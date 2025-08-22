@@ -4,12 +4,12 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.3
-ARG NGINX_VERSION=1.27.3
+ARG PHP_VERSION=8.4
+ARG NGINX_VERSION=1.29
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine3.21 AS bewelcome_php
+FROM php:${PHP_VERSION}-fpm-alpine AS bewelcome_php
 
 # persistent / runtime deps
 RUN apk add --no-cache \
@@ -88,6 +88,7 @@ RUN set -eux; \
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # install Symfony Flex globally to speed up download of Composer packages (parallelized prefetching)
 RUN set -eux; \
     composer global config --no-plugins allow-plugins.symfony/flex true; \
@@ -163,7 +164,6 @@ COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 WORKDIR /srv/bewelcome/public
 
 COPY --from=bewelcome_php /srv/bewelcome/public ./
-
 
 # "php" dev stage
 # depends on the "php" stage above

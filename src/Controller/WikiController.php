@@ -17,7 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class WikiController extends AbstractController
 {
@@ -27,8 +27,8 @@ class WikiController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
     ) {
-
     }
+
     /**
      * @return Response
      */
@@ -67,7 +67,7 @@ class WikiController extends AbstractController
     public function showWikiPage(
         string $pageTitle,
         WikiModel $wikiModel,
-        int $version
+        int $version,
     ): Response {
         $pageName = $wikiModel->getPageName($pageTitle);
 
@@ -84,8 +84,8 @@ class WikiController extends AbstractController
                 return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
             }
 
-            // the given version of the wiki page doesn't exist. Just keep going
-            // (show appropriate message in the template)
+        // the given version of the wiki page doesn't exist. Just keep going
+        // (show appropriate message in the template)
         } else {
             $content = $wikiModel->parseWikiMarkup($wikiPage->getContent());
             if (null === $content) {
@@ -124,8 +124,6 @@ class WikiController extends AbstractController
     }
 
     /**
-     *
-     * @param $pageTitle
      * @return Response
      */
     #[Route(path: '/wiki/{pageTitle}/edit', name: 'wiki_page_edit')]
@@ -139,7 +137,7 @@ class WikiController extends AbstractController
         }
 
         $form = $this->createFormBuilder(['wiki_markup' => $wikiPage->getContent()])
-            ->add('wiki_markup', TextAreaType::class)
+            ->add('wiki_markup', TextareaType::class)
             ->add('submit', SubmitType::class, [
                 'label' => 'Update Page',
             ])
@@ -178,8 +176,6 @@ class WikiController extends AbstractController
     }
 
     /**
-     *
-     * @param $pageTitle
      * @return Response
      */
     #[Route(path: '/wiki/{pageTitle}/create', name: 'wiki_page_create')]
@@ -192,7 +188,7 @@ class WikiController extends AbstractController
         }
 
         $form = $this->createFormBuilder(['wiki_markup' => ''])
-            ->add('wiki_markup', TextAreaType::class)
+            ->add('wiki_markup', TextareaType::class)
             ->add('submit', SubmitType::class, [
                 'label' => 'Create Page',
             ])

@@ -20,7 +20,7 @@ class BaseRequestModel
         Member $receiver,
         Message $hostingRequest,
         Message $data,
-        string $clickedButton
+        string $clickedButton,
     ): Message {
         if (null === $hostingRequest->getRequest()->getDeparture() || null === $data->getRequest()->getDeparture()) {
             throw new InvalidArgumentException();
@@ -90,12 +90,6 @@ class BaseRequestModel
         return $today > $arrival;
     }
 
-    /**
-     * @param $original
-     * @param $current
-     *
-     * @return mixed
-     */
     private function getFinal($original, $current)
     {
         return ($original !== $current) ? $current : $original;

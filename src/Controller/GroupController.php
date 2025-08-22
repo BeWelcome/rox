@@ -23,7 +23,6 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Intervention\Image\ImageManager;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
@@ -33,7 +32,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -41,6 +40,9 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  *
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ *
+ * \todo Move membership handling into own controller.
  */
 class GroupController extends AbstractController
 {
@@ -49,14 +51,8 @@ class GroupController extends AbstractController
     use TranslatorTrait;
     use UniqueFilenameTrait;
 
-    /**
-     * @var GroupModel
-     */
-    private $groupModel;
-
-    public function __construct(GroupModel $groupModel)
+    public function __construct(private GroupModel $groupModel)
     {
-        $this->groupModel = $groupModel;
     }
 
     /**
@@ -76,10 +72,11 @@ class GroupController extends AbstractController
 
     /**
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/groups/{groupId:group}/{path}', name: 'groups_redirect_path', requirements: ['groupId' => '\d+', 'path' => '.+'])]
-    public function groupsRedirectPath(Request $request, Group $group)
+    public function groupsRedirectPath(Request $request)
     {
         // We only need the request
         return $this->redirectGroup($request);
@@ -87,19 +84,17 @@ class GroupController extends AbstractController
 
     /**
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/groups/{groupId:group}', name: 'groups_redirect_group', requirements: ['groupId' => '\d+'])]
-    public function groupsRedirect(Request $request, Group $group)
+    public function groupsRedirect(Request $request)
     {
         return $this->redirectGroup($request);
     }
 
     /**
-     *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     *
-     * @return Response
      *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      * @SuppressWarnings("PHPMD.NPathComplexity")
@@ -170,11 +165,11 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
      * @throws AccessDeniedException
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/acceptjoin/{memberId}', name: 'group_accept_join')]
@@ -202,11 +197,11 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
      * @throws AccessDeniedException
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/declinejoin/{memberId}', name: 'group_decline_join')]
@@ -234,11 +229,11 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
      *
      * @throws AccessDeniedException
+     *
      * @return JsonResponse
      */
     #[Route(path: '/group/{groupId}/invite/{memberId}', name: 'invite_member_to_group')]
@@ -258,9 +253,9 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/accept/{memberId}', name: 'accept_invite_to_group')]
@@ -279,9 +274,9 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/decline/{memberId}', name: 'decline_invite_to_group')]
@@ -300,9 +295,9 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
      * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/withdraw/{memberId}', name: 'withdraw_member_invite_to_group')]

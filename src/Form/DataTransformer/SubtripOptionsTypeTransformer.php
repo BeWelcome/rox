@@ -8,8 +8,6 @@ use Symfony\Component\Form\DataTransformerInterface;
 class SubtripOptionsTypeTransformer implements DataTransformerInterface
 {
     /**
-     * {@inheritDoc}
-     *
      * @param ?SubtripOptionsType $value
      *
      * @return array
@@ -23,9 +21,6 @@ class SubtripOptionsTypeTransformer implements DataTransformerInterface
         return $value;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public function reverseTransform(mixed $value): mixed
     {
         if (null === $value) {

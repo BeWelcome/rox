@@ -13,18 +13,18 @@ use Hidehalo\Nanoid\Client;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class DonationController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
-    private const PAYPAL_NONCE = 'paypal_nonce';
+    private const string PAYPAL_NONCE = 'paypal_nonce';
 
     #[Route(path: '/donations', name: 'donations')]
     public function overview(Request $request): Response
@@ -62,7 +62,7 @@ class DonationController extends AbstractController
     }
 
     #[Route(path: '/donation/complete', name: 'donation_complete')]
-    public function donationCompletedSuccessfully(Request $request): RedirectResponse
+    public function donationCompletedSuccessfully(): RedirectResponse
     {
         $this->addTranslatedFlash('notice', 'donation.thanks');
 
@@ -70,7 +70,7 @@ class DonationController extends AbstractController
     }
 
     #[Route(path: '/donation/error', name: 'donation_error')]
-    public function donationEndedInError(Request $request): RedirectResponse
+    public function donationEndedInError(): RedirectResponse
     {
         $this->addTranslatedFlash('error', 'donation.error');
 
@@ -92,7 +92,7 @@ class DonationController extends AbstractController
         $isTreasurer = false;
         if (null !== $member) {
             $roles = $member->getRoles();
-            $isTreasurer = in_array(Member::ROLE_ADMIN_TREASURER, $roles);
+            $isTreasurer = \in_array(Member::ROLE_ADMIN_TREASURER, $roles, true);
         }
 
         return $this->render('donation/list.html.twig', [

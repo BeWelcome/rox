@@ -6,8 +6,6 @@ use App\Entity\Member;
 use App\Entity\ProfileVisit;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Adapter\ArrayAdapter;
-use Pagerfanta\Doctrine\Collections\CollectionAdapter;
-use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class ProfileVisitRepository extends EntityRepository

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -12,11 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Language.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'languages')]
 #[ORM\UniqueConstraint(name: 'ShortCode', columns: ['ShortCode'])]
@@ -25,8 +24,6 @@ class Language
 {
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'EnglishName', type: 'text', length: 255, nullable: false)]
     #[Groups(['Member:Read'])]
@@ -45,8 +42,6 @@ class Language
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'ShortCode', type: 'string', length: 16, nullable: false)]
     #[Groups(['Member:Read'])]

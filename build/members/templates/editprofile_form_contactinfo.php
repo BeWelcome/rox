@@ -18,7 +18,7 @@
                                type="text"
                                name="Street"
                                id="Street"
-                               value="<?php echo htmlentities($vars['Street'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                               value="<?php echo htmlentities((string) $vars['Street'], ENT_COMPAT, 'UTF-8'); ?>"/>
                         <div class="o-checkbox">
                             <input type="checkbox" class="o-checkbox__input" value="Yes" name="IsHidden_Address" id="IsHidden_Address"
                             <?php if ($vars['IsHidden_Address'])
@@ -41,7 +41,7 @@
                         <input class="o-input<?php if (isset($errorHouseNumber)) { ?> error-input-text<?php } ?>"
                                type="text"
                                name="HouseNumber" id="HouseNumber"
-                               value="<?php echo htmlentities($vars['HouseNumber'], ENT_COMPAT, 'UTF-8'); ?>"
+                               value="<?php echo htmlentities((string) $vars['HouseNumber'], ENT_COMPAT, 'UTF-8'); ?>"
                                size="6"/>
                         <?php if (isset($errorHouseNumber)) { ?>
                             <div
@@ -57,7 +57,7 @@
 
                         <input class="o-input<?php if (isset($errorZip)) { ?> error-input-text<?php } ?>" type="text"
                                name="Zip" id="Zip"
-                               value="<?php echo htmlentities($vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="8"/>
+                               value="<?php echo htmlentities((string) $vars['Zip'], ENT_COMPAT, 'UTF-8'); ?>" size="8"/>
                         <div class="o-checkbox">
                         <input type="checkbox" class="o-checkbox__input" value="Yes" name="IsHidden_Zip" id="IsHidden_Zip"
                             <?php if ($vars['IsHidden_Zip'])
@@ -77,7 +77,7 @@
                             <?= $words->get('ProfileHomePhoneNumber') ?>
                         </label>
                         <input type="text" id="HomePhoneNumber" name="HomePhoneNumber" class="o-input"
-                               value="<?php echo htmlentities($vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                               value="<?php echo htmlentities((string) $vars['HomePhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
 
                         <div class="o-checkbox">
                         <input type="checkbox" class="o-checkbox__input" value="Yes" id="IsHidden_HomePhoneNumber" name="IsHidden_HomePhoneNumber"
@@ -92,7 +92,7 @@
                             <?= $words->get('ProfileCellPhoneNumber') ?>
                         </label>
                         <input type="text" id="CellPhoneNumber" name="CellPhoneNumber" class="o-input"
-                               value="<?php echo htmlentities($vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                               value="<?php echo htmlentities((string) $vars['CellPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                         <div class="o-checkbox">
                         <input type="checkbox" class="o-checkbox__input" value="Yes" id="IsHidden_CellPhoneNumber" name="IsHidden_CellPhoneNumber"
                             <?php if ($vars['IsHidden_CellPhoneNumber'])
@@ -107,7 +107,7 @@
                             <?= $words->get('ProfileWorkPhoneNumber') ?>
                         </label>
                         <input type="text" name="WorkPhoneNumber" class="o-input"
-                               value="<?php echo htmlentities($vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                               value="<?php echo htmlentities((string) $vars['WorkPhoneNumber'], ENT_COMPAT, 'UTF-8'); ?>"/>
                         <div class="o-checkbox">
                         <input type="checkbox" class="o-checkbox__input" value="Yes" name="IsHidden_WorkPhoneNumber"
                             <?php if ($vars['IsHidden_WorkPhoneNumber'])
@@ -123,7 +123,7 @@
                         <?= $words->get('Website') ?>
                     </label>
                     <input type="text" class="o-input" id="WebSite" name="WebSite"
-                           value="<?php echo htmlentities($vars['WebSite'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                           value="<?php echo htmlentities((string) $vars['WebSite'], ENT_COMPAT, 'UTF-8'); ?>"/>
                 </div>
 
                 <div class="row mt-3">
@@ -149,7 +149,7 @@
                             </div>
                             <div class="col-12 col-md-9 mb-2">
                                 <input type="text" name="<?= $val ?>" class="o-input"
-                                       value="<?php echo htmlentities($me["address"], ENT_COMPAT, 'UTF-8'); ?>"/>
+                                       value="<?php echo htmlentities((string) $me["address"], ENT_COMPAT, 'UTF-8'); ?>"/>
                             </div>
                         </div>
                         <?php

@@ -11,16 +11,19 @@
 class GalleryPage extends GalleryBasePage
 {
 
+    #[\Override]
     protected function teaserHeadline() {
         $words = $this->words;
         return '<a href="/gallery/show/user/'. $member->username . '/images">'.$words->get('Gallery').'</a>';
     }
     
+    #[\Override]
     protected function getTopmenuActiveItem()
     {
         return 'gallery';
     }
     
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'overview';
@@ -33,7 +36,7 @@ class GalleryPage extends GalleryBasePage
         $gallery = $this->gallery;
         $d = $this->d;
         $num_rows = $this->num_rows;
-        echo '<h3><a href="gallery/show/sets/'.$gallery->id.'">'.htmlspecialchars($gallery->title).'</a></h3>';
+        echo '<h3><a href="gallery/show/sets/'.$gallery->id.'">'.htmlspecialchars((string) $gallery->title).'</a></h3>';
         if ($this->myself && $this->upload) {
             // Display the upload form
             require SCRIPT_BASE . 'build/gallery/templates/uploadform.php';

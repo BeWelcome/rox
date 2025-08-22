@@ -17,7 +17,7 @@ class DonateModel extends RoxModelBase
      */
     public function getStatForDonations() {
         // check if donate.ini exists and get values
-        list($requiredPerYear, $campaignStart) = $this->getCampaignValues();
+        [$requiredPerYear, $campaignStart] = $this->getCampaignValues();
         $requiredPerMonth = floor($requiredPerYear / 12);
 
         // Calculate donations received for current year
@@ -87,7 +87,7 @@ class DonateModel extends RoxModelBase
     public function getDonations($recent = false) {
         $rights = MOD_right::get();
         $where = "";
-        list($dummy, $campaignStart) = $this->getCampaignValues();
+        [$dummy, $campaignStart] = $this->getCampaignValues();
         if ($rights->hasRight('Treasurer')) {
             $limitClause = "";
             if ($recent) {
@@ -107,7 +107,7 @@ class DonateModel extends RoxModelBase
             $limitClause
             ";
         $result = $this->dao->query($query);
-        $donations = array();
+        $donations = [];
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             if ($row->IdCountry == 0) {
                 $countryName = "Unknown country";
@@ -149,7 +149,7 @@ class DonateModel extends RoxModelBase
             }// Reply with an empty 200 response to indicate to paypal the IPN was received correctly.
             header("HTTP/1.1 200 OK");
             PPHP::PExit();
-        } catch (Exception $e) {
+        } catch (Exception) {
         }
     }
 
@@ -204,11 +204,11 @@ class DonateModel extends RoxModelBase
 
              // parse the data to read the return variables by paypal
              $lines = explode("\n", $res);
-             $keyarray = array();
+             $keyarray = [];
              if (strcmp ($lines[0], "SUCCESS") == 0) {
                 for ($i=1; $i<count($lines);$i++){ // Retrieve the parameters
                     if (strpos($lines[$i],"=")) {
-                       list($key,$val) = explode("=", $lines[$i]);
+                       [$key, $val] = explode("=", $lines[$i]);
                     }
                     $keyarray[urldecode($key)] = urldecode($val);
                 }
@@ -313,9 +313,9 @@ VALUES
         $r = $this->singleLookup($query);
         if (!$r) {
             // failed return defaults (might miss a DB update)
-            return array(1260, '2012-10-11');
+            return [1260, '2012-10-11'];
         } else {
-            return array($r->neededperyear, $r->campaignstartdate);
+            return [$r->neededperyear, $r->campaignstartdate];
         }
     }
 

@@ -29,7 +29,7 @@ class Note extends RoxEntityBase
      * @return mixed false or group of arrays that match any of the terms
      * @access public
      */
-    public function findBySearchTerms($terms = array(), $page = 0)
+    public function findBySearchTerms($terms = [], $page = 0)
     {
         if (empty($terms))
         {
@@ -142,7 +142,7 @@ class Note extends RoxEntityBase
      */
     private function sanitizeTranslationParams($params)
     {
-        $return = array();
+        $return = [];
         foreach ($params as $param)
         {
             if (is_array($param))
@@ -187,7 +187,7 @@ class Note extends RoxEntityBase
         {
             return '';
         } elseif ($this->WordCode == '' && ($text_params = unserialize($this->TranslateParams)) !== false) {
-           return call_user_func_array(array($words, 'get'), $text_params);
+           return call_user_func_array($words->get(...), $text_params);
         } else {
             $member = MOD_member::getMember_userId($item->IdRelMember);
             return $words->get($this->WordCode,$member->getUsername());

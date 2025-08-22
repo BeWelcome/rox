@@ -128,8 +128,6 @@ class StatisticsRepository extends EntityRepository
 
     /**
      * Requests were added April, 2019 so data can only exist after that.
-     *
-     * @param mixed $column
      */
     private function getRequestsDataWeekly($column)
     {
@@ -146,8 +144,6 @@ class StatisticsRepository extends EntityRepository
 
     /**
      * Trips were added June, 2022 so data can only exist after that.
-     *
-     * @param mixed $column
      */
     private function getTripsDataWeekly($column)
     {

@@ -31,7 +31,7 @@ use App\Doctrine\GroupType;
                 <div class="subcolumns">
                 <?php
                 $count=0;
-                $featured_groups = (($this->featured_groups) ? $this->featured_groups : array());
+                $featured_groups = ($this->featured_groups ?: []);
                 foreach($featured_groups as $group_data) :
                     if ($group_data->Type == GroupType::INVITE_ONLY && !$this->model->getLoggedInMember()) continue;
                     if ($count % 2 == 0) { ?>
@@ -40,10 +40,10 @@ use App\Doctrine\GroupType;
                     <div class="c50r groupbox clearfix">
                     <?php } ?>
                         <a href="group/<?=$group_data->id ?>">
-                            <img class="framed float_left"  width="80px" height="80px" alt="group" src="<?= ((strlen($group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
+                            <img class="framed float_left"  width="80px" height="80px" alt="group" src="<?= ((strlen((string) $group_data->Picture) > 0) ? "groups/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>"/>
                         </a>
                         <div class="groupinfo">
-                            <h4><a href="group/<?=$group_data->id ?>"><?= htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h4>
+                            <h4><a href="group/<?=$group_data->id ?>"><?= htmlspecialchars((string) $group_data->Name, ENT_QUOTES) ?></a></h4>
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount');?>: <?=$group_data->getMemberCount(); ?></li>
                                 <li><?= $words->get('GroupsNewMembers');?>: <?=count($group_data->getNewMembers()) ; ?></li>
@@ -74,10 +74,10 @@ use App\Doctrine\GroupType;
                     for($i = 0; $i < count($my_groups) && $i < 5; $i++) : ?>
                         <div class="groupbox clearfix">
                             <a href="group/<?=$my_groups[$i]->id ?>">
-                                <img class="framed float_left"  width="80px" height="80px" alt="Group" src="<?= ((strlen($my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
+                                <img class="framed float_left"  width="80px" height="80px" alt="Group" src="<?= ((strlen((string) $my_groups[$i]->Picture) > 0) ? "groups/thumbimg/{$my_groups[$i]->getPKValue()}" : 'images/icons/group.png' ) ;?>"/>
                             </a>
                             <div class="groupinfo">
-                            <h4><a href="group/<?= $my_groups[$i]->id ?>"><?= htmlspecialchars($my_groups[$i]->Name, ENT_QUOTES) ?></a></h4>
+                            <h4><a href="group/<?= $my_groups[$i]->id ?>"><?= htmlspecialchars((string) $my_groups[$i]->Name, ENT_QUOTES) ?></a></h4>
                             <ul>
                                 <li><?= $words->get('GroupsMemberCount');?>: <?=$my_groups[$i]->getMemberCount(); ?> </li>
                                 <li><?= $words->get('GroupsNewMembers');?>: <?=count($my_groups[$i]->getNewMembers()); ?> </li>

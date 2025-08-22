@@ -41,7 +41,7 @@ WHERE
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-                return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                return (strip_tags((string) $this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
             }
         }
         // Try default eng
@@ -61,7 +61,7 @@ WHERE
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-                return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                return (strip_tags((string) $this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
             }
         }
         // Try first language available
@@ -82,7 +82,7 @@ LIMIT 1
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-                return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+                return (strip_tags((string) $this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
             }
         }
         return ("");
@@ -132,7 +132,7 @@ LIMIT 1
      * @throws PException
      */
     public function getMembers($first, $count, $safetyTeamOrAdmin) {
-        $langarr = explode('-', $this->session->get('lang'));
+        $langarr = explode('-', (string) $this->session->get('lang'));
         $lang = $langarr[0];
         // First get current page and limits
 
@@ -186,9 +186,9 @@ LIMIT 1
 
         $loggedInMember = $this->getLoggedInMember();
 
-        $members = array();
-        $geonameIds = array();
-        $countryIds = array();
+        $members = [];
+        $geonameIds = [];
+        $countryIds = [];
         $layoutBits = new MOD_layoutbits();
         foreach($rawMembers as $member) {
             $geonameIds[$member->geonameId] = $member->geonameId;
@@ -249,7 +249,7 @@ LIMIT 1
             ORDER BY
                 geonameId, source, ispreferred DESC, isshort DESC";
         $rawNames = $this->bulkLookup($query);
-        $names = array();
+        $names = [];
         foreach($rawNames as $rawName) {
             if (!isset($names[$rawName->geonameId])) {
                 $names[$rawName->geonameId] = $rawName->name;
@@ -273,7 +273,7 @@ LIMIT 1
             ORDER BY
                 geonameId, source, ispreferred DESC, isshort DESC";
         $countryRawNames = $this->bulkLookup($query);
-        $countryNames = array();
+        $countryNames = [];
         foreach($countryRawNames as $countryRawName) {
             if (!isset($countryNames[$countryRawName->countryCode])) {
                 $countryNames[$countryRawName->countryCode] = $countryRawName->country;

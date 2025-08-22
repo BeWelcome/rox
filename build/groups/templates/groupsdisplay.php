@@ -1,5 +1,5 @@
 <?php
-    if (strlen($group_data->Picture) > 0) {
+    if (strlen((string) $group_data->Picture) > 0) {
     $img_link = "group/thumbimg/{$group_data->getPKValue()}";
     } else {
     $img_link = "images/icons/group.png";
@@ -8,11 +8,11 @@
 <div class="col-12 col-md-6 col-lg-4 order-3 pt-2">
     <div class="media">
         <a href="group/<?= $group_data->getPKValue() ?>">
-            <img class="groupimg framed mr-1" alt="<?= htmlspecialchars($group_data->Name, ENT_QUOTES) ?>"
+            <img class="groupimg framed mr-1" alt="<?= htmlspecialchars((string) $group_data->Name, ENT_QUOTES) ?>"
                  src="<?= $img_link; ?>">
         </a>
         <div class="media-body">
-            <h5><a href="group/<?= $group_data->getPKValue() ?>"><?= htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a></h5>
+            <h5><a href="group/<?= $group_data->getPKValue() ?>"><?= htmlspecialchars((string) $group_data->Name, ENT_QUOTES) ?></a></h5>
                 <div class="small">
                     <span><i class="fa fa-users mr-1"
                        title="<?= $words->getSilent('group.member.count'); ?>"></i><?= $group_data->getMemberCount(); ?></span>

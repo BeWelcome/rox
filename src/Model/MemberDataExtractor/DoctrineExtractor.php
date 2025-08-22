@@ -9,27 +9,17 @@ use Twig\Environment;
 
 final class DoctrineExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    private $className;
-    private $memberRelationName;
-    private $alias;
-
     public function __construct(
         EntrypointLookupInterface $entrypointLookup,
         Environment $environment,
         ManagerRegistry $registry,
-        string $className,
-        string $memberRelationName,
-        string $alias
+        private readonly string $className,
+        private readonly string $memberRelationName,
+        private readonly string $alias,
     ) {
         parent::__construct($entrypointLookup, $environment, $registry);
-        $this->className = $className;
-        $this->memberRelationName = $memberRelationName;
-        $this->alias = $alias;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         $repository = $this->getRepository($this->className);

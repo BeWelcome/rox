@@ -2,7 +2,7 @@
 
 namespace App\LegacyKernel;
 
-use Psr\Container\ContainerInterface;
+use Override;
 use RoxFrontRouter;
 use SessionMemory;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -21,28 +21,20 @@ use Twig\Environment;
  */
 class LegacyHttpKernel extends HttpKernel
 {
-    protected Environment $environment;
-
     public function __construct(
-        Environment $environment
+        protected Environment $environment,
     ) {
-        $this->environment = $environment;
-
         parent::__construct(new EventDispatcher(), new ControllerResolver());
     }
 
     /**
-     * @param int  $type
-     * @param bool $catch
-     *
-     * @return Response
-     *
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      *
      * The next one is triggered by preg_match. PHP doc says everything's fine with that.
      * @SuppressWarnings("PHPMD.UndefinedVariable")
      */
+    #[Override]
     public function handle(Request $request, int $type = HttpKernelInterface::MAIN_REQUEST, bool $catch = true): Response
     {
         $router = new RoxFrontRouter($this->environment);

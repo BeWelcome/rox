@@ -4,7 +4,7 @@ namespace App\Utilities;
 
 class ForumUtilities
 {
-    function RemoveFQDN(string $postContent)
+    public function removeFqdn(string $postContent)
     {
         // Replace href in links
         $postContent = preg_replace(
@@ -17,7 +17,7 @@ class ForumUtilities
         $postContent = preg_replace(
             '/src="http[s]?:\/\/(www|beta)\.bewelcome\.org\//i',
             'src="/',
-            $postContent
+            (string) $postContent
         );
 
         return $postContent;

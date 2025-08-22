@@ -23,23 +23,25 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ *
+ * \todo rewrite to reduce coupling
+ */
 class GalleryController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
     use UniqueFilenameTrait;
 
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -74,6 +76,11 @@ class GalleryController extends AbstractController
         ]);
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     *
+     * \todo Extract method(s) to break down in digestible pieces.)
+     */
     #[Route(path: '/new/image/upload', name: 'gallery_upload_new')]
     public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator): JsonResponse
     {
@@ -122,7 +129,7 @@ class GalleryController extends AbstractController
         }
 
         // We got an image and need to create a thumbnail for it and put it into the correct place
-        list($width, $height) = getimagesize($image);
+        [$width, $height] = getimagesize($image);
         $uploadDirectory = $this->getParameter('gallery_directory') . '/member' . $member->getId();
         $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
 
@@ -232,8 +239,8 @@ class GalleryController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     #[Route(path: '/gallery/upload/image', name: 'gallery_upload_ckeditor')]
@@ -263,7 +270,7 @@ class GalleryController extends AbstractController
         $existingImages = $uploadedImageRepository->findBy(['fileHash' => $hash]);
 
         if (0 === \count($existingImages)) {
-            list($width, $height) = getimagesize($image);
+            [$width, $height] = getimagesize($image);
             $uploadDirectory = $this->getParameter('upload_directory');
             $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
 
@@ -327,7 +334,7 @@ class GalleryController extends AbstractController
     {
         $uploadDirectory = $this->getParameter('upload_directory') . '/';
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED') || $image->getFileInfo() !== $fileInfo) {
-            $filepath = sprintf($uploadDirectory . 'placeholder_%d_%d.png', $image->getWidth(), $image->getHeight());
+            $filepath = \sprintf($uploadDirectory . 'placeholder_%d_%d.png', $image->getWidth(), $image->getHeight());
         } else {
             $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
         }
@@ -372,6 +379,6 @@ class GalleryController extends AbstractController
 
     private function getMaxUploadSizeInMegaBytes()
     {
-        return (UploadedFile::getMaxFilesize()) / 1024 / 1024;
+        return UploadedFile::getMaxFilesize() / 1024 / 1024;
     }
 }

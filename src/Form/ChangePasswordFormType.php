@@ -20,7 +20,7 @@ class ChangePasswordFormType extends AbstractType
                 'label' => 'profile.current.password',
                 'constraints' => [
                     new NotBlank(),
-                ]
+                ],
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'profile.new.password',
@@ -34,7 +34,7 @@ class ChangePasswordFormType extends AbstractType
                         'message' => 'signup.error.password.blank',
                     ]),
                     new Length(['min' => 8]),
-                ]
+                ],
             ])
         ;
     }

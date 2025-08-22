@@ -17,6 +17,12 @@ use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
+/**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ *
+ * \todo Move to attributes as soon as getGlobals works in that setup. Alternatively split into runtime and template
+ * and check if we really need two extensions (see MemberExtension).
+ */
 class Extension extends AbstractExtension implements GlobalsInterface
 {
     protected TranslatorInterface $translator;
@@ -39,7 +45,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         EntrypointLookupInterface $entrypointLookup,
         LoggerInterface $logger,
         array $locales,
-        string $publicDirectory
+        string $publicDirectory,
     ) {
         $this->translator = $translator;
         $this->locales = $locales;
@@ -86,8 +92,37 @@ class Extension extends AbstractExtension implements GlobalsInterface
             ),
             new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
             new TwigFunction('distance', [$this, 'distance']),
+            new TwigFunction('profile_element', [$this, 'profileElement']),
             new TwigFunction('sgn', [$this, 'sgn']),
         ];
+    }
+
+    public function profileElement(array $fields, $locale, string $element): array
+    {
+        $profileElement = [];
+        // If element exists in this language return that.
+        if (isset($fields[$locale]['members.' . $element])) {
+            $profileElement['locale'] = $locale;
+            $translation = $fields[$locale]['members.' . $element];
+            $profileElement['text'] = $translation->getSentence();
+        }
+
+        // Check if element exists in English
+        if (empty($profileElement) && isset($fields['en']['members.' . $element])) {
+            $profileElement['locale'] = 'en';
+            $translation = $fields['en']['members.' . $element];
+            $profileElement['text'] = $translation->getSentence();
+        }
+
+        // Check if element exists in first provided locale
+        $first = array_key_first($fields);
+        if (empty($profileElement) && isset($fields[$first]['members.' . $element])) {
+            $profileElement['locale'] = $first;
+            $translation = $fields[$first]['members.' . $element];
+            $profileElement['text'] = $translation->getSentence();
+        }
+
+        return $profileElement;
     }
 
     public function languageName(string $locale): string
@@ -108,11 +143,11 @@ class Extension extends AbstractExtension implements GlobalsInterface
     public function privacy(string $isoDate): string
     {
         $date = Carbon::createFromFormat('Y-m-d', $isoDate);
-        if ($date->diffInDays() <=  7) {
+        if ($date->diffInDays() <= 7) {
             return $this->translator->trans('lastloginprivacy');
-        } else {
-            return $date->diffForHumans();
         }
+
+        return $date->diffForHumans();
     }
 
     public function getFilters(): array
@@ -145,8 +180,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
                 [
                     'is_safe' => ['html'],
                 ]
-            )
-         ];
+            ),
+        ];
     }
 
     /**
@@ -272,7 +307,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
-     * signum of the given (float) number
+     * signum of the given (float) number.
      */
     public function sgn(float $number): int
     {

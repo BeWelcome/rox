@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,10 +11,10 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Right;
 
 /**
  * Rightsvolunteers.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -37,7 +38,7 @@ class RightVolunteer
     private $member;
 
     #[ORM\JoinColumn(name: 'IdRight', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Right::class, inversedBy: 'rightVolunteers')]
+    #[ORM\ManyToOne(targetEntity: Right::class, inversedBy: 'rightVolunteers')]
     private $right;
 
     /**
@@ -86,17 +87,11 @@ class RightVolunteer
         $this->member = $member;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRight()
     {
         return $this->right;
     }
 
-    /**
-     * @param mixed $right
-     */
     public function setRight($right)
     {
         $this->right = $right;

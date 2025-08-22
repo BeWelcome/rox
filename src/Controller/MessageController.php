@@ -15,11 +15,10 @@ use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class MessageController.
@@ -35,27 +34,20 @@ class MessageController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private Mailer $mailer;
-    private ConversationModel $conversationModel;
-    private ConversationThread $conversationThread;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        Mailer $mailer,
-        ConversationModel $conversationModel,
-        ConversationThread $conversationThread,
-        EntityManagerInterface $entityManager
+        private readonly Mailer $mailer,
+        private readonly ConversationModel $conversationModel,
+        private readonly ConversationThread $conversationThread,
+        private readonly EntityManagerInterface $entityManager,
     ) {
-        $this->mailer = $mailer;
-        $this->conversationModel = $conversationModel;
-        $this->conversationThread = $conversationThread;
-        $this->entityManager = $entityManager;
     }
 
     /**
-     * @throws Exception
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     *
+     * \todo check how to get this reduced.
      */
-    #[Route(path: '/new/message/{username}', name: 'message_new')]
+    #[Route(path: '/new/message/{username:receiver}', name: 'message_new')]
     public function newMessage(Request $request, Member $receiver, AllowContactCheck $allowContactCheck): Response
     {
         /** @var Member $sender */
@@ -156,7 +148,7 @@ class MessageController extends AbstractController
             /** @var Message $data */
             $data = $replyForm->getData();
             $replySubject = $data->getSubject()->getSubject();
-            if ('Re:' !== substr($replySubject, 0, 3)) {
+            if (!str_starts_with($replySubject, 'Re:')) {
                 $replySubject = 'Re: ' . $replySubject;
             }
 
@@ -184,7 +176,7 @@ class MessageController extends AbstractController
         Member $receiver,
         ?Message $parent,
         string $subjectText,
-        string $body
+        string $body,
     ): Message {
         $message = new Message();
         $message->setMessage($body);
@@ -210,7 +202,7 @@ class MessageController extends AbstractController
         $this->entityManager->persist($message);
         $this->entityManager->flush();
 
-        if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
+        if (!str_contains($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
             $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
                 'message' => $message,
                 'subject' => $subjectText,

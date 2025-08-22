@@ -596,15 +596,10 @@ VALUES
         	// if upload failed, set error message
         	if (!empty($fileName) && $error != UPLOAD_ERR_OK) {
         		$noError = false;
-        		switch ($error) {
-        		    case UPLOAD_ERR_INI_SIZE:
-        			case UPLOAD_ERR_FORM_SIZE:
-        				$vars['fileErrors'][$fileName] = 'Gallery_UploadFileTooLarge';
-                		break;
-        			default:
-        				$vars['fileErrors'][$fileName] = 'Gallery_UploadError';
-            			break;
-            	}
+        		$vars['fileErrors'][$fileName] = match ($error) {
+                    UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE => 'Gallery_UploadFileTooLarge',
+                    default => 'Gallery_UploadError',
+                };
         	} elseif (!empty($fileName)) { // upload succeeded -> check if image
             	$img = new MOD_images_Image($_FILES['gallery-file']['tmp_name'][$key]);
             	if (!$img->isImage()) {
@@ -615,8 +610,8 @@ VALUES
 		            $size = $img->getImageSize();
 		            $original_x = min($size[0],PVars::getObj('images')->max_width);
 		            $original_y = min($size[1],PVars::getObj('images')->max_height);
-		            $tempDir = dirname($_FILES['gallery-file']['tmp_name'][$key]);
-		            $resizedName = md5($_FILES['gallery-file']['tmp_name'][$key]) . md5(date('now')) . '_resized';
+		            $tempDir = dirname((string) $_FILES['gallery-file']['tmp_name'][$key]);
+		            $resizedName = md5((string) $_FILES['gallery-file']['tmp_name'][$key]) . md5(date('now')) . '_resized';
 		            $img->createThumb($tempDir,$resizedName, $original_x, $original_y, true, 'ratio');
 		            $tempFile = $tempDir . '/' . $resizedName ;
 

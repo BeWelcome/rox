@@ -4,8 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Member;
 use App\Entity\ProfileNote;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
@@ -28,7 +26,7 @@ class ProfileNoteRepository extends EntityRepository
         array $categories = [],
         int $order = 1,
         int $page = 1,
-        int $itemsPerPage = 20
+        int $itemsPerPage = 20,
     ): Pagerfanta {
         $qb = $this->createQueryBuilder('n')
             ->where('n.owner = :member')

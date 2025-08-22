@@ -6,7 +6,7 @@ $thumbsize = $this->thumbsize;
 if ($statement) {
     $request = PRequest::get()->request;
     $requestStr = implode('/', $request);
-    $matches = array();
+    $matches = [];
     if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
         $page = $matches[1];
         $requestStr = preg_replace('%/=page(\d+)%', '', $requestStr);
@@ -33,7 +33,7 @@ if ($statement) {
         echo '<img class="mx-auto d-block img-fluid img-thumbnail" src="gallery/thumbimg?id='.$d->id.
             ($thumbsize ? '&t='.$thumbsize : '' ) . '" alt="' . $d->title . '">';
         echo '</a>';
-        $title_short = ((strlen($d->title) >= 26) ? substr($d->title,0,20).'...' : $d->title);
+        $title_short = ((strlen((string) $d->title) >= 26) ? substr((string) $d->title,0,20).'...' : $d->title);
         $loggedmember = isset($this->model) ? $this->model->getLoggedInMember : $this->loggedInMember;
         $edit = ($loggedmember && $loggedmember->Username == $d->user_handle);
         echo '<div class="card-body p-1">';
@@ -46,7 +46,7 @@ if ($statement) {
         }
 
         if ($edit) {
-            echo '<div class="card-text"><small class="text-muted">'.$layoutbits->ago(strtotime($d->created)).'</small>';
+            echo '<div class="card-text"><small class="text-muted">'.$layoutbits->ago(strtotime((string) $d->created)).'</small>';
             echo '<a href="gallery/show/image/'.$d->id.'/edit" title="edit '. $d->title .'" class="btn btn-sm btn-outline-primary float-right"> <i class="fa fa-edit"></i></a>';
             echo '<a href="gallery/show/image/'. $d->id .'/delete" title="delete '. $d->title .'" class="btn btn-sm btn-danger float-right mr-1"><i class="fa fa-trash"></i></a></div>';
         }

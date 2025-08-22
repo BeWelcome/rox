@@ -3,12 +3,14 @@
 
 class MembersMembernotfoundPage extends PageWithActiveSkin
 {
+    #[\Override]
     protected function getPageTitle()
     {
         $words = new MOD_words;
         return $words->getSilent('MemberNotFound') . " - BeWelcome";
     }
 
+    #[\Override]
     protected function teaserContent()
     {
         $words = new MOD_words;
@@ -20,6 +22,7 @@ class MembersMembernotfoundPage extends PageWithActiveSkin
 
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
 

@@ -8,7 +8,6 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
@@ -17,15 +16,12 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class SignupFormType extends AbstractType
 {
-    private string $usernamePattern;
-
-    public function __construct(string $usernamePattern)
+    public function __construct(private readonly string $usernamePattern)
     {
-        $this->usernamePattern = $usernamePattern;
     }
 
     /**
-     * {@inheritdoc}
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -34,7 +30,6 @@ class SignupFormType extends AbstractType
                 'label' => 'label.username',
                 'attr' => [
                     'class' => 'js-username',
-                    'placeholder' => 'placeholder.username',
                 ],
                 'help' => 'help.username',
                 'help_html' => true,
@@ -50,7 +45,6 @@ class SignupFormType extends AbstractType
                 'label' => 'label.email',
                 'attr' => [
                     'class' => 'js-email-address',
-                    'placeholder' => 'placeholder.email',
                 ],
                 'help' => 'help.email',
                 'required' => false,
@@ -58,14 +52,13 @@ class SignupFormType extends AbstractType
                     new NotBlank([
                         'message' => 'signup.error.email.blank',
                     ]),
-                    new Email()
+                    new Email(),
                 ],
             ])
             ->add('password', PasswordType::class, [
                 'label' => 'label.password',
                 'attr' => [
                     'class' => 'js-password-input',
-                    'placeholder' => 'placeholder.password',
                 ],
                 'always_empty' => false,
                 'help' => 'help.password',
@@ -85,7 +78,7 @@ class SignupFormType extends AbstractType
                 'required' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'signup.error.terms_privacy'
+                        'message' => 'signup.error.terms_privacy',
                     ]),
                 ],
             ])

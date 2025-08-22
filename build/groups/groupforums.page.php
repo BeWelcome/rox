@@ -34,6 +34,7 @@ Boston, MA  02111-1307, USA.
 
 class GroupForumsOverviewPage extends PageWithActiveSkin
 {
+    #[\Override]
     protected function teaserContent()
     {
         echo '<h3>';

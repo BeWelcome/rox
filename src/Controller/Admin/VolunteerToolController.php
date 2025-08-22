@@ -28,43 +28,37 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Class VolunteerToolController.
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ *
+ * This controller handles all tools for volunteers. As they are organized by roles the sheer number es rather high.
  */
 class VolunteerToolController extends AbstractController
 {
-    private const CHANGE_USERNAME = 'admin.tools.change_username';
-    private const FIND_USER = 'admin.tools.find_user';
-    private const MESSAGES_SENT = 'admin.tools.messages_sent';
-    private const REQUESTS_SENT = 'admin.tools.requests_sent';
-    private const MESSAGES_BY_MEMBER = 'admin.tools.messages_by_member';
-    private const CHECK_FEEDBACK = 'admin.tools.check_feedback';
-    private const CHECK_TOP_SPAMMER = 'admin.tools.check_spam_messages';
-    private const DAMAGE_DONE = 'admin.tools.damage_done';
-    private const AGE_BY_COUNTRY = 'admin.tools.age_by_country';
-    private const UPLOADED_IMAGES = 'admin.tools.uploaded_images';
-    private const LOGIN_MESSAGES_SHOW = 'admin.tools.login_messages.show';
-    private const LOGIN_MESSAGE_ADD = 'admin.tools.login_message.add';
+    private const string CHANGE_USERNAME = 'admin.tools.change_username';
+    private const string FIND_USER = 'admin.tools.find_user';
+    private const string MESSAGES_SENT = 'admin.tools.messages_sent';
+    private const string REQUESTS_SENT = 'admin.tools.requests_sent';
+    private const string MESSAGES_BY_MEMBER = 'admin.tools.messages_by_member';
+    private const string CHECK_FEEDBACK = 'admin.tools.check_feedback';
+    private const string CHECK_TOP_SPAMMER = 'admin.tools.check_spam_messages';
+    private const string DAMAGE_DONE = 'admin.tools.damage_done';
+    private const string AGE_BY_COUNTRY = 'admin.tools.age_by_country';
+    private const string UPLOADED_IMAGES = 'admin.tools.uploaded_images';
+    private const string LOGIN_MESSAGES_SHOW = 'admin.tools.login_messages.show';
+    private const string LOGIN_MESSAGE_ADD = 'admin.tools.login_message.add';
 
-    private FeedbackModel $feedbackModel;
-
-    public function __construct(FeedbackModel $feedbackModel)
+    public function __construct(private readonly FeedbackModel $feedbackModel)
     {
-        $this->feedbackModel = $feedbackModel;
     }
 
-    /**
-     * This directly redirects to the first assigned tool if any otherwise it redirects to the referrer page.
-     *
-     *
-     * @return Response
-     */
     #[Route(path: '/admin/tools', name: 'admin_volunteer_tools')]
-    public function showOverview(Request $request)
+    public function showOverview(Request $request): RedirectResponse
     {
         $subMenuItems = $this->checkPermissions($request);
         $firstSubMenuItem = reset($subMenuItems);
@@ -72,17 +66,12 @@ class VolunteerToolController extends AbstractController
         return $this->redirect($firstSubMenuItem['url']);
     }
 
-    /**
-     *
-     * @throws Exception
-     * @return Response|RedirectResponse
-     */
     #[Route(path: '/admin/tools/change', name: 'admin_tools_change_username')]
     public function changeUsername(
         Request $request,
         EntityManagerInterface $entityManager,
         TranslatorInterface $translator,
-        Logger $logger
+        Logger $logger,
     ): Response {
         // check permissions
         $subMenuItems = $this->checkPermissions($request, self::CHANGE_USERNAME);
@@ -341,7 +330,6 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
         );
     }
 
-
     #[Route(path: '/admin/tools/requests/sent', name: 'admin_tools_requests_sent')]
     public function showRequestsLastTwoWeeks(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -431,12 +419,12 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
                 $result = $results[$username];
                 $result['type'] |= $type;
                 if ($sender !== $member) {
-                    $result['direction'] = $result['direction'] | 1;
+                    $result['direction'] |= 1;
                     if ($message->getCreated() > $result['last_received']) {
                         $result['last_received'] = $message->getCreated();
                     }
                 } else {
-                    $result['direction'] = $result['direction'] | 2;
+                    $result['direction'] |= 2;
                     if ($message->getCreated() > $result['last_sent']) {
                         $result['last_sent'] = $message->getCreated();
                     }
@@ -586,9 +574,6 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
         return $this->redirectToRoute('admin_tools_login_messages_show');
     }
 
-    /**
-     * @return array
-     */
     private function getSubMenuItems(): array
     {
         $subMenu = [];
@@ -678,13 +663,9 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
     }
 
     /**
-     *
-     * @param Request     $request
-     * @param string|null $tool
-     *
      * @return RedirectResponse|array
      */
-    private function checkPermissions(Request $request, string $tool = null)
+    private function checkPermissions(Request $request, ?string $tool = null)
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();

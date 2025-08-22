@@ -2,7 +2,7 @@
 $formkit = $this->layoutkit->formkit;
 $callbackTags = $formkit->setPostCallback('ActivitiesController', 'searchActivitiesCallback');
 
-$errors = array();
+$errors = [];
 if ($this->session->has( 'errors' )) {
     $errors = $this->session->get('errors');
     $this->session->remove('errors');

@@ -1,19 +1,42 @@
-import { ClassicEditor } from '@ckeditor/ckeditor5-editor-classic/src/index';
-import { Essentials } from '@ckeditor/ckeditor5-essentials/src/index';
-import { UploadAdapter } from '@ckeditor/ckeditor5-adapter-ckfinder/src/index';
-import { Bold, Underline, Italic } from '@ckeditor/ckeditor5-basic-styles/src/index';
-import { BlockQuote } from '@ckeditor/ckeditor5-block-quote/src/index';
-import { EasyImage } from '@ckeditor/ckeditor5-easy-image/src/index';
-import { Image, ImageCaption, ImageStyle, ImageToolbar, ImageUpload } from '@ckeditor/ckeditor5-image/src/index';
-import { Link, LinkImage } from '@ckeditor/ckeditor5-link/src/index';
-import { List } from '@ckeditor/ckeditor5-list/src/index';
-import { Mention } from '@ckeditor/ckeditor5-mention/src/index';
-import { Paragraph } from '@ckeditor/ckeditor5-paragraph/src/index';
-import { SpecialCharacters, SpecialCharactersEssentials }  from '@ckeditor/ckeditor5-special-characters/src/index';
-import { CloudServices } from '@ckeditor/ckeditor5-cloud-services/src/index';
-import { Autosave } from "@ckeditor/ckeditor5-autosave/src/index";
-import HorizontalLine from '@ckeditor/ckeditor5-horizontal-line/src/horizontalline';
-import PendingActions from "@ckeditor/ckeditor5-core/src/pendingactions";
+import {
+    ClassicEditor,
+    Essentials,
+    CKFinderUploadAdapter,
+    Bold,
+    Underline,
+    Italic,
+    BlockQuote,
+    EasyImage,
+    Image,
+    ImageCaption,
+    ImageStyle,
+    ImageToolbar,
+    ImageUpload,
+    Link,
+    LinkImage,
+    List,
+    Mention,
+    Paragraph,
+    SpecialCharacters,
+    SpecialCharactersEssentials,
+    CloudServices,
+    Autosave,
+    HorizontalLine,
+    PendingActions } from "ckeditor5";
+
+/* \todo Add all UI languages */
+import English from 'ckeditor5/translations/en.js';
+import Arabic from 'ckeditor5/translations/ar.js';
+import German from 'ckeditor5/translations/de.js';
+import Greek from 'ckeditor5/translations/el.js';
+import French from 'ckeditor5/translations/fr.js';
+import Spanish from 'ckeditor5/translations/es.js';
+
+import 'ckeditor5/ckeditor5.css';
+
+const translations = [
+    English, Arabic, German, Greek, French, Spanish,
+]
 
 function SpecialCharactersTextExtended( editor ) {
     editor.plugins.get( 'SpecialCharacters' ).addItems( 'Text', [
@@ -37,7 +60,7 @@ for (let i = 0; i < mentions.length; i++) {
 let allEditors = document.querySelectorAll('.editor');
 for (let i = 0; i < allEditors.length; ++i) {
     ClassicEditor.create(allEditors[i], {
-        // The plugins are now passed directly to .create().
+        licenseKey: 'GPL',
         plugins: [
             Autosave,
             PendingActions,
@@ -57,7 +80,7 @@ for (let i = 0; i < allEditors.length; ++i) {
             List,
             Mention,
             Paragraph,
-            UploadAdapter,
+            CKFinderUploadAdapter,
             SpecialCharacters,
             SpecialCharactersEssentials,
             SpecialCharactersTextExtended,
@@ -95,6 +118,7 @@ for (let i = 0; i < allEditors.length; ++i) {
             ]
         },
         language: document.documentElement.lang,
+        translations: translations,
         mention: {
             feeds: [
                 {

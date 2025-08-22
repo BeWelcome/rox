@@ -26,15 +26,8 @@ use Zend\Validator\Date;
 )]
 class UpdateStatistics extends Command
 {
-    private LoggerInterface $logger;
-
-    private StatisticsModel $statisticsModel;
-
-    public function __construct(StatisticsModel $statisticsModel, LoggerInterface $logger)
+    public function __construct(private readonly StatisticsModel $statisticsModel, private readonly LoggerInterface $logger)
     {
-        $this->statisticsModel = $statisticsModel;
-        $this->logger = $logger;
-
         parent::__construct();
     }
 
@@ -51,8 +44,6 @@ class UpdateStatistics extends Command
      * @throws DBALException
      * @throws ORMException
      * @throws OptimisticLockException
-     *
-     * @return int
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */

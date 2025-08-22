@@ -35,7 +35,7 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_EDIT]);
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $vote);
     }
 
     public function testTripCreatorCanNotEditIfExpired(): void
@@ -55,7 +55,7 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_EDIT]);
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $vote);
     }
 
     public function testTripCreatorCanViewIfExpired(): void
@@ -75,7 +75,7 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $vote);
     }
 
     public function testOnlyTripCreatorCanViewIfExpired(): void
@@ -96,7 +96,7 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $vote);
     }
 
     public function testCreatorCanViewCompletelyPrivateTrip(): void
@@ -117,7 +117,7 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $vote);
     }
 
     public function testOnlyTripCreatorCanViewCompletelyPrivateTrip(): void
@@ -139,6 +139,6 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $vote);
     }
 }

@@ -5,12 +5,10 @@ namespace App\Tests\TranslationLoader;
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Language;
 use App\Entity\Word;
-use App\Logger\Logger;
 use App\Repository\WordRepository;
 use App\TranslationLoader\DatabaseLoader;
 use DateTime;
 use Doctrine\ORM\EntityManager;
-use PHPMD\Rule\CleanCode\StaticAccess;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -119,7 +117,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+            ->willReturn([$englishEn], [$englishDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -156,7 +155,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+            ->willReturn([$englishEn], [$englishDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -202,7 +202,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn, $germanEn], [$englishDe, $germanDe]));
+            ->willReturn([$englishEn, $germanEn], [$englishDe, $germanDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -220,7 +221,6 @@ class DatabaseLoaderTest extends TestCase
         $translation = $result->get('german');
         $this->assertSame('German', $translation);
     }
-
 
     public function testCheckTranslationAllowed(): void
     {
@@ -243,7 +243,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+            ->willReturn([$englishEn], [$englishDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -280,7 +281,8 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->will($this->onConsecutiveCalls([$englishEn], [$englishDe]));
+            ->willReturn([$englishEn], [$englishDe])
+        ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub

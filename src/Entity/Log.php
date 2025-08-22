@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -8,14 +9,13 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Logs.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'logs')]
 #[ORM\Entity]
@@ -23,10 +23,10 @@ use Doctrine\ORM\Mapping as ORM;
 class Log
 {
     /**
-     * @var \App\Entity\Member
+     * @var Member
      */
     #[ORM\JoinColumn(name: 'idMember', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Member::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private $member;
 
     /**
@@ -42,7 +42,7 @@ class Log
     private $type;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -130,7 +130,7 @@ class Log
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Log
      */
@@ -167,6 +167,6 @@ class Log
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,9 +17,6 @@ class Select2Type extends AbstractType
         parent::buildForm($builder, $options);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -36,9 +34,6 @@ class Select2Type extends AbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         parent::buildView($view, $form, $options);
@@ -62,6 +57,7 @@ class Select2Type extends AbstractType
         $view->vars['attr'] = $attr;
     }
 
+    #[Override]
     public function getParent(): string
     {
         return ChoiceType::class;

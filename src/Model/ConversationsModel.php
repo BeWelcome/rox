@@ -11,14 +11,10 @@ use Pagerfanta\Pagerfanta;
 
 class ConversationsModel
 {
-    private EntityManagerInterface $entityManager;
-    private ConversationModel $conversationModel;
-    private ConversationThread $conversationThread;
+    private readonly ConversationThread $conversationThread;
 
-    public function __construct(ConversationModel $conversationModel, EntityManagerInterface $entityManager)
+    public function __construct(private readonly ConversationModel $conversationModel, private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
-        $this->conversationModel = $conversationModel;
         $this->conversationThread = new ConversationThread($this->entityManager);
     }
 
@@ -78,7 +74,7 @@ class ConversationsModel
         string $sort,
         string $sortDir,
         int $page = 1,
-        int $limit = 10
+        int $limit = 10,
     ): Pagerfanta {
         /** @var MessageRepository $repository */
         $repository = $this->entityManager->getRepository(Message::class);

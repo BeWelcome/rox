@@ -44,11 +44,11 @@ $map_conf = PVars::getObj('map');
                                 'label_setlocation'
                             ) ?></label><?php echo $words->flushBuffer(); ?>
                         <input type="hidden" name="location-geoname-id" id="location-geoname-id"
-                               value="<?= isset($vars['location-geoname-id']) ? $vars['location-geoname-id'] : '' ?>"/>
+                               value="<?= $vars['location-geoname-id'] ?? '' ?>"/>
                         <input type="hidden" name="location-latitude" id="location-latitude"
-                               value="<?= isset($vars['location-latitude']) ? $vars['location-latitude'] : '' ?>"/>
+                               value="<?= $vars['location-latitude'] ?? '' ?>"/>
                         <input type="hidden" name="location-longitude" id="location-longitude"
-                               value="<?= isset($vars['location-longitude']) ? $vars['location-longitude'] : '' ?>"/>
+                               value="<?= $vars['location-longitude'] ?? '' ?>"/>
                         <input type="text" name="location"
                                id="location" class="o-input location-picker"
                                placeholder="<?= $words->get(

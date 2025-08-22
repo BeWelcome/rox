@@ -126,7 +126,7 @@ class PaypalIPN
             'Connection: Close',
         ]);
         $res = curl_exec($ch);
-        if (!($res)) {
+        if (!$res) {
             $errno = curl_errno($ch);
             $errstr = curl_error($ch);
             curl_close($ch);

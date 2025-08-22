@@ -5,16 +5,15 @@ namespace App\Security;
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
 use App\Entity\Trip;
-use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class TripVoter extends Voter
 {
-    public const TRIP_VIEW = 'TRIP_VIEW';
-    public const TRIP_EDIT = 'TRIP_EDIT';
-    public const TRIP_COPY = 'TRIP_COPY';
-    public const TRIP_REMOVE = 'TRIP_REMOVE';
+    public const string TRIP_VIEW = 'TRIP_VIEW';
+    public const string TRIP_EDIT = 'TRIP_EDIT';
+    public const string TRIP_COPY = 'TRIP_COPY';
+    public const string TRIP_REMOVE = 'TRIP_REMOVE';
 
     protected function supports(string $attribute, $subject): bool
     {
@@ -29,6 +28,11 @@ class TripVoter extends Voter
         return true;
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     *
+     * \todo extract different votes into functions of their own
+     */
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
     {
         /** @var Member $member */
@@ -55,7 +59,7 @@ class TripVoter extends Voter
             // A trip that does not only consist of private legs can be viewed by everyone
             $view = false;
             foreach ($trip->getSubtrips() as $leg) {
-                $view = $view || !in_array(SubtripOptionsType::PRIVATE, $leg->getOptions());
+                $view = $view || !\in_array(SubtripOptionsType::PRIVATE, $leg->getOptions(), true);
             }
             // excepts if it is expired
             $view = $view && !$trip->isExpired();
@@ -64,7 +68,7 @@ class TripVoter extends Voter
         }
 
         if (self::TRIP_REMOVE === $attribute || self::TRIP_COPY === $attribute) {
-            return ($member === $trip->getCreator());
+            return $member === $trip->getCreator();
         }
 
         return $this->canEdit($trip, $member);
@@ -72,6 +76,6 @@ class TripVoter extends Voter
 
     private function canEdit(Trip $trip, Member $member): bool
     {
-        return ($member === $trip->getCreator() && !$trip->isExpired());
+        return $member === $trip->getCreator() && !$trip->isExpired();
     }
 }

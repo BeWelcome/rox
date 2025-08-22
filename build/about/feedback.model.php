@@ -33,7 +33,7 @@ FROM feedbackcategories
 WHERE visible = 1
 ORDER BY sortOrder
             ",
-            array('IdCategory', false)
+            ['IdCategory', false]
         );
         return $categories;
     }
@@ -81,7 +81,7 @@ SQL
             $username = "unknown user";
         }
         $feedback = $this->createEntity('Feedback');
-        if (!$feedback->createNew($category, $vars["FeedbackQuestion"], $member ? $member : null, 'open'))
+        if (!$feedback->createNew($category, $vars["FeedbackQuestion"], $member ?: null, 'open'))
         {
             return false;
         }
@@ -96,7 +96,7 @@ SQL
         if (isset($vars["data"]) && !empty($vars["data"])) {
             $data = unserialize($vars["data"]);
         } else {
-            $data = array();
+            $data = [];
         }
 
         // Feedback must not be slashes striped in case of \r\n so we can't use GetParam
@@ -187,7 +187,7 @@ SQL
         {
             $sendResult = $mailer->send($message);
         }
-        catch (Exception $e)
+        catch (Exception)
         {
             $this->logWrite("Exception when executing Swift_Mailer::send()", "feedback");
             $sendResult = false;

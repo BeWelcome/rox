@@ -1,6 +1,6 @@
 
     <?php
-        $vars = array();
+        $vars = [];
         $words = $this->words;
         $layoutbits = new MOD_layoutbits();
 
@@ -47,7 +47,7 @@
 
         <div class="col-12">
             <?php $m = $this->model->getMemberWithId($note->IdContact);
-            $purifier = MOD_htmlpure::getAdvancedHtmlPurifier();?>
+            $purifier = (new MOD_htmlpure())->getAdvancedHtmlPurifier();?>
             <input name="IdMember" value="<?=$member->id?>" type="hidden" />
 
             <table class="table table-responsive table-striped table-hover w-100">

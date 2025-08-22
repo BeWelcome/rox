@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Roles.
  *
- *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */

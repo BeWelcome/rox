@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -18,11 +19,9 @@ use Doctrine\Persistence\ObjectManager;
 use Exception;
 
 /**
- * ForumsPost.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'forums_posts')]
 #[ORM\Index(name: 'last_editorid', columns: ['last_editorid'])]
@@ -32,7 +31,7 @@ use Exception;
 #[ORM\Index(name: 'PostDeleted', columns: ['PostDeleted'])]
 #[ORM\Index(name: 'create_time', columns: ['create_time'])]
 #[ORM\Entity(repositoryClass: \App\Repository\ForumPostRepository::class)]
-#[Orm\HasLifecycleCallbacks()]
+#[ORM\HasLifecycleCallbacks()]
 class ForumPost
 {
     /** \todo fix this smell */
@@ -51,7 +50,7 @@ class ForumPost
      */
     #[ORM\JoinColumn(name: 'threadid', referencedColumnName: 'id', nullable: true)]
     #[ORM\ManyToOne(targetEntity: ForumThread::class, inversedBy: 'posts')]
-    private $thread = null;
+    private $thread;
 
     /**
      * @var string
@@ -115,7 +114,7 @@ class ForumPost
      */
     #[ORM\JoinColumn(name: 'IdFirstLanguageUsed', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Language::class)]
-    private $language = null;
+    private $language;
 
     /**
      * @var string
@@ -509,10 +508,8 @@ class ForumPost
 
     /**
      * Set thread.
-     *
-     * @return ForumPost
      */
-    public function setThread(ForumThread $thread = null): self
+    public function setThread(?ForumThread $thread = null): self
     {
         $this->thread = $thread;
 
@@ -530,9 +527,7 @@ class ForumPost
         $thread = $this->thread;
         try {
             $threadTitle = $this->thread->getTitle();
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception) {
             $thread = null;
         }
 
@@ -542,11 +537,9 @@ class ForumPost
     /**
      * Set author.
      *
-     * @param Member $author
-     *
      * @return ForumPost
      */
-    public function setAuthor(Member $author = null)
+    public function setAuthor(?Member $author = null)
     {
         $this->author = $author;
 

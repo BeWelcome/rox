@@ -3,35 +3,32 @@
 
 class SignupPage extends SignupBasePage
 {
-    /** @var int Stores the current signup step */
-    private $_step;
-
     /** @var MembersModel */
     private $model;
 
     /**
      * SignupPage constructor.
      *
-     * @param int $step
+     * @param int $_step
      */
-    public function __construct($step = 0)
+    public function __construct(private $_step = 0)
     {
         parent::__construct();
         $this->model = new MembersModel();
-        $this->_step = $step;
-        if ($step == 1) {
+        if ($this->_step == 1) {
             $this->addLateLoadScriptFile('build/rangeslider.js');
         }
-        if ($step == 2) {
+        if ($this->_step == 2) {
             $this->addLateLoadScriptFile('build/signup/signup.js');
         }
-        if ($step == 3) {
+        if ($this->_step == 3) {
             $this->addLateLoadScriptFile('build/leaflet.js');
 //            $this->addLateLoadScriptFile('script/signup/createmap.js');
             $this->addLateLoadScriptFile('build/profile/setlocation.js');
         }
     }
 
+    #[\Override]
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
@@ -48,19 +45,19 @@ class SignupPage extends SignupBasePage
         if ($a == $b) {
             return 0;
         }
-        return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
+        return (strtolower((string) $a->TranslatedName) < strToLower((string) $b->TranslatedName)) ? -1 : 1;
     }
 
     private function _sortLanguages($languages)
     {
         $words = new MOD_words;
-        $langarr = array();
+        $langarr = [];
         foreach($languages as $language) {
             $lang = $language;
             $lang->TranslatedName = $words->getSilent($language->WordCode);
             $langarr[] = $lang;
         }
-        usort($langarr, array($this, "_cmpEditLang"));
+        usort($langarr, [$this, "_cmpEditLang"]);
         return $langarr;
     }
 
@@ -121,7 +118,7 @@ class SignupPage extends SignupBasePage
         // get current request
         $request = PRequest::get()->request;
         if (!isset($vars['errors']) || !is_array($vars['errors'])) {
-            $vars['errors'] = array();
+            $vars['errors'] = [];
         }
 
         $words = $this->layoutkit->words;

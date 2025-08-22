@@ -5,20 +5,16 @@ namespace App\Pagerfanta;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class ArchivedTranslationAdapter implements AdapterInterface
 {
-    private Connection $connection;
-
     /**
      * SearchAdapter constructor.
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function __construct(Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**

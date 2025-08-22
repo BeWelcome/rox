@@ -7,14 +7,11 @@ use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 class LoginMessageRepository extends EntityRepository
 {
     /**
      * Gets open login messages for member.
-     *
-     * @return mixed
      */
     public function getLoginMessages(Member $member): mixed
     {
@@ -32,6 +29,7 @@ class LoginMessageRepository extends EntityRepository
             ->setParameter('member', $member->getId())
             ->getQuery()
         ;
+
         return $query->getResult();
     }
 }

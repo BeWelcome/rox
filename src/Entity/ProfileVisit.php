@@ -7,11 +7,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Profilesvisits.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'profilesvisits')]
 #[ORM\Entity(repositoryClass: \App\Repository\ProfileVisitRepository::class)]
@@ -30,26 +28,16 @@ class ProfileVisit
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
-    /**
-     * @var Member
-     */
-    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
-    #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \Member::class)]
-    private $member;
-
-    /**
-     * @var Member
-     */
-    #[ORM\JoinColumn(name: 'IdVisitor', referencedColumnName: 'id')]
-    #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: \Member::class)]
-    private $visitor;
-
-    public function __construct(Member $member, Member $visitor)
-    {
-        $this->member = $member;
-        $this->visitor = $visitor;
+    public function __construct(
+        #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+        #[ORM\Id]
+        #[ORM\ManyToOne(targetEntity: \Member::class)]
+        private Member $member,
+        #[ORM\JoinColumn(name: 'IdVisitor', referencedColumnName: 'id')]
+        #[ORM\Id]
+        #[ORM\ManyToOne(targetEntity: \Member::class)]
+        private Member $visitor,
+    ) {
     }
 
     /**

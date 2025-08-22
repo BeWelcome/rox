@@ -8,6 +8,7 @@ use App\Entity\NewLocation;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
+use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\EntityManagerInterface;
 use EnvironmentExplorer;
 use Exception;
@@ -25,6 +26,14 @@ class SearchAdapter implements AdapterInterface
     /** @var SearchModel */
     private $model;
 
+    /**
+     * Length of parameter list due to legacy code.
+     *
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
+     *
+     * Singletons needed for legay code
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     public function __construct(
         SearchFormRequest $data,
         SessionInterface $session,
@@ -35,7 +44,7 @@ class SearchAdapter implements AdapterInterface
         string $dbUser,
         string $dbPassword,
         string $manticoreHost,
-        int $manticorePort
+        int $manticorePort,
     ) {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
@@ -81,16 +90,16 @@ class SearchAdapter implements AdapterInterface
         try {
             $location = $repository->find($data->location_geoname_id);
         } catch (Exception $e) {
-            // nothing found?
-            $e->getCode();
+            throw new InvalidArgumentException($e->getMessage(), $e->getCode());
         }
+
         $adminUnits = [];
         $country = false;
         // Are we looking at an admin unit?
         if (null !== $location && 'A' === $location->getFeatureClass()) {
             $country = $location->getCountryId();
             // Is it a country?
-            if (false === strstr($location->getFeatureCode(), 'PCL')) {
+            if (!str_contains($location->getFeatureCode(), 'PCL')) {
                 // find lowest admin unit in location and use it for search
                 $adminUnits = $this->getRankedAdminUnitIds($location);
             }
@@ -171,9 +180,9 @@ class SearchAdapter implements AdapterInterface
 
         foreach (
             [
-            'offers_dinner' => TypicalOfferType::DINNER,
-            'offers_tour' => TypicalOfferType::GUIDED_TOUR,
-            'accessible' => TypicalOfferType::WHEELCHAIR_ACCESSIBLE,
+                'offers_dinner' => TypicalOfferType::DINNER,
+                'offers_tour' => TypicalOfferType::GUIDED_TOUR,
+                'accessible' => TypicalOfferType::WHEELCHAIR_ACCESSIBLE,
             ] as $param => $value
         ) {
             if ($data->$param) {
@@ -183,9 +192,9 @@ class SearchAdapter implements AdapterInterface
 
         foreach (
             [
-            'no_smoking' => 'NoSmoker',
-            'no_alcohol' => 'NoAlchool',
-            'no_drugs' => 'NoDrugs',
+                'no_smoking' => 'NoSmoker',
+                'no_alcohol' => 'NoAlchool',
+                'no_drugs' => 'NoDrugs',
             ] as $param => $value
         ) {
             if ($data->$param) {
@@ -221,18 +230,19 @@ class SearchAdapter implements AdapterInterface
     private function getRankedAdminUnitIds(NewLocation $location): array
     {
         $adminUnits = [];
-        if (null != $location->getAdmin1Id()) {
+        if (null !== $location->getAdmin1Id()) {
             $adminUnits[] = $location->getAdmin1Id();
         }
-        if (null != $location->getAdmin2Id()) {
+        if (null !== $location->getAdmin2Id()) {
             $adminUnits[] = $location->getAdmin2Id();
         }
-        if (null != $location->getAdmin3Id()) {
+        if (null !== $location->getAdmin3Id()) {
             $adminUnits[] = $location->getAdmin3Id();
         }
-        if (null != $location->getAdmin4Id()) {
+        if (null !== $location->getAdmin4Id()) {
             $adminUnits[] = $location->getAdmin4Id();
         }
+
         return $adminUnits;
     }
 }

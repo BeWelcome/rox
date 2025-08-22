@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -15,11 +16,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Comment.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'comments')]
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
@@ -27,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Comment
 {
     #[ORM\Column(name: 'Relations', type: 'comment_relations', nullable: false)]
-    private string $relations;
+    private string $relations = '';
 
     #[ORM\Column(name: 'Quality', type: 'comment_quality', nullable: false)]
     private string $quality = CommentQualityType::NEUTRAL;
@@ -186,7 +185,7 @@ class Comment
         return $this->id;
     }
 
-    public function setToMember(Member $toMember = null): self
+    public function setToMember(?Member $toMember = null): self
     {
         $this->toMember = $toMember;
 
@@ -198,7 +197,7 @@ class Comment
         return $this->toMember;
     }
 
-    public function setFromMember(Member $fromMember = null): self
+    public function setFromMember(?Member $fromMember = null): self
     {
         $this->fromMember = $fromMember;
 
@@ -218,7 +217,7 @@ class Comment
         }
 
         // show comment to Safety team
-        if (in_array(Member::ROLE_ADMIN_COMMENTS, $loggedInMember->getRoles())) {
+        if (\in_array(Member::ROLE_ADMIN_COMMENTS, $loggedInMember->getRoles(), true)) {
             return 2;
         }
 

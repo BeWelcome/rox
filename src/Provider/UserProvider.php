@@ -12,17 +12,14 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserProvider implements UserProviderInterface
 {
-    protected MemberRepository $memberRepository;
-
-    public function __construct(MemberRepository $memberRepository)
+    public function __construct(protected MemberRepository $memberRepository)
     {
-        $this->memberRepository = $memberRepository;
     }
 
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof Member) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
         return $this->loadUserByIdentifier($user->getUsername());
@@ -33,7 +30,7 @@ class UserProvider implements UserProviderInterface
         try {
             return $this->memberRepository->loadUserByUsername($identifier);
         } catch (NonUniqueResultException $e) {
-            throw new UserNotFoundException(sprintf('Username "%s" isn\'t unique.', $identifier), 0, $e);
+            throw new UserNotFoundException(\sprintf('Username "%s" isn\'t unique.', $identifier), 0, $e);
         }
     }
 

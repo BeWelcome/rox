@@ -9,26 +9,21 @@ use App\Entity\Member;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use PDO;
 
 abstract class AbstractConversationsAdapter
 {
-    protected Member $member;
     protected Connection $connection;
     protected EntityManager $entityManager;
-    protected bool $unreadOnly;
-    protected int $initiator;
 
     public function __construct(
         EntityManager $entityManager,
-        Member $member,
-        int $initiator,
-        bool $unreadOnly
+        protected Member $member,
+        protected int $initiator,
+        protected bool $unreadOnly,
     ) {
         $this->connection = $entityManager->getConnection();
-        $this->member = $member;
         $this->entityManager = $entityManager;
-        $this->unreadOnly = $unreadOnly;
-        $this->initiator = $initiator;
     }
 
     /**
@@ -42,10 +37,10 @@ abstract class AbstractConversationsAdapter
             $result = $this->connection->executeQuery(
                 $countQuery,
                 ['memberId' => $this->member->getId()],
-                [\PDO::PARAM_INT]
+                [PDO::PARAM_INT]
             );
             $count = $result->fetchOne();
-        } catch (DBALException $e) {
+        } catch (DBALException) {
             // Return 0
         }
 

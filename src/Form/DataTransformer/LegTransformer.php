@@ -9,11 +9,8 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 
 class LegTransformer implements DataTransformerInterface
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function transform($value): ?string
@@ -40,7 +37,7 @@ class LegTransformer implements DataTransformerInterface
             // causes a validation error
             // this message is not shown to the user
             // see the invalid_message option
-            $message = sprintf(
+            $message = \sprintf(
                 'A leg with id "%d" does not exist!',
                 $value
             );

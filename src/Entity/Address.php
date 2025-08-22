@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -13,11 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Addresses.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'addresses')]
 #[ORM\Index(name: 'address_member', columns: ['IdMember'])]
@@ -130,7 +129,6 @@ class Address
     {
         return $this->location;
     }
-
 
     public function getLatitude(): float
     {

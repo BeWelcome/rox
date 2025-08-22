@@ -9,7 +9,15 @@ namespace App\Doctrine;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
+use Override;
 
+/**
+ * @SuppressWarnings("PHPMD.NumberOfChildren")
+ *
+ * EnumType is used everywhere MYSQL enums are used. That are a lot in the original database, so the number of childs is
+ * rather high, but not really a problem as the implementation is in the base class.
+ * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+ */
 abstract class EnumType extends Type
 {
     protected string $name;
@@ -18,7 +26,7 @@ abstract class EnumType extends Type
 
     protected string $translationPrefix = '';
 
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         $values = array_map(function ($val) {
             return "'" . $val . "'";
@@ -27,11 +35,13 @@ abstract class EnumType extends Type
         return 'ENUM(' . implode(', ', $values) . ')';
     }
 
+    #[Override]
     public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return $value;
     }
 
+    #[Override]
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (!\in_array($value, $this->values, true)) {

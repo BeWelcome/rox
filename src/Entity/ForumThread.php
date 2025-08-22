@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -17,11 +18,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 
 /**
- * ForumThread.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'forums_threads')]
 #[ORM\Index(name: 'first_postid', columns: ['first_postid'])]
@@ -45,7 +44,7 @@ class ForumThread
      * @var DateTime
      */
     #[ORM\Column(name: 'expiredate', type: 'datetime', nullable: true)]
-    private $expiryDate = null;
+    private $expiryDate;
 
     /**
      * @var int
@@ -98,7 +97,7 @@ class ForumThread
      */
     #[ORM\JoinColumn(name: 'IdFirstLanguageUsed', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: \Language::class)]
-    private $language = null;
+    private $language;
 
     /**
      * @var Group
@@ -703,9 +702,7 @@ class ForumThread
         $group = $this->group;
         try {
             $groupName = $this->group->getName();
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception) {
             $group = null;
         }
 

@@ -26,26 +26,25 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.NPathComplexity")
+ *
+ * \todo Fix complexity
+ */
 class CommentController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
-    private ProfileSubmenu $profileSubmenu;
-    private ChangeProfilePictureGlobals $globals;
-
-    public function __construct(ProfileSubmenu $profileSubmenu, ChangeProfilePictureGlobals $globals)
+    public function __construct(private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
     {
-        $this->profileSubmenu = $profileSubmenu;
-        $this->globals = $globals;
     }
 
     /**
-     *
      * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
      * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
      */
@@ -59,7 +58,7 @@ class CommentController extends AbstractController
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
         EntityManagerInterface $entityManager,
-        Mailer $mailer
+        Mailer $mailer,
     ): Response {
         /** @var Member $member */
         $member = $this->getUser();
@@ -85,7 +84,7 @@ class CommentController extends AbstractController
                 str_replace(
                     "\xc2\xa0",
                     ' ',
-                    strip_tags(html_entity_decode($data->feedback, \ENT_HTML5, 'UTF-8'))
+                    strip_tags(html_entity_decode((string) $data->feedback, \ENT_HTML5, 'UTF-8'))
                 )
             );
             if (empty($feedback)) {
@@ -127,7 +126,7 @@ class CommentController extends AbstractController
         Member $member,
         CommentModel $commentModel,
         Mailer $mailer,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -220,7 +219,7 @@ class CommentController extends AbstractController
         Member $member,
         CommentModel $commentModel,
         Mailer $mailer,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -263,12 +262,12 @@ class CommentController extends AbstractController
             $checkForExperience = $commentModel->checkIfNewExperience($originalComment, $comment);
             $newExperience = $form['new_experience']->getData();
             $changedToNegative =
-                (CommentQualityType::NEGATIVE != $originalComment->getQuality()) &&
-                (CommentQualityType::NEGATIVE == $comment->getQuality())
+                (CommentQualityType::NEGATIVE !== $originalComment->getQuality())
+                && (CommentQualityType::NEGATIVE === $comment->getQuality())
             ;
             $changedToPositive =
-                (CommentQualityType::POSITIVE != $originalComment->getQuality()) &&
-                (CommentQualityType::POSITIVE == $comment->getQuality())
+                (CommentQualityType::POSITIVE !== $originalComment->getQuality())
+                && (CommentQualityType::POSITIVE === $comment->getQuality())
             ;
             if ($newExperience || $changedToNegative || $changedToPositive) {
                 $comment->setUpdated(new DateTime());
@@ -301,7 +300,6 @@ class CommentController extends AbstractController
     }
 
     /**
-     *
      * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
      * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
      */
@@ -310,7 +308,7 @@ class CommentController extends AbstractController
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         CommentModel $commentModel,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): RedirectResponse {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -336,7 +334,7 @@ class CommentController extends AbstractController
     public function showCommentsForMember(
         Member $member,
         ProfileModel $profileModel,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();

@@ -7,7 +7,9 @@ use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PostNotification.
+ * Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'posts_notificationqueue')]
 #[ORM\Index(name: 'posts_notificationqueue_status', columns: ['Status'])]

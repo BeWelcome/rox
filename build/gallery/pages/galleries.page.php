@@ -11,11 +11,13 @@
 class GalleryGalleriesPage extends GalleryBasePage
 {
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'overview';
     }
 
+    #[\Override]
     protected function teaserHeadline()
     {
         return '';

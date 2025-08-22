@@ -21,7 +21,7 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
 
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        /** @var Member $user */
+        /* @var Member $user */
         // set the new hashed password on the User object
         $user->setPassword($newHashedPassword);
 

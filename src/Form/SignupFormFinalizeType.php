@@ -17,15 +17,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SignupFormFinalizeType extends AbstractType
 {
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     /**
-     * {@inheritdoc}
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     *
+     * \todo Build up form from smaller functions.
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Parameter $options not used but signature is given by symfony.
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -79,7 +81,7 @@ class SignupFormFinalizeType extends AbstractType
             ])
             ->add('location', SetLocationType::class, [
                 'attr' => [
-                    'class' =>  'js-location-picker',
+                    'class' => 'js-location-picker',
                 ],
                 'label' => 'profile.set.location',
                 'error_bubbling' => true,
@@ -112,11 +114,11 @@ class SignupFormFinalizeType extends AbstractType
             ])
             ->add('newsletters', CheckboxType::class, [
                 'label' => 'signup.label.newsletters',
-                'required' => false
+                'required' => false,
             ])
             ->add('local_events', CheckboxType::class, [
                 'label' => 'signup.label.local_events',
-                'required' => false
+                'required' => false,
             ])
 /*            ->add('trips_notifications', ChoiceType::class, [
                 'label' => 'label.trips_notifications',

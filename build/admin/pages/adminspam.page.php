@@ -33,6 +33,7 @@ Boston, MA  02111-1307, USA.
 class AdminSpamPage extends AdminBasePage
 {
 
+    #[\Override]
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin'>{$this->words->get('AdminSpam')}</a>";

@@ -18,19 +18,15 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use TypeError;
 
 class SearchController extends AbstractController
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -69,17 +65,18 @@ class SearchController extends AbstractController
     }
 
     /**
-     *
-     * @return Response
-     *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * @SuppressWarnings("PHPMD.StaticAccess")
+     *
+     * \todo Find a better way to handle the different location search fields
      */
     #[Route(path: '/search/locations', name: 'search_locations')]
     public function searchLocations(
         Request $request,
         TranslatorInterface $translator,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
     ): Response {
         $pager = null;
         $results = null;
@@ -102,10 +99,13 @@ class SearchController extends AbstractController
         $memberSearchOptionsPreference = $member->getMemberPreference($searchOptionsPreference);
         $searchOptions = $memberSearchOptionsPreference->getValue();
 
-        if ("" !== $searchOptions) {
-            $searchFormRequest = unserialize($searchOptions);
-        } else {
-            $searchFormRequest = new SearchFormRequest();
+        $searchFormRequest = new SearchFormRequest();
+        if ('' !== $searchOptions) {
+            try {
+                $searchFormRequest = unserialize($searchOptions);
+            } catch (TypeError) {
+                // In case the format is corrupted just reset form. Next successful search will write the correct format
+            }
         }
         $searchFormRequest->overrideFromRequest($request);
         $searchFormRequest->show_map = ('Yes' === $showMap);
@@ -208,8 +208,8 @@ class SearchController extends AbstractController
      * This method is used on the home screen to allow people interested in BeWelcome to check how many members are
      * available in a location.
      *
-     *
      * @return Response|RedirectResponse
+     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     #[Route(path: '/search/map', name: 'search_map')]
@@ -266,10 +266,13 @@ class SearchController extends AbstractController
         ]);
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     #[Route(path: '/search/locations/ajax', name: 'search_members_ajax')]
     public function searchGetPageResultsAjax(
         Request $request,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
     ): Response {
         if ('POST' !== $request->getMethod()) {
             // JavaScript doesn't work on client

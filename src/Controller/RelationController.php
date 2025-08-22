@@ -4,11 +4,8 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
-use App\Entity\ProfileNote;
 use App\Entity\Relation;
-use App\Form\ProfileNoteType;
 use App\Form\RelationType;
-use App\Repository\ProfileNoteRepository;
 use App\Repository\RelationRepository;
 use App\Service\Mailer;
 use App\Utilities\ChangeProfilePictureGlobals;
@@ -21,27 +18,16 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Routing\Attribute\Route;
 
 class RelationController extends AbstractController
 {
-    use TranslatorTrait;
     use ItemsPerPageTraits;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
-    private EntityManagerInterface $entityManager;
-    private ChangeProfilePictureGlobals $globals;
-    private ProfileSubmenu $profileSubmenu;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        ProfileSubmenu $profileSubmenu,
-        ChangeProfilePictureGlobals $globals
-    ) {
-        $this->entityManager = $entityManager;
-        $this->globals = $globals;
-        $this->profileSubmenu = $profileSubmenu;
+    public function __construct(private EntityManagerInterface $entityManager, private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
+    {
     }
 
     #[Route(path: '/members/{username}/relation/add', name: 'add_relation')]
@@ -70,8 +56,7 @@ class RelationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Relation $relation */
             $relation = $form->getData();
-            if (!checkForEmailAddress($relation) && !checkForPhoneNumber($relation))
-            {
+            if (!$this->checkForEmailAddress($relation) && !$this->checkForPhoneNumber($relation)) {
                 $relation->setOwner($loggedInMember);
                 $relation->setReceiver($member);
 
@@ -238,7 +223,7 @@ class RelationController extends AbstractController
     private function checkForPhoneNumber(Relation $relation): bool
     {
         $relationText = $relation->getCommentText();
-        $found = preg_match("/([0-9][\. \)-]*){8,}/", $relationText);
+        $found = preg_match("/([0-9][\. \)-]*){9,}/", $relationText);
 
         return $found > 0;
     }

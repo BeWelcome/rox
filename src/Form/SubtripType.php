@@ -19,11 +19,8 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class SubtripType extends AbstractType
 {
-    private DateTransformer $transformer;
-
-    public function __construct(DateTransformer $transformer)
+    public function __construct(private readonly DateTransformer $transformer)
     {
-        $this->transformer = $transformer;
     }
 
     /**
@@ -64,9 +61,9 @@ class SubtripType extends AbstractType
                 }
             }
             $form->add('location', SearchLocationType::class, [
-                    'expired' => $expired,
-                    'label' => 'location',
-                ])
+                'expired' => $expired,
+                'label' => 'location',
+            ])
                 ->add('duration', TextType::class, [
                     'required' => false,
                     'mapped' => false,

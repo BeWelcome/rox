@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Entity\Member as Member;
-use App\Entity\Newsletter as Newsletter;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Broadcastmessages.
+ * Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'broadcastmessages')]
 #[ORM\Entity]

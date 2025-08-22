@@ -10,29 +10,18 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Mailer\MailerInterface;
 
 class ProfileModel
 {
-    private FormFactoryInterface $formFactory;
-    private EntityManagerInterface $entityManager;
-    private Mailer $mailer;
-
-    public function __construct(
-        FormFactoryInterface $formFactory,
-        EntityManagerInterface $entityManager,
-        Mailer $mailer,
-    ) {
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
-        $this->mailer = $mailer;
+    public function __construct(private readonly FormFactoryInterface $formFactory, private readonly EntityManagerInterface $entityManager, private readonly Mailer $mailer)
+    {
     }
 
     public function getStatusForm(Member $loggedInMember, Member $member): ?FormInterface
     {
         $statusForm = null;
 
-        if (in_array(Member::ROLE_ADMIN_SAFETYTEAM, $loggedInMember->getRoles())) {
+        if (\in_array(Member::ROLE_ADMIN_SAFETYTEAM, $loggedInMember->getRoles(), true)) {
             $statusFormBuilder = $this->formFactory->createBuilder(ProfileStatusFormType::class, [
                 'status' => $member->getStatus(),
                 'member' => $member->getId(),

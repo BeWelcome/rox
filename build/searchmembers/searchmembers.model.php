@@ -28,21 +28,21 @@ Boston, MA  02111-1307, USA.
  */
 class Searchmembers extends RoxModelBase
 {
-    private $column_sort_order = array(
+    private $column_sort_order = [
             'members.created' => 'FindPeopleNewMembers',
             'BirthDate'       => 'Age',
             'LastLogin'       => 'Lastlogin',
             'Comments'        => 'Comments',
             'Accomodation'    => 'Accomodation',
-        );
+        ];
 
-    private $default_sort_direction = array(
+    private $default_sort_direction = [
             'members.created' => 'DESC',
             'BirthDate'       => 'DESC',
             'LastLogin'       => 'DESC',
             'Comments'        => 'DESC',
             'Accomodation'    => 'ASC',
-        );
+        ];
 
     private $default_column = 'Accomodation';
 
@@ -106,7 +106,7 @@ WHERE   ShortCode IN ($l)
 SQL;
         $result = $this->dao->query($query);
 
-        $langNames = array();
+        $langNames = [];
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             $langNames[$row->ShortCode] = $row->EnglishName;
         }
@@ -115,9 +115,9 @@ SQL;
 
     private function ellipsis($str, $len)
     {
-        $length = strlen($str);
+        $length = strlen((string) $str);
         if($length <= $len) return $str;
-        return mb_substr($str, 0, $len, 'utf-8').'...';
+        return mb_substr((string) $str, 0, $len, 'utf-8').'...';
     }
 
     /**
@@ -139,7 +139,7 @@ SQL;
         $vars['start_rec'] = $start_rec;
 
         // determine sort order
-        list($order_by, $direction) = $this->getOrderDirection($this->GetParam($vars, 'OrderBy', 'Accomodation'), $this->GetParam($vars, 'OrderByDirection',0) ? 1 : 0);
+        [$order_by, $direction] = $this->getOrderDirection($this->GetParam($vars, 'OrderBy', 'Accomodation'), $this->GetParam($vars, 'OrderByDirection',0) ? 1 : 0);
 
         $OrderBy = '';
         if ($order_by != 'Accomodation' && $direction != 'ASC') {
@@ -223,7 +223,7 @@ SQL;
     * @TODO: Optimise queries (jsfan)
     */
     private function doSearch(&$vars, $tablelist, $where, $orderBy, $start = 0, $limit = 100) {
-        $TMember=array();
+        $TMember=[];
 
         // This query only fetch indexes (because SQL_CALC_FOUND_ROWS can be a pain)
         $str = 'SELECT SQL_CALC_FOUND_ROWS DISTINCT
@@ -423,9 +423,9 @@ SQL;
                 && intval($accuracy) > 1
                 && !isset($WhereCity)) {
 
-            list($long, $lat, $alt) = explode(',', $coordinates);
+            [$long, $lat, $alt] = explode(',', (string) $coordinates);
 
-            foreach ($this->createEntity('Geo')->findLocationsByCoordinates(array('long' => $long, 'lat' => $lat)) as $geo)
+            foreach ($this->createEntity('Geo')->findLocationsByCoordinates(['long' => $long, 'lat' => $lat]) as $geo)
             {
                 if ($geo->isCity() || $geo->isBorough()) {
                     $cities[] = $geo->geonameId;
@@ -472,7 +472,7 @@ SQL;
     * @return  string  WHERE condition
     */
     private function generateAvailabilityLevelCond(&$vars) {
-        $where_accomodation = array();
+        $where_accomodation = [];
         if(array_key_exists('Accomodation', $vars)) {
             $Accommodation = $vars['Accomodation'];
             if(is_array($Accommodation))
@@ -501,7 +501,7 @@ SQL;
     * @return  string  WHERE condition
     */
     private function generateTypicalOfferCond(&$vars) {
-        $where_typicoffer = array();
+        $where_typicoffer = [];
         if(array_key_exists('TypicOffer', $vars)) {
             $TypicOffer = $vars['TypicOffer'];
             if(is_array($TypicOffer))
@@ -534,7 +534,7 @@ SQL;
     private function generateUsernameCond(&$vars) {
         if ($Username = $this->GetParam($vars, 'Username', '')) {
             // create LIKE condition from query parameter with wildcards
-            if (strpos($Username, "*") !== false) {
+            if (str_contains((string) $Username, "*")) {
                 $Username = str_replace("*","%",$Username);
                 return "Username LIKE '" . $this->dao->escape($Username) . "'";
             }
@@ -596,7 +596,7 @@ SQL;
     private function generateGenderCond(&$vars) {
         $gender = $this->GetParam($vars, 'Gender', '0');
 
-        if ( strlen($gender) > 1 && $gender != 'genderOther') {
+        if ( strlen((string) $gender) > 1 && $gender != 'genderOther') {
             return "Gender='" . $this->dao->escape($gender) . "' AND HideGender='No'";
         } elseif ($gender == 'genderOther') {
             return "Gender = 'other' AND HideGender='No'";
@@ -756,7 +756,7 @@ WHERE
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-               return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+               return (strip_tags((string) $this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
             }
         }
         // Try default eng
@@ -776,7 +776,7 @@ WHERE
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-               return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+               return (strip_tags((string) $this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
             }
         }
         // Try first language available
@@ -797,7 +797,7 @@ LIMIT 1
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-               return (strip_tags($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
+               return (strip_tags((string) $this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
             }
         }
         return ("");
@@ -811,9 +811,9 @@ LIMIT 1
     //------------------------------------------------------------------------------
     // fage_value return a  the age value corresponding to date
     private function fage_value($dd) {
-        $pieces = explode("-",$dd);
+        $pieces = explode("-",(string) $dd);
         if(count($pieces) != 3) return 0;
-        list($year,$month,$day) = $pieces;
+        [$year, $month, $day] = $pieces;
         $year_diff = date("Y") - $year;
         $month_diff = date("m") - $month;
         $day_diff = date("d") - $day;
@@ -861,7 +861,7 @@ WHERE
             $Photo = $this->DummyPict($rr->Gender,$rr->HideGender) ;
         }
 
-        $thumb = $this->getthumb($Photo, 100, 100);
+        $thumb = $this->getthumb(100, 100, $Photo);
         if ($thumb === null) $thumb = "";
 
         if($Status == 'map_style')
@@ -890,7 +890,7 @@ WHERE
     // $mode specifies if the new image is based on a cropped and resized version of the old, or just a resized
     // $mode = "square" means a cropped version
     // $mode = "ratio" means merely resized
-    private function getthumb($file = "", $max_x, $max_y, $quality = 85, $thumbdir = 'thumbs',$mode = 'square')
+    private function getthumb($max_x, $max_y, $file = "", $quality = 85, $thumbdir = 'thumbs',$mode = 'square')
     {
         // TODO: analyze MIME-TYPE of the input file (not try / catch)
         // TODO: error analysis of wrong paths
@@ -898,7 +898,7 @@ WHERE
 
         if($file == "") return null;
 
-        $filename = basename($file);
+        $filename = basename((string) $file);
         $filename_noext = substr($filename, 0, strrpos($filename, '.'));
         $filepath = getcwd()."/bw/memberphotos";
         if($_SERVER['HTTP_HOST'] == 'localhost')
@@ -987,10 +987,10 @@ WHERE
 
     private function bwlink( $target, $useTBroot = false )
     {
-        if (strlen($target) > 8)
+        if (strlen((string) $target) > 8)
         {
-            if (substr_compare($target,"https://",0,8)==0 ||
-                substr_compare($target,"http://",0,7)==0)
+            if (substr_compare((string) $target,"https://",0,8)==0 ||
+                substr_compare((string) $target,"http://",0,7)==0)
                 return $target;
         }
 
@@ -1022,10 +1022,7 @@ WHERE
     id = " . intval($cid)
         );
         $rr = $query->fetch(PDB::FETCH_OBJ);
-        if (isset ($rr->username)) {
-            return ($rr->username);
-        }
-        return ("");
+        return ($rr->username ?? "");
     } // end of fUsername
 
     // sql_get_set returns in an array the possible set values of the colum of table name
@@ -1039,7 +1036,7 @@ LIKE '$column'
         );
         $line = $query->fetch(PDB::FETCH_OBJ);
         $set = $line->Type;
-        $set = preg_replace("/.*\('(.*)'\).*/", "$1", $set);
+        $set = preg_replace("/.*\('(.*)'\).*/", "$1", (string) $set);
         return preg_split("/','/", $set); // Split into and array
     } // end of sql_get_set($table,$column)
 
@@ -1093,10 +1090,10 @@ LIKE '$column'
      */
     public function getOrderDirection($column, $bool = 0)
     {
-        $reverse = array('ASC' => 'DESC', 'DESC' => 'ASC');
+        $reverse = ['ASC' => 'DESC', 'DESC' => 'ASC'];
         $directions = $this->getDefaultSortDirection();
         $columns = $this->get_sort_order();
-        $direction = isset($directions[$column]) ? $directions[$column] : 'ASC';
+        $direction = $directions[$column] ?? 'ASC';
         $order = isset($columns[$column]) ? $this->dao->escape($column) : $this->default_column;
         // hack to sort by number of comments
         if ($order == 'Comments')
@@ -1104,6 +1101,6 @@ LIKE '$column'
             $order = "(SELECT COUNT(id) FROM comments WHERE members.id = comments.IdToMember)";
         }
         if ($bool) $direction = $reverse[$direction];
-        return array($order, $direction);
+        return [$order, $direction];
     }
 }

@@ -18,22 +18,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class NoteController extends AbstractController
 {
-    use TranslatorTrait;
-    use TranslatedFlashTrait;
     use ItemsPerPageTraits;
+    use TranslatedFlashTrait;
+    use TranslatorTrait;
 
-    private EntityManagerInterface $entityManager;
-    private ChangeProfilePictureGlobals $globals;
-
-    public function __construct(EntityManagerInterface $entityManager, ChangeProfilePictureGlobals $globals)
+    public function __construct(private EntityManagerInterface $entityManager, private ChangeProfilePictureGlobals $globals)
     {
-        $this->entityManager = $entityManager;
-        $this->globals = $globals;
     }
 
     #[Route(path: '/members/{username}/note/add', name: 'add_note')]
@@ -167,7 +162,7 @@ class NoteController extends AbstractController
             ProfileNoteFilterType::class,
             [
                 'choices' => $categories,
-                'order' => $order
+                'order' => $order,
             ],
             [
                 'categories' => $selectableCategories,

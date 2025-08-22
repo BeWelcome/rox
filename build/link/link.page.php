@@ -32,13 +32,14 @@ class LinkPage extends RoxPageView
      *
      * @return array items of the submenu
      */
+    #[\Override]
     protected function getSubmenuItems() {
-        return array(
-            array('showlink', 'link/showlink', 'ShowLinks'),
-            array('showfriends', 'link/showfriends', 'ShowFriends'),			
+        return [
+            ['showlink', 'link/showlink', 'ShowLinks'],
+            ['showfriends', 'link/showfriends', 'ShowFriends'],			
 
 
-        );
+        ];
     }
 	
 	
@@ -62,6 +63,7 @@ class LinkPage extends RoxPageView
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
      */
+    #[\Override]
     protected function getPageTitle() {
         return 'Link it!';
     }

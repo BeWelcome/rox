@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -7,11 +8,9 @@
 
 namespace App\Entity;
 
-use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
-use App\Doctrine\TypicalOfferType;
 use App\Repository\MemberRepository;
 use Carbon\Carbon;
 use DateTime;
@@ -26,11 +25,15 @@ use Scheb\TwoFactorBundle\Model\Google\TwoFactorInterface as GoogleTwoFactorInte
 use Scheb\TwoFactorBundle\Model\Totp\TotpConfiguration;
 use Scheb\TwoFactorBundle\Model\Totp\TotpConfigurationInterface;
 use Scheb\TwoFactorBundle\Model\Totp\TwoFactorInterface as TotpTwoFactorInterface;
+use Exception;
+use Serializable;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
+ * Do not check entities with PHPMD.
+ *
  * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'members')]
@@ -81,10 +84,10 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     protected int $id;
 
     #[ORM\Column(name: 'Status', type: 'member_status', nullable: false)]
-    private string $status = "";
+    private string $status = '';
 
     #[ORM\JoinColumn(name: 'IdCity', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
     private ?NewLocation $city = null;
 
     #[ORM\Column(name: 'Latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
@@ -102,7 +105,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     #[ORM\Column(name: 'SecondName', type: 'string', nullable: true)]
     private ?string $secondName = null;
 
-    #[ORM\Column(name: 'LastName', type: 'string', nullable: false)]
+    #[ORM\Column(name: 'LastName', type: 'string', nullable: true)]
     private string $lastName = '';
 
     #[ORM\Column(name: 'HideAttribute', type: 'integer', nullable: false)]
@@ -169,7 +172,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     private ?DateTime $birthdate = null;
 
     #[ORM\Column(name: 'AdressHidden', type: 'string', nullable: false)]
-    private string $adressHidden = 'Yes';
+    private string $addressHidden = 'Yes';
 
     #[ORM\Column(name: 'WebSite', type: 'text', length: 255, nullable: true)]
     private ?string $website = null;
@@ -246,13 +249,13 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     #[ORM\Column(name: 'hosting_interest', type: 'integer', nullable: true)]
     private ?int $hostingInterest = null;
 
-    #[ORM\OneToMany(targetEntity: \CryptedField::class, mappedBy: 'member', fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: CryptedField::class, mappedBy: 'member')]
     private Collection $fields;
 
-    #[ORM\OneToMany(targetEntity: \MemberTranslation::class, mappedBy: 'owner', indexBy: 'TableColumn', fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: MemberTranslation::class, mappedBy: 'owner')]
     private Collection $translatedFields;
 
-    #[ORM\OneToMany(targetEntity: \RightVolunteer::class, mappedBy: 'member', fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: RightVolunteer::class, mappedBy: 'member', fetch: 'EXTRA_LAZY')]
     private Collection $volunteerRights;
 
     #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'member', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -263,9 +266,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
 
     private array $memberFields;
 
-    private Collection $comments;
-
-    #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'receiver', fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'receiver')]
     private Collection $relations;
 
     #[ORM\OneToMany(targetEntity: MemberPreference::class, mappedBy: 'member')]
@@ -299,9 +300,24 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         $this->translatedFields = new ArrayCollection();
         $this->groupMemberships = new ArrayCollection();
         $this->languageLevels = new ArrayCollection();
-        $this->comments = new ArrayCollection();
         $this->relations = new ArrayCollection();
         $this->preferences = new ArrayCollection();
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'password' => $this->password,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->id = $data['id'];
+        $this->username = $data['username'];
+        $this->password = $data['password'];
     }
 
     public function setUsername(string $username): self
@@ -652,7 +668,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
 
     public function getShowGender(): bool
     {
-        return $this->hideGender === 'No';
+        return 'No' === $this->hideGender;
     }
 
     public function setShowAge(bool $show): self
@@ -664,7 +680,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
 
     public function getShowAge(): string
     {
-        return $this->hideAge === 'No';
+        return 'No' === $this->hideAge;
     }
 
     public function setBirthdate(DateTime $birthdate): self
@@ -679,16 +695,16 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         return Carbon::instance($this->birthdate);
     }
 
-    public function setAdressHidden(string $adressHidden): self
+    public function setAddressHidden(string $addressHidden): self
     {
-        $this->adressHidden = $adressHidden;
+        $this->addressHidden = $addressHidden;
 
         return $this;
     }
 
-    public function getAdressHidden(): string
+    public function getAddressHidden(): string
     {
-        return $this->adressHidden;
+        return $this->addressHidden;
     }
 
     public function setHobbies(int $hobbies): self
@@ -853,28 +869,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
 
     public function unserialize($serialized): void
     {
-        list(
-            $this->id,
-            $this->username,
-            $this->password,
-            ) = unserialize($serialized);
-    }
-
-
-    public function __serialize(): array
-    {
-        return [
-            'id' => $this->id,
-            'username' => $this->username,
-            'password' => $this->password,
-        ];
-    }
-
-    public function __unserialize(array $data): void
-    {
-        $this->id = $data['id'];
-        $this->username = $data['username'];
-        $this->password = $data['password'];
+        [$this->id, $this->username, $this->password] = unserialize($serialized);
     }
 
     public function getRoles(): array
@@ -888,7 +883,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         if (null !== $volunteerRights) {
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
                 if (0 !== $volunteerRight->getLevel()) {
-                    $roles[] = 'ROLE_ADMIN_' . strtoupper($volunteerRight->getRight()->getName());
+                    $roles[] = 'ROLE_ADMIN_' . strtoupper((string) $volunteerRight->getRight()->getName());
                 }
             }
 
@@ -939,16 +934,11 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
             function ($groupMembership) {
                 try {
                     return $groupMembership->getGroup();
-                } catch (\Exception $e) {
+                } catch (Exception) {
                 }
             },
             $this->groupMemberships->matching($criteria)->toArray()
         );
-    }
-
-    public function getComments(): Collection
-    {
-        return $this->comments;
     }
 
     public function addField(CryptedField $field): self
@@ -1033,7 +1023,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         $field = $this->fields->matching($criteria)->first();
         if (false !== $field && true === $decrypt) {
             $value = $field->getMemberCryptedValue();
-            $stripped = strip_tags($value);
+            $stripped = strip_tags((string) $value);
         }
 
         return $stripped;
@@ -1071,8 +1061,8 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         /** @var RightVolunteer $volunteerRight */
         foreach ($volunteerRights->getIterator() as $volunteerRight) {
             if ($volunteerRight->getRight()->getName() === $nameOfRight) {
-               $hasRight = true;
-               break;
+                $hasRight = true;
+                break;
             }
         }
 
@@ -1087,7 +1077,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         /* \todo find way to define rights name */
         /** @var RightVolunteer $volunteerRight */
         foreach ($volunteerRights->getIterator() as $volunteerRight) {
-            if ($volunteerRight->getRight()->getName() === 'Words') {
+            if ('Words' === $volunteerRight->getRight()->getName()) {
                 $strScope = str_replace('"', '', str_replace(',', ';', $volunteerRight->getScope()));
                 $scope = explode(';', $strScope);
                 if (\in_array($locale, $scope, true)) {
@@ -1110,7 +1100,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
 
         /** @var RightVolunteer $volunteerRight */
         foreach ($volunteerRights->getIterator() as $volunteerRight) {
-            if (strtolower($volunteerRight->getRight()->getName()) === $nameOfRight) {
+            if (strtolower((string) $volunteerRight->getRight()->getName()) === $nameOfRight) {
                 $level = $volunteerRight->getLevel();
             }
         }
@@ -1178,7 +1168,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
 
     public function isDeniedAccess(): bool
     {
-        return !in_array(
+        return !\in_array(
             $this->status,
             [
                 MemberStatusType::ACTIVE,
@@ -1219,14 +1209,15 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
     {
         return array_filter(
             $this->languageLevels->toArray(),
-            function (/** @var MembersLanguagesLevel */ $k) {
+            function (/* @var MembersLanguagesLevel */ $k) {
                 try {
                     // Make sure language exists in database
                     $language = $k->getLanguage();
                     $language->getName();
-                } catch(Exception $e) {
+                } catch (Exception) {
                     return false;
                 }
+
                 return true;
             }
         );
@@ -1409,7 +1400,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
         $memberFields = [];
         foreach ($memberTranslations as $memberTranslation) {
             $tableColumn = $memberTranslation->getTableColumn();
-            if ('members.' !== substr($tableColumn, 0, 8)) {
+            if (!str_starts_with($tableColumn, 'members.')) {
                 continue;
             }
             $tableColumn = str_ireplace('members.', '', $tableColumn);
@@ -1509,7 +1500,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
             $name .= $this->firstName . ' ';
         }
         if (!($this->hideAttribute & self::MEMBER_SECONDNAME_HIDDEN)) {
-            $name .= $this->secondName. ' ';
+            $name .= $this->secondName . ' ';
         }
         if (!($this->hideAttribute & self::MEMBER_LASTNAME_HIDDEN)) {
             $name .= $this->lastName;
@@ -1520,7 +1511,7 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
 
     public function getPasswordHasherName(): ?string
     {
-        if (preg_match('/^\*[0-9A-F]{40}$/', $this->getPassWord())) {
+        if (preg_match('/^\*[0-9A-F]{40}$/', (string) $this->getPassWord())) {
             // Use migrating password hasher in case of legacy password
             return null;
         }
@@ -1562,7 +1553,28 @@ class Member implements \Serializable, UserInterface, PasswordHasherAwareInterfa
 
     public function getTranslatedFields(): Collection
     {
-        return $this->translatedFields;
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->startsWith('tableColumn', 'members.'))
+            ->andWhere(Criteria::expr()->gt('translation', 0))
+        ;
+
+        return $this->translatedFields->matching($criteria);
+    }
+
+    public function getTranslatedFieldsIndexed(): array
+    {
+        $fields = [];
+        foreach ($this->getTranslatedFields() as $field) {
+            $locale = $field->getLanguage()->getShortCode();
+            if ('' !== trim((string) $field->getSentence())) {
+                if (!isset($fields[$locale])) {
+                    $fields[$locale] = [];
+                }
+                $fields[$locale][$field->getTableColumn()] = $field;
+            }
+        }
+
+        return $fields;
     }
 
     /**

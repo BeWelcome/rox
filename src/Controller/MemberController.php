@@ -22,10 +22,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
-use Twig\Profiler\Profile;
 
 /**
  * Class MemberController.
@@ -36,27 +35,23 @@ class MemberController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private ProfileSubmenu $profileSubmenu;
-    private ChangeProfilePictureGlobals $globals;
-
-    public function __construct(ProfileSubmenu $profileSubmenu, ChangeProfilePictureGlobals $globals)
+    public function __construct(private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
     {
-        $this->profileSubmenu = $profileSubmenu;
-        $this->globals = $globals;
     }
 
     #[Route(path: '/mydata', name: 'profile_personal_data_redirect')]
     public function redirectMyData()
     {
         $username = $this->getUser()->getUsername();
+
         return $this->redirectToRoute('profile_personal_data', [
             'username' => $username,
         ]);
     }
 
     /**
-     *
      * @throws Exception
+     *
      * @return StreamedResponse|Response
      */
     #[Route(path: '/members/{username:member}/mydata', name: 'profile_personal_data')]
@@ -66,7 +61,7 @@ class MemberController extends AbstractController
         MemberModel $memberModel,
         Security $security,
         EntrypointLookupInterface $entrypointLookup,
-        PasswordHasherFactoryInterface $passwordHasherFactory
+        PasswordHasherFactoryInterface $passwordHasherFactory,
     ): Response|RedirectResponse {
         /** @var Member $member */
         $loggedInMember = $this->getUser();
@@ -126,7 +121,7 @@ class MemberController extends AbstractController
         Member $member,
         Logger $logger,
         EntrypointLookupInterface $entrypointLookup,
-        MemberModel $memberModel
+        MemberModel $memberModel,
     ): Response {
         // Only the admin can access this special page
         $this->denyAccessUnlessGranted(
@@ -159,10 +154,10 @@ class MemberController extends AbstractController
     }
 
     /**
-     *
      * @throws Exception
      *
      * @return BinaryFileResponse|RedirectResponse
+     *
      * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
     #[Route(path: '/mydata/{username:member}/download', name: 'member_download_data')]

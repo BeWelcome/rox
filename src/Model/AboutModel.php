@@ -11,19 +11,8 @@ use Symfony\Component\Mime\Address;
 
 class AboutModel
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-    /**
-     * @var Mailer
-     */
-    private $mailer;
-
-    public function __construct(EntityManagerInterface $entityManager, Mailer $mailer)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly Mailer $mailer)
     {
-        $this->entityManager = $entityManager;
-        $this->mailer = $mailer;
     }
 
     public function getFeedbackCategories()
@@ -36,7 +25,6 @@ class AboutModel
             ->orderBy('c.sortorder', 'ASC')
             ->indexBy('c', 'c.id')
         ;
-
 
         return $qb->getQuery()->getResult();
     }

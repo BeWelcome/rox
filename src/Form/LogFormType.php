@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -33,6 +34,7 @@ class LogFormType extends AbstractType
             ]);
     }
 
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'log';

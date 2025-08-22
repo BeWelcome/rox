@@ -2,11 +2,9 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Entity\Member;
-
 class StatisticsMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'statistics' => [
             'type' => 'page',
             'template' => 'about/statistics.html.twig',

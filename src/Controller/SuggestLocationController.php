@@ -7,19 +7,13 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SuggestLocationController extends AbstractController
 {
-    private LoggerInterface $logger;
-    private TranslatorInterface $translator;
-
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator)
+    public function __construct(private readonly LoggerInterface $logger, private readonly TranslatorInterface $translator)
     {
-        $this->logger = $logger;
-        $this->translator = $translator;
     }
 
     #[Route(path: '/suggest/locations/places/exact', name: 'suggest_locations_exact')]

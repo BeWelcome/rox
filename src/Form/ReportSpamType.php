@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ReportSpamType extends AbstractType
 {
@@ -16,7 +15,7 @@ class ReportSpamType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('comment', TextAreaType::class, [
+            ->add('comment', TextareaType::class, [
                 'label' => 'conversation.report.comment',
                 'attr' => [
                     'rows' => 3,

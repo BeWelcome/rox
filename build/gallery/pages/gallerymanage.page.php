@@ -10,22 +10,26 @@
 
 class GalleryManagePage extends GalleryUserPage
 {
+    #[\Override]
     protected function init()
     {
         parent::init();
         $this->addLateLoadScriptFile('build/gallery.js');
     }
 
+    #[\Override]
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         return $stylesheets;
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'manage';
     }
 
+    #[\Override]
     public function leftSidebar()
     {
         $galleries = $this->galleries;
@@ -34,6 +38,7 @@ class GalleryManagePage extends GalleryUserPage
         // require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 
+    #[\Override]
     protected function column_col3() {
         $statement = $this->statement;
         $words = $this->getWords();

@@ -8,9 +8,6 @@ use App\Repository\MessageRepository;
 
 class MessagesExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         /** @var MessageRepository $messageRepository */

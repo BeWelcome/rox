@@ -7,37 +7,21 @@ use App\Entity\Address;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\MemberPreference;
+use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\NewLocation;
 use App\Entity\Preference;
 use App\Entity\Subject;
 use App\Service\Mailer;
-use App\Utilities\ManagerTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Hidehalo\Nanoid\Client;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SignupModel
 {
-    private EntityManagerInterface $entityManager;
-    private PasswordHasherFactoryInterface $passwordHasherFactory;
-    private Mailer $mailer;
-    private TranslatorInterface $translator;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        PasswordHasherFactoryInterface $passwordHasherFactory,
-        TranslatorInterface $translator,
-        Mailer $mailer
-    ) {
-        $this->entityManager = $entityManager;
-        $this->passwordHasherFactory = $passwordHasherFactory;
-        $this->mailer = $mailer;
-        $this->translator = $translator;
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly PasswordHasherFactoryInterface $passwordHasherFactory, private readonly TranslatorInterface $translator, private readonly Mailer $mailer)
+    {
     }
 
     public function createAccount(array $signupData, ?string $locale): Member
@@ -60,15 +44,19 @@ class SignupModel
 
         // Matches English in the odd setup of the database
         $localeId = 0;
+        $english = $this->entityManager->getRepository(Language::class)->findOneBy(['shortCode' => 'en']);
+        $language = $english;
         if (null !== $locale) {
             $language = $this->entityManager->getRepository(Language::class)->findOneBy(['shortCode' => $locale]);
             if (null !== $language) {
                 $localeId = $language->getId();
+            } else {
+                $language = $english;
             }
         }
 
         $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
-            'codename' => Preference::LOCALE
+            'codename' => Preference::LOCALE,
         ]);
 
         $memberPreference = new MemberPreference();
@@ -82,6 +70,8 @@ class SignupModel
         $this->entityManager->flush();
 
         $member->initializePreferredLanguage($this->entityManager);
+
+        $this->addProfileTranslations($member, $language);
 
         $parameters = [
             'subject' => 'signup.confirm.email',
@@ -98,7 +88,7 @@ class SignupModel
     public function updateMember(Member $member, array $data): void
     {
         $location = $this->entityManager->getRepository(NewLocation::class)->findOneBy([
-            'geonameId' => $data['location']['geoname_id']
+            'geonameId' => $data['location']['geoname_id'],
         ]);
 
         $member
@@ -158,7 +148,7 @@ class SignupModel
 
         $newsletterValue = $data['newsletters'] ? 'Yes' : 'No';
         $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
-            'codename' => Preference::NEWSLETTERS_VIA_EMAIL
+            'codename' => Preference::NEWSLETTERS_VIA_EMAIL,
         ]);
 
         $newsletterPreference = new MemberPreference();
@@ -171,7 +161,7 @@ class SignupModel
 
         $localeEventsValue = $data['local_events'] ? 'Yes' : 'No';
         $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
-            'codename' => Preference::LOCAL_EVENT_NOTIFICATIONS
+            'codename' => Preference::LOCAL_EVENT_NOTIFICATIONS,
         ]);
 
         $localEventsPreference = new MemberPreference();
@@ -207,5 +197,40 @@ class SignupModel
         }
 
         return true;
+    }
+
+    private function addProfileTranslations(Member $member, ?Language $language): void
+    {
+        // First create profile language for English
+        $this->addProfileTranslation($member, 'en');
+
+        if (null !== $language && 'en' !== $language->getShortCode()) {
+            $this->addProfileTranslation($member, $language->getShortCode());
+        }
+
+        $this->entityManager->flush();
+    }
+
+    private function addProfileTranslation(Member $member, string $locale): void
+    {
+        $languageRepository = $this->entityManager->getRepository(Language::class);
+        $language = $languageRepository->findOneBy(['shortCode' => $locale]);
+
+        if (null !== $language) {
+            $profileTranslation = new MemberTranslation();
+            $profileTranslation
+                ->setTranslator($member)
+                ->setOwner($member)
+                ->setTableColumn('members.language')
+                ->setSentence($language->getName())
+                ->setLanguage($language)
+            ;
+
+            $this->entityManager->persist($profileTranslation);
+            $this->entityManager->flush();
+
+            $profileTranslation->setTranslation($profileTranslation->getId());
+            $this->entityManager->persist($profileTranslation);
+        }
     }
 }

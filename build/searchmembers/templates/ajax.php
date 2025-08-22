@@ -35,7 +35,7 @@ if(isset($vars['queries']) and $vars['queries']) {
 }
 
 $words = new MOD_words();
-$Accomodation = array();
+$Accomodation = [];
 $Accomodation['anytime'] = $words->getBuffered('Accomodation_anytime');
 $Accomodation['dependonrequest'] = $words->getBuffered('Accomodation_dependonrequest');
 $Accomodation['neverask'] = $words->getBuffered('Accomodation_neverask');
@@ -65,7 +65,7 @@ foreach($TList as $TL) {
     $Nr = $ii;
 
     $accomodationIcon = ShowAccomodation($TL->Accomodation, $Accomodation);
-    $profileSummary = nl2br($TL->ProfileSummary);
+    $profileSummary = nl2br((string) $TL->ProfileSummary);
 
     $string = <<<HTML
     <div class="avatar">
@@ -87,7 +87,7 @@ foreach($TList as $TL) {
 HTML;
     $summary = htmlspecialchars($string, ENT_QUOTES);
     $string = '';
-    $detail = htmlspecialchars($ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr), ENT_QUOTES);
+    $detail = htmlspecialchars((string) $ShowMemberFunction($TL, $maxpos, $Accomodation,$Nr), ENT_QUOTES);
 
     echo "<marker username='$TL->Username' Latitude='$TL->Latitude' Longitude='$TL->Longitude' accomodation='$TL->Accomodation' summary='$summary' detail='$detail' abbr='$Nr' />
 ";
@@ -108,7 +108,7 @@ $string .= "</ul></div>" ;
 $pagination = $pagination_attr = '';
 if (count($TList))
 {
-    $start = isset($vars['start_rec']) ? $vars['start_rec'] : 0;
+    $start = $vars['start_rec'] ?? 0;
     $params->strategy = new HalfPagePager('left');
     $params->items_per_page = $vars['limitcount'];
     $params->items = $maxpos;
@@ -150,15 +150,15 @@ echo "</content>
 
 
 // Set session variables for use at another time.
-$this->session->set( 'SearchMapStyle', $mapstyle )
-$this->session->set( 'SearchMembersVars', $vars )
-$this->session->set( 'SearchMembersTList', $TList )
+$this->session->set( 'SearchMapStyle', $mapstyle );
+$this->session->set( 'SearchMembersVars', $vars );
+$this->session->set( 'SearchMembersTList', $TList );
 
 function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     static $ii = 0;
     $layoutbits = new MOD_layoutbits();
 
-    $info_styles = array(0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">");
+    $info_styles = [0 => "<tr class=\"blank\" align=\"left\" valign=\"center\">", 1 => "<tr class=\"highlight\" align=\"left\" valign=\"center\">"];
     $string = $info_styles[($ii++%2)]; // this display the <tr>
     $string .= "<td class=\"memberlist\">" ;
     $string .= "<img src=\"members/avatar/".$TM->Username."/50\" class=\"framed\">";
@@ -175,10 +175,10 @@ function ShowMembersAjax($TM,$maxpos, $Accomodation) {
     $string .= ShowAccomodation($TM->Accomodation, $Accomodation);
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\">" ;
-    $string .= date('d M y', strtotime($TM->created));
+    $string .= date('d M y', strtotime((string) $TM->created));
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\">" ;
-    $string .= $TM->LastLogin == '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime($TM->LastLogin));
+    $string .= $TM->LastLogin == '0000-00-00' ? 'Never' : $layoutbits->ago(strtotime((string) $TM->LastLogin));
     $string .= "</td>" ;
     $string .= "<td class=\"memberlist\" align=center>" ;
     $string .= $TM->NbComment ;
@@ -197,9 +197,9 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     $layoutbits = new MOD_layoutbits();
     $memberProfileLink = "members/".$TM->Username;
 
-    $ago = ($TM->LastLogin == 0) ? $layoutbits->ago($TM->LastLogin) : $layoutbits->ago(strtotime(implode('/',explode('-',$TM->LastLogin))));
+    $ago = ($TM->LastLogin == 0) ? $layoutbits->ago($TM->LastLogin) : $layoutbits->ago(strtotime(implode('/',explode('-',(string) $TM->LastLogin))));
     if ($TM->Accomodation == '') $TM->Accomodation = 'dependonrequest';
-    $info_styles = array(0 => "<div class=\"blank \" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight \" align=\"left\" valign=\"center\">");
+    $info_styles = [0 => "<div class=\"blank \" align=\"left\" valign=\"center\">", 1 => "<div class=\"highlight \" align=\"left\" valign=\"center\">"];
     $string = $info_styles[($ii++%2)]; // this display the <tr>
     $string .= "<table id=\"memberDetail".$Nr."\" class=\"profileLinkArea full\"";
     // highlight marker on member list mouse over: $string .= " onmouseover=\"mapBuilder.highlightMarker(".$Nr.");\" onmouseout=\"mapBuilder.unhighlightMarker(".$Nr.");\"";
@@ -217,7 +217,7 @@ function ShowMembersAjaxShort($TM,$maxpos, $Accomodation,$Nr) {
     }
     $string .= $TM->CityName.", ".$TM->CountryName. "<br />";
     $string .= $words->getFormatted('LastLogin').": <span title=".$TM->LastLogin."><strong>".$ago."</strong></span><br />";
-    $string .= $words->getFormatted('MemberSince').": <span title=".$TM->created."><strong>".date('d M y', strtotime($TM->created))."</strong><br />";
+    $string .= $words->getFormatted('MemberSince').": <span title=".$TM->created."><strong>".date('d M y', strtotime((string) $TM->created))."</strong><br />";
     $string .= $words->getFormatted('Comments').": <span title=".$TM->NbComment."><strong>".$TM->NbComment."</strong><br />";
     $string .= "</span></td><td align=\"right\" class=\"accommodation\">";
     $string .= "<div class=\"markerLabelList ".$TM->Accomodation."\"><a href=\"javascript:geosearchMapBuilder.openMarker(".$Nr.");\" title=\"".$words->getBuffered('Accomodation').": ".$Accomodation[$TM->Accomodation]."\">".$Nr."</a></div>";

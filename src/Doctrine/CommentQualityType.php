@@ -12,7 +12,6 @@ class CommentQualityType extends EnumType
 
     protected string $translationPrefix = 'commentquality_';
 
-    /** @var array */
     protected array $values = [
         self::POSITIVE,
         self::NEUTRAL,

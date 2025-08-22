@@ -42,6 +42,7 @@ class AdminRightsController extends AdminBaseController
         $this->model = new AdminRightsModel();
     }
 
+    #[\Override]
     public function __destruct() {
         unset($this->model);
     }
@@ -61,7 +62,7 @@ class AdminRightsController extends AdminBaseController
         $right = $rights[$vars['rightid']];
         $this->setFlashNotice($this->getWords()->get('AdminRightsRightAssigned', $vars['username'], $right->Name));
 
-        return $this->router->url('admin_rights_member', array("username" => $vars['username']), false);
+        return $this->router->url('admin_rights_member', ["username" => $vars['username']], false);
     }
 
     public function assign() {
@@ -73,12 +74,12 @@ class AdminRightsController extends AdminBaseController
         };
         $page = new AdminRightsAssignPage();
         $page->member = $member;
-        $page->vars = array(
+        $page->vars = [
             'username' => ($member ? $member->Username : ''),
             'rightid' => 0,
             'level' => 0,
             'scope' => '',
-            'comment' => '');
+            'comment' => ''];
         $page->rights = $this->model->getRights(true, $member);
         return $page;
     }
@@ -97,9 +98,9 @@ class AdminRightsController extends AdminBaseController
             $history= true;
         }
         $mem_redirect->vars = $vars;
-        $mem_redirect->members = $this->model->getMembersWithRights(false, $history);
+        $mem_redirect->members = $this->model->getMembersWithRights(false);
         // get list of members with rights (as assigned, filter by $member if set)
-        $mem_redirect->membersWithRights = $this->model->getMembersWithRights($member, $history);
+        $mem_redirect->membersWithRights = $this->model->getMembersWithRights($member);
     }
 
     public function listMembers()
@@ -111,9 +112,9 @@ class AdminRightsController extends AdminBaseController
             $member = $temp->findByUsername($this->route_vars['username']);
         };
         $page = new AdminRightsListMembersPage();
-        $page->vars = array(
+        $page->vars = [
             'member' => ($member ? $member->id : 0)
-        );
+        ];
         $page->current = 'AdminRightsListMembers';
         $page->rights = $this->model->getRights();
         // get list of members (with assigned rights)
@@ -152,9 +153,9 @@ class AdminRightsController extends AdminBaseController
         };
         $page = new AdminRightsListRightsPage();
         $page->rights = $this->model->getRights();
-        $page->vars = array(
+        $page->vars = [
             'rightid' => $rightId
-        );
+        ];
         $page->rightsWithMembers = $this->model->getRightsWithMembers($rightId);
         return $page;
     }
@@ -167,7 +168,7 @@ class AdminRightsController extends AdminBaseController
         return $page;
     }
 
-    public function tooltip() {
+    public function tooltip(): never {
         $id = $this->args_vars->get['tooltip'];
         header('Content-type: text/html, charset=utf-8');
          $javascript = $this->model->getWords()->get($id);
@@ -217,13 +218,13 @@ class AdminRightsController extends AdminBaseController
 
         $page = new AdminRightsEditPage();
         $page->rights = $this->model->getRights(true);
-        $vars = array(
+        $vars = [
             'username' => $username,
             'right' => $rightId,
             'level' => $assigned->Level,
             'scope' => $assigned->Scope,
             'comment' => $assigned->Comment
-        );
+        ];
         $page->vars = $vars;
         return $page;
     }
@@ -235,22 +236,13 @@ class AdminRightsController extends AdminBaseController
         $rights = $this->model->getRights();
         $right = $rights[$vars['rightid']];
         $this->setFlashNotice($this->getWords()->get('AdminRightsRightRemoved', $vars['username'], $right->Name ));
-        switch ($vars['redirect']) {
-            case 'members':
-                $url = $this->router->url('admin_rights_members', array(), false);
-                break;
-            case 'member':
-                $url = $this->router->url('admin_rights_member', array("username" => $vars['username']), false);
-                break;
-            case 'rights':
-                $url = $this->router->url('admin_rights_rights', array(), false);
-                break;
-            case 'right':
-                $url = $this->router->url('admin_rights_right', array("id" => $vars['right']), false);
-                break;
-            default:
-                $url = $this->router->url('admin_rights', array(), false);
-        }
+        $url = match ($vars['redirect']) {
+            'members' => $this->router->url('admin_rights_members', [], false),
+            'member' => $this->router->url('admin_rights_member', ["username" => $vars['username']], false),
+            'rights' => $this->router->url('admin_rights_rights', [], false),
+            'right' => $this->router->url('admin_rights_right', ["id" => $vars['right']], false),
+            default => $this->router->url('admin_rights', [], false),
+        };
         $this->model->remove($vars);
         return $url;
     }
@@ -280,27 +272,27 @@ class AdminRightsController extends AdminBaseController
         $page->rights = $rights;
         $redirectTo = '';
         if (isset($_SERVER['HTTP_REFERER'])) {
-            if (strpos($_SERVER['HTTP_REFERER'], "/list/members") !== false) {
+            if (str_contains((string) $_SERVER['HTTP_REFERER'], "/list/members")) {
                 $redirectTo = 'members';
             }
-            if (strpos($_SERVER['HTTP_REFERER'], "/list/member/") !== false) {
+            if (str_contains((string) $_SERVER['HTTP_REFERER'], "/list/member/")) {
                 $redirectTo = 'member';
             }
-            if (strpos($_SERVER['HTTP_REFERER'], "/list/rights") !== false) {
+            if (str_contains((string) $_SERVER['HTTP_REFERER'], "/list/rights")) {
                 $redirectTo = 'rights';
             }
-            if (strpos($_SERVER['HTTP_REFERER'], "/list/right/") !== false) {
+            if (str_contains((string) $_SERVER['HTTP_REFERER'], "/list/right/")) {
                 $redirectTo = 'right';
             }
         }
-        $vars = array(
+        $vars = [
             'username' => $username,
             'right' => $rightId,
             'level' => $assigned->Level,
             'scope' => $assigned->Scope,
             'comment' => $assigned->Comment,
             'redirect' => $redirectTo
-        );
+        ];
         $page->vars = $vars;
         return $page;
     }
@@ -317,22 +309,22 @@ class AdminRightsController extends AdminBaseController
         }
         $this->model->createRight($vars);
         $this->setFlashNotice($this->getWords()->get('AdminRightsRightCreate', $vars['name']));
-        return $this->router->url('admin_rights_overview', array(), false);
+        return $this->router->url('admin_rights_overview', [], false);
     }
 
     public function create()
     {
-        list($loggedInMember, $rights) = $this->checkRights('Rights');
+        [$loggedInMember, $rights] = $this->checkRights('Rights');
         // Check if member has create right if not redirect to overview
-        if ((stripos($rights['Rights']['Scope'], 'create') === false
-            && stripos($rights['Rights']['Scope'], 'all') === false)) {
+        if ((stripos((string) $rights['Rights']['Scope'], 'create') === false
+            && stripos((string) $rights['Rights']['Scope'], 'all') === false)) {
             $this->redirectAbsolute($this->router->url('admin_rights_overview'));
         }
         $page = new AdminRightsCreatePage();
-        $vars = array(
+        $vars = [
             'name' => '',
             'description' => ''
-        );
+        ];
         $page->vars = $vars;
         return $page;
     }

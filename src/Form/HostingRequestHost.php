@@ -39,7 +39,7 @@ class HostingRequestHost extends HostingRequestAbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
             $this->addMessageTextArea($form, 'enter.message.for.guest');
-//            $form->add('subject', SubjectType::class, ['disabled' => true]);
+            //            $form->add('subject', SubjectType::class, ['disabled' => true]);
         });
     }
 }

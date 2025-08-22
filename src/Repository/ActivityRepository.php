@@ -68,9 +68,6 @@ class ActivityRepository extends EntityRepository
         return $paginator;
     }
 
-    /**
-     * @return Query
-     */
     public function queryProblematicActivities(): Query
     {
         return $this->createQueryBuilder('a')
@@ -85,9 +82,7 @@ class ActivityRepository extends EntityRepository
     /**
      * Get all activities around a given location.
      *
-     * @param int   $limit
-     * @param int   $distance
-     * @param mixed $online
+     * @param int $limit
      *
      * @throws Exception
      *
@@ -113,8 +108,6 @@ class ActivityRepository extends EntityRepository
 
     /**
      * Get all activities around a given location.
-     *
-     * @param mixed $online
      */
     public function getUpcomingAroundLocationCount(Member $member, $online): int
     {
@@ -141,18 +134,14 @@ class ActivityRepository extends EntityRepository
 
         $distance = 20;
         if ($preference) {
-            $distance = (int) ($memberPreference->getValue());
+            $distance = (int) $memberPreference->getValue();
         }
 
         return $distance;
     }
 
     /**
-     * @param mixed $online
-     *
      * @throws Exception
-     *
-     * @return QueryBuilder
      */
     private function getUpcomingAroundLocationQueryBuilder(Member $member, $online): ?QueryBuilder
     {

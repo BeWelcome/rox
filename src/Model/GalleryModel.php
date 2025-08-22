@@ -9,11 +9,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class GalleryModel
 {
-    private ValidatorInterface $validator;
-
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(private readonly ValidatorInterface $validator)
     {
-        $this->validator = $validator;
     }
 
     public function checkUploadedImage($image): ConstraintViolationListInterface

@@ -8,7 +8,7 @@
     var selectedTextTranslation = "<?php echo $words->getSilent('SearchMembersSelected');?>";
 </script><?php
 
-$orderBy = array();
+$orderBy = [];
 $orderArray = SearchModel::getOrderByArray();
 foreach ($orderArray AS $key => $order) :
     $orderBy[$key] = $words->getSilent($orderArray[$key]['WordCode'] . 'Asc');
@@ -49,7 +49,7 @@ endif; ?>
             <td>
                 <span class="small"><?= $words->get('SearchCanHostAtLeast'); ?></span><br/> <select id="search-can-host"
                 name="search-can-host"><?php
-                $canHost = array(0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20');
+                $canHost = [0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 10 => '10', 20 => '20'];
                 foreach ($canHost as $value => $display) :
                     echo '<option value="' . $value . '"';
                     if ($value == $this->vars['search-can-host']) {
@@ -62,7 +62,7 @@ endif; ?>
             <td>
                 <span class="small"><?= $words->get('SearchDistance'); ?></span><br/> <select id="search-distance"
                 name="search-distance"><?php
-                $distance = array(0 => $words->getSilent("SearchExactMatch"), 5 => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi');
+                $distance = [0 => $words->getSilent("SearchExactMatch"), 5 => '5 km/3 mi', 10 => '10 km/6 mi', 25 => '25 km/15 mi', 50 => '50 km/30 mi', 100 => '100 km/60 mi'];
                 foreach ($distance as $value => $display) :
                     echo '<option value="' . $value . '"';
                     if ($value == $this->vars['search-distance']) {
@@ -101,7 +101,7 @@ endif; ?>
 
 <div class="clearfix row">
     <div class="row"><?php
-        $numberOfItems = array('5', '10', '20', '50', '100');
+        $numberOfItems = ['5', '10', '20', '50', '100'];
         $select = '<select name="search-number-items">';
         foreach ($numberOfItems as $number) :
             $select .= '<option value="' . $number . '"';
@@ -191,11 +191,11 @@ if ($this->membersResultsReturned) :
                     . '<div>' . $words->get('SearchMaxGuestInfo', '<strong>' . $member->MaxGuest . '</strong>') . '<br />'
                     . $words->get('SearchCommentsInfo', '<strong>' . $member->CommentCount . '</strong>') . '</div></div>';
                 echo '<div class="clearfix"></div>';
-                echo $words->get('SearchMemberSinceInfo', '<strong>' . date('d M y', strtotime($member->created)) . '</strong>') . '<br />';
-                $lastlogin = (($member->LastLogin == '0000-00-00') ? 'Never' : $layoutbits->ago(strtotime($member->LastLogin)));
+                echo $words->get('SearchMemberSinceInfo', '<strong>' . date('d M y', strtotime((string) $member->created)) . '</strong>') . '<br />';
+                $lastlogin = (($member->LastLogin == '0000-00-00') ? 'Never' : $layoutbits->ago(strtotime((string) $member->LastLogin)));
                 $class = 'red';
                 if ($member->LastLogin <> '0000-00-00') {
-                    switch ($layoutbits->ago_qualified(strtotime($member->LastLogin))) {
+                    switch ($layoutbits->ago_qualified(strtotime((string) $member->LastLogin))) {
                         case 0:
                             $class = 'green';
                             break;
@@ -239,8 +239,8 @@ if ($this->locationsResultsReturned) :
             if ($i % 3 == 2) {
                 $class = 'c33r';
             }
-            echo '<div class="' . $class . '"><span id="geoname' . $big->geonameId . '"><input type="submit" id="geonameId-' . $big->geonameId . '" name="geonameId-' . $big->geonameId . '" value="' . htmlentities($big->name, ENT_COMPAT, 'utf-8') . '" /><br />'
-                . htmlentities($big->admin1, ENT_COMPAT, 'utf-8') . ', ' . htmlentities($big->country, ENT_COMPAT, 'utf-8') . ', ' . $words->get('SearchSuggestionsMembersFound', $big->cnt);
+            echo '<div class="' . $class . '"><span id="geoname' . $big->geonameId . '"><input type="submit" id="geonameId-' . $big->geonameId . '" name="geonameId-' . $big->geonameId . '" value="' . htmlentities((string) $big->name, ENT_COMPAT, 'utf-8') . '" /><br />'
+                . htmlentities((string) $big->admin1, ENT_COMPAT, 'utf-8') . ', ' . htmlentities((string) $big->country, ENT_COMPAT, 'utf-8') . ', ' . $words->get('SearchSuggestionsMembersFound', $big->cnt);
             echo '</span></div>';
             if ($i %3 == 2) {
                 echo '</div>';
@@ -255,16 +255,11 @@ if ($this->locationsResultsReturned) :
         endif;
     endif;
     $i = 0;
-    switch($this->results['type']) {
-        case 'admin1s':
-            $type = 'admin1';
-            break;
-        case 'countries':
-            $type = 'country';
-            break;
-        default:
-            $type = '';
-    }
+    $type = match ($this->results['type']) {
+        'admin1s' => 'admin1',
+        'countries' => 'country',
+        default => '',
+    };
     foreach ($this->locations as $location) :
         $class = 'c33l';
         if ($i % 3 == 0) {
@@ -275,8 +270,8 @@ if ($this->locationsResultsReturned) :
         }
         echo '<div class="' . $class . '">';
         if (empty($type)) :
-            echo '<span id="geoname' . $location->geonameId . '"><input type="submit" id="geonameId-' . $location->geonameId . '" name="geonameId-' . $location->geonameId . '" value="' . htmlentities($location->name, ENT_COMPAT, 'utf-8') . '" /><br />'
-                . ((isset($location->admin1)) ? htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . ', ' : '') . htmlentities($location->country, ENT_COMPAT, 'utf-8') . ', ';
+            echo '<span id="geoname' . $location->geonameId . '"><input type="submit" id="geonameId-' . $location->geonameId . '" name="geonameId-' . $location->geonameId . '" value="' . htmlentities((string) $location->name, ENT_COMPAT, 'utf-8') . '" /><br />'
+                . ((isset($location->admin1)) ? htmlentities($location->admin1, ENT_COMPAT, 'utf-8') . ', ' : '') . htmlentities((string) $location->country, ENT_COMPAT, 'utf-8') . ', ';
             if ($location->cnt == 0) :
                 echo $words->get('SearchSuggestionsNoMembersFound');
             else :
@@ -290,7 +285,7 @@ if ($this->locationsResultsReturned) :
             else :
                 $text = $location->country;
             endif;
-            echo '<input type="submit" name="' . $type . '-' . htmlentities($text, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities($text, ENT_COMPAT, 'utf-8') . '" />';
+            echo '<input type="submit" name="' . $type . '-' . htmlentities((string) $text, ENT_COMPAT, 'utf-8') . '" value="' . htmlentities((string) $text, ENT_COMPAT, 'utf-8') . '" />';
         endif;
         echo '</div>';
         if ($i % 3 == 2) :

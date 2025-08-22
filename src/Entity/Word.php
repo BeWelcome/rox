@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -15,7 +16,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Word.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
@@ -42,11 +42,11 @@ class Word
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private DateTime $updated;
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
+    private ?DateTime $updated = null;
 
     #[ORM\Column(name: 'majorupdate', type: 'datetime', nullable: true)]
-    private ?DateTime $majorUpdate  = null;
+    private ?DateTime $majorUpdate = null;
 
     #[ORM\Column(name: 'donottranslate', type: 'translation_allowed', nullable: false)]
     private string $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED;

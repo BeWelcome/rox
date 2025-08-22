@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class AutoCompleteController extends AbstractController
 {
@@ -16,8 +16,8 @@ class AutoCompleteController extends AbstractController
     public function autoCompleteAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $names = [];
-        $callback = trim(strip_tags($request->get('callback')));
-        $term = trim(strip_tags($request->get('term')));
+        $callback = trim(strip_tags((string) $request->get('callback')));
+        $term = trim(strip_tags((string) $request->get('term')));
 
         /** @var MemberRepository $memberRepository */
         $memberRepository = $entityManager->getRepository(Member::class);
@@ -38,15 +38,12 @@ class AutoCompleteController extends AbstractController
         return $response;
     }
 
-    /**
-     * @return JsonResponse
-     */
     #[Route(path: '/member/autocomplete/start', name: 'members_autocomplete_starts_with')]
     public function autoCompleteStartsWith(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $names = [];
-        $callback = trim(strip_tags($request->get('callback')));
-        $term = trim(strip_tags($request->get('term')));
+        $callback = trim(strip_tags((string) $request->get('callback')));
+        $term = trim(strip_tags((string) $request->get('term')));
 
         /** @var MemberRepository $memberRepository */
         $memberRepository = $entityManager->getRepository(Member::class);

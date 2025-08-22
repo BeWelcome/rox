@@ -32,12 +32,14 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesSearchResultPage extends ActivitiesBasePage
 {
+    #[\Override]
     protected function teaserContent()
     {
         $this->hideSearch = true;
         parent::teaserContent();
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         $items = parent::getSubmenuItems();
@@ -45,7 +47,7 @@ class ActivitiesSearchResultPage extends ActivitiesBasePage
         $words = $layoutkit->getWords();
 
         // Add search results to the end of the list
-        $items[] = array('activitiessearch', 'activities/search', $words->getSilent('ActivitiesSearchResult'));
+        $items[] = ['activitiessearch', 'activities/search', $words->getSilent('ActivitiesSearchResult')];
         return $items;
     }
 
@@ -54,6 +56,7 @@ class ActivitiesSearchResultPage extends ActivitiesBasePage
         return 'activitiessearch';
     }
 
+    #[\Override]
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/activities.css?1';

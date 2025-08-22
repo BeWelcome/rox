@@ -48,11 +48,11 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     </div>
     <div class="o-form-group">
         <label for="scope"><?php echo $this->words->get("AdminRightsScope") ?></label>
-        <input type="text" class="o-input" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
+        <input type="text" class="o-input" id="scope" name="scope" value="<?= htmlentities((string) $this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
     </div>
     <div class="o-form-group">
         <label for="comment"><?php echo $this->words->get("AdminRightsComment") ?></label>
-        <textarea class="o-input" id="comment" name="comment" rows="5"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
+        <textarea class="o-input" id="comment" name="comment" rows="5"><?= htmlentities((string) $this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <input type="submit" class="btn btn-primary" id="AdminRightsSubmit" name="AdminRightsSubmit" value="<?php echo $this->words->getSilent("AdminRightsSubmit")?>" /><?php echo $words->flushBuffer(); ?>
 </form>

@@ -25,19 +25,19 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Twig\Environment;
 
+/**
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ *
+ * \todo check if this can be changed (landing shows different information and needs this)
+ */
 class LandingController extends AbstractController
 {
-    private LandingModel $landingModel;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(LandingModel $landingModel, EntityManagerInterface $entityManager)
+    public function __construct(private readonly LandingModel $landingModel, private readonly EntityManagerInterface $entityManager)
     {
-        $this->landingModel = $landingModel;
-        $this->entityManager = $entityManager;
     }
 
     #[Route(path: '/widget/conversations', name: '/widget/conversations')]
@@ -146,8 +146,8 @@ class LandingController extends AbstractController
     }
 
     /**
-     *
      * @throws Exception
+     *
      * @return Response
      */
     #[Route(path: '/widget/activities', name: '/widget/activities')]
@@ -198,7 +198,6 @@ class LandingController extends AbstractController
     /**
      * Shows the landing page.
      *
-     *
      * @throws AccessDeniedException
      */
     #[Route(path: '/', name: 'landingpage')]
@@ -207,7 +206,7 @@ class LandingController extends AbstractController
         EntityManagerInterface $entityManager,
         DonateModel $donateModel,
         TripModel $tripModel,
-        FormFactoryInterface $formFactory
+        FormFactoryInterface $formFactory,
     ): Response {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             throw $this->createAccessDeniedException();
@@ -278,7 +277,7 @@ class LandingController extends AbstractController
         $radius = $tripModel->getTripsRadius($member);
 
         /** @var SubtripRepository $subtripRepository */
-        $subtripRepository = $this->entityManager->getRepository(SubTrip::class);
+        $subtripRepository = $this->entityManager->getRepository(Subtrip::class);
 
         $visitorsCount = $subtripRepository->getVisitorsCount($member, $radius);
 

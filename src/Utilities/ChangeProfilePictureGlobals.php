@@ -8,13 +8,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ChangeProfilePictureGlobals
 {
-    private UrlGeneratorInterface $urlGenerator;
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator, UrlGeneratorInterface $urlGenerator)
+    public function __construct(private readonly TranslatorInterface $translator, private readonly UrlGeneratorInterface $urlGenerator)
     {
-        $this->urlGenerator = $urlGenerator;
-        $this->translator = $translator;
     }
 
     public function getGlobalsJsAsJson(Member $member, Member $loggedInMember): string
@@ -29,7 +24,7 @@ class ChangeProfilePictureGlobals
                     'profile.change.avatar.fail.file.too.big'
                 ),
                 'profile.picture.title' => $this->translator->trans('profile.picture.title', [
-                    'username' => $member->getUsername()
+                    'username' => $member->getUsername(),
                 ]),
                 'uploading' => $this->translator->trans('uploading'),
             ],
@@ -37,10 +32,10 @@ class ChangeProfilePictureGlobals
                 'isMyself' => ($member === $loggedInMember),
                 'avatarUseLightbox' => ($member !== $loggedInMember),
                 'avatarUrl' => $this->urlGenerator->generate('avatar', [
-                    'username' => $member->getUsername(), 'size' => 48
+                    'username' => $member->getUsername(), 'size' => 48,
                 ]),
                 'username' => $member->getUsername(),
-            ]
+            ],
         ]);
 
         return $globalsJs;

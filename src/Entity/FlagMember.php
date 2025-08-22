@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Utilities\LifecycleCallbacksTrait;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Flagsmembers.
+ * Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'flagsmembers')]
 #[ORM\Index(name: 'flagsmembers_members', columns: ['IdMember', 'IdFlag'])]
@@ -177,7 +180,7 @@ class FlagMember
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return FlagMember
      */
@@ -191,7 +194,7 @@ class FlagMember
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -201,7 +204,7 @@ class FlagMember
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return FlagMember
      */
@@ -215,7 +218,7 @@ class FlagMember
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {

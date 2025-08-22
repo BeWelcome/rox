@@ -75,8 +75,8 @@ class Places extends RoxModelBase {
         $countQuery = $this->dao->query("SELECT FOUND_ROWS() as cnt");
         $count = $countQuery->fetch(PDB::FETCH_OBJ)->cnt;
 
-        $members = array();
-        $cities = array();
+        $members = [];
+        $cities = [];
         while($row = $result->fetch(PDB::FETCH_OBJ)) {
             if (!isset($cities[$row->idCity])) {
                 $cities[$row->idCity] = $this->getCityName($row->idCity);
@@ -84,7 +84,7 @@ class Places extends RoxModelBase {
             $row->city = $cities[$row->idCity];
             $members[] = $row;
         }
-        return array($count, $members);
+        return [$count, $members];
     } // end of getMembersAll
 
     /**
@@ -176,9 +176,9 @@ class Places extends RoxModelBase {
             ORDER BY
                 m.Accomodation DESC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($countrycode));
-        list($count, $members) = $this->getMembersFiltered($query ." LIMIT "
+        [$count, $members] = $this->getMembersFiltered($query ." LIMIT "
             . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
-        return array($count, $totalCount, $members);
+        return [$count, $totalCount, $members];
     }
 
     public function getMembersOfRegion($regioncode, $countrycode, $pageNumber) {
@@ -204,9 +204,9 @@ class Places extends RoxModelBase {
             ORDER BY
                 m.Accomodation DESC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($countrycode), $this->dao->escape($regioncode));
-        list($count, $members) = $this->getMembersFiltered($query ." LIMIT "
+        [$count, $members] = $this->getMembersFiltered($query ." LIMIT "
             . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
-        return array($count, $totalCount, $members);
+        return [$count, $totalCount, $members];
     }
 
     public function getMembersOfCity($cityCode, $cityName, $pageNumber) {
@@ -231,26 +231,26 @@ class Places extends RoxModelBase {
             ORDER BY
                 m.Accomodation DESC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($cityCode));
-        list($count, $members) = $this->getMembersFiltered($query ." LIMIT "
+        [$count, $members] = $this->getMembersFiltered($query ." LIMIT "
             . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
-        return array($count, $totalCount, $members);
+        return [$count, $totalCount, $members];
     }
 
     private function compareCountryNames($a, $b) {
-        return strcmp($a->name, $b->name);
+        return strcmp((string) $a->name, (string) $b->name);
         // $this->collator->compare($a->name, $b->name);
     }
 
     public function getContinents() {
         $words = new MOD_words();
-        $continents = array(
-            "AM" => array($words->getSilent('PlacesAmerica'), $words->getSilent("PlacesAmericaCont")),
-            "EA" => array($words->getSilent('PlacesEurAsia'), $words->getSilent("PlacesEurAsiaCont")),
-            "AF" => array($words->getSilent('PlacesAfrica'),  $words->getSilent("PlacesAfricaCont")),
-            "OC" => array($words->getSilent('PlacesOceania'), $words->getSilent("PlacesOceaniaCont")),
-            "AN" => array($words->getSilent('PlacesAntarctica'), $words->getSilent("PlacesAntarcticaCont"))
-        );
-        uasort($continents, function($a, $b) { return strcmp($a[0], $b[0]); });
+        $continents = [
+            "AM" => [$words->getSilent('PlacesAmerica'), $words->getSilent("PlacesAmericaCont")],
+            "EA" => [$words->getSilent('PlacesEurAsia'), $words->getSilent("PlacesEurAsiaCont")],
+            "AF" => [$words->getSilent('PlacesAfrica'),  $words->getSilent("PlacesAfricaCont")],
+            "OC" => [$words->getSilent('PlacesOceania'), $words->getSilent("PlacesOceaniaCont")],
+            "AN" => [$words->getSilent('PlacesAntarctica'), $words->getSilent("PlacesAntarcticaCont")]
+        ];
+        uasort($continents, function($a, $b) { return strcmp((string) $a[0], (string) $b[0]); });
         return $continents;
     }
 
@@ -281,7 +281,7 @@ class Places extends RoxModelBase {
         if (!$result) {
             throw new PException('Could not retrieve country member counts.');
         }
-        $number = array();
+        $number = [];
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             $number[$row->country] = $row->number;
         }
@@ -322,7 +322,7 @@ class Places extends RoxModelBase {
         }
 
         // Pack both database results into country list
-        $countries = array();
+        $countries = [];
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             if (!isset($countries[$row->continent][$row->country])) {
                 $data = new StdClass;
@@ -338,7 +338,7 @@ class Places extends RoxModelBase {
         }
         // $this->collator = new Collator('root');
         foreach($countries as &$continent) {
-            usort($continent, array($this, 'compareCountryNames'));
+            usort($continent, [$this, 'compareCountryNames']);
         }
         return $countries;
     }
@@ -379,14 +379,14 @@ class Places extends RoxModelBase {
             throw new PException('Could not retrieve region list.');
         }
 
-        $regions = array();
+        $regions = [];
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             if (!isset($regions[$row->admin1])) {
                 $regions[$row->admin1]['name'] = $row->region;
                 $regions[$row->admin1]['number'] = 0;
             }
         }
-        uasort($regions, function($a, $b){ return strcmp($a['name'], $b['name']); });
+        uasort($regions, function($a, $b){ return strcmp((string) $a['name'], (string) $b['name']); });
         // get numbers for admin units
         $query = sprintf("
             SELECT
@@ -435,7 +435,7 @@ class Places extends RoxModelBase {
                 AND a.admin1 = '%1\$s'
                 AND a.country = '%2\$s'", $this->dao->escape($regionscode), $this->dao->escape($countrycode));
         $result = $this->dao->query($query);
-        if (!result) {
+        if (!\RESULT) {
             return false;
         }
         $row = $result->fetch(PDB::FETCH_OBJ);
@@ -499,11 +499,11 @@ class Places extends RoxModelBase {
         if (!$result) {
             throw new PException('Could not retrieve city list.');
         }
-        $cities = array();
+        $cities = [];
         while ($row = $result->fetch(PDB::FETCH_OBJ)) {
             $cities[] = $row;
         }
-        uasort($cities, function($a, $b){ return strcmp($a->city, $b->city); });
+        uasort($cities, function($a, $b){ return strcmp((string) $a->city, (string) $b->city); });
         return $cities;
     }
 }

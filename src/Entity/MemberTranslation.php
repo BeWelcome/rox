@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -12,16 +13,15 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MemberTranslation.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'memberstrads')]
 #[ORM\Index(name: 'memberstrads_trads', columns: ['IdTrad'])]
 #[ORM\Index(name: 'memberstrads_language', columns: ['IdLanguage'])]
 #[ORM\Index(name: 'memberstrads_trad_language', columns: ['IdLanguage', 'IdTrad'])]
+#[ORM\Index(name: 'memberstrads_owner', columns: ['IdOwner'])]
 #[ORM\UniqueConstraint(name: 'Unique_entry', columns: ['IdTrad', 'IdOwner', 'IdLanguage'])]
 #[ORM\UniqueConstraint(name: 'Owner_TableColumn', columns: ['IdOwner', 'IdTrad', 'TableColumn', 'IdLanguage'])]
 #[ORM\Entity]
@@ -29,14 +29,14 @@ use Doctrine\ORM\Mapping as ORM;
 class MemberTranslation
 {
     #[ORM\JoinColumn(name: 'IdOwner', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'translatedFields')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'translatedFields')]
     private Member $owner;
 
     #[ORM\Column(name: 'IdTrad', type: 'integer', nullable: false)]
     private int $translation;
 
     #[ORM\JoinColumn(name: 'IdTranslator', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Member::class, fetch: 'LAZY')]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'LAZY')]
     private Member $translator;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
@@ -63,17 +63,17 @@ class MemberTranslation
     private int $id;
 
     #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Language::class)]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     private Language $language;
 
-    public function setOwner(Member $owner):self
+    public function setOwner(Member $owner): self
     {
         $this->owner = $owner;
 
         return $this;
     }
 
-    public function getOwner():Member
+    public function getOwner(): Member
     {
         return $this->owner;
     }

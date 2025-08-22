@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\FeedbackCategory;
 use Gregwar\CaptchaBundle\Type\CaptchaType;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -51,12 +52,12 @@ class FeedbackFormType extends AbstractType
         $member = $options['member'];
         if (null === $member) {
             $builder->add('FeedbackEmail', TextType::class, [
-                    'label' => 'feedbackemail',
-                    'required' => false,
-                    'constraints' => [
-                        new Email(),
-                    ],
-                ])
+                'label' => 'feedbackemail',
+                'required' => false,
+                'constraints' => [
+                    new Email(),
+                ],
+            ])
                 ->add('captcha', CaptchaType::class)
             ;
         } else {
@@ -80,6 +81,7 @@ class FeedbackFormType extends AbstractType
         ]);
     }
 
+    #[Override]
     public function getBlockPrefix(): string
     {
         return '';

@@ -31,6 +31,7 @@ class ForumsController extends PAppController
         $this->_model->forums_uri = $this->forums_uri;
     }
 
+    #[\Override]
     public function __destruct() {
         unset($this->_model);
         unset($this->_view);
@@ -42,7 +43,7 @@ class ForumsController extends PAppController
 
     public function get_forums_uri() {
         $request = PRequest::get()->request;
-        $uri = array();
+        $uri = [];
         foreach ($request as $r) {
             array_push($uri,$r);
             if ($r == 'forums' or $r == 'forum') break;
@@ -77,7 +78,7 @@ class ForumsController extends PAppController
             if (($request[0] == "group") && (isset($request[1]))) {
                 $IdGroup = intval($request[1]);
             }
-            $new_request = array();
+            $new_request = [];
             $push = false;
             foreach ($request as $r) {
                 if ($r == 'forums' or $r == 'forum') $push = true;
@@ -574,11 +575,11 @@ class ForumsController extends PAppController
             if ($membersForumPostsPagePublic || ($profileVisitor->getPKValue() == $userId) || $this->BW_Right->HasRight("Admin") || $this->BW_Right->HasRight("ForumModerator") || $this->BW_Right->HasRight("SafetyTeam") ) {
                 $posts = $this->_model->searchUserposts($user);
             } else {
-                $posts = array(); //TODO: post something that says that the user has not enabled that page
+                $posts = []; //TODO: post something that says that the user has not enabled that page
             }
         }
         else {
-            $posts = array() ;
+            $posts = [] ;
         }
         $this->_view->displaySearchResultPosts($posts); // TODO: post something suggesting to LogIn or to register to maybe see posts by this user
     }
@@ -663,7 +664,7 @@ class ForumsController extends PAppController
             $this->parseRequest();
             return $this->_model->editProcess();
         } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            PPostHandler::setCallback($callbackId, self::class, __METHOD__);
             return $callbackId;
         }
     }
@@ -675,7 +676,7 @@ class ForumsController extends PAppController
             $this->parseRequest();
             return $this->_model->createProcess();
         } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            PPostHandler::setCallback($callbackId, self::class, __METHOD__);
             return $callbackId;
         }
     }
@@ -687,7 +688,7 @@ class ForumsController extends PAppController
             $this->parseRequest();
             return $this->_model->replyProcess();
         } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            PPostHandler::setCallback($callbackId, self::class, __METHOD__);
             return $callbackId;
         }
     }
@@ -699,7 +700,7 @@ class ForumsController extends PAppController
             $this->parseRequest();
             return $this->_model->reportpostProcess();
         } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            PPostHandler::setCallback($callbackId, self::class, __METHOD__);
             return $callbackId;
         }
     }
@@ -712,7 +713,7 @@ class ForumsController extends PAppController
 //             echo ("here") ;
             return $this->_model->ModeratorEditPostProcess();
         } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            PPostHandler::setCallback($callbackId, self::class, __METHOD__);
             return $callbackId;
         }
     }
@@ -725,7 +726,7 @@ class ForumsController extends PAppController
 //             echo ("here") ;
             return $this->_model->ModeratorEditTagProcess();
         } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            PPostHandler::setCallback($callbackId, self::class, __METHOD__);
             return $callbackId;
         }
     }
@@ -741,7 +742,7 @@ class ForumsController extends PAppController
         if (PPostHandler::isHandling()) {
             return $this->_model->switchShowMyGroupsTopicsOnly();
         } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            PPostHandler::setCallback($callbackId, self::class, __METHOD__);
             return $callbackId;
         }
     }
@@ -752,7 +753,7 @@ class ForumsController extends PAppController
         if (PPostHandler::isHandling()) {
             return $this->_model->adjustThreadsCountToShow($step = 3);
         } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            PPostHandler::setCallback($callbackId, self::class, __METHOD__);
             return $callbackId;
         }
     }
@@ -877,39 +878,39 @@ class ForumsController extends PAppController
                     $this->action = self::ACTION_REVERSE;
                 } else if ($r == 'delete') {
                     $this->action = self::ACTION_DELETE;
-                } else if (preg_match_all('/page([0-9]+)/i', $r, $regs)) {
+                } else if (preg_match_all('/page([0-9]+)/i', (string) $r, $regs)) {
                     $this->_model->setPage($regs[1][0]);
                     $this->_model->pushToPageArray($regs[1][0]);
                 } else if ($r ==  'locationDropdowns') {
                     $this->action = self::ACTION_LOCATIONDROPDOWNS;
                 } else {
                     $char = $r[0];
-                    $dashpos = strpos($r, '-');
+                    $dashpos = strpos((string) $r, '-');
                     if ($dashpos === false) {
-                        $dashpos = strlen($r) - 1;
+                        $dashpos = strlen((string) $r) - 1;
                     } else {
                         $dashpos--;
                     }
                     if ($char == 'g') { // Geoname-ID
-                        $this->_model->setGeonameid((int) substr($r, 1, $dashpos));
+                        $this->_model->setGeonameid((int) substr((string) $r, 1, $dashpos));
                         $this->isTopLevel = false;
                     } else if ($char == 'c') { // Countrycode
-                        $this->_model->setCountryCode(substr($r, 1, $dashpos));
+                        $this->_model->setCountryCode(substr((string) $r, 1, $dashpos));
                         $this->isTopLevel = false;
                     } else if ($char == 'a') { // Admincode
-                        $this->_model->setAdminCode(substr($r, 1, $dashpos));
+                        $this->_model->setAdminCode(substr((string) $r, 1, $dashpos));
                         $this->isTopLevel = false;
                     } else if ($char == 't') { // Tagid
-                        $this->_model->addTag((int) substr($r, 1, $dashpos));
+                        $this->_model->addTag((int) substr((string) $r, 1, $dashpos));
                         $this->isTopLevel = false;
                     } else if ($char == 's') { // Subject-ID (Thread-ID)
-                        $this->_model->setThreadId((int) substr($r, 1, $dashpos));
+                        $this->_model->setThreadId((int) substr((string) $r, 1, $dashpos));
                         $this->isTopLevel = false;
                     } else if ($char == 'u') { // Group ID (This is a dedicated group)
-                        $this->_model->setGroupId((int) substr($r, 1, $dashpos));
+                        $this->_model->setGroupId((int) substr((string) $r, 1, $dashpos));
                         $this->isTopLevel = false;
                     } else if ($char == 'm' && $r != "mygroupsonly") { // Message-ID (Single Post)
-                        $this->_model->setMessageId(substr($r, 1, $dashpos));
+                        $this->_model->setMessageId(substr((string) $r, 1, $dashpos));
                         $this->isTopLevel = false;
                     }
                 }
@@ -927,7 +928,7 @@ class ForumsController extends PAppController
             $this->parseRequest();
             return $this->_model->searchProcess();
         } else {
-            PPostHandler::setCallback($callbackId, __CLASS__, __METHOD__);
+            PPostHandler::setCallback($callbackId, self::class, __METHOD__);
             return $callbackId;
         }
     }

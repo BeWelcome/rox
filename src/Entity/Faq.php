@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,7 +12,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Faq.
+ * Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'faq')]
 #[ORM\Index(name: 'IdCategory', columns: ['IdCategory'])]

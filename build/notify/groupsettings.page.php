@@ -6,6 +6,7 @@
  */
 class GroupSettingsPage2 extends GroupsBasePage
 {
+    #[\Override]
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
@@ -17,6 +18,7 @@ class GroupSettingsPage2 extends GroupsBasePage
         <?php
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'admin';
@@ -38,7 +40,7 @@ class GroupSettingsPage2 extends GroupsBasePage
             $Type = ((!empty($redirected->post['Type'])) ? $redirected->post['Type']: 'Public');
             $VisiblePosts = ((!empty($redirected->post['VisiblePosts'])) ? $redirected->post['VisiblePosts'] : 'yes');
             $DisplayedOnProfile = ((!empty($redirected->post['DisplayedOnProfile'])) ? $redirected->post['DisplayedOnProfile'] : 'Yes');
-            $problems = ((is_array($redirected->problems)) ? $redirected->problems : array());
+            $problems = ((is_array($redirected->problems)) ? $redirected->problems : []);
         }
         else
         {
@@ -46,7 +48,7 @@ class GroupSettingsPage2 extends GroupsBasePage
             $Type = $this->group->Type;
             $VisiblePosts = (($this->group->VisiblePosts == 'no') ? 'no' : 'yes');
             $DisplayedOnProfile = (($this->group->DisplayedOnProfile == 'No') ? 'No' : 'Yes');
-            $problems = array();
+            $problems = [];
         }
 ?>
     <div id="groups">

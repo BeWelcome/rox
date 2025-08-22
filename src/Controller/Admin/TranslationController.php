@@ -30,9 +30,8 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TranslationController.
@@ -44,25 +43,15 @@ class TranslationController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private TranslationModel $translationModel;
-    private array $locales;
-    protected EntityManagerInterface $entityManager;
-
-    public function __construct(
-        TranslationModel $translationModel,
-        EntityManagerInterface $entityManager,
-        array $locales
-    ) {
-        $this->translationModel = $translationModel;
-        $this->locales = $locales;
-        $this->entityManager = $entityManager;
+    public function __construct(private TranslationModel $translationModel, protected EntityManagerInterface $entityManager, private array $locales)
+    {
     }
 
     #[Route(path: '/admin/translations/edit/{locale}/{code}', name: 'translation_edit', requirements: ['code' => '.+'])] // Update an existing translation for the locale
     public function editTranslation(
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
-        string $code
+        string $code,
     ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -90,8 +79,8 @@ class TranslationController extends AbstractController
         // Check that there is already a translation for this id/code
         /** @var Word $translation */
         $translation = $translationRepository->findOneBy([
-           'code' => $code,
-           'shortCode' => $language->getShortCode(),
+            'code' => $code,
+            'shortCode' => $language->getShortCode(),
         ]);
         if (null === $translation) {
             return $this->redirectToRoute('translation_add', [
@@ -155,9 +144,10 @@ class TranslationController extends AbstractController
                 if (null === $referrer) {
                     return $this->redirectToRoute('translations_locale_code', [
                         'locale' => $language->getShortCode(),
-                        'type' => 'all'
+                        'type' => 'all',
                     ]);
                 }
+
                 return $this->redirect($referrer);
             }
             $editForm->get('translatedText')->addError(new FormError($invalidMessage));
@@ -182,7 +172,7 @@ class TranslationController extends AbstractController
     public function createTranslationForId(
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
-        string $translationId
+        string $translationId,
     ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -269,9 +259,7 @@ class TranslationController extends AbstractController
     }
 
     /**
-     *
      * @throws Exception
-     * @return Response
      */
     #[Route(path: '/admin/translations/create', name: 'translation_create_direct')] // Creates an new English index bypassing the translation interface
     public function createTranslationDirect(Request $request): Response
@@ -327,7 +315,7 @@ class TranslationController extends AbstractController
     public function addTranslation(
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
-        string $code
+        string $code,
     ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -425,8 +413,6 @@ class TranslationController extends AbstractController
     }
 
     /**
-     *
-     * @param $mode
      * @return RedirectResponse
      */
     #[Route(path: '/admin/translations/mode/{mode}', name: 'translation_mode', requirements: ['mode' => 'on|off'])]
@@ -481,8 +467,8 @@ class TranslationController extends AbstractController
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
         string $type,
-        string $code
-    ) : Response {
+        string $code,
+    ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         /** @var Member $translator */
@@ -562,17 +548,16 @@ class TranslationController extends AbstractController
         $translationDetails = $translationRepository->getTranslationDetails($this->locales);
 
         return $this->render('admin/translations/statistics.html.twig', [
-                'count_all' => $countAll,
-                'details' => $translationDetails,
-                'submenu' => [
-                    'active' => 'statistics',
-                    'items' => $this->getSubmenuItems($request->getLocale(), 'statistics'),
-                ],
-            ]);
+            'count_all' => $countAll,
+            'details' => $translationDetails,
+            'submenu' => [
+                'active' => 'statistics',
+                'items' => $this->getSubmenuItems($request->getLocale(), 'statistics'),
+            ],
+        ]);
     }
 
     /**
-     * @param $locale
      * @param mixed|null $action
      * @param mixed|null $code
      *

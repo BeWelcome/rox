@@ -15,22 +15,21 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Gedmo\Translatable\TranslatableListener;
-use PDO;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ *
+ * \todo Move statistics of different aspects  into different models
+ */
 class StatisticsModel
 {
     use ManagerTrait;
 
-    private TranslatorInterface $translator;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager)
+    public function __construct(private TranslatorInterface $translator, private EntityManagerInterface $entityManager)
     {
-        $this->translator = $translator;
-        $this->entityManager = $entityManager;
     }
 
     public function getStatisticsHomepage(): array
@@ -104,8 +103,6 @@ class StatisticsModel
      * @throws DBALException
      * @throws ORMException
      * @throws OptimisticLockException
-     *
-     * @return int
      */
     public function updateStatistics(DatePeriod $dates, OutputInterface $output): int
     {
@@ -269,7 +266,7 @@ class StatisticsModel
     public function getLanguagesData(): array
     {
         $connection = $this->entityManager->getConnection();
-        $result = $connection->executeQuery("
+        $result = $connection->executeQuery('
             SELECT
                 l.shortCode language,
                 COUNT(m.id) cnt
@@ -280,12 +277,12 @@ class StatisticsModel
             WHERE
                 l.id = mll.IdLanguage
                 AND mll.idMember = m.id
-                AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")
+                AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
             GROUP BY
                 l.name
             ORDER BY
                 cnt DESC
-        ");
+        ');
 
         $resultSet = $this->reduceResultSet(10, $result->fetchAllKeyValue());
 
@@ -295,7 +292,7 @@ class StatisticsModel
     public function getPreferredLanguagesData(): array
     {
         $connection = $this->entityManager->getConnection();
-        $result = $connection->executeQuery("
+        $result = $connection->executeQuery('
             SELECT
                 l.shortCode language,
                 COUNT(m.id) cnt
@@ -307,13 +304,13 @@ class StatisticsModel
                 m.id = mp.idmember
                 AND mp.idpreference = 1
             WHERE
-                m.status IN (" . MemberStatusType::ACTIVE_ALL . ")
+                m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
                 AND l.id = IFNULL(mp.value, 0)
             GROUP BY
                 language
             ORDER BY
                 cnt DESC
-        ");
+        ');
 
         $resultSet = $this->reduceResultSet(14, $result->fetchAllKeyValue());
 
@@ -323,7 +320,7 @@ class StatisticsModel
     public function getMembersPerCountryData(): array
     {
         $connection = $this->entityManager->getConnection();
-        $result = $connection->executeQuery("
+        $result = $connection->executeQuery('
             SELECT
                 gc.country AS country,
                 count(*) AS cnt
@@ -332,7 +329,7 @@ class StatisticsModel
                 geonamescountries gc,
                 geonames g
             WHERE
-                m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")
+                m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
                 AND
                 m.IdCity = g.geonameId
                 AND
@@ -341,7 +338,7 @@ class StatisticsModel
                 gc.country
             ORDER BY
                 cnt DESC
-        ");
+        ');
 
         $resultSet = $this->reduceResultSet(14, $result->fetchAllKeyValue());
 
@@ -354,16 +351,16 @@ class StatisticsModel
     public function getMembersPerLoginData(): array
     {
         $connection = $this->entityManager->getConnection();
-        $executionResult = $connection->executeQuery("
+        $executionResult = $connection->executeQuery('
             SELECT
                 TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff,
                 COUNT(*) AS cnt
             FROM members
             WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
-            AND status IN (" . MemberStatusType::ACTIVE_ALL . ")
+            AND status IN (' . MemberStatusType::ACTIVE_ALL . ')
             GROUP BY logindiff
             ORDER BY logindiff ASC
-        ");
+        ');
 
         $resultSet = $executionResult->fetchAllKeyValue();
 
@@ -389,7 +386,7 @@ class StatisticsModel
         $result['longer'] = 0;
 
         foreach ($resultSet as $diff => $count) {
-            if ($diff == 1) {
+            if (1 === $diff) {
                 $result['1 day'] += $count;
             } elseif ($diff <= 7) {
                 $result['1 week'] += $count;
@@ -411,23 +408,24 @@ class StatisticsModel
         foreach ($result as $key => $count) {
             $translatedResult[$translatedPeriods[$key]] = $count;
         }
+
         return $translatedResult;
     }
 
     private function reduceResultSet(int $count, array $resultSet): array
     {
-        $other = $this->translator->trans('statistics.other', [ 'count' => count($resultSet) - $count + 1]);
-        $result = array_slice($resultSet, 0, $count);
+        $other = $this->translator->trans('statistics.other', ['count' => \count($resultSet) - $count + 1]);
+        $result = \array_slice($resultSet, 0, $count);
         $keys = array_keys($resultSet);
-        for ($i = $count; $i < count($keys); $i++) {
-           if (!isset($result[$other])) {
-               $result[$other] = 0;
-           }
-           $result[$other] += $resultSet[$keys[$i]];
+        $keyCount = \count($keys);
+        for ($i = $count; $i < $keyCount; ++$i) {
+            if (!isset($result[$other])) {
+                $result[$other] = 0;
+            }
+            $result[$other] += $resultSet[$keys[$i]];
         }
 
         return $result;
-
     }
 
     /**
@@ -562,7 +560,7 @@ class StatisticsModel
         Connection $connection,
         string $current,
         string $next,
-        $statistics
+        $statistics,
     ): void {
         // Number of requests created from one member to another during the current date
         $count = $connection->executeQuery(
@@ -614,7 +612,7 @@ class StatisticsModel
         Connection $connection,
         string $current,
         string $next,
-        Statistic $statistics
+        Statistic $statistics,
     ): void {
         // Number of requests created from one member to another during the current date
         $count = $connection->executeQuery(
@@ -645,7 +643,7 @@ class StatisticsModel
         Connection $connection,
         string $current,
         string $next,
-        Statistic $statistics
+        Statistic $statistics,
     ): void {
         // Number of requests created from one member to another during the current date
         $count = $connection->executeQuery(
@@ -716,8 +714,8 @@ class StatisticsModel
             // turn provided yearweek into a date (first day of the week)
             $preparedData['labels'][] = date(
                 'Y-m-d',
-                strtotime(substr($datum['week'], 0, 4)
-                    . '-W' . substr($datum['week'], 4, 2) . '-1')
+                strtotime(substr((string) $datum['week'], 0, 4)
+                    . '-W' . substr((string) $datum['week'], 4, 2) . '-1')
             );
             $preparedData['numbers'][] = $datum['count'];
         }
@@ -731,15 +729,14 @@ class StatisticsModel
         $qb = $this->entityManager->createQueryBuilder();
         $countriesQuery = $qb
             ->select('c')
-            ->from('App\Entity\NewLocation', 'c', 'c.countryId')
+            ->from(\App\Entity\NewLocation::class, 'c', 'c.countryId')
             ->where($qb->expr()->in('c.countryId ', $countryCodes))
             ->andWhere($qb->expr()->eq('c.featureClass', $qb->expr()->literal('A')))
             ->andWhere($qb->expr()->eq('c.featureCode', $qb->expr()->literal('PCLI')))
-            ->getQuery()
-        ;
+            ->getQuery();
         $countriesQuery->setHint(
             \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
         );
         $countriesQuery->setHint(
             TranslatableListener::HINT_TRANSLATABLE_LOCALE,
@@ -756,7 +753,7 @@ class StatisticsModel
 
         $translatedCountries = [];
         foreach ($countryCodes as $key) {
-            if (2 === strlen($key) && isset($countries[$key])) {
+            if (2 === \strlen($key) && isset($countries[$key])) {
                 $translatedCountries[$countries[$key]->getName()] = $resultSet[$key];
             } else {
                 $translatedCountries[$key] = $resultSet[$key];

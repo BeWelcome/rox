@@ -59,7 +59,7 @@ class DonateModel
                 ";
             $result = $connection->executeQuery($query);
             $row = $result->fetchAssociative();
-            $row['QuarterDonation'] = sprintf('%d', $row['Total']);
+            $row['QuarterDonation'] = \sprintf('%d', $row['Total']);
             $row['MonthNeededAmount'] = $requiredPerMonth;
             $row['YearNeededAmount'] = $campaignValue['neededperyear'];
             $row['QuarterNeededAmount'] = $requiredPerMonth * 3;

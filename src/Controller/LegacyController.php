@@ -6,10 +6,7 @@ use App\Entity\Member;
 use App\LegacyKernel\LegacyHttpKernel;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
-use Doctrine\DBAL\Statement;
-use Doctrine\ORM\EntityManagerInterface;
 use EnvironmentExplorer;
-use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -27,12 +24,11 @@ class LegacyController extends AbstractController
      */
     public function showLegacyPage(
         Request $request,
-        EntityManagerInterface $entityManager,
         LegacyHttpKernel $legacyHttpKernel,
         TranslatorInterface $translator,
         UrlGeneratorInterface $urlGenerator,
         ParameterBagInterface $params,
-        Security $securityHelper
+        Security $securityHelper,
     ): Response {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
@@ -55,9 +51,9 @@ class LegacyController extends AbstractController
         );
 
         $pathInfo = $request->getPathInfo();
-        $public = (false === strpos($pathInfo, '/safety')) ||
-            (false === strpos($pathInfo, '/about')) ||
-            (false === strpos($pathInfo, '/signup'));
+        $public = (!str_contains($pathInfo, '/safety'))
+            || (!str_contains($pathInfo, '/about'))
+            || (!str_contains($pathInfo, '/signup'));
         if (!$session->has('IdMember')) {
             /** @var Member $member */
             $member = $securityHelper->getUser();

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -13,11 +14,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Location.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'geonames')]
 #[ORM\Index(name: 'geonames_idx_name', columns: ['name'])]
@@ -34,10 +33,10 @@ class Location
     private string $name;
 
     #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
-    private float $latitude;
+    private string $latitude;
 
     #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
-    private float $longitude;
+    private string $longitude;
 
     #[ORM\Column(name: 'fclass', type: 'string', length: 1, nullable: false)]
     private string $fclass;

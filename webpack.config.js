@@ -1,7 +1,5 @@
 let Encore = require('@symfony/webpack-encore');
 
-const { CKEditorTranslationsPlugin } = require( '@ckeditor/ckeditor5-dev-translations' );
-const { styles} = require('@ckeditor/ckeditor5-dev-utils');
 const path = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -54,13 +52,6 @@ Encore
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('scrollingtabs', './assets/js/scrollingtabs.js')
     .addEntry('email', './assets/scss/email.scss')
-    // CKEditor
-    .addPlugin(new CKEditorTranslationsPlugin({
-        language: 'en',
-        additionalLanguages: 'all',
-        outputDirectory: 'cktranslations',
-        buildAllTranslationsToSeparateFiles: true
-    }))
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('highlight', './assets/js/highlight.js')
@@ -105,32 +96,10 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(true)
     // Use raw-loader for CKEditor 5 SVG files.
-    .addRule({
-        test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-        loader: 'raw-loader'
-    })
-
-    // Configure other image loaders to exclude CKEditor 5 SVG files.
-    .configureLoaderRule('images', loader => {
-        loader.exclude = /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/;
-    })
     .enablePostCssLoader((options) => {
         // new option outlined here https://webpack.js.org/loaders/postcss-loader/
         options.postcssOptions = {
             config: './postcss.config.js',
-        }
-    })
-    // Configure PostCSS loader.
-    .addLoader({
-        test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
-        loader: 'postcss-loader',
-        options: {
-            postcssOptions: styles.getPostCssConfig( {
-                themeImporter: {
-                    themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
-                },
-                minify: true
-            } )
         }
     })
 ;

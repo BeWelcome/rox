@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -33,9 +34,6 @@ class MapSearchFormType extends AbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -47,6 +45,7 @@ class MapSearchFormType extends AbstractType
         ]);
     }
 
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'search_map';

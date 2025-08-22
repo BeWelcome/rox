@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 class NewsletterUnsubscribeMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'Newsletter (terms of use)' => [
             'type' => 'email',
             'template' => 'emails/newsletter.html.twig',
@@ -58,11 +58,8 @@ class NewsletterUnsubscribeMockups implements MockupProviderInterface
         ],
     ];
 
-    private FormFactoryInterface $formFactory;
-
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(private readonly FormFactoryInterface $formFactory)
     {
-        $this->formFactory = $formFactory;
     }
 
     public function getFeature(): string

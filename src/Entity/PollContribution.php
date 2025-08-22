@@ -7,11 +7,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PollsContributions.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'polls_contributions')]
 #[ORM\Index(name: 'polls_contributions_email', columns: ['Email'])]
@@ -207,11 +205,9 @@ class PollContribution
     /**
      * Set idpoll.
      *
-     * @param Poll $poll
-     *
      * @return PollContribution
      */
-    public function setPoll(Poll $poll = null)
+    public function setPoll(?Poll $poll = null)
     {
         $this->poll = $poll;
 
@@ -231,11 +227,9 @@ class PollContribution
     /**
      * Set idmember.
      *
-     * @param Member $member
-     *
      * @return PollContribution
      */
-    public function setMember(Member $member = null)
+    public function setMember(?Member $member = null)
     {
         $this->member = $member;
 

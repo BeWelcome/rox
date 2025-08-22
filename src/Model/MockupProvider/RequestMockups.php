@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 class RequestMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'intial request (guest)' => [
             'type' => 'page',
             'template' => 'request/request.html.twig',
@@ -46,11 +46,8 @@ class RequestMockups implements MockupProviderInterface
         ],
     ];
 
-    private FormFactoryInterface $formFactory;
-
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(private readonly FormFactoryInterface $formFactory)
     {
-        $this->formFactory = $formFactory;
     }
 
     public function getFeature(): string
@@ -78,20 +75,14 @@ class RequestMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        switch ($parameters['name']) {
-            case 'intial request (guest)':
-                return $this->getVariablesForInitialRequest($parameters);
-            case 'request reply (guest)':
-                return $this->getVariablesForReplyGuest($parameters);
-            case 'request reply (host)':
-                return $this->getVariablesForReplyHost($parameters);
-            case 'view request (guest)':
-                return $this->getVariablesForViewGuest($parameters);
-            case 'view request (host)':
-                return $this->getVariablesForViewHost($parameters);
-            default:
-                return [];
-        }
+        return match ($parameters['name']) {
+            'intial request (guest)' => $this->getVariablesForInitialRequest($parameters),
+            'request reply (guest)' => $this->getVariablesForReplyGuest($parameters),
+            'request reply (host)' => $this->getVariablesForReplyHost($parameters),
+            'view request (guest)' => $this->getVariablesForViewGuest($parameters),
+            'view request (host)' => $this->getVariablesForViewHost($parameters),
+            default => [],
+        };
     }
 
     private function getVariablesForInitialRequest(array $parameters): array
@@ -145,7 +136,7 @@ class RequestMockups implements MockupProviderInterface
         $guest = $parameters['admin'];
 
         $thread = $this->getThread($host, $guest, $parameters['status'], 3);
-        $form = $this->formFactory->create( ReportSpamType::class);
+        $form = $this->formFactory->create(ReportSpamType::class);
 
         return [
             'host' => $host,
@@ -164,7 +155,7 @@ class RequestMockups implements MockupProviderInterface
 
         $thread = $this->getThread($host, $guest, $parameters['status'], 4);
 
-        $form = $this->formFactory->create( ReportSpamType::class);
+        $form = $this->formFactory->create(ReportSpamType::class);
 
         return [
             'host' => $host,

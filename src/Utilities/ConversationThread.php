@@ -8,11 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class ConversationThread
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function getThread(Message $conversation): array

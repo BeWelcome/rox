@@ -35,7 +35,7 @@ class NotifyModel extends RoxModelBase
      * @param int $note_id
      * @return mixed false or a Note entity
      */
-    public function deleteNotes($notes = array())
+    public function deleteNotes($notes = [])
     {
         foreach ($notes as $note) {
             $this->createEntity('Note', $note)->deleteNote();
@@ -54,31 +54,15 @@ class NotifyModel extends RoxModelBase
 
         if (!empty($order))
         {
-            switch ($order)
-            {
-                case "nameasc":
-                    $order = 'Name ASC';
-                    break;
-                case "namedesc":
-                    $order = 'Name DESC';
-                    break;
-                case "membersasc":
-                    $order = '(SELECT SUM(IdMember) FROM membersgroups as mg WHERE IdGroup = groups.id) ASC, Name ASC';
-                    break;
-                case "membersdesc":
-                    $order = '(SELECT SUM(IdMember) FROM membersgroups as mg WHERE IdGroup = groups.id) DESC, Name ASC';
-                    break;
-                case "createdasc":
-                    $order = 'created ASC, Name ASC';
-                    break;
-                case "createddesc":
-                    $order = 'created DESC, Name ASC';
-                    break;
-                case "category":
-                default:
-                    $order = 'created DESC, Name ASC';
-                    break;
-            }
+            $order = match ($order) {
+                "nameasc" => 'Name ASC',
+                "namedesc" => 'Name DESC',
+                "membersasc" => '(SELECT SUM(IdMember) FROM membersgroups as mg WHERE IdGroup = groups.id) ASC, Name ASC',
+                "membersdesc" => '(SELECT SUM(IdMember) FROM membersgroups as mg WHERE IdGroup = groups.id) DESC, Name ASC',
+                "createdasc" => 'created ASC, Name ASC',
+                "createddesc" => 'created DESC, Name ASC',
+                default => 'created DESC, Name ASC',
+            };
         }
         else
         {
@@ -148,7 +132,7 @@ ORDER BY created DESC,IdMember ASC
     {
         if (!$this->session->has( 'IdMember' ))
         {
-            return array();
+            return [];
         }
         else
         {
@@ -160,7 +144,7 @@ ORDER BY created DESC,IdMember ASC
     {
         if (!$this->session->has( 'IdMember' )) {
             // not logged in - no messages
-            return array();
+            return [];
         } else {
             $member_id = $this->session->get('IdMember');
             return $this->getNotes(false,'WHERE notes.IdMember = '.$member_id.' AND notes.Checked = 0');

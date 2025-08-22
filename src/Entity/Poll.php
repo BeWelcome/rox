@@ -7,14 +7,11 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Mapping\ClassMetadata;
 
 /**
- * Polls.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'polls')]
 #[ORM\Index(name: 'IdCreator', columns: ['IdCreator'])]

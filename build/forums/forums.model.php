@@ -24,7 +24,7 @@ function cmpForumLang($a, $b)
     if ($a == $b) {
         return 0;
     }
-    return (strtolower($a->Name) < strToLower($b->Name)) ? -1 : 1;
+    return (strtolower((string) $a->Name) < strToLower((string) $b->Name)) ? -1 : 1;
 }
 
 class Forums extends RoxModelBase {
@@ -159,11 +159,8 @@ function FindAppropriatedLanguage($IdPost=0) {
 	$query ="SELECT `IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
 	$q = $this->dao->query($query);
 	$row = $q->fetch(PDB::FETCH_OBJ);
-	if (isset ($row->IdLanguage)) {
-	   return($row->IdLanguage) ;
-	}
 
-	return(0) ; // By default we will return english
+	return($row->IdLanguage ?? 0) ; // By default we will return english
 
 } // end of FindAppropriatedLanguage
 
@@ -181,17 +178,11 @@ function FindAppropriatedLanguage($IdPost=0) {
         if ($this->session->has('IdMember')) {
             $member = $this->getLoggedInMember();
 
-            switch($member->getPreference("PreferenceForumFirstPage")) {
-                case "Pref_ForumFirstPageLastPost":
-                    $this->setTopMode(Forums::CV_TOPMODE_FORUM) ;
-                    break ;
-                case "Pref_ForumFirstPageCategory":
-                    $this->setTopMode(Forums::CV_TOPMODE_CATEGORY) ;
-                    break ;
-                default:
-                    $this->setTopMode(Forums::CV_TOPMODE_LANDING) ;
-                    break ;
-            }
+            match ($member->getPreference("PreferenceForumFirstPage")) {
+                "Pref_ForumFirstPageLastPost" => $this->setTopMode(Forums::CV_TOPMODE_FORUM),
+                "Pref_ForumFirstPageCategory" => $this->setTopMode(Forums::CV_TOPMODE_CATEGORY),
+                default => $this->setTopMode(Forums::CV_TOPMODE_LANDING),
+            };
             $layoutbits = new MOD_layoutbits();
             $this->ForumOrderList = $layoutbits->GetPreference("PreferenceForumOrderListAsc", $member->id);
         } else {
@@ -203,7 +194,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 			$this->POSTS_PER_PAGE = self::CV_POSTS_PER_PAGE; // Variable because it can change wether the user is logged or no
 		}
 
-		$MyGroups = array();
+		$MyGroups = [];
 
 
 		$this->words = new MOD_words();
@@ -346,20 +337,13 @@ function FindAppropriatedLanguage($IdPost=0) {
                 . ' preference not found in "preferences" table');
         }
 
-        switch ($command) {
-            case "moreagora":
-                $membersmodel->set_preference($member->id, $forumpref->id, min($forumthreads + $step, $MAX_THREADS));
-                break;
-            case "lessagora":
-                $membersmodel->set_preference($member->id, $forumpref->id, max($forumthreads - $step, 1));
-                break;
-            case "moregroups":
-                $membersmodel->set_preference($member->id, $groupspref->id, min($groupsthreads + $step, $MAX_THREADS));
-                break;
-            case "lessgroups":
-                $membersmodel->set_preference($member->id, $groupspref->id, max($groupsthreads - $step, 1));
-                break;
-        }
+        match ($command) {
+            "moreagora" => $membersmodel->set_preference($member->id, $forumpref->id, min($forumthreads + $step, $MAX_THREADS)),
+            "lessagora" => $membersmodel->set_preference($member->id, $forumpref->id, max($forumthreads - $step, 1)),
+            "moregroups" => $membersmodel->set_preference($member->id, $groupspref->id, min($groupsthreads + $step, $MAX_THREADS)),
+            "lessgroups" => $membersmodel->set_preference($member->id, $groupspref->id, max($groupsthreads - $step, 1)),
+            default => false,
+        };
 
         return false;
     }
@@ -524,7 +508,7 @@ WHERE
         }
         $group = $gr->fetch(PDB::FETCH_OBJ);
 
-        $subboards = array();
+        $subboards = [];
 		$gtitle= $this->words->getSilent("ForumGroupTitle", $this->getGroupName($group->Name)) ;
         $this->board = new Board($this->dao, "", ".", $this->getSession(), $subboards, $this->IdGroup);
         $this->board->initThreads($this->getPage(), $showsticky);
@@ -721,7 +705,7 @@ WHERE `forums_posts`.`id` = $this->messageId
 		 $IdLanguage=(int)$P_IdLanguage ;
 		 $Sentence= $this->dao->escape($P_Sentence);
 
-        MOD_log::get()->write("Updating data for IdForumTrads=#".$id." Before [".addslashes($rBefore->Sentence)."] IdLanguage=".$rBefore->IdLanguage." <br />\nAfter [".$Sentence."] IdLanguage=".$IdLanguage, "ForumModerator");
+        MOD_log::get()->write("Updating data for IdForumTrads=#".$id." Before [".addslashes((string) $rBefore->Sentence)."] IdLanguage=".$rBefore->IdLanguage." <br />\nAfter [".$Sentence."] IdLanguage=".$IdLanguage, "ForumModerator");
 		 $sUpdate="update forum_trads set Sentence='".$Sentence."',IdLanguage=".$IdLanguage.",IdTranslator=".$this->session->get("IdMember").", updated=NOW() where id=".$id ;
         $s=$this->dao->query($sUpdate);
         if (!$s) {
@@ -769,7 +753,7 @@ WHERE `forums_posts`.`id` = $this->messageId
 		 	$this->ReplaceInFTrad($this->dao->escape($this->cleanupText($vars['topic_title'])), "forums_threads.IdTitle", $rBefore->threadid, $rBefore->IdTitle, $rBefore->IdWriter) ;
 		// case the update concerns the reference language of the threads
 		 	if ($rBefore->thread_IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
-		 	    $groupId = (isset($vars['IdGroup']))?$vars['IdGroup']:'NULL';
+		 	    $groupId = $vars['IdGroup'] ?? 'NULL';
 		 	   $query="update forums_threads set IdGroup=". $groupId.",title='".$this->dao->escape($this->cleanupText($vars['topic_title']))."' where forums_threads.id=".$rBefore->threadid ;
         	   $s=$this->dao->query($query);
 		   }
@@ -789,7 +773,7 @@ WHERE `forums_posts`.`id` = $this->messageId
         }
 
         $this->prepare_notification($this->messageId,"useredit") ; // Prepare a notification
-        MOD_log::get()->write("Editing Post=#".$this->messageId." Text Before=<i>".addslashes($rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
+        MOD_log::get()->write("Editing Post=#".$this->messageId." Text Before=<i>".addslashes((string) $rBefore->message)."</i> <br /> NotifyMe=[".$vars['NotifyMe']."]", "Forum");
     } // editPost
 
     /**
@@ -804,7 +788,7 @@ WHERE `forums_posts`.`id` = $this->messageId
 UPDATE `forums_threads`
 SET `title` = '%s'
 WHERE `id` = '%d' ",
-            $this->dao->escape(strip_tags($vars['topic_title'])),
+            $this->dao->escape(strip_tags((string) $vars['topic_title'])),
             $threadid
         );
 
@@ -818,7 +802,7 @@ WHERE `id` = '%d' ",
         }
         $rBefore = $s->fetch(PDB::FETCH_OBJ);
 
-		 $this->ReplaceInFTrad($this->dao->escape(strip_tags($vars['topic_title'])), "forums_threads.IdTitle", $rBefore->IdThread, $rBefore->IdTitle, $rBefore->IdWriter) ;
+		 $this->ReplaceInFTrad($this->dao->escape(strip_tags((string) $vars['topic_title'])), "forums_threads.IdTitle", $rBefore->IdThread, $rBefore->IdTitle, $rBefore->IdWriter) ;
 
 		 // case the update concerns the reference language of the posts
 		if ($rBefore->thread_IdFirstLanguageUsed==$this->GetLanguageChoosen()) {
@@ -916,7 +900,7 @@ WHERE `id` = '%d' ",
 	*				in other case an array of reports is returned
 	*/
 	public function GetReports($IdPost,$IdReporter=0) {
-		$tt=array() ;
+		$tt=[] ;
 		if (empty($IdReporter)) {
 			$ss = "select reports_to_moderators.*,Username from reports_to_moderators,members where IdPost=".$IdPost." and members.id=IdReporter" ;
 			$s = $this->dao->query($ss);
@@ -958,7 +942,7 @@ WHERE `id` = '%d' ",
 			$ss=$ss." and reports_to_moderators.Status in ".$StatusList ;
 		}
 
-		$tt=array() ;
+		$tt=[] ;
 		if (!empty($IdMember)) {
 			$ss=$ss." and reports_to_moderators.IdModerator=".$IdMember ;
 		}
@@ -1037,7 +1021,7 @@ WHERE `id` = '%d' ",
         // retrieve all trads for content
         $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
         $s = $this->dao->query($query);
-		 $DataPost->Post->Content=array() ;
+		 $DataPost->Post->Content=[] ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
 		 	   $DataPost->Post->Content[]=$row ;
 		 }
@@ -1055,7 +1039,7 @@ WHERE `id` = '%d' ",
 // retrieve all trads for Title
         $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Thread->IdTitle." order by forum_trads.created asc" ;
         $s = $this->dao->query($query);
-		 $DataPost->Thread->Title=array() ;
+		 $DataPost->Thread->Title=[] ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
 		 	   array_push($DataPost->Thread->Title,$row) ;
 		 }
@@ -1312,7 +1296,7 @@ WHERE `id` = '$topicinfo->threadid'
 
 
     private function checkVarsReply(&$vars) {
-        $errors = array();
+        $errors = [];
 
         if (!isset($vars['topic_text']) || empty($vars['topic_text'])) {
             $errors[] = 'text';
@@ -1326,7 +1310,7 @@ WHERE `id` = '$topicinfo->threadid'
     }
 
     public function checkVarsTopic(&$vars) {
-        $errors = array();
+        $errors = [];
 
         if (!isset($vars['topic_title']) || empty($vars['topic_title'])) {
             $errors[] = 'title';
@@ -1476,7 +1460,7 @@ WHERE `id` = '$this->threadid'
             VALUES (?, ?, ?, ?, ?, ?, 0, 0, 0, 0)
         ");
 
- 		$title = strip_tags($vars['topic_title']);
+ 		$title = strip_tags((string) $vars['topic_title']);
  		$statement->bindParam(1, $title);
  		$statement->bindParam(2, $postId);
  		$statement->bindParam(3, $postId);
@@ -1487,7 +1471,7 @@ WHERE `id` = '$this->threadid'
         $result = $statement->execute();
         $threadId = $statement->insertId();
 
-		$ss=$this->dao->escape(strip_tags(($vars['topic_title']))) ;
+		$ss=$this->dao->escape(strip_tags(((string) $vars['topic_title']))) ;
  		$this->InsertInFTrad($ss,"forums_threads.IdTitle",$threadId) ;
 
  		$statement = $this->dao->prepare("UPDATE `forums_posts` SET `threadId` = ? WHERE `Id` = ?");
@@ -1725,7 +1709,7 @@ LIMIT %d
         if (!$s) {
             throw new PException('Could not retrieve Posts!');
         }
-        $this->topic->posts = array();
+        $this->topic->posts = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
           	$sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner, members as mTranslator
 			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
@@ -1846,7 +1830,7 @@ LIMIT %d
     public function searchSubscriptions() {
         $member= $this->getLoggedInMember();
         if (!$member) {
-            return array();
+            return [];
         }
         $TResults = new StdClass();
         $query = "
@@ -1871,7 +1855,7 @@ ORDER BY `subscribedtime` DESC
             throw new PException('Could not retrieve members_threads_subscribed sts via searchSubscription !');
         }
 
-        $TResults->TData = array();
+        $TResults->TData = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $TResults->TData[] = $row;
         }
@@ -1892,7 +1876,7 @@ ORDER BY `subscribedtime` DESC
         if (!$s) {
             throw new PException('Could load group memberships');
         }
-        $TResults->Groups = array();
+        $TResults->Groups = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $TResults->Groups[] = $row;
         }
@@ -2010,7 +1994,7 @@ AND IdThread=%d
             MOD_log::get()->write("Allready subscribed to Thread=#".$IdThread, "Forum");
             return(false) ;
         }
-        $key=MD5(rand(100000,900000)) ;
+        $key=MD5(random_int(100000,900000)) ;
         $query = "INSERT INTO
                 members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey,notificationsEnabled,created)
                 VALUES(".$IdThread.",".$this->session->get("IdMember").",'".$this->dao->escape($key)."', 1,NOW())" ;
@@ -2116,7 +2100,7 @@ ORDER BY `posttime` DESC",    $IdMember   );
         if (!$s) {
             throw new PException('Could not retrieve Posts via searchUserposts !');
         }
-        $posts = array();
+        $posts = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
           	$sw = $this->dao->query("select forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner,members as mTranslator    where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mTranslator.id=IdTranslator  and mOwner.id=IdOwner order by forum_trads.id asc");
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
@@ -2144,7 +2128,7 @@ ORDER BY `posttime` DESC",    $IdMember   );
 
     private $threadid = 0;
     private $page = 1;
-    private $page_array = array();
+    private $page_array = [];
     private $messageId = 0;
     private $TopMode=Forums::CV_TOPMODE_LANDING; // define that we use the landing page for top mode
 
@@ -2237,8 +2221,8 @@ ORDER BY `posttime` DESC",    $IdMember   );
 	 public function LanguageChoices($DefIdLanguage=-1) {
 
 
-	 		$tt=array() ;
-			$allreadyin=array() ;
+	 		$tt=[] ;
+			$allreadyin=[] ;
 			$ii=0 ;
 
 // First proposed will deflanguage
@@ -2269,11 +2253,11 @@ ORDER BY `posttime` DESC",    $IdMember   );
 			$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id>0"
 			    . " AND IsWrittenLanguage = 1";
           	$s = $this->dao->query($query);
-          	$langarr = array();
+          	$langarr = [];
         	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			   if (!in_array($row->IdLanguage,$allreadyin)) {
 			   	  array_push($allreadyin,$row->IdLanguage) ;
-			   	  $row->Name = $this->getWords()->getSilent($row->WordCode) . " (" . trim($row->Name) . ")";
+			   	  $row->Name = $this->getWords()->getSilent($row->WordCode) . " (" . trim((string) $row->Name) . ")";
 			  	  $langarr[] = $row;
 			   }
 			}
@@ -2284,7 +2268,7 @@ ORDER BY `posttime` DESC",    $IdMember   );
 
     // This fonction will prepare a list of group in an array that the moderator can use
 	 public function ModeratorGroupChoice() {
-	 		$tt=array() ;
+	 		$tt=[] ;
 
 			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups
 										 WHERE membersgroups.IdGroup=groups.id group by groups.id order by Name ";
@@ -2300,7 +2284,7 @@ ORDER BY `posttime` DESC",    $IdMember   );
     // This fonction will prepare a list of group in an array that the user can use
 		// (according to his member ship)
 	 public function GroupChoice() {
- 		$tt=array() ;
+ 		$tt=[] ;
 
 		$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members
 										 WHERE membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
@@ -2387,7 +2371,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
             return;
         }
 
-        $members = array(); // collects all members that get a notification (to avoid several notifications for the same post)
+        $members = []; // collects all members that get a notification (to avoid several notifications for the same post)
 
         // first we get all open (ToSend) post notifications from the database and build
         // a list of members that don't need another reminder
@@ -2411,7 +2395,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 
         // get group members in case of a group post to limit subscriptions to tags and threads
 		$group = false;
-        $groupMembers = array();
+        $groupMembers = [];
         if ($post->groupId != 0) {
             $group = $this->createEntity('Group')->findById($post->groupId);
             $memberEntities = $group->getMembers();
@@ -2424,7 +2408,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
             // We reuse the $group entity from above
             $subscriberEntities = $group->getEmailAcceptingMembers();
 
-            $membersTemp = array();
+            $membersTemp = [];
             foreach($subscriberEntities as $subscriber) {
                 $memberId = $subscriber->getPKValue();
                 if ($memberId == 0) continue;
@@ -2473,7 +2457,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 			return;
 		}
 
-		$membersTemp = array();
+		$membersTemp = [];
 		while ($row = $res->fetch(PDB::FETCH_OBJ)) {
 			if ($row->subscriber > 0) {
                 // did member disable notifications for this thread?
@@ -2621,7 +2605,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
         $client = new Client($config);
         $query = new Search($client);
         $query
-            ->setIndex('forum_rt')
+            ->setTable('forum_rt')
             ->limit(1000)
             ->sort(['post_id' => 'DESC'])
         ;
@@ -2770,7 +2754,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 
 		$vars_ok = $this->_checkVarsSearch($vars);
 		if ($vars_ok) {
-			$keyword = htmlspecialchars($vars['fs-keyword']);
+			$keyword = htmlspecialchars((string) $vars['fs-keyword']);
 			PPostHandler::clearVars();
 			return PVars::getObj('env')->baseuri.$this->forums_uri.'search/'. $keyword;
 		}
@@ -2784,7 +2768,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
         $port = PVars::getObj('env')->manticore_port;
         $config = ['host' => $host, 'port' => $port];
         $client = new Client($config);
-        $index = $client->index('forum_rt');
+        $index = $client->table('forum_rt');
         $index->addDocument([
             'post_id' => $postId,
             'post_deleted' => 'NotDeleted',
@@ -2810,7 +2794,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
         // Find document in index
         $query = new Search($client);
         $query
-            ->setIndex('forum_rt')
+            ->setTable('forum_rt')
             ->filter('post_id', 'equals', $postId)
             ->filter('thread_id', 'equals', $threadId)
         ;
@@ -2822,7 +2806,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
         $data['content'] = $vars['Sentence'];
 
         // Then replace with new content
-        $index = $client->index('forum_rt');
+        $index = $client->table('forum_rt');
         $index->replaceDocument($data, $hit->getId());
     }
 } // end of class Forums
@@ -2830,14 +2814,14 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 
 class Topic {
     public $topicinfo;
-    public $posts = array();
+    public $posts = [];
 }
 
 class Board implements Iterator {
 	public $THREADS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 	public $POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 
-    public function __construct(&$dao, $boardname, $link, $session, $board_description=false, $IdGroup=false, $no_forumsgroup=false) {
+    public function __construct(&$dao, private $boardname, private $link, $session, private $board_description=false, $IdGroup=false, $no_forumsgroup=false) {
 		$this->THREADS_PER_PAGE=Forums::CV_THREADS_PER_PAGE  ; //Variable because it can change wether the user is logged or no
 		$this->POSTS_PER_PAGE=Forums::CV_POSTS_PER_PAGE ; //Variable because it can change wether the user is logged or no
 
@@ -2850,10 +2834,6 @@ class Board implements Iterator {
 		}
 
         $this->dao =& $dao;
-
-        $this->boardname = $boardname;
-        $this->board_description = $board_description;
-        $this->link = $link;
         $this->IdGroup = $IdGroup;
 
         $this->PublicThreadVisibility = "(ThreadVisibility!='ModeratorOnly') and (ThreadDeleted!='Deleted')";
@@ -2926,7 +2906,7 @@ class Board implements Iterator {
         this filtres the list of thread results according to the presence of :
         $this->IdGroup ;
     */
-	public function FilterThreadListResultsWithIdCriteria($ids = array()) {
+	public function FilterThreadListResultsWithIdCriteria($ids = []) {
         $wherethread="" ;
 
 		if (count($ids) <> 0) {
@@ -2956,9 +2936,9 @@ class Board implements Iterator {
 	 * @param array $ids
 	 * @throws PException
 	 */
-    public function initThreads($page = 1, $showsticky = true, $ids = array()) {
+    public function initThreads($page = 1, $showsticky = true, $ids = []) {
 
-		$this->threads = array();
+		$this->threads = [];
         $wherethread=$this->FilterThreadListResultsWithIdCriteria($ids) ;
 
         if ($showsticky) {
@@ -3029,19 +3009,13 @@ class Board implements Iterator {
 
     } // end of initThreads
 
-    private $threads = array();
+    private $threads = [];
     public function getThreads() {
         return $this->threads;
     }
-
-    private $boardname;
     public function getBoardName() {
         return $this->boardname;
     }
-
-    private $board_description;
-
-    private $link;
 
     public function getNumberOfThreads() {
         return $this->numberOfThreads;
@@ -3051,7 +3025,7 @@ class Board implements Iterator {
         return $this->totalThreads;
     }
 
-    private $subboards = array();
+    private $subboards = [];
 
     // Add a subboard
     public function add(Board $board) {

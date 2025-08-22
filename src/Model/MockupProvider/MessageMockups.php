@@ -7,7 +7,7 @@ use Mockery;
 
 class MessageMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'message (email)' => [
             'type' => 'email',
             'template' => 'emails/message.html.twig',

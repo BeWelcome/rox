@@ -207,8 +207,8 @@ class AdminMassmailModel extends RoxModelBase
         }
 
         // get language names from DB
-        $languages = array();
-        $languagesnames = array();
+        $languages = [];
+        $languagesnames = [];
         foreach($mmris as $mm) {
             $languages[] = $mm->LanguageId;
         }
@@ -255,7 +255,7 @@ class AdminMassmailModel extends RoxModelBase
     }
 
     public function createMassmail($name, $type, $subject, $body, $description) {
-        $name = $this->dao->escape(strtolower($name));
+        $name = $this->dao->escape(strtolower((string) $name));
         // first create entry in the broadcast table
         $query = "
             INSERT INTO
@@ -346,12 +346,12 @@ class AdminMassmailModel extends RoxModelBase
 
     public function massmailEditCreateVarsOk(&$vars) {
         $id = $vars['Id'];
-        $name = strtolower($vars['Name']);
+        $name = strtolower((string) $vars['Name']);
         $subject = $vars['Subject'];
         $body = $vars['Body'];
         $description = $vars['Description'];
         $type = $vars['Type'];
-        $errors = array();
+        $errors = [];
         if (empty($name)) {
             $errors[] = 'AdminMassMailNameEmpty';
         }
@@ -436,7 +436,7 @@ class AdminMassmailModel extends RoxModelBase
     }
 
     public function massmailEnqueueVarsOk(&$vars) {
-        $errors = array();
+        $errors = [];
         $action = $this->getEnqueueAction($vars);
         switch($action) {
             case 'enqueueMembers':
@@ -711,9 +711,9 @@ class AdminMassmailModel extends RoxModelBase
         $action = $this->getEnqueueAction($vars);
         switch($action) {
             case 'enqueueMembers':
-                $usernames = array();
+                $usernames = [];
                 if ($vars['members-type'] == 'usernames') {
-                    $usernames = explode(";", $vars['usernames']);
+                    $usernames = explode(";", (string) $vars['usernames']);
                 }
                 if (empty($vars['max-messages'])) {
                     $maxmessages = 0;

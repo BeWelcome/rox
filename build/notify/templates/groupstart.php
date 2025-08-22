@@ -7,7 +7,7 @@
         <div class="c62l">
             <div class="subcl">
                 <div class="bw-row clearfix">
-                    <?= ((strlen($this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$this->group->Name}' />" : ''); ?>
+                    <?= ((strlen((string) $this->group->Picture) > 0) ? "<img class=\"float_left framed\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$this->group->Name}' />" : ''); ?>
                     <h3><?= $words->get('GroupDescription'); ?></h3>
                     <p><?=$this->group->getDescription() ?></p>
                 </div> <!--row clearfix -->

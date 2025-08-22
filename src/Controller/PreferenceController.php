@@ -3,19 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use App\Entity\MemberPreference;
-use App\Entity\Preference;
 use App\Form\PreferencesType;
 use App\Model\PreferenceModel;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class PreferenceController extends AbstractController
 {
@@ -32,9 +29,9 @@ class PreferenceController extends AbstractController
         ProfileSubmenu $profileSubmenu,
         PreferenceModel $preferenceModel,
         ChangeProfilePictureGlobals $globals,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
-        /** Member must be the logged in member to be able to access this page
+        /** Member must be the logged in member to be able to access this page.
          * @var Member $loggedInMember
          */
         $loggedInMember = $this->getUser();
@@ -51,7 +48,7 @@ class PreferenceController extends AbstractController
         }
 
         $preferenceForm = $this->createForm(PreferencesType::class, $data, [
-            'preferences' => $preferences
+            'preferences' => $preferences,
         ]);
         $preferenceForm->handleRequest($request);
 

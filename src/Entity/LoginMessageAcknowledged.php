@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,7 +11,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LoginMessageAcknowledged.
+ * Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'login_messages_acknowledged')]
 #[ORM\Entity]
@@ -34,11 +37,6 @@ class LoginMessageAcknowledged
         $this->acknowledged = true;
 
         return $this;
-    }
-
-    public function getAcknowledged(): bool
-    {
-        return $this->acknowledged;
     }
 
     public function setMessage(LoginMessage $message): self

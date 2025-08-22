@@ -5,15 +5,11 @@ namespace App\Pagerfanta;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class DoNotTranslateTranslationAdapter implements AdapterInterface
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**

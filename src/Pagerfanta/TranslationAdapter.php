@@ -4,27 +4,22 @@ namespace App\Pagerfanta;
 
 use Doctrine\DBAL\Connection;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class TranslationAdapter implements AdapterInterface
 {
     private string $query;
 
-    private string $countQuery;
-
-    private Connection $connection;
+    private readonly string $countQuery;
 
     /**
      * SearchAdapter constructor.
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function __construct(Connection $connection, string $locale, string $term)
+    public function __construct(private readonly Connection $connection, string $locale, string $term)
     {
-        $this->connection = $connection;
-
         if (!empty($term)) {
-            $term = $connection->quote('%' . $term . '%');
+            $term = $this->connection->quote('%' . $term . '%');
         }
 
         $rawQuery = "
@@ -52,7 +47,7 @@ class TranslationAdapter implements AdapterInterface
                  , COALESCE(pi_lang.Sentence,pi_dflt.Sentence) AS sentence
                  , COALESCE(pi_lang.created,pi_dflt.created) AS created', $rawQuery);
 
-        $this->query .= "             ORDER BY created desc";
+        $this->query .= '             ORDER BY created desc';
         $this->countQuery = str_replace('*select*', 'COUNT(distinct p.code) AS cnt', $rawQuery);
     }
 
@@ -62,7 +57,7 @@ class TranslationAdapter implements AdapterInterface
     public function getNbResults(): int
     {
         $statement = $this->connection->executeQuery($this->countQuery);
-        $count = $statement->fetchOne(PDO::FETCH_OBJ);
+        $count = $statement->fetchOne();
 
         return $count;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -16,11 +17,9 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Activity.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'activities')]
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
@@ -53,7 +52,7 @@ class Activity
     private int $status;
 
     #[ORM\Column(name: 'public', type: 'smallint', nullable: true)]
-    private ?int $online ;
+    private ?int $online;
 
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]

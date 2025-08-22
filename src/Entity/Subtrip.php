@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -18,7 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SubTrip.
  *
- *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
@@ -37,7 +37,7 @@ class Subtrip
     private ?DateTime $departure = null;
 
     #[ORM\Column(name: 'options', type: 'subtrip_options', nullable: true)]
-    private ?string $options;
+    private ?string $options = null;
 
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]

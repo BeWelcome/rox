@@ -33,16 +33,16 @@ Boston, MA  02111-1307, USA.
                 <div class="mr-2">
                     <!-- group image -->
                     <a href="group/<?=$group_data->getPKValue() ?>">
-                        <img class="framed groupimg" alt="<?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen($group_data->Picture) > 0) ? "group/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" />
+                        <img class="framed groupimg" alt="<?=htmlspecialchars((string) $group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen((string) $group_data->Picture) > 0) ? "group/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" />
                     </a>
                 </div>
                 <div>
                     <!-- group name -->
-                    <a href="group/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars($group_data->Name, ENT_QUOTES) ?></a>
+                    <a href="group/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars((string) $group_data->Name, ENT_QUOTES) ?></a>
                     <!-- group details -->
                     <ul class="groupul mt-1 text-truncate">
                         <li><i class="fa fa-users pr-1" title="<?php echo $words->get('GroupsMemberCount');?>"></i><?=$group_data->getMemberCount(); ?></li>
-                        <li><i class="fa fa-history pr-1" title="<?= $words->get('GroupsDateCreation');?>"></i><?=date('d F Y', ServerToLocalDateTime(strtotime($group_data->created), $this->getSession())); ?></li>
+                        <li><i class="fa fa-history pr-1" title="<?= $words->get('GroupsDateCreation');?>"></i><?=date('d F Y', ServerToLocalDateTime(strtotime((string) $group_data->created), $this->getSession())); ?></li>
                     </ul>
                 </div>
             </div>
@@ -87,14 +87,14 @@ Boston, MA  02111-1307, USA.
                             </div>
                             <div>
                                 <?php
-                                $layoutbits->ago(strtotime($value->ts));
+                                $layoutbits->ago(strtotime((string) $value->ts));
                                 ?>
                                 <?php
                                 $memberlink = '<a href="members/' . $value->member->Username . '">' . $value->member->Username . '</a>';
-                                $grouplink =  '<a href="group/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars($value->relatedgroup->Name, ENT_QUOTES) . '</a>';
+                                $grouplink =  '<a href="group/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars((string) $value->relatedgroup->Name, ENT_QUOTES) . '</a>';
                                 $logentry = $words->get($value->RelatedGroupAction, $memberlink, $grouplink);
                                 echo $logentry;
-                                echo "<br>" . $layoutbits->ago(strtotime($value->ts)); ?>
+                                echo "<br>" . $layoutbits->ago(strtotime((string) $value->ts)); ?>
                             </div>
                         </div>
                     </div>

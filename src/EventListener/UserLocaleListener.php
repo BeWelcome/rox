@@ -4,7 +4,6 @@ namespace App\EventListener;
 
 use App\Entity\Language;
 use App\Entity\Member;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -16,16 +15,11 @@ use Symfony\Component\Security\Http\SecurityEvents;
  */
 class UserLocaleListener implements EventSubscriberInterface
 {
-    private EntityManagerInterface $entityManager;
-    private array $locales;
-
     /**
      * UserLocaleListener constructor.
      */
-    public function __construct(EntityManagerInterface $entityManager, array $locales)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly array $locales)
     {
-        $this->entityManager = $entityManager;
-        $this->locales = $locales;
     }
 
     /**

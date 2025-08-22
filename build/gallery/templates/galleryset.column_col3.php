@@ -13,7 +13,7 @@ if ($this->myself) {
     $Own = ($this->myself == $this->member->Username);
 }
 if (!isset($vars['errors'])) {
-    $vars['errors'] = array();
+    $vars['errors'] = [];
 }
 if ($statement){
 foreach ($statement as $d) { ?>

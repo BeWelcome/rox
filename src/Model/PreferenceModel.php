@@ -4,27 +4,23 @@ namespace App\Model;
 
 use App\Entity\Member;
 use App\Entity\Preference;
-use App\Form\DataTransformer\MemberPreferenceTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
 class PreferenceModel
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function getPreferences(): array
     {
-        /** @var EntityRepository $preferenceRepository*/
+        /** @var EntityRepository $preferenceRepository */
         $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         $preferences = $preferenceRepository->findBy(['status' => 'Normal'], ['position' => 'ASC']);
 
-        return array_filter($preferences, function ($p) {
-            return (Preference::LOCALE !== $p->getCodename());
+        return array_filter($preferences, function ($preference) {
+            return Preference::LOCALE !== $preference->getCodename();
         });
     }
 

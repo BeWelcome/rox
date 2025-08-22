@@ -26,7 +26,7 @@ abstract class AbstractExtractor
         return $this->registry->getManagerForClass($className)->getRepository($className);
     }
 
-    protected function writePersonalDataFile(array $parameters, string $template, string $filename = null): string
+    protected function writePersonalDataFile(array $parameters, string $template, ?string $filename = null): string
     {
         $this->writeRenderedTemplate(
             $filename ?: $template,
@@ -43,7 +43,7 @@ abstract class AbstractExtractor
         $parameters = array_merge($parameters, ['date_generated' => new DateTime()]);
 
         $handle = fopen($filename, 'w');
-        fwrite($handle, $this->environment->render(sprintf('private/%s.html.twig', $template), $parameters));
+        fwrite($handle, (string) $this->environment->render(\sprintf('private/%s.html.twig', $template), $parameters));
         fclose($handle);
     }
 
@@ -59,7 +59,7 @@ abstract class AbstractExtractor
             mkdir($subDirectory);
         }
 
-        $filename = (null === $filename) ? $template : $filename;
+        $filename ??= $template;
 
         $parameters = array_merge($parameters, [
             'isSubDir' => true,
@@ -74,17 +74,12 @@ abstract class AbstractExtractor
 
     protected function imageExtension(string $filename): string
     {
-        switch (mime_content_type($filename)) {
-            case 'image/png':
-                return '.png';
-            case 'image/jpeg':
-                return '.jpg';
-            case 'image/gif':
-                return '.gif';
-            case 'image/bmp':
-                return '.bmp';
-            default:
-                return '';
-        }
+        return match (mime_content_type($filename)) {
+            'image/png' => '.png',
+            'image/jpeg' => '.jpg',
+            'image/gif' => '.gif',
+            'image/bmp' => '.bmp',
+            default => '',
+        };
     }
 }

@@ -47,7 +47,7 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminFlagsController
     </div>
     <div class="type-text">
         <label for="comment"><?php echo $this->words->get("AdminFlagsComment") ?></label>
-        <textarea id="comment" name="comment" rows="5"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
+        <textarea id="comment" name="comment" rows="5"><?= htmlentities((string) $this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <div class="type-button">
         <input type="submit" id="AdminFlagsSubmit" name="AdminFlagsSubmit" value="<?php echo $this->words->getSilent("AdminFlagsSubmit")?>" /><?php echo $words->flushBuffer(); ?>

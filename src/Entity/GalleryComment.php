@@ -4,14 +4,13 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * GalleryComments.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'gallery_comments')]
 #[ORM\Index(name: 'gallery_comments_blog_id_foreign', columns: ['gallery_items_id_foreign'])]
@@ -204,10 +203,10 @@ class GalleryComment
     #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
-    public function setCreated(\DateTimeInterface $created): self
+    public function setCreated(DateTimeInterface $created): self
     {
         $this->created = $created;
 

@@ -9,27 +9,32 @@
 
 class GalleryOverviewPage extends GalleryBasePage
 {
+    #[\Override]
     protected function init()
     {
         parent::init();
         $this->addLateLoadScriptFile('build/gallery.js');
     }
 
+    #[\Override]
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/basemod_minimal_col3_75percent.css';
         return $stylesheets;
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'overview';
     }
 
+    #[\Override]
     protected function teaser() {
         echo '<div id="teaser" class="page-teaser clearfix">'.$this->teaserHeadline().'</div>';
     }
 
+    #[\Override]
     protected function teaserHeadline() {
         return '<h1>'.$this->getWords()->get('Gallery').'</h1>';
     }
@@ -39,7 +44,7 @@ class GalleryOverviewPage extends GalleryBasePage
         $loggedInMember = $this->loggedInMember;
         $words = $this->words;
         $galleries = $this->galleries;
-        $cnt_pictures = $this->cnt_pictures ? $this->cnt_pictures : 0;
+        $cnt_pictures = $this->cnt_pictures ?: 0;
         require SCRIPT_BASE . 'build/gallery/templates/galleryoverview.leftsidebar.php';
     }
 

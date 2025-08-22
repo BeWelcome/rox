@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\Member;
 use App\Security\AccountBannedException;
 use App\Security\AccountDeniedLoginException;
+use App\Security\AccountMailConfirmedException;
 use App\Security\AccountMailNotConfirmedException;
 use App\Security\AccountSuspendedException;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -19,6 +22,11 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class SecurityController extends AbstractController
 {
+    public function __construct(
+        public EntityManagerInterface $entityManager,
+    ) {
+    }
+
     #[Route(path: '/login', name: 'login', defaults: ['access_denied_redirect' => '/'])]
     #[Route(path: '/login', name: 'security_login', defaults: ['access_denied_redirect' => '/'])]
     #[Route(path: '/login_check', name: 'security_check', defaults: ['access_denied_redirect' => '/'])]
@@ -33,51 +41,55 @@ class SecurityController extends AbstractController
         $error = $helper->getLastAuthenticationError();
 
         if ($error instanceof AccountMailNotConfirmedException || $error instanceof AccountMailConfirmedException) {
-            return $this->redirectToRoute('signup_finalize', ['username' => $lastUsername]);
+            $memberRepository = $this->entityManager->getRepository(Member::class);
+            $member = $memberRepository->loadUserByIdentifier($lastUsername);
+
+            // We can assume we found a member as the exception is only thrown if we had a member.
+            return $this->redirectToRoute('signup_finalize', ['username' => $member->getUsername()]);
         }
 
-//        $showInvalidCredentialsHint = false;
-//        $showResendConfirmationLink = false;
-//        $showBannedHint = false;
-//        $showExpiredHint = false;
-//        $showSuspendedMemberHint = false;
-//        $showNotAllowedToLogin = false;
-//        if (\is_object($error)) {
-//            switch (\get_class($error)) {
-//                case AccountMailNotConfirmedException::class:
-//                    $showResendConfirmationLink = ($lastUsername) ? true : false;
-//                    break;
-//                case AccountSuspendedException::class:
-//                    $showSuspendedMemberHint = true;
-//                    break;
-//                case BadCredentialsException::class:
-//                    $showInvalidCredentialsHint = true;
-//                    break;
-//                case AccountBannedException::class:
-//                    $showBannedHint = true;
-//                    break;
-//                case AccountDeniedLoginException::class:
-//                    $showNotAllowedToLogin = true;
-//                    break;
-//                case AccountExpiredException::class:
-//                    $showExpiredHint = true;
-//                    break;
-//                default:
-//                    ;
-//            }
-//        }
+        //        $showInvalidCredentialsHint = false;
+        //        $showResendConfirmationLink = false;
+        //        $showBannedHint = false;
+        //        $showExpiredHint = false;
+        //        $showSuspendedMemberHint = false;
+        //        $showNotAllowedToLogin = false;
+        //        if (\is_object($error)) {
+        //            switch (\get_class($error)) {
+        //                case AccountMailNotConfirmedException::class:
+        //                    $showResendConfirmationLink = ($lastUsername) ? true : false;
+        //                    break;
+        //                case AccountSuspendedException::class:
+        //                    $showSuspendedMemberHint = true;
+        //                    break;
+        //                case BadCredentialsException::class:
+        //                    $showInvalidCredentialsHint = true;
+        //                    break;
+        //                case AccountBannedException::class:
+        //                    $showBannedHint = true;
+        //                    break;
+        //                case AccountDeniedLoginException::class:
+        //                    $showNotAllowedToLogin = true;
+        //                    break;
+        //                case AccountExpiredException::class:
+        //                    $showExpiredHint = true;
+        //                    break;
+        //                default:
+        //                    ;
+        //            }
+        //        }
 
         $content = $this->render(
             'security/login.html.twig',
             [
                 'last_username' => $lastUsername,
                 'error' => $error,
-            //                'resend_confirmation' => $showResendConfirmationLink,
-            //                'invalid_credentials' => $showInvalidCredentialsHint,
-            //                'member_banned' => $showBannedHint,
-            //                'member_expired' => $showExpiredHint,
-            //                'member_suspended' => $showSuspendedMemberHint,
-            //                'member_not_allowed_to_login' => $showNotAllowedToLogin,
+                //                'resend_confirmation' => $showResendConfirmationLink,
+                //                'invalid_credentials' => $showInvalidCredentialsHint,
+                //                'member_banned' => $showBannedHint,
+                //                'member_expired' => $showExpiredHint,
+                //                'member_suspended' => $showSuspendedMemberHint,
+                //                'member_not_allowed_to_login' => $showNotAllowedToLogin,
             ]
         );
 
@@ -90,11 +102,10 @@ class SecurityController extends AbstractController
      * But, this will never be executed. Symfony will intercept this first
      * and handle the logout automatically. See logout in app/config/security.yml
      *
-     *
      * @throws Exception
      */
     #[Route(path: '/logout', name: 'security_logout')]
-    public function logoutAction()
+    public function logoutAction(): never
     {
         throw new Exception('This should never be reached!');
     }

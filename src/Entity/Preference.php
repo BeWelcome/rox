@@ -2,10 +2,14 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Preference.
+ * Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'preferences')]
 #[ORM\UniqueConstraint(name: 'codeName', columns: ['codeName'])]
@@ -62,7 +66,7 @@ class Preference
     private $description;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
@@ -136,7 +140,7 @@ class Preference
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -211,7 +215,7 @@ class Preference
         return $this;
     }
 
-    public function setCreated(\DateTimeInterface $created): self
+    public function setCreated(DateTimeInterface $created): self
     {
         $this->created = $created;
 

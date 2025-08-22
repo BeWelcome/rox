@@ -9,7 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Stats.
  *
- *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
@@ -232,7 +231,6 @@ class Statistic
         return $this->legsCreated;
     }
 
-
     /**
      * @param int $invitationsSent
      *
@@ -253,7 +251,6 @@ class Statistic
         return $this->invitationsSent;
     }
 
-
     /**
      * @param int $invitationsAccepted
      *
@@ -273,7 +270,6 @@ class Statistic
     {
         return $this->invitationsAccepted;
     }
-
 
     /**
      * Set number of requests which have been accepted.

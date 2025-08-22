@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -13,11 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Memberslanguageslevel.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'memberslanguageslevel')]
 #[ORM\Index(name: 'members_languages', columns: ['IdMember', 'IdLanguage'])]
@@ -45,8 +44,6 @@ class MembersLanguagesLevel
 
     /**
      * @var Language
-     *
-     *
      */
     #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: \Language::class, inversedBy: 'levels')]
@@ -55,8 +52,6 @@ class MembersLanguagesLevel
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'Level', type: 'language_level', nullable: false)]
     #[Groups(['Member:Read'])]

@@ -8,23 +8,18 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Pagerfanta\Adapter\AdapterInterface;
+use PDO;
 
 class ConversationsWithAdapter implements AdapterInterface
 {
-    private Member $member;
-    private Member $partner;
-    private Connection $connection;
-    private EntityManager $entityManager;
+    private readonly Connection $connection;
 
     public function __construct(
-        EntityManager $entityManager,
-        Member $member,
-        Member $partner
+        private readonly EntityManager $entityManager,
+        private readonly Member $member,
+        private readonly Member $partner,
     ) {
-        $this->entityManager = $entityManager;
-        $this->connection = $entityManager->getConnection();
-        $this->partner = $partner;
-        $this->member = $member;
+        $this->connection = $this->entityManager->getConnection();
     }
 
     public function getNbResults(): int
@@ -39,12 +34,12 @@ class ConversationsWithAdapter implements AdapterInterface
                     ':partnerId' => $this->partner->getId(),
                 ],
                 [
-                    \PDO::PARAM_INT,
-                    \PDO::PARAM_INT,
+                    PDO::PARAM_INT,
+                    PDO::PARAM_INT,
                 ]
             );
             $count = $result->fetchOne();
-        } catch (DBALException $e) {
+        } catch (DBALException) {
             // Return 0
         }
 

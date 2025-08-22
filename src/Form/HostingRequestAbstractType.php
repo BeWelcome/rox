@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Message;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -11,9 +12,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class HostingRequestAbstractType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -23,9 +21,7 @@ class HostingRequestAbstractType extends AbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'app_message';

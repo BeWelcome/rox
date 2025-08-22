@@ -7,11 +7,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Notes left by members about other profiles.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'mycontacts')]
 #[ORM\HasLifecycleCallbacks]

@@ -3,12 +3,10 @@
 namespace App\Model\MemberDataExtractor;
 
 use App\Entity\Member;
+use Exception;
 
 final class GroupInformationExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         // Groups the member is in and why
@@ -21,7 +19,7 @@ final class GroupInformationExtractor extends AbstractExtractor implements Extra
                     if ($groupMembership->getGroup()->getName()) {
                         $memberships[] = $groupMembership;
                     }
-                } catch (\Exception $e) {
+                } catch (Exception) {
                     // Deleted Group
                 }
             }

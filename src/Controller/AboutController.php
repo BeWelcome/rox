@@ -5,7 +5,7 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class AboutController extends AboutBaseController
 {
@@ -38,7 +38,6 @@ class AboutController extends AboutBaseController
     }
 
     /**
-     *
      * @return Response
      */
     #[Route(path: '/about/getactive', name: 'getactive')]
@@ -68,7 +67,6 @@ class AboutController extends AboutBaseController
     }
 
     /**
-     *
      * @return Response
      */
     #[Route(path: '/press-information', name: 'about_press')]

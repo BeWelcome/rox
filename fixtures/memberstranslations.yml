@@ -1,20 +1,44 @@
 App\Entity\MemberTranslation:
-    language_tag_en:
+    language_tag_en_member_{1..10}:
         Language: '@language_en'
-        Owner: '@member_2'
+        Owner: '@member_<current()>'
         Translation: 1
-        Translator: '@member_2'
+        Translator: '@member_<current()>'
         created: <dateTimeBetween("-200 days", "now")>
         Sentence: 'en'
-        TableColumn: 'members.LanguageTag'
-    language_tag_fr:
+        TableColumn: 'members.language'
+    language_tag_en_bwadmin:
+        Language: '@language_en'
+        Owner: '@bwadmin'
+        Translation: 1
+        Translator: '@bwadmin'
+        created: <dateTimeBetween("-200 days", "now")>
+        Sentence: 'en'
+        TableColumn: 'members.language'
+    language_tag_en_member_banned:
+        Language: '@language_en'
+        Owner: '@member_banned'
+        Translation: 1
+        Translator: '@member_banned'
+        created: <dateTimeBetween("-200 days", "now")>
+        Sentence: 'en'
+        TableColumn: 'members.language'
+    language_tag_en_member_suspended:
+        Language: '@language_en'
+        Owner: '@member_suspended'
+        Translation: 1
+        Translator: '@member_suspended'
+        created: <dateTimeBetween("-200 days", "now")>
+        Sentence: 'en'
+        TableColumn: 'members.language'
+    language_tag_fr_member_2:
         Language: '@language_fr'
         Owner: '@member_2'
         Translation: 1
         Translator: '@member_2'
         created: <dateTimeBetween("-200 days", "now")>
         Sentence: 'fr'
-        TableColumn: 'members.LanguageTag'
+        TableColumn: 'members.language'
     summary_en:
         Language: '@language_en'
         Owner: '@member_2'

@@ -4,7 +4,6 @@ namespace App\Form\CustomDataClass;
 
 use App\Entity\FaqCategory;
 use App\Entity\Word;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -12,13 +11,15 @@ class FaqCategoryRequest
 {
     /**
      * @var string
+     *
      * @Assert\NotBlank()
+     *
      * @Assert\Length(min="10", max="100")
      */
     public $wordCode;
 
     /**
-     * #[NotBlank()]
+     * #[NotBlank()].
      */
     public string $description;
 

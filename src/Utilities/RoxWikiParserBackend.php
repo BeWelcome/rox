@@ -9,19 +9,11 @@ use Mike42\Wikitext\HtmlRenderer;
 
 class RoxWikiParserBackend extends HtmlRenderer
 {
-    /**
-     * @var WikiModel
-     */
-    private $wikiModel;
-
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(WikiModel $wikiModel, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly WikiModel $wikiModel,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
         parent::__construct();
-
-        $this->wikiModel = $wikiModel;
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -33,13 +25,11 @@ class RoxWikiParserBackend extends HtmlRenderer
      * If it is an internal link check if it exists and set flag accordingly.
      *
      * @param array $info
-     *
-     * @return array
      */
     public function getInternalLinkInfo($info): array
     {
         // if we have an external link just return
-        if (false !== strpos($info['url'], '://')) {
+        if (str_contains((string) $info['url'], '://')) {
             return $info;
         }
 
@@ -58,7 +48,11 @@ class RoxWikiParserBackend extends HtmlRenderer
         return $info;
     }
 
-    // Using images not supported in current wiki implementation
+    /**
+     * Using images not supported in current wiki implementation.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     */
     public function getImageInfo($info): array
     {
         return [];

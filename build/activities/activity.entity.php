@@ -46,6 +46,7 @@ class Activity extends RoxEntityBase
      * @access protected
      * @return bool
      */
+    #[\Override]
     protected function loadEntity(array $data)
     {
         if ($status = parent::loadEntity($data))
@@ -74,7 +75,7 @@ class Activity extends RoxEntityBase
                     a.status, m.Username
                 ";
             if ($result = $this->dao->query($query)) {
-                $organizers = array();
+                $organizers = [];
                 while ($organizer = $result->fetch(PDB::FETCH_OBJ)) {
                     $organizers[$organizer->attendeeId] = $organizer;
                 }
@@ -96,7 +97,7 @@ class Activity extends RoxEntityBase
                     a.status, m.Username
                 ";
             if ($result = $this->dao->query($query)) {
-                $attendees = array();
+                $attendees = [];
                 while ($attendee = $result->fetch(PDB::FETCH_OBJ)) {
                     $attendees[$attendee->attendeeId] = $attendee;
                 }
@@ -119,6 +120,7 @@ class Activity extends RoxEntityBase
      * @access public
      * @return int
      */
+    #[\Override]
     public function insert()
     {
         $status = parent::insert();
@@ -144,7 +146,7 @@ class Activity extends RoxEntityBase
      * @return list of ActivitiesBasePage
      */
     public function getActivitiesForMemberCount(Member $member) {
-        $activities = array();
+        $activities = [];
         $query = "SELECT COUNT(*) FROM activities AS a, activitiesattendees AS aa WHERE a.id = aa.activityId AND aa.attendeeId = " . $member->id;
         return $this->sqlCount($query);
     }
@@ -156,7 +158,7 @@ class Activity extends RoxEntityBase
      * @return list of ActivitiesBasePage
      */
     public function getActivitiesForMember(Member $member, $pageno, $items) {
-        $activities = array();
+        $activities = [];
         $query  = "SELECT a.* FROM activities AS a, activitiesattendees AS aa WHERE a.id = aa.activityId AND aa.attendeeId = " . $member->id . " ";
         $query .= "ORDER BY a.dateTimeStart DESC ";
         $query .= "LIMIT " . $items . " OFFSET " . ($pageno * $items);

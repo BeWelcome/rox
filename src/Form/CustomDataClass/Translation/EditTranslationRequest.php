@@ -8,27 +8,13 @@ use InvalidArgumentException;
 
 class EditTranslationRequest extends TranslationRequest
 {
-    /**
-     * @var bool
-     */
-    public $isMajorUpdate;
+    public bool $isMajorUpdate;
 
-    /**
-     * @var bool
-     */
-    public $isArchived;
+    public bool $isArchived;
 
-    /**
-     * @var bool
-     */
-    public $translationAllowed;
+    public bool $translationAllowed;
 
-    /**
-     * @throws InvalidArgumentException
-     *
-     * @return EditTranslationRequest
-     */
-    public static function fromTranslations(Word $original, Word $translation)
+    public static function fromTranslations(Word $original, Word $translation): self
     {
         if (strtolower($original->getCode()) !== strtolower($translation->getCode())) {
             throw new InvalidArgumentException();
@@ -44,7 +30,7 @@ class EditTranslationRequest extends TranslationRequest
         $editTranslationRequest->isArchived = $original->getIsArchived();
         $editTranslationRequest->translationAllowed = (TranslationAllowedType::TRANSLATION_ALLOWED === $original->getTranslationAllowed());
         $editTranslationRequest->translatedText = $translation->getSentence();
-        if (null === $translation->getSentence() && 'broadcast_body_' === substr($editTranslationRequest->wordCode, 0, 15)) {
+        if (null === $translation->getSentence() && str_starts_with($editTranslationRequest->wordCode, 'broadcast_body_')) {
             $editTranslationRequest->translatedText = $original->getSentence();
         }
 

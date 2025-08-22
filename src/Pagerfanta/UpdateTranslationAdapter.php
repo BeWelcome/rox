@@ -5,23 +5,16 @@ namespace App\Pagerfanta;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class UpdateTranslationAdapter implements AdapterInterface
 {
-    private string $locale;
-
-    private Connection $connection;
-
     /**
      * SearchAdapter constructor.
      *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function __construct(Connection $connection, string $locale)
+    public function __construct(private readonly Connection $connection, private readonly string $locale)
     {
-        $this->connection = $connection;
-        $this->locale = $locale;
     }
 
     /**
@@ -45,7 +38,7 @@ class UpdateTranslationAdapter implements AdapterInterface
                 AND (w1.majorUpdate > w2.updated
                 OR w1.updated > w2.updated)
             ORDER BY w1.updated DESC;");
-        $result = $statement->executeQuery(['locale' => $this->locale]);
+        $result = $statement->executeQuery();
         $count = $result->fetchOne();
 
         return $count;

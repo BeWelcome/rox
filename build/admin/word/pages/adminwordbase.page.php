@@ -33,7 +33,7 @@ Boston, MA  02111-1307, USA.
 class AdminWordBasePage extends PageWithActiveSkin
 {
     protected $purifier; // instance of html-purifier
-    public $formdata = array(); // data collected from the form
+    public $formdata = []; // data collected from the form
 
     public function __construct($model = false) {
         parent::__construct();
@@ -46,6 +46,7 @@ class AdminWordBasePage extends PageWithActiveSkin
      * @access protected
      * @return string
      */
+    #[\Override]
     protected function getPageTitle() {
         return 'Words management | BeWelcome';
     }
@@ -65,6 +66,7 @@ class AdminWordBasePage extends PageWithActiveSkin
         include '../build/admin/word/templates/adminword.leftsidebar.php';
     }
 
+    #[\Override]
     protected function getStylesheets()
     {
        $stylesheets = parent::getStylesheets();
@@ -85,7 +87,7 @@ class AdminWordBasePage extends PageWithActiveSkin
             $tot = '';
             foreach ($this->langarr as $item){
                 if (strlen($tot)>0) {$tot.=', ';}
-                $tot .= trim($this->words->get('lang_'.$item->ShortCode));
+                $tot .= trim((string) $this->words->get('lang_'.$item->ShortCode));
             }
             return $tot;
         }

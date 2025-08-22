@@ -32,6 +32,7 @@ Boston, MA  02111-1307, USA.
      */
 class RetiredProfilePage extends PageWithActiveSkin
 {
+    #[\Override]
     protected function getPageTitle()
     {
         $member = $this->member;

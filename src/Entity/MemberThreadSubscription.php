@@ -7,7 +7,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MembersThreadsSubscribed.
+ * Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'members_threads_subscribed')]
 #[ORM\Entity]
@@ -176,6 +178,7 @@ class MemberThreadSubscription
      * @return bool
      *
      * This triggered by the column name (NotificationsEnabled)
+     *
      * @SuppressWarnings("PHPMD.BooleanGetMethodName")
      */
     public function getNotificationsEnabled()

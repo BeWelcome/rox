@@ -10,12 +10,10 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class AllowContactCheck
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
+
     public function getAllowRequestsWithoutProfilePicture(Member $member): bool
     {
         $preferenceRepository = $this->entityManager->getRepository(Preference::class);
@@ -23,7 +21,7 @@ class AllowContactCheck
 
         $value = $member->getMemberPreference($preference)->getValue();
 
-        return ('Yes' === $value);
+        return 'Yes' === $value;
     }
 
     public function getAllowRequestsWithoutAboutMe(Member $member): bool
@@ -33,7 +31,7 @@ class AllowContactCheck
 
         $value = $member->getMemberPreference($preference)->getValue();
 
-        return ('Yes' === $value);
+        return 'Yes' === $value;
     }
 
     public function checkIfMemberHasProfilePicture(Member $member): bool
@@ -41,7 +39,7 @@ class AllowContactCheck
         $profilePictureRepository = $this->entityManager->getRepository(MembersPhoto::class);
         $profilePictures = $profilePictureRepository->findBy(['member' => $member]);
 
-        return (count($profilePictures) > 0);
+        return \count($profilePictures) > 0;
     }
 
     public function checkIfMemberHasAboutMe(Member $member): bool
@@ -50,7 +48,7 @@ class AllowContactCheck
         /** @var MemberTranslation[] $memberTranslations */
         $memberTranslations = $memberTranslationRepository->findBy([
             'owner' => $member,
-            'tableColumn' => 'members.ProfileSummary'
+            'tableColumn' => 'members.ProfileSummary',
         ]);
 
         $hasAboutMe = array_reduce($memberTranslations, function ($hasAboutMe, $memberTranslation) {
@@ -58,6 +56,6 @@ class AllowContactCheck
                 || (!empty($memberTranslation->getSentence() && $memberTranslation->getTranslation() > 0));
         });
 
-        return (null === $hasAboutMe) ? false : $hasAboutMe;
+        return $hasAboutMe ?? false;
     }
 }

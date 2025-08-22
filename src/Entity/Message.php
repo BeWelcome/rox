@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -16,11 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Message.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'messages', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
 #[ORM\Index(name: 'IdParent', columns: ['IdParent', 'IdReceiver', 'IdSender'])]
@@ -50,7 +49,7 @@ class Message
     private string $deleteRequest;
 
     #[ORM\JoinColumn(name: 'IdParent', referencedColumnName: 'id', nullable: true)]
-    #[ORM\OneToOne(targetEntity: Message::class, fetch: 'LAZY')]
+    #[ORM\OneToOne(targetEntity: self::class, fetch: 'LAZY')]
     private ?Message $parent = null;
 
     #[ORM\JoinColumn(name: 'initiator_id', referencedColumnName: 'id', nullable: false)]
@@ -305,13 +304,12 @@ class Message
         return Carbon::instance($this->firstRead);
     }
 
-
     public function getCheckerComment(): ?string
     {
         return $this->checkerComment;
     }
 
-    public function setCheckerComment(?string $checkerComment): Message
+    public function setCheckerComment(?string $checkerComment): self
     {
         $this->checkerComment = $checkerComment;
 
@@ -328,7 +326,7 @@ class Message
         return null === $this->firstRead;
     }
 
-    public function setSubject(Subject $subject = null): self
+    public function setSubject(?Subject $subject = null): self
     {
         $this->subject = $subject;
 
@@ -340,7 +338,7 @@ class Message
         return $this->subject;
     }
 
-    public function setRequest(HostingRequest $request = null): self
+    public function setRequest(?HostingRequest $request = null): self
     {
         $this->request = $request;
 
@@ -354,7 +352,7 @@ class Message
 
     public function isDeletedByMember(Member $member): bool
     {
-        $deleteRequests = array_filter(explode(',', $this->getDeleteRequest()));
+        $deleteRequests = array_filter(explode(',', (string) $this->getDeleteRequest()));
 
         if ($member === $this->getReceiver()) {
             $key = array_search(DeleteRequestType::RECEIVER_DELETED, $deleteRequests, true);
@@ -383,7 +381,7 @@ class Message
 
     public function isPurgedByMember(Member $member): bool
     {
-        $deleteRequests = array_filter(explode(',', $this->getDeleteRequest()));
+        $deleteRequests = array_filter(explode(',', (string) $this->getDeleteRequest()));
         if ($member === $this->getReceiver()) {
             $key = array_search(DeleteRequestType::RECEIVER_PURGED, $deleteRequests, true);
             if (false !== $key) {
@@ -407,7 +405,7 @@ class Message
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
         if (null === $this->parent) {
             $this->initiator = $this->sender;
         } else {
@@ -419,7 +417,7 @@ class Message
     #[ORM\PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 
     public function setMessageType(string $messageType): self

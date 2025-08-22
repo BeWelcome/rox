@@ -8,7 +8,7 @@ function memberSelect($members, $currentMember) {
         if ($currentMember && $currentMember == $member->id ) {
             $select .= ' selected="selected"';
         }
-        $select .= '>' . htmlentities($username, ENT_COMPAT, 'utf-8') . '</option>';
+        $select .= '>' . htmlentities((string) $username, ENT_COMPAT, 'utf-8') . '</option>';
     }
     $select .= '</select>';
     return $select;

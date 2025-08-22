@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use App\Utilities\LifecycleCallbacksTrait;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Flags.
+ * Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'flags')]
 #[ORM\Entity]
@@ -44,7 +47,7 @@ class Flag
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Flag
      */

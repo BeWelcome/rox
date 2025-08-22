@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class LocaleController extends AbstractController
 {
@@ -22,17 +22,17 @@ class LocaleController extends AbstractController
     public function selectLocaleAction(
         Request $request,
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): RedirectResponse {
         /** @var Member $member */
         $member = $this->getUser();
         if ($member) {
             $preference = $entityManager->getRepository(Preference::class)->findOneBy([
-                'codename' => Preference::LOCALE
+                'codename' => Preference::LOCALE,
             ]);
             $memberPreference = $entityManager->getRepository(MemberPreference::class)->findOneBy([
                 'preference' => $preference,
-                'member' => $member
+                'member' => $member,
             ]);
             if (null === $memberPreference) {
                 $memberPreference = new MemberPreference();

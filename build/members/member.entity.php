@@ -63,7 +63,7 @@ class Member extends RoxEntityBase
         }
         $this->words=new MOD_words;
         if ($this->session->has( 'lang' )) {
-        $langarr = explode('-', $this->session->get('lang'));
+        $langarr = explode('-', (string) $this->session->get('lang'));
         $this->lang = $langarr[0];
         } else {
             $this->lang = 'en';
@@ -71,6 +71,7 @@ class Member extends RoxEntityBase
         $this->_crypt = new MOD_crypt();
     }
 
+    #[\Override]
     public function init($values, $dao)
     {
         parent::init($values, $dao);
@@ -148,7 +149,7 @@ class Member extends RoxEntityBase
      */
     public function get_languages_spoken() {
 
-        $TLanguages = array();
+        $TLanguages = [];
         $str = "SELECT SQL_CACHE memberslanguageslevel.IdLanguage AS IdLanguage,languages.Name,languages.ShortCode AS ShortCode, " .
           "memberslanguageslevel.Level AS Level,WordCode FROM memberslanguageslevel,languages " .
           "WHERE memberslanguageslevel.IdMember=" . $this->id .
@@ -248,7 +249,7 @@ class Member extends RoxEntityBase
      */
     public function get_trads_fields()
     {
-        return array(
+        return [
             'Occupation',
             'ILiveWith',
             'MaxLenghtOfStay',
@@ -269,12 +270,12 @@ class Member extends RoxEntityBase
             'PastTrips',
             'PlannedTrips',
             'ProfileSummary'
-        );
+        ];
     }
 
     public function get_crypted_fields()
     {
-        return array(
+        return [
             'HomePhoneNumber',
             'CellPhoneNumber',
             'WorkPhoneNumber',
@@ -285,7 +286,7 @@ class Member extends RoxEntityBase
             'chat_SKYPE',
             'chat_Others',
             'chat_MSN'
-        );
+        ];
     }
 
     /**
@@ -299,7 +300,7 @@ class Member extends RoxEntityBase
     {
         $trads_for_member = $this->bulkLookup("SELECT SQL_CACHE languages.id,ShortCode,Name from memberstrads,languages
         where languages.id=memberstrads.IdLanguage and IdOwner = $this->id and IdTrad=$this->ProfileSummary") ;
-        $this->profile_languages = array();
+        $this->profile_languages = [];
 
         foreach ($trads_for_member as $trad) {
             $this->profile_languages[$trad->id] = $trad;
@@ -338,18 +339,18 @@ FROM
             ",
             "id"
         );
-        $trads_by_tradid = array();
-        $this->profile_languages = array();
+        $trads_by_tradid = [];
+        $this->profile_languages = [];
         $field_names = $this->get_trads_fields();
-        $field_ids = array();
+        $field_ids = [];
         foreach ($field_names as $field) {
             $field_ids[] = $this->$field;
         }
         foreach ($trads_for_member as $trad) {
             if (!isset($trads_by_tradid[$trad->IdTrad])) {
-                $trads_by_tradid[$trad->IdTrad] = array();
+                $trads_by_tradid[$trad->IdTrad] = [];
             }
-            $trads_by_tradid[$trad->IdTrad][$trad->IdLanguage] = htmlspecialchars($trad);
+            $trads_by_tradid[$trad->IdTrad][$trad->IdLanguage] = htmlspecialchars((string) $trad);
             //keeping track of which translations of the profile texts have been encountered
             $language_id = $trad->IdLanguage;
 
@@ -363,7 +364,7 @@ FROM
             if (!$trad_id = $this->$name) {
                 // whatever
             } else if (!isset($trads_by_tradid[$trad_id])) {
-                $trads_by_fieldname->$name = array();
+                $trads_by_fieldname->$name = [];
             } else {
                 $trads_by_fieldname->$name = htmlspecialchars($trads_by_tradid[$trad_id]);
             }
@@ -373,7 +374,7 @@ FROM
 
 
     public function get_phone() {
-        $phone = array();
+        $phone = [];
         if ($this->get_crypted($this->HomePhoneNumber, ""))
             $phone['HomePhoneNumber'] = $this->get_crypted($this->HomePhoneNumber, "");
         if ($this->get_crypted($this->CellPhoneNumber, ""))
@@ -432,12 +433,12 @@ FROM
     }
 
     public function get_messengers() {
-          $messengers = array(
-            array("network" => "GOOGLE", "nicename" => "Google+", "class" => "fab", "image" => "google-plus-g", "href" => ""),
-            array("network" => "SKYPE", "nicename" => "Skype", "class" => "fab", "image" => "skype", "href" => "skype:echo"),
-            array("network" => "Others", "nicename" => "Other", "class" => "fa", "image" => "user-plus", "href" => "#")
-        );
-          $r = array();
+          $messengers = [
+            ["network" => "GOOGLE", "nicename" => "Google+", "class" => "fab", "image" => "google-plus-g", "href" => ""],
+            ["network" => "SKYPE", "nicename" => "Skype", "class" => "fab", "image" => "skype", "href" => "skype:echo"],
+            ["network" => "Others", "nicename" => "Other", "class" => "fa", "image" => "user-plus", "href" => "#"]
+        ];
+          $r = [];
           foreach($messengers as $m) {
               $address_id = $this->__get("chat_".$m['network']);
               $address = $this->get_crypted($address_id, "");
@@ -449,7 +450,7 @@ FROM
                       "image" => $m["image"],
                       "href" => $m["href"],
                       "address" => htmlspecialchars($address),
-                      "address_id" => htmlspecialchars($address_id),
+                      "address_id" => htmlspecialchars((string) $address_id),
                   ];
               }
           }
@@ -687,10 +688,10 @@ FROM
 
     public function count_comments() {
         if (!$this->isLoaded()) {
-            return array(
+            return [
                 'positive' => 0,
                 'all' => 0
-            );
+            ];
         }
         $id = intval($this->id);
         $positive = $this->bulkLookup("
@@ -730,10 +731,10 @@ FROM
             "
         );
 
-        $commentCounters = array(
+        $commentCounters = [
             'positive' => $positive[0]->positive,
             'all' => $all[0]->sum
-        );
+        ];
         return $commentCounters;
     }
 
@@ -839,7 +840,7 @@ FROM
      */
     public function getNoteCategories()
     {
-        $categories = array();
+        $categories = [];
         if (!$this->_has_loaded)
         {
             return false;
@@ -861,7 +862,7 @@ FROM
      *
      * @return unknown
      */
-    public function get_group_memberships()
+    public function get_group_memberships(): never
     {
         throw new Exception("don't use this function, use getGroups() instead!");
 
@@ -1027,7 +1028,7 @@ ORDER BY
       public function get_relations()
       {
           $all_relations = $this->all_relations();
-          $Relations = array();
+          $Relations = [];
           foreach($all_relations as $rr) {
               if ($rr->Confirmed == 'Yes')
               array_push($Relations, $rr);
@@ -1055,7 +1056,7 @@ WHERE
 ORDER BY members.Username ASC
           ";
           $s = $this->dao->query($sql);
-          $Relations = array();
+          $Relations = [];
           while( $rr = $s->fetch(PDB::FETCH_OBJ)) {
               $rr->IdTradComment = $rr->Comment;
 //              $rr->Comment = $words->mTrad($rr->Comment);
@@ -1081,7 +1082,7 @@ ORDER BY members.Username ASC
               $sql .= " WHERE preferences.Status != 'Inactive'";
           }
           $sql .= " ORDER BY preferences.position asc";
-          $rows = array();
+          $rows = [];
           if (!$sql_result = $this->dao->query($sql)) {
               // sql problem
           } else while ($row = $sql_result->fetch(PDB::FETCH_OBJ)) {
@@ -1323,14 +1324,14 @@ ORDER BY
         // check for Admin
         $right = new MOD_right();
         if ($right->hasRight('Admin') || $right->hasRight('SafetyTeam')) {
-            return htmlspecialchars(urldecode(strip_tags($this->_crypt->AdminReadCrypted($crypted_id))));
+            return htmlspecialchars(urldecode(strip_tags((string) $this->_crypt->AdminReadCrypted($crypted_id))));
         }
         // check for Member's own data
         if ($this->edit_mode) {
             if (($mCrypt = $this->_crypt->MemberReadCrypted($crypted_id)) != "cryptedhidden")
-                return htmlspecialchars(urldecode(strip_tags($mCrypt)));
+                return htmlspecialchars(urldecode(strip_tags((string) $mCrypt)));
         }
-        return htmlspecialchars(urldecode($this->_crypt->get_crypted($crypted_id, $return_value)));
+        return htmlspecialchars(urldecode((string) $this->_crypt->get_crypted($crypted_id, $return_value)));
     }
 
 
@@ -1477,7 +1478,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $s = $this->dao->query("SHOW COLUMNS FROM $table LIKE '$column'");
         $line = $s->fetch(PDB::FETCH_ASSOC);
         $set = $line['Type'];
-        $set = substr($set, 5, strlen($set) - 7); // Remove "set(" at start and ");" at end
+        $set = substr((string) $set, 5, strlen((string) $set) - 7); // Remove "set(" at start and ");" at end
         return preg_split("/','/", $set); // Split into and array
     }
 
@@ -1488,7 +1489,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $s = $this->dao->query("SHOW COLUMNS FROM $table LIKE '$column'");
         $line = $s->fetch(PDB::FETCH_ASSOC);
         $set = $line['Type'];
-        $set = substr($set, 6, strlen($set) - 8); // Remove "enum(" at start and ");" at end
+        $set = substr((string) $set, 6, strlen((string) $set) - 8); // Remove "enum(" at start and ");" at end
         return preg_split("/','/", $set); // Split into and array
     }
 
@@ -1522,7 +1523,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      */
     public function isActive()
     {
-        if ($this->isLoaded() && in_array($this->Status, array('Active', 'ActiveHidden')))
+        if ($this->isLoaded() && in_array($this->Status, ['Active', 'ActiveHidden']))
         {
             return true;
         }
@@ -1626,14 +1627,14 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
     {
         if (!$this->isLoaded())
         {
-            return array();
+            return [];
         }
 
         if (!$this->old_rights)
         {
             $query = "SELECT * FROM rightsvolunteers AS rv, rights AS r WHERE rv.IdMember = {$this->getPKValue()} AND rv.IdRight = r.id AND rv.Level > 0";
             $result = $this->dao->query($query);
-            $return = array();
+            $return = [];
             while ($row = $result->fetch(PDB::FETCH_ASSOC))
             {
                 if ($row['Level'] > 0) {
@@ -1685,7 +1686,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
     public function preparePassword($pw)
     {
-        $pwn = trim($pw);
+        $pwn = trim((string) $pw);
         $pwn = $this->dao->escape($pwn);
         return $pwn;
     }
@@ -1707,7 +1708,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         // if "stay logged in active, clear memory cookie
         $this->removeSessionMemory();
 
-        $keys_to_delete = array(
+        $keys_to_delete = [
             'IdMember',
             'MemberStatus',
             'Status',
@@ -1724,7 +1725,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             'RightLevel',
             'RightScope',
             'FlagLevel',
-            );
+            ];
         foreach ($keys_to_delete as $key)
         {
             $session->remove($key);
@@ -1752,13 +1753,13 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             $env = PVars::getObj('env');
             if( isset($_COOKIE[$env->cookie_prefix.'userid'])) {
                 self::addSetting($_COOKIE[$env->cookie_prefix.'userid'], 'skey');
-                setcookie($env->cookie_prefix.'userid', '', time()-3600, '/');
+                setcookie($env->cookie_prefix.'userid', '', ['expires' => time()-3600, 'path' => '/']);
             }
             if( isset($_COOKIE[$env->cookie_prefix.'userkey'])) {
-                setcookie($env->cookie_prefix.'userkey', '', time()-3600, '/');
+                setcookie($env->cookie_prefix.'userkey', '', ['expires' => time()-3600, 'path' => '/']);
             }
             if( isset($_COOKIE[$env->cookie_prefix.'ep'])) {
-                setcookie($env->cookie_prefix.'ep', '', time()-3600, '/');
+                setcookie($env->cookie_prefix.'ep', '', ['expires' => time()-3600, 'path' => '/']);
             }
         }
 
@@ -1834,7 +1835,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      */
     public function activateProfile()
     {
-        if (!$this->isLoaded() || in_array($this->Status, array('TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy')))
+        if (!$this->isLoaded() || in_array($this->Status, ['TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy']))
         {
             return false;
         }
@@ -1876,7 +1877,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
-        if (in_array($this->Status, array('TakenOut', 'SuspendedBeta', 'AskToLeave', 'Buggy', 'Banned', 'Rejected', 'DuplicateSigned')))
+        if (in_array($this->Status, ['TakenOut', 'SuspendedBeta', 'AskToLeave', 'Buggy', 'Banned', 'Rejected', 'DuplicateSigned']))
         {
             return false;
         }
@@ -1927,7 +1928,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
             $memoryCookie = $this->getMemoryCookie();
             if ($memoryCookie !== false) {
 
-                list($id,$seriesToken,$authToken) = $memoryCookie;
+                [$id, $seriesToken, $authToken] = $memoryCookie;
 
                 $seriesTokenEsc = $this->dao->escape($seriesToken);
 
@@ -1973,11 +1974,11 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
         } else {
             // create series token
-            $seriesToken = md5(rand()+time());
+            $seriesToken = md5(random_int(0, mt_getrandmax())+time());
         }
 
         // create auth token
-        $authToken = md5(rand()+time());
+        $authToken = md5(random_int(0, mt_getrandmax())+time());
 
         // write tokens to database
         if ($modified) {
@@ -2037,7 +2038,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
 
         if ($hijacked === true) {
             // session hijacked
-            setcookie('bwRemember', 'hijacked', time() + 3600, '/');
+            setcookie('bwRemember', 'hijacked', ['expires' => time() + 3600, 'path' => '/']);
         } else {
             // remove cookie
             $this->setMemoryCookie(false);
@@ -2060,7 +2061,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         {
             return false;
         }
-        if (in_array($this->Status, array('Rejected', 'TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'DuplicateSigned')))
+        if (in_array($this->Status, ['Rejected', 'TakenOut', 'Banned', 'SuspendedBeta', 'AskToLeave', 'PassedAway', 'Buggy', 'DuplicateSigned']))
         {
             return false;
         }
@@ -2071,7 +2072,7 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
      * Get all translatable languages
      */
     public function get_all_translatable_languages() {
-        $AllLanguages = array();
+        $AllLanguages = [];
         $str = "
             SELECT SQL_CACHE
                 l.Name AS Name,

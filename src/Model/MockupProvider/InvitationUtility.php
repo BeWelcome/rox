@@ -5,7 +5,6 @@ namespace App\Model\MockupProvider;
 use App\Doctrine\SubtripOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\HostingRequest;
-use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\NewLocation;
@@ -76,7 +75,7 @@ class InvitationUtility
         HostingRequest $request,
         Member $guest,
         Member $host,
-        int $number
+        int $number,
     ): Message {
         $reply = Mockery::mock(Message::class, [
             'getId' => 1,
@@ -98,8 +97,6 @@ class InvitationUtility
 
     /**
      * @SuppressWarnings("PHPMD.StaticAccess")
-     *
-     * @param mixed $host
      */
     public function getLeg($host): Subtrip
     {
@@ -114,7 +111,7 @@ class InvitationUtility
         ]);
         $location = new NewLocation();
         $location->setName('Mock');
-        $leg = Mockery::mock(SubTrip::class, [
+        $leg = Mockery::mock(Subtrip::class, [
             'getId' => 1,
             'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
             'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),

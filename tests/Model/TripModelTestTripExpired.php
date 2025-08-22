@@ -4,11 +4,8 @@ namespace App\Tests\Model;
 
 use App\Entity\Subtrip;
 use App\Entity\Trip;
-use App\Model\TripModel;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 
 class TripModelTestTripExpired extends TripModelTestCase
 {

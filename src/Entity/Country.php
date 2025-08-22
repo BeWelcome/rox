@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,11 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Country.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'geonamescountries')]
 #[ORM\Entity]
@@ -23,8 +22,6 @@ class Country
 {
     /**
      * @var int
-     *
-     *
      */
     #[ORM\Column(name: 'geonameId', type: 'integer', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -32,8 +29,6 @@ class Country
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
     #[Groups(['Member:Read'])]
@@ -41,8 +36,6 @@ class Country
 
     /**
      * @var string
-     *
-     *
      */
     #[ORM\Column(name: 'continent', type: 'string', length: 2, nullable: true)]
     #[Groups(['Member:Read'])]

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Message;
 use App\Form\DataTransformer\DateTransformer;
 use App\Form\DataTransformer\LegTransformer;
+use Override;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -15,17 +16,15 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class InvitationGuest extends HostingRequestAbstractType
 {
-    private DateTransformer $dateTimeTransformer;
-    private LegTransformer $legTransformer;
-
     public function __construct(
-        DateTransformer $dateTimeTransformer,
-        LegTransformer  $legTransformer
+        private readonly DateTransformer $dateTimeTransformer,
+        private readonly LegTransformer $legTransformer,
     ) {
-        $this->dateTimeTransformer = $dateTimeTransformer;
-        $this->legTransformer = $legTransformer;
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -72,9 +71,7 @@ class InvitationGuest extends HostingRequestAbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
@@ -85,9 +82,7 @@ class InvitationGuest extends HostingRequestAbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getBlockPrefix(): string
     {
         return 'invitation';

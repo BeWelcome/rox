@@ -15,15 +15,12 @@ use App\Model\TranslationModel;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Exception;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class FaqController.
@@ -32,19 +29,12 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class FaqController extends FaqBaseController
 {
-    private FaqModel $faqModel;
-
-    private TranslationModel $translationModel;
-
     public function __construct(
-        FaqModel $faqModel,
-        TranslationModel $translationModel,
-        EntityManagerInterface $entityManager
+        private readonly FaqModel $faqModel,
+        private readonly TranslationModel $translationModel,
+        EntityManagerInterface $entityManager,
     ) {
         parent::__construct($entityManager);
-
-        $this->faqModel = $faqModel;
-        $this->translationModel = $translationModel;
     }
 
     #[Route(
@@ -55,7 +45,7 @@ class FaqController extends FaqBaseController
     )]
     public function showOverview(
         Request $request,
-        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category
+        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category,
     ): Response {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');
@@ -69,7 +59,7 @@ class FaqController extends FaqBaseController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             if (!empty($data['sortOrder'])) {
-                $ids = explode('&', $data['sortOrder']);
+                $ids = explode('&', (string) $data['sortOrder']);
                 array_walk(
                     $ids,
                     function (&$item) {
@@ -107,7 +97,7 @@ class FaqController extends FaqBaseController
     )]
     public function createFaqInCategory(
         Request $request,
-        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category
+        #[MapEntity(mapping: ['categoryId' => 'id'])] FaqCategory $category,
     ): Response {
         if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
             throw $this->createAccessDeniedException('You need to have Faq right to access this.');

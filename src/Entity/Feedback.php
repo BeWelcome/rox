@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -12,11 +13,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Feedback.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'feedbacks')]
 #[ORM\Entity]

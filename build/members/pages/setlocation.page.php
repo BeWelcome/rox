@@ -11,6 +11,7 @@ class SetLocationPage extends PageWithRoxLayout
         $this->addLateLoadScriptFile('script/search/searchlocation.js');
     }
 
+    #[\Override]
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
@@ -19,11 +20,13 @@ class SetLocationPage extends PageWithRoxLayout
         return $stylesheets;
     }
 
+    #[\Override]
     protected function body()
     {
         require TEMPLATE_DIR . 'shared/roxpage/body.php';
     }
 
+    #[\Override]
     protected function getStylesheetPatches()
     {
         parent::getStylesheetPatches();
@@ -33,6 +36,7 @@ class SetLocationPage extends PageWithRoxLayout
         return 'myaccount';
     }
 
+    #[\Override]
     protected function teaserContent()
     {
         parent::teaserContent();
@@ -44,11 +48,13 @@ class SetLocationPage extends PageWithRoxLayout
         return $words->get('SetLocation');
     }
 
+    #[\Override]
     protected function getColumnNames()
     {
         return ['col3'];
     }
 
+    #[\Override]
     protected function getPageTitle() {
         if ($this->session->has( 'Username' )) {
             return 'Welcome, '.$this->session->get('Username');

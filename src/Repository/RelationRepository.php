@@ -29,7 +29,7 @@ class RelationRepository extends EntityRepository
                 ->orderBy('r.updated', 'ASC')
                 ->getQuery()
                 ->getSingleScalarResult()
-            ;
+        ;
     }
 
     public function findRelationsFor(Member $member)
@@ -50,7 +50,7 @@ class RelationRepository extends EntityRepository
             ->orderBy('r.updated', 'DESC')
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     public function findRelationBetween(Member $owner, Member $receiver): ?Relation
@@ -64,7 +64,7 @@ class RelationRepository extends EntityRepository
                 ->setParameter('receiver', $receiver)
                 ->getQuery()
                 ->getOneOrNullResult()
-            ;
+        ;
     }
 
     public function findUnconfirmedRelationBetween(Member $owner, Member $receiver): ?Relation
@@ -80,7 +80,7 @@ class RelationRepository extends EntityRepository
                 ->setParameter('confirmed', 'No')
                 ->getQuery()
                 ->getOneOrNullResult()
-            ;
+        ;
     }
 
     public function getRelations(Member $member, int $page, int $itemsPerPage): Pagerfanta

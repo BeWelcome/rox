@@ -29,22 +29,16 @@ use ZipArchive;
 )]
 class GeonamesUpdateFullCommand extends Command
 {
-    private const int ROWS_IN_A_BATCH = 10000;
-
-    private HttpClientInterface $httpClient;
-    private EntityManagerInterface $entityManager;
+    private const int ROWS_IN_A_BATCH = 100000;
     private OutputInterface $output;
-    private array $allowedLocales;
+    private readonly array $allowedLocales;
 
     public function __construct(
-        HttpClientInterface $httpClient,
-        EntityManagerInterface $entityManager,
-        array $locales
+        private readonly HttpClientInterface $httpClient,
+        private readonly EntityManagerInterface $entityManager,
+        array $locales,
     ) {
         parent::__construct();
-
-        $this->httpClient = $httpClient;
-        $this->entityManager = $entityManager;
 
         // turn zh_hant into zh-TW, zh_hans into zh-CN
         $locales = array_replace($locales, ['zh_hant' => 'zh-TW', 'zh_hans' => 'zh-CN']);
@@ -110,7 +104,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $returnCode = 0;
 
-        $downloadFiles = ($input->getOption('download'));
+        $downloadFiles = $input->getOption('download');
 
         $continueOnErrors = $input->getOption('continue-on-errors');
         $geonames = $input->getOption('geonames');
@@ -196,7 +190,7 @@ class GeonamesUpdateFullCommand extends Command
         $rows = [];
 
         $progressBar->setMessage('Loading data...', 'status');
-        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
+        while (($row = fgetcsv($handle, 0, "\t", escape: '\\')) !== false) {
             if (is_numeric($row[0]) && ('A' === $row[6] || 'P' === $row[6])) {
                 $rows[] = $row;
 
@@ -302,11 +296,11 @@ class GeonamesUpdateFullCommand extends Command
         $rows = [];
 
         $progressBar->setMessage('Loading data...', 'status');
-        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
+        while (($row = fgetcsv($handle, 0, "\t", escape: '\\')) !== false) {
             if (
                 is_numeric($row[0])
                 && isset($geonameIds[$row[0]])
-//                && in_array(strtolower($row[2]), $this->allowedLocales)
+                //                && in_array(strtolower($row[2]), $this->allowedLocales)
             ) {
                 $rows[] = $row;
 
@@ -334,7 +328,7 @@ class GeonamesUpdateFullCommand extends Command
         $io->note('Setting translations (preferred, short)');
 
         $connection->executeQuery("
-            INSERT INTO geo__names_translations (locale, object_class, field, foreign_key, content)
+            INSERT IGNORE INTO geo__names_translations (locale, object_class, field, foreign_key, content)
 	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 1 AND isshort = 1 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
@@ -342,7 +336,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $io->note('Setting translations (preferred)');
         $connection->executeQuery("
-            INSERT INTO geo__names_translations (locale, object_class, field, foreign_key, content)
+            INSERT IGNORE INTO geo__names_translations (locale, object_class, field, foreign_key, content)
 	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 1 AND isshort = 0 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
@@ -350,7 +344,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $io->note('Setting translations (short)');
         $connection->executeQuery("
-            INSERT INTO geo__names_translations (locale, object_class, field, foreign_key, content)
+            INSERT IGNORE INTO geo__names_translations (locale, object_class, field, foreign_key, content)
 	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 0 AND isshort = 1 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
@@ -358,7 +352,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $io->note('Setting translations (any)');
         $connection->executeQuery("
-            INSERT INTO geo__names_translations (locale, object_class, field, foreign_key, content)
+            INSERT IGNORE INTO geo__names_translations (locale, object_class, field, foreign_key, content)
 	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 0 AND isshort = 0 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
@@ -405,12 +399,12 @@ class GeonamesUpdateFullCommand extends Command
 
         $handle = fopen($filename, 'r');
 
-        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
+        while (($row = fgetcsv($handle, 0, "\t", escape: '\\')) !== false) {
             $progressBar->advance();
             if ('#' !== $row[0][0]) {
                 $progressBar->setMessage('Executing query', 'status');
                 // Split admin unit into country and identifier
-                $countryAndAdmin1 = explode('.', $row[0]);
+                $countryAndAdmin1 = explode('.', (string) $row[0]);
                 $country = $countryAndAdmin1[0];
                 $admin1 = $countryAndAdmin1[1];
                 // Check if admin unit already exists if so update.
@@ -418,9 +412,9 @@ class GeonamesUpdateFullCommand extends Command
                 $connection->executeQuery(
                     'UPDATE geo__names SET admin1 = :geonameid WHERE country_id = :country AND admin_1_id = :admin1',
                     [
-                        ':geonameid' => $row[3],
-                        ':country' => $country,
-                        ':admin1' => $admin1,
+                        'geonameid' => $row[3],
+                        'country' => $country,
+                        'admin1' => $admin1,
                     ],
                     ['int', 'string', 'string'],
                 );
@@ -457,12 +451,12 @@ class GeonamesUpdateFullCommand extends Command
 
         $handle = fopen($filename, 'r');
 
-        while (($row = fgetcsv($handle, 0, "\t")) !== false) {
+        while (($row = fgetcsv($handle, 0, "\t", escape: '\\')) !== false) {
             $progressBar->advance();
             if ('#' !== $row[0][0]) {
                 $progressBar->setMessage('Executing query', 'status');
                 // Split admin unit into country and identifier
-                $countryAndAdmin1AndAdmin2 = explode('.', $row[0]);
+                $countryAndAdmin1AndAdmin2 = explode('.', (string) $row[0]);
                 $country = $countryAndAdmin1AndAdmin2[0];
                 $admin1 = $countryAndAdmin1AndAdmin2[1];
                 $admin2 = $countryAndAdmin1AndAdmin2[2];
@@ -471,10 +465,10 @@ class GeonamesUpdateFullCommand extends Command
                 $connection->executeQuery(
                     'UPDATE geo__names SET admin2 = :geonameid WHERE country_id = :country AND admin_1_id = :admin1 AND admin_2_id = :admin2',
                     [
-                        ':geonameid' => $row[3],
-                        ':country' => $country,
-                        ':admin1' => $admin1,
-                        ':admin2' => $admin2,
+                        'geonameid' => $row[3],
+                        'country' => $country,
+                        'admin1' => $admin1,
+                        'admin2' => $admin2,
                     ],
                     ['int', 'string', 'string', 'string'],
                 );
@@ -571,7 +565,7 @@ class GeonamesUpdateFullCommand extends Command
             }
 
             try {
-                $query .= sprintf(
+                $query .= \sprintf(
                     '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s), ',
                     $connection->quote($row[0]),
                     $connection->quote($row[1]),
@@ -595,7 +589,7 @@ class GeonamesUpdateFullCommand extends Command
             }
         }
         $query = substr($query, 0, -2);
-        $query .= " ON DUPLICATE KEY UPDATE";
+        // $query .= " ON DUPLICATE KEY UPDATE";
         $progressbar->setMessage('Executing query...', 'status');
         $connection->executeQuery($query);
         $connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');
@@ -635,7 +629,7 @@ class GeonamesUpdateFullCommand extends Command
                         break;
                 }
 
-                $query .= sprintf(
+                $query .= \sprintf(
                     '(%s, %s, %s, %s, %s, %s, %s, %s), ',
                     $connection->quote($row[0]),
                     $connection->quote($row[1]),

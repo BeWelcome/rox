@@ -8,7 +8,7 @@ use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class LoginMessageController extends AbstractController
 {
@@ -20,7 +20,7 @@ class LoginMessageController extends AbstractController
 
         $acknowledgedRepository = $entityManager->getRepository(LoginMessageAcknowledged::class);
         $acknowledged = $acknowledgedRepository->findOneBy(['message' => $loginMessage, 'member' => $member]);
-        if (null == $acknowledged) {
+        if (null === $acknowledged) {
             $acknowledged = new LoginMessageAcknowledged();
         }
         $acknowledged

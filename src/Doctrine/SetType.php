@@ -5,7 +5,11 @@ namespace App\Doctrine;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
+use Override;
 
+/**
+ * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+ */
 abstract class SetType extends Type
 {
     protected string $name;
@@ -23,20 +27,22 @@ abstract class SetType extends Type
         return 'SET(' . implode(', ', $values) . ')';
     }
 
+    #[Override]
     public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return $value;
     }
 
+    #[Override]
     public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (null !== $value && !empty($value)) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $value = implode(',', $value);
-            };
+            }
             if ($value) {
                 // Split given value
-                $values = explode(',', $value);
+                $values = explode(',', (string) $value);
                 $valueCount = \count($values);
 
                 if (\count(array_intersect($values, $this->values)) !== $valueCount) {
@@ -50,17 +56,11 @@ abstract class SetType extends Type
         return $value;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
     public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;

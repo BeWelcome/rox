@@ -26,12 +26,13 @@ use App\Twig\MockupExtension;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Mockery;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -44,14 +45,13 @@ class MockupController extends TranslationController
     private $mockups = [];
     /** @var iterable|MockupProviderInterface[] */
     private $providers;
-    private FormFactoryInterface $formFactory;
 
     public function __construct(
         TranslationModel $translationModel,
         EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory,
+        private readonly FormFactoryInterface $formFactory,
         array $locales,
-        iterable $providers
+        iterable $providers,
     ) {
         parent::__construct($translationModel, $entityManager, $locales);
 
@@ -60,7 +60,6 @@ class MockupController extends TranslationController
             $this->providers[$feature] = $provider;
             $this->mockups = array_merge([$feature => $provider->getMockups()], $this->mockups);
         }
-        $this->formFactory = $formFactory;
     }
 
     #[Route(path: '/admin/translations/mockups', name: 'translations_mockups')]
@@ -170,7 +169,7 @@ class MockupController extends TranslationController
             'profilepicture' => '/members/avatar/' . $this->getUser()->getUsername() . '/48',
         ];
 
-        if (false === strpos($name, 'some')) {
+        if (!str_contains((string) $name, 'some')) {
             $params['activities'] = [];
         } else {
             $mockActivity = Mockery::mock(Activity::class, [
@@ -295,7 +294,7 @@ class MockupController extends TranslationController
                 $params['token'] = '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7';
                 break;
             case 'emails/notifications.html.twig':
-                if ('forum post' === substr($name, 0, 10)) {
+                if (str_starts_with((string) $name, 'forum post')) {
                     $mockThread = Mockery::mock(ForumThread::class, [
                         'getId' => 1,
                         'getGroup' => null,
@@ -307,7 +306,7 @@ class MockupController extends TranslationController
                         'getMessage' => 'Post text',
                         'getThread' => $mockThread,
                     ]);
-                } elseif ('group post' === substr($name, 0, 10)) {
+                } elseif (str_starts_with((string) $name, 'group post')) {
                     $mockThread = Mockery::mock(ForumThread::class, [
                         'getId' => 1,
                         'getGroup' => $group,
@@ -320,7 +319,7 @@ class MockupController extends TranslationController
                         'getThread' => $mockThread,
                     ]);
                 }
-                if (false !== strpos($name, 'not')) {
+                if (str_contains((string) $name, 'not')) {
                     $subscription = 0;
                 } else {
                     $subscription = 123456;
@@ -391,25 +390,18 @@ class MockupController extends TranslationController
     {
         $indicator = substr($name, strpos($name, '('));
 
-        switch ($indicator) {
-            case '(regular)':
-                $type = Newsletter::REGULAR_NEWSLETTER;
-                break;
-            case '(specific)':
-                $type = Newsletter::SPECIFIC_NEWSLETTER;
-                break;
-            case '(terms of use)':
-                $type = Newsletter::TERMS_OF_USE;
-                break;
-            default:
-                $type = Newsletter::TERMS_OF_USE;
-        }
+        $type = match ($indicator) {
+            '(regular)' => Newsletter::REGULAR_NEWSLETTER,
+            '(specific)' => Newsletter::SPECIFIC_NEWSLETTER,
+            '(terms of use)' => Newsletter::TERMS_OF_USE,
+            default => Newsletter::TERMS_OF_USE,
+        };
 
         $newsletterRepository = $this->entityManager->getRepository(Newsletter::class);
         $newsletters = $newsletterRepository->findBy(['type' => $type], ['created' => 'DESC']);
 
         if (0 === \count($newsletters)) {
-            throw new \Exception('Sorry, no newsletter of type ' . $type . ' found, please create one.');
+            throw new Exception('Sorry, no newsletter of type ' . $type . ' found, please create one.');
         }
 
         return [
@@ -451,7 +443,7 @@ class MockupController extends TranslationController
             'getId' => 1,
             'getName' => 'Mock',
         ]);
-        $leg1 = Mockery::mock(SubTrip::class, [
+        $leg1 = Mockery::mock(Subtrip::class, [
             'getId' => 1,
             'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
             'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
@@ -460,7 +452,7 @@ class MockupController extends TranslationController
             'getTrip' => $trip,
             'getInvitedBy' => $this->getUser(),
         ]);
-        $leg2 = Mockery::mock(SubTrip::class, [
+        $leg2 = Mockery::mock(Subtrip::class, [
             'getId' => 2,
             'getArrival' => Carbon::instance(new DateTime('2021-03-23')),
             'getDeparture' => Carbon::instance(new DateTime('2021-03-24')),

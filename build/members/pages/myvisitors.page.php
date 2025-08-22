@@ -4,6 +4,7 @@
 class MyVisitorsPage extends ProfilePage
 {
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'visitors';
@@ -41,7 +42,7 @@ class MyVisitorsPage extends ProfilePage
         foreach ($member->getVisitorsSubset($pager) as $m)
         {
             $image = MOD_layoutbits::PIC_50_50($m->Username,'',$style='float_left profileimg');
-            $aboutMe = MOD_layoutbits::truncate_words(stripslashes($words->mInTrad($m->ProfileSummary, $language_id=0, true)), 70);
+            $aboutMe = MOD_layoutbits::truncate_words(stripslashes((string) $words->mInTrad($m->ProfileSummary, $language_id=0, true)), 70);
 
             if ($m->HideBirthDate=="No") $m->age = floor($layoutbits->fage_value($m->BirthDate));
             else $m->age = $words->get("Hidden");
@@ -59,7 +60,7 @@ class MyVisitorsPage extends ProfilePage
         {$purifier->purify($aboutMe)}
     </div>
     <div class="card-footer text-right p-2">
-        <small>{$words->getFormatted("visited")}: {$layoutbits->ago(strtotime($m->visited))}</small>
+        <small>{$words->getFormatted("visited")}: {$layoutbits->ago(strtotime((string) $m->visited))}</small>
     </div>
 </div>
 HTML;

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -19,7 +20,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Trip.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess

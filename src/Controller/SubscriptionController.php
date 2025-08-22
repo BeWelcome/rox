@@ -7,7 +7,7 @@ use App\Model\SubscriptionModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class SubscriptionController extends AbstractController
 {
@@ -16,7 +16,7 @@ class SubscriptionController extends AbstractController
         Request $request,
         SubscriptionModel $subscriptionModel,
         string $username,
-        string $unsubscribeKey
+        string $unsubscribeKey,
     ): Response {
         $form = $this->createForm(NewsletterUnsubscribeType::class);
         $form->handleRequest($request);
@@ -31,8 +31,8 @@ class SubscriptionController extends AbstractController
             }
 
             return $this->render('newsletter/unsubscribe_failed.html.twig', [
-                    'username' => $username,
-                ]);
+                'username' => $username,
+            ]);
         }
 
         return $this->render('newsletter/unsubscribe_confirm.html.twig', [
@@ -46,7 +46,7 @@ class SubscriptionController extends AbstractController
         Request $request,
         SubscriptionModel $subscriptionModel,
         string $username,
-        string $unsubscribeKey
+        string $unsubscribeKey,
     ): Response {
         $form = $this->createForm(NewsletterUnsubscribeType::class);
         $form->handleRequest($request);
@@ -61,8 +61,8 @@ class SubscriptionController extends AbstractController
             }
 
             return $this->render('newsletter/unsubscribe_local_failed.html.twig', [
-                    'username' => $username,
-                ]);
+                'username' => $username,
+            ]);
         }
 
         return $this->render('newsletter/unsubscribe_local_confirm.html.twig', [

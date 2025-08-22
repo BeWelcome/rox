@@ -2,14 +2,11 @@
 
 namespace App\Repository;
 
-use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
 use Carbon\CarbonImmutable;
-use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -35,7 +32,7 @@ class SubtripRepository extends EntityRepository
             $queryBuilder
                 ->getQuery()
                 ->getSingleScalarResult()
-            ;
+        ;
     }
 
     public function getLegsInAreaMaxGuests(Member $member, int $distance = 20, int $duration = 3): array
@@ -51,7 +48,7 @@ class SubtripRepository extends EntityRepository
             $queryBuilder
                 ->getQuery()
                 ->getResult()
-            ;
+        ;
     }
 
     public function getLegsInAreaQuery(Member $member, int $radius = 20, int $duration = 3): Query

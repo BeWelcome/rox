@@ -57,7 +57,7 @@ Boston, MA  02111-1307, USA.
         ?>
         <tr>
             <th scope="row"><img src="group/thumbimg/<?php echo $group->IdGroup; ?>" width="50" height="50"></th>
-            <td class="align-middle"><a href="group/<?php echo $group->IdGroup; ?>/forum"><?php echo htmlspecialchars($group->Name); ?></a></td>
+            <td class="align-middle"><a href="group/<?php echo $group->IdGroup; ?>/forum"><?php echo htmlspecialchars((string) $group->Name); ?></a></td>
             <td class="align-middle">
                 <div class="btn-group" role="group" aria-label="<?= $words->get('AriaLabelToggleSubscriptionOnOff') ?>">
                 <?php if ($group->AcceptMails == 'yes') { ?>

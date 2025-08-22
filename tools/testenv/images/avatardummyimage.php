@@ -50,13 +50,13 @@ class AvatarDummyImage extends DummyImage
 
         $thumbData = array();
         $thumbData['_original']=array(0,0,0,0,$original_x, $original_y, $this->size[0],$this->size[1]);
-        $thumbData['_200']    = $this->getThumbSize(200, 266, 'ratio' , $this->size);
-        $thumbData['_xs']     = $this->getThumbSize( 50,  50, 'square', $this->size);
-        $thumbData['_75_75']  = $this->getThumbSize( 75,  75, 'square', $this->size);
-        $thumbData['_150']    = $this->getThumbSize(150, 150, 'square', $this->size);
-        $thumbData['_30_30']  = $this->getThumbSize( 30,  30, 'square', $this->size);
-        $thumbData['_500']    = $this->getThumbSize(500, 500, 'ratio' , $this->size);
-        $thumbData['']        = $this->getThumbSize($max_x,$max_y, '' , $this->size);
+        $thumbData['_200']    = (int) $this->getThumbSize(200, 266, 'ratio' , $this->size);
+        $thumbData['_xs']     = (int) $this->getThumbSize( 50,  50, 'square', $this->size);
+        $thumbData['_75_75']  = (int) $this->getThumbSize( 75,  75, 'square', $this->size);
+        $thumbData['_150']    = (int) $this->getThumbSize(150, 150, 'square', $this->size);
+        $thumbData['_30_30']  = (int) $this->getThumbSize( 30,  30, 'square', $this->size);
+        $thumbData['_500']    = (int) $this->getThumbSize(500, 500, 'ratio' , $this->size);
+        $thumbData['']        = (int) $this->getThumbSize($max_x,$max_y, '' , $this->size);
 
         return $this->createFiles($thumbData);
     }

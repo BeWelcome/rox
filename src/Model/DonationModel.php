@@ -2,7 +2,6 @@
 
 namespace App\Model;
 
-use App\Entity\Country;
 use App\Entity\Donation;
 use App\Entity\Member;
 use App\Entity\NewLocation;
@@ -11,16 +10,13 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class DonationModel
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function processDonation(?Member $member, array $parameters): bool
     {
-        $member = $member != 0 ? $member : null;
+        $member = 0 !== $member ? $member : null;
 
         $donation = new Donation();
         $donation->setAmount($parameters['amt'] ?? 0);
@@ -53,7 +49,7 @@ class DonationModel
         return true;
     }
 
-    public function getListOfDonations() : array
+    public function getListOfDonations(): array
     {
         return [];
     }

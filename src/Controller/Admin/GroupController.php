@@ -20,7 +20,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -34,20 +34,15 @@ class GroupController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private Mailer $mailer;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager)
+    public function __construct(private Mailer $mailer, private EntityManagerInterface $entityManager)
     {
-        $this->mailer = $mailer;
-        $this->entityManager = $entityManager;
     }
 
     /**
      * Allows to set a status for group creation requests.
      *
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/groups/approval', name: 'admin_groups_approval')]
@@ -59,7 +54,7 @@ class GroupController extends AbstractController
 
         if (!$this->hasGroupRightLevel(10)) {
             $admin = $this->getUser();
-            $level =  $admin->getLevelForRight(Member::ROLE_ADMIN_GROUP);
+            $level = $admin->getLevelForRight(Member::ROLE_ADMIN_GROUP);
             throw $this->createAccessDeniedException('You need to have level 10 to access this.' . $level);
         }
 
@@ -82,8 +77,8 @@ class GroupController extends AbstractController
     /**
      * Allows to archive a group.
      *
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/groups/archival', name: 'admin_groups_archival')]
@@ -123,8 +118,8 @@ class GroupController extends AbstractController
     /**
      * Allows to unarchive a group.
      *
-     *
      * @throws AccessDeniedException
+     *
      * @return Response
      */
     #[Route(path: '/admin/groups/unarchival', name: 'admin_groups_unarchival')]
@@ -164,8 +159,8 @@ class GroupController extends AbstractController
     /**
      * Move a group creation requests to the discussion queue.
      *
-     *
      * @throws AccessDeniedException
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/admin/groups/{id}/discuss', name: 'admin_groups_discuss')]
@@ -204,8 +199,8 @@ class GroupController extends AbstractController
     /**
      * Dismiss a group creation requests.
      *
-     *
      * @throws AccessDeniedException
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/admin/groups/{id}/dismiss', name: 'admin_groups_dismiss')]
@@ -238,8 +233,8 @@ class GroupController extends AbstractController
     /**
      * Approve a group creation requests.
      *
-     *
      * @throws AccessDeniedException
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/admin/groups/{id}/approve', name: 'admin_groups_approve')]
@@ -274,8 +269,8 @@ class GroupController extends AbstractController
     /**
      * Archive a group .
      *
-     *
      * @throws AccessDeniedException
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/admin/groups/{id}/archive', name: 'admin_groups_archive')]
@@ -308,8 +303,8 @@ class GroupController extends AbstractController
     /**
      * Un-archive a group .
      *
-     *
      * @throws AccessDeniedException
+     *
      * @return RedirectResponse
      */
     #[Route(path: '/admin/groups/{id}/unarchive', name: 'admin_groups_unarchive')]
@@ -342,8 +337,8 @@ class GroupController extends AbstractController
     /**
      * Rename a group .
      *
-     *
      * @throws AccessDeniedException
+     *
      * @return Response|RedirectResponse
      */
     #[Route(path: '/admin/groups/rename', name: 'admin_groups_rename')]

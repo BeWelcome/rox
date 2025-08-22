@@ -9,13 +9,12 @@
 
 namespace App\Security;
 
+use Override;
 use Symfony\Component\Security\Core\Exception\AccountStatusException;
 
 class AccountBannedException extends AccountStatusException
 {
-    /**
-     * {@inheritdoc}
-     */
+    #[Override]
     public function getMessageKey(): string
     {
         return 'Account has been banned.';

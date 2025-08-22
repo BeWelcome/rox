@@ -81,7 +81,7 @@ $hostingInterest = [
                     min="<?php echo (isset($vars['hosting_interest'])) ? 1 : 0; ?>"
                     max="10"
                     step="-1"
-                    value="<?php echo (isset($vars['hosting_interest'])) ? $vars['hosting_interest'] : 0; ?>"
+                    value="<?php echo $vars['hosting_interest'] ?? 0; ?>"
                     required="required"
                     data-orientation="horizontal"
                 >
@@ -159,7 +159,7 @@ $hostingInterest = [
                 for ($ii = 0; $ii < $max; $ii++) {
                     echo '<div class="o-checkbox">';
                     echo '<input type="checkbox" class="o-checkbox__input" name="check_' . $member->TabTypicOffer[$ii] . '" ';
-                    if (strpos($member->TypicOffer, $member->TabTypicOffer[$ii]) !== false)
+                    if (str_contains((string) $member->TypicOffer, (string) $member->TabTypicOffer[$ii]))
                         echo 'checked="checked"';
                     echo '><label class="m-0 ml-2" class="o-checkbox__label" for="check_' . $member->TabTypicOffer[$ii] . '">' . $words->get("TypicOffer_" . $member->TabTypicOffer[$ii]) . '</label></div>';
                 }
@@ -188,7 +188,7 @@ $hostingInterest = [
                 for ($ii = 0; $ii < $max; $ii++) {
                     echo '<div class="o-checkbox">';
                     echo '<input type="checkbox" class="o-checkbox__input" name="check_' . $member->TabRestrictions[$ii] . '" ';
-                    if (strpos($member->Restrictions, $member->TabRestrictions[$ii]) !== false)
+                    if (str_contains((string) $member->Restrictions, (string) $member->TabRestrictions[$ii]))
                         echo 'checked="checked"';
                     echo '><label class="m-0 ml-2 o-checkbox__label" for="check_' . $member->TabRestrictions[$ii] . '">' . $words->get("Restriction_" . $member->TabRestrictions[$ii]) . '</label>';
                     echo '</div>';

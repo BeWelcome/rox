@@ -39,7 +39,8 @@ class MessageRepository extends EntityRepository
     {
         /** @var Connection $connection */
         $connection = $this->getEntityManager()->getConnection();
-        $count = $connection->fetchOne('SELECT count(*) AS cnt FROM (SELECT `m`.*
+        $count = $connection->fetchOne(
+            'SELECT count(*) AS cnt FROM (SELECT `m`.*
             FROM `messages` m
             WHERE
 				NOT m.subject_id IS NULL
@@ -57,9 +58,11 @@ class MessageRepository extends EntityRepository
             WHERE
 				m.subject_id is null
 				AND	((m.IdReceiver = :loggedIn AND m.IdSender = :member) OR
-						(m.IdReceiver = :member AND m.IdSender = :loggedIn))) AS a', [
-                         'loggedIn' => $loggedInMember->getId(),
-                         'member' => $member->getId()]
+						(m.IdReceiver = :member AND m.IdSender = :loggedIn))) AS a',
+            [
+                'loggedIn' => $loggedInMember->getId(),
+                'member' => $member->getId(),
+            ]
         );
 
         return $count;
@@ -106,9 +109,6 @@ class MessageRepository extends EntityRepository
 
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
-     *
-     * @param mixed $page
-     * @param mixed $items
      */
     public function findProcessedReportedMessages($page = 1, $items = 10): Pagerfanta
     {
@@ -123,9 +123,6 @@ class MessageRepository extends EntityRepository
 
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
-     *
-     * @param mixed $page
-     * @param mixed $items
      */
     public function findBlockWordsMessages($page = 1, $items = 10): Pagerfanta
     {
@@ -140,9 +137,6 @@ class MessageRepository extends EntityRepository
 
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
-     *
-     * @param mixed $page
-     * @param mixed $items
      */
     public function findProcessedBlockWordsMessages($page = 1, $items = 10): Pagerfanta
     {
@@ -172,7 +166,7 @@ class MessageRepository extends EntityRepository
         string $sort,
         string $sortDirection,
         int $page = 1,
-        int $items = 10
+        int $items = 10,
     ): Pagerfanta {
         $paginator = new Pagerfanta(
             new QueryAdapter(
@@ -410,7 +404,7 @@ class MessageRepository extends EntityRepository
         Member $loggedInUser,
         Member $member,
         string $sort,
-        string $sortDirection
+        string $sortDirection,
     ): QueryBuilder {
         if ('date' === $sort) {
             $sort = 'created';

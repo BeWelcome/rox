@@ -9,9 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SpamMessagesIndexFormType extends AbstractType
 {
-    /**
-     * {@inheritdoc}
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $ids = $options['ids'];
@@ -32,9 +29,6 @@ class SpamMessagesIndexFormType extends AbstractType
             ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

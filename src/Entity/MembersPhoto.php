@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,11 +12,9 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MembersPhoto.
- *
+ * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
- * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'membersphotos')]
 #[ORM\Index(name: 'membersphotos_members', columns: ['IdMember'])]

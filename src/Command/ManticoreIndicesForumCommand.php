@@ -2,26 +2,18 @@
 
 namespace App\Command;
 
-use App\Entity\NewLocation;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Exception;
-use Gedmo\Translatable\Entity\Repository\TranslationRepository;
-use Gedmo\Translatable\Entity\Translation;
 use Manticoresearch\Client;
-use Manticoresearch\Index;
+use Manticoresearch\Table;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
-use function count;
 
 #[AsCommand(
     name: 'manticore:indices:forum',
@@ -33,19 +25,11 @@ class ManticoreIndicesForumCommand extends Command
 {
     private const string FORUM_INDEX = 'forum_rt';
     private int $chunkSize = 2500;
-
-    private EntityManagerInterface $entityManager;
     private SymfonyStyle $io;
-    private string $manticoreHost;
-    private int $manticorePort;
 
-    public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly string $manticoreHost, private readonly int $manticorePort)
     {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
-        $this->manticoreHost = $manticoreHost;
-        $this->manticorePort = $manticorePort;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -62,9 +46,10 @@ class ManticoreIndicesForumCommand extends Command
             $this->io->note('Created ' . self::FORUM_INDEX . '.');
         } else {
             $this->io->note(
-                'Skipped creation of ' . self::FORUM_INDEX . ' index. ' . PHP_EOL .
+                'Skipped creation of ' . self::FORUM_INDEX . ' index. ' . \PHP_EOL .
                 'Index already exists.'
             );
+
             return Command::INVALID;
         }
 
@@ -73,10 +58,10 @@ class ManticoreIndicesForumCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function createForumIndex(): ?Index
+    private function createForumIndex(): ?Table
     {
         $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
-        $index = $client->index('forum_rt');
+        $index = $client->table('forum_rt');
 
         try {
             $index->create(
@@ -112,7 +97,7 @@ class ManticoreIndicesForumCommand extends Command
         return $index;
     }
 
-    private function addForumDocuments(Index $index, OutputInterface $output)
+    private function addForumDocuments(Table $index, OutputInterface $output)
     {
         /*
           SELECT ft.id AS threadid, sentence as text, IdGroup, \
@@ -129,39 +114,38 @@ class ManticoreIndicesForumCommand extends Command
 
         $stmt = $this->entityManager
             ->getConnection()
-            ->executeQuery(<<<___SQL
-            SELECT
-                count(*) as cnt
-            FROM
-                forums_posts fp
-        ___SQL);
+            ->executeQuery(<<<'___SQL'
+                    SELECT
+                        count(*) as cnt
+                    FROM
+                        forums_posts fp
+                ___SQL);
 
-        $count = ($stmt->fetchNumeric())[0];
-        if ($count !== 0) {
+        $count = $stmt->fetchNumeric()[0];
+        if (0 !== $count) {
             $progressBar = $this->getProgressBar($output, $count);
 
             $firstResult = 0;
             do {
                 $query = $this->entityManager->createNativeQuery(<<<___SQL
-                SELECT
-                    fp.id as post_id,
-                    fp.PostDeleted as post_deleted,
-                    fp.PostVisibility as post_visibility,
-                    ft.id AS thread_id,
-                    ft.ThreadDeleted AS thread_deleted,
-                    ft.ThreadVisibility AS thread_visibility,
-                    ftr.Sentence as content,
-                    ft.IdGroup AS `group`,
-                    fp.IdWriter as author,
-                    l.shortcode as locale
-                FROM
-                    forums_posts fp
-                JOIN forums_threads ft ON fp.threadid = ft.id
-                JOIN forum_trads ftr ON fp.IdContent = ftr.IdTrad
-                JOIN languages l ON ftr.IdLanguage = l.id
-                LIMIT {$firstResult}, {$this->chunkSize}
-            ___SQL
-                    , $this->getResultSetMappingForForumIndex());
+                        SELECT
+                            fp.id as post_id,
+                            fp.PostDeleted as post_deleted,
+                            fp.PostVisibility as post_visibility,
+                            ft.id AS thread_id,
+                            ft.ThreadDeleted AS thread_deleted,
+                            ft.ThreadVisibility AS thread_visibility,
+                            ftr.Sentence as content,
+                            ft.IdGroup AS `group`,
+                            fp.IdWriter as author,
+                            l.shortcode as locale
+                        FROM
+                            forums_posts fp
+                        JOIN forums_threads ft ON fp.threadid = ft.id
+                        JOIN forum_trads ftr ON fp.IdContent = ftr.IdTrad
+                        JOIN languages l ON ftr.IdLanguage = l.id
+                        LIMIT {$firstResult}, {$this->chunkSize}
+                    ___SQL, $this->getResultSetMappingForForumIndex());
 
                 $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
 
@@ -173,7 +157,7 @@ class ManticoreIndicesForumCommand extends Command
         }
     }
 
-    private function addForumDocumentsToIndex(Index $index, NativeQuery $query, ProgressBar $progress): int
+    private function addForumDocumentsToIndex(Table $index, NativeQuery $query, ProgressBar $progress): int
     {
         $forumPosts = $query->getResult();
         $documents = [];
@@ -181,23 +165,25 @@ class ManticoreIndicesForumCommand extends Command
         foreach ($forumPosts as $forumPost) {
             $documents[] = [
                 'post_id' => $forumPost['post_id'],
-                'post_deleted' =>  $forumPost['post_deleted'],
-                'post_visibility' =>  $forumPost['post_visibility'],
-                'thread_id' =>  $forumPost['thread_id'],
-                'thread_deleted' =>  $forumPost['thread_deleted'],
-                'thread_visibility' =>  $forumPost['thread_visibility'],
-                'content' =>  $forumPost['content'],
-                'group' =>  $forumPost['group'] ?? 0,
-                'author' =>  $forumPost['author'],
-                'locale' =>  $forumPost['locale'],
+                'post_deleted' => $forumPost['post_deleted'],
+                'post_visibility' => $forumPost['post_visibility'],
+                'thread_id' => $forumPost['thread_id'],
+                'thread_deleted' => $forumPost['thread_deleted'],
+                'thread_visibility' => $forumPost['thread_visibility'],
+                'content' => $forumPost['content'],
+                'group' => $forumPost['group'] ?? 0,
+                'author' => $forumPost['author'],
+                'locale' => $forumPost['locale'],
             ];
             $progress->advance();
         }
         $count = \count($forumPosts);
         unset($forumPosts);
 
-        $index->addDocuments($documents);
-        $index->flush();
+        if (0 !== $count) {
+            $index->addDocuments($documents);
+            $index->flush();
+        }
 
         gc_collect_cycles();
 
@@ -220,8 +206,10 @@ class ManticoreIndicesForumCommand extends Command
             ->addScalarResult('locale', 'locale')
             ->addScalarResult('created', 'created')
         ;
+
         return $rsm;
     }
+
     private function getProgressBar(OutputInterface $output, $count): ProgressBar
     {
         $progressBar = new ProgressBar($output, $count);

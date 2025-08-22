@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 class InvitationMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'intial invitation (host)' => [
             'type' => 'page',
             'template' => 'invitation/invite.html.twig',
@@ -62,13 +62,10 @@ class InvitationMockups implements MockupProviderInterface
             ],
         ],
     ];
+    private readonly InvitationUtility $invitationUtility;
 
-    private FormFactoryInterface $formFactory;
-    private InvitationUtility $invitationUtility;
-
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(private readonly FormFactoryInterface $formFactory)
     {
-        $this->formFactory = $formFactory;
         $this->invitationUtility = new InvitationUtility();
     }
 
@@ -100,20 +97,14 @@ class InvitationMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        switch ($parameters['name']) {
-            case 'intial invitation (host)':
-                return $this->getVariablesForInitialInvitation($parameters);
-            case 'invitation reply (guest)':
-                return $this->getVariablesForReplyGuest($parameters);
-            case 'invitation reply (host)':
-                return $this->getVariablesForReplyHost($parameters);
-            case 'view invitation (guest)':
-                return $this->getVariablesForViewGuest($parameters);
-            case 'view invitation (host)':
-                return $this->getVariablesForViewHost($parameters);
-            default:
-                return [];
-        }
+        return match ($parameters['name']) {
+            'intial invitation (host)' => $this->getVariablesForInitialInvitation($parameters),
+            'invitation reply (guest)' => $this->getVariablesForReplyGuest($parameters),
+            'invitation reply (host)' => $this->getVariablesForReplyHost($parameters),
+            'view invitation (guest)' => $this->getVariablesForViewGuest($parameters),
+            'view invitation (host)' => $this->getVariablesForViewHost($parameters),
+            default => [],
+        };
     }
 
     private function getVariablesForInitialInvitation(array $parameters): array
@@ -175,7 +166,7 @@ class InvitationMockups implements MockupProviderInterface
 
         $leg = $this->invitationUtility->getLeg($parameters);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
-        $form = $this->formFactory->create( ReportSpamType::class);
+        $form = $this->formFactory->create(ReportSpamType::class);
 
         return [
             'leg' => $leg,

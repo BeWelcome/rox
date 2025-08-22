@@ -17,6 +17,7 @@ class NotifyBasePage extends PageWithActiveSkin
     }
     
     
+    #[\Override]
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
@@ -32,6 +33,7 @@ class NotifyBasePage extends PageWithActiveSkin
         return 'groups';
     }
     
+    #[\Override]
     protected function getSubmenuItems()
     {
 

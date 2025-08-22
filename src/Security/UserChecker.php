@@ -47,13 +47,5 @@ class UserChecker implements UserCheckerInterface
         if ($user->isSuspended()) {
             throw new AccountSuspendedException();
         }
-
-        if ($user->isNotConfirmedYet()) {
-            throw new AccountMailNotConfirmedException();
-        }
-
-        if ($user->didConfirmMailAddress()) {
-            throw new AccountMailNotConfirmedException();
-        }
     }
 }

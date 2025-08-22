@@ -1,4 +1,5 @@
 security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         legacy:
             id: 'App\Security\PasswordHasher\LegacyPasswordHasher'
@@ -13,6 +14,7 @@ security:
             algorithm: 'auto'
             cost: 14
 
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         members:
             entity:
@@ -23,26 +25,8 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
-        # disables authentication for api doc
-        api-doc:
-            pattern: ^/api(?:/index.(html|json|jsonld))?$
-            security: false
-
-        api:
-            pattern: ^/api
-            stateless: true
-            user_checker: rox.user_checker
-            json_login:
-                check_path: /api/login
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            logout:
-                path: /api/logout
-                delete_cookies: ['bewelcome']
-            jwt: ~
-
         main:
+            lazy: true
             remember_me:
                 secret: '%env(APP_SECRET)%'
                 lifetime: 31536000 # 1 year in seconds
@@ -56,15 +40,11 @@ security:
             form_login:
                 login_path: security_login
                 check_path: security_check
-                default_target_path: /
-                use_referer: true
-                enable_csrf: true
+            # activate different ways to authenticate
+            # https://symfony.com/doc/current/security.html#the-firewall
 
-            logout:
-                path:   /logout
-                target: /
-
-#            access_denied_handler: App\Security\AccessDeniedHandler
+            # https://symfony.com/doc/current/security/impersonating_user.html
+            # switch_user: true
 
             pattern: ^/
             oauth:
@@ -77,6 +57,8 @@ security:
                 oauth_user_provider:
                     service: my.oauth_aware.user_provider.service
 
+    # Easy way to control access for large sections of your site
+    # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles:  PUBLIC_ACCESS }
@@ -117,3 +99,24 @@ security:
 #    role_hierarchy:
 #        ROLE_ADMIN:       ROLE_USER
 #        ROLE_SUPER_ADMIN: ROLE_ADMIN
+
+when@test:
+    security:
+        password_hashers:
+            # By default, password hashers are resource intensive and take time. This is
+            # important to generate secure password hashes. In tests however, secure hashes
+            # are not important, waste resources and increase test times. The following
+            # reduces the work factor to the lowest possible values.
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4 # Lowest possible value for bcrypt
+                time_cost: 3 # Lowest possible value for argon
+                memory_cost: 10 # Lowest possible value for argon
+
+                default_target_path: /
+                use_referer: true
+                enable_csrf: true
+
+            logout:
+                path:   /logout
+                target: /

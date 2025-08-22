@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -14,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Right.
- *
  *
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess

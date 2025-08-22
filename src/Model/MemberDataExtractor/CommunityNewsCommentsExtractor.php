@@ -7,9 +7,6 @@ use App\Entity\Member;
 
 final class CommunityNewsCommentsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         // Get community news comments the member wrote

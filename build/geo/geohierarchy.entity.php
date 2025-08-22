@@ -17,7 +17,7 @@ class GeoHierarchy extends RoxEntityBase
     {
         if (!$geo->isLoaded())
         {
-            return array();
+            return [];
         }
         return $this->findByWhereMany("geoId = '{$geo->getPKValue()}'");
     }
@@ -26,7 +26,7 @@ class GeoHierarchy extends RoxEntityBase
     {
         if (!$geo->isLoaded())
         {
-            return array();
+            return [];
         }
         return $this->findByWhereMany("parentId = '{$geo->getPKValue()}'");
     }

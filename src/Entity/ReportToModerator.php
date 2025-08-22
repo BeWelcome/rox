@@ -9,7 +9,9 @@ use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ReportToModerator.
+ * Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'reports_to_moderators')]
 #[ORM\Index(name: 'IdReporter', columns: ['IdReporter', 'IdPost', 'IdThread'])]
@@ -29,7 +31,7 @@ class ReportToModerator
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdReporter', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Member::class)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $reporter;
 
     /**
@@ -42,7 +44,7 @@ class ReportToModerator
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdModerator', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \App\Entity\Member::class)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $moderator;
 
     /**
@@ -54,14 +56,14 @@ class ReportToModerator
     /**
      * @var ForumPost
      */
-    #[ORM\ManyToOne(targetEntity: \App\Entity\ForumPost::class)]
+    #[ORM\ManyToOne(targetEntity: ForumPost::class)]
     #[ORM\Column(name: 'IdPost', type: 'integer', nullable: false)]
     private $post;
 
     /**
      * @var ForumThread
      */
-    #[ORM\ManyToOne(targetEntity: \App\Entity\ForumThread::class)]
+    #[ORM\ManyToOne(targetEntity: ForumThread::class)]
     #[ORM\Column(name: 'IdThread', type: 'integer', nullable: false)]
     private $thread;
 

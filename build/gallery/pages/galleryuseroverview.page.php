@@ -11,11 +11,13 @@
 class GalleryUserOverviewPage extends GalleryUserPage
 {
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'overview';
     }
 
+    #[\Override]
     protected function column_col3() {
         $statement = $this->statement;
         $galleries = $this->galleries;

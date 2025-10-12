@@ -177,7 +177,7 @@ class MemberModel
         }
 
         // Add the Bewelcome logo
-        $filesystem->copy($projectDir . '/public/images/logo_index_top.png', $this->tempDir . 'images/logo_index_top.png');
+        $filesystem->copy($projectDir . '/public/images/logo_email_2025.png', $this->tempDir . 'images/logo_email_2025.png');
 
         // We also need to empty avatar image
         $filesystem->copy($projectDir . '/public/images/empty_avatar.png', $this->tempDir . 'images/empty_avatar.png');

@@ -62,8 +62,12 @@
 ">
 <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary bordert-1 borderb-1">
     <div class="container-lg">
-        <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}"><img
-                    src="{{ asset('images/logo_index_top.png') }}" alt="BeWelcome"/></a>
+        <a class="navbar-brand mr-3 float-left" href="{{ url('homepage') }}">
+            <div class="u-flex u-flex-row" style="height: 40px;" >
+                <img class="u-pl-4 md:u-pl-8 u-pr-8" src="{{ asset('images/logo_icon_2025.svg') }}" alt="BeWelcome logo"/>
+                <img class="d-none d-lg-block u-pr-32" src="{{ asset('images/logo_text_2025.svg') }}" alt="BeWelcome text"/>
+            </div>
+        </a>
     </div>
 </nav>
 {% block content %}

@@ -84,7 +84,7 @@
     "@types/leaflet": "^1.9.8",
     "@types/leaflet-fullscreen": "^1.0.9",
     "bootstrap-dropdown-hover": "^4.2.0",
-    "ckeditor5": "^45.1.0",
+    "ckeditor5": "^46",
     "dayjs": "^1.11.0",
     "micromodal": "^0.4.10",
     "moment": "^2.29.4",

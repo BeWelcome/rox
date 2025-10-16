@@ -4,10 +4,7 @@
         <ul id="collapsing_menu" class="navbar navbar-nav">
             <li class="nav-item">
                 <a id="brand_image" class="navbar-brand" href="{{ url('homepage') }}">
-                    <div class="u-flex u-flex-row" style="height: 40px;" >
-                        <img class="u-pl-4 md:u-pl-8 u-pr-8" src="{{ asset('images/logo_icon_2025.svg') }}" alt="BeWelcome logo"/>
-                        <img class="d-none d-lg-block u-pr-32" src="{{ asset('images/logo_text_2025.svg') }}" alt="BeWelcome text"/>
-                    </div>
+                    {% include 'logo.html.twig' %}
                 </a>
             </li>
             {% include 'login_form_navbar.html.twig' %}
@@ -16,7 +13,7 @@
             {% include 'login_form_dropdown.html.twig' %}
             <li class="nav-item dropdown">
                 <button class="btn btn-primary border text-nowrap dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'menu.language.toggle'|trans }}">{{ language_name(app.request.locale) }}</button>
-                <div id="language_dropdown" class="dropdown-menu dropdown-menu-right u-w-150 md:u-w-300 u-max-h-screen u-overscroll-contain u-overflow-y-auto">
+                <div id="language_dropdown" class="dropdown-menu dropdown-menu-right u-w-150 md:u-w-300 u-max-h-[50vh] u-overscroll-contain u-overflow-y-auto">
                     <div class="u-grid u-grid-cols-1 md:u-gap-8 md:u-grid-cols-2 u-p-8">
                     {% for lang in locales %}
                         <a class="dropdown-item {% if lang == app.request.locale %}u-bg-bewelcome{% endif %} u-my-4 u-p-4" href="{{ path('language', { locale: lang }) }}">

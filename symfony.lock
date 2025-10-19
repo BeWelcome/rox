@@ -14,9 +14,6 @@
     "behat/gherkin": {
         "version": "v4.8.0"
     },
-    "behat/transliterator": {
-        "version": "v1.3.0"
-    },
     "behatch/contexts": {
         "version": "3.3.0"
     },

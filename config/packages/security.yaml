@@ -40,11 +40,10 @@ security:
             form_login:
                 login_path: security_login
                 check_path: security_check
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            logout:
+                path:   /logout
+                target: /
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
@@ -104,7 +103,3 @@ when@test:
                 default_target_path: /
                 use_referer: true
                 enable_csrf: true
-
-            logout:
-                path:   /logout
-                target: /

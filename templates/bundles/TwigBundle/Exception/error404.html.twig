@@ -5,7 +5,7 @@
     <h1>{{ 'error.page.not.found'|trans }}</h1>
 
     {% if app.user %}
-        <p>{{ 'error.greeting'|trans(app.user.Username) }}<p>
+        <p>{{ 'error.greeting'|trans({username: app.user.Username}) }}<p>
         <p>{{ 'error.404'|trans({'url': app.request.pathInfo }) }}</p>
     {% else %}
         <p>{{ 'error.404'|trans({'url': app.request.pathInfo }) }}</p>

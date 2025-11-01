@@ -263,13 +263,14 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username:member}/edit/{locale}', name: 'profile_edit', defaults: ['locale' => 'en'])]
+    #[Route(path: '/members/{username:member}/edit', name: 'profile_edit')]
     public function editProfileInLocale(
         Request $request,
         Member $member,
     ): Response {
-        return new Response();
+        return $this->renderProfile($member, $member);
     }
+
     private function renderProfile(Member $member, Member $loggedInMember): Response
     {
         /** @var CommentRepository $commentRepository */

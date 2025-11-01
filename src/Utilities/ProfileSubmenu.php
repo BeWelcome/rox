@@ -262,7 +262,7 @@ class ProfileSubmenu
         $this->addSubmenuItem('profile', [
             'key' => 'MemberPage',
             'icon' => 'user',
-            'url' => $this->routing->generate('members_profile', ['username' => $username]),
+            'url' => $this->routing->generate('members_profile_new', ['username' => $username]),
         ]);
         $this->addSubmenuItem('comments', [
             'key' => 'ViewComments',

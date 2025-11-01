@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 
 class NotificationRepository extends PaginationRepository
 {

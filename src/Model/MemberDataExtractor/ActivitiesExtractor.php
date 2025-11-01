@@ -3,7 +3,7 @@
 namespace App\Model\MemberDataExtractor;
 
 use App\Entity\ActivityAttendee;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Repository\ActivityAttendeeRepository;
 
 final class ActivitiesExtractor extends AbstractExtractor implements ExtractorInterface

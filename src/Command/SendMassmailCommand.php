@@ -4,7 +4,7 @@ namespace App\Command;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\BroadcastMessage;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Newsletter;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;

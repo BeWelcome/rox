@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\ProfileNote;
 use App\Form\ProfileNoteFilterType;
 use App\Form\ProfileNoteType;
@@ -31,7 +31,7 @@ class NoteController extends AbstractController
     {
     }
 
-    #[Route(path: '/members/{username}/note/add', name: 'add_note')]
+    #[Route(path: '/members/{username:member}/note/add', name: 'add_note')]
     public function add(Request $request, Member $member, ProfileSubmenu $profileSubmenu): Response
     {
         /** @var Member $loggedInMember */
@@ -80,7 +80,7 @@ class NoteController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/note/edit', name: 'edit_note')]
+    #[Route(path: '/members/{username:member}/note/edit', name: 'edit_note')]
     public function edit(Request $request, Member $member, ProfileSubmenu $profileSubmenu): Response
     {
         /** @var Member $loggedInMember */
@@ -121,7 +121,7 @@ class NoteController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/note/delete', name: 'delete_note')]
+    #[Route(path: '/members/{username:member}/note/delete', name: 'delete_note')]
     public function delete(Member $member): Response
     {
         /** @var Member $loggedInMember */
@@ -143,7 +143,7 @@ class NoteController extends AbstractController
         return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
     }
 
-    #[Route(path: '/members/{username}/notes/{page}', name: 'notes')]
+    #[Route(path: '/members/{username:member}/notes/{page}', name: 'notes')]
     public function notes(Request $request, Member $member, ProfileSubmenu $profileSubmenu, int $page = 1): Response
     {
         /** @var Member $loggedInMember */

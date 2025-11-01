@@ -7,7 +7,7 @@ use App\Doctrine\GroupType as DoctrineGroupType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Wiki;
 use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
@@ -24,6 +24,7 @@ use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -382,8 +383,11 @@ class GroupController extends AbstractController
     }
 
     #[Route(path: '/group/{id}/wiki', name: 'group_wiki_page')]
-    public function showGroupWikiPage(Group $group, WikiModel $wikiModel, EntityManagerInterface $entityManager): Response
-    {
+    public function showGroupWikiPage(
+        Group $group,
+        WikiModel $wikiModel,
+        EntityManagerInterface $entityManager
+    ): Response {
         $member = $this->getUser();
 
         $pageName = $wikiModel->getPageName('Group_' . $group->getName());
@@ -546,11 +550,9 @@ class GroupController extends AbstractController
                 $groupImageDir,
                 $fileName
             );
-            $imageManager = new ImageManager();
-            $img = $imageManager->make($groupImageDir . '/' . $fileName);
-            $img->resize(80, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $imageManager = new ImageManager(new Driver());
+            $img = $imageManager->read($groupImageDir . '/' . $fileName);
+            $img->scale(width: 80);
             $img->save($groupImageDir . '/thumb' . $fileName);
 
             return $fileName;

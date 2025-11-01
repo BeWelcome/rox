@@ -3,7 +3,7 @@
 namespace App\Model\MemberDataExtractor;
 
 use App\Entity\Comment;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Repository\CommentRepository;
 
 final class CommentsExtractor extends AbstractExtractor implements ExtractorInterface

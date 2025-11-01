@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Message;
 use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

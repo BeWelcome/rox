@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\LoginMessage;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Message;
 use App\Entity\UploadedImage;
 use App\Form\ChangeUsernameFormType;

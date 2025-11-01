@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
 use App\Entity\Comment;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Form\AdminCommentFormType;
 use App\Model\Admin\CommentModel;
 use App\Utilities\TranslatedFlashTrait;
@@ -330,7 +330,7 @@ class CommentController extends AbstractController
      *
      * @return Response
      */
-    #[Route(path: '/admin/comment/for/{username}', name: 'admin_comments_for_member', priority: 10)]
+    #[Route(path: '/admin/comment/for/{username:member}', name: 'admin_comments_for_member', priority: 10)]
     public function showAllCommentsForMember(Request $request, Member $member)
     {
         if (
@@ -361,7 +361,7 @@ class CommentController extends AbstractController
      *
      * @return Response
      */
-    #[Route(path: '/admin/comment/from/{username}', name: 'admin_comments_from_member', priority: 10)]
+    #[Route(path: '/admin/comment/from/{username:member}', name: 'admin_comments_from_member', priority: 10)]
     public function showAllCommentsFromMember(Request $request, Member $member)
     {
         if (

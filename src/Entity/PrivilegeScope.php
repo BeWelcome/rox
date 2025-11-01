@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,7 +29,7 @@ class PrivilegeScope
     #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'NONE')]
-    #[ORM\OneToOne(targetEntity: \Member::class)]
+    #[ORM\OneToOne(targetEntity: Member::class)]
     private $member;
 
     /**

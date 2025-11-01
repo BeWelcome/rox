@@ -592,7 +592,7 @@ LIMIT 1
                 SELECT
                     COUNT(*) As commentCount, IdToMember
                 FROM
-                    comments, members m2
+                    comments, member m2
                 WHERE
                     IdFromMember = m2.id
                     AND m2.Status IN ({$commentStatuses})
@@ -785,7 +785,7 @@ LIMIT 1
         if (!empty($this->languagesCondition)) {
             $this->tables .= ", memberslanguageslevel mll";
         }
-        $this->tables .= ', members m';
+        $this->tables .= ', member m';
 
         $this->joins = '';
         if (!empty($this->profilePictureCondition)) {
@@ -807,7 +807,7 @@ LIMIT 1
                     SELECT
                         COUNT(*) As commentCount, IdToMember
                     FROM
-                        comments, members m2
+                        comments, member m2
                     WHERE
                         IdFromMember = m2.id
                         AND m2.Status IN ('Active', 'OutOfRemind')

@@ -2,7 +2,7 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\RightVolunteer;
 
 final class RightsExtractor extends AbstractExtractor implements ExtractorInterface

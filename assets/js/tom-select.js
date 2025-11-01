@@ -46,6 +46,7 @@ document
             settings.searchField = 'title';
             settings.options = JSON.parse(tomSelectOptions.autocompleteChoices);
         }
+        settings.maxOptions = null;
 
         new TomSelect(element, settings);
     })

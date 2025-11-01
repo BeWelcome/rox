@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -64,7 +65,7 @@ class PollRecordOfChoice
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \Member::class)]
+    #[ORM\OneToOne(targetEntity: Member::class)]
     private $member;
 
     /**

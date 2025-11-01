@@ -3,13 +3,17 @@
 namespace App\Form;
 
 use App\Doctrine\AccommodationType;
+use App\Entity\Language;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\LessThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -17,8 +21,32 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SignupFormFinalizeType extends AbstractType
 {
-    public function __construct(private readonly TranslatorInterface $translator)
-    {
+    private readonly array $motherTongues;
+
+    public function __construct(
+        private readonly TranslatorInterface $translator,
+        EntityManagerInterface $entityManager,
+    ) {
+        $languageRepository = $entityManager->getRepository(Language::class);
+        $languages = $languageRepository->findAll();
+
+        $spokenLanguages = $signedLanguages = [];
+
+        /** @var Language $language */
+        foreach ($languages as $language) {
+            $languageName = $translator->trans(id: strtolower('lang_' . $language->getShortCode()), locale:$language->getShortCode());
+            if ($language->getIsSpokenlanguage()) {
+                $spokenLanguages[$languageName] = $language->getShortCode();
+            }
+            if ($language->getIsSignlanguage()) {
+                $signedLanguages[$languageName] = $language->getShortCode();
+            }
+        }
+
+        $this->motherTongues = [
+            $this->translator->trans('spoken.languages') => $spokenLanguages,
+            $this->translator->trans('signed.languages') => $signedLanguages,
+        ];
     }
 
     /**
@@ -31,6 +59,20 @@ class SignupFormFinalizeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+        if ($options['show_registration_key']) {
+            $builder->add('registration_key', TextType::class, [
+                'label' => 'label.registration_key',
+                'attr' => [
+                    'placeholder' => 'placeholder.registration_key',
+                ],
+                'help' => 'help.registration_key',
+                'required' => false,
+            ]);
+        } else {
+            $builder->add('registration_key', HiddenType::class);
+        }
+
         $builder
             ->add('name', TextType::class, [
                 'label' => 'label.name',
@@ -44,6 +86,14 @@ class SignupFormFinalizeType extends AbstractType
                         'message' => 'error.name',
                     ]),
                 ],
+            ])
+            ->add('short_name', TextType::class, [
+                'label' => 'label.shortname',
+                'attr' => [
+                    'placeholder' => 'placeholder.shortname',
+                ],
+                'help' => 'help.shortname',
+                'required' => false,
             ])
             ->add('birthdate', DateType::class, [
                 'label' => 'label.birthdate',
@@ -79,6 +129,20 @@ class SignupFormFinalizeType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('mother_tongue', ChoiceType::class, [
+                'label' => 'label.mother_tongue',
+                'multiple' => true,
+                'autocomplete' => true,
+                'help' => 'help.mother_tongue',
+                'choices' => $this->motherTongues,
+                'label_html' => true,
+                'required' => false,
+                'constraints' => [
+                    new NotNull([
+                        'message' => 'error.mother_tongue',
+                    ])
+                ]
+            ])
             ->add('location', SetLocationType::class, [
                 'attr' => [
                     'class' => 'js-location-picker',
@@ -111,6 +175,7 @@ class SignupFormFinalizeType extends AbstractType
                     'min' => 0,
                     'max' => 10,
                 ],
+                'data' => 0,
             ])
             ->add('newsletters', CheckboxType::class, [
                 'label' => 'signup.label.newsletters',
@@ -120,22 +185,13 @@ class SignupFormFinalizeType extends AbstractType
                 'label' => 'signup.label.local_events',
                 'required' => false,
             ])
-/*            ->add('trips_notifications', ChoiceType::class, [
-                'label' => 'label.trips_notifications',
-                'help' => 'help.trips_notifications',
-                'expanded' => false,
-                'multiple' => false,
-                'choices' => [
-                    $this->translator->trans('trips.never') => 'never',
-                    $this->translator->trans('trips.immediately') => 'immediately',
-                    $this->translator->trans('trips.daily') => 'daily',
-                    $this->translator->trans('trips.weekly') => 'weekly',
-                    $this->translator->trans('trips.biweekly') => 'biweekly',
-                    $this->translator->trans('trips.monthly') => 'monthly',
-                ],
-                'required' => false,
-            ])
-*/
         ;
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'show_registration_key' => true
+        ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -31,11 +32,11 @@ class ProfileVisit
     public function __construct(
         #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
         #[ORM\Id]
-        #[ORM\ManyToOne(targetEntity: \Member::class)]
+        #[ORM\ManyToOne(targetEntity: Member::class)]
         private Member $member,
         #[ORM\JoinColumn(name: 'IdVisitor', referencedColumnName: 'id')]
         #[ORM\Id]
-        #[ORM\ManyToOne(targetEntity: \Member::class)]
+        #[ORM\ManyToOne(targetEntity: Member::class)]
         private Member $visitor,
     ) {
     }

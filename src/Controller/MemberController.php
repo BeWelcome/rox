@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Form\PasswordFormType;
 use App\Logger\Logger;
 use App\Model\MemberModel;

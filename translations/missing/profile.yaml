@@ -112,3 +112,24 @@ profile.delete.confirm:
 profile.delete.not.logged.in:
     - 'Please enter your credentials to confirm that you want to delete your profile. Additionally you can leave feedback why you leave and ask to get your data removed within the next 24 hours.'
     - Additional information on the delete profile page if the member isn't logged in.
+profile.created:
+    - Your profile has been created and you can checkout what the site has to offer.
+    - Information on the landing page of a profile which has just been created.
+profile.finish.setup:
+    - Make sure to finish the setup till {deletion_date} (German time) as your account will be deleted otherwise.
+    - Information shown on any page as long as the account lacks certain information. {deletion} will be replaced by a date in long format (weekday, day Month year).
+profile.finish.setup.button:
+    - Finish setup
+    - Label on the button to finish account setup (part of the flash shown when account lacks information.
+label.shortname:
+    - Short name (optional)
+    - Label on the finish account page
+placeholder.shortname:
+    - Name used instead of username if set
+    - Placeholder on the finish account page
+help.shortname:
+    - Setting a short name is optional. If set it will be used instead of your username e.g. in the search results.
+    - Help text on the finish account page
+profile.set.location:
+    - Location
+    - Label used on the finish account page

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\LoginMessage;
 use App\Entity\LoginMessageAcknowledged;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;

@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 

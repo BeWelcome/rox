@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,7 +39,7 @@ class HostingInterest
      * @var Member
      */
     #[ORM\JoinColumn(name: 'member_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'groupMemberships')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'groupMemberships')]
     private $member;
 
     /**

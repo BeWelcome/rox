@@ -45,7 +45,7 @@
     {% for note in notes %}
         <div class="micromodal-slide" id="note-delete-{{ note.id }}">
             <div class="modal__overlay u-bg-gray-80 u-bg-opacity-50 u-flex u-justify-center u-absolute u-inset-0 u-z-[2001]">
-            <div class="u-bg-white u-p-16 u-m-16 u-rounded-8 u-w-[70%] sm:u-w-[30%] md:u-w-[20%]">
+            <div class="u-bg-white u-p-16 u-m-16 u-rounded-8 u-w-[70%] sm:u-w-[30%] md:u-w-[20%] u-max-w-[90%]">
                 <p class="u-text-24 u-mb-4 u-font-700 ">{{ 'profile.notes.modal'|trans }}</p>
                 <p class="u-text-16 u-mb-8">{{ 'profile.notes.delete'|trans }}</p>
                 <hr>

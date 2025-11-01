@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,7 +24,7 @@ class Poll
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdGroupCreator', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \Member::class)]
+    #[ORM\OneToOne(targetEntity: Member::class)]
     private $groupCreator;
 
     /**
@@ -181,7 +182,7 @@ class Poll
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdCreator', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \Member::class)]
+    #[ORM\OneToOne(targetEntity: Member::class)]
     private $creator;
 
     /**

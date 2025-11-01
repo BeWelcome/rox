@@ -2,8 +2,8 @@
 
 namespace App\Pagerfanta;
 
-use App\Doctrine\TypicalOfferType;
-use App\Entity\Member;
+use App\Doctrine\StandardOffersType;
+use App\Entity\NewMember as Member;
 use App\Entity\NewLocation;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Utilities\SessionSingleton;
@@ -180,9 +180,9 @@ class SearchAdapter implements AdapterInterface
 
         foreach (
             [
-                'offers_dinner' => TypicalOfferType::DINNER,
-                'offers_tour' => TypicalOfferType::GUIDED_TOUR,
-                'accessible' => TypicalOfferType::WHEELCHAIR_ACCESSIBLE,
+                'offers_dinner' => StandardOffersType::DINNER,
+                'offers_tour' => StandardOffersType::GUIDED_TOUR,
+                'accessible' => StandardOffersType::WHEELCHAIR_ACCESSIBLE,
             ] as $param => $value
         ) {
             if ($data->$param) {

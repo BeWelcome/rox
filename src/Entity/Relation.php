@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Event\PostLoadEventArgs;
@@ -34,11 +35,11 @@ class Relation
     private DateTime $updated;
 
     #[ORM\JoinColumn(name: 'IdOwner', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Member::class)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $owner;
 
     #[ORM\JoinColumn(name: 'IdRelation', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'relations')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'relations')]
     private Member $receiver;
 
     #[ORM\Column(name: 'Confirmed', type: 'string', nullable: false)]

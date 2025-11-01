@@ -10,6 +10,8 @@ namespace App\Entity;
 
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
+use App\Doctrine\CommentRelationsType;
+use App\Entity\NewMember as Member;
 use App\Repository\CommentRepository;
 use Carbon\Carbon;
 use DateTime;
@@ -26,7 +28,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Comment
 {
     #[ORM\Column(name: 'Relations', type: 'comment_relations', nullable: false)]
-    private string $relations = '';
+    private string $relations = CommentRelationsType::ONLY_MET_ONCE;
 
     #[ORM\Column(name: 'Quality', type: 'comment_quality', nullable: false)]
     private string $quality = CommentQualityType::NEUTRAL;

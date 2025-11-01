@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Preference;
 use App\Entity\Trip;
 use App\Repository\TripRepository;

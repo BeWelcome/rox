@@ -3,7 +3,7 @@
 namespace App\EventListener;
 
 use App\Entity\Language;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Doctrine\ORM\EntityManagerInterface;
 use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -32,26 +32,11 @@ class UserLocaleListener implements EventSubscriberInterface
 
         /** @var Member $user */
         $user = $event->getAuthenticationToken()->getUser();
-        $user->initializePreferredLanguage($this->entityManager);
-
-        $language = $user->getPreferredLanguage();
-        if (null === $language) {
-            $language = $request->getPreferredLanguage($this->locales);
-
-            // \todo: Search for a matching language in the list of UI languages
-
-            $languageRepository = $this->entityManager->getRepository(Language::class);
-            $language = $languageRepository->findOneBy([
-                'shortCode' => $language,
-            ]);
-            $locale = (null === $language) ? 'en' : $language->getShortCode();
-        } else {
-            $locale = $language->getShortCode();
-        }
+        $locale = $user->getLocale();
         PVars::register('lang', $locale);
 
         $request->setLocale($locale);
-        $session->set('IdLanguage', $language->getId());
+        $session->set('IdLanguage', 0);
         $session->set('_locale', $locale);
         $session->set('lang', $locale);
     }

@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Doctrine\AccommodationType;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\MemberTranslation;
 use App\Entity\NewLocation;
 use App\Logger\Logger;

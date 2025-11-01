@@ -8,10 +8,10 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Do not check entities with PHPMD.
@@ -31,20 +31,16 @@ class Address
     private Member $member;
 
     #[ORM\Column(name: 'HouseNumber', type: 'integer', nullable: false)]
-    #[Groups(['Member:Read'])]
     private int $houseNumber;
 
     #[ORM\Column(name: 'StreetName', type: 'integer', nullable: false)]
-    #[Groups(['Member:Read'])]
     private int $streetName;
 
     #[ORM\Column(name: 'Zip', type: 'integer', nullable: false)]
-    #[Groups(['Member:Read'])]
     private int $zip;
 
     #[ORM\JoinColumn(name: 'IdCity', referencedColumnName: 'geonameId')]
     #[ORM\ManyToOne(targetEntity: NewLocation::class)]
-    #[Groups(['Member:Read'])]
     private NewLocation $location;
 
     private float $latitude;

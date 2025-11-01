@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Relation;
 use App\Form\RelationType;
 use App\Repository\RelationRepository;
@@ -30,7 +30,7 @@ class RelationController extends AbstractController
     {
     }
 
-    #[Route(path: '/members/{username}/relation/add', name: 'add_relation')]
+    #[Route(path: '/members/{username:nenber}/relation/add', name: 'add_relation')]
     public function add(Request $request, Member $member, Mailer $mailer): Response
     {
         /** @var Member $loggedInMember */
@@ -77,7 +77,7 @@ class RelationController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/relation/edit', name: 'edit_relation')]
+    #[Route(path: '/members/{username:member}/relation/edit', name: 'edit_relation')]
     public function edit(Request $request, Member $member): Response
     {
         /** @var Member $loggedInMember */
@@ -112,7 +112,7 @@ class RelationController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/relation/delete', name: 'delete_relation')]
+    #[Route(path: '/members/{username:member}/relation/delete', name: 'delete_relation')]
     public function remove(Member $member, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $loggedInMember */
@@ -137,7 +137,7 @@ class RelationController extends AbstractController
         return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
     }
 
-    #[Route(path: '/members/{username}/relation/confirm', name: 'confirm_relation')]
+    #[Route(path: '/members/{username:member}/relation/confirm', name: 'confirm_relation')]
     public function confirm(Member $member, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $loggedInMember */
@@ -162,7 +162,7 @@ class RelationController extends AbstractController
         return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
     }
 
-    #[Route(path: '/members/{username}/relation/dismiss', name: 'dismiss_relation')]
+    #[Route(path: '/members/{username:member}/relation/dismiss', name: 'dismiss_relation')]
     public function dismiss(Member $member, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $loggedInMember */
@@ -186,7 +186,7 @@ class RelationController extends AbstractController
         return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
     }
 
-    #[Route(path: '/members/{username}/relations/{page}', name: 'relations')]
+    #[Route(path: '/members/{username:member}/relations/{page}', name: 'relations')]
     public function relations(Member $member, int $page = 1): Response
     {
         /** @var Member $loggedInMember */

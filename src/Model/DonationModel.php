@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use App\Entity\Donation;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\NewLocation;
 use App\Repository\NewLocationRepository;
 use Doctrine\ORM\EntityManagerInterface;

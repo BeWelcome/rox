@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Gallery;
 use App\Entity\GalleryImage;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
@@ -17,6 +17,7 @@ use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Hidehalo\Nanoid\Client;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -140,12 +141,10 @@ class GalleryController extends AbstractController
         );
 
         // creates a thumbnail for the current image
-        $imageManager = new ImageManager();
-        $img = $imageManager->make($image->getRealPath())->orientate();
+        $imageManager = new ImageManager(new Driver());
+        $img = $imageManager->read($image->getRealPath())->orient();
         if ($width > 240 || $height > 240) {
-            $img->resize(240, 240, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $img->scale(width:240);
         }
         $img->save($uploadDirectory . '/thumb' . $fileName);
 
@@ -340,9 +339,9 @@ class GalleryController extends AbstractController
         }
         if (!file_exists($filepath)) {
             // create image!
-            $imageManager = new ImageManager();
+            $imageManager = new ImageManager(new Driver());
             $imageManager
-                ->canvas($image->getWidth(), $image->getHeight(), '#ccc')
+                ->create($image->getWidth(), $image->getHeight())->fill('#ccc')
                 ->save($filepath);
         }
 

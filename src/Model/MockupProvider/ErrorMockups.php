@@ -2,7 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 
 class ErrorMockups implements MockupProviderInterface
 {

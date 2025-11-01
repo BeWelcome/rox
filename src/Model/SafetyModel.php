@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Utilities\ManagerTrait;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 

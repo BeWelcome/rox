@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Utilities\ConversationThread;

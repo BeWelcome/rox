@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\PasswordReset;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordFormType;
@@ -102,7 +102,7 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/resetpassword/{username}/{token}', name: 'member_reset_password', requirements: ['token' => '[a-z0-9]{64}'])]
+    #[Route(path: '/resetpassword/{username:member}/{token}', name: 'member_reset_password', requirements: ['token' => '[a-z0-9]{64}'])]
     public function resetPassword(
         Request $request,
         Member $member,
@@ -152,7 +152,7 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/password/change', name: 'change_password', requirements: ['token' => '[a-z0-9]{64}'])]
+    #[Route(path: '/members/{username:member}/password/change', name: 'change_password', requirements: ['token' => '[a-z0-9]{64}'])]
     public function changePassword(
         Request $request,
         Member $member,
@@ -179,7 +179,7 @@ class PasswordController extends AbstractController
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
 
-                return $this->redirectToRoute('security_logout');
+                return $this->redirectToRoute('_logout_main');
             }
         }
 
@@ -194,13 +194,11 @@ class PasswordController extends AbstractController
     #[Route(path: 'password/check/', name: 'check_password')]
     public function checkPassword(Request $request): JsonResponse
     {
-        $username = $request->get('username');
-        $email = $request->get('email');
-        $password = $request->get('password');
-        $zxcvbn = new Zxcvbn();
-        $result = $zxcvbn->passwordStrength($password, [$username, $email, 'BeWelcome', 'bewelcome']);
-        $response = new JsonResponse();
-        $response->setData(['score' => $result['score']]);
+        $username = $request->request->get('username');
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $result = new Zxcvbn()->passwordStrength($password, [$username, $email, 'BeWelcome', 'bewelcome']);
+        $response = new JsonResponse(['score' => $result['score']]);
 
         return $response;
     }

@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\FaqCategory;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;

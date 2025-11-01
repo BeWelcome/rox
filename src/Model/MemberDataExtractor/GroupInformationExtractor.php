@@ -2,7 +2,7 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Exception;
 
 final class GroupInformationExtractor extends AbstractExtractor implements ExtractorInterface

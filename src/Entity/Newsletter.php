@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -23,7 +24,7 @@ class Newsletter
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdCreator', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Member::class)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $createdBy;
 
     /**

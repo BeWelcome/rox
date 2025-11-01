@@ -5,7 +5,7 @@ namespace App\Repository;
 use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Entity\ActivityAttendee;
 use App\Entity\Location;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Preference;
 use DateTime;
 use Doctrine\ORM\EntityRepository;

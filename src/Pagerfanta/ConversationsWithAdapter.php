@@ -3,7 +3,7 @@
 namespace App\Pagerfanta;
 
 use App\Doctrine\MessageResultSetMapping;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;

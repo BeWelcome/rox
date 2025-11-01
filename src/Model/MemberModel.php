@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Model\MemberDataExtractor\ExtractorInterface;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;

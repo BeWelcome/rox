@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\LegacyKernel\LegacyHttpKernel;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;

@@ -44,7 +44,7 @@ class Member extends RoxEntityBase
     const MEMBER_All_HIDDEN = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN
         | self::MEMBER_LASTNAME_HIDDEN | self::MEMBER_EMAIL_HIDDEN;
 
-    protected $_table_name = 'members';
+    protected $_table_name = 'member';
 
     private $trads = null;
     private $trads_by_tradid = null;

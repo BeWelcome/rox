@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use App\Doctrine\ReportStatusType;
 use App\Doctrine\ReportTypeType;
 use App\Doctrine\WhoSpokeLastType;

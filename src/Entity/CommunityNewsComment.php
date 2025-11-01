@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use App\Repository\CommunityNewsCommentRepository;
 use Carbon\Carbon;
 use DateTime;

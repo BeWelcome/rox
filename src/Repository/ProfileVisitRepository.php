@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\ProfileVisit;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Adapter\ArrayAdapter;

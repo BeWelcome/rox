@@ -40,7 +40,7 @@ class StatisticsModel
             SELECT
                 COUNT(*) AS cnt
             FROM
-                members m
+                member m
             WHERE
                 m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
         ')->fetchOne();
@@ -51,7 +51,7 @@ class StatisticsModel
             FROM
                 geonamescountries gc
                 join geonames g on gc.country = g.country
-                join members m on g.geonameId = m.IdCity and m.Status IN ('Active', 'OutOfRemind')
+                join member m on g.geonameId = m.City and m.Status IN ('Active', 'OutOfRemind')
         ")->fetchAllAssociative();
 
         $languages = $connection->executeQuery('
@@ -60,7 +60,7 @@ class StatisticsModel
             FROM
                 languages l,
                 memberslanguageslevel mll,
-                members m
+                member m
             WHERE
                 l.id = mll.idLanguage
                 AND mll.IdMember = m.Id
@@ -72,7 +72,7 @@ class StatisticsModel
                 COUNT(c.id) AS cnt
             FROM
                 comments c,
-                members m
+                member m
             WHERE
                 c.Quality = 'Good'
                 AND IdFromMember = m.Id

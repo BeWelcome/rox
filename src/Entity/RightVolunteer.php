@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,7 +35,7 @@ class RightVolunteer
     private $id;
 
     #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'volunteerRights')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'volunteerRights')]
     private $member;
 
     #[ORM\JoinColumn(name: 'IdRight', referencedColumnName: 'id')]

@@ -61,11 +61,6 @@ abstract class SetType extends Type
         return $this->name;
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
-    {
-        return true;
-    }
-
     public function getChoicesArray(): array
     {
         $translationIds = $this->values;

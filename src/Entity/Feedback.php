@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,7 +39,7 @@ class Feedback
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Member::class)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $author;
 
     /**

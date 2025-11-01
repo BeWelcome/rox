@@ -61,7 +61,6 @@ Encore
     .addEntry('searchresults', './assets/js/searchresults.js')
     .addEntry('admin/tools/login_message', './assets/js/admin/tools/login_message.ts')
     .addEntry('tailwind', './assets/tailwindcss/tailwind.css')
-    // .addEntry('tom-select', './assets/js/tom-select')
     // react
     .configureBabel(function(babelConfig) {
         babelConfig.presets = [ "@babel/preset-env", '@babel/preset-react' ]

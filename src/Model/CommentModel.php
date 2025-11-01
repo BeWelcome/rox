@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Doctrine\CommentRelationsType;
 use App\Entity\Comment;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Jfcherng\Diff\LevenshteinDistance;
 use Throwable;

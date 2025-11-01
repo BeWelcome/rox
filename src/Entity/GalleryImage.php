@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -34,7 +35,7 @@ class GalleryImage
      * @var Member
      */
     #[ORM\JoinColumn(name: 'user_id_foreign')]
-    #[ORM\ManyToOne(targetEntity: \Member::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private $owner;
 
     /**

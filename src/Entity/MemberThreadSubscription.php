@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Doctrine\ActionToWatchType;
+use App\Entity\NewMember as Member;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,7 +21,7 @@ class MemberThreadSubscription
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdSubscriber', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Member::class)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $subscriber;
 
     /**

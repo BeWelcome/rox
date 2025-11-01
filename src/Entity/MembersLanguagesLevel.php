@@ -9,6 +9,7 @@
 namespace App\Entity;
 
 use App\Doctrine\LanguageLevelType;
+use App\Entity\NewMember as Member;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -27,7 +28,7 @@ class MembersLanguagesLevel
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'languageLevels')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'languageLevels')]
     protected $member;
 
     /**

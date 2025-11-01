@@ -3,6 +3,7 @@
 namespace App\Utilities;
 
 use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use DateTimeImmutable;
 
 /**
@@ -12,13 +13,13 @@ use DateTimeImmutable;
  */
 class CommentSorter
 {
-    private readonly DateTimeImmutable $early20thCentury;
-    private readonly DateTimeImmutable $farFuture;
+    private readonly CarbonImmutable $early20thCentury;
+    private readonly CarbonImmutable $farFuture;
 
     public function __construct()
     {
-        $this->early20thCentury = new DateTimeImmutable('01-01-1900');
-        $this->farFuture = new DateTimeImmutable('01-01-3000');
+        $this->early20thCentury = new CarbonImmutable('01-01-1900');
+        $this->farFuture = new CarbonImmutable('01-01-3000');
     }
 
     public function sortComments(array $comments): array
@@ -41,21 +42,23 @@ class CommentSorter
         return (-1) * ($aCriterionDate <=> $bCriterionDate);
     }
 
-    private function getCreatedCriterion(array $comment): Carbon
+    private function getCreatedCriterion(array $comment): CarbonImmutable
     {
-        $createdTo = isset($comment['to']) ? $comment['to']->getCreated() : $this->farFuture;
-        $createdFrom = isset($comment['from']) ? $comment['from']->getCreated() : $this->farFuture;
+        $createdTo = isset($comment['to'])
+            ? new CarbonImmutable($comment['to']->getCreated()) : $this->farFuture;
+        $createdFrom = isset($comment['from'])
+            ? new CarbonImmutable($comment['from']->getCreated()) : $this->farFuture;
 
         return min($createdTo, $createdFrom);
     }
 
-    private function getUpdatedCriterion(array $comment): DateTimeImmutable
+    private function getUpdatedCriterion(array $comment): CarbonImmutable
     {
         $updatedTo = isset($comment['to'])
             ? ($comment['to']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
         $updatedFrom = isset($comment['from'])
             ? ($comment['from']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
 
-        return max($updatedTo, $updatedFrom);
+        return max(new CarbonImmutable($updatedTo), new CarbonImmutable($updatedFrom));
     }
 }

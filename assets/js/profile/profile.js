@@ -1,10 +1,14 @@
 require('ekko-lightbox');
 
-document.getElementById("language-switch").addEventListener("change", e => {
+const languageSwitch = document.getElementById("language-switch");
+
+languageSwitch.addEventListener("change", e => {
     const languages = document.querySelectorAll('[id^=profile-language-]');
     languages.forEach(language => {
-        language.style.display = 'none';
+        language.classList.add('u-hidden');
+        language.classList.remove('u-block');
     })
     const current = document.getElementById("profile-language-" + e.target.value);
-    current.style.display = '';
+    current.classList.remove('u-hidden')
+    current.classList.add('u-block')
 })

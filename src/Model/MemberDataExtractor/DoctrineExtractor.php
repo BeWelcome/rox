@@ -2,7 +2,7 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;

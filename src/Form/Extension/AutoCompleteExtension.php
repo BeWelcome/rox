@@ -40,6 +40,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
             'no_results_text' => 'select.no.results',
             'max_options' => null,
             'max_items' => null,
+            'use_select' => false,
             'preload' => 'focus',
             'plugins' => 'remove_button',
             'options_as_html' => false,

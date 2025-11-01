@@ -6,7 +6,7 @@ use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Service\Mailer;

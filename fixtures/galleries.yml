@@ -4,5 +4,3 @@ App\Entity\Gallery:
         title: 'Test'
         description: 'Test Album'
         flags: 0
-
-

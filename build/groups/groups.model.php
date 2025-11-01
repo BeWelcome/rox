@@ -26,7 +26,7 @@ Boston, MA  02111-1307, USA.
 
 use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Manticoresearch\Client;
 use Manticoresearch\Query\BoolQuery;
 use Manticoresearch\Query\Equals;

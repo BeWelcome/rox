@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

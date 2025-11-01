@@ -11,6 +11,8 @@ namespace App\Entity;
 use App\Doctrine\ForumDeleteStatusType;
 use App\Doctrine\ForumVisibilityType;
 use App\Doctrine\PostCanStillEditType;
+use App\Entity\NewMember as Member;
+use App\Repository\ForumPostRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Event\PostLoadEventArgs;
@@ -30,7 +32,7 @@ use Exception;
 #[ORM\Index(name: 'PostVisibility', columns: ['PostVisibility'])]
 #[ORM\Index(name: 'PostDeleted', columns: ['PostDeleted'])]
 #[ORM\Index(name: 'create_time', columns: ['create_time'])]
-#[ORM\Entity(repositoryClass: \App\Repository\ForumPostRepository::class)]
+#[ORM\Entity(repositoryClass: ForumPostRepository::class)]
 #[ORM\HasLifecycleCallbacks()]
 class ForumPost
 {

@@ -22,10 +22,6 @@ Boston, MA  02111-1307, USA.
 
 
 use Carbon\Carbon;
-use Intervention\Image\ImageManager;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-
 
 /**
      * @author Lemon-Head

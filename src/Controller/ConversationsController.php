@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\ConversationsModel;
@@ -59,7 +59,7 @@ class ConversationsController extends AbstractController
     /**
      * @throws InvalidArgumentException
      */
-    #[Route(path: '/conversations/with/{username}', name: 'conversations_with')]
+    #[Route(path: '/conversations/with/{username:member}', name: 'conversations_with')]
     public function allConversationsWithMember(
         Request $request,
         Member $other,

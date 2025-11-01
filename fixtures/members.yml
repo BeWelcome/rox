@@ -1,209 +1,109 @@
-App\Entity\Member:
+App\Entity\NewMember:
     bwadmin:
         Username: 'bwadmin'
         BirthDate: <dateTime('1970-01-01')>
         email: <email()>
-        LastLogin: <dateTime('now')>
-        LastSwitchToActive: null
         Status: 'Active'
         city: '@NewBerlin'
         Latitude: '@NewBerlin->Latitude'
         Longitude: '@Berlin->Longitude'
         remindersWithoutLogin: 0
-        HideAttribute: 8
-        FirstName: 'BW'
-        SecondName: ''
-        LastName: 'Admin'
-        Accommodation: 'neverask'
-        AdditionalAccommodationInfo: 0
-        ILiveWith: 0
-        TypicalOffer: ''
-        Offer: 0
-        MaxGuest: 1
-        MaxLengthOfStay: 0
-        Organizations: 0
-        Restrictions: 0
-        OtherRestrictions: 0
-        ProfileSummary: 0
-        Occupation: 0
+        HideAttribute: 0
+        Name: 'BeWelcome Admin'
+        ShortName: 'BWAdmin'
         Gender: 'other'
-        ShowGender: <boolean(75)>
-        ShowAge: <boolean(75)>
-        Hobbies: 0
-        Books: 0
-        Music: 0
+        Accommodation: 'neverask'
+        AboutMe: 'The profile of the BW admin. Not used for hosting.'
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PleaseBring: 0
-        OfferGuests: 0
-        OfferHosts: 0
-        PublicTransport: 0
-        Movies: 0
-        bewelcomed: 0
-        registration_key: ''
     member_{1..5}:
         Username: 'member-<current()>'
         BirthDate: <dateTimeBetween('-80years', '-18years')>
         email: 'member-<current()>\@bewelcome.org'
         LastLogin: <dateTimeBetween('-12years', 'now')>
-        LastSwitchToActive: null
         Status: '<randomElement(["Active", "OutOfRemind"])>'
         city: '@NewBerlin'
         Latitude: '@NewBerlin->Latitude'
         Longitude: '@NewBerlin->Longitude'
-        remindersWithoutLogin: 0
-        HideAttribute: 8
-        FirstName: <firstName()>
-        SecondName: '70%? <firstName()>'
-        LastName: <lastName()>
+        HideAttribute: <numberBetween(0, 31)>
+        Name: <firstName()> <lastName()>
+        ShortName: '70%? <firstName()>'
         Accommodation: '<randomElement(["anytime", "neverask"])>'
         hostingInterest: '<numberBetween(1,10)>'
-        AdditionalAccommodationInfo: 0
-        TypicalOffer: ''
-        Offer: 0
-        MaxGuest: 1
-        MaxLengthOfStay: 2
-        Organizations: 0
-        Restrictions: 0
-        OtherRestrictions: 0
-        ProfileSummary: 1
-        Occupation: 1
-        Gender: 'female'
-        ShowGender: <boolean(75)>
-        ShowAge: <boolean(75)>
-        Hobbies: 1
-        Books: 1
-        Music: 1
+        AboutMe: <sentence()>
+        MaxGuests: <numberBetween(1, 10)>
+        MaxLengthOfStay: <numberBetween(1, 5)>
+        Gender: '<randomElement(["female", "male", "other"])>'
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PleaseBring: 0
-        OfferGuests: 0
-        OfferHosts: 0
-        PublicTransport: 0
-        Movies: 0
-        bewelcomed: 0
-        registration_key: ''
+        offerHosts: <sentence()>
+        offerGuests: <sentence()>
+        iLiveWith: <sentence()>
+        pleaseBring: <sentence()>
+        informationForGuest: <sentence()>
+        additionalAccommodationInfo: <sentence()>
+        publicTransport: <sentence()>
+        pastTrips: <sentence()>
+        plannedTrips: <sentence()>
+        movies: <sentence()>
+        books: <sentence()>
+        music: <sentence()>
+        hobbies: <sentence()>
+        occupation: 'Occupation'
+        organizations: <sentence()>
+        otherRestrictions: <sentence()>
     member_{6..10}:
         Username: 'member-<current()>'
         BirthDate: <dateTimeBetween('-80years', '-18years')>
         email: 'member-<current()>\@bewelcome.org'
         LastLogin: <dateTimeBetween('-12years', 'now')>
-        LastSwitchToActive: null
         Status: 'Active'
         city: '@NewJayapura'
         Latitude: '@NewJayapura->Latitude'
         Longitude: '@NewJayapura->Longitude'
-        remindersWithoutLogin: 0
-        HideAttribute: 8
-        FirstName: <firstName()>
-        SecondName: '70%? <firstName()>'
-        LastName: <lastName()>
+        HideAttribute: <numberBetween(0, 31)>
+        Name: <firstName()> <lastName()>
+        ShortName: '70%? <firstName()>'
         Accommodation: '<randomElement(["neverask", "anytime"])>'
-        AdditionalAccommodationInfo: 0
-        ILiveWith: 0
-        TypicalOffer: ''
-        Offer: 0
-        MaxGuest: 1
-        MaxLengthOfStay: 2
-        Organizations: 0
-        Restrictions: 0
-        OtherRestrictions: 0
-        ProfileSummary: 0
-        Occupation: 0
-        Gender: 'male'
-        ShowGender: <boolean(75)>
-        ShowAge: <boolean(75)>
-        AddressHidden: <boolean(75)>
-        Hobbies: 0
-        Books: 0
-        Music: 0
+        hostingInterest: '<numberBetween(1,10)>'
+        AboutMe: <sentence()>
+        MaxGuests: <numberBetween(1, 10)>
+        MaxLengthOfStay: <numberBetween(1, 5)>
+        Gender: '<randomElement(["female", "male", "other"])>'
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PleaseBring: 0
-        OfferGuests: 0
-        OfferHosts: 0
-        PublicTransport: 0
-        Movies: 0
-        bewelcomed: 0
-        registration_key: ''
     member_banned:
         Username: 'member-banned'
         BirthDate: <dateTimeBetween('-80years', '-18years')>
         email: 'member-banned\@bewelcome.org'
         LastLogin: <dateTimeBetween('-12years', 'now')>
-        LastSwitchToActive: null
         Status: 'Banned'
         city: '@NewJayapura'
         Latitude: '@NewJayapura->Latitude'
         Longitude: '@NewJayapura->Longitude'
         remindersWithoutLogin: 0
-        HideAttribute: 8
-        FirstName: <firstName()>
-        SecondName: '70%? <firstName()>'
-        LastName: <lastName()>
+        HideAttribute: <numberBetween(0, 31)>
+        Name: <firstName()> <lastName()>
+        ShortName: '70%? <firstName()>'
         Accommodation: '<randomElement(["neverask", "anytime"])>'
-        AdditionalAccommodationInfo: 0
-        ILiveWith: 0
-        TypicalOffer: ''
-        Offer: 0
-        MaxGuest: 1
-        MaxLengthOfStay: 2
-        Organizations: 0
-        Restrictions: 0
-        OtherRestrictions: 0
-        ProfileSummary: 0
-        Occupation: 0
-        Gender: 'male'
-        ShowGender: <boolean(75)>
-        ShowAge: <boolean(75)>
-        AddressHidden: <boolean(75)>
-        Hobbies: 0
-        Books: 0
-        Music: 0
+        MaxGuests: 1
+        MaxLengthOfStay: 3
+        AboutMe: 'Member has been banned for spamming'
+        Occupation: 'Spammer'
+        Gender: '<randomElement(["female", "male", "other"])>'
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PleaseBring: 0
-        OfferGuests: 0
-        OfferHosts: 0
-        PublicTransport: 0
-        Movies: 0
-        bewelcomed: 0
-        registration_key: ''
     member_suspended:
         Username: 'member-suspended'
         BirthDate: <dateTimeBetween('-80years', '-18years')>
         email: 'member-suspended\@bewelcome.org'
         LastLogin: <dateTimeBetween('-12years', 'now')>
-        LastSwitchToActive: null
-        Status: 'TakenOut'
+        HideAttribute: <numberBetween(0, 31)>
+        Status: 'SuspendedBeta'
         city: '@NewJayapura'
         Latitude: '@Jayapura->Latitude'
         Longitude: '@Jayapura->Longitude'
-        remindersWithoutLogin: 0
-        HideAttribute: 8
-        FirstName: <firstName()>
-        SecondName: '70%? <firstName()>'
-        LastName: <lastName()>
+        Name: <firstName()> <lastName()>
+        ShortName: '70%? <firstName()>'
         Accommodation: '<randomElement(["neverask", "anytime"])>'
-        AdditionalAccommodationInfo: 0
-        ILiveWith: 0
-        TypicalOffer: ''
-        Offer: 0
-        MaxGuest: 1
+        MaxGuests: 1
         MaxLengthOfStay: 2
-        Organizations: 0
-        Restrictions: 0
-        OtherRestrictions: 0
-        ProfileSummary: 0
-        Occupation: 0
-        Gender: 'male'
-        ShowGender: <boolean(75)>
-        ShowAge: <boolean(75)>
-        AddressHidden: <boolean(75)>
-        Hobbies: 0
-        Books: 0
-        Music: 0
+        AboutMe: "Member can't be reached (email address invalid)"
+        Gender: '<randomElement(["female", "male", "other"])>'
         Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        PleaseBring: 0
-        OfferGuests: 0
-        OfferHosts: 0
-        PublicTransport: 0
-        Movies: 0
-        bewelcomed: 0
-        registration_key: ''

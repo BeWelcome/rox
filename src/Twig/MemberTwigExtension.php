@@ -5,7 +5,7 @@ namespace App\Twig;
 use App\Entity\Comment;
 use App\Entity\Group;
 use App\Entity\LoginMessage;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Message;
 use App\Repository\CommentRepository;
 use App\Repository\LoginMessageRepository;

@@ -3,7 +3,7 @@
 namespace App\Model\MemberDataExtractor;
 
 use App\Entity\ForumPost;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 
 final class ForumPostsExtractor extends AbstractExtractor implements ExtractorInterface
 {

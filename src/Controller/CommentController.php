@@ -6,7 +6,7 @@ use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Preference;
 use App\Form\CommentType;
 use App\Form\CustomDataClass\ReportCommentRequest;
@@ -40,8 +40,10 @@ class CommentController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    public function __construct(private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
-    {
+    public function __construct(
+        private readonly ProfileSubmenu $profileSubmenu,
+        private readonly ChangeProfilePictureGlobals $globals
+    ) {
     }
 
     /**
@@ -120,7 +122,7 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/comment/add', name: 'add_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
+    #[Route(path: '/members/{username:member}/comment/add', name: 'add_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function addComment(
         Request $request,
         Member $member,
@@ -213,7 +215,7 @@ class CommentController extends AbstractController
     /**
      * @return Response|RedirectResponse
      */
-    #[Route(path: '/members/{username}/comment/edit', name: 'edit_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
+    #[Route(path: '/members/{username:member}/comment/edit', name: 'edit_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function editComment(
         Request $request,
         Member $member,
@@ -330,7 +332,11 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('profile_comments', ['username' => $fromMember->getUsername()]);
     }
 
-    #[Route(path: '/members/{username}/comments', name: 'profile_comments', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
+    #[Route(
+        path: '/members/{username:member}/comments',
+        name: 'profile_comments',
+        requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])']
+    )]
     public function showCommentsForMember(
         Member $member,
         ProfileModel $profileModel,

@@ -12,11 +12,9 @@
       <meta name="apple-mobile-web-app-title" content="beWelcome" />
 
     <title>
-      {% apply spaceless %}
-        {% if block('title') is defined %}
+        {%- if block('title') is defined -%}
           {{ block('title') | trim }} |
-        {% endif %} BeWelcome
-      {% endapply %}
+        {%- endif -%} BeWelcome
     </title>
 
     <meta name="description" content="{{ 'default_meta_description' | trans }}">
@@ -51,13 +49,22 @@
       <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
       </div>
       {% set contentBlock %}
-        {% set loggedInMember = app.user %}
-        {% if not loggedInMember is null and loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::ACCOUNT_ACTIVATED')%}
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-notice">{{ 'member.mail.not.confirmed'|trans|raw }}</div>
+        {% set member = app.user %}
+          {% if not member is null and not hide_finish_setup is defined %}
+            {% if member.status == constant('App\\Doctrine\\MemberStatusType::MAIL_CONFIRMED') or
+                member.status == constant('App\\Doctrine\\MemberStatusType::AWAITING_MAIL_CONFIRMATION') %}
+                <div class="u-flex u-flex-col md:u-flex-row u-justify-between u-mt-8 alert alert-notice">
+                    <div>{% set deletionDate = app.user.created|date_modify("+7 days")|format_date('long') %}
+                        {{ 'profile.finish.setup'|trans({deletion_date: deletionDate})|raw }}</div>
+                    <div><a class="o-button bg-primary white" href="{{ url('finish_setup', {username: app.user.Username}) }}">{{ 'profile.finish.setup.button'|trans }}</a></div>
                 </div>
-            </div>
+            {% endif %}
+            {% if member.status == constant('App\\Doctrine\\MemberStatusType::ACCOUNT_ACTIVATED') %}
+                <div class="u-flex u-justify-between u-mt-8 alert alert-notice">
+                    <div>{{ 'member.mail.not.confirmed'|trans|raw }}</div>
+                    <div><a class="o-button bg-primary white" href="{{ url('confirm_email', {username: app.user.Username}) }}">{{ 'profile.confirm.email.button'|trans }}</a></div>
+                </div>
+          {% endif %}
         {% endif %}
         {% for label, messages in app.flashes %}
           <div class="row">

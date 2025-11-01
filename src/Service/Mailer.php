@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Newsletter;
 use App\Entity\Relation;
 use App\Logger\Logger;
@@ -281,7 +281,7 @@ class Mailer
         $locale = 'en';
         if ($receiver instanceof Member) {
             $this->setTranslatorLocale($receiver);
-            $locale = $receiver->getPreferredLanguage()->getShortCode();
+            $locale = $receiver->getLocale();
             $parameters['receiver'] = $receiver;
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
         } elseif (!$receiver instanceof Address) {
@@ -333,8 +333,7 @@ class Mailer
             $receiver->__load();
         }
 
-        $language = $receiver->getPreferredLanguage();
-        $this->translator->setLocale($language->getShortCode());
+        $this->translator->setLocale($receiver->getLocale());
     }
 
     private function prepareParametersForNewsletter(Newsletter $newsletter, Member $receiver): array
@@ -354,7 +353,7 @@ class Mailer
         ) {
         }
         $parameters['newsletter'] = $newsletter;
-        $parameters['language'] = $receiver->getPreferredLanguage()->getShortCode();
+        $parameters['language'] = $receiver->getLocale();
 
         return $parameters;
     }

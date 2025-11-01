@@ -3,7 +3,7 @@
 namespace App\Model\MemberDataExtractor;
 
 use App\Entity\CommunityNewsComment;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 
 final class CommunityNewsCommentsExtractor extends AbstractExtractor implements ExtractorInterface
 {

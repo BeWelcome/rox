@@ -5,6 +5,10 @@
     {{ encore_entry_link_tags('tailwind') }}
 {% endblock %}
 
+{% block title %}
+    {{ 'conversations' | trans }}
+{% endblock title %}
+
 {% block content %}
     {%  set member = app.user %}
     {{ macros.new_conversation_header(otherMember, 'messages.with.member.headline', false) }}

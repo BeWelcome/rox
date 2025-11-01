@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Message;
 use DateTime;
 use Doctrine\DBAL\Exception\InvalidArgumentException as DBALInvalidArgumentException;

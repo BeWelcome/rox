@@ -27,9 +27,9 @@ class SearchFormRequest
 
     public int $location_geoname_id;
 
-    public float $location_latitude;
+    public string $location_latitude;
 
-    public float $location_longitude;
+    public string $location_longitude;
 
     public bool $location_admin_unit;
 

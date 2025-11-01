@@ -4,12 +4,14 @@ namespace App\Doctrine;
 
 class TypicalOfferType extends SetType
 {
-    public const string DINNER = 'dinner';
-    public const string GUIDED_TOUR = 'guidedtour';
-    public const string WHEELCHAIR_ACCESSIBLE = 'CanHostWeelChair';
+    public const DINNER = 'dinner';
+    public const GUIDED_TOUR = 'guidedtour';
+    public const WHEELCHAIR_ACCESSIBLE = 'CanHostWeelChair';
 
+    /** @var string */
     protected string $name = 'typical_offer';
 
+    /** @var array */
     protected array $values = [
         self::DINNER,
         self::GUIDED_TOUR,

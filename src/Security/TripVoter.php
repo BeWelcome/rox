@@ -3,7 +3,7 @@
 namespace App\Security;
 
 use App\Doctrine\SubtripOptionsType;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Trip;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

@@ -1,4 +1,8 @@
 <?php
+
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+
 class AvatarDummyImage extends DummyImage
 {
     const IMAGE_DIR = '../../../data/user/avatars';
@@ -14,10 +18,10 @@ class AvatarDummyImage extends DummyImage
     {
         srand();
         echo "Generate images for user " . $data['name'] . PHP_EOL;
-        $imageManager = new \Intervention\Image\ImageManager();
+        $imageManager = new ImageManager(new Driver());
         $original = 'lfw/image'.rand(0,99).'.png';
 
-        $img = $imageManager->make($original);
+        $img = $imageManager->read($original);
         switch(rand(0,3)) {
             case 0:
                 $img->blur(rand(0, 100));
@@ -32,7 +36,7 @@ class AvatarDummyImage extends DummyImage
                 $img->contrast(rand(0,100));
                 break;
         }
-        $img->save(self::IMAGE_DIR . '/' . $data['name'] . '_original' );
+        $img->save(self::IMAGE_DIR . '/' . $data['name'] . '_original');
     }
 
     /**

@@ -1556,4 +1556,16 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
 
         return $fields;
     }
+
+    public function getGenderOfGuest(): string
+    {
+        return $this->genderOfGuest;
+    }
+
+    public function setGenderOfGuest(string $genderOfGuest): self
+    {
+        $this->genderOfGuest = $genderOfGuest;
+
+        return $this;
+    }
 }

@@ -3,7 +3,7 @@
 namespace App\Tests\Security;
 
 use App\Doctrine\SubtripOptionsType;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Security\TripVoter;

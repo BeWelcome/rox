@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Newsletter;
 use App\Repository\MemberRepository;
 use App\Service\Mailer;

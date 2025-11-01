@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,7 +22,7 @@ class MemberPreference
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'preferences')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'preferences')]
     protected $member;
 
     /**

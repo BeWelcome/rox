@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\Entity\Address;
 use App\Entity\Comment;
 use App\Entity\GalleryImage;
-use App\Entity\Member;
 use App\Entity\NewLocation;
+use App\Entity\NewMember as Member;
 use App\Entity\Preference;
 use App\Entity\ProfileVisit;
 use App\Entity\Relation;
@@ -29,7 +29,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -46,28 +45,17 @@ class ProfileController extends AbstractController
     ) {
     }
 
-    /**
-     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
-     */
     #[Route(path: '/members/{username:member}/new', name: 'members_profile_new')]
     public function show(Member $member): Response
     {
         if (!$member->isBrowsable()) {
-            throw new AccessDeniedException();
+            throw $this->createAccessDeniedException();
         }
 
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
-        if ($loggedInMember === $member) {
-            return $this->showOwnProfile($member);
-        }
 
-        return $this->renderProfile(false, $member, $loggedInMember);
-    }
-
-    public function showOwnProfile(Member $member): Response
-    {
-        return $this->renderProfile(true, $member, $member);
+        return $this->renderProfile($member, $loggedInMember);
     }
 
     #[Route(path: '/members/status/set', name: 'profile_set_status', methods: ['POST'])]
@@ -92,7 +80,7 @@ class ProfileController extends AbstractController
         return new RedirectResponse($request->headers->get('referer'));
     }
 
-    #[Route(path: '/members/{username}/visitors/{page}', name: 'profile_visitors')]
+    #[Route(path: '/members/{username:member}/visitors/{page}', name: 'profile_visitors')]
     public function showMyVisitors(
         Member $member,
         EntityManagerInterface $entityManager,
@@ -133,7 +121,7 @@ class ProfileController extends AbstractController
         return $this->redirectToRoute('profile_set_location', ['username' => $this->getUser()->getUsername()]);
     }
 
-    #[Route(path: '/members/{username}/location', name: 'profile_set_location')]
+    #[Route(path: '/members/{username:member}/location', name: 'profile_set_location')]
     public function setLocation(
         Request $request,
         Member $member,
@@ -238,7 +226,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/delete', name: 'profile_delete')]
+    #[Route(path: '/members/{username:member}/delete', name: 'profile_delete')]
     public function deleteProfile(
         Request $request,
         TokenStorageInterface $tokenStorage,
@@ -275,7 +263,14 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    private function renderProfile(bool $ownProfile, Member $member, Member $loggedInMember): Response
+    #[Route(path: '/members/{username:member}/edit/{locale}', name: 'profile_edit', defaults: ['locale' => 'en'])]
+    public function editProfileInLocale(
+        Request $request,
+        Member $member,
+    ): Response {
+        return new Response();
+    }
+    private function renderProfile(Member $member, Member $loggedInMember): Response
     {
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);
@@ -296,39 +291,8 @@ class ProfileController extends AbstractController
             'visibleComments' => $visibleComments,
             'relations' => $relations,
             'pictures' => $pictures,
-            'own' => $ownProfile,
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
             'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember),
         ]);
     }
-    /*
-     * \todo add method to delete profile.
-     *
-        private function deleteProfileProcess(Request $request, bool $loggedIn): Response
-        {
-            $deleteProfileForm = $this->createForm(DeleteProfileFormType::class, null, [
-                'loggedIn' => $loggedIn,
-            ]);
-            $deleteProfileForm->handleRequest($request);
-
-            if ($deleteProfileForm->isSubmitted() && $deleteProfileForm->isValid()) {
-                $data = $deleteProfileForm->getData();
-                if (false === $loggedIn) {
-                    // Check credentials
-                }
-
-                // handle delete profile form.
-
-                return $this->redirectToRoute('logout');
-            }
-
-            return $this->render('profile/delete.html.twig', [
-                'form' => $deleteProfileForm->createView(),
-                'member' => $member,
-                'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
-                'submenu' => $profileSubmenu->getSubmenu($member, $member, ['active' => 'profile']),
-            ]);
-
-        }
-    */
 }

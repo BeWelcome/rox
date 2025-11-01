@@ -6,7 +6,7 @@ use App\Doctrine\DomainType;
 use App\Entity\Faq;
 use App\Entity\FaqCategory;
 use App\Entity\Language;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Word;
 use App\Form\CustomDataClass\FaqRequest;
 use App\Form\FaqFormType;

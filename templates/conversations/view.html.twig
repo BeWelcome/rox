@@ -11,6 +11,10 @@
     {% endif %}
 {% endblock javascripts %}
 
+{% block title %}
+    {{ 'conversations' | trans }}
+{% endblock title %}
+
 {% block content %}
     {% import 'macros.twig' as macros %}
     {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam:is_spam} ) }}

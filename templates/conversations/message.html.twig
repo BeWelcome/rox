@@ -67,11 +67,9 @@
         {% endif %}
 
         {% set messageText = message.Message | replace({'\n': ' ', '<br />': ' '}) | striptags %}
-        {% apply spaceless %}
         <p class="u-line-clamp-{% if message.subject %}2{% else%}3{%endif%} m-0 mb-1">
             {% if lastMessageByMember %}{{ 'you'|trans|capitalize }}:{% endif %}
             {{ messageText | truncate(250) | raw -}}</p>
-        {% endapply %}
         </a>
 
         {% if folder != 'spam' and folder != 'deleted' %}

@@ -10,6 +10,7 @@ namespace App\Entity;
 
 use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
+use App\Entity\NewMember as Member;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

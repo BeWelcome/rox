@@ -6,7 +6,7 @@ use App\Doctrine\AccommodationType;
 use App\Entity\Comment;
 use App\Entity\ForumPost;
 use App\Entity\GalleryImage;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Message;
 use App\Entity\Preference;
 use App\Entity\ProfileNote;

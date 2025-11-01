@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use Carbon\Carbon;
 use DateTime;
 use DateTimeInterface;
@@ -36,7 +37,7 @@ class GalleryComment
      * @var Member
      */
     #[ORM\JoinColumn(name: 'user_id_foreign')]
-    #[ORM\ManyToOne(targetEntity: \Member::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private $member;
 
     /**

@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Doctrine\SubtripOptionsType;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
@@ -25,7 +25,7 @@ class SubtripRepository extends EntityRepository
         $queryBuilder
             ->select('count(s.id)')
             ->andWhere('t.countOfTravellers <= :maxguest')
-            ->setParameter('maxguest', $member->getMaxGuest())
+            ->setParameter('maxguest', $member->getMaxGuests())
         ;
 
         return
@@ -40,7 +40,7 @@ class SubtripRepository extends EntityRepository
         $queryBuilder = $this->getLegsInAreaQueryBuilder($member, $distance, $duration);
         $queryBuilder
             ->andWhere('t.countOfTravellers <= :maxguest')
-            ->setParameter('maxguest', $member->getMaxGuest())
+            ->setParameter('maxguest', $member->getMaxGuests())
             ->setMaxResults(5)
         ;
 

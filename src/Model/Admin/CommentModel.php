@@ -3,7 +3,7 @@
 namespace App\Model\Admin;
 
 use App\Entity\Comment;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Repository\CommentRepository;
 use App\Utilities\ManagerTrait;
 use Pagerfanta\Pagerfanta;

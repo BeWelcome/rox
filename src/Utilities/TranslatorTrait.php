@@ -2,7 +2,7 @@
 
 namespace App\Utilities;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 trait TranslatorTrait

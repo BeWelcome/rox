@@ -24,13 +24,15 @@
 
 		<div class="u-flex u-flex-col u-justify-center u-py-16 u-px-24">
         <p class="u-text-26 u-leading-32 u-font-400 u-font-display u-mb-8">{{ 'landing.welcomeback' | trans }}<span class="u-font-300">{{ macros.profilelink(app.user.Username) }}</span></p>
+            {# accomoodation null indicates that the meber hasn't finished setting up yet #}
+            {% if not app.user.Accommodation is null %}
 			<div class="u-flex u-items-center">
 				{% include 'landing/widget/accommodation.html.twig' with {
-            member: app.user
-          } only %}
+                    member: app.user
+                } only %}
 				<p class="u-text-20 u-leading-26 u-gray-60 u-font-display u-font-300 u-ml-4">in</p>
 				{# Provide a way to search in member's location #}
-        {{ form_start( searchLocation, { 'action': path('search_locations'), 'attr' : {'style' : 'display: inline;'}} ) }}
+                {{ form_start( searchLocation, { 'action': path('search_locations'), 'attr' : {'style' : 'display: inline;'}} ) }}
 				<button type="submit" id="home_updateMap" name="home[updateMap]" class="searchsubmit u-text-22 u-leading-26 u-ml-4 u-mb-0 u-font-display u-font-400 u-text-bewelcome btn">
 					{{ searchLocation.vars.value.location }}
 				</button>
@@ -38,8 +40,9 @@
 				<div class="d-none invisible">{{ form_rest(searchLocation) }}</div>
 				{{ form_end(searchLocation) }}
 			</div>
-
-
+            {% else %}
+                <p>{{ 'profile.created'|trans }}<p>
+            {% endif %}
 		</div>
 		{# where do you want to go? #}
 		<div class="u-flex u-items-center u-justify-center u-bg-gray-5 u-py-16 u-px-24 u-rounded-r-16">

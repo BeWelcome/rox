@@ -1,9 +1,9 @@
-{% if member.memberfields[locale] is defined %}
-    {% set memberfields = member.memberfields[locale] %}
-{% elseif member.memberfields['en'] is defined%}
-    {% set memberfields = member.memberfields['en'] %}
+{% if member.translations[locale] is defined %}
+    {% set memberfields = member.translations[locale] %}
+{% elseif member.translations['en'] is defined%}
+    {% set memberfields = member.translations['en'] %}
 {% else %}
-    {% set memberfields = member.memberfields|first %}
+    {% set memberfields = member.translations|first %}
 {% endif %}
 <div class="row">
     <div class="col-12 text-center text-md-left">
@@ -12,12 +12,12 @@
             </strong>
 
             {% if member.status != 'PassedAway' %}
-                {% if 'CanHostWeelChair' in member.TypicalOffer %}
+                <img src="images/icons/{{ member.Accommodation }}.png" class="mb-2" alt="{{ member.Accommodation|trans }}'
+                        title="{{ ('canoffer' ~ member.Accommodation|lower)|trans }}">
+                {% if member.isWheelChairAccessible %}
                     <img src="images/icons/wheelchairblue.png" class="mb-2" alt="{{ 'wheelchair'|trans }}'
                         title="{{ 'canhostwheelchairyes'|trans }}" >
                 {% endif %}
-                <img src="images/icons/{{ member.Accommodation }}.png" class="mb-2" alt="{{ member.Accommodation|trans }}'
-                        title="{{ ('canoffer' ~ member.Accommodation|lower)|trans }}">
             {% endif %}
         </h2>
     </div>
@@ -45,12 +45,15 @@
 
             {% if member.Name != ''%}<h3>{{ member.Name }}</h3>{% endif %}
             {% set city = member.city %}
-            <h5><a href="{{ url('places_city', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id, cityname: city.name, citycode: city.geonameId}) }}">{{ member.city.name }}</a>
-                {%- if city.admin1 != null -%}
-                    , <a href="{{ url('places_region', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id}) }}">{{ city.admin1.name }}</a>
-                {%- endif -%}
-                , <a href="{{ url('places_country', {countryname: city.country.name, countrycode: city.countryId}) }}">{{ city.country.name }}</a>
-            </h5>
+            <h5>{% if not city is null %}
+                <a href="{{ url('places_city', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id, cityname: city.name, citycode: city.geonameId}) }}">{{ member.city.name }}</a>
+                    {%- if city.admin1 != null -%}
+                        , <a href="{{ url('places_region', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id}) }}">{{ city.admin1.name }}</a>
+                    {%- endif -%}
+                    , <a href="{{ url('places_country', {countryname: city.country.name, countrycode: city.countryId}) }}">{{ city.country.name }}</a>
+            {% else %}
+                {{ 'member.no.city.yet'|trans }}
+            {% endif %}</h5>
             {% if status_form is defined and not status_form is null %}
                 {{ form_start(status_form, {'attr': {'class': 'u-grid u-grid-cols-2 u-gap-8'}}) }}
                 {{ form_widget(status_form.status) }}
@@ -82,7 +85,7 @@
             {% if member.hasRight('SafetyTeam') %} ({{ member.created|format_datetime() }}){% endif %}
             <br><strong>{{ 'profile.last.activity'|trans }} </strong>
             {% set lastLogin = (member.lastLogin == null) ? member.created : member.lastLogin %}
-            {% if member.lastLogin.diffInDays <= 7 %}
+            {% if lastLogin.diffInDays <= 7 %}
                 {{ 'lastloginprivacy'| trans }}
             {% else %}
                 {{ lastLogin.diffForHumans }}

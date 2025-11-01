@@ -9,6 +9,10 @@
     {{ encore_entry_script_tags('conversations') }}
 {% endblock %}
 
+{% block title %}
+    {{ 'conversations' | trans }}
+{% endblock title %}
+
 {% block content %}
 {% set member = app.user %}
 <div class="u-font-display u-text">

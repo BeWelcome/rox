@@ -31,8 +31,7 @@
             <spacer size="16"></spacer>
             <row>
                 <columns>
-                    {% apply spaceless %}
-                        {% if constant('\\App\\Entity\\Newsletter::SUSPENSION_NOTIFICATION') != newsletter.type %}
+                        {%- if constant('\\App\\Entity\\Newsletter::SUSPENSION_NOTIFICATION') != newsletter.type -%}
                             <p>{{ 'newsletter.receive'|trans }}</p>
                             <p>
                             {% if constant('\\App\\Entity\\Newsletter::SPECIFIC_NEWSLETTER') == newsletter.type  %}
@@ -43,8 +42,7 @@
                                 {{ 'newsletter.no.unsubscribe'|trans }}
                             {% endif %}
                             </p>
-                        {% endif %}
-                    {% endapply %}
+                        {%- endif -%}
                     <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
                 </columns>
             </row>

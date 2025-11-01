@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Repository\TripRepository;
 use Carbon\Carbon;

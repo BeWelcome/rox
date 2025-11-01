@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use App\Entity\BroadcastMessage;
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\Newsletter;
 use App\Entity\Preference;
 use App\Utilities\ManagerTrait;

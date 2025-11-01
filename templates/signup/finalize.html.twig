@@ -1,4 +1,4 @@
-{% extends 'base-lite.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('signup/finalize') }}
@@ -25,10 +25,15 @@
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1>{{ 'signup.account.created'|trans }}</h1>
-    {{ 'signup.finalize'|trans|raw }}
+<div class="u-min-w-[320px] u-max-w-[640px] u-m-auto">
+
+<h1>{{ 'members.finalize.account'|trans }}</h1>
+    {{ 'members.finalize.account.blurb'|trans|raw }}
     {{ form_start(finalize, { 'attr': { autocomplete: 'off', class: 'u-mt-8' } }) }}
+    {{ form_row(finalize.registration_key) }}
     {{ form_row(finalize.name) }}
+    {{ form_row(finalize.short_name) }}
+    {{ form_row(finalize.mother_tongue) }}
     {{ form_row(finalize.birthdate) }}
     <div class="o-form-group u-grid u-grid-cols-3">
         <div class="u-col-span-3"><label>{{ 'label.gender'|trans }}</label></div>
@@ -112,7 +117,7 @@
         {%- if finalize.accommodation.vars.value == finalize.accommodation.children[1].vars.value %}u-block{% else %}u-hidden{% endif %} u-mt-8">
         {{ form_label(finalize.hosting_interest) }}
         {{ form_widget(finalize.hosting_interest) }}
-        <div class="range text-center u-mt-16">
+        <div class="range text-center u-mt-8 u-text-12">
             <p class="rangeSlider__value-output">{{ 'hosting.interest.set'|trans }}</p>
         </div>
         {{ form_help(finalize.hosting_interest) }}
@@ -128,4 +133,5 @@
     </div>
 
     {{ form_end(finalize) }}
+</div>
 {% endblock content %}

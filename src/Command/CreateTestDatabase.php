@@ -106,15 +106,6 @@ class CreateTestDatabase extends Command
             '',
         ]);
 
-        $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:schema:create', '--dump-sql', '--no-interaction']);
-        $process->run();
-        $output->writeln([
-            'Creating the schema (see output below for SQL).',
-            '',
-            $process->getOutput(),
-            $process->getErrorOutput(),
-        ]);
-
         $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:schema:create', '--no-interaction']);
         $process->run();
 

@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Entity\NewMember as Member;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,7 +33,7 @@ class MembersPhoto
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: \Member::class)]
+    #[ORM\OneToOne(targetEntity: Member::class)]
     private $member;
 
     /**

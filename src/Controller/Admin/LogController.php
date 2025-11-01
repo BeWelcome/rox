@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Form\LogFormType;
 use App\Model\LogModel;
 use App\Repository\MemberRepository;

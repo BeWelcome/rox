@@ -2,11 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\Member;
+use App\Entity\NewMember as Member;
 use App\Entity\MembersPhoto;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,8 +31,11 @@ class AvatarController extends AbstractController
     private const string AVATAR_PATH = '../data/user/avatars/';
     private const string EMPTY_AVATAR_PATH = 'images/';
 
-    public function __construct(private readonly LoggerInterface $logger, private readonly EntityManagerInterface $entityManager, private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator
+    ) {
     }
 
     #[Route(path: '/members/uploadavatar', methods: ['POST'])]
@@ -61,7 +65,12 @@ class AvatarController extends AbstractController
         return new Response($uploadFailedTranslation, Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
     }
 
-    #[Route(path: '/members/avatar/{username:member}/{size}', name: 'avatar', requirements: ['size' => '\d+|original'], defaults: ['size' => '48'])]
+    #[Route(
+        path: '/members/avatar/{username:member}/{size}',
+        name: 'avatar',
+        requirements: ['size' => '\d+|original'],
+        defaults: ['size' => '48']
+    )]
     public function showAvatar(Member $member, string $size): BinaryFileResponse
     {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -92,9 +101,9 @@ class AvatarController extends AbstractController
 
     private function storeAvatar(Member $member, UploadedFile $avatarFile): bool
     {
-        $imageManager = new ImageManager();
+        $imageManager = new ImageManager(new Driver());
         try {
-            $img = $imageManager->make($avatarFile->getRealPath())->orientate();
+            $img = $imageManager->read($avatarFile->getRealPath())->orient();
         } catch (Throwable) {
             return false;
         }
@@ -175,11 +184,11 @@ class AvatarController extends AbstractController
 
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
 
-        $imageManager = new ImageManager();
-        $img = $imageManager->make($original);
+        $imageManager = new ImageManager(new Driver());
+        $img = $imageManager->read($original);
 
-        $height = $img->getHeight();
-        $width = $img->getWidth();
+        $height = $img->height();
+        $width = $img->width();
         if ($height !== $width) {
             $size = min($width, $height);
             $startX = (int) (($width - $size) / 2);
@@ -187,9 +196,7 @@ class AvatarController extends AbstractController
             $img->crop($size, $size, $startX, $startY);
         }
 
-        $img->resize($sizeOfAvatar, null, function ($constraint) {
-            $constraint->aspectRatio();
-        });
+        $img->scale(width: $sizeOfAvatar);
 
         $img->save($filename, 100, 'jpg');
     }
@@ -199,15 +206,13 @@ class AvatarController extends AbstractController
         // creates a thumbnail of the empty avatar
         $original = self::EMPTY_AVATAR_PATH . 'empty_avatar_original.png';
 
-        $imageManager = new ImageManager();
-        $img = $imageManager->make($original);
+        $imageManager = new ImageManager(new Driver());
+        $img = $imageManager->read($original);
         if ('original' === $sizeOfAvatar) {
             $filename = $original;
         } else {
             $filename = self::AVATAR_PATH . 'empty_avatar_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
-            $img->resize($sizeOfAvatar, $sizeOfAvatar, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $img->scale(width: $sizeOfAvatar);
             $img->save($filename);
         }
 

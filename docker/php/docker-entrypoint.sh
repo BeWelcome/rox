@@ -37,8 +37,14 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		composer install --prefer-dist --no-progress --no-interaction --no-scripts
 	fi
 
+    database_host=$(grep '^DB_HOST=' .env | cut -f 2 -d '=')
+    database_port=$(grep '^DB_PORT=' .env | cut -f 2 -d '=')
+    database_name=$(grep '^DB_NAME=' .env | cut -f 2 -d '=')
+    database_user=$(grep '^DB_USER=' .env | cut -f 2 -d '=')
+    database_password=$(grep '^DB_PASS=' .env | cut -f 2 -d '=')
+
 	echo "Waiting for db to be ready..."
-	until bin/console doctrine:query:sql "SELECT 1" > /dev/null 2>&1; do
+	until mariadb $database_name -u $database_user -p$database_password -h $database_host -e "select 1" > /dev/null 2>&1; do
 		sleep 1
 	done
 
@@ -48,15 +54,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		bin/console test:database:create --drop --force --no-interaction
 		echo "Database created."
 
-		database_host=$(grep '^DB_HOST=' .env | cut -f 2 -d '=')
-		database_port=$(grep '^DB_PORT=' .env | cut -f 2 -d '=')
-		database_name=$(grep '^DB_NAME=' .env | cut -f 2 -d '=')
-		database_user=$(grep '^DB_USER=' .env | cut -f 2 -d '=')
-		database_password=$(grep '^DB_PASS=' .env | cut -f 2 -d '=')
-		echo "$database_name"
-		echo "$database_port"
-		echo "$database_user"
-		echo "$database_password"
 		if [ -f docker/db/languages.sql ]; then
 			mariadb $database_name -u $database_user -p$database_password -h $database_host < docker/db/languages.sql
 		fi

@@ -11,7 +11,8 @@ $config
     ->setParallelConfig(new PhpCsFixer\Runner\Parallel\ParallelConfig(4, 20))
     ->setRiskyAllowed(true)
     ->setRules([
-        '@PHP83Migration' => true,
+        '@PHP8x3Migration' => true,
+        '@PHP8x4Migration' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
@@ -38,7 +39,7 @@ $config
                 'use',
                 'parenthesis_brace_block',
                 'square_brace_block',
-                'curly_brace_block'
+                'curly_brace_block',
             ],
         ],
         'no_unreachable_default_argument_value' => true,

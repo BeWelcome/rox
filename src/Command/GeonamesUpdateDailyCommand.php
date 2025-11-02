@@ -171,8 +171,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
      **/
     private function updateGeonames($io): void
     {
-        $this->updateGeonamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
-        $this->updateGeonamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
+        $this->updateGeonamesForDate(new DateTime()->modify('-1day'), $io); // Yesterday
+        $this->updateGeonamesForDate(new DateTime()->modify('-2days'), $io); // the day before yesterday
         if ('01' === date('d', time())) {
             // \todo: Update country list on the first day of a month
         }
@@ -180,8 +180,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
     private function updateAlternatenames($io): int
     {
-        $result = $this->updateAlternateNamesForDate((new DateTime())->modify('-1day'), $io); // Yesterday
-        $result |= $this->updateAlternateNamesForDate((new DateTime())->modify('-2days'), $io); // the day before yesterday
+        $result = $this->updateAlternateNamesForDate(new DateTime()->modify('-1day'), $io); // Yesterday
+        $result |= $this->updateAlternateNamesForDate(new DateTime()->modify('-2days'), $io); // the day before yesterday
 
         return $result;
     }

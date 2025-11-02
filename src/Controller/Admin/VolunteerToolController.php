@@ -3,8 +3,8 @@
 namespace App\Controller\Admin;
 
 use App\Entity\LoginMessage;
-use App\Entity\NewMember as Member;
 use App\Entity\Message;
+use App\Entity\NewMember as Member;
 use App\Entity\UploadedImage;
 use App\Form\ChangeUsernameFormType;
 use App\Form\CustomDataClass\Tools\ChangeUsernameRequest;

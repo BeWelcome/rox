@@ -3,12 +3,10 @@
 namespace App\Repository;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\NewMember As Member;
+use App\Entity\NewMember as Member;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
-use Gedmo\Translatable\TranslatableListener;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;

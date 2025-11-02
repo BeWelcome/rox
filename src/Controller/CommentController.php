@@ -42,7 +42,7 @@ class CommentController extends AbstractController
 
     public function __construct(
         private readonly ProfileSubmenu $profileSubmenu,
-        private readonly ChangeProfilePictureGlobals $globals
+        private readonly ChangeProfilePictureGlobals $globals,
     ) {
     }
 

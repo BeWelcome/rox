@@ -190,7 +190,6 @@ class MigrateMembersCommand extends Command
 
         $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=0; TRUNCATE `member`; TRUNCATE `member_translations`; SET FOREIGN_KEY_CHECKS=1;');
 
-
         for ($i = 0; $i < $countOfMembers; $i += $batchSize) {
             $query = $this->connection->executeQuery("SELECT * FROM members m WHERE m.status IN ('" . implode("', '", self::MIGRATED_STATUSES) . "') ORDER BY ID LIMIT " . $i . ",$batchSize");
             $members = $query->fetchAllAssociative();
@@ -199,9 +198,9 @@ class MigrateMembersCommand extends Command
                 // First non translated elements
                 $memberId = $member['id'];
 
-                $locale = $this->connection->executeQuery("SELECT mp.Value FROM memberspreferences mp WHERE mp.IdMember = :memberId AND mp.IdPreference = 1", ['memberId' => $memberId])->fetchOne();
+                $locale = $this->connection->executeQuery('SELECT mp.Value FROM memberspreferences mp WHERE mp.IdMember = :memberId AND mp.IdPreference = 1', ['memberId' => $memberId])->fetchOne();
                 if (is_numeric($locale)) {
-                    $locale = $this->connection->executeQuery("SELECT l.ShortCode FROM memberspreferences mp, languages l WHERE mp.IdMember = :memberId AND mp.IdPreference = 1 and mp.Value = l.id", ['memberId' => $memberId])->fetchOne();
+                    $locale = $this->connection->executeQuery('SELECT l.ShortCode FROM memberspreferences mp, languages l WHERE mp.IdMember = :memberId AND mp.IdPreference = 1 and mp.Value = l.id', ['memberId' => $memberId])->fetchOne();
                 }
                 $statement = $this->connection->prepare(self::INSERT);
                 $statement->bindValue('id', $memberId);
@@ -287,7 +286,7 @@ class MigrateMembersCommand extends Command
                 }
 
                 if (empty($translationIds)) {
-                    if ($member['Status'] === 'Active' || $member['Status'] === 'OutOfRemind') {
+                    if ('Active' === $member['Status'] || 'OutOfRemind' === $member['Status']) {
                         // Check where this happens
                         $this->addErrorNoTranslations($member);
                     }
@@ -297,8 +296,8 @@ class MigrateMembersCommand extends Command
                     $queryString = $this->addTranslation($memberId, 'en', 'ProfileLanguage', 'en');
                     $memberTranslations = $this->connection->executeQuery('SELECT * FROM memberstrads m WHERE IdTrad IN (' . implode(',', $translationIds) . ') ORDER BY IdTrad, id desc, IdLanguage')->fetchAllAssociative();
                     foreach ($memberTranslations as $memberTranslation) {
-                        $language  = $languages[$memberTranslation['IdLanguage']] ?? null;
-                        if ($language === null) {
+                        $language = $languages[$memberTranslation['IdLanguage']] ?? null;
+                        if (null === $language) {
                             $this->addErrorLanguage($member, $memberTranslation['IdLanguage']);
                             $progressBar->setMessage($member['Username'], 'error');
                         } else {
@@ -307,7 +306,8 @@ class MigrateMembersCommand extends Command
                             if (!isset($processedTranslations[$locale][$field])) {
                                 if (!isset($processedTranslations[$locale]['ProfileLanguage'])) {
                                     $queryString .= $this->addTranslation($memberId, $locale, 'ProfileLanguage', $locale);
-                                    $processedTranslations[$locale]['ProfileLanguage'] = true;                            }
+                                    $processedTranslations[$locale]['ProfileLanguage'] = true;
+                                }
 
                                 $content = $memberTranslation['Sentence'];
                                 if (!empty($content)) {
@@ -318,7 +318,7 @@ class MigrateMembersCommand extends Command
                         }
                     }
 
-                    $sql = "INSERT INTO member_translations (object_id, Locale, Field, Content) VALUES " . substr($queryString, 2);
+                    $sql = 'INSERT INTO member_translations (object_id, Locale, Field, Content) VALUES ' . substr($queryString, 2);
 
                     try {
                         $this->connection->executeStatement($sql);
@@ -336,27 +336,27 @@ class MigrateMembersCommand extends Command
             $file = fopen('migrateMembers.errors.txt', 'w');
             $countOfErrorMembers = 0;
             foreach ($this->errorMembers as $errors) {
-                $countOfErrorMembers += count($errors);
+                $countOfErrorMembers += \count($errors);
             }
             $this->io->error("Error migrating {$countOfErrorMembers} members.");
-            fwrite($file, "Members with errors: " . $countOfErrorMembers . "\n");
+            fwrite($file, 'Members with errors: ' . $countOfErrorMembers . "\n");
             foreach ($this->errorMembers as $status => $membersWithErrors) {
-                $countOfErrorMembers = count($membersWithErrors);
-                fwrite($file, "{$status}: {$countOfErrorMembers}" . PHP_EOL);
+                $countOfErrorMembers = \count($membersWithErrors);
+                fwrite($file, "{$status}: {$countOfErrorMembers}" . \PHP_EOL);
                 $errorsByCategory = [];
                 foreach ($membersWithErrors as $errors) {
                     foreach ($errors as $category => $error) {
                         if (!isset($errorsByCategory[$category])) {
                             $errorsByCategory[$category] = 0;
                         }
-                        $errorsByCategory[$category]++;
+                        ++$errorsByCategory[$category];
                     }
                 }
                 foreach (array_keys($errorsByCategory) as $category) {
-                    fwrite($file, "    {$category}: {$errorsByCategory[$category]}" . PHP_EOL);
+                    fwrite($file, "    {$category}: {$errorsByCategory[$category]}" . \PHP_EOL);
                 }
             }
-            fwrite($file, PHP_EOL);
+            fwrite($file, \PHP_EOL);
 
             foreach ($this->errorMembers as $status => $membersWithErrors) {
                 foreach ($membersWithErrors as $username => $errors) {
@@ -370,7 +370,7 @@ class MigrateMembersCommand extends Command
                         $errorText[] = "Language not found: {$errors['language']}";
                     }
                     if (\array_key_exists('no_translations', $errors)) {
-                        $errorText[] = "No translations in database!";
+                        $errorText[] = 'No translations in database!';
                     }
                     if (\array_key_exists('member_sql', $errors)) {
                         $errorText[] = $errors['member_sql'];
@@ -378,8 +378,8 @@ class MigrateMembersCommand extends Command
                     if (\array_key_exists('translation_sql', $errors)) {
                         $errorText[] = $errors['translation_sql'];
                     }
-                    fwrite($file, implode(PHP_EOL, $errorText));
-                    fwrite($file, PHP_EOL);
+                    fwrite($file, implode(\PHP_EOL, $errorText));
+                    fwrite($file, \PHP_EOL);
                 }
             }
 
@@ -436,11 +436,14 @@ class MigrateMembersCommand extends Command
     {
         $tableColumn = str_replace('members.', '', $tableColumn);
         switch ($tableColumn) {
-            case 'ProfileSummary': $tableColumn = 'AboutMe';
+            case 'ProfileSummary':
+                $tableColumn = 'AboutMe';
                 break;
-            case 'AdditionalAccomodationInfo': $tableColumn = 'AdditionalAccommodationInfo';
+            case 'AdditionalAccomodationInfo':
+                $tableColumn = 'AdditionalAccommodationInfo';
                 break;
-            case 'MaxLenghtOfStay': $tableColumn = 'MaxLengthOfStay';
+            case 'MaxLenghtOfStay':
+                $tableColumn = 'MaxLengthOfStay';
                 break;
         }
 
@@ -501,22 +504,24 @@ class MigrateMembersCommand extends Command
     private function migrateHiddenFields(array $member): int
     {
         $hideAttribute = 0;
-        if (($member['HideAttribute'] && Member::MEMBER_FIRSTNAME_HIDDEN) ||
-            ($member['HideAttribute'] && Member::MEMBER_SECONDNAME_HIDDEN) ||
-            ($member['HideAttribute'] && Member::MEMBER_LASTNAME_HIDDEN)) {
+        if (
+            ($member['HideAttribute'] && Member::MEMBER_FIRSTNAME_HIDDEN)
+            || ($member['HideAttribute'] && Member::MEMBER_SECONDNAME_HIDDEN)
+            || ($member['HideAttribute'] && Member::MEMBER_LASTNAME_HIDDEN)
+        ) {
             $hideAttribute = NewMember::NAME_HIDDEN;
         }
 
-        if ($member['HideBirthDate'] === 'Yes') {
-            $hideAttribute = $hideAttribute | NewMember::AGE_HIDDEN;
+        if ('Yes' === $member['HideBirthDate']) {
+            $hideAttribute |= NewMember::AGE_HIDDEN;
         }
 
-        if ($member['HideGender'] === 'Yes') {
-            $hideAttribute = $hideAttribute | NewMember::GENDER_HIDDEN;
+        if ('Yes' === $member['HideGender']) {
+            $hideAttribute |= NewMember::GENDER_HIDDEN;
         }
 
-        if ($member['AdressHidden'] === 'Yes') {
-            $hideAttribute = $hideAttribute | NewMember::ADDRESS_HIDDEN;
+        if ('Yes' === $member['AdressHidden']) {
+            $hideAttribute |= NewMember::ADDRESS_HIDDEN;
         }
 
         return $hideAttribute;

@@ -148,7 +148,7 @@ class TripModel
         $newTrip->setUpdated(new DateTime());
 
         // Move legs arrival and departure consistently +1month
-        $nextMonth = (new DateTime())->modify('+1month');
+        $nextMonth = new DateTime()->modify('+1month');
         $firstArrival = $trip->getSubtrips()->first()->getArrival();
         $adjust = $firstArrival->diff($nextMonth);
 

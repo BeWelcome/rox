@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\HostingRequest;
-use App\Entity\NewMember as Member;
 use App\Entity\Message;
+use App\Entity\NewMember as Member;
 use App\Entity\Subject;
 use App\Entity\Subtrip;
 use App\Form\InvitationGuest;

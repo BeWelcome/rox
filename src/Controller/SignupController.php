@@ -13,7 +13,6 @@ use App\Service\Mailer;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
@@ -119,7 +118,7 @@ class SignupController extends AbstractController
                 $signupModel->updateMember($member, $finalizeForm->getData());
                 $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $member->getUsername());
 
-                return $this->redirectToRoute('editmyprofile');
+                return $this->redirectToRoute('profile_edit', ['username' => $member->getUsername()]);
             }
         }
 
@@ -171,17 +170,27 @@ class SignupController extends AbstractController
      * Part of signup controller as confirming email concerns signup logic. But the route points to 'members' as
      * handling is done when logged in.
      */
-    #[Route(path: '/members/{username:member}/confirm', name: 'confirm_email')]
-    public function confirmEmailAddress(Request $request, Member $member): Response
+    #[Route(
+        path: '/members/{username:member}/confirm/{registrationKey}',
+        name: 'confirm_email',
+        defaults: ['registrationKey' => null]
+    )]
+    public function confirmEmailAddress(Request $request, Member $member, ?string $registrationKey): Response
     {
         $loggedInMember = $this->getUser();
         if ($member !== $loggedInMember) {
             $this->addTranslatedFlash('error', 'flash.signup.wrong.user');
 
-            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+            return $this->redirectToRoute('members_profile_new', ['username' => $member->getUsername()]);
         }
 
-        $confirmEmailAddressForm = $this->createForm(ConfirmEmailAddressFormType::class);
+        if (null === $member->getRegistrationKey()) {
+            $this->addTranslatedFlash('error', 'flash.profile.mail.already.confirmed');
+
+            return $this->redirectToRoute('members_profile_new', ['username' => $member->getUsername()]);
+        }
+
+        $confirmEmailAddressForm = $this->createForm(ConfirmEmailAddressFormType::class, ['registration_key' => $registrationKey]);
         $confirmEmailAddressForm->handleRequest($request);
         if ($confirmEmailAddressForm->isSubmitted() && $confirmEmailAddressForm->isValid()) {
             $registrationKey = $confirmEmailAddressForm['registration_key']->getData();
@@ -201,14 +210,16 @@ class SignupController extends AbstractController
             }
 
             if (MemberStatusType::ACTIVE === $member->getStatus()) {
-                return $this->redirectToRoute('editmyprofile');
+                return $this->redirectToRoute('profile_edit', ['username' => $member->getUsername()]);
             }
+
+            return $this->redirectToRoute('finish_setup', ['username' => $member->getUsername()]);
         }
 
         return $this->render('signup/confirm.email.html.twig', [
             'hide_finish_setup' => true,
             'member' => $member,
-            'confirm_email' => $confirmEmailAddressForm->createView(),
+            'confirm_email' => $confirmEmailAddressForm,
         ]);
     }
 

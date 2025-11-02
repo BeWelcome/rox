@@ -18,8 +18,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -93,16 +91,6 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
 
     #[ORM\Column(name: 'Status', type: 'member_status', nullable: false)]
     private string $status = 'Incomplete';
-
-    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
-    #[ORM\JoinColumn(name: 'City', referencedColumnName: 'geonameId', nullable: true)]
-    private ?NewLocation $city = null;
-
-    #[ORM\Column(name: 'Latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    private ?string $latitude;
-
-    #[ORM\Column(name: 'Longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    private ?string $longitude;
 
     #[ORM\Column(name: 'Reminders', type: 'integer', nullable: false)]
     private int $remindersWithOutLogin = 0;
@@ -233,7 +221,7 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
     private ?int $hostingInterest = null;
 
     #[ORM\OneToMany(targetEntity: NewMemberTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'])]
-    #[ORM\OrderBy(["locale" => "ASC"])]
+    #[ORM\OrderBy(['locale' => 'ASC'])]
     private Collection $translations;
 
     private array $translationsIndexedByLocale = [];
@@ -282,6 +270,11 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
         $this->id = $data['id'];
         $this->username = $data['username'];
         $this->password = $data['password'];
+    }
+
+    public function __toString(): string
+    {
+        return $this->getId() . ' ' . $this->getUsername() . ' ' . $this->getName();
     }
 
     public function setUsername(string $username): self
@@ -335,42 +328,6 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
     public function getNewEmail(): string
     {
         return $this->newEmail;
-    }
-
-    public function setCity(?NewLocation $city): self
-    {
-        $this->city = $city;
-
-        return $this;
-    }
-
-    public function getCity(): ?NewLocation
-    {
-        return $this->city;
-    }
-
-    public function setLatitude(?float $latitude): self
-    {
-        $this->latitude = $latitude;
-
-        return $this;
-    }
-
-    public function getLatitude(): ?float
-    {
-        return $this->latitude;
-    }
-
-    public function setLongitude(?float $longitude): self
-    {
-        $this->longitude = $longitude;
-
-        return $this;
-    }
-
-    public function getLongitude(): ?float
-    {
-        return $this->longitude;
     }
 
     public function setRemindersWithOutLogin(int $remindersWithOutLogin): self
@@ -489,9 +446,8 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
         $standardOffers = explode(',', $this->standardOffers);
         // remove wheelchair accessibility (covered in hasWheelChairAccess
         $standardOffers = array_filter($standardOffers, function ($value) {
-            return $value !== StandardOffersType::WHEELCHAIR_ACCESSIBLE;
+            return StandardOffersType::WHEELCHAIR_ACCESSIBLE !== $value;
         });
-
 
         return $standardOffers;
     }
@@ -651,6 +607,16 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
         $this->hideAttribute = ($this->hideAttribute | self::GENDER_HIDDEN);
 
         return $this;
+    }
+
+    public function isAgeVisible(): bool
+    {
+        return $this->hideAttribute && self::AGE_HIDDEN !== self::AGE_HIDDEN;
+    }
+
+    public function isGenderVisible(): bool
+    {
+        return $this->hideAttribute && self::AGE_HIDDEN !== self::AGE_HIDDEN;
     }
 
     public function showAge(): self
@@ -1424,7 +1390,6 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
                 $field = $translation->getField();
                 $this->translationsIndexedByLocale[$locale][$field] = $translation->getContent();
             }
-
         }
 
         return $this->translationsIndexedByLocale;
@@ -1453,6 +1418,7 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
 
         return $fallbacks;
     }
+
     public function addTranslation(NewMemberTranslation $translation): void
     {
         if (!$this->translations->contains($translation)) {
@@ -1462,31 +1428,27 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
     }
 
     /**
-     * Remove after migration
+     * Remove after migration.
      */
-    public function setId(int $id): NewMember
+    public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
-    public function setCreated(DateTime $created): NewMember
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function setUpdated(DateTime $updated): NewMember
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
-    }
-
-    public function __tostring(): string
-    {
-        return $this->getId() . " ". $this->getUsername() . " " . $this->getName();
     }
 
     public function getLocale(): string
@@ -1494,7 +1456,7 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
         return $this->locale;
     }
 
-    public function setLocale(string $locale): NewMember
+    public function setLocale(string $locale): self
     {
         $this->locale = $locale;
 

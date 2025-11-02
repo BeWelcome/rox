@@ -3,8 +3,8 @@
 namespace App\Model\MockupProvider;
 
 use App\Entity\HostingRequest;
-use App\Entity\NewMember as Member;
 use App\Entity\Message;
+use App\Entity\NewMember as Member;
 use App\Entity\Subject;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
@@ -175,7 +175,7 @@ class RequestMockups implements MockupProviderInterface
         $mockRequest = Mockery::mock(HostingRequest::class, [
             'getId' => 1,
             'getArrival' => new Carbon(),
-            'getDeparture' => (new Carbon())->addDays($numberOfNights), // use number of replies to change number of nights
+            'getDeparture' => new Carbon()->addDays($numberOfNights), // use number of replies to change number of nights
             'getNumberOfTravellers' => 2,
             'getFlexible' => true,
             'getStatus' => $status,

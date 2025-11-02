@@ -8,7 +8,6 @@
 
 namespace App\Entity;
 
-use App\Entity\NewMember;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;

@@ -522,7 +522,7 @@ class MyDataMockups implements MockupProviderInterface
         }
 
         return [
-            'year' => (new DateTime())->format('Y'),
+            'year' => new DateTime()->format('Y'),
             'post_count' => $count,
             'threads' => $threads,
         ];
@@ -705,14 +705,14 @@ class MyDataMockups implements MockupProviderInterface
                     'sentence' => 'Translations',
                     'shortCode' => 'en',
                     'language' => ['wordCode' => 'lang_pt'],
-                    'created' => (new DateTime())->format('Y-m-d'),
+                    'created' => new DateTime()->format('Y-m-d'),
                 ],
                 [
                     'code' => 'mydata.translations.abstract',
                     'sentence' => 'Traducions',
                     'shortCode' => 'en',
                     'language' => ['wordCode' => 'lang_es'],
-                    'created' => (new DateTime())->format('Y-m-d'),
+                    'created' => new DateTime()->format('Y-m-d'),
                 ],
             ],
         ];
@@ -735,14 +735,14 @@ class MyDataMockups implements MockupProviderInterface
                         'Sentence' => 'Translations',
                         'shortCode' => 'en',
                         'Language' => ['WordCode' => 'lang_pt'],
-                        'created' => (new DateTime())->format('Y-m-d'),
+                        'created' => new DateTime()->format('Y-m-d'),
                     ],
                     [
                         'code' => 'mydata.translations.abstract',
                         'Sentence' => 'Traducions',
                         'shortCode' => 'en',
                         'Language' => ['WordCode' => 'lang_es'],
-                        'created' => (new DateTime())->format('Y-m-d'),
+                        'created' => new DateTime()->format('Y-m-d'),
                     ],
                 ],
             ]);

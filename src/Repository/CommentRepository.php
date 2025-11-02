@@ -308,7 +308,7 @@ class CommentRepository extends EntityRepository
         }
 
         if (!empty($comments)) {
-            $comments = (new CommentSorter())->sortComments($comments);
+            $comments = new CommentSorter()->sortComments($comments);
         }
 
         return $comments;

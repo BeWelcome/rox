@@ -298,7 +298,7 @@ class Mailer
             $subject = $subject['translationId'];
         }
         $subject = $this->translator->trans($subject, $subjectParams);
-        $email = (new TemplatedEmail())
+        $email = new TemplatedEmail()
             ->to($receiver)
             ->subject($subject)
             ->htmlTemplate('emails/' . $template . '.html.twig')

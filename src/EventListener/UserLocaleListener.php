@@ -2,7 +2,6 @@
 
 namespace App\EventListener;
 
-use App\Entity\Language;
 use App\Entity\NewMember as Member;
 use Doctrine\ORM\EntityManagerInterface;
 use PVars;

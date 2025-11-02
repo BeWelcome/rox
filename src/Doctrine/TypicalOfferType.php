@@ -8,10 +8,8 @@ class TypicalOfferType extends SetType
     public const GUIDED_TOUR = 'guidedtour';
     public const WHEELCHAIR_ACCESSIBLE = 'CanHostWeelChair';
 
-    /** @var string */
     protected string $name = 'typical_offer';
 
-    /** @var array */
     protected array $values = [
         self::DINNER,
         self::GUIDED_TOUR,

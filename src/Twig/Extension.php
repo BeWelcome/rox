@@ -3,7 +3,6 @@
 namespace App\Twig;
 
 use Carbon\Carbon;
-use Doctrine\Common\Collections\Collection;
 use HTMLPurifier;
 use HTMLPurifier_HTML5Config;
 use HtmlTruncator\InvalidHtmlException;

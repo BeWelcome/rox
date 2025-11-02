@@ -2,20 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\NewMember as Member;
-use App\Security\AccountBannedException;
-use App\Security\AccountDeniedLoginException;
-use App\Security\AccountMailConfirmedException;
-use App\Security\AccountMailNotConfirmedException;
-use App\Security\AccountSuspendedException;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Exception\AccountExpiredException;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**

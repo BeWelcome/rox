@@ -119,7 +119,7 @@ class StatisticsRepository extends EntityRepository
         $result = $this->createQueryBuilder('s')
             ->select($column . ' AS count, s.created AS day')
             ->where('s.created >= :two_months_ago')
-            ->setParameter('two_months_ago', (new DateTime())->modify('-2months'))
+            ->setParameter('two_months_ago', new DateTime()->modify('-2months'))
             ->getQuery()
             ->getResult();
 

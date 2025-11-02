@@ -16,8 +16,8 @@ use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Hidehalo\Nanoid\Client;
-use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -144,7 +144,7 @@ class GalleryController extends AbstractController
         $imageManager = new ImageManager(new Driver());
         $img = $imageManager->read($image->getRealPath())->orient();
         if ($width > 240 || $height > 240) {
-            $img->scale(width:240);
+            $img->scale(width: 240);
         }
         $img->save($uploadDirectory . '/thumb' . $fileName);
 

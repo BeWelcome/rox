@@ -153,7 +153,7 @@ class WikiController extends AbstractController
             // \todo make this safe against multiple edits at the same time
             $newWikiPage->setVersion($wikiPage->getVersion() + 1);
             $newWikiPage->setAuthor($member->getUsername());
-            $newWikiPage->setCreated((new DateTime())->getTimestamp());
+            $newWikiPage->setCreated(new DateTime()->getTimestamp());
 
             $this->entityManager->persist($newWikiPage);
             $this->entityManager->flush();

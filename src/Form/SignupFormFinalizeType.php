@@ -34,7 +34,7 @@ class SignupFormFinalizeType extends AbstractType
 
         /** @var Language $language */
         foreach ($languages as $language) {
-            $languageName = $translator->trans(id: strtolower('lang_' . $language->getShortCode()), locale:$language->getShortCode());
+            $languageName = $translator->trans(id: strtolower('lang_' . $language->getShortCode()), locale: $language->getShortCode());
             if ($language->getIsSpokenlanguage()) {
                 $spokenLanguages[$languageName] = $language->getShortCode();
             }
@@ -59,7 +59,6 @@ class SignupFormFinalizeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
         if ($options['show_registration_key']) {
             $builder->add('registration_key', TextType::class, [
                 'label' => 'label.registration_key',
@@ -138,10 +137,10 @@ class SignupFormFinalizeType extends AbstractType
                 'label_html' => true,
                 'required' => false,
                 'constraints' => [
-                    new NotNull([
+                    new NotBlank([
                         'message' => 'error.mother_tongue',
-                    ])
-                ]
+                    ]),
+                ],
             ])
             ->add('location', SetLocationType::class, [
                 'attr' => [
@@ -191,7 +190,7 @@ class SignupFormFinalizeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'show_registration_key' => true
+            'show_registration_key' => true,
         ]);
     }
 }

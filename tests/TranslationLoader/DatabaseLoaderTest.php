@@ -97,17 +97,17 @@ class DatabaseLoaderTest extends TestCase
 
     public function testCheckMajorUpdate(): void
     {
-        $englishEn = (new Word())
+        $englishEn = new Word()
             ->setCode('english')
-            ->setLanguage((new Language())->setShortCode('en'))
+            ->setLanguage(new Language()->setShortCode('en'))
             ->setSentence('English')
             ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
             ->setMajorUpdate(new DateTime('2020-09-01 00:00'))
         ;
 
-        $englishDe = (new Word())
+        $englishDe = new Word()
             ->setCode('english')
-            ->setLanguage((new Language())->setShortCode('de'))
+            ->setLanguage(new Language()->setShortCode('de'))
             ->setSentence('Englisch')
             ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
             ->setUpdated(new DateTime('2020-08-31 00:00'))
@@ -136,17 +136,17 @@ class DatabaseLoaderTest extends TestCase
 
     public function testCheckNoMajorUpdate(): void
     {
-        $englishEn = (new Word())
+        $englishEn = new Word()
             ->setCode('english')
-            ->setLanguage((new Language())->setShortCode('en'))
+            ->setLanguage(new Language()->setShortCode('en'))
             ->setSentence('English')
             ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
             ->setMajorUpdate(new DateTime('2020-09-01 00:00'))
         ;
 
-        $englishDe = (new Word())
+        $englishDe = new Word()
             ->setCode('english')
-            ->setLanguage((new Language())->setShortCode('de'))
+            ->setLanguage(new Language()->setShortCode('de'))
             ->setSentence('Englisch')
             ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
             ->setUpdated(new DateTime('2020-09-01 00:01'));
@@ -176,25 +176,25 @@ class DatabaseLoaderTest extends TestCase
     {
         $englishEn = new Word();
         $englishEn->setCode('english');
-        $englishEn->setLanguage((new Language())->setShortCode('en'));
+        $englishEn->setLanguage(new Language()->setShortCode('en'));
         $englishEn->setSentence('English');
         $englishEn->setMajorUpdate(new DateTime('2020-09-01 00:00'));
 
         $englishDe = new Word();
         $englishDe->setCode('english');
-        $englishDe->setLanguage((new Language())->setShortCode('de'));
+        $englishDe->setLanguage(new Language()->setShortCode('de'));
         $englishDe->setSentence('Englisch');
         $englishDe->setUpdated(new DateTime('2020-09-01 00:01'));
 
         $germanEn = new Word();
         $germanEn->setCode('german');
-        $germanEn->setLanguage((new Language())->setShortCode('en'));
+        $germanEn->setLanguage(new Language()->setShortCode('en'));
         $germanEn->setSentence('German');
         $germanEn->setMajorUpdate(new DateTime('2020-09-01 00:01'));
 
         $germanDe = new Word();
         $germanDe->setCode('german');
-        $germanDe->setLanguage((new Language())->setShortCode('de'));
+        $germanDe->setLanguage(new Language()->setShortCode('de'));
         $germanDe->setSentence('Deutsch');
         $germanDe->setUpdated(new DateTime('2020-09-00 00:00'));
 
@@ -224,17 +224,17 @@ class DatabaseLoaderTest extends TestCase
 
     public function testCheckTranslationAllowed(): void
     {
-        $englishEn = (new Word())
+        $englishEn = new Word()
             ->setCode('english')
-            ->setLanguage((new Language())->setShortCode('en'))
+            ->setLanguage(new Language()->setShortCode('en'))
             ->setSentence('English')
             ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
             ->setMajorUpdate(new DateTime('2020-09-01 00:00'))
         ;
 
-        $englishDe = (new Word())
+        $englishDe = new Word()
             ->setCode('english')
-            ->setLanguage((new Language())->setShortCode('de'))
+            ->setLanguage(new Language()->setShortCode('de'))
             ->setSentence('Englisch')
             ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
             ->setUpdated(new DateTime('2020-09-01 00:01'));
@@ -262,17 +262,17 @@ class DatabaseLoaderTest extends TestCase
 
     public function testCheckTranslationNotAllowed(): void
     {
-        $englishEn = (new Word())
+        $englishEn = new Word()
             ->setCode('english')
-            ->setLanguage((new Language())->setShortCode('en'))
+            ->setLanguage(new Language()->setShortCode('en'))
             ->setSentence('English')
             ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_NOT_ALLOWED)
             ->setMajorUpdate(new DateTime('2020-09-01 00:00'))
         ;
 
-        $englishDe = (new Word())
+        $englishDe = new Word()
             ->setCode('english')
-            ->setLanguage((new Language())->setShortCode('de'))
+            ->setLanguage(new Language()->setShortCode('de'))
             ->setSentence('Englisch')
             ->setTranslationAllowed(TranslationAllowedType::TRANSLATION_ALLOWED)
             ->setUpdated(new DateTime('2020-09-01 00:01'));

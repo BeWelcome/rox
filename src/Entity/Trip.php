@@ -8,8 +8,8 @@
 
 namespace App\Entity;
 
-use App\Entity\NewMember as Member;
 use App\Doctrine\TripAdditionalInfoType;
+use App\Entity\NewMember as Member;
 use App\Repository\TripRepository;
 use Carbon\Carbon;
 use DateTime;

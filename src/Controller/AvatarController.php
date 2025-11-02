@@ -2,12 +2,12 @@
 
 namespace App\Controller;
 
-use App\Entity\NewMember as Member;
 use App\Entity\MembersPhoto;
+use App\Entity\NewMember as Member;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,7 +34,7 @@ class AvatarController extends AbstractController
     public function __construct(
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
-        private readonly TranslatorInterface $translator
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

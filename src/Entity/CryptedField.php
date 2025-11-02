@@ -8,7 +8,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Member;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

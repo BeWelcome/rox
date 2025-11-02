@@ -2,9 +2,7 @@
 
 namespace App\Utilities;
 
-use Carbon\Carbon;
 use Carbon\CarbonImmutable;
-use DateTimeImmutable;
 
 /**
  * Sorts comment pairs after lowest created as long as updated is null.

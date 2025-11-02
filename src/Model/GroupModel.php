@@ -8,8 +8,8 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Language;
-use App\Entity\NewMember as Member;
 use App\Entity\MemberTranslation;
+use App\Entity\NewMember as Member;
 use App\Entity\Notification;
 use App\Entity\Privilege;
 use App\Entity\PrivilegeScope;
@@ -49,7 +49,7 @@ class GroupModel
 
         $translator = $this->getTranslator();
         $translator->setLocale($member->getPreferredLanguage()->getShortCode());
-        $comment = (new MemberTranslation())
+        $comment = new MemberTranslation()
             ->setLanguage($language)
             ->setSentence($translator->trans('group.got.invited.by', ['admin' => $admin->getUsername()]))
             ->setOwner($member)

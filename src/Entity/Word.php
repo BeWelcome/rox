@@ -9,8 +9,8 @@
 namespace App\Entity;
 
 use App\Doctrine\TranslationAllowedType;
-use App\Repository\WordRepository;
 use App\Entity\NewMember as Member;
+use App\Repository\WordRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;

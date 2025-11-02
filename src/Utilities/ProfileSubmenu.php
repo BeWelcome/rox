@@ -6,8 +6,8 @@ use App\Doctrine\AccommodationType;
 use App\Entity\Comment;
 use App\Entity\ForumPost;
 use App\Entity\GalleryImage;
-use App\Entity\NewMember as Member;
 use App\Entity\Message;
+use App\Entity\NewMember as Member;
 use App\Entity\Preference;
 use App\Entity\ProfileNote;
 use App\Entity\Relation;
@@ -131,7 +131,7 @@ class ProfileSubmenu
         $this->addSubmenuItem('edit_profile', [
             'key' => 'editmyprofile',
             'icon' => 'edit',
-            'url' => '/editmyprofile',
+            'url' => $this->routing->generate('profile_edit', ['username' => $username]),
         ]);
         $this->addSubmenuItem('preferences', [
             'key' => 'profile.preferences.menu',

@@ -3,8 +3,8 @@
 namespace App\Pagerfanta;
 
 use App\Doctrine\StandardOffersType;
-use App\Entity\NewMember as Member;
 use App\Entity\NewLocation;
+use App\Entity\NewMember as Member;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;

@@ -170,7 +170,7 @@ class ActivityRepository extends EntityRepository
             ->setParameter('long_n', $coordinates[1]->getLongitudeInDegrees())
             ->where('(a.ends >= :now AND a.ends <= :three_months) OR (a.starts >= :now AND a.starts <= :three_months)')
             ->setParameter('now', new DateTime())
-            ->setParameter('three_months', (new DateTime())->modify('+3 months'))
+            ->setParameter('three_months', new DateTime()->modify('+3 months'))
             ->andWhere($qb->expr()->neq('a.status', 1)) // Do not show activities that were cancelled
             ->orderBy('a.starts', 'asc');
 

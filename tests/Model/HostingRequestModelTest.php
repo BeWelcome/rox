@@ -4,8 +4,8 @@ namespace App\Tests\Model;
 
 use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
-use App\Entity\NewMember as Member;
 use App\Entity\Message;
+use App\Entity\NewMember as Member;
 use App\Entity\Subject;
 use App\Model\HostingRequestModel;
 use DateInterval;
@@ -40,7 +40,7 @@ class HostingRequestModelTest extends TestCase
     public function testRequestExpiredYesterday(): void
     {
         $arrival = new DateTime('yesterday');
-        $departure = (new DateTime('yesterday'))->setTime(23, 59);
+        $departure = new DateTime('yesterday')->setTime(23, 59);
 
         $request = new HostingRequest();
         $request->setArrival($arrival);
@@ -58,7 +58,7 @@ class HostingRequestModelTest extends TestCase
     public function testRequestDoesNotExpireToday(): void
     {
         $arrival = new DateTime('today');
-        $departure = (new DateTime('today'))->setTime(23, 59);
+        $departure = new DateTime('today')->setTime(23, 59);
 
         $request = new HostingRequest();
         $request->setArrival($arrival);
@@ -76,7 +76,7 @@ class HostingRequestModelTest extends TestCase
     public function testRequestForTomorrowHasntExpiredYet(): void
     {
         $arrival = new DateTime('tomorrow');
-        $departure = (new DateTime('tomorrow'))->setTime(23, 59);
+        $departure = new DateTime('tomorrow')->setTime(23, 59);
 
         $request = new HostingRequest();
         $request->setArrival($arrival);

@@ -43,7 +43,7 @@ class ProfileModel
 
         $dataRetention = $data['data_retention'] ?? false;
         if ($dataRetention) {
-            $retentionDate = (new Carbon())->subYears(1);
+            $retentionDate = new Carbon()->subYears(1);
             $member->setLastLogin($retentionDate);
         }
 

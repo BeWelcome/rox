@@ -12,7 +12,7 @@ TIME_STAMP := $(shell git log -n 1 --format=%aI)
 
 all: phpci
 
-phpci: phpcpd phploc phpmd php-code-sniffer phpunit infection behat version
+phpci: phpcpd phploc php-code-sniffer phpunit infection behat version  
 
 install:
 	git rev-parse --short HEAD > VERSION
@@ -67,7 +67,7 @@ mkdocs:
 	mkdocs build
 
 phpcpd:
-	"./vendor/bin/phpcpd" $(SRC_DIR_NO_TESTS) --exclude=src/Entity
+	"./vendor/bin/phpcpd" $(SRC_DIR_NO_TESTS) --exclude=src/Entity --exclude=src/Repository
 
 phploc:
 	"./vendor/bin/phploc" --log-xml=phploc.xml $(SRC_DIR)

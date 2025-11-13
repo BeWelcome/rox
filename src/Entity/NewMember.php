@@ -12,12 +12,14 @@ use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\StandardOffersType;
+use App\Entity\NewAddress as Address;
 use App\Repository\NewMemberRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -914,6 +916,7 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
     public function addAddress(Address $address): self
     {
         if (!$this->addresses->contains($address)) {
+            $address->setMember($this);
             $this->addresses[] = $address;
         }
 
@@ -1461,5 +1464,14 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
         $this->locale = $locale;
 
         return $this;
+    }
+
+    public function getActiveAddress()
+    {
+        $expr = new Comparison('active', '=', true);
+        $activeOnly = new Criteria();
+        $activeOnly->where($expr);
+
+        return $this->addresses->matching($activeOnly)->first();
     }
 }

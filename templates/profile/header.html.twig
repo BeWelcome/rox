@@ -11,7 +11,7 @@
                 {% if member.status == 'PassedAway' %}{{ 'profileinmemoriam'|format(member.Username) }}{% else %}{{ member.Username }}{% endif %}
             </strong>
 
-            {% if member.status != 'PassedAway' %}
+            {% if member.status != 'PassedAway' and not member.Accommodation is null %}
                 <img src="images/icons/{{ member.Accommodation }}.png" class="mb-2" alt="{{ member.Accommodation|trans }}'
                         title="{{ ('canoffer' ~ member.Accommodation|lower)|trans }}">
                 {% if member.isWheelChairAccessible %}
@@ -44,9 +44,10 @@
             </div>
 
             {% if member.Name != ''%}<h3>{{ member.Name }}</h3>{% endif %}
-            {% set city = member.city %}
-            <h5>{% if not city is null %}
-                <a href="{{ url('places_city', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id, cityname: city.name, citycode: city.geonameId}) }}">{{ member.city.name }}</a>
+            {% set address = member.activeAddress %}
+            <h5>{% if not address is same as(false) %}
+                {% set city = address.city %}
+                <a href="{{ url('places_city', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id, cityname: city.name, citycode: city.geonameId}) }}">{{ city.name }}</a>
                     {%- if city.admin1 != null -%}
                         , <a href="{{ url('places_region', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id}) }}">{{ city.admin1.name }}</a>
                     {%- endif -%}
@@ -68,15 +69,17 @@
         {% endif %}
 
         <p class="mb-2">
-            {%- if member.ShowAge -%}
+            {% set showAge = member.isAgeVisible and member.Age != 0 %}
+            {% set showGender = member.isGenderVisible %}
+            {%- if showAge -%}
                 <strong>{{ 'profile.age'|trans }} </strong> {{ member.age }}
             {%- endif -%}
-            {%- if member.showAge and member.showGender -%}, {%- endif %}
-            {%- if not member.showAge and member.showGender -%}<strong>{{ 'profile.gender'|trans }}</strong> {%- endif %}
-            {% if member.showGender %}
+            {%- if showAge and showGender -%}, {%- endif %}
+            {%- if not showAge and showGender -%}<strong>{{ 'profile.gender'|trans }}</strong> {%- endif %}
+            {%- if showGender -%}
                 {{ member.gender|trans }}
             {%- endif -%}
-            <br><strong>{{ 'profile.joined'|trans }} </strong>
+            {% if showAge or showGender %}<br>{% endif %}<strong>{{ 'profile.joined'|trans }} </strong>
             {% if member.created.diffInDays <= 7 %}
                 {{ 'lastloginprivacy'| trans }}
             {% else %}

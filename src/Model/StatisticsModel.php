@@ -47,12 +47,13 @@ class StatisticsModel
 
         $countries = $connection->executeQuery("
             SELECT
-                DISTINCT gc.country
+                COUNT(DISTINCT g.country_id) AS cnt
             FROM
-                geonamescountries gc
-                join geonames g on gc.country = g.country
-                join member m on g.geonameId = m.City and m.Status IN ('Active', 'OutOfRemind')
-        ")->fetchAllAssociative();
+                member m,
+			    address a
+            JOIN geo__names g ON a.City = g.geonameId 
+			WHERE m.id = a.member_id and m.Status IN ('Active', 'OutOfRemind')
+        ")->fetchOne();
 
         $languages = $connection->executeQuery('
             SELECT
@@ -90,7 +91,7 @@ class StatisticsModel
 
         $stats = [
             'members' => $members,
-            'countries' => \count($countries),
+            'countries' => $countries,
             'languages' => $languages,
             'comments' => $positiveComments,
             'activities' => $activities,

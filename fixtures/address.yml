@@ -1,0 +1,53 @@
+App\Entity\NewAddress:
+  address_1:
+    member: "@bwadmin"
+    housenumber: ""
+    streetname: ""
+    active: true
+    zip: ""
+    explanation: ""
+    gettingthere: ""
+    city: '@NewBerlin'
+    latitude: '@NewBerlin->latitude'
+    longitude: '@NewBerlin->longitude'
+  address_{2..5}:
+    member: "@member_<current()>"
+    housenumber: ""
+    streetname: ""
+    active: true
+    zip: ""
+    explanation: ""
+    gettingthere: ""
+    city: '@NewBerlin'
+    latitude: '@NewBerlin->latitude'
+    longitude: '@NewBerlin->longitude'
+  address_{6..10}:
+      member: "@member_<current()>"
+      housenumber: ""
+      streetname: ""
+      zip: ""
+      explanation: ""
+      gettingthere: ""
+      city: '@NewJayapura'
+      latitude: '@NewJayapura->latitude'
+      longitude: '@NewJayapura->longitude'
+  address_suspended:
+      member: "@member_suspended"
+      housenumber: ""
+      streetname: ""
+      zip: ""
+      explanation: ""
+      gettingthere: ""
+      city: '@NewJayapura'
+      latitude: '@NewJayapura->latitude'
+      longitude: '@NewJayapura->longitude'
+  address_banned:
+      member: "@member_banned"
+      housenumber: ""
+      streetname: ""
+      zip: ""
+      explanation: ""
+      gettingthere: ""
+      city: '@NewJayapura'
+      latitude: '@NewJayapura->latitude'
+      longitude: '@NewJayapura->longitude'

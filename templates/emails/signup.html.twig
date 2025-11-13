@@ -3,5 +3,7 @@
 {% block content%}
     <p>{{ 'signup.thank.you'|trans }}</p>
     <p>{{ 'signup.confirm.link'|trans({'email_address': email_address}) }}</p>
+    <p><a href="{{ url('confirm_email', { username: username, registrationKey: key }) }}">{{ 'signup.confirm.email.address'|trans }}</a></p>
+    <p>{{ 'signup.confirm.key'|trans }}</p>
     <p><button>{{ key }}</button></p>
 {% endblock content %}

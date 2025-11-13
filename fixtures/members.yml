@@ -4,9 +4,6 @@ App\Entity\NewMember:
         BirthDate: <dateTime('1970-01-01')>
         email: <email()>
         Status: 'Active'
-        city: '@NewBerlin'
-        Latitude: '@NewBerlin->Latitude'
-        Longitude: '@Berlin->Longitude'
         remindersWithoutLogin: 0
         HideAttribute: 0
         Name: 'BeWelcome Admin'
@@ -21,9 +18,6 @@ App\Entity\NewMember:
         email: 'member-<current()>\@bewelcome.org'
         LastLogin: <dateTimeBetween('-12years', 'now')>
         Status: '<randomElement(["Active", "OutOfRemind"])>'
-        city: '@NewBerlin'
-        Latitude: '@NewBerlin->Latitude'
-        Longitude: '@NewBerlin->Longitude'
         HideAttribute: <numberBetween(0, 31)>
         Name: <firstName()> <lastName()>
         ShortName: '70%? <firstName()>'
@@ -56,9 +50,6 @@ App\Entity\NewMember:
         email: 'member-<current()>\@bewelcome.org'
         LastLogin: <dateTimeBetween('-12years', 'now')>
         Status: 'Active'
-        city: '@NewJayapura'
-        Latitude: '@NewJayapura->Latitude'
-        Longitude: '@NewJayapura->Longitude'
         HideAttribute: <numberBetween(0, 31)>
         Name: <firstName()> <lastName()>
         ShortName: '70%? <firstName()>'
@@ -75,9 +66,6 @@ App\Entity\NewMember:
         email: 'member-banned\@bewelcome.org'
         LastLogin: <dateTimeBetween('-12years', 'now')>
         Status: 'Banned'
-        city: '@NewJayapura'
-        Latitude: '@NewJayapura->Latitude'
-        Longitude: '@NewJayapura->Longitude'
         remindersWithoutLogin: 0
         HideAttribute: <numberBetween(0, 31)>
         Name: <firstName()> <lastName()>
@@ -96,9 +84,6 @@ App\Entity\NewMember:
         LastLogin: <dateTimeBetween('-12years', 'now')>
         HideAttribute: <numberBetween(0, 31)>
         Status: 'SuspendedBeta'
-        city: '@NewJayapura'
-        Latitude: '@Jayapura->Latitude'
-        Longitude: '@Jayapura->Longitude'
         Name: <firstName()> <lastName()>
         ShortName: '70%? <firstName()>'
         Accommodation: '<randomElement(["neverask", "anytime"])>'

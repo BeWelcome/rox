@@ -5,6 +5,7 @@ namespace App\Repository;
 use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Entity\ActivityAttendee;
 use App\Entity\Location;
+use App\Entity\NewLocation;
 use App\Entity\NewMember as Member;
 use App\Entity\Preference;
 use DateTime;
@@ -92,7 +93,9 @@ class ActivityRepository extends EntityRepository
      */
     public function findUpcomingAroundLocation(Member $member, $online, $limit = 5)
     {
-        if (null === $member->getCity()) {
+        $address = $member->getActiveAddress();
+
+        if (false === $address) {
             return [];
         }
 
@@ -111,7 +114,8 @@ class ActivityRepository extends EntityRepository
      */
     public function getUpcomingAroundLocationCount(Member $member, $online): int
     {
-        if (null === $member->getCity()) {
+        $address = $member->getActiveAddress();
+        if (false === $address) {
             return 0;
         }
 
@@ -145,12 +149,12 @@ class ActivityRepository extends EntityRepository
      */
     private function getUpcomingAroundLocationQueryBuilder(Member $member, $online): ?QueryBuilder
     {
-        $location = $member->getCity();
+        $address = $member->getActiveAddress();
         $distance = $this->getActivitiesRadius($member);
 
         // Fetch latitude and longitude of member's location
-        $latitude = $location->getLatitude();
-        $longitude = $location->getLongitude();
+        $latitude = $address->getLatitude();
+        $longitude = $address->getLongitude();
 
         $edison = GeoLocation::fromDegrees($latitude, $longitude);
         $coordinates = $edison->boundingCoordinates($distance, 'km');
@@ -158,7 +162,7 @@ class ActivityRepository extends EntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb
             ->leftJoin(
-                Location::class,
+                NewLocation::class,
                 'l',
                 Join::WITH,
                 'a.location = l.geonameId '

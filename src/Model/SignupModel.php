@@ -9,6 +9,7 @@ use App\Entity\Language;
 use App\Entity\MemberPreference;
 use App\Entity\MembersLanguagesLevel;
 use App\Entity\Message;
+use App\Entity\NewAddress;
 use App\Entity\NewLocation;
 use App\Entity\NewMember as Member;
 use App\Entity\NewMemberTranslation as MemberTranslation;
@@ -105,15 +106,20 @@ class SignupModel
             'geonameId' => $data['location']['geoname_id'],
         ]);
 
-        $member
+        $address = new NewAddress();
+        $address
             ->setCity($location)
+            ->setActive(true)
             ->setLatitude($data['location']['latitude'])
-            ->setLongitude($data['location']['longitude'])
+            ->setLongitude($data['location']['longitude']);
+
+        $member
             ->setName($data['name'])
             ->setShortName($data['short_name'])
             ->setBirthdate($data['birthdate'])
             ->setGender($data['gender'])
             ->setAccommodation($data['accommodation'])
+            ->addAddress($address)
             ->setHostingInterest($data['hosting_interest'] ?? null)
         ;
 

@@ -61,6 +61,11 @@ class SubtripRepository extends EntityRepository
 
     private function getLegsInAreaQueryBuilder(Member $member, int $distance, int $duration): QueryBuilder
     {
+        $address = $member->getActiveAddress();
+        $city = $address === false ? null : $address->getCity();
+        $latitude = $address === false ? null : $address->getLatitude();
+        $longitude = $address === false ? null : $address->getLongitude();
+
         $now = new CarbonImmutable();
         $durationMonthsAhead = $now->addMonths($duration);
 
@@ -91,9 +96,9 @@ class SubtripRepository extends EntityRepository
             )
             ->setParameter('distance', $distance)
             ->setParameter('member', $member)
-            ->setParameter('city', $member->getCity())
-            ->setParameter('latitude', $member->getLatitude())
-            ->setParameter('longitude', $member->getLongitude())
+            ->setParameter('city', $city)
+            ->setParameter('latitude', $latitude)
+            ->setParameter('longitude', $longitude)
             ->setParameter('now', $now)
             ->setParameter('durationMonthsAhead', $durationMonthsAhead)
             ->orderBy('s.arrival', 'ASC')

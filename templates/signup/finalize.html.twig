@@ -66,7 +66,7 @@
     {% do finalize.gender.setRendered %}
     <div class="o-form-group">
     <label for="{{ finalize.location.fullname.vars.id}}">{{ finalize.location.vars.label}}</label>
-
+    {{ form_errors(finalize.location.fullname) }}
     <div class="auto-search-wrapper max-height loupe">
         <input type="text" id="{{ finalize.location.fullname.vars.id}}" name="{{ finalize.location.fullname.vars.full_name }}"
                class="o-input js-location-picker{% if finalize.location.fullname.vars.errors|length > 0 %} is-invalid{% endif %}" autocomplete="off"
@@ -75,7 +75,6 @@
                {% if finalize.location.fullname.vars.value %}value="{{ finalize.location.fullname.vars.value }}"{% endif %}
         >
     </div>
-    {{ form_errors(finalize.location.fullname) }}
     {{ form_help(finalize.location) }}
     {% do finalize.location.setRendered %}
     </div>
@@ -86,6 +85,7 @@
 
     <div class="o-form-group align-content-center mt-2">
         <span class="o-input-label">Accommodation</span>
+        {{ form_errors(finalize.accommodation) }}
         <div class="btn-group w-100 mt-2 " data-toggle="buttons">
             <label for="{{ finalize.accommodation.children[0].vars.id }}" class="btn btn-light">
                 <input type="radio" id="{{ finalize.accommodation.children[0].vars.id }}"
@@ -108,7 +108,6 @@
                 </div>
             </label>
         </div>
-        {{ form_errors(finalize.accommodation) }}
         {{ form_help(finalize.accommodation) }}
     </div>
     {% do finalize.accommodation.setRendered %}

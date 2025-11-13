@@ -155,7 +155,7 @@ class CreateTestDatabase extends Command
                 $process->getErrorOutput(),
             ]);
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $output->writeln([
@@ -177,6 +177,7 @@ class CreateTestDatabase extends Command
             UPDATE memberstrads SET IdLanguage = 1 WHERE IdLanguage = 2;
             SET FOREIGN_KEY_CHECKS=1;
         ");
+
         $output->writeln([
             '',
             'Finished have fun.',

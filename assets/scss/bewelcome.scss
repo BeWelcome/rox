@@ -599,3 +599,7 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 .js-password-input.is-invalid ~ .js-password-show-hide {
   right: 24px;
 }
+
+.vc {
+  z-index: 100;
+}

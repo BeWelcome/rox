@@ -69,7 +69,6 @@ class MigrateMembersCommand extends Command
                 ShortName, 
                 Status, 
                 Email, 
-                City, 
                 Gender, 
                 Accommodation, 
                 MaxGuests,
@@ -80,8 +79,6 @@ class MigrateMembersCommand extends Command
                 HostingInterest,
                 Reminders,
                 LastLogin,
-                Latitude,
-                Longitude,
                 LastSwitchToActive,
                 created,
                 updated,
@@ -115,7 +112,6 @@ class MigrateMembersCommand extends Command
                 :ShortName, 
                 :Status, 
                 :Email, 
-                :City, 
                 :Gender, 
                 :Accommodation,
                 :MaxGuests,
@@ -126,8 +122,6 @@ class MigrateMembersCommand extends Command
                 :HostingInterest,
                 :Reminders,
                 :LastLogin,
-                :Latitude,
-                :Longitude,
                 :LastSwitchToActive,
                 :created,
                 :updated,
@@ -211,16 +205,6 @@ class MigrateMembersCommand extends Command
                 $statement->bindValue('ShortName', $this->isFirstnameShown($member) ? $member['FirstName'] : null);
                 $statement->bindValue('Status', $member['Status']);
                 $statement->bindValue('Email', $member['Email']);
-                $city = $locationRepository->findOneBy(['geonameId' => $member['IdCity']]);
-                if (null === $city) {
-                    if ('AskToLeave' !== $member['Status'] && 'TakenOut' !== $member['Status']) {
-                        $this->addErrorCity($member);
-                        $progressBar->setMessage($member['Username'], 'error');
-                    }
-                    $statement->bindValue('City', null);
-                } else {
-                    $statement->bindValue('City', $city->getGeonameid());
-                }
                 $statement->bindValue('Gender', $member['Gender']);
                 $statement->bindValue('Accommodation', $member['Accomodation']);
                 $statement->bindValue('MaxGuests', $member['MaxGuest']);
@@ -239,8 +223,6 @@ class MigrateMembersCommand extends Command
                 } else {
                     $statement->bindValue('LastLogin', null);
                 }
-                $statement->bindValue('Latitude', $member['Latitude']);
-                $statement->bindValue('Longitude', $member['Longitude']);
                 if (null !== $member['LastSwitchToActive']) {
                     $statement->bindValue('LastSwitchToActive', new DateTime($member['LastSwitchToActive']), 'datetime');
                 } else {
@@ -272,6 +254,18 @@ class MigrateMembersCommand extends Command
                 } catch (Exception $e) {
                     $progressBar->setMessage($member['Username'], 'error');
                     $this->addErrorMemberSql($member, $e->getMessage());
+                }
+
+                // Migrate address
+                $city = $locationRepository->findOneBy(['geonameId' => $member['IdCity']]);
+                if (null === $city) {
+                    if ('AskToLeave' !== $member['Status'] && 'TakenOut' !== $member['Status']) {
+                        $this->addErrorCity($member);
+                        $progressBar->setMessage($member['Username'], 'error');
+                    }
+                    $statement->bindValue('City', null);
+                } else {
+                    $statement->bindValue('City', $city->getGeonameid());
                 }
 
                 // Now handle translated fields

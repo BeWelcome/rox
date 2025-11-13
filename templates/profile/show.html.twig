@@ -56,6 +56,7 @@
                     </div>
                 </div>
             </div>
+            {% if languageLevels|length != 0 %}
             <div class="md:u-break-inside-avoid max-sm:u-order-3 u-mb-16">
                 <div class="card">
                     <h3 class="card-header">{{ 'profilelanguagesspoken'|trans({}, "messages", profileLanguage)|raw }}</h3>
@@ -74,6 +75,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             {# Check if any interests are set #}
             {% set hobbies = translatedFields[profileLanguage]['Hobbies'] ?? '' %}
             {% set books = translatedFields[profileLanguage]['Books'] ?? '' %}
@@ -223,6 +225,7 @@
                     </div>
                 </div>
             {% endif %}
+            {% if not member.Accommodation is null %}
             <div class="md:u-break-inside-avoid max-sm:u-order-1 u-mb-16 u-break-before-column">
                 <div class="card">
                     <h3 class="card-header">{{ 'profileaccommodation'|trans({}, "messages", profileLanguage) }}</h3>
@@ -325,6 +328,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             {% if comments|length != 0 %}
             <div class="md:u-break-inside-avoid max-sm:u-order-1 u-mb-16">
                 <div class="card">

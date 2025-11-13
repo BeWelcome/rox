@@ -1,5 +1,5 @@
 App\Entity\Address:
-  address_1:
+  addresses_1:
     member: "@bwadmin"
     housenumber: 0
     streetname: 0
@@ -8,7 +8,7 @@ App\Entity\Address:
     explanation: 0
     gettingthere: 0
     location: '@NewBerlin'
-  address_{2..5}:
+  addresses_{2..5}:
     member: "@member_<current()>"
     housenumber: 0
     streetname: 0
@@ -17,7 +17,7 @@ App\Entity\Address:
     explanation: 0
     gettingthere: 0
     location: '@NewBerlin'
-  address_{6..10}:
+  addresses_{6..10}:
     member: "@member_<current()>"
     housenumber: 0
     streetname: 0

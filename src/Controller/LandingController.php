@@ -295,12 +295,13 @@ class LandingController extends AbstractController
     private function getSearchHomeLocationRequest(Member $member): SearchFormRequest
     {
         $searchHomeRequest = new SearchFormRequest();
-        $geo = $member->getCity();
-        if (null !== $geo) {
-            $searchHomeRequest->location = $geo->getName();
-            $searchHomeRequest->location_geoname_id = $geo->getGeonameId();
-            $searchHomeRequest->location_latitude = $member->getLatitude();
-            $searchHomeRequest->location_longitude = $member->getLongitude();
+        $address = $member->getActiveAddress();
+        if (false !== $address) {
+            $city = $address->getCity();
+            $searchHomeRequest->location = $city->getName();
+            $searchHomeRequest->location_geoname_id = $city->getGeonameId();
+            $searchHomeRequest->location_latitude = $address->getLatitude();
+            $searchHomeRequest->location_longitude = $address->getLongitude();
             $searchHomeRequest->accommodation_anytime = true;
             $searchHomeRequest->accommodation_neverask = true;
         }

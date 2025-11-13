@@ -18,7 +18,7 @@ use Symfony\Component\Validator\Constraints\NotNull;
 class SearchFormRequest
 {
     #[NotNull(message: 'search.location.invalid', groups: ['text-search'])]
-    public string $location = "";
+    public string $location = '';
 
     #[NotNull(message: 'search.location.dropdown', groups: ['text-search'])]
     public string $location_fullname;

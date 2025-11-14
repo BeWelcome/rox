@@ -144,15 +144,16 @@ class ManticoreIndicesGeonamesCommand extends Command
                             geo__names g
                         LEFT JOIN (
                             SELECT
-                                m.IdCity,
-                                COUNT(m.IdCity) total
+                                a.city,
+                                COUNT(a.city) total
                             FROM
-                                members m
-                            WHERE m.status IN ('Active', 'OutOfRemind')
+                                member m,
+                                address a
+                            WHERE m.status IN ('Active', 'OutOfRemind') and m.id = a.member_id
                             GROUP BY
-                                m.IdCity
+                                a.city
                         ) membercounts
-                        ON (g.geonameid = membercounts.IdCity)
+                        ON (g.geonameid = membercounts.city)
                         LIMIT {$firstResult}, {$this->chunkSize}
                     ___SQL, $this->getResultSetMappingForGeonamesIndex());
 
@@ -207,15 +208,16 @@ class ManticoreIndicesGeonamesCommand extends Command
                             geo__names_translations gt ON g.geonameId = gt.foreign_key
                         LEFT JOIN (
                             SELECT
-                                m.IdCity,
-                                COUNT(m.IdCity) total
+                                a.city,
+                                COUNT(a.city) total
                             FROM
-                                members m
-                            WHERE m.status IN ('Active', 'OutOfRemind')
+                                members m,
+                                address a
+                            WHERE m.status IN ('Active', 'OutOfRemind') and m.id = a.member_id
                             GROUP BY
-                                m.IdCity
+                                a.city
                         ) membercounts
-                        ON (g.geonameid = membercounts.IdCity)
+                        ON (g.geonameid = membercounts.city)
                         LIMIT {$firstResult}, {$this->chunkSize}
                     ___SQL, $this->getResultSetMappingForGeonamesIndex());
 

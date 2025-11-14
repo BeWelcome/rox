@@ -1,4 +1,4 @@
-App\Entity\NewAddress:
+App\Entity\Address:
   address_1:
     member: "@bwadmin"
     housenumber: ""

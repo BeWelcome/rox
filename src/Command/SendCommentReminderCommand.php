@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Comment;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;

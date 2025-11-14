@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Gallery;
 use App\Entity\GalleryImage;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;

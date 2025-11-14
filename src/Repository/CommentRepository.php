@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Utilities\CommentSorter;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;

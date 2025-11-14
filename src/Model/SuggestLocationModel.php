@@ -331,7 +331,7 @@ class SuggestLocationModel
         $qb = $this->entityManager->createQueryBuilder();
         $query = $qb
             ->select('l')
-            ->from(\App\Entity\NewLocation::class, 'l')
+            ->from(\App\Entity\Location::class, 'l')
             ->where($qb->expr()->eq('l.geonameId', $id))
             ->getQuery()
         ;

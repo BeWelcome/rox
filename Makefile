@@ -82,16 +82,16 @@ php-code-sniffer:
 	"./vendor/bin/phpcs"  --colors --warning-severity=Error
 
 phpunit:
-	phpdbg -qrr bin/phpunit --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
+	"./bin/phpunit" --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
 
 infection: phpunit
-	"./vendor/bin/infection" --only-covered --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
+	"./vendor/bin/infection" --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
 
-behat: encore
-	bin/console doctrine:database:create --env=test --if-not-exists
-	bin/console doctrine:schema:create --env=test
-	bin/console hautelook:fixtures:load --env=test --no-interaction
-	vendor/bin/behat --colors --tags='~@wip'
+#behat: encore
+#	bin/console doctrine:database:create --env=test --if-not-exists
+#	bin/console doctrine:schema:create --env=test
+#	bin/console hautelook:fixtures:load --env=test --no-interaction
+#	vendor/bin/behat --colors --tags='~@wip'
 
 phpmetrics:
 	"./vendor/bin/phpmetrics" --exclude=src/App/Entity --report-violations=phpmetrics.xml $(SRC_DIR_COMMA)

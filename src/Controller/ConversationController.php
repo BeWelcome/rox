@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Message;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Form\ReportSpamType;
 use App\Model\ConversationModel;
 use App\Utilities\ConversationThread;

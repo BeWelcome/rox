@@ -6,7 +6,7 @@ use App\Doctrine\GroupType;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Group;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery;
 

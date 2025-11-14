@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\MapSearchFormType;

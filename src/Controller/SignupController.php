@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
 use App\Doctrine\MemberStatusType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Form\ConfirmEmailAddressFormType;
 use App\Form\SignupFormFinalizeType;
 use App\Form\SignupFormType;

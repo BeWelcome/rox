@@ -4,8 +4,8 @@ namespace App\Model\MockupProvider;
 
 use App\Doctrine\SubtripOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
-use App\Entity\NewLocation;
-use App\Entity\NewMember as Member;
+use App\Entity\Location;
+use App\Entity\Member;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
@@ -68,7 +68,7 @@ class LandingMockups implements MockupProviderInterface
             'getAdditionalInfo' => TripAdditionalInfoType::NONE,
             'getCreated' => new DateTime(),
         ]);
-        $location = new NewLocation();
+        $location = new Location();
         $location->setName('Mock');
         $leg1 = Mockery::mock(Subtrip::class, [
             'getId' => 1,

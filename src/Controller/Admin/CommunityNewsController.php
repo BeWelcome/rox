@@ -3,7 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\CommunityNews;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Form\CommunityNewsType;
 use App\Model\CommunityNewsModel;
 use DateTime;

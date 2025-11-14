@@ -642,7 +642,7 @@ LIMIT 1
             $countryIds[$member->country] = $member->country;
         }
 
-        $locationRepository = $this->entityManager->getRepository(\App\Entity\NewLocation::class);
+        $locationRepository = $this->entityManager->getRepository(\App\Entity\Location::class);
         $rawLocations = $locationRepository->findBy(['geonameId' => $geonameIds]);
 
         $locations = [];

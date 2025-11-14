@@ -8,7 +8,7 @@
 
 namespace App\Entity;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
@@ -23,7 +23,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Table(name: 'address')]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity]
-class NewAddress
+class Address
 {
     #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'addresses')]
     private Member $member;
@@ -37,9 +37,9 @@ class NewAddress
     #[ORM\Column(name: 'Zip', type: Types::STRING, nullable: true)]
     private ?string $zip;
 
-    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: Location::class)]
     #[ORM\JoinColumn(name: 'City', referencedColumnName: 'geonameId', nullable: false)]
-    private NewLocation $city;
+    private Location $city;
 
     #[ORM\Column(name: 'Latitude', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
     private ?string $latitude;
@@ -117,14 +117,14 @@ class NewAddress
         return $this->zip;
     }
 
-    public function setCity(NewLocation $city): self
+    public function setCity(Location $city): self
     {
         $this->city = $city;
 
         return $this;
     }
 
-    public function getCity(): NewLocation
+    public function getCity(): Location
     {
         return $this->city;
     }

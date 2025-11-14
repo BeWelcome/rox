@@ -4,7 +4,7 @@ namespace App\Model\MockupProvider;
 
 use App\Doctrine\CommentQualityType;
 use App\Entity\Comment;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Mockery;
 
 class CommentMockups implements MockupProviderInterface

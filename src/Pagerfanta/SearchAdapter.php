@@ -3,8 +3,8 @@
 namespace App\Pagerfanta;
 
 use App\Doctrine\StandardOffersType;
-use App\Entity\NewLocation;
-use App\Entity\NewMember as Member;
+use App\Entity\Location;
+use App\Entity\Member;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
@@ -84,8 +84,8 @@ class SearchAdapter implements AdapterInterface
         $this->modelData = $this->prepareModelData($data);
 
         // Determine if we search for a country or an admin unit and call prepareQuery accordingly
-        $repository = $em->getRepository(NewLocation::class);
-        /** @var NewLocation $location */
+        $repository = $em->getRepository(Location::class);
+        /** @var Location $location */
         $location = null;
         try {
             $location = $repository->find($data->location_geoname_id);
@@ -227,7 +227,7 @@ class SearchAdapter implements AdapterInterface
         return $vars;
     }
 
-    private function getRankedAdminUnitIds(NewLocation $location): array
+    private function getRankedAdminUnitIds(Location $location): array
     {
         $adminUnits = [];
         if (null !== $location->getAdmin1Id()) {

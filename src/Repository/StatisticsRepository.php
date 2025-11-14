@@ -23,16 +23,6 @@ class StatisticsRepository extends EntityRepository
         return $this->getStatisticsDataDaily('s.activeMembers');
     }
 
-    public function getNewMembersDataWeekly()
-    {
-        return $this->getStatisticsDataWeekly('s.activeMembers');
-    }
-
-    public function getNewMembersDataDaily()
-    {
-        return $this->getStatisticsDataDaily('s.activeMembers');
-    }
-
     public function getSentMessagesDataWeekly()
     {
         return $this->getStatisticsDataWeekly('s.messagesSent');

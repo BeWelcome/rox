@@ -9,7 +9,7 @@ use App\Doctrine\MessageResultSetMapping;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Message;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;

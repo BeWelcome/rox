@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Model\GalleryModel;
 use App\Model\TranslationModel;

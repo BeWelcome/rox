@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use App\Entity\Message;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Repository\MessageRepository;
 use App\Utilities\ConversationThread;
 use Doctrine\ORM\EntityManagerInterface;

@@ -21,8 +21,8 @@
     {% set activeLocale = locale in profileLanguages ? locale : 'en' %}
 
     {% set languageLevels = member.languageLevels %}
-    <div id="language-switch-container" class="u-p-8 u-my-4 form-inline u-z-[10000] u-flex u-justify-end {% if own %}u-sticky{% endif %} u-bg-white u-border-bewelcome u-rounded-8" style="top:60px; border: 2px solid #f37000;">
-        <label for="language-switch" class="u-mr-8">{{ 'profile.switch.locale'|trans }}</label>
+    <div id="language-switch-container" class="u-p-8 u-my-4 form-inline u-z-[999] u-flex u-justify-end {% if own %}u-sticky{% endif %} u-bg-white u-border-bewelcome u-rounded-8" style="top:60px; border: 2px solid #f37000;">
+        <label for="language-switch" class="u-mr-8">{{ 'profile.switch.language'|trans }}</label>
         <select id="language-switch" class="o-input o-input--select o-input--select-short" name="language-switch">
             {% for profileLanguage in profileLanguages %}
                 <option value="{{ profileLanguage }}" {% if profileLanguage is same as(activeLocale) %}selected="selected"{% endif %}>{{ ("lang_" ~ profileLanguage)|lower|trans({}, "messages", profileLanguage) }}</option>
@@ -50,7 +50,7 @@
                             {% if aboutMe|length != 0 %}
                                 {{ aboutMe|purify|nl2br }}
                             {% else %}
-                                {{ 'profile.no.about_me'|trans({}, "messages", profileLanguage) }}
+                                {{ 'profile.no.about.me'|trans({}, "messages", profileLanguage) }}
                             {% endif %}
                         </div>
                     </div>

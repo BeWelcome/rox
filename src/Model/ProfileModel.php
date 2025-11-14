@@ -3,7 +3,7 @@
 namespace App\Model;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Form\ProfileStatusFormType;
 use App\Service\Mailer;
 use Carbon\Carbon;

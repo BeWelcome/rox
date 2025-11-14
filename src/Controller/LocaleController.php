@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Language;
 use App\Entity\MemberPreference;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Preference;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;

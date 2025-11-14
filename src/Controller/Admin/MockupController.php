@@ -11,7 +11,7 @@ use App\Entity\Group;
 use App\Entity\HostingRequest;
 use App\Entity\Location;
 use App\Entity\Message;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Subtrip;
 use App\Entity\Trip;

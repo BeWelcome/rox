@@ -1,0 +1,4 @@
+spoken.languages:
+    - "@spokenlanguages"
+signed.languages:
+    - "signedlanguages"

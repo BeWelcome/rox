@@ -8,7 +8,7 @@
 
 namespace App\Entity;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Repository\SubtripRepository;
 use Carbon\Carbon;
 use DateTime;
@@ -28,8 +28,8 @@ use Doctrine\ORM\Mapping as ORM;
 class Subtrip
 {
     #[ORM\JoinColumn(name: 'location', referencedColumnName: 'geonameId', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
-    private NewLocation $location;
+    #[ORM\ManyToOne(targetEntity: Location::class)]
+    private Location $location;
 
     #[ORM\Column(name: 'arrival', type: 'date', nullable: false)]
     private ?DateTime $arrival = null;
@@ -61,14 +61,14 @@ class Subtrip
         $this->invitations = new ArrayCollection();
     }
 
-    public function setLocation(?NewLocation $location): self
+    public function setLocation(?Location $location): self
     {
         $this->location = $location;
 
         return $this;
     }
 
-    public function getLocation(): ?NewLocation
+    public function getLocation(): ?Location
     {
         return $this->location;
     }

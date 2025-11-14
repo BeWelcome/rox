@@ -7,7 +7,7 @@ use App\Doctrine\GroupType as DoctrineGroupType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Wiki;
 use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;

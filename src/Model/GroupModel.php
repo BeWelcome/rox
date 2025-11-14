@@ -9,7 +9,7 @@ use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Language;
 use App\Entity\MemberTranslation;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Notification;
 use App\Entity\Privilege;
 use App\Entity\PrivilegeScope;

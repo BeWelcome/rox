@@ -1,4 +1,4 @@
-App\Entity\NewMemberTranslation:
+App\Entity\MemberTranslation:
     about_me_{1..10}:
         __construct:
             - '<randomElement(["de", "fr", "el", "es"])>'

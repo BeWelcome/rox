@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\MembersPhoto;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Drivers\Gd\Driver;

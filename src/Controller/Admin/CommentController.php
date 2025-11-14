@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
 use App\Entity\Comment;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Form\AdminCommentFormType;
 use App\Model\Admin\CommentModel;
 use App\Utilities\TranslatedFlashTrait;

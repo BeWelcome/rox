@@ -6,7 +6,7 @@ App\Entity\Params:
     toggledonatebar: 0
     neededperyear: 1260
     campaignstartdate: '<dateTime(2012-10-11)>'
-    mailtonotifywhennewmembersignup: ''
+    mailtonotifywhenMembersignup: ''
     featureforumclosed: 'No'
     featureajaxchatclosed: 'No'
     featuresignupclose: 'No'

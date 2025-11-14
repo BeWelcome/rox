@@ -127,9 +127,9 @@ App\Entity\Right:
         Name: 'CommunityNews'
         Description: >-
             'Allows a member to post a new community news. (Filters the tag list accordingly.)'
-    NewMembersBeWelcome:
+    MembersBeWelcome:
         created: <datetime('2014-08-11 21:43:08')>
-        Name: 'NewMembersBeWelcome'
+        Name: 'MembersBeWelcome'
         Description: >-
             'Members with that right have access to the New Members BeWelcome Tool. Level = 1, Scope = \"All\"'
     ManageSubscriptions:

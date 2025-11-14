@@ -3,9 +3,9 @@
 namespace App\Model;
 
 use App\Entity\Donation;
-use App\Entity\NewLocation;
-use App\Entity\NewMember as Member;
-use App\Repository\NewLocationRepository;
+use App\Entity\Location;
+use App\Entity\Member;
+use App\Repository\LocationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DonationModel
@@ -30,9 +30,9 @@ class DonationModel
             $donation->setEmail($member->getEmail());
             $donation->setNameGiven($member->getUsername());
 
-            /** @var NewLocationRepository $locationRepository */
-            $locationRepository = $this->entityManager->getRepository(NewLocation::class);
-            /** @var ?NewLocation $country */
+            /** @var LocationRepository $locationRepository */
+            $locationRepository = $this->entityManager->getRepository(Location::class);
+            /** @var ?Location $country */
             $country = $locationRepository->findCountry($member->getCountry()->getCountryId());
 
             if (null !== $country) {

@@ -5,8 +5,7 @@ namespace App\Repository;
 use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Entity\ActivityAttendee;
 use App\Entity\Location;
-use App\Entity\NewLocation;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Preference;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
@@ -162,7 +161,7 @@ class ActivityRepository extends EntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb
             ->leftJoin(
-                NewLocation::class,
+                Location::class,
                 'l',
                 Join::WITH,
                 'a.location = l.geonameId '

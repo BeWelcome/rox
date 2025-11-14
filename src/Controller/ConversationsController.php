@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\ConversationsModel;

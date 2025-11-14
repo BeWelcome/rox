@@ -18,7 +18,7 @@ security:
     providers:
         members:
             entity:
-                class: App\Entity\NewMember
+                class: App\Entity\Member
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs

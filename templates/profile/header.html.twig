@@ -53,7 +53,7 @@
                     {%- endif -%}
                     , <a href="{{ url('places_country', {countryname: city.country.name, countrycode: city.countryId}) }}">{{ city.country.name }}</a>
             {% else %}
-                {{ 'member.no.city.yet'|trans }}
+                {{ 'profile.no.city.yet'|trans }}
             {% endif %}</h5>
             {% if status_form is defined and not status_form is null %}
                 {{ form_start(status_form, {'attr': {'class': 'u-grid u-grid-cols-2 u-gap-8'}}) }}

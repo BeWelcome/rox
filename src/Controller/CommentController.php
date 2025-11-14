@@ -6,7 +6,7 @@ use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\CommentType;
 use App\Form\CustomDataClass\ReportCommentRequest;

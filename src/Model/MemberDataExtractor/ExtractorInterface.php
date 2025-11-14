@@ -2,7 +2,7 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 
 interface ExtractorInterface
 {

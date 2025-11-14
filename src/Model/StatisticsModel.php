@@ -730,7 +730,7 @@ class StatisticsModel
         $qb = $this->entityManager->createQueryBuilder();
         $countriesQuery = $qb
             ->select('c')
-            ->from(\App\Entity\NewLocation::class, 'c', 'c.countryId')
+            ->from(\App\Entity\Location::class, 'c', 'c.countryId')
             ->where($qb->expr()->in('c.countryId ', $countryCodes))
             ->andWhere($qb->expr()->eq('c.featureClass', $qb->expr()->literal('A')))
             ->andWhere($qb->expr()->eq('c.featureCode', $qb->expr()->literal('PCLI')))

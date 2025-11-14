@@ -288,7 +288,7 @@ class GeonamesUpdateFullCommand extends Command
         $progressBar->setMessage('Reading geoname ids...', 'status');
         $progressBar->start();
 
-        $query = $this->entityManager->createQuery('SELECT l.geonameId FROM App\Entity\NewLocation l');
+        $query = $this->entityManager->createQuery('SELECT l.geonameId FROM App\Entity\Location l');
         $geonameIds = $query->getResult(AbstractQuery::HYDRATE_SCALAR_COLUMN);
         $geonameIds = array_flip($geonameIds);
 
@@ -329,7 +329,7 @@ class GeonamesUpdateFullCommand extends Command
 
         $connection->executeQuery("
             INSERT IGNORE INTO geo__names_translations (locale, object_class, field, foreign_key, content)
-	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
+	            SELECT isolanguage as locale, 'App\\\\Entity\\\\Location', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 1 AND isshort = 1 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
         ");
@@ -337,7 +337,7 @@ class GeonamesUpdateFullCommand extends Command
         $io->note('Setting translations (preferred)');
         $connection->executeQuery("
             INSERT IGNORE INTO geo__names_translations (locale, object_class, field, foreign_key, content)
-	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
+	            SELECT isolanguage as locale, 'App\\\\Entity\\\\Location', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 1 AND isshort = 0 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
         ");
@@ -345,7 +345,7 @@ class GeonamesUpdateFullCommand extends Command
         $io->note('Setting translations (short)');
         $connection->executeQuery("
             INSERT IGNORE INTO geo__names_translations (locale, object_class, field, foreign_key, content)
-	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
+	            SELECT isolanguage as locale, 'App\\\\Entity\\\\Location', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 0 AND isshort = 1 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
         ");
@@ -353,7 +353,7 @@ class GeonamesUpdateFullCommand extends Command
         $io->note('Setting translations (any)');
         $connection->executeQuery("
             INSERT IGNORE INTO geo__names_translations (locale, object_class, field, foreign_key, content)
-	            SELECT isolanguage as locale, 'App\\\\Entity\\\\NewLocation', 'name', geonameid, alternatename
+	            SELECT isolanguage as locale, 'App\\\\Entity\\\\Location', 'name', geonameid, alternatename
 	                FROM geonamesalternatenames
 	                WHERE ispreferred = 0 AND isshort = 0 AND ishistoric = 0 AND isolanguage <> '' and length(isolanguage) <> 4;
         ");

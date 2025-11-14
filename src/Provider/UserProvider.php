@@ -2,7 +2,7 @@
 
 namespace App\Provider;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;

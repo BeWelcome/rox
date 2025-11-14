@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\ForumPost;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Preference;
 use App\Repository\ForumPostRepository;
 use App\Utilities\ChangeProfilePictureGlobals;

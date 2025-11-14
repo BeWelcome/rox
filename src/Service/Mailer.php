@@ -4,7 +4,7 @@ namespace App\Service;
 
 use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Relation;
 use App\Logger\Logger;

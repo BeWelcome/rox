@@ -9,10 +9,9 @@ use App\Entity\Language;
 use App\Entity\MemberPreference;
 use App\Entity\MembersLanguagesLevel;
 use App\Entity\Message;
-use App\Entity\NewAddress;
-use App\Entity\NewLocation;
-use App\Entity\NewMember as Member;
-use App\Entity\NewMemberTranslation as MemberTranslation;
+use App\Entity\Location;
+use App\Entity\Member;
+use App\Entity\MemberTranslation as MemberTranslation;
 use App\Entity\Preference;
 use App\Entity\Subject;
 use App\Service\Mailer;
@@ -102,11 +101,11 @@ class SignupModel
 
     public function updateMember(Member $member, array $data): void
     {
-        $location = $this->entityManager->getRepository(NewLocation::class)->findOneBy([
+        $location = $this->entityManager->getRepository(Location::class)->findOneBy([
             'geonameId' => $data['location']['geoname_id'],
         ]);
 
-        $address = new NewAddress();
+        $address = new Address();
         $address
             ->setCity($location)
             ->setActive(true)

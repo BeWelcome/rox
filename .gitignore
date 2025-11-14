@@ -4,6 +4,7 @@ errors.log
 rox_local.ini
 *.cache.ini
 .php_cs.cache
+.php-cs-fixer.cache
 .phpunit.result.cache
 /data/*
 !data/user/avatars/.gitkeep

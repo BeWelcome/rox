@@ -2,7 +2,7 @@
 
 namespace App\Utilities;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Symfony\Component\Mime\Address;
 
 trait BewelcomeAddressTrait

@@ -79,17 +79,17 @@ App\Entity\RightVolunteer:
         Comment: Granted by the System
         updated: '<dateTime()>'
         created: '<dateTime()>'
-    NewMembersBeWelcome_bwadmin:
+    MembersBeWelcome_bwadmin:
         member: '@bwadmin'
-        right: '@NewMembersBeWelcome'
+        right: '@MembersBeWelcome'
         level: '10'
         scope: '"All"'
         Comment: Granted by the System
         updated: '<dateTime()>'
         created: '<dateTime()>'
-    NewMembersBeWelcome_member_2:
+    MembersBeWelcome_member_2:
         member: '@member_2'
-        right: '@NewMembersBeWelcome'
+        right: '@MembersBeWelcome'
         level: '10'
         scope: '"All"'
         Comment: Granted by the BW Admin

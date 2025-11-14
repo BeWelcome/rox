@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Relation;
 use App\Form\RelationType;
 use App\Repository\RelationRepository;

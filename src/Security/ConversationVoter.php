@@ -3,7 +3,7 @@
 namespace App\Security;
 
 use App\Entity\Message;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

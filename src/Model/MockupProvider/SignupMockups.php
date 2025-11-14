@@ -2,7 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Form\SignupFormFinalizeType;
 use App\Form\SignupFormType;
 use Symfony\Component\Form\FormFactoryInterface;

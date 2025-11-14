@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Doctrine\ReportStatusType;
 use App\Doctrine\ReportTypeType;
 use App\Doctrine\WhoSpokeLastType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 

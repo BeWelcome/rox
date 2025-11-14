@@ -3,7 +3,7 @@
 namespace App\Logger;
 
 use App\Entity\Log;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;

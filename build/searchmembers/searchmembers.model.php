@@ -29,7 +29,7 @@ Boston, MA  02111-1307, USA.
 class Searchmembers extends RoxModelBase
 {
     private $column_sort_order = [
-            'members.created' => 'FindPeopleNewMembers',
+            'members.created' => 'FindPeopleMembers',
             'BirthDate'       => 'Age',
             'LastLogin'       => 'Lastlogin',
             'Comments'        => 'Comments',

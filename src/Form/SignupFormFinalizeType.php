@@ -61,11 +61,11 @@ class SignupFormFinalizeType extends AbstractType
     {
         if ($options['show_registration_key']) {
             $builder->add('registration_key', TextType::class, [
-                'label' => 'label.registration_key',
+                'label' => 'label.registration.key',
                 'attr' => [
-                    'placeholder' => 'placeholder.registration_key',
+                    'placeholder' => 'placeholder.registration.key',
                 ],
-                'help' => 'help.registration_key',
+                'help' => 'help.registration.key',
                 'required' => false,
             ]);
         } else {

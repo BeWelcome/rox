@@ -1,222 +1,23 @@
 <?php
 
-/*
- * @codingStandardsIgnoreFile
- *
- * Auto generated file ignore for Code Sniffer
- */
-
 namespace App\Entity;
 
-use Carbon\Carbon;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
 
-/**
- * Do not check entities with PHPMD.
- *
- * @SuppressWarnings("PHPMD")
- */
-#[ORM\Table(name: 'memberstrads')]
-#[ORM\Index(name: 'memberstrads_trads', columns: ['IdTrad'])]
-#[ORM\Index(name: 'memberstrads_language', columns: ['IdLanguage'])]
-#[ORM\Index(name: 'memberstrads_trad_language', columns: ['IdLanguage', 'IdTrad'])]
-#[ORM\Index(name: 'memberstrads_owner', columns: ['IdOwner'])]
-#[ORM\UniqueConstraint(name: 'Unique_entry', columns: ['IdTrad', 'IdOwner', 'IdLanguage'])]
-#[ORM\UniqueConstraint(name: 'Owner_TableColumn', columns: ['IdOwner', 'IdTrad', 'TableColumn', 'IdLanguage'])]
+#[ORM\Table(name: 'member_translations')]
+#[ORM\UniqueConstraint(name: 'lookup_unique_idx', columns: ['locale', 'object_id', 'field'])]
 #[ORM\Entity]
-#[ORM\HasLifecycleCallbacks]
-class MemberTranslation
+class MemberTranslation extends AbstractPersonalTranslation
 {
-    #[ORM\JoinColumn(name: 'IdOwner', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'translatedFields')]
-    private Member $owner;
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'translations')]
+    #[ORM\JoinColumn(name: 'object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    protected $object;
 
-    #[ORM\Column(name: 'IdTrad', type: 'integer', nullable: false)]
-    private int $translation;
-
-    #[ORM\JoinColumn(name: 'IdTranslator', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'LAZY')]
-    private Member $translator;
-
-    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private DateTime $updated;
-
-    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private DateTime $created;
-
-    #[ORM\Column(name: 'Type', type: 'string', nullable: false)]
-    private string $type = 'member';
-
-    #[ORM\Column(name: 'Sentence', type: 'text', length: 65535, nullable: false)]
-    private string $sentence;
-
-    #[ORM\Column(name: 'IdRecord', type: 'integer', nullable: false)]
-    private int $record = -1;
-
-    #[ORM\Column(name: 'TableColumn', type: 'string', length: 200, nullable: false)]
-    private string $tableColumn = 'NotSet';
-
-    #[ORM\Column(name: 'id', type: 'integer')]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $id;
-
-    #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: Language::class)]
-    private Language $language;
-
-    public function setOwner(Member $owner): self
+    public function __construct($locale, $field, $value)
     {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
-    public function getOwner(): Member
-    {
-        return $this->owner;
-    }
-
-    public function setTranslation(int $translation): self
-    {
-        $this->translation = $translation;
-
-        return $this;
-    }
-
-    public function getTranslation(): int
-    {
-        return $this->translation;
-    }
-
-    public function setTranslator(Member $translator): self
-    {
-        $this->translator = $translator;
-
-        return $this;
-    }
-
-    public function getTranslator(): Member
-    {
-        return $this->translator;
-    }
-
-    public function setUpdated(DateTime $updated): self
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    public function getUpdated(): Carbon
-    {
-        return Carbon::instance($this->updated);
-    }
-
-    public function setCreated(DateTime $created): self
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    public function getCreated(): Carbon
-    {
-        return Carbon::instance($this->created);
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    public function setSentence(string $sentence): self
-    {
-        $this->sentence = $sentence;
-
-        return $this;
-    }
-
-    public function getSentence(): string
-    {
-        return $this->sentence;
-    }
-
-    public function setRecord(int $record): self
-    {
-        $this->record = $record;
-
-        return $this;
-    }
-
-    public function getRecord(): int
-    {
-        return $this->record;
-    }
-
-    public function setTableColumn($tableColumn): self
-    {
-        $this->tableColumn = $tableColumn;
-
-        return $this;
-    }
-
-    public function getTableColumn(): string
-    {
-        return $this->tableColumn;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function setLanguage(?Language $language = null): self
-    {
-        $this->language = $language;
-
-        return $this;
-    }
-
-    public function getLanguage(): ?Language
-    {
-        return $this->language;
-    }
-
-    /**
-     * Triggered on insert.
-     */
-    #[ORM\PrePersist]
-    public function onPrePersist()
-    {
-        $this->created = new DateTime('now');
-        $this->updated = $this->created;
-        $this->translation = random_int(0, 24500000);
-    }
-
-    /**
-     * Triggered after insert.
-     */
-    #[ORM\PostPersist]
-    public function onPostPersist()
-    {
-        $this->translation = $this->id;
-    }
-
-    /**
-     * Triggered on update.
-     */
-    #[ORM\PreUpdate]
-    public function onPreUpdate()
-    {
-        $this->updated = new DateTime('now');
+        $this->setLocale($locale);
+        $this->setField($field);
+        $this->setContent($value);
     }
 }

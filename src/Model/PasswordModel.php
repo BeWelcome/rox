@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\PasswordReset;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;

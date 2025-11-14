@@ -60,8 +60,8 @@ class Params
     /**
      * @var string
      */
-    #[ORM\Column(name: 'MailToNotifyWhenNewMemberSignup', type: 'text', length: 65535, nullable: false)]
-    private $mailtonotifywhennewmembersignup;
+    #[ORM\Column(name: 'MailToNotifyWhenMemberSignup', type: 'text', length: 65535, nullable: false)]
+    private $mailtonotifywhenMembersignup;
 
     /**
      * @var string
@@ -318,27 +318,27 @@ class Params
     }
 
     /**
-     * Set mailtonotifywhennewmembersignup.
+     * Set mailtonotifywhenMembersignup.
      *
-     * @param string $mailtonotifywhennewmembersignup
+     * @param string $mailtonotifywhenMembersignup
      *
      * @return Params
      */
-    public function setMailtonotifywhennewmembersignup($mailtonotifywhennewmembersignup)
+    public function setMailtonotifywhenMembersignup($mailtonotifywhenMembersignup)
     {
-        $this->mailtonotifywhennewmembersignup = $mailtonotifywhennewmembersignup;
+        $this->mailtonotifywhenMembersignup = $mailtonotifywhenMembersignup;
 
         return $this;
     }
 
     /**
-     * Get mailtonotifywhennewmembersignup.
+     * Get mailtonotifywhenMembersignup.
      *
      * @return string
      */
-    public function getMailtonotifywhennewmembersignup()
+    public function getMailtonotifywhenMembersignup()
     {
-        return $this->mailtonotifywhennewmembersignup;
+        return $this->mailtonotifywhenMembersignup;
     }
 
     /**

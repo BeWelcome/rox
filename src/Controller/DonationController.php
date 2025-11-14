@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Donation;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Model\DonationModel;
 use App\Repository\DonationRepository;
 use App\Utilities\TranslatedFlashTrait;

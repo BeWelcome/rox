@@ -3,7 +3,7 @@
 namespace App\Model\MemberDataExtractor;
 
 use App\Entity\Group;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\PrivilegeScope;
 
 final class PrivilegesExtractor extends AbstractExtractor implements ExtractorInterface

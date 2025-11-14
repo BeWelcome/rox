@@ -2,7 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\NewLocation;
+use App\Entity\Location;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -239,7 +239,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         $locations = $query->getResult();
         $documents = [];
 
-        /** @var NewLocation $location */
+        /** @var Location $location */
         foreach ($locations as $location) {
             $isPlace = 'P' === $location['feature_class'] && str_starts_with((string) $location['feature_code'], 'PPL')
                 && 'PPLH' !== $location['feature_code'] && 'PPLCH' !== $location['feature_code']

@@ -11,7 +11,7 @@ namespace App\Entity;
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
 use App\Doctrine\CommentRelationsType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Repository\CommentRepository;
 use Carbon\Carbon;
 use DateTime;

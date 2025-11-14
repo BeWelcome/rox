@@ -6,7 +6,7 @@ use App\Entity\Activity;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Message;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Notification;
 use App\Entity\Preference;
 use App\Entity\Subtrip;

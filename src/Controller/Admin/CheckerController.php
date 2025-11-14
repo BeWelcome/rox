@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Form\SpamActivitiesIndexFormType;
 use App\Form\SpamCommunityNewsCommentsIndexFormType;
 use App\Form\SpamMessagesIndexFormType;

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\HostingRequest;
 use App\Entity\Message;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
 use App\Utilities\TranslatedFlashTrait;

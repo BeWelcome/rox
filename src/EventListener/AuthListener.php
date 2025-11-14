@@ -3,7 +3,7 @@
 namespace App\EventListener;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 

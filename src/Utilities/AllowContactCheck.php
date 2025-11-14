@@ -4,7 +4,7 @@ namespace App\Utilities;
 
 use App\Entity\MembersPhoto;
 use App\Entity\MemberTranslation;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Preference;
 use Doctrine\ORM\EntityManagerInterface;
 

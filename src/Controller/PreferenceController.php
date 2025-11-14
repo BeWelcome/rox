@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Form\PreferencesType;
 use App\Model\PreferenceModel;
 use App\Utilities\ChangeProfilePictureGlobals;

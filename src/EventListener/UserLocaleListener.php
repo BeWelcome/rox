@@ -2,7 +2,7 @@
 
 namespace App\EventListener;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use PVars;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

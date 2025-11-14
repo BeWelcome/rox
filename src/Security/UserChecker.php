@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;

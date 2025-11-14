@@ -8,7 +8,7 @@
 
 namespace App\Entity;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;

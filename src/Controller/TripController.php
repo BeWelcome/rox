@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Form\TripRadiusType;

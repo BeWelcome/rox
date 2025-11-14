@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Doctrine\SubtripOptionsType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;

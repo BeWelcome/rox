@@ -5,7 +5,7 @@ namespace App\Controller\Admin;
 use App\Doctrine\DomainType;
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Language;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\RightVolunteer;
 use App\Entity\Word;
 use App\Form\CustomDataClass\Translation\EditTranslationRequest;

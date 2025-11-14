@@ -7,8 +7,7 @@ use App\Doctrine\StandardOffersType;
 use App\Doctrine\TypicalOfferType;
 use App\Entity\Language;
 use App\Entity\Member;
-use App\Entity\NewLocation;
-use App\Entity\NewMember;
+use App\Entity\Location;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -160,7 +159,7 @@ class MigrateMembersCommand extends Command
         $this->io->note('Migrating ' . $countOfMembers . ' members.');
 
         // load members in chunks of 100
-        $locationRepository = $this->entityManager->getRepository(NewLocation::class);
+        $locationRepository = $this->entityManager->getRepository(Location::class);
         $languageRepository = $this->entityManager->getRepository(Language::class);
         $rawLanguages = $languageRepository->findAll();
         $languages = [];
@@ -503,19 +502,19 @@ class MigrateMembersCommand extends Command
             || ($member['HideAttribute'] && Member::MEMBER_SECONDNAME_HIDDEN)
             || ($member['HideAttribute'] && Member::MEMBER_LASTNAME_HIDDEN)
         ) {
-            $hideAttribute = NewMember::NAME_HIDDEN;
+            $hideAttribute = Member::NAME_HIDDEN;
         }
 
         if ('Yes' === $member['HideBirthDate']) {
-            $hideAttribute |= NewMember::AGE_HIDDEN;
+            $hideAttribute |= Member::AGE_HIDDEN;
         }
 
         if ('Yes' === $member['HideGender']) {
-            $hideAttribute |= NewMember::GENDER_HIDDEN;
+            $hideAttribute |= Member::GENDER_HIDDEN;
         }
 
         if ('Yes' === $member['AdressHidden']) {
-            $hideAttribute |= NewMember::ADDRESS_HIDDEN;
+            $hideAttribute |= Member::ADDRESS_HIDDEN;
         }
 
         return $hideAttribute;

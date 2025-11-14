@@ -8,7 +8,7 @@
 
 namespace App\Entity;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Repository\DonationRepository;
 use Carbon\Carbon;
 use DateTime;
@@ -62,10 +62,10 @@ class Donation
     private $money;
 
     /**
-     * @var NewLocation
+     * @var Location
      */
     #[ORM\JoinColumn(name: 'IdCountry', referencedColumnName: 'geonameId')]
-    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
+    #[ORM\ManyToOne(targetEntity: Location::class)]
     private $country;
 
     /**
@@ -179,7 +179,7 @@ class Donation
         return $this;
     }
 
-    public function getCountry(): ?NewLocation
+    public function getCountry(): ?Location
     {
         return $this->country;
     }

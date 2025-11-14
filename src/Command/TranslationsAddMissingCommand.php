@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Language;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -34,13 +34,15 @@ class TranslationsAddMissingCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $io->note('Adding missing translations');
+
         $finder = new Finder();
         $files = $finder->files()->name('*.yaml')->in('translations/missing');
 
         $count = 0;
-        foreach ($files as $file) {
-            $io->section(\sprintf('Importing missing translations from file: %s', $file));
+        $lastFile = '';
 
+        foreach ($files as $file) {
             $memberRepository = $this->entityManager->getRepository(Member::class);
             $admin = $memberRepository->find(1);
 
@@ -50,7 +52,6 @@ class TranslationsAddMissingCommand extends Command
             $translationRepository = $this->entityManager->getRepository(Word::class);
 
             $missing = Yaml::parseFile($file);
-
             foreach ($missing as $translationId => $missingTranslation) {
                 $sentence = $missingTranslation[0];
                 $description = $missingTranslation[1] ?? 'No description given.';
@@ -61,6 +62,11 @@ class TranslationsAddMissingCommand extends Command
 
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {
+                    if ($lastFile !== $file) {
+                        $io->section(\sprintf('Importing missing translations from file: %s', $file));
+                        $lastFile = $file;
+                    }
+
                     ++$count;
                     if ('@' === $sentence[0]) {
                         $reusedTranslationId = substr((string) $sentence, 1);

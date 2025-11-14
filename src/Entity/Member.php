@@ -12,8 +12,8 @@ use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\StandardOffersType;
-use App\Entity\NewAddress as Address;
-use App\Repository\NewMemberRepository;
+use App\Entity\Address as Address;
+use App\Repository\MemberRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -34,10 +34,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'member')]
-#[ORM\Entity(repositoryClass: NewMemberRepository::class)]
-#[Gedmo\TranslationEntity(class: NewMemberTranslation::class)]
+#[ORM\Entity(repositoryClass: MemberRepository::class)]
+#[Gedmo\TranslationEntity(class: MemberTranslation::class)]
 #[ORM\HasLifecycleCallbacks]
-class NewMember implements Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
+class Member implements Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
@@ -51,7 +51,7 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
     public const ROLE_ADMIN_LOGS = 'ROLE_ADMIN_LOGS';
     public const ROLE_ADMIN_MANAGESUBSCRIPTIONS = 'ROLE_ADMIN_MANAGESUBSCRIPTIONS';
     public const ROLE_ADMIN_MASSMAIL = 'ROLE_ADMIN_MASSMAIL';
-    public const ROLE_ADMIN_NEWMEMBERSBEWELCOME = 'ROLE_ADMIN_NEWMEMBERSBEWELCOME';
+    public const ROLE_ADMIN_MemberSBEWELCOME = 'ROLE_ADMIN_MemberSBEWELCOME';
     public const ROLE_ADMIN_POLL = 'ROLE_ADMIN_POLL';
     public const ROLE_ADMIN_PROFILE = 'ROLE_ADMIN_PROFILE';
     public const ROLE_ADMIN_RIGHTS = 'ROLE_ADMIN_RIGHTS';
@@ -222,7 +222,7 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
     #[ORM\Column(name: 'HostingInterest', type: 'integer', nullable: true)]
     private ?int $hostingInterest = null;
 
-    #[ORM\OneToMany(targetEntity: NewMemberTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: MemberTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['locale' => 'ASC'])]
     private Collection $translations;
 
@@ -1297,12 +1297,12 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
         return $this;
     }
 
-    public function getRegion(): ?NewLocation
+    public function getRegion(): ?Location
     {
         return $this->city->getAdmin1();
     }
 
-    public function getCountry(): ?NewLocation
+    public function getCountry(): ?Location
     {
         return $this->city->getCountry();
     }
@@ -1384,7 +1384,7 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
                 'en' => [],
             ];
 
-            /** @var NewMemberTranslation $translation */
+            /** @var MemberTranslation $translation */
             foreach ($this->translations as $translation) {
                 $locale = $translation->getLocale();
                 if (!isset($this->translationsIndexedByLocale[$locale])) {
@@ -1422,7 +1422,7 @@ class NewMember implements Serializable, UserInterface, PasswordHasherAwareInter
         return $fallbacks;
     }
 
-    public function addTranslation(NewMemberTranslation $translation): void
+    public function addTranslation(MemberTranslation $translation): void
     {
         if (!$this->translations->contains($translation)) {
             $this->translations[] = $translation;

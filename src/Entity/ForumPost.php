@@ -11,7 +11,7 @@ namespace App\Entity;
 use App\Doctrine\ForumDeleteStatusType;
 use App\Doctrine\ForumVisibilityType;
 use App\Doctrine\PostCanStillEditType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Repository\ForumPostRepository;
 use Carbon\Carbon;
 use DateTime;

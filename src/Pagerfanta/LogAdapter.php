@@ -2,7 +2,7 @@
 
 namespace App\Pagerfanta;
 
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pagerfanta\Adapter\AdapterInterface;

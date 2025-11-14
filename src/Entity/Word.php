@@ -9,7 +9,7 @@
 namespace App\Entity;
 
 use App\Doctrine\TranslationAllowedType;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Repository\WordRepository;
 use Carbon\Carbon;
 use DateTime;

@@ -6,8 +6,8 @@ use App\Doctrine\SubtripOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Message;
-use App\Entity\NewLocation;
-use App\Entity\NewMember as Member;
+use App\Entity\Location;
+use App\Entity\Member;
 use App\Entity\Subject;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -109,7 +109,7 @@ class InvitationUtility
             'getAdditionalInfo' => TripAdditionalInfoType::NONE,
             'getCreated' => new DateTime(),
         ]);
-        $location = new NewLocation();
+        $location = new Location();
         $location->setName('Mock');
         $leg = Mockery::mock(Subtrip::class, [
             'getId' => 1,

@@ -59,7 +59,7 @@ profile.gender:
 profile.visited:
     - '@visited'
 profile.no.about.me:
-    - 'No about me given.'
+    - 'No about me provided.'
     - 'Shown if a member didn''t provide any information about themselves in about me.'
 profile.joined:
     - 'Joined:'
@@ -131,3 +131,28 @@ help.shortname:
 profile.set.location:
     - Location
     - Label used on the finish account page
+profile.switch.language:
+    - 'View profile in:'
+    - Label for the dropdown to switch between profile translations.
+profile.no.city.yet:
+    - No location set
+    - Shown for an incomplete profile (not visible for most members).
+members.finalize.account:
+    - Finish account setup
+    - Headline on the finish account setup page
+members.finalize.account.blurb:
+    - "Please make sure to add finish your profile.\n
+       \n
+       Otherwise we might remove it for fun."
+    - Additional text on the finish account setup page that informs the user what to do.
+label.registration.key:
+    - Registration Key
+    - Label for the registration key field used on finalize setup or confirm email pages
+placeholder.registration.key:
+    - Registration Key from email
+    - Placeholder in the registration key field used on finalize setup or confirm email pages
+help.registration.key:
+    - The registration key was sent to you via email. You can just copy and paste it here (your phone might even suggest it from email). The field is optional if you haven't gotten an email with the key please check your spam folder.
+    - Help text for the registration key field used on finalize setup or confirm email pages
+label.mother.tongue:
+    - "@"

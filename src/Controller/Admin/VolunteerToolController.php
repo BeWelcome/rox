@@ -4,7 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\LoginMessage;
 use App\Entity\Message;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\UploadedImage;
 use App\Form\ChangeUsernameFormType;
 use App\Form\CustomDataClass\Tools\ChangeUsernameRequest;
@@ -85,8 +85,8 @@ class VolunteerToolController extends AbstractController
             $oldMember = $memberRepository->findOneBy(['username' => $data->oldUsername]);
             if (null !== $oldMember) {
                 // check if new username is already taken
-                $newMember = $memberRepository->findOneBy(['username' => $data->newUsername]);
-                if (null === $newMember) {
+                $Member = $memberRepository->findOneBy(['username' => $data->newUsername]);
+                if (null === $Member) {
                     $logger->write(
                         'Changed member username from ' . $data->oldUsername . ' to ' . $data->newUsername . '.',
                         'adminquery'
@@ -112,8 +112,8 @@ class VolunteerToolController extends AbstractController
             } else {
                 $form->get('oldUsername')->addError(new FormError('No member with this username found.'));
                 // check if new username is already taken
-                $newMember = $memberRepository->findOneBy(['username' => $data->newUsername]);
-                if (null !== $newMember) {
+                $Member = $memberRepository->findOneBy(['username' => $data->newUsername]);
+                if (null !== $Member) {
                     $form
                         ->get('newUsername')
                         ->addError(

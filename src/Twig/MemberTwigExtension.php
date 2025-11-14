@@ -6,7 +6,7 @@ use App\Entity\Comment;
 use App\Entity\Group;
 use App\Entity\LoginMessage;
 use App\Entity\Message;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Repository\CommentRepository;
 use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
@@ -56,10 +56,10 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_CHECKER],
             'route' => 'admin_spam_activities',
         ],
-        'newmembersbewelcome' => [
-            'trans' => 'AdminNewMembers',
-            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_NEWMEMBERSBEWELCOME],
-            'route' => 'newmembers',
+        'Membersbewelcome' => [
+            'trans' => 'AdminMembers',
+            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_MemberSBEWELCOME],
+            'route' => 'Members',
         ],
         'massmail' => [
             'trans' => 'AdminMassMail',

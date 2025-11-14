@@ -35,8 +35,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Index(name: 'geonames_idx_admin2_id', columns: ['admin_2_id'])]
 #[ORM\Index(name: 'geonames_idx_admin3_id', columns: ['admin_3_id'])]
 #[ORM\Index(name: 'geonames_idx_admin4_id', columns: ['admin_4_id'])]
-#[ORM\Entity(repositoryClass: \App\Repository\NewLocationRepository::class)]
-class NewLocation implements Translatable
+#[ORM\Entity(repositoryClass: \App\Repository\LocationRepository::class)]
+class Location implements Translatable
 {
     /**
      * @var string
@@ -116,7 +116,7 @@ class NewLocation implements Translatable
     private $admin4Id;
 
     /**
-     * @var NewLocation
+     * @var Location
      */
     #[ORM\JoinColumn(name: 'country', referencedColumnName: 'geonameId', nullable: true)]
     #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
@@ -124,28 +124,28 @@ class NewLocation implements Translatable
     private $country;
 
     /**
-     * @var NewLocation
+     * @var Location
      */
     #[ORM\JoinColumn(name: 'admin1', referencedColumnName: 'geonameId', nullable: true)]
     #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
     private $admin1;
 
     /**
-     * @var NewLocation
+     * @var Location
      */
     #[ORM\JoinColumn(name: 'admin2', referencedColumnName: 'geonameId', nullable: true)]
     #[ORM\ManyToOne(targetEntity: self::class)]
     private $admin2;
 
     /**
-     * @var NewLocation
+     * @var Location
      */
     #[ORM\JoinColumn(name: 'admin3', referencedColumnName: 'geonameId', nullable: true)]
     #[ORM\ManyToOne(targetEntity: self::class)]
     private $admin3;
 
     /**
-     * @var NewLocation
+     * @var Location
      */
     #[ORM\JoinColumn(name: 'admin4', referencedColumnName: 'geonameId', nullable: true)]
     #[ORM\ManyToOne(targetEntity: self::class)]

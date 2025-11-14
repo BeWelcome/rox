@@ -12,7 +12,7 @@ TIME_STAMP := $(shell git log -n 1 --format=%aI)
 
 all: phpci
 
-phpci: phpcpd phploc php-code-sniffer phpunit infection behat version
+phpci: phpcpd phploc php-code-sniffer php-cs-fixer phpunit infection version
 
 install:
 	git rev-parse --short HEAD > VERSION

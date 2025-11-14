@@ -8,7 +8,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Member;
 use App\Repository\DonationRepository;
 use Carbon\Carbon;
 use DateTime;

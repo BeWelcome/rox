@@ -3,9 +3,9 @@
 namespace App\Command;
 
 use App\Doctrine\AccommodationType;
-use App\Entity\MemberTranslation;
 use App\Entity\Location;
 use App\Entity\Member;
+use App\Entity\MemberTranslation;
 use App\Logger\Logger;
 use App\Repository\MemberRepository;
 use DateTime;

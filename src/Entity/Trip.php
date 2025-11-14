@@ -9,7 +9,6 @@
 namespace App\Entity;
 
 use App\Doctrine\TripAdditionalInfoType;
-use App\Entity\Member;
 use App\Repository\TripRepository;
 use Carbon\Carbon;
 use DateTime;

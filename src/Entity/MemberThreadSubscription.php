@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Doctrine\ActionToWatchType;
-use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 

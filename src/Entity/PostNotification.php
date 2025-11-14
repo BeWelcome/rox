@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Member;
 use App\Repository\PostNotificationRepository;
 use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;

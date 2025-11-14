@@ -4,8 +4,8 @@ namespace App\Tests\Model;
 
 use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
-use App\Entity\Message;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Entity\Subject;
 use App\Model\HostingRequestModel;
 use DateInterval;

@@ -3,8 +3,8 @@
 namespace App\Utilities;
 
 use App\Doctrine\MessageStatusType;
-use App\Entity\Message;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Entity\Subject;
 use Twig\Environment;
 

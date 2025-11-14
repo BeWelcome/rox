@@ -8,7 +8,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Member;
 use App\Repository\SubtripRepository;
 use Carbon\Carbon;
 use DateTime;

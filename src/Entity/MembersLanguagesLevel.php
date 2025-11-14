@@ -9,7 +9,6 @@
 namespace App\Entity;
 
 use App\Doctrine\LanguageLevelType;
-use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;

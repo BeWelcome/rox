@@ -2,8 +2,8 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use App\Entity\MembersPhoto;
 use App\Entity\Member;
+use App\Entity\MembersPhoto;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class ProfilePicturesExtractor extends AbstractExtractor implements ExtractorInterface

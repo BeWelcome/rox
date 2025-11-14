@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Event\PostLoadEventArgs;

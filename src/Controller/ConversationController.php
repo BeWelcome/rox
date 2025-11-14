@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
-use App\Entity\Message;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Form\ReportSpamType;
 use App\Model\ConversationModel;
 use App\Utilities\ConversationThread;

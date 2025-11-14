@@ -2,8 +2,8 @@
 
 namespace App\Model;
 
-use App\Entity\Message;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Repository\MessageRepository;
 use App\Utilities\ConversationThread;
 use Doctrine\ORM\EntityManagerInterface;

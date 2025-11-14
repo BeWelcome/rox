@@ -9,7 +9,6 @@
 namespace App\Entity;
 
 use App\Doctrine\GroupMembershipStatusType;
-use App\Entity\Member;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;

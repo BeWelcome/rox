@@ -12,7 +12,6 @@ use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\StandardOffersType;
-use App\Entity\Address as Address;
 use App\Repository\MemberRepository;
 use Carbon\Carbon;
 use DateTime;

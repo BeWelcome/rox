@@ -3,8 +3,8 @@
 namespace App\Model\MockupProvider;
 
 use App\Entity\HostingRequest;
-use App\Entity\Message;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;

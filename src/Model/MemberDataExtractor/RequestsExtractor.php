@@ -2,8 +2,8 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use App\Entity\Message;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Repository\MessageRepository;
 use Override;
 

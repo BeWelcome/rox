@@ -8,6 +8,8 @@
         <ul>
             <li><?= $this->getWords()->getSilent('activities.rules.type.category'); ?></li>
             <li><?= $this->getWords()->getSilent('activities.rules.type.variants'); ?></li>
+            <li><?= $this->getWords()->getSilent('activities.rules.type.hosting'); ?></li>
+            <li><?= $this->getWords()->getSilent('activities.rules.type.trip'); ?></li>
         </ul>
         <h3><?= $this->getWords()->getSilent('activities.rules.duration'); ?></h3>
         <ul>

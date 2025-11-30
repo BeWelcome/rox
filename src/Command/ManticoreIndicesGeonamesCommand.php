@@ -144,16 +144,16 @@ class ManticoreIndicesGeonamesCommand extends Command
                             geo__names g
                         LEFT JOIN (
                             SELECT
-                                a.city,
-                                COUNT(a.city) total
+                                a.location,
+                                COUNT(a.location) total
                             FROM
                                 member m,
                                 address a
                             WHERE m.status IN ('Active', 'OutOfRemind') and m.id = a.member_id
                             GROUP BY
-                                a.city
+                                a.location
                         ) membercounts
-                        ON (g.geonameid = membercounts.city)
+                        ON (g.geonameid = membercounts.location)
                         LIMIT {$firstResult}, {$this->chunkSize}
                     ___SQL, $this->getResultSetMappingForGeonamesIndex());
 
@@ -208,16 +208,16 @@ class ManticoreIndicesGeonamesCommand extends Command
                             geo__names_translations gt ON g.geonameId = gt.foreign_key
                         LEFT JOIN (
                             SELECT
-                                a.city,
-                                COUNT(a.city) total
+                                a.location,
+                                COUNT(a.location) total
                             FROM
                                 members m,
                                 address a
                             WHERE m.status IN ('Active', 'OutOfRemind') and m.id = a.member_id
                             GROUP BY
-                                a.city
+                                a.location
                         ) membercounts
-                        ON (g.geonameid = membercounts.city)
+                        ON (g.geonameid = membercounts.location)
                         LIMIT {$firstResult}, {$this->chunkSize}
                     ___SQL, $this->getResultSetMappingForGeonamesIndex());
 

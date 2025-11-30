@@ -152,7 +152,34 @@ placeholder.registration.key:
     - Registration Key from email
     - Placeholder in the registration key field used on finalize setup or confirm email pages
 help.registration.key:
-    - The registration key was sent to you via email. You can just copy and paste it here (your phone might even suggest it from email). The field is optional if you haven't gotten an email with the key please check your spam folder.
+    - The registration key was sent to you via email. If you clicked the link in that email it is already filled in. Otherwise just copy and paste it here (your phone might even suggest it from email). If you haven't gotten an email with the key please check your spam folder.
+    - Help text for the registration key field used on finalize setup or confirm email pages
+error.registration.key:
+    - The provided registration key doesn't match the stored information.
+label.registration.key.optional:
+    - Registration Key (optional)
+    - Label for the registration key field used on finalize setup or confirm email pages
+placeholder.registration.key.optional:
+    - Registration Key from email (optional)
+    - Placeholder in the registration key field used on finalize setup or confirm email pages
+help.registration.key-optional:
+    - The registration key was sent to you via email. Just copy and paste it here (your phone might even suggest it from email). If you haven't gotten an email with the key please check your spam folder.
     - Help text for the registration key field used on finalize setup or confirm email pages
 label.mother.tongue:
-    - "@"
+    - "@signupselectmothertongue"
+placeholder.mother.tongue:
+    - 'Select at least one mother tongue'
+help.mother.tongue:
+    - You have to give at least one mother tongue but may give more.
+    - Help text on the finish setup page for the mother tongue field
+error.mother.tongue:
+    - You need to select at least one mother tongue.
+members.confirm.email:
+    - Confirm email address
+    - Title of the page to confirm email address
+members.confirm.email.blurb:
+    - We've sent you an email with a code to confirm that you get email notifications from us. Please copy the code into the field below.
+    - Explanatory text on the conform email address page
+members.confirm.email.button:
+    - Confirm
+    - Button label

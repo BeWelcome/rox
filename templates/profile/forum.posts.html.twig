@@ -1,10 +1,12 @@
 {% extends 'profile/profile.html.twig' %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('highlight') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
+    {{ parent() }}
     {{ encore_entry_link_tags('highlight') }}
 {% endblock stylesheets %}
 

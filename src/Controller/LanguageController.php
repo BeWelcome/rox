@@ -18,7 +18,7 @@ final class LanguageController extends AbstractController
 
         $motherTongues = [];
         foreach ($languages as $language) {
-            if ($language->getIsSpokenlanguage() || $language->getIsSignlanguage()) {
+            if ($language->getIsSpokenLanguage() || $language->getIsSignlanguage()) {
                 $motherTongues[] = [
                     'id' => $language->getShortCode(),
                     'label' => $language->getName(),

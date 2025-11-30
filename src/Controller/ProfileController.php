@@ -41,14 +41,21 @@ class ProfileController extends AbstractController
     public function __construct(
         private readonly ChangeProfilePictureGlobals $globals,
         private readonly ProfileSubmenu $profileSubmenu,
+        private readonly ProfileModel $profileModel,
         private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
-    #[Route(path: '/members/{username:member}/new', name: 'members_profile_new')]
+    #[Route(path: '/members/{username:member}', name: 'members_profile')]
     public function show(Member $member): Response
     {
-        if (!$member->isBrowsable()) {
+        if (
+            !($member->isBrowsable()
+                || $this->isGranted(Member::ROLE_ADMIN_ADMIN, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_PROFILE, $member)
+            )
+        ) {
             throw $this->createAccessDeniedException();
         }
 
@@ -178,7 +185,6 @@ class ProfileController extends AbstractController
     #[Route(path: '/deleteprofile', name: 'profile_delete_redirect')]
     public function deleteProfileNotLoggedIn(
         Request $request,
-        ProfileModel $profileModel,
         TranslatorInterface $translator,
         PasswordHasherFactoryInterface $passwordHasherFactory,
     ): Response {
@@ -213,7 +219,7 @@ class ProfileController extends AbstractController
 
             $success = false;
             if ($verified) {
-                $success = $profileModel->retireProfile($member, $data);
+                $success = $this->profileModel->retireProfile($member, $data);
             }
 
             if ($success) {
@@ -231,7 +237,6 @@ class ProfileController extends AbstractController
         Request $request,
         TokenStorageInterface $tokenStorage,
         Member $member,
-        ProfileModel $profileModel,
     ): Response {
         $loggedInMember = $this->getUser();
         if ($member !== $loggedInMember) {
@@ -244,7 +249,7 @@ class ProfileController extends AbstractController
         $deleteProfileForm->handleRequest($request);
 
         if ($deleteProfileForm->isSubmitted() && $deleteProfileForm->isValid()) {
-            $success = $profileModel->retireProfile($member, $deleteProfileForm->getData());
+            $success = $this->profileModel->retireProfile($member, $deleteProfileForm->getData());
 
             if ($success) {
                 // force logout
@@ -263,10 +268,12 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username:member}/edit', name: 'profile_edit')]
-    public function editProfileInLocale(
+    #[Route(path: '/members/{username:member}/edit/{language}/{section}', name: 'profile_edit')]
+    public function editProfileInLanguage(
         Request $request,
         Member $member,
+        ?string $language = null,
+        ?string $section = null,
     ): Response {
         return $this->renderProfile($member, $member);
     }
@@ -280,7 +287,7 @@ class ProfileController extends AbstractController
 
         /** @var RelationRepository $relationsRepository */
         $relationsRepository = $this->entityManager->getRepository(Relation::class);
-        $relations = $relationsRepository->findBy(['receiver' => $member]);
+        $relations = $relationsRepository->findBy(['receiver' => $member, 'confirmed' => 'Yes']);
 
         /** @var GalleryImageRepository $galleryRepository */
         $galleryRepository = $this->entityManager->getRepository(GalleryImage::class);
@@ -292,6 +299,7 @@ class ProfileController extends AbstractController
             'visibleComments' => $visibleComments,
             'relations' => $relations,
             'pictures' => $pictures,
+            'status_form' => $this->profileModel->getStatusForm($member, $loggedInMember),
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
             'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember),
         ]);

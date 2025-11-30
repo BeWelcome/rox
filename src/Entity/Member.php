@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Serializable;
+use Stringable;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -36,7 +37,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[Gedmo\TranslationEntity(class: MemberTranslation::class)]
 #[ORM\HasLifecycleCallbacks]
-class Member implements Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
+class Member implements Stringable, Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
@@ -84,8 +85,8 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
     #[ORM\Column(name: 'Locale', type: 'string', length: 8, nullable: false)]
     protected string $locale = 'en';
 
-    #[ORM\Column(name: 'LastLogin', type: 'datetime', nullable: true)]
-    protected ?DateTime $lastLogin = null;
+    #[ORM\Column(name: 'LastActive', type: 'datetime', nullable: true)]
+    protected ?DateTime $lastActive = null;
 
     #[ORM\Column(name: 'PassWord', type: 'string', length: 100, nullable: true)]
     protected ?string $password = null;
@@ -96,9 +97,9 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
     #[ORM\Column(name: 'Reminders', type: 'integer', nullable: false)]
     private int $remindersWithOutLogin = 0;
 
-    /** @var string length set to 780 as original DB design has 255 per name part */
-    #[ORM\Column(name: 'Name', type: 'text', length: 780, nullable: false)]
-    private string $name = '';
+    /* length set to 780 as original DB design has 255 per name part */
+    #[ORM\Column(name: 'Name', type: 'text', length: 780, nullable: true)]
+    private ?string $name = null;
 
     #[ORM\Column(name: 'ShortName', type: 'string', nullable: true)]
     private ?string $shortName = null;
@@ -160,8 +161,8 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
     #[Gedmo\Translatable]
     private ?string $occupation = null;
 
-    #[ORM\Column(name: 'Gender', type: 'string', nullable: false)]
-    private string $gender = 'IDontTell';
+    #[ORM\Column(name: 'Gender', type: 'gender_type', nullable: false)]
+    private string $gender = 'other';
 
     #[ORM\Column(name: 'GenderOfGuests', type: 'string', nullable: false)]
     private string $genderOfGuests = 'any';
@@ -241,7 +242,7 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
     #[ORM\OneToMany(targetEntity: MemberPreference::class, mappedBy: 'member', cascade: ['persist', 'remove'])]
     private Collection $preferences;
 
-    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'member', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'member', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private Collection $addresses;
 
     private ?Language $preferredLanguage = null;
@@ -352,7 +353,7 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
 
     public function getName(): ?string
     {
-        if ($this->hideAttribute & self::NAME_HIDDEN !== self::NAME_HIDDEN) {
+        if (($this->hideAttribute & self::NAME_HIDDEN) !== self::NAME_HIDDEN) {
             return $this->name;
         }
 
@@ -532,17 +533,17 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
         return Carbon::instance($this->created);
     }
 
-    public function setLastLogin(?DateTime $lastLogin): self
+    public function setLastActive(?DateTime $lastActive): self
     {
-        $this->lastLogin = $lastLogin;
+        $this->lastActive = $lastActive;
 
         return $this;
     }
 
-    public function getLastLogin(): ?Carbon
+    public function getLastActive(): ?Carbon
     {
-        if (null !== $this->lastLogin) {
-            return Carbon::instance($this->lastLogin);
+        if (null !== $this->lastActive) {
+            return Carbon::instance($this->lastActive);
         }
 
         return null;
@@ -1467,7 +1468,7 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
 
     public function getActiveAddress()
     {
-        $expr = new Comparison('active', '=', true);
+        $expr = new Comparison('active', Comparison::EQ, true);
         $activeOnly = new Criteria();
         $activeOnly->where($expr);
 

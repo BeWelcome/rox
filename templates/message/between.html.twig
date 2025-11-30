@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-    {%  set member = app.user %}
+    {%  set loggedInMember = app.user %}
     <h2>{% trans with {'%username%': otherMember.Username} %}messages.with.heading{% endtrans %}</h2>
 
     {% if items.nbResults == 0 %}

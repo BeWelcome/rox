@@ -14,6 +14,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
+use stdClass;
 
 /**
  * Do not check entities with PHPMD.
@@ -340,7 +341,9 @@ class GroupMembership
     public function onPostLoad(PostLoadEventArgs $eventArgs): void
     {
         $memberTranslationRepository = $eventArgs->getObjectManager()->getRepository(MemberTranslation::class);
-        $this->comments = $memberTranslationRepository->findBy(['translation' => $this->comment]);
+        $comment = new stdClass();
+        $comment->sentence = 'Todo';
+        $this->comments = [$comment]; // $memberTranslationRepository->findBy(['translation' => $this->comment]);
     }
 
     /**

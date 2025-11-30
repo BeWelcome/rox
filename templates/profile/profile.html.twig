@@ -1,14 +1,15 @@
-{% extends 'profile/profile.base.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}{{ 'profile.title'|trans({username:member.Username}) }}{% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('avatar') }}
 {% endblock javascripts %}
 
 {% block content %}
     <div class="u-mb-16">
-        {% block profile_header %}
-        {% endblock profile_header %}
+        {% include 'profile/header.html.twig' %}
     </div>
     <div class="u-mb-16">
         {% block page_content%}

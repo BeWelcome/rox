@@ -22,10 +22,6 @@ class BaseRequestModel
         Message $data,
         string $clickedButton,
     ): Message {
-        if (null === $hostingRequest->getRequest()->getDeparture() || null === $data->getRequest()->getDeparture()) {
-            throw new InvalidArgumentException();
-        }
-
         $finalRequest = new Message();
         $finalRequest->setSender($sender);
         $finalRequest->setReceiver($receiver);
@@ -49,11 +45,15 @@ class BaseRequestModel
 
         $newFlexible = ($originalRequest->getFlexible() !== $currentRequest->getFlexible());
 
+        $newInvitation = ($originalRequest->getInviteForLeg() !== $currentRequest->getInviteForLeg());
+
         $newNumberOfTravellers =
             ($originalRequest->getNumberOfTravellers() !== $currentRequest->getNumberOfTravellers());
 
         $newHostingRequest = new HostingRequest();
-        $newHostingRequest->setInviteForLeg($hostingRequest->getRequest()->getInviteForLeg());
+        $newHostingRequest->setInviteForLeg(
+            $this->getFinal($originalRequest->getInviteForLeg(), $currentRequest->getInviteForLeg())
+        );
         $newHostingRequest->setArrival(
             $this->getFinal($originalRequest->getArrival(), $currentRequest->getArrival())
         );
@@ -66,7 +66,7 @@ class BaseRequestModel
         $newHostingRequest->setNumberOfTravellers(
             $this->getFinal($originalRequest->getNumberOfTravellers(), $currentRequest->getNumberOfTravellers())
         );
-        if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers) {
+        if ($newArrival || $newDeparture || $newFlexible || $newNumberOfTravellers || $newInvitation) {
             $finalRequest->setRequest($newHostingRequest);
         } else {
             $finalRequest->setRequest($hostingRequest->getRequest());

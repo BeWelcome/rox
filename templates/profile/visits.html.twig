@@ -2,10 +2,12 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('readmore') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
+    {{ parent() }}
     {{ encore_entry_link_tags('readmore') }}
 {% endblock stylesheets %}
 

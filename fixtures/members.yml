@@ -2,93 +2,72 @@ App\Entity\Member:
     bwadmin:
         Username: 'bwadmin'
         BirthDate: <dateTime('1970-01-01')>
-        email: <email()>
+        Email: <email()>
         Status: 'Active'
-        remindersWithoutLogin: 0
+        RemindersWithoutLogin: 0
         HideAttribute: 0
         Name: 'BeWelcome Admin'
         ShortName: 'BWAdmin'
         Gender: 'other'
         Accommodation: 'neverask'
-        AboutMe: 'The profile of the BW admin. Not used for hosting.'
-        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
     member_{1..5}:
         Username: 'member-<current()>'
         BirthDate: <dateTimeBetween('-80years', '-18years')>
-        email: 'member-<current()>\@bewelcome.org'
-        LastLogin: <dateTimeBetween('-12years', 'now')>
+        Email: 'member-<current()>\@bewelcome.org'
         Status: '<randomElement(["Active", "OutOfRemind"])>'
         HideAttribute: <numberBetween(0, 31)>
-        Name: <firstName()> <lastName()>
-        ShortName: '70%? <firstName()>'
+        Gender: '<randomElement(["female", "male", "other"])>'
         Accommodation: '<randomElement(["anytime", "neverask"])>'
         hostingInterest: '<numberBetween(1,10)>'
-        AboutMe: <sentence()>
-        MaxGuests: <numberBetween(1, 10)>
-        MaxLengthOfStay: <numberBetween(1, 5)>
-        Gender: '<randomElement(["female", "male", "other"])>'
-        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
-        offerHosts: <sentence()>
-        offerGuests: <sentence()>
-        iLiveWith: <sentence()>
-        pleaseBring: <sentence()>
-        informationForGuest: <sentence()>
-        additionalAccommodationInfo: <sentence()>
-        publicTransport: <sentence()>
-        pastTrips: <sentence()>
-        plannedTrips: <sentence()>
-        movies: <sentence()>
-        books: <sentence()>
-        music: <sentence()>
-        hobbies: <sentence()>
-        occupation: 'Occupation'
-        organizations: <sentence()>
-        otherRestrictions: <sentence()>
     member_{6..10}:
         Username: 'member-<current()>'
         BirthDate: <dateTimeBetween('-80years', '-18years')>
-        email: 'member-<current()>\@bewelcome.org'
-        LastLogin: <dateTimeBetween('-12years', 'now')>
+        Email: 'member-<current()>\@bewelcome.org'
         Status: 'Active'
         HideAttribute: <numberBetween(0, 31)>
-        Name: <firstName()> <lastName()>
-        ShortName: '70%? <firstName()>'
         Accommodation: '<randomElement(["neverask", "anytime"])>'
-        hostingInterest: '<numberBetween(1,10)>'
-        AboutMe: <sentence()>
-        MaxGuests: <numberBetween(1, 10)>
-        MaxLengthOfStay: <numberBetween(1, 5)>
-        Gender: '<randomElement(["female", "male", "other"])>'
-        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
+        HostingInterest: '<numberBetween(1,10)>'
+        Gender: '<randomElement(["female","male", "other"])>'
     member_banned:
         Username: 'member-banned'
         BirthDate: <dateTimeBetween('-80years', '-18years')>
-        email: 'member-banned\@bewelcome.org'
-        LastLogin: <dateTimeBetween('-12years', 'now')>
+        Email: 'member-banned\@bewelcome.org'
         Status: 'Banned'
-        remindersWithoutLogin: 0
+        RemindersWithoutLogin: 0
+        Name: 'Banned Member'
+        ShortName: 'Banned'
         HideAttribute: <numberBetween(0, 31)>
-        Name: <firstName()> <lastName()>
-        ShortName: '70%? <firstName()>'
         Accommodation: '<randomElement(["neverask", "anytime"])>'
         MaxGuests: 1
-        MaxLengthOfStay: 3
-        AboutMe: 'Member has been banned for spamming'
-        Occupation: 'Spammer'
-        Gender: '<randomElement(["female", "male", "other"])>'
-        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
+        Gender: 'male'
     member_suspended:
         Username: 'member-suspended'
         BirthDate: <dateTimeBetween('-80years', '-18years')>
-        email: 'member-suspended\@bewelcome.org'
-        LastLogin: <dateTimeBetween('-12years', 'now')>
+        Email: 'member-suspended\@bewelcome.org'
         HideAttribute: <numberBetween(0, 31)>
         Status: 'SuspendedBeta'
-        Name: <firstName()> <lastName()>
-        ShortName: '70%? <firstName()>'
+        Name: 'Suspended Member'
+        ShortName: 'Suspended'
         Accommodation: '<randomElement(["neverask", "anytime"])>'
         MaxGuests: 1
-        MaxLengthOfStay: 2
-        AboutMe: "Member can't be reached (email address invalid)"
-        Gender: '<randomElement(["female", "male", "other"])>'
-        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
+        Gender: 'female'
+    member_retired:
+        Username: 'member-retired'
+        BirthDate: <dateTimeBetween('-80years', '-18years')>
+        Email: 'member-retired\@bewelcome.org'
+        HideAttribute: <numberBetween(0, 31)>
+        Status: 'AskToLeave'
+        Name: 'retired_10'
+        Accommodation: 'neverask'
+        MaxGuests: 1
+        Gender: 'other'
+    member_after_data_retention:
+        Username: 'member-no-data'
+        BirthDate: <dateTimeBetween('-80years', '-18years')>
+        Email: 'member-no-data\@bewelcome.org'
+        HideAttribute: 31
+        Status: 'AskToLeave'
+        Name: 'retired_10'
+        Accommodation: 'neverask'
+        MaxGuests: 0
+        Gender: 'other'

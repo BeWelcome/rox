@@ -3,146 +3,179 @@
 {% extends 'profile/profile.html.twig' %}
 
 {% block stylesheets %}
+    {{ parent() }}
     {{ encore_entry_link_tags('readmore') }}
     {{ encore_entry_link_tags('lightbox') }}
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('readmore') }}
     {{ encore_entry_script_tags('lightbox') }}
+    {{ encore_entry_script_tags('profile/profile') }}
 {% endblock %}
 
-{% block content %}
+{% block page_content %}
     {% set own = app.user == member %}
-    {# dump(member) #}
-    {% set translatedFields = member.translations %}
+    {% set translated_fields = member.translations %}
     {% set fallbacks = member.fallbacks %}
-    {% set profileLanguages = translatedFields|keys %}
-    {% set activeLocale = locale in profileLanguages ? locale : 'en' %}
-
-    {% set languageLevels = member.languageLevels %}
+    {% set profile_languages = translated_fields|keys %}
+    {% set active_locale = locale in profile_languages ? locale : 'en' %}
+    {% set language_levels = member.languageLevels %}
     <div id="language-switch-container" class="u-p-8 u-my-4 form-inline u-z-[999] u-flex u-justify-end {% if own %}u-sticky{% endif %} u-bg-white u-border-bewelcome u-rounded-8" style="top:60px; border: 2px solid #f37000;">
         <label for="language-switch" class="u-mr-8">{{ 'profile.switch.language'|trans }}</label>
         <select id="language-switch" class="o-input o-input--select o-input--select-short" name="language-switch">
-            {% for profileLanguage in profileLanguages %}
-                <option value="{{ profileLanguage }}" {% if profileLanguage is same as(activeLocale) %}selected="selected"{% endif %}>{{ ("lang_" ~ profileLanguage)|lower|trans({}, "messages", profileLanguage) }}</option>
+            {% for profileLanguage in profile_languages %}
+                {# only add languages that actually have content except for own profile to show missing content #}
+                {% if translated_fields[profileLanguage]|length != 1 or own %}
+                    <option value="{{ profileLanguage }}" {% if profileLanguage is same as(active_locale) %}selected="selected"{% endif %}>{{ ("lang_" ~ profileLanguage)|lower|trans({}, "messages", profileLanguage) }}</option>
+                {% endif %}
             {% endfor %}
         </select>
     </div>
-    {% for profileLanguage in profileLanguages %}
-        {% set emptyProfileLangauge = translatedFields[profileLanguage]|length == 1 %}
-        <div id="profile-language-{{ profileLanguage }}"
-            class="u-mb-16 max-sm:u-flex max-sm:u-flex-col md:u-columns-2 {% if profileLanguage != activeLocale %}u-hidden{% endif %}" >
+    {% for profile_language in profile_languages %}
+        {% set edit_text = 'profile.edit'|trans({}, 'messages', profile_language) %}
+        {% set profileTranslation = translated_fields[profile_language] %}
+        <div id="profile-language-{{ profile_language }}"
+            class="u-mb-16 max-sm:u-flex max-sm:u-flex-col md:u-columns-2 {% if profile_language != active_locale %}u-hidden{% endif %}" >
             {#
                 Add cards in order
                 'About Me', 'Languages', 'My Interests', 'Travel Experiences', 'Groups', 'Gallery', 'Family and Friends'
                 'Accommodation', 'Comments'
             #}
-            {% set aboutMe = translatedFields[profileLanguage]['AboutMe'] ?? '' %}
-            {% set fallback = fallbacks[profileLanguage]['AboutMe'] ?? false %}
+            {% set aboutMe = profileTranslation['AboutMe'] ?? '' %}
+            {% set fallback = fallbacks[profile_language]['AboutMe'] ?? false %}
             <div class="md:u-break-inside-avoid max-sm:u-order-1 u-mb-16">
                 <div class="card">
-                    <h3 class="card-header">
-                        {{ 'profilesummary'|trans({}, "messages", profileLanguage)|raw }}
-                    </h3>
-                    <div class="card-block p-2 {% if own and fallback %}u-bg-gray-10 u-p-[4px]{% endif %}">
+                    <div class="card-header u-flex u-flex-row u-justify-between">
+                        {{ 'profilesummary'|trans({}, "messages", profile_language)|raw }}
+                        {%- if own -%}
+                            {% set edit_link = url('profile_edit', {'username': member.username, 'language': profile_language, section: 'about-me'}) %}
+                            <a href="{{ edit_link }}">
+                                <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+                                <span class="u-sr-only">{{ edit_text }}</span>
+                            </a>
+                        {%- endif -%}
+                    </div>
+                    <div class="card-block p-2">
                         <div class="card-text m-0">
                             {% if aboutMe|length != 0 %}
                                 {{ aboutMe|purify|nl2br }}
                             {% else %}
-                                {{ 'profile.no.about.me'|trans({}, "messages", profileLanguage) }}
+                                {{ 'profile.no.about.me'|trans({}, "messages", profile_language) }}
                             {% endif %}
                         </div>
                     </div>
                 </div>
             </div>
-            {% if languageLevels|length != 0 %}
+
             <div class="md:u-break-inside-avoid max-sm:u-order-3 u-mb-16">
                 <div class="card">
-                    <h3 class="card-header">{{ 'profilelanguagesspoken'|trans({}, "messages", profileLanguage)|raw }}</h3>
+                    <div class="card-header u-flex u-flex-row u-justify-between">{{ 'profilelanguagesspoken'|trans({}, "messages", profile_language)|raw }}
+                        {%- if own -%}
+                            {% set edit_link = url('profile_edit', {'username': member.username, 'language': profile_language, section: 'languages'}) %}
+                            <a href="{{ edit_link }}">
+                                <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+                                <span class="u-sr-only">{{ edit_text }}</span>
+                            </a>
+                        {%- endif -%}
+                    </div>
                     <div class="card-block p-2">
                         <div class="card-text m-0">
-                            <div class="p-2">
-                                {% for languageLevel in languageLevels %}
-                                    <p class="m-0">
-                                        {{ ('lang_' ~ languageLevel.language.ShortCode)|lower|trans({}, "messages", profileLanguage) }}
-                                        <sup
-                                            class="ml-1 gray">{{ ('languagelevel_' ~ languageLevel.level)|lower|trans({}, "messages", profileLanguage) }}</sup>
-                                    </p>
-                                {% endfor %}
-                            </div>
-                        </div>
+                            {% for languageLevel in language_levels %}
+                                <p class="m-0">
+                                    {{ ('lang_' ~ languageLevel.language.ShortCode)|lower|trans({}, "messages", profile_language) }}
+                                    <sup
+                                        class="ml-1 gray">{{ ('languagelevel_' ~ languageLevel.level)|lower|trans({}, "messages", profile_language) }}</sup>
+                                </p>
+                            {% else %}
+                                {{ 'profile.no.languages'|trans({}, 'messages', profile_language) }}
+                            {% endfor %}
+                         </div>
                     </div>
                 </div>
             </div>
-            {% endif %}
+
             {# Check if any interests are set #}
-            {% set hobbies = translatedFields[profileLanguage]['Hobbies'] ?? '' %}
-            {% set books = translatedFields[profileLanguage]['Books'] ?? '' %}
-            {% set music = translatedFields[profileLanguage]['Music'] ?? '' %}
-            {% set movies = translatedFields[profileLanguage]['Movies'] ?? '' %}
-            {% set organizations = translatedFields[profileLanguage]['Organizations'] ?? '' %}
+            {% set hobbies = profileTranslation['Hobbies'] ?? '' %}
+            {% set books = profileTranslation['Books'] ?? '' %}
+            {% set music = profileTranslation['Music'] ?? '' %}
+            {% set movies = profileTranslation['Movies'] ?? '' %}
+            {% set organizations = profileTranslation['Organizations'] ?? '' %}
             {% set interests = hobbies|length != 0 or books|length != 0 or music|length != 0 or movies|length != 0
                 or organizations|length != 0 %}
-            {% if interests %}
-                <div class="md:u-break-inside-avoid max-sm:u-order-3 u-mb-16">
-                    <div class="card">
-                        <h3 class="card-header">{{ 'profileinterests'|trans({}, "messages", profileLanguage)|raw }}</h3>
-                        <div class="card-block p-2">
-                            <div class="card-text m-0">
-                                {% if hobbies|length != 0 %}
-                                <div class="h5 u-mt-8 u-mb-0">{{ 'profilehobbies'|trans({}, "messages", profileLanguage) }}
-                                    {% if own %}({{ profileLanguage }}){% endif %}
-                                </div>
-                                <div>{{ hobbies|purify }}</div>
-                                {% endif %}
-                                {% if books|length != 0 %}
-                                <div class="h5 u-mt-8 u-mb-0">{{ 'profilebooks'|trans({}, "messages", profileLanguage) }}
-                                    {% if own %}({{ profileLanguage}}){% endif %}
-                                </div>
-                                <div>{{ books|purify }}</div>
-                                {% endif %}
-                                {% if music|length != 0 %}
-                                <div class="h5 u-mt-8 u-mb-0">{{ 'profilemusic'|trans({}, "messages", profileLanguage) }}
-                                    {% if own %}({{ profileLanguage }}){% endif %}
-                                </div>
-                                <div>{{ music|purify }}</div>
-                                {% endif %}
-                                {% if movies|length != 0 %}
-                                <div class="h5 u-mt-8 u-mb-0">{{ 'profilemovies'|trans({}, "messages", profileLanguage) }}
-                                    {% if own %}({{ profileLanguage }}){% endif %}
-                                </div>
-                                <div>{{ movies|purify }}</div>
-                                {% endif %}
-                                {% if organizations|length != 0 %}
-                                <div class="h5 u-mt-8 u-mb-0">{{ 'profileorganizations'|trans({}, "messages", profileLanguage) }}
-                                    {% if own %}({{ profileLanguage }}){% endif %}
-                                </div>
-                                <div>{{ organizations|purify }}</div>
-                                {% endif %}
+
+            <div class="md:u-break-inside-avoid max-sm:u-order-3 u-mb-16">
+                <div class="card">
+                    <div class="card-header u-flex u-flex-row u-justify-between">{{ 'profileinterests'|trans({}, "messages", profile_language)|raw }}
+                        {%- if own -%}
+                            {% set edit_link = url('profile_edit', {'username': member.username, 'language': profile_language, section: 'interests'}) %}
+                            <a href="{{ edit_link }}">
+                                <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+                                <span class="u-sr-only">{{ edit_text }}</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="card-block p-2">
+                        {% if interests or own %}
+                        <div class="card-text m-0">
+                            {% if hobbies|length != 0 or own %}
+                            <div class="h5 u-mt-8 u-mb-0">{{ 'profilehobbies'|trans({}, "messages", profile_language) }}
                             </div>
+                            <div>{{ hobbies|purify }}</div>
+                            {% endif %}
+                            {% if books|length != 0 or own %}
+                            <div class="h5 u-mt-8 u-mb-0">{{ 'profilebooks'|trans({}, "messages", profile_language) }}
+                            </div>
+                            <div>{{ books|purify }}</div>
+                            {% endif %}
+                            {% if music|length != 0 or own %}
+                            <div class="h5 u-mt-8 u-mb-0">{{ 'profilemusic'|trans({}, "messages", profile_language) }}
+                            </div>
+                            <div>{{ music|purify }}</div>
+                            {% endif %}
+                            {% if movies|length != 0 or own %}
+                            <div class="h5 u-mt-8 u-mb-0">{{ 'profilemovies'|trans({}, "messages", profile_language) }}
+                            </div>
+                            <div>{{ movies|purify }}</div>
+                            {% endif %}
+                            {% if organizations|length != 0 or own %}
+                            <div class="h5 u-mt-8 u-mb-0">{{ 'profileorganizations'|trans({}, "messages", profile_language) }}
+                            </div>
+                            <div>{{ organizations|purify }}</div>
+                            {% endif %}
                         </div>
+                        {% else %}
+                            No interests
+                        {% endif %}
                     </div>
                 </div>
-            {% endif %}
+            </div>
+
             {# Check if any travel experience is there #}
-            {% set pastTrips = translatedFields[profileLanguage]['PastTrips'] ?? '' %}
-            {% set plannedTrips = translatedFields[profileLanguage]['PlannedTrips'] ?? '' %}
-            {% if pastTrips|length != 0 or plannedTrips|length != 0 %}
+            {% set pastTrips = profileTranslation['PastTrips'] ?? '' %}
+            {% set plannedTrips = profileTranslation['PlannedTrips'] ?? '' %}
+            {% if pastTrips|length != 0 or plannedTrips|length != 0 or own %}
                 <div class="md:u-break-inside-avoid max-sm:u-order-3 u-mb-16">
                     <div class="card">
-                        <h3 class="card-header">{{ 'profiletravelexperience'|trans({}, "messages", profileLanguage) }}</h3>
+                        <div class="card-header u-flex u-flex-row u-justify-between">{{ 'profiletravelexperience'|trans({}, "messages", profile_language)|raw }}
+                            {%- if own -%}
+                                {% set edit_link = url('profile_edit', {'username': member.username, 'language': profile_language, section: 'travels'}) %}
+                                <a href="{{ edit_link }}">
+                                    <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+                                    <span class="u-sr-only">{{ edit_text }}</span>
+                                </a>
+                            {%- endif -%}
+                        </div>
                         <div class="card-block p-2">
                             <div class="card-text m-0">
-                                {% if pastTrips|length != 0 %}
-                                    <div class="h5 u-mt-8 u-mb-0">{{ 'profilepasttrips'|trans({}, "messages", profileLanguage) }}
-                                        {% if own %}({{ profileLanguage }}){% endif %}
+                                {% if pastTrips|length != 0 or own %}
+                                    <div class="h5 u-mt-8 u-mb-0">{{ 'profilepasttrips'|trans({}, "messages", profile_language)|raw }}
                                     </div>
                                     <div>{{ pastTrips|purify }}</div>
                                 {% endif %}
-                                {% if plannedTrips|length != 0 %}
-                                    <div class="h5 u-mt-8 u-mb-0">{{ 'profileplannedtrips'|trans({}, "messages", profileLanguage) }}
-                                        {% if own %}({{ profileLanguage }}){% endif %}
+                                {% if plannedTrips|length != 0 or own %}
+                                    <div class="h5 u-mt-8 u-mb-0">{{ 'profileplannedtrips'|trans({}, "messages", profile_language)|raw }}
                                     </div>
                                     <div>{{ plannedTrips|purify }}</div>
                                 {% endif %}
@@ -151,10 +184,18 @@
                     </div>
                 </div>
             {% endif %}
-            {% if member.groups|length > 0 %}
+            {% if member.groups|length > 0 or own %}
                 <div class="md:u-break-inside-avoid max-sm:u-order-3 u-mb-16">
                     <div class="card">
-                        <h3 class="card-header">{{ 'profilegroups'|trans({}, "messages", profileLanguage) }}</h3>
+                        <div class="card-header u-flex u-flex-row u-justify-between">{{ 'profilegroups'|trans({}, "messages", profile_language)|raw }}
+                            {%- if own -%}
+                                {% set edit_link = url('profile_edit', {'username': member.username, 'language': profile_language, section: 'groups'}) %}
+                                <a href="{{ edit_link }}">
+                                    <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+                                    <span class="u-sr-only">{{ edit_text }}</span>
+                                </a>
+                            {%- endif -%}
+                        </div>
                         <div class="p-2">
                             {% for group in member.groups|slice(0,5) %}
                                 <div class="mb-3 d-flex d-column">
@@ -172,20 +213,32 @@
                                             {% set groupMembership = group.membership(member) %}{{ (groupMembership.comments|first).sentence|purify|truncate(50) }}</p>
                                     </div>
                                 </div>
+                            {% else %}
+                                {{ 'profile.no.groups'|trans({}, 'messages', profile_language) }}
                             {% endfor %}
                             {% if member.groups|length > 5 %}
                                 <a class="btn btn-sm btn-block btn-outline-primary"
-                                   href="{{ url('group_user_all', {username:member.username}) }}">{{ 'groupsallmylink'|trans({}, "messages", profileLanguage) }}</a>
+                                   href="{{ url('group_user_all', {username:member.username}) }}">{{ 'groupsallmylink'|trans({}, "messages", profile_language) }}</a>
                             {% endif %}
                         </div>
                     </div>
                 </div>
             {% endif %}
-            {% if pictures|length > 0 %}
+            {% if pictures|length > 0 or own %}
             <div class="md:u-break-inside-avoid max-sm:u-order-3 u-mb-16">
                 <div class="card">
-                    <h3 class="card-header">{{ 'gallerytitlelatest'|trans({}, "messages", profileLanguage) }}</h3>
-                    <div class="card-block p-2 d-flex flex-wrap justify-content-around">
+                    <div class="card-header u-flex u-flex-row u-justify-between">{{ 'gallerytitlelatest'|trans({}, "messages", profile_language)|raw }}
+                        {%- if own -%}
+                            {% set edit_link = url('profile_edit', {'username': member.username, 'language': profile_language, section: 'pictures'}) %}
+                            <a href="{{ edit_link }}">
+                                <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+                                <span class="u-sr-only">{{ edit_text }}</span>
+                            </a>
+                        {%- endif -%}
+                    </div>
+                    <div class="card-block p-2">
+                        {% if pictures|length > 0 %}
+                        <div class="d-flex flex-wrap justify-content-around">
                         {% for picture in pictures %}
                             <a href="{{ url('gallery_image', {id: picture.id}) }}"
                                style="max-width: 40%; display: flex; align-items: center; margin-bottom: 1rem;"
@@ -199,7 +252,11 @@
                                     alt="{{ picture.title }}"
                                 />
                             </a>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                            {{ 'profile.no.pictures'|trans({}, 'messages', profile_language) }}
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -207,71 +264,89 @@
             {% if relations|length != 0 %}
                 <div class="md:u-break-inside-avoid max-sm:u-order-3 u-mb-16">
                     <div class="card">
-                        <h3 class="card-header">{{ 'myrelations'|trans({}, "messages", profileLanguage) }}</h3>
+                        <div class="card-header u-flex u-flex-row u-justify-between">{{ 'myrelations'|trans({}, "messages", profile_language)|raw }}
+                            {%- if own -%}
+                                {% set edit_link = url('profile_edit', {'username': member.username, 'language': profile_language, section: 'relations'}) %}
+                                <a href="{{ edit_link }}">
+                                    <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+                                    <span class="u-sr-only">{{ edit_text }}</span>
+                                </a>
+                            {%- endif -%}
+                        </div>
                         <div class="card-block u-p-4">
+                            <div class="u-grid u-grid-cols-[80px_auto] u-gap-x-8 u-gap-y-12">
                             {% for relation in relations|slice(0,10) %}
-                                <div class="u-w-full u-mb-16">
-                                    <div class="o-avatar o-avatar--s u-mr-4 u-float-left">
+                                <div class="u-flex u-flex-col u-items-center">
+                                    <div class="o-avatar o-avatar--s u-mr-4">
                                         {{ macros.roundedavatarstack(relation.owner.username, 48, false) }}
                                     </div>
-                                    <a href="{{ url('members_profile', {username: relation.owner.username}) }}">{{ relation.owner.username }}</a>
-                                    <p class="u-leading-16">
-                                        {{ relation.commentText }}
-                                    </p>
+                                    <a href="{{ url('members_profile', {username: relation.owner.username}) }}" class="u-text-[.875em] u-text-center" style="word-break: break-all;">{{ relation.owner.username }}</a>
                                 </div>
-                                <div class="clearfix u-mb-4"></div>
+                                <div class="u-leading-16">
+                                    {{ relation.commentText }}
+                                </div>
                             {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
             {% endif %}
-            {% if not member.Accommodation is null %}
+            {% if not member.accommodation is null or own %}
             <div class="md:u-break-inside-avoid max-sm:u-order-1 u-mb-16 u-break-before-column">
                 <div class="card">
-                    <h3 class="card-header">{{ 'profileaccommodation'|trans({}, "messages", profileLanguage) }}</h3>
+                    <div class="card-header u-flex u-flex-row u-justify-between">{{ 'profileaccommodation'|trans({}, "messages", profile_language)|raw }}
+                        {%- if own -%}
+                            {% set edit_link = url('profile_edit', {'username': member.username, 'language': profile_language, section: 'accommodation'}) %}
+                            <a href="{{ edit_link }}">
+                                <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+                                <span class="u-sr-only">{{ edit_text }}</span>
+                            </a>
+                        {%- endif -%}
+                    </div>
                     <div class="card-block p-2">
                         <div class="card-text m-0">
-                            <div id="quickinfo" class="float-right text-right">
-                                {% if member.isWheelChairAccessible %}
-                                    <img
-                                    src="{{ asset('images/icons/wheelchairblue.png') }}" alt="{{ 'wheelchair'|trans({}, "messages", profileLanguage) }}
-                             title="{{ 'canhostwheelchairyes'|trans({}, "messages", profileLanguage) }}">
-                                {% endif %}
-                                <img src="images/icons/{{ member.accommodation }}.png"
-                                     alt="{{ member.accommodation|trans({}, "messages", profileLanguage) }}
-                             title="{{ ('canoffer' ~ member.accommodation)|trans({}, "messages", profileLanguage) }}">
-                            </div>
-
-                            <div id="accommodation" class="clearfix mb-1">
+                            <div id="accommodation" class="mb-1">
+                                <div class="u-flex u-flex-row u-justify-between u-mb-8">
                                 {% if member.maxGuests != 0 %}
                                     <div
-                                        class="guests h5">{{ 'profilenumberofguests'|trans({}, "messages", profileLanguage) }} {{ member.maxGuests }}</div>
+                                        class="guests h5">{{ 'profilenumberofguests'|trans({}, "messages", profile_language)|raw }} {{ member.maxGuests }}</div>
                                 {% endif %}
-                                {% if translatedFields[profileLanguage]['MaxLengthOfStay'] is defined %}
+                                    <div id="quickinfo" class="align-self-end">
+                                        {% if member.isWheelChairAccessible %}
+                                            <img
+                                            src="{{ asset('images/icons/wheelchairblue.png') }}" alt="{{ 'wheelchair'|trans({}, "messages", profile_language) }}
+                                 title="{{ 'canhostwheelchairyes'|trans({}, "messages", profile_language) }}">
+                                        {% endif %}
+                                        <img src="images/icons/{{ member.accommodation }}.png"
+                                             alt="{{ member.accommodation|trans({}, "messages", profile_language) }}
+                                 title="{{ ('canoffer' ~ member.accommodation)|trans({}, "messages", profile_language) }}">
+                                    </div>
+                                </div>
+                                {% if profileTranslation['MaxLengthOfStay'] is defined %}
                                     <div
-                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profilemaxlenghtofstay'|trans({}, "messages", profileLanguage) }}</div>
+                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profilemaxlenghtofstay'|trans({}, "messages", profile_language)|raw }}</div>
                                     <div>
-                                        {{ translatedFields[profileLanguage]['MaxLengthOfStay']|purify }}
+                                        {{ profileTranslation['MaxLengthOfStay']|purify }}
                                     </div>
                                 {% endif %}
-                                {% if translatedFields[profileLanguage]['ILiveWith'] is defined %}
+                                {% if profileTranslation['ILiveWith'] is defined %}
                                     <div
-                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profileilivewith'|trans({}, "messages", profileLanguage) }}</div>
-                                    <div>{{ translatedFields[profileLanguage]['ILiveWith']|purify }}</div>
+                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profileilivewith'|trans({}, "messages", profile_language)|raw }}</div>
+                                    <div>{{ profileTranslation['ILiveWith']|purify }}</div>
                                 {% endif %}
-                                {% if translatedFields[profileLanguage]['PleaseBring'] is defined %}
+                                {% if profileTranslation['PleaseBring'] is defined %}
                                     <div
-                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profilepleasebring'|trans({}, "messages", profileLanguage) }}</div>
-                                    <div>{{ translatedFields[profileLanguage]['PleaseBring']|purify }}</div>
+                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profilepleasebring'|trans({}, "messages", profile_language)|raw }}</div>
+                                    <div>{{ profileTranslation['PleaseBring']|purify }}</div>
                                 {% endif %}
                                 {% set standardOffers = member.StandardOffers %}
-                                {% set offerGuests = translatedFields[profileLanguage]['OfferGuests'] ?? '' %}
+                                {% set offerGuests = profileTranslation['OfferGuests'] ?? '' %}
                                 {% if standardOffers|length > 0 or offerGuests|length > 0 %}
                                     <div
-                                        class="h5 u-mt-8 u-mb-0">{{ 'profileofferguests'|trans({}, "messages", profileLanguage) }}</div>
+                                        class="h5 u-mt-8 u-mb-0">{{ 'profileofferguests'|trans({}, "messages", profile_language)|raw }}</div>
                                     <div>
                                         {% for offer in standardOffers %}
-                                            {{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, "messages", profileLanguage) }}
+                                            {{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, "messages", profile_language) }}
                                             <br>
                                         {% endfor %}
                                         {% if offerGuests|length > 0 %}
@@ -279,38 +354,38 @@
                                         {% endif %}
                                     </div>
                                 {% endif %}
-                                {% if translatedFields[profileLanguage]['OfferHosts'] is defined %}
+                                {% if profileTranslation['OfferHosts'] is defined %}
                                     <div
-                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profileofferhosts'|trans({}, "messages", profileLanguage) }}</div>
-                                    <div>{{ translatedFields[profileLanguage]['OfferHosts']|purify }}</div>
+                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profileofferhosts'|trans({}, "messages", profile_language)|raw }}</div>
+                                    <div>{{ profileTranslation['OfferHosts']|purify }}</div>
                                 {% endif %}
-                                {% if translatedFields[profileLanguage]['AdditionalAccommodationInfo'] is defined
-                                    or translatedFields[profileLanguage]['InformationForGuest'] is defined %}
+                                {% if profileTranslation['AdditionalAccommodationInfo'] is defined
+                                    or profileTranslation['InformationForGuest'] is defined %}
                                     <div
-                                        class="h5 u-mt-8 u-mb-0">{{ 'otherinfosforguest'|trans({}, "messages", profileLanguage) }}</div>
-                                    {% if translatedFields[profileLanguage]['AdditionalAccomodationInfo'] is defined %}
-                                        {{ translatedFields[profileLanguage]['AdditionalAccomodationInfo']|purify }}
+                                        class="h5 u-mt-8 u-mb-0">{{ 'otherinfosforguest'|trans({}, "messages", profile_language)|raw }}</div>
+                                    {% if profileTranslation['additionalAccomodationInfo'] is defined %}
+                                        {{ profileTranslation['AdditionalAccomodationInfo']|purify }}
                                     {% endif %}
-                                    {% if translatedFields[profileLanguage]['InformationForGuest'] is defined %}
-                                        {{ translatedFields[profileLanguage]['InformationForGuest']|purify }}
+                                    {% if profileTranslation['informationForGuest'] is defined %}
+                                        {{ profileTranslation['InformationForGuest']|purify }}
                                     {% endif %}
                                 {% endif %}
-                                {% if translatedFields[profileLanguage]['PublicTransport'] is defined %}
+                                {% if profileTranslation['PublicTransport'] is defined %}
                                     <div
-                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profilepublictransport'|trans({}, "messages", profileLanguage) }}</div>
-                                    <div>{{ translatedFields[profileLanguage]['PublicTransport']|purify }}</div>
+                                        class="stay h5 u-mt-8 u-mb-0">{{ 'profilepublictransport'|trans({}, "messages", profile_language)|raw }}</div>
+                                    <div>{{ profileTranslation['PublicTransport']|purify }}</div>
                                 {% endif %}
                                 {% set restrictions = member.Restrictions %}
-                                {% if restrictions|length > 0 or translatedFields[profileLanguage]['OtherRestrictions'] is defined %}
+                                {% if restrictions|length > 0 or profileTranslation['OtherRestrictions'] is defined %}
                                     <div
-                                        class="h5 u-mt-8 u-mb-0">{{ 'profilehouserules'|trans({}, "messages", profileLanguage) }}</div>
+                                        class="h5 u-mt-8 u-mb-0">{{ 'profilehouserules'|trans({}, "messages", profile_language)|raw }}</div>
                                     <div>
                                         {% for restriction in restrictions %}
-                                            {{ ('Restriction_' ~ restriction)|lower|trans({}, "messages", profileLanguage) }}
+                                            {{ ('restriction_' ~ restriction)|lower|trans({}, "messages", profile_language) }}
                                             <br>
                                         {% endfor %}
-                                        {% if translatedFields[profileLanguage]['OtherRestrictions'] is defined %}
-                                            {{ translatedFields[profileLanguage]['OtherRestrictions']|purify }}
+                                        {% if profileTranslation['OtherRestrictions'] is defined %}
+                                            {{ profileTranslation['OtherRestrictions']|purify }}
                                         {% endif %}
                                     </div>
                                 {% endif %}
@@ -319,7 +394,7 @@
                                     <div>
                                         <a href="{{ url('hosting_request', {username: member.username}) }}"
                                            class="btn btn-primary float-right"><i
-                                                class="fa fa-bed mr-1"></i>{{ 'profile.request.hosting'|trans({}, "messages", profileLanguage) }}
+                                                class="fa fa-bed mr-1"></i>{{ 'profile.request.hosting'|trans({}, "messages", profile_language) }}
                                         </a>
                                     </div>
                                 {% endif %}
@@ -329,10 +404,18 @@
                 </div>
             </div>
             {% endif %}
-            {% if comments|length != 0 %}
+            {% if comments|length != 0 or own %}
             <div class="md:u-break-inside-avoid max-sm:u-order-1 u-mb-16">
                 <div class="card">
-                    <h3 class="card-header">{{ 'latestcomments'|trans({}, "messages", profileLanguage) }}</h3>
+                    <div class="card-header u-flex u-flex-row u-justify-between">{{ 'latestcomments'|trans({}, "messages", profile_language) }}
+                        {%- if own -%}
+                            {% set edit_link = url('profile_edit', {'username': member.username, 'language': profile_language, section: 'comments'}) %}
+                            <a href="{{ edit_link }}">
+                                <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+                                <span class="u-sr-only">{{ edit_text }}</span>
+                            </a>
+                        {%- endif -%}
+                    </div>
                     <div class="card-block u-p-4">
                         {% set commentsShown = 0 %}
                         {% for comment in comments|slice(0,10) %}
@@ -340,12 +423,14 @@
                             {% set commentFromVisible = (comment['from'] is defined) ? (comment['from'].showCondition(app.user) > 0) : false %}
                             {% if commentToVisible or commentFromVisible %}
                                 {% set commentsShown = commentsShown + 1 %}
-                                {% include 'profile/comment.embedded.html.twig' with { comment: comment, language: profileLanguage } %}
+                                {% include 'profile/comment.embedded.html.twig' with { comment: comment, language: profile_language } %}
                             {% endif %}
+                        {% else %}
+                            {{ 'profile.no.comments'|trans({}, 'messages', profile_language) }}
                         {% endfor %}
                         {% if comments|length != visibleComments %}
                             <a href="{{ url('profile_comments', {username: member.username}) }}" class="btn btn-block btn-sm btn-outline-primary">
-                                {{ 'showallcomments'|trans({}, "messages", profileLanguage) }} <span class="badge badge-primary u-rounded-8 u-px-8 u-min-w-20">{{ visibleComments }}</span>
+                                {{ 'showallcomments'|trans({}, "messages", profile_language) }} <span class="badge badge-primary u-rounded-8 u-px-8 u-min-w-20">{{ visibleComments }}</span>
                             </a>
                         {% endif %}
                     </div>
@@ -354,4 +439,4 @@
             {% endif %}
         </div>
     {% endfor %}
-{% endblock %}
+{% endblock page_content %}

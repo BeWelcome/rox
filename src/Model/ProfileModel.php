@@ -8,20 +8,28 @@ use App\Form\ProfileStatusFormType;
 use App\Service\Mailer;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
 class ProfileModel
 {
-    public function __construct(private readonly FormFactoryInterface $formFactory, private readonly EntityManagerInterface $entityManager, private readonly Mailer $mailer)
-    {
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Security $security,
+        private readonly Mailer $mailer,
+    ) {
     }
 
     public function getStatusForm(Member $loggedInMember, Member $member): ?FormInterface
     {
         $statusForm = null;
+        $admin = $this->security->isGranted(Member::ROLE_ADMIN_ADMIN, $member)
+            || $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM, $member)
+            || $this->security->isGranted(Member::ROLE_ADMIN_PROFILE, $member);
 
-        if (\in_array(Member::ROLE_ADMIN_SAFETYTEAM, $loggedInMember->getRoles(), true)) {
+        if ($admin) {
             $statusFormBuilder = $this->formFactory->createBuilder(ProfileStatusFormType::class, [
                 'status' => $member->getStatus(),
                 'member' => $member->getId(),
@@ -44,7 +52,7 @@ class ProfileModel
         $dataRetention = $data['data_retention'] ?? false;
         if ($dataRetention) {
             $retentionDate = new Carbon()->subYears(1);
-            $member->setLastLogin($retentionDate);
+            $member->setLastActive($retentionDate);
         }
 
         $this->entityManager->persist($member);

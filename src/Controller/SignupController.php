@@ -181,13 +181,13 @@ class SignupController extends AbstractController
         if ($member !== $loggedInMember) {
             $this->addTranslatedFlash('error', 'flash.signup.wrong.user');
 
-            return $this->redirectToRoute('members_profile_new', ['username' => $member->getUsername()]);
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
         if (null === $member->getRegistrationKey()) {
             $this->addTranslatedFlash('error', 'flash.profile.mail.already.confirmed');
 
-            return $this->redirectToRoute('members_profile_new', ['username' => $member->getUsername()]);
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
         $confirmEmailAddressForm = $this->createForm(ConfirmEmailAddressFormType::class, ['registration_key' => $registrationKey]);

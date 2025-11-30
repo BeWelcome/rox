@@ -47,10 +47,10 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
             $member = $this->tokenStorage->getToken()->getUser();
 
             // Update the last login if last login and current time differ for more than 5 minutes
-            $lastLogin = $member->getLastLogin();
+            $lastLogin = $member->getLastActive();
             $diff = new Carbon()->diffInMinutes($lastLogin);
             if (null === $lastLogin || $diff > 5) {
-                $member->setLastLogin(new DateTime());
+                $member->setLastActive(new DateTime());
 
                 $status = $member->getStatus();
                 if (MemberStatusType::OUT_OF_REMIND === $status) {

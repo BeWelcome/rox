@@ -6,10 +6,12 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('trips') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
+    {{ parent() }}
     {{ encore_entry_link_tags('tailwind') }}
     {{ encore_entry_link_tags('trips') }}
 {% endblock %}

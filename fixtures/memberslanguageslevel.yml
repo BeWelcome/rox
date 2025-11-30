@@ -3,11 +3,11 @@ App\Entity\MembersLanguagesLevel:
         Member:  '@bwadmin'
         Language: '@language_en'
         Level: 'MotherLanguage'
-    member_2_french_mother_tongue:
-        Member:  '@member_2'
+    member_french_{1..10}:
+        Member:  '@member_<current()>'
         Language: '@language_fr'
-        Level: 'MotherLanguage'
-    member_2_english_beginner:
-        Member:  '@member_2'
+        Level: '<randomElement(["MotherLanguage", "Expert", "Intermediate", "Beginner"])>'
+    member_english_{1..10}:
+        Member:  '@member_<current()>'
         Language: '@language_en'
-        Level: 'Intermediate'
+        Level: '<randomElement(["Expert", "MotherLanguage", "Intermediate", "Beginner"])>'

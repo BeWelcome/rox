@@ -297,9 +297,9 @@ class LandingController extends AbstractController
         $searchHomeRequest = new SearchFormRequest();
         $address = $member->getActiveAddress();
         if (false !== $address) {
-            $city = $address->getCity();
-            $searchHomeRequest->location = $city->getName();
-            $searchHomeRequest->location_geoname_id = $city->getGeonameId();
+            $location = $address->getLocation();
+            $searchHomeRequest->location = $location->getName();
+            $searchHomeRequest->location_geoname_id = $location->getGeonameId();
             $searchHomeRequest->location_latitude = $address->getLatitude();
             $searchHomeRequest->location_longitude = $address->getLongitude();
             $searchHomeRequest->accommodation_anytime = true;

@@ -301,22 +301,24 @@ class VolunteerToolController extends AbstractController
 
         $connection = $entityManager->getConnection();
         $results = $connection->executeQuery('
-        SELECT
-m.username AS Username,
-g.name AS City,
-g.country AS Country,
-count(msg.id) AS Count
-FROM
-messages msg,
-members m
-LEFT JOIN geonames g ON m.IdCity = g.geonameID
-WHERE
-m.id = msg.IdSender
-AND (DATE_ADD(msg.created,
-    INTERVAL 7 DAY) > NOW())
-GROUP BY m.Username
-HAVING COUNT(msg.id) > 9
-ORDER BY count(msg.id) DESC')->fetchAllAssociative();
+            SELECT
+                m.username AS Username,
+                g.name AS City,
+                g.country AS Country,
+                count(msg.id) AS Count
+            FROM
+                messages msg,
+                member m,
+                address a
+            LEFT JOIN geo__names g ON a.location = g.geonameID
+            WHERE
+              a.member_id = m.id 
+              AND m.id = msg.IdSender
+              AND (DATE_ADD(msg.created, INTERVAL 7 DAY) > NOW())
+            GROUP BY m.Username
+            HAVING COUNT(msg.id) > 9
+            ORDER BY count(msg.id) DESC
+        ')->fetchAllAssociative();
 
         return $this->render(
             'admin/tools/messages.sent.html.twig',
@@ -409,7 +411,7 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
                 $type = $this->getConversationType($message);
                 if (!\array_key_exists($username, $results)) {
                     $results[$username] = [
-                        'type' => $type,
+                        'type' => 0,
                         'username' => $username,
                         'direction' => 0,
                         'last_sent' => null,

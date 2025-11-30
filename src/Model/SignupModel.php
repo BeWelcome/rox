@@ -107,8 +107,8 @@ class SignupModel
 
         $address = new Address();
         $address
-            ->setCity($location)
             ->setActive(true)
+            ->setLocation($location)
             ->setLatitude($data['location']['latitude'])
             ->setLongitude($data['location']['longitude']);
 
@@ -136,7 +136,7 @@ class SignupModel
             $language = $languageRepository->findOneBy(['shortCode' => $motherTongue]);
             if (null !== $language) {
                 // for each mother tongue create a profile version if the language is a written language
-                if ($language->getIsWrittenlanguage()) {
+                if ($language->getIsWrittenLanguage()) {
                     if (!isset($translations[$motherTongue]['ProfileLanguage'])) {
                         $member->addTranslation(new MemberTranslation($motherTongue, 'ProfileLanguage', $member));
                     }
@@ -153,21 +153,6 @@ class SignupModel
         }
 
         $this->entityManager->persist($member);
-
-        $address = new Address();
-        $address
-            ->setMember($member)
-            ->setLocation($location)
-            // Set next ones to 0 as the are not set to have a default NULL value in the current database
-            ->setHouseNumber(0)
-            ->setExplanation(0)
-            ->setGettingThere(0)
-            ->setStreetName(0)
-            ->setRank(0)
-            ->setZip(0)
-        ;
-
-        $this->entityManager->persist($address);
 
         $newsletterValue = $data['newsletters'] ? 'Yes' : 'No';
         $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([

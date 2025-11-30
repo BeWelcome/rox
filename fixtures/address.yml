@@ -1,53 +1,42 @@
 App\Entity\Address:
-  address_1:
-    member: "@bwadmin"
-    housenumber: ""
-    streetname: ""
-    active: true
-    zip: ""
-    explanation: ""
-    gettingthere: ""
-    city: '@NewBerlin'
-    latitude: '@NewBerlin->latitude'
-    longitude: '@NewBerlin->longitude'
-  address_{2..5}:
-    member: "@member_<current()>"
-    housenumber: ""
-    streetname: ""
-    active: true
-    zip: ""
-    explanation: ""
-    gettingthere: ""
-    city: '@NewBerlin'
-    latitude: '@NewBerlin->latitude'
-    longitude: '@NewBerlin->longitude'
-  address_{6..10}:
-      member: "@member_<current()>"
-      housenumber: ""
-      streetname: ""
-      zip: ""
-      explanation: ""
-      gettingthere: ""
-      city: '@NewJayapura'
-      latitude: '@NewJayapura->latitude'
-      longitude: '@NewJayapura->longitude'
-  address_suspended:
-      member: "@member_suspended"
-      housenumber: ""
-      streetname: ""
-      zip: ""
-      explanation: ""
-      gettingthere: ""
-      city: '@NewJayapura'
-      latitude: '@NewJayapura->latitude'
-      longitude: '@NewJayapura->longitude'
-  address_banned:
-      member: "@member_banned"
-      housenumber: ""
-      streetname: ""
-      zip: ""
-      explanation: ""
-      gettingthere: ""
-      city: '@NewJayapura'
-      latitude: '@NewJayapura->latitude'
-      longitude: '@NewJayapura->longitude'
+    address_admin:
+        Member: "@bwadmin"
+        location: '@NewBerlin'
+        latitude: '@NewBerlin->latitude'
+        longitude: '@NewBerlin->longitude'
+    address_{1..5}:
+        member: "@member_<current()>"
+        location: '@NewBerlin'
+        latitude: '@NewBerlin->latitude'
+        longitude: '@NewBerlin->longitude'
+    address_multiple:
+        member: "@member_1"
+        active: false
+        location: '@NewJayapura'
+        latitude: '@NewJayapura->latitude'
+        longitude: '@NewJayapura->longitude'
+    address_{6..10}:
+        member: "@member_<current()>"
+        location: '@NewJayapura'
+        latitude: '@NewJayapura->latitude'
+        longitude: '@NewJayapura->longitude'
+    address_suspended:
+        member: "@member_suspended"
+        location: '@NewJayapura'
+        latitude: '@NewJayapura->latitude'
+        longitude: '@NewJayapura->longitude'
+    address_banned:
+        member: "@member_banned"
+        location: '@NewJayapura'
+        latitude: '@NewJayapura->latitude'
+        longitude: '@NewJayapura->longitude'
+    address_retired:
+        member: "@member_retired"
+        location: '@NewJayapura'
+        latitude: '@NewJayapura->latitude'
+        longitude: '@NewJayapura->longitude'
+    address_after_data_retention:
+        member: "@member_retired"
+        location: '@NewJayapura'
+        latitude: '@NewJayapura->latitude'
+        longitude: '@NewJayapura->longitude'

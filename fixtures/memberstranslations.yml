@@ -1,65 +1,75 @@
-App\Entity\MemberTranslation:
-    about_me_{1..10}:
-        __construct:
-            - '<randomElement(["de", "fr", "el", "es"])>'
-            - 'aboutMe'
-            - '<sentence()>'
-        object: '@member_<current()>'
-
-
-#    language_tag_en_member_{1..10}:
-#        Language: '@language_en'
-#        Owner: '@member_<current()>'
-#        Translation: 1
-#        Translator: '@member_<current()>'
-#        created: <dateTimeBetween("-200 days", "now")>
-#        Sentence: 'en'
-#        TableColumn: 'members.language'
-#    language_tag_en_bwadmin:
-#        Language: '@language_en'
-#        Owner: '@bwadmin'
-#        Translation: 1
-#        Translator: '@bwadmin'
-#        created: <dateTimeBetween("-200 days", "now")>
-#        Sentence: 'en'
-#        TableColumn: 'members.language'
-#    language_tag_en_member_banned:
-#        Language: '@language_en'
-#        Owner: '@member_banned'
-#        Translation: 1
-#        Translator: '@member_banned'
-#        created: <dateTimeBetween("-200 days", "now")>
-#        Sentence: 'en'
-#        TableColumn: 'members.language'
-#    language_tag_en_member_suspended:
-#        Language: '@language_en'
-#        Owner: '@member_suspended'
-#        Translation: 1
-#        Translator: '@member_suspended'
-#        created: <dateTimeBetween("-200 days", "now")>
-#        Sentence: 'en'
-#        TableColumn: 'members.language'
-#    language_tag_fr_member_2:
-#        Language: '@language_fr'
-#        Owner: '@member_2'
-#        Translation: 1
-#        Translator: '@member_2'
-#        created: <dateTimeBetween("-200 days", "now")>
-#        Sentence: 'fr'
-#        TableColumn: 'members.language'
-#    summary_en:
-#        Language: '@language_en'
-#        Owner: '@member_2'
-#        Translation: 2
-#        Translator: '@member_2'
-#        created: <dateTimeBetween("-200 days", "now")>
-#        Sentence: '<sentence()>'
-#        TableColumn: 'members.ProfileSummary'
-#    summary_fr:
-#        Language: '@language_fr'
-#        Owner: '@member_2'
-#        Translation: 2
-#        Translator: '@member_2'
-#        created: <dateTimeBetween("-200 days", "now")>
-#        Sentence: '<sentence()>'
-#        TableColumn: 'members.ProfileSummary'
+#App\Entity\MemberTranslation:
+#    about_me_{1..2}:
+#        __construct:
+#            - 'de'
+#            - 'aboutMe'
+#            - '<de:text()>'
+#        object: '@member_<current()>'
+#    about_me_{6..8}:
+#        __construct:
+#            - 'el'
+#            - 'aboutMe'
+#            - '<el:sentence()>'
+#        object: '@member_<current()>'
+#    publicTransport_{1..5}:
+#        __construct:
+#            - 'es'
+#            - 'publicTransport'
+#            - '<es:text()>'
+#        object: '@member_<current()>'
+##    language_tag_en_member_{1..10}:
+##        Language: '@language_en'
+##        Owner: '@member_<current()>'
+##        Translation: 1
+##        Translator: '@member_<current()>'
+##        created: <dateTimeBetween("-200 days", "now")>
+##        Sentence: 'en'
+##        TableColumn: 'members.language'
+##    language_tag_en_bwadmin:
+##        Language: '@language_en'
+##        Owner: '@bwadmin'
+##        Translation: 1
+##        Translator: '@bwadmin'
+##        created: <dateTimeBetween("-200 days", "now")>
+##        Sentence: 'en'
+##        TableColumn: 'members.language'
+##    language_tag_en_member_banned:
+##        Language: '@language_en'
+##        Owner: '@member_banned'
+##        Translation: 1
+##        Translator: '@member_banned'
+##        created: <dateTimeBetween("-200 days", "now")>
+##        Sentence: 'en'
+##        TableColumn: 'members.language'
+##    language_tag_en_member_suspended:
+##        Language: '@language_en'
+##        Owner: '@member_suspended'
+##        Translation: 1
+##        Translator: '@member_suspended'
+##        created: <dateTimeBetween("-200 days", "now")>
+##        Sentence: 'en'
+##        TableColumn: 'members.language'
+##    language_tag_fr_member_2:
+##        Language: '@language_fr'
+##        Owner: '@member_2'
+##        Translation: 1
+##        Translator: '@member_2'
+##        created: <dateTimeBetween("-200 days", "now")>
+##        Sentence: 'fr'
+##        TableColumn: 'members.language'
+##    summary_en:
+##        Language: '@language_en'
+##        Owner: '@member_2'
+##        Translation: 2
+##        Translator: '@member_2'
+##        created: <dateTimeBetween("-200 days", "now")>
+##        Sentence: '<sentence()>'
+##        TableColumn: 'members.ProfileSummary'
+##    summary_fr:
+##        Language: '@language_fr'
+##        Owner: '@member_2'
+##        Translation: 2
+##        Translator: '@member_2'
+##        created: <dateTimeBetween("-200 days", "now")>
+##        Sentence: '<sentence()>'
+##        TableColumn: 'members.ProfileSummary'

@@ -5,6 +5,11 @@
 {% else %}
     {% set memberfields = member.translations|first %}
 {% endif %}
+{% set own = app.user == member %}
+{% set admin = is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_SAFETYTEAM'))
+    or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_PROFILE'))
+    or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_ADMIN'))
+%}
 <div class="row">
     <div class="col-12 text-center text-md-left">
         <h2 class="m-0 d-inline"><strong>
@@ -46,16 +51,16 @@
             {% if member.Name != ''%}<h3>{{ member.Name }}</h3>{% endif %}
             {% set address = member.activeAddress %}
             <h5>{% if not address is same as(false) %}
-                {% set city = address.city %}
-                <a href="{{ url('places_city', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id, cityname: city.name, citycode: city.geonameId}) }}">{{ city.name }}</a>
-                    {%- if city.admin1 != null -%}
-                        , <a href="{{ url('places_region', {countryname: city.country.name, countrycode: city.countryId, regionname: city.admin1.name, regioncode: city.admin1id}) }}">{{ city.admin1.name }}</a>
+                {% set location = address.location %}
+                <a href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>
+                    {%- if location.admin1 != null -%}
+                        , <a href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id}) }}">{{ location.admin1.name }}</a>
                     {%- endif -%}
-                    , <a href="{{ url('places_country', {countryname: city.country.name, countrycode: city.countryId}) }}">{{ city.country.name }}</a>
+                    , <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
             {% else %}
                 {{ 'profile.no.city.yet'|trans }}
             {% endif %}</h5>
-            {% if status_form is defined and not status_form is null %}
+            {% if not own and status_form is defined and not status_form is null %}
                 {{ form_start(status_form, {'attr': {'class': 'u-grid u-grid-cols-2 u-gap-8'}}) }}
                 {{ form_widget(status_form.status) }}
                 <button type="submit" class="o-button o-button--s u-self-center" value="{{ 'submit'|trans }}">{{ 'submit'|trans }}</button>
@@ -85,15 +90,15 @@
             {% else %}
                 {{ member.created.diffForHumans }}
             {% endif %}
-            {% if member.hasRight('SafetyTeam') %} ({{ member.created|format_datetime() }}){% endif %}
+            {% if admin %} ({{ member.created|format_datetime() }}){% endif %}
             <br><strong>{{ 'profile.last.activity'|trans }} </strong>
-            {% set lastLogin = (member.lastLogin == null) ? member.created : member.lastLogin %}
-            {% if lastLogin.diffInDays <= 7 %}
+            {% set lastActivity = (member.lastActive == null) ? member.created : member.lastActive %}
+            {% if lastActivity.diffInDays <= 7 %}
                 {{ 'lastloginprivacy'| trans }}
             {% else %}
-                {{ lastLogin.diffForHumans }}
+                {{ lastActivity.diffForHumans }}
             {% endif %}
-            {% if member.hasRight('SafetyTeam') %} ({{ lastLogin|format_datetime() }}){% endif %}
+            {% if admin %} ({{ lastActivity|format_datetime() }}){% endif %}
         </p>
     </div>
 </div>

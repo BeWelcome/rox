@@ -1,6 +1,6 @@
 {% import 'macros.twig' as macros %}
 
-{% set member = app.user %}
+{% set loggedInMember = app.user %}
 <nav id="main_menu" class="navbar sticky-top navbar-dark navbar-expand bg-primary justify-content-between">
     <div class="container-lg">
         <ul id="collapsing_menu" class="navbar navbar-nav">
@@ -9,7 +9,7 @@
                     {% include 'logo.html.twig' %}
                 </a>
             </li>
-            {% if member %}
+            {% if loggedInMember %}
             <li class="nav-item dropdown">
                 <a href="#search_menu" class="nav-link dropdown-toggle"
                    data-target="search_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'findmembers' | trans }}">
@@ -51,7 +51,7 @@
                     <li><a href="{{ url('safety_contact_no_modal') }}" class="dropdown-item"><i class="fa fa-fw fa-flag mr-1"></i>{{ 'menu.safety.report'| trans }}</a></li>
                 </ul>
             </li>
-            {% if member and teams|length != 0 %}
+            {% if loggedInMember and teams|length != 0 %}
                 <li class="nav-item dropdown">
                     <a href="#volunteer_menu" class="nav-link dropdown-toggle"
                        data-target="volunteer_menu" data-toggle="dropdown" aria-haspopup="true"
@@ -90,17 +90,17 @@
                     <li><a href="{{ url('donations') }}" class="dropdown-item">{{ 'donatelink'  | trans }}</a></li>
                 </ul>
             </li>
-            {% if member and teams|length == 0 %}
+            {% if loggedInMember and teams|length == 0 %}
                 <li class="nav-item">
                     <a href="{{ url('getactive') }}" class="nav-link">{{ 'volunteer' | trans }}</a>
                 </li>
             {% endif %}
-            {% if not member %}
+            {% if not loggedInMember %}
                 {% include 'login_form_navbar.html.twig' %}
             {% endif %}
         </ul>
         <ul id="static_menu" class="navbar navbar-nav">
-            {% if member %}
+            {% if loggedInMember %}
             {# conversations #}
             <li class="nav-item">
                 <div id="conversationCount" class="nav-link pl-0 pl-md-1" data-count="-1">
@@ -114,28 +114,28 @@
             <li class="nav-item dropdown">
                 <a href="#member_menu" class="nav-link dropdown-toggle pl-0 pl-md-1"
                    data-target="member_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}">
-                    <span class="d-none d-md-inline">{{ member.Username }}&nbsp;</span>
-                    <img class="profileimg px-0 js-profile-picture" src="{{ url('avatar', { username: member.username, size: 36 })}}" width="36" height="36" alt="{{ 'profile.picture' }}">
+                    <span class="d-none d-md-inline">{{ loggedInMember.Username }}&nbsp;</span>
+                    <img class="profileimg px-0 js-profile-picture" src="{{ url('avatar', { username: loggedInMember.username, size: 36 })}}" width="36" height="36" alt="{{ 'profile.picture' }}">
                 </a>
                 <ul id="member_menu" class="dropdown-menu dropdown-menu-right" role="menu">
                     <li class="text-right"><a
                             href="{{ path('conversations', {'conversationsType': 'conversations'}) }}"
                             class="dropdown-item">{{ 'conversations' | trans }}</a></li>
                     <li class="text-right"><a
-                            href="{{ path( 'members_profile_new' , {username: member.username} ) }}"
+                            href="{{ path( 'members_profile' , {username: loggedInMember.username} ) }}"
                             class="dropdown-item">{{ 'profile' | trans }}</a></li>
-                    <li class="text-right"><a href="{{ path('profile_edit', {username: member.username}) }}"
+                    <li class="text-right"><a href="{{ path('profile_edit', {username: loggedInMember.username}) }}"
                                               class="dropdown-item">{{ 'editmyprofile' | trans }}</a></li>
-                    <li class="text-right"><a href="{{ path('preferences', {'username': member.username}) }}"
+                    <li class="text-right"><a href="{{ path('preferences', {'username': loggedInMember.username}) }}"
                                               class="dropdown-item">{{ 'profile.preferences.menu' | trans }}</a></li>
-                    <li class="text-right"><a href="{{ path('notes', {'username': member.username}) }}"
+                    <li class="text-right"><a href="{{ path('notes', {'username': loggedInMember.username}) }}"
                                               class="dropdown-item">{{ 'profile.notes.menu' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('groups_mygroups') }}"
                                               class="dropdown-item">{{ 'mygroups' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('trips') }}"
                                               class="dropdown-item">{{ 'trips.mytrips' | trans }}</a></li>
                     <li><div class="dropdown-divider"></div></li>
-                    <li class="text-right"><a href="{{ path('change_password', {'username': member.username}) }}"
+                    <li class="text-right"><a href="{{ path('change_password', {'username': loggedInMember.username}) }}"
                                               class="dropdown-item">{{ 'profile.change.password.menu' | trans }}</a></li>
                     <li><div class="dropdown-divider"></div></li>
                     <li class="text-right"><a href="{{ url( '_logout_main' ) }}"
@@ -143,7 +143,7 @@
                 </ul>
             </li>
             {% endif %}
-            {% if not member %}
+            {% if not loggedInMember %}
                 {% include 'login_form_dropdown.html.twig' %}
             {% endif %}
             <li class="nav-item">
@@ -159,7 +159,7 @@
         <ul id="hamburger_menu" class="navbar-nav text-right"></ul>
     </div>
 </div>
-{% if member %}
+{% if loggedInMember %}
 {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM')
     or is_granted('ROLE_ADMIN_GROUP')%}
     <div class="container-lg u-z-10 u-relative">
@@ -187,7 +187,7 @@
     {% endfor %}
 </div>
 {% endif %}
-    {% if member.username == 'SafetyTeam' %}
+    {% if loggedInMember.username == 'SafetyTeam' %}
         <div class="container-lg">
             <div class="alert alert-warning alert-dismissible fade show" role="alert">
                 Be careful, you're using the SafetyTeam profile.

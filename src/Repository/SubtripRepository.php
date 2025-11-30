@@ -62,7 +62,7 @@ class SubtripRepository extends EntityRepository
     private function getLegsInAreaQueryBuilder(Member $member, int $distance, int $duration): QueryBuilder
     {
         $address = $member->getActiveAddress();
-        $city = false === $address ? null : $address->getCity();
+        $location = false === $address ? null : $address->getLocation();
         $latitude = false === $address ? null : $address->getLatitude();
         $longitude = false === $address ? null : $address->getLongitude();
 
@@ -91,12 +91,12 @@ class SubtripRepository extends EntityRepository
             ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->lte('GeoDistance(:latitude, :longitude, l.latitude, l.longitude)', 't.invitationRadius'),
-                    $qb->expr()->eq('s.location', ':city')
+                    $qb->expr()->eq('s.location', ':location')
                 )
             )
             ->setParameter('distance', $distance)
             ->setParameter('member', $member)
-            ->setParameter('city', $city)
+            ->setParameter('location', $location)
             ->setParameter('latitude', $latitude)
             ->setParameter('longitude', $longitude)
             ->setParameter('now', $now)

@@ -24,6 +24,10 @@ class CommentModel
     }
 
     /**
+     * @infection-ignore-all
+     *
+     * Mutations on this function are meaningless (e.g. 999 instead of 1000).
+     *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      *
      *  \todo move check for text difference into function of its own.
@@ -57,6 +61,8 @@ class CommentModel
             if ($lenUpdatedText > $lenOriginalText) {
                 return true;
             }
+
+            return false;
         }
 
         $newExperience = false;

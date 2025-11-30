@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block content %}
-    {%  set member = app.user %}
+    {%  set loggedInMember = app.user %}
     <h2>{{ submenu.active | trans }}</h2>
 
     {% if items.nbResults == 0 %}

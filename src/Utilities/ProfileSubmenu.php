@@ -68,7 +68,9 @@ class ProfileSubmenu
         $preferenceRepository = $this->entityManager->getRepository(Preference::class);
 
         /** @var Preference $profileVisitorsPreference */
-        $profileVisitorsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_PROFILE_VISITORS]);
+        $profileVisitorsPreference = $preferenceRepository->findOneBy([
+            'codename' => Preference::SHOW_PROFILE_VISITORS,
+        ]);
         $showProfileVisitors = ('Yes' === $member->getMemberPreferenceValue($profileVisitorsPreference));
         $memberInfo['show_visitors'] = $showProfileVisitors && $ownProfile;
 
@@ -215,21 +217,14 @@ class ProfileSubmenu
             ]);
         }
 
-        /*        if ($parameters['family_or_friend']) {
+        if ($parameters['family_or_friend']) {
+            $this->addSubmenuItem('family_or_friend', [
+                'key' => 'profile.relation.edit',
+                'icon' => 'handshake',
+                'url' => $this->routing->generate('edit_relation', ['username' => $username]),
+            ]);
+        }
 
-                    $this->addSubmenuItem('family_or_friend', [
-                        'key' => 'profile.relation.edit',
-                        'icon' => 'handshake',
-                        'url' => $this->routing->generate('edit_relation', ['username' => $username]),
-                    ]);
-                } else {
-                    $this->addSubmenuItem('family_or_friend', [
-                        'key' => 'profile.relation.add',
-                        'icon' => 'handshake',
-                        'url' => $this->routing->generate('add_relation', ['username' => $username]),
-                    ]);
-                }
-        */
         if ($parameters['note']) {
             $this->addSubmenuItem('edit_note', [
                 'key' => 'NoteEditMyNotesOfMember',
@@ -262,7 +257,7 @@ class ProfileSubmenu
         $this->addSubmenuItem('profile', [
             'key' => 'MemberPage',
             'icon' => 'user',
-            'url' => $this->routing->generate('members_profile_new', ['username' => $username]),
+            'url' => $this->routing->generate('members_profile', ['username' => $username]),
         ]);
         $this->addSubmenuItem('comments', [
             'key' => 'ViewComments',
@@ -271,12 +266,14 @@ class ProfileSubmenu
             'url' => $this->routing->generate('profile_comments', ['username' => $username]),
         ]);
 
-        $this->addSubmenuItem('relations', [
-            'key' => 'profile.relations',
-            'icon' => 'users',
-            'count' => $parameters['relations_count'],
-            'url' => $this->routing->generate('relations', ['username' => $username]),
-        ]);
+        if (0 !== $parameters['relations_count']) {
+            $this->addSubmenuItem('relations', [
+                'key' => 'profile.relations',
+                'icon' => 'users',
+                'count' => $parameters['relations_count'],
+                'url' => $this->routing->generate('relations', ['username' => $username]),
+            ]);
+        }
 
         if ($member === $loggedInMember) {
             $this->addSubmenuItem('gallery', [

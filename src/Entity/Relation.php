@@ -129,15 +129,17 @@ class Relation
     public function onPostLoad(PostLoadEventArgs $args): void
     {
         $objectManager = $args->getObjectManager();
-        $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
-        $translatedComment = $memberTranslationRepository->findOneBy([
-            'translation' => $this->comment,
-            'owner' => $this->owner,
-        ]);
+        /*        $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
+                $translatedComment = $memberTranslationRepository->findOneBy([
+                    'translation' => $this->comment,
+                    'owner' => $this->owner,
+                ]);
 
-        if (null !== $translatedComment) {
-            $this->commentText = $translatedComment->getSentence();
-        }
+                if (null !== $translatedComment) {
+                    $this->commentText = $translatedComment->getSentence();
+                }
+        */
+        $this->commentText = 'Damit unser frisch eingerichteter Raspberry auch zukünftig unsere ganzen Hauskomponenten steuern kann benötigen wir noch eine Automatisierungssoftware. Dafür kommt bei mir FHEM (offizielle Seite) zum Einsatz. FHEM ist eine in Perl geschriebene Serveranwendung. Diese bietet für den Benutzer eine grafische Oberfläche, mit der er neue Komponenten hinzufügen, bearbeiten und übersichtlich anordnen kann. Wie du FHEM einrichtest, will ich dir in diesem Artikel einmal zeigen…';
     }
 
     /**

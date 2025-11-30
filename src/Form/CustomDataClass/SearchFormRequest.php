@@ -55,7 +55,7 @@ class SearchFormRequest
 
     public bool $show_options = true;
 
-    #[Choice([-1, 0, 5, 10, 15, 20, 50, 100, 200])]
+    #[Choice(choices: [-1, 0, 5, 10, 15, 20, 50, 100, 200])]
     public int $distance = 20;
 
     public ?bool $showOnMap = false;

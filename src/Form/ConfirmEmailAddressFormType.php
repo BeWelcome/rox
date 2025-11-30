@@ -13,15 +13,15 @@ class ConfirmEmailAddressFormType extends AbstractType
     {
         $builder
             ->add('registration_key', TextType::class, [
-                'label' => 'label.registration_key',
+                'label' => 'label.registration.key',
                 'attr' => [
-                    'placeholder' => 'placeholder.registration_key',
+                    'placeholder' => 'placeholder.registration.key',
                 ],
-                'help' => 'help.registration_key',
+                'help' => 'help.registration.key',
                 'required' => false,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'error.registration_key',
+                        'message' => 'error.registration.key',
                     ]),
                 ],
             ])

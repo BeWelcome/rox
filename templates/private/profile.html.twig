@@ -1,7 +1,8 @@
 {% extends 'private/mydata.html.twig' %}
 
 {% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
+    {{ parent() }}
+    {{ encore_entry_link_tags('tailwind') }}
 {% endblock %}
 
 {% block content %}

@@ -10,7 +10,7 @@
 {% endblock title %}
 
 {% block content %}
-    {%  set member = app.user %}
+    {%  set loggedInMember = app.user %}
     {{ macros.new_conversation_header(otherMember, 'messages.with.member.headline', false) }}
 
     {% if items.nbResults == 0 %}

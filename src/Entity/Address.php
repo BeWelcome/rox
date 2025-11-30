@@ -10,6 +10,8 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -20,6 +22,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'address')]
+#[Gedmo\TranslationEntity(class: AddressTranslation::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity]
 class Address
@@ -36,19 +39,19 @@ class Address
     #[ORM\Column(name: 'Zip', type: Types::STRING, nullable: true)]
     private ?string $zip;
 
+    #[ORM\Column(name: 'GettingThere', type: Types::STRING, nullable: true)]
+    #[Gedmo\Translatable]
+    private ?string $gettingThere;
+
     #[ORM\ManyToOne(targetEntity: Location::class)]
-    #[ORM\JoinColumn(name: 'City', referencedColumnName: 'geonameId', nullable: false)]
-    private Location $city;
+    #[ORM\JoinColumn(name: 'Location', referencedColumnName: 'geonameId', nullable: true)]
+    private Location $location;
 
     #[ORM\Column(name: 'Latitude', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
     private ?string $latitude;
 
     #[ORM\Column(name: 'Longitude', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
     private ?string $longitude;
-
-    #[ORM\Column(name: 'Explanation', type: Types::STRING, nullable: true)]
-    #[Gedmo\Translatable]
-    private ?string $explanation;
 
     #[ORM\Column(name: 'active', type: Types::BOOLEAN, nullable: true)]
     private bool $active = true;
@@ -59,14 +62,19 @@ class Address
     #[ORM\Column(name: 'updated', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $updated = null;
 
-    #[ORM\Column(name: 'GettingThere', type: Types::STRING, nullable: true)]
-    #[Gedmo\Translatable]
-    private ?string $gettingThere;
-
     #[ORM\Id]
     #[ORM\Column(name: 'id')]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private readonly int $id;
+
+    #[ORM\OneToMany(targetEntity: AddressTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['locale' => 'ASC'])]
+    private Collection $translations;
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+    }
 
     public function setMember(Member $member): self
     {
@@ -116,16 +124,16 @@ class Address
         return $this->zip;
     }
 
-    public function setCity(Location $city): self
+    public function setLocation(Location $location): self
     {
-        $this->city = $city;
+        $this->location = $location;
 
         return $this;
     }
 
-    public function getCity(): Location
+    public function getLocation(): Location
     {
-        return $this->city;
+        return $this->location;
     }
 
     public function setLatitude(?string $latitude): self
@@ -164,14 +172,14 @@ class Address
         return $this->explanation;
     }
 
-    public function setActive(?string $active): self
+    public function setActive(?bool $active): self
     {
         $this->active = $active;
 
         return $this;
     }
 
-    public function getActive(): ?string
+    public function getActive(): ?bool
     {
         return $this->active;
     }
@@ -201,6 +209,14 @@ class Address
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function addTranslation(MemberTranslation $translation): void
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations[] = $translation;
+            $translation->setObject($this);
+        }
     }
 
     /**

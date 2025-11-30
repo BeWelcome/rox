@@ -44,7 +44,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
     database_password=$(grep '^DB_PASS=' .env | cut -f 2 -d '=')
 
 	echo "Waiting for db to be ready..."
-	until mariadb $database_name -u $database_user -p$database_password -h $database_host -e "select 1" > /dev/null 2>&1; do
+	until mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port -e "select 1" > /dev/null 2>&1; do
 		sleep 1
 	done
 
@@ -55,13 +55,13 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		echo "Database created."
 
 		if [ -f docker/db/languages.sql ]; then
-			mariadb $database_name -u $database_user -p$database_password -h $database_host < docker/db/languages.sql
+			mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/languages.sql
 		fi
 		if [ -f docker/db/words.sql ]; then
-			mariadb $database_name -u $database_user -p$database_password -h $database_host < docker/db/words.sql
+			mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/words.sql
 		fi
 		if [ -f docker/db/geonamesadminunits.sql ]; then
-			mariadb $database_name -u $database_user -p$database_password -h $database_host < docker/db/geonamesadminunits.sql
+			mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/geonamesadminunits.sql
 		fi
 
 		bin/console translations:add:missing

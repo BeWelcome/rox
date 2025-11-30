@@ -344,15 +344,13 @@ class CommentController extends AbstractController
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
-        $statusForm = $profileModel->getStatusForm($loggedInMember, $member);
-        $statusFormView = (null === $statusForm) ? null : $statusForm->createView();
 
         $commentRepository = $entityManager->getRepository(Comment::class);
         $comments = $commentRepository->getAllCommentsMember($member);
 
         return $this->render('profile/comments.html.twig', [
             'use_lightbox' => false,
-            'status_form' => $statusFormView,
+            'status_form' => $profileModel->getStatusForm($loggedInMember, $member),
             'member' => $member,
             'comments' => $comments,
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),

@@ -51,7 +51,7 @@ class StatisticsModel
             FROM
                 member m,
 			    address a
-            JOIN geo__names g ON a.City = g.geonameId 
+            JOIN geo__names g ON a.location = g.geonameId 
 			WHERE m.id = a.member_id and m.Status IN ('Active', 'OutOfRemind')
         ")->fetchOne();
 
@@ -60,11 +60,11 @@ class StatisticsModel
                 COUNT(DISTINCT l.id) AS cnt
             FROM
                 languages l,
-                memberslanguageslevel mll,
+                member_language_level mll,
                 member m
             WHERE
-                l.id = mll.idLanguage
-                AND mll.IdMember = m.Id
+                l.id = mll.language_id
+                AND mll.member_id = m.Id
                 AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
         ')->fetchOne();
 
@@ -272,12 +272,12 @@ class StatisticsModel
                 l.shortCode language,
                 COUNT(m.id) cnt
             FROM
-                memberslanguageslevel mll,
+                member_language_level mll,
                 languages l,
                 members m
             WHERE
-                l.id = mll.IdLanguage
-                AND mll.idMember = m.id
+                l.id = mll.language_id
+                AND mll.member_id = m.id
                 AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
             GROUP BY
                 l.name
@@ -327,16 +327,15 @@ class StatisticsModel
                 count(*) AS cnt
             FROM
                 members m,
-                geonamescountries gc,
+                address a,
                 geonames g
             WHERE
                 m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-                AND
-                m.IdCity = g.geonameId
-                AND
-                g.country = gc.country
+                AND m.id = a.member_id 
+                AND a.active = 1
+                AND a.location = g.geonameId
             GROUP BY
-                gc.country
+                g.country
             ORDER BY
                 cnt DESC
         ');

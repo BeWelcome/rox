@@ -62,7 +62,7 @@
     $this->addRoute('relatedgroup_log','group/:group_id:/relatedgroupsettings', 'RelatedGroupsController', 'showRelatedGroupLog');
 
     // member app routes
-    $this->addRoute('members_profile', '/members/:username:', 'MembersController', 'index');
+    $this->addRoute('members_profile_old', '/members/:username:/old', 'MembersController', 'index');
     $this->addRoute('members_profile_notification', '/members/:username:/:message:', 'MembersController', 'index');
     $this->addRoute('members_profile_invite', '/members/:username:/leg/:id:', 'MembersController', 'index');
     $this->addRoute('edit_my_profile', '/editmyprofile', 'MembersController', 'index');

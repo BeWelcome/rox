@@ -7,6 +7,7 @@ use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
+use App\Entity\Subtrip;
 use App\Model\HostingRequestModel;
 use DateInterval;
 use DateTime;
@@ -402,6 +403,50 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
+    public function testFinalRequestContainsCorrectInviteForLegAsNull(): void
+    {
+        $arrival = new DateTime();
+        $departure = (clone $arrival)->add(new DateInterval('P2D'));
+
+        $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message', null);
+        $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message', null);
+
+        $requestModel = new HostingRequestModel();
+        $finalRequestMessage = $requestModel->getFinalRequest(
+            $this->sender,
+            $this->receiver,
+            $hostingRequestMessage,
+            $formRequestMessage,
+            'reply'
+        );
+
+        // Check that inviteForLeg was set correctly
+        $this->assertNull($finalRequestMessage->getRequest()->getInviteForLeg());
+    }
+
+    public function testFinalRequestContainsCorrectInviteForLeg(): void
+    {
+        $arrival = new DateTime();
+        $departure = (clone $arrival)->add(new DateInterval('P2D'));
+
+        $inviteForLeg = new Subtrip()->setInvitedBy($this->sender);
+
+        $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message', null);
+        $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN, 'Message', $inviteForLeg);
+
+        $requestModel = new HostingRequestModel();
+        $finalRequestMessage = $requestModel->getFinalRequest(
+            $this->sender,
+            $this->receiver,
+            $hostingRequestMessage,
+            $formRequestMessage,
+            'reply'
+        );
+
+        // Check that inviteForLeg was set correctly
+        $this->assertSame($this->sender, $finalRequestMessage->getRequest()->getInviteForLeg()->getInvitedBy());
+    }
+
     private function setupRequestMessage(
         DateTime $arrival,
         DateTime $departure,
@@ -409,6 +454,7 @@ class HostingRequestModelTest extends TestCase
         int $numberOfTravellers,
         int $state,
         string $messageText = '',
+        ?Subtrip $inviteForLeg = null,
     ): Message {
         $message = new Message();
         $message->setParent($this->parent);
@@ -423,6 +469,7 @@ class HostingRequestModelTest extends TestCase
         $request->setFlexible($flexible);
         $request->setNumberOfTravellers($numberOfTravellers);
         $request->setStatus($state);
+        $request->setInviteForLeg($inviteForLeg);
 
         $message->setRequest($request);
 

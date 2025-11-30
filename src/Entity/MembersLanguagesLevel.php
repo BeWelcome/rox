@@ -9,192 +9,120 @@
 namespace App\Entity;
 
 use App\Doctrine\LanguageLevelType;
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'memberslanguageslevel')]
-#[ORM\Index(name: 'members_languages', columns: ['IdMember', 'IdLanguage'])]
+#[ORM\Table(name: 'member_language_level')]
+#[ORM\Index(name: 'members_languages', columns: ['member_id', 'language_id'])]
 #[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MembersLanguagesLevel
 {
-    /**
-     * @var Member
-     */
-    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'languageLevels')]
-    protected $member;
+    protected Member $member;
 
-    /**
-     * @var DateTime
-     */
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private $updated;
+    private ?DateTime $updated = null;
 
-    /**
-     * @var DateTime
-     */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private $created;
+    private DateTime $created;
 
-    /**
-     * @var Language
-     */
-    #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Language::class, inversedBy: 'levels')]
-    #[Groups(['Member:Read'])]
-    private $language;
+    #[ORM\JoinColumn(name: 'language_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
+    private Language $language;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'Level', type: 'language_level', nullable: false)]
-    #[Groups(['Member:Read'])]
-    private $level = LanguageLevelType::BEGINNER;
+    private string $level = LanguageLevelType::BEGINNER;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private $id;
+    private int $id;
 
-    public function __construct()
-    {
-        $this->created = new DateTime();
-    }
-
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return Memberslanguageslevel
-     */
-    public function setUpdated($updated)
+    public function setUpdated(?DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updated.
-     *
-     * @return DateTime
-     */
-    public function getUpdated()
+    public function getUpdated(): ?Carbon
     {
-        return $this->updated;
+        if (null === $this->updated) {
+            return null;
+        }
+
+        return Carbon::instance($this->updated);
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return Memberslanguageslevel
-     */
-    public function setCreated($created)
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return DateTime
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
-    /**
-     * Set member.
-     *
-     * @param Member $member
-     *
-     * @return Memberslanguageslevel
-     */
-    public function setMember($member)
+    public function setMember(Member $member): self
     {
         $this->member = $member;
 
         return $this;
     }
 
-    /**
-     * Get member.
-     *
-     * @return Member
-     */
-    public function getMember()
+    public function getMember(): Member
     {
         return $this->member;
     }
 
-    /**
-     * Set language.
-     *
-     * @return Memberslanguageslevel
-     */
-    public function setLanguage(Language $language)
+    public function setLanguage(Language $language): self
     {
         $this->language = $language;
 
         return $this;
     }
 
-    /**
-     * Get language.
-     *
-     * @return Language
-     */
-    public function getLanguage()
+    public function getLanguage(): Language
     {
         return $this->language;
     }
 
-    /**
-     * Set level.
-     *
-     * @param string $level
-     *
-     * @return Memberslanguageslevel
-     */
-    public function setLevel($level)
+    public function setLevel(string $level): self
     {
         $this->level = $level;
 
         return $this;
     }
 
-    /**
-     * Get level.
-     *
-     * @return string
-     */
-    public function getLevel()
+    public function getLevel(): string
     {
         return $this->level;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->created = Carbon::now();
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updated = Carbon::now();
     }
 }

@@ -169,11 +169,11 @@ class CreateTestDatabase extends Command
             SET FOREIGN_KEY_CHECKS=0;
             UPDATE languages SET id = 0 WHERE ShortCode = 'en';
             UPDATE words SET IdLanguage = 0 WHERE ShortCode = 'en';
-            UPDATE memberslanguageslevel SET IdLanguage = 0 WHERE IdLanguage = 1;
+            UPDATE member_language_level SET IdLanguage = 0 WHERE IdLanguage = 1;
             UPDATE memberstrads SET IdLanguage = 0 WHERE IdLanguage = 1;
             UPDATE languages SET id = 1 WHERE ShortCode = 'fr';
             UPDATE words SET IdLanguage = 1 WHERE ShortCode = 'fr';
-            UPDATE memberslanguageslevel SET IdLanguage = 1 WHERE IdLanguage = 2;
+            UPDATE member_language_level SET IdLanguage = 1 WHERE IdLanguage = 2;
             UPDATE memberstrads SET IdLanguage = 1 WHERE IdLanguage = 2;
             SET FOREIGN_KEY_CHECKS=1;
         ");

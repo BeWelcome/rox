@@ -5,11 +5,13 @@
 {% endblock %}
 
 {% block stylesheets %}
+    {{ parent() }}
     {{ encore_entry_link_tags('tailwind') }}
     {{ encore_entry_link_tags('leaflet') }}
 {% endblock stylesheets %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('profile/setlocation') }}
 {% endblock javascripts %}
 

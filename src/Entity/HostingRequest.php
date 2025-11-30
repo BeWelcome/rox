@@ -44,12 +44,12 @@ class HostingRequest
     #[ORM\Column(name: 'arrival', type: 'datetime', nullable: false)]
     #[Assert\NotBlank]
     #[Assert\LessThanOrEqual(propertyPath: 'departure')]
-    private ?DateTime $arrival = null;
+    private DateTime $arrival;
 
     #[ORM\Column(name: 'departure', type: 'datetime', nullable: false)]
     #[Assert\NotBlank]
     #[Assert\GreaterThanOrEqual(propertyPath: 'arrival')]
-    private ?DateTime $departure = null;
+    private DateTime $departure;
 
     #[ORM\Column(name: 'flexible', type: 'boolean', nullable: true)]
     private bool $flexible = false;

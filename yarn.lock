@@ -867,471 +867,471 @@
     "@babel/helper-string-parser" "^7.27.1"
     "@babel/helper-validator-identifier" "^7.28.5"
 
-"@ckeditor/ckeditor5-adapter-ckfinder@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-adapter-ckfinder/-/ckeditor5-adapter-ckfinder-47.1.0.tgz#95c3435d09ec58c6c90b2cfddec471f1414cf3ac"
-  integrity sha512-h/ClAZBbqz0q5332OPLCQXBOx5EH3GHykJrGAK2+Wtx3CuhzJV+RhgEj3KLMQ2SaAR4DaLKamzCAiR2jIH6Y6Q==
+"@ckeditor/ckeditor5-adapter-ckfinder@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-adapter-ckfinder/-/ckeditor5-adapter-ckfinder-47.2.0.tgz#10ced491bd112a4633ed9f543b96eaf41e1bd807"
+  integrity sha512-zzuINBzWuheU76Ans9m59VCVMiljESoKxzpMh0aYu+M3YB5IDctOPU8pdOpXPIdBwoYv64+ioZE/T5TyZDckSw==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-upload" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-upload" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-alignment@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-alignment/-/ckeditor5-alignment-47.1.0.tgz#109ed02f520b103e4ab8d978984857f39c894fbf"
-  integrity sha512-oE6PLT5MRBayw87jOv5DgR0p6TU7mX18MJkaGEz98vuLW3npo1GEdkBtw72+05FwkKr2QCCZUZpg12DTf9Mc/g==
+"@ckeditor/ckeditor5-alignment@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-alignment/-/ckeditor5-alignment-47.2.0.tgz#64f527d7571acd543a3a9e74ed528a7b4aca0639"
+  integrity sha512-lfcJAC8yJOQux3t33ikJrWRsZvywLr2zmU6mDR96SuCmeCyAN3UGXzCNa8kWPExpFGV01ZR61EZkjTah8LP2sQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-autoformat@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-autoformat/-/ckeditor5-autoformat-47.1.0.tgz#b6bb33cb40223c55543b0e6b2ddc8049a39b0ba5"
-  integrity sha512-vnP5CNEDriVgFwUVocXyQ++yGrJnkp8V5YCQZv76nZPSed02soL62MRm6M9A4GOAXpEJMe7d5NWom73ieRfcVA==
+"@ckeditor/ckeditor5-autoformat@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-autoformat/-/ckeditor5-autoformat-47.2.0.tgz#78887a9ba872d806805fc4cde229414426de4128"
+  integrity sha512-d9ZwAB8JwWlgLK2Um+u3ctiCtv5bkBHGk/rSdXB6D/V7QHCl31NyPFYByxTyCOY9SsoNn1l/8zbJfvp89LJm2w==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-heading" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-heading" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-autosave@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-autosave/-/ckeditor5-autosave-47.1.0.tgz#f3e16f63c7d3da92df51ea571aa6b20a98322ae6"
-  integrity sha512-3wjI/RNSgXZhG4RMTwl/LByaZyHLV+cixKN0hRqkjULj/i0H05A4Gu485v62FDwBlil1NhPTfKyrmiM/N/7n8g==
+"@ckeditor/ckeditor5-autosave@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-autosave/-/ckeditor5-autosave-47.2.0.tgz#4cbc1af19d358e991b5f57c9c1dbbfd30de9ebb9"
+  integrity sha512-44nGL/M0qLURA1BEFkqZg6JzpjtvGyWJEluv728vb29JNQUGx0iNykjHBgtPX5s1Ztblx5ZwqFiuNiLkpmHptg==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-basic-styles@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-basic-styles/-/ckeditor5-basic-styles-47.1.0.tgz#3cfe4cc736d7833e3df82682990e8dcd9c191af7"
-  integrity sha512-WxiFFKUlisz8B3ymeBFijshDWmqX649TEA+1nxgjXHr0L0UONCJfBExanrRUJND6AwHIh1n2IIAXwXvYMdqZbw==
+"@ckeditor/ckeditor5-basic-styles@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-basic-styles/-/ckeditor5-basic-styles-47.2.0.tgz#ab1abe2306c6e6cec62393adc04b07997869351a"
+  integrity sha512-a8pPHq3CXmyxPPXPQZ8C92OOyBoCfpY8M30dS7et/dLXW3nuVo9VVLMw0vR1j+zcKXClp3+/odyw2/rxP+qntA==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-block-quote@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-block-quote/-/ckeditor5-block-quote-47.1.0.tgz#f2f2d20060b11bdb4ae966aa5a8aeeea6442f321"
-  integrity sha512-h+p/pFm0wNmozhFZcxxh6DmkGQCE3Jpukju0ovxiPnRO49PN+0cUsdbHuKYtJK6jxLfqwjfdHVOn1m+LyRRmkg==
+"@ckeditor/ckeditor5-block-quote@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-block-quote/-/ckeditor5-block-quote-47.2.0.tgz#39f9efd80f5a2b8cfa5ec438ee5bec25fd82f70f"
+  integrity sha512-BlFFfunyWpYcGhLsOmCR0yEz5VgrOmHREHQZIRcL6fKzXJwdpA/VFWPirotwF/QErJjguhhDZ5a3PBEnUAmW/A==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-enter" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-enter" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-bookmark@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-bookmark/-/ckeditor5-bookmark-47.1.0.tgz#666b88e660a839b171df25da804052752e249eca"
-  integrity sha512-B7Q0IzaN6iA80B3YkXihXo7gRad5TpKyhTI9x3XvbpCDzO+sBNyOEAy6d6CWmlhQsIZ6mn+hUn2q9N4nACybiw==
+"@ckeditor/ckeditor5-bookmark@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-bookmark/-/ckeditor5-bookmark-47.2.0.tgz#b370892c4cbb4570c2c526546ff14dd37cfb3df6"
+  integrity sha512-FDFDZXm8MqktIt3x0WVrYFuXy9sxcCH31Cpa0/mV19lW8CzoCZCAfvXNzPWsz2eFo8qOsna2c/e55ax8OM/Ncg==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-link" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-link" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-ckbox@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-ckbox/-/ckeditor5-ckbox-47.1.0.tgz#1650eaa59f94ce5b12e155055248befcf509d03c"
-  integrity sha512-DgTxePr5fE7yaQCjaSMlKNf5j38NGjywg9//l7XeVvxLmJJgQrN7G7xaX/vl55H2jGZF0LrM4IyS9mbyfUj1bQ==
+"@ckeditor/ckeditor5-ckbox@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-ckbox/-/ckeditor5-ckbox-47.2.0.tgz#98a3400167f62dfb080d83a8d753647debcb12a3"
+  integrity sha512-Cu+nJTXhcmdE8DWHoTY1nrrjxyG4pfxMrEcO/PNV28cojwtOQaWGt4EbWlXOfZZTEWlZO18JIw/YrxYXwx5mTA==
   dependencies:
-    "@ckeditor/ckeditor5-cloud-services" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-image" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-upload" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-cloud-services" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-image" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-upload" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
     blurhash "2.0.5"
-    ckeditor5 "47.1.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-ckfinder@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-ckfinder/-/ckeditor5-ckfinder-47.1.0.tgz#1a1fc4a34d9167c132c35aa1848b6f7d84b5d9e3"
-  integrity sha512-eQPgvW+cSA2p5EVyoJv0NIOYorS5DoAxKdcBcxrKc433yuC7fKsZ1awp5aWJOUOfRzGLAa1WYikR7OKvmTjzYg==
+"@ckeditor/ckeditor5-ckfinder@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-ckfinder/-/ckeditor5-ckfinder-47.2.0.tgz#2f3be378adfa40d718d8a05d91fd304068f22943"
+  integrity sha512-nsxn9weZNwdplW/BHfEJ/rvb+wZj0KECN2Av9zFRekTxE1mp0hTShQ9MNlKImRQ4X2UV6bGN6+DXwJJIU0smlQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-image" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-image" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-clipboard@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-clipboard/-/ckeditor5-clipboard-47.1.0.tgz#4b7eec58bc6956f6267025f6798050d53cf1171e"
-  integrity sha512-xxF9TuV6pWfos1okaS20CFTQN1CD3lOSyZXIJ/IodznpF7f9GYzhhvyOYXJO5fH6T8F0BbR5P94gon8QnAMivg==
+"@ckeditor/ckeditor5-clipboard@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-clipboard/-/ckeditor5-clipboard-47.2.0.tgz#668117643acceb343b764b07a26410ef70841ea7"
+  integrity sha512-x/ehXk+ga5tnumA8TenrZRU684DvpzzhTLfZScRxX3/3BJPYlFp7BWx60KJPQHKXYgb+I0qkQrgxuBXp83ed2g==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-cloud-services@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-cloud-services/-/ckeditor5-cloud-services-47.1.0.tgz#91b43f3e1501df2c3e79913c509a47c62c94d6ed"
-  integrity sha512-yLH1eTxWMrzF16CFdu/RJAwzcGYaKKS+gQfX3aRjIphtkY9ebnS1SbelP12ZXUBp/vcTguSYjUrPUwnstoadew==
+"@ckeditor/ckeditor5-cloud-services@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-cloud-services/-/ckeditor5-cloud-services-47.2.0.tgz#119a004b2f7a72664c05351e6dd72dcc43d0d8fc"
+  integrity sha512-794mxJ8MFhz2SxSjlMSp4cZbyBBpVjinQ3GxOS5VqO7H4m/iT2hdSPJaWpML53soxpEoG/6ax4vVKe5d0+xoqA==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-code-block@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-code-block/-/ckeditor5-code-block-47.1.0.tgz#bac7fa799cee6d71e27da7d93ccd450fcc663a3b"
-  integrity sha512-FGQD/B5BXHesqgijjBV3wm4tBDNKMjGodsTPjW++NkezgBgzOWdBnl6svpMns+xjtEVFnhkjA9hQt6vbHevJmA==
+"@ckeditor/ckeditor5-code-block@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-code-block/-/ckeditor5-code-block-47.2.0.tgz#9fbeb02ff87a798d624d2c461a86ce7b9c5edc2d"
+  integrity sha512-8SH10L7i+wirkouDmg4MdBN4R3AZDyutsuSCwDPALoKSHQs7KlYB+8TJxcejt/dSBd0JWgrBi7rVu9Arkk3I1A==
   dependencies:
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-enter" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-enter" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-core@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-core/-/ckeditor5-core-47.1.0.tgz#7ee7fa6e5710f1f50f7893d03448c10286a31ab3"
-  integrity sha512-CKE/cxzyAECL9rXMCTiQfNtIwy8x24zSyjQgU44FB59H/eUksw9FYaDdRgNs/PvW/gdW7JdCPiaOI3m28wYmHg==
+"@ckeditor/ckeditor5-core@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-core/-/ckeditor5-core-47.2.0.tgz#90976e6e8b18008ead5c8a33fee690d8ddf297f0"
+  integrity sha512-NwUNa25g//ScxaVPASalcGfMDhUSv7nIpxC07oVv99zJjk64RTBr4TZHpjKLCVqN9gAn3phAtjtkxa2KOgOMtQ==
   dependencies:
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-watchdog" "47.1.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-watchdog" "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-easy-image@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-easy-image/-/ckeditor5-easy-image-47.1.0.tgz#261bc7b9e0a71547b7d6c28e9c305064a1785104"
-  integrity sha512-V/8nSXle8D/XzC6NSmNatcYoZzy7SXOsNFbLgXN+2gOFguhexmgVagBAiHgGCUpZTNTmkQRTI5VpiI5mfAHt+g==
+"@ckeditor/ckeditor5-easy-image@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-easy-image/-/ckeditor5-easy-image-47.2.0.tgz#03e8be382b9ab2a281dab18703bc66a1b4c9735f"
+  integrity sha512-lSnbiGDzYdu9GeOaYjVpowaZWDJbrb7NHCuUN5Af2474jXTDyYmG7qOm39fWEBlcxjMTzDR8fFzPcRNhOvSRRA==
   dependencies:
-    "@ckeditor/ckeditor5-cloud-services" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-upload" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-cloud-services" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-upload" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-editor-balloon@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-balloon/-/ckeditor5-editor-balloon-47.1.0.tgz#52a48193e0b4c3c984ba15703309904c3e614684"
-  integrity sha512-M/d8zWQgGbtQPKAyYOBZdEeDBaQXiXmwUIi1rMULL7IGxQDvfHAHB6T7mu3GU39oay0HkM+LGWnz5GZ8oG7HNw==
+"@ckeditor/ckeditor5-editor-balloon@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-balloon/-/ckeditor5-editor-balloon-47.2.0.tgz#2207ec688750ad70dbbbd08f9a7f767be09c46fa"
+  integrity sha512-szIx59pnw6kgxYuAyqecMnSlwtwWu2q23XV4TpKF/V3NlHs9ZeIFusTX3icO8JLQR4ExsYa0bsYpabGdZdx2Ug==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-editor-classic@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-classic/-/ckeditor5-editor-classic-47.1.0.tgz#e8a043d479512601a13a403952594eddb72f5612"
-  integrity sha512-x4aegRral5LTV1kURmjnp/tLSE1nttH+MsVkrVLWJd0j2A0qj88BLSccmY71ybFgMcDKlwJD6kVT0ZNKsvRogw==
+"@ckeditor/ckeditor5-editor-classic@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-classic/-/ckeditor5-editor-classic-47.2.0.tgz#13c8b376341475940e8d42a642f598a453a0bf24"
+  integrity sha512-fYy4RKmvM4kYvUgCRuBdUqVLE8ts1Kj4q1Caaq5VZyBudmaj/RZqQBSdiu5pZgKMdj1oMaIQ5Gextg96iJ3LTw==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-editor-decoupled@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-decoupled/-/ckeditor5-editor-decoupled-47.1.0.tgz#0a680fe62e0afc98dea137789bb6f02d57a4c5ee"
-  integrity sha512-rqTmzMot1rjCz3cqtQkVRou8RgVFItRXeCNY0Ljg3aLcAaNcbwYSYSeJtQpMoyhasSh3cCUqyG9PRnfNYpzTNQ==
+"@ckeditor/ckeditor5-editor-decoupled@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-decoupled/-/ckeditor5-editor-decoupled-47.2.0.tgz#7ed46a30eff38893d88094d4863709b2a77a9239"
+  integrity sha512-h1Yw6/XHeEe5aW/4VV0njAGe5nsuIBkARCun039noA+b2bq+Qb9bAExzaSHULf7nZW4HHVJMcYvb2HwcX8MZ6g==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-editor-inline@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-inline/-/ckeditor5-editor-inline-47.1.0.tgz#8669730ba1e0ba15d39655fa970e269c31a2f17e"
-  integrity sha512-By4mi4p7oReWx8SAyUtq7cIhF1BH63DABJLbj7kaT3MsFlMXOp4FheZpGEMFJbOt8jKx9Du1EU/PFWlUeNoPLw==
+"@ckeditor/ckeditor5-editor-inline@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-inline/-/ckeditor5-editor-inline-47.2.0.tgz#1c82e1713d7e03bb97904704fcc8c949aa0703f5"
+  integrity sha512-6kGG8Q4ggOim7KU/J3iMvmf5/faNjYL/ucg2RPMvzhH/eTqlZBlMdDid86b0YAW0fbKPvIIACifoOBHIGlcZyA==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-editor-multi-root@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-multi-root/-/ckeditor5-editor-multi-root-47.1.0.tgz#3abcbb1a155c7a0a2e9190fe44f9eae3d4a786f8"
-  integrity sha512-BjAOWtAOg8g1E8WJoRj73RoRpyTb1nLtHU2AgxLlaYubGcXfokVvyPz4VU2cDTUq3Zg6chjPeRw74ybLmI2LBg==
+"@ckeditor/ckeditor5-editor-multi-root@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-editor-multi-root/-/ckeditor5-editor-multi-root-47.2.0.tgz#03dcca7fad6e91851e1cd128168049587df5833a"
+  integrity sha512-bIkPzkpLGznNnDLAuSkVNP+LfICLbUj80IdkVLB9KeXnuZ1WKYkLqBGfDv6y70iJnANAiiP6Z8EaucBNzfjS7g==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-emoji@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-emoji/-/ckeditor5-emoji-47.1.0.tgz#848a78183d6cfc1f2101d69a05a773e3e276b376"
-  integrity sha512-8Kicj1md0PfdGtlUxK0kTrLJncYnrhj7OzVqen42ygxiU3PrZrdSApDBg0a8DVb0Skvjb2GhOcBCN7UZptK7LQ==
+"@ckeditor/ckeditor5-emoji@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-emoji/-/ckeditor5-emoji-47.2.0.tgz#22b7809008dcf9fe0726b899d2f29edfe425a22f"
+  integrity sha512-pS1G0QVFOK2Z+BLrVmm6pVjFZRpkC95YgQeASuuIySLZBllYD3+tlys2lPt3el5PAd0IQB7s85XuTdbCXDFr6A==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-mention" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-mention" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
     fuzzysort "3.1.0"
 
-"@ckeditor/ckeditor5-engine@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-engine/-/ckeditor5-engine-47.1.0.tgz#a1b258b5122caa105f0a32ab4998305a6faac440"
-  integrity sha512-uXlD+UKSb6wC5OBzQm5Sn0PYTYNpa4Jccdk61Z6U9h1lAZI4KV4SU12vRL5XG20bI0PIQvBo7Lhy7Va635kiqw==
+"@ckeditor/ckeditor5-engine@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-engine/-/ckeditor5-engine-47.2.0.tgz#578446d200a16d5f25de3a558085501f14a60f72"
+  integrity sha512-T3pFgycam60ytkbLOo2r99UPkbalLfzp4e6QrDVdZnloY7BO46zAbU5p3TqgfCdxODPhZh7srFGzANh6IsLMeg==
   dependencies:
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-enter@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-enter/-/ckeditor5-enter-47.1.0.tgz#817bc9daba3ece88d1e00f82b6aca241db04bdd0"
-  integrity sha512-Vkm4rPCTrimJ3LcdPPXQZc86Wb920kish6ckXTSkoPPAe9Ef2fVlKZYggWrXBI4VZ6tegTepSFpZiMqa1/a00w==
+"@ckeditor/ckeditor5-enter@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-enter/-/ckeditor5-enter-47.2.0.tgz#775fc49e28c64c90d4286341f983982be3c2fda1"
+  integrity sha512-7ZHfrxDSs55IXgs5yAX6Nl8COY1dqefZ5HiWT/UM0cOP/4aMffp5I1yYYP7NVfBkTW9DlUoeAkHFTv2miTwclQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
 
-"@ckeditor/ckeditor5-essentials@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-essentials/-/ckeditor5-essentials-47.1.0.tgz#fcb712c32daa498239b4abe844c32ec32c5a5f47"
-  integrity sha512-lpXxfBQ7GocQ4klO2GTZYSxJFhymI2WwxaKklI+rh729dcxsIsjih1sXwSLM6kqwPbveF/9WgDBy3I6kqzRmqg==
+"@ckeditor/ckeditor5-essentials@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-essentials/-/ckeditor5-essentials-47.2.0.tgz#8b1850ddd0725709a4acf65d55bfe6ccbc39b227"
+  integrity sha512-d3hHtkuLhvI+RvsDU7cKFc/K9uD27Tvi4NVjALcN1Ybr0k8dkJFGU1nUwXuo6zcdqRnkIJMWxIR+cwteuMCGQg==
   dependencies:
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-enter" "47.1.0"
-    "@ckeditor/ckeditor5-select-all" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-undo" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-enter" "47.2.0"
+    "@ckeditor/ckeditor5-select-all" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-undo" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-find-and-replace@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-find-and-replace/-/ckeditor5-find-and-replace-47.1.0.tgz#cc5bc8ea00970000356f65e9641d305687fdc04a"
-  integrity sha512-H3c69XM7fLdlnt20gdNSU1fMwA+1yYfboFWQ07PlA8M/D9H7ZKUmBlI846flSssFp1kPLGhPDTryun6c7zERPg==
+"@ckeditor/ckeditor5-find-and-replace@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-find-and-replace/-/ckeditor5-find-and-replace-47.2.0.tgz#d2fcc24d6be08d56c1e195bd03625e4acc2911c1"
+  integrity sha512-34Uzpbxi+/eJx/0CR9/T92wDaw67KLaYcm39+RY4OUCxC9EywEFruIJEg/M/Xu4iTVjdVKbpQ3ovGBuciiL1vQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-font@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-font/-/ckeditor5-font-47.1.0.tgz#702ad5d62999e685cd1e7a45ce3b67d9861ac31c"
-  integrity sha512-QiKlsqbcMAAlVAoxrBBxe062adBfTfTKHBLJ/VbBMBYszYaWNoG5VJKLQbXnKBVGWD07rE7rXa/vnenCvpT8hQ==
+"@ckeditor/ckeditor5-font@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-font/-/ckeditor5-font-47.2.0.tgz#19402eb3a8c397657e1f7767ddb807e63bc62009"
+  integrity sha512-X/AYeNHc3Hibd56OfPwOEdYRIGX3eWtGQ/qIAEVkS2xCEDPhM0fTHpLTEpDsMukw9NRAqmhnQHIp2amGaOwY8g==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-fullscreen@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-fullscreen/-/ckeditor5-fullscreen-47.1.0.tgz#65070903598e5f3640887bf1040f90b5135bcc81"
-  integrity sha512-LSC62HAW2cmThX2bJOPXcUrxy3sULGStj5G//PdTuxz1z6WbPbF4xst1ockHmaRJeoJUcdt89Qv7C0WFl3j4lw==
+"@ckeditor/ckeditor5-fullscreen@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-fullscreen/-/ckeditor5-fullscreen-47.2.0.tgz#7ac86bd80b3ff33ab600cc662cd35eb4b47936f5"
+  integrity sha512-Kf//0eQIuslGNVSbNkHXBELn/jZT+OsTIeo8PulZEbVI5do0vB/52w0F40rhgk8EudlGTxEmMOi0x/jrdR0MHg==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-editor-classic" "47.1.0"
-    "@ckeditor/ckeditor5-editor-decoupled" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-editor-classic" "47.2.0"
+    "@ckeditor/ckeditor5-editor-decoupled" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-heading@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-heading/-/ckeditor5-heading-47.1.0.tgz#de9465cfb770b28fa0b4210c3e727b0d38c183a6"
-  integrity sha512-HD+mWG5W5kk5fE2G9TFP/ktiU1CU8sA6mOyO6epd+0nsSwacTynKJkszgTVsd9HeY6wZopdqTHa1Dun/9wsxPA==
+"@ckeditor/ckeditor5-heading@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-heading/-/ckeditor5-heading-47.2.0.tgz#0487b8bb36936409d8cbf4da067ca18976b7f525"
+  integrity sha512-m1zSERVh7gdVXwLLYgcAsy7lkIOuadmA5YuwyPpR/g3oa0j1gcuNm5y/73MTOPflPUn0g0Y9DzocF2G1WY2NiQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-paragraph" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-paragraph" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-highlight@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-highlight/-/ckeditor5-highlight-47.1.0.tgz#05bf9f1f3c7efbcdde89d0873b9dbac2445405ff"
-  integrity sha512-K5sO/etY+Nh67r3dsXArPWI5UjOGKQdbS4k5AU30m0vCK9IfGO9BLCUzBnxo6JM91lfOhY96yCqg3zaOU/C0wg==
+"@ckeditor/ckeditor5-highlight@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-highlight/-/ckeditor5-highlight-47.2.0.tgz#1e9c0d4c13602ba76dea0f03e4fc5fb0cbf4a1d3"
+  integrity sha512-Fp59HRybXJpJl/DtliMTjiVrIA95jmm0SptvXtIucD0hdP9ZX6TOFPTzrRl29LZGITNuYDulPqvNTpFoechRmQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-horizontal-line@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-horizontal-line/-/ckeditor5-horizontal-line-47.1.0.tgz#aedc19c369dbc660ad84e1ef2f870abb3d761f60"
-  integrity sha512-ex+g4L0QvteKHtXGJXMu72wjCrMhQw+mEBWLZm20jLeaPf0eSkQ34ilTRFGwZTw/zfgqy69vMTbVV/SIDiYxvg==
+"@ckeditor/ckeditor5-horizontal-line@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-horizontal-line/-/ckeditor5-horizontal-line-47.2.0.tgz#b0a10cff4f2dddb78e0c9a130a4790e8efb27302"
+  integrity sha512-/DHVMhI9vNs/NI+NQBbUXdzsXHj9hGKihtNDmbV5UP3Hy7l32Gv8k9nJVnBlDbBbHI6Wpxjj6GUxAiLZ46mc1Q==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-html-embed@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-html-embed/-/ckeditor5-html-embed-47.1.0.tgz#74911d9914937c1a56b66ead4bf0b7ffccc33a80"
-  integrity sha512-HMfnHzSRrpKDealBWtq3cpvRGZuODBssw7f1paQxML2W/pRLd6eSb/Rc9a0O3DB2/NhXq8Bbl9aDv9ungz+SLg==
+"@ckeditor/ckeditor5-html-embed@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-html-embed/-/ckeditor5-html-embed-47.2.0.tgz#8dd20d32775aad62a21c1197d3209b5c438411cb"
+  integrity sha512-VhI789/KDKmQhz9nQqq64odOtLpwjJbPQ/Pf54J2d7AGDvbuNVkjAMVdj5xXXzb/nXdys6zM8lPQZfQGI/Ya8A==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-html-support@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-html-support/-/ckeditor5-html-support-47.1.0.tgz#c7a81d0d56e817ef834c4bb559330694154d4be3"
-  integrity sha512-TBnmlJ1JjMO973Q4A/e+UEv99CMhBezUAdLKqQ3+EztivTEeEb6YV+pmli8HPf7n0DI6UbkU0Kj/mdFUNiIzog==
+"@ckeditor/ckeditor5-html-support@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-html-support/-/ckeditor5-html-support-47.2.0.tgz#d9bef384af7e4535b570a4d52acc539a1745d13e"
+  integrity sha512-IwaFBdv0qQQXfnA1LHL2BVQoioNJa9T8NIKDq2OG3mXg02jJvhJl84QADJ0ro36igjKsyfttsl8lM1pf00XAhA==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-enter" "47.1.0"
-    "@ckeditor/ckeditor5-heading" "47.1.0"
-    "@ckeditor/ckeditor5-image" "47.1.0"
-    "@ckeditor/ckeditor5-list" "47.1.0"
-    "@ckeditor/ckeditor5-remove-format" "47.1.0"
-    "@ckeditor/ckeditor5-table" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-enter" "47.2.0"
+    "@ckeditor/ckeditor5-heading" "47.2.0"
+    "@ckeditor/ckeditor5-image" "47.2.0"
+    "@ckeditor/ckeditor5-list" "47.2.0"
+    "@ckeditor/ckeditor5-remove-format" "47.2.0"
+    "@ckeditor/ckeditor5-table" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-icons@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-icons/-/ckeditor5-icons-47.1.0.tgz#ee6820a01e4b6222155e1b2bc64a22176c9e94ce"
-  integrity sha512-2tlGXuQrXiQFxb2U+67kzlkl4/4IlDEt6R+sPQnP+QR7wJNXQnK9zk4M2bc30r91/91iuCjx+AIzKerm0VwFJg==
+"@ckeditor/ckeditor5-icons@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-icons/-/ckeditor5-icons-47.2.0.tgz#0721f47f2ea7e8ae729f44e5a9815cc87e30571d"
+  integrity sha512-9rxAWNQEjZBHyMBQ8XXwfa+ubPBzQntd+nkWBAGTK6ddqHZIaQLsiLrUAdR5tyKKK9tnTkwyx1jycGRspZnoxw==
 
-"@ckeditor/ckeditor5-image@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-image/-/ckeditor5-image-47.1.0.tgz#2653db9c464d270b35c7e9d881b36b37b89d7487"
-  integrity sha512-BoVwiXD/l0yUxUsF9wLajo5p3b7TKamkKP7wAA/dkCUlWYzvzjQKwLwYoknNf3GgHLYuY5n6iRPvYQGvNsn6hg==
+"@ckeditor/ckeditor5-image@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-image/-/ckeditor5-image-47.2.0.tgz#4c7a50a05cebccc9e084269cbac1e22524e85203"
+  integrity sha512-XbXvRS++kFku0l7GABhsribmQTBC/SOAfimDNKjg5rayhAXCfovys7YmmU0eicydpo4//fAaa8zvDYc8uXWZGA==
   dependencies:
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-undo" "47.1.0"
-    "@ckeditor/ckeditor5-upload" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-undo" "47.2.0"
+    "@ckeditor/ckeditor5-upload" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-indent@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-indent/-/ckeditor5-indent-47.1.0.tgz#de34853071ec0ccbacd4fb2a48efdd7a18e0975c"
-  integrity sha512-iqYlsdOGsTjuJ+xUx0ee8aAVh9sDPishKx1UHJbwetlPyM1kUADvVNONVBHV5YLgT0M7Bk5/MzGwlyQAuVipxg==
+"@ckeditor/ckeditor5-indent@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-indent/-/ckeditor5-indent-47.2.0.tgz#39fef07c6b789fbcdb122ee37317f212b57ee92d"
+  integrity sha512-Q85+b+o+nonhJ/I9K9wB9XeZ5W8rS9k66VvoDHxL3jJ6g6C+oyEAOomooTDCvJvBgDN6vGpcwzznKp0Q8baoCQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-heading" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-list" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-heading" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-list" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-language@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-language/-/ckeditor5-language-47.1.0.tgz#d3438e523c2d4bcba57e0d632e71afde2210f709"
-  integrity sha512-nZJlfefKtf0sWvyQdTB361mQMSGSlYj2WbHV3gpabkgkE/ZCbL/Tr5aCJ2ulQo2/ksL2s7nDHFIWu8UUEeVhbw==
+"@ckeditor/ckeditor5-language@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-language/-/ckeditor5-language-47.2.0.tgz#f31dfc03ef5f56985b6329875fca0e0200b86a6e"
+  integrity sha512-kc5MqQnvQtUPuvRJfdqXHQZNQyHVy/ZZv5laPY1AKrsKqc5SJO4y3v//4yHvdn45V4QKLwMOy4yC365Sdq0UpA==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-link@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-link/-/ckeditor5-link-47.1.0.tgz#cf6d02d4208968420dd7df7c82c4d4900cb3edf7"
-  integrity sha512-8XwnVPnp2GaNzcyXEahDYM8Qjh/qkU/R1VyjMh7EKSnlZOdget/jKXltNNwJpX0ofPMcY0CnvqGGF42gM3Tlcg==
+"@ckeditor/ckeditor5-link@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-link/-/ckeditor5-link-47.2.0.tgz#72c6ba684db256d4a2bb481689236335435f7bcc"
+  integrity sha512-ijaF1Ic23FH9qulW2ZuaxecmdT0JuK/4XNkdaoRntloHiVZ/tFAu+o/6st/pDXfutDBmnEXwrNGVtzO/JTPhrw==
   dependencies:
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-image" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-image" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-list@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-list/-/ckeditor5-list-47.1.0.tgz#21dd745b3bfe37cc9e411eb62c1d1acddfd4224f"
-  integrity sha512-P18ZXzJcAGoA6+nIoXkZ27/Ny80HCcrH36ay1MwSxsuQKO8S894kEZb+QS/HvePsX2tso+bQsWw4WWBzbLfP2g==
+"@ckeditor/ckeditor5-list@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-list/-/ckeditor5-list-47.2.0.tgz#ec5940d8d8d941b9c9e7bb578ce72e64141e4fbe"
+  integrity sha512-PDjTQLn2CqrZ4XuAAJWY2vA5bkVu8UHKQZa1+ddfS4FbvfF2QR3eDX5axywpuaCb2Dm2ZQoqxpA5GQmt1fUehg==
   dependencies:
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-enter" "47.1.0"
-    "@ckeditor/ckeditor5-font" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-enter" "47.2.0"
+    "@ckeditor/ckeditor5-font" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-markdown-gfm@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-markdown-gfm/-/ckeditor5-markdown-gfm-47.1.0.tgz#93a2222358bbe7b6d38d76d18ff0f71ac588d0f0"
-  integrity sha512-oZh2sUX7VvI24ijosvilRqfrRkmUYdDaKdKxDfH8OBKiLnCPOccAhOMVy2LSBY1yvEEIUe2yq79nTC3i0uUkdg==
+"@ckeditor/ckeditor5-markdown-gfm@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-markdown-gfm/-/ckeditor5-markdown-gfm-47.2.0.tgz#2b88dc114bacf7fa03f9dbc0413a799657954343"
+  integrity sha512-mt47/GMxrsAL3u/aBjOuH5ETSLH0knoYJpchYb7sXzIuQlY7xPqvcONyD9700TAN30FV7qpOVKUqI7tRyLL5uA==
   dependencies:
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
     "@types/hast" "3.0.4"
-    ckeditor5 "47.1.0"
+    ckeditor5 "47.2.0"
     hast-util-from-dom "5.0.1"
     hast-util-to-html "9.0.5"
     hast-util-to-mdast "10.1.2"
@@ -1347,271 +1347,271 @@
     unified "11.0.5"
     unist-util-visit "5.0.0"
 
-"@ckeditor/ckeditor5-media-embed@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-media-embed/-/ckeditor5-media-embed-47.1.0.tgz#c162aeee05b03e260b224e93ce5ab5a94b13e067"
-  integrity sha512-ZbCYrJpEoKnXFLIwTeCqL6au/irByQq4UhElWFECMUchk3ZlJiSbTrVgrMxtzNdYxvlRGkNIizqPlukt4Xf5ig==
+"@ckeditor/ckeditor5-media-embed@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-media-embed/-/ckeditor5-media-embed-47.2.0.tgz#1bba0974808cd4c23a07a092030c136274b2873d"
+  integrity sha512-lATTMej9pBsZk4qm8cOqLXhmrCq/t+HpP/zg3DWnYbiD6zclO69PSJxD09l9NsyOo0YZb8SYAsVISoKNaIOr0A==
   dependencies:
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-undo" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-undo" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-mention@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-mention/-/ckeditor5-mention-47.1.0.tgz#afe28fedf85e94d8701593cd1289d85be02ebe18"
-  integrity sha512-5Bsf9224WU/ORVoOZnWWqaGA06DTs/+VLQvZhu5qmh17zL1o/JpSA0SrS9mQcf2StCW4HhX89MZhFSLb+2oOvQ==
+"@ckeditor/ckeditor5-mention@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-mention/-/ckeditor5-mention-47.2.0.tgz#db7a21e6b4189f197c03398f0c2cf28dd0717d77"
+  integrity sha512-ZPvVwEQxcCUI0SvJa28JUULww/SCXiiZpfnMtaneMxsIOqesAFxPqMXA9HkyLotikuK1sezu5XzgJ2S5gdqw3A==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-minimap@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-minimap/-/ckeditor5-minimap-47.1.0.tgz#d3b360e516898fa582fee3dfe979453695ba23f0"
-  integrity sha512-fh3f0WTrULjd8rm/VWhVem/VYJgPjf+h+Zrnu8MeX0DHqRsNINdIUHNtYk2wUbIzQSgGtIVktK0LhLlN/XxRTA==
+"@ckeditor/ckeditor5-minimap@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-minimap/-/ckeditor5-minimap-47.2.0.tgz#a47b83ed042a528b25dc1e09c7e8830222640d7b"
+  integrity sha512-Th6HspywP3JeGBMRUmpAuIyFa8XtrpMiGdsjazlKcHaitT6bHBTzaTjaWVnOuVY3gBdFAKsalv2ZEk8vIPqkhg==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-page-break@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-page-break/-/ckeditor5-page-break-47.1.0.tgz#ded8470a7828e5a31574238c8453bcb9fb108a91"
-  integrity sha512-PrCugSPny2icLp/ZKx1r6mkgtP1jJmc+kB4w56Dsmgf1ZorWniI53wmemaTDhIgGwnNfO9CjYdSy8Vb4vyB1ZA==
+"@ckeditor/ckeditor5-page-break@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-page-break/-/ckeditor5-page-break-47.2.0.tgz#c08dfee03ffe14a0694a4f1bb14231c1eaeb8935"
+  integrity sha512-DosfUorg3wZ3a6yM/ymsJQ1E2Rbqi08RFOQ4oQLPPAi2VRdTLt0BiqQPFMKJmy2T2k5K4TLc7bs0s3E96aQyXg==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-paragraph@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-paragraph/-/ckeditor5-paragraph-47.1.0.tgz#ea0aa0b2393e14e7f797537a7c425d71edaab3ef"
-  integrity sha512-B1tY1+kEncLFrGoD3YkpJIMNFSQvB4t8SVSei6+upD3YGkyf/VhmtYlnqBLRK2znQTlg76EJJcWlGv9zCJ9edw==
+"@ckeditor/ckeditor5-paragraph@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-paragraph/-/ckeditor5-paragraph-47.2.0.tgz#7d5242d38b2986e9da627859ad4a744285801a44"
+  integrity sha512-x6nqRQjlAcOhirOE9umNdK8WckWcz7JPVU7IlPTzlrVAYCq+wiz6rgpuh4COUHnee4c31fF21On+OVyqgu7JvQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
 
-"@ckeditor/ckeditor5-paste-from-office@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-paste-from-office/-/ckeditor5-paste-from-office-47.1.0.tgz#2d0117bcae3ee83d06c396f51dc2facee2b96486"
-  integrity sha512-+96rw8TkId8o/im4zvq2EtdDzHHaP/+29PMcJ5ACmvq32tJgFsLCyo10asEWV+U/SiWUHNKBPgGLJeh/MdzlAw==
+"@ckeditor/ckeditor5-paste-from-office@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-paste-from-office/-/ckeditor5-paste-from-office-47.2.0.tgz#3b0dccca78353dc477d5658d5877c06e91bfc04d"
+  integrity sha512-DGGNGNhl25ub8dFBKJF4jfMBoSSbF5uKzFShMNIaAVAagV6kkDWR0HJWAir5CuFrElzWTkPd0ZC5RNL76yTbtg==
   dependencies:
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-remove-format@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-remove-format/-/ckeditor5-remove-format-47.1.0.tgz#37e2d3eba344988edd8a41ea74ec9263723dcb41"
-  integrity sha512-JShEW29roO0PyQKBCDUS6cACGuYWxnUhCRcBt+DFUhS5t51XPpDXasdYfGfeUJ9DeNL/0iPjKtQxcGUoMa5NtQ==
+"@ckeditor/ckeditor5-remove-format@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-remove-format/-/ckeditor5-remove-format-47.2.0.tgz#d1631b3b7ba7d8560522e5cc4aa0c123cbd21432"
+  integrity sha512-CRWs7Osok8k3Oi2N7RvA12ECxi47wIyrDTsJ3lJYo8zDIbZdOXlv5o+In+mbsZ7lzNKLhKMAgRcF/PrGWcAaUg==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-restricted-editing@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-restricted-editing/-/ckeditor5-restricted-editing-47.1.0.tgz#ddd3c7742ecfed8841d14315dacbccb5fada1bea"
-  integrity sha512-vEBZKc3vkvFKOVfPn56Wl76YPCn73QmkkUMLGN2tf2ntvSoVEmlk+HTWaXYRG8bsbj2JtdijgW3wckCvNRW8ow==
+"@ckeditor/ckeditor5-restricted-editing@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-restricted-editing/-/ckeditor5-restricted-editing-47.2.0.tgz#6d5513f535db2570ec626b29fed997f7461e2ce9"
+  integrity sha512-ziFgoZCHaHzzrLeQ6XIlrcEazoGF6IC2+qzxGnO1A1NKY/8WVLmokKFLmUgDMnPLrhvz5Qqldj0dSS2pKhj6QQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-select-all@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-select-all/-/ckeditor5-select-all-47.1.0.tgz#c40ad89efb7466ade836b28637171826c357694d"
-  integrity sha512-3k7TgWjcx7FFm0t6bS8Uc6YOhqehf815SsmtFN+JISoL9Ojm1yqLEUOOYuYPy0Voed70Mk2HBQvdEnuP9m6X1g==
+"@ckeditor/ckeditor5-select-all@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-select-all/-/ckeditor5-select-all-47.2.0.tgz#61d2bb5c0dd4f16403828f0ae7bb7ce90f557e37"
+  integrity sha512-4kswe9jmKp6y1hTwWfJBxF8XuX1pgZxraAlm+ugJLhjsus/vGBVXBFNN7kH+RoNxC6tf1ZXly69dGTG4P/nXrg==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
 
-"@ckeditor/ckeditor5-show-blocks@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-show-blocks/-/ckeditor5-show-blocks-47.1.0.tgz#2d8c3d22394ad982cbaf2519fc44365e0f7011f4"
-  integrity sha512-8ogD671z7j2DwlOa1W0KX7jcorTHbrLxqLYtiCeJljJv/sfHMtzfXc8PL81eiKDfSZwoNY2k5pwTWPyv30MRAg==
+"@ckeditor/ckeditor5-show-blocks@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-show-blocks/-/ckeditor5-show-blocks-47.2.0.tgz#4096372e2bb52e04cc1d2316f6c36e266b948c43"
+  integrity sha512-eIzvA5zQEWNGVXhkCTYVfw32tpsFEx4nTPAVpsFEv0hb1sAMaOv5fIoFmwcx/C8CmN9sBiZtuovXGM5i/pwoTQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-source-editing@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-source-editing/-/ckeditor5-source-editing-47.1.0.tgz#e9af36b59f8d3d08800096498a2b2c588b3a48d4"
-  integrity sha512-/UzbN04b3gK4FdY9nS6bdmh1KlkhHTOglCnvKDlx6XvC+E6qW2OzfU7D1b/k7sINSmVRGkt5L2NuZCHeAgX2/Q==
+"@ckeditor/ckeditor5-source-editing@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-source-editing/-/ckeditor5-source-editing-47.2.0.tgz#6d521c9abdb79e8232279410a54654d73dff2a77"
+  integrity sha512-B82fbUiTBWYR3XTfUk/30Hsk9PAmPkmraKNJKGDoch0NXduPz8ehpCwbnrJdIvm7pozbgB11RjWzq56VcBX2Qw==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-theme-lark" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-theme-lark" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-special-characters@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-special-characters/-/ckeditor5-special-characters-47.1.0.tgz#ee699082b9bb89175336f08ea2d572053364e379"
-  integrity sha512-r/FW9Xz589nLcr5pXOyhCPNLQp7XkjR17PgHTgJcQmJuEo396UTvoPz7eBfGkCDMjINmZj1cTNdJSL7/Xpqk5g==
+"@ckeditor/ckeditor5-special-characters@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-special-characters/-/ckeditor5-special-characters-47.2.0.tgz#08e4f476216d3a5fe9d359a38c1694c163ede818"
+  integrity sha512-aH1E1SEMRUF6gMdqPuFeDZvZRCUNJ/n8RWwXHFicsJArYDGOiATxVZQZbwk50duAsWcxxj0uTSHGwFXBL9evyQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
 
-"@ckeditor/ckeditor5-style@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-style/-/ckeditor5-style-47.1.0.tgz#cf694876f913b4ab272b4acfa453f2772f3bd90a"
-  integrity sha512-Mt40tqRfgebkbHVXq+8nD19gyIsNgnITiQoT+tFZynSlQieaifDo+9D3Aq70KdrxlHW4Muw5ryYe14Xy7Y+rwA==
+"@ckeditor/ckeditor5-style@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-style/-/ckeditor5-style-47.2.0.tgz#939b39f42db67dfa91c51ddde2efa9fc28dffc0d"
+  integrity sha512-XAIl8oNHpFxTRbGIE+2vpKLgrP3VnknUTyasvL/HeS3iUHKLDRlh9d3ghozhuUqQaF5rnkzUQEBv/fv+4u3Y7A==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-html-support" "47.1.0"
-    "@ckeditor/ckeditor5-list" "47.1.0"
-    "@ckeditor/ckeditor5-table" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-html-support" "47.2.0"
+    "@ckeditor/ckeditor5-list" "47.2.0"
+    "@ckeditor/ckeditor5-table" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-table@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-table/-/ckeditor5-table-47.1.0.tgz#dd89a38b7950954d60e5c0fa93b5c8ef6de7766c"
-  integrity sha512-49g66He4BFzfh/8m23BBhfxk/0FnJnEZ07SiQBWdAMfZSFubTz0/tCm38imf79h4bawUcaLSGP+UJBc6x/gg4w==
+"@ckeditor/ckeditor5-table@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-table/-/ckeditor5-table-47.2.0.tgz#d08098760bc5dca1289a98fcb06a3a6bccd0c4d1"
+  integrity sha512-zxNHpl4L7HsOLCYiKrbyyHoM2dMGetgP4eTjYyWfn9gf+ydVs7o+LJVN5bsWt3J4ToamCj5G7VHZUmqUcPbN6A==
   dependencies:
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-theme-lark@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-theme-lark/-/ckeditor5-theme-lark-47.1.0.tgz#9819ebf013f26d1500188c3882e71d5f3064bcb5"
-  integrity sha512-gUAPApFbsViLKGgwHtCLigBYziFUmXDBa9UFmZUNSTZPWpTz/uxOOhwjrQvGqwAH/0W9pKR5TsxWaE2sJZaJPQ==
+"@ckeditor/ckeditor5-theme-lark@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-theme-lark/-/ckeditor5-theme-lark-47.2.0.tgz#10260a70b0c12f668593506e51ebd8b7eaa76dba"
+  integrity sha512-5Guefuo+Nllq4FMaFnLJlU/fICy2IQYw3T+0PTYjFqd59xTx6suwjv2ou41HKPfJ1b6NCbmkbhuaC59lGIfBtQ==
   dependencies:
-    "@ckeditor/ckeditor5-ui" "47.1.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
 
-"@ckeditor/ckeditor5-typing@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-typing/-/ckeditor5-typing-47.1.0.tgz#f18c0d1430177c677f7020c269b48d6331abc3e7"
-  integrity sha512-teg0UA6AWEMraXAsXYB8372ogIXfFaakOv6Vz8ppIsuKPZfHKJC5ixUd+oUzk03nv3QdtalQAALY8I8dnwl6dQ==
+"@ckeditor/ckeditor5-typing@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-typing/-/ckeditor5-typing-47.2.0.tgz#6f5ac014e3104cedc54cc79213d24ea871d24122"
+  integrity sha512-BDJLlaX9SHFUfZegOEW7ZeJ0o/TBgabINNxa3CwtGuGBLHUAQ3IAFJ0Cd6jHq12J2kRDwiXZzvvgMyCH7jeeUQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-ui@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-ui/-/ckeditor5-ui-47.1.0.tgz#2c691666fd679736fc3ebf629f2c27d1c10fd6db"
-  integrity sha512-fV/9LPGZgnWBFQcHq29idZI34OZoO5ej72asf0X+A2rMgdCrHPlVeVwiy6THLRE5CFn9qdramYB27eESxOPi6A==
+"@ckeditor/ckeditor5-ui@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-ui/-/ckeditor5-ui-47.2.0.tgz#e3d7f5ab66a5426f79afa560c1e01bfd41abf88c"
+  integrity sha512-/yd1/JmIqJybqBRZvk/QGzeY6DZlJvPtyEqq9Ay+U4bUftr2DOrfOikM62okepYRCCtMQ4nQk3c2eFmacfym2A==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-editor-multi-root" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-editor-multi-root" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
     "@types/color-convert" "2.0.4"
     color-convert "3.1.0"
     color-parse "2.0.2"
     es-toolkit "1.39.5"
     vanilla-colorful "0.7.2"
 
-"@ckeditor/ckeditor5-undo@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-undo/-/ckeditor5-undo-47.1.0.tgz#e31a947a890af2c1f94ebd81643ef6f4eb146cc3"
-  integrity sha512-e+GyEZLlx2LhHbaegWri3p1zgX6fjvQH7fzmFG2NZ5h1bgbsCW/+vHv5/r9cwU2/SudJqOeoQRXGQ8PHBp6/ZA==
+"@ckeditor/ckeditor5-undo@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-undo/-/ckeditor5-undo-47.2.0.tgz#94af4ec59d65f88dbb3500316784fa5ba897417e"
+  integrity sha512-smq5O3GdqJXB+9o54BTn/LyB52OHiW9ekzacOuMNxtuA/KBwHpdsPFMcGFGH04W9O0qUtSdt3fYC0i+SJjYAww==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
 
-"@ckeditor/ckeditor5-upload@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-upload/-/ckeditor5-upload-47.1.0.tgz#37cd923c0e23070c9a0e61f4529d0c1d250a0272"
-  integrity sha512-JP6Ao5xbNPoxKv4zWgYbVBA6u8CmOSkvLYp+P3+i4MCcwva4NH/dKwJL+Wqk8XxZ8eavhXNgMGs22Oqq2v18/Q==
+"@ckeditor/ckeditor5-upload@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-upload/-/ckeditor5-upload-47.2.0.tgz#6c0caa82be97e1149c03a2d96da242d0a4a613ee"
+  integrity sha512-uE4FwVtmJ6UACDC9N+H6HHGhlpAF8Fk2QCF/iBboh4VqhlFbFjMbXCAbsWrDik6C/p9r4Iv+IEmbpjsRTD+9SQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
 
-"@ckeditor/ckeditor5-utils@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-utils/-/ckeditor5-utils-47.1.0.tgz#b0038703d874029ebf15636d6b7aa75c3634da4e"
-  integrity sha512-tx2AHkx8dqVp4YKieGbNmSZy88ekmsMIQyHMD04n6oMFz16a3mmqFCm9WJRpTaNvniGKh6TCxA48Kf2zwn7EmQ==
+"@ckeditor/ckeditor5-utils@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-utils/-/ckeditor5-utils-47.2.0.tgz#6d80dc08564d34db04b8799eff2897b9cc1d9e17"
+  integrity sha512-1b9SWtGuPZApm9065swh+fivxQMvuAsVXHuo26OGV2EnQK//w7kHsxKhVGJMzfHeuev5KvhJ2zdo8SUvePfBoA==
   dependencies:
-    "@ckeditor/ckeditor5-ui" "47.1.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-watchdog@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-watchdog/-/ckeditor5-watchdog-47.1.0.tgz#207a54f21b60fafdad9acbf33857eda82c0dc8cd"
-  integrity sha512-3cK0GKi8Et3dHln1E36Wmk30SzgLd2dgWDGaNUvfygQT9hBeKnWZ//cp/ZlBwbfEwJth/jAlcXUHsFR9T2Uwjw==
+"@ckeditor/ckeditor5-watchdog@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-watchdog/-/ckeditor5-watchdog-47.2.0.tgz#67fc6af5205f8da246752e97d8a4e907cc18373f"
+  integrity sha512-C1AT7OqLBkPCUm4pjJe4n64qj+5vvMdQb2+lLMSz0SMsBqmYFrVYMlZWW4LjpaYUAYEmvTPcyDoqukBKRWNrRQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-editor-multi-root" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-editor-multi-root" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-widget@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-widget/-/ckeditor5-widget-47.1.0.tgz#d201efc67d812e0b3356d5de4a88116857bf4b7b"
-  integrity sha512-S04Ry1eVMyLV7yyc8bpmAY/7/bmD8FsrV5Gfk3ftL+voJi0+3B1WmptOcpkyiCC5PbbgjNX3f0NPYufEjjPNtQ==
+"@ckeditor/ckeditor5-widget@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-widget/-/ckeditor5-widget-47.2.0.tgz#3c38db32b0e4d2ec0e78a053fda04d68f2542bf5"
+  integrity sha512-1vhfdeVPNc6UtCPAC+aKDNIi0EDxpAJ7TudepJVLXnS752V5rnArjPrYBfH6dkpHYV920CuxxsoS1sSuVVMrkA==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-enter" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-enter" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
     es-toolkit "1.39.5"
 
-"@ckeditor/ckeditor5-word-count@47.1.0":
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-word-count/-/ckeditor5-word-count-47.1.0.tgz#d09a3fa80e0fe07560148b8d62efe01c97016907"
-  integrity sha512-e9sx/EUONwbdZFGU6bcJmrLMw18Fugecs3LiMQVVoVrFpMEywPhzzeRZUN6XX70qPXWHkDRQRnNSQXqhJ2lpxg==
+"@ckeditor/ckeditor5-word-count@47.2.0":
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/@ckeditor/ckeditor5-word-count/-/ckeditor5-word-count-47.2.0.tgz#42577d55113f63c4953f7549f1eff8b7de653950"
+  integrity sha512-1ouy59G1Qxf6hTRnW9tSL7Xjsx8kGfTJvrH9mZWGIpmNo0pIM6Ts96U/qgr5RB0LbhYtqhbDq87F9QjMcfYUjQ==
   dependencies:
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    ckeditor5 "47.1.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    ckeditor5 "47.2.0"
     es-toolkit "1.39.5"
 
 "@csstools/selector-specificity@^2.0.0":
@@ -1638,18 +1638,6 @@
   version "6.7.2"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-6.7.2.tgz#8249de9b7e22fcb3ceb5e66090c30a1d5492b81a"
   integrity sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==
-
-"@isaacs/cliui@^8.0.2":
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/@isaacs/cliui/-/cliui-8.0.2.tgz#b37667b7bc181c168782259bab42474fbf52b550"
-  integrity sha512-O8jcjabXaleOG9DQ0+ARXWZBTfnP4WNAqzuiJK7ll44AmxGKv/J2M4TPjxjY3znBCfvBXFzucm1twdyFybFqEA==
-  dependencies:
-    string-width "^5.1.2"
-    string-width-cjs "npm:string-width@^4.2.0"
-    strip-ansi "^7.0.1"
-    strip-ansi-cjs "npm:strip-ansi@^6.0.1"
-    wrap-ansi "^8.1.0"
-    wrap-ansi-cjs "npm:wrap-ansi@^7.0.0"
 
 "@jest/schemas@^29.6.3":
   version "29.6.3"
@@ -1844,11 +1832,6 @@
     "@parcel/watcher-win32-ia32" "2.5.1"
     "@parcel/watcher-win32-x64" "2.5.1"
 
-"@pkgjs/parseargs@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
-  integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
-
 "@popperjs/core@^2.11.8":
   version "2.11.8"
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
@@ -1907,9 +1890,9 @@
     string.prototype.matchall "^4.0.6"
 
 "@symfony/webpack-encore@5.*":
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/@symfony/webpack-encore/-/webpack-encore-5.2.0.tgz#a1a6db817da33bc8454bfff3b7c68d2cc7439850"
-  integrity sha512-AGSdYBFgWqiZDFn6LAtoGYGys/XRdGpoGoEzt5m4FKkan20oGfmFfHJfemyLW7/OzQkRi1RM2F0RsIlZ73pmAw==
+  version "5.3.1"
+  resolved "https://registry.yarnpkg.com/@symfony/webpack-encore/-/webpack-encore-5.3.1.tgz#a8b183bb8ba9f8ce0aa47be5f520ae194ffa1412"
+  integrity sha512-fNevCvcFMWrY63b901F2mvuECFUqwrQUUEJ9TZkO42lc81F0D6yiTMCFpzTKNrUIO7JSoD8aQxAWJbI5Kly4yg==
   dependencies:
     "@nuxt/friendly-errors-webpack-plugin" "^2.5.1"
     babel-loader "^9.1.3 || ^10.0.0"
@@ -1924,7 +1907,7 @@
     style-loader "^3.3.0 || ^4.0.0"
     tapable "^2.2.1"
     terser-webpack-plugin "^5.3.0"
-    tmp "^0.2.1"
+    tmp "^0.2.5"
     webpack-manifest-plugin "^5.0.1"
     yargs-parser "^21.0.0"
 
@@ -2087,9 +2070,9 @@
   integrity sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==
 
 "@types/yargs@^17.0.8":
-  version "17.0.34"
-  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-17.0.34.tgz#1c2f9635b71d5401827373a01ce2e8a7670ea839"
-  integrity sha512-KExbHVa92aJpw9WDQvzBaGVE2/Pz+pLZQloT2hjL8IqsZnV62rlPOYvNnLmf/L2dyllfVUOVBj64M0z/46eR2A==
+  version "17.0.35"
+  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-17.0.35.tgz#07013e46aa4d7d7d50a49e15604c1c5340d4eb24"
+  integrity sha512-qUHkeCyQFxMXg79wQfTtfndEC+N9ZZg76HJftDJp+qH2tV7Gj4OJi7l+PiWwJ+pWtW8GwSmqsDj/oymhrTWXjg==
   dependencies:
     "@types/yargs-parser" "*"
 
@@ -2304,11 +2287,6 @@ ansi-regex@^5.0.1:
   resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-5.0.1.tgz#082cb2c89c9fe8659a311a53bd6a4dc5301db304"
   integrity sha512-quJQXlTSUGL2LH9SUXo8VwsY4soanhgo6LNSm84E1LBcE8s3O0wpdiRzyR9z/ZZJMlMWv37qOOb9pdJlMUEKFQ==
 
-ansi-regex@^6.0.1:
-  version "6.2.2"
-  resolved "https://registry.yarnpkg.com/ansi-regex/-/ansi-regex-6.2.2.tgz#60216eea464d864597ce2832000738a0589650c1"
-  integrity sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==
-
 ansi-styles@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-3.2.1.tgz#41fbb20243e50b12be0f04b8dedbf07520ce841d"
@@ -2316,17 +2294,12 @@ ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-ansi-styles@^4.0.0, ansi-styles@^4.1.0:
+ansi-styles@^4.1.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-4.3.0.tgz#edd803628ae71c04c85ae7a0906edad34b648937"
   integrity sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==
   dependencies:
     color-convert "^2.0.1"
-
-ansi-styles@^6.1.0:
-  version "6.2.3"
-  resolved "https://registry.yarnpkg.com/ansi-styles/-/ansi-styles-6.2.3.tgz#c044d5dcc521a076413472597a1acb1f103c4041"
-  integrity sha512-4Dj6M28JB+oAH8kFkTLUo+a2jwOFkuqb3yucU0CANcRRUbxS0cP0nZYCGjcc3BNXwRIsUVmDGgzawme7zvJHvg==
 
 any-promise@^1.0.0:
   version "1.3.0"
@@ -2453,9 +2426,9 @@ balanced-match@^1.0.0:
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
 baseline-browser-mapping@^2.8.25:
-  version "2.8.28"
-  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.8.28.tgz#9ef511f5a7c19d74a94cafcbf951608398e9bdb3"
-  integrity sha512-gYjt7OIqdM0PcttNYP2aVrr2G0bMALkBaoehD4BuRGjAOtipg0b6wHg1yNL+s5zSnLZZrGHOw4IrND8CD+3oIQ==
+  version "2.8.32"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.8.32.tgz#5de72358cf363ac41e7d642af239f6ac5ed1270a"
+  integrity sha512-OPz5aBThlyLFgxyhdwf/s2+8ab3OvT7AdTNvKHBwpXomIYeXqpUUuT8LrdtxZSsWJ4R4CU1un4XGh5Ez3nlTpw==
 
 big.js@^5.2.2:
   version "5.2.2"
@@ -2528,7 +2501,7 @@ braces@^3.0.3, braces@~3.0.2:
   dependencies:
     fill-range "^7.1.1"
 
-browserslist@^4.0.0, browserslist@^4.24.0, browserslist@^4.26.3, browserslist@^4.27.0:
+browserslist@^4.0.0, browserslist@^4.24.0, browserslist@^4.26.3, browserslist@^4.27.0, browserslist@^4.28.0:
   version "4.28.0"
   resolved "https://registry.yarnpkg.com/browserslist/-/browserslist-4.28.0.tgz#9cefece0a386a17a3cd3d22ebf67b9deca1b5929"
   integrity sha512-tbydkR/CxfMwelN0vwdP/pLkDwyAASZ+VfWm4EOwlB6SWhx1sYnWLqo8N5j0rAzPfzfRaxt0mM/4wPU/Su84RQ==
@@ -2601,9 +2574,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001754:
-  version "1.0.30001754"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001754.tgz#7758299d9a72cce4e6b038788a15b12b44002759"
-  integrity sha512-x6OeBXueoAceOmotzx3PO4Zpt4rzpeIFsSr6AAePTZxSkXiYDUmpypEl7e2+8NCd9bD7bXjqyef8CJYPC1jfxg==
+  version "1.0.30001757"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001757.tgz#a46ff91449c69522a462996c6aac4ef95d7ccc5e"
+  integrity sha512-r0nnL/I28Zi/yjk1el6ilj27tKcdjLsNqAOZr0yVjWPrSQyHgKI2INaEWw21bAQSv2LXRt1XuCS/GomNpWOxsQ==
 
 ccount@^2.0.0:
   version "2.0.1"
@@ -2683,72 +2656,72 @@ ci-info@^3.2.0:
   version "1.0.0"
   resolved "https://github.com/HatScripts/circle-flags#c888ec17d0fb23ad9131fe1de34b7bf88ff5d9fc"
 
-ckeditor5@47.1.0:
-  version "47.1.0"
-  resolved "https://registry.yarnpkg.com/ckeditor5/-/ckeditor5-47.1.0.tgz#f050ccfaf46163dec914fd30410deae7866d869f"
-  integrity sha512-Vnmt6eKIpiM+EpJSwxzCjJC5/9ykUhegwqWS9znAuAz2ZgBiVUFt54Y+CBhVpMru3z4zQ+NncVgCqoiU3ocHGQ==
+ckeditor5@47.2.0:
+  version "47.2.0"
+  resolved "https://registry.yarnpkg.com/ckeditor5/-/ckeditor5-47.2.0.tgz#8aeb6466c6dbb1d3b990f9a52c114fbe12fee498"
+  integrity sha512-mrG9UdpT4JC0I44vK1DV5UwfGhruEG/FMXIWwGv+LWYrKt4aLL/5NyNpW86UDO9YAFSaw6IdEcbJGC/WkMJJjA==
   dependencies:
-    "@ckeditor/ckeditor5-adapter-ckfinder" "47.1.0"
-    "@ckeditor/ckeditor5-alignment" "47.1.0"
-    "@ckeditor/ckeditor5-autoformat" "47.1.0"
-    "@ckeditor/ckeditor5-autosave" "47.1.0"
-    "@ckeditor/ckeditor5-basic-styles" "47.1.0"
-    "@ckeditor/ckeditor5-block-quote" "47.1.0"
-    "@ckeditor/ckeditor5-bookmark" "47.1.0"
-    "@ckeditor/ckeditor5-ckbox" "47.1.0"
-    "@ckeditor/ckeditor5-ckfinder" "47.1.0"
-    "@ckeditor/ckeditor5-clipboard" "47.1.0"
-    "@ckeditor/ckeditor5-cloud-services" "47.1.0"
-    "@ckeditor/ckeditor5-code-block" "47.1.0"
-    "@ckeditor/ckeditor5-core" "47.1.0"
-    "@ckeditor/ckeditor5-easy-image" "47.1.0"
-    "@ckeditor/ckeditor5-editor-balloon" "47.1.0"
-    "@ckeditor/ckeditor5-editor-classic" "47.1.0"
-    "@ckeditor/ckeditor5-editor-decoupled" "47.1.0"
-    "@ckeditor/ckeditor5-editor-inline" "47.1.0"
-    "@ckeditor/ckeditor5-editor-multi-root" "47.1.0"
-    "@ckeditor/ckeditor5-emoji" "47.1.0"
-    "@ckeditor/ckeditor5-engine" "47.1.0"
-    "@ckeditor/ckeditor5-enter" "47.1.0"
-    "@ckeditor/ckeditor5-essentials" "47.1.0"
-    "@ckeditor/ckeditor5-find-and-replace" "47.1.0"
-    "@ckeditor/ckeditor5-font" "47.1.0"
-    "@ckeditor/ckeditor5-fullscreen" "47.1.0"
-    "@ckeditor/ckeditor5-heading" "47.1.0"
-    "@ckeditor/ckeditor5-highlight" "47.1.0"
-    "@ckeditor/ckeditor5-horizontal-line" "47.1.0"
-    "@ckeditor/ckeditor5-html-embed" "47.1.0"
-    "@ckeditor/ckeditor5-html-support" "47.1.0"
-    "@ckeditor/ckeditor5-icons" "47.1.0"
-    "@ckeditor/ckeditor5-image" "47.1.0"
-    "@ckeditor/ckeditor5-indent" "47.1.0"
-    "@ckeditor/ckeditor5-language" "47.1.0"
-    "@ckeditor/ckeditor5-link" "47.1.0"
-    "@ckeditor/ckeditor5-list" "47.1.0"
-    "@ckeditor/ckeditor5-markdown-gfm" "47.1.0"
-    "@ckeditor/ckeditor5-media-embed" "47.1.0"
-    "@ckeditor/ckeditor5-mention" "47.1.0"
-    "@ckeditor/ckeditor5-minimap" "47.1.0"
-    "@ckeditor/ckeditor5-page-break" "47.1.0"
-    "@ckeditor/ckeditor5-paragraph" "47.1.0"
-    "@ckeditor/ckeditor5-paste-from-office" "47.1.0"
-    "@ckeditor/ckeditor5-remove-format" "47.1.0"
-    "@ckeditor/ckeditor5-restricted-editing" "47.1.0"
-    "@ckeditor/ckeditor5-select-all" "47.1.0"
-    "@ckeditor/ckeditor5-show-blocks" "47.1.0"
-    "@ckeditor/ckeditor5-source-editing" "47.1.0"
-    "@ckeditor/ckeditor5-special-characters" "47.1.0"
-    "@ckeditor/ckeditor5-style" "47.1.0"
-    "@ckeditor/ckeditor5-table" "47.1.0"
-    "@ckeditor/ckeditor5-theme-lark" "47.1.0"
-    "@ckeditor/ckeditor5-typing" "47.1.0"
-    "@ckeditor/ckeditor5-ui" "47.1.0"
-    "@ckeditor/ckeditor5-undo" "47.1.0"
-    "@ckeditor/ckeditor5-upload" "47.1.0"
-    "@ckeditor/ckeditor5-utils" "47.1.0"
-    "@ckeditor/ckeditor5-watchdog" "47.1.0"
-    "@ckeditor/ckeditor5-widget" "47.1.0"
-    "@ckeditor/ckeditor5-word-count" "47.1.0"
+    "@ckeditor/ckeditor5-adapter-ckfinder" "47.2.0"
+    "@ckeditor/ckeditor5-alignment" "47.2.0"
+    "@ckeditor/ckeditor5-autoformat" "47.2.0"
+    "@ckeditor/ckeditor5-autosave" "47.2.0"
+    "@ckeditor/ckeditor5-basic-styles" "47.2.0"
+    "@ckeditor/ckeditor5-block-quote" "47.2.0"
+    "@ckeditor/ckeditor5-bookmark" "47.2.0"
+    "@ckeditor/ckeditor5-ckbox" "47.2.0"
+    "@ckeditor/ckeditor5-ckfinder" "47.2.0"
+    "@ckeditor/ckeditor5-clipboard" "47.2.0"
+    "@ckeditor/ckeditor5-cloud-services" "47.2.0"
+    "@ckeditor/ckeditor5-code-block" "47.2.0"
+    "@ckeditor/ckeditor5-core" "47.2.0"
+    "@ckeditor/ckeditor5-easy-image" "47.2.0"
+    "@ckeditor/ckeditor5-editor-balloon" "47.2.0"
+    "@ckeditor/ckeditor5-editor-classic" "47.2.0"
+    "@ckeditor/ckeditor5-editor-decoupled" "47.2.0"
+    "@ckeditor/ckeditor5-editor-inline" "47.2.0"
+    "@ckeditor/ckeditor5-editor-multi-root" "47.2.0"
+    "@ckeditor/ckeditor5-emoji" "47.2.0"
+    "@ckeditor/ckeditor5-engine" "47.2.0"
+    "@ckeditor/ckeditor5-enter" "47.2.0"
+    "@ckeditor/ckeditor5-essentials" "47.2.0"
+    "@ckeditor/ckeditor5-find-and-replace" "47.2.0"
+    "@ckeditor/ckeditor5-font" "47.2.0"
+    "@ckeditor/ckeditor5-fullscreen" "47.2.0"
+    "@ckeditor/ckeditor5-heading" "47.2.0"
+    "@ckeditor/ckeditor5-highlight" "47.2.0"
+    "@ckeditor/ckeditor5-horizontal-line" "47.2.0"
+    "@ckeditor/ckeditor5-html-embed" "47.2.0"
+    "@ckeditor/ckeditor5-html-support" "47.2.0"
+    "@ckeditor/ckeditor5-icons" "47.2.0"
+    "@ckeditor/ckeditor5-image" "47.2.0"
+    "@ckeditor/ckeditor5-indent" "47.2.0"
+    "@ckeditor/ckeditor5-language" "47.2.0"
+    "@ckeditor/ckeditor5-link" "47.2.0"
+    "@ckeditor/ckeditor5-list" "47.2.0"
+    "@ckeditor/ckeditor5-markdown-gfm" "47.2.0"
+    "@ckeditor/ckeditor5-media-embed" "47.2.0"
+    "@ckeditor/ckeditor5-mention" "47.2.0"
+    "@ckeditor/ckeditor5-minimap" "47.2.0"
+    "@ckeditor/ckeditor5-page-break" "47.2.0"
+    "@ckeditor/ckeditor5-paragraph" "47.2.0"
+    "@ckeditor/ckeditor5-paste-from-office" "47.2.0"
+    "@ckeditor/ckeditor5-remove-format" "47.2.0"
+    "@ckeditor/ckeditor5-restricted-editing" "47.2.0"
+    "@ckeditor/ckeditor5-select-all" "47.2.0"
+    "@ckeditor/ckeditor5-show-blocks" "47.2.0"
+    "@ckeditor/ckeditor5-source-editing" "47.2.0"
+    "@ckeditor/ckeditor5-special-characters" "47.2.0"
+    "@ckeditor/ckeditor5-style" "47.2.0"
+    "@ckeditor/ckeditor5-table" "47.2.0"
+    "@ckeditor/ckeditor5-theme-lark" "47.2.0"
+    "@ckeditor/ckeditor5-typing" "47.2.0"
+    "@ckeditor/ckeditor5-ui" "47.2.0"
+    "@ckeditor/ckeditor5-undo" "47.2.0"
+    "@ckeditor/ckeditor5-upload" "47.2.0"
+    "@ckeditor/ckeditor5-utils" "47.2.0"
+    "@ckeditor/ckeditor5-watchdog" "47.2.0"
+    "@ckeditor/ckeditor5-widget" "47.2.0"
+    "@ckeditor/ckeditor5-word-count" "47.2.0"
 
 clone-deep@^4.0.1:
   version "4.0.1"
@@ -2883,11 +2856,11 @@ cookieconsent@^3.1.1:
   integrity sha512-v8JWLJcI7Zs9NWrs8hiVldVtm3EBF70TJI231vxn6YToBGj0c9dvdnYwltydkAnrbBMOM/qX1xLFrnTfm5wTag==
 
 core-js-compat@^3.43.0:
-  version "3.46.0"
-  resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.46.0.tgz#0c87126a19a1af00371e12b02a2b088a40f3c6f7"
-  integrity sha512-p9hObIIEENxSV8xIu+V68JjSeARg6UVMG5mR+JEUguG3sI6MsiS1njz2jHmyJDvA+8jX/sytkBHup6kxhM9law==
+  version "3.47.0"
+  resolved "https://registry.yarnpkg.com/core-js-compat/-/core-js-compat-3.47.0.tgz#698224bbdbb6f2e3f39decdda4147b161e3772a3"
+  integrity sha512-IGfuznZ/n7Kp9+nypamBhvwdwLsW6KC8IOaURw2doAK5e98AG3acVLdh0woOnEqCfUtS+Vu882JE4k/DAm3ItQ==
   dependencies:
-    browserslist "^4.26.3"
+    browserslist "^4.28.0"
 
 cosmiconfig@^8.3.5:
   version "8.3.6"
@@ -2899,7 +2872,7 @@ cosmiconfig@^8.3.5:
     parse-json "^5.2.0"
     path-type "^4.0.0"
 
-cross-spawn@^7.0.3, cross-spawn@^7.0.6:
+cross-spawn@^7.0.3:
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-7.0.6.tgz#8a58fe78f00dcd70c370451759dfbfaf03e8ee9f"
   integrity sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==
@@ -3242,11 +3215,6 @@ dunder-proto@^1.0.0, dunder-proto@^1.0.1:
     es-errors "^1.3.0"
     gopd "^1.2.0"
 
-eastasianwidth@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/eastasianwidth/-/eastasianwidth-0.2.0.tgz#696ce2ec0aa0e6ea93a397ffcf24aa7840c827cb"
-  integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
-
 ejs@^3.1.6:
   version "3.1.10"
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-3.1.10.tgz#69ab8358b14e896f80cc39e62087b88500c3ac3b"
@@ -3260,19 +3228,14 @@ ekko-lightbox@^5.3.0:
   integrity sha512-mbacwySuVD3Ad6F2hTkjSTvJt59bcVv2l/TmBerp4xZnLak8tPtA4AScUn4DL42c1ksTiAO6sGhJZ52P/1Qgew==
 
 electron-to-chromium@^1.5.249:
-  version "1.5.252"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.252.tgz#65d8fe59767e68ef90b4b6380cb5c227e6ba860f"
-  integrity sha512-53uTpjtRgS7gjIxZ4qCgFdNO2q+wJt/Z8+xAvxbCqXPJrY6h7ighUkadQmNMXH96crtpa6gPFNP7BF4UBGDuaA==
+  version "1.5.262"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.262.tgz#c31eed591c6628908451c9ca0f0758ed514aa003"
+  integrity sha512-NlAsMteRHek05jRUxUR0a5jpjYq9ykk6+kO0yRaMi5moe7u0fVIOeQ3Y30A8dIiWFBNUoQGi1ljb1i5VtS9WQQ==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
   integrity sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==
-
-emoji-regex@^9.2.2:
-  version "9.2.2"
-  resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-9.2.2.tgz#840c8803b0d8047f4ff0cf963176b32d4ef3ed72"
-  integrity sha512-L18DaJsXSUk2+42pv8mLs5jJT2hqFkFE4j21wOmgbUqsZ2hL72NsUU785g9RXgo3s0ZNgVl42TiHp3ZtOv/Vyg==
 
 emojis-list@^3.0.0:
   version "3.0.0"
@@ -3298,9 +3261,9 @@ entities@^4.2.0:
   integrity sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==
 
 envinfo@^7.7.3:
-  version "7.20.0"
-  resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-7.20.0.tgz#3fd9de69fb6af3e777a017dfa033676368d67dd7"
-  integrity sha512-+zUomDcLXsVkQ37vUqWBvQwLaLlj8eZPSi61llaEFAVBY5mhcXdaSw1pSJVl4yTYD5g/gEfpNl28YYk4IPvrrg==
+  version "7.21.0"
+  resolved "https://registry.yarnpkg.com/envinfo/-/envinfo-7.21.0.tgz#04a251be79f92548541f37d13c8b6f22940c3bae"
+  integrity sha512-Lw7I8Zp5YKHFCXL7+Dz95g4CcbMEpgvqZNNq3AmlT5XAV6CgAAk6gyAMqn2zjw08K9BHfcNuKrMiCPLByGafow==
 
 error-ex@^1.3.1:
   version "1.3.4"
@@ -3530,6 +3493,11 @@ fastq@^1.6.0:
   dependencies:
     reusify "^1.0.4"
 
+fdir@^6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.5.0.tgz#ed2ab967a331ade62f18d077dae192684d50d350"
+  integrity sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==
+
 file-selector@^2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/file-selector/-/file-selector-2.1.2.tgz#fe7c7ee9e550952dfbc863d73b14dc740d7de8b4"
@@ -3585,14 +3553,6 @@ for-each@^0.3.3, for-each@^0.3.5:
   integrity sha512-dKx12eRCVIzqCxFGplyFKJMPvLEWgmNtUrpTiJIR5u97zEhRG8ySrtboPHZXx7daLxQVrl643cTzbab2tkQjxg==
   dependencies:
     is-callable "^1.2.7"
-
-foreground-child@^3.1.0:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/foreground-child/-/foreground-child-3.3.1.tgz#32e8e9ed1b68a3497befb9ac2b6adf92a638576f"
-  integrity sha512-gIXjKqtFuWEgzFRJA9WCQeSJLZDjgJUOMCMzxtvFq/37KojM1BFGufqsCy0r4qSQmYLsZYMeyRqzIWOMup03sw==
-  dependencies:
-    cross-spawn "^7.0.6"
-    signal-exit "^4.0.1"
 
 foundation-emails@^2.4.0:
   version "2.4.0"
@@ -3722,18 +3682,6 @@ glob-to-regexp@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/glob-to-regexp/-/glob-to-regexp-0.4.1.tgz#c75297087c851b9a578bd217dd59a92f59fe546e"
   integrity sha512-lkX1HJXwyMcprw/5YUZc2s7DrpAiHB21/V+E1rHUrVNokkvB6bqMzT0VfV6/86ZNabt1k14YOIaT7nDvOX3Iiw==
-
-glob@^10.3.10:
-  version "10.4.5"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-10.4.5.tgz#f4d9f0b90ffdbab09c9d77f5f29b4262517b0956"
-  integrity sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==
-  dependencies:
-    foreground-child "^3.1.0"
-    jackspeak "^3.1.2"
-    minimatch "^9.0.4"
-    minipass "^7.1.2"
-    package-json-from-dist "^1.0.0"
-    path-scurry "^1.11.1"
 
 glob@^7.1.6, glob@^7.1.7:
   version "7.2.3"
@@ -4316,15 +4264,6 @@ isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha512-WhB9zCku7EGTj/HQQRz5aUQEUeoQZH2bWcltRErOpymJ4boYE6wL9Tbr23krRPSZ+C5zqNSrSw+Cc7sZZ4b7vg==
 
-jackspeak@^3.1.2:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/jackspeak/-/jackspeak-3.4.3.tgz#8833a9d89ab4acde6188942bd1c53b6390ed5a8a"
-  integrity sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==
-  dependencies:
-    "@isaacs/cliui" "^8.0.2"
-  optionalDependencies:
-    "@pkgjs/parseargs" "^0.11.0"
-
 jake@^10.8.5:
   version "10.9.4"
   resolved "https://registry.yarnpkg.com/jake/-/jake-10.9.4.tgz#d626da108c63d5cfb00ab5c25fadc7e0084af8e6"
@@ -4527,7 +4466,7 @@ litepicker@^2.0.11:
   resolved "https://registry.yarnpkg.com/litepicker/-/litepicker-2.0.12.tgz#7b583024ddddbd04849036bda28e3f1b8b4ef8f3"
   integrity sha512-1N0sZJca/eALvS1hbJsVqKXwJAmp0BsJn73kZKWGGLjZkvjKr7HXGPV+/shu60aEY/JXoOg2XUmo7hbdIOsFpQ==
 
-loader-runner@^4.2.0:
+loader-runner@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-4.3.1.tgz#6c76ed29b0ccce9af379208299f07f876de737e3"
   integrity sha512-IWqP2SCPhyVFTBtRcgMHdzlf9ul25NwaFx4wCEH/KjAXuuHY4yNjvPXsBokp8jCB936PyWRaPKUNh8NvylLp2Q==
@@ -4591,11 +4530,6 @@ loose-envify@^1.1.0, loose-envify@^1.4.0:
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
-
-lru-cache@^10.2.0:
-  version "10.4.3"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-10.4.3.tgz#410fc8a17b70e598013df257c2446b7f3383f119"
-  integrity sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==
 
 lru-cache@^5.1.1:
   version "5.1.1"
@@ -4751,9 +4685,9 @@ mdast-util-phrasing@^4.0.0:
     unist-util-is "^6.0.0"
 
 mdast-util-to-hast@^13.0.0:
-  version "13.2.0"
-  resolved "https://registry.yarnpkg.com/mdast-util-to-hast/-/mdast-util-to-hast-13.2.0.tgz#5ca58e5b921cc0a3ded1bc02eed79a4fe4fe41f4"
-  integrity sha512-QGYKEuUsYT9ykKBCMOEDLsU5JRObWQusAolFMeko/tYPufNkRffBAQjIE+99jbA87xv6FgmjLtwjh9wBWajwAA==
+  version "13.2.1"
+  resolved "https://registry.yarnpkg.com/mdast-util-to-hast/-/mdast-util-to-hast-13.2.1.tgz#d7ff84ca499a57e2c060ae67548ad950e689a053"
+  integrity sha512-cctsq2wp5vTsLIcaymblUriiTcZd0CwWtCbLvrOzYCDZoWyMNV8sZ7krj09FSnsiJi3WVsHLM4k6Dq/yaPyCXA==
   dependencies:
     "@types/hast" "^3.0.0"
     "@types/mdast" "^4.0.0"
@@ -5144,24 +5078,12 @@ minimatch@^5.0.1:
   dependencies:
     brace-expansion "^2.0.1"
 
-minimatch@^9.0.4:
-  version "9.0.5"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.5.tgz#d74f9dd6b57d83d8e98cfb82133b03978bc929e5"
-  integrity sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==
-  dependencies:
-    brace-expansion "^2.0.1"
-
 minimatch@~3.0.4:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.8.tgz#5e6a59bd11e2ab0de1cfb843eb2d82e546c321c1"
   integrity sha512-6FsRAQsxQ61mw+qP1ZzbL9Bc78x2p5OqNgNpnoAFLTrX8n5Kxph0CsnhmKKNXTWjXqU5L0pGPR7hYk+XWZr60Q==
   dependencies:
     brace-expansion "^1.1.7"
-
-"minipass@^5.0.0 || ^6.0.2 || ^7.0.0", minipass@^7.1.2:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/minipass/-/minipass-7.1.2.tgz#93a9626ce5e5e66bd4db86849e7515e92340a707"
-  integrity sha512-qOOzS1cBTWYF4BH8fVePDBOO9iptMnGUEZwNc/cMWnTV2nVLZ7VoNWEPHkYczZA0pdoA7dl6e7FL659nX9S2aw==
 
 moment-timezone@^0.5.28, moment-timezone@^0.5.37:
   version "0.5.48"
@@ -5332,11 +5254,6 @@ p-try@^2.0.0:
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
 
-package-json-from-dist@^1.0.0:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/package-json-from-dist/-/package-json-from-dist-1.0.1.tgz#4f1471a010827a86f94cfd9b0727e36d267de505"
-  integrity sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==
-
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -5374,14 +5291,6 @@ path-parse@^1.0.7:
   resolved "https://registry.yarnpkg.com/path-parse/-/path-parse-1.0.7.tgz#fbc114b60ca42b30d9daf5858e4bd68bbedb6735"
   integrity sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==
 
-path-scurry@^1.11.1:
-  version "1.11.1"
-  resolved "https://registry.yarnpkg.com/path-scurry/-/path-scurry-1.11.1.tgz#7960a668888594a0720b12a911d1a742ab9f11d2"
-  integrity sha512-Xa4Nw17FS9ApQFJ9umLiJS4orGjm7ZzwUrwamcGQuHSzDyth9boKDaycYdDcZDuqYATXw4HFXgaqWTctW/v1HA==
-  dependencies:
-    lru-cache "^10.2.0"
-    minipass "^5.0.0 || ^6.0.2 || ^7.0.0"
-
 path-type@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
@@ -5404,6 +5313,11 @@ picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.2.2, picomatch@^2.2.3, picomatc
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.1.tgz#3ba3833733646d9d3e4995946c1365a67fb07a42"
   integrity sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==
+
+picomatch@^4.0.3:
+  version "4.0.3"
+  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-4.0.3.tgz#796c76136d1eead715db1e7bad785dedd695a042"
+  integrity sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==
 
 pify@^2.3.0:
   version "2.3.0"
@@ -5700,9 +5614,9 @@ postcss-selector-parser@^6.0.10, postcss-selector-parser@^6.0.6, postcss-selecto
     util-deprecate "^1.0.2"
 
 postcss-selector-parser@^7.0.0, postcss-selector-parser@^7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-7.1.0.tgz#4d6af97eba65d73bc4d84bcb343e865d7dd16262"
-  integrity sha512-8sLjZwK0R+JlxlYcTuVnyT2v+htpdrjDOKuMcOVdYjt52Lh8hWRYpxBPoKx/Zg+bcjc3wx6fmQevMmUztS/ccA==
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-7.1.1.tgz#e75d2e0d843f620e5df69076166f4e16f891cb9f"
+  integrity sha512-orRsuYpJVw8LdAwqqLykBj9ecS5/cRHlI5+nvTo8LcCKmzDmqVORXtOIYEEQuL9D4BxtA1lm5isAqzQZCoQ6Eg==
   dependencies:
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
@@ -6169,9 +6083,9 @@ sass-loader@16.*:
     neo-async "^2.6.2"
 
 sass@1.*:
-  version "1.94.0"
-  resolved "https://registry.yarnpkg.com/sass/-/sass-1.94.0.tgz#a04198d8940358ca6ad537d2074051edbbe7c1a7"
-  integrity sha512-Dqh7SiYcaFtdv5Wvku6QgS5IGPm281L+ZtVD1U2FJa7Q0EFRlq8Z3sjYtz6gYObsYThUOz9ArwFqPZx+1azILQ==
+  version "1.94.2"
+  resolved "https://registry.yarnpkg.com/sass/-/sass-1.94.2.tgz#198511fc6fdd2fc0a71b8d1261735c12608d4ef3"
+  integrity sha512-N+7WK20/wOr7CzA2snJcUSSNTCzeCGUTFY3OgeQP3mZ1aj9NMQ0mSTXwlrnd89j33zzQJGqIN52GIOmYrfq46A==
   dependencies:
     chokidar "^4.0.0"
     immutable "^5.0.2"
@@ -6302,7 +6216,7 @@ shebang-regex@^3.0.0:
 
 show-more-read@tomik23/show-more:
   version "1.1.9"
-  resolved "https://codeload.github.com/tomik23/show-more/tar.gz/34fc1ad6aaf28445f476bb0f413a933e67530e69"
+  resolved "https://codeload.github.com/tomik23/show-more/tar.gz/ebe50b9337889f0bb20b65762f9e1823b2b7662e"
 
 side-channel-list@^1.0.0:
   version "1.0.0"
@@ -6343,11 +6257,6 @@ side-channel@^1.1.0:
     side-channel-list "^1.0.0"
     side-channel-map "^1.0.1"
     side-channel-weakmap "^1.0.2"
-
-signal-exit@^4.0.1:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-4.1.0.tgz#952188c1cbd546070e2dd20d0f41c0ae0530cb04"
-  integrity sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==
 
 source-list-map@^2.0.0, source-list-map@^2.0.1:
   version "2.0.1"
@@ -6407,7 +6316,7 @@ stop-iteration-iterator@^1.1.0:
     es-errors "^1.3.0"
     internal-slot "^1.1.0"
 
-"string-width-cjs@npm:string-width@^4.2.0":
+string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -6415,24 +6324,6 @@ stop-iteration-iterator@^1.1.0:
     emoji-regex "^8.0.0"
     is-fullwidth-code-point "^3.0.0"
     strip-ansi "^6.0.1"
-
-string-width@^4.1.0, string-width@^4.2.3:
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-4.2.3.tgz#269c7117d27b05ad2e536830a8ec895ef9c6d010"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
-
-string-width@^5.0.1, string-width@^5.1.2:
-  version "5.1.2"
-  resolved "https://registry.yarnpkg.com/string-width/-/string-width-5.1.2.tgz#14f8daec6d81e7221d2a357e668cab73bdbca794"
-  integrity sha512-HnLOCR3vjcY8beoNLtcjZ5/nxn2afmME6lhrDrebokqMap+XbeW8n9TXpPDOqdGK5qcI3oT0GKTW6wC7EMiVqA==
-  dependencies:
-    eastasianwidth "^0.2.0"
-    emoji-regex "^9.2.2"
-    strip-ansi "^7.0.1"
 
 string.prototype.matchall@^4.0.6:
   version "4.0.12"
@@ -6502,26 +6393,12 @@ stringify-object@^3.3.0:
     is-obj "^1.0.1"
     is-regexp "^1.0.0"
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
+strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
   dependencies:
     ansi-regex "^5.0.1"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-6.0.1.tgz#9e26c63d30f53443e9489495b2105d37b67a85d9"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
-
-strip-ansi@^7.0.1:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/strip-ansi/-/strip-ansi-7.1.2.tgz#132875abde678c7ea8d691533f2e7e22bb744dba"
-  integrity sha512-gmBGslpoQJtgnMAvOVqGZpEz9dyoKTCzy2nfz/n8aIFhN/jCE/rCmcxabB6jOOHV+0WNnylOxaxBQPSvcWklhA==
-  dependencies:
-    ansi-regex "^6.0.1"
 
 strip-comments@^2.0.1:
   version "2.0.1"
@@ -6542,16 +6419,16 @@ stylehacks@^7.0.5:
     postcss-selector-parser "^7.1.0"
 
 sucrase@^3.35.0:
-  version "3.35.0"
-  resolved "https://registry.yarnpkg.com/sucrase/-/sucrase-3.35.0.tgz#57f17a3d7e19b36d8995f06679d121be914ae263"
-  integrity sha512-8EbVDiu9iN/nESwxeSxDKe0dunta1GOlHufmSSXxMD2z2/tMZpDMpvXQGsc+ajGo8y2uYUmixaSRUc/QPoQ0GA==
+  version "3.35.1"
+  resolved "https://registry.yarnpkg.com/sucrase/-/sucrase-3.35.1.tgz#4619ea50393fe8bd0ae5071c26abd9b2e346bfe1"
+  integrity sha512-DhuTmvZWux4H1UOnWMB3sk0sbaCVOoQZjv8u1rDoTV0HTdGem9hkAZtl4JZy8P2z4Bg0nT+YMeOFyVr4zcG5Tw==
   dependencies:
     "@jridgewell/gen-mapping" "^0.3.2"
     commander "^4.0.0"
-    glob "^10.3.10"
     lines-and-columns "^1.1.6"
     mz "^2.7.0"
     pirates "^4.0.1"
+    tinyglobby "^0.2.11"
     ts-interface-checker "^0.1.9"
 
 supports-color@^5.3.0:
@@ -6693,7 +6570,15 @@ thenify-all@^1.0.0:
   dependencies:
     any-promise "^1.0.0"
 
-tmp@^0.2.1:
+tinyglobby@^0.2.11:
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/tinyglobby/-/tinyglobby-0.2.15.tgz#e228dd1e638cea993d2fdb4fcd2d4602a79951c2"
+  integrity sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==
+  dependencies:
+    fdir "^6.5.0"
+    picomatch "^4.0.3"
+
+tmp@^0.2.5:
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.2.5.tgz#b06bcd23f0f3c8357b426891726d16015abfd8f8"
   integrity sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow==
@@ -7069,9 +6954,9 @@ webpack-sources@^3.3.3:
   integrity sha512-yd1RBzSGanHkitROoPFd6qsrxt+oFhg/129YzheDGqeustzX0vTZJZsSsQjVQC4yzBQ56K55XU8gaNCtIzOnTg==
 
 webpack@5.*:
-  version "5.102.1"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.102.1.tgz#1003a3024741a96ba99c37431938bf61aad3d988"
-  integrity sha512-7h/weGm9d/ywQ6qzJ+Xy+r9n/3qgp/thalBbpOi5i223dPXKi04IBtqPN9nTd+jBc7QKfvDbaBnFipYp4sJAUQ==
+  version "5.103.0"
+  resolved "https://registry.yarnpkg.com/webpack/-/webpack-5.103.0.tgz#17a7c5a5020d5a3a37c118d002eade5ee2c6f3da"
+  integrity sha512-HU1JOuV1OavsZ+mfigY0j8d1TgQgbZ6M+J75zDkpEAwYeXjWSqrGJtgnPblJjd/mAyTNQ7ygw0MiKOn6etz8yw==
   dependencies:
     "@types/eslint-scope" "^3.7.7"
     "@types/estree" "^1.0.8"
@@ -7090,7 +6975,7 @@ webpack@5.*:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.2.11"
     json-parse-even-better-errors "^2.3.1"
-    loader-runner "^4.2.0"
+    loader-runner "^4.3.1"
     mime-types "^2.1.27"
     neo-async "^2.6.2"
     schema-utils "^4.3.3"
@@ -7341,24 +7226,6 @@ workbox-window@6.6.1:
   dependencies:
     "@types/trusted-types" "^2.0.2"
     workbox-core "6.6.1"
-
-"wrap-ansi-cjs@npm:wrap-ansi@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
-  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
-  dependencies:
-    ansi-styles "^4.0.0"
-    string-width "^4.1.0"
-    strip-ansi "^6.0.0"
-
-wrap-ansi@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-8.1.0.tgz#56dc22368ee570face1b49819975d9b9a5ead214"
-  integrity sha512-si7QWI6zUMq56bESFvagtmzMdGOtoxfR+Sez11Mobfc7tm+VkUckk9bW2UeffTGVUbOksxmSw0AA2gs8g71NCQ==
-  dependencies:
-    ansi-styles "^6.1.0"
-    string-width "^5.0.1"
-    strip-ansi "^7.0.1"
 
 wrappy@1:
   version "1.0.2"

@@ -14,7 +14,7 @@
 {% endblock title %}
 
 {% block content %}
-{% set member = app.user %}
+{% set loggedInMember = app.user %}
 <div class="u-font-display u-text">
     <h1>{{ submenu.active | trans }}</h1>
     <div class="u-flex u-flex-col md:u-flex-row">

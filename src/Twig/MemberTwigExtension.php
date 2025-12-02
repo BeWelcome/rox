@@ -10,6 +10,7 @@ use App\Entity\Message;
 use App\Repository\CommentRepository;
 use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -97,6 +98,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected ?Member $member;
 
     public function __construct(
+        private EntityManagerInterface $entityManager,
         private Security $security,
     ) {
         $this->member = $this->security->getUser();
@@ -166,7 +168,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         if ($this->security->isGranted(Member::ROLE_ADMIN_GROUP)) {
             $level = $this->member->getLevelForRight(Member::ROLE_ADMIN_GROUP);
             if (10 === $level) {
-                $groupsRepository = $this->getManager()->getRepository(Group::class);
+                $groupsRepository = $this->entityManager->getRepository(Group::class);
                 $groups = $groupsRepository->findBy([
                     'approved' => Group::OPEN,
                 ]);
@@ -185,7 +187,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             || $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             /** @var CommentRepository $commentRepository */
-            $commentRepository = $this->getManager()->getRepository(Comment::class);
+            $commentRepository = $this->entityManager->getRepository(Comment::class);
             $reportedCommentsCount = $commentRepository->getReportedCommentsCount();
         }
 
@@ -200,7 +202,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             || $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             /** @var MessageRepository $messageRepository */
-            $messageRepository = $this->getManager()->getRepository(Message::class);
+            $messageRepository = $this->entityManager->getRepository(Message::class);
 
             $reportedMessagesCount = $messageRepository->getReportedMessagesCount();
         }
@@ -211,7 +213,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected function getUnreadConversationsCount(): int
     {
         /** @var MessageRepository $messageRepository */
-        $messageRepository = $this->getManager()->getRepository(Message::class);
+        $messageRepository = $this->entityManager->getRepository(Message::class);
 
         return $messageRepository->getUnreadConversationsCount($this->member);
     }
@@ -219,7 +221,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected function getLoginMessages(): array
     {
         /** @var LoginMessageRepository $loginMessagsRepository */
-        $loginMessageRepository = $this->getManager()->getRepository(LoginMessage::class);
+        $loginMessageRepository = $this->entityManager->getRepository(LoginMessage::class);
 
         return $loginMessageRepository->getLoginMessages($this->member);
     }

@@ -273,7 +273,7 @@ services:
     rox.member_twig_extension:
         class: App\Twig\MemberTwigExtension
         public: true
-        arguments: [ '@router', '@security.helper' ]
+        arguments: [ '@doctrine.orm.entity_manager', '@security.helper' ]
         tags: [twig.extension]
 
     pagerfanta.bootstrap4.ajax.template:

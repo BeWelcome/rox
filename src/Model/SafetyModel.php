@@ -3,24 +3,27 @@
 namespace App\Model;
 
 use App\Entity\Member;
-use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 
 class SafetyModel
 {
-    use ManagerTrait;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     /**
      * @return Member[]
      */
     public function getSafetyTeamMembers(): array
     {
-        $entityManager = $this->getManager();
+        $entityManager = $this->entityManager;
 
         $rsm = new ResultSetMappingBuilder($entityManager);
         $rsm->addRootEntityFromClassMetadata(Member::class, 'm');
 
-        $query = $this->getManager()->createNativeQuery("
+        $query = $this->entityManager->createNativeQuery("
             SELECT
                 m.*
             FROM

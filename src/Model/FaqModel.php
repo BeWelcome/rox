@@ -5,14 +5,17 @@ namespace App\Model;
 use App\Entity\Faq;
 use App\Entity\FaqCategory;
 use App\Repository\FaqRepository;
-use App\Utilities\ManagerTrait;
 use Doctrine\DBAL\ParameterType;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Pagerfanta\Pagerfanta;
 
 class FaqModel
 {
-    use ManagerTrait;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
@@ -25,14 +28,14 @@ class FaqModel
     public function getFilteredFaqs($page, $limit)
     {
         /** @var FaqRepository $repository */
-        $repository = $this->getManager()->getRepository(Faq::class);
+        $repository = $this->entityManager->getRepository(Faq::class);
 
         return $repository->findLatest($page, $limit);
     }
 
     public function getFaqsForCategory(FaqCategory $faqCategory): mixed
     {
-        $connection = $this->getManager()->getConnection();
+        $connection = $this->entityManager->getConnection();
         $stmt = $connection->prepare(
             "SELECT
     f.*
@@ -59,7 +62,7 @@ ORDER BY
     public function getFaqCategories()
     {
         /** @var EntityRepository $repository */
-        $repository = $this->getManager()->getRepository(FaqCategory::class);
+        $repository = $this->entityManager->getRepository(FaqCategory::class);
 
         return $repository->findBy([], ['sortOrder' => 'ASC']);
     }

@@ -6,15 +6,18 @@ use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Preference;
-use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SubscriptionModel
 {
-    use ManagerTrait;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     public function unsubscribeNewsletter(string $username, string $unsubscribeKey): bool
     {
-        $entityManager = $this->getManager();
+        $entityManager = $this->entityManager;
         $broadcastRepository = $entityManager->getRepository(BroadcastMessage::class);
         $memberRepository = $entityManager->getRepository(Member::class);
         /** @var BroadcastMessage $broadcast */

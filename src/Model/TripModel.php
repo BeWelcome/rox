@@ -10,14 +10,14 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TripModel
 {
     private const array ALLOWED_TRIPS_RADIUS = [0, 5, 10, 20, 50, 100];
 
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     public function paginateTripsOfMember(Member $member, int $page): Pagerfanta

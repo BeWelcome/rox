@@ -4,12 +4,15 @@ namespace App\Model;
 
 use App\Entity\Member;
 use App\Pagerfanta\LogAdapter;
-use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 
 class LogModel
 {
-    use ManagerTrait;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
@@ -21,7 +24,7 @@ class LogModel
      */
     public function getFilteredLogs(array $types, $member, $page, $limit)
     {
-        $adapter = new LogAdapter($this->getManager(), $types, $member);
+        $adapter = new LogAdapter($this->entityManager, $types, $member);
         $pagerFanta = new Pagerfanta($adapter);
         $pagerFanta->setMaxPerPage($limit);
         $pagerFanta->setCurrentPage($page);

@@ -3,12 +3,15 @@
 namespace App\Model;
 
 use App\Entity\Params;
-use App\Utilities\ManagerTrait;
 use Carbon\Carbon;
+use Doctrine\ORM\EntityManagerInterface;
 
 class DonateModel
 {
-    use ManagerTrait;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     public function getStatForDonations()
     {
@@ -26,7 +29,7 @@ class DonateModel
                 WHERE
                     created > '" . $campaignValue['campaignstartdate']->format('Y-m-d H:i:s') . "'
                 ";
-            $connection = $this->getManager()->getConnection();
+            $connection = $this->entityManager->getConnection();
             $rowYear = $connection->executeQuery($sql)->fetchAssociative();
             switch ($rowYear['quarter']) {
                 case 1:
@@ -79,7 +82,7 @@ class DonateModel
     public function getCampaignValues()
     {
         $query = $this
-            ->getManager()
+            ->entityManager
             ->getRepository(Params::class)
             ->createQueryBuilder('d')
             ->select([

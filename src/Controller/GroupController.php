@@ -18,7 +18,6 @@ use App\Model\GroupModel;
 use App\Model\WikiModel;
 use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
-use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
@@ -47,13 +46,13 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class GroupController extends AbstractController
 {
-    use ManagerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
     use UniqueFilenameTrait;
 
-    public function __construct(private GroupModel $groupModel)
-    {
+    public function __construct(
+        private GroupModel $groupModel,
+    ) {
     }
 
     /**

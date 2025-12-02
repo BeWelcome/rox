@@ -6,7 +6,6 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Statistic;
 use App\Repository\StatisticsRepository;
-use App\Utilities\ManagerTrait;
 use DatePeriod;
 use DateTime;
 use Doctrine\DBAL\Connection;
@@ -26,10 +25,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class StatisticsModel
 {
-    use ManagerTrait;
-
-    public function __construct(private TranslatorInterface $translator, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private TranslatorInterface $translator,
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
     public function getStatisticsHomepage(): array
@@ -124,7 +123,7 @@ class StatisticsModel
             ]);
         }
 
-        $em = $this->getManager();
+        $em = $this->entityManager;
         $connection = $em->getConnection();
         $statisticsRepository = $em->getRepository(Statistic::class);
         /** @var DateTime $day */

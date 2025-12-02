@@ -4,9 +4,9 @@ namespace App\Model;
 
 use App\Entity\Member;
 use App\Model\MemberDataExtractor\ExtractorInterface;
-use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -21,18 +21,17 @@ use ZipArchive;
 
 class MemberModel
 {
-    use ManagerTrait;
     use TranslatorTrait;
 
     /** @var string */
     private $tempDir;
 
     public function __construct(
-        private Environment $environment,
-        private EntrypointLookupInterface $entrypointLookup,
-        private ContainerBagInterface $params,
-        /** @var iterable|ExtractorInterface[] */
-        private iterable $extractors,
+        private readonly Environment $environment,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly EntrypointLookupInterface $entrypointLookup,
+        private readonly ContainerBagInterface $params,
+        private readonly iterable|ExtractorInterface $extractors,
     ) {
     }
 

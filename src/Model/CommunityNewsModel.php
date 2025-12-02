@@ -13,7 +13,7 @@ use App\Entity\CommunityNews;
 use App\Entity\CommunityNewsComment;
 use App\Repository\CommunityNewsCommentRepository;
 use App\Repository\NotificationRepository;
-use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\Collections\CollectionAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -22,7 +22,10 @@ use Pagerfanta\Pagerfanta;
  */
 class CommunityNewsModel
 {
-    use ManagerTrait;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     /**
      * @param int $page
@@ -33,7 +36,7 @@ class CommunityNewsModel
     public function getPaginator($page, $limit)
     {
         /** @var NotificationRepository $repository */
-        $repository = $this->getManager()->getRepository(CommunityNews::class);
+        $repository = $this->entityManager->getRepository(CommunityNews::class);
 
         return $repository->pagePublic($page, $limit);
     }
@@ -47,7 +50,7 @@ class CommunityNewsModel
     public function getAdminPaginator($page, $limit)
     {
         /** @var NotificationRepository $repository */
-        $repository = $this->getManager()->getRepository(CommunityNews::class);
+        $repository = $this->entityManager->getRepository(CommunityNews::class);
 
         return $repository->pageAll($page, $limit);
     }
@@ -55,7 +58,7 @@ class CommunityNewsModel
     public function getLatest()
     {
         /** @var NotificationRepository $repository */
-        $repository = $this->getManager()->getRepository(CommunityNews::class);
+        $repository = $this->entityManager->getRepository(CommunityNews::class);
 
         return $repository->getLatest();
     }
@@ -74,7 +77,7 @@ class CommunityNewsModel
     public function getLatestCommunityNewsComments($page, $limit)
     {
         /** @var CommunityNewsCommentRepository $repository */
-        $repository = $this->getManager()->getRepository(CommunityNewsComment::class);
+        $repository = $this->entityManager->getRepository(CommunityNewsComment::class);
 
         return $repository->findLatestCommunityNewsComments($page, $limit);
     }
@@ -82,7 +85,7 @@ class CommunityNewsModel
     public function deleteAsSpamByChecker($commentIds)
     {
         // delete all activities based on there ids
-        $em = $this->getManager();
+        $em = $this->entityManager;
         /** @var CommunityNewsCommentRepository $repository */
         $communityNewsCommentRepository = $em->getRepository(CommunityNewsComment::class);
         $comments = $communityNewsCommentRepository->findBy(['id' => $commentIds]);

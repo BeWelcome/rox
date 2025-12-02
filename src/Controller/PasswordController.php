@@ -11,7 +11,6 @@ use App\Model\PasswordModel;
 use App\Repository\MemberRepository;
 use App\Service\Mailer;
 use App\Utilities\ChangeProfilePictureGlobals;
-use App\Utilities\ManagerTrait;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -27,12 +26,13 @@ use ZxcvbnPhp\Zxcvbn;
 
 class PasswordController extends AbstractController
 {
-    use ManagerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    public function __construct(private PasswordModel $passwordModel, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private PasswordModel $passwordModel,
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
     /**

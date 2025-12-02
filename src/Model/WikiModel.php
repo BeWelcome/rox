@@ -4,7 +4,6 @@ namespace App\Model;
 
 use App\Entity\Wiki;
 use App\Repository\WikiRepository;
-use App\Utilities\ManagerTrait;
 use App\Utilities\RoxWikiParserBackend;
 use Doctrine\ORM\EntityManagerInterface;
 use Mike42\Wikitext\HtmlRenderer;
@@ -13,12 +12,11 @@ use Symfony\Contracts\Service\Attribute\Required;
 
 class WikiModel
 {
-    use ManagerTrait;
-
     private HtmlRenderer $roxWikiParserBackend;
 
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     #[Required]
@@ -32,7 +30,7 @@ class WikiModel
         $pageName = $this->getPagename($pageTitle);
 
         /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $this->getManager()->getRepository(Wiki::class);
+        $wikiRepository = $this->entityManager->getRepository(Wiki::class);
 
         $wikiPage = $wikiRepository->getPageByName($pageName, $version);
 
@@ -73,7 +71,7 @@ class WikiModel
         $newWikiPage->setPagename($this->getPagename($pageTitle));
         $newWikiPage->setVersion(1);
         $newWikiPage->setContent($wikiMarkup);
-        $em = $this->getManager();
+        $em = $this->entityManager;
         $em->persist($newWikiPage);
         $em->flush();
 
@@ -86,7 +84,7 @@ class WikiModel
         $newWikiPage->setContent($wikiMarkup);
         // \todo make this safe against multiple edits at the same time
         $newWikiPage->setVersion($wikiPage->getVersion() + 1);
-        $em = $this->getManager();
+        $em = $this->entityManager;
         $em->persist($newWikiPage);
         $em->flush();
 
@@ -96,7 +94,7 @@ class WikiModel
     public function getHistory(Wiki $wikiPage)
     {
         /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $this->getManager()->getRepository(Wiki::class);
+        $wikiRepository = $this->entityManager->getRepository(Wiki::class);
 
         return $wikiRepository->getHistory($wikiPage);
     }

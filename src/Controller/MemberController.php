@@ -7,7 +7,6 @@ use App\Form\PasswordFormType;
 use App\Logger\Logger;
 use App\Model\MemberModel;
 use App\Utilities\ChangeProfilePictureGlobals;
-use App\Utilities\ManagerTrait;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -31,12 +30,13 @@ use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
  */
 class MemberController extends AbstractController
 {
-    use ManagerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    public function __construct(private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
-    {
+    public function __construct(
+        private ProfileSubmenu $profileSubmenu,
+        private ChangeProfilePictureGlobals $globals,
+    ) {
     }
 
     #[Route(path: '/mydata', name: 'profile_personal_data_redirect')]

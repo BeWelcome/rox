@@ -10,16 +10,12 @@ use App\Entity\Message;
 use App\Repository\CommentRepository;
 use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
-use App\Utilities\ManagerTrait;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Routing\RouterInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
 class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 {
-    use ManagerTrait;
-
     private const ALL_TEAMS = [
         'communitynews' => [
             'trans' => 'AdminCommunityNews',
@@ -98,18 +94,11 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         ],
     ];
 
-    protected RouterInterface $router;
-
-    protected Security $security;
-
     protected ?Member $member;
 
     public function __construct(
-        RouterInterface $router,
-        Security $security,
+        private Security $security,
     ) {
-        $this->router = $router;
-        $this->security = $security;
         $this->member = $this->security->getUser();
     }
 

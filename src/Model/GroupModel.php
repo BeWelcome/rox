@@ -16,8 +16,8 @@ use App\Entity\PrivilegeScope;
 use App\Entity\Role;
 use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
-use App\Utilities\ManagerTrait;
 use App\Utilities\MessageTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -25,19 +25,19 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class GroupModel
 {
     use BewelcomeAddressTrait;
-    use ManagerTrait;
+
     use MessageTrait;
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator, private Mailer $mailer)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly Mailer $mailer,
+    ) {
     }
 
-    /**
-     * @return bool
-     */
-    public function inviteMemberToGroup(Group $group, Member $member, Member $admin)
+    public function inviteMemberToGroup(Group $group, Member $member, Member $admin): bool
     {
-        $em = $this->getManager();
+        $em = $this->entityManager;
         // We need a comment on the GroupMembership, so let's create one in English
         $languageRepository = $em->getRepository(Language::class);
         /** @var Language $language */
@@ -96,18 +96,15 @@ class GroupModel
         return true;
     }
 
-    /**
-     * @return bool
-     */
-    public function acceptInviteToGroup(Group $group, Member $member)
+    public function acceptInviteToGroup(Group $group, Member $member): bool
     {
         try {
             $membership = $this->getMembership($group, $member);
 
             if ($membership) {
                 $membership->setStatus(GroupMembershipStatusType::CURRENT_MEMBER);
-                $this->getManager()->persist($membership);
-                $this->getManager()->flush();
+                $this->entityManager->persist($membership);
+                $this->entityManager->flush();
                 $success = true;
             }
         } catch (Exception) {
@@ -117,18 +114,15 @@ class GroupModel
         return $success;
     }
 
-    /**
-     * @return bool
-     */
-    public function declineInviteToGroup(Group $group, Member $member)
+    public function declineInviteToGroup(Group $group, Member $member): bool
     {
         try {
             $success = false;
             $membership = $this->getMembership($group, $member);
 
             if ($membership) {
-                $this->getManager()->remove($membership);
-                $this->getManager()->flush();
+                $this->entityManager->remove($membership);
+                $this->entityManager->flush();
                 $success = true;
             }
         } catch (Exception) {
@@ -138,17 +132,14 @@ class GroupModel
         return $success;
     }
 
-    /**
-     * @return bool
-     */
-    public function withdrawInviteMemberToGroup(Group $group, Member $member)
+    public function withdrawInviteMemberToGroup(Group $group, Member $member): bool
     {
         try {
             $membership = $this->getMembership($group, $member);
 
             if ($membership) {
-                $this->getManager()->remove($membership);
-                $this->getManager()->flush();
+                $this->entityManager->remove($membership);
+                $this->entityManager->flush();
                 $success = true;
             }
         } catch (Exception) {
@@ -158,12 +149,12 @@ class GroupModel
         return $success;
     }
 
-    public function join(Group $group, Member $member, $data, $locale)
+    public function join(Group $group, Member $member, $data, $locale): bool
     {
         try {
             $reason = $data['reason'] ?? '';
             $notifications = $data['notifications'];
-            $em = $this->getManager();
+            $em = $this->entityManager;
             $languageRepository = $em->getRepository(Language::class);
             /** @var Language $language */
             $language = $languageRepository->findOneBy(['shortCode' => $locale]);
@@ -216,18 +207,12 @@ class GroupModel
     }
 
     /**
-     * @throws DBALException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     *
-     * @return Group
-     *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * Because of the mix between old code and new code this method is way too long.
      */
-    public function new($data, $locale, Member $member, $groupPicture)
+    public function new($data, $locale, Member $member, $groupPicture): Group
     {
-        $em = $this->getManager();
+        $em = $this->entityManager;
 
         // \todo: This is convoluted due to having to support the old structure! When recoding groups this should be simpler
         // We need the current locale for the MemberTranslation entity
@@ -405,7 +390,7 @@ class GroupModel
     {
         // Unfortunately we need to replicate old code here
         $admins = [];
-        $entityManager = $this->getManager();
+        $entityManager = $this->entityManager;
         $roleRepo = $entityManager->getRepository(Role::class);
 
         $role = $roleRepo->findBy(['name' => 'GroupsAdmin']);
@@ -425,7 +410,7 @@ class GroupModel
 
     private function getMembership($group, $member): ?GroupMembership
     {
-        $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
+        $membershipRepository = $this->entityManager->getRepository(GroupMembership::class);
 
         /** @var GroupMembership $membership */
         $membership = $membershipRepository->findOneBy([
@@ -442,17 +427,17 @@ class GroupModel
      */
     private function updateMembership(Group $group, Member $member, string $status)
     {
-        $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
+        $membershipRepository = $this->entityManager->getRepository(GroupMembership::class);
         $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);
         $membership->setStatus($status);
 
-        $this->getManager()->persist($membership);
-        $this->getManager()->flush();
+        $this->entityManager->persist($membership);
+        $this->entityManager->flush();
     }
 
     private function checkMembershipStatus(Group $group, Member $member, string $status)
     {
-        $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
+        $membershipRepository = $this->entityManager->getRepository(GroupMembership::class);
         $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);
 
         return $status === $membership->getStatus();

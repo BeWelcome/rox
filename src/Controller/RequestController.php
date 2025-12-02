@@ -16,7 +16,6 @@ use App\Model\HostingRequestModel;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
-use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Form;
@@ -34,7 +33,6 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class RequestController extends BaseRequestAndInvitationController
 {
-    use ManagerTrait;
     use TranslatorTrait;
 
     public function __construct(

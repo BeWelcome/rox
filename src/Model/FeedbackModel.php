@@ -4,13 +4,16 @@ namespace App\Model;
 
 use App\Entity\Feedback;
 use App\Entity\FeedbackCategory;
-use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class FeedbackModel
 {
-    use ManagerTrait;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     /**
      * Returns a Pagerfanta object that contains the currently selected logs.
@@ -22,7 +25,7 @@ class FeedbackModel
      */
     public function getFilteredFeedback(array $categories, $page, $limit)
     {
-        $qb = $this->getManager()->createQueryBuilder();
+        $qb = $this->entityManager->createQueryBuilder();
         $qb
             ->select('f')
             ->from(Feedback::class, 'f');
@@ -43,7 +46,7 @@ class FeedbackModel
 
     public function getCategories()
     {
-        $categoryRepository = $this->getManager()->getRepository(FeedbackCategory::class);
+        $categoryRepository = $this->entityManager->getRepository(FeedbackCategory::class);
 
         $categories = $categoryRepository->findAll();
         $mapped = [];

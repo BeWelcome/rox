@@ -4,38 +4,41 @@ namespace App\Model;
 
 use App\Entity\Activity;
 use App\Repository\ActivityRepository;
-use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Pagerfanta;
 
 class ActivityModel
 {
-    use ManagerTrait;
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
 
-    public function getLatest($page, $limit)
+    public function getLatest($page, $limit): Pagerfanta
     {
         /** @var ActivityRepository $repository */
-        $repository = $this->getManager()->getRepository(Activity::class);
+        $repository = $this->entityManager->getRepository(Activity::class);
 
         return $repository->findLatest($page, $limit);
     }
 
-    public function getProblematicActivities($page, $limit)
+    public function getProblematicActivities($page, $limit): Pagerfanta
     {
         /** @var ActivityRepository $repository */
-        $repository = $this->getManager()->getRepository(Activity::class);
+        $repository = $this->entityManager->getRepository(Activity::class);
 
         return $repository->findProblematicActivities($page, $limit);
     }
 
-    public function deleteAsSpamByChecker($activityIds)
+    public function deleteAsSpamByChecker($activityIds): void
     {
         // delete all activities based on there ids
-        $em = $this->getManager();
         /** @var ActivityRepository $activityRepository */
-        $activityRepository = $em->getRepository(Activity::class);
+        $activityRepository = $this->entityManager->getRepository(Activity::class);
         $activities = $activityRepository->findBy(['id' => $activityIds]);
         foreach ($activities as $activity) {
-            $em->remove($activity);
+            $this->entityManager->remove($activity);
         }
-        $em->flush();
+        $this->entityManager->flush();
     }
 }

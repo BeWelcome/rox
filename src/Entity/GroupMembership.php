@@ -56,14 +56,14 @@ class GroupMembership
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'groupMemberships')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'groupMemberships')]
     private $member;
 
     /**
      * @var Group
      */
     #[ORM\JoinColumn(name: 'IdGroup', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Group::class, inversedBy: 'groupMemberships')]
+    #[ORM\ManyToOne(targetEntity: Group::class, inversedBy: 'groupMemberships')]
     private $group;
 
     /**

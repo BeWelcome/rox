@@ -11,24 +11,27 @@ namespace App\Model;
 
 use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Entity\Location;
-use App\Utilities\ManagerTrait;
+use Doctrine\ORM\EntityManagerInterface;
 
 class LocationModel
 {
-    use ManagerTrait;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
 
     public function getLocationIdsAroundLocation($latitude, $longitude, $distance = 25)
     {
         $coordinates = GeoLocation::fromDegrees($latitude, $longitude)->boundingCoordinates($distance, 'km');
 
         return $this
-            ->em
+            ->entityManager
             ->getRepository(Location::class)
             ->createQueryBuilder('l')
             ->where('l.latitude < ' . $coordinates[1]->getLatitudeInDegrees())
-            ->where('l.latitude > ' . $coordinates[0]->getLatitudeInDegrees())
-            ->where('l.longitude < ' . $coordinates[1]->getLongitudeInDegrees())
-            ->where('l.longitude < ' . $coordinates[0]->getLongitudeInDegrees())
+            ->andWhere('l.latitude > ' . $coordinates[0]->getLatitudeInDegrees())
+            ->andWhere('l.longitude < ' . $coordinates[1]->getLongitudeInDegrees())
+            ->andWhere('l.longitude < ' . $coordinates[0]->getLongitudeInDegrees())
             ->getQuery()
             ->getResult();
     }

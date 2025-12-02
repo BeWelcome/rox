@@ -64,7 +64,7 @@ foreach ($DataTag->Names as $Content) {
 	foreach ($ArrayLanguage as $Choices) {
 			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
 			if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
-			echo "\">",$Choices->EnglishName,"</option>" ;
+			echo "\">",$Choices->Name,"</option>" ;
 	}
 	echo "</select>\n" ;
 
@@ -93,7 +93,7 @@ foreach ($DataTag->Descriptions as $Content) {
 	foreach ($ArrayLanguage as $Choices) {
 			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
 			if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
-			echo "\">",$Choices->EnglishName,"</option>" ;
+			echo "\">",$Choices->Name,"</option>" ;
 	}
 	echo "</select>\n" ;
 
@@ -122,7 +122,7 @@ echo "<select Name=\"NewIdLanguage\">" ;
 foreach ($ArrayLanguage as $Choices) {
 			echo "<option value=\"",$Choices->IdLanguage,"\"" ;
 			if ($Choices->IdLanguage==$Content->IdLanguage) echo " selected ";
-			echo "\">",$Choices->EnglishName,"</option>" ;
+			echo "\">",$Choices->Name,"</option>" ;
 }
 echo "</select>\n" ;
 

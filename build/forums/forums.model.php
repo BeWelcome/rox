@@ -902,7 +902,7 @@ WHERE `id` = '%d' ",
 	public function GetReports($IdPost,$IdReporter=0) {
 		$tt=[] ;
 		if (empty($IdReporter)) {
-			$ss = "select reports_to_moderators.*,Username from reports_to_moderators,members where IdPost=".$IdPost." and members.id=IdReporter" ;
+			$ss = "select reports_to_moderators.*,Username from reports_to_moderators,member where IdPost=".$IdPost." and member.id=IdReporter" ;
 			$s = $this->dao->query($ss);
 			while ($rr = $s->fetch(PDB::FETCH_OBJ)) {
 				array_push($tt,$rr) ;
@@ -937,7 +937,7 @@ WHERE `id` = '%d' ",
 	*/
 	public function prepareReportList($IdMember,$StatusList) { // This retrieve all the reports for the a member or all members
 
-		$ss = "select reports_to_moderators.*,Username from reports_to_moderators,members where members.id=IdReporter " ;
+		$ss = "select reports_to_moderators.*,Username from reports_to_moderators,member where member.id=IdReporter " ;
 		if (!empty($StatusList)) {
 			$ss=$ss." and reports_to_moderators.Status in ".$StatusList ;
 		}
@@ -961,7 +961,7 @@ WHERE `id` = '%d' ",
 		returns and integer
 	*/
 	public function countReportList($IdMember,$StatusList) { // This count all the reports for and optional members or all members according to their styatus
-		$ss = "select count(*) as cnt from reports_to_moderators,members where members.id=IdReporter " ;
+		$ss = "select count(*) as cnt from reports_to_moderators,member where member.id=IdReporter " ;
 		if (!empty($StatusList)) {
 			$ss=$ss." and reports_to_moderators.Status in ".$StatusList ;
 		}
@@ -983,7 +983,7 @@ WHERE `id` = '%d' ",
 	 	$DataPost->IdPost=$IdPost ;
 		$DataPost->Error="" ; // This will receive the error sentence if any
 
-        $query = "select forums_posts.*,members.Status as memberstatus,members.UserName as UserNamePoster from forums_posts,members where forums_posts.id=".$IdPost." and IdWriter=members.id" ;
+        $query = "select forums_posts.*,member.Status as memberstatus,member.UserName as UserNamePoster from forums_posts,member where forums_posts.id=".$IdPost." and IdWriter=member.id" ;
         $s = $this->dao->query($query);
 		$DataPost->Post = $s->fetch(PDB::FETCH_OBJ) ;
 
@@ -1019,7 +1019,7 @@ WHERE `id` = '%d' ",
         }
 
         // retrieve all trads for content
-        $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
+        $query = "select forum_trads.*,Name,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
         $s = $this->dao->query($query);
 		 $DataPost->Post->Content=[] ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
@@ -1037,7 +1037,7 @@ WHERE `id` = '%d' ",
 
 
 // retrieve all trads for Title
-        $query = "select forum_trads.*,EnglishName,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Thread->IdTitle." order by forum_trads.created asc" ;
+        $query = "select forum_trads.*,Name,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Thread->IdTitle." order by forum_trads.created asc" ;
         $s = $this->dao->query($query);
 		 $DataPost->Thread->Title=[] ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
@@ -1580,11 +1580,11 @@ WHERE `id` = '$this->threadid'
                 message,
                 IdContent,
                 IdWriter,
-                geonames.name AS city,
+                geo__names.name AS city,
                 geonamescountries.name AS country,
                 forums_posts.threadid,
                 OwnerCanStillEdit,
-                members.Username as OwnerUsername,
+                member.Username as OwnerUsername,
                 PostVisibility,
                 PostDeleted,
                 forums_threads.IdGroup
@@ -1592,13 +1592,13 @@ WHERE `id` = '$this->threadid'
                 forums_threads,
                 forums_posts
             LEFT
-                JOIN members ON forums_posts.IdWriter = members.id
+                JOIN member ON forums_posts.IdWriter = member.id
             LEFT JOIN
-                addresses AS a ON a.IdMember = members.id AND a.rank = 0
+                address AS a ON a.member_id = member.id AND a.active = 1
             LEFT JOIN
-                geonames ON a.IdCity = geonames.geonameId
+                geo__names ON a.location = geo__names.geonameId
             LEFT JOIN
-                geonamescountries ON geonames.country = geonamescountries.country
+                geonamescountries ON geo__names.country = geonamescountries.country
             WHERE
                 forums_posts.threadid = '%d'
                 AND forums_posts.threadid=forums_threads.id
@@ -1616,8 +1616,8 @@ WHERE `id` = '$this->threadid'
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			if ($WithDetail) { // if details are required retrieve all the translated text for posts (sentence, owner, modification time and translator name) of this thread
-				$sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername
-										from forum_trads,languages,members as mOwner, members as mTranslator
+				$sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.Name,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername
+										from forum_trads,languages,member as mOwner, member as mTranslator
 										where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
 				while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 					$row->Trad[]=$roww ;
@@ -1678,21 +1678,21 @@ SELECT
     UNIX_TIMESTAMP(`create_time`) AS `posttime`,
     `message`,
 	`IdContent`,
-    `members`.`Username` AS `OwnerUsername`,
+    `member`.`username` AS `OwnerUsername`,
     `IdWriter`,
 	 forums_threads.`id` as `threadid`,
     `PostVisibility`,
     `PostDeleted`,
     `ThreadDeleted`,
 	`OwnerCanStillEdit`,
-    `geonames`.`name` as `city`,
+    `geo__names`.`name` as `city`,
     `geonamescountries`.`name` as `country`,
     `IdGroup`
-FROM forums_posts, forums_threads, members, addresses
-LEFT JOIN `geonames` ON (addresses.IdCity = `geonames`.`geonameId`)
-LEFT JOIN `geonamescountries` ON (geonames.country = `geonamescountries`.`country`)
-WHERE `forums_posts`.`threadid` = '%d' AND `forums_posts`.`IdWriter` = `members`.`id`
-AND addresses.IdMember = members.id AND addresses.rank = 0
+FROM forums_posts, forums_threads, member, address
+LEFT JOIN `geo__names` ON (address.location = `geo__names`.`geonameId`)
+LEFT JOIN `geonamescountries` ON (geo__names.country = `geonamescountries`.`country`)
+WHERE `forums_posts`.`threadid` = '%d' AND `forums_posts`.`IdWriter` = `member`.`id`
+AND address.member_id = member.id AND address.active = 1
  AND `forums_posts`.`threadid`=`forums_threads`.`id`
 	and ({$this->PublicPostVisibility})
 	and ({$this->PublicThreadVisibility})
@@ -1711,7 +1711,7 @@ LIMIT %d
         }
         $this->topic->posts = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-          	$sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner, members as mTranslator
+          	$sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.Name,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,member as mOwner, member as mTranslator
 			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 			    		$row->Trad[]=$roww ;
@@ -1897,9 +1897,9 @@ SELECT
     members_threads_subscribed.id AS IdSubscribe,
     IdThread,
     IdSubscriber,
-    Username from members,
+    Username from member,
     members_threads_subscribed
-WHERE members.id=members_threads_subscribed.IdSubscriber
+WHERE member.id=members_threads_subscribed.IdSubscriber
 AND members_threads_subscribed.id=%d
 AND UnSubscribeKey='%s'
             ",
@@ -2085,13 +2085,13 @@ AND IdThread=%d
     `PostVisibility`,
     `PostDeleted`,
     `ThreadDeleted`,
-    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `members`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geonames`.`country`
-		FROM (forums_posts, members, forums_threads, addresses)
+    `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `member`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geo__names`.`country`
+		FROM (forums_posts, member, forums_threads, address)
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-LEFT JOIN `geonames` ON (addresses.IdCity = geonames.geonameId)
-WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `members`.`id`
+LEFT JOIN `geo__names` ON (address.location = geo__names.geonameId)
+WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `member`.`id`
 AND `forums_posts`.`threadid` = `forums_threads`.`id`
-AND addresses.IdMember = members.id AND addresses.rank = 0
+AND address.member_id = member.id AND address.active = 1
 AND ($this->PublicThreadVisibility)
 AND ($this->PublicPostVisibility)
 AND ($this->PostGroupsRestriction)
@@ -2102,7 +2102,7 @@ ORDER BY `posttime` DESC",    $IdMember   );
         }
         $posts = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-          	$sw = $this->dao->query("select forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner,members as mTranslator    where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mTranslator.id=IdTranslator  and mOwner.id=IdOwner order by forum_trads.id asc");
+          	$sw = $this->dao->query("select forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.Name,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,member as mOwner,member as mTranslator    where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=".$row->IdContent." and mTranslator.id=IdTranslator  and mOwner.id=IdOwner order by forum_trads.id asc");
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 			    			$row->Trad[]=$roww ;
 			  		}
@@ -2201,14 +2201,14 @@ ORDER BY `posttime` DESC",    $IdMember   );
     } // end of cleanupText
 
     function GetLanguageName($IdLanguage) {
-        $query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id=".($IdLanguage)
+        $query="select id as IdLanguage,Name,Name,ShortCode from languages where id=".($IdLanguage)
             . " AND IsWrittenLanguage = 1";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could not retrieve IdLanguage in GetLanguageName entries');
         } else {
             $row = $s->fetch(PDB::FETCH_OBJ) ;
-            $row->Name = $this->getWords()->getSilent($row->WordCode) . " (" . $row->Name . ")";
+            $row->Name = $this->getWords()->getSilent('lang' . $row->ShortCode) . " (" . $row->Name . ")";
             return($row) ;
         }
         return("not Found") ;
@@ -2250,14 +2250,14 @@ ORDER BY `posttime` DESC",    $IdMember   );
 
 			array_push($tt, "AllLanguages");
 			// then now all available languages
-			$query="select id as IdLanguage,Name,EnglishName,ShortCode,WordCode from languages where id>0"
+			$query="select id as IdLanguage,Name,Name,ShortCode from languages where id>0"
 			    . " AND IsWrittenLanguage = 1";
           	$s = $this->dao->query($query);
           	$langarr = [];
         	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			   if (!in_array($row->IdLanguage,$allreadyin)) {
 			   	  array_push($allreadyin,$row->IdLanguage) ;
-			   	  $row->Name = $this->getWords()->getSilent($row->WordCode) . " (" . trim((string) $row->Name) . ")";
+			   	  $row->Name = $this->getWords()->getSilent('lang_' . $row->ShortCode) . " (" . trim((string) $row->Name) . ")";
 			  	  $langarr[] = $row;
 			   }
 			}
@@ -2286,9 +2286,9 @@ ORDER BY `posttime` DESC",    $IdMember   );
 	 public function GroupChoice() {
  		$tt=[] ;
 
-		$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups,members
-										 WHERE membersgroups.IdGroup=groups.id and members.id=membersgroups.IdMember and
-										  members.Status in ('Active','ActiveHidden') and members.id=".$this->session->get('IdMember')." and membersgroups.Status='In' group by groups.id order by groups.id ";
+		$query="select groups.id as IdGroup,groups.Name,count(*) as cnt from groups,membersgroups,member
+										 WHERE membersgroups.IdGroup=groups.id and member.id=membersgroups.IdMember and
+										  member.Status in ('Active','ActiveHidden') and member.id=".$this->session->get('IdMember')." and membersgroups.Status='In' group by groups.id order by groups.id ";
      	$s = $this->dao->query($query);
      	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$this->getGroupName($row->Name);
@@ -2672,7 +2672,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
             $query = "
                 SELECT SQL_CALC_FOUND_ROWS
                     `forums_posts`.`id`,
-                    `members`.`Username`,
+                    `member`.`Username`,
                     `forums_posts`.`message`,
                     `forum_trads`.`Sentence`,
                     `forums_threads`.`id` AS `IdThread`,
@@ -2683,7 +2683,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                     `forums_threads`.`ThreadVisibility`,
                     `forums_threads`.`ThreadDeleted`,
                      UNIX_TIMESTAMP(`forums_posts`.`create_time`) AS `created`,
-                    geonames.name AS city,
+                    geo__names.name AS city,
                     geonamescountries.name AS country
                 FROM
                     `forums_posts`
@@ -2694,13 +2694,13 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                 LEFT JOIN
                     `forum_trads` ON (`forum_trads`.`IdTrad` = `forums_posts`.`IdContent` AND `forum_trads`.`IdLanguage` = {$languageId})
                 LEFT JOIN
-                    `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
+                    `member` ON (`forums_posts`.`IdWriter` = `member`.`id`)
                 LEFT JOIN
-                    `addresses` ON `members`.`id` = `addresses`.`IdMember`
+                    `address` ON `member`.`id` = `address`.`member_id` and `address`.`active` = 1 
                 LEFT JOIN
-                    `geonames` ON `addresses`.IdCity = `geonames`.`geonameId`
+                    `geo__names` ON `address`.location = `geo__names`.`geonameId`
                 LEFT JOIN
-                    `geonamescountries` ON `geonames`.`country` = `geonamescountries`.`country`
+                    `geonamescountries` ON `geo__names`.`country` = `geonamescountries`.`country`
                 WHERE
                     `forums_posts`.`id` IN ({$separatedPostIds})
                     AND (`forums_threads`.`IdGroup` IN ({$separatedGroupIds}) OR `forums_threads`.`IdGroup` IS NULL)
@@ -2987,8 +2987,8 @@ class Board implements Iterator {
               WHERE fp.threadid = `forums_threads`.`id`
               AND fp.PostDeleted = 'NotDeleted'
               ) ";
-		$query .= "LEFT JOIN `members` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)" ;
-		$query .= "LEFT JOIN `members` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)" ;
+		$query .= "LEFT JOIN `member` AS `first_member` ON (`first`.`IdWriter` = `first_member`.`id`)" ;
+		$query .= "LEFT JOIN `member` AS `last_member` ON (`last`.`IdWriter` = `last_member`.`id`)" ;
 		$query .= " WHERE 1 ".$wherethread . $orderby . " LIMIT ".$from.", ".$this->THREADS_PER_PAGE ;
 
 

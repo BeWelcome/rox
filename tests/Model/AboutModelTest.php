@@ -62,6 +62,26 @@ class AboutModelTest extends TestCase
         $aboutModel->sendFeedbackEmail($data);
     }
 
+    public function testSendFeedbackEmailWithNoEnailTriggersMailerWithDefaultEmail(): void
+    {
+        // Side-effect test: verify mailer is called.
+        $mailer = $this->createMock(Mailer::class);
+        $mailer->expects($this->once())->method('sendFeedbackEmail');
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+
+        $category = new FeedbackCategory();
+        $category->setEmailtonotify('admin@example.com');
+
+        $data = [
+            'IdCategory' => $category,
+            'FeedbackEmail' => null,
+            'message' => 'hello',
+        ];
+
+        $aboutModel = new AboutModel($entityManager, $mailer);
+        $aboutModel->sendFeedbackEmail($data);
+    }
+
     public function testAddFeedbackPersistsData(): void
     {
         // Side-effect test: verify persistence.

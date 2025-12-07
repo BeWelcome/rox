@@ -6,6 +6,9 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 #[Group('integration')]
+/**
+ * @infection-ignore-all
+ */
 class SignupControllerTest extends WebTestCase
 {
     public function testSignupPageLoads(): void

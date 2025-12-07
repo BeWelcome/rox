@@ -65,6 +65,6 @@ class SuggestLocationController extends AbstractController
 
     private function splitElements(string $searchTerm): array
     {
-        return array_filter(array_map('trim', explode(',', $searchTerm)), 'strlen');
+        return array_filter(array_map(trim(...), explode(',', $searchTerm)), strlen(...));
     }
 }

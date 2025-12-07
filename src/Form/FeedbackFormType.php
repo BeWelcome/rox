@@ -38,7 +38,7 @@ class FeedbackFormType extends AbstractType
                     'class' => 'select2',
                 ],
                 'constraints' => [
-                    new NotNull(['message' => 'feedback.select.category']),
+                    new NotNull(message: 'feedback.select.category'),
                 ],
             ])
             ->add('FeedbackQuestion', CkEditorType::class, [

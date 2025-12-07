@@ -6,6 +6,7 @@ use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
 use App\Entity\Trip;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class TripVoter extends Voter
@@ -33,7 +34,7 @@ class TripVoter extends Voter
      *
      * \todo extract different votes into functions of their own
      */
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         /** @var Member $member */
         $member = $token->getUser();

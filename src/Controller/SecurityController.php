@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 

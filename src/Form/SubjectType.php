@@ -23,9 +23,7 @@ class SubjectType extends AbstractType
             ],
             'required' => false,
             'constraints' => [
-                new NotBlank([
-                    'message' => 'error.subject.blank',
-                ]),
+                new NotBlank(message: 'error.subject.blank'),
             ],
         ]);
     }

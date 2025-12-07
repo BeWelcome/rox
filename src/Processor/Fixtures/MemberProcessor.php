@@ -57,7 +57,7 @@ final readonly class MemberProcessor implements ProcessorInterface
             $name = $this->faker->firstName($object->getGender()) . ' ' . $this->faker->lastName($object->getGender());
             $shortName = null;
 
-            $setShortName = rand(0, 100);
+            $setShortName = random_int(0, 100);
             if (25 <= $setShortName) {
                 $space = strpos($name, ' ');
                 $shortName = substr($name, 0, $space);
@@ -97,7 +97,7 @@ final readonly class MemberProcessor implements ProcessorInterface
             $object->addTranslation(new MemberTranslation($locale, 'ProfileLanguage', $locale));
             $fields = $this->getRandomFields();
             foreach ($fields as $field) {
-                $text = $this->faker->sentences(rand(1, 7), true);
+                $text = $this->faker->sentences(random_int(1, 7), true);
                 $object->addTranslation(new MemberTranslation($locale, $field, $text));
             }
         }

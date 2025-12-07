@@ -25,9 +25,7 @@ class MessageToMemberType extends AbstractType
                     'class' => 'form-control editor',
                 ],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'please.enter.a.message.text',
-                    ]),
+                    new NotBlank(message: 'please.enter.a.message.text'),
                 ],
             ])
         ;

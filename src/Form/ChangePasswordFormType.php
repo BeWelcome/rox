@@ -30,10 +30,8 @@ class ChangePasswordFormType extends AbstractType
                 ],
                 'always_empty' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'signup.error.password.blank',
-                    ]),
-                    new Length(['min' => 8]),
+                    new NotBlank(message: 'signup.error.password.blank'),
+                    new Length(min: 8),
                 ],
             ])
         ;

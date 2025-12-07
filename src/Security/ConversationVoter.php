@@ -6,6 +6,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class ConversationVoter extends Voter
@@ -26,7 +27,7 @@ class ConversationVoter extends Voter
         return true;
     }
 
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         /** @var Member $member */
         $member = $token->getUser();

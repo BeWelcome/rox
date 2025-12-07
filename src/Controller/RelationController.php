@@ -215,7 +215,7 @@ class RelationController extends AbstractController
     private function checkForEmailAddress(Relation $relation): bool
     {
         $relationText = $relation->getCommentText();
-        $found = preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $relationText);
+        $found = preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", (string) $relationText);
 
         return $found > 0;
     }
@@ -223,7 +223,7 @@ class RelationController extends AbstractController
     private function checkForPhoneNumber(Relation $relation): bool
     {
         $relationText = $relation->getCommentText();
-        $found = preg_match("/([0-9][\. \)-]*){9,}/", $relationText);
+        $found = preg_match("/([0-9][\. \)-]*){9,}/", (string) $relationText);
 
         return $found > 0;
     }

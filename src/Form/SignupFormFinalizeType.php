@@ -81,9 +81,7 @@ class SignupFormFinalizeType extends AbstractType
                 'help' => 'help.name',
                 'required' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'error.name',
-                    ]),
+                    new NotBlank(message: 'error.name'),
                 ],
             ])
             ->add('short_name', TextType::class, [
@@ -105,9 +103,7 @@ class SignupFormFinalizeType extends AbstractType
                 'html5' => false,
                 'required' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'error.birthdate',
-                    ]),
+                    new NotBlank(message: 'error.birthdate'),
                     new LessThan('-18years'),
                 ],
             ])
@@ -123,9 +119,7 @@ class SignupFormFinalizeType extends AbstractType
                 ],
                 'required' => false,
                 'constraints' => [
-                    new NotNull([
-                        'message' => 'error.gender',
-                    ]),
+                    new NotNull(message: 'error.gender'),
                 ],
             ])
             ->add('mother_tongue', ChoiceType::class, [
@@ -137,9 +131,7 @@ class SignupFormFinalizeType extends AbstractType
                 'label_html' => true,
                 'required' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'error.mother_tongue',
-                    ]),
+                    new NotBlank(message: 'error.mother_tongue'),
                 ],
             ])
             ->add('location', SetLocationType::class, [
@@ -161,9 +153,7 @@ class SignupFormFinalizeType extends AbstractType
                 ],
                 'required' => false,
                 'constraints' => [
-                    new NotNull([
-                        'message' => 'error.accommodation',
-                    ]),
+                    new NotNull(message: 'error.accommodation'),
                 ],
             ])
             ->add('hosting_interest', RangeType::class, [

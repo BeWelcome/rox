@@ -109,11 +109,7 @@ class GalleryController extends AbstractController
             return $response;
         }
 
-        $constraint = new Image([
-            'maxSize' => UploadedFile::getMaxFilesize(),
-            'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
-            'mimeTypesMessage' => 'upload.error.not_supported',
-        ]);
+        $constraint = new Image(maxSize: UploadedFile::getMaxFilesize(), mimeTypes: ['image/jpeg', 'image/png', 'image/gif'], mimeTypesMessage: 'upload.error.not_supported');
 
         $violations = $validator->validate($image, $constraint);
 

@@ -445,7 +445,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
             return [];
         }
 
-        $standardOffers = explode(',', $this->standardOffers);
+        $standardOffers = explode(',', (string) $this->standardOffers);
         // remove wheelchair accessibility (covered in hasWheelChairAccess
         $standardOffers = array_filter($standardOffers, function ($value) {
             return StandardOffersType::WHEELCHAIR_ACCESSIBLE !== $value;
@@ -456,7 +456,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
     public function isWheelChairAccessible(): bool
     {
-        return str_contains($this->standardOffers, StandardOffersType::WHEELCHAIR_ACCESSIBLE);
+        return str_contains((string) $this->standardOffers, StandardOffersType::WHEELCHAIR_ACCESSIBLE);
     }
 
     public function setMaxGuests(int $maxGuests): self

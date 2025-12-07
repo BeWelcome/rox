@@ -20,9 +20,7 @@ class ConfirmEmailAddressFormType extends AbstractType
                 'help' => 'help.registration.key',
                 'required' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'error.registration.key',
-                    ]),
+                    new NotBlank(message: 'error.registration.key'),
                 ],
             ])
         ;

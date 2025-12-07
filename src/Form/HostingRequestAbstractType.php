@@ -37,12 +37,8 @@ class HostingRequestAbstractType extends AbstractType
                     'class' => 'editor form-control',
                 ],
                 'constraints' => [
-                    new NotNull([
-                        'message' => 'please.enter.a.message.text',
-                    ]),
-                    new NotBlank([
-                        'message' => 'please.enter.a.message.text',
-                    ]),
+                    new NotNull(message: 'please.enter.a.message.text'),
+                    new NotBlank(message: 'please.enter.a.message.text'),
                 ],
                 'empty_data' => '',
             ])

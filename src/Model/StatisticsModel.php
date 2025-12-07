@@ -12,7 +12,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,8 +25,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class StatisticsModel
 {
     public function __construct(
-        private TranslatorInterface $translator,
-        private EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -101,7 +100,7 @@ class StatisticsModel
 
     /**
      * @throws DBALException
-     * @throws ORMException
+     * @throws \Doctrine\ORM\Exception\ORMException
      * @throws OptimisticLockException
      */
     public function updateStatistics(DatePeriod $dates, OutputInterface $output): int
@@ -752,7 +751,7 @@ class StatisticsModel
 
         $translatedCountries = [];
         foreach ($countryCodes as $key) {
-            if (2 === \strlen($key) && isset($countries[$key])) {
+            if (2 === \strlen((string) $key) && isset($countries[$key])) {
                 $translatedCountries[$countries[$key]->getName()] = $resultSet[$key];
             } else {
                 $translatedCountries[$key] = $resultSet[$key];
@@ -767,7 +766,7 @@ class StatisticsModel
         $translatedLanguages = [];
         $languageCodes = array_keys($resultSet);
         foreach ($languageCodes as $key) {
-            $translationId = 'lang_' . strtolower($key);
+            $translationId = 'lang_' . strtolower((string) $key);
             $languageName = $this->translator->trans($translationId);
             if ($translationId === $languageName) {
                 $translatedLanguages[$key] = $resultSet[$key];

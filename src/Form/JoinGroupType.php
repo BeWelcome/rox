@@ -34,9 +34,7 @@ class JoinGroupType extends AbstractType
                 'placeholder' => false,
                 'error_bubbling' => true,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'error.select.notification',
-                    ]),
+                    new NotBlank(message: 'error.select.notification'),
                 ],
             ])
             ->add('join', SubmitType::class, [

@@ -12,7 +12,7 @@ TIME_STAMP := $(shell git log -n 1 --format=%aI)
 
 all: phpci
 
-phpci: phpcpd phploc php-code-sniffer php-cs-fixer phpunit infection version
+phpci: phpcpd phploc php-code-sniffer php-cs-fixer phpunit infection int-test version
 
 install:
 	git rev-parse --short HEAD > VERSION
@@ -82,7 +82,10 @@ php-code-sniffer:
 	"./vendor/bin/phpcs"  --colors --warning-severity=Error
 
 phpunit:
-	"./bin/phpunit" --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random
+	"./bin/phpunit" --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --exclude-group=integration
+
+int-test:
+	"./bin/phpunit" --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --group=integration
 
 infection: phpunit
 	"./vendor/bin/infection" --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30

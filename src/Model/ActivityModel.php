@@ -10,7 +10,7 @@ use Pagerfanta\Pagerfanta;
 class ActivityModel
 {
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 

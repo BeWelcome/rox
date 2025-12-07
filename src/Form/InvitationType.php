@@ -33,9 +33,7 @@ class InvitationType extends HostingRequestAbstractType
                     'class' => 'editor',
                 ],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'please.enter.a.message.text',
-                    ]),
+                    new NotBlank(message: 'please.enter.a.message.text'),
                 ],
             ])
             ->add('send', SubmitType::class, [

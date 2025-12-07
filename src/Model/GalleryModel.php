@@ -17,11 +17,7 @@ class GalleryModel
     {
         // Create Image constraint to check if uploaded file is an image and not something else
 
-        $constraint = new Image([
-            'maxSize' => UploadedFile::getMaxFilesize(),
-            'mimeTypes' => ['image/jpeg', 'image/png', 'image/gif'],
-            'mimeTypesMessage' => 'upload.error.not_supported',
-        ]);
+        $constraint = new Image(maxSize: UploadedFile::getMaxFilesize(), mimeTypes: ['image/jpeg', 'image/png', 'image/gif'], mimeTypesMessage: 'upload.error.not_supported');
 
         $violations = $this->validator->validate($image, $constraint);
 

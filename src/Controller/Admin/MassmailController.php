@@ -37,7 +37,7 @@ class MassmailController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $members = array_map('trim', explode(',', (string) $data['members']));
+            $members = array_map(trim(...), explode(',', (string) $data['members']));
 
             /** @var MemberRepository $memberRepository */
             $memberRepository = $entityManager->getRepository(Member::class);

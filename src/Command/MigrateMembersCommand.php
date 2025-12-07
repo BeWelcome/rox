@@ -136,7 +136,7 @@ class MigrateMembersCommand extends Command
 
     private SymfonyStyle $io;
     private array $errorMembers = [];
-    private Connection $connection;
+    private readonly Connection $connection;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -428,17 +428,12 @@ class MigrateMembersCommand extends Command
     private function mapField(string $tableColumn): string
     {
         $tableColumn = str_replace('members.', '', $tableColumn);
-        switch ($tableColumn) {
-            case 'ProfileSummary':
-                $tableColumn = 'AboutMe';
-                break;
-            case 'AdditionalAccomodationInfo':
-                $tableColumn = 'AdditionalAccommodationInfo';
-                break;
-            case 'MaxLenghtOfStay':
-                $tableColumn = 'MaxLengthOfStay';
-                break;
-        }
+        $tableColumn = match ($tableColumn) {
+            'ProfileSummary' => 'AboutMe',
+            'AdditionalAccomodationInfo' => 'AdditionalAccommodationInfo',
+            'MaxLenghtOfStay' => 'MaxLengthOfStay',
+            default => $tableColumn,
+        };
 
         return $tableColumn;
     }

@@ -25,75 +25,52 @@ use Twig\TwigFunction;
  */
 class Extension extends AbstractExtension implements GlobalsInterface
 {
-    protected TranslatorInterface $translator;
-
-    private string $publicDirectory;
-
-    private EntrypointLookupInterface $entrypointLookup;
-    private LoggerInterface $logger;
-
-    /** @var false|string[] */
-    private $locales;
-    private RequestStack $requestStack;
-
     /**
      * Extension constructor.
      */
     public function __construct(
-        RequestStack $requestStack,
-        TranslatorInterface $translator,
-        EntrypointLookupInterface $entrypointLookup,
-        LoggerInterface $logger,
-        array $locales,
-        string $publicDirectory,
-    ) {
-        $this->translator = $translator;
-        $this->locales = $locales;
-        $this->entrypointLookup = $entrypointLookup;
-        $this->publicDirectory = $publicDirectory;
-        $this->logger = $logger;
-        $this->requestStack = $requestStack;
+        private readonly RequestStack $requestStack,
+        protected TranslatorInterface $translator,
+        private readonly EntrypointLookupInterface $entrypointLookup,
+        private readonly LoggerInterface $logger,
+        /** @var false|string[] */
+        private readonly array $locales,
+        private readonly string $publicDirectory
+    )
+    {
     }
 
+    #[\Override]
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('ago', [$this, 'ago']),
-            new TwigFunction('getTranslations', [$this, 'getTranslations']),
+            new TwigFunction('ago', $this->ago(...)),
+            new TwigFunction('getTranslations', $this->getTranslations(...)),
             new TwigFunction(
                 'dump_it',
-                [
-                    $this,
-                    'dumpIt',
-                ],
+                $this->dumpIt(...),
                 [
                     'is_safe' => ['html'],
                 ]
             ),
             new TwigFunction(
                 'language_name',
-                [
-                    $this,
-                    'languageName',
-                ],
+                $this->languageName(...),
                 [
                     'is_safe' => ['html'],
                 ]
             ),
             new TwigFunction(
                 'language_name_translated',
-                [
-                    $this,
-                    'languageNameTranslated',
-                ],
+                $this->languageNameTranslated(...),
                 [
                     'is_safe' => ['html'],
                 ]
             ),
-            new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
-            new TwigFunction('distance', [$this, 'distance']),
+            new TwigFunction('encore_entry_css_source', $this->getEncoreEntryCssSource(...)),
+            new TwigFunction('distance', $this->distance(...)),
             new TwigFunction('isFallback', $this->isFallback(...)),
-            new TwigFunction('sgn', [$this, 'sgn']),
+            new TwigFunction('sgn', $this->sgn(...)),
         ];
     }
 
@@ -129,33 +106,34 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return $date->diffForHumans();
     }
 
+    #[\Override]
     public function getFilters(): array
     {
         return [
             new TwigFilter(
                 'truncate',
-                [$this, 'truncate'],
+                $this->truncate(...),
                 [
                     'is_safe' => ['html'],
                 ]
             ),
             new TwigFilter(
                 'url_update',
-                [$this, 'urlUpdate'],
+                $this->urlUpdate(...),
                 [
                     'is_safe' => ['html'],
                 ]
             ),
             new TwigFilter(
                 'prepare_newsletter',
-                [$this, 'prepareNewsletter'],
+                $this->prepareNewsletter(...),
                 [
                     'is_safe' => ['html'],
                 ]
             ),
             new TwigFilter(
                 'privacy',
-                [$this, 'privacy'],
+                $this->privacy(...),
                 [
                     'is_safe' => ['html'],
                 ]
@@ -263,7 +241,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $result = preg_replace(
             '%<figure.*?><img.*?src="(.*?)".*?>%',
             $centerOpen . '<img src="\1" alt="' . htmlentities($embeddedImage) . '"' . $style . '>' . $centerClose,
-            $result
+            (string) $result
         );
 
         $this->logger->info($text);

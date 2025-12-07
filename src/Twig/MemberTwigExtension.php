@@ -17,7 +17,7 @@ use Twig\Extension\GlobalsInterface;
 
 class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 {
-    private const ALL_TEAMS = [
+    private const array ALL_TEAMS = [
         'communitynews' => [
             'trans' => 'AdminCommunityNews',
             'rights' => [Member::ROLE_ADMIN_COMMUNITYNEWS],
@@ -98,8 +98,8 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     protected ?Member $member;
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
-        private Security $security,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Security $security,
     ) {
         $this->member = $this->security->getUser();
     }

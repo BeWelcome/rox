@@ -18,9 +18,8 @@ return RectorConfig::configure()
         SetList::PHP_82,
         SetList::PHP_83,
         SetList::PHP_84,
-        SetList::PHP_85,
     ])
-    ->withComposerBased(twig: true, doctrine: true, phpunit: true, symfony: true)
+#    ->withComposerBased(twig: true, doctrine: true, phpunit: true, symfony: true)
     ->withPaths([
         __DIR__ . '/src',
         __DIR__ . '/tests',

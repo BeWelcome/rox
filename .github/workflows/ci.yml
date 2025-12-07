@@ -76,14 +76,22 @@ jobs:
       - name: Install project dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
+      - name: Install MariaDB and create test database
+        uses: getong/mariadb-action@v1.11
+        with:
+          mysql database: 'bewelcome'
+          mysql user: 'bewelcome'
+          mysql password: 'bewelcome'
+        run: bin/console test:database:create
+
       - name: Run phpunit tests
         run: bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/unit.xml --colors=never --order-by=random --exclude-group=integration
 
 #      - name: Run Infection tests
 #        run: vendor/bin/infection --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
 
-#      - name: Run Integration tests
-#        run: bin/phpunit --log-junit=build/logs/phpunit/integration.xml --colors=never --order-by=random --group=integration
+      - name: Run Integration tests
+        run: bin/phpunit --log-junit=build/logs/phpunit/integration.xml --colors=never --order-by=random --group=integration
 
 #      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # tag=v4.6.2
 #        if: ${{ always() }}
@@ -342,12 +350,3 @@ jobs:
       - name: Run JS security checker
         run: yarn audit --groups dependencies
 
-  mariadb:
-    name: mariadb
-    runs-on: ubuntu-latest
-    steps:
-      - uses: getong/mariadb-action@v1.11
-        with:
-          mysql database: 'bewelcome'
-          mysql user: 'bewelcome'
-          mysql password: 'bewelcome'

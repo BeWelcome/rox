@@ -48,8 +48,8 @@ jobs:
       - name: Run phpcpd tests
         run: vendor/bin/phpcpd src --exclude=src/Entity --exclude=src/Repository
 
-  phpunit:
-    name: PHPUnit
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -76,12 +76,13 @@ jobs:
       - name: Install project dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
-      - name: Install MariaDB and create test database
+      - name: Install MariaDB
         uses: getong/mariadb-action@v1.11
         with:
           mysql database: 'bewelcome'
           mysql user: 'bewelcome'
           mysql password: 'bewelcome'
+      - name: Create test database
         run: bin/console test:database:create
 
       - name: Run phpunit tests
@@ -349,4 +350,5 @@ jobs:
 
       - name: Run JS security checker
         run: yarn audit --groups dependencies
+
 

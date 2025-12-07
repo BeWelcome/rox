@@ -79,7 +79,7 @@ jobs:
       - name: Install MariaDB
         uses: getong/mariadb-action@v1.11
         with:
-          mysql database: 'bewelcome'
+          mysql database: 'bewelcome_test'
           mysql user: 'bewelcome'
           mysql password: 'bewelcome'
       - name: Create test database
@@ -350,6 +350,7 @@ jobs:
 
       - name: Run JS security checker
         run: yarn audit --groups dependencies
+
 
 
 

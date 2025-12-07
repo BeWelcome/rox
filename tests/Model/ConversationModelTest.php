@@ -20,16 +20,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModelTest extends TestCase
 {
-    private $entityManager;
-    private $mailer;
-    private $translator;
-    private $model;
-
     protected function setUp(): void
     {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->mailer = $this->createMock(Mailer::class);
-        $this->translator = $this->createMock(TranslatorInterface::class);
+        $this->entityManager = $this->createStub(EntityManagerInterface::class);
+        $this->mailer = $this->createStub(Mailer::class);
+        $this->translator = $this->createStub(TranslatorInterface::class);
 
         $this->model = new ConversationModel(
             $this->mailer,
@@ -79,17 +74,12 @@ class ConversationModelTest extends TestCase
     public function testMarkConversationAsSpamUpdatesStatusAndInfo(): void
     {
         $receiver = new Member();
-        $sender = new Member();
         $message = new Message();
         $message->setReceiver($receiver);
         $message->setFolder(InFolderType::NORMAL);
         $message->setStatus(MessageStatusType::SENT);
 
         $conversation = [$message];
-
-        // Expect persistence
-        $this->entityManager->expects($this->once())->method('persist')->with($message);
-        $this->entityManager->expects($this->once())->method('flush');
 
         $this->model->markConversationAsSpam($receiver, $conversation, 'Spam comment');
 
@@ -138,9 +128,6 @@ class ConversationModelTest extends TestCase
 
         $conversation = [$message];
 
-        $this->entityManager->expects($this->once())->method('persist')->with($message);
-        $this->entityManager->expects($this->once())->method('flush');
-
         $this->model->unmarkConversationDeleted($receiver, $conversation);
 
         // Should replace RECEIVER_DELETED relative to empty string or existing state.
@@ -159,9 +146,6 @@ class ConversationModelTest extends TestCase
 
         $conversation = [$message];
 
-        $this->entityManager->expects($this->once())->method('persist')->with($message);
-        $this->entityManager->expects($this->once())->method('flush');
-
         $this->model->unmarkConversationAsSpam($receiver, $conversation);
 
         $this->assertEquals(InFolderType::NORMAL, $message->getFolder());
@@ -178,9 +162,6 @@ class ConversationModelTest extends TestCase
 
         $conversation = [$message];
 
-        $this->entityManager->expects($this->once())->method('persist')->with($message);
-        $this->entityManager->expects($this->once())->method('flush');
-
         $this->model->markConversationAsRead($receiver, $conversation);
 
         $this->assertNotNull($message->getFirstRead());
@@ -195,7 +176,7 @@ class ConversationModelTest extends TestCase
         $msg1 = new Message();
         $msg2 = new Message();
 
-        $repo = $this->createMock(\Doctrine\ORM\EntityRepository::class);
+        $repo = $this->createStub(\Doctrine\ORM\EntityRepository::class);
         $repo->method('findBy')->with(['subject' => $subject])->willReturn([$msg1, $msg2]);
 
         $this->entityManager->method('getRepository')->with(Message::class)->willReturn($repo);

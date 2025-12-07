@@ -16,21 +16,9 @@ use PHPUnit\Framework\TestCase;
 
 class AboutModelTest extends TestCase
 {
-    private $entityManager;
-    private $mailer;
-    private $aboutModel;
-
-    protected function setUp(): void
-    {
-        $this->entityManager = $this->createMock(EntityManagerInterface::class);
-        $this->mailer = $this->createMock(Mailer::class);
-        $this->aboutModel = new AboutModel($this->entityManager, $this->mailer);
-    }
-
     public function testGetFeedbackCategoriesReturnsResult(): void
     {
         // Stubbing the chain to return a specific result.
-        // We don't care about the exact method calls on the query builder, mostly just that it returns the expected data.
         $expectedCategories = [new FeedbackCategory(), new FeedbackCategory()];
 
         $query = $this->createStub(Query::class);
@@ -44,9 +32,12 @@ class AboutModelTest extends TestCase
         $qb->method('indexBy')->willReturnSelf();
         $qb->method('getQuery')->willReturn($query);
 
-        $this->entityManager->method('createQueryBuilder')->willReturn($qb);
+        $mailer = $this->createStub(Mailer::class);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('createQueryBuilder')->willReturn($qb);
 
-        $result = $this->aboutModel->getFeedbackCategories();
+        $aboutModel = new AboutModel($entityManager, $mailer);
+        $result = $aboutModel->getFeedbackCategories();
 
         $this->assertSame($expectedCategories, $result);
     }
@@ -54,7 +45,9 @@ class AboutModelTest extends TestCase
     public function testSendFeedbackEmailTriggersMailer(): void
     {
         // Side-effect test: verify mailer is called.
-        $this->mailer->expects($this->once())->method('sendFeedbackEmail');
+        $mailer = $this->createMock(Mailer::class);
+        $mailer->expects($this->once())->method('sendFeedbackEmail');
+        $entityManager = $this->createStub(EntityManagerInterface::class);
 
         $category = new FeedbackCategory();
         $category->setEmailtonotify('admin@example.com');
@@ -65,19 +58,22 @@ class AboutModelTest extends TestCase
             'message' => 'hello',
         ];
 
-        $this->aboutModel->sendFeedbackEmail($data);
+        $aboutModel = new AboutModel($entityManager, $mailer);
+        $aboutModel->sendFeedbackEmail($data);
     }
 
     public function testAddFeedbackPersistsData(): void
     {
         // Side-effect test: verify persistence.
-        $this->entityManager->expects($this->once())->method('persist')->with($this->isInstanceOf(Feedback::class));
-        $this->entityManager->expects($this->once())->method('flush');
+        $mailer = $this->createStub(Mailer::class);
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $entityManager->expects($this->once())->method('persist')->with($this->isInstanceOf(Feedback::class));
+        $entityManager->expects($this->once())->method('flush');
 
         // Stub repository to return a dummy language
-        $repo = $this->createStub(EntityRepository::class);
-        $repo->method('find')->willReturn(new Language());
-        $this->entityManager->method('getRepository')->willReturn($repo);
+        $repository = $this->createStub(EntityRepository::class);
+        $repository->method('find')->willReturn(new Language());
+        $entityManager->method('getRepository')->willReturn($repository);
 
         $data = [
             'member' => new Member(),
@@ -85,6 +81,7 @@ class AboutModelTest extends TestCase
             'IdCategory' => new FeedbackCategory(),
         ];
 
-        $this->aboutModel->addFeedback($data);
+        $aboutModel = new AboutModel($entityManager, $mailer);
+        $aboutModel->addFeedback($data);
     }
 }

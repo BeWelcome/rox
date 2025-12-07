@@ -341,3 +341,13 @@ jobs:
 
       - name: Run JS security checker
         run: yarn audit --groups dependencies
+
+  mariadb:
+    name: mariadb
+    runs-on: ubuntu-latest
+    steps:
+      - uses: getong/mariadb-action@v1.11
+        with:
+          mysql database: 'bewelcome'
+          mysql user: 'bewelcome'
+          mysql password: 'bewelcome'

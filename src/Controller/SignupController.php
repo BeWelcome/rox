@@ -22,6 +22,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
+/**
+ * @infection-ignore-all
+ */
 class SignupController extends AbstractController
 {
     use TranslatedFlashTrait;

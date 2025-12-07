@@ -7,6 +7,7 @@ use HTMLPurifier;
 use HTMLPurifier_HTML5Config;
 use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
+use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
@@ -35,12 +36,11 @@ class Extension extends AbstractExtension implements GlobalsInterface
         private readonly LoggerInterface $logger,
         /** @var false|string[] */
         private readonly array $locales,
-        private readonly string $publicDirectory
-    )
-    {
+        private readonly string $publicDirectory,
+    ) {
     }
 
-    #[\Override]
+    #[Override]
     public function getFunctions(): array
     {
         return [
@@ -106,7 +106,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return $date->diffForHumans();
     }
 
-    #[\Override]
+    #[Override]
     public function getFilters(): array
     {
         return [

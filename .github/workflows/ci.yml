@@ -83,7 +83,7 @@ jobs:
           mysql user: 'bewelcome'
           mysql password: 'bewelcome'
       - name: Create test database
-        run: bin/console test:database:create
+        run: bin/console test:database:create --env=test
 
       - name: Run phpunit tests
         run: bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/unit.xml --colors=never --order-by=random --exclude-group=integration
@@ -350,5 +350,6 @@ jobs:
 
       - name: Run JS security checker
         run: yarn audit --groups dependencies
+
 
 

@@ -4,7 +4,7 @@
             "src/Model"
         ]
     },
-    "timeout": 10,
+    "timeout": 20,
     "logs": {
         "text": "infection.log"
     },

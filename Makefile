@@ -82,7 +82,7 @@ php-code-sniffer:
 	"./vendor/bin/phpcs"  --colors --warning-severity=Error
 
 phpunit:
-	"./bin/phpunit" --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
+	"./bin/phpunit" --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random
 
 infection: phpunit
 	"./vendor/bin/infection" --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30

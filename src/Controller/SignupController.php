@@ -40,7 +40,7 @@ class SignupController extends AbstractController
     ): Response {
         $signupFormData = ['locale' => $request->getLocale()];
         if ($request->isMethod('POST')) {
-            $signupFormData['username'] = $request->get('username');
+            $signupFormData['username'] = $request->attributes->get('username');
         }
 
         $loggedInMember = $this->getUser();

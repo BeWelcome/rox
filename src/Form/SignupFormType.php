@@ -37,9 +37,7 @@ class SignupFormType extends AbstractType
                 'help_html' => true,
                 'required' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'signup.error.username',
-                    ]),
+                    new NotBlank(message: 'signup.error.username'),
                     new Regex($this->usernamePattern, 'signup.error.username.pattern'),
                 ],
             ])
@@ -51,9 +49,7 @@ class SignupFormType extends AbstractType
                 'help' => 'help.email',
                 'required' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'signup.error.email.blank',
-                    ]),
+                    new NotBlank(message: 'signup.error.email.blank'),
                     new Email(),
                 ],
             ])
@@ -66,10 +62,8 @@ class SignupFormType extends AbstractType
                 'help' => 'help.password',
                 'required' => false,
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'signup.error.password.blank',
-                    ]),
-                    new Length(['min' => 8]),
+                    new NotBlank(message: 'signup.error.password.blank'),
+                    new Length(min: 8),
                 ],
             ])
             ->add('terms_privacy', CheckboxType::class, [
@@ -79,9 +73,7 @@ class SignupFormType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
-                    new IsTrue([
-                        'message' => 'signup.error.terms_privacy',
-                    ]),
+                    new IsTrue(message: 'signup.error.terms_privacy'),
                 ],
             ])
         ;

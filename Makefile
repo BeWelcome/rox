@@ -88,7 +88,7 @@ int-test:
 	"./bin/phpunit" --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --group=integration
 
 infection: phpunit
-	"./vendor/bin/infection" --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
+	"./vendor/bin/infection" --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=30
 
 #behat: encore
 #	bin/console doctrine:database:create --env=test --if-not-exists

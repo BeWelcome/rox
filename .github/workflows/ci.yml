@@ -96,6 +96,7 @@ jobs:
         uses: threeal/setup-yarn-action@v2.0.0
         with:
           version: latest
+          cache: false
           
       - name: Install yarn dependencies and run webpack
         run: yarn install --frozen-lock ; yarn encore dev
@@ -359,6 +360,7 @@ jobs:
 
       - name: Run JS security checker
         run: yarn audit --groups dependencies
+
 
 
 

@@ -77,7 +77,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
       - name: Run phpunit tests
-        run: bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/unit.xml --colors=never --order-by=random --exclude-group=integration
+        run: bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never --order-by=random --exclude-group=integration
 
       - name: Run Infection tests
         run: vendor/bin/infection --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=30
@@ -360,6 +360,7 @@ jobs:
 
       - name: Run JS security checker
         run: yarn audit --groups dependencies
+
 
 
 

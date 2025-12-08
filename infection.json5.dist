@@ -3,9 +3,9 @@
         "directories": [
             "src/Model"
         ],
-        "excludes": {
+        "excludes": [
             "src/Controller/SignupController"
-        }
+        ]
     },
     "timeout": 30,
     "logs": {

@@ -33,7 +33,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -48,8 +48,8 @@ jobs:
       - name: Run phpcpd tests
         run: vendor/bin/phpcpd src --exclude=src/Entity --exclude=src/Repository
 
-  phpunit:
-    name: PHPUnit
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -64,7 +64,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -77,19 +77,38 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
       - name: Run phpunit tests
-        run: bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/unit.xml --colors=never --order-by=random --exclude-group=integration
+        run: bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never --order-by=random --exclude-group=integration
 
-#      - name: Run Infection tests
-#        run: vendor/bin/infection --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
+      - name: Run Infection tests
+        run: vendor/bin/infection --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=30
 
-#      - name: Run Integration tests
-#        run: bin/phpunit --log-junit=build/logs/phpunit/integration.xml --colors=never --order-by=random --group=integration
+      - name: Install MariaDB
+        uses: getong/mariadb-action@v1.11
+        with:
+          mysql database: 'bewelcome_test'
+          mysql user: 'bewelcome'
+          mysql password: 'bewelcome'
 
-#      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # tag=v4.6.2
-#        if: ${{ always() }}
-#        with:
-#          name: infection.log
-#          path: infection.log
+      - name: Create test database
+        run: bin/console test:database:create --env=test
+
+      - name: Setup Yarn
+        uses: threeal/setup-yarn-action@v2.0.0
+        with:
+          version: latest
+          cache: false
+          
+      - name: Install yarn dependencies and run webpack
+        run: yarn install --frozen-lock ; yarn encore dev
+
+      - name: Run Integration tests
+        run: bin/phpunit --log-junit=build/logs/phpunit/integration.xml --colors=never --order-by=random --group=integration
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # tag=v4.6.2
+        if: ${{ always() }}
+        with:
+          name: infection.log
+          path: infection.log
 
   phploc:
     name: PHPLoc
@@ -106,7 +125,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -137,7 +156,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -168,7 +187,7 @@ jobs:
 #
 #      - name: Get Composer Cache Directory
 #        id: composer-cache
-#        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+#        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 #
 #      - name: Cache dependencies
 #        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -198,7 +217,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -228,7 +247,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -258,7 +277,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -288,7 +307,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -322,7 +341,7 @@ jobs:
 
       - name: Get Composer Cache Directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache dependencies
         uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809  # tag=v4.2.4
@@ -341,3 +360,14 @@ jobs:
 
       - name: Run JS security checker
         run: yarn audit --groups dependencies
+
+
+
+
+
+
+
+
+
+
+

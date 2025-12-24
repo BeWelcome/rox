@@ -2,6 +2,7 @@
 # Here is a sample: https://gist.github.com/vincentchalamon/d5defad563ed49d9306a4aa57dfd4498
 errors.log
 rox_local.ini
+.php-version
 *.cache.ini
 .php_cs.cache
 .php-cs-fixer.cache
@@ -59,6 +60,7 @@ allCountries.zip
 /public/bundles/
 /var/
 /vendor/
+/config/reference.php
 ###< symfony/framework-bundle ###
 ###> symfony/webpack-encore-bundle ###
 /node_modules/

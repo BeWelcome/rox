@@ -3,10 +3,10 @@ set -e
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
-	set -- php-fpm "$@"
+	set -- frankenphp run "$@"
 fi
 
-if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
+if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ "$1" = 'ls' ]; then
  	PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-production"
 	if [ "$APP_ENV" != 'prod' ]; then
 		PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-development"
@@ -81,4 +81,4 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	bin/console manticore:indices:geonames
 fi
 
-exec docker-php-entrypoint "$@"
+exec "$@"

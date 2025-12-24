@@ -5,11 +5,11 @@
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
 ARG PHP_VERSION=8.5
-ARG NGINX_VERSION=1.29
+ARG FRANKENPHP_VERSION=1.11
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine AS bewelcome_php
+FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-alpine AS bewelcome_php
 
 # persistent / runtime deps
 RUN apk add --no-cache \
@@ -25,22 +25,9 @@ RUN apk add --no-cache \
 		python3 \
 	;
 
-ARG APCU_VERSION=5.1.24
 RUN set -eux; \
-	apk add --no-cache --virtual .build-deps \
-		$PHPIZE_DEPS \
-		freetype-dev \
-		icu-dev \
-		libjpeg-turbo-dev \
-		libpng-dev \
-		libxslt-dev \
-		libzip-dev \
-		zlib-dev \
-	; \
-	\
-	docker-php-ext-configure zip; \
-	docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --enable-gd; \
-	docker-php-ext-install -j$(nproc) \
+	install-php-extensions \
+		apcu \
 		intl \
 		gd \
 		mysqli \
@@ -48,26 +35,9 @@ RUN set -eux; \
 		pdo_mysql \
 		xsl \
 		zip \
-        exif \
-	; \
-	pecl install \
-		apcu-${APCU_VERSION} \
-	; \
-	pecl clear-cache; \
-	docker-php-ext-enable \
-		apcu \
+		exif \
 		opcache \
-	; \
-	\
-	runDeps="$( \
-		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
-			| tr ',' '\n' \
-			| sort -u \
-			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
-	)"; \
-	apk add --no-cache --virtual .phpexts-rundeps $runDeps; \
-	\
-	apk del .build-deps
+	;
 
 # https://github.com/nodejs/docker-node/issues/1126
 RUN set -eux; \
@@ -79,12 +49,6 @@ RUN export PATH="/usr/local/bin:$PATH"
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/bewelcome.prod.ini $PHP_INI_DIR/conf.d/bewelcome.ini
-
-RUN set -eux; \
-	{ \
-		echo '[www]'; \
-		echo 'ping.path = /ping'; \
-	} | tee /usr/local/etc/php-fpm.d/docker-healthcheck.conf
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
@@ -143,27 +107,16 @@ RUN set -eux; \
 VOLUME /srv/bewelcome/var
 VOLUME /srv/bewelcome/data
 
-COPY docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
-RUN chmod +x /usr/local/bin/docker-healthcheck
+COPY docker/frankenphp/Caddyfile /etc/caddy/Caddyfile
 
-HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["docker-healthcheck"]
+HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["frankenphp", "php-cli", "-r", "echo 1;"]
 
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
 ENTRYPOINT ["docker-entrypoint"]
-CMD ["php-fpm"]
+CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
 
-
-# "nginx" stage
-# depends on the "php" stage above
-FROM nginx:${NGINX_VERSION}-alpine AS bewelcome_nginx
-
-COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
-
-WORKDIR /srv/bewelcome/public
-
-COPY --from=bewelcome_php /srv/bewelcome/public ./
 
 # "php" dev stage
 # depends on the "php" stage above

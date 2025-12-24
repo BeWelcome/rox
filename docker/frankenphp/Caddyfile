@@ -1,0 +1,10 @@
+{
+	frankenphp
+	order php_server before file_server
+}
+
+:80 {
+	root * /srv/bewelcome/public
+	encode zstd gzip
+	php_server
+}

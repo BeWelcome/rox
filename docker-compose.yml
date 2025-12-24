@@ -1,22 +1,23 @@
 x-cache-from:
   - &cache-from
     cache_from:
-      - ${NGINX_IMAGE:-bewelcome/nginx}
-      - ${PHP_IMAGE:-bewelcome/php}
+      - ${APP_IMAGE:-bewelcome/app}
 
 services:
-  php:
+  app:
     build:
       context: .
       target: bewelcome_php_dev
       <<: *cache-from
-    image: ${PHP_IMAGE:-bewelcome/php}
+    image: ${APP_IMAGE:-bewelcome/app}
+    environment:
+      SERVER_NAME: :80
     healthcheck:
       interval: 10s
       timeout: 3s
       retries: 3
       start_period: 30s
-      test: ["NONE"]
+      test: ["CMD", "frankenphp", "php-cli", "-r", "echo 1;"]
     depends_on:
       - db
       - manticore
@@ -25,17 +26,10 @@ services:
       - .:/srv/bewelcome:rw,cached
       # if you develop on Linux, you may use a bind-mounted host directory instead
       # - ./var:/srv/bewelcome/var:rw
-
-  web:
-    build:
-      context: .
-      target: bewelcome_nginx
-      <<: *cache-from
-    image: ${NGINX_IMAGE:-bewelcome/nginx}
-    depends_on:
-      - php
-    volumes:
-      - ./public:/srv/bewelcome/public:ro
+    ports:
+      - "8080:80"
+      - "8043:443"
+      - "8043:443/udp"
 
   db:
     image: mariadb:12.0.2

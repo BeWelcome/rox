@@ -1,5 +1,5 @@
 services:
-  web:
+  app:
     ports:
       - target: 80
         published: 8080

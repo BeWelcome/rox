@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Repository\LanguageRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -15,14 +16,14 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'languages')]
-#[ORM\UniqueConstraint(name: 'ShortCode', columns: ['ShortCode'])]
-#[ORM\Entity(repositoryClass: \App\Repository\LanguageRepository::class)]
+#[ORM\Table(name: 'language')]
+#[ORM\Entity(repositoryClass: LanguageRepository::class)]
 class Language
 {
     #[ORM\Column(name: 'Name', type: 'text', length: 255, nullable: false)]
     private string $name;
 
+    #[ORM\Id]
     #[ORM\Column(name: 'ShortCode', type: 'string', length: 16, nullable: false)]
     private string $shortCode;
 
@@ -34,11 +35,6 @@ class Language
 
     #[ORM\Column(name: 'IsSignLanguage', type: 'boolean', nullable: false)]
     private bool $isSignLanguage = false;
-
-    #[ORM\Column(name: 'id', type: 'integer')]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private readonly int $id;
 
     public function setName(string $name): self
     {
@@ -71,7 +67,7 @@ class Language
         return $this;
     }
 
-    public function getIsWrittenLanguage(): bool
+    public function isWrittenLanguage(): bool
     {
         return $this->isWrittenLanguage;
     }
@@ -83,7 +79,7 @@ class Language
         return $this;
     }
 
-    public function getIsSpokenLanguage(): bool
+    public function isSpokenLanguage(): bool
     {
         return $this->isSpokenLanguage;
     }
@@ -95,13 +91,8 @@ class Language
         return $this;
     }
 
-    public function getIsSignLanguage(): bool
+    public function isSignLanguage(): bool
     {
         return $this->isSignLanguage;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 }

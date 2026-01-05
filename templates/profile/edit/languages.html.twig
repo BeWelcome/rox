@@ -1,0 +1,85 @@
+{% extends 'profile/profile.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('profile/edit_languages') }}
+  <script type="application/javascript">
+  </script>
+{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ encore_entry_link_tags('profile/edit_languages') }}
+{% endblock %}
+
+{% macro widget_prototype(widget) %}
+  {% set form = widget %}
+  {% set name = widget.vars.full_name %}
+  {% set currentLanguage = name %}
+  <div class="u:grid u:md:grid-cols-2 u:items-bottom u:gap-8" id="{{ currentLanguage }}">
+    <div class="form-group u:grid u:auto-rows-min">
+      {{ form_label(form.language) }}
+      {{ form_widget(form.language) }}
+      {{ form_errors(form.language) }}
+    </div>
+    {# force error display #}
+    <div class="form-group u:grid u:auto-rows-min {% if form.level.vars.errors|length != 0 %}is-invalid{% endif %}">
+      {{ form_label(form.level) }}
+      <div class="u:grid u:grid-cols-[auto_min-content] u:gap-8">
+        {{ form_widget(form.level) }}
+        <button type="button" class="o-button u:self-end js-delete-language"
+                data-collection-holder-class="collection-languages"
+                data-related="{{ currentLanguage }}"><i class="fa fa-fw fa-trash" aria-label="{{ 'language.delete'|trans }}"></i><span class="sr-only">{{ 'language.delete'|trans }}</span></button></div>
+      {{ form_errors(form.level) }}
+    </div>
+  </div>
+{% endmacro %}
+
+{% block page_content %}
+  <div class="u:w-full">
+    <div class="card">
+      <div class="card-header u:flex u:flex-row u:justify-between">
+        {{ 'profile.languages'|trans|raw }}
+      </div>
+      <div class="card-block p-2">
+        <div class="card-text m-0">
+          {{ form_start(form) }}
+          {{ form_errors(form) }}
+          <div class="collection-languages"
+               data-index="{{ form.language_levels|length > 0 ? form.language_levels|last.vars.name + 1 : 0 }}"
+               data-prototype="{{ _self.widget_prototype(form.language_levels.vars.prototype)|e('html_attr') }}">
+            {% for language_level in form.language_levels %}
+              {% set currentLanguage = language_level.vars.full_name %}
+              <div class="u:grid u:md:grid-cols-2 u:items-bottom u:gap-8" id="{{ currentLanguage }}">
+                <div class="form-group u:grid u:auto-rows-min">
+                  {{ form_label(language_level.language) }}
+                  {{ form_widget(language_level.language) }}
+                  {{ form_errors(language_level.language) }}
+                </div>
+                  {# force error display #}
+                  <div class="form-group u:grid u:auto-rows-min {% if language_level.level.vars.errors|length != 0 %}is-invalid{% endif %}">
+                    {{ form_label(language_level.level) }}
+                    <div class="u:grid u:grid-cols-[auto_min-content] u:gap-8">
+                    {{ form_widget(language_level.level) }}
+                    <button type="button" class="o-button u:self-end js-delete-language"
+                          data-collection-holder-class="collection-languages"
+                            data-related="{{ currentLanguage }}"><i class="fa fa-fw fa-trash" aria-label="{{ 'language.delete'|trans }}"></i><span class="sr-only">{{ 'language.delete'|trans }}</span></button></div>
+                    {{ form_errors(language_level.level) }}
+                </div>
+              </div>
+              <hr class="u:bg-bewelcome" style="margin-top: 0;">
+            {% endfor %}
+          </div>
+          <div class="u:flex u:justify-between u:my-8">
+            <button type="button" class="o-button js-add-language"
+                    data-collection-holder-class="collection-languages"><i class="fa fa-fw fa-add" aria-label="{{ 'language.add'|trans }}"></i><span class="sr-only">{{ 'language.add'|trans }}</span></button></button>
+            <input type="submit" class="o-button" value="{{ 'profile.update'|trans }}">
+          </div>
+          {{ form_rest(form) }}
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock page_content %}

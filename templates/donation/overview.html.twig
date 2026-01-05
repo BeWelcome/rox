@@ -15,8 +15,8 @@
         {% set helloAssoLink = 'https://www.helloasso.com/associations/bevolunteer/formulaires/1/' ~ helloAssoLocale %}
 
         <div class="col-12 col-lg-6">
-            <div class="scroller scroller-left u-float-left mt-2"><i class="fa fa-caret-left"></i></div>
-            <div class="scroller scroller-right u-float-right mt-2"><i class="fa fa-caret-right"></i></div>
+            <div class="scroller scroller-left u:float-left mt-2"><i class="fa fa-caret-left"></i></div>
+            <div class="scroller scroller-right u:float-right mt-2"><i class="fa fa-caret-right"></i></div>
             <div class="wrapper-nav">
                 <ul class="nav nav-tabs list" role="tablist">
                     <li class="nav-item">
@@ -43,13 +43,13 @@
                 </div>
                 <div class="tab-pane card p-2" id="hello_asso" role="tabpanel">
                     <h3>{{ 'donate.hello.asso'|trans }}&nbsp;<i class="fa fa3x fa-coins ml-2"></i></h3>
-                    <p class="u-my-8">{{ 'donate.hello.asso.text'|trans }}</p>
+                    <p class="u:my-8">{{ 'donate.hello.asso.text'|trans }}</p>
                     <a href="{{ helloAssoLink }}" target="_blank" class="btn btn-primary btn-block"><i class="fa fa-coins mr-1"></i>{{ 'donate.hello.asso'|trans }}</a>
                 </div>
                 <div class="tab-pane card p-2" id="paypal" role="tabpanel">
                     <h3>{{ 'donate_paypal_legend'|trans }}</h3>
 
-                    <div id="donate-button-container" class="u-flex u-justify-center u-my-20">
+                    <div id="donate-button-container" class="u:flex u:justify-center u:my-20">
                         <div id="donate-button"></div>
                         <script src="https://www.paypalobjects.com/donate/sdk/donate-sdk.js" charset="UTF-8"></script>
                         <script>

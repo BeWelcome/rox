@@ -14,7 +14,7 @@
 .c-dashboard__item {
 	display: flex;
 	align-items: center;
-	background-color: theme('colors.gray-5');
+	background-color: var(--u-color-zinc-100);
 	padding: 0 16px;
 	border-radius: 8px;
 	margin-bottom: 8px;
@@ -25,7 +25,7 @@
 .c-dashboard__message-item {
   display: grid;
   align-items: center;
-  background-color: theme('colors.gray-5');
+  background-color: var(--u-color-zinc-100);
   padding: 0 4px;
   border-radius: 8px;
   margin-bottom: 8px;

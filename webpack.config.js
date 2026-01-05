@@ -41,6 +41,8 @@ Encore
     .addEntry('chartjs', './node_modules/chart.js/dist/chart.js')
     .addEntry('offcanvas', './assets/js/offcanvas.js')
     .addEntry('profile/profile', './assets/js/profile/profile.js')
+    .addEntry('profile/edit', './assets/js/profile/edit.js')
+    .addEntry('profile/edit_languages', './assets/js/profile/edit_languages.js')
     .addEntry('profile/setlocation', './assets/js/profile/setlocation.js')
     .addEntry('signup/setlocation', './assets/js/signup/setlocation.js')
     .addEntry('updatecounters', './assets/js/updateCounters.js')

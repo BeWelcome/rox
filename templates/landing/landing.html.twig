@@ -2,7 +2,6 @@
 {% import 'macros.twig' as macros %}
 
 {% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
   {{ encore_entry_link_tags('jquery_ui') }}
   {{ encore_entry_link_tags('leaflet') }}
 {% endblock stylesheets %}
@@ -14,7 +13,7 @@
 
 {% block content %}
 
-<div class="l-landing-welcome u-my-32">
+<div class="l-landing-welcome u:my-32">
 
 	{% include 'landing/widget/profilepicturewithaccommodation.html.twig' with {
     member: app.user
@@ -22,18 +21,18 @@
 
 	<div class="l-welcome-card">
 
-		<div class="u-flex u-flex-col u-justify-center u-py-16 u-px-24">
-        <p class="u-text-26 u-leading-32 u-font-400 u-font-display u-mb-8">{{ 'landing.welcomeback' | trans }}<span class="u-font-300">{{ macros.profilelink(app.user.Username) }}</span></p>
+		<div class="u:flex u:flex-col u:justify-center u:py-16 u:px-24">
+        <p class="u:text-26 u:leading-32 u:font-400 u:font-display u:mb-8">{{ 'landing.welcomeback' | trans }}<span class="u:font-300">{{ macros.profilelink(app.user.Username) }}</span></p>
             {# accomoodation null indicates that the meber hasn't finished setting up yet #}
             {% if not app.user.Accommodation is null %}
-			<div class="u-flex u-items-center">
+			<div class="u:flex u:items-center">
 				{% include 'landing/widget/accommodation.html.twig' with {
                     member: app.user
                 } only %}
-				<p class="u-text-20 u-leading-26 u-gray-60 u-font-display u-font-300 u-ml-4">in</p>
+				<p class="u:text-20 u:leading-26 u:gray-60 u:font-display u:font-300 u:ml-4">in</p>
 				{# Provide a way to search in member's location #}
                 {{ form_start( searchLocation, { 'action': path('search_locations'), 'attr' : {'style' : 'display: inline;'}} ) }}
-				<button type="submit" id="home_updateMap" name="home[updateMap]" class="searchsubmit u-text-22 u-leading-26 u-ml-4 u-mb-0 u-font-display u-font-400 u-text-bewelcome btn">
+				<button type="submit" id="home_updateMap" name="home[updateMap]" class="searchsubmit u:text-22 u:leading-26 u:ml-4 u:mb-0 u:font-display u:font-400 u:text-bewelcome btn">
 					{{ searchLocation.vars.value.location }}
 				</button>
 				{% do searchLocation.updateMap.setRendered %}
@@ -45,8 +44,8 @@
             {% endif %}
 		</div>
 		{# where do you want to go? #}
-		<div class="u-flex u-items-center u-justify-center u-bg-gray-5 u-py-16 u-px-24 u-rounded-r-16">
-			{{ form_start( tinySearch, { 'action': path('search_locations'), 'attr': {'class': 'u-w-full'} } ) }}
+		<div class="u:flex u:items-center u:justify-center u:bg-gray-5 u:py-16 u:px-24 u:rounded-r-16">
+			{{ form_start( tinySearch, { 'action': path('search_locations'), 'attr': {'class': 'u:w-full'} } ) }}
 
 			<label for="{{ tinySearch.location.vars.id}}" class="sr-only">{{ 'landing.whereyougo' | trans }}</label>
 			<div class="input-group">
@@ -58,13 +57,13 @@
                            {% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
                     >
                 </div>
-                <div class="u-block">{{ form_errors(tinySearch.location) }}</div>
+                <div class="u:block">{{ form_errors(tinySearch.location) }}</div>
                 {% do tinySearch.location.setRendered %}
                 <span class="input-group-append">
 					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="btn o-button">{{ 'go'|trans }}</button>
 				</span>
 			</div>
-            <div class="u-block">{{ form_errors(tinySearch.location) }}</div>
+            <div class="u:block">{{ form_errors(tinySearch.location) }}</div>
             {% do tinySearch.location.setRendered %}
             {% do tinySearch.updateMap.setRendered %}
 			<div class="d-none" aria-hidden="true">{{ form_rest( tinySearch ) }}</div>
@@ -74,10 +73,10 @@
 	</div>
 </div>
 
-<div class="u-flex u-flex-wrap md:u-grid md:u-grid-cols-2 u-gap-24 u-pb-24">
+<div class="u:flex u:flex-wrap u:md:grid u:md:grid-cols-2 u:gap-24 u:pb-24">
 
 	{# conversations box #}
-	<div class="u-w-full u-flex u-flex-col">
+	<div class="u:w-full u:flex u:flex-col">
 
         <ul class="nav nav-tabs" role="tablist">
             <li class="nav-item">
@@ -85,7 +84,7 @@
                    data-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}
                     {% if conversationCount %}
                         <span
-                            class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ conversationCount }}</span>
+                            class="badge badge-primary u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center">{{ conversationCount }}</span>
                     {% endif %}
                 </a>
             </li>
@@ -93,20 +92,20 @@
                 <a class="nav-link" aria-controls="visitors" href="#visitors" role="tab"
                    data-toggle="tab">{{ 'landing.tab.visitors' | trans }}
                     {% if visitorsCount %}
-                        <span class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ visitorsCount }}</span>
+                        <span class="badge badge-primary u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center">{{ visitorsCount }}</span>
                     {% endif %}
                 </a>
             </li>
         </ul>
 
-        <div class="o-card o-card--tabbed tab-content u-p-16">
+        <div class="o-card o-card--tabbed tab-content u:p-16 u:bg-white">
 
 			{# conversations #}
-			<div role="tabpanel" class="o-tab tab-pane u-h-full active" id="conversations">
+			<div role="tabpanel" class="o-tab tab-pane u:h-full active" id="conversations">
 				{# all / unread conversations toggle #}
-				<div class="u-flex u-flex-col u-h-full">
-					<div class="u-flex u-items-center u-mb-16" data-toggle="buttons" role="radiogroup">
-						<label class="o-button o-button--outline btn o-button--full u-mr-8{% if messageFilter == 'All' %} active{% endif %}" id="all" role="radio">
+				<div class="u:flex u:flex-col u:h-full">
+					<div class="u:flex u:items-center u:mb-16" data-toggle="buttons" role="radiogroup">
+						<label class="o-button o-button--outline btn o-button--full u:mr-8{% if messageFilter == 'All' %} active{% endif %}" id="all" role="radio">
                 <input type="radio" name="options" autocomplete="off"
                      {% if messageFilter == 'All' %}checked{% endif %}
                      hidden>{{ 'landing.button.all' | trans }}
@@ -122,47 +121,47 @@
 
 					{# received messages #}
 					<div id="conversationsdisplay" class="c-dashboard">
-						<div class="u-flex u-h-full u-items-center u-justify-center">
-							<p class="u-text-center u-my-24 u-font-300 u-font-display">
-								<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+						<div class="u:flex u:h-full u:items-center u:justify-center">
+							<p class="u:text-center u:my-24 u:font-300 u:font-display">
+								<i class="fa u:mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
 								{{ 'dashboard.load.conversations' | trans }}
 							</p>
 						</div>
 					</div>
 
 					{# message buttons #}
-					<div class="u-mt-auto u-mb-16 u-flex u-justify-center">
-						<a href="{{ url( 'conversations', { 'conversationsType': 'conversations' } ) }}" class="u-mt-16 o-button u-w-50 btn">
-                            <i class="fa u-mr-8 fa-envelope"></i>{{ 'landing.conversations' | trans }}
+					<div class="u:mt-auto u:mb-16 u:flex u:justify-center">
+						<a href="{{ url( 'conversations', { 'conversationsType': 'conversations' } ) }}" class="u:mt-16 o-button btn">
+                            <i class="fa u:mr-8 fa-envelope"></i>{{ 'landing.conversations' | trans }}
                         </a>
 					</div>
 				</div>
 			</div>
 
 			{# visitors #}
-			<div role="tabpanel" class="o-tab tab-pane u-h-full" id="visitors">
+			<div role="tabpanel" class="o-tab tab-pane u:h-full" id="visitors">
 				<div id="visitorsdisplay">
-                    <div class="u-flex u-items-center u-mb-8 u-w-full">
-                        {{ form_start(radiusForm, {'attr': {'class': 'u-w-full'}})}}
-                        <div class="u-flex u-items-center u-mb-8 u-w-full">
-                            <i class="fa fa-fw fa-bullseye u-text-16 u-text-gray-50 u-mr-4"></i>
-                            {{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u-mb-0 u-mr-16'}}) }}
-                            {{ form_widget(radiusForm.radius, {'attr': {'class': 'u-w-full'}}) }}
+                    <div class="u:flex u:items-center u:mb-8 u:w-full">
+                        {{ form_start(radiusForm, {'attr': {'class': 'u:w-full'}})}}
+                        <div class="u:flex u:items-center u:mb-8 u:w-full">
+                            <i class="fa fa-fw fa-bullseye u:text-16 u:text-gray-50 u:mr-4"></i>
+                            {{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u:mb-0 u:mr-16'}}) }}
+                            {{ form_widget(radiusForm.radius, {'attr': {'class': 'u:w-full'}}) }}
                         </div>
                         {{ form_rest(radiusForm)}}
                         {{ form_end(radiusForm)}}
                     </div>
                     <div id="legsdisplay" class="c-dashboard">
-                        <div class="u-flex u-h-full u-items-center u-justify-center">
-                            <p class="u-text-center u-my-24 u-font-300 u-font-display">
-                                <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+                        <div class="u:flex u:h-full u:items-center u:justify-center">
+                            <p class="u:text-center u:my-24 u:font-300 u:font-display">
+                                <i class="fa u:mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
                                 {{ 'bevisited.load.legs' | trans }}
                             </p>
                         </div>
                     </div>
-                    <div class="u-flex u-flex-col u-mt-auto u-space-y-8">
-                        <a href="{{ url('visitors') }}" class="o-button o-button--full btn u-mt-16"><i
-                            class="far fa-map u-mr-8"></i> {{ 'landing.bevisited.alltrips' | trans }}</a>
+                    <div class="u:flex u:flex-col u:mt-auto u:space-y-8">
+                        <a href="{{ url('visitors') }}" class="o-button o-button--full btn u:mt-16"><i
+                            class="far fa-map u:mr-8"></i> {{ 'landing.bevisited.alltrips' | trans }}</a>
                     </div>
                 </div>
             </div>
@@ -170,7 +169,7 @@
 	</div>
 
 	{# community box #}
-	<div class="u-w-full u-flex u-flex-col">
+	<div class="u:w-full u:flex u:flex-col">
 
 		<ul class="nav nav-tabs" role="tablist">
 			<li class="nav-item">
@@ -180,24 +179,24 @@
             <li class="nav-item">
                 <a href="#activities" class="nav-link" aria-controls="activities" role="tab"
                    data-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
-                        class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ activityCount }}</span>{% endif %}</a>
+                        class="badge badge-primary u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center">{{ activityCount }}</span>{% endif %}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
                    data-toggle="tab">{{ 'landing.tab.notifications' | trans }}{% if notificationCount %} <span
-                        class="badge badge-primary u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center">{{ notificationCount }}</span>{% endif %}</a>
+                        class="badge badge-primary u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center">{{ notificationCount }}</span>{% endif %}</a>
             </li>
 		</ul>
 
-		<div class="o-card o-card--tabbed tab-content u-p-16">
+		<div class="o-card o-card--tabbed tab-content u:p-16">
 			{# forum discussions #}
-			<div role="tabpanel" class="o-tab tab-pane u-h-full active" id="threads">
+			<div role="tabpanel" class="o-tab tab-pane u:h-full active" id="threads">
 
 				{# display settings #}
-				<div class="u-flex u-flex-col u-h-full">
-            <div class="u-flex u-items-center u-mb-16" data-toggle="buttons"  role="radiogroup">
+				<div class="u:flex u:flex-col u:h-full">
+            <div class="u:flex u:items-center u:mb-16" data-toggle="buttons"  role="radiogroup">
               <label
-                class="o-button btn o-button--outline o-button--full u-mr-8{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} active{% endif %}"
+                class="o-button btn o-button--outline o-button--full u:mr-8{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} active{% endif %}"
                 id="groupsButton">
                 <input type="checkbox"
                      autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} checked{% endif %}
@@ -214,64 +213,64 @@
 
 					{# forums threads #}
 					<div id="threadsdisplay" class="c-dashboard">
-						<div class="u-flex u-h-full u-items-center u-justify-center">
-							<p class="u-text-center u-my-24 u-font-300 u-font-display">
-								<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+						<div class="u:flex u:h-full u:items-center u:justify-center">
+							<p class="u:text-center u:my-24 u:font-300 u:font-display">
+								<i class="fa u:mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
 								{{ 'dashboard.load.threads' | trans }}
 							</p>
 						</div>
 					</div>
 
-					<div class="u-flex u-flex-col sm:u-flex-row u-justify-between u-mt-auto u-py-16 u-space-y-8 sm:u-space-y-0" role="group" aria-label="...">
+					<div class="u:flex u:flex-col u:sm:flex-row u:justify-between u:mt-auto u:py-16 u:space-y-8 u:sm:space-y-0" role="group" aria-label="...">
               <a href="/forums" class="o-button o-button--full btn"><i
-                  class="fa u-mr-8 fa-comments mr-1"></i>{{ 'landing.button.discussions' | trans }}</a>
-              <a href="/groups/mygroups" class="o-button o-button--full btn u-mx-0 sm:u-mx-8"><i
-                  class="fa u-mr-8 fa-users mr-1"></i>{{ 'landing.button.mygroups' | trans }}</a>
+                  class="fa u:mr-8 fa-comments mr-1"></i>{{ 'landing.button.discussions' | trans }}</a>
+              <a href="/groups/mygroups" class="o-button o-button--full btn u:mx-0 u:sm:mx-8"><i
+                  class="fa u:mr-8 fa-users mr-1"></i>{{ 'landing.button.mygroups' | trans }}</a>
               <a href="/forums/subscriptions" class="o-button o-button--full btn"><i
-                  class="fa u-mr-8 fa-check-square mr-1"></i>{{ 'landing.button.subscriptions' | trans }}</a>
+                  class="fa u:mr-8 fa-check-square mr-1"></i>{{ 'landing.button.subscriptions' | trans }}</a>
 					</div>
 				</div>
 
 			</div>
 
 			{# load activities #}
-			<div role="tabpanel" class="o-tab tab-pane u-h-full" id="activities">
-				<div class="u-flex u-items-center u-mb-16" role="group">
-					<a href="/activities/create" class="o-button btn u-mr-16">
-						<i class="fa u-mr-8 fa-calendar-plus"></i>
+			<div role="tabpanel" class="o-tab tab-pane u:h-full" id="activities">
+				<div class="u:flex u:items-center u:mb-16" role="group">
+					<a href="/activities/create" class="o-button btn u:mr-16">
+						<i class="fa u:mr-8 fa-calendar-plus"></i>
 						{{ 'landing.activities.create' | trans }}
                     </a>
                     <div class="custom-control custom-switch">
                         <input type="checkbox" class="custom-control-input" id="show_online"
                         name="show_online" {% if onlineActivities %}checked{% endif %}>
-                        <label class="custom-control-label u-font-display u-font-300 u-leading-24"
+                        <label class="custom-control-label u:font-display u:font-300 u:leading-24"
                         for="show_online">{{ 'landing.activities.show.online'|trans }}</label>
 					</div>
 				</div>
 				<div id="activitiesdisplay" class="c-dashboard">
-					<div class="u-flex u-h-full u-items-center u-justify-center">
-						<p class="u-text-center u-my-24 u-font-300 u-font-display">
-							<i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+					<div class="u:flex u:h-full u:items-center u:justify-center">
+						<p class="u:text-center u:my-24 u:font-300 u:font-display">
+							<i class="fa u:mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
 							{{ 'dashboard.load.activities' | trans }}
 						</p>
 					</div>
                 </div>
-                <div class="u-mt-auto u-mb-16 u-flex u-items-center" role="group">
-                    <a href="/activities" class="o-button btn o-button o-button--full u-mr-8 u-mt-16">
-                        <i class="fa u-mr-8 fa-map"></i>
+                <div class="u:mt-auto u:mb-16 u:flex u:items-center" role="group">
+                    <a href="/activities" class="o-button btn o-button o-button--full u:mr-8 u:mt-16">
+                        <i class="fa u:mr-8 fa-map"></i>
                         {{ 'landing.activities.allactivities' | trans }}</a>
-                    <a href="/activities/myactivities" class="o-button btn o-button--full u-mt-16">
-                        <i class="fa u-mr-8 fa-calendar"></i>
+                    <a href="/activities/myactivities" class="o-button btn o-button--full u:mt-16">
+                        <i class="fa u:mr-8 fa-calendar"></i>
                         {{ 'landing.activities.myactivities' | trans }}</a>
                 </div>
 			</div>
 
             {# notifications #}
-            <div role="tabpanel" class="o-tab tab-pane u-h-full p-2" id="notifications">
+            <div role="tabpanel" class="o-tab tab-pane u:h-full p-2" id="notifications">
                 <div id="notificationsdisplay" class="c-dashboard">
-                    <div class="u-flex u-h-full u-items-center u-justify-center">
-                        <p class="u-text-center u-my-24 u-font-300 u-font-display">
-                            <i class="fa u-mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
+                    <div class="u:flex u:h-full u:items-center u:justify-center">
+                        <p class="u:text-center u:my-24 u:font-300 u:font-display">
+                            <i class="fa u:mr-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
                             {{ 'dashboard.load.notifications' | trans }}
                         </p>
                     </div>
@@ -282,14 +281,14 @@
 </div>
 
 {# 3 columns #}
-<div class="u-flex u-flex-wrap md:u-grid md:u-grid-cols-2 u-gap-24 u-pb-24">
+<div class="u:flex u:flex-wrap u:md:grid u:md:grid-cols-2 u:gap-24 u:pb-24">
 
-	<div class="u-w-full">
-		<div class="o-card u-mb-24">
+	<div class="u:w-full">
+		<div class="o-card u:mb-24">
         <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span
             class="homesubt">{{ 'landing.beinvolved.donate' | trans }}</span></h4>
 
-        <p class="u-font-display u-text-center u-mb-16 u-font-300 u-text-18">{{ 'landing.beinvolved.goalfor' | trans }} {{ campaign.year }}
+        <p class="u:font-display u:text-center u:mb-16 u:font-300 u:text-18">{{ 'landing.beinvolved.goalfor' | trans }} {{ campaign.year }}
           - {{ campaign.year + 1 }}:
           <strong>€{{ campaign.yearNeeded }}</strong></p>
 
@@ -313,68 +312,68 @@
 				</div>
 			{% endif %}
 
-			<p class="u-font-display u-text-center u-mt-16 u-text-18">
+			<p class="u:font-display u:text-center u:mt-16 u:text-18">
 				{{ '€ ' ~ campaign.yearDonated ~ '' }}
-          <span class="u-ml-8">{{ 'dashboard.donation.received' | trans }}</span></p>
+          <span class="u:ml-8">{{ 'dashboard.donation.received' | trans }}</span></p>
 			{% if campaign.yearDonated >= campaign.yearNeeded %}
-				<p class="u-font-display u-font-300 u-my-16 u-text-center">{{ 'donation.thank.you'|trans({'amount':'€' ~ campaign.yearNeeded})|raw }}</p>
+				<p class="u:font-display u:font-300 u:my-16 u:text-center">{{ 'donation.thank.you'|trans({'amount':'€' ~ campaign.yearNeeded})|raw }}</p>
 			{% endif %}
         <a href="{{ url('donations') }}"
-            class="btn o-button {% if campaign.yearDonated < campaign.yearNeeded %}o-button--full{% else %}o-button--outline{% endif %} u-my-16"><i
-              class="fa u-mr-8 fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a>
+            class="btn o-button {% if campaign.yearDonated < campaign.yearNeeded %}o-button--full{% else %}o-button--outline{% endif %} u:my-16"><i
+              class="fa u:mr-8 fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a>
 
 		</div>
 
-		<div class="o-card u-mb-24">
+		<div class="o-card u:mb-24">
         <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span
             class="homesubt">{{ 'landing.beinvolved.volunteer' | trans }}</span></h4>
 
-			<p class="u-font-display u-font-300">{{ 'landing.beinvolved.intro' | trans }}</p>
-        <p class="u-font-display u-font-300"><a href="{{ url('getactive') }}" class="o-button btn o-button u-mt-16"><i
-              class="fa u-mr-8 fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a></p>
+			<p class="u:font-display u:font-300">{{ 'landing.beinvolved.intro' | trans }}</p>
+        <p class="u:font-display u:font-300"><a href="{{ url('getactive') }}" class="o-button btn o-button u:mt-16"><i
+              class="fa u:mr-8 fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a></p>
 		</div>
 
 		<div class="o-card">
         <h4 class="homehfour">{{ 'landing.beinformed.title' | trans }}<br/><span
             class="homesubt">{{ 'landing.beinformed.subtitle' | trans }}</span></h4>
         <a href="{{ url('about') }}"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-question mr-2"></i>{{ 'landing.beinformed.about' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-question mr-2"></i>{{ 'landing.beinformed.about' | trans }}</a>
         <a href="{{ url('about_faq') }}"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-question mr-2"></i>{{ 'landing.beinformed.faq' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-question mr-2"></i>{{ 'landing.beinformed.faq' | trans }}</a>
         <a href="{{ url('safety') }}"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-user-shield mr-2"></i>{{ 'landing.beinformed.safety' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-user-shield mr-2"></i>{{ 'landing.beinformed.safety' | trans }}</a>
 			<a href="{{ url('newsletters') }}" class="o-button btn o-button
-          text-truncate u-mb-8"><i
+          text-truncate u:mb-8"><i
             class="far fa-newspaper mr-2"></i>{{ 'newsletters' | trans }}</a>
         <a href="https://www.bevolunteer.org/" target="_blank"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-bullseye mr-2"></i>{{ 'landing.beinformed.bevolunteer' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-bullseye mr-2"></i>{{ 'landing.beinformed.bevolunteer' | trans }}</a>
         <a href="https://www.bevolunteer.org/reports/annual-reports/" target="_blank"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-book mr-2"></i>{{ 'landing.beinformed.annualreport' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-book mr-2"></i>{{ 'landing.beinformed.annualreport' | trans }}</a>
         <a href="https://www.bevolunteer.org/reports/financial-reports/" target="_blank"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-money-bill-wave-alt mr-2"></i>{{ 'landing.beinformed.finances' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-money-bill-wave-alt mr-2"></i>{{ 'landing.beinformed.finances' | trans }}</a>
         <a href="{{ url('terms_of_use') }}"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-book mr-2"></i>{{ 'landing.beinformed.termsofuse' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-book mr-2"></i>{{ 'landing.beinformed.termsofuse' | trans }}</a>
         <a href="{{ url('privacy_policy') }}"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-book mr-2"></i>{{ 'landing.beinformed.privacypolicy' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-book mr-2"></i>{{ 'landing.beinformed.privacypolicy' | trans }}</a>
         <a href="{{ url('data_rights') }}"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-book mr-2"></i>{{ 'landing.beinformed.datarights' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-book mr-2"></i>{{ 'landing.beinformed.datarights' | trans }}</a>
         <a href="{{ url('about_credits') }}"
-           class="o-button btn o-button text-truncate u-mb-8"><i
-            class="fa u-mr-8 fa-book mr-2"></i>{{ 'credits.title' | trans }}</a>
+           class="o-button btn o-button text-truncate u:mb-8"><i
+            class="fa u:mr-8 fa-book mr-2"></i>{{ 'credits.title' | trans }}</a>
 		</div>
 	</div>
 
-	<div class="u-w-full">
-		<div class="o-card u-h-full">
+	<div class="u:w-full">
+		<div class="o-card u:h-full">
         <h4 class="homehfour">{{ 'landing.bwnews.title' | trans }}<br/><span
             class="homesubt">{{ 'landing.bwnews.subtitle' | trans }}</span></h4>
         {% for news in communityNews %}
@@ -382,22 +381,22 @@
 			<h5>
 				<a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a>
 			</h5>
-			<div class="community-news-wrapper u-font-display u-font-300 u-mb-8">{{ news.text | truncate(200) | raw }}</div>
+			<div class="community-news-wrapper u:font-display u:font-300 u:mb-8">{{ news.text | truncate(200) | raw }}</div>
 
-			<div class="u-flex u-flex-row u-justify-between">
+			<div class="u:flex u:flex-row u:justify-between">
 				<small>{{ news.createdAt.diffForHumans }}</small>
                 {% set commentsCount = news.comments | length %}
                 <small>{{ 'bewelcome_news.nrcomments'|trans({'%commentsCount%': commentsCount}) }}</small>
 			</div>
             <a href="{{ url('communitynews_show', { id: news.id} ) }}"
-               class="o-button u-my-16"><i class="fas fa-angle-double-right u-mr-8"></i>{{ 'label.read.more' | trans }}
+               class="o-button u:my-16"><i class="fas fa-angle-double-right u:mr-8"></i>{{ 'label.read.more' | trans }}
             </a>
             {% if not loop.last %}
-            <div class="u-mb-16">&nbsp;</div>
+            <div class="u:mb-16">&nbsp;</div>
             {% endif %}
         {% endfor %}
-            <a href="{{ url('communitynews') }}" class="o-button btn u-mt-16"><i
-            class="far fa-newspaper u-mr-8"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
+            <a href="{{ url('communitynews') }}" class="o-button btn u:mt-16"><i
+            class="far fa-newspaper u:mr-8"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
 		</div>
 	</div>
 

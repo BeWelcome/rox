@@ -122,10 +122,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     #[Gedmo\Translatable]
     private ?string $iLiveWith = null;
 
-    #[ORM\Column(name: 'InformationToGuest', type: 'string', nullable: true)]
-    #[Gedmo\Translatable]
-    private ?string $informationForGuest = null;
-
     #[ORM\Column(name: 'StandardOffers', type: 'standard_offers', nullable: true)]
     private ?string $standardOffers = null;
 
@@ -198,6 +194,10 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     #[Gedmo\Translatable]
     private ?string $pleaseBring = null;
 
+    #[ORM\Column(name: 'WhereYouSleep', type: 'string', nullable: true)]
+    #[Gedmo\Translatable]
+    private ?string $whereYouSleep = null;
+
     #[ORM\Column(name: 'OfferGuests', type: 'string', nullable: true)]
     #[Gedmo\Translatable]
     private ?string $offerGuests = null;
@@ -233,7 +233,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'member', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $groupMemberships;
 
-    #[ORM\OneToMany(targetEntity: MembersLanguagesLevel::class, mappedBy: 'member', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: MemberLanguageLevel::class, mappedBy: 'member', cascade: ['persist', 'remove'])]
     private Collection $languageLevels;
 
     #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'receiver', cascade: ['persist', 'remove'])]
@@ -418,18 +418,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     public function getILiveWith(): ?string
     {
         return $this->iLiveWith;
-    }
-
-    public function setInformationForGuest(?string $informationForGuest): self
-    {
-        $this->informationForGuest = $informationForGuest;
-
-        return $this;
-    }
-
-    public function getInformationForGuest(): ?string
-    {
-        return $this->informationForGuest;
     }
 
     public function setStandardOffers(?string $standardOffers): self
@@ -735,6 +723,18 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     public function getPleaseBring(): ?string
     {
         return $this->pleaseBring;
+    }
+
+    public function setWhereYouSleep(?string $whereYouSleep): self
+    {
+        $this->whereYouSleep = $whereYouSleep;
+
+        return $this;
+    }
+
+    public function getWhereYouSleep(): ?string
+    {
+        return $this->whereYouSleep;
     }
 
     public function setOfferGuests(?string $offerGuests): self
@@ -1141,7 +1141,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     {
         return array_filter(
             $this->languageLevels->toArray(),
-            function (/* @var MembersLanguagesLevel */ $k) {
+            function (/* @var MemberLanguageLevel */ $k) {
                 try {
                     // Make sure language exists in database
                     $language = $k->getLanguage();
@@ -1166,21 +1166,21 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
             ->toArray();
     }
 
-    public function addLanguageLevel(MembersLanguagesLevel $level): self
+    public function addLanguageLevel(MemberLanguageLevel $languageLevel): self
     {
-        if (!$this->languageLevels->contains($level)) {
-            $this->languageLevels->add($level);
-            $level->setMember($this);
+        if (!$this->languageLevels->contains($languageLevel)) {
+            $this->languageLevels->add($languageLevel);
+            $languageLevel->setMember($this);
         }
 
         return $this;
     }
 
-    public function removeLanguageLevel(MembersLanguagesLevel $level): self
+    public function removeLanguageLevel(MemberLanguageLevel $languageLevel): self
     {
-        if ($this->languageLevels->contains($level)) {
-            $this->languageLevels->removeElement($level);
-            $level->setMember(null);
+        if ($this->languageLevels->contains($languageLevel)) {
+            $this->languageLevels->removeElement($languageLevel);
+            $languageLevel->setMember(null);
         }
 
         return $this;
@@ -1189,8 +1189,8 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     public function getLanguages(): array
     {
         return array_map(
-            function ($level) {
-                return $level->getLanguage();
+            function ($languageLevel) {
+                return $languageLevel->getLanguage();
             },
             $this->languageLevels->toArray()
         );
@@ -1377,6 +1377,11 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         return $this->genderOfGuests;
     }
 
+    public function getRawTranslations(): Collection
+    {
+        return $this->translations;
+    }
+
     public function getTranslations(): array
     {
         if (empty($this->translationsIndexedByLocale)) {
@@ -1396,30 +1401,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         }
 
         return $this->translationsIndexedByLocale;
-    }
-
-    public function getFallbacks(): array
-    {
-        $fallbacks = [
-            'en' => [],
-        ];
-
-        $translations = $this->translationsIndexedByLocale;
-        $englishTranslations = $this->translationsIndexedByLocale['en'];
-        foreach ($translations as $locale => $translationsForLocale) {
-            if (!isset($fallbacks[$locale])) {
-                $fallbacks[$locale] = [];
-            }
-            foreach ($translationsForLocale as $field => $content) {
-                if ('en' === $locale || !isset($englishTranslations[$field])) {
-                    $fallbacks[$locale][$field] = false;
-                } else {
-                    $fallbacks[$locale][$field] = $englishTranslations[$field] === $content;
-                }
-            }
-        }
-
-        return $fallbacks;
     }
 
     public function addTranslation(MemberTranslation $translation): void

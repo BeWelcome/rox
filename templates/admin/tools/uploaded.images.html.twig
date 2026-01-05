@@ -10,7 +10,7 @@
     <h2>{{ 'admin.tools.uploaded_images' | trans }}</h2>
 
     {% if results.haveToPaginate %}
-        <div class="u-flex u-justify-end u-my-8">
+        <div class="u:flex u:justify-end u:my-8">
             {{ pagerfanta( results, 'rounded_pagination') }}
         </div>
 
@@ -27,7 +27,7 @@
             {% endfor %}
         </div>
 
-        <div class="u-flex u-justify-end u-my-8">
+        <div class="u:flex u:justify-end u:my-8">
             {{ pagerfanta( results, 'rounded_pagination') }}
         </div>
     {% else %}

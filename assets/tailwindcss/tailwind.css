@@ -1,16 +1,65 @@
-@import "tailwindcss/base";
+@layer theme, base, components, utilities;
 
-@import "tailwindcss/components";
+@import "tailwindcss/theme.css" layer(theme) prefix(u);
+@import "tailwindcss/utilities.css" layer(utilities);
 
-@import "tailwindcss/utilities";
+@import './objects/objects.css';
+@import './components/components.css';
+@import "./layouts/layouts.css";
 
-/* @import 'tailwind.layer.css'; */
-@import 'objects/objects';
+@source not "../../public/";
 
-@import 'components/components';
+@theme {
+  --color-bewelcome: #f37000;
+  --color-bewelcome-dark: #cd5e00;
 
-@import "layouts/layouts";
+  --spacing: 1px;
+  --spacing-0: 0px;
+  --spacing-2: 2px;
+  --spacing-4: 4px;
+  --spacing-6: 6px;
+  --spacing-8: 8px;
+  --spacing-12: 12px;
+  --spacing-16: 16px;
+  --spacing-20: 20px;
+  --spacing-24: 24px;
+  --spacing-32: 32px;
+  --spacing-40: 40px;
+  --spacing-48: 48px;
+  --spacing-56: 56px;
+  --spacing-60: 60px;
+  --spacing-64: 64px;
+  --spacing-72: 72px;
+  --spacing-96: 96px;
+  --spacing-150: 150px;
+  --spacing-300: 300px;
 
+  --radius-4: 4px;
+  --radius-8: 8px;
+  --radius-full: 100%;
+
+  --text-12: 12px;
+  --text-14: 14px;
+  --text-16: 16px;
+  --text-18: 18px;
+  --text-20: 20px;
+  --text-22: 22px;
+  --text-24: 24px;
+  --text-26: 26px;
+  --text-28: 28px;
+
+  --font-signika: "Signika", sans-serif;
+
+  --font-weight-100: 100;
+  --font-weight-200: 200;
+  --font-weight-300: 300;
+  --font-weight-400: 400;
+  --font-weight-500: 500;
+  --font-weight-600: 600;
+  --font-weight-700: 700;
+  --font-weight-800: 800;
+  --font-weight-900: 900;
+}
 
 p {
   margin-bottom: 0;
@@ -19,19 +68,19 @@ p {
 /* Screen width */
 @media screen and (max-width: 600px) {
     :root {
-     --width: 1px;
+       --width: 1px;
    }
  }
 
  @media screen and (min-width: 601px) and (max-width: 1200px) {
     :root {
-     --width: calc(100vw / 1440);
+       --width: calc(100vw / 1440);
    }
  }
 
  @media screen and (min-width: 1201px) {
      :root {
-       --width: 1px;
+         --width: 1px;
      }
  }
 

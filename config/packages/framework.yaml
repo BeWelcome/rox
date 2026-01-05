@@ -17,7 +17,7 @@ framework:
     validation:
         enabled: true
     default_locale:  "en"
-    trusted_hosts:   ~
+    trusted_hosts:   ['^(.+\.)?stage.bewelcome\.org$','^(.+\.)?bewelcome\.org$', 'localhost']
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
@@ -46,6 +46,11 @@ framework:
 
         # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
         #app: cache.adapter.apcu
+
+when@prod:
+    framework:
+        trusted_proxies: '127.0.0.1,172.18.0.0/16'
+        trusted_headers: [ 'x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix' ]
 
 when@test:
     framework:

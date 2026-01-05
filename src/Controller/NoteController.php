@@ -75,8 +75,8 @@ class NoteController extends AbstractController
         return $this->render('note/add.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'add_note']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'add_note']),
         ]);
     }
 
@@ -116,8 +116,8 @@ class NoteController extends AbstractController
         return $this->render('note/edit.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'edit_note']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'edit_note']),
         ]);
     }
 
@@ -183,7 +183,7 @@ class NoteController extends AbstractController
             'notes' => $notes,
             'filtered' => !empty($categories),
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'notes']),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'notes']),
         ]);
     }
 }

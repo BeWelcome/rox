@@ -70,8 +70,8 @@ class PreferenceController extends AbstractController
             'member' => $loggedInMember,
             'form' => $preferenceForm->createView(),
             'preferences' => $preferences,
-            'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $loggedInMember),
-            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $loggedInMember, [
+            'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, [
                 'active' => 'preferences',
             ]),
         ]);

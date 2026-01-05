@@ -5,14 +5,15 @@ const email = document.querySelector('.js-email-address');
 
 function resetBackgroundColor() {
     for (let i = 0; i < 5; i++) {
-        passwordStrength.children.item(i).classList.add('u-bg-gray-20');
-        passwordStrength.children.item(i).classList.remove('u-bg-red');
-        passwordStrength.children.item(i).classList.remove('u-bg-bewelcome');
-        passwordStrength.children.item(i).classList.remove('u-bg-bewelcome-dark');
-        passwordStrength.children.item(i).classList.remove('u-bg-green');
-        passwordStrength.children.item(i).classList.remove('u-bg-green-dark');
+        passwordStrength.children.item(i).classList.add('u:bg-gray-300');
+        passwordStrength.children.item(i).classList.remove('u:bg-red-700');
+        passwordStrength.children.item(i).classList.remove('u:bg-bewelcome');
+        passwordStrength.children.item(i).classList.remove('u:bg-bewelcome-dark');
+        passwordStrength.children.item(i).classList.remove('u:bg-green-600');
+        passwordStrength.children.item(i).classList.remove('u:bg-green-800');
     }
 }
+
 async function getPasswordScore() {
     // Collect form data (username, email address and password)
     // Send to server to calculate score
@@ -37,17 +38,17 @@ async function getPasswordScore() {
 
     let backgroundColor;
     switch(score) {
-        case 0: backgroundColor = 'u-bg-red'; break;
-        case 1: backgroundColor = 'u-bg-bewelcome-dark'; break;
-        case 2: backgroundColor = 'u-bg-bewelcome'; break;
-        case 3: backgroundColor = 'u-bg-green'; break;
-        case 4: backgroundColor = 'u-bg-green-dark'; break;
+        case 0: backgroundColor = 'u:bg-red-700'; break;
+        case 1: backgroundColor = 'u:bg-bewelcome-dark'; break;
+        case 2: backgroundColor = 'u:bg-bewelcome'; break;
+        case 3: backgroundColor = 'u:bg-green-600'; break;
+        case 4: backgroundColor = 'u:bg-green-800'; break;
     }
 
     resetBackgroundColor();
     for (let i = 0; i < 5; i++) {
         if (i <= score) {
-            passwordStrength.children.item(i).classList.remove('u-bg-gray-20');
+            passwordStrength.children.item(i).classList.remove('u:bg-gray-300');
             passwordStrength.children.item(i).classList.add(backgroundColor);
         }
     }

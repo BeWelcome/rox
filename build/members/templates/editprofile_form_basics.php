@@ -25,7 +25,7 @@
                                name="FirstName"
                                value="<?php echo htmlentities((string) $vars['FirstName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
+                    <div class="col-4 col-md-2 u:flex u:items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_FirstName"
                             <?php if ($vars['IsHidden_FirstName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -43,7 +43,7 @@
                         <input type="text" name="SecondName" class="o-input"
                                value="<?php echo htmlentities((string) $vars['SecondName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
+                    <div class="col-4 col-md-2 u:flex u:items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_SecondName"
                             <?php if ($vars['IsHidden_SecondName'] === 'Yes')
                                 echo 'checked="checked"';
@@ -61,7 +61,7 @@
                                name="LastName"
                                value="<?php echo htmlentities((string) $vars['LastName'], ENT_COMPAT, 'UTF-8'); ?>"/>
                     </div>
-                    <div class="col-4 col-md-2 u-flex u-items-center"><div class="o-checkbox">
+                    <div class="col-4 col-md-2 u:flex u:items-center"><div class="o-checkbox">
                         <input type="checkbox" value="Yes" name="IsHidden_LastName"
                             <?php if ($vars['IsHidden_LastName'] === 'Yes')
                                 echo 'checked="checked"';

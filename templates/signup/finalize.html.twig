@@ -25,19 +25,19 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<div class="u-min-w-[320px] u-max-w-[640px] u-m-auto">
+<div class="u:min-w-[320px] u:max-w-[640px] u:m-auto">
 
 <h1>{{ 'members.finalize.account'|trans }}</h1>
     {{ 'members.finalize.account.blurb'|trans|raw }}
-    {{ form_start(finalize, { 'attr': { autocomplete: 'off', class: 'u-mt-8' } }) }}
+    {{ form_start(finalize, { 'attr': { autocomplete: 'off', class: 'u:mt-8' } }) }}
     {{ form_row(finalize.registration_key) }}
     {{ form_row(finalize.name) }}
     {{ form_row(finalize.short_name) }}
     {{ form_row(finalize.mother_tongue) }}
     {{ form_row(finalize.birthdate) }}
-    <div class="o-form-group u-grid u-grid-cols-3">
-        <div class="u-col-span-3"><label>{{ 'label.gender'|trans }}</label></div>
-        <div class="u-col-span-3">{{ form_errors(finalize.gender) }}</div>
+    <div class="o-form-group u:grid u:grid-cols-3">
+        <div class="u:col-span-3"><label>{{ 'label.gender'|trans }}</label></div>
+        <div class="u:col-span-3">{{ form_errors(finalize.gender) }}</div>
         <div class="o-radio-button">
             <input type="radio" id="{{ finalize.gender.children[0].vars.id }}" name="{{ finalize.gender.children[0].vars.full_name }}"
                    class="o-radio-button__input" value="{{ finalize.gender.children[0].vars.value}}"
@@ -59,7 +59,7 @@
             >
             <label for="{{ finalize.gender.children[2].vars.id}}">{{ finalize.gender.children[2].vars.value}}</label>
         </div>
-        <div class="u-col-span-3">
+        <div class="u:col-span-3">
             <small id="{{ finalize.gender.vars.id }}_help" class="form-text text-muted">{{ finalize.gender.vars.help|trans }}</small>
         </div>
     </div>
@@ -113,21 +113,21 @@
     {% do finalize.accommodation.setRendered %}
 
     <div id="hosting_interest" class="
-        {%- if finalize.accommodation.vars.value == finalize.accommodation.children[1].vars.value %}u-block{% else %}u-hidden{% endif %} u-mt-8">
+        {%- if finalize.accommodation.vars.value == finalize.accommodation.children[1].vars.value %}u:block{% else %}u:hidden{% endif %} u:mt-8">
         {{ form_label(finalize.hosting_interest) }}
         {{ form_widget(finalize.hosting_interest) }}
-        <div class="range text-center u-mt-8 u-text-12">
+        <div class="range text-center u:mt-8 u:text-12">
             <p class="rangeSlider__value-output">{{ 'hosting.interest.set'|trans }}</p>
         </div>
         {{ form_help(finalize.hosting_interest) }}
     </div>
-    <div class="u-mt-8">
-        <p class="u-text-18 u-mb-8 u-font-600">{{ 'signup.optional'|trans }}</p>
+    <div class="u:mt-8">
+        <p class="u:text-18 u:mb-8 u:font-600">{{ 'signup.optional'|trans }}</p>
         {{ form_row(finalize.newsletters) }}
         {{ form_row(finalize.local_events) }}
         {# {{ form_row(finalize.trips_notifications) }}  #}
     </div>
-    <div class="u-flex u-justify-end u-mt-8">
+    <div class="u:flex u:justify-end u:mt-8">
         <input type="submit" class="o-button" value="{{ 'signup.activate'|trans }}">
     </div>
 

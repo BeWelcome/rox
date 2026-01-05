@@ -225,7 +225,7 @@ class MemberPage extends PageWithActiveSkin
                     <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
                 </button>
             </div>
-        <div class="list-group u-rounded-8 mb-2">
+        <div class="list-group u:rounded-8 mb-2">
             <?php
             $member = $this->member;
             $words = $this->getWords();
@@ -250,7 +250,7 @@ class MemberPage extends PageWithActiveSkin
             ?>
             <div id="react_mount" data-globals="<?=htmlspecialchars($globalsJs)?>"></div>
         </div>
-        <div class="list-group u-rounded-8 mt-2">
+        <div class="list-group u:rounded-8 mt-2">
             <?php
 
             $active_menu_item = $this->getSubmenuActiveItem();
@@ -261,7 +261,7 @@ class MemberPage extends PageWithActiveSkin
                     // Brutal hack to separate the two blocks in the menu visually
                     ?>
                     </div>
-                    <div class="list-group u-rounded-8 mt-2">
+                    <div class="list-group u:rounded-8 mt-2">
                     <?php
                     continue;
                 }
@@ -383,7 +383,7 @@ class MemberPage extends PageWithActiveSkin
         } else {
             $badge .= 'badge-primary text-white';
         }
-        $badge .= ' text-white u-rounded-8 u-min-w-20 u-px-8 u-h-20 u-inline-flex u-items-center u-justify-center pull-right">';
+        $badge .= ' text-white u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center pull-right">';
         $badge .= $count . '<span>';
 
         return $badge;

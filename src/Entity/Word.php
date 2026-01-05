@@ -20,9 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
-#[ORM\Table(name: 'words')]
-#[ORM\UniqueConstraint(name: 'code', columns: ['code', 'IdLanguage'])]
-#[ORM\UniqueConstraint(name: 'code_2', columns: ['code', 'ShortCode'])]
+#[ORM\Table(name: 'word')]
+#[ORM\UniqueConstraint(name: 'code', columns: ['code', 'ShortCode'])]
 #[ORM\Entity(repositoryClass: WordRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Word
@@ -35,6 +34,9 @@ class Word
 
     #[ORM\Column(name: 'ShortCode', type: 'string', length: 16, nullable: false)]
     private string $shortCode = 'en';
+
+    // Storing the language object for now (should be an association with OneToMany)
+    private Language $language;
 
     #[ORM\Column(name: 'Sentence', type: 'text', length: 65535, nullable: false)]
     private string $sentence;
@@ -51,13 +53,9 @@ class Word
     #[ORM\Column(name: 'donottranslate', type: 'translation_allowed', nullable: false)]
     private string $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED;
 
-    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: true)]
     #[ORM\ManyToOne(targetEntity: Member::class)]
-    private Member $author;
-
-    #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: Language::class)]
-    private Language $language;
+    private ?Member $author;
 
     #[ORM\Column(name: 'Description', type: 'text', length: 65535, nullable: false)]
     private string $description;
@@ -186,14 +184,14 @@ class Word
         return $this->description;
     }
 
-    public function setAuthor(Member $author): self
+    public function setAuthor(?Member $author): self
     {
         $this->author = $author;
 
         return $this;
     }
 
-    public function getAuthor(): Member
+    public function getAuthor(): ?Member
     {
         return $this->author;
     }

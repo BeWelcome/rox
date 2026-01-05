@@ -12,6 +12,6 @@ function disableButtons()
         .from(document.getElementsByTagName("button"))
         .forEach(b => {
             b.classList.add('disabled')
-            b.classList.add('u-pointer-events-none')
+            b.classList.add('u:pointer-events-none')
         });
 }

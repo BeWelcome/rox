@@ -15,11 +15,11 @@
             <div id="modal-content-content" class="modal-content-content">
                 {{ form_start(form) }}
                 <div id="modal-content" class="modal__content">
-                    <p class="u-pb-8">{{ 'conversation.report.body'|trans|raw }}</p>
+                    <p class="u:pb-8">{{ 'conversation.report.body'|trans|raw }}</p>
                     {{ form_row(form.comment) }}
                     {{ form_errors(form.comment) }}
                 </div>
-                <footer id="modal-footer" class="modal__footer u-flex u-flex-row u-justify-between">
+                <footer id="modal-footer" class="modal__footer u:flex u:flex-row u:justify-between">
                     <button class="o-button" data-micromodal-close aria-label="{{ 'conversation.report.close'|trans }}">
                         {{ 'conversation.report.close'|trans }}</button>
                     {{ form_widget(form.report, {'attr':{'class': 'o-button'}}) }}

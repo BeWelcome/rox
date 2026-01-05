@@ -55,13 +55,13 @@ class StatisticsModel
 
         $languages = $connection->executeQuery('
             SELECT
-                COUNT(DISTINCT l.id) AS cnt
+                COUNT(DISTINCT l.shortCode) AS cnt
             FROM
-                languages l,
+                language l,
                 member_language_level mll,
                 member m
             WHERE
-                l.id = mll.language_id
+                l.ShortCode = mll.language
                 AND mll.member_id = m.Id
                 AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
         ')->fetchOne();
@@ -267,14 +267,14 @@ class StatisticsModel
         $connection = $this->entityManager->getConnection();
         $result = $connection->executeQuery('
             SELECT
-                l.shortCode language,
+                l.shortCode AS `language`,
                 COUNT(m.id) cnt
             FROM
                 member_language_level mll,
                 languages l,
                 members m
             WHERE
-                l.id = mll.language_id
+                l.shortCode = mll.shortCode
                 AND mll.member_id = m.id
                 AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
             GROUP BY
@@ -304,7 +304,7 @@ class StatisticsModel
                 AND mp.idpreference = 1
             WHERE
                 m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
-                AND l.id = IFNULL(mp.value, 0)
+                AND l.ShortCode = IFNULL(mp.value, \'en\')
             GROUP BY
                 language
             ORDER BY

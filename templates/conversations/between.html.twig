@@ -17,7 +17,7 @@
         <p>{{ 'messages.none' | trans }}</p>
     {% else %}
         {% if items.haveToPaginate %}
-            <div class="u-flex u-justify-end u-my-8">
+            <div class="u:flex u:justify-end u:my-8">
                 {{ pagerfanta( items, 'rounded_pagination') }}
             </div>
         {% endif %}
@@ -25,7 +25,7 @@
             {% include 'conversations/message.html.twig' with { 'message': message, 'between': false, 'folder': 'none' } %}
         {% endfor %}
         {% if items.haveToPaginate %}
-            <div class="u-flex u-justify-end u-my-8">
+            <div class="u:flex u:justify-end u:my-8">
                 {{ pagerfanta( items, 'rounded_pagination') }}
             </div>
         {% endif %}

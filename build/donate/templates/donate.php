@@ -21,8 +21,8 @@ if ($error) {?>
 <?php } ?>
 
 	<div class="col-12 col-lg-6">
-        <div class="scroller scroller-left u-float-left mt-2"><i class="fa fa-caret-left"></i></div>
-        <div class="scroller scroller-right u-float-right mt-2"><i class="fa fa-caret-right"></i></div>
+        <div class="scroller scroller-left u:float-left mt-2"><i class="fa fa-caret-left"></i></div>
+        <div class="scroller scroller-right u:float-right mt-2"><i class="fa fa-caret-right"></i></div>
         <div class="wrapper-nav">
             <ul class="nav nav-tabs list" role="tablist">
                 <li class="nav-item">

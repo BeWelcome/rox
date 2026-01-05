@@ -72,8 +72,8 @@ class RelationController extends AbstractController
         return $this->render('relation/add.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'add_relation']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'add_relation']),
         ]);
     }
 
@@ -107,8 +107,8 @@ class RelationController extends AbstractController
         return $this->render('relation/edit.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'edit_relation']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'edit_relation']),
         ]);
     }
 
@@ -199,8 +199,8 @@ class RelationController extends AbstractController
         return $this->render('relation/relations.html.twig', [
             'member' => $member,
             'relations' => $relations,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'relations']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'relations']),
         ]);
     }
 

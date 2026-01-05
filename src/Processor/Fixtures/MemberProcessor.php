@@ -11,9 +11,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 
 final readonly class MemberProcessor implements ProcessorInterface
 {
-    private const array LOCALES = [
-        'fr', 'es', 'zh-hans', 'ua',
-    ];
+    private const array LOCALES = ['fr', 'es', 'zh-hans', 'ar'];
 
     private const array FIELDS = [
         'GenderOfGuests',
@@ -83,6 +81,11 @@ final readonly class MemberProcessor implements ProcessorInterface
         if (!$object instanceof Member) {
             return;
         }
+
+        if ('member-empty' === $object->getUsername()) {
+            return;
+        }
+
         $this->assignRandomizedFields($object);
 
         $this->entityManager->persist($object);

@@ -1,0 +1,11 @@
+<div class="u:flex u:flex-col u:md:flex-row u:justify-between u:gap-4">
+    <div class="btn-group u:bg-white">
+    {% for profile_language in profile_languages %}
+        {% set active = profile_language is same as(active_locale) %}
+        <button class="btn {% if active %}btn-primary{% else %}btn-outline-primary{% endif %}" data-edit-language="{{ profile_language }}">{{ ('lang_' ~ profile_language)|lower|trans({}, 'messages', profile_language) }}</button>
+    {% endfor %}
+    </div>
+    <div class="u:ms-auto"><div class="u:bg-white"><a href="{{ url('profile_add_language', {username: member.username}) }}" class="btn btn-outline-primary"><i class="fa fa-plus u:bg-bewelcome u:text-white "></i> {{ 'profile.add.language'|trans }}</a></div></div>
+</div>
+{#  add modal here #}
+<hr class="u:border-0 u:px-8 u:h-2 u:bg-bewelcome">

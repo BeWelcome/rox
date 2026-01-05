@@ -77,7 +77,7 @@ class SignupController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username:member}/finalize', name: 'finish_setup')]
+    #[Route(path: '/members/{username:member}/finalize', name: 'finish_setup', priority: 11)]
     public function finishSetup(
         Request $request,
         Member $member,

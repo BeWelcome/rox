@@ -226,7 +226,7 @@
                     <div class="o-form-group pt-3">
                         <div class="d-flex">
                             <button type="submit"
-                                    class="o-button u-w-full"><?php echo $words->getSilent('NextStep'); ?> <i
+                                    class="o-button u:w-full"><?php echo $words->getSilent('NextStep'); ?> <i
                                         class="fa fa-angle-double-right"></i></button>
                             <?php echo $words->flushBuffer(); ?>
                         </div>

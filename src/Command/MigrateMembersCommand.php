@@ -34,7 +34,6 @@ class MigrateMembersCommand extends Command
         'Organizations',
         'AdditionalAccomodationInfo',
         'OtherRestrictions',
-        'InformationToGuest',
         'ProfileSummary',
         'Hobbies',
         'Books',
@@ -90,7 +89,6 @@ class MigrateMembersCommand extends Command
                 Organizations,
                 AdditionalAccommodationInfo,
                 OtherRestrictions,
-                InformationToGuest,
                 ProfileLanguage,
                 AboutMe,
                 Hobbies,
@@ -130,7 +128,7 @@ class MigrateMembersCommand extends Command
                       null, null, null, null, null,
                       null, null, null, null, null,
                       null, null, null, null, null,
-                      null, null, null, null
+                      null, null, null
             )
         SQL;
 

@@ -188,3 +188,22 @@
         <div class="o-avatar u-mt-8">{{ macros.roundedavatarstack(receiver.Username, 100) }}</div>
     </div>
 {% endmacro %}
+
+{% macro field_english(language, field, translations) %}
+  {% if language != 'en' %}
+    <div class="u:relative u:border u:border-gray-500 u:p-4 u:mt-16">
+      <span class="u:absolute u:-top-14 u:left-8 u:bg-white u:px-2 u:text-12">
+        {{ 'lang_en'|trans({}, "messages", language) }}
+      </span>
+      <p class="u:text-sm">
+        <small class="form-text text-muted">
+          {% if translations['en'][field] is defined %}
+            {{ translations['en'][field]|purify }}
+            {% else %}
+               &nbsp;
+          {% endif %}
+        </small>
+      </p>
+    </div>
+  {% endif %}
+{% endmacro %}

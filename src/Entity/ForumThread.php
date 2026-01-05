@@ -62,14 +62,14 @@ class ForumThread
      * @var ForumPost
      */
     #[ORM\JoinColumn(name: 'first_postid', referencedColumnName: 'id', nullable: false)]
-    #[ORM\OneToOne(targetEntity: \ForumPost::class)]
+    #[ORM\OneToOne(targetEntity: ForumPost::class)]
     private $firstPost;
 
     /**
      * @var ForumPost
      */
     #[ORM\JoinColumn(name: 'last_postid', referencedColumnName: 'id', nullable: false)]
-    #[ORM\OneToOne(targetEntity: \ForumPost::class)]
+    #[ORM\OneToOne(targetEntity: ForumPost::class)]
     private $lastPost;
 
     /**
@@ -95,15 +95,15 @@ class ForumThread
      *
      * Default English
      */
-    #[ORM\JoinColumn(name: 'IdFirstLanguageUsed', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: \Language::class)]
+    #[ORM\JoinColumn(name: 'ShortCode', referencedColumnName: 'ShortCode', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     private $language;
 
     /**
      * @var Group
      */
     #[ORM\JoinColumn(name: 'IdGroup', referencedColumnName: 'id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: \Group::class)]
+    #[ORM\ManyToOne(targetEntity: Group::class)]
     private $group;
 
     /**

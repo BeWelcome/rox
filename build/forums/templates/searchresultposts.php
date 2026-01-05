@@ -53,7 +53,7 @@ use App\Utilities\ForumUtilities;
         foreach ($posts as $post) {
             ?>
 
-            <div class="l-search-post <?php echo $styles[$cnt % 2]; ?> u-w-full">
+            <div class="l-search-post <?php echo $styles[$cnt % 2]; ?> u:w-full">
                 <div class="c-search-user_info">
                     <a id="post<?php echo $post->id; ?>" style="position: relative; top:-50px;"></a>
                     <div class="d-flex flex-row text-break">
@@ -90,7 +90,7 @@ use App\Utilities\ForumUtilities;
                     <?php echo $post->message; ?>
                 </div>
                 <div class="c-search-thread_info js-highlight">
-                    <div class="u-flex u-justify-end">
+                    <div class="u:flex u:justify-end">
                         <small>
                             <?php
                                 $title = strip_tags((string) $post->title);

@@ -38,7 +38,7 @@ if ($statement) {
         $edit = ($loggedmember && $loggedmember->Username == $d->user_handle);
         echo '<div class="card-body p-1">';
         if ($edit) {
-            echo '<div class="o-checkbox u-m-4"><input type="checkbox" class="o-checkbox__input mr-0" name="imageId[]" value="' . $d->id . '"></div> ';
+            echo '<div class="o-checkbox u:m-4"><input type="checkbox" class="o-checkbox__input mr-0" name="imageId[]" value="' . $d->id . '"></div> ';
         }
         echo '<h6 class="card-title text-truncate"></h6><a href="gallery/img?id='. $d->id .'" alt="'. $d->title .'">'. $title_short . '</a>';
         if (null !== $d->albumId) {

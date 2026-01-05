@@ -1,8 +1,8 @@
 {% import 'macros.twig' as macros %}
-<div id="searchresults" class="u-w-full">
-    <div id="overlay" class="u-mt-8">
-        <div class="u-flex u-flex-col md:u-flex-row md:u-justify-between u-my-8">
-            <div class="u-text-14 md:u-self-center">{% trans with {'%first%': pager.getCurrentPageOffsetStart, '%last%': pager.getCurrentPageOffsetEnd, '%count%': pager.getNbResults} %}search.members.showing{% endtrans %}</div>
+<div id="searchresults" class="u:w-full">
+    <div id="overlay" class="u:mt-8">
+        <div class="u:flex u:flex-col u:md:flex-row u:md:justify-between u:my-8">
+            <div class="u:text-14 u:md:self-center">{% trans with {'%first%': pager.getCurrentPageOffsetStart, '%last%': pager.getCurrentPageOffsetEnd, '%count%': pager.getNbResults} %}search.members.showing{% endtrans %}</div>
             {% if pager.haveToPaginate %}
                 {{ pagerfanta( pager, 'rounded_pagination', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}
             {% endif %}
@@ -33,7 +33,7 @@
                         {{- member.Gender|trans }}
                     {% endif %}
                 </p>
-                <div class="m-0 mb-2 u-flex u-flex-row">
+                <div class="m-0 mb-2 u:flex u:flex-row">
                     <div class="mr-1"><i class="fa fa-2x fa-map-marker-alt"></i></div>
                     <div><strong>{{ member.CityName }}</strong><br>{{ member.CountryName }}</div>
                 </div>
@@ -44,7 +44,7 @@
                     <a class="btn btn-block btn-secondary" data-toggle="collapse" href="#collapse-{{ loop.index }}" role="button" aria-expanded="false" aria-controls="collapse-{{ loop.index }}">
                         <strong>{{ 'profilesummary' | trans | capitalize }}</strong>
                     </a>
-                    <div class="collapse bg-white u-p-4" id="collapse-{{ loop.index }}">
+                    <div class="collapse bg-white u:p-4" id="collapse-{{ loop.index }}">
                         <a href="/members/{{ member.Username }}"
                            class="profilesummary">{{ member.ProfileSummary | truncate(250) | purify }}</a>
                         {% if member.Occupation|length %}<p class="font-italic">{{ 'occupation' | trans | capitalize }}: {{ member.Occupation | raw }}</p>{% endif %}
@@ -58,23 +58,23 @@
                 {% endif %}
             </div>
             <div class="c-search-hosting">
-                <div class="u-flex u-flex-row u-gap-4">
-                    <div class="u-self-center"><img src="/images/icons/{{ member.Accommodation }}.png"
+                <div class="u:flex u:flex-row u:gap-4">
+                    <div class="u:self-center"><img src="/images/icons/{{ member.Accommodation }}.png"
                                                  alt="{{ member.Accommodation | trans }}"></div>
-                    <div class="u-self-center"><i class="fa fa-2x fa-bed "></i></div>
-                    <div class="u-self-center u-text-24">{{ member.MaxGuest }}</div>
-                    <div class="d-block d-sm-none u-self-center d-block d-sm-none"><i class="fa fa-2x fa-comments m-1"></i></div>
-                    <div class="d-block d-sm-none u-self-center u-text-24 d-block d-sm-none">
+                    <div class="u:self-center"><i class="fa fa-2x fa-bed "></i></div>
+                    <div class="u:self-center u:text-24">{{ member.MaxGuest }}</div>
+                    <div class="d-block d-sm-none u:self-center d-block d-sm-none"><i class="fa fa-2x fa-comments m-1"></i></div>
+                    <div class="d-block d-sm-none u:self-center u:text-24 d-block d-sm-none">
                         <a href="/members/{{ member.Username }}/comments">{{ member.CommentCount }}</a>
                     </div>
                 </div>
-                <div class="d-none d-sm-block u-w-full u-font-400 text-nowrap">
+                <div class="d-none d-sm-block u:w-full u:font-400 text-nowrap">
                     <i class="fa fa-comments mr-1"></i><a href="/members/{{ member.Username }}/comments">{{ 'searchcommentsinfo' | trans | format( member.CommentCount) | raw }}
                     </a>
                 </div>
             </div>
             <div class="c-search-extra_info">
-                <div class="d-flex flex-column flex-md-row flex-lg-column u-gap-4">
+                <div class="d-flex flex-column flex-md-row flex-lg-column u:gap-4">
                     <small>{{ 'search.last.login' | trans }}<br><strong>{{ member.LastLogin|privacy }}</strong></small>
                     <small>{{ 'search.member.since' | trans }}<br><strong>{{ member.created|privacy }}</strong></small>
                 </div>
@@ -83,7 +83,7 @@
         {% endfor %}
 
         {% if pager.haveToPaginate %}
-            <div class="u-flex u-justify-end u-my-8">
+            <div class="u:flex u:justify-end u:my-8">
                 {{ pagerfanta( pager, 'rounded_pagination', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}
             </div>
         {% endif %}

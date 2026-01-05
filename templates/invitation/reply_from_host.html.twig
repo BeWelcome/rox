@@ -42,7 +42,7 @@
             {% else %}
                 {% set label = 'reply' %}
             {% endif %}
-            <div class="u-flex u-justify-end mt-2">
+            <div class="u:flex u:justify-end mt-2">
                 {{ form_widget(form.cancel, {'attr': {'class': 'o-button mr-l',
                     'onclick': 'return confirm(\'' ~ ('invitation.confirm.cancel'|trans) ~ '\');'}})
                 }}

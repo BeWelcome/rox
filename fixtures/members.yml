@@ -71,3 +71,13 @@ App\Entity\Member:
         Accommodation: 'neverask'
         MaxGuests: 0
         Gender: 'other'
+    member_empty:
+        Username: 'member-empty'
+        BirthDate: <dateTimeBetween('-80years', '-18years')>
+        Email: 'member-empty\@bewelcome.org'
+        HideAttribute: 31
+        Status: 'Active'
+        Name: 'Empty Member'
+        Accommodation: 'neverask'
+        MaxGuests: 1
+        Gender: 'female'

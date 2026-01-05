@@ -12,7 +12,7 @@ TIME_STAMP := $(shell git log -n 1 --format=%aI)
 
 all: phpci
 
-phpci: phpcpd phploc php-code-sniffer php-cs-fixer phpunit infection int-test version
+phpci: phpcpd phploc php-code-sniffer php-cs-fixer phpunit infection int-test version yaml-lint doctrine twig
 
 install:
 	git rev-parse --short HEAD > VERSION
@@ -88,7 +88,7 @@ int-test:
 	"./bin/phpunit" --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --group=integration
 
 infection: phpunit
-	"./vendor/bin/infection" --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=30
+	"./vendor/bin/infection" --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=2
 
 #behat: encore
 #	bin/console doctrine:database:create --env=test --if-not-exists
@@ -102,3 +102,12 @@ phpmetrics:
 version:
 	git rev-parse --short HEAD > VERSION
 	touch -d $(TIME_STAMP) VERSION
+
+yaml-lint:
+	bin/console lint:yaml --parse-tags config fixtures
+
+doctrine:
+	bin/console doctrine:schema:validate --skip-sync
+
+twig:
+	bin/console lint:twig

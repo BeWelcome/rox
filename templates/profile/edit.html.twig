@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block title %}{{ 'profile.title'|trans({username:member.Username}) }}{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('avatar') }}
+  {{ encore_entry_script_tags('readmore') }}
+  {{ encore_entry_script_tags('lightbox') }}
+  {{ encore_entry_script_tags('profile/edit') }}
+{% endblock javascripts %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ encore_entry_link_tags('readmore') }}
+  {{ encore_entry_link_tags('lightbox') }}
+  {{ encore_entry_link_tags('leaflet') }}
+{% endblock %}
+
+{% block content %}
+    {% set translated_fields = member.translations %}
+    {% set profile_languages = translated_fields|keys %}
+    {% if not language is null %}
+        {% set active_locale = language in profile_languages ? language : 'en' %}
+    {% else %}
+        {% set active_locale = locale in profile_languages ? locale : 'en' %}
+    {% endif %}
+
+    <div class="u:flex u:flex-col u:md:flex-row u:justify-between u:mb-16">
+      <span class="u:text-[2rem] u:font-700 u:font-signika">{{ member.username }}</span>
+      <div class="u:ms-auto">
+        <div class="u:bg-white">{% set edit_link = url('account_edit', {username: member.username}) %}
+        {% set edit_text = 'account.edit'|trans %}
+        <a href="{{ edit_link }}" class="btn btn-outline-primary">
+            <i class="fa fa-edit u:text-bewelcome" title="{{ edit_text }}" aria-hidden="true"></i>
+            {{ edit_text }}
+        </a></div>
+      </div>
+    </div>
+
+    {% include 'profile/edit.header.html.twig' with {profile_languages: profile_languages, active_locale: active_locale} %}
+
+
+    {% set language_levels = member.languageLevels %}
+
+    {% set address = member.activeAddress %}
+    {% if not address is same as(false) %}
+      <input type="hidden" id="latitude" value="{{ address.latitude }}"><input type="hidden" id="longitude" value="{{ address.longitude }}">
+    {% endif %}
+
+    {% for profile_language in profile_languages %}
+        {% include 'profile/content.html.twig' with {profile_language: profile_language, translated_fields: translated_fields, active_locale:active_locale, edit:true} %}
+    {% endfor %}
+{% endblock content %}

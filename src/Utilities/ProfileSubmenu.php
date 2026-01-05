@@ -24,11 +24,13 @@ class ProfileSubmenu
 {
     private array $submenuItems = [];
 
-    public function __construct(private readonly RouterInterface $routing, private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly RouterInterface $routing,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
-    public function getSubmenu(Member $member, Member $loggedInMember, array $parameters = []): array
+    public function getSubmenu(Member $loggedInMember, Member $member, array $parameters = []): array
     {
         $parameters = array_merge($parameters, $this->getMemberInfo($member, $loggedInMember));
 
@@ -134,6 +136,11 @@ class ProfileSubmenu
             'key' => 'editmyprofile',
             'icon' => 'edit',
             'url' => $this->routing->generate('profile_edit', ['username' => $username]),
+        ]);
+        $this->addSubmenuItem('edit_account', [
+            'key' => 'account.edit',
+            'icon' => 'user',
+            'url' => $this->routing->generate('account_edit', ['username' => $username]),
         ]);
         $this->addSubmenuItem('preferences', [
             'key' => 'profile.preferences.menu',

@@ -6,7 +6,7 @@
     <h3>{{ 'wiki' }}: {{ title | title }}</h3>
 
     {% if wikipage %}
-        <div id="wiki" class="u-leading-24">{{ content | raw }}</div>
+        <div id="wiki" class="u:leading-24">{{ content | raw }}</div>
 
         <div class="row">
             <div class="col-12 col-sm-6">
@@ -17,7 +17,7 @@
             </div>
         </div>
 
-        <div class="u-flex u-justify-end u-my-8">
+        <div class="u:flex u:justify-end u:my-8">
             {{ pagerfanta( history, 'rounded_pagination', { 'routeName': 'wiki_page', 'pageParameter': '[version]', 'routeParams': {'pageTitle': title} }) }}
         </div>
 

@@ -186,8 +186,8 @@ class PasswordController extends AbstractController
         return $this->render('profile/change.password.html.twig', [
             'member' => $member,
             'form' => $form->createView(),
-            'globals_js_json' => $globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember),
+            'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member),
         ]);
     }
 

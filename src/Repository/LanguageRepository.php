@@ -31,4 +31,12 @@ ORDER BY name ASC", $rsm);
         return $query->getResult();
     }
      */
+
+    public function getAllLanguages(): array
+    {
+        $queryBuilder = $this->createQueryBuilder('l');
+        $queryBuilder->orderBy('l.name', 'ASC');
+
+        return $queryBuilder->getQuery()->getResult();
+    }
 }

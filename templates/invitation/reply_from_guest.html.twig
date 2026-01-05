@@ -32,15 +32,15 @@
             {{ form_widget(form.message) }}
             {{ form_errors(form.message) }}
         </div>
-        <div class="col-12 u-flex u-justify-end mb-2">
+        <div class="col-12 u:flex u:justify-end mb-2">
             {{ form_row(form.request.arrival) }}
             {{ form_row(form.request.departure) }}
             {{ form_row(form.request.numberOfTravellers) }}
             {{ form_row(form.request.inviteForLeg) }}
             {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button mb-2'}}) }}
             {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
-            <div class="btn-group u-ml-4">
-                <div class="btn-group u-ml-4">
+            <div class="btn-group u:ml-4">
+                <div class="btn-group u:ml-4">
                     <button type="submit" id="{{ form.decline.vars.id }}" name="{{ form.decline.vars.full_name }}" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
                         {{ form.decline.vars.label|trans }}
                     </button>

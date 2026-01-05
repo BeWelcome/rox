@@ -20,8 +20,8 @@
 
     {{ macros.new_conversation_header(receiver, 'message.write_to') }}
 
-    <div class="u-grid u-grid-cols-1">
-        <div class="u-mb-4">
+    <div class="u:grid u:grid-cols-1">
+        <div class="u:mb-4">
             {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
             {{ form_errors(form) }}
             {{ form_label(form.subject.subject) }}
@@ -33,9 +33,9 @@
             {{ form_rest(form) }}
         </div>
 
-        <div class="u-mb-4">
-            <div class="u-flex u-justify-end">
-                <button type="submit" class="o-button u-mt-8">{{ 'message.send' | trans }}</button>
+        <div class="u:mb-4">
+            <div class="u:flex u:justify-end">
+                <button type="submit" class="o-button u:mt-8">{{ 'message.send' | trans }}</button>
             </div>
         </div>
         {{ form_end(form) }}

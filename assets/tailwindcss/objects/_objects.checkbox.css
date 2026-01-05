@@ -15,14 +15,14 @@
   .o-checkbox__input {
     margin-right: 8px;
     cursor: pointer;
-    border: 1px solid theme('colors.gray-20');
+    border: 1px solid var(--u-color-gray-20);
     border-radius: 2px;
   }
 
   .o-radio-button__input {
     margin-right: 8px;
     cursor: pointer;
-    border: 1px solid theme('colors.gray-20');
+    border: 1px solid var(--u-color-gray-20);
     border-radius: 100%;
   }
 
@@ -50,7 +50,7 @@
    * White. Set as sibling due to Simfony restriction passing classes
    */
   .o-checkbox--white ~ .o-checkbox__label {
-    color: theme('colors.white');
+    color: var(--u-color-white);
   }
 
 

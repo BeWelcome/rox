@@ -103,13 +103,13 @@
     text-transform: uppercase;
     font-size: 18px;
     letter-spacing: 0.05rem;
-    color: theme('colors.gray-20');
+    color: var(--u-color-gray-20);
     margin-right: 24px;
   }
 
   .c-trips__nav-btn:after {
     content: "•";
-    color: theme('colors.gray-40');
+    color: var(--u-color-gray-40);
     margin: 0 8px;
     text-decoration: none !important;
     position: absolute;
@@ -132,12 +132,12 @@
 
   .c-trips__nav-btn--active,
   .c-trips__nav-btn:hover {
-    color: theme('colors.white');
+    color: var(--u-color-white);
   }
 
 
   .c-trips__nav-line {
-    border: 1px solid theme('colors.white');
+    border: 1px solid var(--u-color-white);
     opacity: 0;
     position: absolute;
     width: 100%;

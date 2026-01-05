@@ -2,7 +2,6 @@
    #BUTTON
    ========================================================================== */
 
-@layer components {
   /**
    * Button with BeWelcome brand colors, regular size
   */
@@ -12,8 +11,8 @@
     padding: 0 24px;
     border: 1px solid transparent;
     border-radius: 24px;
-    color: theme('colors.white');
-    background-color: theme('colors.bewelcome');
+    color: var(--u-color-white);
+    background-color: var(--u-color-bewelcome);
     font-size: 16px;
     line-height: 20px;
     font-weight: 500;
@@ -35,8 +34,8 @@
     padding: 0 16px;
     border: 1px solid transparent;
     border-radius: 8px;
-    color: theme('colors.white');
-    background-color: theme('colors.bewelcome');
+    color: var(--u-color-white);
+    background-color: var(--u-color-bewelcome);
     font-size: 20px;
     line-height: 24px;
     font-weight: 500;
@@ -57,8 +56,8 @@
     padding: 0 16px;
     border: 1px solid transparent;
     border-radius: 24px;
-    color: theme('colors.white');
-    background-color: theme('colors.bewelcome');
+    color: var(--u-color-white);
+    background-color: var(--u-color-bewelcome);
     font-size: 12px;
     line-height: 16px;
     font-weight: 500;
@@ -80,8 +79,8 @@
     padding: 0 16px;
     border: 1px solid transparent;
     border-radius: 2px;
-    color: theme('colors.white');
-    background-color: theme('colors.bewelcome');
+    color: var(--u-color-white);
+    background-color: var(--u-color-bewelcome);
     font-size: 12px;
     line-height: 16px;
     font-weight: 500;
@@ -95,30 +94,30 @@
   * Outline Button
   */
   .o-button--outline {
-    background-color: theme('colors.white');
-    border: 1px solid theme('colors.bewelcome');
-    color: theme('colors.bewelcome');
+    background-color: var(--u-color-white);
+    border: 1px solid var(--u-color-bewelcome);
+    color: var(--u-color-bewelcome);
     font-weight: 400;
   }
 
   .o-button--outline-inverse {
-    background-color: theme('colors.bewelcome');
-    border: 1px solid theme('colors.white');
-    color: theme('colors.white');
+    background-color: var(--u-color-bewelcome);
+    border: 1px solid var(--u-color-white);
+    color: var(--u-color-white);
     font-weight: 400;
   }
 
   .o-button--outline-gray {
-    background-color: theme('colors.white');
-    border: 1px solid theme('colors.gray-60');
-    color: theme('colors.gray-60');
+    background-color: var(--u-color-white);
+    border: 1px solid var(--u-color-gray-60);
+    color: var(--u-color-gray-60);
     font-weight: 400;
   }
 
   .o-button--outline-gray-inverse {
-    background-color: theme('colors.gray-60');
-    border: 1px solid theme('colors.gray-60');
-    color: theme('colors.white');
+    background-color: var(--u-color-gray-60);
+    border: 1px solid var(--u-color-gray-60);
+    color: var(--u-color-white);
     font-weight: 400;
   }
 
@@ -151,30 +150,30 @@
   ========================================================================== */
   .o-button:hover {
     opacity: 0.7;
-    color: theme('colors.white');
+    color: var(--u-color-white);
   }
 
   .o-button--outline.active,
   .o-button--outline:hover {
-    background-color: theme('colors.bewelcome');
-    border: 1px solid theme('colors.bewelcome');
-    color: theme('colors.white');
+    background-color: var(--u-color-bewelcome);
+    border: 1px solid var(--u-color-bewelcome);
+    color: var(--u-color-white);
     opacity: 1;
   }
 
   .o-button--outline-gray.active,
   .o-button--outline-gray:hover {
-    background-color: theme('colors.gray-60');
-    border: 1px solid theme('colors.gray-60');
-    color: theme('colors.white');
+    background-color: var(--u-color-gray-60);
+    border: 1px solid var(--u-color-gray-60);
+    color: var(--u-color-white);
     opacity: 1;
   }
 
   .o-button--outline-inverse:hover {
     opacity: 1;
-    color: theme('colors.white');
-    border: 1px solid theme('colors.white');
-    background-color: theme('colors.bewelcome');
+    color: var(--u-color-white);
+    border: 1px solid var(--u-color-white);
+    background-color: var(--u-color-bewelcome);
   }
 
   .o-button--outline-ceniza:hover,
@@ -242,8 +241,8 @@
   .o-show-more-btn {
     margin: 4px;
     cursor: pointer;
-    background-color: theme('colors.bewelcome');
-    color: theme('colors.white');
+    background-color: var(--u-color-bewelcome);
+    color: var(--u-color-white);
     border-radius: 8px;
     white-space: nowrap;
     transition: color 300ms ease-in-out;
@@ -252,7 +251,6 @@
   }
 
   .o-show-more-btn:hover {
-    background-color: theme('colors.bewelcome-dark');
-    color: theme('colors.white');
+    background-color: var(--u-color-bewelcome-dark);
+    color: var(--u-color-white);
   }
-}

@@ -37,11 +37,11 @@
            {% if form.location.vars.value %}value="{{ form.location.vars.value }}"{% endif %}
         >
     </div>
-    <div class="u-block">{{ form_errors(form.location) }}</div>
-    <div class="u-mb-8">{{ form_help(form.location) }}</div>
+    <div class="u:block">{{ form_errors(form.location) }}</div>
+    <div class="u:mb-8">{{ form_help(form.location) }}</div>
     {% do form.location.setRendered %}
     <div class="row mb-3">
-        <div class="u-flex u-justify-start ml-3">
+        <div class="u:flex u:justify-start ml-3">
             {{ form_row(form.show_options, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_options mr-3'}}) }}<span class="mr-3"></span>
             {{ form_row(form.show_map, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_map'}}) }}
         </div>
@@ -144,7 +144,7 @@
             </div>
         </div>
         <div class="col-12">
-            <div class="u-flex u-justify-end">
+            <div class="u:flex u:justify-end">
                 {% if form.resetOptions is defined %}
                     {{ form_widget(form.resetOptions) }}
                 {% endif %}

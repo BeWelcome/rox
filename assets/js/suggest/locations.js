@@ -77,7 +77,7 @@ class LocationSuggest {
                         return `
                             ${group}
                             <li>
-                                <div class="u-flex u-flex-row u-justify-between align-items-center">
+                                <div class="u:flex u:flex-row u:justify-between align-items-center">
                                     <div>
                                         <div class="suggest-name">
                                             ${parts[0]}

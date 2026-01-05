@@ -15,17 +15,17 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_errors(form) }}
-    <div class="u-grid u-grid-cols-1">
-        <div class="u-mb-4">
+    <div class="u:grid u:grid-cols-1">
+        <div class="u:mb-4">
             {{ form_row(form.message) }}
             {% do form.subject.setRendered %}
             {{ form_rest(form) }}
         </div>
     </div>
 
-    <div class="u-mb-4">
-        <div class="u-flex u-justify-end">
-            <button type="submit" class="o-button u-mt-8">{{ 'label.message.button.send' | trans }}</button>
+    <div class="u:mb-4">
+        <div class="u:flex u:justify-end">
+            <button type="submit" class="o-button u:mt-8">{{ 'label.message.button.send' | trans }}</button>
         </div>
     </div>
 

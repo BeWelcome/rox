@@ -17,7 +17,7 @@
         {% set myself = app.user %}
         {% if trips.haveToPaginate %}
             <section>
-                <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mb-24 md:u-mb-16 md:u-h-48 u-flex-col md:u-flex-row">
+                <div class="u:inline-flex u:w-full u:items-center u:justify-end u:mb-24 u:md:mb-16 u:md:h-48 u:flex-col u:md:flex-row">
                        {{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
                    </div>
                </section>
@@ -26,15 +26,15 @@
             {% for trip in trips %}
             <div class="c-trip-card">
                 <div class="c-trip-card__wrapper">
-                    <a class="u-text-white hover:u-text-gray-20 u-text-24 u-font-display u-font-700 u-col-span-full u-ellipsis u-mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
+                    <a class="u:text-white u:hover:text-gray-20 u:text-24 u:font-display u:font-700 u:col-span-full u:ellipsis u:mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
                     <div>
-                        <div class=" u-font-display u-italic u-text-white u-mb-8">{{ trip.description | nl2br | purify | truncate(200) }}</div>
-                        <div class="u-text-white u-font-display u-mt-8 u-mb-16 md:u-m-0 u-flex u-flex-column">
-                            <div class="u-mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}
+                        <div class=" u:font-display u:italic u:text-white u:mb-8">{{ trip.description | nl2br | purify | truncate(200) }}</div>
+                        <div class="u:text-white u:font-display u:mt-8 u:mb-16 u:md:m-0 u:flex u:flex-column">
+                            <div class="u:mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}
                              {% for leg in trip.subtrips %}
-                                {% if leg.location %}<span class="u-whitespace-nowrap u-mr-8">
+                                {% if leg.location %}<span class="u:whitespace-nowrap u:mr-8">
                                     {% if leg.location.country %}
-                                        <i class="o-flag o-flag--{{ leg.location.country.countryId }} u--mb-4" title="{{ leg.location.country.name }}"></i>
+                                        <i class="o-flag o-flag--{{ leg.location.country.countryId }} u:-mb-4" title="{{ leg.location.country.name }}"></i>
                                     {% endif %}
                                     {{ leg.location.name }}</span>
                                 {% endif %}
@@ -44,24 +44,24 @@
                     </div>
                     <div>
                         <div class="c-trip-card__icon-grid">
-                            <div><i class="far fa-calendar-alt u-text-white u-text-16 u-justify-self-center u-self-center"></i></div>
-                            <div><p class="u-text-white u-font-display">{{ (trip.subtrips|first).arrival|format_date('full') }} –<br>{{ (trip.subtrips|last).departure|format_date('full') }}</p></div>
+                            <div><i class="far fa-calendar-alt u:text-white u:text-16 u:justify-self-center u:self-center"></i></div>
+                            <div><p class="u:text-white u:font-display">{{ (trip.subtrips|first).arrival|format_date('full') }} –<br>{{ (trip.subtrips|last).departure|format_date('full') }}</p></div>
                         </div>
-                        <div class="c-trip-card__icon-grid u-leading-24">
-                            <i class="fa fa-users u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                            <p class="u-text-white u-font-display">{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}</p>
+                        <div class="c-trip-card__icon-grid u:leading-24">
+                            <i class="fa fa-users u:text-white u:text-16 u:justify-self-center u:self-center"></i>
+                            <p class="u:text-white u:font-display">{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}</p>
                         </div>
                         {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
-                            <div class="c-trip-card__icon-grid u-leading-24">
-                                <i class="fa fa-info-circle u-text-white u-text-16 u-justify-self-center u-self-center"></i>
-                                <p class="u-text-white u-font-display">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
+                            <div class="c-trip-card__icon-grid u:leading-24">
+                                <i class="fa fa-info-circle u:text-white u:text-16 u:justify-self-center u:self-center"></i>
+                                <p class="u:text-white u:font-display">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
                             </div>
                         {% endif %}
                     </div>
                 </div>
-                <div class="u-flex u-justify-center md:u-justify-between u-items-center u-mt-16 md:u-m-0">
+                <div class="u:flex u:justify-center u:md:justify-between u:items-center u:mt-16 u:md:m-0">
                     {% if not trip.isExpired %}
-                    <a class="o-rounded o-rounded--l u-text-18 u-mr-20 md:u-m-0"
+                    <a class="o-rounded o-rounded--l u:text-18 u:mr-20 u:md:m-0"
                        href="{{ path('trip_edit', {'id': trip.id}) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
                         <i class="far fa-edit"></i>
                     </a>
@@ -72,19 +72,19 @@
                 </div>
             </div>
             {% else %}
-                <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
+                <p class="u:text-white u:font-display">{{ 'trip.no.trips'|trans }}</p>
             {% endfor %}
         </section>
 
         {% if trips.haveToPaginate %}
         <section>
-            <div class="u-inline-flex u-w-full u-items-center u-justify-end u-mt-16 md:u-h-48 u-flex-col md:u-flex-row">
+            <div class="u:inline-flex u:w-full u:items-center u:justify-end u:mt-16 u:md:h-48 u:flex-col u:md:flex-row">
                   {{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
               </div>
         </section>
         {% endif %}
     {% else %}
-        <p class="u-text-white u-font-display">{{ 'trip.no.trips'|trans }}</p>
+        <p class="u:text-white u:font-display">{{ 'trip.no.trips'|trans }}</p>
     {% endif %}
 {% endblock content %}
 
@@ -104,8 +104,8 @@
                         <div id="modal-content" class="modal__content">
                             {{ 'trip.remove.body'|trans|raw }}
                         </div>
-                        <footer id="modal-footer" class="modal__footer u-flex u-flex-row u-justify-between">
-                            <a class="btn btn-primary-outline u-border-black" role="button" href="{{ path('trip_remove', {'id': trip.id}) }}" aria-label="{{ 'trip.remove'|trans }}">{{ 'trip.remove.label'|trans }}</a>
+                        <footer id="modal-footer" class="modal__footer u:flex u:flex-row u:justify-between">
+                            <a class="btn btn-primary-outline u:border-black" role="button" href="{{ path('trip_remove', {'id': trip.id}) }}" aria-label="{{ 'trip.remove'|trans }}">{{ 'trip.remove.label'|trans }}</a>
                             <button class="btn btn-primary" data-micromodal-close aria-label="{{ 'trip.remove.close'|trans }}">
                                 {{ 'trip.remove.close'|trans }}</button>
                         </footer>

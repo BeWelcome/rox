@@ -33,9 +33,9 @@
 {% include 'loginbar.html.twig' %}
 <main class="site-content">
     <div class="container" style="position: relative; z-index: 2000;">
-        {{ form_start(form, {'attr': {'class': 'u-mt-8 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
+        {{ form_start(form, {'attr': {'class': 'u:mt-8 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
         {{ form_errors(form) }}
-        <div class="u-flex u-items-center u-p-8 u-rounded-8"
+        <div class="u:flex u:items-center u:p-8 u:rounded-8"
              style="background-color:rgba(0,0,0,0.2); border-radius:.25rem;">
             <div class="col-8 col-sm-10">
                 <div class="auto-search-wrapper max-height loupe">
@@ -46,7 +46,7 @@
                            {% if form.location.vars.value %}value="{{ form.location.vars.value }}"{% endif %}
                     >
                 </div>
-                <div class="u-block">{{ form_errors(form.location) }}</div>
+                <div class="u:block">{{ form_errors(form.location) }}</div>
                 {% do form.location.setRendered %}
             </div>
             <div class="col-4 col-sm-2">
@@ -63,8 +63,8 @@
     </div>
 </main>
 <footer>
-    <div class="u-flex">
-        <div class="u-m-auto" style="z-index: 2000;">
+    <div class="u:flex">
+        <div class="u:m-auto" style="z-index: 2000;">
                 <a href="{{ url('about') }}"><strong>{{ 'aboutuspage' | trans }}</strong></a> •
                 <a href="{{ url('safety') }}">{{ 'safety' | trans }}</a> •
                 <a href="{{ url('terms_of_use') }}" target="new">{{ 'termsofuse' | trans }}</a> •

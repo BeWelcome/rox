@@ -1,4 +1,4 @@
-App\Entity\MembersLanguagesLevel:
+App\Entity\MemberLanguageLevel:
     bwadmin_english_mother_tongue:
         Member:  '@bwadmin'
         Language: '@language_en'

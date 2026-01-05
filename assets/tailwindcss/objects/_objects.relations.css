@@ -9,7 +9,7 @@
   ;
     grid-template-columns: 80px 1fr;
     border: 1px solid #ccc;
-    @apply u-p-8 u-rounded-8 u-mb-8;
+    @apply u:p-8 u:rounded-8 u:mb-8;
     background-color: #fff;
   }
 
@@ -21,7 +21,7 @@
   ;
     grid-template-columns: 80px 1fr;
     border: 1px solid #ccc;
-    @apply u-p-8 u-rounded-8 u-mb-8;
+    @apply u:p-8 u:rounded-8 u:mb-8;
     background-color: #fff;
   }
 
@@ -40,22 +40,22 @@
 
   .relation-category {
     grid-area: category;
-    @apply u-font-700 u-mb-8;
+    @apply u:font-700 u:mb-8;
   }
 
   .relation-relation {
     grid-area: relation;
-    @apply u-break-words u-mb-8;
+    @apply u:break-words u:mb-8;
   }
 
   .relation-updated {
     grid-area: updated;
-    @apply u-flex u-text-12 u-text-gray-50 u-mb-8 u-justify-end;
+    @apply u:flex u:text-12 u:text-zinc-100 u:mb-8 u:justify-end;
   }
 
   .relation-actions {
     grid-area: actions;
-    @apply u-flex u-flex-row u-gap-8 u-justify-end;
+    @apply u:flex u:flex-row u:gap-8 u:justify-end;
   }
 
   @media screen(sm) {
@@ -67,20 +67,20 @@
     ;
       grid-template-columns: 80px 1fr 64px;
       border: 1px solid #ccc;
-      @apply u-p-8 u-rounded-8 u-mb-8;
+      @apply u:p-8 u:rounded-8 u:mb-8;
       background-color: #fff;
     }
 
     .relation-actions {
-      @apply u-flex u-flex-col u-gap-8 u-justify-start;
+      @apply u:flex u:flex-col u:gap-8 u:justify-start;
     }
 
     .relation-relation {
-      @apply u-mr-8;
+      @apply u:mr-8;
     }
 
     .relation-updated {
-      @apply u-mr-8 u-self-end u-mb-0;
+      @apply u:mr-8 u:self-end u:mb-0;
     }
   }
 }

@@ -5,14 +5,14 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<div class="u-min-w-[320px] u-max-w-[640px] u-m-auto">
+<div class="u:min-w-[320px] u:max-w-[640px] u:m-auto">
 
 <h1>{{ 'members.confirm.email'|trans }}</h1>
     {{ 'members.confirm.email.blurb'|trans|raw }}
-    {{ form_start(confirm_email, { 'attr': { autocomplete: 'off', class: 'u-mt-8' } }) }}
+    {{ form_start(confirm_email, { 'attr': { autocomplete: 'off', class: 'u:mt-8' } }) }}
     {{ form_row(confirm_email.registration_key) }}
 
-    <div class="u-flex u-justify-end u-mt-8">
+    <div class="u:flex u:justify-end u:mt-8">
         <input type="submit" class="o-button" value="{{ 'members.confirm.email.button'|trans }}">
     </div>
 

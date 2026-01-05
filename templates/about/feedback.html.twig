@@ -34,7 +34,7 @@
                             <div id="modal-content" class="modal__content">
                                 {{ 'feedback.profile.report.message' | trans | purify | nl2br }}
                             </div>
-                            <footer id="modal-footer" class="modal__footer u-flex u-flex-row u-justify-between">
+                            <footer id="modal-footer" class="modal__footer u:flex u:flex-row u:justify-between">
                                 <button class="o-button" data-micromodal-close aria-label="{{ 'modal.continue'|trans }}">
                                     {{ 'modal.continue'|trans }}</button>
                                 <a href="{{ url('conversation_report_spam', {'id': messageId }) }}" class="o-button" data-dismiss="modal">{{ 'conversation.report.message'|trans }}</a>
@@ -57,7 +57,7 @@
                             <div id="modal-content" class="modal__content">
                                 {{ 'feedback.profile.report.addinfo' | trans | purify | nl2br }}
                             </div>
-                            <footer id="modal-footer" class="modal__footer u-flex u-flex-row u-justify-end">
+                            <footer id="modal-footer" class="modal__footer u:flex u:flex-row u:justify-end">
                                 <button type="button" class="o-button" data-micromodal-close aria-label="{{ 'feedback.understood'|trans }}">{{ 'feedback.understood'|trans }}</button>
                             </footer>
                         </div>

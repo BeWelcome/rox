@@ -210,8 +210,8 @@ class ForumsController extends AbstractController
             'search' => $search,
             'member' => $member,
             'posts' => $posts,
-            'globals_js_json' => $globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'forum_posts']),
+            'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'forum_posts']),
         ]);
     }
 }

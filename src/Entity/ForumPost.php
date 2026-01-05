@@ -113,7 +113,7 @@ class ForumPost
      *
      * Default English
      */
-    #[ORM\JoinColumn(name: 'IdFirstLanguageUsed', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'ShortCode', referencedColumnName: 'ShortCode', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Language::class)]
     private $language;
 

@@ -11,10 +11,10 @@
   width: 100%;
   height: 40px;
   padding-left: 16px;
-  border: 1px solid theme('colors.gray-15');
+  border: 1px solid var(--u-color-gray-600);
   border-radius: 8px;
   box-shadow: none;
-  background-color: theme('colors.white');
+  background-color: var(--u-color-white);
 }
 
 textarea.o-input {
@@ -44,7 +44,7 @@ textarea.o-input::placeholder {
    ==========================================================================
 
 .o-input:invalid {
-  border: 1px solid theme('colors.red');
+  border: 1px solid var(--u-color-red);
   box-shadow: none;
 }
 
@@ -62,7 +62,7 @@ textarea.o-input::placeholder {
 
 .o-input:hover,
 .o-input:focus {
-  border: 1px solid theme('colors.gray-50');
+  border: 1px solid var(--u-color-gray-400);
   box-shadow: none;
 }
 
@@ -80,14 +80,14 @@ textarea.o-input::placeholder {
 
 .o-input--inactive,
 .o-input[disabled] {
-  background-color: theme('colors.gray-20');
-  color: theme('colors.gray-50');
+  background-color: var(--u-color-gray-400);
+  color: var(--u-color-gray-200);
   pointer-events: none;
 }
 
 .o-input--inactive:hover,
 .o-input[disabled]:hover {
-  border: 1px solid theme('colors.gray-60');
+  border: 1px solid var(--u-color-gray-600);
 }
 
 
@@ -120,7 +120,7 @@ textarea.o-input::placeholder {
 
 .o-input--round-left {
   border-radius: 8px 0 0 8px;
-  border-right: 1px solid theme('colors.gray-15');
+  border-right: 1px solid var(--u-color-gray-600);
 }
 
 .o-input--round-right {
@@ -216,13 +216,13 @@ textarea.o-input::placeholder {
 .o-input--white,
 .o-input--white::placeholder {
   font-weight: 700;
-  color: theme('colors.white');
+  color: var(--u-color-white);
   font-family: Signika;
   opacity: 1;
 }
 
 .o-input--white:focus::placeholder {
-  color: theme('colors.gray-20');
+  color: var(--u-color-gray-600);
 }
 
 .o-input--white:active,
@@ -230,7 +230,7 @@ textarea.o-input::placeholder {
 .o-input--white:focus,
 .o-input--white:focus-visible {
   background-color: rgba(255, 255, 255, 0.3);
-  color: theme('colors.white');
+  color: var(--u-color-white);
 }
 
 
@@ -257,7 +257,7 @@ textarea.o-input::placeholder {
 }
 
 .o-input--select-white {
-  color: theme('colors.white');
+  color: var(--u-color-white);
   background-color:rgba(255, 255, 255, 0.2);
   border: none;
   font-family: Signika;
@@ -270,7 +270,7 @@ textarea.o-input::placeholder {
 .o-input--select-white:focus,
 .o-input--select-white:focus-visible  {
   background-color:rgba(255, 255, 255, 0.3);
-  color: theme('colors.white');
+  color: var(--u-color-white);
 
 }
 

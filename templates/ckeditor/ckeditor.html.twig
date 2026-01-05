@@ -1,4 +1,9 @@
 {% block ckeditor_widget %}
+    {% if image_upload %}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' js-ckeditor-images')|trim}) %}
+    {% else %}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' js-ckeditor-no-images')|trim}) %}
+    {% endif %}
     <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
     {% if not async %}
         {{ block( '_ckeditor_javascript' ) }}

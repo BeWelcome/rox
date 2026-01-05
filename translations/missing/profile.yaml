@@ -183,3 +183,7 @@ members.confirm.email.blurb:
 members.confirm.email.button:
     - Confirm
     - Button label
+profile.added.new.languages:
+    - Added new languages to profile languages.
+    - Flash message shown when during editing of languages new fluent, expert or mother tongues were added.
+

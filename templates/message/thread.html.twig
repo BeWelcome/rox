@@ -19,16 +19,16 @@
     {% set curentArrival = null %}
 {% endif %}
 
-<div id="message_thread" class="u-mb-4">
+<div id="message_thread" class="u:mb-4">
     {% set currentDate = current.created %}
-    <div class="u-flex u-flex-col u-justify-center u-my-4">
-        <div class="u-bg-gray-20 u-text-12 u-m-auto u-p-4 u-rounded-8">{{ currentDate|format_date('long') }}</div>
+    <div class="u:flex u:flex-col u:justify-center u:my-4">
+        <div class="u:bg-gray-20 u:text-12 u:m-auto u:p-4 u:rounded-8">{{ currentDate|format_date('long') }}</div>
     </div>
     {% for message in thread %}
         {% if currentDate.format('Y-m-d') != message.created.format('Y-m-d') %}
             {% set currentDate = message.created %}
-            <div class="u-flex u-flex-col u-justify-center u-my-4">
-                <div class="u-bg-gray-20 u-text-12 u-m-auto u-p-4 u-rounded-8">{{ message.created|format_date('long') }}</div>
+            <div class="u:flex u:flex-col u:justify-center u:my-4">
+                <div class="u:bg-gray-20 u:text-12 u:m-auto u:p-4 u:rounded-8">{{ message.created|format_date('long') }}</div>
             </div>
         {% endif %}
         {% set own = (myself.Username == message.Sender.Username) %}
@@ -39,16 +39,16 @@
             {% set show_deleted = false %}
         {% endif %}
         {% if (show_deleted or not deleted) and not purged %}
-            <div class="u-flex {% if own %}u-justify-end{% else %}u-justify-start{% endif %}">
-                <div class="u-flex u-flex-col {% if own %}message_own u-justify-end{% else %}message_other u-justify-start{% endif %} {% if deleted %}deleted{% endif %}">
+            <div class="u:flex {% if own %}u:justify-end{% else %}u:justify-start{% endif %}">
+                <div class="u:flex u:flex-col {% if own %}message_own u:justify-end{% else %}message_other u:justify-start{% endif %} {% if deleted %}deleted{% endif %}">
                     {{ message.message|purify('custom')|url_update }}
-                    <small class="u-flex {% if own %}u-justify-end{% else %}u-justify-start{% endif %} u-text-10 text-muted u-m-0">
+                    <small class="u:flex {% if own %}u:justify-end{% else %}u:justify-start{% endif %} u:text-10 text-muted u:m-0">
                         {%- if own -%}
-                            <div class="u-flex u-flex-col u-justify-center u-items-end">
+                            <div class="u:flex u:flex-col u:justify-center u:items-end">
                                 {{ message.created|format_time('short') }}
                             </div>
                         {%- else -%}
-                            <div class="u-flex u-flex-col u-justify-center">
+                            <div class="u:flex u:flex-col u:justify-center">
                                 {{ message.created|format_time('short') }}
                             </div>
                         {%- endif %}
@@ -58,32 +58,32 @@
             {% if message.Request %}
                 {% if message.Request.Arrival != currentArrival or message.Request.Departure != currentDeparture or message.Request.Flexible != currentFlexible or message.Request.NumberOfTravellers != currentTravelers or (loop.last == true and requestChanged == true) %}
                     {% set request = message.Request %}
-                    <div class="u-rounded-8 u-p-8 u-w-full u-mb-8 u-bg-gray-5">
-                        <h6 class="u-p-4">
+                    <div class="u:rounded-8 u:p-8 u:w-full u:mb-8 u:bg-gray-5">
+                        <h6 class="u:p-4">
                             {% if loop.last == true %}
                                 {{ 'original.request.details'|trans }}
                             {% else %}
                                 {{ 'former.request.details'|trans }}
                             {% endif %}
                         </h6>
-                        <div class="u-flex u-flex-col md:u-flex-row u-justify-between">
+                        <div class="u:flex u:flex-col u:md:flex-row u:justify-between">
                             <div>
-                                <div class="u-p-4">
-                                    <i class="fa fa-calendar u-mr-8"></i>
+                                <div class="u:p-4">
+                                    <i class="fa fa-calendar u:mr-8"></i>
                                     {{ request.arrival|format_date('full') }}
                                     -
                                     {{ request.departure|format_date('full') }}
                                 </div>
                             </div>
                             <div>
-                                <div class="u-p-4">
-                                    <i class="fa fa-users u-mr-4"></i>
+                                <div class="u:p-4">
+                                    <i class="fa fa-users u:mr-4"></i>
                                     {{ 'request.number.persons'|trans ({'numberpersons': request.numberOfTravellers}) }}
                                 </div>
                             </div>
                             <div>
-                                <div class="u-p-4">
-                                    <i class="fas fa-sync u-mr-8"></i>
+                                <div class="u:p-4">
+                                    <i class="fas fa-sync u:mr-8"></i>
                                     {% if request.flexible %}
                                         {{ 'request.flexible.with.arrival.departure'|trans }}
                                     {% else %}

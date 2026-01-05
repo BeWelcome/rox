@@ -8,6 +8,7 @@ import {
     BlockQuote,
     EasyImage,
     Image,
+    ImageBlock,
     ImageCaption,
     ImageStyle,
     ImageToolbar,
@@ -57,11 +58,11 @@ for (let i = 0; i < mentions.length; i++) {
     feed.push('@' + mentions.item(i).value);
 }
 
-let allEditors = document.querySelectorAll('.editor');
+let allEditors = document.querySelectorAll('.js-ckeditor-images, .js-ckeditor-no-images');
 for (let i = 0; i < allEditors.length; ++i) {
-    ClassicEditor.create(allEditors[i], {
-        licenseKey: 'GPL',
-        plugins: [
+    const allowImageUpload = allEditors[i].classList.contains('js-ckeditor-images');
+    console.log(allowImageUpload);
+    let plugins = [
             Autosave,
             PendingActions,
             Essentials,
@@ -70,12 +71,6 @@ for (let i = 0; i < allEditors.length; ++i) {
             Italic,
             HorizontalLine,
             BlockQuote,
-            Image,
-            LinkImage,
-            ImageCaption,
-            ImageStyle,
-            ImageToolbar,
-            EasyImage,
             Link,
             List,
             Mention,
@@ -83,40 +78,50 @@ for (let i = 0; i < allEditors.length; ++i) {
             CKFinderUploadAdapter,
             SpecialCharacters,
             SpecialCharactersEssentials,
-            SpecialCharactersTextExtended,
+//            SpecialCharactersTextExtended,
+        ];
+    if (allowImageUpload) {
+        console.log(plugins)
+        plugins = plugins.concat([
+            Image,
+            EasyImage,
+            ImageCaption,
+            ImageStyle,
+            ImageToolbar,
+            ImageBlock,
+            LinkImage,
             ImageUpload,
             CloudServices
-        ],
-        ckfinder: {
-            uploadUrl: uploadUrl
-        },
+        ]);
+        console.log(plugins)
+    }
+    let toolbar = [
+        'bold',
+        'underline',
+        'italic',
+        '|',
+        'link',
+        'bulletedList',
+        'numberedList',
+        'specialCharacters',
+        '|',
+        'horizontalLine',
+        '|',
+        ];
+    if (allowImageUpload) {
+        toolbar = toolbar.concat(['imageUpload']);
+    }
+    toolbar = toolbar.concat([
+        'blockQuote',
+        '|',
+        'undo',
+        'redo',
+    ]);
+    let config = {
+        licenseKey: 'GPL',
+        plugins: plugins,
         // So is the rest of the default configuration.
-        toolbar: [
-            'bold',
-            'underline',
-            'italic',
-            '|',
-            'link',
-            'bulletedList',
-            'numberedList',
-            'specialCharacters',
-            '|',
-            'horizontalLine',
-            '|',
-            'imageUpload',
-            'blockQuote',
-            '|',
-            'undo',
-            'redo'
-        ],
-        image: {
-            toolbar: [
-                'imageTextAlternative',
-                '|',
-                'toggleImageCaption',
-                'linkImage'
-            ]
-        },
+        toolbar: toolbar,
         language: document.documentElement.lang,
         translations: translations,
         mention: {
@@ -132,7 +137,22 @@ for (let i = 0; i < allEditors.length; ++i) {
                 return saveData( editor.getData() );
             }
         }
-    } )
+    }
+    if (allowImageUpload) {
+        config.ckFinder = {
+            uploadUrl: uploadUrl
+        };
+        config.image = {
+            toolbar: [
+                'imageTextAlternative',
+                '|',
+                'toggleImageCaption',
+                'linkImage'
+            ]
+        };
+    }
+    console.log(config);
+    ClassicEditor.create(allEditors[i], config )
         .then( editor => {
             const form = editor.sourceElement.form;
             registerSubmitHandler(form);

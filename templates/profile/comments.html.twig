@@ -2,7 +2,7 @@
 
 {% block page_content %}
     {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
-        <div class="u-w-full u-mb-8">{{ 'commentguidlineslink'|trans|raw }}</div>
+        <div class="u:w-full u:mb-8">{{ 'commentguidlineslink'|trans|raw }}</div>
     {% endif %}
     {% for comment in comments %}
         {% set commentToVisible = (comment['to'] is defined) ? (comment['to'].showCondition(app.user) > 0) : false %}

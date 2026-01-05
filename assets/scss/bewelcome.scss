@@ -2,11 +2,12 @@
 
 @import "mixins";
 
-@import "@fontsource/lato";
 @import "@fontsource/signika";
 @import "@fontsource/signika/300.css";
 @import "@fontsource/signika/700.css";
 @import "toastify-js/src/toastify.css";
+
+@import "./latofonts.css";
 
 // Core variables and mixins
 @import "custom";
@@ -49,26 +50,26 @@ $font-family-bold: Signika;
 @import "daterangepicker.scss";
 
 .badge-warning {
-    background-color: white;
-    color: $brand-primary;
+  background-color: white;
+  color: $brand-primary;
 }
 
 .map {
 }
 
-.username{
+.username {
   line-height: 1.1;
   word-wrap: break-word;
 }
 
 // This is actually defined in content_minimal but that file is not imported
 .unread {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 // Fix for location input appearing behind map on search member page
 .ui-front {
-    z-index: 2000!important;
+  z-index: 2000 !important;
 }
 
 .ck.ck-content blockquote, blockquote {
@@ -86,17 +87,17 @@ $font-family-bold: Signika;
   }
 }
 
-.leaflet-popup-content-wrapper{
+.leaflet-popup-content-wrapper {
   border-radius: 0.2rem;
 }
 
-.divlink  {
+.divlink {
   color: black;
   display: block;
   width: 100%;
   height: 100%;
 
-  .p{
+  .p {
     margin-bottom: 0.5rem !important;
   }
 }
@@ -171,7 +172,7 @@ a.active .metric .value {
 }
 
 #editProfileTab .nav-tabs {
-  display:none;
+  display: none;
 }
 
 @include media-breakpoint-up(md) {
@@ -184,15 +185,15 @@ a.active .metric .value {
   }
 
   #editProfileTab .card .card-header {
-    display:none;
+    display: none;
   }
 
-  #editProfileTab .card .collapse{
-    display:block;
+  #editProfileTab .card .collapse {
+    display: block;
   }
 }
 
-@include media-breakpoint-down(md){
+@include media-breakpoint-down(md) {
   #editProfileTab .tab-pane {
     display: block !important;
     opacity: 1;
@@ -236,11 +237,11 @@ a.active .metric .value {
 
 /* styles for the accommodation checkboxes */
 .checked {
-   border-color: #f37000 !important;
-   border-radius: 2px;
-   background-color: #f37000 !important;
-   outline: 0 !important;
-   box-shadow: 0 0 0 0.2rem rgba(243, 112, 0, 1) !important;
+  border-color: #f37000 !important;
+  border-radius: 2px;
+  background-color: #f37000 !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 0.2rem rgba(243, 112, 0, 1) !important;
 }
 
 .not_checked {
@@ -275,7 +276,7 @@ figure > figcaption {
 
 // Masonry
 .grid-item {
-  width:100%;
+  width: 100%;
 }
 
 .grid-item-content img {
@@ -436,7 +437,7 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 
 .translated-text {
   min-height: 200px;
-  max-height:300px;
+  max-height: 300px;
   overflow-y: scroll;
   background-color: #eee;
   border: 1px solid black;
@@ -477,7 +478,7 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
   display: block;
 }
 
-.dropdown-submenu.show>.dropdown-menu.show{
+.dropdown-submenu.show > .dropdown-menu.show {
   margin-top: 0;
   margin-left: auto;
   transform: none !important;
@@ -511,8 +512,7 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
   margin: auto;
 }
 
-#hamburger_collapse #login_signup
-{
+#hamburger_collapse #login_signup {
   display: none;
 }
 
@@ -539,41 +539,43 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 }
 
 .wrapper-nav {
-  position:relative;
-  margin:0 auto;
-  overflow:hidden;
-  padding:5px;
-  height:36px;
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 5px;
+  height: 36px;
 }
 
 .list {
-  position:absolute;
-  left:0;
-  top:0;
-  min-width:3500px;
-  margin-top:0;
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 3500px;
+  margin-top: 0;
 }
 
-.list li{
-  display:table-cell;
-  position:relative;
-  text-align:center;
-  cursor:grab;
-  color:#efefef;
-  vertical-align:middle;
+.list li {
+  display: table-cell;
+  position: relative;
+  text-align: center;
+  cursor: grab;
+  color: #efefef;
+  vertical-align: middle;
 }
 
 .scroller {
-  text-align:center;
-  cursor:pointer;
-  display:none;
-  padding:5px;
-  white-space:nowrap;
-  vertical-align:middle;
-  background-color:transparent;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+  padding: 5px;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-color: transparent;
 }
 
-.pointer {cursor: pointer;}
+.pointer {
+  cursor: pointer;
+}
 
 .o-form-group, .o-form-group-sm {
   margin-bottom: 8px;
@@ -602,4 +604,8 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 
 .vc {
   z-index: 100;
+}
+
+.u\:hidden\! {
+  display: none !important;
 }

@@ -1,0 +1,2029 @@
+App\Entity\Language:
+    language_aa:
+        Name: 'Afaraf '
+        ShortCode: 'aa'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ab:
+        Name: 'Аҧсуа '
+        ShortCode: 'ab'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ads:
+        Name: 'Adamorobe Sign Language'
+        ShortCode: 'ads'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ae:
+        Name: 'avesta '
+        ShortCode: 'ae'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_aed:
+        Name: 'Argentine Sign Language'
+        ShortCode: 'aed'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_aen:
+        Name: 'Armenian Sign Language'
+        ShortCode: 'aen'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_af:
+        Name: 'Afrikaans '
+        ShortCode: 'af'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_afg:
+        Name: 'Afghan Sign Language'
+        ShortCode: 'afg'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_aii:
+        Name: 'ܣܘܪܝܬ'
+        ShortCode: 'aii'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ak:
+        Name: 'Akan '
+        ShortCode: 'ak'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_am:
+        Name: 'አማርኛ '
+        ShortCode: 'am'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_an:
+        Name: 'Aragonés '
+        ShortCode: 'an'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ar:
+        Name: 'العربية '
+        ShortCode: 'ar'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_as:
+        Name: 'অসমীয়া '
+        ShortCode: 'as'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ase:
+        Name: 'American Sign Language'
+        ShortCode: 'ase'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_asf:
+        Name: 'Australian Sign Language'
+        ShortCode: 'asf'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_asp:
+        Name: 'Algerian Sign Language'
+        ShortCode: 'asp'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_asq:
+        Name: 'Austrian Sign Language'
+        ShortCode: 'asq'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_asw:
+        Name: 'Australian Aborigines Sign Language'
+        ShortCode: 'asw'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_av:
+        Name: 'авар мацӀ; магӀарул мацӀ '
+        ShortCode: 'av'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ay:
+        Name: 'aymar aru '
+        ShortCode: 'ay'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_az:
+        Name: 'azərbaycan dili '
+        ShortCode: 'az'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ba:
+        Name: 'башҡорт теле '
+        ShortCode: 'ba'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_be:
+        Name: 'Беларуская '
+        ShortCode: 'be'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ber:
+        Name: 'Tamaziɣt'
+        ShortCode: 'ber'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_bfi:
+        Name: 'British Sign Language'
+        ShortCode: 'bfi'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_bfk:
+        Name: 'Ban Khor Sign Language'
+        ShortCode: 'bfk'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_bg:
+        Name: 'Български'
+        ShortCode: 'bg'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_bh:
+        Name: 'भोजपुरी '
+        ShortCode: 'bh'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_bi:
+        Name: 'Bislama '
+        ShortCode: 'bi'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_bm:
+        Name: 'bamanankan '
+        ShortCode: 'bm'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_bn:
+        Name: 'বাংলা '
+        ShortCode: 'bn'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_bo:
+        Name: 'བོད་ཡིག '
+        ShortCode: 'bo'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_bog:
+        Name: 'Bamako Sign Language'
+        ShortCode: 'bog'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_bqn:
+        Name: 'Bulgarian Sign Language'
+        ShortCode: 'bqn'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_bqy:
+        Name: 'Bengkala Sign Language'
+        ShortCode: 'bqy'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_br:
+        Name: 'brezhoneg '
+        ShortCode: 'br'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_bs:
+        Name: 'bosanski jezik '
+        ShortCode: 'bs'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_bvl:
+        Name: 'Bolivian Sign Language'
+        ShortCode: 'bvl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_bzs:
+        Name: 'Brazilian Sign Language'
+        ShortCode: 'bzs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ca:
+        Name: 'Català'
+        ShortCode: 'ca'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_cds:
+        Name: 'Chadian Sign Language'
+        ShortCode: 'cds'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ce:
+        Name: 'нохчийн мотт '
+        ShortCode: 'ce'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ch:
+        Name: 'Chamoru '
+        ShortCode: 'ch'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_cmn:
+        Name: '国语/普通话'
+        ShortCode: 'cmn'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_co:
+        Name: 'corsu; lingua corsa '
+        ShortCode: 'co'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_cr:
+        Name: 'ᓀᐦᐃᔭᐍᐏᐣ '
+        ShortCode: 'cr'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_cs:
+        Name: 'čeština'
+        ShortCode: 'cs'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_csc:
+        Name: 'Catalan Sign Language'
+        ShortCode: 'csc'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_csd:
+        Name: 'Chiangmai Sign Language'
+        ShortCode: 'csd'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_cse:
+        Name: 'Czech Sign Language'
+        ShortCode: 'cse'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_csf:
+        Name: 'Cuba Sign Language'
+        ShortCode: 'csf'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_csg:
+        Name: 'Chilean Sign Language'
+        ShortCode: 'csg'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_csl:
+        Name: 'Chinese Sign Language'
+        ShortCode: 'csl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_csn:
+        Name: 'Colombian Sign Language'
+        ShortCode: 'csn'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_csq:
+        Name: 'Croatia Sign Language'
+        ShortCode: 'csq'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_csr:
+        Name: 'Costa Rican Sign Language'
+        ShortCode: 'csr'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_cu:
+        Name: 'ѩзыкъ словѣньскъ '
+        ShortCode: 'cu'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_cv:
+        Name: 'чӑваш чӗлхи '
+        ShortCode: 'cv'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_cy:
+        Name: 'Cymraeg '
+        ShortCode: 'cy'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_da:
+        Name: 'dansk'
+        ShortCode: 'da'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_de:
+        Name: 'Deutsch'
+        ShortCode: 'de'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_doq:
+        Name: 'Dominican Sign Language'
+        ShortCode: 'doq'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_dse:
+        Name: 'Dutch Sign Language'
+        ShortCode: 'dse'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_dsl:
+        Name: 'Danish Sign Language'
+        ShortCode: 'dsl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_dv:
+        Name: 'ދިވެހި '
+        ShortCode: 'dv'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_dz:
+        Name: 'རྫོང་ཁ '
+        ShortCode: 'dz'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ecs:
+        Name: 'Ecuadorian Sign Language'
+        ShortCode: 'ecs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ee:
+        Name: 'Eʋegbe'
+        ShortCode: 'ee'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_el:
+        Name: 'Ελληνικά'
+        ShortCode: 'el'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_en:
+        Name: 'English'
+        ShortCode: 'en'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_eo:
+        Name: 'Esperanto'
+        ShortCode: 'eo'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_es:
+        Name: 'español'
+        ShortCode: 'es'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_esl:
+        Name: 'Egypt Sign Language'
+        ShortCode: 'esl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_esn:
+        Name: 'Salvadoran Sign Language'
+        ShortCode: 'esn'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_eso:
+        Name: 'Estonian Sign Language'
+        ShortCode: 'eso'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_et:
+        Name: 'Eesti keel'
+        ShortCode: 'et'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_eth:
+        Name: 'Ethiopian Sign Language'
+        ShortCode: 'eth'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_eu:
+        Name: 'euskara'
+        ShortCode: 'eu'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_fa:
+        Name: 'فارسی '
+        ShortCode: 'fa'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_fcs:
+        Name: 'Quebec Sign Language'
+        ShortCode: 'fcs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ff:
+        Name: 'Fulfulde '
+        ShortCode: 'ff'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_fi:
+        Name: 'suomi'
+        ShortCode: 'fi'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_fil:
+        Name: 'Filipino'
+        ShortCode: 'fil'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_fj:
+        Name: 'vosa Vakaviti '
+        ShortCode: 'fj'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_fo:
+        Name: 'Føroyskt '
+        ShortCode: 'fo'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_fr:
+        Name: 'français'
+        ShortCode: 'fr'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_fse:
+        Name: 'Finnish Sign Language'
+        ShortCode: 'fse'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_fsl:
+        Name: 'French Sign Language'
+        ShortCode: 'fsl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_fss:
+        Name: 'Finland-Swedish Sign Language'
+        ShortCode: 'fss'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_fy:
+        Name: 'Frysk '
+        ShortCode: 'fy'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ga:
+        Name: 'Gaeilge '
+        ShortCode: 'ga'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_gd:
+        Name: 'Gàidhlig '
+        ShortCode: 'gd'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_gl:
+        Name: 'Galego '
+        ShortCode: 'gl'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_gn:
+        Name: 'Avañe\''ẽ '
+        ShortCode: 'gn'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_gse:
+        Name: 'Ghanaian Sign Language'
+        ShortCode: 'gse'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_gsg:
+        Name: 'German Sign Language'
+        ShortCode: 'gsg'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_gsm:
+        Name: 'Guatemalan Sign Language'
+        ShortCode: 'gsm'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_gss:
+        Name: 'Greek Sign Language'
+        ShortCode: 'gss'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_gsw:
+        Name: 'Schwizerdütsch'
+        ShortCode: 'gsw'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_gu:
+        Name: 'ગુજરાતી '
+        ShortCode: 'gu'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_gus:
+        Name: 'Guinean Sign Language'
+        ShortCode: 'gus'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_gv:
+        Name: 'Gaelg; Gailck '
+        ShortCode: 'gv'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ha:
+        Name: 'هَوُسَ '
+        ShortCode: 'ha'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_hab:
+        Name: 'Hanoi Sign Language'
+        ShortCode: 'hab'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_haf:
+        Name: 'Haiphong Sign Language'
+        ShortCode: 'haf'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_hak:
+        Name: '客家話'
+        ShortCode: 'hak'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_hds:
+        Name: 'Honduras Sign Language'
+        ShortCode: 'hds'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_he:
+        Name: 'עברית'
+        ShortCode: 'he'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_hi:
+        Name: 'हिन्दी; हिंदी '
+        ShortCode: 'hi'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_hks:
+        Name: 'Hong Kong Sign Language'
+        ShortCode: 'hks'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ho:
+        Name: 'Hiri Motu '
+        ShortCode: 'ho'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_hos:
+        Name: 'Ho Chi Minh City Sign Language'
+        ShortCode: 'hos'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_hps:
+        Name: 'Hawai\''i Pidgin Sign Language'
+        ShortCode: 'hps'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_hr:
+        Name: 'Hrvatski '
+        ShortCode: 'hr'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_hsh:
+        Name: 'Hungarian Sign Language'
+        ShortCode: 'hsh'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_hsl:
+        Name: 'Hausa Sign Language'
+        ShortCode: 'hsl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ht:
+        Name: 'Kreyòl ayisyen '
+        ShortCode: 'ht'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_hu:
+        Name: 'magyar'
+        ShortCode: 'hu'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_hy:
+        Name: 'Հայերեն '
+        ShortCode: 'hy'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_hz:
+        Name: 'Otjiherero '
+        ShortCode: 'hz'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_icl:
+        Name: 'Icelandic Sign Language'
+        ShortCode: 'icl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_id:
+        Name: 'Indonesian'
+        ShortCode: 'id'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ig:
+        Name: 'Igbo '
+        ShortCode: 'ig'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ii:
+        Name: 'ꆇꉙ '
+        ShortCode: 'ii'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ik:
+        Name: 'Iñupiaq; Iñupiatun '
+        ShortCode: 'ik'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ils:
+        Name: 'International Sign Language'
+        ShortCode: 'ils'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_inl:
+        Name: 'Indonesian Sign Language'
+        ShortCode: 'inl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ins:
+        Name: 'Indian Sign Language'
+        ShortCode: 'ins'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_io:
+        Name: 'Ido '
+        ShortCode: 'io'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_is:
+        Name: 'Íslenska '
+        ShortCode: 'is'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ise:
+        Name: 'Italian Sign Language'
+        ShortCode: 'ise'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_isg:
+        Name: 'Irish Sign Language'
+        ShortCode: 'isg'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_isr:
+        Name: 'Israeli Sign Language'
+        ShortCode: 'isr'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_it:
+        Name: 'italiano'
+        ShortCode: 'it'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_iu:
+        Name: 'ᐃᓄᒃᑎᑐᑦ '
+        ShortCode: 'iu'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ja:
+        Name: '日本語'
+        ShortCode: 'ja'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_jcs:
+        Name: 'Jamaican Country Sign Language'
+        ShortCode: 'jcs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_jhs:
+        Name: 'Jhankot Sign Language'
+        ShortCode: 'jhs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_jls:
+        Name: 'Jamaican Sign Language'
+        ShortCode: 'jls'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_jos:
+        Name: 'Jordanian Sign Language'
+        ShortCode: 'jos'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_jsl:
+        Name: 'Japanese Sign Language'
+        ShortCode: 'jsl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_jus:
+        Name: 'Jumla Sign Language'
+        ShortCode: 'jus'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_jv:
+        Name: 'basa Jawa '
+        ShortCode: 'jv'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ka:
+        Name: 'georgian'
+        ShortCode: 'ka'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kbp:
+        Name: 'Kabyè'
+        ShortCode: 'kbp'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kg:
+        Name: 'KiKongo '
+        ShortCode: 'kg'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kgi:
+        Name: 'Selangor Sign Language'
+        ShortCode: 'kgi'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ki:
+        Name: 'Gĩkũyũ '
+        ShortCode: 'ki'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kj:
+        Name: 'Kuanyama '
+        ShortCode: 'kj'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kk:
+        Name: 'Қазақ тілі '
+        ShortCode: 'kk'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kl:
+        Name: 'kalaallisut; kalaallit oqaasii '
+        ShortCode: 'kl'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_km:
+        Name: 'ភាសាខ្មែរ '
+        ShortCode: 'km'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kn:
+        Name: 'ಕನ್ನಡ '
+        ShortCode: 'kn'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ko:
+        Name: '한국어; 조선어'
+        ShortCode: 'ko'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kr:
+        Name: 'Kanuri '
+        ShortCode: 'kr'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ks:
+        Name: 'कश्मीरी; كشميري‎ '
+        ShortCode: 'ks'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ku:
+        Name: 'Kurdî; كوردی‎ '
+        ShortCode: 'ku'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kv:
+        Name: 'коми кыв '
+        ShortCode: 'kv'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_kvk:
+        Name: 'Korean Sign Language'
+        ShortCode: 'kvk'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_kw:
+        Name: 'Kernewek '
+        ShortCode: 'kw'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ky:
+        Name: 'кыргыз тили '
+        ShortCode: 'ky'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_la:
+        Name: 'latine; lingua latina '
+        ShortCode: 'la'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_lb:
+        Name: 'Lëtzebuergesch '
+        ShortCode: 'lb'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_lbs:
+        Name: 'Libyan Sign Language'
+        ShortCode: 'lbs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_lep:
+        Name: 'Lepcha'
+        ShortCode: 'lep'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_lg:
+        Name: 'Luganda '
+        ShortCode: 'lg'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_li:
+        Name: 'Limburgs '
+        ShortCode: 'li'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_lls:
+        Name: 'Lithuanian Sign Language'
+        ShortCode: 'lls'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ln:
+        Name: 'Lingála '
+        ShortCode: 'ln'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_lo:
+        Name: 'ພາສາລາວ '
+        ShortCode: 'lo'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_lsg:
+        Name: 'Lyons Sign Language'
+        ShortCode: 'lsg'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_lsl:
+        Name: 'Latvian Sign Language'
+        ShortCode: 'lsl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_lso:
+        Name: 'Laos Sign Language'
+        ShortCode: 'lso'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_lsp:
+        Name: 'Panamanian Sign Language'
+        ShortCode: 'lsp'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_lst:
+        Name: 'Trinidad and Tobago Sign Language'
+        ShortCode: 'lst'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_lsy:
+        Name: 'Mauritian Sign Language'
+        ShortCode: 'lsy'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_lt:
+        Name: 'lietuvių'
+        ShortCode: 'lt'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_lu:
+        Name: 'Tshiluba'
+        ShortCode: 'lu'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_lv:
+        Name: 'latviešu'
+        ShortCode: 'lv'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_mdl:
+        Name: 'Maltese Sign Language'
+        ShortCode: 'mdl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_mfs:
+        Name: 'Mexican Sign Language'
+        ShortCode: 'mfs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_mg:
+        Name: 'Malagasy fiteny '
+        ShortCode: 'mg'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_mh:
+        Name: 'Kajin M̧ajeļ '
+        ShortCode: 'mh'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_mi:
+        Name: 'te reo Māori '
+        ShortCode: 'mi'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_mk:
+        Name: 'англиски'
+        ShortCode: 'mk'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ml:
+        Name: 'മലയാളം '
+        ShortCode: 'ml'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_mn:
+        Name: 'Монгол '
+        ShortCode: 'mn'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_moe:
+        Name: 'Innu'
+        ShortCode: 'moe'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 0
+    language_mos:
+        Name: 'Mõõré'
+        ShortCode: 'mos'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_mr:
+        Name: 'मराठी '
+        ShortCode: 'mr'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_mre:
+        Name: 'Martha\''s Vineyard Sign Language'
+        ShortCode: 'mre'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ms:
+        Name: 'Bahasa Melayu'
+        ShortCode: 'ms'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_msd:
+        Name: 'Yucatec Maya Sign Language'
+        ShortCode: 'msd'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_msr:
+        Name: 'Mongolian Sign Language'
+        ShortCode: 'msr'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_mt:
+        Name: 'Malti '
+        ShortCode: 'mt'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_my:
+        Name: 'ဗမာစာ '
+        ShortCode: 'my'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_mzc:
+        Name: 'Madagascar Sign Language'
+        ShortCode: 'mzc'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_mzg:
+        Name: 'Monastic Sign Language'
+        ShortCode: 'mzg'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_mzy:
+        Name: 'Mozambican Sign Language'
+        ShortCode: 'mzy'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_na:
+        Name: 'Ekakairũ Naoero '
+        ShortCode: 'na'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_nb:
+        Name: 'Norsk bokmål '
+        ShortCode: 'nb'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_nbs:
+        Name: 'Namibian Sign Language'
+        ShortCode: 'nbs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ncs:
+        Name: 'Nicaraguan Sign Language'
+        ShortCode: 'ncs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_nd:
+        Name: 'isiNdebele '
+        ShortCode: 'nd'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ne:
+        Name: 'नेपाली '
+        ShortCode: 'ne'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ng:
+        Name: 'Owambo '
+        ShortCode: 'ng'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_nl:
+        Name: 'Nederlands'
+        ShortCode: 'nl'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_no:
+        Name: 'norsk'
+        ShortCode: 'no'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_nr:
+        Name: 'isiNdebele '
+        ShortCode: 'nr'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_nsi:
+        Name: 'Nigerian Sign Language'
+        ShortCode: 'nsi'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_nsl:
+        Name: 'Norwegian Sign Language'
+        ShortCode: 'nsl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_nsp:
+        Name: 'Nepalese Sign Language'
+        ShortCode: 'nsp'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_nsr:
+        Name: 'Maritime Sign Language'
+        ShortCode: 'nsr'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_nv:
+        Name: 'Diné bizaad; Dinékʼehǰí '
+        ShortCode: 'nv'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ny:
+        Name: 'chiCheŵa; chinyanja '
+        ShortCode: 'ny'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_nzs:
+        Name: 'New Zealand Sign Language'
+        ShortCode: 'nzs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_oc:
+        Name: 'Occitan '
+        ShortCode: 'oc'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_oj:
+        Name: 'ᐊᓂᔑᓈᐯᒧᐎᓐ '
+        ShortCode: 'oj'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_okl:
+        Name: 'Old Kentish Sign Language'
+        ShortCode: 'okl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_om:
+        Name: 'Afaan Oromoo '
+        ShortCode: 'om'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_or:
+        Name: 'ଓଡ଼ିଆ '
+        ShortCode: 'or'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_os:
+        Name: 'Ирон æвзаг '
+        ShortCode: 'os'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_pa:
+        Name: 'ਪੰਜਾਬੀ; پنجابی‎ '
+        ShortCode: 'pa'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_pi:
+        Name: 'पाऴि '
+        ShortCode: 'pi'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_pks:
+        Name: 'Pakistan Sign Language'
+        ShortCode: 'pks'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_pl:
+        Name: 'Polski'
+        ShortCode: 'pl'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_prl:
+        Name: 'Peruvian Sign Language'
+        ShortCode: 'prl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_prz:
+        Name: 'Providencia Sign Language'
+        ShortCode: 'prz'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ps:
+        Name: 'پښتو '
+        ShortCode: 'ps'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_psc:
+        Name: 'Persian Sign Language'
+        ShortCode: 'psc'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_psd:
+        Name: 'Plains Indian Sign Language'
+        ShortCode: 'psd'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_psg:
+        Name: 'Penang Sign Language'
+        ShortCode: 'psg'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_psl:
+        Name: 'Puerto Rican Sign Language'
+        ShortCode: 'psl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_pso:
+        Name: 'Polish Sign Language'
+        ShortCode: 'pso'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_psp:
+        Name: 'Philippine Sign Language'
+        ShortCode: 'psp'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_psr:
+        Name: 'Portuguese Sign Language'
+        ShortCode: 'psr'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_pt:
+        Name: 'português'
+        ShortCode: 'pt'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_pt-BR:
+        Name: 'português (br)'
+        ShortCode: 'pt-BR'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_pys:
+        Name: 'Paraguayan Sign Language'
+        ShortCode: 'pys'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_qu:
+        Name: 'Runa Simi; Kichwa '
+        ShortCode: 'qu'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_rm:
+        Name: 'rumantsch grischun '
+        ShortCode: 'rm'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_rms:
+        Name: 'Romanian Sign Language'
+        ShortCode: 'rms'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_rn:
+        Name: 'kiRundi '
+        ShortCode: 'rn'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ro:
+        Name: 'română'
+        ShortCode: 'ro'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_rsi:
+        Name: 'Rennellese Sign Language'
+        ShortCode: 'rsi'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_rsl:
+        Name: 'Russian Sign Language'
+        ShortCode: 'rsl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ru:
+        Name: 'Русский'
+        ShortCode: 'ru'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_rw:
+        Name: 'Ikinyarwanda '
+        ShortCode: 'rw'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sa:
+        Name: 'संस्कृतम् '
+        ShortCode: 'sa'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sc:
+        Name: 'sardu '
+        ShortCode: 'sc'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_scn:
+        Name: 'sicilianu'
+        ShortCode: 'scn'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sco:
+        Name: 'Scots'
+        ShortCode: 'sco'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sd:
+        Name: 'सिन्धी; سنڌي، سندھی‎ '
+        ShortCode: 'sd'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sdl:
+        Name: 'Saudi Arabian Sign Language'
+        ShortCode: 'sdl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_se:
+        Name: 'Davvisámegiella'
+        ShortCode: 'se'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sfb:
+        Name: 'French Belgian Sign Language'
+        ShortCode: 'sfb'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_sfs:
+        Name: 'South African Sign Language'
+        ShortCode: 'sfs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_sg:
+        Name: 'yângâ tî sängö '
+        ShortCode: 'sg'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sgg:
+        Name: 'Swiss-German Sign Language'
+        ShortCode: 'sgg'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_sgx:
+        Name: 'Sierra Leone Sign Language'
+        ShortCode: 'sgx'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_si:
+        Name: 'සිංහල'
+        ShortCode: 'si'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sk:
+        Name: 'slovenčina '
+        ShortCode: 'sk'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sl:
+        Name: 'slovenščina'
+        ShortCode: 'sl'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_slf:
+        Name: 'Swiss-Italian Sign Language'
+        ShortCode: 'slf'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_sls:
+        Name: 'Singapore Sign Language'
+        ShortCode: 'sls'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_sm:
+        Name: 'gagana fa\''a Samoa '
+        ShortCode: 'sm'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sn:
+        Name: 'chiShona '
+        ShortCode: 'sn'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_so:
+        Name: 'Soomaaliga; af Soomaali '
+        ShortCode: 'so'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sq:
+        Name: 'Shqip '
+        ShortCode: 'sq'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sqs:
+        Name: 'Sri Lankan Sign Language'
+        ShortCode: 'sqs'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_sr:
+        Name: 'српски језик '
+        ShortCode: 'sr'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ss:
+        Name: 'SiSwati '
+        ShortCode: 'ss'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ssp:
+        Name: 'Spanish Sign Language'
+        ShortCode: 'ssp'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ssr:
+        Name: 'Swiss-French Sign Language'
+        ShortCode: 'ssr'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_st:
+        Name: 'Sesotho '
+        ShortCode: 'st'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_su:
+        Name: 'Basa Sunda '
+        ShortCode: 'su'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_sv:
+        Name: 'svenska'
+        ShortCode: 'sv'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_svk:
+        Name: 'Slovakian Sign Language'
+        ShortCode: 'svk'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_sw:
+        Name: 'Kiswahili '
+        ShortCode: 'sw'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_swl:
+        Name: 'Swedish Sign Language'
+        ShortCode: 'swl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_syy:
+        Name: 'Al-Sayyid Bedouin Sign Language'
+        ShortCode: 'syy'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ta:
+        Name: 'தமிழ் '
+        ShortCode: 'ta'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_taib1242:
+        Name: '臺語'
+        ShortCode: 'taib1242'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_te:
+        Name: 'తెలుగు '
+        ShortCode: 'te'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_tg:
+        Name: 'тоҷикӣ; toğikī; تاجیکی‎ '
+        ShortCode: 'tg'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_th:
+        Name: 'ไทย '
+        ShortCode: 'th'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ti:
+        Name: 'ትግርኛ '
+        ShortCode: 'ti'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_tk:
+        Name: 'Türkmen; Түркмен '
+        ShortCode: 'tk'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_tl:
+        Name: 'Tagalog '
+        ShortCode: 'tl'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_tn:
+        Name: 'Setswana '
+        ShortCode: 'tn'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_to:
+        Name: 'faka Tonga '
+        ShortCode: 'to'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_tpi:
+        Name: 'Tok Pisin'
+        ShortCode: 'tpi'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_tr:
+        Name: 'Türkçe'
+        ShortCode: 'tr'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ts:
+        Name: 'Xitsonga '
+        ShortCode: 'ts'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_tse:
+        Name: 'Tunisian Sign Language'
+        ShortCode: 'tse'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_tsm:
+        Name: 'Turkish Sign Language'
+        ShortCode: 'tsm'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_tsq:
+        Name: 'Thai Sign Language'
+        ShortCode: 'tsq'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_tss:
+        Name: 'Taiwan Sign Language'
+        ShortCode: 'tss'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_tsy:
+        Name: 'Tebul Sign Language'
+        ShortCode: 'tsy'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_tt:
+        Name: 'татарча; tatarça; تاتارچا‎ '
+        ShortCode: 'tt'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_tw:
+        Name: 'Twi '
+        ShortCode: 'tw'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ty:
+        Name: 'Reo Mā`ohi '
+        ShortCode: 'ty'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_tza:
+        Name: 'Tanzanian Sign Language'
+        ShortCode: 'tza'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ug:
+        Name: 'Uyƣurqə; ئۇيغۇرچە‎ '
+        ShortCode: 'ug'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ugn:
+        Name: 'Ugandan Sign Language'
+        ShortCode: 'ugn'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ugy:
+        Name: 'Uruguayan Sign Language'
+        ShortCode: 'ugy'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_uk:
+        Name: 'Українська '
+        ShortCode: 'uk'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ukl:
+        Name: 'Ukrainian Sign Language'
+        ShortCode: 'ukl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_uks:
+        Name: 'Urubú-Kaapor Sign Language'
+        ShortCode: 'uks'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_ur:
+        Name: 'اردو '
+        ShortCode: 'ur'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_uz:
+        Name: 'O\''zbek; Ўзбек; أۇزبېك‎ '
+        ShortCode: 'uz'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ve:
+        Name: 'Tshivenḓa '
+        ShortCode: 've'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_vgt:
+        Name: 'Flemish Sign Language'
+        ShortCode: 'vgt'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_vi:
+        Name: 'Tiếng Việt '
+        ShortCode: 'vi'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_vo:
+        Name: 'Volapük '
+        ShortCode: 'vo'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_vsi:
+        Name: 'Moldova Sign Language'
+        ShortCode: 'vsi'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_vsl:
+        Name: 'Venezuelan Sign Language'
+        ShortCode: 'vsl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_vsv:
+        Name: 'Valencian Sign Language'
+        ShortCode: 'vsv'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_wa:
+        Name: 'Walon '
+        ShortCode: 'wa'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_wo:
+        Name: 'Wollof '
+        ShortCode: 'wo'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_xh:
+        Name: 'isiXhosa '
+        ShortCode: 'xh'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_xki:
+        Name: 'Kenyan Sign Language'
+        ShortCode: 'xki'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_xml:
+        Name: 'Malaysian Sign Language'
+        ShortCode: 'xml'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_xms:
+        Name: 'Moroccan Sign Language'
+        ShortCode: 'xms'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_yds:
+        Name: 'Yiddish Sign Language'
+        ShortCode: 'yds'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_yi:
+        Name: 'ייִדיש '
+        ShortCode: 'yi'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_yo:
+        Name: 'Yorùbá '
+        ShortCode: 'yo'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_ysl:
+        Name: 'Yugoslavian Sign Language'
+        ShortCode: 'ysl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_yue:
+        Name: '粤语/广东话'
+        ShortCode: 'yue'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_za:
+        Name: 'Saɯ cueŋƅ; Saw cuengh '
+        ShortCode: 'za'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_zh-hans:
+        Name: '简体中文'
+        ShortCode: 'zh-hans'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 0
+        IsSignLanguage: 0
+    language_zh-hant:
+        Name: '繁體中文'
+        ShortCode: 'zh-hant'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 0
+        IsSignLanguage: 0
+    language_zh-min-nan:
+        Name: '闽南语'
+        ShortCode: 'zh-min-nan'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_zib:
+        Name: 'Zimbabwe Sign Language'
+        ShortCode: 'zib'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_zsl:
+        Name: 'Zambian Sign Language'
+        ShortCode: 'zsl'
+        IsWrittenLanguage: 0
+        IsSpokenLanguage: 0
+        IsSignLanguage: 1
+    language_zu:
+        Name: 'isiZulu '
+        ShortCode: 'zu'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0
+    language_zza:
+        Name: 'Zazaki'
+        ShortCode: 'zza'
+        IsWrittenLanguage: 1
+        IsSpokenLanguage: 1
+        IsSignLanguage: 0

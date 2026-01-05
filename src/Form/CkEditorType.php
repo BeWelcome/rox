@@ -16,6 +16,7 @@ class CkEditorType extends TextareaType
         parent::buildForm($builder, $options);
 
         $builder->setAttribute('async', $options['async']);
+        $builder->setAttribute('image_upload', $options['image_upload']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -23,9 +24,10 @@ class CkEditorType extends TextareaType
         $resolver
             ->setDefaults([
                 'attr' => [
-                    'class' => 'editor form-control',
+                    'class' => 'form-control',
                 ],
                 'async' => false,
+                'image_upload' => true,
                 'placeholder' => '',
                 'error_bubbling' => false,
             ])
@@ -38,6 +40,7 @@ class CkEditorType extends TextareaType
     {
         parent::buildView($view, $form, $options);
         $view->vars['async'] = $form->getConfig()->getAttribute('async');
+        $view->vars['image_upload'] = $form->getConfig()->getAttribute('image_upload');
     }
 
     #[Override]

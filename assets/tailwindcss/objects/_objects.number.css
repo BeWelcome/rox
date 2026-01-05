@@ -9,9 +9,9 @@
 .o-number {
   width: 24px;
   height: 24px;
-  background-color: theme('colors.gray-80');
+  background-color: var(--u-color-gray-80);
   border-radius: 100%;
-  color: theme('colors.white');
+  color: var(--u-color-white);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -37,8 +37,8 @@
  */
 
  .o-number--white {
-  background-color: theme('colors.white');
-  color: theme('colors.gray-70');
+  background-color: var(--u-color-white);
+  color: var(--u-color-gray-70);
 }
 
 

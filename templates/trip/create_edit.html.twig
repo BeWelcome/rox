@@ -23,8 +23,8 @@
         {% set name = widget.vars.full_name %}
     {% endif %}
     <div data-content="{{ name }}"
-         class="c-trips__info u-items-start">
-        <div class="u-w-full u-mb-8 md:u-width-auto md:u-mb-0">
+         class="c-trips__info u:items-start">
+        <div class="u:w-full u:mb-8 u:md:width-auto u:md:mb-0">
             <div class="auto-search-wrapper max-height loupe">
                 <input type="text" id="{{ form.location.fullname.vars.id}}" name="{{ form.location.fullname.vars.full_name }}"
                        class="o-input o-input--xl o-input--no-borders o-input--round-left o-input--translucid js-location-picker" autocomplete="off"
@@ -32,40 +32,40 @@
                        aria-label="{{ 'trip.leg.location'|trans }}"
                        {% if form.location.fullname.vars.value %}value="{{ form.location.fullname.vars.value }}"{% endif %}
                 >
-                <div class="u-block">{{ form_errors(form.location) }}{{ form_errors(form.location.fullname) }}{{ form_errors(form.location.geoname_id) }}</div>
+                <div class="u:block">{{ form_errors(form.location) }}{{ form_errors(form.location.fullname) }}{{ form_errors(form.location.geoname_id) }}</div>
             </div>
         </div>
-        <div class="u-w-full md:u-width-auto">
+        <div class="u:w-full u:md:width-auto">
             {% set attributes = {
-                'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid u-w-full duration js-duration',
+                'class': 'o-input--xl o-input--no-borders o-input--round-right o-input--translucid u:w-full duration js-duration',
                 'placeholder': 'trip.leg.duration'|trans,
                 'aria-label': 'trip.leg.duration'|trans,
             } %}
 
             {{ form_widget(form.duration, {'attr': attributes}) }}
-            <div class="u-block">{{ form_errors(form.duration) }}</div>
+            <div class="u:block">{{ form_errors(form.duration) }}</div>
         </div>
         {% if not form.location.fullname.vars.disabled %}
-        <button class="btn-remove js-btn-remove o-rounded o-rounded--l u-justify-self-center u-self-center c-trips__info-btn-grid"
+        <button class="btn-remove js-btn-remove o-rounded o-rounded--l u:justify-self-center u:self-center c-trips__info-btn-grid"
                 data-related="{{ name }}">
             <i class="fa fa-times"></i>
         </button>
         {% endif %}
-        <div class="u-flex u-flex-col md:u-flex-row md:u-mt-16 u-flex-wrap u-col-span-2">
-            <div class="u-mb-8 md:u-mr-24">
+        <div class="u:flex u:flex-col u:md:flex-row u:md:mt-16 u:flex-wrap u:col-span-2">
+            <div class="u:mb-8 u:md:mr-24">
                 {% set attributes = {
                     'class': 'o-checkbox--white o-checkbox--display'
                 } %}
 
                 {{ form_widget(form.options[0], {'attr': attributes }) }}
             </div>
-            <div class="u-mb-8 md:u-mr-24">
+            <div class="u:mb-8 u:md:mr-24">
                 {{ form_widget(form.options[1], {'attr': attributes }) }}
             </div>
-            <div class="u-mb-4 md:u-mr-24">
+            <div class="u:mb-4 u:md:mr-24">
                 {{ form_widget(form.options[2], {'attr': attributes }) }}
             </div>
-            <div class="md:u-mr-24">{{ form_errors(form.options) }}</div>
+            <div class="u:md:mr-24">{{ form_errors(form.options) }}</div>
         </div>
         {{ form_widget(form.location.name) }} {{ form_widget(form.location.geoname_id) }}
         {{ form_widget(form.location.latitude) }} {{ form_widget(form.location.longitude) }}
@@ -83,33 +83,33 @@
 
         {{ form_start(form, {'attr': {'autocomplete': 'off'} }) }}
         <div>
-            <div class="u-mb-24 u-relative">
-                {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl u-w-full', 'aria-label':'Title'}}) }}
-                <div class="u-block">{{ form_errors(form.summary) }}</div>
+            <div class="u:mb-24 u:relative">
+                {{ form_widget(form.summary, {'attr': { 'class': 'o-input--white o-input--no-border-on-hover o-input--white-xl u:w-full', 'aria-label':'Title'}}) }}
+                <div class="u:block">{{ form_errors(form.summary) }}</div>
             </div>
-            <div class="u-relative u-mb-8 md:u-mb-24">
+            <div class="u:relative u:mb-8 u:md:mb-24">
                 {{ form_widget(form.description, { 'attr': {  'class': 'o-input--white o-input--no-border-on-hover', 'rows': 5, 'aria-label':'Description' }}) }}
-                <div class="u-block">{{ form_errors(form.description) }}</div>
+                <div class="u:block">{{ form_errors(form.description) }}</div>
             </div>
-            <div class="u-flex u-flex-col md:u-grid md:u-grid-cols-3">
-                <div class="u-flex u-flex-col md:u-flex-row u-col-span-2 u-mb-24">
+            <div class="u:flex u:flex-col u:md:grid u:md:grid-cols-3">
+                <div class="u:flex u:flex-col u:md:flex-row u:col-span-2 u:mb-24">
                     <div
-                        class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center md:u-mr-24 u-mb-8 md:u-mb-0 u-flex-1">
-                        {{ form_label(form.countoftravellers, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
-                        <div class="u-relative u-w-full">
-                            {{ form_widget(form.countoftravellers, {'attr': { 'class': 'o-input--select o-input--select-short md:u-w-auto'}}) }}
+                        class="u:flex u:flex-col u:md:flex-row u:items-start u:md:items-center u:md:mr-24 u:mb-8 u:md:mb-0 u:flex-1">
+                        {{ form_label(form.countoftravellers, null, {'label_attr': { 'class': 'o-label o-label--white u:mt-8 u:mr-8 u:flex u:items-center u:whitespace-nowrap'}}) }}
+                        <div class="u:relative u:w-full">
+                            {{ form_widget(form.countoftravellers, {'attr': { 'class': 'o-input--select o-input--select-short u:md:w-auto'}}) }}
                         </div>
                     </div>
-                    <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center  md:u-mr-24 u-mb-16 md:u-mb-0 u-flex-1">
-                        {{ form_label(form.additionalinfo, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
-                        <div class="u-relative u-w-full">
-                            {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-short md:u-w-auto'}}) }}
+                    <div class="u:flex u:flex-col u:md:flex-row u:items-start u:md:items-center  u:md:mr-24 u:mb-16 u:md:mb-0 u:flex-1">
+                        {{ form_label(form.additionalinfo, null, {'label_attr': { 'class': 'o-label o-label--white u:mt-8 u:mr-8 u:flex u:items-center u:whitespace-nowrap'}}) }}
+                        <div class="u:relative u:w-full">
+                            {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-short u:md:w-auto'}}) }}
                         </div>
                     </div>
-                    <div class="u-flex u-flex-col md:u-flex-row u-items-start md:u-items-center u-mb-16 md:u-mb-0 u-flex-1">
-                        {{ form_label(form.invitationradius, null, {'label_attr': { 'class': 'o-label o-label--white u-mt-8 u-mr-8 u-flex u-items-center u-whitespace-nowrap'}}) }}
-                        <div class="u-relative u-w-full">
-                            {{ form_widget(form.invitationradius, {'attr': { 'class': 'o-input--select o-input--select-short md:u-w-auto'}}) }}
+                    <div class="u:flex u:flex-col u:md:flex-row u:items-start u:md:items-center u:mb-16 u:md:mb-0 u:flex-1">
+                        {{ form_label(form.invitationradius, null, {'label_attr': { 'class': 'o-label o-label--white u:mt-8 u:mr-8 u:flex u:items-center u:whitespace-nowrap'}}) }}
+                        <div class="u:relative u:w-full">
+                            {{ form_widget(form.invitationradius, {'attr': { 'class': 'o-input--select o-input--select-short u:md:w-auto'}}) }}
                         </div>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                     data-target="subtrips-list">
                 <i class="fa fa-plus"></i>
             </button>
-            <div class="u-flex u-justify-end u-mt-48 md:u-mt-0">
+            <div class="u:flex u:justify-end u:mt-48 u:md:mt-0">
                 <button class="o-button"
                        type="submit"
                        value="{{ button_text|trans|capitalize }}">{{ button_text|trans|capitalize }}</button>

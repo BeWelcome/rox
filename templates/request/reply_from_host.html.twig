@@ -23,7 +23,7 @@
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 
-    <div class="u-flex u-flex-col">
+    <div class="u:flex u:flex-col">
         {{ form_label(form.message) }}
         {{ form_widget(form.message) }}
         {{ form_errors(form.message) }}
@@ -52,19 +52,19 @@
         {{ form_row(form.request.departure) }}
         {% do form.request.setRendered %}
 
-        <div class="u-flex u-justify-end u-mt-8 u-mb-16">
+        <div class="u:flex u:justify-end u:mt-8 u:mb-16">
             {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
-                {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+                {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button u:ml-4'}}) }}
             {% else %}
                 {% do form.accept.setRendered %}
             {% endif %}
             {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
-                {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+                {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button u:ml-4'}}) }}
             {% else %}
                 {% do form.tentatively.setRendered %}
             {% endif %}
             {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
-            <div class="btn-group u-ml-4">
+            <div class="btn-group u:ml-4">
                 <button type="submit" id="{{ form.decline.vars.id }}" name="{{ form.decline.vars.full_name }}" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
                     {{ form.decline.vars.label|trans }}
                 </button>
@@ -77,7 +77,7 @@
             </div>
             {% endif %}
             {% do form.decline.setRendered %}
-            {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button u-ml-4'}}) }}
+            {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button u:ml-4'}}) }}
         </div>
     </div>
 

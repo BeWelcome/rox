@@ -1,0 +1,51 @@
+{% extends 'profile/profile.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('roxeditor') }}
+{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ encore_entry_link_tags('roxeditor') }}
+{% endblock %}
+
+{% block page_content %}
+  <div class="u:w-full">
+    <div class="card">
+      <div class="card-header u:flex u:flex-row u:justify-between">
+        {{ 'profilesummary'|trans({}, "messages", language)|raw }}
+      </div>
+      <div class="card-block p-2">
+        <div class="card-text">
+          {{ form_start(form) }}
+          {{ form_label(form.hobbies) }}
+          {{ form_widget(form.hobbies) }}
+          {{ macros.field_english(language, 'Hobbies', member.translations) }}
+
+          {{ form_label(form.books) }}
+          {{ form_widget(form.books) }}
+          {{ macros.field_english(language, 'Books', member.translations) }}
+
+          {{ form_label(form.music) }}
+          {{ form_widget(form.music) }}
+          {{ macros.field_english(language, 'Music', member.translations) }}
+
+          {{ form_label(form.movies) }}
+          {{ form_widget(form.movies) }}
+          {{ macros.field_english(language, 'Movies', member.translations) }}
+
+          {{ form_label(form.organizations) }}
+          {{ form_widget(form.organizations) }}
+          {{ macros.field_english(language, 'Organizations', member.translations) }}
+
+          <div class="u:flex u:justify-end u:my-8">
+            <input type="submit" class="o-button" value="{{ 'profile.update'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}">
+          </div>
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock page_content %}

@@ -62,8 +62,8 @@
 <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary bordert-1 borderb-1">
     <div class="container-lg">
         <a class="navbar-brand" href="{{ url('homepage') }}">
-            <div class="u-flex u-flex-row u-h-[40px] u-w-[220px]">
-                <img class="u-pl-4 md:u-pl-8 md:u-pr-8" src="{{ asset('images/logo_icon_2025.svg') }}" alt="BeWelcome logo"/>
+            <div class="u:flex u:flex-row u:h-[40px] u:w-[220px]">
+                <img class="u:pl-4 u:md:pl-8 u:md:pr-8" src="{{ asset('images/logo_icon_2025.svg') }}" alt="BeWelcome logo"/>
                 <img class="" src="{{ asset('images/logo_text_2025.svg') }}" alt="BeWelcome text"/>
             </div>
         </a>
@@ -91,7 +91,7 @@
         {% endfor %}
     </div>
     <div class="container-lg">
-        <div class="u-flex u-flex-col">
+        <div class="u:flex u:flex-col">
             <div class="col-10 offset-1 col-sm-8 offset-sm-2">
                 {% for flash_message in app.session.flashBag.get('error') %}
                     <div class="flash error">
@@ -103,7 +103,7 @@
                         {{ flash_message | trans }}
                     </div>
                 {% endfor %}
-                <h1 class="u-text-32 u-leading-40 u-text-white u-text-center u-my-16 u-font-700">BeWelcome - {{ 'indexpageteaseropendoor' | trans }}</h1>
+                <h1 class="u:text-32 u:leading-40 u:text-white u:text-center u:my-16 u:font-700">BeWelcome - {{ 'indexpageteaseropendoor' | trans }}</h1>
             </div>
             {% if error %}
                 <div class="col-10 offset-1 col-sm-8 offset-sm-2">
@@ -117,7 +117,7 @@
                 <div class="card-deck">
                     <div class="card o-card">
                         <form id="main-login-form"
-                              class="u-m-0"
+                              class="u:m-0"
                               role="form"
                               method="post"
                               action="{{ path('security_check') }}">
@@ -131,9 +131,9 @@
                                 </div>
                                 <div class="o-form-group">
                                     <label for="login-p">{{ 'password' | trans }}</label>
-                                    <div class="u-relative">
+                                    <div class="u:relative">
                                         <input type="password" id="login-p" name="_password" class="o-input js-password-input">
-                                        <button type="button" id="password_show_hide" class="u-absolute u-text-gray-50 u-border-0 u-bg-white u-h-full u-top-0 u-end-0 js-password-show-hide" style="height: 38px; margin: 1px; background-color: transparent">
+                                        <button type="button" id="password_show_hide" class="u:absolute u:text-gray-500 u:border-0 u:bg-white u:h-full u:top-0 u:end-0 js-password-show-hide" style="height: 38px; margin: 1px; background-color: transparent">
                                             <svg class="" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path class="block" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
                                                 <circle class="block" cx="12" cy="12" r="3"></circle>
@@ -141,7 +141,7 @@
                                         </button>
                                     </div>
                                 </div>
-                                <div class="o-checkbox u-flex u-items-center u-my-8">
+                                <div class="o-checkbox u:flex u:items-center u:my-8">
                                     <input type="checkbox"
                                            id="login-r"
                                            class="o-checkbox__input"
@@ -178,7 +178,7 @@
                                     </p>
                                 {% endif %}
                             </div>
-                            <div class="u-flex u-justify-center u-items-center">
+                            <div class="u:flex u:justify-center u:items-center">
                                 <button type="submit"
                                         class="o-button o-button--full">{{ 'indexpageloginsubmit' | trans }}</button>
                             </div>
@@ -187,9 +187,9 @@
                     <div class="card o-card">
                         <div class="card-body p-2">
                             <h4 class="card-title">{{ 'signupnow' | trans }}</h4>
-                            <p class="u-text-18 u-mt-24">{{ 'login.signup.info'|trans|raw }}</p>
+                            <p class="u:text-18 u:mt-24">{{ 'login.signup.info'|trans|raw }}</p>
                         </div>
-                        <div class="u-flex u-justify-center u-items-center"><a href="{{ url('signup') }}" class="o-button o-button--full" role="button">
+                        <div class="u:flex u:justify-center u:items-center"><a href="{{ url('signup') }}" class="o-button o-button--full" role="button">
                                 {{ 'signup'|trans }}</a>
                         </div>
                     </div>

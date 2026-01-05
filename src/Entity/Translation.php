@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class Translation
 {
-    #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'ShortCode', referencedColumnName: 'ShortCode', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Language::class)]
     private Language $language;
 

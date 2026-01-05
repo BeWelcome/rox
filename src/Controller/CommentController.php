@@ -207,8 +207,8 @@ class CommentController extends AbstractController
         return $this->render('/profile/comment.add.html.twig', [
             'form' => $form->createView(),
             'member' => $member,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'comment']),
         ]);
     }
 
@@ -296,8 +296,8 @@ class CommentController extends AbstractController
             'form' => $form->createView(),
             'member' => $member,
             'check_experience' => $checkForExperience,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'comment']),
         ]);
     }
 
@@ -353,8 +353,8 @@ class CommentController extends AbstractController
             'status_form' => $profileModel->getStatusForm($loggedInMember, $member),
             'member' => $member,
             'comments' => $comments,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $loggedInMember),
-            'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comments']),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'comments']),
         ]);
     }
 }

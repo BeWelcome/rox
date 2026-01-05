@@ -74,7 +74,6 @@ class LocaleListener implements EventSubscriberInterface
 
         if (null !== $language) {
             $request->getSession()->set('lang', $language->getShortCode());
-            $request->getSession()->set('IdLanguage', $language->getId());
         }
         PVars::register('lang', $locale);
     }

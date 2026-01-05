@@ -3,8 +3,6 @@
 namespace App\Form;
 
 use App\Doctrine\AccommodationType;
-use App\Entity\Language;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,38 +15,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\LessThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SignupFormFinalizeType extends AbstractType
 {
-    private readonly array $motherTongues;
-
-    public function __construct(
-        private readonly TranslatorInterface $translator,
-        EntityManagerInterface $entityManager,
-    ) {
-        $languageRepository = $entityManager->getRepository(Language::class);
-        $languages = $languageRepository->findAll();
-
-        $spokenLanguages = $signedLanguages = [];
-
-        /** @var Language $language */
-        foreach ($languages as $language) {
-            $languageName = $translator->trans(id: strtolower('lang_' . $language->getShortCode()), locale: $language->getShortCode());
-            if ($language->getIsSpokenLanguage()) {
-                $spokenLanguages[$languageName] = $language->getShortCode();
-            }
-            if ($language->getIsSignlanguage()) {
-                $signedLanguages[$languageName] = $language->getShortCode();
-            }
-        }
-
-        $this->motherTongues = [
-            $this->translator->trans('spoken.languages') => $spokenLanguages,
-            $this->translator->trans('signed.languages') => $signedLanguages,
-        ];
-    }
-
     /**
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      *
@@ -113,23 +82,21 @@ class SignupFormFinalizeType extends AbstractType
                 'multiple' => false,
                 'help' => 'help.gender',
                 'choices' => [
-                    $this->translator->trans('male') => 'male',
-                    $this->translator->trans('female') => 'female',
-                    $this->translator->trans('other') => 'other',
+                    'male' => 'male',
+                    'female' => 'female',
+                    'other' => 'other',
                 ],
                 'required' => false,
                 'constraints' => [
                     new NotNull(message: 'error.gender'),
                 ],
             ])
-            ->add('mother_tongue', ChoiceType::class, [
-                'label' => 'label.mother_tongue',
+            ->add('mother_tongue', LanguageType::class, [
+                'spoken' => true,
+                'signed' => true,
                 'multiple' => true,
-                'autocomplete' => true,
+                'label' => 'label.mother_tongue',
                 'help' => 'help.mother_tongue',
-                'choices' => $this->motherTongues,
-                'label_html' => true,
-                'required' => false,
                 'constraints' => [
                     new NotBlank(message: 'error.mother_tongue'),
                 ],
@@ -148,8 +115,8 @@ class SignupFormFinalizeType extends AbstractType
                 'multiple' => false,
                 'help' => 'help.accommodation',
                 'choices' => [
-                    $this->translator->trans('accommodation.no') => AccommodationType::NO,
-                    $this->translator->trans('accommodation.yes') => AccommodationType::YES,
+                    'accommodation.no' => AccommodationType::NO,
+                    'accommodation.yes' => AccommodationType::YES,
                 ],
                 'required' => false,
                 'constraints' => [

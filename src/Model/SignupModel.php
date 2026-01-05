@@ -8,8 +8,8 @@ use App\Entity\Address;
 use App\Entity\Language;
 use App\Entity\Location;
 use App\Entity\Member;
+use App\Entity\MemberLanguageLevel;
 use App\Entity\MemberPreference;
-use App\Entity\MembersLanguagesLevel;
 use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\Preference;
@@ -49,7 +49,7 @@ class SignupModel
         $member->addTranslation(
             new MemberTranslation(
                 'en',
-                'profileLanguage',
+                'ProfileLanguage',
                 'en'
             )
         );
@@ -58,7 +58,7 @@ class SignupModel
             $member->addTranslation(
                 new MemberTranslation(
                     $locale,
-                    'profileLanguage',
+                    'ProfileLanguage',
                     $locale
                 )
             );
@@ -130,26 +130,22 @@ class SignupModel
         }
 
         $translations = $member->getTranslations();
-        $languageRepository = $this->entityManager->getRepository(Language::class);
-
         foreach ($data['mother_tongue'] as $motherTongue) {
-            $language = $languageRepository->findOneBy(['shortCode' => $motherTongue]);
-            if (null !== $language) {
-                // for each mother tongue create a profile version if the language is a written language
-                if ($language->getIsWrittenLanguage()) {
-                    if (!isset($translations[$motherTongue]['ProfileLanguage'])) {
-                        $member->addTranslation(new MemberTranslation($motherTongue, 'ProfileLanguage', $member));
-                    }
+            // for each mother tongue create a profile version if the language is a written language
+            if ($motherTongue->isWrittenLanguage()) {
+                $languageShortCode = $motherTongue->getShortCode();
+                if (!isset($translations[$languageShortCode]['ProfileLanguage'])) {
+                    $member->addTranslation(new MemberTranslation($languageShortCode, 'ProfileLanguage', $languageShortCode));
                 }
-
-                // Also add entry for language level in database
-                $languageLevel = new MembersLanguagesLevel();
-                $languageLevel->setLanguage($language);
-                $languageLevel->setLevel(LanguageLevelType::MOTHER_TONGUE);
-                $languageLevel->setMember($member);
-
-                $this->entityManager->persist($languageLevel);
             }
+
+            // Also add entry for language level in database
+            $languageLevel = new MemberLanguageLevel();
+            $languageLevel->setLanguage($motherTongue);
+            $languageLevel->setLevel(LanguageLevelType::MOTHER_TONGUE);
+            $languageLevel->setMember($member);
+
+            $this->entityManager->persist($languageLevel);
         }
 
         $this->entityManager->persist($member);

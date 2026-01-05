@@ -60,7 +60,7 @@ $map_conf = PVars::getObj('map');
                         </div>
                     </div>
 
-                    <button type="submit" class="o-button u-w-full"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
+                    <button type="submit" class="o-button u:w-full"><?php echo $words->getSilent('NextStep'); ?> <i class="fa fa-angle-double-right"></i></button>
                     <?php echo $words->flushBuffer(); ?>
 
                 </div>

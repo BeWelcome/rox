@@ -67,7 +67,7 @@
     "scrolling-tabs-bootstrap-5": "^1.0.7",
     "scrollmagic": "^2.0.7",
     "select2": "^4.1.0-rc.0",
-    "tailwindcss": "^3.1",
+    "tailwindcss": "^4.1",
     "tempusdominus": "github:tonix-tuft/tempusdominus",
     "tempusdominus-bootstrap": "github:tonix-tuft/tempusdominus-bootstrap",
     "toastify-js": "^1.10.0",
@@ -80,11 +80,12 @@
     "encoreWatch": "encore dev --watch"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.18",
     "@types/geojson": "^7946.0.13",
     "@types/leaflet": "^1.9.8",
     "@types/leaflet-fullscreen": "^1.0.9",
     "bootstrap-dropdown-hover": "^4.2.0",
-    "ckeditor5": "47.2.0",
+    "ckeditor5": "^47",
     "dayjs": "^1.11.0",
     "micromodal": "^0.4.10",
     "moment": "^2.29.4",

@@ -30,7 +30,7 @@ final class Version20200522172912 extends AbstractMigration
             VIEW `forum_trads` AS
                 SELECT
                     `translations`.`id` AS `id`,
-                    `translations`.`IdLanguage` AS `IdLanguage`,
+                    `translations`.`ShortCode` AS `ShortCode`,
                     `translations`.`IdOwner` AS `IdOwner`,
                     `translations`.`IdTrad` AS `IdTrad`,
                     `translations`.`IdTranslator` AS `IdTranslator`,

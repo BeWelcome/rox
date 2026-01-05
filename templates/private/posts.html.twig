@@ -39,20 +39,20 @@
                 <div class="c-single-post-permalink">{% if not threadLink is empty %}<a href="{{ threadLink }}/#post{{ post.id }}"><i class="fa fa-link"></i> Permalink</a>{% endif %}</div>
 
                 <!-- message -->
-                <div class="c-single-post-content u-flex u-flex-col u-justify-between">
+                <div class="c-single-post-content u:flex u:flex-col u:justify-between">
                     <div id="d{{ post.IdContent }}" class="js-highlight">
                         {% set translations = post.messageTranslations %}
                         {% for locale, translation in translations %}
                             <div class="post">
                                 {% if translations|length > 1 %}
-                                    {% if not loop.first %}<hr class="u-my-8" style="border-top:1px solid gray;">{% endif %}
+                                    {% if not loop.first %}<hr class="u:my-8" style="border-top:1px solid gray;">{% endif %}
                                     <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortCode }})</small><br>
                                 {% endif %}
                                 {{ translation.message | purify | nl2br }}
                             </div>
                         {% endfor %}
                     </div>
-                    <div class="u-flex u-mt-8 u-justify-end">
+                    <div class="u:flex u:mt-8 u:justify-end">
                         <small>
                             {% if not post.thread is null %}
                                 {% if post.thread.group %}

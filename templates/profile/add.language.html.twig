@@ -1,0 +1,24 @@
+{% extends 'profile/profile.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block page_content %}
+  <div class="u:w-full">
+    <div class="card">
+      <div class="card-header u:flex u:flex-row u:justify-between">
+        {{ 'profile.languages'|trans|raw }}
+      </div>
+      <div class="card-block p-2">
+        <div class="card-text m-0">
+          {{ form_start(form) }}
+          {{ form_errors(form) }}
+          {{ form_row(form.language) }}
+          <div class="u:flex u:justify-between u:my-8">
+            <input type="submit" class="o-button" value="{{ 'profile.update'|trans }}">
+          </div>
+          {{ form_rest(form) }}
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock page_content %}

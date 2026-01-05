@@ -92,7 +92,7 @@ class MemberController extends AbstractController
                         'username' => $member->getUsername(),
                         'member' => $member,
                         'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
-                        'submenu' => $this->profileSubmenu->getSubmenu($member, $member),
+                        'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member),
                         'url' => $this->generateUrl(
                             'member_download_data',
                             ['username' => $member->getUsername()],
@@ -106,8 +106,8 @@ class MemberController extends AbstractController
 
         return $this->render('private/password.html.twig', [
             'member' => $member,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
-            'submenu' => $this->profileSubmenu->getSubmenu($member, $member),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member),
             'form' => $passwordForm->createView(),
         ]);
     }
@@ -130,6 +130,9 @@ class MemberController extends AbstractController
             'Unable to access this page!'
         );
 
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+
         $logger->write('Extracting personal data for ' . $member->getUsername(), 'Members');
 
         $zipFilename = $memberModel->collectPersonalData($member);
@@ -141,8 +144,8 @@ class MemberController extends AbstractController
         return $this->render('private/download.html.twig', [
             'username' => $member->getUsername(),
             'member' => $member,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
-            'submenu' => $this->profileSubmenu->getSubmenu($member, $member),
+            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member),
             'url' => $this->generateUrl(
                 'member_download_data',
                 [

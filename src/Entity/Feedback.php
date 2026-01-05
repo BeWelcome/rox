@@ -50,8 +50,8 @@ class Feedback
     /**
      * @var Language
      */
-    #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Language::class)]
+    #[ORM\JoinColumn(name: 'ShortCode', referencedColumnName: 'ShortCode', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
     private $language;
 
     /**

@@ -20,7 +20,7 @@ $cnt = 0;
 foreach ($this->search_result as $post) {
 ?>
 
-<div class="l-search-post <?php echo $styles[$cnt % 2]; ?> u-w-full">
+<div class="l-search-post <?php echo $styles[$cnt % 2]; ?> u:w-full">
     <!-- left column -->
     <div class="c-search-user_info">
         <a id="post<?php echo $post->id; ?>" style="position: relative; top:-50px;"></a>
@@ -53,7 +53,7 @@ foreach ($this->search_result as $post) {
         }
         ?>
     </div>
-    <div class="c-search-thread_info js-highlight"><div class="u-flex u-justify-end"><small><?php
+    <div class="c-search-thread_info js-highlight"><div class="u:flex u:justify-end"><small><?php
                 $title = strip_tags((string) $post->title);
             echo $words->get('forum.thread');
         if (isset($post->IdGroup) && $post->IdGroup != 0) {

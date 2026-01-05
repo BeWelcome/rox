@@ -8,12 +8,12 @@ $picture_url = 'members/avatar/'.$member->Username.'/160';
 <form id="manage" method="POST" class="mt-3">
 <div class="row">
     <div class="col-12 order-sm-12 col-lg-3 order-lg-1 postleftcolumn">
-        <div class="u-w-full u-hidden u-p-8 d-lg-block">
+        <div class="u:w-full u:hidden u:p-8 d-lg-block">
             <div class="o-avatar o-avatar--l o-avatar--shadow">
                 <div class="o-avatar__img-wrapper">
                     <a href="members/<?=$member->Username?>"><img class="o-avatar__img" src="<?=$picture_url?>" alt="Picture of <?=$member->Username?>"/></a>
                 </div>
-                <a class="o-avatar__name u-break-all" href="members/<?=$member->Username ?>"><?=$member->Username ?></a>
+                <a class="o-avatar__name u:break-all" href="members/<?=$member->Username ?>"><?=$member->Username ?></a>
             </div>
         </div>
 

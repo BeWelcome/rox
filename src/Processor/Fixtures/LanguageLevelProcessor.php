@@ -3,7 +3,7 @@
 namespace App\Processor\Fixtures;
 
 use App\Doctrine\LanguageLevelType;
-use App\Entity\MembersLanguagesLevel;
+use App\Entity\MemberLanguageLevel;
 use Doctrine\ORM\EntityManagerInterface;
 use Fidry\AliceDataFixtures\ProcessorInterface;
 
@@ -16,7 +16,7 @@ final readonly class LanguageLevelProcessor implements ProcessorInterface
 
     public function preProcess(string $id, $object): void
     {
-        if (!$object instanceof MembersLanguagesLevel) {
+        if (!$object instanceof MemberLanguageLevel) {
             return;
         }
 
@@ -25,7 +25,7 @@ final readonly class LanguageLevelProcessor implements ProcessorInterface
 
     public function postProcess(string $id, $object): void
     {
-        if (!$object instanceof MembersLanguagesLevel) {
+        if (!$object instanceof MemberLanguageLevel) {
             return;
         }
 

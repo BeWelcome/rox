@@ -1,39 +1,300 @@
-/*
-@layer components {
+.ts-wrapper.plugin-drag_drop.multi > .ts-control > div.ui-sortable-placeholder {
+  @apply u:visible u:border-none;
+}
 
-  .ts-dropdown .create:hover, .ts-dropdown .option:hover {
-    @apply u-bg-bewelcome u-text-white;
+.ts-wrapper.plugin-drag_drop .ui-sortable-placeholder::after {
+  content: "!";
+  visibility: hidden;
+}
+
+.plugin-checkbox_options .option input {
+  margin-right: 0.5rem;
+}
+
+.plugin-clear_button .clear-button {
+  @apply u:opacity-0 u:absolute u:top-1/2 u:transform u:-translate-y-1/2 u:right-0 u:cursor-pointer;
+}
+
+.plugin-clear_button.single .clear-button {
+  @apply u:right-2;
+}
+
+.plugin-clear_button.focus.has-items .clear-button, .plugin-clear_button:hover.has-items .clear-button {
+  @apply u:opacity-100;
+}
+
+.ts-wrapper .dropdown-header {
+  @apply u:relative u:p-2.5 u:rounded-t;
+  border-bottom: 20px solid #d0d0d0;
+  background: #f8f8f8;
+}
+
+.ts-wrapper .dropdown-header-close {
+  @apply u:absolute u:right-2 u:top-1/2 u:opacity-40 u:-m-3 u:leading-5 u:text-xl;
+}
+
+.ts-wrapper .dropdown-header-close:hover {
+  @apply u:text-black;
+}
+
+.plugin-dropdown_input .dropdown-input {
+  @apply u:block u:p-2 u:shadow-none u:w-full u:bg-transparent;
+}
+
+.ts-wrapper.plugin-input_autogrow.has-items .ts-control > input {
+  @apply u:min-w-0;
+}
+
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input {
+  @apply u:flex;
+  min-width: 4px;
+}
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input::-webkit-input-placeholder {
+  @apply u:text-transparent;
+}
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input::-ms-input-placeholder {
+  @apply u:text-transparent;
+}
+.ts-wrapper.plugin-input_autogrow.has-items.focus .ts-control > input::placeholder {
+  @apply u:text-transparent;
+}
+
+.ts-dropdown.plugin-optgroup_columns .ts-dropdown-content {
+  @apply u:flex;
+}
+
+.ts-dropdown.plugin-optgroup_columns .optgroup {
+  @apply u:flex-grow u:border-t-0 u:border-r u:border-gray-100 u:basis-0 u:min-w-0;
+}
+
+.ts-dropdown.plugin-optgroup_columns .optgroup:last-child {
+  @apply u:border-r-0;
+}
+
+.ts-dropdown.plugin-optgroup_columns .optgroup:before {
+  @apply u:hidden;
+}
+
+.ts-dropdown.plugin-optgroup_columns .optgroup-header {
+  @apply u:border-t-0;
+}
+
+.ts-wrapper.plugin-remove_button .item {
+  @apply u:inline-flex u:items-center u:pr-1;
+}
+
+.ts-wrapper.plugin-remove_button .item .remove {
+  @apply u:text-inherit u:no-underline u:align-middle u:inline-block u:p-0 u:border-l u:border-gray-300 u:rounded-r-sm u:box-border u:ml-1.5;
+}
+
+.ts-wrapper.plugin-remove_button .item .remove:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.ts-wrapper.plugin-remove_button .item.active .remove {
+  border-left-color: #cacaca;
+}
+
+.ts-wrapper.plugin-remove_button.disabled .item .remove:hover {
+  background: none;
+}
+
+.ts-wrapper.plugin-remove_button.disabled .item .remove {
+  border-left-color: white;
+}
+
+.ts-wrapper.plugin-remove_button .remove-single {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 23px;
+}
+
+.ts-wrapper {
+  position: relative;
+}
+
+.ts-dropdown,
+.ts-control,
+.ts-control input {
+  @apply u:text-black u:z-20;
+}
+
+/* Color for input */
+.ts-control,
+.ts-wrapper.single.input-active .ts-control {
+  @apply u:bg-white;
+  cursor: text;
+}
+
+.ts-control {
+  @apply u:border u:border-gray-600 u:p-8 u:w-full u:overflow-hidden u:relative u:z-10 u:box-border u:shadow-none u:rounded-md u:flex u:flex-wrap u:h-40;
+}
+
+.ts-wrapper.multi.has-items .ts-control {
+  padding: 6px 8px 3px;
+}
+
+.full .ts-control {
+  @apply u:bg-white;
+}
+
+.disabled .ts-control, .disabled .ts-control * {
+  @apply u:cursor-pointer;
+}
+
+.focus .ts-control {
+  @apply u:shadow-none;
+}
+
+.ts-control > * {
+  @apply u:align-baseline u:inline-block;
+}
+
+.ts-wrapper.multi .ts-control > div {
+  @apply u:cursor-pointer u:m-0 u:mx-1 u:my-1 u:p-1 u:px-1.5 u:bg-gray-200 u:text-gray-800 u:border-0;
+}
+
+.ts-wrapper.multi .ts-control > div.active {
+  @apply u:bg-gray-300 u:text-gray-800 u:border-0;
+}
+
+.ts-wrapper.multi.disabled .ts-control > div, .ts-wrapper.multi.disabled .ts-control > div.active {
+  @apply u:text-gray-400 u:bg-white u:border-0;
+}
+
+.ts-control > input {
+  @apply u:inline-block u:p-0 u:min-h-0 u:max-w-full u:m-0 u:indent-0 u:border-0 u:bg-transparent u:flex-grow u:select-auto u:placeholder-gray-300;
+  min-width: 7rem;
+  max-height: none !important;
+  box-shadow: none !important;
+}
+
+.is-invalid > .ts-control {
+  @apply u:border-red-600;
+}
+
+.is-invalid > .invalid-feedback {
+  display: block;
+}
+
+.ts-control > input::-ms-clear {
+  @apply u:hidden;
+}
+
+.ts-control > input:focus {
+  @apply u:outline-0;
+}
+
+.has-items .ts-control > input {
+  @apply u:m-0 u:mx-1;
+}
+
+.ts-control.rtl {
+  @apply u:text-right;
+}
+
+.ts-control.rtl.single .ts-control:after {
+  @apply u:absolute u:right-auto u:left-[15px];
+  content: '';
+}
+
+.ts-control.rtl .ts-control > input {
+  @apply u:m-0 u:mx-1;
+}
+
+.disabled .ts-control {
+  @apply u:bg-gray-100/50;
+}
+
+.input-hidden .ts-control > input {
+  @apply u:opacity-0 u:absolute;
+  left: -10000px;
+}
+
+.ts-dropdown {
+  @apply u:absolute u:top-full u:left-0 u:w-full u:z-1100 u:border u:border-gray-300 u:bg-white u:mt-1 u:box-border u:rounded-lg u:overflow-hidden u:bg-gray-100;
+}
+
+.ts-dropdown [data-selectable] {
+  @apply u:cursor-pointer u:overflow-hidden;
+}
+
+.ts-dropdown [data-selectable] .highlight {
+  background: rgba(125, 168, 208, 0.2);
+  border-radius: 1px;
+}
+
+.ts-dropdown .option,
+.ts-dropdown .optgroup-header,
+.ts-dropdown .no-results,
+.ts-dropdown .create {
+  padding: 5px 8px;
+}
+
+.ts-dropdown .option, .ts-dropdown [data-disabled], .ts-dropdown [data-disabled] [data-selectable].option {
+  cursor: inherit;
+  opacity: 0.5;
+}
+
+.ts-dropdown [data-selectable].option {
+  @apply u:opacity-100 u:cursor-pointer u:p-2.5;
+}
+
+.ts-dropdown .optgroup:first-child .optgroup-header {
+  @apply u:border-t-0;
+}
+
+.ts-dropdown .optgroup-header {
+  @apply u:cursor-default u:bg-white;
+  color: #303030;
+}
+
+/* Color for item list hover */
+.ts-dropdown .create:hover,
+.ts-dropdown .option:hover,
+.ts-dropdown .active {
+  @apply u:bg-gray-300;
+}
+
+.ts-dropdown .create:hover.create,
+.ts-dropdown .option:hover.create,
+.ts-dropdown .active.create {
+  color: #495c68;
+}
+
+.ts-dropdown .create {
+  color: rgba(48, 48, 48, 0.5);
+}
+
+.ts-dropdown .spinner {
+  @apply u:inline-block u:w-7 u:h-7 u:m-1 u:mx-2;
+}
+
+.ts-dropdown .spinner:after {
+  @apply u:block u:w-6 u:h-6 u:m-1 u:rounded-full u:border-4 u:border-gray-300;
+  content: " ";
+  border-color: #FF7828 transparent #FF7828 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
   }
-
-  .ts-dropdown .active {
-    @apply u-bg-bewelcome u-text-white;
-  }
-
-  .ts-wrapper {
-    @apply u-w-full;
-  }
-
-  .ts-control > input {
-    height:40px;
-
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    background-position: right 0.5rem center;
-    background-repeat: no-repeat;
-    background-size: 1.5em 1.5em;
-    @apply shadow-sm u-rounded-8 u-border-gray-30 u-bg-white u-py-2 u-px-3 u-text-base;
-  }
-
-  .ts-dropdown {
-    @apply border border-solid border-t u-border-gray-30 u-text-base;
-  }
-
-  .ts-wrapper.multi .ts-control > div {
-    cursor: pointer;
-    margin: 0 3px 3px 0;
-    padding: 2px 6px;
-    background: #f37000;
-    color: #fff;
-    border: 1px solid #f37000;
+  100% {
+    transform: rotate(360deg);
   }
 }
-*/
+
+.ts-dropdown-content {
+  @apply u:overflow-y-auto u:overflow-x-hidden u:max-h-[200px];
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.ts-hidden-accessible {
+  @apply u:border-0 u:h-0.5 u:overflow-hidden u:p-0 u:absolute u:w-0.5 u:whitespace-nowrap;
+  clip: rect(0 0 0 0) !important;
+  clip-path: inset(50%) !important;
+}

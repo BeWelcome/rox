@@ -17,14 +17,14 @@
     {% if visits.haveToPaginate %}
         {{ pagerfanta( visits, 'rounded_pagination_end') }}
     {% endif %}
-<div class="u-columns-1 sm:u-columns-2 md:u-columns-3">
+<div class="u:columns-1 u:sm:columns-2 u:md:columns-3">
      {% for visit in visits %}
         {% set visitor = visit.visitor %}
-    <div class="u-bg-white u-break-inside-avoid-column u-p-8 u-mb-8">
-        <div class="u-flex u-flex-col">
-            <div class="u-flex u-flex-row u-mb-8">
+    <div class="u:bg-white u:break-inside-avoid-column u:p-8 u:mb-8">
+        <div class="u:flex u:flex-col">
+            <div class="u:flex u:flex-row u:mb-8">
                 <div class="o-avatar o-avatar--m o-avatar--noname">{{ macros.roundedavatarstack(visitor.Username, 48) }}</div>
-                <div class="u-text-14 u-ml-8">
+                <div class="u:text-14 u:ml-8">
                     <strong>{{ macros.profilelink(visitor.Username) }}</strong>
                     {%- if visitor.HideBirthDate == 'No' -%}
                         <br>{{ 'profile.age'|trans }}  {{ visitor.age }}
@@ -44,7 +44,7 @@
                     <br>{{ visitor.city.fullname }}
                 </div>
             </div>
-            <div class="u-mb-8 u-break-words js-read-more">
+            <div class="u:mb-8 u:break-words js-read-more">
             {% set fields = visitor.memberFields %}
                 {% if fields|length %}
                     {% if fields[app.request.locale] is defined %}
@@ -57,7 +57,7 @@
                     {{ 'profile.no.about.me'|trans }}
                 {% endif %}
             </div>
-            <div class="u-text-12 u-self-end">
+            <div class="u:text-12 u:self-end">
                 {{ 'profile.visited'|trans }} {{ visit.updated.diffForHumans }}
             </div>
         </div>

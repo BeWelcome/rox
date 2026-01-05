@@ -13,7 +13,7 @@
 .c-conversation__item {
 	display: flex;
 	align-items: center;
-	background-color: theme('colors.gray-5');
+	background-color: var(--u-color-zinc-100);
 	padding: 0 4px;
 	border-radius: 4px;
 	margin-bottom: 8px;
@@ -24,7 +24,7 @@
 .c-conversation__message-item {
   display: grid;
   align-items: center;
-  background-color: var(--gray-5);
+  background-color: var(--zinc-100);
   padding: 0 4px;
   border-radius: 8px;
   margin-bottom: 8px;

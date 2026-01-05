@@ -138,7 +138,7 @@ function wasGuestOrHost(string $relations) {
                            }
                            $linkedFrom = in_array($comment->FromStatus, MemberStatusType::MEMBER_PROFILE_LINKED);
                            ?>
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix u-mr-24 u-rounded-8">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= (!isset($c['to'])) ? 'mb-2' : '' ?> clearfix u:mr-24 u:rounded-8">
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                     <?php if ($linkedFrom) { ?>
@@ -173,7 +173,7 @@ function wasGuestOrHost(string $relations) {
                                    </div>
                                </div>
                                <?php if ($comment->DisplayInPublic == '0') {
-                                   echo '<div class="u-flex u-flex-col u-rounded-8 u-p-8 u-bg-black-o-30 text-white u-my-4">' . $words->get("commenthiddenedit") . '</div>';
+                                   echo '<div class="u:flex u:flex-col u:rounded-8 u:p-8 u:bg-black-o-30 text-white u:my-4">' . $words->get("commenthiddenedit") . '</div>';
                                } ?>
                                <div class="w-100 py-2">
                                    <p class="js-read-more-received mb-1">
@@ -203,7 +203,7 @@ function wasGuestOrHost(string $relations) {
                                </div>
                            <?php } else { ?>
 
-                           <div class="p-2 mt-1 u-mr-24 u-rounded-8 u-bg-black-o-10"><?php
+                           <div class="p-2 mt-1 u:mr-24 u:rounded-8 u:bg-black-o-10"><?php
                                $noCommentYet = $words->get('profile.no.comment.yet');
                                $noCommentYet = str_replace('{to}', $c['to']->UsernameFromMember, $noCommentYet);
                                $noCommentYet = str_replace('{from}', $c['to']->UsernameToMember, $noCommentYet);
@@ -230,7 +230,7 @@ function wasGuestOrHost(string $relations) {
                            $linkedTo = in_array($comment->ToStatus, MemberStatusType::MEMBER_PROFILE_LINKED);
                        ?>
 
-                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix u-ml-24 u-rounded-8">
+                       <div class="comment-bg-<?=$quality?> p-2 mt-1 <?= !(isset($c['from'])) ? 'mt-1' : '' ?> clearfix u:ml-24 u:rounded-8">
                            <div class="d-flex flex-column">
                                <div class="d-flex flex-row">
                                    <div class="mr-auto  align-self-center">
@@ -262,7 +262,7 @@ function wasGuestOrHost(string $relations) {
                                    <?php } ?>
                                </div>
                                <?php if ($comment->DisplayInPublic == '0') {
-                                   echo '<div class="u-flex u-flex-col u-rounded-8 u-p-8 u-bg-black-o-30 text-white u-my-4">' . $words->get("commenthiddenedit") . '</div>';
+                                   echo '<div class="u:flex u:flex-col u:rounded-8 u:p-8 u:bg-black-o-30 text-white u:my-4">' . $words->get("commenthiddenedit") . '</div>';
                                } ?>
                                <div class="w-100 py-2">
                                    <p class="js-read-more-written mb-1">

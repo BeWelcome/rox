@@ -12,7 +12,7 @@ class ChangeProfilePictureGlobals
     {
     }
 
-    public function getGlobalsJsAsJson(Member $member, Member $loggedInMember): string
+    public function getGlobalsJsAsJson(Member $loggedInMember, Member $member): string
     {
         $globalsJs = json_encode([
             'baseUrl' => $this->urlGenerator->generate('homepage', [], UrlGeneratorInterface::ABSOLUTE_URL),

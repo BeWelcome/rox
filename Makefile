@@ -88,6 +88,7 @@ int-test:
 	"./bin/phpunit" --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --group=integration
 
 infection: phpunit
+
 	"./vendor/bin/infection" --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=2
 
 #behat: encore

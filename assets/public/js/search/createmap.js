@@ -132,22 +132,8 @@ function addMarkers(map) {
     $.each(mapMembers, function (index, value) {
         var iconFile;
 
-        switch (value.Accommodation) {
-            case 'anytime':
-                iconFile = 'anytime';
-                break;
-
-            case 'dependonrequest':
-                iconFile = 'dependonrequest';
-                break;
-
-            case 'dontask':
-                iconFile = 'neverask';
-                break;
-        }
-
         var icon = new L.DivIcon({
-            html: '<div><img src="/images/icons/' + iconFile + '.png" class="mapicon"></div>',
+            html: '<div><img src="/images/icons/' + value.Accommodation + '.png" class="mapicon"></div>',
             className: '',
             iconSize: new L.Point(17, 17)
         });

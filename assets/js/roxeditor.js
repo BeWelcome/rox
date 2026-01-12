@@ -1,7 +1,7 @@
 import {
     ClassicEditor,
+    InlineEditor,
     Essentials,
-    CKFinderUploadAdapter,
     Bold,
     Underline,
     Italic,
@@ -13,6 +13,7 @@ import {
     ImageStyle,
     ImageToolbar,
     ImageUpload,
+    CKFinderUploadAdapter,
     Link,
     LinkImage,
     List,
@@ -54,136 +55,166 @@ if (null !== uploadPath) {
 const mentions = document.getElementsByClassName('js-mention');
 let feed = [];
 
+const plugins = [
+    Autosave,
+    PendingActions,
+    Essentials,
+    Bold,
+    Underline,
+    Italic,
+    HorizontalLine,
+    BlockQuote,
+    Link,
+    List,
+    Mention,
+    Paragraph,
+    CKFinderUploadAdapter,
+    SpecialCharacters,
+    SpecialCharactersEssentials,
+    Image,
+    EasyImage,
+    ImageCaption,
+    ImageStyle,
+    ImageToolbar,
+    ImageBlock,
+    LinkImage,
+    ImageUpload,
+    CloudServices
+];
+
+const config = {
+    licenseKey: 'GPL',
+    plugins: plugins,
+    // So is the rest of the default configuration.
+    toolbar: {
+        items: [
+            'bold',
+            'underline',
+            'italic',
+            '|',
+            'link',
+            'bulletedList',
+            'numberedList',
+            'specialCharacters',
+            '|',
+            'horizontalLine',
+            '|',
+            'imageUpload',
+            'blockQuote',
+            '|',
+            'undo',
+            'redo'
+        ],
+        shouldNotGroupWhenFull: false
+    },
+    language: document.documentElement.lang,
+    translations: translations,
+    mention: {
+        feeds: [
+            {
+                marker: '@',
+                feed: feed
+            }
+        ]
+    },
+    autosave: {
+        save( editor ) {
+            return saveData( editor );
+        }
+    },
+    ckfinder: {
+        uploadUrl: uploadUrl
+    },
+    image: {
+        toolbar: [
+            'imageTextAlternative',
+            '|',
+            'toggleImageCaption',
+            'linkImage'
+        ]
+    }
+}
+
+
 for (let i = 0; i < mentions.length; i++) {
     feed.push('@' + mentions.item(i).value);
 }
 
-let allEditors = document.querySelectorAll('.js-ckeditor-images, .js-ckeditor-no-images');
-for (let i = 0; i < allEditors.length; ++i) {
-    const allowImageUpload = allEditors[i].classList.contains('js-ckeditor-images');
-    console.log(allowImageUpload);
-    let plugins = [
-            Autosave,
-            PendingActions,
-            Essentials,
-            Bold,
-            Underline,
-            Italic,
-            HorizontalLine,
-            BlockQuote,
-            Link,
-            List,
-            Mention,
-            Paragraph,
-            CKFinderUploadAdapter,
-            SpecialCharacters,
-            SpecialCharactersEssentials,
-//            SpecialCharactersTextExtended,
-        ];
-    if (allowImageUpload) {
-        console.log(plugins)
-        plugins = plugins.concat([
-            Image,
-            EasyImage,
-            ImageCaption,
-            ImageStyle,
-            ImageToolbar,
-            ImageBlock,
-            LinkImage,
-            ImageUpload,
-            CloudServices
-        ]);
-        console.log(plugins)
+
+// add editors based on editor type
+let editors = new Map();
+
+const sourceElements = document.querySelectorAll('[data-editor-type]');
+sourceElements.forEach( (element) => {
+    const allowImageUpload = element.dataset.imageUpload === 'yes';
+
+    let editor = null;
+    switch (element.dataset.editorType) {
+        case 'textarea':
+            editor = ClassicEditor.create(element, config);
+            break;
+        case 'inline':
+            editor = InlineEditor.create(element, config);
+            break;
+        case 'decoupled':
+            throw 'Decoupled editor not implemented yet';
+        default:
+            throw 'Unknown editor type';
     }
-    let toolbar = [
-        'bold',
-        'underline',
-        'italic',
-        '|',
-        'link',
-        'bulletedList',
-        'numberedList',
-        'specialCharacters',
-        '|',
-        'horizontalLine',
-        '|',
-        ];
-    if (allowImageUpload) {
-        toolbar = toolbar.concat(['imageUpload']);
-    }
-    toolbar = toolbar.concat([
-        'blockQuote',
-        '|',
-        'undo',
-        'redo',
-    ]);
-    let config = {
-        licenseKey: 'GPL',
-        plugins: plugins,
-        // So is the rest of the default configuration.
-        toolbar: toolbar,
-        language: document.documentElement.lang,
-        translations: translations,
-        mention: {
-            feeds: [
-                {
-                    marker: '@',
-                    feed: feed
-                }
-            ]
-        },
-        autosave: {
-            save( editor ) {
-                return saveData( editor.getData() );
-            }
-        }
-    }
-    if (allowImageUpload) {
-        config.ckFinder = {
-            uploadUrl: uploadUrl
-        };
-        config.image = {
-            toolbar: [
-                'imageTextAlternative',
-                '|',
-                'toggleImageCaption',
-                'linkImage'
-            ]
-        };
-    }
-    console.log(config);
-    ClassicEditor.create(allEditors[i], config )
+
+    editor
         .then( editor => {
-            const form = editor.sourceElement.form;
+            editors.set(element.id, editor)
+
+            const form = editor.sourceElement.closest('form')
+
             registerSubmitHandler(form);
 
-            const storedData = JSON.parse(window.localStorage.getItem(window.location.href));
+            const storedData = JSON.parse(window.localStorage.getItem(editor.sourceElement.id));
             if (storedData !== null) {
                 const diff = new Date() - new Date(storedData.lastChange);
 
+                // Data needs to be younger than 24h)
                 if (diff < 1000 * 60 * 60 * 24) {
                     editor.setData(storedData.editorData);
                 } else {
-                    window.localStorage.removeItem(window.location.href);
+                    window.localStorage.removeItem(editor.sourceElement.id);
                 }
             }
+            if (!allowImageUpload) {
+                editor.ui.view.toolbar.items.get(11).isEnabled = false
+            }
+
         } )
         .catch( error => {
-            console.error( error );
+            console.error( error )
         } );
-}
+})
+
 
 function registerSubmitHandler( form ) {
-    form.addEventListener('submit', function() {
-        window.localStorage.removeItem(window.location.href);
-    });
+    form.addEventListener('submit', function( form ) {
+        // get all editors and set data on hidden input for inline and decoupled editor
+        // then remove data from localeStorage
+        for (let [id, editor] of editors.entries()) {
+            const element = editor.sourceElement
+
+            if (element.dataset.editorType === 'inline') {
+                const input = document.getElementById(element.dataset.input)
+                input.value = editor.getData()
+            }
+
+            window.localStorage.removeItem(element.id);
+        }
+    })
 }
 
-function saveData( data ) {
+function saveData( editor ) {
     const lastChange = new Date();
-    window.localStorage.setItem(window.location.href, JSON.stringify({
+
+    window.localStorage.setItem(editor.sourceElement.id, JSON.stringify({
         lastChange: lastChange,
-        editorData: data
+        editorData: editor.getData()
     }));
 }
 

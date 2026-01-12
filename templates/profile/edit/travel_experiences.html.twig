@@ -20,13 +20,9 @@
       <div class="card-block p-2">
         <div class="card-text">
           {{ form_start(form) }}
-          {{ form_label(form.past) }}
-          {{ form_widget(form.past) }}
-          {{ macros.field_english(language, 'PastTrips', member.translations) }}
 
-          {{ form_label(form.planned) }}
-          {{ form_widget(form.planned) }}
-          {{ macros.field_english(language, 'PlannedTrips', member.translations) }}
+          {{ macros.field_translation(form.past, language, 'PastTrips', member.translations) }}
+          {{ macros.field_translation(form.planned, language, 'PlannedTrips', member.translations) }}
 
           <div class="u:flex u:justify-end u:my-8">
             <input type="submit" class="o-button" value="{{ 'profile.update'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}">

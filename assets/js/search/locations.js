@@ -217,22 +217,8 @@ Map.prototype.addMarkers = function (map) {
     $.each(mapMembers, function (index, value) {
         var iconFile = 'undefined';
 
-        switch (value.Accommodation) {
-            case 'anytime':
-                iconFile = 'anytime';
-                break;
-
-            case 'neverask':
-                iconFile = 'neverask';
-                break;
-
-            default:
-                iconFile = value.Accommodation;
-                break;
-        }
-
         var icon = new L.DivIcon({
-            html: '<div><img src="/images/icons/' + iconFile + '.png" class="mapicon"></div>',
+            html: '<div><img src="/images/icons/' + value.Accommodation + '.png" class="mapicon"></div>',
             className: '',
             iconSize: new L.Point(17, 17)
         });

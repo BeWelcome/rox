@@ -1,12 +1,29 @@
 require('ekko-lightbox');
+const L = require("leaflet");
 
-const languageSwitch = document.getElementById("language-switch");
+const locationMaps = document.querySelectorAll('[id^=location-map]')
 
-languageSwitch.addEventListener("change", e => {
-    const languages = document.querySelectorAll('[id^=profile-language-]');
-    languages.forEach(language => {
-        language.classList.add('u:hidden!');
-    })
-    const current = document.getElementById("profile-language-" + e.target.value);
-    current.classList.remove('u:hidden!')
+locationMaps.forEach( locationMap => {
+    const latitude = document.getElementById('latitude').value;
+    const longitude = document.getElementById('longitude').value;
+
+    const map = L.map(locationMap, {
+        zoomControl: false,
+        boxZoom: false
+    }).setView([latitude, longitude], 10)
+
+    map.attributionControl.setPrefix(false)
+    const markerIcon = L.icon({
+        iconUrl: 'images/icons/marker_drop.png',
+        iconShadowUrl: 'images/icons/marker_drop_shadow.png',
+        iconSize: [25, 25],
+        iconAnchor: [13, 0],
+    });
+
+    L.marker(new L.LatLng(latitude, longitude), {icon: markerIcon}).addTo(map)
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        subdomains: ['a', 'b', 'c']
+    }).addTo(map)
 })
+

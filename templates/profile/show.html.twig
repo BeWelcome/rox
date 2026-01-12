@@ -3,16 +3,15 @@
 {% extends 'profile/profile.html.twig' %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('readmore') }}
-    {{ encore_entry_link_tags('lightbox') }}
+  {{ parent() }}
+  {{ encore_entry_link_tags('readmore') }}
+  {{ encore_entry_link_tags('profile/show') }}
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('readmore') }}
-    {{ encore_entry_script_tags('lightbox') }}
-    {{ encore_entry_script_tags('profile/profile') }}
+  {{ parent() }}
+  {{ encore_entry_script_tags('readmore') }}
+  {{ encore_entry_script_tags('profile/show') }}
 {% endblock %}
 
 {% block page_content %}

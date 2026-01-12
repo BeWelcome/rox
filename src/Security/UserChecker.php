@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\Member;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -28,13 +29,7 @@ class UserChecker implements UserCheckerInterface
         }
     }
 
-    /**
-     * @throws AccountExpiredException
-     * @throws AccountSuspendedException
-     * @throws AccountMailConfirmedException
-     * @throws AccountMailNotConfirmedException
-     */
-    public function checkPostAuth(UserInterface $user): void
+    public function checkPostAuth(UserInterface $user, ?TokenInterface $token = null): void
     {
         if (!$user instanceof Member) {
             return;

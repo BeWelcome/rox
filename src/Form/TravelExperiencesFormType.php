@@ -14,12 +14,14 @@ class TravelExperiencesFormType extends AbstractType
             ->add('past', CkEditorType::class, [
                 'label' => 'label.profile.past_trips',
                 'help' => 'help.profile.past_trips',
+                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'required' => false,
                 'image_upload' => false,
             ])
             ->add('planned', CkEditorType::class, [
                 'label' => 'label.profile.planned_trips',
                 'help' => 'help.profile.planned_trips',
+                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'required' => false,
                 'image_upload' => false,
             ])

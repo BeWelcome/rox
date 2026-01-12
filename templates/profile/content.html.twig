@@ -1,3 +1,6 @@
+{% import 'macros.twig' as macros %}
+
+{% set address = member.activeAddress %}
 {% set profileTranslation = translated_fields[profile_language] ?? [] %}
 <div id="profile-language-{{ profile_language }}"
      class="{% if profile_language != active_locale %}u:hidden! {% endif %}">
@@ -310,141 +313,149 @@
         </div>
         <div class="card-block p-2">
           <div class="card-text m-0">
-            <div id="accommodation" class="mb-1">
-              {% if not member.accommodation is null %}
-                {% if edit %}
-                  {% set address = member.activeAddress %}
-                  {% if not address is same as(false) %}
-                    <div class="u:flex u:flex-row u:justify-between align-items-center u:mb-8 u:gap-8">
-                      <div>
-                        <p class="h5">{{ 'profile.location'|trans({}, 'messages', profile_language) }}</p>
-                        <p class="u:font-700">{{ address.location.name }}</p>
-                        <p>{{ address.location.admin1.name }} - {{ address.location.country.name }}</p>
-                      </div>
-                      <div id="location-map-{{ profile_language }}"
-                           class="u:w-[40%] u:aspect-3/2 u:border-1 u:border-bewelcome"></div>
+            {% if not member.accommodation is null or edit %}
+              {% if edit %}
+                {% if not address is same as(false) %}
+                  <div class="u:flex u:flex-row u:justify-between align-items-center u:mb-8 u:gap-8">
+                    <div>
+                      <p class="h5">{{ 'profile.location'|trans({}, 'messages', profile_language) }}</p>
+                      <p class="u:font-700">{{ address.location.name }}</p>
+                      <p>{{ address.location.admin1.name }} - {{ address.location.country.name }}</p>
+                      <a href="{{ url('profile_set_location', {username: member.username}) }}" class="o-button o-button--outline">{{ 'profile.change.location'|trans({}, 'messages', profile_language) }}</a>
                     </div>
-                  {% endif %}
-                {% endif %}
-                <div class="u:flex u:flex-row u:justify-between u:mb-8">
-                  <div>
-                    {% if edit or (member.maxGuests != 0 and member.accommodation == constant('App\\Doctrine\\AccommodationType::YES')) %}
-                      <span  class="guests h5">{{ 'profilenumberofguests'|trans({}, "messages", profile_language)|raw }} {{ member.maxGuests }}</span>
-                    {% else %}
-                      {% if member.accommodation == constant('App\\Doctrine\\AccommodationType::NO') %}
-                        {{ 'member.not.hosting'|trans({}, "messages", profile_language) }}
-                      {% endif %}
-                    {% endif %}
+                    <div id="location-map-{{ profile_language }}"
+                         class="u:w-[40%] u:aspect-3/2 u:border-1 u:border-bewelcome"></div>
                   </div>
+                {% endif %}
+              {% endif %}
+              <div class="u:flex u:flex-row u:justify-between u:mb-8">
+                <div>
+                  {% if edit or (member.maxGuests != 0 and member.accommodation == constant('App\\Doctrine\\AccommodationType::YES')) %}
+                    {% set lastUpdate = member.updated ?? member.created %}
+                    <p
+                      class="guests h5 u:mb-4">{{ 'profilenumberofguests'|trans({}, "messages", profile_language)|raw }} {{ member.maxGuests }}
+                      <br>
+                      {{ 'profile.hosting_interest'|trans({}, "messages", profile_language)|raw }} {{ macros.hostingInterest(member.hostingInterest, profile_language) }}
+                      <br>
+                      <span
+                        class="u:text-12 u:font-400">{{ 'profile.hosting_interest.last_updated'|trans({updated: lastUpdate}, "messages+intl-icu", profile_language) }}</span>
+                    </p>
+                  {% else %}
+                    {% if member.accommodation == constant('App\\Doctrine\\AccommodationType::NO') %}
+                      {{ 'member.not.hosting'|trans({}, "messages", profile_language) }}
+                    {% endif %}
+                  {% endif %}
+                </div>
 
-                  <div id="quickinfo" class="align-self-end">
-                    {% if member.isWheelChairAccessible %}
-                      <img
-                      src="{{ asset('images/icons/wheelchairblue.png') }}" alt="{{ 'wheelchair'|trans({}, "messages", profile_language) }}
+                <div id="quickinfo" class="U:items-end u:shrink-0">
+                  {% if not address is same as(false) and address.isWheelChairAccessible %}
+                    <img
+                    src="{{ asset('images/icons/wheelchairblue.png') }}" alt="{{ 'wheelchair'|trans({}, "messages", profile_language) }}
                                  title="{{ 'canhostwheelchairyes'|trans({}, "messages", profile_language) }}">
-                    {% endif %}
-                    <img src="images/icons/{{ member.accommodation }}.png"
-                         alt="{{ member.accommodation|trans({}, "messages", profile_language) }}
+                  {% endif %}
+                  <img src="images/icons/{{ member.accommodation }}.png"
+                       alt="{{ member.accommodation|trans({}, "messages", profile_language) }}
                                  title="{{ ('canoffer' ~ member.accommodation)|trans({}, "messages", profile_language) }}
-                    ">
-                  </div>
+                  ">
+                </div>
+              </div>
+            {% else %}
+              {{ 'profile.no.accommodation'|trans({}, "messages", profile_language) }}
+            {% endif %}
+
+            {% set maxLengthOfStay = profileTranslation['MaxLengthOfStay'] ?? '' %}
+            {% if maxLengthOfStay|length != 0 or edit %}
+              <div
+                class="stay h5 u:mt-8 u:mb-0">{{ 'profilemaxlenghtofstay'|trans({}, "messages", profile_language)|raw }}</div>
+              {% if maxLengthOfStay|length != 0 %}
+                <div>
+                  {{ profileTranslation['MaxLengthOfStay']|purify }}
                 </div>
               {% endif %}
+            {% endif %}
 
-              {% set maxLengthOfStay = profileTranslation['MaxLengthOfStay'] ?? '' %}
-              {% if maxLengthOfStay|length != 0 or edit %}
-                <div
-                  class="stay h5 u:mt-8 u:mb-0">{{ 'profilemaxlenghtofstay'|trans({}, "messages", profile_language)|raw }}</div>
-                {% if maxLengthOfStay|length != 0 %}
-                  <div>
-                    {{ profileTranslation['MaxLengthOfStay']|purify }}
-                  </div>
+            {% set iLiveWith = profileTranslation['ILiveWith'] ?? '' %}
+            {% if iLiveWith|length > 0 or edit %}
+              <div
+                class="stay h5 u:mt-8 u:mb-0">{{ 'profileilivewith'|trans({}, "messages", profile_language)|raw }}</div>
+              {% if iLiveWith|length > 0 %}
+                <div>{{ profileTranslation['ILiveWith']|purify }}</div>{% endif %}
+            {% endif %}
+
+            {% set pleaseBring = profileTranslation['PleaseBring'] ?? '' %}
+            {% if pleaseBring|length > 0 or edit %}
+              <div
+                class="stay h5 u:mt-8 u:mb-0">{{ 'profilepleasebring'|trans({}, "messages", profile_language)|raw }}</div>
+              {% if pleaseBring|length > 0 %}
+                <div>{{ profileTranslation['PleaseBring']|purify }}</div>{% endif %}
+            {% endif %}
+
+            {% set whereYouSleep = profileTranslation['WhereYouSleep'] ?? '' %}
+            {% if whereYouSleep|length > 0 or edit %}
+              <div
+                class="h5 u:mt-8 u:mb-0">{{ 'profile.where.you.sleep'|trans({}, "messages", profile_language)|raw }}</div>
+              <div>
+                {% if whereYouSleep|length > 0 %}
+                  {{ whereYouSleep|purify }}
                 {% endif %}
-              {% endif %}
+              </div>
+            {% endif %}
 
-              {% set iLiveWith = profileTranslation['ILiveWith'] ?? '' %}
-              {% if iLiveWith|length > 0 or edit %}
-                <div
-                  class="stay h5 u:mt-8 u:mb-0">{{ 'profileilivewith'|trans({}, "messages", profile_language)|raw }}</div>
-                {% if iLiveWith|length > 0 %}
-                  <div>{{ profileTranslation['ILiveWith']|purify }}</div>{% endif %}
-              {% endif %}
-
-              {% set pleaseBring = profileTranslation['PleaseBring'] ?? '' %}
-              {% if pleaseBring|length > 0 or edit %}
-                <div
-                  class="stay h5 u:mt-8 u:mb-0">{{ 'profilepleasebring'|trans({}, "messages", profile_language)|raw }}</div>
-                {% if pleaseBring|length > 0 %}
-                  <div>{{ profileTranslation['PleaseBring']|purify }}</div>{% endif %}
-              {% endif %}
-
-              {% set whereYouSleep = profileTranslation['WhereYouSleep'] ?? '' %}
-              {% if whereYouSleep|length > 0 or edit %}
-                <div
-                  class="h5 u:mt-8 u:mb-0">{{ 'profile.where.you.sleep'|trans({}, "messages", profile_language)|raw }}</div>
-                <div>
-                  {% if whereYouSleep|length > 0 %}
-                    {{ whereYouSleep|purify }}
-                  {% endif %}
-                </div>
-              {% endif %}
-
-              {% set standardOffers = member.StandardOffers %}
-              {% set offerGuests = profileTranslation['OfferGuests'] ?? '' %}
-              {% if standardOffers|length > 0 or offerGuests|length > 0 or edit %}
-                <div
-                  class="h5 u:mt-8 u:mb-0">{{ 'profileofferguests'|trans({}, "messages", profile_language)|raw }}</div>
-                <div>
-                  {% for offer in standardOffers %}
-                    {{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, "messages", profile_language) }}
-                    <br>
-                  {% endfor %}
-                  {% if offerGuests|length > 0 %}
-                    {{ offerGuests|purify }}
-                  {% endif %}
-                </div>
-              {% endif %}
-
-              {% set additionalInfo = profileTranslation['AdditionalAccommodationInfo'] ?? '' %}
-              {% if additionalInfo|length != 0 or edit %}
-                <div
-                  class="h5 u:mt-8 u:mb-0">{{ 'otherinfosforguest'|trans({}, "messages", profile_language)|raw }}</div>
-                {% if additionalInfo|length != 0 %}
-                  {{ additionalInfo|purify }}
+            {% set standardOffers = member.StandardOffers %}
+            {% set offerGuests = profileTranslation['OfferGuests'] ?? '' %}
+            {% if standardOffers|length > 0 or offerGuests|length > 0 or edit %}
+              <div
+                class="h5 u:mt-8 u:mb-0">{{ 'profileofferguests'|trans({}, "messages", profile_language)|raw }}</div>
+              <div>
+                {% for offer in standardOffers %}
+                  {{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, "messages", profile_language) }}
+                  <br>
+                {% endfor %}
+                {% if offerGuests|length > 0 %}
+                  {{ offerGuests|purify }}
                 {% endif %}
-              {% endif %}
-              {% set publicTransport = profileTranslation['PublicTransport'] ?? '' %}
-              {% if publicTransport|length != 0 or edit %}
-                <div
-                  class="stay h5 u:mt-8 u:mb-0">{{ 'profilepublictransport'|trans({}, "messages", profile_language)|raw }}</div>
-                {% if publicTransport|length != 0 %}
-                  <div>{{ profileTranslation['PublicTransport']|purify }}</div>{% endif %}
-              {% endif %}
-              {% set restrictions = member.Restrictions %}
-              {% set otherRestrictions = profileTranslation['OtherRestrictions'] ?? '' %}
-              {% if restrictions|length > 0 or otherRestrictions|length > 0 or edit %}
-                <div
-                  class="h5 u:mt-8 u:mb-0">{{ 'profilehouserules'|trans({}, "messages", profile_language)|raw }}</div>
-                <div>
-                  {% for restriction in restrictions %}
-                    {{ ('restriction_' ~ restriction)|lower|trans({}, "messages", profile_language) }}
-                    <br>
-                  {% endfor %}
-                  {% if otherRestrictions|length > 0 %}
-                    {{ otherRestrictions|purify }}
-                  {% endif %}
-                </div>
-              {% endif %}
+              </div>
+            {% endif %}
 
-              {% if member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
-                <div>
-                  <a href="{{ url('hosting_request', {username: member.username}) }}"
-                     class="btn btn-primary float-right"><i
-                      class="fa fa-bed mr-1"></i>{{ 'profile.request.hosting'|trans({}, "messages", profile_language) }}
-                  </a>
-                </div>
+            {% set additionalInfo = profileTranslation['AdditionalAccommodationInfo'] ?? '' %}
+            {% if additionalInfo|length != 0 or edit %}
+              <div
+                class="h5 u:mt-8 u:mb-0">{{ 'otherinfosforguest'|trans({}, "messages", profile_language)|raw }}</div>
+              {% if additionalInfo|length != 0 %}
+                {{ additionalInfo|purify }}
               {% endif %}
-            </div>
+            {% endif %}
+            {% set gettingThere = profileTranslation['GettingThere'] ?? '' %}
+            {% if gettingThere|length != 0 or edit %}
+              <div
+                class="stay h5 u:mt-8 u:mb-0">{{ 'profilepublictransport'|trans({}, "messages", profile_language)|raw }}</div>
+              {% if gettingThere|length != 0 %}
+                <div>{{ profileTranslation['GettingThere']|purify }}</div>{% endif %}
+            {% endif %}
+            {% set restrictions = member.Restrictions %}
+            {% set houseRules = profileTranslation['HouseRules'] ?? '' %}
+            {% if restrictions|length > 0 or houseRules|length > 0 or edit %}
+              <div
+                class="h5 u:mt-8 u:mb-0">{{ 'profilehouserules'|trans({}, "messages", profile_language)|raw }}</div>
+              <div>
+                {% for restriction in restrictions %}
+                  {{ ('restriction_' ~ restriction)|lower|trans({}, "messages", profile_language) }}
+                  <br>
+                {% endfor %}
+                {% if houseRules|length > 0 %}
+                  {{ houseRules|purify }}
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
+              <div>
+                <a href="{{ url('hosting_request', {username: member.username}) }}"
+                   class="btn btn-primary float-right"><i
+                    class="fa fa-bed mr-1"></i>{{ 'profile.request.hosting'|trans({}, "messages", profile_language) }}
+                </a>
+              </div>
+            {% endif %}
           </div>
         </div>
       </div>

@@ -69,16 +69,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
             ),
             new TwigFunction('encore_entry_css_source', $this->getEncoreEntryCssSource(...)),
             new TwigFunction('distance', $this->distance(...)),
-            new TwigFunction('isFallback', $this->isFallback(...)),
             new TwigFunction('sgn', $this->sgn(...)),
         ];
-    }
-
-    public function isFallback(array $translatedFields, string $element, string $field): array
-    {
-        $isFallback = false;
-
-        return $isFallback;
     }
 
     public function languageName(string $locale): string

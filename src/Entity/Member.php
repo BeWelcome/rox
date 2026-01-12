@@ -11,7 +11,6 @@ namespace App\Entity;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
-use App\Doctrine\StandardOffersType;
 use App\Repository\MemberRepository;
 use Carbon\Carbon;
 use DateTime;
@@ -139,9 +138,9 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     #[ORM\Column(name: 'Restrictions', type: 'host_restrictions', nullable: true)]
     private ?string $restrictions = null;
 
-    #[ORM\Column(name: 'OtherRestrictions', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'HouseRules', type: 'string', nullable: true)]
     #[Gedmo\Translatable]
-    private ?string $otherRestrictions = null;
+    private ?string $houseRules = null;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private ?DateTime $created = null;
@@ -206,9 +205,9 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     #[Gedmo\Translatable]
     private ?string $offerHosts = null;
 
-    #[ORM\Column(name: 'PublicTransport', type: 'string', nullable: true)]
+    #[ORM\Column(name: 'GettingThere', type: 'string', nullable: true)]
     #[Gedmo\Translatable]
-    private ?string $publicTransport = null;
+    private ?string $gettingThere = null;
 
     #[ORM\Column(name: 'LastSwitchToActive', type: 'datetime', nullable: true)]
     private ?DateTime $lastSwitchToActive = null;
@@ -353,11 +352,25 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
     public function getName(): ?string
     {
-        if (($this->hideAttribute & self::NAME_HIDDEN) !== self::NAME_HIDDEN) {
+        return $this->name;
+    }
+
+    public function getVisibleName(): string
+    {
+        if ($this->isNameVisible()) {
             return $this->name;
         }
 
-        return null;
+        if (null !== $this->shortName) {
+            return $this->shortName;
+        }
+
+        return '';
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->name;
     }
 
     public function setShortName(?string $shortName): self
@@ -420,31 +433,17 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         return $this->iLiveWith;
     }
 
-    public function setStandardOffers(?string $standardOffers): self
+    public function setStandardOffers(array $standardOffers): self
     {
-        $this->standardOffers = $standardOffers;
+        // \todo implode but check validity
+        $this->standardOffers = implode(',', $standardOffers);
 
         return $this;
     }
 
     public function getStandardOffers(): array
     {
-        if ('' === $this->standardOffers) {
-            return [];
-        }
-
-        $standardOffers = explode(',', (string) $this->standardOffers);
-        // remove wheelchair accessibility (covered in hasWheelChairAccess
-        $standardOffers = array_filter($standardOffers, function ($value) {
-            return StandardOffersType::WHEELCHAIR_ACCESSIBLE !== $value;
-        });
-
-        return $standardOffers;
-    }
-
-    public function isWheelChairAccessible(): bool
-    {
-        return str_contains((string) $this->standardOffers, StandardOffersType::WHEELCHAIR_ACCESSIBLE);
+        return explode(',', $this->standardOffers);
     }
 
     public function setMaxGuests(int $maxGuests): self
@@ -483,28 +482,35 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         return $this->organizations;
     }
 
-    public function setRestrictions(?string $restrictions): self
+    public function setRestrictions(array $restrictions): self
     {
-        $this->restrictions = $restrictions;
+        // \todo implode $restrictions but check if valid.
+        $this->restrictions = implode(',', $restrictions);
 
         return $this;
     }
 
-    public function getRestrictions(): ?string
+    public function getRestrictions(): array
     {
-        return $this->restrictions;
+        if ('' === $this->restrictions) {
+            return [];
+        }
+
+        $restrictions = explode(',', (string) $this->restrictions);
+
+        return $restrictions;
     }
 
-    public function setOtherRestrictions(?string $otherRestrictions): self
+    public function setHouseRules(?string $houseRules): self
     {
-        $this->otherRestrictions = $otherRestrictions;
+        $this->houseRules = $houseRules;
 
         return $this;
     }
 
-    public function getOtherRestrictions(): ?string
+    public function getHouseRules(): ?string
     {
-        return $this->otherRestrictions;
+        return $this->houseRules;
     }
 
     public function getUpdated(): ?Carbon
@@ -599,14 +605,24 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         return $this;
     }
 
+    public function isNameVisible(): bool
+    {
+        return ($this->hideAttribute & self::NAME_HIDDEN) !== self::NAME_HIDDEN;
+    }
+
+    public function isAddressVisible(): bool
+    {
+        return ($this->hideAttribute & self::ADDRESS_HIDDEN) !== self::ADDRESS_HIDDEN;
+    }
+
     public function isAgeVisible(): bool
     {
-        return $this->hideAttribute && self::AGE_HIDDEN !== self::AGE_HIDDEN;
+        return ($this->hideAttribute & self::AGE_HIDDEN) !== self::AGE_HIDDEN;
     }
 
     public function isGenderVisible(): bool
     {
-        return $this->hideAttribute && self::AGE_HIDDEN !== self::AGE_HIDDEN;
+        return ($this->hideAttribute & self::GENDER_HIDDEN) !== self::GENDER_HIDDEN;
     }
 
     public function showAge(): self
@@ -761,16 +777,16 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         return $this->offerHosts;
     }
 
-    public function setPublicTransport(?string $publicTransport): self
+    public function setGettingThere(?string $gettingThere): self
     {
-        $this->publicTransport = $publicTransport;
+        $this->gettingThere = $gettingThere;
 
         return $this;
     }
 
-    public function getPublicTransport(): ?string
+    public function getGettingThere(): ?string
     {
-        return $this->publicTransport;
+        return $this->gettingThere;
     }
 
     public function setMovies(?string $movies): self
@@ -1123,14 +1139,14 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         return MemberStatusType::MAIL_CONFIRMED === $this->status;
     }
 
-    public function isShortNameShown(): bool
+    public function isShortNameVisible(): bool
     {
         return empty($this->shortName);
     }
 
     public function getShortNameOrUsername(): string
     {
-        if ($this->isShortNameShown()) {
+        if ($this->isShortNameVisible()) {
             return $this->getShortName();
         }
 
@@ -1227,36 +1243,11 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         return $value;
     }
 
-    /**
-     * Triggered on insert.
-     */
-    #[ORM\PrePersist]
-    public function onPrePersist(): void
-    {
-        if (null === $this->created) {
-            $this->created = new DateTime('now');
-        }
-    }
-
-    /**
-     * Triggered on update.
-     */
-    #[ORM\PreUpdate]
-    public function onPreUpdate()
-    {
-        if (null === $this->updated) {
-            $this->updated = new DateTime('now');
-        }
-    }
-
     public function getPreferredLanguage(): ?Language
     {
         return $this->preferredLanguage;
     }
 
-    /**
-     * @return Collection|MemberPreference[]
-     */
     public function getPreferences(): Collection
     {
         return $this->preferences;
@@ -1402,7 +1393,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
         return $this->translationsIndexedByLocale;
     }
-
     public function addTranslation(MemberTranslation $translation): void
     {
         if (!$this->translations->contains($translation)) {
@@ -1454,5 +1444,13 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         $activeOnly->where($expr);
 
         return $this->addresses->matching($activeOnly)->first();
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        if (null === $this->created) {
+            $this->created = new DateTime('now');
+        }
     }
 }

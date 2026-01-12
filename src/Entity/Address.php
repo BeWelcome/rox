@@ -39,9 +39,8 @@ class Address
     #[ORM\Column(name: 'Zip', type: Types::STRING, nullable: true)]
     private ?string $zip;
 
-    #[ORM\Column(name: 'GettingThere', type: Types::STRING, nullable: true)]
-    #[Gedmo\Translatable]
-    private ?string $gettingThere;
+    #[ORM\Column(name: 'WheelChairAccessible', type: Types::BOOLEAN, nullable: true)]
+    private ?bool $isWheelChairAccessible;
 
     #[ORM\ManyToOne(targetEntity: Location::class)]
     #[ORM\JoinColumn(name: 'Location', referencedColumnName: 'geonameId', nullable: true)]
@@ -160,18 +159,6 @@ class Address
         return $this->longitude;
     }
 
-    public function setExplanation(?string $explanation): self
-    {
-        $this->explanation = $explanation;
-
-        return $this;
-    }
-
-    public function getExplanation(): ?string
-    {
-        return $this->explanation;
-    }
-
     public function setActive(?bool $active): self
     {
         $this->active = $active;
@@ -194,16 +181,16 @@ class Address
         return Carbon::instance($this->updated);
     }
 
-    public function setGettingThere(?string $gettingThere): self
+    public function setIsWheelChairAccessible(?bool $isWheelChairAccessible): self
     {
-        $this->gettingThere = $gettingThere;
+        $this->isWheelChairAccessible = $isWheelChairAccessible;
 
         return $this;
     }
 
-    public function getGettingThere(): ?string
+    public function IsWheelChairAccessible(): ?bool
     {
-        return $this->gettingThere;
+        return $this->isWheelChairAccessible;
     }
 
     public function getId(): int

@@ -29,7 +29,16 @@ class AccountController extends AbstractController
             return $this->redirectToRoute('account_edit', ['username' => $member->getUsername()]);
         }
 
-        $form = $this->createForm(AccountEditFormType::class);
+        $form = $this->createForm(AccountEditFormType::class, [
+            'name' => $member->getName(),
+            'show_name' => $member->isNameVisible(),
+            'short_name' => $member->getUsername(),
+            'gender' => $member->getGender(),
+            'show_gender' => $member->isGenderVisible(),
+            'birthdate' => $member->getBirthdate(),
+            'show_age' => $member->isAgeVisible(),
+            'email' => $member->getEmail(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

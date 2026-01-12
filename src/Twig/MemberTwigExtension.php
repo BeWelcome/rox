@@ -56,7 +56,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         'Membersbewelcome' => [
             'trans' => 'AdminMembers',
             'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_MemberSBEWELCOME],
-            'route' => 'Members',
+            'route' => 'newmembers',
         ],
         'massmail' => [
             'trans' => 'AdminMassMail',

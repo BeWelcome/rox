@@ -20,25 +20,12 @@
       <div class="card-block p-2">
         <div class="card-text">
           {{ form_start(form) }}
-          {{ form_label(form.hobbies) }}
-          {{ form_widget(form.hobbies) }}
-          {{ macros.field_english(language, 'Hobbies', member.translations) }}
 
-          {{ form_label(form.books) }}
-          {{ form_widget(form.books) }}
-          {{ macros.field_english(language, 'Books', member.translations) }}
-
-          {{ form_label(form.music) }}
-          {{ form_widget(form.music) }}
-          {{ macros.field_english(language, 'Music', member.translations) }}
-
-          {{ form_label(form.movies) }}
-          {{ form_widget(form.movies) }}
-          {{ macros.field_english(language, 'Movies', member.translations) }}
-
-          {{ form_label(form.organizations) }}
-          {{ form_widget(form.organizations) }}
-          {{ macros.field_english(language, 'Organizations', member.translations) }}
+          {{ macros.field_translation(form.hobbies, language, 'Hobbies', member.translations) }}
+          {{ macros.field_translation(form.books, language, 'Books', member.translations) }}
+          {{ macros.field_translation(form.music, language, 'Music', member.translations) }}
+          {{ macros.field_translation(form.movies, language, 'Movies', member.translations) }}
+          {{ macros.field_translation(form.organizations, language, 'Organizations', member.translations) }}
 
           <div class="u:flex u:justify-end u:my-8">
             <input type="submit" class="o-button" value="{{ 'profile.update'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}">

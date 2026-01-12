@@ -118,7 +118,7 @@ $vars =& PPostHandler::getVars($callbackId);
         <div class="o-form-group">
             <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
-            <textarea name="topic_text" id="topic_text" class="o-input editor" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>"><?php
+            <textarea name="topic_text" id="topic_text" class="o-input" data-editor-type="textarea" data-image-upload="yes" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>"><?php
                 if (isset($void_string)) {
                     echo $void_string;
                 } else {

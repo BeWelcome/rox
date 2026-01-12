@@ -159,24 +159,6 @@ class CreateTestDatabase extends Command
         }
 
         $output->writeln([
-            'Fixing ids in the database',
-            '',
-        ]);
-
-        // Now set id for English to 0 as the old code expects that
-        $connection = $this->entityManager->getConnection();
-        $connection->executeQuery("
-            SET FOREIGN_KEY_CHECKS=0;
-            UPDATE languages SET id = 0 WHERE ShortCode = 'en';
-            UPDATE words SET IdLanguage = 0 WHERE ShortCode = 'en';
-            UPDATE member_language_level SET language_id = 0 WHERE language_id = 1;
-            UPDATE languages SET id = 1 WHERE ShortCode = 'fr';
-            UPDATE words SET IdLanguage = 1 WHERE ShortCode = 'fr';
-            UPDATE member_language_level SET language_id = 1 WHERE language_id = 2;
-            SET FOREIGN_KEY_CHECKS=1;
-        ");
-
-        $output->writeln([
             '',
             'Finished have fun.',
         ]);

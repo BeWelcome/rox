@@ -72,16 +72,12 @@ Map.prototype.addMarkers = function (map) {
         let iconFile = 'undefined';
 
         switch (value.Accommodation) {
-            case 'anytime':
-                iconFile = 'anytime';
+            case 'yes':
+                iconFile = 'yes';
                 break;
 
-            case 'neverask':
-                iconFile = 'neverask';
-                break;
-
-            default:
-                iconFile = value.Accommodation;
+            case 'no':
+                iconFile = 'no';
                 break;
         }
 

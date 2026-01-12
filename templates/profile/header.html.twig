@@ -1,104 +1,111 @@
 {% if member.translations[locale] is defined %}
-    {% set memberfields = member.translations[locale] %}
-{% elseif member.translations['en'] is defined%}
-    {% set memberfields = member.translations['en'] %}
+  {% set memberfields = member.translations[locale] %}
+{% elseif member.translations['en'] is defined %}
+  {% set memberfields = member.translations['en'] %}
 {% else %}
-    {% set memberfields = member.translations|first %}
+  {% set memberfields = member.translations|first %}
 {% endif %}
 {% set own = app.user == member %}
 {% set admin = is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_SAFETYTEAM'))
-    or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_PROFILE'))
-    or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_ADMIN'))
-%}
+  or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_PROFILE'))
+  or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_ADMIN')) %}
+{% set address = member.activeAddress %}
 <div class="row">
-    <div class="col-12 text-center text-md-left">
-        <h2 class="m-0 d-inline"><strong>
-                {% if member.status == 'PassedAway' %}{{ 'profileinmemoriam'|format(member.Username) }}{% else %}{{ member.Username }}{% endif %}
-            </strong>
+  <div class="col-12 text-center text-md-left">
+    <h2 class="m-0 d-inline"><strong>
+        {% if member.status == 'PassedAway' %}{{ 'profileinmemoriam'|format(member.Username) }}{% else %}{{ member.Username }}{% endif %}
+      </strong>
 
-            {% if member.status != 'PassedAway' and not member.Accommodation is null %}
-                <img src="images/icons/{{ member.Accommodation }}.png" class="mb-2" alt="{{ member.Accommodation|trans }}'
+      {% if member.status != 'PassedAway' and not member.Accommodation is null %}
+        <img src="images/icons/{{ member.Accommodation }}.png" class="mb-2" alt="{{ member.Accommodation|trans }}'
                         title="{{ ('canoffer' ~ member.Accommodation|lower)|trans }}">
-                {% if member.isWheelChairAccessible %}
-                    <img src="images/icons/wheelchairblue.png" class="mb-2" alt="{{ 'wheelchair'|trans }}'
+        {% if not address is same as (false) and address.isWheelChairAccessible %}
+          <img src="images/icons/wheelchairblue.png" class="mb-2" alt="{{ 'wheelchair'|trans }}'
                         title="{{ 'canhostwheelchairyes'|trans }}" >
-                {% endif %}
-            {% endif %}
-        </h2>
-    </div>
+        {% endif %}
+      {% endif %}
+    </h2>
+  </div>
 </div>
 <div class="row align-items-start">
-    <div class="col-12 col-sm-6">
-        <div class="text-center text-md-left">
-            <div class="d-md-none u:w-full u:relative u:pb-[100%] u:m-auto">
-                <div class="u:absolute u:left-0 u:top-0 u:w-full u:h-full">
-                    {% if use_lightbox is defined %}
-                    <a class="js-profile-picture" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}" data-toggle="lightbox"
-                       data-always-show-close="true" data-type="image"
-                       data-title="{{ 'profile.picture.title'| trans }}">
-                        <img class="u:rounded-8 u:w-full u:h-full u:object-cover js-profile-picture" src="{{ url('avatar', { username: member.Username, size: 320}) }}"
-                             alt="{{ 'profile.picture.title'| trans }}">
-                    </a>
-                {% else %}
-                    <a href="{{ url('members_profile', {username: member.username}) }}">
-                        <img class="u:rounded-8 u:w-full u:h-full u:object-cover js-profile-picture" src="{{ url('avatar', { username: member.Username, size: 320}) }}"
-                             alt="{{ 'profile.picture.title'| trans }}">
-                    </a>
-                {% endif %}
-                </div>
-            </div>
-
-            {% if member.Name != ''%}<h3>{{ member.Name }}</h3>{% endif %}
-            {% set address = member.activeAddress %}
-            <h5>{% if not address is same as(false) %}
-                {% set location = address.location %}
-                <a href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>
-                    {%- if location.admin1 != null -%}
-                        , <a href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id}) }}">{{ location.admin1.name }}</a>
-                    {%- endif -%}
-                    , <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
-            {% else %}
-                {{ 'profile.no.city.yet'|trans }}
-            {% endif %}</h5>
-            {% if not own and status_form is defined and not status_form is null %}
-                {{ form_start(status_form, {'attr': {'class': 'u:grid u:grid-cols-2 u:gap-8'}}) }}
-                {{ form_widget(status_form.status) }}
-                <button type="submit" class="o-button o-button--s u:self-center" value="{{ 'submit'|trans }}">{{ 'submit'|trans }}</button>
-                {{ form_end(status_form) }}
-            {% endif %}
+  <div class="col-12 col-sm-6">
+    <div class="text-center text-md-left">
+      <div class="d-md-none u:w-full u:relative u:aspect-1/1 u:m-auto">
+        <div class="u:absolute u:w-[50%] u:h-[50%]">
+          {% if use_lightbox is defined %}
+            <a class="js-profile-picture" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}"
+               data-toggle="lightbox"
+               data-always-show-close="true" data-type="image"
+               data-title="{{ 'profile.picture.title'| trans }}">
+              <img class="u:rounded-8 u:w-full u:h-full u:object-cover js-profile-picture"
+                   src="{{ url('avatar', { username: member.Username, size: 320}) }}"
+                   alt="{{ 'profile.picture.title'| trans }}">
+            </a>
+          {% else %}
+            <a href="{{ url('members_profile', {username: member.username}) }}">
+              <img class="u:rounded-8 u:w-full u:h-full u:object-cover js-profile-picture"
+                   src="{{ url('avatar', { username: member.Username, size: 320}) }}"
+                   alt="{{ 'profile.picture.title'| trans }}">
+            </a>
+          {% endif %}
         </div>
-    </div>
-    <div class="col-12 col-sm-6 teaser-border text-center text-md-left">
-        {% if memberfields.Occupation is defined and memberfields.Occupation != null %}
-            <p class="h5">{{ memberfields.Occupation }}</p>
-        {% endif %}
+      </div>
 
-        <p class="mb-2">
-            {% set showAge = member.isAgeVisible and member.Age != 0 %}
-            {% set showGender = member.isGenderVisible %}
-            {%- if showAge -%}
-                <strong>{{ 'profile.age'|trans }} </strong> {{ member.age }}
-            {%- endif -%}
-            {%- if showAge and showGender -%}, {%- endif %}
-            {%- if not showAge and showGender -%}<strong>{{ 'profile.gender'|trans }}</strong> {%- endif %}
-            {%- if showGender -%}
-                {{ member.gender|trans }}
-            {%- endif -%}
-            {% if showAge or showGender %}<br>{% endif %}<strong>{{ 'profile.joined'|trans }} </strong>
-            {% if member.created.diffInDays <= 7 %}
-                {{ 'lastloginprivacy'| trans }}
-            {% else %}
-                {{ member.created.diffForHumans }}
-            {% endif %}
-            {% if admin %} ({{ member.created|format_datetime() }}){% endif %}
-            <br><strong>{{ 'profile.last.activity'|trans }} </strong>
-            {% set lastActivity = (member.lastActive == null) ? member.created : member.lastActive %}
-            {% if lastActivity.diffInDays <= 7 %}
-                {{ 'lastloginprivacy'| trans }}
-            {% else %}
-                {{ lastActivity.diffForHumans }}
-            {% endif %}
-            {% if admin %} ({{ lastActivity|format_datetime() }}){% endif %}
-        </p>
+      {% if member.visibleName != ''%}<h3>{{ member.visibleName }}</h3>{% endif %}
+
+      <h5>{% if not address is same as(false) %}
+          {% set location = address.location %}
+          <a
+            href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>
+          {%- if location.admin1 != null -%}
+            , <a
+            href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id}) }}">{{ location.admin1.name }}</a>
+          {%- endif -%}
+          , <a
+            href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
+          <input type="hidden" id="latitude" value="{{ address.latitude }}"><input type="hidden" id="longitude" value="{{ address.longitude }}">
+          <div id="location-map"
+               class="u:w-full u:aspect-4/1 u:border-1 u:border-bewelcome"></div>
+        {% else %}
+          {{ 'profile.no.city.yet'|trans }}
+        {% endif %}</h5>
     </div>
+  </div>
+  <div class="col-12 col-sm-6 teaser-border text-center text-md-left">
+    <div id="occupation" class="h5">{% if memberfields.Occupation is defined and memberfields.Occupation != null %}
+      {{ memberfields.Occupation|purify }}
+    {% endif %}</div>
+
+    <p class="mb-2">
+      {% set showAge = member.isAgeVisible and member.Age != 0 %}
+      {% set showGender = member.isGenderVisible %}
+      {%- if showAge -%}
+        <strong>{{ 'profile.age'|trans }}</strong> {{ member.age }}
+      {%- endif -%}
+      {%- if showAge and showGender -%}<br>{%- endif %}
+      {%- if showGender -%} <strong>{{ 'profile.gender'|trans }}</strong> {{ member.gender|trans }}{%- endif %}
+      {% if showAge or showGender %}<br>{% endif %}<strong>{{ 'profile.joined'|trans }}</strong>
+      {% if member.created.diffInDays <= 7 %}
+        {{ 'lastloginprivacy'| trans }}
+      {% else %}
+        {{ member.created.diffForHumans }}
+      {% endif %}
+      {% if admin %} ({{ member.created|format_datetime() }}){% endif %}
+      <br><strong>{{ 'profile.last.activity'|trans }}</strong>
+      {% set lastActivity = (member.lastActive == null) ? member.created : member.lastActive %}
+      {% if lastActivity.diffInDays <= 7 %}
+        {{ 'lastloginprivacy'| trans }}
+      {% else %}
+        {{ lastActivity.diffForHumans }}
+      {% endif %}
+      {% if admin %} ({{ lastActivity|format_datetime() }}){% endif %}
+      {% if not own and status_form is defined and not status_form is null %}
+        {{ form_start(status_form, {'attr': {'class': 'u:grid u:grid-cols-2 u:gap-8'}}) }}
+        {{ form_widget(status_form.status) }}
+        <button type="submit" class="o-button o-button--s u:self-center"
+                value="{{ 'submit'|trans }}">{{ 'submit'|trans }}</button>
+        {{ form_end(status_form) }}
+      {% endif %}
+    </p>
+  </div>
 </div>

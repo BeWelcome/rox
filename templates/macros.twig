@@ -36,7 +36,7 @@
 {% endmacro %}
 
 {% macro avatar(username, size = 48, linked = false, addimage = false, addlink = false, newpage = false) %}
-    {% import _self as macros %}
+  {% import _self as macros %}
     {% set imgclasses %}profileimg
     {% if addimage %}
         {{ addimage }}
@@ -191,11 +191,11 @@
 
 {% macro field_english(language, field, translations) %}
   {% if language != 'en' %}
-    <div class="u:relative u:border u:border-gray-500 u:p-4 u:mt-16">
+    <div class="u:relative u:border u:border-gray-500 u:p-4 u:pt-8 u:w-[40%] u:flex-1">
       <span class="u:absolute u:-top-14 u:left-8 u:bg-white u:px-2 u:text-12">
         {{ 'lang_en'|trans({}, "messages", language) }}
       </span>
-      <p class="u:text-sm">
+      <div class="u:text-sm u:w-full ">
         <small class="form-text text-muted">
           {% if translations['en'][field] is defined %}
             {{ translations['en'][field]|purify }}
@@ -203,7 +203,44 @@
                &nbsp;
           {% endif %}
         </small>
-      </p>
+      </div>
     </div>
   {% endif %}
+{% endmacro %}
+
+{% macro field_translation(form, language, field, translations) %}
+{% import _self as macros %}
+  <div class="u:mb-16">
+    <div class="u:inline-block u:mb-8">{{ form.vars.label|trans({}, 'messages', language) }}</div>
+    <div class="u:flex u:flex-col u:md:flex-row u:gap-16 u:items-stretch">
+      {{ form_widget(form) }}
+      {{ _self.field_english(language, field, translations) }}
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro hostingInterest(hostingInterest, profileLanguage) %}
+  {% set translationId = 'hosting_interest.not_set' %}
+  {% if  hostingInterest == 1 %}
+    {% set translationId = 'hosting_interest.very_low' %}
+  {% elseif hostingInterest == 2 %}
+    {% set translationId = 'hosting_interest.low' %}
+  {% elseif hostingInterest == 3 %}
+    {% set translationId = 'hosting_interest.lower' %}
+  {% elseif hostingInterest == 4 %}
+    {% set translationId = 'hosting_interest.low_to_medium' %}
+  {% elseif hostingInterest == 5 %}
+    {% set translationId = 'hosting_interest.medium' %}
+  {% elseif hostingInterest == 6 %}
+    {% set translationId = 'hosting_interest.medium_to_high' %}
+  {% elseif hostingInterest == 7 %}
+    {% set translationId = 'hosting_interest.high' %}
+  {% elseif hostingInterest == 8 %}
+    {% set translationId = 'hosting_interest.higher' %}
+  {% elseif hostingInterest == 9 %}
+    {% set translationId = 'hosting_interest.very_high' %}
+  {% elseif hostingInterest == 10 %}
+    {% set translationId = 'hosting_interest.cant_wait' %}
+  {% endif %}
+  {{ translationId|trans({}, 'messages', profileLanguage) }}
 {% endmacro %}

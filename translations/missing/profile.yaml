@@ -52,10 +52,6 @@ profile.comment.relation.communicatedonline:
     - '@comment_communicatedonline'
 profile.comment.relation.nevermetinreallife:
     - '@comment_nevermetinreallife'
-profile.age:
-    - '@age'
-profile.gender:
-    - '@gender'
 profile.visited:
     - '@visited'
 profile.no.about.me:
@@ -63,10 +59,10 @@ profile.no.about.me:
     - 'Shown if a member didn''t provide any information about themselves in about me.'
 profile.joined:
     - 'Joined:'
-    - 'Used with the date a member created their profile. Like ""Joined: 10 years ago.""'
+    - Used with the date a member created their profile. Like ''Joined: 10 years ago.''
 profile.last.activity:
     - 'Last activity:'
-    - 'Shows the last time a user accessed the site (not the last time they logged in which might be remembered).'
+    - Shows the last time a user accessed the site (not the last time they logged in which might be remembered).
 profile.no.comment.yet:
     - 'No comment for {to} by {from} yet.'
     - Make sure to keep {to} and {from} in the translation.
@@ -186,4 +182,155 @@ members.confirm.email.button:
 profile.added.new.languages:
     - Added new languages to profile languages.
     - Flash message shown when during editing of languages new fluent, expert or mother tongues were added.
-
+profile.hosting_interest:
+    - 'Hosting interest:'
+    - Text shown on the profile page in the accommodation section if the hosting status is yes.
+hosting_interest.select:
+    - 'Select a hosting interest'
+    - Label for the hosting interest slider
+hosting_interest.not_set:
+    - 'Not set'
+    - Label for the hosting interest
+hosting_interest.very_low:
+    - 'very low'
+    - Label for the hosting interest
+hosting_interest.low:
+    - 'low'
+    - Label for the hosting interest
+hosting_interest.lower:
+    - 'lower'
+    - Label for the hosting interest
+hosting_interest.low_to_medium:
+    - 'lower than medium'
+    - Label for the hosting interest
+hosting_interest.medium:
+    - 'medium'
+    - Label for the hosting interest
+hosting_interest.medium_to_high:
+    - 'higher than medium'
+    - Label for the hosting interest
+hosting_interest.high:
+    - 'high'
+    - Label for the hosting interest slider
+hosting_interest.higher:
+    - 'higher'
+    - Label for the hosting interest slider
+hosting_interest.very_high:
+    - 'very high'
+    - Label for the hosting interest slider
+hosting_interest.cant_wait:
+    - 'can''t wait'
+    - Label for the hosting interest slider
+profile.hosting_interest.last_updated:
+    - 'Last updated: {updated, date, short}'
+    - Shown on the profile page to tell people when the hosting interest was last updated.
+profile.age:
+    - 'Age:'
+    - Shown in the profile header.
+profile.gender:
+    - 'Gender:'
+    - Shown in the profile header.
+profile.confirm.email.button:
+    - 'Confirm email'
+    - Button label on the confirm email page
+profile.edit:
+    - 'Edit Profile'
+    - Menu entry leading to the profile edit page.
+profile.languages:
+    - '@languages'
+profile.update:
+    - 'Update'
+    - Button label on the edit pages of the profile sections.
+profile.edit.about.me:
+    - 'Edit ''about me'''
+    - Tooltip and screen reader text on 'Edit profile'.
+profile.edit.languages:
+    - 'Edit languages'
+    - Tooltip and screen reader text on 'Edit profile'.
+profile.no.languages:
+    - 'No languages selected yet.'
+    - Text on the profile page if the language section is empty (should never be visible to regular members).
+profile.edit.interests:
+    - 'Edit your interests'
+    - Tooltip and screen reader text on 'Edit profile'.
+profile.edit.travel_experiences:
+    - 'Edit your travel experiences'
+    - Tooltip and screen reader text on 'Edit profile'.
+profile.edit.groups:
+    - 'Manage your groups'
+    - Tooltip and screen reader text on 'Edit profile'.
+profile.edit.pictures:
+    - 'Manage your pictures'
+    - Tooltip and screen reader text on 'Edit profile'.
+profile.edit.relations:
+    - 'Manage ''Family and friends'''
+    - Tooltip and screen reader text on 'Edit profile'.
+profile.edit.accommodation:
+    - 'Edit accommodation info'
+    - Tooltip and screen reader text on 'Edit profile'.
+profile.no.accommodation:
+    - 'Member hasn''t set a location and accommodation yet.'
+    - Text on the profile shown after the profile got created but nothing else was done yet.
+member.not.hosting:
+    - 'This member is currently not hosting.'
+    - Text shown if accommodation is set to ''no''.
+profile.where.you.sleep:
+    - 'Sleeping arrangement'
+    - Text shown in the accommodation section.
+profile.location:
+    - Location
+    - Headline on the edit profile page
+profile.change.location:
+    - Change location
+    - Button label on the edit profile page
+accommodation.no:
+    - No
+    - Label for the not hosting accommodation choice
+accommodation.yes:
+    - Yes
+    - Label for the hosting accommodation choice
+label.profile.length_of_stay:
+    - Length of stay
+    - Label for the profile edit form
+label.profile.please_bring:
+    - Please bring
+    - Label for the profile edit form
+label.profile.i_live_with:
+    - I live with
+    - Label for the profile edit form
+label.profile.where_you_sleep:
+    - Sleeping arrangement
+    - Label for the profile edit form
+label.profile.additional_info:
+    - Additional Information
+    - Label for the profile edit form
+label.profile.house_rules:
+    - House rules
+    - Label for the profile edit form
+label.profile.getting_there:
+    - How to get there
+    - Label for the profile edit form
+label.profile.offer_guests:
+    - I can offer my guests
+    - Label for the profile edit form
+label.profile.max_guests:
+    - Maximum number of guests
+    - Label for the profile edit form
+offer.dinner:
+    - A dinner
+    - Label for the standard offer
+offer.guided tour:
+    - A guided tour
+    - Label for the standard offer
+label.profile.wheelchair_accessible:
+    - Wheelchair accessible
+    - Label for the standard offer
+restriction.no_alcohol:
+    - No alcohol please in my flat
+    - Label for the standard restriction
+restriction.no_smoking:
+    - No smoking not even near the flat
+    - Label for the standard restriction
+restriction.no_drugs:
+    - No drug use while you visit
+    - Label for the standard restriction

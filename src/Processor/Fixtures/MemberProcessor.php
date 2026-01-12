@@ -20,7 +20,7 @@ final readonly class MemberProcessor implements ProcessorInterface
         'MaxLengthOfStay',
         'Organizations',
         'AdditionalAccommodationInfo',
-        'OtherRestrictions',
+        'HouseRules',
         'InformationToGuest',
         'AboutMe',
         'Hobbies',
@@ -30,7 +30,7 @@ final readonly class MemberProcessor implements ProcessorInterface
         'PleaseBring',
         'OfferGuests',
         'OfferHosts',
-        'PublicTransport',
+        'GettingThere',
         'PastTrips',
         'PlannedTrips',
     ];
@@ -48,10 +48,8 @@ final readonly class MemberProcessor implements ProcessorInterface
             return;
         }
 
-        // Make sure name is shown
-        $hideAttribute = $object->getHideAttribute();
-        $object->setHideAttribute(0);
-        if (null === $object->getName()) {
+        // If name is set in fixture skip setting name and shortname
+        if (null === $object->getFullName()) {
             $name = $this->faker->firstName($object->getGender()) . ' ' . $this->faker->lastName($object->getGender());
             $shortName = null;
 
@@ -63,7 +61,6 @@ final readonly class MemberProcessor implements ProcessorInterface
             $object->setShortName($shortName);
             $object->setName($name);
         }
-        $object->setHideAttribute($hideAttribute);
 
         $passwordHasher = $this->passwordHasherFactory->getPasswordHasher($object);
         $hashedPassword = $passwordHasher->hash('password');
@@ -82,7 +79,7 @@ final readonly class MemberProcessor implements ProcessorInterface
             return;
         }
 
-        if ('member-empty' === $object->getUsername()) {
+        if ('member-empty' === $id) {
             return;
         }
 

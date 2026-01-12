@@ -3,9 +3,16 @@
 {% block title %}{{ 'profile.title'|trans({username:member.Username}) }}{% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('avatar') }}
+  {{ parent() }}
+  {{ encore_entry_script_tags('avatar') }}
+  {{ encore_entry_script_tags('profile/profile') }}
 {% endblock javascripts %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ encore_entry_link_tags('lightbox') }}
+  {{ encore_entry_link_tags('leaflet') }}
+{% endblock %}
 
 {% block content %}
     <div class="u:mb-16">

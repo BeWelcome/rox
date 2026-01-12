@@ -11,6 +11,7 @@ use App\Entity\MemberTranslation;
 use App\Form\ProfileStatusFormType;
 use App\Service\Mailer;
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -169,6 +170,16 @@ readonly class ProfileModel
             case 'travels':
                 $errors = $this->handleTravelExperiences($member, $data);
                 break;
+            case 'accommodation':
+                $errors = $this->handleAccommodation($member, $data);
+                break;
+        }
+
+        if (empty($errors)) {
+            $member->setUpdated(new DateTime());
+
+            $this->entityManager->persist($member);
+            $this->entityManager->flush();
         }
 
         return $errors;
@@ -210,6 +221,40 @@ readonly class ProfileModel
 
         $this->handleField($member, $language, 'PastTrips', $data['past']);
         $this->handleField($member, $language, 'PlannedTrips', $data['planned']);
+
+        $this->entityManager->persist($member);
+        $this->entityManager->flush();
+
+        return [];
+    }
+
+    private function handleAccommodation(Member $member, array $data): array
+    {
+        $language = $data['language'];
+
+        $member->setAccommodation($data['accommodation']);
+        $member->setMaxGuests($data['max_guests']);
+        if ('yes' === $data['accommodation']) {
+            $member->setHostingInterest($data['hosting_interest']);
+        }
+        $member->setStandardOffers($data['offers']);
+        $member->setRestrictions($data['restrictions']);
+
+        $address = $member->getActiveAddress();
+        if (null !== $address) {
+            $address->setIsWheelChairAccessible($data['wheelchair_accessible'] ?? false);
+
+            $this->entityManager->persist($address);
+        }
+
+        $this->handleField($member, $language, 'MaxLengthOfStay', $data['length_of_stay']);
+        $this->handleField($member, $language, 'ILiveWith', $data['i_live_with']);
+        $this->handleField($member, $language, 'PleaseBring', $data['please_bring']);
+        $this->handleField($member, $language, 'OfferGuests', $data['offer_guests']);
+        $this->handleField($member, $language, 'WhereYouSleep', $data['where_you_sleep']);
+        $this->handleField($member, $language, 'AdditionalInfo', $data['additional_info']);
+        $this->handleField($member, $language, 'HouseRules', $data['house_rules']);
+        $this->handleField($member, $language, 'GettingThere', $data['getting_there']);
 
         $this->entityManager->persist($member);
         $this->entityManager->flush();

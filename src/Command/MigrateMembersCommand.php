@@ -76,7 +76,7 @@ class MigrateMembersCommand extends Command
                 GenderOfGuests,
                 HostingInterest,
                 Reminders,
-                LastLogin,
+                LastActivity,
                 LastSwitchToActive,
                 created,
                 updated,
@@ -88,7 +88,7 @@ class MigrateMembersCommand extends Command
                 MaxLengthOfStay,
                 Organizations,
                 AdditionalAccommodationInfo,
-                OtherRestrictions,
+                HouseRules,
                 ProfileLanguage,
                 AboutMe,
                 Hobbies,
@@ -98,7 +98,7 @@ class MigrateMembersCommand extends Command
                 PleaseBring,
                 OfferGuests,
                 OfferHosts,
-                PublicTransport,
+                GettingThere,
                 PastTrips,
                 PlannedTrips                          
             ) VALUES (
@@ -382,6 +382,14 @@ class MigrateMembersCommand extends Command
         return Command::SUCCESS;
     }
 
+    private function migrateAccommodation(string $accommodation): string
+    {
+        return match ($accommodation) {
+            'neverask' => 'no',
+            'dependonrequest', 'anytime' => 'yes',
+        };
+    }
+
     private function migrateTypicalOffer(string $typicalOffer): string
     {
         $standardOffer = '';
@@ -391,6 +399,7 @@ class MigrateMembersCommand extends Command
         if (str_contains(TypicalOfferType::GUIDED_TOUR, $typicalOffer)) {
             $standardOffer .= ',' . StandardOffersType::GUIDED_TOUR;
         }
+
         if (str_contains(TypicalOfferType::WHEELCHAIR_ACCESSIBLE, $typicalOffer)) {
             $standardOffer .= ',' . StandardOffersType::WHEELCHAIR_ACCESSIBLE;
         }

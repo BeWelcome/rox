@@ -4,32 +4,38 @@ App\Entity\Address:
         location: '@NewBerlin'
         latitude: '@NewBerlin->latitude'
         longitude: '@NewBerlin->longitude'
+        isWheelChairAccessible: '<randomElement([0, 1])>'
     address_{1..5}:
         member: "@member_<current()>"
         location: '@NewBerlin'
         latitude: '@NewBerlin->latitude'
         longitude: '@NewBerlin->longitude'
+        isWheelChairAccessible: '<randomElement([0, 1])>'
     address_multiple:
         member: "@member_1"
         active: false
         location: '@NewJayapura'
         latitude: '@NewJayapura->latitude'
         longitude: '@NewJayapura->longitude'
+        isWheelChairAccessible: '<randomElement([0, 1])>'
     address_{6..10}:
         member: "@member_<current()>"
         location: '@NewJayapura'
         latitude: '@NewJayapura->latitude'
         longitude: '@NewJayapura->longitude'
+        isWheelChairAccessible: '<randomElement([0, 1])>'
     address_suspended:
         member: "@member_suspended"
         location: '@NewJayapura'
         latitude: '@NewJayapura->latitude'
         longitude: '@NewJayapura->longitude'
+        isWheelChairAccessible: '<randomElement([0, 1])>'
     address_banned:
         member: "@member_banned"
         location: '@NewJayapura'
         latitude: '@NewJayapura->latitude'
         longitude: '@NewJayapura->longitude'
+        isWheelChairAccessible: '<randomElement([0, 1])>'
     address_retired:
         member: "@member_retired"
         location: '@NewJayapura'

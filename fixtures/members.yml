@@ -9,7 +9,7 @@ App\Entity\Member:
         Name: 'BeWelcome Admin'
         ShortName: 'BWAdmin'
         Gender: 'other'
-        Accommodation: 'neverask'
+        Accommodation: 'no'
     member_{1..5}:
         Username: 'member-<current()>'
         BirthDate: <dateTimeBetween('-80years', '-18years')>
@@ -17,7 +17,7 @@ App\Entity\Member:
         Status: '<randomElement(["Active", "OutOfRemind"])>'
         HideAttribute: <numberBetween(0, 31)>
         Gender: '<randomElement(["female", "male", "other"])>'
-        Accommodation: '<randomElement(["anytime", "neverask"])>'
+        Accommodation: '<randomElement(["yes", "no"])>'
         hostingInterest: '<numberBetween(1,10)>'
     member_{6..10}:
         Username: 'member-<current()>'
@@ -25,7 +25,7 @@ App\Entity\Member:
         Email: 'member-<current()>\@bewelcome.org'
         Status: 'Active'
         HideAttribute: <numberBetween(0, 31)>
-        Accommodation: '<randomElement(["neverask", "anytime"])>'
+        Accommodation: '<randomElement(["no", "yes"])>'
         HostingInterest: '<numberBetween(1,10)>'
         Gender: '<randomElement(["female","male", "other"])>'
     member_banned:
@@ -37,7 +37,7 @@ App\Entity\Member:
         Name: 'Banned Member'
         ShortName: 'Banned'
         HideAttribute: <numberBetween(0, 31)>
-        Accommodation: '<randomElement(["neverask", "anytime"])>'
+        Accommodation: '<randomElement(["no", "yes"])>'
         MaxGuests: 1
         Gender: 'male'
     member_suspended:
@@ -48,7 +48,7 @@ App\Entity\Member:
         Status: 'SuspendedBeta'
         Name: 'Suspended Member'
         ShortName: 'Suspended'
-        Accommodation: '<randomElement(["neverask", "anytime"])>'
+        Accommodation: '<randomElement(["no", "yes"])>'
         MaxGuests: 1
         Gender: 'female'
     member_retired:
@@ -58,7 +58,7 @@ App\Entity\Member:
         HideAttribute: <numberBetween(0, 31)>
         Status: 'AskToLeave'
         Name: 'retired_10'
-        Accommodation: 'neverask'
+        Accommodation: 'no'
         MaxGuests: 1
         Gender: 'other'
     member_after_data_retention:
@@ -68,7 +68,7 @@ App\Entity\Member:
         HideAttribute: 31
         Status: 'AskToLeave'
         Name: 'retired_10'
-        Accommodation: 'neverask'
+        Accommodation: 'no'
         MaxGuests: 0
         Gender: 'other'
     member_empty:
@@ -78,6 +78,6 @@ App\Entity\Member:
         HideAttribute: 31
         Status: 'Active'
         Name: 'Empty Member'
-        Accommodation: 'neverask'
+        Accommodation: 'no'
         MaxGuests: 1
         Gender: 'female'

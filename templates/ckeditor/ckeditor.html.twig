@@ -1,26 +1,40 @@
 {% block ckeditor_widget %}
-    {% if image_upload %}
-        {% set attr = attr|merge({class: (attr.class|default('') ~ ' js-ckeditor-images')|trim}) %}
+    {% set attr = attr|merge({}) %}
+    {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_INLINE') or
+          editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_DECOUPLED')
+      %}
+      <div class="u:flex-1 u:border-1 u:border-gray-500 u:relative u:group">
+        {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_DECOUPLED') %}
+          <div id="form.vars.id ~ '_toolbar'"></div>
+        {% endif %}
+        <div id="{{ form.vars.id ~ '_editor' }}" data-input="{{ form.vars.id }}" data-editor-type="{{ editor_type }}" data-image-upload="{{ image_upload ? 'yes' : 'no' }}">
+          {{ value|raw }}
+        </div>
+        {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_INLINE') %}
+          <div class="u:absolute u:top-0 u:right-0 u:bg-white u:p-8 u:group-focus-within:hidden u:pointer-events-none"><i class="fa fa-edit"></i><span class="sr-only">{{ 'profile.edit'|trans() }}</span></div>
+        {% endif %}
+      </div>
+      <input type="hidden" {{ block('widget_attributes') }}>
     {% else %}
-        {% set attr = attr|merge({class: (attr.class|default('') ~ ' js-ckeditor-no-images')|trim}) %}
+      {% set attr = attr|merge({'data-editor-type': editor_type}) %}
+      {% set attr = attr|merge({'data-image-upload': image_upload ? 'yes' : 'no'}) %}
+      <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
     {% endif %}
-    <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
     {% if not async %}
-        {{ block( '_ckeditor_javascript' ) }}
-        {{ block( '_ckeditor_stylesheet' ) }}
+      {{ block( '_ckeditor_javascript' ) }}
+      {{ block( '_ckeditor_stylesheet' ) }}
     {% endif %}
 {% endblock %}
 
 {% block _ckeditor_javascript %}
-    {{ encore_entry_script_tags('roxeditor') }}
+  {{ encore_entry_script_tags('roxeditor') }}
 {% endblock %}
 
 {% block _ckeditor_stylesheet %}
-    {{ encore_entry_link_tags('roxeditor') }}
-    <style>
-        .ck-editor__editable {
-            min-height: 10em;
-        }
-    </style>
+  {{ encore_entry_link_tags('roxeditor') }}
+  <style>
+    .ck-editor__editable {
+      min-height: 10em;
+    }
+  </style>
 {% endblock %}
-

@@ -88,7 +88,7 @@ const hostingInterest = document.getElementById('hosting_interest');
 const radioHandler = (event) => {
     if (event.target.type === 'radio') {
         console.log("Clicked: ", event.target.type, event.target.checked, event.target.value);
-        if (event.target.value === 'neverask') {
+        if (event.target.value === 'no') {
             hostingInterest.classList.remove('u:block');
             hostingInterest.classList.add('u:hidden');
         } else {

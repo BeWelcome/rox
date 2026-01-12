@@ -1393,6 +1393,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
         return $this->translationsIndexedByLocale;
     }
+
     public function addTranslation(MemberTranslation $translation): void
     {
         if (!$this->translations->contains($translation)) {

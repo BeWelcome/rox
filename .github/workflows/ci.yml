@@ -92,6 +92,9 @@ jobs:
       - name: Create test database
         run: bin/console test:database:create --env=test
 
+      - name: Warmup cache
+        run: bin/console cache:clear
+
       - name: Setup Yarn
         uses: threeal/setup-yarn-action@v2.0.0
         with:

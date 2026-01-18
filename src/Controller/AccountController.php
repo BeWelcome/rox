@@ -12,7 +12,6 @@ use App\Model\SignupModel;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -27,9 +26,9 @@ class AccountController extends AbstractController
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly ProfileModel           $profileModel,
-        private readonly SignupModel           $signupModel,
-        private readonly TranslatorInterface    $translator,
+        private readonly ProfileModel $profileModel,
+        private readonly SignupModel $signupModel,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 

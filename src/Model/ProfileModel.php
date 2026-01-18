@@ -212,6 +212,21 @@ readonly class ProfileModel
         $this->entityManager->flush();
     }
 
+    public function sendEmailConfirmationEmail(Member $member, string $email): void
+    {
+        $nanoClient = new Client();
+        $member->setRegistrationKey($nanoClient->generateId(16, Client::MODE_DYNAMIC));
+
+        $parameters = [
+            'subject' => 'signup.confirm.email',
+            'username' => $member->getUsername(),
+            'email_address' => $email,
+            'key' => $member->getRegistrationKey(),
+        ];
+
+        $this->mailer->sendSignupEmail($member, 'newemail', $parameters);
+    }
+
     private function handleAboutMe(Member $member, array $data): array
     {
         $language = $data['language'];
@@ -287,20 +302,5 @@ readonly class ProfileModel
         $this->entityManager->flush();
 
         return [];
-    }
-
-    public function sendEmailConfirmationEmail(Member $member, string $email): void
-    {
-        $nanoClient = new Client();
-        $member->setRegistrationKey($nanoClient->generateId(16, Client::MODE_DYNAMIC));
-
-        $parameters = [
-            'subject' => 'signup.confirm.email',
-            'username' => $member->getUsername(),
-            'email_address' => $email,
-            'key' => $member->getRegistrationKey(),
-        ];
-
-        $this->mailer->sendSignupEmail($member, 'newemail', $parameters);
     }
 }

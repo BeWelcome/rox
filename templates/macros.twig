@@ -208,12 +208,15 @@
   {% endif %}
 {% endmacro %}
 
-{% macro field_translation(form, language, field, translations) %}
-{% import _self as macros %}
+{% macro field_translation(form, language, field, username, translations) %}
+  {% import _self as macros %}
   <div class="u:mb-16">
     <div class="u:inline-block u:mb-8">{{ form.vars.label|trans({}, 'messages', language) }}</div>
     <div class="u:flex u:flex-col u:md:flex-row u:gap-16 u:items-stretch">
-      {{ form_widget(form) }}
+      {% set attr = form.vars.attr|merge({'data-language': language}) %}
+      {% set attr = attr|merge({'data-field': field}) %}
+      {% set attr = attr|merge({'data-username': username}) %}
+      {{ form_widget(form, {attr: attr}) }}
       {{ _self.field_english(language, field, translations) }}
     </div>
   </div>

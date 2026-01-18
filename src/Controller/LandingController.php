@@ -165,11 +165,8 @@ class LandingController extends AbstractController
         return $content;
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/widget/accommodation', name: '/widget/accommodation')]
-    public function setAccommodationAction(Request $request, Environment $twig)
+    public function setAccommodation(Request $request, Environment $twig): JsonResponse
     {
         /** @var Member $member */
         $member = $this->getUser();

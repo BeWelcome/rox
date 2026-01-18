@@ -1,36 +1,68 @@
 {% extends 'profile/profile.html.twig' %}
 
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('profile/account') }}
+{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ encore_entry_link_tags('profile/account') }}
+{% endblock %}
+
 {% block page_content %}
-  {{ form_start(form) }}
-  {{ form_row(form.name) }}
-  {{ form_row(form.show_name) }}
-  {{ form_row(form.short_name) }}
+  <div class="u:w-full">
+    <div class="card">
+      <div class="card-header">
+        {{ 'account.edit'|trans }}
+      </div>
+      <div class="card-block p-2">
+        <div class="card-text">
 
-  <label class="form-label">{{ form.gender.vars.label|trans }}</label>
-  <div class="u:flex u:flex-row u:justify-between">
-    {% for child in form.gender %}
-      <div class="o-radio">
-        <input type="radio" class="o-radio__input"
-               id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
-               value="{{ child.vars.value }}"
-               {% if child.vars.checked %}checked="checked"{% endif %}
-        >
-        <label class="o-radio__label">{{ child.vars.label|trans }}</label></div>
-      {% do child.setRendered %}
-    {% endfor %}
+          {{ form_start(form) }}
+          {{ form_errors(form) }}
+
+          {{ form_label(form.name) }}
+          {{ form_widget(form.name) }}
+          {{ form_errors(form.name) }}
+          {{ form_help(form.name) }}
+
+          {{ form_row(form.show_name) }}
+          {{ form_row(form.short_name) }}
+
+          <label class="form-label">{{ form.gender.vars.label|trans }}</label>
+          <div class="u:flex u:flex-row u:justify-between">
+            {% for child in form.gender %}
+              <div class="o-radio">
+                <input type="radio" class="o-radio__input"
+                       id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
+                       value="{{ child.vars.value }}"
+                       {% if child.vars.checked %}checked="checked"{% endif %}
+                >
+                <label class="o-radio__label">{{ child.vars.label|trans }}</label></div>
+              {% do child.setRendered %}
+            {% endfor %}
+          </div>
+          {{ form_row(form.show_gender) }}
+
+          {{ form_label(form.birthdate) }}
+          {{ form_widget(form.birthdate) }}
+          {{ form_errors(form.birthdate) }}
+          {{ form_help(form.birthdate) }}
+
+          {{ form_row(form.show_age) }}
+
+          {{ form_label(form.email) }}
+          {{ form_widget(form.email) }}
+          {{ form_errors(form.email) }}
+          {{ form_help(form.email) }}
+
+          <div class="u:flex u:justify-end u:my-8">
+            <input type="submit" class="o-button" value="{{ 'account.update'|trans }}">
+          </div>
+          {{ form_end(form) }}
+        </div>
+      </div>
+    </div>
   </div>
-  {{ form_row(form.show_gender) }}
-  {{ form_row(form.birthdate) }}
-  {{ form_row(form.show_age) }}
-
-  {{ form_row(form.address) }}
-  {{ form_row(form.show_address) }}
-
-  {{ form_row(form.email) }}
-
-  <div class="u:flex u:justify-end u:my-8">
-    <input type="submit" class="o-button" value="{{ 'account.update'|trans }}">
-  </div>
-
-  {{ form_end(form) }}
 {% endblock page_content %}

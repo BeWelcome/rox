@@ -79,7 +79,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     protected string $email;
 
     #[ORM\Column(name: 'NewEmail', type: 'string', nullable: true)]
-    protected string $newEmail;
+    protected ?string $newEmail;
 
     #[ORM\Column(name: 'Locale', type: 'string', length: 8, nullable: false)]
     protected string $locale = 'en';
@@ -326,7 +326,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         return $this;
     }
 
-    public function getNewEmail(): string
+    public function getNewEmail(): ?string
     {
         return $this->newEmail;
     }

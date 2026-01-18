@@ -118,8 +118,9 @@ const config = {
         ]
     },
     autosave: {
+        waitingTime: 2000,
         save( editor ) {
-            return saveData( editor );
+            return saveData( editor, false );
         }
     },
     ckfinder: {
@@ -164,6 +165,24 @@ sourceElements.forEach( (element) => {
 
     editor
         .then( editor => {
+            editor.ui.focusTracker.on( 'change:isFocused', ( evt, data, isFocused ) => {
+                console.log(editor.sourceElement.id + " - " + isFocused)
+
+                const host = editor.sourceElement;
+                const editorType = host.dataset.editorType;
+
+                if (editorType === 'inline') {
+                    const progress = document.getElementById(host.dataset.progress)
+
+                    if (isFocused) {
+                        progress.classList.remove('u:hidden')
+                        progress.classList.add('u:bg-bewelcome')
+                    } else {
+                        saveData(editor, true)
+                    }
+                }
+            } );
+
             editors.set(element.id, editor)
 
             const form = editor.sourceElement.closest('form')
@@ -194,27 +213,49 @@ sourceElements.forEach( (element) => {
 
 function registerSubmitHandler( form ) {
     form.addEventListener('submit', function( form ) {
-        // get all editors and set data on hidden input for inline and decoupled editor
-        // then remove data from localeStorage
-        for (let [id, editor] of editors.entries()) {
+        // Remove data from localeStorage.
+        for (let [editor] of editors.entries()) {
             const element = editor.sourceElement
-
-            if (element.dataset.editorType === 'inline') {
-                const input = document.getElementById(element.dataset.input)
-                input.value = editor.getData()
-            }
 
             window.localStorage.removeItem(element.id);
         }
     })
 }
 
-function saveData( editor ) {
-    const lastChange = new Date();
+async function saveData( editor, lostFocus ) {
+    const element = document.getElementById(editor.sourceElement.id)
 
-    window.localStorage.setItem(editor.sourceElement.id, JSON.stringify({
+    const lastChange = new Date();
+    const language = element.dataset.language;
+    const storageKey = editor.sourceElement.id + "-" + (language ? language : '');
+
+    window.localStorage.setItem(storageKey, JSON.stringify({
         lastChange: lastChange,
         editorData: editor.getData()
     }));
-}
 
+    if (lostFocus) {
+        // Only triggered for inline editor: messages, forum posts, trips description stay keep the data till form submit
+        const progress = document.getElementById(element.dataset.progress);
+
+        if (progress) {
+            progress.classList.add('u:bg-bewelcome', 'u:animate-pulse')
+        }
+
+        // Post data to the server
+        const form = new FormData();
+        form.append('field', element.dataset.field);
+        form.append('language', element.dataset.language);
+        form.append('username', element.dataset.username);
+        form.append('content', editor.getData());
+
+        await fetch("/members/update/field", { method: 'POST', body: form })
+            .then(() => {
+                if (progress) {
+                    progress.classList.remove('u:animate-pulse', 'u:bg-bewelcome')
+                    progress.classList.add('u:hidden')
+                }
+                window.localStorage.removeItem(storageKey);
+            })
+    }
+}

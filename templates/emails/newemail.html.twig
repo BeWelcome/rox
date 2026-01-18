@@ -1,0 +1,9 @@
+{% extends 'emails/email.html.twig' %}
+
+{% block content%}
+    <p>{{ 'email.change'|trans }}</p>
+    <p>{{ 'email.change.confirm.link'|trans({'email_address': email_address}) }}</p>
+    <p><a href="{{ url('confirm_email', { username: username, registrationKey: key }) }}">{{ 'email.change.confirm.email.address'|trans }}</a></p>
+    <p>{{ 'email.change.confirm.key'|trans }}</p>
+    <p><button>{{ key }}</button></p>
+{% endblock content %}

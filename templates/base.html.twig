@@ -1,134 +1,149 @@
 {% import 'macros.twig' as macros %}
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}" dir="auto">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <link rel="icon" type="image/png" href="{{ asset('/images/favicon-96x96.png') }}" sizes="96x96" />
-      <link rel="icon" type="image/svg+xml" href="{{ asset('/images/favicon.svg') }}" />
-      <link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}" />
-      <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/images/apple-touch-icon.png') }}" />
-      <meta name="apple-mobile-web-app-title" content="beWelcome" />
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/png" href="{{ asset('/images/favicon-96x96.png') }}" sizes="96x96"/>
+  <link rel="icon" type="image/svg+xml" href="{{ asset('/images/favicon.svg') }}"/>
+  <link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/images/apple-touch-icon.png') }}"/>
+  <meta name="apple-mobile-web-app-title" content="beWelcome"/>
 
-    <title>{%- if block('title') is defined %}{{ block('title') | trim }} | {% endif -%} BeWelcome</title>
+  <title>{%- if block('title') is defined %}{{ block('title') | trim }} | {% endif -%} BeWelcome</title>
 
-    <meta name="description" content="{{ 'default_meta_description' | trans }}">
-    <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
-    <meta name="robots" content="{{ robots }}">
-    {% block redirect %}{% endblock %}
+  <meta name="description" content="{{ 'default_meta_description' | trans }}">
+  <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
+  <meta name="robots" content="{{ robots }}">
+  {% block redirect %}{% endblock %}
 
-    {{ encore_entry_link_tags('bewelcome') }}
-    {{ encore_entry_link_tags('tailwind') }}
+  {{ encore_entry_link_tags('bewelcome') }}
+  {{ encore_entry_link_tags('tailwind') }}
 
-    {% block stylesheets %}{% endblock %}
+  {% block stylesheets %}{% endblock %}
 
-    {% block matomo %}{% endblock %}
-    <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
+  {% block matomo %}{% endblock %}
+  <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
 
-    <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
-    <script>
-      // Check that service workers are supported
-      if ('serviceWorker' in navigator) {
-        // Use the window load event to keep the page load performant
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('{{ asset('service-worker.js') }}');
-        });
-      }
-    </script>
-  </head>
-  <body>
-    {% set sidebar = (submenu is defined) %}
-    {% include 'menu.html.twig' %}
-    {% block main %}
-    <main role="main">
-      <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
-      </div>
-      {% set contentBlock %}
-        {% set loggedInMember = app.user %}
-          {% if not loggedInMember is null and not hide_finish_setup is defined %}
-            {% if loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::MAIL_CONFIRMED') or
-                loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::AWAITING_MAIL_CONFIRMATION') %}
-                <div class="u:flex u:flex-col u:md:flex-row u:justify-between u:mt-8 alert alert-notice">
-                    <div>{% set deletionDate = app.user.created|date_modify("+7 days")|format_date('long') %}
-                        {{ 'profile.finish.setup'|trans({deletion_date: deletionDate})|raw }}</div>
-                    <div><a class="o-button bg-primary white" href="{{ url('finish_setup', {username: app.user.Username}) }}">{{ 'profile.finish.setup.button'|trans }}</a></div>
-                </div>
-            {% endif %}
-            {% if loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::ACCOUNT_ACTIVATED') %}
-                <div class="u:flex u:justify-between u:mt-8 alert alert-notice">
-                    <div>{{ 'member.mail.not.confirmed'|trans|raw }}</div>
-                    <div><a class="o-button bg-primary white" href="{{ url('confirm_email', {username: app.user.Username}) }}">{{ 'profile.confirm.email.button'|trans }}</a></div>
-                </div>
+  <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
+  <script>
+    // Check that service workers are supported
+    if ('serviceWorker' in navigator) {
+      // Use the window load event to keep the page load performant
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('{{ asset('service-worker.js') }}');
+      });
+    }
+  </script>
+</head>
+<body>
+{% set sidebar = (submenu is defined) %}
+{% include 'menu.html.twig' %}
+{% block main %}
+  <main role="main">
+    <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
+    </div>
+    {% set contentBlock %}
+      {% set loggedInMember = app.user %}
+      {% if not loggedInMember is null %}
+        {% if not hide_finish_setup is defined %}
+          {% if loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::MAIL_CONFIRMED') or
+            loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::AWAITING_MAIL_CONFIRMATION') %}
+            <div class="u:flex u:flex-col u:md:flex-row u:justify-between u:mt-8 alert alert-notice">
+              <div>{% set deletionDate = app.user.created|date_modify("+7 days")|format_date('long') %}
+                {{ 'profile.finish.setup'|trans({deletion_date: deletionDate})|raw }}</div>
+              <div><a class="o-button bg-primary white"
+                      href="{{ url('finish_setup', {username: app.user.Username}) }}">{{ 'profile.finish.setup.button'|trans }}</a>
+              </div>
+            </div>
+          {% endif %}
+          {% if loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::ACCOUNT_ACTIVATED') %}
+            <div class="u:flex u:justify-between u:mt-8 alert alert-notice">
+              <div>{{ 'member.mail.not.confirmed'|trans|raw }}</div>
+              <div><a class="o-button bg-primary white"
+                      href="{{ url('confirm_email', {username: app.user.Username}) }}">{{ 'profile.confirm.email.button'|trans }}</a>
+              </div>
+            </div>
+          {% endif %}
+          {% if not loggedInMember.newEmail is null %}
+            <div class="u:flex u:justify-between u:mt-8 alert alert-notice">
+              <div>{{ 'change.email.not.confirmed'|trans|raw }}</div>
+              <div><a class="o-button bg-primary white"
+                      href="{{ url('change_email', {username: app.user.Username}) }}">{{ 'profile.confirm.email.button'|trans }}</a>
+              </div>
+            </div>
           {% endif %}
         {% endif %}
-        {% for label, messages in app.flashes %}
-          <div class="row">
-            {% for message in messages %}
-              <div class="col-12">
-                <div class="alert alert-{{ label }}">
-                  {{ message | raw }}
-                </div>
+      {% endif %}
+      {% for label, messages in app.flashes %}
+        <div class="row">
+          {% for message in messages %}
+            <div class="col-12">
+              <div class="alert alert-{{ label }}">
+                {{ message | raw }}
               </div>
-            {% endfor %}
-          </div>
-        {% endfor %}
-        {% block content %}{% endblock %}
-      {% endset %}
-      <div class="container-lg">
-        {% if sidebar %}
-          <div class="row mt-2">
-            <div class="col-12 col-md-9">
-              <p class="float-right d-md-none">
-                <button type="button" class="btn btn-primary btn-sm ml-3" aria-label="Open sidemenu" data-toggle="offcanvas"><span class="navbar-dark navbar-toggler-icon"></span></button>
-              </p>
-              {{  contentBlock | raw }}
             </div>
-            <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
-              <div class="w-100 p-1 text-right d-md-none">
-                <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
-                  <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
-                </button>
-              </div>
-                <div class="list-group u:rounded-8 mb-2">
-                    {% for filter,menuItem in submenu.items %}
-                        {% if 'separator' in filter %}
-                            </div>
-                            {% if menuItem.key is defined %}<h3
-                                class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3>
-                            {% endif %}
-                            <div class="list-group u:rounded-8 mb-2">
-                        {% elseif 'profile_picture' in filter %}
-                            <div id="react_mount" data-globals="{{ globals_js_json }}"></div>
-                        {% else %}
-                            <a class="list-group-item nav-link{% if submenu.active == filter %} active{% endif %}"
-                               href="{{ menuItem.url }}">{% if menuItem.icon is defined %}<i
-                                    class="fas fa-fw fa-{{ menuItem.icon }}"></i> {% endif %}{{ menuItem.key | lower | trans }}
-                                {% if menuItem.count is defined -%}
-                                <span class="badge
+          {% endfor %}
+        </div>
+      {% endfor %}
+      {% block content %}{% endblock %}
+    {% endset %}
+    <div class="container-lg">
+      {% if sidebar %}
+        <div class="row mt-2">
+          <div class="col-12 col-md-9">
+            <p class="float-right d-md-none">
+              <button type="button" class="btn btn-primary btn-sm ml-3" aria-label="Open sidemenu"
+                      data-toggle="offcanvas"><span class="navbar-dark navbar-toggler-icon"></span></button>
+            </p>
+            {{ contentBlock | raw }}
+          </div>
+          <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
+            <div class="w-100 p-1 text-right d-md-none">
+              <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
+                <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
+              </button>
+            </div>
+            <div class="list-group u:rounded-8 mb-2">
+              {% for filter,menuItem in submenu.items %}
+              {% if 'separator' in filter %}
+            </div>
+            {% if menuItem.key is defined %}<h3
+              class="mt-3 h3-canvas-color">{{ menuItem.key | lower | trans }}</h3>
+            {% endif %}
+            <div class="list-group u:rounded-8 mb-2">
+              {% elseif 'profile_picture' in filter %}
+                <div id="react_mount" data-globals="{{ globals_js_json }}"></div>
+              {% else %}
+                <a class="list-group-item nav-link{% if submenu.active == filter %} active{% endif %}"
+                   href="{{ menuItem.url }}">{% if menuItem.icon is defined %}<i
+                    class="fas fa-fw fa-{{ menuItem.icon }}"></i> {% endif %}{{ menuItem.key | lower | trans }}
+                  {% if menuItem.count is defined -%}
+                    <span class="badge
                                   {% if submenu.active == filter %}bg-white text-primary{% else %}badge-primary{% endif %}
                                    u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center pull-right">
                                     {{ menuItem.count }}
                                 </span>
-                                {%- endif %}
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+                  {%- endif %}
+                </a>
+              {% endif %}
+              {% endfor %}
             </div>
           </div>
-        {% else %}
-          {{  contentBlock | raw }}
-        {% endif %}
-      </div>
-    </main>
-    {% endblock main %}
-    {% include 'footer.html.twig' %}
-    {{ encore_entry_script_tags('bewelcome') }}
-    {{ encore_entry_script_tags('updatecounters') }}
-    {% if sidebar %}
-        {{ encore_entry_script_tags('offcanvas') }}
-    {% endif %}
-    {% block javascripts %}{% endblock javascripts %}
-  </body>
+        </div>
+      {% else %}
+        {{ contentBlock | raw }}
+      {% endif %}
+    </div>
+  </main>
+{% endblock main %}
+{% include 'footer.html.twig' %}
+{{ encore_entry_script_tags('bewelcome') }}
+{{ encore_entry_script_tags('updatecounters') }}
+{% if sidebar %}
+  {{ encore_entry_script_tags('offcanvas') }}
+{% endif %}
+{% block javascripts %}{% endblock javascripts %}
+</body>
 </html>

@@ -448,7 +448,7 @@
               </div>
             {% endif %}
 
-            {% if member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
+            {% if not edit and member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
               <div>
                 <a href="{{ url('hosting_request', {username: member.username}) }}"
                    class="btn btn-primary float-right"><i

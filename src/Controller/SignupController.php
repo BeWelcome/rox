@@ -176,7 +176,8 @@ class SignupController extends AbstractController
     #[Route(
         path: '/members/{username:member}/confirm/{registrationKey}',
         name: 'confirm_email',
-        defaults: ['registrationKey' => null]
+        defaults: ['registrationKey' => null],
+        priority: 20
     )]
     public function confirmEmailAddress(Request $request, Member $member, ?string $registrationKey): Response
     {
@@ -193,7 +194,9 @@ class SignupController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
-        $confirmEmailAddressForm = $this->createForm(ConfirmEmailAddressFormType::class, ['registration_key' => $registrationKey]);
+        $confirmEmailAddressForm = $this->createForm(ConfirmEmailAddressFormType::class, [
+            'registration_key' => $registrationKey,
+        ]);
         $confirmEmailAddressForm->handleRequest($request);
         if ($confirmEmailAddressForm->isSubmitted() && $confirmEmailAddressForm->isValid()) {
             $registrationKey = $confirmEmailAddressForm['registration_key']->getData();

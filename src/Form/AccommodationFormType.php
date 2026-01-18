@@ -50,7 +50,6 @@ class AccommodationFormType extends AbstractType
                     'min' => 0,
                     'max' => 10,
                 ],
-                'data' => 0,
             ])
             ->add('restrictions', ChoiceType::class, [
                 'label' => 'label.restrictions',
@@ -74,9 +73,9 @@ class AccommodationFormType extends AbstractType
                 ],
             ])
             ->add('wheelchair_accessible', CheckboxType::class, [
+                'required' => false,
                 'label' => 'label.profile.wheelchair_accessible',
                 'help' => 'help.profile.wheelchair_accessible',
-                'required' => false,
             ])
             ->add('length_of_stay', CkEditorType::class, [
                 'label' => 'label.profile.length_of_stay',

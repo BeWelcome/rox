@@ -83,25 +83,9 @@ class AccountEditFormType extends AbstractType
                 'help' => 'help.gender.show',
                 'required' => false,
             ])
-            ->add('address', TextType::class, [
-                'label' => 'label.address',
-                'help' => 'help.address',
-                'required' => false,
-                'constraints' => [
-                    new NotNull(message: 'error.address'),
-                ],
-            ])
-            ->add('show_address', CheckboxType::class, [
-                'label' => 'label.address.show',
-                'help' => 'help.addresss.show',
-                'required' => false,
-            ])
             ->add('email', EmailType::class, [
-                'label' => 'label.email',
-                'attr' => [
-                    'class' => 'js-email-address',
-                ],
-                'help' => 'help.email',
+                'label' => 'label.email.change',
+                'help' => 'help.email.change',
                 'required' => false,
                 'constraints' => [
                     new NotBlank(message: 'signup.error.email.blank'),

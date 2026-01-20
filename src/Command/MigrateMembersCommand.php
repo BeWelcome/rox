@@ -64,88 +64,88 @@ class MigrateMembersCommand extends Command
     ];
 
     private const string INSERT = <<<'SQL'
-        INSERT INTO member ( 
-            id, 
-            Locale,
-            Username, 
-            Password, 
-            Name, 
-            ShortName, 
-            Status, 
-            Email, 
-            Gender, 
-            HideAttribute, 
-            bewelcomed, 
-            BirthDate,
-            LastActive,
-            LastSwitchToActive,
-            Reminders,
-            created,
-            updated,
-            RegistrationKey,
-            Accommodation, 
-            MaxGuests,
-            HostingInterest,
-            StandardOffers,
-            /* Translated fields are set to null */
-            Occupation,
-            PleaseBring,
-            OfferGuests,
-            OfferHosts,
-            GettingThere,
-            ILiveWith,
-            MaxLengthOfStay,
-            Restrictions,
-            HouseRules,
-            Hobbies,
-            Books,
-            Movies,
-            Music,
-            Organizations,                
-            PastTrips,
-            PlannedTrips
-        ) VALUES (
-            :id,
-            :Locale,
-            :Username,
-            :Password,
-            :Name,
-            :ShortName,
-            :Status,
-            :Email,
-            :Gender,
-            :HideAttribute,
-            :bewelcomed,
-            :BirthDate,
-            :LastActive,
-            :LastSwitchToActive,
-            :Reminders,
-            :created,
-            :updated,
-            :RegistrationKey,
-            :Accommodation,
-            :MaxGuests,
-            :HostingInterest,
-            :StandardOffers,
-            /* Translated fields are set to null */
-            null /* :Occupation*/,
-            null /* :PleaseBring*/, 
-            null /* :OfferGuests*/,
-            null /* :OfferHosts*/,
-            null /* :GettingThere*/,
-            null /* :ILiveWith*/,
-            null /* :MaxLengthOfStay*/,
-            null /* :Restrictions*/,
-            null /* :HouseRules*/,
-            null /* :Hobbies*/,
-            null /* :Books*/,
-            null /* :Movies*/,
-            null /* :Music*/,
-            null /* :Organizations*/,
-            null /* :PastTrips*/,
-            null /* :PlannedTrips */
-        )
-    SQL;
+            INSERT INTO member ( 
+                id, 
+                Locale,
+                Username, 
+                Password, 
+                Name, 
+                ShortName, 
+                Status, 
+                Email, 
+                Gender, 
+                HideAttribute, 
+                bewelcomed, 
+                BirthDate,
+                LastActive,
+                LastSwitchToActive,
+                Reminders,
+                created,
+                updated,
+                RegistrationKey,
+                Accommodation, 
+                MaxGuests,
+                HostingInterest,
+                StandardOffers,
+                /* Translated fields are set to null */
+                Occupation,
+                PleaseBring,
+                OfferGuests,
+                OfferHosts,
+                GettingThere,
+                ILiveWith,
+                MaxLengthOfStay,
+                Restrictions,
+                HouseRules,
+                Hobbies,
+                Books,
+                Movies,
+                Music,
+                Organizations,                
+                PastTrips,
+                PlannedTrips
+            ) VALUES (
+                :id,
+                :Locale,
+                :Username,
+                :Password,
+                :Name,
+                :ShortName,
+                :Status,
+                :Email,
+                :Gender,
+                :HideAttribute,
+                :bewelcomed,
+                :BirthDate,
+                :LastActive,
+                :LastSwitchToActive,
+                :Reminders,
+                :created,
+                :updated,
+                :RegistrationKey,
+                :Accommodation,
+                :MaxGuests,
+                :HostingInterest,
+                :StandardOffers,
+                /* Translated fields are set to null */
+                null /* :Occupation*/,
+                null /* :PleaseBring*/, 
+                null /* :OfferGuests*/,
+                null /* :OfferHosts*/,
+                null /* :GettingThere*/,
+                null /* :ILiveWith*/,
+                null /* :MaxLengthOfStay*/,
+                null /* :Restrictions*/,
+                null /* :HouseRules*/,
+                null /* :Hobbies*/,
+                null /* :Books*/,
+                null /* :Movies*/,
+                null /* :Music*/,
+                null /* :Organizations*/,
+                null /* :PastTrips*/,
+                null /* :PlannedTrips */
+            )
+        SQL;
 
     private SymfonyStyle $io;
     private array $errorMembers = [];
@@ -153,8 +153,7 @@ class MigrateMembersCommand extends Command
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->connection = $this->entityManager->getConnection();
@@ -272,8 +271,8 @@ class MigrateMembersCommand extends Command
                         $this->addErrorMemberSql($member, $e->getMessage());
                     }
 
-                    $addressSQL = "INSERT INTO address (member_id, active, location, latitude, longitude, wheelChairAccessible) " .
-                        "VALUES (:member, 1, :city, :latitude, :longitude, :wheelchairAccessible)";
+                    $addressSQL = 'INSERT INTO address (member_id, active, location, latitude, longitude, wheelChairAccessible) ' .
+                        'VALUES (:member, 1, :city, :latitude, :longitude, :wheelchairAccessible)';
 
                     // Migrate address
                     $statement = $this->connection->prepare($addressSQL);
@@ -359,7 +358,7 @@ class MigrateMembersCommand extends Command
                     unset($translationIds);
 
                     // migrate language levels
-                    $languageLevels = $this->connection->executeQuery("select * from memberslanguageslevel where Idmember = " . $memberId)->fetchAllAssociative();
+                    $languageLevels = $this->connection->executeQuery('select * from memberslanguageslevel where Idmember = ' . $memberId)->fetchAllAssociative();
                     foreach ($languageLevels as $languageLevel) {
                         $statement = $this->connection->prepare(
                             'INSERT INTO member_language_level (member_id, language, level) ' .
@@ -403,8 +402,8 @@ class MigrateMembersCommand extends Command
 
                     foreach ($specialRelations as $specialRelation) {
                         $statement = $this->connection->prepare(
-                            "INSERT INTO relation (`comment`, created, updated, confirmed, owner_id, relation_id) " .
-                            "VALUES (:comment, :created, :updated, :confirmed, :owner_id, :relation_id)"
+                            'INSERT INTO relation (`comment`, created, updated, confirmed, owner_id, relation_id) ' .
+                            'VALUES (:comment, :created, :updated, :confirmed, :owner_id, :relation_id)'
                         );
 
                         $statement->bindValue('comment', $specialRelation['comment']);
@@ -604,8 +603,8 @@ class MigrateMembersCommand extends Command
 
     private function addErrorNoTranslations(array $member): void
     {
-//        $this->addErrorMember($member);
-//        $this->errorMembers[$member['Status']][$member['Username']]['no_translations'] = 'No Translations';
+        //        $this->addErrorMember($member);
+        //        $this->errorMembers[$member['Status']][$member['Username']]['no_translations'] = 'No Translations';
     }
 
     private function addErrorLanguage(array $member, mixed $language): void

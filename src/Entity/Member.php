@@ -159,9 +159,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     #[ORM\Column(name: 'Gender', type: 'gender_type', nullable: false)]
     private string $gender = 'other';
 
-    #[ORM\Column(name: 'GenderOfGuests', type: 'string', nullable: false)]
-    private string $genderOfGuests = 'any';
-
     #[ORM\Column(name: 'BirthDate', type: 'date', nullable: true)]
     private ?DateTime $birthdate = null;
 
@@ -492,7 +489,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
     public function getRestrictions(): array
     {
-        if ('' === $this->restrictions) {
+        if (empty($this->restrictions)) {
             return [];
         }
 
@@ -1286,16 +1283,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         $this->registrationKey = $registrationKey;
 
         return $this;
-    }
-
-    public function getRegion(): ?Location
-    {
-        return $this->city->getAdmin1();
-    }
-
-    public function getCountry(): ?Location
-    {
-        return $this->city->getCountry();
     }
 
     public function getAge(): int

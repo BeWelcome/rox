@@ -436,7 +436,7 @@
             {% set houseRules = profileTranslation['HouseRules'] ?? '' %}
             {% if restrictions|length > 0 or houseRules|length > 0 or edit %}
               <div
-                class="h5 u:mt-8 u:mb-0">{{ 'profilehouserules'|trans({}, "messages", profile_language)|raw }}</div>
+                class="h5 u:mt-8">{{ 'profilehouserules'|trans({}, "messages", profile_language)|raw }}</div>
               <div>
                 {% for restriction in restrictions %}
                   {{ ('restriction_' ~ restriction)|lower|trans({}, "messages", profile_language) }}

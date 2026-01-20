@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'languages')]
 #[ORM\UniqueConstraint(name: 'ShortCode', columns: ['ShortCode'])]
+#[ORM\Entity]
 class Languages
 {
     #[ORM\Column(name: 'Name', type: 'text', length: 255, nullable: false)]

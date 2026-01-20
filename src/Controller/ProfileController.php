@@ -612,7 +612,7 @@ class ProfileController extends AbstractController
 
         /** @var RelationRepository $relationsRepository */
         $relationsRepository = $this->entityManager->getRepository(Relation::class);
-        $relations = $relationsRepository->findBy(['receiver' => $member, 'confirmed' => 'Yes']);
+        $relations = $relationsRepository->findRelationsFor($member);
 
         /** @var GalleryImageRepository $galleryRepository */
         $galleryRepository = $this->entityManager->getRepository(GalleryImage::class);

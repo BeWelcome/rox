@@ -60,7 +60,7 @@
 
           {{ macros.field_translation(form.offer_guests, language, 'OfferGuests', username, translations) }}
           {{ macros.field_translation(form.where_you_sleep, language, 'WhereYouSleep', username, translations) }}
-          {{ macros.field_translation(form.additional_info, language, 'AdditionalInfo', username, translations) }}
+          {{ macros.field_translation(form.additional_info, language, 'AdditionalAccommodationInfo', username, translations) }}
 
           <span class="form-check-label">{{ form.restrictions.vars.label|trans }}</span>
           <div class="u:flex u:flex-row u:justify-between">
@@ -76,8 +76,8 @@
             {% endfor %}
           </div>
 
-          {{ macros.field_translation(form.house_rules, language, 'OtherRestrictions', username, translations) }}
-          {{ macros.field_translation(form.getting_there, language, 'PublicTransport', username, translations) }}
+          {{ macros.field_translation(form.house_rules, language, 'HouseRules', username, translations) }}
+          {{ macros.field_translation(form.getting_there, language, 'GettingThere', username, translations) }}
 
           <div class="u:flex u:justify-end u:my-8">
             <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>

@@ -23,7 +23,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  */
 #[ORM\Table(name: 'address')]
 #[Gedmo\TranslationEntity(class: AddressTranslation::class)]
-#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity]
 class Address
 {
@@ -39,27 +38,21 @@ class Address
     #[ORM\Column(name: 'Zip', type: Types::STRING, nullable: true)]
     private ?string $zip;
 
-    #[ORM\Column(name: 'WheelChairAccessible', type: Types::BOOLEAN, nullable: true)]
+    #[ORM\Column(name: 'wheelChairAccessible', type: Types::BOOLEAN, nullable: true)]
     private ?bool $isWheelChairAccessible;
 
     #[ORM\ManyToOne(targetEntity: Location::class)]
-    #[ORM\JoinColumn(name: 'Location', referencedColumnName: 'geonameId', nullable: true)]
+    #[ORM\JoinColumn(name: 'location', referencedColumnName: 'geonameId', nullable: true)]
     private Location $location;
 
-    #[ORM\Column(name: 'Latitude', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
+    #[ORM\Column(name: 'latitude', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
     private ?string $latitude;
 
-    #[ORM\Column(name: 'Longitude', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
+    #[ORM\Column(name: 'longitude', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]
     private ?string $longitude;
 
     #[ORM\Column(name: 'active', type: Types::BOOLEAN, nullable: true)]
     private bool $active = true;
-
-    #[ORM\Column(name: 'created', type: Types::DATETIME_MUTABLE, nullable: false)]
-    private DateTime $created;
-
-    #[ORM\Column(name: 'updated', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $updated = null;
 
     #[ORM\Id]
     #[ORM\Column(name: 'id')]
@@ -171,16 +164,6 @@ class Address
         return $this->active;
     }
 
-    public function getCreated(): Carbon
-    {
-        return Carbon::instance($this->created);
-    }
-
-    public function getUpdated(): Carbon
-    {
-        return Carbon::instance($this->updated);
-    }
-
     public function setIsWheelChairAccessible(?bool $isWheelChairAccessible): self
     {
         $this->isWheelChairAccessible = $isWheelChairAccessible;
@@ -204,23 +187,5 @@ class Address
             $this->translations[] = $translation;
             $translation->setObject($this);
         }
-    }
-
-    /**
-     * Triggered on insert.
-     */
-    #[ORM\PrePersist]
-    public function onPrePersist()
-    {
-        $this->created = new DateTime('now');
-    }
-
-    /**
-     * Triggered on update.
-     */
-    #[ORM\PreUpdate]
-    public function onPreUpdate()
-    {
-        $this->updated = new DateTime('now');
     }
 }

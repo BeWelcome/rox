@@ -5,22 +5,6 @@
   {{ parent() }}
   {{ encore_entry_script_tags('roxeditor') }}
   {{ encore_entry_script_tags('profile/edit_accommodation') }}
-  <script type="application/javascript">
-    const accommodation = "{{ form.accommodation.vars.full_name }}";
-    const markers = [
-      "{{ 'hosting_interest.select'|trans }}",
-      "{{ 'hosting_interest.very_low'|trans }}",
-      "{{ 'hosting_interest.low'|trans }}",
-      "{{ 'hosting_interest.lower'|trans }}",
-      "{{ 'hosting_interest.low_to_medium'|trans }}",
-      "{{ 'hosting_interest.medium'|trans }}",
-      "{{ 'hosting_interest.medium_to_high'|trans }}",
-      "{{ 'hosting_interest.high'|trans }}",
-      "{{ 'hosting_interest.higher'|trans }}",
-      "{{ 'hosting_interest.very_high'|trans }}",
-      "{{ 'hosting_interest.cant_wait'|trans }}"
-    ];
-  </script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -39,96 +23,64 @@
           {{ form_start(form) }}
           {{ form_errors(form) }}
 
-          <div class="o-form-group align-content-center mt-2 {% if form.accommodation.vars.valid == false %}is-invalid{% endif %}">
-            <span class="o-input-label">Accommodation</span>
-            {{ form_errors(form.accommodation) }}
-            <div class="btn-group w-100 mt-2 " data-toggle="buttons">
-              <label for="{{ form.accommodation.children[0].vars.id }}" class="btn btn-light">
-                <input type="radio" id="{{ form.accommodation.children[0].vars.id }}"
-                       name="{{ form.accommodation.children[0].vars.full_name }}"
-                       value="{{ form.accommodation.children[0].vars.value }}"
-                       {% if form.accommodation.vars.value == form.accommodation.children[0].vars.value %}checked="checked"{% endif %}
-                       class="noradio">
-                <div class="d-block-inline"><img src="images/icons/no.png" alt="" title=""><br><small>
-                    {{ form.accommodation.children[0].vars.label|trans }}</small>
-                </div>
-              </label>
-              <label for="{{ form.accommodation.children[1].vars.id }}" class="btn btn-light">
-                <input type="radio" id="{{ form.accommodation.children[1].vars.id }}"
-                       name="{{ form.accommodation.children[1].vars.full_name }}"
-                       value="{{ form.accommodation.children[1].vars.value }}"
-                       {% if form.accommodation.vars.value == form.accommodation.children[1].vars.value %}checked="checked"{% endif %}
-                       class="noradio">
-                <div class="d-block-inline"><img src="images/icons/yes.png" alt="" title=""><br><small>
-                    {{ form.accommodation.children[1].vars.label|trans }}</small>
-                </div>
-              </label>
-            </div>
-            {{ form_help(form.accommodation) }}
-          </div>
-          {% do form.accommodation.setRendered %}
-
-          <div id="hosting_interest" class="
-        {%- if form.accommodation.vars.value == form.accommodation.children[1].vars.value %}u:block{% else %}u:hidden{% endif %} u:mt-8">
-            {{ form_label(form.hosting_interest) }}
-            {{ form_widget(form.hosting_interest) }}
-            <div class="range text-center u:mt-8 u:text-12">
-              <p class="rangeSlider__value-output">{{ 'hosting.interest.set'|trans }}</p>
-            </div>
-            {{ form_help(form.hosting_interest) }}
-          </div>
+          {% include 'profile/accommodation_widget.html.twig' %}
 
           {{ form_row(form.max_guests) }}
 
-          {{ macros.field_translation(form.length_of_stay, language, 'MaxLengthOfStay', member.translations) }}
-          {{ macros.field_translation(form.i_live_with, language, 'ILiveWith', member.translations) }}
-          {{ macros.field_translation(form.please_bring, language, 'PleaseBring', member.translations) }}
+          {% set username = member.username %}
+          {% set translations = member.translations %}
+          {{ macros.field_translation(form.length_of_stay, language, 'MaxLengthOfStay', username, translations) }}
+          {{ macros.field_translation(form.i_live_with, language, 'ILiveWith', username, translations) }}
+          {{ macros.field_translation(form.please_bring, language, 'PleaseBring', username, translations) }}
 
-          <label class="form-check-label">{{ form_label(form.offers) }}</label>
+          <span class="form-check-label">{{ form.offers.vars.label|trans }}</span>
           <div class="u:flex u:flex-row u:justify-between">
             {% for child in form.offers.children %}
               <div class="o-checkbox">
                 <input type="checkbox" class="o-checkbox__input"
                        id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
                        value="{{ child.vars.value }}"
+                       data-offer="{{ child.vars.value }}"
                        {% if child.vars.checked %}checked="checked"{% endif %}
                 >
-                <label class="o-checkbox__label">{{ child.vars.label|trans({}, "messages", language) }}</label></div>
+                <label class="o-checkbox__label" for="{{ child.vars.id }}">{{ child.vars.label|trans({}, "messages", language) }}</label></div>
               {% do child.setRendered %}
             {% endfor %}
             <div class="o-checkbox">
               <input type="checkbox" class="o-checkbox__input"
                      id="{{ form.wheelchair_accessible.vars.id }}"
                      name="{{ form.wheelchair_accessible.vars.full_name }}"
+                     data-offer="accessible"
                     {% if form.wheelchair_accessible.vars.checked %}checked="checked"{% endif %}
               >
-              <label class="o-checkbox__label">{{ form.wheelchair_accessible.vars.label|trans({}, "messages", language) }}</label>
+              <label class="o-checkbox__label" for="{{ form.wheelchair_accessible.vars.id }}">{{ form.wheelchair_accessible.vars.label|trans({}, "messages", language) }}</label>
             </div>
             {% do form.wheelchair_accessible.setRendered %}
           </div>
 
-          {{ macros.field_translation(form.offer_guests, language, 'OfferGuests', member.translations) }}
-          {{ macros.field_translation(form.where_you_sleep, language, 'WhereYouSleep', member.translations) }}
-          {{ macros.field_translation(form.additional_info, language, 'AdditionalInfo', member.translations) }}
+          {{ macros.field_translation(form.offer_guests, language, 'OfferGuests', username, translations) }}
+          {{ macros.field_translation(form.where_you_sleep, language, 'WhereYouSleep', username, translations) }}
+          {{ macros.field_translation(form.additional_info, language, 'AdditionalAccommodationInfo', username, translations) }}
 
-          <label class="form-check-label">{{ form_label(form.restrictions) }}</label>
+          <span class="form-check-label">{{ form.restrictions.vars.label|trans }}</span>
           <div class="u:flex u:flex-row u:justify-between">
             {% for child in form.restrictions.children %}
               <div class="o-checkbox">
                 <input type="checkbox" class="o-checkbox__input"
                        id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
                        value="{{ child.vars.value }}"
+                       data-restrictions="{{ child.vars.value }}"
                        {% if child.vars.checked %}checked="checked"{% endif %}
-                ><label class="o-checkbox__label">{{ child.vars.label|trans({}, "messages", language) }}</label></div>
+                ><label class="o-checkbox__label" for="{{ child.vars.id }}">{{ child.vars.label|trans({}, "messages", language) }}</label></div>
               {% do child.setRendered %}
             {% endfor %}
           </div>
 
-          {{ macros.field_translation(form.house_rules, language, 'OtherRestrictions', member.translations) }}
-          {{ macros.field_translation(form.getting_there, language, 'PublicTransport', member.translations) }}
+          {{ macros.field_translation(form.house_rules, language, 'HouseRules', username, translations) }}
+          {{ macros.field_translation(form.getting_there, language, 'GettingThere', username, translations) }}
 
           <div class="u:flex u:justify-end u:my-8">
-            <input type="submit" class="o-button" value="{{ 'profile.update'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}">
+            <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>
           </div>
           {{ form_end(form) }}
         </div>

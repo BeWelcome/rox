@@ -116,7 +116,7 @@ class RoxFrontRouter
             // Set id of language
             $Model = new RoxFrontRouterModel();
             $lang = $Model->getLanguage($this->session->get('_locale'));
-            $this->session->set('IdLanguage', $lang->id);
+            $this->session->set('IdLanguage', $lang->ShortCode);
         }
         if (!($this->session->has('lang')) ) {
             $Model = new RoxFrontRouterModel;

@@ -17,26 +17,14 @@ class RoxFrontRouterModel extends RoxModelBase
     {
         if (!$langcode) {
             return false;
-        } else {
-            if (is_numeric($langcode)) {
-                return $this->singleLookup("
-                    SELECT
-                        languages.id AS id,
-                        languages.ShortCode AS ShortCode
-                    FROM
-                        languages
-                    WHERE
-                        languages.id = '" . $this->dao->escape($langcode) . "'");
-            } else {
-                return $this->singleLookup("
-                    SELECT
-                        languages.id AS id,
-                        languages.ShortCode AS ShortCode
-                    FROM
-                        languages
-                    WHERE
-                        languages.ShortCode = '" . $this->dao->escape($langcode) . "'");
-            }
         }
+
+        return $this->singleLookup("
+            SELECT
+                language.ShortCode AS ShortCode
+            FROM
+                language
+            WHERE
+                language.ShortCode = '" . $this->dao->escape($langcode) . "'");
     }
 }

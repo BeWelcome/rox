@@ -2,30 +2,26 @@
 
 namespace App\Entity;
 
+use App\Repository\RelationRepository;
 use Carbon\Carbon;
 use DateTime;
-use Doctrine\ORM\Event\PostLoadEventArgs;
-use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\ObjectManager;
 
 /**
  * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'specialrelations')]
-#[ORM\Index(name: 'IdOwner', columns: ['IdOwner'])]
-#[ORM\UniqueConstraint(name: 'UniqueRelation', columns: ['IdOwner', 'IdRelation'])]
+#[ORM\Table(name: 'relation')]
+#[ORM\Index(name: 'owner', columns: ['owner_id'])]
+#[ORM\UniqueConstraint(name: 'UniqueRelation', columns: ['owner_id', 'relation_id'])]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\Entity(repositoryClass: \App\Repository\RelationRepository::class)]
+#[ORM\Entity(repositoryClass: RelationRepository::class)]
 class Relation
 {
-    #[ORM\Column(name: 'Comment', type: 'integer', nullable: false)]
-    private int $comment = 0;
-
-    private ?string $commentText = '';
+    #[ORM\Column(name: 'comment', type: 'text', nullable: true)]
+    private ?string $comment;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
@@ -33,15 +29,15 @@ class Relation
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private DateTime $updated;
 
-    #[ORM\JoinColumn(name: 'IdOwner', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'owner_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $owner;
 
-    #[ORM\JoinColumn(name: 'IdRelation', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'relation_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'relations')]
     private Member $receiver;
 
-    #[ORM\Column(name: 'Confirmed', type: 'string', nullable: false)]
+    #[ORM\Column(name: 'confirmed', type: 'string', nullable: false)]
     private string $confirmed = 'No';
 
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -49,14 +45,14 @@ class Relation
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    public function setComment(int $comment): self
+    public function setComment(?string $comment): self
     {
         $this->comment = $comment;
 
         return $this;
     }
 
-    public function getComment(): int
+    public function getComment(): ?string
     {
         return $this->comment;
     }
@@ -85,9 +81,6 @@ class Relation
         return $this;
     }
 
-    /**
-     * Get owner.
-     */
     public function getOwner(): Member
     {
         return $this->owner;
@@ -122,94 +115,10 @@ class Relation
         return $this->id;
     }
 
-    /**
-     * Triggered after load from database.
-     */
-    #[ORM\PostLoad]
-    public function onPostLoad(PostLoadEventArgs $args): void
-    {
-        $objectManager = $args->getObjectManager();
-        /*        $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
-                $translatedComment = $memberTranslationRepository->findOneBy([
-                    'translation' => $this->comment,
-                    'owner' => $this->owner,
-                ]);
-
-                if (null !== $translatedComment) {
-                    $this->commentText = $translatedComment->getSentence();
-                }
-        */
-        $this->commentText = 'Damit unser frisch eingerichteter Raspberry auch zukünftig unsere ganzen Hauskomponenten steuern kann benötigen wir noch eine Automatisierungssoftware. Dafür kommt bei mir FHEM (offizielle Seite) zum Einsatz. FHEM ist eine in Perl geschriebene Serveranwendung. Diese bietet für den Benutzer eine grafische Oberfläche, mit der er neue Komponenten hinzufügen, bearbeiten und übersichtlich anordnen kann. Wie du FHEM einrichtest, will ich dir in diesem Artikel einmal zeigen…';
-    }
-
-    /**
-     * Triggered on insert.
-     */
     #[ORM\PrePersist]
     public function onPrePersist(PrePersistEventArgs $args)
     {
         $this->created = new DateTime('now');
         $this->updated = $this->created;
-
-        if (null !== $this->commentText) {
-            $this->createRelationComment($args->getObjectManager());
-        }
-    }
-
-    /**
-     * Triggered on update.
-     */
-    #[ORM\PostUpdate]
-    public function onPostUpdate(PostUpdateEventArgs $args)
-    {
-        if (0 !== $this->comment) {
-            $objectManager = $args->getObjectManager();
-
-            $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
-            $translatedComment = $memberTranslationRepository->findOneBy([
-                'translation' => $this->comment,
-                'owner' => $this->getOwner(),
-            ]);
-
-            $translatedComment->setSentence($this->commentText ?? '');
-            $objectManager->persist($translatedComment);
-            $objectManager->flush();
-        } else {
-            $translatedComment = $this->createRelationComment($args->getObjectManager());
-            $this->comment = $translatedComment->getId();
-        }
-    }
-
-    public function getCommentText(): ?string
-    {
-        return $this->commentText;
-    }
-
-    public function setCommentText(?string $commentText): self
-    {
-        $this->commentText = $commentText;
-
-        return $this;
-    }
-
-    private function createRelationComment(ObjectManager $objectManager): MemberTranslation
-    {
-        $languageRepository = $objectManager->getRepository(Language::class);
-        $language = $languageRepository->findOneBy(['shortCode' => 'en']);
-
-        $translatedComment = new MemberTranslation();
-        $translatedComment->setSentence($this->commentText);
-        $translatedComment->setOwner($this->getOwner());
-        $translatedComment->setTranslator($this->getOwner());
-        $translatedComment->setLanguage($language);
-        $translatedComment->setTableColumn('specialrelations.comment');
-        $objectManager->persist($translatedComment);
-        $objectManager->flush();
-
-        $translatedComment->setTranslation($translatedComment->getId());
-        $objectManager->persist($translatedComment);
-        $objectManager->flush();
-
-        return $translatedComment;
     }
 }

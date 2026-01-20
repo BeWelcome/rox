@@ -7,14 +7,14 @@
         {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_DECOUPLED') %}
           <div id="form.vars.id ~ '_toolbar'"></div>
         {% endif %}
-        <div id="{{ form.vars.id ~ '_editor' }}" data-input="{{ form.vars.id }}" data-editor-type="{{ editor_type }}" data-image-upload="{{ image_upload ? 'yes' : 'no' }}">
+        <div {{ block('widget_attributes') }} data-progress="{{ form.vars.id ~ '_progress' }}" data-editor-type="{{ editor_type }}" data-image-upload="{{ image_upload ? 'yes' : 'no' }}">
           {{ value|raw }}
         </div>
         {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_INLINE') %}
           <div class="u:absolute u:top-0 u:right-0 u:bg-white u:p-8 u:group-focus-within:hidden u:pointer-events-none"><i class="fa fa-edit"></i><span class="sr-only">{{ 'profile.edit'|trans() }}</span></div>
         {% endif %}
+        <div id="{{ form.vars.id ~ '_progress' }}" class="u:h-2 u:w-full"></div>
       </div>
-      <input type="hidden" {{ block('widget_attributes') }}>
     {% else %}
       {% set attr = attr|merge({'data-editor-type': editor_type}) %}
       {% set attr = attr|merge({'data-image-upload': image_upload ? 'yes' : 'no'}) %}

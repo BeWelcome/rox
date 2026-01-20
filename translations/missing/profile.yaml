@@ -59,7 +59,7 @@ profile.no.about.me:
     - 'Shown if a member didn''t provide any information about themselves in about me.'
 profile.joined:
     - 'Joined:'
-    - Used with the date a member created their profile. Like ''Joined: 10 years ago.''
+    - 'Used with the date a member created their profile. Like ''Joined: 10 years ago.'''
 profile.last.activity:
     - 'Last activity:'
     - Shows the last time a user accessed the site (not the last time they logged in which might be remembered).

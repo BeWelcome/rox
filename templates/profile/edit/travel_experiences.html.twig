@@ -21,11 +21,13 @@
         <div class="card-text">
           {{ form_start(form) }}
 
-          {{ macros.field_translation(form.past, language, 'PastTrips', member.translations) }}
-          {{ macros.field_translation(form.planned, language, 'PlannedTrips', member.translations) }}
+          {% set username = member.username %}
+          {% set translations = member.translations %}
+          {{ macros.field_translation(form.past, language, 'PastTrips', username, translations) }}
+          {{ macros.field_translation(form.planned, language, 'PlannedTrips', username, translations) }}
 
           <div class="u:flex u:justify-end u:my-8">
-            <input type="submit" class="o-button" value="{{ 'profile.update'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}">
+            <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>
           </div>
           {{ form_end(form) }}
         </div>

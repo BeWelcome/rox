@@ -1019,7 +1019,7 @@ WHERE `id` = '%d' ",
         }
 
         // retrieve all trads for content
-        $query = "select forum_trads.*,Name,ShortCode,forum_trads.id as IdForumTrads from forum_trads,languages where IdLanguage=languages.id and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
+        $query = "select forum_trads.*,Name,ShortCode,forum_trads.id as IdForumTrads from forum_trads,language where ShortCode=language.ShortCode and IdTrad=".$DataPost->Post->IdContent." order by forum_trads.created asc" ;
         $s = $this->dao->query($query);
 		 $DataPost->Post->Content=[] ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {

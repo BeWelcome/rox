@@ -191,11 +191,19 @@ class SignupModel
         return true;
     }
 
+    /**
+     * Email is either taken directly or is currently changed and awaiting confirmation.
+     */
     public function checkEmailAddress(string $email): bool
     {
         $memberRepository = $this->entityManager->getRepository(Member::class);
         $member = $memberRepository->findOneBy(['email' => $email]);
 
+        if (null !== $member) {
+            return false;
+        }
+
+        $member = $memberRepository->findOneBy(['newEmail' => $email]);
         if (null !== $member) {
             return false;
         }

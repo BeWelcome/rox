@@ -43,6 +43,7 @@ Encore
     .addEntry('profile/profile', './assets/js/profile/profile.js')
     .addEntry('profile/show', './assets/js/profile/show.js')
     .addEntry('profile/edit', './assets/js/profile/edit.js')
+    .addEntry('profile/account', './assets/js/profile/account.js')
     .addEntry('profile/edit_languages', './assets/js/profile/edit_languages.js')
     .addEntry('profile/edit_accommodation', './assets/js/profile/edit_accommodation.js')
     .addEntry('profile/setlocation', './assets/js/profile/setlocation.js')

@@ -21,14 +21,16 @@
         <div class="card-text">
           {{ form_start(form) }}
 
-          {{ macros.field_translation(form.hobbies, language, 'Hobbies', member.translations) }}
-          {{ macros.field_translation(form.books, language, 'Books', member.translations) }}
-          {{ macros.field_translation(form.music, language, 'Music', member.translations) }}
-          {{ macros.field_translation(form.movies, language, 'Movies', member.translations) }}
-          {{ macros.field_translation(form.organizations, language, 'Organizations', member.translations) }}
+          {% set username = member.username %}
+          {% set translations = member.translations %}
+          {{ macros.field_translation(form.hobbies, language, 'Hobbies', username, translations) }}
+          {{ macros.field_translation(form.books, language, 'Books', username, translations) }}
+          {{ macros.field_translation(form.music, language, 'Music', username, translations) }}
+          {{ macros.field_translation(form.movies, language, 'Movies', username, translations) }}
+          {{ macros.field_translation(form.organizations, language, 'Organizations', username, translations) }}
 
           <div class="u:flex u:justify-end u:my-8">
-            <input type="submit" class="o-button" value="{{ 'profile.update'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}">
+            <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>
           </div>
           {{ form_end(form) }}
         </div>

@@ -15,6 +15,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Hidehalo\Nanoid\Client;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -185,6 +186,47 @@ readonly class ProfileModel
         return $errors;
     }
 
+    public function handleField(Member $member, string $language, string $field, ?string $fieldContent): void
+    {
+        $fieldTranslation = $this->memberTranslationRepository->findOneBy([
+            'object' => $member,
+            'locale' => $language,
+            'field' => $field,
+        ]);
+
+        if (empty($fieldContent)) {
+            if (null !== $fieldTranslation) {
+                $member->getRawTranslations()->removeElement($fieldTranslation);
+                $this->entityManager->remove($fieldTranslation);
+            }
+        } else {
+            if (null === $fieldTranslation) {
+                $fieldTranslation = new MemberTranslation($language, $field, $fieldContent);
+            }
+            $fieldTranslation->setContent($fieldContent);
+
+            $member->addTranslation($fieldTranslation);
+        }
+
+        $this->entityManager->persist($member);
+        $this->entityManager->flush();
+    }
+
+    public function sendEmailConfirmationEmail(Member $member, string $email): void
+    {
+        $nanoClient = new Client();
+        $member->setRegistrationKey($nanoClient->generateId(16, Client::MODE_DYNAMIC));
+
+        $parameters = [
+            'subject' => 'signup.confirm.email',
+            'username' => $member->getUsername(),
+            'email_address' => $email,
+            'key' => $member->getRegistrationKey(),
+        ];
+
+        $this->mailer->sendSignupEmail($member, 'newemail', $parameters);
+    }
+
     private function handleAboutMe(Member $member, array $data): array
     {
         $language = $data['language'];
@@ -260,28 +302,5 @@ readonly class ProfileModel
         $this->entityManager->flush();
 
         return [];
-    }
-
-    private function handleField(Member $member, string $language, string $field, ?string $fieldContent): void
-    {
-        $fieldTranslation = $this->memberTranslationRepository->findOneBy([
-            'object' => $member,
-            'locale' => $language,
-            'field' => $field,
-        ]);
-
-        if (empty($fieldContent)) {
-            if (null !== $fieldTranslation) {
-                $member->getRawTranslations()->removeElement($fieldTranslation);
-                $this->entityManager->remove($fieldTranslation);
-            }
-        } else {
-            if (null === $fieldTranslation) {
-                $fieldTranslation = new MemberTranslation($language, $field, $fieldContent);
-            }
-            $fieldTranslation->setContent($fieldContent);
-
-            $member->addTranslation($fieldTranslation);
-        }
     }
 }

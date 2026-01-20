@@ -2,6 +2,12 @@
 
 namespace App\Controller;
 
+use App\Doctrine\AccommodationType;
+use App\Doctrine\HostRestrictionsType;
+use App\Doctrine\StandardOffersType;
+use App\Dto\AccommodationDto;
+use App\Dto\OffersDto;
+use App\Dto\RestrictionsDto;
 use App\Entity\Comment;
 use App\Entity\GalleryImage;
 use App\Entity\Location;
@@ -29,11 +35,13 @@ use App\Utilities\TranslatedFlashTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -465,6 +473,136 @@ class ProfileController extends AbstractController
         ]);
     }
 
+    #[Route(path: '/members/update/field', name: 'profile_update_field', methods: ['POST'], priority: 20)]
+    public function updateField(Request $request): Response
+    {
+        $form = $this->createFormBuilder(options: ['csrf_protection' => false])
+            ->add('language', TextType::class)
+            ->add('field', TextType::class)
+            ->add('content', TextType::class)
+            ->add('username', TextType::class)
+            ->getForm();
+
+        $form->submit($request->request->all());
+        if ($form->isSubmitted() && $form->isValid()) {
+            $loggedInMember = $this->getUser();
+            $data = $form->getData();
+            $memberRepository = $this->entityManager->getRepository(Member::class);
+            $member = $memberRepository->findOneBy(['username' => $data['username']]);
+
+            // Check if user exists and if logged in member is either same or privileged
+            if ($member === $loggedInMember) {
+                $this->profileModel->handleField($member, $data['language'], $data['field'], $data['content']);
+            }
+        }
+
+        return new Response();
+    }
+
+    #[Route(
+        path: '/members/update/accommodation',
+        name: 'profile_update_accommodation',
+        methods: ['POST'],
+        priority: 10,
+    )]
+    public function setAccommodation(#[MapRequestPayload] AccommodationDto $payload): Response
+    {
+        // Result of call will not be communicated to the requestor
+        $response = new Response();
+
+        /** @var Member $member */
+        $member = $this->getUser();
+        if (null === $member) {
+            return $response;
+        }
+
+        $accommodation = $payload->accommodation;
+        $valid = (AccommodationType::YES === $accommodation) || (AccommodationType::NO === $accommodation);
+        if ($valid) {
+            $member->setAccommodation($accommodation);
+        }
+
+        $hostingInterest = $payload->hostingInterest;
+        if (null !== $hostingInterest && $hostingInterest > 0) {
+            $member->setHostingInterest($hostingInterest);
+        }
+
+        $this->entityManager->persist($member);
+        $this->entityManager->flush();
+
+        return $response;
+    }
+
+    #[Route(path: '/members/update/offers', name: 'profile_update_offers', methods: ['POST'], priority: 10)]
+    public function setOffers(#[MapRequestPayload] OffersDto $payload): Response
+    {
+        // Result of call will not be communicated to the requestor
+        $response = new Response();
+
+        /** @var Member $member */
+        $member = $this->getUser();
+        if (null === $member) {
+            return $response;
+        }
+
+        $dinner = $payload->dinner;
+        $tour = $payload->tour;
+
+        $offers = [];
+        if (true === $dinner) {
+            $offers[] = StandardOffersType::DINNER;
+        }
+
+        if (true === $tour) {
+            $offers[] = StandardOffersType::GUIDED_TOUR;
+        }
+
+        $member->setStandardOffers($offers);
+        $address = $member->getActiveAddress();
+        $address->setIsWheelchairAccessible($payload->accessible);
+
+        $this->entityManager->persist($address);
+        $this->entityManager->persist($member);
+        $this->entityManager->flush();
+
+        return $response;
+    }
+
+    #[Route(path: '/members/update/restrictions', name: 'profile_update_restrictions', methods: ['POST'], priority: 10)]
+    public function setRestrictions(#[MapRequestPayload] RestrictionsDto $payload): Response
+    {
+        // Result of call will not be communicated to the requestor
+        $response = new Response();
+
+        /** @var Member $member */
+        $member = $this->getUser();
+        if (null === $member) {
+            return $response;
+        }
+
+        $noAlcohol = $payload->noAlcohol;
+        $noSmoking = $payload->noSmoking;
+        $noDrugs = $payload->noDrugs;
+
+        $restrictions = [];
+        if (true === $noAlcohol) {
+            $restrictions[] = HostRestrictionsType::NO_ALCOHOL;
+        }
+        if (true === $noSmoking) {
+            $restrictions[] = HostRestrictionsType::NO_SMOKING;
+        }
+        if (true === $noDrugs) {
+            $restrictions[] = HostRestrictionsType::NO_DRUGS;
+        }
+
+        $member->setRestrictions($restrictions);
+
+        $this->entityManager->persist($member);
+        $this->entityManager->flush();
+
+        return $response;
+    }
+
     private function renderProfile(Member $member, Member $loggedInMember, ?string $language, bool $editMode): Response
     {
         /** @var CommentRepository $commentRepository */
@@ -474,7 +612,7 @@ class ProfileController extends AbstractController
 
         /** @var RelationRepository $relationsRepository */
         $relationsRepository = $this->entityManager->getRepository(Relation::class);
-        $relations = $relationsRepository->findBy(['receiver' => $member, 'confirmed' => 'Yes']);
+        $relations = $relationsRepository->findRelationsFor($member);
 
         /** @var GalleryImageRepository $galleryRepository */
         $galleryRepository = $this->entityManager->getRepository(GalleryImage::class);

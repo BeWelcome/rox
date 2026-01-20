@@ -766,6 +766,20 @@
             "templates/base.html.twig"
         ]
     },
+    "symfony/ux-translator": {
+        "version": "2.32",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.32",
+            "ref": "20e2abac415da4c3a9a6bafa059a6419beb74593"
+        },
+        "files": [
+            "./assets/translator.js",
+            "./config/packages/ux_translator.yaml",
+            "./var/translations/index.js"
+        ]
+    },
     "symfony/validator": {
         "version": "7.3",
         "recipe": {

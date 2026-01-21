@@ -75,7 +75,7 @@ class TranslationsAddMissingCommand extends Command
                         $statement = $connection->prepare('
                             INSERT INTO word (code, domain, ShortCode, Sentence, donottranslate, Description, author_id, updated, created, TranslationPriority, isarchived, majorupdate)
                             SELECT :translationId, domain, ShortCode, Sentence, donottranslate, Description, :admin, updated, created, TranslationPriority, isarchived, majorupdate
-                            FROM words
+                            FROM word
                             WHERE code = :reusedTranslationId
                         ');
                         $statement->bindValue(':translationId', $translationId);

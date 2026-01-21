@@ -18,6 +18,7 @@ revision.txt
 .sass-cache
 doc/
 /docker/db/*
+!docker/db/word.sql
 !docker/db/.gitkeep
 docker-compose.override.*
 !docker-compose.override.yml.dist

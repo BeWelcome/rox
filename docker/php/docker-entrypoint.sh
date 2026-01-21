@@ -54,23 +54,26 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 		bin/console test:database:create --drop --force --no-interaction
 		echo "Database created."
 
-		if [ -f docker/db/languages.sql ]; then
-			mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/languages.sql
-		fi
-		if [ -f docker/db/words.sql ]; then
-			mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/words.sql
+        echo "Importing translations"
+		if [ -f docker/db/word.sql ]; then
+            echo "Yepp, really. Importing translations"
+			mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/word.sql
 		fi
 		if [ -f docker/db/geonamesadminunits.sql ]; then
 			mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/geonamesadminunits.sql
 		fi
 
-		bin/console translations:add:missing
+		bin/console translations:add:missing > /dev/nul
 
 	elif ls -A src/Migrations/*.php > /dev/null 2>&1; then
 		bin/console doctrine:migrations:migrate --no-interaction
 	fi
+
 	# WarmUp translations now database is up to date
 	composer run-script --no-dev post-install-cmd
+
+    echo "Warmup cache"
+    bin/console cache:clear
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		yarn encore dev --mode=development

@@ -153,8 +153,7 @@ class MigrateMembersCommand extends Command
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
         parent::__construct();
 
         $this->connection = $this->entityManager->getConnection();

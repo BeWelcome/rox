@@ -4,7 +4,7 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.5
+ARG PHP_VERSION=8.4
 ARG FRANKENPHP_VERSION=1.11
 
 
@@ -70,6 +70,7 @@ COPY assets assets/
 COPY bin bin/
 COPY build build/
 COPY config config/
+COPY docker docker/
 COPY lib lib/
 COPY Mike42 Mike42/
 COPY modules modules/
@@ -90,10 +91,10 @@ RUN set -eux; \
 	composer clear-cache
 
 # prevent the reinstallation of node_modules at every changes in the source code
-COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
-RUN set -eux; \
-	yarn install --frozen-lock; \
-	yarn encore production --mode=production
+#COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
+#RUN set -eux; \
+#	yarn install --frozen-lock; \
+#	yarn encore production --mode=production
 
 # do not use .env files in production
 COPY .env ./

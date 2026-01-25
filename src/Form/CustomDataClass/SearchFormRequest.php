@@ -211,8 +211,8 @@ class SearchFormRequest
             && -1 !== $searchFormRequest->distance
         ) {
             [$neLat, $neLng, $swLat, $swLng] = self::calculateBoundingBox(
-                floatval($searchFormRequest->location_latitude),
-                floatval($searchFormRequest->location_longitude),
+                (float) $searchFormRequest->location_latitude,
+                (float) $searchFormRequest->location_longitude,
                 $searchFormRequest->distance
             );
             $searchFormRequest->ne_latitude = $neLat;

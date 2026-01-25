@@ -106,7 +106,7 @@ class TripModel
     public function orderTripLegs(Trip &$trip): void
     {
         $legs = iterator_to_array($trip->getSubtrips());
-        usort($legs, function ($a, $b) {
+        usort($legs, static function ($a, $b) {
             $arrivalA = $a->getArrival();
             $arrivalB = $b->getArrival();
 

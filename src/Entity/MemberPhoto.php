@@ -49,7 +49,7 @@ class MemberPhoto
         return $this->filepath;
     }
 
-     public function setMember(Member $member): self
+    public function setMember(Member $member): self
     {
         $this->member = $member;
 

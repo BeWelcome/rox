@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Entity\MemberPhoto;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;

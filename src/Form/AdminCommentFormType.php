@@ -42,7 +42,7 @@ class AdminCommentFormType extends AbstractType
                 'label' => 'label.admin.comment.delete',
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             /** @var Comment $comment */
             $comment = $event->getData();
             $form = $event->getForm();

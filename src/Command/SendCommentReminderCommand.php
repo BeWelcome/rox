@@ -81,7 +81,7 @@ class SendCommentReminderCommand extends Command
         return $this->sendGuestReminders(
             $start,
             $end,
-            function ($guest, $host) use ($mailer) {
+            static function ($guest, $host) use ($mailer) {
                 $mailer->sendCommentReminderToGuest($guest, $host, 'comment.first.reminder.guest');
             },
             'two days'
@@ -98,7 +98,7 @@ class SendCommentReminderCommand extends Command
         return $this->sendGuestReminders(
             $start,
             $end,
-            function ($guest, $host) use ($mailer) {
+            static function ($guest, $host) use ($mailer) {
                 $mailer->sendCommentReminderToGuest($guest, $host, 'comment.second.reminder.guest');
             },
             'two weeks'
@@ -127,7 +127,7 @@ class SendCommentReminderCommand extends Command
         $mailer = $this->mailer;
         $sendReminders = $this->sendReminderIfNoCommentGivenYet(
             $guestsAndHosts,
-            function ($guest, $host) use ($mailer) {
+            static function ($guest, $host) use ($mailer) {
                 $mailer->sendCommentReminderToHost($guest, $host);
             }
         );

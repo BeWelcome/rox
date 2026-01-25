@@ -49,7 +49,7 @@ class SubtripType extends AbstractType
             ->get('departure')
             ->addModelTransformer($this->transformer);
 
-        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::POST_SET_DATA, static function (FormEvent $event) {
             $locationRequest = $event->getData();
             $form = $event->getForm();
 

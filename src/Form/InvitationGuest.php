@@ -51,7 +51,7 @@ class InvitationGuest extends HostingRequestAbstractType
                 'label' => 'label.hosting.update',
             ]);
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             $form = $event->getForm();
             $options = $form->getConfig()->getOptions();
             if (!$options['already_accepted']) {

@@ -27,10 +27,10 @@ class FeedbackFormType extends AbstractType
                 'placeholder' => 'feedbackchooseyourcategory',
                 'choices' => $options['categories'],
                 'choice_translation_domain' => 'messages',
-                'choice_value' => function (?FeedbackCategory $entity) {
+                'choice_value' => static function (?FeedbackCategory $entity) {
                     return $entity ? $entity->getId() : '';
                 },
-                'choice_label' => function (?FeedbackCategory $entity) {
+                'choice_label' => static function (?FeedbackCategory $entity) {
                     return $entity ? strtolower('FeedBackName_' . $entity->getName()) : '';
                 },
                 'required' => false,

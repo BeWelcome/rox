@@ -92,7 +92,7 @@ class LandingModel
 
         $groupIds = [];
         if ($groups) {
-            $groupIds = array_map(function ($group) {
+            $groupIds = array_map(static function ($group) {
                 return $group->getId();
             }, $member->getGroups());
         }

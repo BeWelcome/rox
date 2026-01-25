@@ -493,7 +493,7 @@ class GeonamesUpdateFullCommand extends Command
         $progressbar = null;
 
         $response = $this->httpClient->request('GET', 'https://download.geonames.org/export/dump/' . $filename, [
-            'on_progress' => function (int $dlNow, int $dlSize, array $info) use ($io, &$progressbar): void {
+            'on_progress' => static function (int $dlNow, int $dlSize, array $info) use ($io, &$progressbar): void {
                 // $dlNow is the number of bytes downloaded so far
                 // $dlSize is the total size to be downloaded or -1 if it is unknown
                 // $info is what $response->getInfo() would return at this very time

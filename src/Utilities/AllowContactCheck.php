@@ -51,7 +51,7 @@ class AllowContactCheck
             'tableColumn' => 'members.ProfileSummary',
         ]);
 
-        $hasAboutMe = array_reduce($memberTranslations, function ($hasAboutMe, $memberTranslation) {
+        $hasAboutMe = array_reduce($memberTranslations, static function ($hasAboutMe, $memberTranslation) {
             return $hasAboutMe
                 || (!empty($memberTranslation->getSentence() && $memberTranslation->getTranslation() > 0));
         });

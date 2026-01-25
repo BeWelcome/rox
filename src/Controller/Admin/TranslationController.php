@@ -651,7 +651,7 @@ class TranslationController extends AbstractController
         $volunteer = $this->getUser();
 
         /** @var RightVolunteer $wordRight */
-        $wordRight = $volunteer->getVolunteerRights()->filter(function (RightVolunteer $volunteerRight) {
+        $wordRight = $volunteer->getVolunteerRights()->filter(static function (RightVolunteer $volunteerRight) {
             return 'Words' === $volunteerRight->getRight()->getName();
         })->first();
 

@@ -20,7 +20,7 @@ abstract class SetType extends Type
 
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
-        $values = array_map(function ($val) {
+        $values = array_map(static function ($val) {
             return "'" . $val . "'";
         }, $this->values);
 

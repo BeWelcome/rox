@@ -497,7 +497,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
             return [];
         }
 
-       return explode(',', (string) $this->restrictions);
+        return explode(',', (string) $this->restrictions);
     }
 
     public function setHouseRules(?string $houseRules): self
@@ -899,7 +899,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
         // get all groups, work around problem with database
         return array_map(
-            function ($groupMembership) {
+            static function ($groupMembership) {
                 try {
                     return $groupMembership->getGroup();
                 } catch (Exception) {
@@ -1156,7 +1156,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     {
         $languageLevels = array_filter(
             $this->languageLevels->toArray(),
-            function (/* @var MemberLanguageLevel */ $k) {
+            static function (/* @var MemberLanguageLevel */ $k) {
                 try {
                     // Make sure language exists in database
                     $language = $k->getLanguage();
@@ -1176,7 +1176,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     {
         $languageLevels = array_filter(
             $this->languageLevels->toArray(),
-            function (/* @var MemberLanguageLevel */ $k) {
+            static function (/* @var MemberLanguageLevel */ $k) {
                 try {
                     // Make sure language exists in database
                     $language = $k->getLanguage();
@@ -1205,10 +1205,10 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
         return array_filter(
             $levelLanguages,
-            function ($v, $k) {
+            static function ($v, $k) {
                 return !empty($v);
             },
-            ARRAY_FILTER_USE_BOTH
+            \ARRAY_FILTER_USE_BOTH
         );
     }
 
@@ -1246,7 +1246,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     public function getLanguages(): array
     {
         return array_map(
-            function ($languageLevel) {
+            static function ($languageLevel) {
                 return $languageLevel->getLanguage();
             },
             $this->languageLevels->toArray()

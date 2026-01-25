@@ -55,7 +55,7 @@ class ConversationThread
         $result = $stmt->executeQuery();
         $ids = $result->fetchAllNumeric();
         $ids = array_map(
-            function ($value) {
+            static function ($value) {
                 return $value[0];
             },
             $ids

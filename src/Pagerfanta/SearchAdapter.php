@@ -132,7 +132,7 @@ class SearchAdapter implements AdapterInterface
     {
         $results = $this->model->getMapResultsForLocation();
 
-        $results['map'] = array_map(function ($value) {
+        $results['map'] = array_map(static function ($value) {
             $value->Username = '';
 
             return $value;

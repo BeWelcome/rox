@@ -48,7 +48,7 @@ class CommentType extends AbstractType
                 'multiple' => true,
                 'expanded' => true,
                 'choices' => $commentRelationsType->getChoicesArray(),
-                'choice_translation_parameters' => function () use ($toMember) {
+                'choice_translation_parameters' => static function () use ($toMember) {
                     return ['username' => $toMember->getUsername()];
                 },
                 'constraints' => [

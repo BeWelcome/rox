@@ -358,7 +358,7 @@ class GroupController extends AbstractController
                     'class' => 'select2',
                 ],
                 'class' => Group::class,
-                'query_builder' => function (EntityRepository $er) {
+                'query_builder' => static function (EntityRepository $er) {
                     return $er->createQueryBuilder('g')
                         ->where('g.approved = 1')
                         ->orderBy('g.name', 'ASC');

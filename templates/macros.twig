@@ -189,16 +189,19 @@
     </div>
 {% endmacro %}
 
-{% macro field_english(language, field, translations) %}
-  {% if language != 'en' %}
+{% macro field_ui_language(uiLanguage, language, field, translations) %}
+  {% if uiLanguage not in translations|keys %}
+    {% set uiLanguage = 'en' %}
+  {% endif %}
+  {% if language != uiLanguage %}
     <div class="u:relative u:border u:border-gray-500 u:p-4 u:pt-8 u:w-[40%] u:flex-1">
       <span class="u:absolute u:-top-14 u:left-8 u:bg-white u:px-2 u:text-12">
-        {{ 'lang_en'|trans({}, "messages", language) }}
+        {{ ('lang_' ~ uiLanguage)|lower|trans({}, "messages", language) }}
       </span>
-      <div class="u:text-sm u:w-full ">
+      <div class="u:text-sm u:w-full">
         <small class="form-text text-muted">
-          {% if translations['en'][field] is defined %}
-            {{ translations['en'][field]|purify }}
+          {% if translations[uiLanguage][field] is defined %}
+            {{ translations[uiLanguage][field]|purify }}
             {% else %}
                &nbsp;
           {% endif %}
@@ -208,7 +211,7 @@
   {% endif %}
 {% endmacro %}
 
-{% macro field_translation(form, language, field, username, translations) %}
+{% macro field_translation(form, uiLanguage, language, field, username, translations) %}
   {% import _self as macros %}
   <div class="u:mb-16">
     <div class="u:inline-block u:mb-8">{{ form.vars.label|trans({}, 'messages', language) }}</div>
@@ -217,7 +220,7 @@
       {% set attr = attr|merge({'data-field': field}) %}
       {% set attr = attr|merge({'data-username': username}) %}
       {{ form_widget(form, {attr: attr}) }}
-      {{ _self.field_english(language, field, translations) }}
+      {{ _self.field_ui_language(uiLanguage, language, field, translations) }}
     </div>
   </div>
 {% endmacro %}

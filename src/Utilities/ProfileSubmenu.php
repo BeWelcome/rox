@@ -133,27 +133,27 @@ class ProfileSubmenu
         $username = $member->getUsername();
 
         $this->addSubmenuItem('edit_profile', [
-            'key' => 'editmyprofile',
+            'key' => 'profile.menu.edit.profile',
             'icon' => 'edit',
             'url' => $this->routing->generate('profile_edit', ['username' => $username]),
         ]);
         $this->addSubmenuItem('edit_account', [
-            'key' => 'account.edit',
+            'key' => 'profile.menu.edit.account',
             'icon' => 'user',
             'url' => $this->routing->generate('account_edit', ['username' => $username]),
         ]);
         $this->addSubmenuItem('preferences', [
-            'key' => 'profile.preferences.menu',
+            'key' => 'profile.menu.preferences',
             'icon' => 'cogs',
             'url' => $this->routing->generate('preferences', ['username' => $username]),
         ]);
         $this->addSubmenuItem('mydata', [
-            'key' => 'mydata',
+            'key' => 'profile.menu.my.data',
             'icon' => 'database',
             'url' => $this->routing->generate('profile_personal_data', ['username' => $username]),
         ]);
         $this->addSubmenuItem('mynotes', [
-            'key' => 'mynotes',
+            'key' => 'profile.menu.my.notes',
             'icon' => 'sticky-note',
             'count' => $parameters['notes_count'],
             'url' => $this->routing->generate('notes', ['username' => $username]),
@@ -262,12 +262,12 @@ class ProfileSubmenu
         $username = $member->getUsername();
         $this->addSubmenuItem('separator_two', []);
         $this->addSubmenuItem('profile', [
-            'key' => 'MemberPage',
+            'key' => 'profile.menu.profile',
             'icon' => 'user',
             'url' => $this->routing->generate('members_profile', ['username' => $username]),
         ]);
         $this->addSubmenuItem('comments', [
-            'key' => 'ViewComments',
+            'key' => 'profile.menu.comments',
             'icon' => 'comments',
             'count' => ($parameters['comments_for_count'] ?? 0),
             'url' => $this->routing->generate('profile_comments', ['username' => $username]),
@@ -275,7 +275,7 @@ class ProfileSubmenu
 
         if (0 !== $parameters['relations_count']) {
             $this->addSubmenuItem('relations', [
-                'key' => 'profile.relations',
+                'key' => 'profile.menu.family.and.friends',
                 'icon' => 'users',
                 'count' => $parameters['relations_count'],
                 'url' => $this->routing->generate('relations', ['username' => $username]),
@@ -284,14 +284,14 @@ class ProfileSubmenu
 
         if ($member === $loggedInMember) {
             $this->addSubmenuItem('gallery', [
-                'key' => 'Gallery',
+                'key' => 'profile.menu.images',
                 'icon' => 'image',
                 'count' => $parameters['images_count'] ?? 0,
                 'url' => '/gallery/manage',
             ]);
         } else {
             $this->addSubmenuItem('gallery', [
-                'key' => 'Gallery',
+                'key' => 'profile.menu.images',
                 'icon' => 'image',
                 'count' => $parameters['images_count'] ?? 0,
                 'url' => '/gallery/show/user/' . $username . '/pictures',
@@ -299,7 +299,7 @@ class ProfileSubmenu
         }
         if ($parameters['show_forum_posts']) {
             $this->addSubmenuItem('forum_posts', [
-                'key' => 'ViewForumPosts',
+                'key' => 'profile.menu.forum.posts',
                 'icon' => 'comment',
                 'count' => $parameters['posts_count'] ?? 0,
                 'url' => $this->routing->generate('profile_forum_posts', ['username' => $username]),

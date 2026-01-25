@@ -30,12 +30,13 @@ class LanguageType extends AbstractType
             'choice_label' => 'name',
             'choice_value' => 'shortcode',
             'label' => 'label.language',
+            'label_translation_domain' => 'messages',
             'error_bubbling' => false,
             'multiple' => false,
             'autocomplete' => true,
             'help' => 'help.language',
             'required' => false,
-            'translation_domain' => false,
+
             'constraints' => [
                 new NotNull(message: 'error.language'),
             ],

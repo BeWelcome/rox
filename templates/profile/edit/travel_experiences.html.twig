@@ -15,7 +15,7 @@
   <div class="u:w-full">
     <div class="card">
       <div class="card-header u:flex u:flex-row u:justify-between">
-        {{ 'profilesummary'|trans({}, "messages", language)|raw }}
+        {{ 'profile.travel.experience'|trans({}, "messages", language)|raw }}
       </div>
       <div class="card-block p-2">
         <div class="card-text">
@@ -23,8 +23,8 @@
 
           {% set username = member.username %}
           {% set translations = member.translations %}
-          {{ macros.field_translation(form.past, language, 'PastTrips', username, translations) }}
-          {{ macros.field_translation(form.planned, language, 'PlannedTrips', username, translations) }}
+          {{ macros.field_translation(form.past, locale, language, 'PastTrips', username, translations) }}
+          {{ macros.field_translation(form.planned, locale, language, 'PlannedTrips', username, translations) }}
 
           <div class="u:flex u:justify-end u:my-8">
             <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>

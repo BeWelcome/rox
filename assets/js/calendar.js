@@ -7,8 +7,9 @@ export { initializeCalendar }
 const htmlTag = document.getElementsByTagName('html')[0];
 const lang = htmlTag.attributes['lang'].value;
 
-const minimumAge = dayjs().subtract(18, 'year');
-const maximumAge = minimumAge.subtract(122, 'year');
+const now = dayjs()
+const minimumAge = now.subtract(18, 'year');
+const maximumAge = now.subtract(120, 'year');
 
 const options = {
     inputMode: true,

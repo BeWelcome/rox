@@ -3,6 +3,7 @@
 namespace App\Command;
 
 use App\Doctrine\HostRestrictionsType;
+use App\Doctrine\LanguageLevelType;
 use App\Doctrine\StandardOffersType;
 use App\Doctrine\TypicalOfferType;
 use App\Entity\Language;
@@ -372,7 +373,7 @@ class MigrateMembersCommand extends Command
                         } else {
                             $statement->bindValue('member_id', $memberId);
                             $statement->bindValue('language', $languages[$languageLevel['IdLanguage']]->getShortCode());
-                            $statement->bindValue('level', $languageLevel['Level']);
+                            $statement->bindValue('level', $this->migrateLanguageLevel($languageLevel['Level']));
                             try {
                                 $statement->executeStatement();
                             } catch (Exception $e) {
@@ -538,6 +539,9 @@ class MigrateMembersCommand extends Command
         if (str_contains($restrictions, 'NoAlchool')) {
             $hostRestrictions .= ',' . HostRestrictionsType::NO_ALCOHOL;
         }
+        if (str_contains($restrictions, 'NoDrugs')) {
+            $hostRestrictions .= ',' . HostRestrictionsType::NO_DRUGS;
+        }
 
         return substr($hostRestrictions, 1);
     }
@@ -639,11 +643,23 @@ class MigrateMembersCommand extends Command
         return $hideAttribute;
     }
 
-    private function migrateGender(mixed $gender): string
+    private function migrateGender(string $gender): string
     {
         return match ($gender) {
             'IDontTell' => 'other',
             default => $gender,
+        };
+    }
+
+    private function migrateLanguageLevel(string $level): string
+    {
+        return match ($level) {
+            'MotherLanguage' => LanguageLevelType::MOTHER_TONGUE,
+            'Expert' => LanguageLevelType::EXPERT,
+            'Fluent' => LanguageLevelType::FLUENT,
+            'Intermediate' => LanguageLevelType::INTERMEDIATE,
+            'Beginner' => LanguageLevelType::BEGINNER,
+            'OnlyHello' => LanguageLevelType::HELLO_ONLY,
         };
     }
 }

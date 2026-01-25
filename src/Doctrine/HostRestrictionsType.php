@@ -4,9 +4,9 @@ namespace App\Doctrine;
 
 class HostRestrictionsType extends SetType
 {
-    public const string NO_ALCOHOL = 'NoAlcohol';
-    public const string NO_SMOKING = 'NoSmoking';
-    public const string NO_DRUGS = 'NoDrugs';
+    public const string NO_ALCOHOL = 'no.alcohol';
+    public const string NO_SMOKING = 'no.smoking';
+    public const string NO_DRUGS = 'no.drugs';
 
     protected string $name = 'host_restrictions';
 

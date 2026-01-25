@@ -13,7 +13,7 @@ class AboutMeFormType extends AbstractType
         $builder
             ->add('about_me', CkEditorType::class, [
                 'label' => 'profile.about.me',
-                'help' => 'help.about_me',
+                'help' => 'help.about.me',
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'required' => false,
             ])

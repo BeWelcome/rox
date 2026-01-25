@@ -182,7 +182,6 @@ class SearchAdapter implements AdapterInterface
             [
                 'offers_dinner' => StandardOffersType::DINNER,
                 'offers_tour' => StandardOffersType::GUIDED_TOUR,
-                'accessible' => StandardOffersType::WHEELCHAIR_ACCESSIBLE,
             ] as $param => $value
         ) {
             if ($data->$param) {

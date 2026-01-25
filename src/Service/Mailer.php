@@ -31,8 +31,13 @@ class Mailer
     private const string SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
     private const string ACCOUNT_FEEDBACK_ADDRESS = 'account@bewelcome.org';
 
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly UrlGeneratorInterface $urlGenerator, private readonly TranslatorInterface $translator, private readonly MailerInterface $mailer, private readonly Logger $logger)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly TranslatorInterface $translator,
+        private readonly MailerInterface $mailer,
+        private readonly Logger $logger,
+    ) {
     }
 
     public function sendMessageNotificationEmail(Member $sender, Member $receiver, string $template, $parameters): bool

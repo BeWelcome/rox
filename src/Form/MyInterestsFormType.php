@@ -12,35 +12,35 @@ class MyInterestsFormType extends AbstractType
     {
         $builder
             ->add('hobbies', CkEditorType::class, [
-                'label' => 'label.profile.hobbies',
+                'label' => 'profile.hobbies',
                 'help' => 'help.profile.hobbies',
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'required' => false,
                 'image_upload' => false,
             ])
             ->add('books', CkEditorType::class, [
-                'label' => 'label.profile.books',
+                'label' => 'profile.books',
                 'help' => 'help.profile.books',
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'required' => false,
                 'image_upload' => false,
             ])
             ->add('music', CkEditorType::class, [
-                'label' => 'label.profile.music',
+                'label' => 'profile.music',
                 'help' => 'help.profile.music',
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'required' => false,
                 'image_upload' => false,
             ])
             ->add('movies', CkEditorType::class, [
-                'label' => 'label.profile.movies',
+                'label' => 'profile.movies',
                 'help' => 'help.profile.movies',
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'required' => false,
                 'image_upload' => false,
             ])
             ->add('organizations', CkEditorType::class, [
-                'label' => 'label.profile.organizations',
+                'label' => 'profile.organizations',
                 'help' => 'help.profile.organizations',
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'required' => false,

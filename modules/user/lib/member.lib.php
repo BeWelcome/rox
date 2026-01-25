@@ -92,7 +92,7 @@ class MOD_member
             throw new PException('DB config error!');
         }
         $dao = PDB::get($db->dsn, $db->user, $db->password);
-        $result = $dao->query("SELECT username FROM members WHERE id = ". intval($user_id));
+        $result = $dao->query("SELECT username FROM member WHERE id = ". intval($user_id));
         if ($result && $fetched = $result->fetch(PDB::FETCH_OBJ))
         {
             return $fetched->username;
@@ -110,7 +110,7 @@ class MOD_member
     {
         if ($row = self::_getDAO()->query(
             'SELECT SQL_CACHE id '.
-            'FROM members '.
+            'FROM member '.
             "WHERE Username='$username' "
         )->fetch(PDB::FETCH_OBJ)) {
             return new MOD_member($row->id, $username); 
@@ -129,7 +129,7 @@ class MOD_member
     {
         if ($row = self::_getDAO()->query(
             'SELECT SQL_CACHE Username '.
-            'FROM members '.
+            'FROM member '.
             "WHERE id='$userId' "
         )->fetch(PDB::FETCH_OBJ)) {
             return new MOD_member($userId, $row->Username);

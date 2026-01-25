@@ -69,7 +69,8 @@ class TranslationsAddMissingCommand extends Command
 
                     ++$count;
                     if ('@' === $sentence[0]) {
-                        $reusedTranslationId = substr((string) $sentence, 1);
+                        $offset = ('-' === $sentence[1]) ? 2 : 1;
+                        $reusedTranslationId = substr((string) $sentence, $offset);
                         $io->note(\sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
                         $connection = $this->entityManager->getConnection();
                         $statement = $connection->prepare('
@@ -82,6 +83,17 @@ class TranslationsAddMissingCommand extends Command
                         $statement->bindValue(':reusedTranslationId', $reusedTranslationId);
                         $statement->bindValue(':admin', $admin->getId());
                         $statement->executeQuery();
+
+                        // We had a translation id that started with @-.
+                        if (2 === $offset) {
+                            $io->note(\sprintf('Deleting %s.', $reusedTranslationId));
+                            // Delete existing translations, so that missing translations can be found
+                            $statement = $connection->prepare('
+                                DELETE FROM word WHERE code = :reusedTranslationId
+                            ');
+                            $statement->bindValue(':reusedTranslationId', $reusedTranslationId);
+                            $statement->executeStatement();
+                        }
                     } else {
                         $io->note(\sprintf('Adding %s: %s', $translationId, $sentence));
 

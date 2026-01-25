@@ -3,7 +3,7 @@ languages.spoken:
 languages.signed:
     - "@signedlanguages"
 languages.written:
-    - '@writtenlanguages'
+    - 'Written Language'
 languages.error.duplicates:
     - 'Duplicate languages!'
     - Error message on the edit languages page
@@ -21,3 +21,7 @@ language.delete.yes:
 language.deleted.flash:
     - Deleted {language} content of the profile.
     - Flash message shown if a profile translation gets deleted. Make sure to keep the { language } tag.
+label.language:
+    - 'Language'
+label.language.level:
+    - 'Level'

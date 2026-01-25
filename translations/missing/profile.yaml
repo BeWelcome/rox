@@ -259,8 +259,8 @@ profile.edit.travel_experiences:
 profile.edit.groups:
     - 'Manage your groups'
     - Tooltip and screen reader text on 'Edit profile'.
-profile.edit.pictures:
-    - 'Manage your pictures'
+profile.edit.images:
+    - 'Manage your images'
     - Tooltip and screen reader text on 'Edit profile'.
 profile.edit.relations:
     - 'Manage ''Family and friends'''
@@ -289,48 +289,114 @@ accommodation.no:
 accommodation.yes:
     - Yes
     - Label for the hosting accommodation choice
-label.profile.length_of_stay:
-    - Length of stay
-    - Label for the profile edit form
-label.profile.please_bring:
-    - Please bring
-    - Label for the profile edit form
-label.profile.i_live_with:
-    - I live with
-    - Label for the profile edit form
-label.profile.where_you_sleep:
-    - Sleeping arrangement
-    - Label for the profile edit form
-label.profile.additional_info:
-    - Additional Information
-    - Label for the profile edit form
-label.profile.house_rules:
-    - House rules
-    - Label for the profile edit form
-label.profile.getting_there:
-    - How to get there
-    - Label for the profile edit form
-label.profile.offer_guests:
-    - I can offer my guests
-    - Label for the profile edit form
-label.profile.max_guests:
-    - Maximum number of guests
-    - Label for the profile edit form
+
 offer.dinner:
-    - A dinner
-    - Label for the standard offer
-offer.guided tour:
-    - A guided tour
-    - Label for the standard offer
-label.profile.wheelchair_accessible:
-    - Wheelchair accessible
-    - Label for the standard offer
-restriction.no_alcohol:
-    - No alcohol please in my flat
-    - Label for the standard restriction
-restriction.no_smoking:
-    - No smoking not even near the flat
-    - Label for the standard restriction
-restriction.no_drugs:
-    - No drug use while you visit
-    - Label for the standard restriction
+    - '@-typicoffer_dinner'
+offer.guided.tour:
+    - '@-typicoffer_guidedtour'
+profile.wheelchair.accessible:
+    - '@-typicoffer_canhostwheelchair'
+profile.about.me:
+    - '@-profilesummary'
+profile.occupation:
+    - '@-profileoccupation'
+profile.offer.hosts:
+    - '@-profileofferhosts'
+profile.interests:
+    - '@-profileinterests'
+profile.travel.experience:
+    - '@-profiletravelexperience'
+profile.groups:
+    - '@-profilegroups'
+profile.images:
+    - '@-gallerytitlelatest'
+profile.accommodation:
+    - '@-profileaccommodation'
+profile.comments:
+    - '@-latestcomments'
+profile.menu.edit.profile:
+    - '@-editmyprofile'
+profile.change.avatar:
+    - 'ToDo'
+profile.menu.edit.account:
+    - 'Edit account'
+profile.menu.preferences:
+    - '@-profile.preferences.menu'
+profile.menu.my.data:
+    - '@mydata'
+profile.menu.my.notes:
+    - '@mynotes'
+profile.menu.profile:
+    - '@memberpage'
+profile.menu.comments:
+    - '@-viewcomments'
+profile.menu.images:
+    - '@-gallery'
+profile.menu.forum.posts:
+    - '@-viewforumposts'
+last.activity.privacy:
+    - '@-lastloginprivacy'
+profile.hobbies:
+    - '@-profilehobbies'
+profile.books:
+    - '@-profilebooks'
+profile.music:
+    - '@-profilemusic'
+profile.movies:
+    - '@-profilemovies'
+profile.organizations:
+    - '@-profileorganizations'
+profile.past.trips:
+    - '@-profilepasttrips'
+profile.planned.trips:
+    - '@-profileplannedtrips'
+profile.family.and.friends:
+    - '@-myrelations'
+profile.max.guests:
+    - '@-profilenumberofguests'
+profile.max.length.of.stay:
+    - '@-profilemaxlenghtofstay'
+profile.i.live.with:
+    - '@-profileilivewith'
+profile.please.bring:
+    - '@-profilepleasebring'
+profile.offer.guests:
+    - '@-profileofferguests'
+profile.additional.information.for.guests:
+    - '@-otherinfosforguest'
+profile.getting.there:
+    - '@-profilepublictransport'
+label.restrictions:
+    - Restrictions
+label.offers:
+    - Offers additional to hosting
+profile.house.rules:
+    - '@-profilehouserules'
+restriction.no.alcohol:
+    - '@-restriction_noalchool'
+restriction.no.smoking:
+    - '@-restriction_nosmoker'
+restriction.no.drugs:
+    - '@-restriction_nodrugs'
+language.level.mother.tongue:
+    - '@-languagelevel_motherlanguage'
+language.level.expert:
+    - '@-languagelevel_expert'
+language.level.fluent:
+    - '@-languagelevel_fluent'
+language.level.beginner:
+    - '@-languagelevel_beginner'
+language.level.intermediate:
+    - '@-languagelevel_intermediate'
+language.level.hello.only:
+    - '@-languagelevel_helloonly'
+label.show.age:
+    - Show age on profile and allow to search for it.
+label.show.gender:
+    - Show gender on profile and allow to search for it.
+label.show.name:
+    - Show name on profile (can''t be searched for). You can set a short name to be shown instead.
+label.email.change:
+    - Change email address?
+help.email.change:
+    - If you change your email address you will need to confirm that you can be reached through that email the same way you did during signup.

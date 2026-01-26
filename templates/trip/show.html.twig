@@ -17,18 +17,20 @@
 {% endblock %}
 
 {% block content %}
+  {% set member = app.user %}
+  {% set address = member.activeAddress %}
     <section class="u:mb-48">
         <div class="u:flex u:mt-8 u:mb-24">
             <div class="o-avatar o-avatar--white u:mr-24">{{ macros.roundedavatarstack(trip.creator.username, 96) }}</div>
             <div class="u:flex u:items-center">
                 <h1 class="u:text-32 u:leading-48 u:md:text-56 u:md:leading-60 u:text-white u:font-700">{{ trip.summary }}</h1>
-                {% if app.user == trip.creator and expired == false %}
+                {% if member is same as(trip.creator) and expired == false %}
                     <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u:ml-24"
                        aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
                         <i class="fa fa-edit"></i>
                     </a>
                 {% endif %}
-                {% if app.user == trip.creator %}
+                {% if member is same as (trip.creator) %}
                     <a href="{{ path('trip_copy', {'id': trip.id}) }}" class="o-rounded u:ml-24"
                        aria-label="{{ 'trip.copy'|trans }}" title="{{ 'trip.copy'|trans }}">
                         <i class="fa fa-copy"></i>
@@ -65,7 +67,7 @@
                     {% set current = 1 %}
                     {% set lastLongitude = ((trip.subtrips)|first).location.longitude %}
                     {% for subtrip in trip.subtrips %}
-                        {% if not(constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in subtrip.options) or (app.user == trip.creator) %}
+                        {% if not(constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in subtrip.options) or (member is same as (trip.creator)) %}
                             <li class="l-trip-show">
                                 <span
                                     class="o-number o-number--white o-number--l u:relative u:ml-__18">{{ current }}</span>
@@ -131,7 +133,7 @@
                                                 {% if invitations|length > 5 %}<a href="{{ url('conversations', {conversationsType: 'invitations'}) }}">...</a>{% endif %}
                                             {% endif %}
                                         {% else %}
-                                            {% if distance(subtrip.location.latitude, subtrip.location.longitude, app.user.latitude, app.user.longitude) <= trip.invitationRadius or subtrip.location.geonameId == app.user.city.geonameId %}
+                                            {% if distance(subtrip.location.latitude, subtrip.location.longitude, address.latitude, address.longitude) <= trip.invitationRadius or subtrip.location.geonameId == address.location.geonameId %}
                                                 <div class="u:flex">
                                                     {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
                                                         <a class="o-rounded o-rounded--l u:mx-4"
@@ -141,7 +143,7 @@
                                                         </a>
                                                     {% endif %}
                                                     {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
-                                                        {% set invitation = subtrip.invitationBy(app.user) %}
+                                                        {% set invitation = subtrip.invitationBy(member) %}
                                                         {% if invitation %}
                                                             {% set invited = invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
                                                            <a class="o-rounded o-rounded--l u:mx-4 {% if invited %}u:bg-green-dark{% endif %}"
@@ -189,8 +191,8 @@
             radius: {{ trip.invitationRadius * 1000 }},
         }
         let memberInfo = {
-            latitude: {{ app.user.latitude }},
-            longitude: {{ app.user.longitude }},
+            latitude: {{ address.latitude }},
+            longitude: {{ address.longitude }},
             searchRadius: {{ searchRadius }},
         }
     </script>

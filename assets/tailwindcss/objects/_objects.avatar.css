@@ -32,7 +32,7 @@
   height: 32px;
   overflow: hidden;
   border-radius: 100%;
-  border: 1px solid var(--u-color-gray-40);
+  border: 1px solid var(--u-color-gray-50);
   justify-self: center;
 }
 
@@ -53,7 +53,7 @@
   font-size: 10px;
 }
 
-@screen sm {
+@variant sm {
   .o-avatar {
     display: grid;
     grid-template-rows: 48px 1fr;
@@ -67,7 +67,7 @@
     height: 48px;
     overflow: hidden;
     border-radius: 100%;
-    border: 2px solid var(--u-color-gray-40);
+    border: 2px solid var(--u-color-gray-50);
     justify-self: center;
   }
 
@@ -91,7 +91,7 @@
   }
 }
 
-@screen md {
+@variant md {
   .o-avatar {
     display: grid;
     grid-template-rows: 72px 1fr;
@@ -105,7 +105,7 @@
     height: 72px;
     overflow: hidden;
     border-radius: 100%;
-    border: 2px solid var(--u-color-gray-40);
+    border: 2px solid var(--u-color-gray-50);
     justify-self: center;
   }
 
@@ -128,7 +128,7 @@
   }
 }
 
-@screen lg {
+@variant lg {
   .o-avatar {
     display: grid;
     grid-template-rows: 96px 1fr;
@@ -142,7 +142,7 @@
     height: 96px;
     overflow: hidden;
     border-radius: 100%;
-    border: 2px solid var(--u-color-gray-40);
+    border: 2px solid var(--u-color-gray-50);
     justify-self: center;
   }
 

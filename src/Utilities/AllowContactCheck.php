@@ -3,6 +3,7 @@
 namespace App\Utilities;
 
 use App\Entity\Member;
+use App\Entity\MemberPhoto;
 use App\Entity\MembersPhoto;
 use App\Entity\MemberTranslation;
 use App\Entity\Preference;
@@ -36,7 +37,7 @@ class AllowContactCheck
 
     public function checkIfMemberHasProfilePicture(Member $member): bool
     {
-        $profilePictureRepository = $this->entityManager->getRepository(MembersPhoto::class);
+        $profilePictureRepository = $this->entityManager->getRepository(MemberPhoto::class);
         $profilePictures = $profilePictureRepository->findBy(['member' => $member]);
 
         return \count($profilePictures) > 0;
@@ -44,18 +45,13 @@ class AllowContactCheck
 
     public function checkIfMemberHasAboutMe(Member $member): bool
     {
-        $memberTranslationRepository = $this->entityManager->getRepository(MemberTranslation::class);
-        /** @var MemberTranslation[] $memberTranslations */
-        $memberTranslations = $memberTranslationRepository->findBy([
-            'owner' => $member,
-            'tableColumn' => 'members.ProfileSummary',
-        ]);
+        $translations = $member->getTranslations();
 
-        $hasAboutMe = array_reduce($memberTranslations, static function ($hasAboutMe, $memberTranslation) {
-            return $hasAboutMe
-                || (!empty($memberTranslation->getSentence() && $memberTranslation->getTranslation() > 0));
-        });
+        $hasAboutMe = false;
+        foreach (array_keys($translations) as $language) {
+            $hasAboutMe |= ($translations[$language]['AboutMe'] ?? '') !== '';
+        }
 
-        return $hasAboutMe ?? false;
+        return $hasAboutMe;
     }
 }

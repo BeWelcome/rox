@@ -61,7 +61,7 @@ App\Entity\Preference:
         created: <DateTime()>
         DefaultValue: 'Yes'
         PossibleValues: 'Yes;No'
-        Status: 'Normal'
+        Status: 'Inactive'
     NEWSLETTERS_VIA_EMAIL:
         position: 50
         codename: 'PreferenceAcceptNewsByMail'

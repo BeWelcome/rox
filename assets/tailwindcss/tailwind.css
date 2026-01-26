@@ -10,8 +10,10 @@
 @source not "../../public/";
 
 @theme {
-  --color-bewelcome: #f37000;
-  --color-bewelcome-dark: #cd5e00;
+  --color-white: white;
+  --color-bewelcome: oklch(0.6914 0.1856 48.95);
+  --color-bewelcome-dark: oklch(0.3457 0.1856 48.95);
+  --color-bewelcome-light: oklch(0.7977 0.1856 48.95);
 
   --spacing: 1px;
   --spacing-0: 0px;
@@ -35,6 +37,7 @@
   --spacing-300: 300px;
 
   --radius-4: 4px;
+  --radius-5: 5px;
   --radius-8: 8px;
   --radius-full: 100%;
 

@@ -1140,7 +1140,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
     public function isShortNameVisible(): bool
     {
-        return empty($this->shortName);
+        return !empty($this->shortName);
     }
 
     public function getShortNameOrUsername(): string

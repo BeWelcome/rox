@@ -7,7 +7,22 @@
         {% if not (name starts with '_') %}
             <div class="u:mb-16">
                 <legend class="o-label" aria-label="{{ child.vars.label|trans }}">{{ child.vars.label|trans }}</legend>
-                <div class="u:grid u:grid-cols-1 {% if child.vars.choices|length == 2 %}u:sm:grid-cols-2{% endif %}">{{ form_widget(child) }}</div>
+              {% if child.vars.choices|length == 2 %}
+                {{ dump(child.vars) }}
+                <label class="u:inline-flex u:items-center u:cursor-pointer" style="display: inline-flex;">
+                  <span class="u:select-none u:font-medium u:text-heading">{{ child.vars.choices[0].label|trans }}</span>
+                  <input type="checkbox" class="u:sr-only u:peer">
+                  <div class="u:relative u:mx-8 u:w-20 u:h-10 u:bg-bewelcome u:peer-focus:outline-none u:peer-focus:ring-1 u:peer-focus:ring-bewelcome-light
+                              u:rounded-5 u:peer u:peer-checked:after:translate-x-10 u:rtl:peer-checked:after:-translate-x-full u:peer-checked:after:border-buffer
+                              u:after:content-[''] u:after:absolute after:top-[2px] u:after:bg-white u:after:rounded-5 u:after:h-10
+                              u:after:w-10 u:after:transition-all u:peer-checked:bg-bewelcome"></div>
+                  <span class="u:select-none u:text-sm u:font-medium u:text-heading">{{ child.vars.choices[1].label|trans }}</span>
+                </label>
+
+              {{ form_widget(child) }}
+              {% else %}
+                <div class="u:grid u:grid-cols-1">{{ form_widget(child) }}</div>
+                  {% endif %}
                 {{ form_help(child) }}
             </div>
         {% endif %}

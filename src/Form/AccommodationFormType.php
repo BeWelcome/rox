@@ -20,7 +20,7 @@ class AccommodationFormType extends AbstractType
     {
         $builder
             ->add('max_guests', IntegerType::class, [
-                'label' => 'label.profile.max_guests',
+                'label' => 'profile.max.guests',
                 'help' => 'help.profile.max_guests',
                 'attr' => [
                     'class' => 'o-input',
@@ -43,8 +43,8 @@ class AccommodationFormType extends AbstractType
                 ],
             ])
             ->add('hosting_interest', RangeType::class, [
-                'label' => 'label.hosting_interest',
-                'help' => 'help.hosting_interest',
+                'label' => 'hosting.interest',
+                'help' => 'help.hosting.interest',
                 'required' => false,
                 'attr' => [
                     'min' => 0,
@@ -57,9 +57,9 @@ class AccommodationFormType extends AbstractType
                 'multiple' => true,
                 'help' => 'help.restrictions',
                 'choices' => [
-                    'restriction.no_alcohol' => HostRestrictionsType::NO_ALCOHOL,
-                    'restriction.no_smoking' => HostRestrictionsType::NO_SMOKING,
-                    'restriction.no_drugs' => HostRestrictionsType::NO_DRUGS,
+                    'restriction.no.alcohol' => HostRestrictionsType::NO_ALCOHOL,
+                    'restriction.no.smoking' => HostRestrictionsType::NO_SMOKING,
+                    'restriction.no.drugs' => HostRestrictionsType::NO_DRUGS,
                 ],
             ])
             ->add('offers', ChoiceType::class, [
@@ -69,73 +69,73 @@ class AccommodationFormType extends AbstractType
                 'help' => 'help.offers',
                 'choices' => [
                     'offer.dinner' => StandardOffersType::DINNER,
-                    'offer.guided_tour' => StandardOffersType::GUIDED_TOUR,
+                    'offer.guided.tour' => StandardOffersType::GUIDED_TOUR,
                 ],
             ])
             ->add('wheelchair_accessible', CheckboxType::class, [
                 'required' => false,
-                'label' => 'label.profile.wheelchair_accessible',
-                'help' => 'help.profile.wheelchair_accessible',
+                'label' => 'profile.wheelchair.accessible',
+                'help' => 'help.profile.wheelchair.accessible',
             ])
             ->add('length_of_stay', CkEditorType::class, [
-                'label' => 'label.profile.length_of_stay',
-                'help' => 'help.profile.length_of_stay',
+                'label' => 'profile.max.length.of.stay',
+                'help' => 'help.profile.length.of.stay',
                 'async' => true,
                 'required' => false,
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'image_upload' => false,
             ])
             ->add('i_live_with', CkEditorType::class, [
-                'label' => 'label.profile.i_live_with',
-                'help' => 'help.profile.i_live_with',
+                'label' => 'profile.i.live.with',
+                'help' => 'help.profile.i.live.with',
                 'async' => true,
                 'required' => false,
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'image_upload' => false,
             ])
             ->add('please_bring', CkEditorType::class, [
-                'label' => 'label.profile.please_bring',
-                'help' => 'help.profile.please_bring',
+                'label' => 'profile.please.bring',
+                'help' => 'help.profile.please.bring',
                 'async' => true,
                 'required' => false,
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'image_upload' => false,
             ])
             ->add('where_you_sleep', CkEditorType::class, [
-                'label' => 'label.profile.where_you_sleep',
-                'help' => 'help.profile.where_you_sleep',
+                'label' => 'profile.where.you.sleep',
+                'help' => 'help.profile.where.you.sleep',
                 'async' => true,
                 'required' => false,
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'image_upload' => true,
+                'image_upload' => false,
             ])
             ->add('offer_guests', CkEditorType::class, [
-                'label' => 'label.profile.offer_guests',
-                'help' => 'help.profile.offer_guests',
+                'label' => 'profile.offer.guests',
+                'help' => 'help.profile.offer.guests',
                 'async' => true,
                 'required' => false,
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'image_upload' => false,
             ])
             ->add('additional_info', CkEditorType::class, [
-                'label' => 'label.profile.additional_info',
-                'help' => 'help.profile.additional_info',
+                'label' => 'profile.additional.information.for.guests',
+                'help' => 'help.profile.additional.information.for.guests',
                 'async' => true,
                 'required' => false,
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'image_upload' => false,
             ])
             ->add('getting_there', CkEditorType::class, [
-                'label' => 'label.profile.getting_there',
-                'help' => 'help.profile.getting_there',
+                'label' => 'profile.getting.there',
+                'help' => 'help.profile.getting.there',
                 'async' => true,
                 'required' => false,
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
                 'image_upload' => false,
             ])
             ->add('house_rules', CkEditorType::class, [
-                'label' => 'label.profile.house_rules',
-                'help' => 'help.profile.house_rules',
+                'label' => 'profile.house.rules',
+                'help' => 'help.profile.house.rules',
                 'async' => true,
                 'required' => false,
                 'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,

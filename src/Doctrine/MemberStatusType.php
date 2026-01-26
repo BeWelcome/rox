@@ -121,7 +121,7 @@ class MemberStatusType extends EnumType
     public function getStatuses(): array
     {
         $translationIds = self::STATUSES_IN_USE;
-        array_walk($translationIds, function (&$item) {
+        array_walk($translationIds, static function (&$item) {
             $item = strtolower('MemberStatus' . $item);
         });
 

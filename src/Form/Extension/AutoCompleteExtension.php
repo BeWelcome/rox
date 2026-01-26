@@ -46,7 +46,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
             'options_as_html' => false,
         ]);
 
-        $resolver->setNormalizer('preload', function ($options, $value) {
+        $resolver->setNormalizer('preload', static function ($options, $value) {
             if (\is_bool($value)) {
                 $value = $value ? 'true' : 'false';
             }

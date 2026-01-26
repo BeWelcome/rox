@@ -27,7 +27,7 @@ class TranslationFormType extends AbstractType
                 'label' => 'label.admin.translation.englishtext',
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             $translationRequest = $event->getData();
             $form = $event->getForm();
             if ('en' !== $translationRequest->locale) {

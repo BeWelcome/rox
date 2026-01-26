@@ -29,9 +29,9 @@
 
           {% set username = member.username %}
           {% set translations = member.translations %}
-          {{ macros.field_translation(form.length_of_stay, language, 'MaxLengthOfStay', username, translations) }}
-          {{ macros.field_translation(form.i_live_with, language, 'ILiveWith', username, translations) }}
-          {{ macros.field_translation(form.please_bring, language, 'PleaseBring', username, translations) }}
+          {{ macros.field_translation(form.length_of_stay, locale, language, 'MaxLengthOfStay', username, translations) }}
+          {{ macros.field_translation(form.i_live_with, locale, language, 'ILiveWith', username, translations) }}
+          {{ macros.field_translation(form.please_bring, locale, language, 'PleaseBring', username, translations) }}
 
           <span class="form-check-label">{{ form.offers.vars.label|trans }}</span>
           <div class="u:flex u:flex-row u:justify-between">
@@ -58,9 +58,9 @@
             {% do form.wheelchair_accessible.setRendered %}
           </div>
 
-          {{ macros.field_translation(form.offer_guests, language, 'OfferGuests', username, translations) }}
-          {{ macros.field_translation(form.where_you_sleep, language, 'WhereYouSleep', username, translations) }}
-          {{ macros.field_translation(form.additional_info, language, 'AdditionalAccommodationInfo', username, translations) }}
+          {{ macros.field_translation(form.offer_guests, locale, language, 'OfferGuests', username, translations) }}
+          {{ macros.field_translation(form.where_you_sleep, locale, language, 'WhereYouSleep', username, translations) }}
+          {{ macros.field_translation(form.additional_info, locale, language, 'AdditionalAccommodationInfo', username, translations) }}
 
           <span class="form-check-label">{{ form.restrictions.vars.label|trans }}</span>
           <div class="u:flex u:flex-row u:justify-between">
@@ -76,8 +76,8 @@
             {% endfor %}
           </div>
 
-          {{ macros.field_translation(form.house_rules, language, 'HouseRules', username, translations) }}
-          {{ macros.field_translation(form.getting_there, language, 'GettingThere', username, translations) }}
+          {{ macros.field_translation(form.house_rules, locale, language, 'HouseRules', username, translations) }}
+          {{ macros.field_translation(form.getting_there, locale, language, 'GettingThere', username, translations) }}
 
           <div class="u:flex u:justify-end u:my-8">
             <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>

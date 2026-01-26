@@ -601,12 +601,12 @@ LIMIT 1
                 ) c ON c.IdToMember = m.id
             LEFT JOIN (
                 SELECT
-                    COUNT(*) As photoCount, IdMember
+                    COUNT(*) As photoCount, member_id
                 FROM
-                    membersphotos
+                    member_photo
                 GROUP BY
-                    IdMember
-                ) mp ON mp.IdMember = m.id
+                    member_id
+                ) mp ON mp.member_id = m.id
             WHERE
                 {$this->maxGuestCondition}
                 {$this->statusCondition}
@@ -792,13 +792,13 @@ LIMIT 1
             $this->joins .= "
                 LEFT JOIN (
                     SELECT
-                        COUNT(*) As photoCount, IdMember
+                        COUNT(*) As photoCount, member_id
                     FROM
-                        membersphotos
+                        member_photo
                     GROUP BY
-                        IdMember) mp
+                        member_id) mp
                     ON
-                        mp.IdMember = m.id
+                        mp.member_id = m.id
             ";
         }
         if (!empty($this->commentsCondition)) {

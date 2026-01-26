@@ -368,7 +368,7 @@ SELECT
     a.`title` AS album,
     a.`id` AS albumId
 FROM `gallery_items` AS i
-LEFT JOIN `members` AS `m` ON
+LEFT JOIN `member` AS `m` ON
     m.`id` = i.`user_id_foreign`
 LEFT JOIN `gallery_items_to_gallery` AS `g` ON
     g.`item_id_foreign` = i.`id`
@@ -414,7 +414,7 @@ SELECT
     i.`title`,
     i.`created`
 FROM `gallery_items` AS i
-LEFT JOIN `members` AS `m` ON
+LEFT JOIN `member` AS `m` ON
     m.`id` = i.`user_id_foreign`
 WHERE i.`id` > '.(int)$imageId.'
         ';
@@ -448,7 +448,7 @@ SELECT
     i.`title`,
     i.`created`
 FROM `gallery_items` AS i
-LEFT JOIN `members` AS `m` ON
+LEFT JOIN `member` AS `m` ON
     m.`id` = i.`user_id_foreign`
 WHERE i.`id` < '.(int)$imageId.'
         ';
@@ -517,7 +517,7 @@ SELECT
     i.`description`,
     i.`created`
 FROM `gallery_items` AS i,
-members as m
+member as m
 WHERE i.`id` = ". (int)$itemId . "
 AND m.id = i.user_id_foreign
 AND m.Status IN ('Active', 'ChoiceInactive', 'Pending', 'OutOfRemind')

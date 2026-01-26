@@ -50,7 +50,7 @@ class FaqFormType extends AbstractType
                 'required' => false,
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             $faq = $event->getData();
             $form = $event->getForm();
             if (empty($faq->wordCode)) {

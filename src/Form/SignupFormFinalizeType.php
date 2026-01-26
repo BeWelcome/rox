@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\LessThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -74,6 +75,7 @@ class SignupFormFinalizeType extends AbstractType
                 'constraints' => [
                     new NotBlank(message: 'error.birthdate'),
                     new LessThan('-18years'),
+                    new GreaterThan('-120years'),
                 ],
             ])
             ->add('gender', ChoiceType::class, [

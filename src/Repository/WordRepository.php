@@ -101,7 +101,7 @@ class WordRepository extends EntityRepository
                 'translator' => $translator,
                 'date' => $date,
             ];
-            uasort($translationDetails, function ($a, $b) {
+            uasort($translationDetails, static function ($a, $b) {
                 if ($a['count'] === $b['count']) {
                     return 0;
                 } elseif ($a['count'] > $b['count']) {

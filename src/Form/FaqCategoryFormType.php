@@ -31,7 +31,7 @@ class FaqCategoryFormType extends AbstractType
         ;
         $builder->get('wordCode')
             ->addModelTransformer(new CallbackTransformer(
-                function ($wordCode) {
+                static function ($wordCode) {
                     if (null === $wordCode) {
                         return '';
                     }
@@ -41,7 +41,7 @@ class FaqCategoryFormType extends AbstractType
 
                     return strtolower(str_ireplace('faq_cat_', '', $wordCode));
                 },
-                function ($strippedWordCode) {
+                static function ($strippedWordCode) {
                     if (true === stripos($strippedWordCode, 'faq_cat_')) {
                         throw new TransformationFailedException('error.admin.faq.transform.invalid');
                     }
@@ -49,7 +49,7 @@ class FaqCategoryFormType extends AbstractType
                     return 'faq_cat_' . $strippedWordCode;
                 }
             ));
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             $faqCategory = $event->getData();
             $form = $event->getForm();
             if (!$faqCategory) {

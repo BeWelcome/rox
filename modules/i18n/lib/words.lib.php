@@ -73,7 +73,7 @@ class MOD_words
 
         $this->_lang = \PVars::get()->lang;
 
-		$this->WordMemcache=new MOD_bw_memcache("words","Sentence","code") ;
+		$this->WordMemcache=new MOD_bw_memcache("word","Sentence","code") ;
 
         if (!empty($category)) {
             $this->_whereCategory = ' `category`=\'' . $category . '\'';
@@ -271,7 +271,7 @@ class MOD_words
         if (is_numeric($code)) {
             $query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
-                "FROM `words` ".
+                "FROM `word` ".
                 "WHERE `id`=" . $this->_dao->escape($code)
             ;
         } else {
@@ -281,7 +281,7 @@ class MOD_words
             }
             $query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
-                "FROM `words` ".
+                "FROM `word` ".
                 "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'"
             ;
         }
@@ -294,7 +294,7 @@ class MOD_words
             // Try again in English
             $query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
-                "FROM `words` ".
+                "FROM `word` ".
                 "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='en'"
             ;
             $q = $this->_dao->query($query);
@@ -538,7 +538,7 @@ class MOD_words
         if (is_numeric($code)) {
             $query =
                 "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated`, majorupdate ".
-                "FROM `words` ".
+                "FROM `word` ".
                 "WHERE `id`=" . $this->_dao->escape($code)
             ;
         } else {
@@ -546,7 +546,7 @@ class MOD_words
             $query =
                 '
 SELECT SQL_CACHE code, Sentence, donottranslate, updated, majorupdate
-FROM words
+FROM word
 WHERE code = "' . $this->_dao->escape(strtolower($code)) . '" AND ShortCode = "' . $this->_dao->escape($lang) .'"'. $extraWhere;
         }
 

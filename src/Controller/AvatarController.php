@@ -3,8 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use App\Entity\MembersPhoto;
-use DateTime;
+use App\Entity\MemberPhoto;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -112,15 +111,13 @@ class AvatarController extends AbstractController
         $newFileName = self::AVATAR_PATH . $member->getId() . '_original';
         $img->save($newFileName);
 
-        $memberPhotoRepository = $this->entityManager->getRepository(MembersPhoto::class);
+        $memberPhotoRepository = $this->entityManager->getRepository(MemberPhoto::class);
         $memberPhoto = $memberPhotoRepository->findOneBy(['member' => $member->getId()], ['created' => 'DESC']);
         if (null === $memberPhoto) {
-            $memberPhoto = new MembersPhoto();
+            $memberPhoto = new MemberPhoto();
         }
         $memberPhoto->setMember($member);
         $memberPhoto->setFilepath($newFileName);
-        $memberPhoto->setCreated(new DateTime());
-        $memberPhoto->setComment('Uploaded new avatar');
 
         $this->entityManager->persist($memberPhoto);
         $this->entityManager->flush();

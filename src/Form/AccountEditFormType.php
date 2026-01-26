@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\LessThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -31,8 +32,7 @@ class AccountEditFormType extends AbstractType
                 ],
             ])
             ->add('show_name', CheckboxType::class, [
-                'label' => 'label.name.show',
-                'help' => 'help.name.show',
+                'label' => 'label.show.name',
                 'required' => false,
             ])
             ->add('short_name', TextType::class, [
@@ -56,11 +56,11 @@ class AccountEditFormType extends AbstractType
                 'constraints' => [
                     new NotBlank(message: 'error.birthdate'),
                     new LessThan('-18years'),
+                    new GreaterThan('-120years'),
                 ],
             ])
             ->add('show_age', CheckboxType::class, [
-                'label' => 'label.age.show',
-                'help' => 'help.age.show',
+                'label' => 'label.show.age',
                 'required' => false,
             ])
             ->add('gender', ChoiceType::class, [
@@ -79,8 +79,7 @@ class AccountEditFormType extends AbstractType
                 ],
             ])
             ->add('show_gender', CheckboxType::class, [
-                'label' => 'label.gender.show',
-                'help' => 'help.gender.show',
+                'label' => 'label.show.gender',
                 'required' => false,
             ])
             ->add('email', EmailType::class, [

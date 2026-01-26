@@ -15,7 +15,7 @@
   <div class="u:w-full">
     <div class="card">
       <div class="card-header u:flex u:flex-row u:justify-between">
-        {{ 'profilesummary'|trans({}, "messages", language)|raw }}
+        {{ 'profile.interests'|trans({}, "messages", language)|raw }}
       </div>
       <div class="card-block p-2">
         <div class="card-text">
@@ -23,11 +23,11 @@
 
           {% set username = member.username %}
           {% set translations = member.translations %}
-          {{ macros.field_translation(form.hobbies, language, 'Hobbies', username, translations) }}
-          {{ macros.field_translation(form.books, language, 'Books', username, translations) }}
-          {{ macros.field_translation(form.music, language, 'Music', username, translations) }}
-          {{ macros.field_translation(form.movies, language, 'Movies', username, translations) }}
-          {{ macros.field_translation(form.organizations, language, 'Organizations', username, translations) }}
+          {{ macros.field_translation(form.hobbies, locale, language, 'Hobbies', username, translations) }}
+          {{ macros.field_translation(form.books, locale, language, 'Books', username, translations) }}
+          {{ macros.field_translation(form.music, locale, language, 'Music', username, translations) }}
+          {{ macros.field_translation(form.movies, locale, language, 'Movies', username, translations) }}
+          {{ macros.field_translation(form.organizations, locale, language, 'Organizations', username, translations) }}
 
           <div class="u:flex u:justify-end u:my-8">
             <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>

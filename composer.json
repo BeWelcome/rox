@@ -47,7 +47,7 @@
         "nelmio/security-bundle": "3.*",
         "nesbot/carbon": "3.*",
         "pagerfanta/pagerfanta": "^v4.4.0",
-        "phpdocumentor/reflection-docblock": "^6.0",
+        "phpdocumentor/reflection-docblock": "^5.2",
         "phpstan/phpdoc-parser": "^2.3",
         "ramsey/uuid-doctrine": "2.*",
         "stof/doctrine-extensions-bundle": "^1.7",

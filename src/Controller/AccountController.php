@@ -75,6 +75,27 @@ class AccountController extends AbstractController
                 $member->setGender($data['gender']);
                 $member->setBirthdate($data['birthdate']);
 
+                $showAge = $data['show_age'] ?? false;
+                if ($showAge) {
+                    $member->showAge();
+                } else {
+                    $member->hideAge();
+                }
+
+                $showGender = $data['show_gender'] ?? false;
+                if ($showGender) {
+                    $member->showGender();
+                } else {
+                    $member->hideGender();
+                }
+
+                $showName = $data['show_name'] ?? false;
+                if ($showName) {
+                    $member->showName();
+                } else {
+                    $member->hideName();
+                }
+
                 if ($data['email'] !== $member->getEmail()) {
                     $member->setNewEmail($data['email']);
                     $this->profileModel->sendEmailConfirmationEmail($member, $data['email']);

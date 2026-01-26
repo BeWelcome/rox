@@ -1,5 +1,3 @@
-profile.preferences.menu:
-    - '@mypreferences'
 profile.preferences:
     - 'Preferences'
     - Headline on the preferences page

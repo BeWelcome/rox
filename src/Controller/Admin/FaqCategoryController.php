@@ -161,7 +161,7 @@ class FaqCategoryController extends FaqBaseController
                 $ids = explode('&', (string) $data['sortOrder']);
                 array_walk(
                     $ids,
-                    function (&$item) {
+                    static function (&$item) {
                         $item = str_replace('faq=', '', $item);
                     }
                 );

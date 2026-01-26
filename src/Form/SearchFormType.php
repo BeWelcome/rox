@@ -150,7 +150,7 @@ class SearchFormType extends AbstractType
         $languages = [];
         if (null !== $options['languages']) {
             foreach ($options['languages'] as $language) {
-                $languages['lang_' . strtolower((string) $language->getShortCode())] = $language->getId();
+                $languages['lang_' . strtolower((string) $language->getShortCode())] = $language->getShortCode();
             }
         }
         $formBuilder

@@ -314,7 +314,7 @@ class Group
     public function getMembers(): array
     {
         return array_map(
-            function ($groupMembership) {
+            static function ($groupMembership) {
                 return $groupMembership->getMember();
             },
             $this->groupMemberships->toArray()
@@ -383,7 +383,7 @@ class Group
             ->where(Criteria::expr()->eq('status', 'In'));
 
         return array_map(
-            function ($groupMembership) {
+            static function ($groupMembership) {
                 return $groupMembership->getMember();
             },
             $this->groupMemberships->matching($criteria)->toArray()

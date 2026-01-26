@@ -125,11 +125,11 @@
                             href="{{ path( 'members_profile' , {username: loggedInMember.username} ) }}"
                             class="dropdown-item">{{ 'profile' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('profile_edit', {username: loggedInMember.username}) }}"
-                                              class="dropdown-item">{{ 'editmyprofile' | trans }}</a></li>
+                                              class="dropdown-item">{{ 'profile.menu.edit.profile' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('preferences', {'username': loggedInMember.username}) }}"
-                                              class="dropdown-item">{{ 'profile.preferences.menu' | trans }}</a></li>
+                                              class="dropdown-item">{{ 'profile.menu.preferences' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('notes', {'username': loggedInMember.username}) }}"
-                                              class="dropdown-item">{{ 'profile.notes.menu' | trans }}</a></li>
+                                              class="dropdown-item">{{ 'profile.menu.my.notes' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('groups_mygroups') }}"
                                               class="dropdown-item">{{ 'mygroups' | trans }}</a></li>
                     <li class="text-right"><a href="{{ path('trips') }}"

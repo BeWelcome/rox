@@ -19,7 +19,7 @@ class PreferenceModel
         $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         $preferences = $preferenceRepository->findBy(['status' => 'Normal'], ['position' => 'ASC']);
 
-        return array_filter($preferences, function ($preference) {
+        return array_filter($preferences, static function ($preference) {
             return Preference::LOCALE !== $preference->getCodename();
         });
     }

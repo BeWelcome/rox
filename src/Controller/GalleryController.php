@@ -144,7 +144,7 @@ class GalleryController extends AbstractController
         }
         $img->save($uploadDirectory . '/thumb' . $fileName);
 
-        $album = $request->get('album');
+        $album = $request->request->get('album');
 
         // Create doctrine entity for image and save to database
         $galleryImage = new GalleryImage();

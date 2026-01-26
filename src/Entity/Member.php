@@ -440,6 +440,10 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
     public function getStandardOffers(): array
     {
+        if (empty($this->standardOffers)) {
+            return [];
+        }
+
         return explode(',', $this->standardOffers);
     }
 
@@ -493,9 +497,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
             return [];
         }
 
-        $restrictions = explode(',', (string) $this->restrictions);
-
-        return $restrictions;
+        return explode(',', (string) $this->restrictions);
     }
 
     public function setHouseRules(?string $houseRules): self
@@ -636,16 +638,16 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         return $this;
     }
 
-    public function showAddress(): self
+    public function showName(): self
     {
-        $this->hideAttribute = ($this->hideAttribute ^ self::ADDRESS_HIDDEN);
+        $this->hideAttribute = ($this->hideAttribute ^ self::NAME_HIDDEN);
 
         return $this;
     }
 
-    public function hideAddress(): self
+    public function hideName(): self
     {
-        $this->hideAttribute = ($this->hideAttribute | self::ADDRESS_HIDDEN);
+        $this->hideAttribute = ($this->hideAttribute | self::NAME_HIDDEN);
 
         return $this;
     }
@@ -897,7 +899,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
         // get all groups, work around problem with database
         return array_map(
-            function ($groupMembership) {
+            static function ($groupMembership) {
                 try {
                     return $groupMembership->getGroup();
                 } catch (Exception) {
@@ -1152,9 +1154,9 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
     public function getLanguageLevels(): array
     {
-        return array_filter(
+        $languageLevels = array_filter(
             $this->languageLevels->toArray(),
-            function (/* @var MemberLanguageLevel */ $k) {
+            static function (/* @var MemberLanguageLevel */ $k) {
                 try {
                     // Make sure language exists in database
                     $language = $k->getLanguage();
@@ -1165,6 +1167,48 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
                 return true;
             }
+        );
+
+        return $languageLevels;
+    }
+
+    public function getLevelLanguages(): array
+    {
+        $languageLevels = array_filter(
+            $this->languageLevels->toArray(),
+            static function (/* @var MemberLanguageLevel */ $k) {
+                try {
+                    // Make sure language exists in database
+                    $language = $k->getLanguage();
+                    $language->getName();
+                } catch (Exception) {
+                    return false;
+                }
+
+                return true;
+            }
+        );
+
+        $levelLanguages = [
+            LanguageLevelType::MOTHER_TONGUE => [],
+            LanguageLevelType::EXPERT => [],
+            LanguageLevelType::FLUENT => [],
+            LanguageLevelType::INTERMEDIATE => [],
+            LanguageLevelType::BEGINNER => [],
+        ];
+        foreach ($languageLevels as $languageLevel) {
+            if (!isset($levelLanguages[$languageLevel->getLevel()])) {
+                $levelLanguages[$languageLevel->getLevel()] = [];
+            }
+            $levelLanguages[$languageLevel->getLevel()][] = $languageLevel->getLanguage();
+        }
+
+        return array_filter(
+            $levelLanguages,
+            static function ($v, $k) {
+                return !empty($v);
+            },
+            \ARRAY_FILTER_USE_BOTH
         );
     }
 
@@ -1202,7 +1246,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     public function getLanguages(): array
     {
         return array_map(
-            function ($languageLevel) {
+            static function ($languageLevel) {
                 return $languageLevel->getLanguage();
             },
             $this->languageLevels->toArray()

@@ -44,7 +44,7 @@ class EditTranslationFormType extends AbstractType
                 'label' => 'label.admin.translation.englishtext',
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             $form = $event->getForm();
             $richtext = $form->getConfig()->getOption('richtext');
             $translationRequest = $event->getData();

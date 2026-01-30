@@ -16,130 +16,53 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'geonamescountries')]
+#[ORM\Table(name: 'geo__countries')]
 #[ORM\Entity]
 class Country
 {
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'geonameId', type: 'integer', nullable: true)]
-    #[Groups(['Member:Read'])]
-    private $geonameId;
+    #[ORM\JoinColumn(name: 'country', referencedColumnName: 'geoname_id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Location::class, fetch: 'EAGER')]
+    private Location $country;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
-    #[Groups(['Member:Read'])]
-    private $name;
+    #[ORM\Column(name: 'continent', type: 'string', length: 2, nullable: false)]
+    private string $continent;
 
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'continent', type: 'string', length: 2, nullable: true)]
-    #[Groups(['Member:Read'])]
-    private $continent;
-
-    /**
-     * @var string
-     */
-    #[ORM\Column(name: 'country', type: 'string', length: 2)]
+    #[ORM\Column(name: 'country_id', type: 'string', length: 2)]
     #[ORM\Id]
-    private $country;
+    private string $countryId;
 
-    /**
-     * Set geonameId.
-     *
-     * @param int $geonameId
-     *
-     * @return Country
-     */
-    public function setGeonameId($geonameId)
+    public function setCountry(Location $country): self
     {
-        $this->geonameId = $geonameId;
+        $this->country = $country;
 
         return $this;
     }
 
-    /**
-     * Get geonameId.
-     *
-     * @return int
-     */
-    public function getGeonameId()
+    public function getCountry(): Location
     {
-        return $this->geonameId;
+        return $this->country;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Country
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set continent.
-     *
-     * @param string $continent
-     *
-     * @return Country
-     */
-    public function setContinent($continent)
+    public function setContinent($continent): self
     {
         $this->continent = $continent;
 
         return $this;
     }
 
-    /**
-     * Get continent.
-     *
-     * @return string
-     */
-    public function getContinent()
+    public function getContinent(): string
     {
         return $this->continent;
     }
 
-    /**
-     * Get country.
-     *
-     * @return string
-     */
-    public function getCountry()
+    public function getCountryId(): string
     {
         return $this->country;
     }
 
-    /**
-     * Set country.
-     *
-     * @param string $country
-     *
-     * @return string
-     */
-    public function setCountry($country)
+    public function setCountryId($countryId): self
     {
-        $this->country = $country;
+        $this->countryId = $countryId;
 
         return $this;
     }

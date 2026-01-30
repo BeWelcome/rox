@@ -40,7 +40,7 @@ class Address
     private ?bool $isWheelChairAccessible;
 
     #[ORM\ManyToOne(targetEntity: Location::class)]
-    #[ORM\JoinColumn(name: 'location', referencedColumnName: 'geonameId', nullable: true)]
+    #[ORM\JoinColumn(name: 'location', referencedColumnName: 'geoname_id', nullable: true)]
     private Location $location;
 
     #[ORM\Column(name: 'latitude', type: Types::DECIMAL, precision: 10, scale: 7, nullable: true)]

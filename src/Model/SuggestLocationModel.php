@@ -3,6 +3,8 @@
 namespace App\Model;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query;
+use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\TranslatableListener;
 use Manticoresearch\Client;
 use Manticoresearch\Query\BoolQuery;
@@ -336,8 +338,8 @@ class SuggestLocationModel
             ->getQuery()
         ;
         $query->setHint(
-            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
+            Query::HINT_CUSTOM_OUTPUT_WALKER,
+            TranslationWalker::class
         );
         $query->setHint(
             TranslatableListener::HINT_TRANSLATABLE_LOCALE,

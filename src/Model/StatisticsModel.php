@@ -12,6 +12,8 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\Query;
+use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -733,8 +735,8 @@ class StatisticsModel
             ->andWhere($qb->expr()->eq('c.featureCode', $qb->expr()->literal('PCLI')))
             ->getQuery();
         $countriesQuery->setHint(
-            \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
+            Query::HINT_CUSTOM_OUTPUT_WALKER,
+            TranslationWalker::class
         );
         $countriesQuery->setHint(
             TranslatableListener::HINT_TRANSLATABLE_LOCALE,

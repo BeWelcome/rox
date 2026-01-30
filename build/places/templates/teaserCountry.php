@@ -29,7 +29,7 @@ $city = htmlspecialchars((string) $city);
 ?>
 
 <div id="teaser" class="page-teaser clearfix">
-<h1>
+<h2>
     <?php
     if (!$countrycode OR !isset($country->name)) { 
         echo $words->getFormatted('CountryTitle');
@@ -50,18 +50,5 @@ $city = htmlspecialchars((string) $city);
         echo '</span>';
     }
     ?>
-</h1> 
-<?php
-if (isset($title)) {
-    if (MOD_right::get()->HasRight('Debug')) {  ?>
-        <h2>
-        <?php
-        echo $title; 
-        // This is only visible to people with debug rights
-        echo " <a href=\"geo/displaylocation/".$countryinfo->IdCountry."\" title=\" specific debug right view database records\">view geo record #".$countryinfo->IdCountry."</a>" ;
-        ?></h2>
-        <?php
-    }
-}
-?>
+</h2>
 </div>

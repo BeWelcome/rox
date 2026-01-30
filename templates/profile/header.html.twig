@@ -65,7 +65,7 @@
             href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
           <input type="hidden" id="latitude" value="{{ address.latitude }}"><input type="hidden" id="longitude" value="{{ address.longitude }}">
           <div id="location-map"
-               class="u:w-full u:aspect-4/1 u:border-1 u:border-bewelcome"></div>
+               class="u:w-full u:aspect-4/1 u:border u:border-bewelcome"></div>
         {% else %}
           {{ 'profile.no.city.yet'|trans }}
         {% endif %}</h5>

@@ -26,7 +26,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: SubtripRepository::class)]
 class Subtrip
 {
-    #[ORM\JoinColumn(name: 'location', referencedColumnName: 'geonameId', nullable: false)]
+    #[ORM\JoinColumn(name: 'location', referencedColumnName: 'geoname_id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Location::class)]
     private Location $location;
 

@@ -18,7 +18,7 @@ App\Entity\Location:
         featureClass: A
         featureCode: PCLI
         admin1Id: '00'
-        population: 3426354
+        population: 1643084
         modificationDate: '<DateTime()>'
         countryId: 'ID'
     NewAdmin1ReferenceLandBerlin:

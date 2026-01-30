@@ -63,7 +63,7 @@ class Donation
     /**
      * @var Location
      */
-    #[ORM\JoinColumn(name: 'IdCountry', referencedColumnName: 'geonameId')]
+    #[ORM\JoinColumn(name: 'IdCountry', referencedColumnName: 'geoname_id')]
     #[ORM\ManyToOne(targetEntity: Location::class)]
     private $country;
 

@@ -25,7 +25,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     name: 'migrate:database',
     description: 'Migrates the existing production database to the new table layout',
 )]
-class MigrateMembersCommand extends Command
+class MigrateDatabaseCommand extends Command
 {
     private const int MEMBER_FIRSTNAME_HIDDEN = 1;
     private const int MEMBER_SECONDNAME_HIDDEN = 2;

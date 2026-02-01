@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
 use App\Entity\Activity;
+use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Notification;
 use App\Entity\Preference;
@@ -36,8 +37,10 @@ use Twig\Environment;
  */
 class LandingController extends AbstractController
 {
-    public function __construct(private readonly LandingModel $landingModel, private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly LandingModel $landingModel,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     #[Route(path: '/widget/conversations', name: '/widget/conversations')]

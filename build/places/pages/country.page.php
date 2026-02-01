@@ -45,7 +45,7 @@ class CountryPage extends PageWithActiveSkin
         $formkit = $layoutkit->formkit;
         $words = $layoutkit->getWords();
         $countryName = htmlspecialchars($this->countryName);
-        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; ' . $countryName;
+        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <i class="o-flag o-flag--xl o-flag--' . $this->countryCode . ' u:-mb-4" title="' . $countryName . '"></i>&nbsp;' . $countryName;
     }
 
     #[\Override]

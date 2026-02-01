@@ -24,7 +24,7 @@ class MemberLanguageLevel
     #[ORM\Id]
     protected ?Member $member = null;
 
-    #[ORM\JoinColumn(name: 'language', referencedColumnName: 'ShortCode', nullable: false)]
+    #[ORM\JoinColumn(name: 'language', referencedColumnName: 'ShortCode')]
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Language::class)]
     private ?Language $language;

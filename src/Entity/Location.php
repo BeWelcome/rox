@@ -8,7 +8,6 @@
 
 namespace App\Entity;
 
-use App\Repository\LocationRepository;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -37,10 +36,9 @@ use Gedmo\Translatable\Translatable;
 #[ORM\Index(name: 'geonames_idx_admin2_id', columns: ['admin_2_id'])]
 #[ORM\Index(name: 'geonames_idx_admin3_id', columns: ['admin_3_id'])]
 #[ORM\Index(name: 'geonames_idx_admin4_id', columns: ['admin_4_id'])]
-#[ORM\Index(name: 'geonames_idx_admin4_id', columns: ['admin_4_id'])]
 #[ORM\Index(name: 'geonames_idx_country_geoname_id', columns: ['country_id', 'geoname_id'])]
 #[ORM\Index(name: 'geonames_idx_country_admin_1_and_2', columns: ['country_id', 'admin_1_id', 'admin_2_id'])]
-#[ORM\Entity(repositoryClass: LocationRepository::class)]
+#[ORM\Entity()]
 #[Gedmo\TranslationEntity(class: LocationTranslation::class)]
 class Location implements Translatable
 {
@@ -114,14 +112,14 @@ class Location implements Translatable
      * @var Location
      */
     #[ORM\JoinColumn(name: 'country', referencedColumnName: 'geoname_id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'LAZY')]
     private $country;
 
     /**
      * @var Location
      */
     #[ORM\JoinColumn(name: 'admin1', referencedColumnName: 'geoname_id', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'LAZY')]
     private $admin1;
 
     /**
@@ -167,7 +165,6 @@ class Location implements Translatable
     #[ORM\OneToMany(targetEntity: LocationTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['locale' => 'ASC'])]
     private Collection $translations;
-
 
     public function setName(string $name): self
     {

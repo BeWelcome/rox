@@ -7,6 +7,7 @@ use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
 
 #[ORM\Table(name: 'geo__names_translations')]
 #[ORM\UniqueConstraint(name: 'lookup_unique_idx', columns: ['locale', 'object_id', 'field'])]
+#[ORM\Index(name: 'object_id', columns: ['object_id'])]
 #[ORM\Entity]
 class LocationTranslation extends AbstractPersonalTranslation
 {

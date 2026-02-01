@@ -9,12 +9,12 @@ use App\Dto\AccommodationDto;
 use App\Dto\OffersDto;
 use App\Dto\RestrictionsDto;
 use App\Entity\Comment;
+use App\Entity\Friend;
 use App\Entity\GalleryImage;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Entity\ProfileVisit;
-use App\Entity\Relation;
 use App\Form\AboutMeFormType;
 use App\Form\AccommodationFormType;
 use App\Form\AddLanguageFormType;
@@ -26,9 +26,9 @@ use App\Form\SetLocationType;
 use App\Form\TravelExperiencesFormType;
 use App\Model\ProfileModel;
 use App\Repository\CommentRepository;
+use App\Repository\FriendRepository;
 use App\Repository\GalleryImageRepository;
 use App\Repository\ProfileVisitRepository;
-use App\Repository\RelationRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
@@ -610,9 +610,9 @@ class ProfileController extends AbstractController
         $comments = $commentRepository->getLatestCommentsMember($member, 5);
         $visibleComments = $commentRepository->getVisibleCommentsForMemberCount($member);
 
-        /** @var RelationRepository $relationsRepository */
-        $relationsRepository = $this->entityManager->getRepository(Relation::class);
-        $relations = $relationsRepository->findRelationsFor($member);
+        /** @var FriendRepository $friendRepository */
+        $friendRepository = $this->entityManager->getRepository(Friend::class);
+        $friends = $friendRepository->findFriendsFor($member);
 
         /** @var GalleryImageRepository $galleryRepository */
         $galleryRepository = $this->entityManager->getRepository(GalleryImage::class);
@@ -624,7 +624,7 @@ class ProfileController extends AbstractController
             'member' => $member,
             'comments' => $comments,
             'visibleComments' => $visibleComments,
-            'relations' => $relations,
+            'friends' => $friends,
             'pictures' => $pictures,
             'language' => $language,
             'status_form' => $this->profileModel->getStatusForm($loggedInMember, $member),

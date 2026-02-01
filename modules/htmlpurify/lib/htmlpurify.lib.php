@@ -69,14 +69,14 @@ class MOD_htmlpure
     public function getPurifier()
     {
         $config = HTMLPurifier_HTML5Config::createDefault();
-        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . 'data');
         return new HTMLPurifier($config);
     }
 
     public function getBasicHtmlPurifier()
     {
         $config = HTMLPurifier_HTML5Config::createDefault();
-        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . 'data');
         $config->set('HTML.Allowed', 'p,b,a[href],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
         $config->set('AutoFormat.AutoParagraph', true);
         return new HTMLPurifier($config);
@@ -85,7 +85,7 @@ class MOD_htmlpure
     public function getAdvancedHtmlPurifier()
     {
         $config = HTMLPurifier_HTML5Config::createDefault();
-        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . 'data');
         $config->set('HTML.Allowed', 'p,b,a[href|target],br,i,strong,em,ol,ul,li,dl,dt,dd,blockquote');
         $config->set('HTML.TargetBlank', true);
         $config->set('AutoFormat.AutoParagraph', true); // automatically turn double newlines into paragraphs
@@ -124,7 +124,7 @@ class MOD_htmlpure
     private function getSophisticatedHtmlPurifier($additionalTags = [])
     {
         $config = HTMLPurifier_HTML5Config::createDefault();
-        $config->set('Cache.SerializerPath', SCRIPT_BASE . '/data');
+        $config->set('Cache.SerializerPath', SCRIPT_BASE . 'data');
         $allowedHtml = self::ALLOWED_HTML;
         if ($additionalTags) {
             foreach($additionalTags as $tag) {

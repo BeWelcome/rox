@@ -46,7 +46,7 @@ class CityPage extends PageWithActiveSkin
         $words = $layoutkit->getWords();
         $countryName = htmlspecialchars($this->countryName);
         $regionName = htmlspecialchars($this->regionName);
-        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName. '/' . $this->countryCode . '/">'
+        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName. '/' . $this->countryCode . '/"><i class="o-flag o-flag--xl o-flag--' . $this->countryCode . ' u:-mb-4" title="' . $countryName . '"></i>&nbsp;'
             . $countryName . '</a> &raquo; <a href="/places/' . $countryName. '/' . $this->countryCode . '/'
             . $regionName . '/' . $this->regionCode . '/">' . $regionName . '</a>'
             . ' &raquo; ' . htmlspecialchars($this->cityName);

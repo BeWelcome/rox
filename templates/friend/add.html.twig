@@ -1,0 +1,15 @@
+{% extends 'profile/profile.html.twig' %}
+
+{% block page_content %}
+  <h1>{{ 'friend.add'|trans }}</h1>
+  <p>{{ 'friend.add.blurb'|trans({username: member.username}) }}</p>
+  <form class="form">
+    <div class="u:flex u:justify-end u:my-8">
+      <button class="o-button o-button--outline" type="submit">{{ form.no.vars.label|trans }}</button>
+      &nbsp;
+      <button class="o-button" type="submit">{{ form.yes.vars.label|trans }}</button>
+    </div>
+    {% do form.yes.setRendered %}
+    {% do form.no.setRendered %}
+  </form>
+{% endblock %}

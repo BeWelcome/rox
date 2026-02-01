@@ -28,7 +28,7 @@ if (isset($country->name)){$country->name = htmlspecialchars($country->name);}
 $city = htmlspecialchars((string) $city);
 ?>
 
-<div id="teaser" class="page-teaser clearfix">
+<div id="teaser" class="page-teaser clearfix">hello
 <h2>
     <?php
     if (!$countrycode OR !isset($country->name)) { 
@@ -37,9 +37,9 @@ $city = htmlspecialchars((string) $city);
         echo '<a href="places">'.$words->getFormatted('CountryTitle').'</a>';
         echo '<span class="small">';
         if (!$region) { 
-            echo ' &raquo; '.$country->name;
+            echo ' &raquo; <i class="o-flag o-flag--' . $countrycode . ' u:-mb-4" title="' . $country->name . '"></i>'.$country->name;
         } else {
-            echo ' &raquo; <a href="places/'.$countrycode.'">'.$country->name.'</a>'; 
+            echo ' &raquo; <i class="o-flag o-flag--' . $countrycode . ' u:-mb-4" title="' . $country->name . '"></i><a href="places/'.$countrycode.'">'.$country->name.'</a>';
             if (!$city) { 
                 echo ' &raquo; '.$region;
             } else {

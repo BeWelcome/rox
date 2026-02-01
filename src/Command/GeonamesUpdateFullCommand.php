@@ -322,7 +322,6 @@ class GeonamesUpdateFullCommand extends Command
                     unset($rows);
                     $rows = [];
 
-                    
                     $progressBar->setMessage('Loading data...', 'status');
                 }
             }
@@ -390,7 +389,7 @@ class GeonamesUpdateFullCommand extends Command
                 $country = $countryAndAdmin1[0];
                 $admin1 = $countryAndAdmin1[1];
                 // Check if admin unit already exists if so update.
-                $query = "UPDATE geo__names SET admin1 = {$row[3]} WHERE country_id = '{$country}' AND admin_1_id = '{$admin1}';" . PHP_EOL;
+                $query = "UPDATE geo__names SET admin1 = {$row[3]} WHERE country_id = '{$country}' AND admin_1_id = '{$admin1}';" . \PHP_EOL;
                 $connection->executeQuery($query);
                 $progressBar->setMessage('Executing query', 'status');
             }
@@ -439,7 +438,7 @@ class GeonamesUpdateFullCommand extends Command
                 $admin1 = $countryAndAdmin1AndAdmin2[1];
                 $admin2 = $countryAndAdmin1AndAdmin2[2];
                 // Check if admin unit already exists if so update.
-                $query = "UPDATE geo__names SET admin2 = {$row[3]} WHERE country_id = '{$country}' AND admin_1_id = '{$admin1}' AND admin_2_id = '{$admin2}';" . PHP_EOL;
+                $query = "UPDATE geo__names SET admin2 = {$row[3]} WHERE country_id = '{$country}' AND admin_1_id = '{$admin1}' AND admin_2_id = '{$admin2}';" . \PHP_EOL;
                 $connection->executeStatement($query);
                 $progressBar->setMessage('Executing query', 'status');
             }
@@ -604,7 +603,6 @@ class GeonamesUpdateFullCommand extends Command
                         'Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0] . ') -- ' . $e->getMessage()
                     );
                 }
-
             }
         }
         $query = substr($query, 0, -2);
@@ -643,7 +641,7 @@ class GeonamesUpdateFullCommand extends Command
                 break;
         }
         $geonameId = $row[1];
-        if (!empty($language) && strlen($language) < 4) {
+        if (!empty($language) && \strlen($language) < 4) {
             $alternateName = $row[3];
             if (!isset($rows[$geonameId])) {
                 $rows[$geonameId] = [];
@@ -651,10 +649,10 @@ class GeonamesUpdateFullCommand extends Command
             if (!isset($rows[$geonameId][$language])) {
                 $rows[$geonameId][$language] = $alternateName;
             } else {
-                if ($row[4] == 1) {
+                if (1 === $row[4]) {
                     $rows[$geonameId][$language] = $alternateName;
                 }
-                if (($row[4] == 1) && ($row[5] == 1)) {
+                if ((1 === $row[4]) && (1 === $row[5])) {
                     $rows[$geonameId][$language] = $alternateName;
                 }
             }
@@ -664,6 +662,7 @@ class GeonamesUpdateFullCommand extends Command
     private function setupCountries(SymfonyStyle $io, mixed $downloadFiles): int
     {
         $io->title('Fetching country info from geonames');
+        $this->entityManager->getConnection()->executeStatement('TRUNCATE geo__countries');
 
         $filename = $this->getFile(
             $io,
@@ -675,39 +674,34 @@ class GeonamesUpdateFullCommand extends Command
             return -1;
         }
 
-        $io->writeln('Downloaded file.');
-
         $handle = fopen($filename, 'r');
-        $rawCountries =
-            $this->entityManager
-                ->createQuery(
-                'SELECT l FROM App\Entity\Location l WHERE l.country = l.geonameId'
-                )
-                ->getResult()
-        ;
 
         $countries = [];
-        foreach ($rawCountries as $country) {
-            $countries[$country->getCountryId()] = $country;
-        }
-
         while (($row = fgetcsv($handle, 0, "\t", escape: '\\')) !== false) {
-            if ('#' !== $row[0][0] && isset($countries[$row[0]])) {
-                $country = new Country();
-
-                $country->setCountry($countries[$row[0]]);
-                $continent = match ($row[8]) {
-                    'EU', 'AS' => 'EA',
-                    'NA', 'SA' => 'AM',
-                    default => $row[8],
-                };
-                $country->setContinent($continent);
-                $country->setCountryId($row[0]);
-
-                $this->entityManager->persist($country);
+            if ('#' !== $row[0][0]) {
+                $countries[] = $row;
             }
         }
-        $this->entityManager->flush();
+
+        $query = 'INSERT INTO geo__countries (continent, country_id, country) VALUE ';
+
+        foreach ($countries as $country) {
+            $continent = match ($country[8]) {
+                'EU', 'AS' => 'EA',
+                'NA', 'SA' => 'AM',
+                default => $country[8],
+            };
+            $query .= \sprintf(
+                '(%s, %s, %s), ',
+                $this->entityManager->getConnection()->quote($continent),
+                $this->entityManager->getConnection()->quote($country[0]),
+                $this->entityManager->getConnection()->quote($country[16])
+            );
+        }
+
+        $query = substr($query, 0, -2);
+
+        $this->entityManager->getConnection()->executeStatement($query);
         fclose($handle);
 
         return Command::SUCCESS;

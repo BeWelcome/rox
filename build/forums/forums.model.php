@@ -1580,8 +1580,8 @@ WHERE `id` = '$this->threadid'
                 message,
                 IdContent,
                 IdWriter,
-                geo__names.name AS city,
-                geonamescountries.name AS country,
+                g.name AS city,
+                c.name AS country,
                 forums_posts.threadid,
                 OwnerCanStillEdit,
                 member.Username as OwnerUsername,
@@ -1596,9 +1596,9 @@ WHERE `id` = '$this->threadid'
             LEFT JOIN
                 address AS a ON a.member_id = member.id AND a.active = 1
             LEFT JOIN
-                geo__names ON a.location = geo__names.geonameId
+                geo__names g ON a.location = g.geoname_id
             LEFT JOIN
-                geonamescountries ON geo__names.country = geonamescountries.country
+                geo__names c ON g.country = c.geoname_id
             WHERE
                 forums_posts.threadid = '%d'
                 AND forums_posts.threadid=forums_threads.id
@@ -1689,7 +1689,7 @@ SELECT
     `geonamescountries`.`name` as `country`,
     `IdGroup`
 FROM forums_posts, forums_threads, member, address
-LEFT JOIN `geo__names` ON (address.location = `geo__names`.`geonameId`)
+LEFT JOIN `geo__names` ON (address.location = `geo__names`.`geoname_id`)
 LEFT JOIN `geonamescountries` ON (geo__names.country = `geonamescountries`.`country`)
 WHERE `forums_posts`.`threadid` = '%d' AND `forums_posts`.`IdWriter` = `member`.`id`
 AND address.member_id = member.id AND address.active = 1
@@ -2088,7 +2088,7 @@ AND IdThread=%d
     `forums_threads`.`IdTitle`,`forums_threads`.`IdGroup`,   `IdWriter`,   `member`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`,    `geo__names`.`country`
 		FROM (forums_posts, member, forums_threads, address)
 LEFT JOIN `groups` ON (`forums_threads`.`IdGroup` = `groups`.`id`)
-LEFT JOIN `geo__names` ON (address.location = geo__names.geonameId)
+LEFT JOIN `geo__names` ON (address.location = geo__names.geoname_id)
 WHERE `forums_posts`.`IdWriter` = %d AND `forums_posts`.`IdWriter` = `member`.`id`
 AND `forums_posts`.`threadid` = `forums_threads`.`id`
 AND address.member_id = member.id AND address.active = 1
@@ -2698,7 +2698,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                 LEFT JOIN
                     `address` ON `member`.`id` = `address`.`member_id` and `address`.`active` = 1 
                 LEFT JOIN
-                    `geo__names` ON `address`.location = `geo__names`.`geonameId`
+                    `geo__names` ON `address`.location = `geo__names`.`geoname_id`
                 LEFT JOIN
                     `geonamescountries` ON `geo__names`.`country` = `geonamescountries`.`country`
                 WHERE

@@ -45,7 +45,7 @@ class RegionPage extends PageWithActiveSkin
         $formkit = $layoutkit->formkit;
         $words = $layoutkit->getWords();
         $countryName = htmlspecialchars($this->countryName);
-        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName . '/' . $this->countryCode . '">'
+        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName . '/' . $this->countryCode . '"><i class="o-flag o-flag--xl o-flag--' . $this->countryCode . ' u:-mb-4" title="' . $countryName . '"></i>&nbsp;'
             . $countryName . '</a>' . ' &raquo; ' . htmlspecialchars($this->regionName);
     }
 

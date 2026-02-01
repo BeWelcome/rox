@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Location;
 use App\Form\LoginFormType;
 use App\Form\MapSearchFormType;
 use App\Model\StatisticsModel;
+use Doctrine\ORM\EntityManagerInterface;
 use RoxPostHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,9 +17,16 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HomeController extends AbstractController
 {
-    #[Route(path: '/', name: 'homepage')]
-    public function show(Request $request, StatisticsModel $statisticsModel, array $locales): Response
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
+    }
+
+    #[Route(path: '/', name: 'homepage')]
+    public function show(Request $request, StatisticsModel $statisticsModel, EntityManagerInterface $entityManager, array $locales): Response
+    {
+        $locationRepository = $entityManager->getRepository(Location::class);
+        $city = $locationRepository->find(2797114);
+
         $member = $this->getUser();
         if ($member) {
             return $this->forward(LandingController::class . '::show');

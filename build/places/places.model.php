@@ -37,17 +37,21 @@ class Places extends RoxModelBase {
     private function getCityName($geonameid) {
         $query = "
                 SELECT
-                    t.object_id AS geoname_id, t.content name
+                    g.geoname_id AS geoname_id, g.name AS name, t.content AS translation
                 FROM
-                    geo__names_translations t
+                    geo__names g
+                LEFT JOIN geo__names_translations t ON g.geoname_id = t.object_id 
                 WHERE
-                    t.object_id = {$geonameid}
+                    g.geoname_id = {$geonameid} 
         ";
         $result = $this->dao->query($query);
         if (!$result) {
             return false;
         }
         $row = $result->fetch(PDB::FETCH_OBJ);
+        if (!empty($row->translation)) {
+            return $row->translation;
+        }
         return $row->name;
     }
 
@@ -285,8 +289,6 @@ class Places extends RoxModelBase {
             $count[$row->country_id] = $row->count;
         }
 
-        // Get all countries based on current language
-        // use mysql only query to get only the first match
         $query = "
             SELECT
                 c.country_id AS country_id,
@@ -432,7 +434,7 @@ class Places extends RoxModelBase {
             GROUP BY
                 geoname_id
             ORDER BY
-                geoname_id, city
+                geoname_id
             ", $this->dao->escape($countrycode), $this->dao->escape($regioncode), $this->dao->escape($this->lang));
         $result = $this->dao->query($query);
         if (!$result) {

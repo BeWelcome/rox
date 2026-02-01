@@ -51,7 +51,7 @@ class StatisticsModel
             FROM
                 member m,
 			    address a
-            JOIN geo__names g ON a.location = g.geonameId 
+            JOIN geo__names g ON a.location = g.geoname_id 
 			WHERE m.id = a.member_id and m.Status IN ('Active', 'OutOfRemind')
         ")->fetchOne();
 
@@ -328,12 +328,12 @@ class StatisticsModel
             FROM
                 members m,
                 address a,
-                geonames g
+                geo__names g
             WHERE
                 m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
                 AND m.id = a.member_id 
                 AND a.active = 1
-                AND a.location = g.geonameId
+                AND a.location = g.geoname_id
             GROUP BY
                 g.country
             ORDER BY

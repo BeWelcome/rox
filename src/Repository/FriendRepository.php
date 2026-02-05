@@ -88,6 +88,7 @@ class FriendRepository extends EntityRepository
                 ->createQueryBuilder('r')
                 ->where('r.left = :left')
                 ->andWhere('r.right = :right')
+                ->andWhere('r.confirmed = :confirmed')
                 ->setParameter('left', $left)
                 ->setParameter('right', $right)
                 ->setParameter('confirmed', 'No')
@@ -96,19 +97,27 @@ class FriendRepository extends EntityRepository
         ;
     }
 
-    public function getRelations(Member $member, int $page, int $itemsPerPage): Pagerfanta
+    public function getFriends(Member $member, int $page): Pagerfanta
     {
-        $qb = $this->createQueryBuilder('r')
-            ->leftJoin('r.receiver', 'm')
-            ->where('r.confirmed = :confirmed')
-            ->andWhere('r.owner = :member')
+        $qb = $this->createQueryBuilder('f');
+        $qb
+            ->leftJoin('f.left', 'l')
+            ->leftJoin('f.right', 'r')
+            ->where('f.confirmed = :confirmed')
+            ->andWhere(
+                $qb->expr()
+                    ->orX(
+                        $qb->expr()->eq('f.left', ':member'),
+                        $qb->expr()->eq('f.right', ':member'),
+                    )
+            )
             ->setParameter('member', $member)
-            ->setParameter('confirmed', 'Yes')
-            ->orderBy('m.username', 'ASC')
+            ->setParameter('confirmed', 1)
+            ->orderBy('l.created', 'ASC')
         ;
 
         $notes = new Pagerfanta(new QueryAdapter($qb->getQuery()));
-        $notes->setMaxPerPage($itemsPerPage);
+        $notes->setMaxPerPage(30);
         $notes->setCurrentPage($page);
 
         return $notes;

@@ -293,38 +293,39 @@
       </div>
     </div>
 
-    {% if friends|length != 0 %}
-      <div class="u:md:break-inside-avoid u:order-3 u:mb-16">
-        <div class="card">
-          <div
-            class="card-header u:flex u:flex-row u:justify-between">{{ 'profile.family.and.friends'|trans({}, "messages", profile_language)|raw }}
-            {%- if edit -%}
-              {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'relations'}) %}
-              {% set edit_text = 'profile.edit.family.and.friends'|trans({}, 'messages', profile_language) %}
-              <a href="{{ edit_link }}">
-                <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-                <span class="u:sr-only">{{ edit_text }}</span>
-              </a>
-            {%- endif -%}
-          </div>
-          <div class="card-block u:p-4">
-            <div class="u:grid u:grid-cols-3 u:gap-8">
-              {% for friend in friends|slice(0,9) %}
-                {% set other = friend.left == member ? friend.right : friend.left %}
-                  <div class="u:flex u:flex-col u:items-center">
-                    <div class="o-avatar o-avatar--s u:mr-4">
-                      {{ macros.roundedavatarstack(other.username, 48, false) }}
-                    </div>
-                    <a href="{{ url('members_profile', {username: other.username}) }}"
-                      class="u:text-[.875em] u:text-center"
-                      style="word-break: break-all;">{{ other.username }}</a>
+    <div class="u:md:break-inside-avoid u:order-3 u:mb-16">
+      <div class="card">
+        <div
+          class="card-header u:flex u:flex-row u:justify-between">{{ 'profile.family.and.friends'|trans({}, "messages", profile_language)|raw }}
+          {%- if edit -%}
+            {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'relations'}) %}
+            {% set edit_text = 'profile.edit.family.and.friends'|trans({}, 'messages', profile_language) %}
+            <a href="{{ edit_link }}">
+              <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+              <span class="u:sr-only">{{ edit_text }}</span>
+            </a>
+          {%- endif -%}
+        </div>
+        <div class="card-block u:p-4">
+          <div class="u:grid u:grid-cols-3 u:gap-8">
+            {% for friend in friends|slice(0,9) %}
+              {% set other = friend.left == member ? friend.right : friend.left %}
+                <div class="u:flex u:flex-col u:items-center">
+                  <div class="o-avatar o-avatar--s u:mr-4">
+                    {{ macros.roundedavatarstack(other.username, 48, false) }}
                   </div>
-              {% endfor %}
-            </div>
+                  <a href="{{ url('members_profile', {username: other.username}) }}"
+                    class="u:text-[.875em] u:text-center"
+                    style="word-break: break-all;">{{ other.username }}</a>
+                </div>
+              {% else %}
+                {{ 'profile.no.friends'|trans({}, 'messages', profile_language) }}
+            {% endfor %}
           </div>
         </div>
       </div>
-    {% endif %}
+    </div>
+
 
     <div class="u:md:break-inside-avoid u:md:break-before-column u:order-2 u:mb-16">
       <div class="card">

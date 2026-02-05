@@ -152,7 +152,7 @@ class Mailer
     public function sendFriendshipNotification(Friend $friend, Member $requester): bool
     {
         $sender = $friend->getLeft() === $requester ? $requester : $friend->getRight();
-        $receiver  = $friend->getLeft() === $requester ? $friend->getLeft() : $requester;
+        $receiver = $friend->getLeft() === $requester ? $friend->getLeft() : $requester;
         $parameters = [];
         $parameters['sender'] = $sender;
         $parameters['receiver'] = $receiver;
@@ -166,7 +166,7 @@ class Mailer
         return $this->sendTemplateEmail(
             $this->getBeWelcomeAddress($requester, self::NO_REPLY_EMAIL_ADDRESS),
             $requester,
-            'friendship.notification',
+            'friendship.request',
             $parameters
         );
     }

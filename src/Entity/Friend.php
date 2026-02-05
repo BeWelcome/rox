@@ -95,7 +95,7 @@ class Friend
         $this->created = new DateTime();
     }
 
-    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function onPreUpdate(PreUpdateEventArgs $args): void
     {
         $this->updated = new DateTime();

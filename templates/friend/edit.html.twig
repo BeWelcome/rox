@@ -1,2 +1,13 @@
-{% set buttonLabel = 'relation.edit' %}
-{% include 'relation/relation.form.html.twig' %}
+{% extends 'profile/profile.html.twig' %}
+
+{% block page_content %}
+  <h1>{{ 'friend.edit.headline'|trans }}</h1>
+  <p>{{ 'friend.edit.blurb'|trans({username: member.username}) }}</p>
+  <form class="form" method="post">
+    <div class="u:flex u:justify-end u:my-8">
+      <button class="o-button o-button--outline" name="keep_friend" value="keep" type="submit">{{ 'profile.edit.friend.keep'|trans }}</button>
+      &nbsp;
+      <button class="o-button" name="remove_friendship" value="remove" type="submit">{{ 'profile.edit.friend.remove'|trans }}</button>
+    </div>
+  </form>
+{% endblock %}

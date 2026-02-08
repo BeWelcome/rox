@@ -354,6 +354,28 @@ class ProfileController extends AbstractController
             'form' => $addLanguageForm,
             'member' => $member,
             'status_form' => $this->profileModel->getStatusForm($loggedInMember, $member),
+            'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member),
+        ]);
+    }
+
+    #[Route(path: '/members/{username:member}/edit/avatar', name: 'profile_edit_avatar', priority: 10)]
+    public function editPicture(Request $request, Member $member): Response
+    {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+
+        if ($member !== $loggedInMember) {
+            return $this->redirectToRoute('profile_edit_avatar', ['username' => $loggedInMember->getUsername()]);
+        }
+
+        /** @var GalleryImageRepository $galleryRepository */
+        $galleryRepository = $this->entityManager->getRepository(GalleryImage::class);
+        $pictures = $galleryRepository->getImagesForMember($member);
+
+        return $this->render('profile/edit/avatar.html.twig', [
+            'member' => $member,
+            'pictures' => $pictures,
+            'status_form' => $this->profileModel->getStatusForm($loggedInMember, $member),
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member),
         ]);

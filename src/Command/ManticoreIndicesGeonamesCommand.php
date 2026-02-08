@@ -128,7 +128,7 @@ class ManticoreIndicesGeonamesCommand extends Command
             do {
                 $query = $this->entityManager->createNativeQuery(<<<___SQL
                         SELECT
-                            g.geonameid AS geonameid,
+                            g.geoname_id,
                             g.`name` AS name,
                             g.feature_class,
                             g.feature_code,
@@ -153,7 +153,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                             GROUP BY
                                 a.location
                         ) membercounts
-                        ON (g.geonameid = membercounts.location)
+                        ON (g.geoname_id = membercounts.location)
                         LIMIT {$firstResult}, {$this->chunkSize}
                     ___SQL, $this->getResultSetMappingForGeonamesIndex());
 
@@ -190,7 +190,7 @@ class ManticoreIndicesGeonamesCommand extends Command
             do {
                 $query = $this->entityManager->createNativeQuery(<<<___SQL
                         SELECT
-                            g.geonameid,
+                            g.geoname_id,
                             gt.`content` AS name,
                             g.feature_class,
                             g.feature_code,
@@ -205,19 +205,19 @@ class ManticoreIndicesGeonamesCommand extends Command
                         FROM
                             geo__names g
                         JOIN
-                            geo__names_translations gt ON g.geonameId = gt.foreign_key
+                            geo__names_translations gt ON g.geoname_id = gt.object_id
                         LEFT JOIN (
                             SELECT
                                 a.location,
                                 COUNT(a.location) total
                             FROM
-                                members m,
+                                member m,
                                 address a
                             WHERE m.status IN ('Active', 'OutOfRemind') and m.id = a.member_id
                             GROUP BY
                                 a.location
                         ) membercounts
-                        ON (g.geonameid = membercounts.location)
+                        ON (g.geoname_id = membercounts.location)
                         LIMIT {$firstResult}, {$this->chunkSize}
                     ___SQL, $this->getResultSetMappingForGeonamesIndex());
 
@@ -253,7 +253,7 @@ class ManticoreIndicesGeonamesCommand extends Command
             $isAdmin = 'A' === $location['feature_class'] && !$isCountry;
 
             $documents[] = [
-                'geoname_id' => $location['geonameid'],
+                'geoname_id' => $location['geoname_id'],
                 'name' => $location['name'],
                 'country' => $location['country'] ?? 0,
                 'isPlace' => $isPlace,
@@ -286,7 +286,7 @@ class ManticoreIndicesGeonamesCommand extends Command
     {
         $rsm = new ResultSetMapping();
         $rsm
-            ->addScalarResult('geonameid', 'geonameid')
+            ->addScalarResult('geoname_id', 'geoname_id')
             ->addScalarResult('name', 'name')
             ->addScalarResult('country_id', 'country')
             ->addScalarResult('admin_1_id', 'admin1')

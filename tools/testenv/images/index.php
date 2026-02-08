@@ -40,11 +40,11 @@ $dbPassword = $container->getParameter('database_password');
 
 $dbController = new DatabaseController($dbHost, $dbName, $dbUser, $dbPassword);
 
-$group = new GroupImagesCreator($dbController);
-$group->getImages();
+// $group = new GroupImagesCreator($dbController);
+// $group->getImages();
 
-// $avatar = new AvatarImagesCreator($dbController);
-// $avatar->getImages();
+$avatar = new AvatarImagesCreator($dbController);
+$avatar->getImages();
 
-//$gallery = new GalleryImagesCreator($dbController);
-//$gallery->getImages();
+// $gallery = new GalleryImagesCreator($dbController);
+// $gallery->getImages();

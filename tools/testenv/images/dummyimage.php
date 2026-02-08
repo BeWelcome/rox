@@ -173,7 +173,7 @@ class DummyImage
     {
         $imgDir = STATIC::IMAGE_DIR;
         if (!is_dir($imgDir)) {
-            mkdir($imgDir,'0777',true);
+            mkdir($imgDir,0777,true);
         }
         $this->imgDir = $imgDir;
     }

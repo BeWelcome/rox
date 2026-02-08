@@ -46,5 +46,5 @@ $dbController = new DatabaseController($dbHost, $dbName, $dbUser, $dbPassword);
 $avatar = new AvatarImagesCreator($dbController);
 $avatar->getImages();
 
-//$gallery = new GalleryImagesCreator($dbController);
-//$gallery->getImages();
+// $gallery = new GalleryImagesCreator($dbController);
+// $gallery->getImages();

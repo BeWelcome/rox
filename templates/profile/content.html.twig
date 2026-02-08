@@ -7,7 +7,7 @@
   <div class="u:mb-16 u:max-sm:flex u:max-sm:flex-col u:md:block u:md:columns-2">
     {#
     Add cards in order
-    'About Me', 'Languages', 'My Interests', 'Travel Experiences', 'Groups', 'Gallery', 'Family and Friends'
+    'About Me', 'Languages', 'My Interests', 'Travel Experiences', 'Groups', 'Gallery', 'Friends'
     'Accommodation', 'Comments'
     #}
     {% set aboutMe = profileTranslation['AboutMe'] ?? '' %}
@@ -293,42 +293,41 @@
       </div>
     </div>
 
-    {% if relations|length != 0 %}
-      <div class="u:md:break-inside-avoid u:order-3 u:mb-16">
-        <div class="card">
-          <div
-            class="card-header u:flex u:flex-row u:justify-between">{{ 'profile.family.and.friends'|trans({}, "messages", profile_language)|raw }}
-            {%- if edit -%}
-              {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'relations'}) %}
-              {% set edit_text = 'profile.edit.family.and.friends'|trans({}, 'messages', profile_language) %}
-              <a href="{{ edit_link }}">
-                <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-                <span class="u:sr-only">{{ edit_text }}</span>
-              </a>
-            {%- endif -%}
-          </div>
-          <div class="card-block u:p-4">
-            <div class="u:grid u:grid-cols-[80px_auto] u:gap-x-8 u:gap-y-12">
-              {% for relation in relations|slice(0,10) %}
+    <div class="u:md:break-inside-avoid u:order-3 u:mb-16">
+      <div class="card">
+        <div
+          class="card-header u:flex u:flex-row u:justify-between">{{ 'profile.family.and.friends'|trans({}, "messages", profile_language)|raw }}
+          {%- if edit -%}
+            {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'relations'}) %}
+            {% set edit_text = 'profile.edit.family.and.friends'|trans({}, 'messages', profile_language) %}
+            <a href="{{ edit_link }}">
+              <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
+              <span class="u:sr-only">{{ edit_text }}</span>
+            </a>
+          {%- endif -%}
+        </div>
+        <div class="card-block u:p-4">
+          <div class="u:grid u:grid-cols-3 u:gap-8">
+            {% for friend in friends|slice(0,9) %}
+              {% set other = friend.left == member ? friend.right : friend.left %}
                 <div class="u:flex u:flex-col u:items-center">
                   <div class="o-avatar o-avatar--s u:mr-4">
-                    {{ macros.roundedavatarstack(relation.owner.username, 48, false) }}
+                    {{ macros.roundedavatarstack(other.username, 48, false) }}
                   </div>
-                  <a href="{{ url('members_profile', {username: relation.owner.username}) }}"
-                     class="u:text-[.875em] u:text-center"
-                     style="word-break: break-all;">{{ relation.owner.username }}</a>
+                  <a href="{{ url('members_profile', {username: other.username}) }}"
+                    class="u:text-[.875em] u:text-center"
+                    style="word-break: break-all;">{{ other.username }}</a>
                 </div>
-                <div class="u:leading-16">
-                  {{ relation.commentText }}
-                </div>
-              {% endfor %}
-            </div>
+              {% else %}
+                {{ 'profile.no.friends'|trans({}, 'messages', profile_language) }}
+            {% endfor %}
           </div>
         </div>
       </div>
-    {% endif %}
+    </div>
 
-    <div class="u:md:break-inside-avoid u:order-2 u:mb-16 u:break-before-column">
+
+    <div class="u:md:break-inside-avoid u:md:break-before-column u:order-2 u:mb-16">
       <div class="card">
         <div
           class="card-header u:flex u:flex-row u:justify-between">{{ 'profile.accommodation'|trans({}, "messages", profile_language)|raw }}
@@ -380,11 +379,11 @@
                 <div id="quickinfo" class="U:items-end u:shrink-0">
                   {% if not address is same as(false) and address.isWheelChairAccessible %}
                     <img
-                    src="{{ asset('images/icons/wheelchairblue.png') }}" alt="{{ 'wheelchair'|trans({}, "messages", profile_language) }}
+                    src="{{ asset('images/icons/wheelchairblue.png') }}" alt="{{ 'wheelchair'|trans({}, "messages", profile_language) }}"
                                  title="{{ 'canhostwheelchairyes'|trans({}, "messages", profile_language) }}">
                   {% endif %}
                   <img src="images/icons/{{ member.accommodation }}.png"
-                       alt="{{ member.accommodation|trans({}, "messages", profile_language) }}
+                       alt="{{ member.accommodation|trans({}, "messages", profile_language) }}"
                                  title="{{ ('canoffer' ~ member.accommodation)|trans({}, "messages", profile_language) }}
                   ">
                 </div>

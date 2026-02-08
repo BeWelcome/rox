@@ -663,6 +663,7 @@ class GalleryController extends RoxControllerBase {
             $thumbFile = 'nopic.gif';
             $d->mimetype = 'image/gif';
         }
+        header('Cache-Control: max-age=604800');
         header('Content-type: '.$d->mimetype);
         $tmpDir->readFile($thumbFile);
         PPHP::PExit();

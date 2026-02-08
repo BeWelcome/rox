@@ -1,8 +1,11 @@
 <?php
+
+use App\Entity\Member;
+
 echo '<div class="row mt-3"><div class="col-12"><h2 class="m-0">' . $words->get('members') . '</h2></div>';
 // $User = new APP_User;
 $words = new MOD_words();
-$layoutbits = new MOD_layoutbits;
+$layoutbits = new MOD_layoutbits();
 $url = '/places/' . htmlspecialchars((string) $this->countryName) . '/' . $this->countryCode . '/';
 if ($this->regionCode) {
     $url .= htmlspecialchars((string) $this->regionName) . '/' . $this->regionCode . '/';
@@ -10,13 +13,8 @@ if ($this->regionCode) {
 if ($this->cityCode) {
     $url .= htmlspecialchars((string) $this->cityName) . '/' . $this->cityCode . '/';
 }
-$loginUrlOpen = '<a href="login' . $url . '#login-widget">';
-$loginUrlClose = '</a>';
-if ($this->totalMemberCount != $this->memberCount) {
-    echo $words->get('PlacesMoreMembers', $words->getSilent('PlacesMoreLogin'), $loginUrlOpen, $loginUrlClose) . $words->flushBuffer();
-}
 // divide members into pages of Places::MEMBERS_PER_PAGE (20)
-$params = new StdClass;
+$params = new StdClass();
 $params->strategy = new HalfPagePager('right');
 $params->page_url = $url;
 $params->page_url_marker = 'page';
@@ -28,7 +26,7 @@ $pager = new PagerWidget($params);
 
 foreach ($this->members as $member) {
     $image = new MOD_images_Image('',$member->username);
-    if ($member->HideBirthDate=="No") {
+    if (($member->HideAttribute & Member::AGE_HIDDEN) !== Member::AGE_HIDDEN) {
         $member->age = floor($layoutbits->fage_value($member->BirthDate));
     } else {
         $member->age = $words->get("Hidden");

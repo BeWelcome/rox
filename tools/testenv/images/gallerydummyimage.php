@@ -62,7 +62,7 @@ class GalleryDummyImage extends DummyImage
     {
         $imgDir = STATIC::IMAGE_DIR . '/member' . $this->user;
         if (!is_dir($imgDir)) {
-            mkdir($imgDir,'0777',true);
+            mkdir($imgDir,0777, true);
         }
         $this->imgDir = $imgDir;
     }

@@ -4,10 +4,9 @@ namespace App\Service;
 
 use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
+use App\Entity\Friend;
 use App\Entity\Member;
 use App\Entity\Newsletter;
-use App\Entity\Relation;
-use App\Logger\Logger;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -36,7 +35,6 @@ class Mailer
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
         private readonly MailerInterface $mailer,
-        private readonly Logger $logger,
     ) {
     }
 
@@ -149,25 +147,26 @@ class Mailer
     }
 
     /**
-     * Send notification for special relation (friends and family).
+     * Send notification for a friendship request.
      */
-    public function sendRelationNotification(Relation $relation): bool
+    public function sendFriendshipNotification(Friend $friend, Member $requester): bool
     {
+        $sender = $friend->getLeft() === $requester ? $requester : $friend->getRight();
+        $receiver = $friend->getLeft() === $requester ? $friend->getLeft() : $requester;
         $parameters = [];
-        $parameters['sender'] = $relation->getOwner();
-        $parameters['receiver'] = $relation->getReceiver();
-        $parameters['comment'] = $relation->getCommentText();
+        $parameters['sender'] = $sender;
+        $parameters['receiver'] = $receiver;
         $parameters['subject'] = [
-            'translationId' => 'email.subject.relation',
+            'translationId' => 'email.subject.friendship',
             'parameters' => [
-                'username' => $relation->getOwner()->getUsername(),
+                'username' => $requester->getUsername(),
             ],
         ];
 
         return $this->sendTemplateEmail(
-            $this->getBeWelcomeAddress($relation->getOwner(), self::NO_REPLY_EMAIL_ADDRESS),
-            $relation->getReceiver(),
-            'relation.notification',
+            $this->getBeWelcomeAddress($requester, self::NO_REPLY_EMAIL_ADDRESS),
+            $requester,
+            'friendship.request',
             $parameters
         );
     }

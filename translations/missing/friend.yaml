@@ -1,0 +1,48 @@
+profile.no.friends:
+    - 'No members marked as friends yet.'
+    - Text shown if a member hasn''t marked any member as friend
+profile.friend.add:
+    - '@addfriend'
+profile.friend.edit:
+    - 'Edit friends entry'
+    - Menu entry if you already have a link to this member.
+friend.add:
+    - 'Add'
+    - Button label in the add friend (family and friends) form
+friend.edit:
+    - 'Edit'
+    - Button label in the add friend (family and friends) form
+profile.friend.delete.modal:
+    - 'Delete friend?'
+    - Headline of modal shown if user wants to delete a friend
+profile.friend.delete:
+    - 'Do you want to delete this friend permanently?'
+    - Abstract on the modal to delete a friend between members
+profile.friend.delete.no:
+    - '@no'
+profile.friend.delete.yes:
+    - '@yes'
+profile.friend.with:
+    - 'friend with {username}'
+    - Headline of the add/edit friend form
+profile.friends:
+    - 'Friends'
+    - Submenu item label
+flash.friend.removed:
+    - 'Friend link has been removed.'
+    - Flash message shown to the user, when a friend link has been removed.
+flash.friend.confirmed:
+    - 'Friendship has been confirmed.'
+    - Flash message shown to the user, when a friendship has been confirmed.
+friend.sender.says.exist:
+    - '{username} says you''re friend (or family member).'
+    - Text in the notification email about a friend request
+friend.confirm:
+    - 'Confirm'
+    - Button label in the friend request notification email
+friend.dismiss:
+    - 'Dismiss'
+    - Button label in the friend request notification email (saying that there is no friend)
+email.subject.friend:
+    - 'Are you a friend (or family member) of {username}?'
+    - Email subject for the request notification email

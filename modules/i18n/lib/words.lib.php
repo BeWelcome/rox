@@ -672,7 +672,7 @@ WHERE
 			}
 
 			// Try default chosen language
-        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage." ORDER BY updated DESC" ;
+        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`='".$IdLanguage."' ORDER BY updated DESC" ;
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {
@@ -731,7 +731,6 @@ WHERE
 	 * @return string translated according to the best language find
 	 */
     public function fTrad($IdTrad,$IdForceLanguage=-1, $ReplaceWithBr=false) {
-
 			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 																					// Will receive the choosen language
@@ -758,7 +757,7 @@ WHERE
 				$IdLanguage=$IdForceLanguage ;
 			}
 			// Try default language
-        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `translations` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$IdLanguage ;
+        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `translations` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`='".$IdLanguage."'";
 			$q = $this->_dao->query($query);
 			$row = $q->fetch(PDB::FETCH_OBJ);
 			if (isset ($row->Sentence)) {

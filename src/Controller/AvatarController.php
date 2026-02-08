@@ -44,18 +44,18 @@ class AvatarController extends AbstractController
 
         /** @var Member $member */
         $member = $this->getUser();
-        if (!$member || !$member->getId()) {
+        if (null === $member) {
             return new Response($uploadFailedTranslation, Response::HTTP_UNAUTHORIZED);
         }
 
         /** @var UploadedFile $avatarFile */
-        $avatarFile = $request->files->get('avatar');
+        $avatar = $request->request->get('avatar');
 
-        if (null === $avatarFile) {
+        if (null === $avatar) {
             return new Response($uploadFailedTranslation, Response::HTTP_BAD_REQUEST);
         }
 
-        $success = $this->storeAvatar($member, $avatarFile);
+        $success = $this->storeAvatar($member, $avatar);
 
         if ($success) {
             return new Response('');
@@ -98,11 +98,11 @@ class AvatarController extends AbstractController
         return $this->createCacheableResponse($filename);
     }
 
-    private function storeAvatar(Member $member, UploadedFile $avatarFile): bool
+    private function storeAvatar(Member $member, string $avatar): bool
     {
         $imageManager = new ImageManager(new Driver());
         try {
-            $img = $imageManager->read($avatarFile->getRealPath())->orient();
+            $img = $imageManager->read($avatar);
         } catch (Throwable) {
             return false;
         }
@@ -127,7 +127,7 @@ class AvatarController extends AbstractController
         return true;
     }
 
-    private function removeAvatarFiles($member)
+    private function removeAvatarFiles($member): void
     {
         $finder = new Finder();
         $finder->name($member->getId() . '_*');
@@ -144,7 +144,7 @@ class AvatarController extends AbstractController
             $filename = $this->createEmptyAvatarImage($size);
         }
 
-        return $this->createCacheableResponse($filename, self::EXPIRY);
+        return $this->createCacheableResponse($filename);
     }
 
     private function createCacheableResponse(string $filename, $expiry = self::EXPIRY): BinaryFileResponse
@@ -170,7 +170,7 @@ class AvatarController extends AbstractController
         return file_exists($this->getAvatarImageFilename($member, $size));
     }
 
-    private function createAvatarImage(Member $member, string $sizeOfAvatar)
+    private function createAvatarImage(Member $member, string $sizeOfAvatar): void
     {
         // creates a thumbnail for the current image (if we have an original that is)
         $original = self::AVATAR_PATH . $member->getId() . '_original';

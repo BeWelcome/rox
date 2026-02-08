@@ -1,0 +1,11 @@
+{% extends 'profile/profile.html.twig' %}
+
+{% block page_content %}
+  <h1>{{ 'friend.add.headline'|trans }}</h1>
+  <p>{{ 'friend.add.blurb'|trans({username: member.username}) }}</p>
+  <form class="form" method="post">
+    <div class="u:flex u:justify-end u:my-8">
+      <button class="o-button" name="add_friendship" value="add" type="submit">{{ 'profile.add.friend.confirm'|trans }}</button>
+    </div>
+  </form>
+{% endblock %}

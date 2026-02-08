@@ -35,7 +35,7 @@ class Activity
     #[ORM\Column(name: 'dateTimeEnd', type: 'datetime', nullable: false)]
     private DateTime $ends;
 
-    #[ORM\JoinColumn(name: 'locationId', referencedColumnName: 'geonameId', nullable: false)]
+    #[ORM\JoinColumn(name: 'locationId', referencedColumnName: 'geoname_id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Location::class)]
     private Location $location;
 

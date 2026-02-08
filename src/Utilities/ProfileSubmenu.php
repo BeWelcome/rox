@@ -5,18 +5,18 @@ namespace App\Utilities;
 use App\Doctrine\AccommodationType;
 use App\Entity\Comment;
 use App\Entity\ForumPost;
+use App\Entity\Friend;
 use App\Entity\GalleryImage;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Preference;
 use App\Entity\ProfileNote;
-use App\Entity\Relation;
 use App\Repository\CommentRepository;
 use App\Repository\ForumPostRepository;
+use App\Repository\FriendRepository;
 use App\Repository\GalleryImageRepository;
 use App\Repository\MessageRepository;
 use App\Repository\ProfileNoteRepository;
-use App\Repository\RelationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -103,9 +103,9 @@ class ProfileSubmenu
         $notesCount = $noteRepository->getProfileNotesCount($loggedInMember);
         $memberInfo['notes_count'] = $notesCount;
 
-        /** @var RelationRepository $relationRepository */
-        $relationRepository = $this->entityManager->getRepository(Relation::class);
-        $memberInfo['relations_count'] = $relationRepository->getRelationsCount($member);
+        /** @var FriendRepository $familyAndFriendsRepository */
+        $familyAndFriendsRepository = $this->entityManager->getRepository(Friend::class);
+        $memberInfo['friends_count'] = $familyAndFriendsRepository->getFamilyAndFriendsCount($member);
 
         if (!$ownProfile) {
             $comment = $commentRepository->findOneBy(['fromMember' => $loggedInMember, 'toMember' => $member]);
@@ -114,10 +114,10 @@ class ProfileSubmenu
             $note = $noteRepository->findOneBy(['owner' => $loggedInMember, 'member' => $member]);
             $memberInfo['note'] = null !== $note;
 
-            /** @var RelationRepository $relationRepository */
-            $relationRepository = $this->entityManager->getRepository(Relation::class);
-            $relation = $relationRepository->findRelationBetween($loggedInMember, $member);
-            $memberInfo['family_or_friend'] = null !== $relation;
+            /** @var FriendRepository $familyAndFriendsRepository */
+            $familyAndFriendsRepository = $this->entityManager->getRepository(Friend::class);
+            $friend = $familyAndFriendsRepository->findFriendshipBetween($loggedInMember, $member);
+            $memberInfo['friend'] = null !== $friend;
 
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->entityManager->getRepository(Message::class);
@@ -128,7 +128,7 @@ class ProfileSubmenu
         return $memberInfo;
     }
 
-    private function addSubmenuItemsOwnProfile(Member $member, array $parameters)
+    private function addSubmenuItemsOwnProfile(Member $member, array $parameters): void
     {
         $username = $member->getUsername();
 
@@ -161,7 +161,7 @@ class ProfileSubmenu
         if ($parameters['show_visitors']) {
             $this->addSubmenuItem('visitors', [
                 'key' => 'myvisitors',
-                'icon' => 'bed invisible',
+                'icon' => '',
                 'url' => $this->routing->generate('profile_visitors', ['username' => $username]),
             ]);
         }
@@ -173,7 +173,7 @@ class ProfileSubmenu
         ]);
     }
 
-    private function addSubmenuItemsProfile(Member $member, array $parameters)
+    private function addSubmenuItemsProfile(Member $member, array $parameters): void
     {
         $username = $member->getUsername();
 
@@ -224,11 +224,17 @@ class ProfileSubmenu
             ]);
         }
 
-        if ($parameters['family_or_friend']) {
-            $this->addSubmenuItem('family_or_friend', [
-                'key' => 'profile.relation.edit',
+        if ($parameters['friend']) {
+            $this->addSubmenuItem('friend', [
+                'key' => 'profile.friend.edit',
                 'icon' => 'handshake',
-                'url' => $this->routing->generate('edit_relation', ['username' => $username]),
+                'url' => $this->routing->generate('edit_friendship', ['username' => $username]),
+            ]);
+        } else {
+            $this->addSubmenuItem('friend', [
+                'key' => 'profile.friend.add',
+                'icon' => 'handshake',
+                'url' => $this->routing->generate('add_friendship', ['username' => $username]),
             ]);
         }
 
@@ -257,7 +263,7 @@ class ProfileSubmenu
         ]);
     }
 
-    private function addGeneralItems(Member $member, Member $loggedInMember, array $parameters)
+    private function addGeneralItems(Member $member, Member $loggedInMember, array $parameters): void
     {
         $username = $member->getUsername();
         $this->addSubmenuItem('separator_two', []);
@@ -273,14 +279,12 @@ class ProfileSubmenu
             'url' => $this->routing->generate('profile_comments', ['username' => $username]),
         ]);
 
-        if (0 !== $parameters['relations_count']) {
-            $this->addSubmenuItem('relations', [
-                'key' => 'profile.menu.family.and.friends',
-                'icon' => 'users',
-                'count' => $parameters['relations_count'],
-                'url' => $this->routing->generate('relations', ['username' => $username]),
-            ]);
-        }
+        $this->addSubmenuItem('friends', [
+            'key' => 'profile.menu.friends',
+            'icon' => 'users',
+            'count' => $parameters['friends_count'],
+            'url' => $this->routing->generate('friends', ['username' => $username]),
+        ]);
 
         if ($member === $loggedInMember) {
             $this->addSubmenuItem('gallery', [
@@ -307,7 +311,7 @@ class ProfileSubmenu
         }
     }
 
-    private function addVolunteerEntries(Member $member, Member $loggedInMember)
+    private function addVolunteerEntries(Member $member, Member $loggedInMember): void
     {
         $roles = $loggedInMember->getRoles();
         $username = $member->getUsername();
@@ -358,7 +362,7 @@ class ProfileSubmenu
         return \in_array($role, $roles, true);
     }
 
-    private function addSubmenuItem(string $key, array $value)
+    private function addSubmenuItem(string $key, array $value): void
     {
         $this->submenuItems[$key] = $value;
     }

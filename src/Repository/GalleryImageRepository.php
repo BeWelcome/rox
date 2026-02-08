@@ -20,6 +20,7 @@ class GalleryImageRepository extends EntityRepository
     public function getImagesForMember(Member $member): array
     {
         return $this->getImagesByMemberQueryBuilder($member)
+            ->orderBy('i.created', 'DESC')
             ->getQuery()
             ->getResult()
         ;

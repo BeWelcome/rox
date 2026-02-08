@@ -71,7 +71,7 @@ Encore
         babelConfig.presets = [ "@babel/preset-env", '@babel/preset-react' ]
         babelConfig.plugins = [ '@babel/plugin-transform-runtime' ]
     })
-    .addEntry('avatar', './assets/js/react/avatar/AvatarMount.jsx')
+    .addEntry('avatar', './assets/js/profile/avatar.js')
     .enableTypeScriptLoader()
     .enableSassLoader(options => {
         // Prefer using sass instead of node-sass to not depend on Python

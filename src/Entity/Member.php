@@ -232,9 +232,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     #[ORM\OneToMany(targetEntity: MemberLanguageLevel::class, mappedBy: 'member', cascade: ['persist', 'remove'])]
     private Collection $languageLevels;
 
-    #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'receiver', cascade: ['persist', 'remove'])]
-    private Collection $relations;
-
     #[ORM\OneToMany(targetEntity: MemberPreference::class, mappedBy: 'member', cascade: ['persist', 'remove'])]
     private Collection $preferences;
 
@@ -250,7 +247,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         $this->translations = new ArrayCollection();
         $this->groupMemberships = new ArrayCollection();
         $this->languageLevels = new ArrayCollection();
-        $this->relations = new ArrayCollection();
         $this->preferences = new ArrayCollection();
     }
 
@@ -1140,7 +1136,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
     public function isShortNameVisible(): bool
     {
-        return empty($this->shortName);
+        return !empty($this->shortName);
     }
 
     public function getShortNameOrUsername(): string
@@ -1357,34 +1353,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         }
 
         return null;
-    }
-
-    public function getRelations(): Collection
-    {
-        return $this->relations;
-    }
-
-    public function addRelation(Relation $relation): self
-    {
-        if (!$this->relations->contains($relation)) {
-            $this->relations[] = $relation;
-            $relation->setOwner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRelation(Relation $relation): self
-    {
-        if ($this->relations->contains($relation)) {
-            $this->relations->removeElement($relation);
-
-            if ($relation->getOwner() === $this) {
-                $relation->setOwner(null);
-            }
-        }
-
-        return $this;
     }
 
     public function setGenderOfGuests(?string $genderOfGuests): self

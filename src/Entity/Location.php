@@ -9,10 +9,11 @@
 namespace App\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Do not check entities with PHPMD.
@@ -35,7 +36,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ORM\Index(name: 'geonames_idx_admin2_id', columns: ['admin_2_id'])]
 #[ORM\Index(name: 'geonames_idx_admin3_id', columns: ['admin_3_id'])]
 #[ORM\Index(name: 'geonames_idx_admin4_id', columns: ['admin_4_id'])]
-#[ORM\Entity(repositoryClass: \App\Repository\LocationRepository::class)]
+#[ORM\Index(name: 'geonames_idx_country_geoname_id', columns: ['country_id', 'geoname_id'])]
+#[ORM\Index(name: 'geonames_idx_country_admin_1_and_2', columns: ['country_id', 'admin_1_id', 'admin_2_id'])]
+#[ORM\Entity()]
+#[Gedmo\TranslationEntity(class: LocationTranslation::class)]
 class Location implements Translatable
 {
     /**
@@ -43,29 +47,23 @@ class Location implements Translatable
      *
      * @Gedmo\Translatable
      */
+    #[Gedmo\Translatable]
     #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
-    #[Groups(['Member:Read'])]
     private $name;
 
-    /**
-     * @Gedmo\Locale
-     * Used locale to override Translation listener`s locale
-     * this is not a mapped field of entity metadata, just a simple property
-     */
+    #[Gedmo\Locale]
     private $locale;
 
     /**
      * @var float
      */
     #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    #[Groups(['Member:Read'])]
     private $latitude;
 
     /**
      * @var float
      */
     #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
-    #[Groups(['Member:Read'])]
     private $longitude;
 
     /**
@@ -84,77 +82,71 @@ class Location implements Translatable
      * @var string
      */
     #[ORM\Column(name: 'country_id', type: 'string', nullable: true)]
-    #[Groups(['Member:Read'])]
     private $countryId;
 
     /**
      * @var string
      */
     #[ORM\Column(name: 'admin_1_id', type: 'string', nullable: true)]
-    #[Groups(['Member:Read'])]
     private $admin1Id;
 
     /**
      * @var string
      */
     #[ORM\Column(name: 'admin_2_id', type: 'string', nullable: true)]
-    #[Groups(['Member:Read'])]
     private $admin2Id;
 
     /**
      * @var string
      */
     #[ORM\Column(name: 'admin_3_id', type: 'string', nullable: true)]
-    #[Groups(['Member:Read'])]
     private $admin3Id;
 
     /**
      * @var string
      */
     #[ORM\Column(name: 'admin_4_id', type: 'string', nullable: true)]
-    #[Groups(['Member:Read'])]
     private $admin4Id;
 
     /**
      * @var Location
      */
-    #[ORM\JoinColumn(name: 'country', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
-    #[Groups(['Member:Read'])]
+    #[ORM\JoinColumn(name: 'country', referencedColumnName: 'geoname_id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'LAZY')]
     private $country;
 
     /**
      * @var Location
      */
-    #[ORM\JoinColumn(name: 'admin1', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
+    #[ORM\JoinColumn(name: 'admin1', referencedColumnName: 'geoname_id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'LAZY')]
     private $admin1;
 
     /**
      * @var Location
      */
-    #[ORM\JoinColumn(name: 'admin2', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: self::class)]
+    #[ORM\JoinColumn(name: 'admin2', referencedColumnName: 'geoname_id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
     private $admin2;
 
     /**
      * @var Location
      */
-    #[ORM\JoinColumn(name: 'admin3', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: self::class)]
+    #[ORM\JoinColumn(name: 'admin3', referencedColumnName: 'geoname_id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
     private $admin3;
 
     /**
      * @var Location
      */
-    #[ORM\JoinColumn(name: 'admin4', referencedColumnName: 'geonameId', nullable: true)]
-    #[ORM\ManyToOne(targetEntity: self::class)]
+    #[ORM\JoinColumn(name: 'admin4', referencedColumnName: 'geoname_id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EXTRA_LAZY')]
     private $admin4;
 
     /**
      * @var int
      */
-    #[ORM\Column(name: 'population', type: 'integer', nullable: true)]
+    #[ORM\Column(name: 'population', type: Types::BIGINT, nullable: true)]
     private $population;
 
     /**
@@ -166,9 +158,13 @@ class Location implements Translatable
     /**
      * @var int
      */
-    #[ORM\Column(name: 'geonameId', type: 'integer')]
+    #[ORM\Column(name: 'geoname_id', type: 'integer')]
     #[ORM\Id]
     private $geonameId;
+
+    #[ORM\OneToMany(targetEntity: LocationTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['locale' => 'ASC'])]
+    private Collection $translations;
 
     public function setName(string $name): self
     {
@@ -397,5 +393,10 @@ class Location implements Translatable
     public function setTranslatableLocale($locale)
     {
         $this->locale = $locale;
+    }
+
+    public function getTranslations(): array
+    {
+        return $this->translations->toArray();
     }
 }

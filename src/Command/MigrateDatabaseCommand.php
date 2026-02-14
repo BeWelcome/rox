@@ -194,7 +194,7 @@ class MigrateDatabaseCommand extends Command
 
         $this->progressBar = new ProgressBar($output, $countOfMembers);
         $this->progressBar->setFormat(
-            "<fg=white;bg=green>\n %info:-60s% \n</>\n%current%/%max% [%bar%] %percent:3s%%\n%estimated:-20s%  %memory:20s%\nLast error: %error%"
+            "<fg=white;bg=green>\n %info:-60s% \n</>\n%current%/%max% [%bar%] %percent:3s%%\n%elapsed:-10% %%estimated:-10s%  %memory:20s%\nLast error: %error%"
         );
         $this->progressBar->setMessage("Migrating {$countOfMembers} members to new member table including translations.", 'info');
         $this->progressBar->setMessage('none', 'error');
@@ -315,6 +315,11 @@ class MigrateDatabaseCommand extends Command
 
     private function migrateMemberAddress(mixed $member): void
     {
+        if ('AskToLeave' === $member['Status'] || 'TakenOut' === $member['Status']) {
+            // Do not add address for members that are not active anymore
+            return;
+        }
+
         $addressSQL = 'INSERT INTO address (member_id, active, location, latitude, longitude, wheelChairAccessible) ' .
             'VALUES (:member, 1, :city, :latitude, :longitude, :wheelchairAccessible)';
 
@@ -323,20 +328,17 @@ class MigrateDatabaseCommand extends Command
         $statement = $this->connection->prepare($addressSQL);
         $statement->bindValue('member', $member['id']);
         if (null === $city) {
-            if ('AskToLeave' !== $member['Status'] && 'TakenOut' !== $member['Status']) {
-                $this->addErrorCity($member);
-                $this->progressBar->setMessage($member['Username'], 'error');
-            }
-            $statement->bindValue('city', null);
-            $statement->bindValue('latitude', null);
-            $statement->bindValue('longitude', null);
-            $statement->bindValue('wheelchairAccessible', null);
-        } else {
-            $statement->bindValue('city', $city->getGeonameid());
-            $statement->bindValue('latitude', $member['Latitude']);
-            $statement->bindValue('longitude', $member['Longitude']);
-            $statement->bindValue('wheelchairAccessible', $this->isWheelchairAccessible($member['TypicOffer']) ? 1 : 0);
+            // If we can't find a city we just do not set an address
+            return;
         }
+
+        $statement->bindValue('city', $city->getGeonameid());
+        $statement->bindValue('latitude', $member['Latitude']);
+        $statement->bindValue('longitude', $member['Longitude']);
+        $statement->bindValue(
+            'wheelchairAccessible',
+            $this->isWheelchairAccessible($member['TypicOffer']) ? 1 : 0
+        );
 
         try {
             $statement->executeStatement();

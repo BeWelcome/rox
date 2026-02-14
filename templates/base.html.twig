@@ -116,13 +116,15 @@
               {% elseif 'profile_picture' in filter %}
                 <div class="u:w-full u:relative u:pb-[100%]">
                   <div class="u:absolute u:left-0 u:top-0 u:w-full u:h-full">
-                    <a href="{{ url('avatar', {username: loggedInMember.username, size:48}) }}" title="{{ 'profile.picture.title'|trans({username: loggedInMember.username}) }}" class="js-profile-picture" data-toggle="lightbox" data-type="image">
+                    <a href="{{ url('avatar', {username: member.username, size:48}) }}" title="{{ 'profile.picture.title'|trans({username: member.username}) }}" class="js-profile-picture" data-toggle="lightbox" data-type="image">
                       <img class="u:rounded-8 u:w-full u:h-full u:object-cover js-profile-picture"
-                           src="{{ url('avatar', {username: loggedInMember.username, size: 500}) }}" alt="{{ 'profile.picture.title'|trans({username: loggedInMember.username}) }}">
+                           src="{{ url('avatar', {username: member.username, size: 500}) }}" alt="{{ 'profile.picture.title'|trans({username: member.username}) }}">
                     </a>
                   </div>
                 </div>
-                <div><a href="{{ url('profile_edit_avatar', {username: loggedInMember.username}) }}" class="btn btn-info btn-block">{{ 'profile.change.avatar'|trans }}</a></div>
+                {% if loggedInMember == member %}
+                  <div><a href="{{ url('profile_edit_avatar', {username: member.username}) }}" class="btn btn-info btn-block">{{ 'profile.change.avatar'|trans }}</a></div>
+                {% endif %}
               {% else %}
                 <a class="list-group-item nav-link{% if submenu.active == filter %} active{% endif %}"
                    href="{{ menuItem.url }}">{% if menuItem.icon is defined %}<i

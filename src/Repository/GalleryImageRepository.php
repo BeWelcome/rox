@@ -26,11 +26,10 @@ class GalleryImageRepository extends EntityRepository
         ;
     }
 
-    public function getLatestImagesFor(Member $member, int $count = 10): array
+    public function getLatestImagesFor(Member $member): array
     {
         return $this->getImagesByMemberQueryBuilder($member)
             ->orderBy('i.created', 'DESC')
-            ->setMaxResults($count)
             ->getQuery()
             ->getResult()
         ;

@@ -46,3 +46,39 @@ friend.dismiss:
 email.subject.friend:
     - 'Are you a friend (or family member) of {username}?'
     - Email subject for the request notification email
+friendship.sender.says.exist:
+    - '@friend.sender.says.exist'
+friendship.confirm:
+    - '@confirm'
+friendship.dismiss:
+    - '@dismiss'
+friend.edit.headline:
+    - 'Edit friends entry'
+    - Headline of the edit friend (family and friends) form
+friend.edit.blurb:
+    - "If you're no longer friends with this member, you can remove the friendship here.
+    
+    Your friend will not be notified about any change but the friend entry on your and their profile
+    will be removed. 
+    "
+    - Added on the 'Add a friend' page to guide members
+profile.edit.friend.keep:
+    - 'Keep as friend'
+    - Label on keep button on the edit friend form
+profile.edit.friend.remove:
+    - 'Remove friendship'
+    - Label on remove button on the edit friend form
+profile.friendship.remove.no:
+    - '@no'
+profile.friendship.remove.yes:
+    - '@yes'
+friend.add.headline:
+    - 'Add friend'
+    - Headline of the add friend (family and friends) form
+friend.add.blurb:
+    - "A member you add as a fiend will be asked to confirm that friendship. After that happened the
+      friendship will be visible on your profile and the profile of your friend.
+      "
+    - Added on the 'Add a friend' page to guide members
+profile.add.friend.confirm:
+    - '@confirm'

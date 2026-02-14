@@ -2,6 +2,8 @@
 
 {% block content %}
     <p>{{ 'friendship.sender.says.exist'|trans({username:sender.Username}) }}</p>
+  {{ receiver.username }}
+  {{ sender.username }}
     <row>
         <columns>
             <center>

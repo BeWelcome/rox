@@ -165,7 +165,7 @@ class FriendshipController extends AbstractController
             return $this->redirectToRoute('friends', ['username' => $right->getUsername()]);
         }
 
-        $friendship->setConfirmed(1);
+        $friendship->setConfirmed(true);
         $entityManager->flush();
 
         $this->addTranslatedFlash('notice', 'flash.friendship.confirmed');
@@ -205,10 +205,11 @@ class FriendshipController extends AbstractController
     {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getuser();
+        $itemsPerPage = $this->getItemsPerPage($loggedInMember);
 
         /** @var FriendRepository $friendRepository */
         $friendRepository = $this->entityManager->getRepository(Friend::class);
-        $friends = $friendRepository->getFriends($member, $page);
+        $friends = $friendRepository->getFriends($member, $page, $itemsPerPage);
 
         return $this->render('friend/friends.html.twig', [
             'member' => $member,

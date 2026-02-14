@@ -249,7 +249,8 @@
           {% endfor %}
           {% if member.groups|length > 5 %}
             <a class="btn btn-sm btn-block btn-outline-primary"
-               href="{{ url('group_user_all', {username:member.username}) }}">{{ 'groupsallmylink'|trans({}, "messages", profile_language) }}</a>
+               href="{{ url('group_user_all', {username:member.username}) }}">{{ 'groupsallmylink'|trans({}, "messages", profile_language) }} <span
+                class="badge badge-primary u:rounded-8 u:px-8 u:min-w-20">{{ member.groups|length }}</span></a>
           {% endif %}
         </div>
       </div>
@@ -271,7 +272,7 @@
         <div class="card-block p-2">
           {% if pictures|length > 0 %}
             <div class="d-flex flex-wrap justify-content-around">
-              {% for picture in pictures %}
+              {% for picture in pictures|slice(0,10) %}
                 <a href="{{ url('gallery_image', {id: picture.id}) }}"
                    style="max-width: 40%; display: flex; align-items: center; margin-bottom: 1rem;"
                    data-toggle="lightbox"
@@ -288,6 +289,13 @@
             </div>
           {% else %}
             {{ 'profile.no.images'|trans({}, 'messages', profile_language) }}
+          {% endif %}
+          {% if pictures|length > 9 %}
+            <a href="{{ url('gallery', {username: member.username}) }}"
+               class="btn btn-block btn-sm btn-outline-primary">
+              {{ 'profile.all.images'|trans({}, "messages", profile_language) }} <span
+                class="badge badge-primary u:rounded-8 u:px-8 u:min-w-20">{{ pictures|length }}</span>
+            </a>
           {% endif %}
         </div>
       </div>
@@ -306,22 +314,31 @@
             </a>
           {%- endif -%}
         </div>
-        <div class="card-block u:p-4">
-          <div class="u:grid u:grid-cols-3 u:gap-8">
-            {% for friend in friends|slice(0,9) %}
-              {% set other = friend.left == member ? friend.right : friend.left %}
-                <div class="u:flex u:flex-col u:items-center">
-                  <div class="o-avatar o-avatar--s u:mr-4">
-                    {{ macros.roundedavatarstack(other.username, 48, false) }}
+        <div class="card-block p-2">
+          {% if friends|length != 0 %}
+            <div class="u:grid u:grid-cols-3 u:gap-8 u:mb-8">
+              {% for friend in friends|slice(0,9) %}
+                {% set other = friend.left == member ? friend.right : friend.left %}
+                  <div class="u:flex u:flex-col u:items-center">
+                    <div class="o-avatar o-avatar--s u:mr-4">
+                      {{ macros.roundedavatarstack(other.username, 48, false) }}
+                    </div>
+                    <a href="{{ url('members_profile', {username: other.username}) }}"
+                      class="u:text-[.875em] u:text-center"
+                      style="word-break: break-all;">{{ other.username }}</a>
                   </div>
-                  <a href="{{ url('members_profile', {username: other.username}) }}"
-                    class="u:text-[.875em] u:text-center"
-                    style="word-break: break-all;">{{ other.username }}</a>
-                </div>
-              {% else %}
-                {{ 'profile.no.friends'|trans({}, 'messages', profile_language) }}
-            {% endfor %}
-          </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            {{ 'profile.no.friends'|trans({}, 'messages', profile_language) }}
+          {% endif %}
+          {% if friends|length > 9 %}
+            <a href="{{ url('friends', {username: member.username}) }}"
+               class="btn btn-block btn-sm btn-outline-primary">
+              {{ 'profile.all.friends'|trans({}, "messages", profile_language) }} <span
+                class="badge badge-primary u:rounded-8 u:px-8 u:min-w-20">{{ friends|length }}</span>
+            </a>
+          {% endif %}
         </div>
       </div>
     </div>
@@ -533,6 +550,7 @@
         - {{ ('lang_' ~ profile_language)|trans({}, "messages", profile_language) }}
       </button>
     </div>
+
     <div class="micromodal-slide" id="delete-{{ profile_language }}">
       <div class="modal__overlay u:bg-gray-100/50 u:flex u:justify-center u:absolute u:inset-0 u:z-[2001]">
         <div class="u:bg-white u:p-16 u:m-16 u:rounded-8 u:min-w-50  u:w-max-[80%] u:sm:w-max-[60%] u:md:w-max-[50%] ">

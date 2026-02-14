@@ -50,7 +50,7 @@ jobs:
 
   tests:
     name: Tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # tag=v4.2.2
@@ -82,35 +82,13 @@ jobs:
       - name: Run Infection tests
         run: vendor/bin/infection --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=30
 
-#      - name: Install MariaDB
-#        uses: getong/mariadb-action@v1.11
-#        with:
-#          mysql database: 'bewelcome_test'
-#          mysql user: 'bewelcome'
-#          mysql password: 'bewelcome'
+      - name: Install MariaDB
+        uses: getong/mariadb-action@v1.11
+        with:
+          mysql database: 'bewelcome_test'
+          mysql user: 'bewelcome'
+          mysql password: 'bewelcome'
 
-      - name: Setup MariaDB 12.0.2
-        run: |
-          docker run -d --name=mariadb \
-            -e MARIADB_ROOT_PASSWORD=bewelcome \
-            -e MARIADB_DATABASE=bewelcome_test \
-            -p 3306:3306 \
-            --health-cmd="mariadb-admin ping -h 127.0.0.1 -proot || exit 1" \
-            --health-interval=10s \
-            --health-timeout=5s \
-            --health-retries=10 \
-            mariadb:12.0.2
-  
-          echo "Waiting for MariaDB to be ready..."
-          for i in {1..60}; do
-            if docker exec mariadb mariadb-admin ping -h 127.0.0.1 -proot >/dev/null 2>&1; then
-              echo "MariaDB is responding."
-              break
-            fi
-  
-            sleep 2
-          done
-        
       - name: Create test database
         run: bin/console test:database:create --env=test
 
@@ -385,6 +363,7 @@ jobs:
 
       - name: Run JS security checker
         run: yarn audit --groups dependencies
+
 
 
 

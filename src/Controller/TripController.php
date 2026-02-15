@@ -29,8 +29,9 @@ class TripController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    public function __construct(private TripModel $tripModel)
-    {
+    public function __construct(
+        private readonly TripModel $tripModel,
+    ) {
     }
 
     #[Route(path: '/trips/{page}', name: 'trips', requirements: ['page' => '\d+'])]

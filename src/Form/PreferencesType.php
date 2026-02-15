@@ -19,28 +19,34 @@ class PreferencesType extends AbstractType
         foreach ($preferences as $preference) {
             $choices = $this->getChoices($preference);
             if (2 === \count($choices)) {
-                // Create radio buttons
-                $fieldOptions = [
-                    'expanded' => true,
-                ];
+                $builder
+                    ->add($preference->getCodename(), SwitchType::class, [
+                        'label' => strtolower($preference->getCodename()),
+                        'help' => strtolower($preference->getCodedescription()),
+                        'help_html' => true,
+                        'choices' => $choices,
+                        'default' => $preference->getDefaultValue(),
+                    ])
+                ;
             } else {
-                $fieldOptions = [
-                    'expanded' => false,
-                ];
+                $builder
+                    ->add($preference->getCodename(), ChoiceType::class, [
+                        'attr' => [
+                            'class' => 'preference',
+                        ],
+                        'label' => strtolower($preference->getCodename()),
+                        'help' => strtolower($preference->getCodedescription()),
+                        'expanded' => false,
+                        'help_html' => true,
+                        'choices' => $choices,
+                        'multiple' => false,
+                        'required' => true,
+                        'constraints' => [
+                            new NotBlank(),
+                        ],
+                    ])
+                ;
             }
-            $builder
-                ->add($preference->getCodename(), ChoiceType::class, array_merge($fieldOptions, [
-                    'label' => strtolower($preference->getCodename()),
-                    'help' => strtolower($preference->getCodedescription()),
-                    'help_html' => true,
-                    'choices' => $choices,
-                    'multiple' => false,
-                    'required' => true,
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                ]))
-            ;
         }
     }
 
@@ -57,7 +63,7 @@ class PreferencesType extends AbstractType
 
     private function getChoices(Preference $preference): array
     {
-        $possibleValues = explode(';', $preference->getPossibleValues());
+        $possibleValues = $preference->getPossibleValues();
         $values = [];
         foreach ($possibleValues as $value) {
             $values[strtolower($preference->getCodename() . $value)] = $value;

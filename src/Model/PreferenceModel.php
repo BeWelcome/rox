@@ -5,17 +5,16 @@ namespace App\Model;
 use App\Entity\Member;
 use App\Entity\Preference;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 
 class PreferenceModel
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     public function getPreferences(): array
     {
-        /** @var EntityRepository $preferenceRepository */
         $preferenceRepository = $this->entityManager->getRepository(Preference::class);
         $preferences = $preferenceRepository->findBy(['status' => 'Normal'], ['position' => 'ASC']);
 

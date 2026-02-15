@@ -157,14 +157,9 @@ class Preference
         return $this->defaultValue;
     }
 
-    /**
-     * Get possiblevalues.
-     *
-     * @return string
-     */
-    public function getPossibleValues()
+    public function getPossibleValues(): array
     {
-        return $this->possibleValues;
+        return explode(';', $this->possibleValues);
     }
 
     /**

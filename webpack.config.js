@@ -47,6 +47,7 @@ Encore
     .addEntry('profile/edit_languages', './assets/js/profile/edit_languages.js')
     .addEntry('profile/edit_accommodation', './assets/js/profile/edit_accommodation.js')
     .addEntry('profile/setlocation', './assets/js/profile/setlocation.js')
+    .addEntry('profile/preference', './assets/js/profile/preference.js')
     .addEntry('signup/setlocation', './assets/js/signup/setlocation.js')
     .addEntry('updatecounters', './assets/js/updateCounters.js')
     .addEntry('lightbox', './assets/js/lightbox.js')

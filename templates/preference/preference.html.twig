@@ -1,25 +1,29 @@
 {% extends 'profile/profile.html.twig' %}
 
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('profile/preference') }}
+{% endblock javascripts %}
+
 {% block page_content %}
     <h1>{{ 'profile.preferences'|trans }}</h1>
     {{ form_start(form) }}
+    <input type="hidden" id="member" value="{{ member.username }}">
     {% for name, child in form.children %}
         {% if not (name starts with '_') %}
             <div class="u:mb-16">
                 <legend class="o-label" aria-label="{{ child.vars.label|trans }}">{{ child.vars.label|trans }}</legend>
               {% if child.vars.choices|length == 2 %}
-                {{ dump(child.vars) }}
                 <label class="u:inline-flex u:items-center u:cursor-pointer" style="display: inline-flex;">
-                  <span class="u:select-none u:font-medium u:text-heading">{{ child.vars.choices[0].label|trans }}</span>
-                  <input type="checkbox" class="u:sr-only u:peer">
-                  <div class="u:relative u:mx-8 u:w-20 u:h-10 u:bg-bewelcome u:peer-focus:outline-none u:peer-focus:ring-1 u:peer-focus:ring-bewelcome-light
-                              u:rounded-5 u:peer u:peer-checked:after:translate-x-10 u:rtl:peer-checked:after:-translate-x-full u:peer-checked:after:border-buffer
-                              u:after:content-[''] u:after:absolute after:top-[2px] u:after:bg-white u:after:rounded-5 u:after:h-10
-                              u:after:w-10 u:after:transition-all u:peer-checked:bg-bewelcome"></div>
-                  <span class="u:select-none u:text-sm u:font-medium u:text-heading">{{ child.vars.choices[1].label|trans }}</span>
+                  <span class="u:select-none u:font-medium u:text-heading switch">{{ child.vars.choices|keys|first|trans }}</span>
+                  <input id="{{ child.vars.id }}" name="{{ child.vars.full_name }}" type="checkbox" class="u:sr-only u:peer preference" value="{{ child.vars.choices|last }}" {% if child.vars.data == child.vars.choices|last %}checked="checked"{% endif %}>
+                  <div class="u:relative u:mx-9 u:w-24 u:h-12 u:bg-bewelcome u:peer-focus:outline-none u:peer-focus:ring-1 u:peer-focus:ring-bewelcome-light
+                              u:rounded-6 u:peer u:peer-checked:after:translate-x-12 u:rtl:peer-checked:after:-translate-x-full u:peer-checked:after:border-buffer
+                              u:after:content-[''] u:after:absolute after:top-[2px] u:after:bg-white u:after:rounded-6 u:after:h-12
+                              u:after:w-12 u:after:transition-all u:peer-checked:bg-bewelcome"></div>
+                  <span class="u:select-none u:text-sm u:font-medium u:text-heading">{{ child.vars.choices|keys|last|trans }}</span>
                 </label>
-
-              {{ form_widget(child) }}
+                {% do child.setRendered %}
               {% else %}
                 <div class="u:grid u:grid-cols-1">{{ form_widget(child) }}</div>
                   {% endif %}
@@ -29,7 +33,7 @@
     {% endfor %}
     {{ form_rest(form) }}
     <div class="u:flex u:justify-end">
-        <button type="submit" class="o-button">{{ 'submit'|trans }}</button>
+        <a href="{{ url('members_profile', {username: member.username}) }}" class="o-button">{{ 'profile.back'|trans }}</a>
     </div>
     {{ form_end(form) }}
 {% endblock %}

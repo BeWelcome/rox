@@ -14,6 +14,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Exception;
+use Symfony\Component\Console\Attribute\Argument;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -164,13 +165,15 @@ class MigrateDatabaseCommand extends Command
         $this->connection = $this->entityManager->getConnection();
     }
 
-    public function __invoke(InputInterface $input, OutputInterface $output): int
+    public function __invoke(InputInterface $input, OutputInterface $output, #[Argument] int $offset): int
     {
         $this->io = new SymfonyStyle($input, $output);
         $this->io->success('Migrating old profiles.');
 
-        $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=0;');
-        $this->connection->executeStatement('TRUNCATE `address`; TRUNCATE `member_translations`; TRUNCATE `member_language_level`; TRUNCATE `friend`; TRUNCATE `member`;');
+        if (0 === $offset) {
+            $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=0;');
+            $this->connection->executeStatement('TRUNCATE `address`; TRUNCATE `member_translations`; TRUNCATE `member_language_level`; TRUNCATE `friend`; TRUNCATE `member`;');
+        }
 
         $sql = "SELECT COUNT(m.id) FROM members m WHERE m.status IN ('" . implode("', '", self::MIGRATED_STATUSES) . "')";
 
@@ -190,13 +193,13 @@ class MigrateDatabaseCommand extends Command
         }
 
         $this->errorMembers = [];
-        $batchSize = 2000;
+        $batchSize = 20000;
 
-        $this->progressBar = new ProgressBar($output, $countOfMembers);
+        $this->progressBar = new ProgressBar($output, $batchSize);
         $this->progressBar->setFormat(
-            "<fg=white;bg=green>\n %info:-60s% \n</>\n%current%/%max% [%bar%] %percent:3s%%\n%elapsed:-10% %%estimated:-10s%  %memory:20s%\nLast error: %error%"
+            "<fg=white;bg=green>\n %info:-60s% \n</>\n%current%/%max% [%bar%] %percent:3s%%\n%elapsed:-10s% %estimated:-10s%  %memory:20s%\nLast error: %error%"
         );
-        $this->progressBar->setMessage("Migrating {$countOfMembers} members to new member table including translations.", 'info');
+        $this->progressBar->setMessage("Migrating {$countOfMembers} members starting at {$offset} to new member table including translations.", 'info');
         $this->progressBar->setMessage('none', 'error');
         $this->progressBar->minSecondsBetweenRedraws(10.0);
         $this->progressBar->start();
@@ -204,10 +207,10 @@ class MigrateDatabaseCommand extends Command
         // Make sure the tables member and member_translations are empty
 
         try {
-            for ($current = 0; $current < $countOfMembers; $current += $batchSize) {
-                $this->migrateMembersData($current, $batchSize);
-            }
-            $this->reportErrors();
+            //            for ($current = 0; $current < $countOfMembers; $current += $batchSize) {
+            $this->migrateMembersData($offset, $batchSize);
+            //            }
+            $this->reportErrors($offset);
         } finally {
             $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=1;');
         }
@@ -243,6 +246,7 @@ class MigrateDatabaseCommand extends Command
             $this->progressBar->advance();
             unset($member);
         }
+        unset($members);
     }
 
     private function migrateMemberData(array $member): void
@@ -345,6 +349,8 @@ class MigrateDatabaseCommand extends Command
         } catch (Exception $e) {
             $this->progressBar->setMessage($member['Username'], 'error');
             $this->addErrorAddress($member, $e->getMessage());
+        } finally {
+            $this->entityManager->detach($city);
         }
     }
 
@@ -402,6 +408,7 @@ class MigrateDatabaseCommand extends Command
                     }
                 }
             }
+            unset($processedTranslations, $memberTranslations);
 
             $values = substr($queryString, 2);
 
@@ -669,10 +676,10 @@ class MigrateDatabaseCommand extends Command
         }
     }
 
-    private function reportErrors(): void
+    private function reportErrors(int $offset): void
     {
         if (!empty($this->errorMembers)) {
-            $file = fopen('migrateMembers.errors.txt', 'w');
+            $file = fopen("migrateMembers.errors-{$offset}.txt", 'w');
             $countOfErrorMembers = 0;
             foreach ($this->errorMembers as $errors) {
                 $countOfErrorMembers += \count($errors);

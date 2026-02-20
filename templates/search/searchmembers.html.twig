@@ -2,43 +2,52 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('jquery_ui') }}
-    {{ encore_entry_script_tags('member/autocomplete') }}
+  {{ encore_entry_script_tags('jquery_ui') }}
+  {{ encore_entry_script_tags('member/autocomplete') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('jquery_ui') }}
+  {{ encore_entry_link_tags('jquery_ui') }}
 {% endblock stylesheets %}
 
 {% block content %}
-    <h1 class="u:text-24">{{ 'search.members'|trans }}</h1>
-    <p>{{ 'search.member.abstract'|trans }}</p>
-    {{ form(form) }}
-    {% if members is defined %}
-        <div class="row">
-        {% for member in members %}
-            {% set fields = member.memberFields %}
-            <div class="col-12 col-md-6 mb-2">
-                <div class="media">
-                    {{ macros.avatar(member.username, 100, true) }}
-                    <div class="ml-3 media-body">
-                        <h5 class="mt-0">{{ member.username }}</h5>
-                        {{ dump(member.city) }}
-{#                          <p>{{ member.city.name }}
-                            {% if not member.city.country is null %}
-                                , {{ member.country.name }}
-                            {% endif %}</p>
-#}                        {% if fields|length %}
-                            {% if fields[app.request.locale] is defined %}
-                                <p>{{ fields[app.request.locale]['ProfileSummary']|truncate(500) }}</p>
-                            {% else %}
-                                <p>{{ (fields|first)['ProfileSummary']|truncate(500) }}</p>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-                </div>
+  <h1 class="u:text-24">{{ 'search.members'|trans }}</h1>
+  <p class="u:mb-8">{{ 'search.member.abstract'|trans }}</p>
+  {{ form_start(form) }}
+  {{ form_label(form.username) }}
+  <input type="text"
+         id="{{ form.username.vars.id }}" name="{{ form.username.vars.full_name }}"
+         value="{{ form.username.vars.value }}"
+         required="required"
+         placeholder="{{ 'search.member.placeholder'|trans }}"
+         class="member-autocomplete-start"
+  >
+  {{ form_help(form.username) }}
+  {% do form.username.setRendered %}
+  {{ form_end(form) }}
+  {% if not members is null %}
+    <div class="u:w-full u:grid u:grid-cols-1 {% if members|length > 0 %}u:sm:grid-cols-2 u:md:grid-cols-3{% endif %} u:gap-12">
+      {% for member in members %}
+        {% set translations = member.translations %}
+          <div class="media">
+            {{ macros.avatar(member.username, 72, true) }}
+            <div class="ml-3 media-body">
+              <h5 class="mt-0">{{ member.username }}</h5>
+              {% set address = member.activeAddress %}
+              {% if not address is same as(false) %}
+              <p>{{ address.location.name }}, {{ address.location.country.name }}
+                {% if translations[app.request.locale] is defined %}
+                  <p>{{ (translations[app.request.locale]['AboutMe']??'')|truncate(100)|raw }}</p>
+                {% else %}
+                  <p>{{ ((translations|first)['AboutMe']??'')|truncate(100)|raw }}</p>
+              {% endif %}
+              {% endif %}
             </div>
-        {% endfor %}
-        </div>
-    {% endif %}
+          </div>
+      {% else %}
+        {{ 'members.search.no.results'|trans }}
+      {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 {% endblock content %}

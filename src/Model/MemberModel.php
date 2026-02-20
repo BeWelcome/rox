@@ -183,8 +183,7 @@ class MemberModel
 
         // The accommodation images
         $filesystem->copy($projectDir . '/public/images/icons/wheelchairblue.png', $this->tempDir . 'images/wheelchairblue.png');
-        $filesystem->copy($projectDir . '/public/images/icons/anytime.png', $this->tempDir . 'images/anytime.png');
-        $filesystem->copy($projectDir . '/public/images/icons/dependonrequest.png', $this->tempDir . 'images/dependonrequest.png');
-        $filesystem->copy($projectDir . '/public/images/icons/neverask.png', $this->tempDir . 'images/neverask.png');
+        $filesystem->copy($projectDir . '/public/images/icons/yes.png', $this->tempDir . 'images/yes.png');
+        $filesystem->copy($projectDir . '/public/images/icons/no.png', $this->tempDir . 'images/no.png');
     }
 }

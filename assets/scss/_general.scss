@@ -46,7 +46,15 @@ main {
 }
 
 .ui-autocomplete-loading {
+  margin-right: 8px;
   background: white url("../images/ui-anim_basic_16x16.gif") right center no-repeat;
+}
+
+.ui-autocomplete {
+  max-height: 200px;
+  overflow-y: auto;
+  /* prevent horizontal scrollbar */
+  overflow-x: hidden;
 }
 
 .button {

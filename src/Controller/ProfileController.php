@@ -658,6 +658,8 @@ class ProfileController extends AbstractController
     private function getSectionForm(?string $section, Member $member, string $language): ?FormInterface
     {
         $translations = $member->getTranslations();
+        $activeAddress = $member->getActiveAddress();
+        $wheelchairAccessible = false === $member->getActiveAddress() ? false : $activeAddress->getIsWheelchairAccessible();
 
         return match ($section) {
             'aboutme' => $this->createForm(AboutMeFormType::class, [
@@ -693,7 +695,7 @@ class ProfileController extends AbstractController
                 'additional_info' => $translations[$language]['AdditionalInfo'] ?? '',
                 'transport' => $translations[$language]['PublicTransport'] ?? '',
                 'house_rules' => $translations[$language]['Restrictions'] ?? '',
-                'wheelchair_accessible' => $member->getActiveAddress()->isWheelchairAccessible(),
+                'wheelchair_accessible' => $wheelchairAccessible,
                 'language' => $language,
             ]),
             'languages' => $this->createForm(LanguageLevelsFormType::class, [

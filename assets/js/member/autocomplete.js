@@ -1,46 +1,21 @@
-$( function() {
-    function log( message ) {
-        $( "<div>" ).text( message ).prependTo( "#log" );
-        $( "#log" ).scrollTop( 0 );
-    }
+import TomSelect from 'tom-select';
+import 'tom-select/dist/css/tom-select.min.css';
 
-    $( ".member-autocomplete-start" ).autocomplete({
-        source: function( request, response ) {
-            $.ajax( {
-                url: "/member/autocomplete/start",
-                dataType: "jsonp",
-                data: {
-                    term: request.term
-                },
-                success: function( data ) {
-                    response( data );
-                }
-            } );
-        },
-        minLength: 2,
-        select: function( event, ui ) {
-            log( "Selected: " + ui.item.value + " aka " + ui.item.id );
-            $(this).val(ui.item.value);
-        }
-    } );
-
-    $( ".member-autocomplete" ).autocomplete({
-        source: function( request, response ) {
-            $.ajax( {
-                url: "/member/autocomplete",
-                dataType: "jsonp",
-                data: {
-                    term: request.term
-                },
-                success: function( data ) {
-                    response( data );
-                }
-            } );
-        },
-        minLength: 2,
-        select: function( event, ui ) {
-            log( "Selected: " + ui.item.value + " aka " + ui.item.id );
-            $(this).val(ui.item.value);
-        }
-    } );
+new TomSelect('.member-autocomplete-start', {
+    load: function(query, callback) {
+        const url = '/member/autocomplete/start?term=' + encodeURIComponent(query);
+        fetch(url)
+            .then(response => response.json())
+            .then(json => {
+                callback(json.items);
+            }).catch(()=>{
+            callback();
+        });
+    },
+    maxItems: 1,
+    create: true,
+    createOnBlur: true,
+    valueField: 'id',
+    labelField: 'id',
+    searchField: 'id',
 });

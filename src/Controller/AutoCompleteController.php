@@ -16,8 +16,8 @@ class AutoCompleteController extends AbstractController
     public function autoCompleteAction(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $names = [];
-        $callback = trim(strip_tags((string) $request->get('callback')));
-        $term = trim(strip_tags((string) $request->get('term')));
+        $callback = trim(strip_tags((string) $request->query->get('callback')));
+        $term = trim(strip_tags((string) $request->query->get('term')));
 
         /** @var MemberRepository $memberRepository */
         $memberRepository = $entityManager->getRepository(Member::class);
@@ -32,18 +32,17 @@ class AutoCompleteController extends AbstractController
         }
 
         $response = new JsonResponse();
-        $response->setCallback($callback);
         $response->setData($names);
 
         return $response;
     }
 
-    #[Route(path: '/member/autocomplete/start', name: 'members_autocomplete_starts_with')]
+    #[Route(path: '/member/autocomplete/start', name: 'members_autocomplete_starts_with', format: 'json')]
     public function autoCompleteStartsWith(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $names = [];
-        $callback = trim(strip_tags((string) $request->get('callback')));
-        $term = trim(strip_tags((string) $request->get('term')));
+        $callback = trim(strip_tags((string) $request->query->get('callback')));
+        $term = trim(strip_tags((string) $request->query->get('term')));
 
         /** @var MemberRepository $memberRepository */
         $memberRepository = $entityManager->getRepository(Member::class);
@@ -58,9 +57,8 @@ class AutoCompleteController extends AbstractController
         }
 
         $response = new JsonResponse();
-        $response->setCallback($callback);
         $response->setData($names);
 
-        return $response;
+        return $this->json(['items' => $names]);
     }
 }

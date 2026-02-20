@@ -91,7 +91,7 @@
     "croppie": "^2.6.5",
     "dayjs": "^1.11.0",
     "micromodal": "^0.4.10",
-    "moment": "^2.29.4",
+    "moment": "^2.30",
     "moment-timezone": "^0.5.37",
     "postcss-import": "^15.0.0",
     "postcss-nesting": "^11.2.2",

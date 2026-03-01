@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>{% if donation.id %}{{ 'admin.treasurer.donation.edit' | trans }}{% else %}{{ 'admin.treasurer.donation.create' | trans }}{% endif %}</h1>
+
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button type="submit" class="btn btn-primary">{{ 'button.save' | trans }}</button>
+    <a href="{{ path('admin_treasurer_overview') }}" class="btn btn-secondary">{{ 'button.cancel' | trans }}</a>
+    {{ form_end(form) }}
+{% endblock %}

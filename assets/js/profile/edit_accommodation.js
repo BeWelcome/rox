@@ -76,3 +76,22 @@ const restrictions = document.querySelectorAll('[data-restrictions]')
 restrictions.forEach( (restriction) => {
     restriction.addEventListener("change", updateRestrictions)
 })
+
+const updateMaxGuests = async (e) => {
+    const newMaxGuests = {
+        maxGuests: +e.target.value
+    }
+
+    await fetch('/members/update/maxguests',  {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newMaxGuests)
+    }).then((response) => {
+    })
+}
+
+const maxGuests = document.getElementById('accommodation_form_max_guests')
+maxGuests.addEventListener("change", updateMaxGuests)

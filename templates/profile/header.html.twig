@@ -59,15 +59,15 @@
           {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
           <a
             href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">
-            {{ location.name }}
+            {{ location.name -}}
           </a>, {% if not location.admin1 is null %}
           <a
             href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id}) }}">
-            {{ location.admin1.name }}
+            {{ location.admin1.name -}}
           </a>, {% endif %}
           <a
             href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">
-            {{ location.country.name }}
+            {{ location.country.name -}}
           </a>
           <input type="hidden" id="latitude" value="{{ address.latitude }}"><input type="hidden" id="longitude" value="{{ address.longitude }}">
           <div id="location-map"

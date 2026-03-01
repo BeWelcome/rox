@@ -108,14 +108,9 @@ class ForumPost
     #[ORM\Column(name: 'edit_count', type: 'boolean', nullable: false)]
     private $editCount = '0';
 
-    /**
-     * @var Language
-     *
-     * Default English
-     */
     #[ORM\JoinColumn(name: 'ShortCode', referencedColumnName: 'ShortCode', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Language::class)]
-    private $language;
+    private Language $language;
 
     /**
      * @var string

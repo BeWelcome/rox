@@ -64,7 +64,7 @@ class FriendshipController extends AbstractController
                 $friend = new Friend();
                 $friend->setLeft($left);
                 $friend->setRight($right);
-                $friend->setConfirmed(false);
+                $friend->setLeftConfirmed(false);
 
                 $this->entityManager->persist($friend);
                 $this->entityManager->flush();
@@ -165,7 +165,7 @@ class FriendshipController extends AbstractController
             return $this->redirectToRoute('friends', ['username' => $right->getUsername()]);
         }
 
-        $friendship->setConfirmed(true);
+        $friendship->setLeftConfirmed(true);
         $entityManager->flush();
 
         $this->addTranslatedFlash('notice', 'flash.friendship.confirmed');

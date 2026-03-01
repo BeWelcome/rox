@@ -60,12 +60,9 @@ class Donation
     #[ORM\Column(name: 'Money', type: 'string', length: 10, nullable: false)]
     private $money;
 
-    /**
-     * @var Location
-     */
     #[ORM\JoinColumn(name: 'IdCountry', referencedColumnName: 'geoname_id')]
     #[ORM\ManyToOne(targetEntity: Location::class)]
-    private $country;
+    private ?Location $country = null;
 
     /**
      * @var string
@@ -231,7 +228,7 @@ class Donation
         return $this->systemComment;
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }

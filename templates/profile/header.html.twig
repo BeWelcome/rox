@@ -55,14 +55,20 @@
 
       <h5>{% if not address is same as(false) %}
           {% set location = address.location %}
+          {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
+          {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
           <a
-            href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>
-          {%- if location.admin1 != null -%}
-            , <a
-            href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id}) }}">{{ location.admin1.name }}</a>
-          {%- endif -%}
-          , <a
-            href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
+            href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">
+            {{ location.name -}}
+          </a>, {% if not location.admin1 is null %}
+          <a
+            href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id}) }}">
+            {{ location.admin1.name -}}
+          </a>, {% endif %}
+          <a
+            href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">
+            {{ location.country.name -}}
+          </a>
           <input type="hidden" id="latitude" value="{{ address.latitude }}"><input type="hidden" id="longitude" value="{{ address.longitude }}">
           <div id="location-map"
                class="u:w-full u:aspect-4/1 u:border u:border-bewelcome"></div>
@@ -86,7 +92,7 @@
       {%- if showGender -%} <strong>{{ 'profile.gender'|trans }}</strong> {{ member.gender|trans }}{%- endif %}
       {% if showAge or showGender %}<br>{% endif %}<strong>{{ 'profile.joined'|trans }}</strong>
       {% if member.created.diffInDays <= 7 %}
-        {{ 'lastloginprivacy'| trans }}
+        {{ 'last.activity.privacy'| trans }}
       {% else %}
         {{ member.created.diffForHumans }}
       {% endif %}
@@ -94,7 +100,7 @@
       <br><strong>{{ 'profile.last.activity'|trans }}</strong>
       {% set lastActivity = (member.lastActive == null) ? member.created : member.lastActive %}
       {% if lastActivity.diffInDays <= 7 %}
-        {{ 'lastloginprivacy'| trans }}
+        {{ 'last.activity.privacy'| trans }}
       {% else %}
         {{ lastActivity.diffForHumans }}
       {% endif %}

@@ -6,6 +6,7 @@ use App\Doctrine\AccommodationType;
 use App\Doctrine\HostRestrictionsType;
 use App\Doctrine\StandardOffersType;
 use App\Dto\AccommodationDto;
+use App\Dto\MaxGuestsDto;
 use App\Dto\OffersDto;
 use App\Dto\RestrictionsDto;
 use App\Entity\Comment;
@@ -32,6 +33,7 @@ use App\Repository\ProfileVisitRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -549,6 +551,7 @@ class ProfileController extends AbstractController
             $member->setHostingInterest($hostingInterest);
         }
 
+        $member->setUpdated(new DateTime());
         $this->entityManager->persist($member);
         $this->entityManager->flush();
 
@@ -625,10 +628,32 @@ class ProfileController extends AbstractController
         return $response;
     }
 
+    #[Route(path: '/members/update/maxguests', name: 'profile_update_max_guests', methods: ['POST'], priority: 10)]
+    public function setMaxGuests(#[MapRequestPayload] MaxGuestsDto $payload): Response
+    {
+        // Result of call will not be communicated to the requestor
+        $response = new Response();
+
+        /** @var Member $member */
+        $member = $this->getUser();
+        $maxGuests = $payload->maxGuests;
+        if (null === $member || null === $maxGuests || $maxGuests < 1) {
+            return $response;
+        }
+
+        $member->setMaxGuests($payload->maxGuests);
+
+        $this->entityManager->persist($member);
+        $this->entityManager->flush();
+
+        return $response;
+    }
+
     private function renderProfile(Member $member, Member $loggedInMember, ?string $language, bool $editMode): Response
     {
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);
+        $commentCounts = $commentRepository->getCommentsCountMemberByQuality($member);
         $comments = $commentRepository->getLatestCommentsMember($member, 5);
         $visibleComments = $commentRepository->getVisibleCommentsForMemberCount($member);
 
@@ -645,6 +670,7 @@ class ProfileController extends AbstractController
         return $this->render($template, [
             'member' => $member,
             'comments' => $comments,
+            'comments_count' => $commentCounts,
             'visibleComments' => $visibleComments,
             'friends' => $friends,
             'pictures' => $pictures,
@@ -658,6 +684,8 @@ class ProfileController extends AbstractController
     private function getSectionForm(?string $section, Member $member, string $language): ?FormInterface
     {
         $translations = $member->getTranslations();
+        $activeAddress = $member->getActiveAddress();
+        $wheelchairAccessible = false === $member->getActiveAddress() ? false : $activeAddress->isWheelchairAccessible();
 
         return match ($section) {
             'aboutme' => $this->createForm(AboutMeFormType::class, [
@@ -693,7 +721,7 @@ class ProfileController extends AbstractController
                 'additional_info' => $translations[$language]['AdditionalInfo'] ?? '',
                 'transport' => $translations[$language]['PublicTransport'] ?? '',
                 'house_rules' => $translations[$language]['Restrictions'] ?? '',
-                'wheelchair_accessible' => $member->getActiveAddress()->isWheelchairAccessible(),
+                'wheelchair_accessible' => $wheelchairAccessible,
                 'language' => $language,
             ]),
             'languages' => $this->createForm(LanguageLevelsFormType::class, [

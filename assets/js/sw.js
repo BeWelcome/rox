@@ -38,6 +38,23 @@ registerRoute(
     }),
 );
 
+/* cache build assets for a year */
+registerRoute(
+    new RegExp('/build/.*'),
+    new NetworkFirst({
+        cacheName: 'assets',
+        plugins: [
+            new CacheableResponsePlugin({
+                statuses: [200],
+            }),
+            new ExpirationPlugin({
+                maxEntries: 100,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+            }),
+        ],
+    }),
+);
+
 registerRoute(
     new RegExp('/conversation/.*'),
     new NetworkFirst({

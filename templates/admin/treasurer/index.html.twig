@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'admin.treasurer.overview' | trans }}</h1>
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    {{ 'admin.treasurer.campaign.status' | trans }}
+                </div>
+                <div class="card-body">
+                    {% if params.toggledonatebar %}
+                        <p class="text-success">{{ 'admin.treasurer.campaign.active' | trans }}</p>
+                        <a href="{{ path('admin_treasurer_campaign_stop') }}" class="btn btn-danger">{{ 'admin.treasurer.campaign.stop' | trans }}</a>
+                    {% else %}
+                        <p class="text-secondary">{{ 'admin.treasurer.campaign.inactive' | trans }}</p>
+                        <a href="{{ path('admin_treasurer_campaign_start') }}" class="btn btn-success">{{ 'admin.treasurer.campaign.start' | trans }}</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    {{ 'admin.treasurer.stats' | trans }}
+                </div>
+                <div class="card-body">
+                    <p>{{ 'admin.treasurer.stats.year_needed' | trans }}: {{ stats.YearNeededAmount }}</p>
+                    <p>{{ 'admin.treasurer.stats.year_donation' | trans }}: {{ stats.YearDonation }}</p>
+                    <p>{{ 'admin.treasurer.stats.quarter_needed' | trans }}: {{ stats.QuarterNeededAmount }}</p>
+                    <p>{{ 'admin.treasurer.stats.quarter_donation' | trans }}: {{ stats.QuarterDonation }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <a href="{{ path('admin_treasurer_donation_add') }}" class="btn btn-primary">{{ 'admin.treasurer.donation.add' | trans }}</a>
+    </div>
+
+    {% if donations.nbResults == 0 %}
+        <div class="alert alert-warning">{{ 'admin.treasurer.no.donations' | trans }}</div>
+    {% else %}
+        {% if donations.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( donations, 'rox_default' ) }}
+            </div>
+        {% endif %}
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>{{ 'admin.treasurer.donation.date' | trans }}</th>
+                    <th>{{ 'admin.treasurer.donation.donor' | trans }}</th>
+                    <th>{{ 'admin.treasurer.donation.amount' | trans }}</th>
+                    <th>{{ 'admin.treasurer.donation.country' | trans }}</th>
+                    <th>{{ 'admin.treasurer.donation.comment' | trans }}</th>
+                    <th>{{ 'admin.treasurer.donation.actions' | trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donation in donations.currentPageResults %}
+                    <tr>
+                        <td>{{ donation.created | date('Y-m-d') }}</td>
+                        <td>
+                            {% if donation.donor %}
+                                <a href="{{ path('members_profile_old', {'username': donation.donor.username}) }}">{{ donation.donor.username }}</a>
+                            {% else %}
+                                {{ donation.nameGiven }}
+                            {% endif %}
+                        </td>
+                        <td>{{ donation.amount }} {{ donation.money }}</td>
+                        <td>{{ donation.country ? donation.country.name : '' }}</td>
+                        <td>{{ donation.systemComment }}</td>
+                        <td>
+                            <a href="{{ path('admin_treasurer_donation_edit', {'id': donation.id}) }}" class="btn btn-sm btn-secondary">{{ 'button.edit' | trans }}</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if donations.haveToPaginate %}
+            <div class="float-left">
+                {{ pagerfanta( donations, 'rox_default') }}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

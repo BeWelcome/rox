@@ -25,15 +25,13 @@ use TypeError;
 
 class SearchController extends AbstractController
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/search/members', name: 'search_members')]
-    public function searchMembers(Request $request)
+    public function searchMembers(Request $request): Response
     {
         $members = null;
         $memberSearch = $this->createFormBuilder()

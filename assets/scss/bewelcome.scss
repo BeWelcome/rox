@@ -610,3 +610,9 @@ $avatar-sizes: 30, 50, 75, 100, 150, 200, 500;
 .u\:hidden\! {
   display: none !important;
 }
+
+.avatar-72 {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+}

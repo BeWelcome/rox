@@ -4,6 +4,13 @@
     {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
         <div class="u:w-full u:mb-8">{{ 'commentguidlineslink'|trans|raw }}</div>
     {% endif %}
+  <div class="w-full u:mb-8">
+    <a href="{{ url('profile_comments', {username: member.username, type: 'positive'}) }}">
+      <span class="u:text-18 {% if type == 'positive' %}u:font-weight-600{% endif %} u:text-green-600">{{ 'comments.positive'| trans({positive: comments_count.positive }) }}</span></a> /
+    <a href="{{ url('profile_comments', {username: member.username, type: 'neutral'}) }}"><span class="u:text-18 {% if type == 'neutral' %}u:font-weight-600{% endif %}">{{ 'comments.neutral'| trans({neutral: comments_count.neutral }) }}</span></a> /
+    <a href="{{ url('profile_comments', {username: member.username, type: 'negative'}) }}"><span class="u:text-18 {% if type == 'negative' %}u:font-weight-600{% endif %} u:text-red-600">{{ 'comments.negative'| trans({negative: comments_count.negative }) }}</span></a> /
+    <a href="{{ url('profile_comments', {username: member.username}) }}"><span class="u:text-18 {% if type == 'all' %}u:font-weight-600{% endif %}  u:text-500">{{ 'comments.total'| trans({total: comments_count.total }) }}</span></a>
+  </div>
     {% for comment in comments %}
         {% set commentToVisible = (comment['to'] is defined) ? (comment['to'].showCondition(app.user) > 0) : false %}
         {% set commentFromVisible = (comment['from'] is defined) ? (comment['from'].showCondition(app.user) > 0) : false %}

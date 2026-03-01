@@ -106,7 +106,6 @@
         "phpstan/phpstan-doctrine": "*",
         "phpstan/phpstan-mockery": "^2.0",
         "phpstan/phpstan-symfony": "*",
-        "phpunit/php-file-iterator": "^6",
         "phpunit/phpunit": "^12",
         "rector/rector": "^2.1",
         "squizlabs/php_codesniffer": "^3.5",
@@ -150,7 +149,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.4"
+            "php": "8.4.13"
         },
         "allow-plugins": {
             "infection/extension-installer": true,

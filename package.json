@@ -57,6 +57,9 @@
     "postcss": "^8.4.17",
     "postcss-loader": "^7.0.0",
     "purgecss": "^4.0.3",
+    "postcss-import": "^15.0.0",
+    "postcss-nesting": "^11.2.2",
+    "postcss-url": "^10.1.3",
     "rangeslider.js": "^2.3.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -75,12 +78,7 @@
     "ts-loader": "^9.0.0",
     "typescript": "^5.3.3",
     "webpack-cli": "^5.0.1",
-    "workbox-webpack-plugin": "^6.1.5"
-  },
-  "scripts": {
-    "encoreWatch": "encore dev --watch"
-  },
-  "dependencies": {
+    "workbox-webpack-plugin": "^7.4.0",
     "@babel/plugin-transform-runtime": "^7.29.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@types/geojson": "^7946.0.13",
@@ -91,11 +89,9 @@
     "croppie": "^2.6.5",
     "dayjs": "^1.11.0",
     "micromodal": "^0.4.10",
-    "moment": "^2.29.4",
+    "minimatch": "^10.2.4",
+    "moment": "^2.30",
     "moment-timezone": "^0.5.37",
-    "postcss-import": "^15.0.0",
-    "postcss-nesting": "^11.2.2",
-    "postcss-url": "^10.1.3",
     "rangeslider-pure": "^0.4.11",
     "react-avatar-editor": "^14.0.0",
     "show-more-read": "tomik23/show-more",
@@ -103,5 +99,10 @@
     "ux-translator": "symfony/ux-translator",
     "vanilla-calendar-pro": "^3.0",
     "webpack": "5.*"
+  },
+  "scripts": {
+    "encoreWatch": "encore dev --watch"
+  },
+  "dependencies": {
   }
 }

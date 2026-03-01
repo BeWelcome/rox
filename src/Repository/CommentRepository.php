@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Doctrine\CommentAdminActionType;
+use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\Member;
@@ -171,10 +172,46 @@ class CommentRepository extends EntityRepository
         return $results;
     }
 
-    public function getAllCommentsMember(Member $member): array
+    public function getCommentsCountMemberByQuality(Member $member): array
     {
-        $commentsForMember = $this->getAllCommentsForMember($member);
-        $commentsByMember = $this->getAllCommentsByMember($member);
+        $qb = $this->createQueryBuilder('c');
+        $results = $qb
+            ->innerJoin(Member::class, 'm', 'WITH', $qb->expr()->andX(
+                $qb->expr()->eq('m.id', 'c.fromMember'),
+                $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
+            ))
+            ->where('c.toMember = :member')
+            ->andWhere($qb->expr()->eq('c.displayInPublic', 1))
+            ->setParameter('member', $member)
+            ->select('c.quality, count(c.fromMember) AS count')
+            ->groupBy('c.quality')
+            ->getQuery()
+            ->getScalarResult();
+
+        $counts = [
+            CommentQualityType::POSITIVE => 0,
+            CommentQualityType::NEUTRAL => 0,
+            CommentQualityType::NEGATIVE => 0,
+            'total' => 0,
+        ];
+
+        $total = 0;
+        foreach ($results as $result) {
+            $counts[$result['quality']] = $result['count'];
+            $total += $result['count'];
+        }
+        $counts['total'] = $total;
+
+        return $counts;
+    }
+
+    public function getAllCommentsMember(Member $member, string $type): array
+    {
+        $commentsByMember = [];
+        $commentsForMember = $this->getAllCommentsForMember($member, $type);
+        if ('all' === $type || ('all' !== $type && !empty($commentsForMember))) {
+            $commentsByMember = $this->getAllCommentsByMember($member);
+        }
 
         return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
     }
@@ -206,9 +243,9 @@ class CommentRepository extends EntityRepository
         ;
     }
 
-    public function getAllCommentsForMember(Member $member): array
+    public function getAllCommentsForMember(Member $member, string $type): array
     {
-        return $this->getCommentsForMemberQueryBuilder($member)
+        return $this->getCommentsForMemberQueryBuilder($member, $type)
             ->getQuery()
             ->getResult()
         ;
@@ -268,7 +305,7 @@ class CommentRepository extends EntityRepository
         return $qb;
     }
 
-    private function getCommentsForMemberQueryBuilder(Member $member): QueryBuilder
+    private function getCommentsForMemberQueryBuilder(Member $member, string $type = 'all'): QueryBuilder
     {
         $qb = $this->createQueryBuilder('c');
         $qb
@@ -279,6 +316,12 @@ class CommentRepository extends EntityRepository
             ->where('c.toMember = :member')
             ->setParameter('member', $member)
         ;
+
+        if ('all' !== $type) {
+            $qb
+                ->andWhere('c.quality = :type')
+                ->setParameter('type', $type);
+        }
 
         return $qb;
     }

@@ -21,7 +21,12 @@ class FriendRepository extends EntityRepository
                 ->select('count(f.left)')
                 ->join('f.left', 'l')
                 ->join('f.right', 'r')
-                ->where('f.confirmed = :confirmed')
+                ->where(
+                    $qb->expr()->andX(
+                        $qb->expr()->eq('f.leftConfirmed', true),
+                        $qb->expr()->eq('f.rightConfirmed', true)
+                    )
+                )
                 ->andWhere(
                     $qb->expr()->orX(
                         $qb->expr()->eq('f.left', ':member'),
@@ -36,7 +41,6 @@ class FriendRepository extends EntityRepository
                 )
                 ->setParameter('member', $member)
                 ->setParameter('status', MemberStatusType::ACTIVE_ALL_ARRAY)
-                ->setParameter('confirmed', true)
                 ->getQuery()
                 ->getSingleScalarResult()
         ;
@@ -55,9 +59,14 @@ class FriendRepository extends EntityRepository
         $qb = $this->createQueryBuilder('f');
 
         return $qb
-            ->where('f.confirmed = :confirmed')
             ->join('f.left', 'l')
             ->join('f.right', 'r')
+            ->where(
+                $qb->expr()->andX(
+                    $qb->expr()->eq('f.leftConfirmed', true),
+                    $qb->expr()->eq('f.rightConfirmed', true)
+                )
+            )
             ->andWhere(
                 $qb->expr()
                     ->orX(
@@ -68,7 +77,6 @@ class FriendRepository extends EntityRepository
             ->andWhere($qb->expr()->in('l.status', ':status'))
             ->andWhere($qb->expr()->in('r.status', ':status'))
             ->setParameter('member', $member)
-            ->setParameter('confirmed', 1)
             ->setParameter('status', MemberStatusType::ACTIVE_ALL_ARRAY)
             ->orderBy('f.updated', 'DESC')
             ->getQuery()
@@ -98,15 +106,20 @@ class FriendRepository extends EntityRepository
         $left = $relation1->getId() < $relation2->getId() ? $relation1 : $relation2;
         $right = $relation1->getId() < $relation2->getId() ? $relation2 : $relation1;
 
+        $qb = $this->createQueryBuilder('f');
+
         return
-            $this
-                ->createQueryBuilder('r')
-                ->where('r.left = :left')
-                ->andWhere('r.right = :right')
-                ->andWhere('r.confirmed = :confirmed')
+            $qb
+                ->where('f.left = :left')
+                ->andWhere('f.right = :right')
+                ->andWhere(
+                    $qb->expr()->orX(
+                        $qb->expr()->eq('f.leftConfirmed', 0),
+                        $qb->expr()->eq('f.rightConfirmed', 0)
+                    )
+                )
                 ->setParameter('left', $left)
                 ->setParameter('right', $right)
-                ->setParameter('confirmed', 'No')
                 ->getQuery()
                 ->getOneOrNullResult()
         ;
@@ -136,9 +149,14 @@ class FriendRepository extends EntityRepository
         $qb = $this->createQueryBuilder('f');
 
         return $qb
-            ->where('f.confirmed = :confirmed')
             ->join('f.left', 'l')
             ->join('f.right', 'r')
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->eq('f.leftConfirmed', ':confirmed'),
+                    $qb->expr()->eq('f.rightConfirmed', ':confirmed')
+                )
+            )
             ->andWhere(
                 $qb->expr()
                     ->orX(
@@ -149,9 +167,9 @@ class FriendRepository extends EntityRepository
             ->andWhere($qb->expr()->in('l.status', ':status'))
             ->andWhere($qb->expr()->in('r.status', ':status'))
             ->setParameter('member', $member)
-            ->setParameter('confirmed', 1)
+            ->setParameter('confirmed', true)
             ->setParameter('status', MemberStatusType::ACTIVE_ALL_ARRAY)
-            ->orderBy('r.updated', 'DESC')
+            ->orderBy('f.updated', 'DESC')
         ;
     }
 }

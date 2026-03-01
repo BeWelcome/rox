@@ -150,6 +150,7 @@ class AccountController extends AbstractController
             if ($registrationKey === $member->getRegistrationKey()) {
                 $member->setEmail($member->getNewEmail());
                 $member->setNewEmail(null);
+
                 $member->setRegistrationKey(null);
 
                 $this->entityManager->persist($member);
@@ -160,7 +161,7 @@ class AccountController extends AbstractController
         }
 
         return $this->render('signup/confirm.email.html.twig', [
-            'hide_confirm_email' => true,
+            'hide_finish_setup' => true,
             'member' => $member,
             'confirm_email' => $changeEmailAddressForm,
         ]);

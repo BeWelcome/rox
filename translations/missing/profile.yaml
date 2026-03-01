@@ -265,6 +265,9 @@ profile.edit.images:
 profile.edit.relations:
     - 'Manage ''Family and friends'''
     - Tooltip and screen reader text on 'Edit profile'.
+profile.menu.friends:
+    - 'Friends'
+    - Entry in the profile submenu
 profile.edit.accommodation:
     - 'Edit accommodation info'
     - Tooltip and screen reader text on 'Edit profile'.
@@ -400,3 +403,6 @@ label.email.change:
     - Change email address?
 help.email.change:
     - If you change your email address you will need to confirm that you can be reached through that email the same way you did during signup.
+profile.avatar.picture:
+    - Profile picture
+    - Headline on the profile picture update page

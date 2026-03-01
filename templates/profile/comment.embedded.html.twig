@@ -79,7 +79,7 @@
                 <div class="u:self-center u:px-8">
                     <p class="u:m-0 u:leading-16 {% if not from %}text-right{% endif %}">
                         {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
-                            <span class="commenttitle {{ quality }}">{{ ('commentquality_' ~ quality )|trans }}</span>
+                            <span class="commenttitle {{ quality }}">{{ ('comment.quality.' ~ quality )|trans }}</span>
                         {% endif %}
                         <br><small>{{ comment_direction }}</small>
                         <br><small><span title="{{ comment_date|format_datetime() }}">{{ comment_date.diffForHumans }}</span></small>

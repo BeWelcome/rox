@@ -521,6 +521,11 @@
           {%- endif -%}
         </div>
         <div class="card-block p-2">
+          <div class="u:w-full u:flex u:flex-column u:justify-center u:gap-8">
+            <a href="{{ url('profile_comments', {username: member.username, type: 'positive'}) }}"><span class="u:text-18 u:text-green-600">{{ 'comments.positive'| trans({positive: comments_count.positive }) }}</span></a>
+            <a href="{{ url('profile_comments', {username: member.username, type: 'neutral'}) }}"><span class="u:text-18">{{ 'comments.neutral'| trans({neutral: comments_count.neutral }) }}</span></a>
+            <a href="{{ url('profile_comments', {username: member.username, type: 'negative'}) }}"><span class="u:text-18 u:font-weight-600 u:text-red-600">{{ 'comments.negative'| trans({negative: comments_count.negative }) }}</span></a>
+          </div>
           {% set commentsShown = 0 %}
           {% for comment in comments|slice(0,10) %}
             {% set commentToVisible = (comment['to'] is defined) ? (comment['to'].showCondition(app.user) > 0) : false %}

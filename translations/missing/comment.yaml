@@ -82,3 +82,22 @@ comment.reminder.host.body:
 flash.comment.report.only.own:
     - Can't report comments of other members.
     - Flash message shown if you followed a wrong link to report a comment.
+comments.positive:
+    - '{positive} positive'
+    - Element on the comments pages showing number of positive comments
+comments.neutral:
+    - '{neutral} neutral'
+    - Element on the comments pages showing number of neutral comments
+comments.negative:
+    - '{negative} negative'
+    - Element on the comments pages showing number of negative comments
+comments.total:
+    - '{total} overall'
+    - Element on the comments pages showing number of comments
+comment.quality.positive:
+    - '@-commentquality_good'
+comment.quality.neutral:
+    - '@-commentquality_neutral'
+comment.quality.negative:
+    - '@-commentquality_bad'
+

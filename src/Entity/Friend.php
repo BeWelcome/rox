@@ -26,6 +26,9 @@ class Friend
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
     private ?DateTime $updated;
 
+    #[ORM\Column(name: 'left_confirmed', type: Types::BOOLEAN, nullable: false)]
+    private bool $leftConfirmed = false;
+
     #[ORM\JoinColumn(name: 'left_id', referencedColumnName: 'id')]
     #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Member::class)]
@@ -36,8 +39,8 @@ class Friend
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $right;
 
-    #[ORM\Column(name: 'confirmed', type: Types::BOOLEAN, nullable: false)]
-    private bool $confirmed = false;
+    #[ORM\Column(name: 'right_confirmed', type: Types::BOOLEAN, nullable: false)]
+    private bool $rightConfirmed = false;
 
     public function getCreated(): Carbon
     {
@@ -77,16 +80,28 @@ class Friend
         return $this->right;
     }
 
-    public function setConfirmed(bool $confirmed): self
+    public function setLeftConfirmed(bool $leftConfirmed): self
     {
-        $this->confirmed = $confirmed;
+        $this->leftConfirmed = $leftConfirmed;
 
         return $this;
     }
 
-    public function getConfirmed(): bool
+    public function getLeftConfirmed(): bool
     {
-        return $this->confirmed;
+        return $this->leftConfirmed;
+    }
+
+    public function setRightConfirmed(bool $rightConfirmed): self
+    {
+        $this->rightConfirmed = $rightConfirmed;
+
+        return $this;
+    }
+
+    public function getRightConfirmed(): bool
+    {
+        return $this->rightConfirmed;
     }
 
     #[ORM\PrePersist]

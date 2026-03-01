@@ -46,10 +46,6 @@ class CommentController extends AbstractController
     ) {
     }
 
-    /**
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     */
     #[Route(
         path: '/members/{to_member}/comment/{from_member}/report',
         name: 'report_comment',
@@ -122,7 +118,11 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username:member}/comment/add', name: 'add_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
+    #[Route(
+        path: '/members/{username:member}/comment/add',
+        name: 'add_comment',
+        requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])']
+    )]
     public function addComment(
         Request $request,
         Member $member,
@@ -215,7 +215,11 @@ class CommentController extends AbstractController
     /**
      * @return Response|RedirectResponse
      */
-    #[Route(path: '/members/{username:member}/comment/edit', name: 'edit_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
+    #[Route(
+        path: '/members/{username:member}/comment/edit',
+        name: 'edit_comment',
+        requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])']
+    )]
     public function editComment(
         Request $request,
         Member $member,
@@ -301,11 +305,11 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     */
-    #[Route(path: '/members/{from_member}/comment/{to_member}/new', name: 'comment_new_experience', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
+    #[Route(
+        path: '/members/{from_member}/comment/{to_member}/new',
+        name: 'comment_new_experience',
+        requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])']
+    )]
     public function setNewExperienceForComment(
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
@@ -333,27 +337,33 @@ class CommentController extends AbstractController
     }
 
     #[Route(
-        path: '/members/{username:member}/comments',
+        path: '/members/{username:member}/comments/{type}',
         name: 'profile_comments',
-        requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])']
+        requirements: [
+            'username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])',
+            'type' => 'positive|neutral|negative|all',
+        ]
     )]
     public function showCommentsForMember(
         Member $member,
         ProfileModel $profileModel,
         EntityManagerInterface $entityManager,
+        string $type = 'all',
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
         $commentRepository = $entityManager->getRepository(Comment::class);
-        $comments = $commentRepository->getAllCommentsMember($member);
+        $comments = $commentRepository->getAllCommentsMember($member, $type);
+        $commentCounts = $commentRepository->getCommentsCountMemberByQuality($member);
 
         return $this->render('profile/comments.html.twig', [
             'use_lightbox' => false,
             'status_form' => $profileModel->getStatusForm($loggedInMember, $member),
+            'type' => $type,
             'member' => $member,
             'comments' => $comments,
-            'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'comments_count' => $commentCounts,
             'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'comments']),
         ]);
     }

@@ -92,7 +92,7 @@
       {%- if showGender -%} <strong>{{ 'profile.gender'|trans }}</strong> {{ member.gender|trans }}{%- endif %}
       {% if showAge or showGender %}<br>{% endif %}<strong>{{ 'profile.joined'|trans }}</strong>
       {% if member.created.diffInDays <= 7 %}
-        {{ 'lastloginprivacy'| trans }}
+        {{ 'last.activity.privacy'| trans }}
       {% else %}
         {{ member.created.diffForHumans }}
       {% endif %}
@@ -100,7 +100,7 @@
       <br><strong>{{ 'profile.last.activity'|trans }}</strong>
       {% set lastActivity = (member.lastActive == null) ? member.created : member.lastActive %}
       {% if lastActivity.diffInDays <= 7 %}
-        {{ 'lastloginprivacy'| trans }}
+        {{ 'last.activity.privacy'| trans }}
       {% else %}
         {{ lastActivity.diffForHumans }}
       {% endif %}

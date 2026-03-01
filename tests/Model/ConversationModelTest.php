@@ -15,21 +15,25 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModelTest extends TestCase
 {
+    private EntityManagerInterface $entityManager;
+    private ConversationModel $model;
+
     protected function setUp(): void
     {
         $this->entityManager = $this->createStub(EntityManagerInterface::class);
-        $this->mailer = $this->createStub(Mailer::class);
-        $this->translator = $this->createStub(TranslatorInterface::class);
+        $mailer = $this->createStub(Mailer::class);
+        $translator = $this->createStub(TranslatorInterface::class);
 
         $this->model = new ConversationModel(
-            $this->mailer,
+            $mailer,
             $this->entityManager,
-            $this->translator
+            $translator
         );
     }
 
@@ -176,10 +180,10 @@ class ConversationModelTest extends TestCase
         $msg1 = new Message();
         $msg2 = new Message();
 
-        $repo = $this->createStub(\Doctrine\ORM\EntityRepository::class);
-        $repo->method('findBy')->with(['subject' => $subject])->willReturn([$msg1, $msg2]);
+        $repo = $this->createStub(EntityRepository::class);
+        $repo->method('findBy')->willReturn([$msg1, $msg2]);
 
-        $this->entityManager->method('getRepository')->with(Message::class)->willReturn($repo);
+        $this->entityManager->method('getRepository')->willReturn($repo);
 
         $result = $this->model->getLastMessageInConversation($parent);
 

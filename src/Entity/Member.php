@@ -1333,7 +1333,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
 
         $birthday = $this->getBirthdate();
 
-        return intval($birthday->diffInYears());
+        return (int) $birthday->diffInYears();
     }
 
     public function getAvatar(): string

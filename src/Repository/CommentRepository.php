@@ -187,7 +187,6 @@ class CommentRepository extends EntityRepository
             ->groupBy('c.quality')
             ->getQuery()
             ->getScalarResult();
-        ;
 
         $counts = [
             CommentQualityType::POSITIVE => 0,
@@ -197,7 +196,7 @@ class CommentRepository extends EntityRepository
         ];
 
         $total = 0;
-        foreach($results as $result) {
+        foreach ($results as $result) {
             $counts[$result['quality']] = $result['count'];
             $total += $result['count'];
         }

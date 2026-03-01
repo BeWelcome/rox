@@ -64,13 +64,14 @@ class DonationType extends AbstractType
 
         $builder->get('country')
             ->addModelTransformer(new CallbackTransformer(
-                function (?Location $location) {
+                static function (?Location $location) {
                     return $location?->getGeonameId();
                 },
                 function (?int $geonameId) {
                     if (!$geonameId) {
                         return null;
                     }
+
                     return $this->entityManager->getRepository(Location::class)->find($geonameId);
                 }
             ));
@@ -103,6 +104,7 @@ class DonationType extends AbstractType
         foreach ($results as $row) {
             $choices[$row['name']] = $row['geonameId'];
         }
+
         return $choices;
     }
 }

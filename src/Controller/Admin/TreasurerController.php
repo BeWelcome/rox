@@ -17,7 +17,7 @@ class TreasurerController extends AbstractController
 {
     public function __construct(
         private readonly TreasurerModel $treasurerModel,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -25,7 +25,7 @@ class TreasurerController extends AbstractController
     public function overview(Request $request): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_TREASURER)) {
-             throw $this->createAccessDeniedException('You need to have Treasurer right to access this.');
+            throw $this->createAccessDeniedException('You need to have Treasurer right to access this.');
         }
 
         $page = $request->query->getInt('page', 1);
@@ -45,7 +45,7 @@ class TreasurerController extends AbstractController
     public function editDonation(Request $request, ?Donation $donation = null): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_TREASURER)) {
-             throw $this->createAccessDeniedException();
+            throw $this->createAccessDeniedException();
         }
 
         if (!$donation) {
@@ -60,6 +60,7 @@ class TreasurerController extends AbstractController
             $this->entityManager->flush();
 
             $this->addFlash('success', 'Donation saved.');
+
             return $this->redirectToRoute('admin_treasurer_overview');
         }
 
@@ -73,7 +74,7 @@ class TreasurerController extends AbstractController
     public function startCampaign(Request $request): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_TREASURER)) {
-             throw $this->createAccessDeniedException();
+            throw $this->createAccessDeniedException();
         }
 
         $params = $this->treasurerModel->getDonationCampaignValues();
@@ -87,6 +88,7 @@ class TreasurerController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->treasurerModel->startDonationCampaign($params);
             $this->addFlash('success', 'Campaign started.');
+
             return $this->redirectToRoute('admin_treasurer_overview');
         }
 
@@ -99,11 +101,12 @@ class TreasurerController extends AbstractController
     public function stopCampaign(): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_TREASURER)) {
-             throw $this->createAccessDeniedException();
+            throw $this->createAccessDeniedException();
         }
 
         $this->treasurerModel->stopDonationCampaign();
         $this->addFlash('success', 'Campaign stopped.');
+
         return $this->redirectToRoute('admin_treasurer_overview');
     }
 }

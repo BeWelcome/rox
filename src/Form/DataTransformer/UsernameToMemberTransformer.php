@@ -5,6 +5,7 @@ namespace App\Form\DataTransformer;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Proxy\Proxy;
+use Exception;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
@@ -18,7 +19,7 @@ class UsernameToMemberTransformer implements DataTransformerInterface
     /**
      * Transforms an object (member) to a string (username).
      *
-     * @param  Member|null $member
+     * @param Member|null $member
      */
     public function transform($member): string
     {
@@ -36,11 +37,11 @@ class UsernameToMemberTransformer implements DataTransformerInterface
                     ->setParameter('id', $id)
                     ->getQuery()
                     ->getOneOrNullResult();
-                
+
                 if ($result) {
                     return $result['username'];
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Fallback to standard behavior
             }
         }
@@ -51,8 +52,9 @@ class UsernameToMemberTransformer implements DataTransformerInterface
     /**
      * Transforms a string (username) to an object (member).
      *
-     * @param  string $username
-     * @throws TransformationFailedException if object (member) is not found.
+     * @param string $username
+     *
+     * @throws TransformationFailedException if object (member) is not found
      */
     public function reverseTransform($username): ?Member
     {
@@ -66,10 +68,7 @@ class UsernameToMemberTransformer implements DataTransformerInterface
         ;
 
         if (null === $member) {
-            throw new TransformationFailedException(sprintf(
-                'A member with username "%s" does not exist!',
-                $username
-            ));
+            throw new TransformationFailedException(\sprintf('A member with username "%s" does not exist!', $username));
         }
 
         return $member;

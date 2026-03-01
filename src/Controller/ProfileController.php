@@ -36,7 +36,6 @@ use App\Utilities\TranslatedFlashTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Laminas\Validator\Date;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
@@ -638,7 +637,7 @@ class ProfileController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
         $maxGuests = $payload->maxGuests;
-        if (null === $member || null === $maxGuests || $maxGuests < 1 ) {
+        if (null === $member || null === $maxGuests || $maxGuests < 1) {
             return $response;
         }
 

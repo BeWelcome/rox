@@ -161,11 +161,11 @@
         'massmailUntrigger');
 
     // admin treasurer routes
-    $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminTreasurerController', 'treasurerOverview');
-    $this->addRoute('admin_treasurer_add_donation', 'admin/treasurer/add', 'AdminTreasurerController', 'treasurerEditCreateDonation');
-    $this->addRoute('admin_treasurer_edit_donation', 'admin/treasurer/edit/:id:', 'AdminTreasurerController', 'treasurerEditCreateDonation');
-    $this->addRoute('admin_treasurer_campaign_start', 'admin/treasurer/campaign/start', 'AdminTreasurerController', 'treasurerStartDonationCampaign');
-    $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminTreasurerController', 'treasurerStopDonationCampaign');
+    // $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminTreasurerController', 'treasurerOverview');
+    // $this->addRoute('admin_treasurer_add_donation', 'admin/treasurer/add', 'AdminTreasurerController', 'treasurerEditCreateDonation');
+    // $this->addRoute('admin_treasurer_edit_donation', 'admin/treasurer/edit/:id:', 'AdminTreasurerController', 'treasurerEditCreateDonation');
+    // $this->addRoute('admin_treasurer_campaign_start', 'admin/treasurer/campaign/start', 'AdminTreasurerController', 'treasurerStartDonationCampaign');
+    // $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminTreasurerController', 'treasurerStopDonationCampaign');
 
     // places routes
     $this->addRoute('places', 'places', 'PlacesController', 'countries');

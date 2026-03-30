@@ -11,13 +11,14 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 	if [ "$APP_ENV" != 'prod' ]; then
 		PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-development"
 	fi
-	ln -sf "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
+	rm -f "$PHP_INI_DIR/php.ini"
+	ln -s "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
     sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" "$PHP_INI_DIR/php.ini"
 
 	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images
-	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload || true
-	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload || true
-
+	CURRENT_UID="$(id -u)"
+	setfacl -R -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX var build data upload 2>/dev/null || true
+	setfacl -dR -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX var build data upload 2>/dev/null || true
 	if [ "$APP_ENV" != 'prod' ] && [ -f /certs/localCA.crt ]; then
 		ln -sf /certs/localCA.crt /usr/local/share/ca-certificates/localCA.crt
 		update-ca-certificates
@@ -27,7 +28,7 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 		cp rox_docker.ini rox_local.ini
 	fi
 
-  git config --global --add safe.directory /srv/bewelcome
+	git config --global --add safe.directory /srv/bewelcome 2>/dev/null || true
 	if [ "$APP_ENV" != 'prod' ] && [ ! -f VERSION ]; then
 		git rev-parse --short HEAD > VERSION
 	fi

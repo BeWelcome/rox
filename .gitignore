@@ -10,6 +10,8 @@ rox_local.ini
 /data/*
 !data/user/avatars/.gitkeep
 !data/gallery/member/.gitkeep
+/upload/*
+!upload/images/.gitkeep
 google*.html
 tools/testenv/images/status.csv
 components/*

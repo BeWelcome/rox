@@ -47,7 +47,6 @@ RUN set -eux; \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN export PATH="/usr/local/bin:$PATH"
 
-RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/bewelcome.prod.ini $PHP_INI_DIR/conf.d/bewelcome.ini
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
@@ -102,7 +101,7 @@ RUN composer dump-env prod; \
 	rm .env
 
 RUN set -eux; \
-	mkdir -p var/cache var/log; \
+	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
 	chmod +x bin/console; sync
 VOLUME /srv/bewelcome/var
@@ -129,4 +128,6 @@ ARG NODE_ENV=production
 RUN set -eux; \
 	apk add --no-cache \
 		make \
-		mysql-client
+		mysql-client; \
+	chmod a+w $PHP_INI_DIR; \
+	chmod -R a+w /srv/bewelcome/vendor

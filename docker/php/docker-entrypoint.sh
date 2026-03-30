@@ -19,7 +19,6 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 	CURRENT_UID="$(id -u)"
 	setfacl -R -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX var build data upload 2>/dev/null || true
 	setfacl -dR -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX var build data upload 2>/dev/null || true
-
 	if [ "$APP_ENV" != 'prod' ] && [ -f /certs/localCA.crt ]; then
 		ln -sf /certs/localCA.crt /usr/local/share/ca-certificates/localCA.crt
 		update-ca-certificates

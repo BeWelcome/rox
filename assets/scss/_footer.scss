@@ -9,19 +9,21 @@ footer {
   .stickyfooter {
     height: auto;
     font-size: $font-size-sm;
-    line-height: 1.1;
+    line-height: 1.45;
     width: 100%;
     margin-top: 1rem;
-    padding: $spacer $spacer;
-    background-color: #555;
-    color: #999;
+    padding: ($spacer * 1.25) $spacer;
+    background-color: #4a4a4a;
+    color: #a8a8a8;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
 
     a {
-      color: #aaa;
-      white-space: nowrap;
+      color: #c8c8c8;
+      white-space: normal;
 
       &:hover {
         color: #fff;
+        text-decoration: none;
       }
       &:focus {
         color: #fff;
@@ -37,6 +39,46 @@ footer {
       margin-left: 0.3rem;
     }
 
+    .footer-modern-heading {
+      margin: 0 0 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #888;
+    }
+
+    .footer-modern-list li {
+      margin-bottom: 0.35rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    .footer-modern-list--legal {
+      font-size: 0.9em;
+    }
+
+    .footer-modern-meta {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.88em;
+      line-height: 1.35;
+      color: #8a8a8a;
+
+      a {
+        color: #b0b0b0;
+
+        &:hover,
+        &:focus {
+          color: #fff;
+        }
+      }
+    }
+
+    .font-weight-semibold {
+      font-weight: 600;
+    }
   }
 
 }

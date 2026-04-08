@@ -51,18 +51,49 @@
                             {% endif %}
                     </div>
                 </div>
-                <div class="col-12 mt-1">
-                    <a href="{{ url('about') }}" class="font-weight-bold">{{ 'aboutuspage' | trans }}</a> &bull;
-                    <a href="{{ url('donations') }}">{{ 'donate' | trans }}</a> &bull;
-                    <a href="{{ url('terms_of_use') }}" class="footnav" target="new">{{ 'termsofuse' | trans }}</a> &bull;
-                    <a href="{{ url('privacy_policy') }}" class="footnav" target="new">{{ 'privacy' | trans }}</a> &bull;
-                    <a href="{{ url('data_rights') }}" class="footnav" target="new">{{ 'datarights' | trans }}</a> &bull;
-                    <a href="{{ url('imprint') }}" class="footnav">{{ 'impressum' | trans }}</a> &bull;
-                    <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a> &bull;
-                    <a href="{{ url('feedback') }}" class="footnav">{{ 'contactus' | trans }}</a> &bull;
-                    <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}" class="footnav">{{ 'footer.reportbug' | trans }}</a>
+                <div class="col-12 mt-3 footer-modern-nav">
+                    <div class="row">
+                        <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+                            <ul class="list-unstyled footer-modern-list mb-0">
+                                <li><a href="{{ url('about') }}" class="font-weight-semibold">{{ 'aboutuspage' | trans }}</a></li>
+                                <li><a href="{{ url('stats') }}">{{ 'statspage' | trans }}</a></li>
+                                <li><a href="{{ url('donations') }}">{{ 'donate' | trans }}</a></li>
+                                <li><a href="{{ url('getactive') }}">{{ 'about_getactive' | trans }}</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+                            <h2 class="footer-modern-heading">{{ 'communitymenu' | trans }}</h2>
+                            <ul class="list-unstyled footer-modern-list mb-0">
+                                <li><a href="{{ path('forums') }}">{{ 'communitydiscussions' | trans }}</a></li>
+                                <li><a href="{{ path('groups_mygroups') }}">{{ 'groups' | trans }}</a></li>
+                                <li><a href="{{ path('activities') }}">{{ 'activities' | trans }}</a></li>
+                                <li><a href="{{ path('wiki_front_page') }}">{{ 'wiki' | trans }}</a></li>
+                                <li><a href="{{ path('newsletters') }}">{{ 'newsletters' | trans }}</a></li>
+                                <li><a href="{{ path('communitynews') }}">{{ 'communitynews' | trans }}</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-6 col-lg-3 mb-3 mb-lg-0">
+                            <h2 class="footer-modern-heading">{{ 'safety' | trans }}</h2>
+                            <ul class="list-unstyled footer-modern-list mb-0">
+                                <li><a href="{{ url('safety') }}">{{ 'menu.safety.information' | trans }}</a></li>
+                                <li><a href="{{ url('safety_contact_no_modal') }}">{{ 'menu.safety.report' | trans }}</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <h2 class="footer-modern-heading">{{ 'getanswers' | trans }}</h2>
+                            <ul class="list-unstyled footer-modern-list footer-modern-list--legal mb-0">
+                                <li><a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a></li>
+                                <li><a href="{{ url('feedback') }}">{{ 'contactus' | trans }}</a></li>
+                                <li><a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a></li>
+                                <li><a href="{{ url('terms_of_use') }}" target="_blank" rel="noopener noreferrer">{{ 'termsofuse' | trans }}</a></li>
+                                <li><a href="{{ url('privacy_policy') }}" target="_blank" rel="noopener noreferrer">{{ 'privacy' | trans }}</a></li>
+                                <li><a href="{{ url('data_rights') }}" target="_blank" rel="noopener noreferrer">{{ 'datarights' | trans }}</a></li>
+                                <li><a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-12 mt-1">
+                <div class="col-12 mt-3 pt-2 footer-modern-meta">
                     &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="https://www.bevolunteer.org/"
                                                                    target="_blank">BeVolunteer</a> and contributors
 

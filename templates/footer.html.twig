@@ -4,65 +4,14 @@
 {%- set hasCurrentLocaleRights = app.user.hasRightsForLocale(app.request.locale) -%}
 {% endif %}
 <footer>
-    <div id="footer_content" class="stickyfooter my-0 py-0">
-        <div class="container-lg my-1">
-            <div class="row align-items-center row justify-content-end">
-                <div class="col-sm-8">
-                    <form method="post">
-                        <div class="o-form-group form-row">
-                            <label for="language" class="col-auto col-form-label">
-                            {{ 'footer.site.language' | trans }}
-                            </label>
-                            <select id="language" name="language" class="col-auto form-control-sm select2"
-                                onchange="window.location.href=this.value; return false">
-                                {% for lang in locales %}
-                                    <option {% if lang == app.request.locale %}selected="selected"{% endif %}
-                                            value="{{ path('language', { locale: lang }) }}">{{ language_name(lang) }}
-                                        ({{ language_name_translated(lang, app.request.locale) }})
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-sm-4">
-                    <div class="o-form-group form-row float-md-right">
-                            {% if is_granted('ROLE_ADMIN_WORDS') and hasCurrentLocaleRights %}
-                                <label for="translation_mode" class="col-auto col-form-label">
-                                    {{ 'translation.mode' | trans }}
-                                </label>
-                                <select id="translation_mode" name="translation_mode" class="o-input select2"
-                                        data-minimum-results-for-search="-1"
-                                        onchange="window.location.href=this.value; return false">
-                                    <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}
-                                            value="{{ url('translation_mode', {mode: 'on'}) }}">
-                                        {{ 'on' | trans }}
-                                    </option>
-                                    <option {% if app.session.get('translation_mode') != 'on' %}selected="selected"{% endif %}
-                                            value="{{ url('translation_mode', {mode: 'off'}) }}">
-                                        {{ 'off' | trans }}
-                                    </option>
-                                </select>
-                            {% else %}
-                                {% if is_granted('ROLE_USER') %}
-                                    <a class="btn btn-sm btn-outline-primary pull-right"
-                                    href="groups/60">{{ 'translation.help' | trans }}</a>
-                                {% endif %}
-                            {% endif %}
-                    </div>
-                </div>
-                <div class="col-12 mt-3 footer-modern-nav">
-                    <div class="row">
-                        <div class="col-6 col-lg-3 mb-3 mb-lg-0">
-                            <ul class="list-unstyled footer-modern-list mb-0">
-                                <li><a href="{{ url('about') }}" class="font-weight-semibold">{{ 'aboutuspage' | trans }}</a></li>
-                                <li><a href="{{ url('stats') }}">{{ 'statspage' | trans }}</a></li>
-                                <li><a href="{{ url('donations') }}">{{ 'donate' | trans }}</a></li>
-                                <li><a href="{{ url('getactive') }}">{{ 'about_getactive' | trans }}</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-6 col-lg-3 mb-3 mb-lg-0">
-                            <h2 class="footer-modern-heading">{{ 'communitymenu' | trans }}</h2>
+    <div id="footer_content" class="stickyfooter">
+        <div class="stickyfooter__main">
+        <div class="container-fluid stickyfooter-container">
+            <div class="row align-items-lg-start footer-modern-nav">
+                        <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                            <h2 class="footer-modern-heading">
+                                <i class="fa fa-users footer-modern-heading__icon" aria-hidden="true"></i>{{ 'communitymenu' | trans }}
+                            </h2>
                             <ul class="list-unstyled footer-modern-list mb-0">
                                 <li><a href="{{ path('forums') }}">{{ 'communitydiscussions' | trans }}</a></li>
                                 <li><a href="{{ path('groups_mygroups') }}">{{ 'groups' | trans }}</a></li>
@@ -72,35 +21,110 @@
                                 <li><a href="{{ path('communitynews') }}">{{ 'communitynews' | trans }}</a></li>
                             </ul>
                         </div>
-                        <div class="col-6 col-lg-3 mb-3 mb-lg-0">
-                            <h2 class="footer-modern-heading">{{ 'safety' | trans }}</h2>
+                        <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                            <h2 class="footer-modern-heading">
+                                <i class="fa fa-user-shield footer-modern-heading__icon" aria-hidden="true"></i>{{ 'safety' | trans }}
+                            </h2>
                             <ul class="list-unstyled footer-modern-list mb-0">
                                 <li><a href="{{ url('safety') }}">{{ 'menu.safety.information' | trans }}</a></li>
                                 <li><a href="{{ url('safety_contact_no_modal') }}">{{ 'menu.safety.report' | trans }}</a></li>
                             </ul>
+                            <h2 class="footer-modern-heading footer-modern-heading--after-block">
+                                <i class="fa fa-heart footer-modern-heading__icon" aria-hidden="true"></i>{{ 'landing.beinvolved.title' | trans }}
+                            </h2>
+                            <ul class="list-unstyled footer-modern-list mb-0">
+                                <li><a href="{{ url('donations') }}">{{ 'donate' | trans }}</a></li>
+                                <li><a href="{{ url('getactive') }}">{{ 'about_getactive' | trans }}</a></li>
+                            </ul>
                         </div>
-                        <div class="col-6 col-lg-3">
-                            <h2 class="footer-modern-heading">{{ 'getanswers' | trans }}</h2>
+                        <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                            <h2 class="footer-modern-heading">
+                                <i class="fa fa-question-circle footer-modern-heading__icon" aria-hidden="true"></i>{{ 'getanswers' | trans }}
+                            </h2>
                             <ul class="list-unstyled footer-modern-list footer-modern-list--legal mb-0">
+                                <li><a href="{{ url('about') }}">{{ 'aboutuspage' | trans }}</a></li>
                                 <li><a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a></li>
                                 <li><a href="{{ url('feedback') }}">{{ 'contactus' | trans }}</a></li>
                                 <li><a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a></li>
+                                <li><a href="{{ url('stats') }}">{{ 'statspage' | trans }}</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                            <h2 class="footer-modern-heading">
+                                <i class="fa fa-balance-scale footer-modern-heading__icon" aria-hidden="true"></i>{{ 'landing.beinformed.title' | trans }}
+                            </h2>
+                            <ul class="list-unstyled footer-modern-list mb-0">
                                 <li><a href="{{ url('terms_of_use') }}" target="_blank" rel="noopener noreferrer">{{ 'termsofuse' | trans }}</a></li>
                                 <li><a href="{{ url('privacy_policy') }}" target="_blank" rel="noopener noreferrer">{{ 'privacy' | trans }}</a></li>
                                 <li><a href="{{ url('data_rights') }}" target="_blank" rel="noopener noreferrer">{{ 'datarights' | trans }}</a></li>
                                 <li><a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a></li>
                             </ul>
+                            {% if is_granted('ROLE_ADMIN_WORDS') and app.user and app.user.hasRightsForLocale(app.request.locale) %}
+                                <div class="footer-translate-block footer-translate-block--admin mt-3">
+                                    <div class="o-form-group form-row align-items-center">
+                                        <label for="translation_mode" class="col-auto col-form-label mb-0 footer-translate-block__label">
+                                            {{ 'translation.mode' | trans }}
+                                        </label>
+                                        <select id="translation_mode" name="translation_mode" class="o-input select2 col-auto"
+                                                data-minimum-results-for-search="-1"
+                                                onchange="window.location.href=this.value; return false">
+                                            <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}
+                                                    value="{{ url('translation_mode', {mode: 'on'}) }}">
+                                                {{ 'on' | trans }}
+                                            </option>
+                                            <option {% if app.session.get('translation_mode') != 'on' %}selected="selected"{% endif %}
+                                                    value="{{ url('translation_mode', {mode: 'off'}) }}">
+                                                {{ 'off' | trans }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            {% elseif is_granted('ROLE_USER') %}
+                                <a class="footer-help-translate mt-3" href="{{ url('group_start', { group_id: 60 }) }}">
+                                    <span class="footer-help-translate__icon" aria-hidden="true"><i class="fa fa-language"></i></span>
+                                    <span class="footer-help-translate__text">{{ 'translation.help' | trans }}</span>
+                                </a>
+                            {% endif %}
+                        </div>
+            </div>
+        </div>
+        </div>
+        <div class="footer-bottom-band">
+            <div class="container-fluid stickyfooter-container">
+                <div class="row align-items-center footer-bottom-band__row">
+                    <div class="col-12 col-md-7 col-lg-8 footer-bottom-band__legal">
+                        <div class="footer-modern-meta">
+                            &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="https://www.bevolunteer.org/"
+                                                                           target="_blank">BeVolunteer</a> and contributors
+
+                            - <em>Running on open source <a class="d-inline" href="https://github.com/bewelcome/rox">BW
+                                    Rox</a> rev. <a
+                                        href="https://github.com/BeWelcome/rox/commit/{{ version }}">{{ version }}</a>
+                                ({{ version_dt }})</em>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 mt-3 pt-2 footer-modern-meta">
-                    &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="https://www.bevolunteer.org/"
-                                                                   target="_blank">BeVolunteer</a> and contributors
-
-                    - <em>Running on open source <a class="d-inline" href="https://github.com/bewelcome/rox">BW
-                            Rox</a> rev. <a
-                                href="https://github.com/BeWelcome/rox/commit/{{ version }}">{{ version }}</a>
-                        ({{ version_dt }})</em>
+                    <div class="col-12 col-md-5 col-lg-4 footer-bottom-band__lang">
+                        <form method="post" class="footer-bottom-band__lang-form">
+                            <div class="form-row align-items-center">
+                                <div class="col-12 col-md-auto">
+                                    <label for="language" class="col-form-label mb-0 d-block footer-bottom-band__lang-label">
+                                        {{ 'footer.site.language' | trans }}
+                                    </label>
+                                </div>
+                                <div class="col-12 col-md-auto footer-bottom-band__lang-select-wrap">
+                                    <select id="language" name="language" class="form-control-sm select2 footer-site-language"
+                                            onchange="window.location.href=this.value; return false">
+                                        {% for lang in locales %}
+                                            <option {% if lang == app.request.locale %}selected="selected"{% endif %}
+                                                    value="{{ path('language', { locale: lang }) }}">{{ language_name(lang) }}
+                                                ({{ language_name_translated(lang, app.request.locale) }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

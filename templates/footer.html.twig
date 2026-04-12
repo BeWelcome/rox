@@ -3,11 +3,13 @@
 {%- set hasEnglishRights = app.user.hasRightsForLocale('en') -%}
 {%- set hasCurrentLocaleRights = app.user.hasRightsForLocale(app.request.locale) -%}
 {% endif %}
+{% set footer_col = app.user ? 'col-12 col-md-6 col-lg-3 mb-4 mb-lg-0' : 'col-12 col-md-6 col-lg-4 mb-4 mb-lg-0' %}
 <footer>
     <div id="footer_content" class="stickyfooter">
         <div class="stickyfooter__main">
         <div class="container-fluid stickyfooter-container">
             <div class="row align-items-lg-start footer-modern-nav">
+                        {% if app.user %}
                         <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
                             <h2 class="footer-modern-heading">
                                 <i class="fa fa-users footer-modern-heading__icon" aria-hidden="true"></i>{{ 'communitymenu' | trans }}
@@ -21,7 +23,8 @@
                                 <li><a href="{{ path('communitynews') }}">{{ 'communitynews' | trans }}</a></li>
                             </ul>
                         </div>
-                        <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                        {% endif %}
+                        <div class="{{ footer_col }}">
                             <h2 class="footer-modern-heading">
                                 <i class="fa fa-user-shield footer-modern-heading__icon" aria-hidden="true"></i>{{ 'safety' | trans }}
                             </h2>
@@ -29,6 +32,7 @@
                                 <li><a href="{{ url('safety') }}">{{ 'menu.safety.information' | trans }}</a></li>
                                 <li><a href="{{ url('safety_contact_no_modal') }}">{{ 'menu.safety.report' | trans }}</a></li>
                             </ul>
+                            {% if app.user %}
                             <h2 class="footer-modern-heading footer-modern-heading--after-block">
                                 <i class="fa fa-heart footer-modern-heading__icon" aria-hidden="true"></i>{{ 'landing.beinvolved.title' | trans }}
                             </h2>
@@ -36,8 +40,9 @@
                                 <li><a href="{{ url('donations') }}">{{ 'donate' | trans }}</a></li>
                                 <li><a href="{{ url('getactive') }}">{{ 'about_getactive' | trans }}</a></li>
                             </ul>
+                            {% endif %}
                         </div>
-                        <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                        <div class="{{ footer_col }}">
                             <h2 class="footer-modern-heading">
                                 <i class="fa fa-question-circle footer-modern-heading__icon" aria-hidden="true"></i>{{ 'getanswers' | trans }}
                             </h2>
@@ -46,10 +51,12 @@
                                 <li><a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a></li>
                                 <li><a href="{{ url('feedback') }}">{{ 'contactus' | trans }}</a></li>
                                 <li><a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a></li>
+                                {% if app.user %}
                                 <li><a href="{{ url('stats') }}">{{ 'statspage' | trans }}</a></li>
+                                {% endif %}
                             </ul>
                         </div>
-                        <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                        <div class="{{ footer_col }}">
                             <h2 class="footer-modern-heading">
                                 <i class="fa fa-balance-scale footer-modern-heading__icon" aria-hidden="true"></i>{{ 'landing.beinformed.title' | trans }}
                             </h2>
@@ -175,7 +182,6 @@
                                 </div>
                             </a>
                         </li>
-                        {# Show fallback count only if any exist #}
                         <li class="nav-item">
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#fallback" role="tab"
                                aria-controls="fallback" aria-selected="false">
@@ -245,7 +251,6 @@
     {% endif %}
 </footer>
 {% macro render_table(messages, hasEnglishRights) %}
-    {# We should always get messages but better be safe than sorry. #}
     {% if messages|length %}
         {% set state = messages[0].state %}
     <div class="col-12">
@@ -272,12 +277,6 @@
                         <p class="m-0">{{ message.id | trans( {}, message.domain, 'en' ) | truncate(50) }}</p>
                         {% if message.transChoiceNumber is not null %}
                             <small class="newline">(pluralization is used)</small>
-                        {% endif %}
-
-                        {% if message.parameters|length > 0 %}
-                            {% for parameter in message.parameters %}
-                                {# dump(parameters) #}
-                            {% endfor %}
                         {% endif %}
                     </td>
                     {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}

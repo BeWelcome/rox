@@ -60,24 +60,22 @@
                                 <li><a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a></li>
                             </ul>
                             {% if is_granted('ROLE_ADMIN_WORDS') and app.user and app.user.hasRightsForLocale(app.request.locale) %}
-                                <div class="footer-translate-block footer-translate-block--admin">
-                                    <div class="o-form-group form-row align-items-center">
-                                        <label for="translation_mode" class="col-auto col-form-label mb-0 footer-translate-block__label">
-                                            {{ 'translation.mode' | trans }}
-                                        </label>
-                                        <select id="translation_mode" name="translation_mode" class="o-input select2 col-auto"
-                                                data-minimum-results-for-search="-1"
-                                                onchange="window.location.href=this.value; return false">
-                                            <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}
-                                                    value="{{ url('translation_mode', {mode: 'on'}) }}">
-                                                {{ 'on' | trans }}
-                                            </option>
-                                            <option {% if app.session.get('translation_mode') != 'on' %}selected="selected"{% endif %}
-                                                    value="{{ url('translation_mode', {mode: 'off'}) }}">
-                                                {{ 'off' | trans }}
-                                            </option>
-                                        </select>
-                                    </div>
+                                <div class="footer-help-translate footer-help-translate--embed mt-3" role="group">
+                                    <span class="footer-help-translate__icon" aria-hidden="true"><i class="fa fa-language"></i></span>
+                                    <label for="footer_embed_select" class="footer-help-translate__text mb-0">{{ 'translation.mode' | trans }}</label>
+                                    <select id="footer_embed_select" name="translation_mode"
+                                            class="select2 footer-help-translate__control"
+                                            data-minimum-results-for-search="-1"
+                                            onchange="window.location.href=this.value; return false">
+                                        <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}
+                                                value="{{ url('translation_mode', {mode: 'on'}) }}">
+                                            {{ 'on' | trans }}
+                                        </option>
+                                        <option {% if app.session.get('translation_mode') != 'on' %}selected="selected"{% endif %}
+                                                value="{{ url('translation_mode', {mode: 'off'}) }}">
+                                            {{ 'off' | trans }}
+                                        </option>
+                                    </select>
                                 </div>
                             {% elseif is_granted('ROLE_USER') %}
                                 <a class="footer-help-translate mt-3" href="{{ url('group_start', { group_id: 60 }) }}">

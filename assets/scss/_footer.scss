@@ -23,7 +23,7 @@ footer {
     line-height: 1.45;
     width: 100%;
     max-width: 100%;
-    margin-top: 1rem;
+    margin-top: 0;
     padding: 0;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     color: #b0b0b5;
@@ -330,10 +330,50 @@ footer {
       align-self: flex-start;
       width: fit-content;
       max-width: 100%;
+      margin-top: 0;
+      padding-top: 0;
+
+      .form-row {
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.5rem;
+      }
 
       .footer-translate-block__label {
+        display: inline-flex;
+        align-items: center;
+        align-self: center;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        margin-bottom: 0;
+        line-height: 1.35;
         color: rgba(255, 255, 255, 0.88);
         font-size: 0.8125rem;
+      }
+
+      #translation_mode + .select2-container--bootstrap4 {
+        flex-shrink: 0;
+        align-self: center;
+        margin-top: 0;
+
+        .select2-selection--single {
+          display: flex;
+          align-items: center;
+          min-height: 2.125rem;
+          height: auto;
+          padding-top: 0.25rem;
+          padding-bottom: 0.25rem;
+        }
+
+        .select2-selection__rendered {
+          line-height: 1.35;
+        }
+
+        .select2-selection__arrow {
+          top: 50%;
+          margin-top: 0;
+          transform: translateY(-50%);
+        }
       }
     }
 
@@ -364,4 +404,12 @@ footer {
   order: 1;
 
   margin-top: 1em;
+}
+
+/* Translation mode (footer admin): Select2 dropdown is attached to body — compact option rows */
+#select2-translation_mode-results {
+  .select2-results__option {
+    padding: 0.2rem 0.5rem;
+    line-height: 1.25;
+  }
 }

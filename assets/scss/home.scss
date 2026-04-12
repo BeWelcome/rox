@@ -18,10 +18,10 @@ $font-family-bold: Signika;
 @import "parallax";
 @import "floating_labels";
 
-// select2
+// select2 (footer language + any selects on landing)
 @import "~select2/src/scss/core";
-// @import "~select2-theme-bootstrap4/src/select2-bootstrap";
-
 @import "~@ttskch/select2-bootstrap4-theme/src/single";
 @import "~@ttskch/select2-bootstrap4-theme/src/multiple";
+@import "~@ttskch/select2-bootstrap4-theme/src/layout";
 
+@import "footer";

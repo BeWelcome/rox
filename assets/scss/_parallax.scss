@@ -645,4 +645,23 @@
       width:100%
     }
   }
+
+  /* Shared footer must paint above the last parallax layer (fixed signup/search CTA). */
+  > footer {
+    position: relative;
+    z-index: 20;
+  }
+
+  /* Desktop: hide fixed CTA when the real footer enters view (ScrollMagic toggles class).
+     Specificity beats .parallax--fixed-enter { opacity: 1 } without !important. */
+  @include media-breakpoint-up(lg) {
+    #fade-animation-3.parallax--fixed.parallax--fixed-footer-hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition:
+        opacity 0.45s ease,
+        visibility 0.45s ease;
+    }
+  }
 }

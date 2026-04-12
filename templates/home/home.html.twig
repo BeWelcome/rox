@@ -218,26 +218,7 @@
             </div>
         </div>
     </div>
-<div id="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-left">
-                <a href="{{ url('about') }}"><strong>{{ 'aboutuspage' | trans }}</strong></a> •
-                <a href="{{ url('safety') }}">{{ 'safety' | trans }}</a> •
-                <a href="{{ url('terms_of_use') }}" target="new">{{ 'termsofuse' | trans }}</a> •
-                <a href="{{ url('privacy_policy') }}" target="new">{{ 'privacy' | trans }}</a> •
-                <a href="{{ url('data_rights') }}" target="new">{{ 'datarights' | trans }}</a> •
-                <a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a> •
-                <a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a> •
-                <a href="{{ url('feedback') }}">{{ 'footer.contactus' | trans }}</a> •
-                <a href="{{ url('feedback', {'IdCategory': 1, 'RequestUri': url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a><br>
-                &copy;2007
-                &mdash; {{ "now" | date("Y") }} {{ 'copyrightbybv' | trans | escape | replace({'%link_start%': '<a href="https://bevolunteer.org">', '%link_end%': '</a>'})| raw }}
-                - {{ 'runningon' | trans }} BW Rox rev. {{ version }} ({{ version_dt }})
-            </div>
-        </div>
-    </div>
-</div>
+    {% include 'footer.html.twig' %}
 </div>
 {{ encore_entry_script_tags('home') }}
 {{ encore_entry_script_tags('jquery_ui') }}

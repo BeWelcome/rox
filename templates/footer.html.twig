@@ -60,7 +60,7 @@
                                 <li><a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a></li>
                             </ul>
                             {% if is_granted('ROLE_ADMIN_WORDS') and app.user and app.user.hasRightsForLocale(app.request.locale) %}
-                                <div class="footer-translate-block footer-translate-block--admin mt-3">
+                                <div class="footer-translate-block footer-translate-block--admin">
                                     <div class="o-form-group form-row align-items-center">
                                         <label for="translation_mode" class="col-auto col-form-label mb-0 footer-translate-block__label">
                                             {{ 'translation.mode' | trans }}

@@ -25,6 +25,10 @@ new ScrollMagic.Scene({triggerElement: "#trigger-fade-3", triggerHook: 0.2 })
     .setClassToggle("#fade-animation-3", "parallax--fixed-enter")
     .addTo(controller);
 
+new ScrollMagic.Scene({ triggerElement: '#footer_content', triggerHook: 1 })
+    .setClassToggle('#fade-animation-3', 'parallax--fixed-footer-hide')
+    .addTo(controller);
+
 new ScrollMagic.Scene({triggerElement: "#trigger-icon-animation-1", triggerHook: 1 })
     .setClassToggle("#icon-animation-1", "icon-animation-start")
     .addTo(controller);

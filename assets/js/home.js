@@ -30,3 +30,9 @@ function onChange(element, result) {
 }
 
 initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', onChange);
+
+$(".select2").select2({
+    theme: 'bootstrap4',
+    width: 'auto',
+    dropdownAutoWidth: true,
+});

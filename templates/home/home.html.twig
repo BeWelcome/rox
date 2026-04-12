@@ -218,7 +218,11 @@
             </div>
         </div>
     </div>
-    {% include 'footer.html.twig' %}
+    {% if app.user %}
+        {% include 'footer.html.twig' %}
+    {% else %}
+        {% include 'footer_guest_home.html.twig' %}
+    {% endif %}
 </div>
 {{ encore_entry_script_tags('home') }}
 {{ encore_entry_script_tags('jquery_ui') }}

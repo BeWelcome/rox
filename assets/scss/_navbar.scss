@@ -30,6 +30,16 @@
   #main_menu .bw-header-logo__text {
     display: none;
   }
+
+  #main_menu.loginbar--slim .bw-header-logo {
+    width: auto;
+    max-width: 100%;
+  }
+
+  #main_menu.loginbar--slim .bw-header-logo__text {
+    display: block;
+    height: 24px;
+  }
 }
 
 @include media-breakpoint-up(md) {

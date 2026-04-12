@@ -6316,11 +6316,6 @@ scrolling-tabs-bootstrap-5@^1.0.7:
     bootstrap-icons "^1.7.2"
     move-js "^0.5.0"
 
-scrollmagic@^2.0.7:
-  version "2.0.9"
-  resolved "https://registry.yarnpkg.com/scrollmagic/-/scrollmagic-2.0.9.tgz#ebcba33d37f77e8062977812b003c7791f28d5f3"
-  integrity sha512-NKvr3wUtA7hqlsTnGjV3XrWKdVwkhAaRBJK5z3lh2Gk0G6m5qW3ipfKkwtLhwcLMcEc76eoK5KO95Ok1TmBBEQ==
-
 select2@^4.1.0-rc.0:
   version "4.1.0-rc.0"
   resolved "https://registry.yarnpkg.com/select2/-/select2-4.1.0-rc.0.tgz#ba3cd3901dda0155e1c0219ab41b74ba51ea22d8"

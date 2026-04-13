@@ -8,13 +8,13 @@
     <div id="footer_content" class="stickyfooter">
         <div class="stickyfooter__main">
         <div class="container-fluid stickyfooter-container">
-            <div class="row align-items-lg-start footer-modern-nav">
+            <div class="row align-items-lg-start stickyfooter__columns">
                         {% if app.user %}
                         <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                            <h2 class="footer-modern-heading">
-                                <i class="fa fa-users footer-modern-heading__icon" aria-hidden="true"></i>{{ 'communitymenu' | trans }}
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-users stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'communitymenu' | trans }}
                             </h2>
-                            <ul class="list-unstyled footer-modern-list mb-0">
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
                                 <li><a href="{{ path('forums') }}">{{ 'communitydiscussions' | trans }}</a></li>
                                 <li><a href="{{ path('groups_mygroups') }}">{{ 'groups' | trans }}</a></li>
                                 <li><a href="{{ path('activities') }}">{{ 'activities' | trans }}</a></li>
@@ -25,28 +25,28 @@
                         </div>
                         {% endif %}
                         <div class="{{ footer_col }}">
-                            <h2 class="footer-modern-heading">
-                                <i class="fa fa-user-shield footer-modern-heading__icon" aria-hidden="true"></i>{{ 'safety' | trans }}
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-user-shield stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'safety' | trans }}
                             </h2>
-                            <ul class="list-unstyled footer-modern-list mb-0">
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
                                 <li><a href="{{ url('safety') }}">{{ 'menu.safety.information' | trans }}</a></li>
                                 <li><a href="{{ url('safety_contact_no_modal') }}">{{ 'menu.safety.report' | trans }}</a></li>
                             </ul>
                             {% if app.user %}
-                            <h2 class="footer-modern-heading footer-modern-heading--after-block">
-                                <i class="fa fa-heart footer-modern-heading__icon" aria-hidden="true"></i>{{ 'landing.beinvolved.title' | trans }}
+                            <h2 class="stickyfooter__heading stickyfooter__heading--stacked">
+                                <i class="fa fa-heart stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'landing.beinvolved.title' | trans }}
                             </h2>
-                            <ul class="list-unstyled footer-modern-list mb-0">
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
                                 <li><a href="{{ url('donations') }}">{{ 'donate' | trans }}</a></li>
                                 <li><a href="{{ url('getactive') }}">{{ 'about_getactive' | trans }}</a></li>
                             </ul>
                             {% endif %}
                         </div>
                         <div class="{{ footer_col }}">
-                            <h2 class="footer-modern-heading">
-                                <i class="fa fa-question-circle footer-modern-heading__icon" aria-hidden="true"></i>{{ 'getanswers' | trans }}
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-question-circle stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'getanswers' | trans }}
                             </h2>
-                            <ul class="list-unstyled footer-modern-list footer-modern-list--legal mb-0">
+                            <ul class="list-unstyled stickyfooter__link-list stickyfooter__link-list--legal mb-0">
                                 <li><a href="{{ url('about') }}">{{ 'aboutuspage' | trans }}</a></li>
                                 <li><a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a></li>
                                 <li><a href="{{ url('feedback') }}">{{ 'contactus' | trans }}</a></li>
@@ -57,10 +57,10 @@
                             </ul>
                         </div>
                         <div class="{{ footer_col }}">
-                            <h2 class="footer-modern-heading">
-                                <i class="fa fa-balance-scale footer-modern-heading__icon" aria-hidden="true"></i>{{ 'landing.beinformed.title' | trans }}
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-balance-scale stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'landing.beinformed.title' | trans }}
                             </h2>
-                            <ul class="list-unstyled footer-modern-list mb-0">
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
                                 <li><a href="{{ url('terms_of_use') }}" target="_blank" rel="noopener noreferrer">{{ 'termsofuse' | trans }}</a></li>
                                 <li><a href="{{ url('privacy_policy') }}" target="_blank" rel="noopener noreferrer">{{ 'privacy' | trans }}</a></li>
                                 <li><a href="{{ url('data_rights') }}" target="_blank" rel="noopener noreferrer">{{ 'datarights' | trans }}</a></li>
@@ -98,7 +98,7 @@
             <div class="container-fluid stickyfooter-container">
                 <div class="row align-items-center footer-bottom-band__row">
                     <div class="col-12 col-md-7 col-lg-8 footer-bottom-band__legal">
-                        <div class="footer-modern-meta">
+                        <div class="footer-bottom-band__meta">
                             &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="https://www.bevolunteer.org/"
                                                                            target="_blank">BeVolunteer</a> and contributors
 

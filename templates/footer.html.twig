@@ -68,7 +68,6 @@
                             </ul>
                             {% if is_granted('ROLE_ADMIN_WORDS') and app.user and app.user.hasRightsForLocale(app.request.locale) %}
                                 <div class="footer-help-translate footer-help-translate--embed mt-3" role="group">
-                                    <span class="footer-help-translate__icon" aria-hidden="true"><i class="fa fa-language"></i></span>
                                     <label for="footer_embed_select" class="footer-help-translate__text mb-0">{{ 'translation.mode' | trans }}</label>
                                     <select id="footer_embed_select" name="translation_mode"
                                             class="select2 footer-help-translate__control"

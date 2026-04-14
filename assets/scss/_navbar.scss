@@ -1,5 +1,43 @@
-.navbar {
+/* Logo: icon SVG has a tall viewBox — without explicit size it blows up; wordmark must not flex-shrink to 0. */
+#main_menu .bw-header-logo {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.4rem;
+  height: 48px;
+  max-height: 48px;
+  min-width: 0;
+}
 
+#main_menu .bw-header-logo__icon {
+  display: block;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  object-fit: contain;
+}
+
+#main_menu .bw-header-logo__text {
+  display: block;
+  flex: 0 0 auto;
+  width: auto;
+  height: 30px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+@include media-breakpoint-up(md) {
+  #main_menu .bw-header-logo__text {
+    height: 38px;
+  }
+
+  #main_menu .bw-header-logo {
+    width: 260px;
+    max-width: 260px;
+  }
+}
+
+.navbar {
   .navbar-brand {
     padding-right: $spacer;
   }
@@ -10,14 +48,245 @@
     padding-top: 0.75rem;
   }
 
-  .nav-link:hover {
-    background-color: rgba($navbar-dark-color, 0.2);
-    color: $navbar-dark-hover-color;
-    text-shadow: 0 0 0.1rem white;
-    border-radius: $border-radius;
+  z-index: 2000;
+}
+
+/* Standard app-bar height (64px); keep offsets (sticky, offcanvas, layouts) in sync. */
+:root {
+  --bw-topbar-offset: 64px;
+}
+
+#main_menu.navbar {
+  height: 64px;
+  min-height: 64px;
+  max-height: 64px;
+  box-sizing: border-box;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+@include media-breakpoint-down(lg) {
+  #main_menu.navbar > .bw-topbar__container {
+    padding-left: max(1.25rem, env(safe-area-inset-left, 0px)) !important;
+    padding-right: max(1.25rem, env(safe-area-inset-right, 0px)) !important;
   }
 
-  z-index: 2000;
+  #main_menu #collapsing_menu.navbar-nav,
+  #main_menu #static_menu.navbar-nav {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Right cluster: search + community icons + messages + profile. */
+#main_menu #static_menu.navbar-nav {
+  flex-wrap: nowrap;
+  column-gap: 0.35rem;
+}
+
+#main_menu.navbar .navbar-nav .nav-link {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+
+/*
+ * Main header nav: kill the light “box” around items on hover/open dropdown.
+ * Browsers often paint this as :focus/:focus-visible outline or box-shadow on the
+ * .dropdown-toggle <a>; previous rules lost specificity to Bootstrap / UA styles.
+ */
+#main_menu.navbar-dark {
+  -webkit-tap-highlight-color: transparent;
+
+  .topbar-counter__link,
+  .topbar-member-toggle,
+  .topbar-icon-dropdown {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    box-sizing: border-box;
+    /* Same pill box as messages (44px); lock height so profile name/avatar cannot stretch it. */
+    height: 2.75rem;
+    min-height: 2.75rem;
+    max-height: 2.75rem;
+    padding-left: 0.65rem !important;
+    padding-right: 0.85rem !important;
+    border-radius: 999px;
+    transition: background-color 0.15s ease;
+    /* Visible chip at rest (same spirit as former hover-only state). */
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    text-decoration: none;
+  }
+
+  .topbar-icon-dropdown {
+    justify-content: center;
+    width: 2.75rem;
+    min-width: 2.75rem;
+    max-width: 2.75rem;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    gap: 0;
+  }
+
+  .topbar-icon-dropdown::after {
+    display: none !important;
+  }
+
+  .topbar-icon-dropdown__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3rem;
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+
+  .topbar-counter__link:hover,
+  .topbar-counter__link:focus,
+  .topbar-member-toggle:hover,
+  .topbar-member-toggle:focus,
+  .nav-item.dropdown.show > .topbar-member-toggle,
+  .topbar-icon-dropdown:hover,
+  .topbar-icon-dropdown:focus,
+  .nav-item.dropdown.show > .topbar-icon-dropdown {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    text-decoration: none;
+  }
+
+  /* Keep name + caret same white as at rest (Bootstrap hover uses $navbar-dark-hover-color otherwise). */
+  .topbar-member-toggle,
+  .topbar-member-toggle:hover,
+  .topbar-member-toggle:focus,
+  .topbar-member-toggle:focus-visible,
+  .nav-item.dropdown.show > .topbar-member-toggle,
+  .topbar-icon-dropdown,
+  .topbar-icon-dropdown:hover,
+  .topbar-icon-dropdown:focus,
+  .topbar-icon-dropdown:focus-visible,
+  .nav-item.dropdown.show > .topbar-icon-dropdown {
+    color: $navbar-dark-color !important;
+  }
+
+  .topbar-counter__link {
+    position: relative;
+  }
+
+  .topbar-counter__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.3rem;
+    font-size: 1.15rem;
+    line-height: 1;
+    opacity: 1;
+  }
+
+  .topbar-counter__badge.badge {
+    position: absolute;
+    top: -0.08rem;
+    right: -0.05rem;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0 0.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.95);
+    background-color: rgba(255, 255, 255, 0.22);
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
+
+    i {
+      margin: 0 !important;
+      font-size: 0.55rem;
+      line-height: 1;
+    }
+  }
+
+  /* No unread: hide badge entirely (loading uses data-count="-1" and keeps spinner visible). */
+  #conversationCount[data-count="0"] .topbar-counter__badge.badge {
+    display: none !important;
+  }
+
+  /* Unread ≥ 1: clear blue chip on orange bar ($info from _custom.scss). */
+  #conversationCount[data-count]:not([data-count="0"]):not([data-count="-1"]) .topbar-counter__badge.badge {
+    top: -0.12rem;
+    right: -0.08rem;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    padding: 0 0.28rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #fff;
+    background-color: $info;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.1),
+      0 2px 6px rgba(0, 80, 160, 0.35);
+  }
+
+  .topbar-member__name {
+    max-width: 10.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2;
+    font-size: $font-size-base;
+  }
+
+  .topbar-member-toggle .js-profile-picture {
+    width: 32px;
+    height: 32px;
+    flex: 0 0 32px;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .navbar-nav .nav-link {
+    border: 0;
+    text-shadow: none;
+  }
+
+  /* Exclude profile chip + top-bar icon chips: they keep a subtle pill background. */
+  .navbar-nav .nav-link:not(.topbar-member-toggle):not(.topbar-icon-dropdown),
+  .navbar-nav .nav-link.dropdown-toggle:not(.topbar-member-toggle):not(.topbar-icon-dropdown) {
+    &,
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:active {
+      background-color: transparent !important;
+      color: $navbar-dark-color !important;
+      border: 0 !important;
+      border-color: transparent !important;
+      outline: none !important;
+      outline-offset: 0 !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .navbar-nav .nav-item.show > .nav-link,
+  .navbar-nav .nav-item.dropdown.show > .nav-link {
+    outline: none !important;
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+
+  /* Inner <a> (e.g. envelope) can still get the UA focus ring */
+  .navbar-nav .nav-link a,
+  .navbar-nav .nav-item a.nav-link {
+    &,
+    &:hover,
+    &:focus,
+    &:focus-visible,
+    &:active {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+  }
 }
 
 .navbar-shadow{
@@ -26,7 +295,7 @@
 
 .subnav{
   position: fixed !important;
-  top: 42px;
+  top: var(--bw-topbar-offset, 56px);
   left: 0;
   right: 0;
   background-color: rgba($brand-primary,0.95);
@@ -96,6 +365,21 @@
 }
 
 @include media-breakpoint-up(lg) {
+  /*
+   * Default .navbar > .container uses align-items: center, so the left and right <ul>
+   * can have different heights; dropdowns use top:100% on each <li> and then sit higher
+   * than the profile menu. Stretch both columns to the same row height (avatar row).
+   */
+  #main_menu.navbar > .container-lg {
+    align-items: stretch;
+  }
+
+  /* Vertically center labels/icons in the full-height strip (after stretch). */
+  #main_menu #collapsing_menu.navbar-nav > .nav-item > .nav-link,
+  #main_menu #static_menu.navbar-nav > .nav-item > .nav-link {
+    display: flex;
+    align-items: center;
+  }
 
   .navbar {
     .nav-link{
@@ -108,6 +392,326 @@
     padding-top: 0.75rem;
   }
 
-
-
 }
+
+/* Full-viewport sheets below xl: profile, search, community (compact dropdown from `xl` up — see next block). */
+@include media-breakpoint-down(xl) {
+  .member-menu.dropdown-menu.show,
+  #search_menu.nav-top-dropdown.dropdown-menu.show,
+  #community_menu.nav-top-dropdown.dropdown-menu.show {
+    position: fixed !important;
+    inset: 0;
+    z-index: 2100;
+    display: flex !important;
+    flex-direction: column;
+    width: 100% !important;
+    min-width: 100%;
+    max-width: none;
+    min-height: 100vh;
+    min-height: 100dvh;
+    max-height: 100vh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0 !important;
+    padding: 0;
+    padding-top: max(0.75rem, env(safe-area-inset-top, 0));
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0));
+    border: none;
+    border-radius: 0;
+    background: rgba(28, 30, 34, 0.98);
+    box-shadow: none;
+    backdrop-filter: blur(14px);
+
+    transform: none !important;
+
+    .member-menu__toolbar {
+      flex: 0 0 auto;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 0.35rem 0.5rem 0.5rem;
+      margin: 0;
+      list-style: none;
+    }
+
+    .member-menu__close {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      margin: 0;
+      padding: 0;
+      color: rgba(255, 255, 255, 0.88);
+      font: inherit;
+      line-height: 1;
+      background: transparent;
+      border: none;
+      border-radius: 0.35rem;
+      cursor: pointer;
+      transition:
+        color 0.15s ease,
+        background 0.15s ease;
+
+      &:hover,
+      &:focus {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      &:focus-visible {
+        outline: 2px solid rgba(255, 255, 255, 0.45);
+        outline-offset: 2px;
+      }
+    }
+
+    .member-menu__close-icon {
+      font-size: 2rem;
+      font-weight: 300;
+      line-height: 1;
+    }
+
+    .nav-top-dropdown__title {
+      flex: 0 0 auto;
+      list-style: none;
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-top-dropdown__title .dropdown-header {
+      margin: 0;
+      padding: 0.35rem 1.35rem 0;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      line-height: 1.35;
+      letter-spacing: 0.12em;
+      text-transform: uppercase !important;
+      text-align: left;
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    .dropdown-item {
+      padding: 1rem 1.35rem;
+      font-size: 1.0625rem;
+      font-weight: 600;
+      line-height: 1.35;
+      color: rgba(255, 255, 255, 0.94);
+
+      &:hover,
+      &:focus {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      i {
+        width: 1.35rem;
+        margin-right: 0.65rem !important;
+        font-size: 1.1rem;
+        vertical-align: -0.08em;
+      }
+    }
+
+    .dropdown-divider {
+      margin: 0.65rem 1.25rem;
+      border-top-width: 1px;
+      border-top-color: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Logout — outline style aligned with BeWelcome orange ($brand-primary). */
+    .member-menu__logout-item {
+      padding: 0.35rem 1.35rem 1.1rem;
+    }
+
+    .member-menu__logout {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: fit-content;
+      max-width: 100%;
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      line-height: 1.35;
+      color: rgba(255, 255, 255, 0.96);
+      text-decoration: none;
+      cursor: pointer;
+      background: rgba($brand-primary, 0.2);
+      border: 1px solid rgba($brand-primary, 0.55);
+      border-radius: 0.35rem;
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease;
+
+      .member-menu__logout-icon {
+        display: inline-flex;
+        flex-shrink: 0;
+        align-items: center;
+        font-size: 1rem;
+        line-height: 1;
+        color: lighten($brand-primary, 6%);
+      }
+
+      .member-menu__logout-text {
+        white-space: normal;
+      }
+
+      &:hover,
+      &:focus {
+        color: #fff;
+        text-decoration: none;
+        background: rgba($brand-primary, 0.42);
+        border-color: rgba(lighten($brand-primary, 8%), 0.85);
+        box-shadow: 0 2px 8px rgba($brand-primary, 0.25);
+      }
+
+      &:focus-visible {
+        outline: 2px solid rgba($brand-primary, 0.75);
+        outline-offset: 2px;
+      }
+    }
+  }
+}
+
+/* Wide screens (≥ xl): compact dropdowns — same rhythm as profile menu; do NOT target .dropdown-menu without .show. */
+@include media-breakpoint-up(xl) {
+  .member-menu.dropdown-menu.show,
+  #main_menu .nav-top-dropdown.dropdown-menu.show {
+    position: absolute !important;
+    top: 100% !important;
+    right: 0 !important;
+    bottom: auto !important;
+    left: auto !important;
+    inset: auto !important;
+    z-index: 1000;
+    display: block !important;
+    flex-direction: unset !important;
+    width: auto !important;
+    min-width: 10rem;
+    max-width: min(22rem, calc(100vw - 2rem));
+    min-height: 0 !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    overflow-y: visible !important;
+    margin: 0.125rem 0 0 !important;
+    padding: 0.65rem 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.25rem;
+    /* Less transparent than global $dropdown-bg (was ~80% black). */
+    background-color: rgba(22, 24, 28, 0.97);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.28);
+    backdrop-filter: none !important;
+    transform: none !important;
+  }
+
+  /* Top-bar dropdowns: small gap under the orange bar (avatar menu reference). */
+  #main_menu .nav-top-dropdown.dropdown-menu.show {
+    margin-top: 0.65rem !important;
+  }
+
+  .member-menu.dropdown-menu.show .dropdown-item,
+  #main_menu .nav-top-dropdown.dropdown-menu.show .dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 2.5rem;
+    padding-top: 0.45rem;
+    padding-right: 1rem;
+    padding-bottom: 0.45rem;
+    padding-left: 1rem !important;
+    font-size: $font-size-base;
+    font-weight: 400;
+    line-height: 1.35;
+    text-align: left;
+    color: $dropdown-link-color;
+
+    &:hover,
+    &:focus {
+      color: $dropdown-link-hover-color;
+      background-color: $dropdown-link-hover-bg;
+    }
+
+    i {
+      flex: 0 0 1.35rem;
+      width: 1.35rem;
+      min-height: 1.35rem;
+      margin-right: 0.55rem !important;
+      font-size: 1rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+
+  .member-menu.dropdown-menu.show .dropdown-divider,
+  #main_menu .nav-top-dropdown.dropdown-menu.show .dropdown-divider {
+    margin: 0.55rem 0;
+    border-top-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .member-menu.dropdown-menu.show .member-menu__logout-item {
+    padding: 0.25rem 0.75rem 0.6rem;
+    box-sizing: border-box;
+  }
+
+  .member-menu.dropdown-menu.show .member-menu__logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.35;
+    color: darken($brand-primary, 6%);
+    text-decoration: none;
+    cursor: pointer;
+    background: rgba($brand-primary, 0.1);
+    border: 1px solid rgba($brand-primary, 0.45);
+    border-radius: 0.3rem;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease;
+
+    .member-menu__logout-icon {
+      display: inline-flex;
+      flex-shrink: 0;
+      align-items: center;
+      font-size: 0.9rem;
+      line-height: 1;
+      color: $brand-primary;
+    }
+
+    .member-menu__logout-text {
+      white-space: normal;
+    }
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      text-decoration: none;
+      background: $brand-primary;
+      border-color: darken($brand-primary, 4%);
+      box-shadow: 0 2px 6px rgba($brand-primary, 0.35);
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba($brand-primary, 0.55);
+      outline-offset: 2px;
+    }
+  }
+}
+

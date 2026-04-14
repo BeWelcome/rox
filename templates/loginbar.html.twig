@@ -1,6 +1,6 @@
 {% import 'macros.twig' as macros %}
 <nav id="main_menu" class="navbar sticky-top navbar-dark navbar-expand bg-primary justify-content-between">
-    <div class="container-lg">
+    <div class="container-lg bw-topbar__container">
         <ul id="collapsing_menu" class="navbar navbar-nav">
             <li class="nav-item">
                 <a id="brand_image" class="navbar-brand" href="{{ url('homepage') }}">
@@ -23,16 +23,6 @@
                     </div>
                 </div>
             </li>
-            <li class="nav-item">
-                <button class="border bg-primary mr-1 d-none" id="hamburger" type="button" data-toggle="collapse" data-target="#hamburger_collapse" aria-controls="hamburger_collapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-            </li>
         </ul>
     </div>
 </nav>
-<div class="collapse navbar-dark bg-primary" id="hamburger_collapse">
-    <div class="container-lg">
-        <ul id="hamburger_menu" class="navbar-nav text-right"></ul>
-    </div>
-</div>

@@ -1,0 +1,12 @@
+{# Shared Community links (text only). #}
+{% set _community_nav_items = [
+    { route: 'forums', label: 'communitydiscussions' },
+    { route: 'groups_mygroups', label: 'groups' },
+    { route: 'activities', label: 'activities' },
+    { route: 'wiki_front_page', label: 'wiki' },
+] %}
+{% for item in _community_nav_items %}
+    <li{% if item_li_class is defined and item_li_class %} class="{{ item_li_class|e('html_attr') }}"{% endif %}>
+        <a href="{{ path(item.route) }}" class="dropdown-item{% if item_link_class is defined and item_link_class %} {{ item_link_class|e('html_attr') }}{% endif %}">{{ item.label|trans }}</a>
+    </li>
+{% endfor %}

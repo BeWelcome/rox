@@ -1,12 +1,3 @@
-// #main_menu: click only (no bootstrap-dropdown-hover). Elsewhere hover stays optional via data-dropdown-click-only.
-$('[data-toggle="dropdown"]')
-    .not('#main_menu [data-toggle="dropdown"]')
-    .not('[data-dropdown-click-only]')
-    .bootstrapDropdownHover({
-        clickBehavior: 'sticky',
-        hideTimeout: 1000,
-    });
-
 $(function () {
     registerOnClickEvent();
 });

@@ -53,11 +53,8 @@
                     </li>
                     <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item text-left">{{ 'search.locations' | trans }}</a></li>
                     <li><a href="{{ path('search_members') }}" class="dropdown-item text-left">{{ 'search.members' | trans }}</a></li>
-                    <li class="dropdown-divider"></li>
                     <li><a href="{{ url('places') }}" class="dropdown-item text-left">{{ 'browsecountries' | trans }}</a></li>
-                    <li class="dropdown-divider"></li>
                     <li><a href="{{ url('visitors') }}" class="dropdown-item text-left">{{ 'menu.visitors' | trans }}</a></li>
-                    <li><a href="{{ url('trips') }}" class="dropdown-item text-left">{{ 'trips.mytrips' | trans }}</a></li>
                 </ul>
             </li>
             <li class="nav-item dropdown">
@@ -110,7 +107,7 @@
                                               class="dropdown-item text-left">{{ 'profile.menu.preferences' | trans }}</a></li>
                     <li><a href="{{ path('notes', {'username': loggedInMember.username}) }}"
                                               class="dropdown-item text-left">{{ 'profile.menu.my.notes' | trans }}</a></li>
-                    <li><div class="dropdown-divider"></div></li>
+                    <li><a href="{{ url('trips') }}" class="dropdown-item text-left">{{ 'trips.mytrips' | trans }}</a></li>
                     <li><a href="{{ path('change_password', {'username': loggedInMember.username}) }}"
                                               class="dropdown-item text-left">{{ 'profile.change.password.menu' | trans }}</a></li>
                     <li><div class="dropdown-divider"></div></li>

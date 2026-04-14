@@ -2,7 +2,6 @@ import 'jquery';
 import 'popper.js';
 
 import 'bootstrap';
-import 'bootstrap-dropdown-hover';
 import '../scss/home.scss';
 import 'cookieconsent/src/cookieconsent.js';
 import 'cookieconsent/src/styles/animation.css';

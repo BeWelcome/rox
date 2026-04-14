@@ -7,35 +7,43 @@
                     {% include 'logo.html.twig' %}
                 </a>
             </li>
-            {% if loggedInMember and teams|length != 0 %}
-                <li class="nav-item dropdown">
-                    <a href="#volunteer_menu" class="nav-link dropdown-toggle"
-                       data-target="volunteer_menu" data-toggle="dropdown" data-dropdown-click-only aria-haspopup="true"
-                       aria-expanded="false" aria-label="{{ 'volunteer' | trans }}">
-                        {{ 'volunteer' | trans }}
-                    </a>
-                    <ul id="volunteer_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
-                        {% for team in teams %}
-                            <li>
-                                {% if team.route starts with '/' %}
-                                    <a href="{{ team.route }}" class="dropdown-item text-left">{{ team.trans | trans }}</a>
-                                {% else %}
-                                    <a href="{{ path(team.route) }}" class="dropdown-item text-left">{{ team.trans | trans }}</a>
-                                {% endif %}
-                            </li>
-                        {% endfor %}
-                        <li>
-                            <a href="{{ url('getactive') }}" class="dropdown-item text-left">{{ 'about_getactive' | trans }}</a>
-                        </li>
-                    </ul>
-                </li>
-            {% endif %}
             {% if not loggedInMember %}
                 {% include 'login_form_navbar.html.twig' %}
             {% endif %}
         </ul>
         <ul id="static_menu" class="navbar navbar-nav align-items-center">
             {% if loggedInMember %}
+            {% if teams|length != 0 %}
+            <li class="nav-item dropdown">
+                <a id="volunteer_menu_toggle" href="#volunteer_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
+                   data-target="volunteer_menu" data-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
+                   aria-label="{{ 'volunteer' | trans }}">
+                    <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-user-shield"></i></span>
+                </a>
+                <ul id="volunteer_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
+                    <li class="member-menu__toolbar d-flex d-xl-none">
+                        <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
+                            <span class="member-menu__close-icon" aria-hidden="true">&times;</span>
+                        </button>
+                    </li>
+                    <li class="nav-top-dropdown__title d-xl-none">
+                        <h6 class="dropdown-header text-left mb-0">{{ 'volunteer' | trans }}</h6>
+                    </li>
+                    {% for team in teams %}
+                        <li>
+                            {% if team.route starts with '/' %}
+                                <a href="{{ team.route }}" class="dropdown-item text-left">{{ team.trans | trans }}</a>
+                            {% else %}
+                                <a href="{{ path(team.route) }}" class="dropdown-item text-left">{{ team.trans | trans }}</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                    <li>
+                        <a href="{{ url('getactive') }}" class="dropdown-item text-left">{{ 'about_getactive' | trans }}</a>
+                    </li>
+                </ul>
+            </li>
+            {% endif %}
             <li class="nav-item dropdown">
                 <a id="search_menu_toggle" href="#search_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
                    data-target="search_menu" data-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"

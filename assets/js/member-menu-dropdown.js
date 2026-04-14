@@ -1,5 +1,12 @@
 import $ from 'jquery';
 
+const wideQuery = window.matchMedia('(min-width: 1200px)');
+
+function syncTopbarSheetScrollLock() {
+  const shouldLock = !wideQuery.matches && document.querySelector('#main_menu .dropdown-menu.show');
+  document.body.classList.toggle('topbar-sheet-open', Boolean(shouldLock));
+}
+
 /** Close the top-bar dropdown whose menu contains this close control (profile, search, community full sheets). */
 function hideDropdownFromCloseButton(closeButton) {
   const $toggle = $(closeButton).closest('ul.dropdown-menu').prev('.dropdown-toggle');
@@ -15,7 +22,6 @@ $(document).on('click', '.member-menu__close', function (e) {
 });
 
 /** Close any open #main_menu dropdown when crossing to xl (sheets → compact popovers). */
-const wideQuery = window.matchMedia('(min-width: 1200px)');
 function closeMainMenuDropdownsIfWide() {
   if (!wideQuery.matches) {
     return;
@@ -23,7 +29,13 @@ function closeMainMenuDropdownsIfWide() {
   document.querySelectorAll('#main_menu .nav-item.dropdown.show > .dropdown-toggle').forEach((el) => {
     $(el).dropdown('hide');
   });
+  syncTopbarSheetScrollLock();
 }
+
+$(document).on('shown.bs.dropdown hidden.bs.dropdown', '#main_menu .nav-item.dropdown', function () {
+  syncTopbarSheetScrollLock();
+});
+
 if (typeof wideQuery.addEventListener === 'function') {
   wideQuery.addEventListener('change', closeMainMenuDropdownsIfWide);
 } else if (typeof wideQuery.addListener === 'function') {

@@ -51,13 +51,11 @@
                     <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-search"></i></span>
                 </a>
                 <ul id="search_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
-                    <li class="member-menu__toolbar d-flex d-xl-none">
+                    <li class="member-menu__toolbar member-menu__toolbar--with-title d-flex d-xl-none">
+                        <h6 class="member-menu__toolbar-title mb-0">{{ 'findmembers' | trans }}</h6>
                         <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
                             <span class="member-menu__close-icon" aria-hidden="true">&times;</span>
                         </button>
-                    </li>
-                    <li class="nav-top-dropdown__title d-xl-none">
-                        <h6 class="dropdown-header text-left mb-0">{{ 'findmembers' | trans }}</h6>
                     </li>
                     <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item text-left">{{ 'search.locations' | trans }}</a></li>
                     <li><a href="{{ path('search_members') }}" class="dropdown-item text-left">{{ 'search.members' | trans }}</a></li>
@@ -69,23 +67,21 @@
                 <a id="community_menu_toggle" href="#community_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
                    data-target="community_menu" data-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
                    aria-label="{{ 'communitymenu' | trans }}">
-                    <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-comments"></i></span>
+                    <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-users"></i></span>
                 </a>
                 <ul id="community_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
-                    <li class="member-menu__toolbar d-flex d-xl-none">
+                    <li class="member-menu__toolbar member-menu__toolbar--with-title d-flex d-xl-none">
+                        <h6 class="member-menu__toolbar-title mb-0">{{ 'communitymenu' | trans }}</h6>
                         <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
                             <span class="member-menu__close-icon" aria-hidden="true">&times;</span>
                         </button>
-                    </li>
-                    <li class="nav-top-dropdown__title d-xl-none">
-                        <h6 class="dropdown-header text-left mb-0">{{ 'communitymenu' | trans }}</h6>
                     </li>
                     {% include 'layout/_community_nav_links.html.twig' with { item_link_class: 'text-left' } only %}
                 </ul>
             </li>
             {# conversations #}
             <li class="nav-item topbar-messages">
-                <div id="conversationCount" class="nav-link topbar-counter pl-0 pl-md-1" data-count="-1">
+                <div id="conversationCount" class="nav-link topbar-counter px-0" data-count="-1">
                     <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="topbar-counter__link text-white">
                         <span class="topbar-counter__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
                         <span class="badge topbar-counter__badge"><i class="fa fa-fw fa-spinner"></i></span>

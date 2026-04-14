@@ -4,16 +4,16 @@
   flex-direction: row;
   align-items: center;
   gap: 0.4rem;
-  height: 48px;
-  max-height: 48px;
+  height: 44px;
+  max-height: 44px;
   min-width: 0;
 }
 
 #main_menu .bw-header-logo__icon {
   display: block;
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
   object-fit: contain;
 }
 
@@ -24,6 +24,12 @@
   height: 30px;
   object-fit: contain;
   object-position: left center;
+}
+
+@include media-breakpoint-down(md) {
+  #main_menu .bw-header-logo__text {
+    display: none;
+  }
 }
 
 @include media-breakpoint-up(md) {
@@ -67,8 +73,8 @@
 
 @include media-breakpoint-down(lg) {
   #main_menu.navbar > .bw-topbar__container {
-    padding-left: max(1.25rem, env(safe-area-inset-left, 0px)) !important;
-    padding-right: max(1.25rem, env(safe-area-inset-right, 0px)) !important;
+    padding-left: max(0.7rem, env(safe-area-inset-left, 0px)) !important;
+    padding-right: max(0.7rem, env(safe-area-inset-right, 0px)) !important;
   }
 
   #main_menu #collapsing_menu.navbar-nav,
@@ -81,7 +87,19 @@
 /* Right cluster: search + community icons + messages + profile. */
 #main_menu #static_menu.navbar-nav {
   flex-wrap: nowrap;
-  column-gap: 0.35rem;
+  column-gap: 0.2rem;
+}
+
+@include media-breakpoint-up(xl) {
+  #main_menu #static_menu.navbar-nav {
+    column-gap: 0.5rem;
+  }
+}
+
+#main_menu #conversationCount.topbar-counter.nav-link {
+  margin: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 #main_menu.navbar .navbar-nav .nav-link {
@@ -245,6 +263,18 @@
     box-shadow: none !important;
   }
 
+  @include media-breakpoint-down(md) {
+    .topbar-member-toggle {
+      gap: 0.1rem;
+      padding-left: 0.4rem !important;
+      padding-right: 0.45rem !important;
+    }
+
+    .topbar-member-toggle::after {
+      margin-left: 0.08rem;
+    }
+  }
+
   .navbar-nav .nav-link {
     border: 0;
     text-shadow: none;
@@ -396,6 +426,11 @@
 
 /* Full-viewport sheets below xl: profile, search, community (compact dropdown from `xl` up — see next block). */
 @include media-breakpoint-down(xl) {
+  body.topbar-sheet-open {
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
   .member-menu.dropdown-menu.show,
   #volunteer_menu.nav-top-dropdown.dropdown-menu.show,
   #search_menu.nav-top-dropdown.dropdown-menu.show,
@@ -434,6 +469,22 @@
       padding: 0.35rem 0.5rem 0.5rem;
       margin: 0;
       list-style: none;
+    }
+
+    .member-menu__toolbar--with-title {
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.35rem 1.1rem 0.65rem;
+    }
+
+    .member-menu__toolbar-title {
+      margin: 0;
+      font-size: 25px;
+      font-weight: 500;
+      line-height: 1.25;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.2);
     }
 
     .member-menu__close {

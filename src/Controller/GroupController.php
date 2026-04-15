@@ -63,7 +63,7 @@ class GroupController extends AbstractController
     {
         /** @var Member|null $member */
         $member = $this->getUser();
-        if ($member !== null && $member->getGroups()) {
+        if (null !== $member && $member->getGroups()) {
             return $this->redirectToRoute('groups_mygroups');
         }
 

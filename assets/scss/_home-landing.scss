@@ -1069,3 +1069,32 @@
     }
   }
 }
+
+/* Cookie consent: bottom full-width banner */
+.cc-window.cc-banner {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: none;
+  border-radius: 0;
+  border-top: 1px solid rgba(15, 23, 42, 0.1);
+  box-shadow: 0 -8px 28px rgba(15, 23, 42, 0.1);
+  padding: 0.85rem 1rem;
+}
+
+.cc-window .cc-message {
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.cc-window .cc-link {
+  color: #f37000;
+}
+
+.cc-window .cc-btn {
+  border: none;
+  border-radius: 999px;
+  padding: 0.45rem 1rem;
+  font-weight: 700;
+}

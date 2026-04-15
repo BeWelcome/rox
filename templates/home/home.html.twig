@@ -139,7 +139,7 @@
 
     <section id="statistics">
         <div class="container home-stats__container">
-            <p class="home-stats__eyebrow">{{ 'home.header.statistics' | trans }}</p>
+            <h2 class="home-section-title mb-4 mb-lg-5">{{ 'home.header.statistics' | trans }}</h2>
             <div class="row justify-content-center home-stats__row">
                 <div class="col-6 col-md-4 col-lg home-stat-item">
                     <i class="far fa-user home-stat-item__icon" aria-hidden="true"></i>
@@ -202,15 +202,16 @@
         window.cookieconsent.initialise({
             "palette": {
                 "popup": {
-                    "background": "#efefef",
-                    "text": "#404040"
+                    "background": "#ffffff",
+                    "text": "#334155"
                 },
                 "button": {
-                    "background": "#f37000"
+                    "background": "#f37000",
+                    "text": "#ffffff"
                 }
             },
-            "theme": "classic",
-            "position": "bottom-right",
+            "theme": "edgeless",
+            "position": "bottom",
             "content": {
                 "href": privacyUrl,
                 message: "{{ 'cookie.consent.message'|trans }}",

@@ -13,21 +13,6 @@ import 'cookieconsent/src/styles/themes/edgeless.css';
 import 'select2/dist/js/select2.full.js';
 import '@fortawesome/fontawesome-free/js/all.js';
 import './collapsemenu.js';
-import {initializeSingleAutoComplete} from './suggest/locations';
-
-function onChange(element, result) {
-    const fullName = element;
-    const baseId = element.id + "_";
-    const geonameId = document.getElementById(baseId + "geoname_id");
-    const latitude = document.getElementById(baseId + "latitude");
-    const longitude = document.getElementById(baseId + "longitude");
-    fullName.value = result.name.replaceAll("#", ", ");
-    geonameId.value = result.id;
-    latitude.value = result.latitude;
-    longitude.value = result.longitude;
-}
-
-initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', onChange);
 
 $(".select2").select2({
     theme: 'bootstrap4',

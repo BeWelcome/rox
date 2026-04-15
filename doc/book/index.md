@@ -29,7 +29,7 @@ You like the idea? Development is only one way to contribute! Find out how to [g
 You probably want to get started by checking out the code in `src/`. (`build/` is deprecated and the code needs to be rewritten in `src/`.)
 
 To make changes in **Javascript** bear in mind that the Webpack needs to process each change before it reflects on the site.
-It is a good idea to run `yarn encore dev --watch` which will keep updating files as you keep saving them.
+It is a good idea to run `bun encore dev --watch` which will keep updating files as you keep saving them.
 
 ## Documentation
 
@@ -53,10 +53,10 @@ composer install --prefer-dist --no-progress --no-interaction --no-scripts
 Also run
 
 ```bash
-yarn install --frozen-lock
+bun i --frozen-lockfile
 ```
 
-everytime you see a change in either ```package.json``` or ```yarn.lock```.
+everytime you see a change in either ```package.json``` or ```bun.lock```.
 
 If any file in ```assets/``` changed a ```make build``` is necessary.
 

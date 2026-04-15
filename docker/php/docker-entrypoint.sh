@@ -35,7 +35,7 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		composer install --prefer-dist --no-progress --no-interaction --no-scripts
-		yarn install --frozen-lock
+		bun i --frozen-lockfile
 	fi
 
 	if [ -f .env ]; then
@@ -55,7 +55,7 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 
 
 	echo "Waiting for db to be ready..."
-	until mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port -e "select 1" > /dev/null 2>&1; do
+	until mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" -e "select 1" > /dev/null 2>&1; do
 		sleep 1
 	done
 
@@ -68,13 +68,13 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
         echo "Importing translations"
 		if [ -f docker/db/word.sql ]; then
             echo "Yepp, really. Importing translations"
-			mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/word.sql
+			mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" < docker/db/word.sql
 		fi
 		if [ -f docker/db/geonamesadminunits.sql ]; then
-			mariadb $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/geonamesadminunits.sql
+			mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" < docker/db/geonamesadminunits.sql
 		fi
 
-		bin/console translations:add:missing > /dev/nul
+		bin/console translations:add:missing > /dev/null
 
 	elif ls -A src/Migrations/*.php > /dev/null 2>&1; then
 		bin/console doctrine:migrations:migrate --no-interaction
@@ -93,7 +93,7 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
     bin/console cache:clear
 
 	if [ "$APP_ENV" != 'prod' ]; then
-		yarn encore dev --mode=development
+		bun encore dev --mode=development
 	fi
 
 	# create manticore indices

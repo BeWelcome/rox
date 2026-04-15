@@ -39,23 +39,31 @@
 <main class="home-landing">
     <section class="home-hero" aria-labelledby="home-hero-title">
         <div class="home-hero__media" aria-hidden="true">
-            <img class="home-hero__img"
-                 srcset="{{ asset(images[1].high) }} 1200w, {{ asset(images[1].low) }} 576w"
-                 src="{{ asset(images[1].high) }}"
-                 alt="">
+            <video class="home-hero__video"
+                   autoplay
+                   muted
+                   playsinline
+                   preload="metadata"
+                   poster="{{ asset(images[1].high) }}">
+                <source src="{{ asset('video/hero.mp4') }}" type="video/mp4">
+            </video>
         </div>
         <div class="home-hero__body">
             <div class="container home-hero__container px-3 px-sm-4">
                 <div class="row home-hero__row justify-content-center align-items-start">
                     <div class="col-12 col-lg-7 col-xl-6 home-hero__copy text-center text-lg-left mb-4 mb-lg-0">
-                        <h1 id="home-hero-title" class="home-heading">{{ 'home.headline.bewelcome.cultural' | trans }}</h1>
-                        <div class="home-hero__text text-white">
-                            <p class="home-hero__abstract">{{ 'home.abstract.bewelcome.cultural' | trans }}</p>
-                            <p class="home-hero__lead">{{ 'home.bewelcome.free' | trans | escape | replace({
-                                '%link_start%': '<a class="home-hero__link" href="' ~ path('wiki_page', { pageTitle: 'Can BeWelcome be sold' }) ~ '">',
-                                '%link_end%': '</a>'
-                            }) | raw }}</p>
-                        </div>
+                        <h1 id="home-hero-title" class="home-heading">
+                            <span class="home-heading__brand">
+                                <img class="home-heading__logo" src="{{ asset('images/favicon.svg') }}" alt="BeWelcome">
+                                <span class="home-heading__name">BeWelcome</span>
+                            </span>
+                            <span class="home-heading__subtitle">the largest free hospitality community</span>
+                        </h1>
+                        <p class="home-hero__abstract text-white">{{ 'home.abstract.bewelcome.cultural' | trans }}</p>
+                        <p class="home-hero__lead text-white">{{ 'home.bewelcome.free' | trans | escape | replace({
+                            '%link_start%': '<a class="home-hero__link" href="' ~ path('wiki_page', { pageTitle: 'Can BeWelcome be sold' }) ~ '">',
+                            '%link_end%': '</a>'
+                        }) | raw }}</p>
                         <div class="home-hero__actions">
                             <a href="{{ url('signup') }}" class="btn home-hero__cta">{{ 'home.button.join' | trans }}</a>
                             <button type="button" class="btn home-hero__login-btn d-lg-none js-home-login-open" aria-controls="home-login" aria-expanded="false">
@@ -64,7 +72,7 @@
                             </button>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-5 col-xl-4 home-hero__aside js-home-login-aside">
+                    <div class="col-12 col-lg-5 col-xl-5 home-hero__aside js-home-login-aside">
                         <aside id="home-login" class="home-login-panel" aria-label="{{ 'login' | trans }}">
                             <button type="button" class="home-login-panel__close d-lg-none js-home-login-close" aria-label="{{ 'close' | trans }}">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">

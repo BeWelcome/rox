@@ -50,6 +50,10 @@ class EnvironmentExplorer
         $this->_initPVars($settings);
         $this->_initBWGlobals($settings);
 
+        // Make Symfony's URL generator available to legacy code
+        if ($this->urlGenerator !== null) {
+            PVars::register('symfony_url_generator', $this->urlGenerator);
+        }
 
         PSurveillance::setPoint('base_loaded');
 

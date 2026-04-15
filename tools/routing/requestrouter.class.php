@@ -34,7 +34,7 @@ class RequestRouter implements UrlGeneratorInterface
     {
         if (empty(self::$_routes))
         {
-            require_once(SCRIPT_BASE . 'routes.php');
+            require(SCRIPT_BASE . 'routes.php');
         }
     }
 
@@ -136,9 +136,19 @@ class RequestRouter implements UrlGeneratorInterface
      */
     public function url($route, $vars = array(), $add_base = true)
     {
+        $routeName = $route;
         $route = $this->getRoute($route);
         if (empty($route))
         {
+            // Fall back to Symfony's URL generator for routes not in legacy routes.php
+            $symfonyGenerator = PVars::get()->symfony_url_generator;
+            if ($symfonyGenerator !== false && $symfonyGenerator !== null) {
+                try {
+                    return $symfonyGenerator->generate($routeName, $vars);
+                } catch (\Exception $e) {
+                    // Route not found in Symfony either
+                }
+            }
             return '';
         }
         $url = $route['url'];

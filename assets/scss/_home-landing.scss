@@ -892,13 +892,26 @@
     margin-bottom: 2.25rem;
   }
 
-  .home-cta__panel {
-    background: #fff;
-    border-radius: 1.5rem;
-    padding: 2.25rem 2.5rem 2rem;
-    max-width: 860px;
-    margin: 0 auto;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+  .home-cta__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.95rem;
+    padding: 0.8rem 1.85rem;
+    border: none;
+    border-radius: 999px;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    background: linear-gradient(135deg, #ff9a2e 0%, #f37000 60%, #e06000 100%);
+    transition: filter 0.18s ease;
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      filter: brightness(1.06);
+    }
   }
 
   .home-cta-label {

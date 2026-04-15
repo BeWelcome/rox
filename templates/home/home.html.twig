@@ -180,54 +180,8 @@
         <div class="home-strip__body container">
             <h2 id="home-cta-title" class="home-cta-heading">{{ 'home.title.onestep' | trans }}</h2>
             <p class="home-subheading">{{ 'home.title.onestep.sub' | trans }}</p>
-            <div class="home-cta__panel">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-6 col-lg-5 mb-4 mb-md-0">
-                    {{ form_start(username) }}
-                    <p class="home-cta-label">{{ 'indexpageword_share' | trans }}</p>
-                    <label for="{{ username.username.vars.id }}" class="sr-only">{{ 'choose.username' | trans }}</label>
-                    <div class="home-cta-field">
-                        <i class="fa fa-user home-cta-field__icon" aria-hidden="true"></i>
-                        <input type="text" class="home-cta-field__input"
-                               name="{{ username.username.vars.name }}"
-                               id="{{ username.username.vars.id }}"
-                               placeholder="{{ 'home.username' | trans }}"
-                               value="{{ username.username.vars.value }}"/>
-                        <button class="home-cta-field__btn" type="submit">
-                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                            <span class="sr-only">{{ 'home.username.signup' | trans }}</span>
-                        </button>
-                        {% do username.username.setRendered %}
-                    </div>
-                    <p class="home-cta-hint">{{ 'home.username.subheader' | trans }}</p>
-                    {{ form_end(username) }}
-                </div>
-                <div class="col-12 col-md-6 col-lg-5">
-                    {{ form_start(search) }}
-                    <p class="home-cta-label">{{ 'home.searchplace' | trans }}</p>
-                    <label for="{{ search.location.vars.id }}" class="sr-only">{{ 'home.searchplace.question' | trans }}</label>
-                    <div class="home-cta-field">
-                        <i class="fas fa-map-marker-alt home-cta-field__icon" aria-hidden="true"></i>
-                        <div class="auto-search-wrapper max-height loupe home-cta-field__auto-wrapper">
-                            <input type="text" id="{{ search.location.vars.id }}" name="{{ search.location.vars.full_name }}"
-                                   class="home-cta-field__input js-location-picker" autocomplete="off"
-                                   placeholder="{{ 'trip.leg.location'|trans }}"
-                                   aria-label="{{ 'trip.leg.location'|trans }}"
-                                   {% if search.location.vars.value %}value="{{ search.location.vars.value }}"{% endif %}>
-                            {% do search.location.setRendered %}
-                        </div>
-                        <button id="{{ search.updateMap.vars.id }}" name="updateMap" type="submit" class="home-cta-field__btn">
-                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                            <span class="sr-only">{{ 'search' | trans }}</span>
-                        </button>
-                        {% do search.updateMap.setRendered %}
-                    </div>
-                    <p class="home-cta-hint">{{ 'home.searchplace.subheader' | trans }}</p>
-                    {{ form_rest(search) }}
-                    <div class="d-none invisible"></div>
-                    {{ form_end(search) }}
-                </div>
-            </div>
+            <div class="text-center">
+                <a href="{{ url('signup') }}" class="btn home-cta__button">{{ 'home.button.join' | trans }}</a>
             </div>
         </div>
     </section>

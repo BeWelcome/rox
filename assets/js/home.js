@@ -10,6 +10,7 @@ import 'cookieconsent/src/styles/layout.css';
 import 'cookieconsent/src/styles/media.css';
 import 'cookieconsent/src/styles/themes/classic.css';
 import 'cookieconsent/src/styles/themes/edgeless.css';
+import '../scss/cookie-consent.scss';
 import 'select2/dist/js/select2.full.js';
 import '@fortawesome/fontawesome-free/js/all.js';
 import './collapsemenu.js';

@@ -105,21 +105,21 @@
   .home-heading__brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.55rem;
     margin-bottom: 0.55rem;
   }
 
-  .home-heading__logo {
-    width: clamp(2.15rem, 4.6vw, 3.2rem);
+  .home-heading__logo-mark {
+    width: clamp(2.1rem, 5vw, 3rem);
     height: auto;
-    display: block;
+    flex: 0 0 auto;
   }
 
-  .home-heading__name {
-    font-size: clamp(1.4rem, 3.6vw, 2.6rem);
-    font-weight: 700;
-    line-height: 1;
-    letter-spacing: 0.01em;
+  .home-heading__logo-text {
+    width: clamp(10.5rem, 29vw, 16.5rem);
+    height: auto;
+    flex: 0 0 auto;
+    transform: translateY(0.08rem);
   }
 
   .home-heading__subtitle {
@@ -228,22 +228,17 @@
     }
 
     .home-heading__brand {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: nowrap;
-      gap: 0.45rem;
+      gap: 0.4rem;
       margin-bottom: 0.4rem;
     }
 
-    .home-heading__logo {
-      width: clamp(1.6rem, 6.8vw, 2.25rem);
+    .home-heading__logo-mark {
+      width: clamp(1.85rem, 9vw, 2.3rem);
     }
 
-    .home-heading__name {
-      font-size: clamp(1.2rem, 5vw, 1.55rem);
-      line-height: 1;
-      white-space: nowrap;
+    .home-heading__logo-text {
+      width: clamp(9.2rem, 46vw, 12.8rem);
+      transform: translateY(0.06rem);
     }
 
     .home-heading__subtitle {

@@ -23,8 +23,7 @@
 @font-face {
   font-family: 'FontAwesome';
   src: url('../../../../../images/fontawsome/fontawesome-webfont.eot?v=3.0.1');
-  src: url('../../../../../images/fontawsome/fontawesome-webfont.eot?#iefix&v=3.0.1') format('embedded-opentype'),
-    url('../../../../../images/fontawsome/fontawesome-webfont.woff?v=3.0.1') format('woff'),
+  src: url('../../../../../images/fontawsome/fontawesome-webfont.woff?v=3.0.1') format('woff'),
     url('../../../../../images/fontawsome/fontawesome-webfont.ttf?v=3.0.1') format('truetype');
   font-weight: normal;
   font-style: normal;

@@ -26,6 +26,8 @@ $(".select2").select2({
     const aside = document.querySelector('.js-home-login-aside');
     const backdrop = document.querySelector('.js-home-login-backdrop');
     const triggers = document.querySelectorAll('.js-home-login-open');
+    const root = document.documentElement;
+    let lockedScrollY = 0;
     if (!aside || !backdrop) return;
 
     function setExpandedState(isExpanded) {
@@ -34,7 +36,30 @@ $(".select2").select2({
         });
     }
 
+    function lockBodyScroll() {
+        lockedScrollY = window.scrollY || window.pageYOffset || 0;
+        document.body.classList.add('home-sheet-open');
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${lockedScrollY}px`;
+        document.body.style.left = '0';
+        document.body.style.right = '0';
+        document.body.style.width = '100%';
+        root.style.overflow = 'hidden';
+    }
+
+    function unlockBodyScroll() {
+        document.body.classList.remove('home-sheet-open');
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.width = '';
+        root.style.overflow = '';
+        window.scrollTo(0, lockedScrollY);
+    }
+
     function openSheet() {
+        if (aside.classList.contains('is-open')) return;
         aside.classList.add('is-open');
         setExpandedState(true);
         // Trigger reflow so CSS transition plays on backdrop
@@ -42,15 +67,16 @@ $(".select2").select2({
         requestAnimationFrame(function () {
             backdrop.classList.add('is-visible');
         });
-        document.body.classList.add('home-sheet-open');
+        lockBodyScroll();
         const closeBtn = aside.querySelector('.js-home-login-close');
         if (closeBtn) closeBtn.focus();
     }
 
     function closeSheet() {
+        if (!aside.classList.contains('is-open')) return;
         aside.classList.remove('is-open');
         backdrop.classList.remove('is-visible');
-        document.body.classList.remove('home-sheet-open');
+        unlockBodyScroll();
         setExpandedState(false);
         // Hide backdrop after transition
         backdrop.addEventListener('transitionend', function onEnd() {

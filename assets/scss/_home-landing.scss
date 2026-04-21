@@ -317,8 +317,8 @@
       padding: 0 !important;
       margin: 0 !important;
       flex: none !important;
-      /* Above the topbar (z-index: 2000) and the backdrop */
-      z-index: 2010;
+      /* Above topbar and cookie banner */
+      z-index: 12010;
       transform: translateY(calc(100% + 2px));
       transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
       /* Visibility is more reliable than pointer-events on Android */
@@ -446,7 +446,7 @@
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 2009;
+    z-index: 12009;
     background: rgba(5, 14, 28, 0.55);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
@@ -459,9 +459,11 @@
     }
   }
 
-  /* ── Prevent body scroll when sheet is open ────────────────────── */
-  .home-sheet-open {
-    overflow: hidden;
+  /* ── iOS layering fix when sheet is open ───────────────────────── */
+  body.home-sheet-open & {
+    .home-hero {
+      overflow: visible;
+    }
   }
 
   /* ── Login card ───────────────────────────────────────────────── */

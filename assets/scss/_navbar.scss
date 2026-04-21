@@ -250,7 +250,7 @@
     display: none !important;
   }
 
-  /* Unread ≥ 1: clear blue chip on orange bar ($info from _custom.scss). */
+  /* Unread ≥ 1: clear blue chip on orange bar. */
   #conversationCount[data-count]:not([data-count="0"]):not([data-count="-1"]) .topbar-counter__badge.badge {
     top: -0.12rem;
     right: -0.08rem;
@@ -260,7 +260,7 @@
     font-size: 0.72rem;
     font-weight: 800;
     color: #fff;
-    background-color: $info;
+    background-color: $topbar-unread-badge-bg;
     border: 1px solid rgba(255, 255, 255, 0.95);
     box-shadow:
       0 0 0 1px rgba(0, 0, 0, 0.1),

@@ -317,6 +317,9 @@
       padding: 0 !important;
       margin: 0 !important;
       flex: none !important;
+      display: flex;
+      align-items: flex-end;
+      max-height: calc(100dvh - var(--bw-topbar-offset, 64px));
       /* Above topbar and cookie banner */
       z-index: 12010;
       transform: translateY(calc(100% + 2px));
@@ -344,12 +347,17 @@
 
     /* Panel: rounded top, full width, no max-width limit on mobile */
     .home-login-panel {
+      width: 100%;
       max-width: 100%;
       margin: 0;
       padding: 1.35rem 1.25rem 2rem;
       border-radius: 1.5rem 1.5rem 0 0;
       border-bottom: none;
       position: relative;
+      max-height: calc(100dvh - var(--bw-topbar-offset, 64px) - 0.5rem);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
       padding-bottom: max(2rem, calc(1.35rem + env(safe-area-inset-bottom, 0px)));
       backdrop-filter: none !important;
       -webkit-backdrop-filter: none !important;

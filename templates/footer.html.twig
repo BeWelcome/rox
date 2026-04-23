@@ -3,73 +3,132 @@
 {%- set hasEnglishRights = app.user.hasRightsForLocale('en') -%}
 {%- set hasCurrentLocaleRights = app.user.hasRightsForLocale(app.request.locale) -%}
 {% endif %}
+{% set footer_col = app.user ? 'col-12 col-md-6 col-lg-3 mb-4 mb-lg-0' : 'col-12 col-md-6 col-lg-4 mb-4 mb-lg-0' %}
 <footer>
-    <div id="footer_content" class="stickyfooter my-0 py-0">
-        <div class="container-lg my-1">
-            <div class="row align-items-center row justify-content-end">
-                <div class="col-sm-8">
-                    <form method="post">
-                        <div class="o-form-group form-row">
-                            <label for="language" class="col-auto col-form-label">
-                            {{ 'footer.site.language' | trans }}
-                            </label>
-                            <select id="language" name="language" class="col-auto form-control-sm select2"
-                                onchange="window.location.href=this.value; return false">
-                                {% for lang in locales %}
-                                    <option {% if lang == app.request.locale %}selected="selected"{% endif %}
-                                            value="{{ path('language', { locale: lang }) }}">{{ language_name(lang) }}
-                                        ({{ language_name_translated(lang, app.request.locale) }})
-                                    </option>
-                                {% endfor %}
-                            </select>
+    <div id="footer_content" class="stickyfooter">
+        <div class="stickyfooter__main">
+        <div class="container-fluid stickyfooter-container">
+            <div class="row align-items-lg-start stickyfooter__columns">
+                        {% if app.user %}
+                        <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-users stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'communitymenu' | trans }}
+                            </h2>
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
+                                <li><a href="{{ path('forums') }}">{{ 'communitydiscussions' | trans }}</a></li>
+                                <li><a href="{{ path('groups_mygroups') }}">{{ 'groups' | trans }}</a></li>
+                                <li><a href="{{ path('activities') }}">{{ 'activities' | trans }}</a></li>
+                                <li><a href="{{ path('wiki_front_page') }}">{{ 'wiki' | trans }}</a></li>
+                                <li><a href="{{ path('newsletters') }}">{{ 'newsletters' | trans }}</a></li>
+                                <li><a href="{{ path('communitynews') }}">{{ 'communitynews' | trans }}</a></li>
+                            </ul>
                         </div>
-                    </form>
-                </div>
-                <div class="col-sm-4">
-                    <div class="o-form-group form-row float-md-right">
-                            {% if is_granted('ROLE_ADMIN_WORDS') and hasCurrentLocaleRights %}
-                                <label for="translation_mode" class="col-auto col-form-label">
-                                    {{ 'translation.mode' | trans }}
-                                </label>
-                                <select id="translation_mode" name="translation_mode" class="o-input select2"
-                                        data-minimum-results-for-search="-1"
-                                        onchange="window.location.href=this.value; return false">
-                                    <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}
-                                            value="{{ url('translation_mode', {mode: 'on'}) }}">
-                                        {{ 'on' | trans }}
-                                    </option>
-                                    <option {% if app.session.get('translation_mode') != 'on' %}selected="selected"{% endif %}
-                                            value="{{ url('translation_mode', {mode: 'off'}) }}">
-                                        {{ 'off' | trans }}
-                                    </option>
-                                </select>
-                            {% else %}
-                                {% if is_granted('ROLE_USER') %}
-                                    <a class="btn btn-sm btn-outline-primary pull-right"
-                                    href="groups/60">{{ 'translation.help' | trans }}</a>
-                                {% endif %}
+                        {% endif %}
+                        <div class="{{ footer_col }}">
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-user-shield stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'safety' | trans }}
+                            </h2>
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
+                                <li><a href="{{ url('safety') }}">{{ 'menu.safety.information' | trans }}</a></li>
+                                <li><a href="{{ url('safety_contact_no_modal') }}">{{ 'menu.safety.report' | trans }}</a></li>
+                            </ul>
+                            {% if app.user %}
+                            <h2 class="stickyfooter__heading stickyfooter__heading--stacked">
+                                <i class="fa fa-heart stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'landing.beinvolved.title' | trans }}
+                            </h2>
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
+                                <li><a href="{{ url('donations') }}">{{ 'donate' | trans }}</a></li>
+                                <li><a href="{{ url('getactive') }}">{{ 'about_getactive' | trans }}</a></li>
+                            </ul>
                             {% endif %}
-                    </div>
-                </div>
-                <div class="col-12 mt-1">
-                    <a href="{{ url('about') }}" class="font-weight-bold">{{ 'aboutuspage' | trans }}</a> &bull;
-                    <a href="{{ url('donations') }}">{{ 'donate' | trans }}</a> &bull;
-                    <a href="{{ url('terms_of_use') }}" class="footnav" target="new">{{ 'termsofuse' | trans }}</a> &bull;
-                    <a href="{{ url('privacy_policy') }}" class="footnav" target="new">{{ 'privacy' | trans }}</a> &bull;
-                    <a href="{{ url('data_rights') }}" class="footnav" target="new">{{ 'datarights' | trans }}</a> &bull;
-                    <a href="{{ url('imprint') }}" class="footnav">{{ 'impressum' | trans }}</a> &bull;
-                    <a href="{{ url('about_faq') }}" class="footnav">{{ 'faq' | trans }}</a> &bull;
-                    <a href="{{ url('feedback') }}" class="footnav">{{ 'contactus' | trans }}</a> &bull;
-                    <a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}" class="footnav">{{ 'footer.reportbug' | trans }}</a>
-                </div>
-                <div class="col-12 mt-1">
-                    &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="https://www.bevolunteer.org/"
-                                                                   target="_blank">BeVolunteer</a> and contributors
+                        </div>
+                        <div class="{{ footer_col }}">
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-question-circle stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'getanswers' | trans }}
+                            </h2>
+                            <ul class="list-unstyled stickyfooter__link-list stickyfooter__link-list--legal mb-0">
+                                <li><a href="{{ url('about') }}">{{ 'aboutuspage' | trans }}</a></li>
+                                <li><a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a></li>
+                                <li><a href="{{ url('feedback') }}">{{ 'contactus' | trans }}</a></li>
+                                <li><a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a></li>
+                                {% if app.user %}
+                                <li><a href="{{ url('stats') }}">{{ 'statspage' | trans }}</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div class="{{ footer_col }}">
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-balance-scale stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'landing.beinformed.title' | trans }}
+                            </h2>
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
+                                <li><a href="{{ url('terms_of_use') }}" target="_blank" rel="noopener noreferrer">{{ 'termsofuse' | trans }}</a></li>
+                                <li><a href="{{ url('privacy_policy') }}" target="_blank" rel="noopener noreferrer">{{ 'privacy' | trans }}</a></li>
+                                <li><a href="{{ url('data_rights') }}" target="_blank" rel="noopener noreferrer">{{ 'datarights' | trans }}</a></li>
+                                <li><a href="{{ url('imprint') }}">{{ 'impressum' | trans }}</a></li>
+                            </ul>
+                            {% if is_granted('ROLE_ADMIN_WORDS') and app.user and app.user.hasRightsForLocale(app.request.locale) %}
+                                <div class="footer-help-translate footer-help-translate--embed mt-3" role="group">
+                                    <label for="footer_embed_select" class="footer-help-translate__text mb-0">{{ 'translation.mode' | trans }}</label>
+                                    <select id="footer_embed_select" name="translation_mode"
+                                            class="select2 footer-help-translate__control"
+                                            data-minimum-results-for-search="-1"
+                                            onchange="window.location.href=this.value; return false">
+                                        <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}
+                                                value="{{ url('translation_mode', {mode: 'on'}) }}">
+                                            {{ 'on' | trans }}
+                                        </option>
+                                        <option {% if app.session.get('translation_mode') != 'on' %}selected="selected"{% endif %}
+                                                value="{{ url('translation_mode', {mode: 'off'}) }}">
+                                            {{ 'off' | trans }}
+                                        </option>
+                                    </select>
+                                </div>
+                            {% elseif is_granted('ROLE_USER') %}
+                                <a class="footer-help-translate mt-3" href="{{ url('group_start', { group_id: 60 }) }}">
+                                    <span class="footer-help-translate__icon" aria-hidden="true"><i class="fa fa-language"></i></span>
+                                    <span class="footer-help-translate__text">{{ 'translation.help' | trans }}</span>
+                                </a>
+                            {% endif %}
+                        </div>
+            </div>
+        </div>
+        </div>
+        <div class="footer-bottom-band">
+            <div class="container-fluid stickyfooter-container">
+                <div class="row align-items-center footer-bottom-band__row">
+                    <div class="col-12 col-md-7 col-lg-8 footer-bottom-band__legal">
+                        <div class="footer-bottom-band__meta">
+                            &copy; 2007 &mdash; {{ "now" | date("Y") }} <a href="https://www.bevolunteer.org/"
+                                                                           target="_blank">BeVolunteer</a> and contributors
 
-                    - <em>Running on open source <a class="d-inline" href="https://github.com/bewelcome/rox">BW
-                            Rox</a> rev. <a
-                                href="https://github.com/BeWelcome/rox/commit/{{ version }}">{{ version }}</a>
-                        ({{ version_dt }})</em>
+                            - <em>Running on open source <a class="d-inline" href="https://github.com/bewelcome/rox">BW
+                                    Rox</a> rev. <a
+                                        href="https://github.com/BeWelcome/rox/commit/{{ version }}">{{ version }}</a>
+                                ({{ version_dt }})</em>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-5 col-lg-4 footer-bottom-band__lang">
+                        <form method="post" class="footer-bottom-band__lang-form">
+                            <div class="form-row align-items-center">
+                                <div class="col-12 col-md-auto">
+                                    <label for="language" class="col-form-label mb-0 d-block footer-bottom-band__lang-label">
+                                        {{ 'footer.site.language' | trans }}
+                                    </label>
+                                </div>
+                                <div class="col-12 col-md-auto footer-bottom-band__lang-select-wrap">
+                                    <select id="language" name="language" class="form-control-sm select2 footer-site-language"
+                                            onchange="window.location.href=this.value; return false">
+                                        {% for lang in locales %}
+                                            <option {% if lang == app.request.locale %}selected="selected"{% endif %}
+                                                    value="{{ path('language', { locale: lang }) }}">{{ language_name(lang) }}
+                                                ({{ language_name_translated(lang, app.request.locale) }})
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,7 +181,6 @@
                                 </div>
                             </a>
                         </li>
-                        {# Show fallback count only if any exist #}
                         <li class="nav-item">
                             <a class="nav-link" id="profile-tab" data-toggle="tab" href="#fallback" role="tab"
                                aria-controls="fallback" aria-selected="false">
@@ -192,7 +250,6 @@
     {% endif %}
 </footer>
 {% macro render_table(messages, hasEnglishRights) %}
-    {# We should always get messages but better be safe than sorry. #}
     {% if messages|length %}
         {% set state = messages[0].state %}
     <div class="col-12">
@@ -219,12 +276,6 @@
                         <p class="m-0">{{ message.id | trans( {}, message.domain, 'en' ) | truncate(50) }}</p>
                         {% if message.transChoiceNumber is not null %}
                             <small class="newline">(pluralization is used)</small>
-                        {% endif %}
-
-                        {% if message.parameters|length > 0 %}
-                            {% for parameter in message.parameters %}
-                                {# dump(parameters) #}
-                            {% endfor %}
                         {% endif %}
                     </td>
                     {% if state == constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') %}

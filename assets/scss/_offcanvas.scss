@@ -5,7 +5,7 @@
 @media screen and (max-width: 767px) {
   .offcanvas-collapse {
     position: fixed;
-    top: 46px; /* Height of navbar */
+    top: var(--bw-topbar-offset, 64px); /* align with #main_menu height */
     bottom: 0;
     left: 100%;
     width: 100%;

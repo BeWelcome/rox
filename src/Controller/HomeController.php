@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Location;
-use App\Form\LoginFormType;
 use App\Form\MapSearchFormType;
 use App\Model\StatisticsModel;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,11 +31,6 @@ class HomeController extends AbstractController
             return $this->forward(LandingController::class . '::show');
         }
 
-        $loginForm = $this->createForm(LoginFormType::class, null, [
-            'action' => $this->generateUrl('security_check'),
-            'method' => 'POST',
-        ]);
-
         // Find all members around 100km of the given location
         $searchForm = $this->createForm(MapSearchFormType::class, null, [
             'action' => '/search/map',
@@ -58,11 +52,10 @@ class HomeController extends AbstractController
             'SignupController',
         ]);
 
-        $images = $this->getHomeImagesRandomly();
+        $images = $this->getHomeImages();
 
         return $this->render('home/home.html.twig', [
             'postHandler' => $roxPostHandler,
-            'form' => $loginForm->createView(),
             'search' => $searchForm->createView(),
             'images' => $images,
             'username' => $usernameForm->createView(),
@@ -72,34 +65,21 @@ class HomeController extends AbstractController
         ]);
     }
 
-    private function getHomeImagesRandomly(): array
+    private function getHomeImages(): array
     {
-        $images = [
+        return [
             1 => [
-                'high' => '/images/homepicture-1200px_1-min.jpg',
-                'low' => '/images/homepicture-576px_1-min.jpg',
+                'high' => '/images/homepicture-big-1.jpg',
+                'low' => '/images/homepicture-small-1.jpg',
             ],
             2 => [
-                'high' => '/images/homepicture-1200px_2-min.jpg',
-                'low' => '/images/homepicture-576px_2-min.jpg',
+                'high' => '/images/homepicture-big-2.jpg',
+                'low' => '/images/homepicture-small-2.jpg',
             ],
             3 => [
-                'high' => '/images/homepicture-1200px_3-min.jpg',
-                'low' => '/images/homepicture-576px_3-min.jpg',
+                'high' => '/images/homepicture-big-3.jpg',
+                'low' => '/images/homepicture-small-3.jpg',
             ],
         ];
-        $picked = [];
-        $pickedCount = 0;
-        $imagesRandom = [];
-        while (3 !== $pickedCount) {
-            $pick = random_int(1, 3);
-            if (!\in_array($pick, $picked, true)) {
-                $picked[] = $pick;
-                $imagesRandom[\count($picked)] = $images[$pick];
-            }
-            $pickedCount = \count($picked);
-        }
-
-        return $imagesRandom;
     }
 }

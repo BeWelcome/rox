@@ -32,11 +32,6 @@
 <?= (is_object($this->layoutkit) && (is_object($this->layoutkit->mem_from_redirect))) ? $this->layoutkit->mem_from_redirect->buffered_text : '' ?>
 test <?= $this->body() ?> test
 <?= $this->includeLateScriptfiles() ?>
-<script type="application/javascript">
-$('[data-toggle="dropdown"]').bootstrapDropdownHover({
-    clickBehavior: 'sticky',
-    hideTimeout: 1000
-});
-</script>
+
 </body>
 </html>

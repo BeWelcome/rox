@@ -1,5 +1,5 @@
 <!-- #nav: main navigation -->
-<nav class="navbar navbar-fixed-top" role="navigation">
+<nav id="main_menu" class="navbar navbar-fixed-top" role="navigation">
   <div class="container-lg">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -26,7 +26,7 @@
     <div class="collapse navbar-collapse" id="bewelcome-navbar-collapse-1">
     <ul class="nav navbar-nav navbar-left">
         <li class="dropdown">
-          <a href="search" class="dropdown-toggle" data-toggle="dropdown"><?=$words->get('FindMembers')?> <b class="caret"></b></a>
+          <a href="search" class="dropdown-toggle" data-toggle="dropdown" data-dropdown-click-only><?=$words->get('FindMembers')?> <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="searchmembers"><?=$words->get('MapSearch')?></a></li>
                 <li><a href="search"><?=$words->get('TextSearch')?></a></li>
@@ -35,7 +35,7 @@
           </ul>
         </li>
         <li class="dropdown">
-          <a href="community" class="dropdown-toggle" data-toggle="dropdown"><?=$words->get('CommunityMenu')?> <b class="caret"></b></a>
+          <a href="community" class="dropdown-toggle" data-toggle="dropdown" data-dropdown-click-only><?=$words->get('CommunityMenu')?> <b class="caret"></b></a>
           <ul class="dropdown-menu">
             <li><a href="forums" title="<?=$words->getSilent('AgoraTagLine')?>"><?=$words->get('CommunityDiscussions')?></a><?php echo $words->flushBuffer(); ?></li>
             <li><a href="groups/search" title="<?=$words->getSilent('GroupsTagLine')?>"><?=$words->get('Groups')?></a><?php echo $words->flushBuffer(); ?></li>
@@ -50,7 +50,7 @@
         <a href="safety"><?=$words->get('Safety')?></a>
         </li>
         <li class="dropdown">
-          <a href="about" class="dropdown-toggle" data-toggle="dropdown"><?=$words->get('GetAnswers')?> <b class="caret"></b></a>
+          <a href="about" class="dropdown-toggle" data-toggle="dropdown" data-dropdown-click-only><?=$words->get('GetAnswers')?> <b class="caret"></b></a>
           <ul class="dropdown-menu">
                 <li><a href="faq"><?=$words->get('Faq')?></a></li>
                 <li><a href="feedback"><?=$words->get('ContactUs')?></a></li>
@@ -60,7 +60,7 @@
         </li>
 <?php if (isset($volunteer) && $volunteer) { ?>
         <li class="dropdown">
-          <a href="volunteer" class="dropdown-toggle" data-toggle="dropdown"><?=$words->get('Volunteer')?> <b class="caret"></b></a>
+          <a href="volunteer" class="dropdown-toggle" data-toggle="dropdown" data-dropdown-click-only><?=$words->get('Volunteer')?> <b class="caret"></b></a>
           <?=$this->volunteerMenu() ?>
         </li>
 <?php } ?>
@@ -73,7 +73,7 @@
             <li>
                 <a href="/messages"><i class="fa  fa-lg fa-inbox" style="vertical-align: middle;"></i> <span style="font-weight: normal" >[<?= $numberOfNewMessagees ?>]</span></a>
             </li>
-            <li class="dropdown"><a href="/logout" class="dropdown-toggle" data-toggle="dropdown">&nbsp;<i class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span class="caret"></span></a>
+            <li class="dropdown"><a href="/logout" class="dropdown-toggle" data-toggle="dropdown" data-dropdown-click-only>&nbsp;<i class="fa fa-lg fa-gear" style="vertical-align: middle"></i> <span class="caret"></span></a>
                 <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li><a href="members/<?=$username?>"><?=$words->get('Profile')?></a></li>
                     <li><a href="editmyprofile"><?=$words->get('EditMyProfile')?></a></li>

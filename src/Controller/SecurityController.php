@@ -91,6 +91,7 @@ class SecurityController extends AbstractController
      * and handle the logout automatically. See logout in app/config/security.yml
      *
      * @Route("/logout", name="security_logout")
+     * @Route("/logout", name="_logout_main")
      *
      * @throws Exception
      */

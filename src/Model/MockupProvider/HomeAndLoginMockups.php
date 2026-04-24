@@ -80,16 +80,16 @@ class HomeAndLoginMockups implements MockupProviderInterface
                     'search' => $searchForm->createView(),
                     'images' => [
                         1 => [
-                            'high' => '/images/homepicture-1200px_1-min.jpg',
-                            'low' => '/images/homepicture-576px_1-min.jpg',
+                            'high' => '/images/homepicture-big-1.jpg',
+                            'low' => '/images/homepicture-small-1.jpg',
                         ],
                         2 => [
-                            'high' => '/images/homepicture-1200px_2-min.jpg',
-                            'low' => '/images/homepicture-576px_2-min.jpg',
+                            'high' => '/images/homepicture-big-2.jpg',
+                            'low' => '/images/homepicture-small-2.jpg',
                         ],
                         3 => [
-                            'high' => '/images/homepicture-1200px_3-min.jpg',
-                            'low' => '/images/homepicture-576px_3-min.jpg',
+                            'high' => '/images/homepicture-big-3.jpg',
+                            'low' => '/images/homepicture-small-3.jpg',
                         ],
                     ],
                 ];

@@ -66,6 +66,7 @@
     $this->addRoute('members_profile_notification', '/members/:username:/:message:', 'MembersController', 'index');
     $this->addRoute('members_profile_invite', '/members/:username:/leg/:id:', 'MembersController', 'index');
     $this->addRoute('edit_my_profile', '/editmyprofile', 'MembersController', 'index');
+    $this->addRoute('profile_edit', '/editmyprofile/:username:', 'MembersController', 'index');
 
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
     $this->addRoute('members_profile_set_active', 'setprofileactive', 'MembersController', 'setactive');

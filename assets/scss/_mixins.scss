@@ -30,8 +30,14 @@
   );
 
   @each $ext in $exts {
-    $extmod: if(map-has-key($extmods, $ext), $ext + map-get($extmods, $ext), $ext);
-    $format: if(map-has-key($formats, $ext), map-get($formats, $ext), $ext);
+    $extmod: $ext;
+    @if map-has-key($extmods, $ext) {
+      $extmod: $ext + map-get($extmods, $ext);
+    }
+    $format: $ext;
+    @if map-has-key($formats, $ext) {
+      $format: map-get($formats, $ext);
+    }
     $src: append($src, url(quote($path + "." + $extmod)) format(quote($format)), comma);
   }
 

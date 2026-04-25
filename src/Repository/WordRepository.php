@@ -52,6 +52,8 @@ class WordRepository extends EntityRepository
             ->setParameter('locale', $locale)
             ->setParameter('domain', $domain);
 
+        $qb->orderBy('t.updated', 'ASC');
+
         $translations = $qb
             ->getQuery()
             ->getResult();

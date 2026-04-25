@@ -70,6 +70,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         $index = $client->table('geonames_rt');
 
         try {
+            $index->drop(true);
             $index->create(
                 [
                     'geoname_id' => ['type' => 'integer'],
@@ -97,10 +98,10 @@ class ManticoreIndicesGeonamesCommand extends Command
                 ]
             );
         } catch (Exception $e) {
-            // $index = null;
+            $index = null;
 
             $this->io->error($e->getMessage());
-            $this->io->error('Index ' . self::GEONAMES_INDEX . ' already exists or another problem occurred.');
+            $this->io->error('Failed to create index ' . self::GEONAMES_INDEX . '.');
         }
 
         return $index;

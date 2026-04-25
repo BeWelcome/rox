@@ -64,6 +64,7 @@ class ManticoreIndicesForumCommand extends Command
         $index = $client->table('forum_rt');
 
         try {
+            $index->drop(true);
             $index->create(
                 [
                     'post_id' => ['type' => 'integer'],
@@ -88,10 +89,10 @@ class ManticoreIndicesForumCommand extends Command
                 ]
             );
         } catch (Exception $e) {
-            // $index = null;
+            $index = null;
 
             $this->io->error($e->getMessage());
-            $this->io->error('Index ' . self::FORUM_INDEX . ' already exists or another problem occurred.');
+            $this->io->error('Failed to create index ' . self::FORUM_INDEX . '.');
         }
 
         return $index;

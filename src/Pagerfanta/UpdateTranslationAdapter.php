@@ -38,6 +38,7 @@ class UpdateTranslationAdapter implements AdapterInterface
                 AND (w1.majorUpdate > w2.updated
                 OR w1.updated > w2.updated)
             ORDER BY w1.updated DESC;");
+        $statement->bindValue('locale', $this->locale, ParameterType::STRING);
         $result = $statement->executeQuery();
         $count = $result->fetchOne();
 

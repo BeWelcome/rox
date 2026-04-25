@@ -61,27 +61,24 @@
        "purpose": "maskable"
      }
   ],
-  "screenshots" : [
-      {
-        "src": "images/screenshots/home.jpg",
-        "sizes": "720x1230",
-        "type": "image/jpg",
-        "platform": "narrow",
-        "label": "Home screen of app"
-      },
-      {
-        "src": "images/screenshots/search.jpg",
-        "sizes": "720x1230",
-        "type": "image/jpg",
-        "platform": "narrow",
-        "label": "Search function of the app"
-      },
-      {
-        "src": "images/screenshots/profile.jpg",
-        "sizes": "720x1230",
-        "type": "image/jpg",
-        "platform": "narrow",
-        "label": "Profile section of the app"
-      }
+  "screenshots": [
+    {
+      "src": "images/screenshots/home.jpg",
+      "sizes": "1230x720",
+      "type": "image/jpg",
+      "platform": "wide"
+    },
+    {
+      "src": "images/screenshots/search.jpg",
+      "sizes": "1230x720",
+      "type": "image/jpg",
+      "platform": "wide"
+    },
+    {
+      "src": "images/screenshots/profile.jpg",
+      "sizes": "1230x720",
+      "type": "image/jpg",
+      "platform": "wide"
+    }
   ]
 }

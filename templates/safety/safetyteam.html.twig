@@ -1,3 +1,4 @@
+{% set slim_nav = true %}
 {% extends 'base.html.twig' %}
 
 {% block stylesheets %}
@@ -23,7 +24,7 @@
             <a id="reactive"></a>
             <h5>{{ 'safety_reactive' | trans | purify }}</h5>
             <p>{{ 'safety_reactivetext' | trans | purify }}</p>
-            <p>{{ 'safety_reactivetext' | trans 
+            <p>{{ 'safety_reactivetext' | trans
                 ({ 'safety_reactivetext.terms' : '<a href="' ~ url('terms_of_use', {'locale': app.request.locale}) ~ '">' ~ 'safety_reactivetext.terms'|trans ~ '</a>' })
                 | purify }}
             </p>

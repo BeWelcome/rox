@@ -144,6 +144,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
             <?php
             $forumUtilities = new ForumUtilities();
             $postContent = $forumUtilities->removeFqdn($words->fTrad($post->IdContent));
+            $postContent = ForumUtilities::addLightboxToFigures($postContent);
 
 
             if (($post->PostDeleted == "Deleted")&&($this->BW_Right->HasRight("ForumModerator"))) {

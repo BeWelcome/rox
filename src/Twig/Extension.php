@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Utilities\ForumUtilities;
 use Carbon\Carbon;
 use HTMLPurifier;
 use HTMLPurifier_HTML5Config;
@@ -126,6 +127,13 @@ class Extension extends AbstractExtension implements GlobalsInterface
             new TwigFilter(
                 'privacy',
                 $this->privacy(...),
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFilter(
+                'forum_lightbox',
+                ForumUtilities::addLightboxToFigures(...),
                 [
                     'is_safe' => ['html'],
                 ]

@@ -77,6 +77,14 @@ Encore
     .enableSassLoader(options => {
         // Prefer using sass instead of node-sass to not depend on Python
         options.implementation = require('sass');
+        options.sassOptions = {
+            // Suppress deprecation warnings from node_modules dependencies
+            quietDeps: true,
+            // Silence deprecations that require a major migration to fix
+            // (Bootstrap 4 / Foundation @import → @use, and legacy color functions
+            // in foundation-settings.scss used as a Foundation Emails config file)
+            silenceDeprecations: ['import', 'global-builtin', 'color-functions'],
+        };
     }, {
         resolveUrlLoader: true
     })

@@ -230,6 +230,9 @@ class ForumsView extends RoxAppView {
     * Display a topic
     */
     public function showTopic()  {
+        $this->page->addStyleSheet('build/lightbox.css');
+        $this->page->addLateLoadScriptFile('build/lightbox.js');
+
         $topic = $this->_model->getTopic();
         $request = PRequest::get()->request;
 

@@ -90,7 +90,7 @@ using a browser or use curl _url_ > _filename_.
 
     ```bash
     $ composer install
-    $ yarn install --frozen-lock
+    $ bun i --frozen-lockfile
     ```
 
 2. Initialize the database.

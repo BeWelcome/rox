@@ -71,7 +71,6 @@ allCountries.zip
 /public/main.js*
 /public/service-worker.js*
 npm-debug.log
-yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 
 ###> squizlabs/php_codesniffer ###

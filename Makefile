@@ -42,22 +42,22 @@ phpcsfix:
 	"./vendor/bin/phpcbf" $(SRC_DIR)
 	"./vendor/bin/php-cs-fixer" fix -v
 
-deploy: composer yarn encore assets
+deploy: composer bun encore assets
 
 composer:
 	composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
-yarn:
-	yarn install
+bun:
+	bun i
 
 encore:
-	yarn encore production
+	bun encore production
 
 assets:
 	php bin/console assets:install --env=prod
 
 build:
-	yarn encore dev
+	bun encore dev
 	php bin/console assets:install
 
 phpdox: phploc phpmd php-code-sniffer phpunit

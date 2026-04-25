@@ -12,7 +12,6 @@ on:
 
 env:
   PHP_VERSION: 8.4
-  NODE_VERSION: 22
 
 permissions:
   contents: read
@@ -97,14 +96,11 @@ jobs:
       - name: Warmup cache
         run: bin/console cache:clear --env=test
 
-      - name: Setup Yarn
-        uses: threeal/setup-yarn-action@v2.0.0
-        with:
-          version: latest
-          cache: false
-          
-      - name: Install yarn dependencies and run webpack
-        run: yarn install --frozen-lock ; yarn encore dev
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install bun dependencies and run webpack
+        run: bun i --frozen-lockfile && bun encore dev
 
       - name: Run Integration tests
         run: bin/phpunit --log-junit=build/logs/phpunit/integration.xml --colors=never --order-by=random --group=integration
@@ -341,8 +337,8 @@ jobs:
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xml, xmlwriter, xsl, zip
           tools: symfony
 
-      - name: Setup NODE
-        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610  # tag=v3.9.1
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -358,24 +354,10 @@ jobs:
       - name: Install project dependencies
         run: |
           composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
-          yarn install --frozen-lock
+          bun i --frozen-lockfile
 
       - name: Run PHP security checker
         run: symfony security:check
 
       - name: Run JS security checker
-        run: yarn audit --groups dependencies
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        run: bun audit

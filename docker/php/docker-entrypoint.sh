@@ -35,7 +35,7 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		composer install --prefer-dist --no-progress --no-interaction --no-scripts
-		yarn install --frozen-lock
+		bun i --frozen-lockfile
 	fi
 
 	if [ -f .env ]; then
@@ -93,7 +93,7 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
     bin/console cache:clear
 
 	if [ "$APP_ENV" != 'prod' ]; then
-		yarn encore dev --mode=development
+		bun encore dev --mode=development
 	fi
 
 	# create manticore indices

@@ -39,10 +39,15 @@ RUN set -eux; \
 		opcache \
 	;
 
-# https://github.com/nodejs/docker-node/issues/1126
 RUN set -eux; \
-	echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories; \
-	apk add --no-cache yarn@edge
+    apk add --no-cache curl unzip bash; \
+    curl -fsSL https://bun.sh/install -o bun-install.sh; \
+    bash bun-install.sh; \
+    ln -s /root/.bun/bin/bun /usr/local/bin/bun; \
+    rm bun-install.sh
+
+# Verify
+RUN bun --version
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN export PATH="/usr/local/bin:$PATH"
@@ -92,8 +97,8 @@ RUN set -eux; \
 # prevent the reinstallation of node_modules at every changes in the source code
 #COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
 #RUN set -eux; \
-#	yarn install --frozen-lock; \
-#	yarn encore production --mode=production
+#	bun i --frozen-lockfile; \
+#	bun encore production --mode=production
 
 # do not use .env files in production
 COPY .env ./
@@ -130,4 +135,5 @@ RUN set -eux; \
 		make \
 		mysql-client; \
 	chmod a+w $PHP_INI_DIR; \
-	chmod -R a+w /srv/bewelcome/vendor
+	chmod -R a+w /srv/bewelcome/vendor; \
+	chmod -R 777 /srv/bewelcome/var

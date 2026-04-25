@@ -54,7 +54,7 @@
     "move-js": "^0.5.0",
     "path": "^0.12.7",
     "popper.js": "^1.16.1",
-    "postcss": "^8.4.17",
+    "postcss": "^8.5.10",
     "postcss-loader": "^7.0.0",
     "purgecss": "^4.0.3",
     "postcss-import": "^15.0.0",

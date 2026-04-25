@@ -1,5 +1,6 @@
 let Encore = require('@symfony/webpack-encore');
 
+const fs = require('fs');
 const path = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -98,6 +99,19 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(true)
     // Use raw-loader for CKEditor 5 SVG files.
+    .configureCssLoader((config) => {
+        config.url = {
+            filter: (url, resourcePath) => {
+                if (/^(data:|https?:)/.test(url)) return true;
+                const resolved = path.resolve(path.dirname(resourcePath), url);
+                if (!fs.existsSync(resolved)) {
+                    console.warn(`\x1b[33mWARNING\x1b[0m CSS url() not found, skipping: ${url} (in ${path.relative(__dirname, resourcePath)})`);
+                    return false;
+                }
+                return true;
+            },
+        };
+    })
     .enablePostCssLoader((options) => {
         // new option outlined here https://webpack.js.org/loaders/postcss-loader/
         options.postcssOptions = {

@@ -63,26 +63,22 @@
   ],
   "screenshots": [
     {
-        "screenshots" : [
-          {
-            "src": "images/screenshots/home.jpg",
-            "sizes": "1230x720",
-            "type": "image/jpg",
-            "platform": "wide",
-          },
-          {
-            "src": "images/screenshots/search.jpg",
-            "sizes": "1230x720",
-            "type": "image/jpg",
-            "platform": "wide",
-          },
-          {
-            "src": "images/screenshots/profile.jpg",
-            "sizes": "1230x720",
-            "type": "image/jpg",
-            "platform": "wide",
-          },
-        ]
+      "src": "images/screenshots/home.jpg",
+      "sizes": "1230x720",
+      "type": "image/jpg",
+      "platform": "wide"
+    },
+    {
+      "src": "images/screenshots/search.jpg",
+      "sizes": "1230x720",
+      "type": "image/jpg",
+      "platform": "wide"
+    },
+    {
+      "src": "images/screenshots/profile.jpg",
+      "sizes": "1230x720",
+      "type": "image/jpg",
+      "platform": "wide"
     }
   ]
 }

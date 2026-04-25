@@ -61,9 +61,9 @@ class GroupController extends AbstractController
     #[Route(path: '/groups/', name: 'groups_redirect', priority: 10)]
     public function redirectToOverviewPage()
     {
-        /** @var Member $member */
+        /** @var Member|null $member */
         $member = $this->getUser();
-        if ($member->getGroups()) {
+        if (null !== $member && $member->getGroups()) {
             return $this->redirectToRoute('groups_mygroups');
         }
 

@@ -82,7 +82,7 @@ class CommunityNewsModel
         return $repository->findLatestCommunityNewsComments($page, $limit);
     }
 
-    public function deleteAsSpamByChecker($commentIds)
+    public function deleteAsSpamByChecker($commentIds): void
     {
         // delete all activities based on there ids
         $em = $this->entityManager;

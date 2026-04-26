@@ -2,22 +2,19 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('jquery_ui') }}
-    {{ encore_entry_script_tags('leaflet') }}
     {{ encore_entry_script_tags('search/loadcontent') }}
     {{ encore_entry_script_tags('search/locations') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('leaflet') }}
-    {{ encore_entry_link_tags('jquery_ui') }}
     {{ encore_entry_link_tags('tailwind') }}
     {{ encore_entry_link_tags('search/locations') }}
 {% endblock stylesheets %}
 
 {% block content %}
+  {% dump(searchParams) %}
     {% if pager is not null and pager.nbResults == 0 %}
-    <div class="row no-gutters">
+    <div class="row g-0">
         <div class="col-12">
             <div class="alert alert-notice">
                 {{ 'search.no.members'|trans }}
@@ -40,30 +37,48 @@
     <div class="u:block">{{ form_errors(form.location) }}</div>
     <div class="u:mb-8">{{ form_help(form.location) }}</div>
     {% do form.location.setRendered %}
-    <div class="row mb-3">
-        <div class="u:flex u:justify-start ml-3">
-            {{ form_row(form.show_options, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_options mr-3'}}) }}<span class="mr-3"></span>
-            {{ form_row(form.show_map, {'label_attr': {'class':'switch-custom'}, 'attr': {'class':'show_map'}}) }}
+    <div class="row g-3 mb-3">
+      <div class="col-12">
+        <div class="row g-3">
+      <div class="col-sm-4">
+          <div class="form-check form-switch d-flex align-items-center">
+            <input class="form-check-input show_options mt-0 me-2" type="checkbox" role="switch" id="{{ form.show_options.vars.id }}" name="{{ form.show_options.vars.full_name }}"
+                   {% if form.show_options.vars.checked %}checked="checked"{% endif %}
+                   switch>
+            <label class="form-check-label mb-0" for="{{ form.show_options.vars.id }}">{{ form.show_options.vars.label|trans }}</label>
+          </div>
+      </div>
+      <div class="col-sm-4">
+          <div class="form-check form-switch d-flex align-items-center">
+            <input class="form-check-input show_map mt-0 me-2" type="checkbox" role="switch" id="{{ form.show_map.vars.id }}" name="{{ form.show_map.vars.full_name }}"
+                   {% if form.show_map.vars.checked %}checked="checked"{% endif %}
+                   switch>
+            <label class="form-check-label mb-0" for="{{ form.show_map.vars.id }}">{{ form.show_map.vars.label|trans }}</label>
+          </div>
+          {% do form.show_options.setRendered %}
+          {% do form.show_map.setRendered %}
         </div>
+        </div>
+    </div>
         <div id="search_options"
-             class="col-12 {% if form.show_options.vars.checked %}d-block{% else %}d-none{% endif %}">
-            <div class="form-row">
+             class="col-12  {% if form.show_options.vars.checked %}d-block{% else %}d-none{% endif %}">
+            <div class="row g-3">
                 <div class="col-sm-4">
-                    <div class="row no-gutters">
+                    <div class="row g-0">
                         <div class="col-12 mb-2">
-                            <span class="font-weight-bolder">{{ 'accommodation'|trans }}</span>
+                            <span class="fw-bolder">{{ 'accommodation'|trans }}</span>
                         </div>
                         <div class="col-12">
-                            {{ form_row(form.accommodation_anytime) }}
+                            {{ form_row(form.accommodation_yes) }}
                         </div>
                         <div class="col-12">
-                            {{ form_row(form.accommodation_neverask) }}
+                            {{ form_row(form.accommodation_no) }}
                         </div>
                         <div class="col-12">
                             {{ form_row(form.accessible) }}
                         </div>
                         <div class="col-12 mb-2">
-                            <span class="font-weight-bolder">{{ 'profile.information'|trans }}</span>
+                            <span class="fw-bolder">{{ 'profile.information'|trans }}</span>
                         </div>
                         <div class="col-12">
                             {{ form_row(form.has_profile_picture) }}
@@ -75,7 +90,7 @@
                             {{ form_row(form.has_comments) }}
                         </div>
                         <div class="col-12 mb-2">
-                            <span class="font-weight-bolder">{{ 'restrictions'|trans }}</span>
+                            <span class="fw-bolder">{{ 'restrictions'|trans }}</span>
                         </div>
                         <div class="col-12">
                             {{ form_row(form.no_alcohol) }}
@@ -89,7 +104,7 @@
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <div class="row no-gutters">
+                    <div class="row g-0">
                         <div class="col-12">
                             {{ form_row(form.can_host) }}
                         </div>
@@ -103,12 +118,12 @@
                             {{ form_row(form.languages) }}
                         </div>
                         <div class="col-12">
-                            {{ form_row(form.last_login) }}
+                            {{ form_row(form.last_active) }}
                         </div>
                     </div>
                 </div>
                 <div class="col-sm-4">
-                    <div class="row no-gutters">
+                    <div class="row g-0">
                         <div class="col-12">
                             {{ form_row(form.distance) }}
                         </div>
@@ -122,7 +137,7 @@
                             {{ form_row(form.gender) }}
                         </div>
                         <div class="col-12 mb-2">
-                            <span class="font-weight-bolder">{{ 'offers'|trans }}</span>
+                            <span class="fw-bolder">{{ 'offers'|trans }}</span>
                         </div>
                         <div class="col-12">
                             {{ form_row(form.offers_dinner) }}
@@ -154,21 +169,25 @@
     </div>
     {{ form_rest(form) }}
     {{ form_end(form) }}
+  <input type="hidden" id="min_latitude" value="{{ searchParams.min_latitude }}">
+  <input type="hidden" id="max_latitude" value="{{ searchParams.max_latitude }}">
+  <input type="hidden" id="min_longitude" value="{{ searchParams.min_longitude }}">
+  <input type="hidden" id="max_longitude" value="{{ searchParams.min_longitude }}">
 
-    <div id="map-box"></div>
+   <div id="map-box"></div>
 
     <script>
         var mapMembers =
-            {% if results %}
-                {{ results.map | json_encode | raw }}
+            {% if map_members %}
+                {{ map_members | json_encode | raw }}
             {% else %}
                 null
             {% endif %}
         ;
     </script>
 
-    {% if pager is not null and pager.nbResults > 0 %}
-        <div class="row no-gutters">
+    {% if members is not null and members.nbResults > 0 %}
+        <div class="row g-0">
             {% include 'member/results.html.twig' %}
         </div>
     {% endif %}

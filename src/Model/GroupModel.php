@@ -345,7 +345,7 @@ class GroupModel
         return true;
     }
 
-    public function sendAdminNotificationDeclined(Group $group, Member $member)
+    public function sendAdminNotificationDeclined(Group $group, Member $member): void
     {
         $admins = $group->getAdministrators();
         foreach ($admins as $admin) {
@@ -363,7 +363,7 @@ class GroupModel
         }
     }
 
-    public function sendAdminNotificationAccepted(Group $group, Member $member)
+    public function sendAdminNotificationAccepted(Group $group, Member $member): void
     {
         $admins = $group->getAdministrators();
         foreach ($admins as $admin) {
@@ -425,7 +425,7 @@ class GroupModel
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function updateMembership(Group $group, Member $member, string $status)
+    private function updateMembership(Group $group, Member $member, string $status): void
     {
         $membershipRepository = $this->entityManager->getRepository(GroupMembership::class);
         $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);

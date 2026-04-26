@@ -22,6 +22,7 @@ Boston, MA  02111-1307, USA.
 */
 
 use App\Doctrine\MemberStatusType;
+use App\Entity\Member;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Foolz\SphinxQL\Drivers\Pdo\Connection;
@@ -97,11 +98,11 @@ class SearchModel extends RoxModelBase
         $order = self::ORDER_BY[$orderType]['Column'] . $directionType;
         switch ($orderType) {
             case self::ORDER_ACCOMMODATION:
-                $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC'
+                $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.AboutMe != "", 2, 0)) ASC'
                     . ', hosting_interest ASC, LastLogin ASC, Distance ASC';
                 break;
             case self::ORDER_COMMENTS:
-                $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC, '
+                $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.AboutMe != "", 2, 0)) ASC, '
                         . 'LastLogin ASC, Distance ASC';
                 break;
             case self::ORDER_DISTANCE:
@@ -256,7 +257,7 @@ LIMIT 1
     {
         $profileSummaryCondition = "";
         if ($vars['search-has-about-me']) {
-            $profileSummaryCondition .= " AND IF(m.ProfileSummary != 0, 2, 0) = 2 ";
+            $profileSummaryCondition .= " AND IF(m.AboutMe != '', 2, 0) = 2 ";
         }
 
         return $profileSummaryCondition;
@@ -368,7 +369,7 @@ LIMIT 1
             $condition .= ' AND m.BirthDate >= (NOW() - INTERVAL ' . $maxAge . ' YEAR)';
         }
         if (!empty($condition) && !($minAge == 18 && $maxAge == 120)) {
-            $condition .= " AND m.HideBirthDate='No'";
+            $condition .= " AND BIT_AND(m.HideAttribute, 4) == 0";
         }
 
         return $condition;
@@ -445,7 +446,7 @@ LIMIT 1
                     if ($value == '') {
                         continue;
                     }
-                    $accommodations[] = "Accomodation = '" . $this->dao->escape($value) . "'";
+                    $accommodations[] = "Accommodation = '" . $this->dao->escape($value) . "'";
                 }
             }
             if (!empty($accommodations)) {
@@ -475,7 +476,7 @@ LIMIT 1
         return $condition;
     }
 
-    private function getTypicalOfferCondition($vars)
+    private function getStandardOffersCondition($vars)
     {
         $condition = "";
         if (isset($vars['search-typical-offers'])) {
@@ -486,7 +487,7 @@ LIMIT 1
                     if ($value == '') {
                         continue;
                     }
-                    $typicalOffers[] = " FIND_IN_SET('" . $this->dao->escape($value) . "', TypicOffer)";
+                    $typicalOffers[] = " FIND_IN_SET('" . $this->dao->escape($value) . "', StandardOffers)";
                 }
             }
             if (!empty($typicalOffers)) {
@@ -563,11 +564,11 @@ LIMIT 1
                 m.Username,
                 Date(m.created) as 'created',
                 m.BirthDate,
-                m.HideBirthDate,
-                m.Accomodation as 'Accommodation',
-                m.TypicOffer,
+                m.HideAttribute,
+                m.Accommodation,
+                m.StandardOffers,
                 m.Restrictions,
-                m.ProfileSummary,
+                m.AboutMe,
                 m.Occupation,
                 m.Gender,
                 m.HideGender,
@@ -576,9 +577,9 @@ LIMIT 1
                 m.FirstName,
                 m.SecondName,
                 m.LastName,
-                IF (m.accomodation = 'neverask', 0, m.hosting_interest) as hosting_interest,
+                IF (m.accommodation = 'no', 0, m.hosting_interest) as hosting_interest,
                 date_format(m.LastLogin,'%Y-%m-%d') AS LastLogin,
-                IF(m.ProfileSummary != 0, 2, 0) AS HasProfileSummary,
+                IF(m.AboutMe != '', 2, 0) AS HasProfileSummary,
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
                 g.geonameId,
                 g.country,
@@ -654,18 +655,16 @@ LIMIT 1
 
         foreach ($rawMembers as $member) {
             $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary, true), 70);
-            $FirstName = ($member->HideAttribute & \Member::MEMBER_FIRSTNAME_HIDDEN) ? "" : $member->FirstName;
-            $SecondName = ($member->HideAttribute & \Member::MEMBER_SECONDNAME_HIDDEN) ? "" : $member->SecondName;
-            $LastName = ($member->HideAttribute & \Member::MEMBER_LASTNAME_HIDDEN) ? "" : $member->LastName;
-            $member->Name = trim($FirstName . " " . $SecondName . " " . $LastName);
+            $LastName = ($member->HideAttribute & Member::NAME_HIDDEN) ? "" : $member->LastName;
+            $member->Name = trim($LastName);
             $member->ProfileSummary = $aboutMe;
 
-            if ($member->HideBirthDate == "No") {
+            if ($member->HideAttribute & Member::AGE_HIDDEN !== Member::AGE_HIDDEN) {
                 $member->Age = floor($layoutBits->fage_value($member->BirthDate));
             } else {
                 $member->Age = "";
             }
-            if ($member->HideGender != "Yes") {
+            if ($member->HideAttribute & Member::GENDER_HIDDEN !== Member::GENDER_HIDDEN) {
                 $member->GenderString = MOD_layoutbits::getGenderTranslated($member->Gender, false, false);
             }
             $member->Occupation = MOD_layoutbits::truncate_words($this->FindTrad($member->Occupation), 10);
@@ -723,7 +722,7 @@ LIMIT 1
     {
         $query = "
             SELECT DISTINCT
-                m.Accomodation as Accommodation, m.Username, m.latitude, m.longitude, m.maxGuest as CanHost
+                m.Accommodation, m.Username, m.latitude, m.longitude, m.maxGuest as CanHost
             FROM
                 {$this->tables}
                 {$this->joins}

@@ -32,7 +32,7 @@
     {% endfor %}
     {% if countLanguages > 1 %}
     <div id="language-switch-container" class="u:p-8 u:my-4 u:z-[999] u:flex u:items-baseline u:justify-end {% if own %}u:sticky{% endif %} u:bg-white u:border-bewelcome u:rounded-8" style="top:60px; border: 2px solid #f37000;">
-        <label for="language-switch" class="u:mr-8">{{ 'profile.switch.language'|trans }}</label>
+        <label for="language-switch" class="u:me-8">{{ 'profile.switch.language'|trans }}</label>
         <select id="language-switch" class="u:py-8 u:px-16 u:rounded-8" name="language-switch">
             {% for profile_language in profile_languages %}
                 {# only add languages that actually have content except for own profile in edit to show missing content #}

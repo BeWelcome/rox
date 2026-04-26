@@ -28,7 +28,7 @@ class CommentModelTest extends TestCase
             ->setRelations($this->buildRelations([
                 CommentRelationsType::WAS_GUEST,
             ]))
-            ->setTextFree('Lorem ipsum.')
+            ->setComment('Lorem ipsum.')
         ;
         $updated = clone $original;
         $updated
@@ -37,7 +37,7 @@ class CommentModelTest extends TestCase
                     CommentRelationsType::WAS_HOST,
                 ])
             )
-            ->setTextFree('Lorem ipsum.')
+            ->setComment('Lorem ipsum.')
         ;
 
         $this->assertTrue($this->commentModel->checkIfNewExperience($original, $updated));
@@ -48,7 +48,7 @@ class CommentModelTest extends TestCase
         $original = new Comment();
         $original->setRelations($this->buildRelations([
             CommentRelationsType::WAS_GUEST,
-        ]))->setTextFree('Lorem ipsum.');
+        ]))->setComment('Lorem ipsum.');
         $updated = clone $original;
 
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
@@ -57,9 +57,9 @@ class CommentModelTest extends TestCase
     public function testNewExperienceTextAdded(): void
     {
         $original = new Comment();
-        $original->setTextFree('Lorem ipsum.');
+        $original->setComment('Lorem ipsum.');
         $updated = new Comment();
-        $updated->setTextFree('Lorem ipsum. Lorem ipsum.');
+        $updated->setComment('Lorem ipsum. Lorem ipsum.');
 
         $this->assertTrue($this->commentModel->checkIfNewExperience($original, $updated));
     }
@@ -67,9 +67,9 @@ class CommentModelTest extends TestCase
     public function testNoNewExperienceNoTextChanged(): void
     {
         $original = new Comment();
-        $original->setTextFree('Lorem ipsum.');
+        $original->setComment('Lorem ipsum.');
         $updated = new Comment();
-        $updated->setTextFree('Lorem ipsum.');
+        $updated->setComment('Lorem ipsum.');
 
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
@@ -77,9 +77,9 @@ class CommentModelTest extends TestCase
     public function testNoNewExperienceTypoFixed(): void
     {
         $original = new Comment();
-        $original->setTextFree('Lorem pisum. Lorem ipsum.');
+        $original->setComment('Lorem pisum. Lorem ipsum.');
         $updated = new Comment();
-        $updated->setTextFree('Lorem ipsum. Lorem ipsum.');
+        $updated->setComment('Lorem ipsum. Lorem ipsum.');
 
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
@@ -87,9 +87,9 @@ class CommentModelTest extends TestCase
     public function testNoNewExperienceNegationFixed(): void
     {
         $original = new Comment();
-        $original->setTextFree('I can stand the rain.');
+        $original->setComment('I can stand the rain.');
         $updated = new Comment();
-        $updated->setTextFree('I can\'t stand the rain.');
+        $updated->setComment('I can\'t stand the rain.');
 
         $this->assertFalse($this->commentModel->checkIfNewExperience($original, $updated));
     }
@@ -97,7 +97,7 @@ class CommentModelTest extends TestCase
     public function testNoNewExperienceRemovedLineBreaks(): void
     {
         $original = new Comment();
-        $original->setTextFree(
+        $original->setComment(
             'First line.' .
             \PHP_EOL .
             \PHP_EOL .
@@ -107,7 +107,7 @@ class CommentModelTest extends TestCase
             \PHP_EOL
         );
         $updated = new Comment();
-        $updated->setTextFree(
+        $updated->setComment(
             'First line.' .
             \PHP_EOL .
             'Second line.' .
@@ -121,7 +121,7 @@ class CommentModelTest extends TestCase
     public function testNoNewExperienceAddedLineBreaks(): void
     {
         $original = new Comment();
-        $original->setTextFree(
+        $original->setComment(
             'First line.' .
             \PHP_EOL .
             'Second line.' .
@@ -129,7 +129,7 @@ class CommentModelTest extends TestCase
             'Third line.'
         );
         $updated = new Comment();
-        $updated->setTextFree(
+        $updated->setComment(
             'First line.' .
             \PHP_EOL .
             \PHP_EOL .
@@ -145,14 +145,14 @@ class CommentModelTest extends TestCase
     public function testNoNewExperienceSmallTextChanges(): void
     {
         $original = new Comment();
-        $original->setTextFree(
+        $original->setComment(
             'Olli is a very charming and friendly guest, who is eager to discover the world!' .
             \PHP_EOL .
             \PHP_EOL .
             'All the best for your journey(s)! Take care and stay healthy!'
         );
         $updated = new Comment();
-        $updated->setTextFree(
+        $updated->setComment(
             'Methusalem is a very charming and friendly guest, who is eager to discover the world!' .
             \PHP_EOL .
             'All the best for your journey! Take care and stay healthy!'
@@ -164,9 +164,9 @@ class CommentModelTest extends TestCase
     public function testNewExperienceTextChanges(): void
     {
         $original = new Comment();
-        $original->setTextFree('I can stand the rain but not the snow.');
+        $original->setComment('I can stand the rain but not the snow.');
         $updated = new Comment();
-        $updated->setTextFree('I like the snow can stand the rain.');
+        $updated->setComment('I like the snow can stand the rain.');
 
         $this->assertTrue($this->commentModel->checkIfNewExperience($original, $updated));
     }
@@ -174,7 +174,7 @@ class CommentModelTest extends TestCase
     public function testLongTextWithLotsOfUpdatesIsANewExperience(): void
     {
         $original = new Comment();
-        $original->setTextFree(<<<'COMMENT'
+        $original->setComment(<<<'COMMENT'
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales scelerisque aliquam. Curabitur viverra quam ornare ligula tempus vehicula. Pellentesque vehicula eros at urna faucibus luctus. Donec et posuere ipsum. Nulla massa nunc, pulvinar sit amet sodales at, euismod volutpat sem. Nulla pharetra velit nibh, sollicitudin vulputate enim vestibulum vitae. Vestibulum lacinia, urna varius aliquet aliquet, nisi metus posuere urna, iaculis interdum tellus felis nec neque. Morbi sed semper orci, eu accumsan libero. Donec ullamcorper libero vel eleifend blandit. Proin id mauris libero. Morbi egestas convallis condimentum. Aliquam vitae lectus sapien. Donec id accumsan arcu. Nulla porta, nisl ac egestas hendrerit, purus metus tincidunt ex, nec maximus sapien ex condimentum turpis.
 
             Sed faucibus magna et tellus tempor pulvinar. Sed tristique urna quam, sed tincidunt risus scelerisque vel. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum elementum hendrerit tortor non tempus. Curabitur cursus lacus maximus, varius nibh ut, mollis ex. Nullam eget neque at arcu laoreet vestibulum sed in velit. Etiam nec nunc nec ligula suscipit ornare.
@@ -197,7 +197,7 @@ class CommentModelTest extends TestCase
             COMMENT);
 
         $updated = new Comment();
-        $updated->setTextFree(<<<'COMMENT'
+        $updated->setComment(<<<'COMMENT'
             Donec metus neque, bibendum id sem a, iaculis ullamcorper leo. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum id magna sollicitudin nibh eleifend fermentum ac sed ligula. Fusce luctus, augue quis sollicitudin varius, lorem nisi ullamcorper sem, nec eleifend ligula nulla ac ante. Maecenas et eleifend nisl. Praesent ac sagittis neque. Morbi bibendum justo in ligula auctor, nec congue lectus tempor. Nulla a sollicitudin massa. Ut eu nibh quis quam feugiat sollicitudin nec eget turpis. Phasellus enim mi, blandit a aliquet fringilla, fringilla facilisis felis. Nullam lobortis lorem nunc, quis laoreet sapien condimentum sit amet. Morbi id tincidunt nisi. Maecenas nec vulputate nulla, consequat lobortis massa. Nulla congue maximus est, a interdum diam placerat a.
 
             Vivamus libero mauris, sollicitudin in enim sollicitudin, ultrices molestie diam. Ut eget suscipit nisi, quis pretium mi. Aliquam ut augue mattis mi placerat sagittis. Mauris non fringilla orci. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec ornare velit sed ligula cursus, non euismod lacus fringilla. In ac mi sed tortor molestie commodo et ac eros. Sed sagittis sem turpis, in tincidunt arcu fringilla quis.
@@ -225,7 +225,7 @@ class CommentModelTest extends TestCase
     public function testLongTextWithLowNumberUpdatesIsNotANewExperience(): void
     {
         $original = new Comment();
-        $original->setTextFree(<<<'COMMENT'
+        $original->setComment(<<<'COMMENT'
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales scelerisque aliquam. Curabitur viverra quam ornare ligula tempus vehicula. Pellentesque vehicula eros at urna faucibus luctus. Donec et posuere ipsum. Nulla massa nunc, pulvinar sit amet sodales at, euismod volutpat sem. Nulla pharetra velit nibh, sollicitudin vulputate enim vestibulum vitae. Vestibulum lacinia, urna varius aliquet aliquet, nisi metus posuere urna, iaculis interdum tellus felis nec neque. Morbi sed semper orci, eu accumsan libero. Donec ullamcorper libero vel eleifend blandit. Proin id mauris libero. Morbi egestas convallis condimentum. Aliquam vitae lectus sapien. Donec id accumsan arcu. Nulla porta, nisl ac egestas hendrerit, purus metus tincidunt ex, nec maximus sapien ex condimentum turpis.
 
             Sed faucibus magna et tellus tempor pulvinar. Sed tristique urna quam, sed tincidunt risus scelerisque vel. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum elementum hendrerit tortor non tempus. Curabitur cursus lacus maximus, varius nibh ut, mollis ex. Nullam eget neque at arcu laoreet vestibulum sed in velit. Etiam nec nunc nec ligula suscipit ornare.
@@ -248,7 +248,7 @@ class CommentModelTest extends TestCase
             COMMENT);
 
         $updated = new Comment();
-        $updated->setTextFree(<<<'COMMENT'
+        $updated->setComment(<<<'COMMENT'
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec sodales scelerisque aliquam. Curabitur viverra quam ornare ligula tempus vehicula. Pellentesque vehicula eros at urna faucibus luctus. Donec et posuere ipsum. Nulla massa nunc, pulvinar sit amet sodales at, euismod volutpat sem. Nulla pharetra velit nibh, sollicitudin vulputate enim vestibulum vitae. Vestibulum lacinia, urna varius aliquet aliquet, nisi metus posuere urna, iaculis interdum tellus felis nec neque. Morbi sed semper orci, eu accumsan libero. Donec ullamcorper libero vel eleifend blandit. Proin id mauris libero. Morbi egestas convallis condimentum. Aliquam vitae lectus sapien. Donec id accumsan arcu. Nulla porta, nisl ac egestas hendrerit, purus metus tincidunt ex, nec maximus sapien ex condimentum turpis.
 
             Sed faucibus magna et tellus tempor pulvinar. Sed tristique urna quam, sed tincidunt risus scelerisque vel. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Vestibulum elementum hendrerit tortor non tempus. Curabitur cursus lacus maximus, varius nibh ut, mollis ex. Nullam eget neque at arcu laoreet vestibulum sed in velit. Etiam nec nunc nec ligula suscipit ornare.
@@ -276,7 +276,7 @@ class CommentModelTest extends TestCase
     public function testCommentWithEmailAddressInTextIsRecognized(): void
     {
         $comment = new Comment();
-        $comment->setTextfree('This is an@email.address in the middle of a text.');
+        $comment->setComment('This is an@email.address in the middle of a text.');
 
         $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
 
@@ -286,7 +286,7 @@ class CommentModelTest extends TestCase
     public function testCommentWithEmailAddressAtStartOfTextIsRecognized(): void
     {
         $comment = new Comment();
-        $comment->setTextfree('an@email.address at the start of a text.');
+        $comment->setComment('an@email.address at the start of a text.');
 
         $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
 
@@ -296,7 +296,7 @@ class CommentModelTest extends TestCase
     public function testCommentWithEmailAddressAtTheEndOfTextIsRecognized(): void
     {
         $comment = new Comment();
-        $comment->setTextfree('At the end of this text, there is an@email.address');
+        $comment->setComment('At the end of this text, there is an@email.address');
 
         $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
 
@@ -306,7 +306,7 @@ class CommentModelTest extends TestCase
     public function testCommentWithTwoEmailAddressesInTextIsRecognized(): void
     {
         $comment = new Comment();
-        $comment->setTextfree('This is an@email.address in the middle of a text. And another one at the end. another@email.net');
+        $comment->setComment('This is an@email.address in the middle of a text. And another one at the end. another@email.net');
 
         $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
 
@@ -316,7 +316,7 @@ class CommentModelTest extends TestCase
     public function testCommentWithoutEmailAddressInTextIsRecognized(): void
     {
         $comment = new Comment();
-        $comment->setTextfree('This is an @instagram username.');
+        $comment->setComment('This is an @instagram username.');
 
         $emailAddressFound = $this->commentModel->checkForEmailAddress($comment);
 

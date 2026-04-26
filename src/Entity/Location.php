@@ -14,6 +14,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
+use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
 
 /**
  * Do not check entities with PHPMD.
@@ -26,6 +27,8 @@ use Gedmo\Translatable\Translatable;
 #[ORM\Index(name: 'geonames_idx_longitude', columns: ['longitude'])]
 #[ORM\Index(name: 'geonames_idx_fclass', columns: ['feature_class'])]
 #[ORM\Index(name: 'geonames_idx_fcode', columns: ['feature_code'])]
+#[ORM\Index(name: 'geonames_coordinates', columns: ['latitude', 'longitude'])]
+#[ORM\Index(name: 'geonames_idx_spatial_coordinates', columns: ['coordinates'], flags: ['spatial'])]
 #[ORM\Index(name: 'geonames_idx_country', columns: ['country'])]
 #[ORM\Index(name: 'geonames_idx_admin1', columns: ['admin1'])]
 #[ORM\Index(name: 'geonames_idx_admin2', columns: ['admin2'])]
@@ -57,14 +60,17 @@ class Location implements Translatable
     /**
      * @var float
      */
-    #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
+    #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
     private $latitude;
 
     /**
      * @var float
      */
-    #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
+    #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
     private $longitude;
+
+    #[ORM\Column(name: 'coordinates', type: 'point', nullable: false)]
+    private ?Point $coordinates = null;
 
     /**
      * @var string
@@ -176,6 +182,18 @@ class Location implements Translatable
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setCoordinates(?Point $coordinates): self
+    {
+        $this->coordinates = $coordinates;
+
+        return $this;
+    }
+
+    public function getCoordinates(): ?Point
+    {
+        return $this->coordinates;
     }
 
     public function setLatitude(float $latitude): self
@@ -390,7 +408,7 @@ class Location implements Translatable
         return $this;
     }
 
-    public function setTranslatableLocale($locale)
+    public function setTranslatableLocale($locale): void
     {
         $this->locale = $locale;
     }

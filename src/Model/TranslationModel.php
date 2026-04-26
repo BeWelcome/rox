@@ -55,7 +55,7 @@ class TranslationModel
         return $translationAdapter;
     }
 
-    public function updateDomainOfTranslations(Word $updatedTranslation)
+    public function updateDomainOfTranslations(Word $updatedTranslation): void
     {
         $translationRepository = $this->entityManager->getRepository(Word::class);
         $translations = $translationRepository->findBy(['code' => $updatedTranslation->getCode()]);

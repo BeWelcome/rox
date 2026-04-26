@@ -2,9 +2,9 @@
 
 namespace App\Form;
 
+use App\Doctrine\GenderType;
 use App\Form\CustomDataClass\SearchFormRequest;
 use Override;
-use SearchModel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Exception\AlreadySubmittedException;
 use Symfony\Component\Form\Exception\LogicException;
@@ -57,8 +57,10 @@ class SearchFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'groups' => null,
-            'languages' => null,
+            'group_choices' => [],
+            'language_choices' => [],
+            'groups' => null, // keep for BC
+            'languages' => null, // keep for BC
             'search_options' => null,
             'validation_groups' => SearchFormRequest::determineValidationGroups(...),
             'translation_domain' => 'messages',
@@ -115,7 +117,7 @@ class SearchFormType extends AbstractType
                 ->add('resetOptions', SubmitType::class, [
                     'label' => 'search.options.reset',
                     'attr' => [
-                        'class' => 'o-button o-button--outline mr-1',
+                        'class' => 'o-button o-button--outline me-1',
                     ],
                 ])
             ;
@@ -130,25 +132,27 @@ class SearchFormType extends AbstractType
                 ->add('resetOptions', SubmitType::class, [
                     'label' => 'search.options.reset',
                     'attr' => [
-                        'class' => 'o-button o-button--outline mr-1',
+                        'class' => 'o-button o-button--outline me-1',
                     ],
                 ])
             ;
         }
     }
 
-    protected function addVariableSelects(FormBuilderInterface $formBuilder, array $options)
+    protected function addVariableSelects(FormBuilderInterface $formBuilder, array $options): void
     {
-        $groups = [];
-        if (null !== $options['groups']) {
+        $groups = $options['group_choices'] ?: [];
+        if (empty($groups) && null !== $options['groups']) {
+            // Fallback for any other places using the old method
             foreach ($options['groups'] as $group) {
                 if ($group->getApproved()) {
                     $groups[$group->getName()] = $group->getId();
                 }
             }
         }
-        $languages = [];
-        if (null !== $options['languages']) {
+        $languages = $options['language_choices'] ?: [];
+        if (empty($languages) && null !== $options['languages']) {
+            // Fallback for any other places using the old method
             foreach ($options['languages'] as $language) {
                 $languages['lang_' . strtolower((string) $language->getShortCode())] = $language->getShortCode();
             }
@@ -171,7 +175,7 @@ class SearchFormType extends AbstractType
             ]);
     }
 
-    protected function addAgeAndGenderSelects(FormBuilderInterface $formBuilder)
+    protected function addAgeAndGenderSelects(FormBuilderInterface $formBuilder): void
     {
         $minAgeArray = [];
         for ($i = 18; $i <= 120; $i += 2) {
@@ -184,36 +188,37 @@ class SearchFormType extends AbstractType
         $formBuilder
             ->add('min_age', ChoiceType::class, [
                 'autocomplete' => true,
-                'plugins' => [],
                 'choices' => $minAgeArray,
                 'choice_translation_domain' => false,
                 'label' => 'findpeopleminimumage',
                 'translation_domain' => 'messages',
+                'required' => false,
+                'placeholder' => '',
             ])
             ->add('max_age', ChoiceType::class, [
                 'autocomplete' => true,
-                'plugins' => [],
                 'choices' => $maxAgeArray,
                 'choice_translation_domain' => false,
                 'label' => 'findpeoplemaximumage',
                 'translation_domain' => 'messages',
+                'required' => false,
+                'placeholder' => '',
             ])
             ->add('gender', ChoiceType::class, [
                 'autocomplete' => true,
-                'plugins' => [],
+                'multiple' => true,
                 'choices' => [
-                    'any' => null,
-                    'male' => 1,
-                    'female' => 2,
-                    'other' => 4,
+                    'male' => GenderType::MALE,
+                    'female' => GenderType::FEMALE,
+                    'other' => GenderType::OTHER,
                 ],
                 'label' => 'gender',
-                'required' => true,
+                'required' => false,
                 'translation_domain' => 'messages',
             ]);
     }
 
-    protected function addSelects(FormBuilderInterface $formBuilder)
+    protected function addSelects(FormBuilderInterface $formBuilder): void
     {
         $formBuilder
             ->add('can_host', ChoiceType::class, [
@@ -232,18 +237,18 @@ class SearchFormType extends AbstractType
                 'choice_translation_domain' => false,
                 'translation_domain' => 'messages',
             ])
-            ->add('last_login', ChoiceType::class, [
-                'label' => 'search.filter.last.login',
+            ->add('last_active', ChoiceType::class, [
+                'label' => 'search.filter.last.active',
                 'autocomplete' => true,
                 'plugins' => [],
                 'choices' => [
-                    'search.filter.last.login.1month' => 1,
-                    'search.filter.last.login.2months' => 2,
-                    'search.filter.last.login.3months' => 3,
-                    'search.filter.last.login.6months' => 6,
-                    'search.filter.last.login.year' => 12,
-                    'search.filter.last.login.2years' => 24,
-                    'search.filter.last.login.all' => 2400,
+                    'search.filter.last.active.1month' => 1,
+                    'search.filter.last.active.2months' => 2,
+                    'search.filter.last.active.3months' => 3,
+                    'search.filter.last.active.6months' => 6,
+                    'search.filter.last.active.year' => 12,
+                    'search.filter.last.active.2years' => 24,
+                    'search.filter.last.active.all' => 2400,
                 ],
                 'translation_domain' => 'messages',
             ])
@@ -252,12 +257,12 @@ class SearchFormType extends AbstractType
                 'autocomplete' => true,
                 'plugins' => [],
                 'choices' => [
-                    'search.order.accommodation' => SearchModel::ORDER_ACCOMMODATION,
-                    'search.order.distance' => SearchModel::ORDER_DISTANCE,
-                    'search.order.login' => SearchModel::ORDER_LOGIN,
-                    'search.order.comments' => SearchModel::ORDER_COMMENTS,
-                    'search.order.membership' => SearchModel::ORDER_MEMBERSHIP,
-                    'search.order.username' => SearchModel::ORDER_USERNAME,
+                    'search.order.accommodation' => \App\Repository\MemberRepository::ORDER_ACCOMMODATION,
+                    'search.order.distance' => \App\Repository\MemberRepository::ORDER_DISTANCE,
+                    'search.order.login' => \App\Repository\MemberRepository::ORDER_LOGIN,
+                    'search.order.comments' => \App\Repository\MemberRepository::ORDER_COMMENTS,
+                    'search.order.membership' => \App\Repository\MemberRepository::ORDER_MEMBERSHIP,
+                    'search.order.username' => \App\Repository\MemberRepository::ORDER_USERNAME,
                 ],
                 'translation_domain' => 'messages',
             ])
@@ -266,8 +271,8 @@ class SearchFormType extends AbstractType
                 'autocomplete' => true,
                 'plugins' => [],
                 'choices' => [
-                    'search.direction.descending' => SearchModel::DIRECTION_DESCENDING,
-                    'search.direction.ascending' => SearchModel::DIRECTION_ASCENDING,
+                    'search.direction.descending' => \App\Repository\MemberRepository::DIRECTION_DESCENDING,
+                    'search.direction.ascending' => \App\Repository\MemberRepository::DIRECTION_ASCENDING,
                 ],
             ])
             ->add('items', ChoiceType::class, [
@@ -287,7 +292,7 @@ class SearchFormType extends AbstractType
         ;
     }
 
-    private function addHiddenFields(FormBuilderInterface $formBuilder)
+    private function addHiddenFields(FormBuilderInterface $formBuilder): void
     {
         $formBuilder
             ->add('location_fullname', HiddenType::class)
@@ -297,32 +302,29 @@ class SearchFormType extends AbstractType
             ->add('location_longitude', HiddenType::class)
             ->add('location_admin_unit', HiddenType::class)
             ->add('showOnMap', HiddenType::class)
-            ->add('ne_latitude', HiddenType::class)
-            ->add('ne_longitude', HiddenType::class)
-            ->add('sw_latitude', HiddenType::class)
-            ->add('sw_longitude', HiddenType::class);
+        ;
     }
 
-    private function addButtons(FormBuilderInterface $formBuilder)
+    private function addButtons(FormBuilderInterface $formBuilder): void
     {
         $formBuilder
             ->add('updateMap', SubmitType::class, [
                 'label' => 'search.find.members',
                 'attr' => [
-                    'class' => 'o-button',
+                    'class' => 'o-button btn-primary',
                 ],
             ])
         ;
     }
 
-    private function addCheckboxes(FormBuilderInterface $formBuilder)
+    private function addCheckboxes(FormBuilderInterface $formBuilder): void
     {
         $formBuilder
-            ->add('accommodation_anytime', CheckboxType::class, [
+            ->add('accommodation_yes', CheckboxType::class, [
                 'label' => 'search.accommodation.yes',
                 'required' => false,
             ])
-            ->add('accommodation_neverask', CheckboxType::class, [
+            ->add('accommodation_no', CheckboxType::class, [
                 'label' => 'search.accommodation.no',
                 'required' => false,
             ])

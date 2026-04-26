@@ -18,7 +18,7 @@
         <p>{{ 'messages.none' | trans }}</p>
     {% else %}
         {% if items.haveToPaginate %}
-        <div class="float-left">
+        <div class="float-start">
             {{ pagerfanta( items, 'rox_default') }}
         </div>
         {% endif %}
@@ -57,10 +57,10 @@
                     <p class="m-0 mb-1">{{- messageText | truncate(150) | url_update | raw -}}</p>
                     {% if message.request %}
                         <div class="d-flex alert-light p-2">
-                            <div class="mr-2 font-weight-bold">
-                                <i class="fa fa-calendar mr-1"></i>{{ 'request.arrival' | trans }}
+                            <div class="me-2 font-weight-bold">
+                                <i class="fa fa-calendar me-1"></i>{{ 'request.arrival' | trans }}
                                 {%- if message.request.departure %}<br>
-                                    <i class="fa fa-calendar mr-1"></i>{{ 'request.departure' | trans }}{%- endif %}
+                                    <i class="fa fa-calendar me-1"></i>{{ 'request.departure' | trans }}{%- endif %}
                             </div>
                             <div>
                                 {{ message.request.arrival | format_date( 'medium') }}
@@ -74,7 +74,7 @@
                         </div>
                     </a>
                 </td>
-                <td class="text-right">
+                <td class="text-end">
                     <a href="{{ path('conversation_view', { id: message.id}) }}" class="btn btn-primary btn-sm">{{ 'view' | trans }}</a>
                     {% if message.sender.Username == otherMember.Username %}<br>
                     <a href="{{ path('message_reply', { id: message.id}) }}" class="btn btn-primary btn-sm mt-1">{{ 'reply' | trans }}</a>
@@ -88,7 +88,7 @@
         {% endfor %}
         </table>
         {% if items.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( items, 'rox_default') }}
             </div>
         {% endif %}

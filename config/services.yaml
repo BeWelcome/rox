@@ -450,3 +450,7 @@ services:
 
     App\Form\DataTransformer\LocationRequestToLocationTransformer: ~
     App\Form\DataTransformer\DateTransformer: ~
+
+#    App\Processor\LocationProcessor: ~
+# #   App\Processor\MemberProcessor: ~
+#    App\Processor\LanguageProcessor: ~

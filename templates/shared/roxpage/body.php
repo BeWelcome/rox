@@ -82,8 +82,8 @@ use Symfony\Component\Asset\VersionStrategy\JsonManifestVersionStrategy;
 
             <?php
             if ($submenuItems) { ?>
-                <div class="float-right d-md-none">
-                    <button type="button" class="btn btn-primary btn-sm ml-3" data-toggle="offcanvas"><i class="navbar-toggler-icon"></i></button>
+                <div class="float-end d-md-none">
+                    <button type="button" class="btn btn-primary btn-sm ms-3" data-bs-toggle="offcanvas"><i class="navbar-toggler-icon"></i></button>
                 </div>
                 <?php
             }

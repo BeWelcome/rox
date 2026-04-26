@@ -19,26 +19,26 @@
         {% for news in communityNews %}
         <div class="community-news-wrapper u:bg-gray-5 u:p-16 u:rounded-8 u:my-16">
             <div class="u:flex u:justify-start u:items-center">
-                <div class="o-avatar o-avatar--m u:mt-8 u:mr-16">
+                <div class="o-avatar o-avatar--m u:mt-8 u:me-16">
                     {{ macros.roundedavatarstack( news.createdBy.Username, 72) }}
                 </div>
                 <div class="u:place-self-center u:w-full">
                     <p class="u:text-20 u:md:text-28 u:font-700"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></p>
                     <small class="u:mb-8 u:text-gray-65">
-                        <i class="fa fa-fw fa-clock u:mr-2"></i>
+                        <i class="fa fa-fw fa-clock u:me-2"></i>
                         {{ news.createdAt.DiffForHumans }}
                         {% if news.updatedBy and news.updatedBy.Username != news.createdBy.Username %}
-                            <br><i class="fa fa-fw fa-pen u:mr-2"></i>{{ 'bewelcome_news.lastupdater' | trans}}
+                            <br><i class="fa fa-fw fa-pen u:me-2"></i>{{ 'bewelcome_news.lastupdater' | trans}}
                             {{ macros.profilelink( news.updatedBy.Username ) }}
                             {{ news.updatedAt.DiffForHumans }}
                         {% endif %}
                     </small>
                 </div>
             </div>
-            <div class="u:ml-8 u:my-16 u:mr-16">
+            <div class="u:ms-8 u:my-16 u:me-16">
                 {{ news.text | truncate(500) | raw }}
             </div>
-            <p class="u:ml-8 u:my-16 u:mr-16"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a> (<span class="text-muted">{% trans with {'%commentsCount%': news.comments|length} %}bewelcome_news.nrcomments{% endtrans %}</span>)
+            <p class="u:ms-8 u:my-16 u:me-16"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a> (<span class="text-muted">{% trans with {'%commentsCount%': news.comments|length} %}bewelcome_news.nrcomments{% endtrans %}</span>)
             </p>
         </div>
         {% endfor %}

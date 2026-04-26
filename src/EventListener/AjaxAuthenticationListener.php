@@ -14,7 +14,7 @@ class AjaxAuthenticationListener
     /**
      * Handles security related exceptions.
      */
-    public function onCoreException(ExceptionEvent $event)
+    public function onCoreException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
         $request = $event->getRequest();

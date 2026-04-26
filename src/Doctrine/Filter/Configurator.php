@@ -25,7 +25,7 @@ class Configurator
         $this->reader = $reader;
     }
 
-    public function onKernelRequest()
+    public function onKernelRequest(): void
     {
         $language = $this->getLanguage();
 

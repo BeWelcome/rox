@@ -15,8 +15,8 @@ function onChange(element, result) {
 
 initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', onChange);
 
-$(document).ready(function() {
-    if (!$('#conversationsdisplay').length) {
+document.addEventListener('DOMContentLoaded', function() {
+    if (!document.getElementById('conversationsdisplay')) {
         return;
     }
 
@@ -24,30 +24,69 @@ $(document).ready(function() {
     Home.updateThreads();
     Home.updateTripLegs();
 
-    $('a[data-toggle="tab"]').on('show.bs.tab', Home.onTabChange);
-
-    $('#all, #unread').change(function() {
-        setTimeout(Home.updateMessages, 500);
+    const tabElements = document.querySelectorAll('a[data-bs-toggle="tab"]');
+    tabElements.forEach(tab => {
+        tab.addEventListener('show.bs.tab', Home.onTabChange);
     });
 
-    $('#groupsButton, #forumButton, #followingButton').change(function() {
-        setTimeout(Home.updateThreads, 500);
+    const allRadio = document.getElementById('all');
+    if (allRadio) {
+        allRadio.addEventListener('change', function() {
+            setTimeout(Home.updateMessages, 500);
+        });
+    }
+
+    const unreadRadio = document.getElementById('unread');
+    if (unreadRadio) {
+        unreadRadio.addEventListener('change', function() {
+            setTimeout(Home.updateMessages, 500);
+        });
+    }
+
+    const groupsButton = document.getElementById('groupsButton');
+    if (groupsButton) {
+        groupsButton.addEventListener('change', function() {
+            setTimeout(Home.updateThreads, 500);
+        });
+    }
+
+    const forumButton = document.getElementById('forumButton');
+    if (forumButton) {
+        forumButton.addEventListener('change', function() {
+            setTimeout(Home.updateThreads, 500);
+        });
+    }
+
+    const followingButton = document.getElementById('followingButton');
+    if (followingButton) {
+        followingButton.addEventListener('change', function() {
+            setTimeout(Home.updateThreads, 500);
+        });
+    }
+
+    const hostingElements = document.querySelectorAll('.hosting');
+    hostingElements.forEach(el => {
+        el.addEventListener('click', Home.setHostingStatus);
     });
 
-    $('.hosting').click(Home.setHostingStatus);
+    const showOnline = document.getElementById('show_online');
+    if (showOnline) {
+        showOnline.addEventListener('change', function() {
+            setTimeout(Home.updateActivities, 500);
+        });
+    }
 
-    $('#show_online').change(function() {
-        setTimeout(Home.updateActivities, 500);
-    });
-
-    $('#trips_radius').change(function() {
-        setTimeout(Home.updateTripLegs, 500);
-    });
+    const tripsRadius = document.getElementById('trips_radius');
+    if (tripsRadius) {
+        tripsRadius.addEventListener('change', function() {
+            setTimeout(Home.updateTripLegs, 500);
+        });
+    }
 });
 
 var Home = {
     onTabChange: function (e) {
-        switch($(e.target).attr('aria-controls')) {
+        switch(e.target.getAttribute('aria-controls')) {
             case 'messages':
                 return Home.updateMessages();
 
@@ -62,112 +101,142 @@ var Home = {
         }
     },
     updateMessages: function () {
-        var all = $('#all').hasClass('active') ? 1 : 0;
-        var unread = $('#unread').hasClass('active') ? 1 : 0;
+        const allRadio = document.getElementById('all');
+        const all = allRadio && allRadio.classList.contains('active') ? 1 : 0;
+        
+        const unreadRadio = document.getElementById('unread');
+        const unread = unreadRadio && unreadRadio.classList.contains('active') ? 1 : 0;
 
-        $.ajax({
-            type: 'GET',
-            url: '/widget/conversations',
-            data: {
-                all: all,
-                unread: unread
-            },
-            success: function(messages) {
-                $('#conversationsdisplay').replaceWith(messages);
-            }
+        const params = new URLSearchParams({
+            all: all,
+            unread: unread
         });
+
+        fetch('/widget/conversations?' + params.toString())
+            .then(response => response.text())
+            .then(messages => {
+                const display = document.getElementById('conversationsdisplay');
+                if (display) {
+                    display.outerHTML = messages;
+                }
+            });
     },
     updateNotifications: function() {
-        $.ajax({
-            type: 'GET',
-            url: '/widget/notifications',
-            success: function (notifications) {
-                $('#notificationsdisplay').replaceWith(notifications);
+        fetch('/widget/notifications')
+            .then(response => response.text())
+            .then(notifications => {
+                const display = document.getElementById('notificationsdisplay');
+                if (display) {
+                    display.outerHTML = notifications;
+                }
 
                 // Set click event
-                $('.notify').click(function (e) {
-                    e.preventDefault();
-
-                    var that = $(this);
-                    var id = $(this).attr('id');
-
-                    $.ajax({
-                        type: 'GET',
-                        url: '/notify/' + id.replace('notify-', '') + '/check',
-                        success: function() {
-                            // update the notifications
-                            Home.updateNotifications();
-                        }
+                const notifies = document.querySelectorAll('.notify');
+                notifies.forEach(notify => {
+                    notify.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const id = this.getAttribute('id');
+                        
+                        fetch('/notify/' + id.replace('notify-', '') + '/check')
+                            .then(() => {
+                                // update the notifications
+                                Home.updateNotifications();
+                            });
                     });
                 });
-            }
-        });
+            });
     },
     updateThreads: function () {
         // Get parameters
-        var groups = $('#groupsButton').hasClass('active') ? 1 : 0;
-        var forum = $('#forumButton').hasClass('active') ? 1 : 0;
-        var following = $('#following').hasClass('active') ? 1 : 0;
+        const groupsButton = document.getElementById('groupsButton');
+        const groups = groupsButton && groupsButton.classList.contains('active') ? 1 : 0;
+        
+        const forumButton = document.getElementById('forumButton');
+        const forum = forumButton && forumButton.classList.contains('active') ? 1 : 0;
+        
+        const followingEl = document.getElementById('following');
+        const following = followingEl && followingEl.classList.contains('active') ? 1 : 0;
 
-        $.ajax({
-            type: 'GET',
-            url: '/widget/threads',
-            data: {
-                groups: groups,
-                forum: forum,
-                following: following
-            },
-            success: function (threads) {
-                $('#threadsdisplay').replaceWith(threads);
-            }
+        const params = new URLSearchParams({
+            groups: groups,
+            forum: forum,
+            following: following
         });
+
+        fetch('/widget/threads?' + params.toString())
+            .then(response => response.text())
+            .then(threads => {
+                const display = document.getElementById('threadsdisplay');
+                if (display) {
+                    display.outerHTML = threads;
+                }
+            });
     },
     updateActivities: function () {
-        var online = $('#show_online').prop('checked') ? 1 : 0;
-        // Get parameters
-        $.ajax({
-            type: 'GET',
-            url: '/widget/activities',
-            data: {
-                online: online
-            },
-            success: function (activities) {
-                $('#activitiesdisplay').replaceWith(activities);
-            }
+        const showOnline = document.getElementById('show_online');
+        const online = showOnline && showOnline.checked ? 1 : 0;
+        
+        const params = new URLSearchParams({
+            online: online
         });
+
+        fetch('/widget/activities?' + params.toString())
+            .then(response => response.text())
+            .then(activities => {
+                const display = document.getElementById('activitiesdisplay');
+                if (display) {
+                    display.outerHTML = activities;
+                }
+            });
     },
     updateTripLegs: function () {
-        const tripsRadius = $('#trips_radius');
-        let radius = tripsRadius.val();
+        const tripsRadius = document.getElementById('trips_radius');
+        const radius = tripsRadius ? tripsRadius.value : '';
 
-        $.ajax({
-            type: 'GET',
-            url: '/widget/visitors',
-            data: {
-                radius: radius
-            },
-            success: function(legs) {
-                $('#legsdisplay').replaceWith(legs);
-            },
+        const params = new URLSearchParams({
+            radius: radius
         });
+
+        fetch('/widget/visitors?' + params.toString())
+            .then(response => response.text())
+            .then(legs => {
+                const display = document.getElementById('legsdisplay');
+                if (display) {
+                    display.outerHTML = legs;
+                }
+            });
     },
 
     setHostingStatus: function (e) {
         e.preventDefault();
-        // Get parameters
-        var accommodation = this.id;
-        $.ajax({
-            type: 'POST',
-            url: '/widget/accommodation',
-            data: {
-                accommodation: accommodation
-            },
-            dataType: 'json',
-            success: function (data) {
-                $('#welcomeavatar').replaceWith(data.profilePictureWithAccommodation);
-                $('#accommodation').replaceWith(data.accommodationHtml);
-                $('.hosting').click(Home.setHostingStatus);
+        const accommodation = this.id;
+        
+        const formData = new FormData();
+        formData.append('accommodation', accommodation);
+
+        fetch('/widget/accommodation', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const welcomeAvatar = document.getElementById('welcomeavatar');
+            if (welcomeAvatar) {
+                welcomeAvatar.outerHTML = data.profilePictureWithAccommodation;
+            }
+            
+            const accommodationDisplay = document.getElementById('accommodation');
+            if (accommodationDisplay) {
+                accommodationDisplay.outerHTML = data.accommodationHtml;
+            }
+            
+            const hostingElements = document.querySelectorAll('.hosting');
+            hostingElements.forEach(el => {
+                el.addEventListener('click', Home.setHostingStatus);
+            });
         });
     }
 };

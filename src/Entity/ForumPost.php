@@ -24,7 +24,7 @@ use Exception;
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'forums_posts')]
+#[ORM\Table(name: 'forum_post')]
 #[ORM\Index(name: 'last_editorid', columns: ['last_editorid'])]
 #[ORM\Index(name: 'threadid', columns: ['threadid'])]
 #[ORM\Index(name: 'IdWriter', columns: ['IdWriter'])]

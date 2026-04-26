@@ -4,7 +4,7 @@ import {disableButtonOnSubmit} from './submit_button_disable';
 
 import '../scss/_daterangepicker.scss';
 
-$(function () {
+document.addEventListener('DOMContentLoaded', function () {
     const input = document.getElementsByClassName('js-litepicker')[0];
     if (input !== undefined) {
         const parent = input.id.replace('_duration', '');

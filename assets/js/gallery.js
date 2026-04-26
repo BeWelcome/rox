@@ -1,7 +1,7 @@
 let Masonry = require('masonry-layout');
 let imagesLoaded = require('imagesloaded');
 
-$(function () {
+document.addEventListener('DOMContentLoaded', function () {
     // init Masonry
     let grid = document.getElementById('masonry-grid');
 

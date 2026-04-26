@@ -146,7 +146,7 @@ class ProfileVisit
      * Triggered on insert.
      */
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
         $this->updated = $this->created;
@@ -156,7 +156,7 @@ class ProfileVisit
      * Triggered on update.
      */
     #[ORM\PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
     }

@@ -19,9 +19,9 @@
 
 {% block content %}
 <h1>{{ 'activities' | trans }}</h1>
-    <div class="pull-right">{{ pagerfanta( activities, 'rox_default', { routeName: 'activity' }) }}</div>
+    <div class="float-end">{{ pagerfanta( activities, 'rox_default', { routeName: 'activity' }) }}</div>
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
             <table class="table" id="activitylist" style="table-layout: fixed;">
                 <tbody>
                 {% for activity in activities %}
@@ -39,7 +39,7 @@
 
                         <td class="verticalmiddle">
                             <div class="d-inline-block"><i class="fa fa-3x fa-map-marker-alt"></i></div>
-                            <div class="pl-1 d-inline-block">{{ activity.location.name }}<br>{{ activity.location.country.name }}</div>
+                            <div class="ps-1 d-inline-block">{{ activity.location.name }}<br>{{ activity.location.country.name }}</div>
                         </td>
 
                         <td class="verticalmiddle">
@@ -52,7 +52,7 @@
                             </div>
                         </td>
                         <td class="organiser">
-                            <div class="pull-xs-right text-xs-center">
+                            <div class="float-end text-center">
                                 {{ macros.avatar( activity.organizers[0].attendee.Username, 50, true) }}
                             </div>
                         </td>
@@ -77,6 +77,6 @@
             </table>
         </div>
     </div>
-    <div class="pull-right">{{ pagerfanta( activities, 'rox_default', { routeName: 'activity' }) }}</div>
+    <div class="float-end">{{ pagerfanta( activities, 'rox_default', { routeName: 'activity' }) }}</div>
 
 {% endblock content %}

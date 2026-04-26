@@ -1,7 +1,9 @@
-$(document).ready(function () {
+document.addEventListener('DOMContentLoaded', function () {
     'use strict';
 
-    $('[data-toggle="offcanvas"]').on('click', function () {
-        $('.offcanvas-collapse').toggleClass('open');
+    document.querySelectorAll('[data-bs-toggle="offcanvas"]').forEach(function(element) {
+        element.addEventListener('click', function () {
+            document.querySelector('.offcanvas-collapse').classList.toggle('open');
+        });
     });
 });

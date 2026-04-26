@@ -33,7 +33,7 @@ class LocaleListener implements EventSubscriberInterface
     /**
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
         if (!$request->hasPreviousSession()) {

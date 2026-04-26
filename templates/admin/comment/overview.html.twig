@@ -33,9 +33,9 @@
                         <td>{{ macros.avatarstack(comment.fromMember.Username, 50) }}</td>
                         <td class="w-100">
                             <small class="text-muted">{{ 'comment.quality' | trans }}</small><br>
-                            {{ ('CommentQuality_' ~ comment.Quality) | lower | trans }} ({{ 'written' | trans }} {{ comment.created }}{% if not comment.updated is null and comment.created != comment.updated %} &mdash; {{ 'updated' | trans }} {{ comment.updated }}{% endif %})<hr style="margin-top:.125rem; margin-bottom:.125rem;">
+                            {{ ('comment.quality.' ~ comment.Quality) | lower | trans }} ({{ 'written' | trans }} {{ comment.created }}{% if not comment.updated is null and comment.created != comment.updated %} &mdash; {{ 'updated' | trans }} {{ comment.updated }}{% endif %})<hr style="margin-top:.125rem; margin-bottom:.125rem;">
                             <small class="text-muted">{{ 'comment.text' | trans }}</small><br>
-                            {{ comment.TextFree | nl2br }}<hr style="margin-top:.125rem; margin-bottom:.125rem;">
+                            {{ comment.comment | nl2br }}<hr style="margin-top:.125rem; margin-bottom:.125rem;">
                             <small class="text-muted">{{ 'comment.know' | trans }}</small><br>
                             {% set relations = comment.relations | split(',') %}
                             {% for relation in relations %}{{ ('profile.comment.relation.' ~ relation) | lower | trans({'username': comment.toMember.Username}) }} {% endfor %}
@@ -44,7 +44,7 @@
                         <td>{{ macros.avatarstack(comment.toMember.Username, 50) }}</td>
                         <td class="text-center">
                             <a href="{{ path('admin_comment', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-edit" title="{{ 'admin.comment.edit' | trans }}"></i></a><br/>
-                            {% if comment.displayinpublic %}
+                            {% if comment.showToOtherMembers %}
                                 <a href="{{ path('admin_comment_hide', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-eye-slash" title="{{ 'admin.comment.hide' | trans }}"></i></a>
                             {% else %}
                                 <a href="{{ path('admin_comment_show', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-eye" title="{{ 'admin.comment.show' | trans }}"></i></a>

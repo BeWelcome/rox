@@ -25,7 +25,7 @@ class AccessDeniedRedirectListener
         $this->urlGenerator = $urlGenerator;
     }
 
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         if (
             !$event->getException() instanceof AccessDeniedHttpException

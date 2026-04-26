@@ -3,26 +3,28 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-    const checkAllSpam = document.getElementById('checkAllSpam');
-    const checkAllNoSpam  = document.getElementById('checkAllNoSpam');
-    const spam = document.querySelectorAll('.checkableSpam');
-    const noSpam = document.querySelectorAll('.checkableNoSpam');
-    checkAllSpam.addEventListener('click', function() {
-        const status = checkAllSpam.checked;
-        spam.forEach((checkbox) => {checkbox.checked = status;});
-        if (status) {
-            checkAllNoSpam.checked = false;
-            noSpam.forEach((checkbox) => {checkbox.checked = false;});
-        }
-    });
-    checkAllNoSpam.addEventListener('click', function() {
-        console.log(checkAllNoSpam.checked);
-        const status = checkAllNoSpam.checked;
-        noSpam.forEach((checkbox) => {checkbox.checked = status;});
-        if (status) {
-            checkAllSpam.checked = false;
-            spam.forEach((checkbox) => {checkbox.checked = false;});
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkAllSpam = document.getElementById('checkAllSpam');
+        const checkAllNoSpam  = document.getElementById('checkAllNoSpam');
+        const spam = document.querySelectorAll('.checkableSpam');
+        const noSpam = document.querySelectorAll('.checkableNoSpam');
+        checkAllSpam.addEventListener('click', function() {
+            const status = checkAllSpam.checked;
+            spam.forEach((checkbox) => {checkbox.checked = status;});
+            if (status) {
+                checkAllNoSpam.checked = false;
+                noSpam.forEach((checkbox) => {checkbox.checked = false;});
+            }
+        });
+        checkAllNoSpam.addEventListener('click', function() {
+            console.log(checkAllNoSpam.checked);
+            const status = checkAllNoSpam.checked;
+            noSpam.forEach((checkbox) => {checkbox.checked = status;});
+            if (status) {
+                checkAllSpam.checked = false;
+                spam.forEach((checkbox) => {checkbox.checked = false;});
+            }
+        });
     });
 </script>
 {% endblock %}
@@ -34,11 +36,11 @@
         {{ form_start(form) }}
         {{ form_errors(form) }}
         {% if reported.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( reported, 'rox_default') }}
             </div>
             <div class="row">
-                <div class="col-12 text-right">
+                <div class="col-12 text-end">
                     <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
                 </div>
             </div>
@@ -76,12 +78,12 @@
         {% endfor %}
         </table>
         <div class="row">
-            <div class="col-12 text-right">
+            <div class="col-12 text-end">
                 <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
             </div>
         </div>
         {% if reported.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( reported, 'rox_default') }}
             </div>
         {% endif %}

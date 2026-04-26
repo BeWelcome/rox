@@ -18,7 +18,7 @@
     <h1>{{ 'admin.tools.headline' | trans }}</h1>
     <h2>{{ 'admin.tools.check_feedback' | trans }}</h2>
 
-    {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+    {% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
     {{ form_start(form) }}
     {{ form_rest(form) }}
     <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
@@ -27,7 +27,7 @@
         <div class="alert alert-warning">{{ 'admin.feedback.no.feedback' | trans }}</div>
     {% else %}
         {% if feedbacks.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( feedbacks, 'rox_default') }}
             </div>
         {% endif %}
@@ -50,7 +50,7 @@
             </table>
         </div>
         {% if feedbacks.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( feedbacks, 'rox_default') }}
             </div>
         {% endif %}

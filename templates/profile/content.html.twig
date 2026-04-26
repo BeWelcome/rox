@@ -22,12 +22,12 @@
             <div>
               <a href="{{ edit_link }}">
                 <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-                <span class="u:sr-only">{{ edit_text }}</span>
+                <span class="visually-hidden">{{ edit_text }}</span>
               </a>
             </div>
           {%- endif -%}
         </div>
-        <div class="card-block p-2">
+        <div class="card-body p-2">
           <div class="card-text m-0">
             {% if aboutMe|length != 0 %}
               {{ aboutMe|purify|nl2br }}
@@ -68,17 +68,17 @@
             {% set edit_text = 'profile.edit.languages'|trans({}, 'messages', profile_language) %}
             <a href="{{ edit_link }}">
               <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-              <span class="u:sr-only">{{ edit_text }}</span>
+              <span class="visually-hidden">{{ edit_text }}</span>
             </a>
           {%- endif -%}
         </div>
-        <div class="card-block p-2">
+        <div class="card-body p-2">
           <div class="card-text m-0">
             {% for languageLevel in language_levels %}
               <p class="m-0">
                 {{ ('lang_' ~ languageLevel.language.ShortCode)|lower|trans({}, "messages", profile_language) }}
                 <sup
-                  class="ml-1 gray">{{ ('language.level.' ~ languageLevel.level)|lower|trans({}, "messages", profile_language) }}</sup>
+                  class="ms-1 gray">{{ ('language.level.' ~ languageLevel.level)|lower|trans({}, "messages", profile_language) }}</sup>
               </p>
             {% else %}
               {{ 'profile.no.languages'|trans({}, 'messages', profile_language) }}
@@ -97,11 +97,11 @@
             {% set edit_text = 'profile.edit.languages'|trans({}, 'messages', profile_language) %}
             <a href="{{ edit_link }}">
               <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-              <span class="u:sr-only">{{ edit_text }}</span>
+              <span class="visually-hidden">{{ edit_text }}</span>
             </a>
           {%- endif -%}
         </div>
-        <div class="card-block p-2">
+        <div class="card-body p-2">
           <div class="card-text m-0">
             {% for level, languages in member.levelLanguages %}
               <p class="u:font-500 u:text-18 u:font-signika">{{ ('language.level.' ~ level)|lower|trans({}, "messages", profile_language) }}</p>
@@ -137,11 +137,11 @@
             {% set edit_text = 'profile.edit.interests'|trans({}, 'messages', profile_language) %}
             <a href="{{ edit_link }}">
               <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-              <span class="u:sr-only">{{ edit_text }}</span>
+              <span class="visually-hidden">{{ edit_text }}</span>
             </a>
           {% endif %}
         </div>
-        <div class="card-block p-2">
+        <div class="card-body p-2">
           {% if interests or edit %}
             <div class="card-text m-0">
               {% if hobbies|length != 0 or edit %}
@@ -190,11 +190,11 @@
             {% set edit_text = 'profile.edit.travel.experience'|trans({}, 'messages', profile_language) %}
             <a href="{{ edit_link }}">
               <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-              <span class="u:sr-only">{{ edit_text }}</span>
+              <span class="visually-hidden">{{ edit_text }}</span>
             </a>
           {%- endif -%}
         </div>
-        <div class="card-block p-2">
+        <div class="card-body p-2">
           <div class="card-text m-0">
             {% if pastTrips|length != 0 or edit %}
               <div class="h5 u:mt-8 u:mb-0">{{ 'profile.past.trips'|trans({}, "messages", profile_language)|raw }}
@@ -223,7 +223,7 @@
             {% set edit_text = 'profile.edit.groups'|trans({}, 'messages', profile_language) %}
             <a href="{{ edit_link }}">
               <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-              <span class="u:sr-only">{{ edit_text }}</span>
+              <span class="visually-hidden">{{ edit_text }}</span>
             </a>
           {%- endif -%}
         </div>
@@ -232,7 +232,7 @@
             <div class="mb-3 d-flex d-column">
               <div>
                 <a href="{{ url('group_start', {group_id: group.id}) }}">
-                  <img class="framed float-left mr-2" width="50" height="50" alt="Group"
+                  <img class="framed float-start me-2" width="50" height="50" alt="Group"
                        src="{{ url('group_thumbimg', {group_id: group.id}) }}"/>
                 </a>
               </div>
@@ -250,7 +250,7 @@
           {% if member.groups|length > 5 %}
             <a class="btn btn-sm btn-block btn-outline-primary"
                href="{{ url('group_user_all', {username:member.username}) }}">{{ 'groupsallmylink'|trans({}, "messages", profile_language) }} <span
-                class="badge badge-primary u:rounded-8 u:px-8 u:min-w-20">{{ member.groups|length }}</span></a>
+                class="badge text-bg-primary u:rounded-8 u:px-8 u:min-w-20">{{ member.groups|length }}</span></a>
           {% endif %}
         </div>
       </div>
@@ -265,11 +265,11 @@
             {% set edit_text = 'profile.edit.images'|trans({}, 'messages', profile_language) %}
             <a href="{{ edit_link }}">
               <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-              <span class="u:sr-only">{{ edit_text }}</span>
+              <span class="visually-hidden">{{ edit_text }}</span>
             </a>
           {%- endif -%}
         </div>
-        <div class="card-block p-2">
+        <div class="card-body p-2">
           {% if pictures|length > 0 %}
             <div class="d-flex flex-wrap justify-content-around">
               {% for picture in pictures|slice(0,10) %}
@@ -294,7 +294,7 @@
             <a href="{{ url('gallery', {username: member.username}) }}"
                class="btn btn-block btn-sm btn-outline-primary">
               {{ 'profile.all.images'|trans({}, "messages", profile_language) }} <span
-                class="badge badge-primary u:rounded-8 u:px-8 u:min-w-20">{{ pictures|length }}</span>
+                class="badge text-bg-primary u:rounded-8 u:px-8 u:min-w-20">{{ pictures|length }}</span>
             </a>
           {% endif %}
         </div>
@@ -310,17 +310,17 @@
             {% set edit_text = 'profile.edit.family.and.friends'|trans({}, 'messages', profile_language) %}
             <a href="{{ edit_link }}">
               <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-              <span class="u:sr-only">{{ edit_text }}</span>
+              <span class="visually-hidden">{{ edit_text }}</span>
             </a>
           {%- endif -%}
         </div>
-        <div class="card-block p-2">
+        <div class="card-body p-2">
           {% if friends|length != 0 %}
             <div class="u:grid u:grid-cols-3 u:gap-8 u:mb-8">
               {% for friend in friends|slice(0,9) %}
                 {% set other = friend.left == member ? friend.right : friend.left %}
                   <div class="u:flex u:flex-col u:items-center">
-                    <div class="o-avatar o-avatar--s u:mr-4">
+                    <div class="o-avatar o-avatar--s u:me-4">
                       {{ macros.roundedavatarstack(other.username, 48, false) }}
                     </div>
                     <a href="{{ url('members_profile', {username: other.username}) }}"
@@ -336,7 +336,7 @@
             <a href="{{ url('friends', {username: member.username}) }}"
                class="btn btn-block btn-sm btn-outline-primary">
               {{ 'profile.all.friends'|trans({}, "messages", profile_language) }} <span
-                class="badge badge-primary u:rounded-8 u:px-8 u:min-w-20">{{ friends|length }}</span>
+                class="badge text-bg-primary u:rounded-8 u:px-8 u:min-w-20">{{ friends|length }}</span>
             </a>
           {% endif %}
         </div>
@@ -353,11 +353,11 @@
             {% set edit_text = 'profile.edit.accommodation'|trans({}, 'messages', profile_language) %}
             <a href="{{ edit_link }}">
               <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-              <span class="u:sr-only">{{ edit_text }}</span>
+              <span class="visually-hidden">{{ edit_text }}</span>
             </a>
           {%- endif -%}
         </div>
-        <div class="card-block p-2">
+        <div class="card-body p-2">
           <div class="card-text m-0">
             {% if not member.accommodation is null or edit %}
               {% if edit %}
@@ -497,8 +497,8 @@
             {% if not edit and member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
               <div>
                 <a href="{{ url('hosting_request', {username: member.username}) }}"
-                   class="btn btn-primary float-right"><i
-                    class="fa fa-bed mr-1"></i>{{ 'profile.request.hosting'|trans({}, "messages", profile_language) }}
+                   class="btn btn-primary float-end"><i
+                    class="fa fa-bed me-1"></i>{{ 'profile.request.hosting'|trans({}, "messages", profile_language) }}
                 </a>
               </div>
             {% endif %}
@@ -516,11 +516,11 @@
             {% set edit_text = 'profile.edit.comments'|trans({}, 'messages', profile_language) %}
             <a href="{{ edit_link }}">
               <i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i>
-              <span class="u:sr-only">{{ edit_text }}</span>
+              <span class="visually-hidden">{{ edit_text }}</span>
             </a>
           {%- endif -%}
         </div>
-        <div class="card-block p-2">
+        <div class="card-body p-2">
           <div class="u:w-full u:flex u:flex-column u:justify-center u:gap-8">
             <a href="{{ url('profile_comments', {username: member.username, type: 'positive'}) }}"><span class="u:text-18 u:text-green-600">{{ 'comments.positive'| trans({positive: comments_count.positive }) }}</span></a>
             <a href="{{ url('profile_comments', {username: member.username, type: 'neutral'}) }}"><span class="u:text-18">{{ 'comments.neutral'| trans({neutral: comments_count.neutral }) }}</span></a>
@@ -541,7 +541,7 @@
             <a href="{{ url('profile_comments', {username: member.username}) }}"
                class="btn btn-block btn-sm btn-outline-primary">
               {{ 'showallcomments'|trans({}, "messages", profile_language) }} <span
-                class="badge badge-primary u:rounded-8 u:px-8 u:min-w-20">{{ visibleComments }}</span>
+                class="badge text-bg-primary u:rounded-8 u:px-8 u:min-w-20">{{ visibleComments }}</span>
             </a>
           {% endif %}
         </div>

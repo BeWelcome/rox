@@ -2,59 +2,31 @@
 
 namespace App\Command;
 
+use App\Doctrine\CommentQualityType;
+use App\Doctrine\CommentRelationsType;
 use App\Doctrine\HostRestrictionsType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\StandardOffersType;
-use App\Doctrine\TypicalOfferType;
-use App\Entity\Languages;
-use App\Entity\Location;
 use App\Entity\Member;
-use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Exception;
-use Symfony\Component\Console\Attribute\Argument;
+use RuntimeException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\Service\ResetInterface;
 use Throwable;
 
 #[AsCommand(
     name: 'migrate:database',
-    description: 'Migrates the existing production database to the new table layout',
+    description: 'Migrates the existing production database to the new table layout using high-performance pure SQL',
 )]
-class MigrateDatabaseCommand extends Command
+class MigrateDatabaseCommand extends Command implements ResetInterface
 {
-    private const int MEMBER_FIRSTNAME_HIDDEN = 1;
-    private const int MEMBER_SECONDNAME_HIDDEN = 2;
-    private const int MEMBER_LASTNAME_HIDDEN = 4;
-
-    private const array TRANSLATED_FIELDS = [
-        'Occupation',
-        'ILiveWith',
-        'MaxLenghtOfStay',
-        'MotivationForHospitality',
-        'Offer',
-        'Organizations',
-        'AdditionalAccomodationInfo',
-        'OtherRestrictions',
-        'ProfileSummary',
-        'Hobbies',
-        'Books',
-        'Music',
-        'Movies',
-        'PleaseBring',
-        'OfferGuests',
-        'OfferHosts',
-        'PublicTransport',
-        'PastTrips',
-        'PlannedTrips',
-    ];
-
     private const array MIGRATED_STATUSES = [
         'Active',
         'ActiveHidden',
@@ -66,675 +38,494 @@ class MigrateDatabaseCommand extends Command
         'PassedAway',
     ];
 
-    private const string INSERT = <<<'SQL'
-            INSERT INTO member ( 
-                id, 
-                Locale,
-                Username, 
-                Password, 
-                Name, 
-                ShortName, 
-                Status, 
-                Email, 
-                Gender, 
-                HideAttribute, 
-                bewelcomed, 
-                BirthDate,
-                LastActive,
-                LastSwitchToActive,
-                Reminders,
-                created,
-                updated,
-                RegistrationKey,
-                Accommodation, 
-                MaxGuests,
-                HostingInterest,
-                StandardOffers,
-                /* Translated fields are set to null */
-                Occupation,
-                PleaseBring,
-                OfferGuests,
-                OfferHosts,
-                GettingThere,
-                ILiveWith,
-                MaxLengthOfStay,
-                Restrictions,
-                HouseRules,
-                Hobbies,
-                Books,
-                Movies,
-                Music,
-                Organizations,                
-                PastTrips,
-                PlannedTrips
-            ) VALUES (
-                :id,
-                :Locale,
-                :Username,
-                :Password,
-                :Name,
-                :ShortName,
-                :Status,
-                :Email,
-                :Gender,
-                :HideAttribute,
-                :bewelcomed,
-                :BirthDate,
-                :LastActive,
-                :LastSwitchToActive,
-                :Reminders,
-                :created,
-                :updated,
-                :RegistrationKey,
-                :Accommodation,
-                :MaxGuests,
-                :HostingInterest,
-                :StandardOffers,
-                /* Translated fields are set to null */
-                null /* :Occupation*/,
-                null /* :PleaseBring*/, 
-                null /* :OfferGuests*/,
-                null /* :OfferHosts*/,
-                null /* :GettingThere*/,
-                null /* :ILiveWith*/,
-                null /* :MaxLengthOfStay*/,
-                null /* :Restrictions*/,
-                null /* :HouseRules*/,
-                null /* :Hobbies*/,
-                null /* :Books*/,
-                null /* :Movies*/,
-                null /* :Music*/,
-                null /* :Organizations*/,
-                null /* :PastTrips*/,
-                null /* :PlannedTrips */
-            )
-        SQL;
-
     private SymfonyStyle $io;
-    private array $errorMembers = [];
     private readonly Connection $connection;
-    private array $languages;
-    private ProgressBar $progressBar;
-    private EntityRepository $locationRepository;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
         parent::__construct();
-
         $this->connection = $this->entityManager->getConnection();
+        $this->entityManager->getConnection()->getConfiguration()->setMiddlewares([]);
     }
 
-    public function __invoke(InputInterface $input, OutputInterface $output, #[Argument] int $offset): int
+    public function reset(): void
+    {
+        $this->entityManager->clear();
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->io = new SymfonyStyle($input, $output);
-        $this->io->success('Migrating old profiles.');
+        $this->io->title('Migrating old profiles via Bulk SQL ETL');
 
-        if (0 === $offset) {
-            $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=0;');
-            $this->connection->executeStatement('TRUNCATE `address`; TRUNCATE `member_translations`; TRUNCATE `member_language_level`; TRUNCATE `friend`; TRUNCATE `member`;');
-        }
-
-        $sql = "SELECT COUNT(m.id) FROM members m WHERE m.status IN ('" . implode("', '", self::MIGRATED_STATUSES) . "')";
-
-        $countOfMembers = $this->connection->executeQuery(
-            $sql
-        )->fetchOne();
-
-        $this->io->writeln('Migrating ' . $countOfMembers . ' members.');
-
-        $this->locationRepository = $this->entityManager->getRepository(Location::class);
-        $languagesRepository = $this->entityManager->getRepository(Languages::class);
-        $rawLanguages = $languagesRepository->findAll();
-
-        $this->languages = [];
-        foreach ($rawLanguages as $language) {
-            $this->languages[$language->getId()] = $language;
-        }
-
-        $this->errorMembers = [];
-        $batchSize = 20000;
-
-        $this->progressBar = new ProgressBar($output, $batchSize);
-        $this->progressBar->setFormat(
-            "<fg=white;bg=green>\n %info:-60s% \n</>\n%current%/%max% [%bar%] %percent:3s%%\n%elapsed:-10s% %estimated:-10s%  %memory:20s%\nLast error: %error%"
-        );
-        $this->progressBar->setMessage("Migrating {$countOfMembers} members starting at {$offset} to new member table including translations.", 'info');
-        $this->progressBar->setMessage('none', 'error');
-        $this->progressBar->minSecondsBetweenRedraws(10.0);
-        $this->progressBar->start();
-
-        // Make sure the tables member and member_translations are empty
+        $statuses = "'" . implode("', '", self::MIGRATED_STATUSES) . "'";
 
         try {
-            //            for ($current = 0; $current < $countOfMembers; $current += $batchSize) {
-            $this->migrateMembersData($offset, $batchSize);
-            //            }
-            $this->reportErrors($offset);
+            $this->io->writeln('Disabling foreign key checks and truncating tables...');
+            $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=0;');
+            $this->connection->executeStatement('TRUNCATE `address`; TRUNCATE `member_translations`; TRUNCATE `member_language_level`; TRUNCATE `friend`; TRUNCATE `member`; TRUNCATE `comment`; TRUNCATE `language`; TRUNCATE `word`; TRUNCATE `forum_thread`; TRUNCATE `forum_post`; TRUNCATE `member_photo`;');
+
+            $steps = 13;
+            $progressBar = new ProgressBar($output, $steps);
+            $progressBar->setFormat("<fg=white;bg=green>\n %message% \n</>\n%current%/%max% [%bar%] %percent:3s%%\nElapsed: %elapsed:-10s% Memrory: %memory:20s%");
+            $progressBar->start();
+
+            // 1. Migrate Member Table
+            $progressBar->setMessage('Migrating main `member` table...');
+            $this->migrateMemberTable($statuses);
+            $progressBar->advance();
+
+            // 2. Migrate Address Table
+            $progressBar->setMessage('Migrating `address` table...');
+            $this->migrateAddressTable($statuses);
+            $progressBar->advance();
+
+            // 3. Migrate Base Profile Translations
+            $progressBar->setMessage('Seeding default ProfileLanguage translations...');
+            $this->migrateBaseTranslations($statuses);
+            $progressBar->advance();
+
+            // 4. Migrate Dynamic Profile Translations (deduced by locale usage)
+            $progressBar->setMessage('Seeding derived ProfileLanguage translations...');
+            $this->migrateDerivedTranslations($statuses);
+            $progressBar->advance();
+
+            // 5. Migrate Full Translations
+            $progressBar->setMessage('Migrating full `member_translations`...');
+            $this->migrateTranslations($statuses);
+            $progressBar->advance();
+
+            // 6. Migrate Language Levels
+            $progressBar->setMessage('Migrating `member_language_level`...');
+            $this->migrateLanguageLevels($statuses);
+            $progressBar->advance();
+
+            // 7. Migrate Friends & Relations
+            $progressBar->setMessage('Migrating `friend` relations...');
+            $this->migrateFriends($statuses);
+            $progressBar->advance();
+
+            // 8. Migrate Comments
+            $progressBar->setMessage('Migrating `comments` to `comment` table...');
+            $this->migrateComments($statuses);
+            $progressBar->advance();
+
+            // 9. Migrate Languages
+            $progressBar->setMessage('Migrating `languages` to `language` table...');
+            $this->migrateLanguages();
+            $progressBar->advance();
+
+            // 10. Migrate Words
+            $progressBar->setMessage('Migrating `words` to `word` table...');
+            $this->migrateWords();
+            $progressBar->advance();
+
+            // 11. Migrate Forum Threads
+            $progressBar->setMessage('Migrating `ForumsThreads` to `forum_thread` table...');
+            $this->migrateForumThreads();
+            $progressBar->advance();
+
+            // 12. Migrate Forum Posts
+            $progressBar->setMessage('Migrating `ForumsPosts` to `forum_post` table...');
+            $this->migrateForumPosts();
+            $progressBar->advance();
+
+            // 13. Migrate Member Photos
+            $progressBar->setMessage('Migrating `membersphotos` to `member_photo` table...');
+            $this->migrateMemberPhotos($statuses);
+            $progressBar->advance();
+
+            $progressBar->finish();
+            $this->io->newLine(2);
+            $this->io->success('Migration completed incredibly fast!');
+        } catch (Throwable $e) {
+            $this->io->error('Migration Failed: ' . $e->getMessage());
+
+            return Command::FAILURE;
         } finally {
             $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=1;');
         }
 
-        $this->io->success('Done migrating old profiles.');
-
         return Command::SUCCESS;
     }
 
-    private function migrateMembersData(int $current, int $batchSize): void
+    private function migrateMemberTable(string $statuses): void
     {
-        $sql = \sprintf("
-            SELECT 
-                * 
-            FROM 
-                members m 
-            WHERE 
-                m.status IN ('%s') 
-            ORDER BY 
-                id 
-            LIMIT %d, %d
-        ", implode("', '", self::MIGRATED_STATUSES), $current, $batchSize);
+        $nameHidden = Member::NAME_HIDDEN;
+        $ageHidden = Member::AGE_HIDDEN;
+        $genderHidden = Member::GENDER_HIDDEN;
+        $addressHidden = Member::ADDRESS_HIDDEN;
+        $dinnerOffer = StandardOffersType::DINNER;
+        $guidedTourOffer = StandardOffersType::GUIDED_TOUR;
+        $noSmoking = HostRestrictionsType::NO_SMOKING;
+        $noAlcohol = HostRestrictionsType::NO_ALCOHOL;
+        $noDrugs = HostRestrictionsType::NO_DRUGS;
 
-        $members = $this->connection->executeQuery($sql)->fetchAllAssociative();
-
-        foreach ($members as $member) {
-            $this->migrateMemberData($member);
-            $this->migrateMemberAddress($member);
-            $this->migrateMemberTranslations($member);
-            $this->migrateMemberLanguageLevels($member);
-            $this->migrateFamilyAndFriends($member);
-
-            $this->progressBar->advance();
-            unset($member);
-        }
-        unset($members);
-    }
-
-    private function migrateMemberData(array $member): void
-    {
-        $memberId = $member['id'];
-
-        $locale = $this->connection->executeQuery('SELECT mp.Value FROM memberspreferences mp WHERE mp.IdMember = :memberId AND mp.IdPreference = 1', ['memberId' => $memberId])->fetchOne();
-        if (is_numeric($locale)) {
-            $locale = $this->connection->executeQuery('SELECT l.ShortCode FROM memberspreferences mp, languages l WHERE mp.IdMember = :memberId AND mp.IdPreference = 1 and mp.Value = l.id', ['memberId' => $memberId])->fetchOne();
-        }
-        $statement = $this->connection->prepare(self::INSERT);
-        $statement->bindValue('id', $memberId);
-        $statement->bindValue('Locale', false === $locale ? 'en' : $locale);
-        $statement->bindValue('Username', $member['Username']);
-        $statement->bindValue('Password', $member['PassWord']);
-        $statement->bindValue('Name', $this->getFullname($member));
-        $statement->bindValue('ShortName', $this->isFirstnameShown($member) ? $member['FirstName'] : null);
-        $statement->bindValue('Status', $member['Status']);
-        $statement->bindValue('Email', $member['Email']);
-        $statement->bindValue('Gender', $this->migrateGender($member['Gender']));
-        $statement->bindValue('HideAttribute', $this->migrateHiddenFields($member));
-        $statement->bindValue('bewelcomed', $member['bewelcomed']);
-        if ('0000-00-00' !== $member['BirthDate']) {
-            $statement->bindValue('BirthDate', new DateTime($member['BirthDate']), 'datetime');
-        } else {
-            $statement->bindValue('BirthDate', new DateTime('1970-01-01 00:00:00'), 'datetime');
-        }
-        if (null !== $member['LastLogin'] && '0000-00-00 00:00:00' !== $member['LastLogin']) {
-            $statement->bindValue('LastActive', new DateTime($member['LastLogin']), 'datetime');
-        } else {
-            $statement->bindValue('LastActive', null);
-        }
-        if (null !== $member['LastSwitchToActive']) {
-            $statement->bindValue('LastSwitchToActive', new DateTime($member['LastSwitchToActive']), 'datetime');
-        } else {
-            $statement->bindValue('LastSwitchToActive', null);
-        }
-        $statement->bindValue('Reminders', $member['NbRemindWithoutLogingIn']);
-
-        if ('0000-00-00 00:00:00' !== $member['created']) {
-            $statement->bindValue('created', new DateTime($member['created']), 'datetime');
-        } else {
-            $statement->bindValue('created', new DateTime('1970-01-01 00:00:00'), 'datetime');
-        }
-
-        if ('0000-00-00 00:00:00' !== $member['updated']) {
-            if (null === $member['updated']) {
-                $statement->bindValue('updated', null, 'datetime');
-            } else {
-                $statement->bindValue('updated', new DateTime($member['updated']), 'datetime');
-            }
-        } else {
-            $statement->bindValue('updated', new DateTime('1970-01-01 00:00:00'), 'datetime');
-        }
-
-        $statement->bindValue('RegistrationKey', $member['registration_key']);
-
-        $statement->bindValue('Accommodation', $this->migrateAccommodation($member['Accomodation']));
-        $statement->bindValue('MaxGuests', $member['MaxGuest']);
-        $statement->bindValue('HostingInterest', $member['hosting_interest']);
-        $statement->bindValue('StandardOffers', $this->migrateTypicalOffer($member['TypicOffer']));
-
-        try {
-            $statement->executeStatement();
-        } catch (Exception $e) {
-            $this->progressBar->setMessage($member['Username'], 'error');
-            $this->addErrorMemberSql($member, $e->getMessage());
-        }
-    }
-
-    private function migrateMemberAddress(mixed $member): void
-    {
-        if ('AskToLeave' === $member['Status'] || 'TakenOut' === $member['Status']) {
-            // Do not add address for members that are not active anymore
-            return;
-        }
-
-        $addressSQL = 'INSERT INTO address (member_id, active, location, latitude, longitude, wheelChairAccessible) ' .
-            'VALUES (:member, 1, :city, :latitude, :longitude, :wheelchairAccessible)';
-
-        // Migrate address
-        $city = $this->locationRepository->findOneBy(['geonameId' => $member['IdCity']]);
-        $statement = $this->connection->prepare($addressSQL);
-        $statement->bindValue('member', $member['id']);
-        if (null === $city) {
-            // If we can't find a city we just do not set an address
-            return;
-        }
-
-        $statement->bindValue('city', $city->getGeonameid());
-        $statement->bindValue('latitude', $member['Latitude']);
-        $statement->bindValue('longitude', $member['Longitude']);
-        $statement->bindValue(
-            'wheelchairAccessible',
-            $this->isWheelchairAccessible($member['TypicOffer']) ? 1 : 0
-        );
-
-        try {
-            $statement->executeStatement();
-        } catch (Exception $e) {
-            $this->progressBar->setMessage($member['Username'], 'error');
-            $this->addErrorAddress($member, $e->getMessage());
-        } finally {
-            $this->entityManager->detach($city);
-        }
-    }
-
-    private function migrateMemberTranslations(array $member): void
-    {
-        $memberId = $member['id'];
-
-        // Determine currently used translation ids
-        $translationIds = [];
-        foreach (self::TRANSLATED_FIELDS as $translatedField) {
-            if (0 !== $member[$translatedField] && null !== $member[$translatedField]) {
-                $translationIds[] = $member[$translatedField];
-            }
-        }
-
-        if (empty($translationIds)) {
-            if ('Active' === $member['Status'] || 'OutOfRemind' === $member['Status']) {
-                // Check where this happens
-                $this->addErrorNoTranslations($member);
-            }
-        } else {
-            $processedTranslations = [];
-            $processedTranslations['en']['ProfileLanguage'] = true;
-            $queryString = $this->addTranslation($memberId, 'en', 'ProfileLanguage', 'en');
-            $memberTranslations = $this->connection->executeQuery('
+        $sql = <<<SQL
+                INSERT IGNORE INTO member (
+                    id, Locale, Username, Password, Name, ShortName, Status, Email, Gender,
+                    HideAttribute, bewelcomed, BirthDate, LastActive, LastSwitchToActive,
+                    Reminders, created, updated, RegistrationKey, Accommodation, MaxGuests,
+                    HostingInterest, StandardOffers, Occupation, PleaseBring, OfferGuests,
+                    OfferHosts, GettingThere, ILiveWith, MaxLengthOfStay, Restrictions,
+                    HouseRules, Hobbies, Books, Movies, Music, Organizations, PastTrips,
+                    PlannedTrips
+                )
                 SELECT 
-                    * 
-                FROM 
-                    memberstrads m 
-                WHERE 
-                    IdTrad IN (' . implode(',', $translationIds) . ')
-                ORDER BY 
-                    IdTrad, id desc, IdLanguage
-            ')->fetchAllAssociative();
+                    m.id,
+                    COALESCE(l.ShortCode, 'en'),
+                    m.Username,
+                    m.PassWord,
+                    REPLACE(CONCAT_WS(' ', m.FirstName, NULLIF(m.SecondName, ''), NULLIF(m.LastName, '')), '  ', ' '),
+                    IF((m.HideAttribute & 1) != 1, m.FirstName, NULL),
+                    IF(m.Status IN ($statuses), m.Status, 'ChoiceInactive'),
+                    m.Email,
+                    IF(m.Gender = 'IDontTell', 'other', m.Gender),
+                    (
+                        IF((m.HideAttribute & 1) OR (m.HideAttribute & 2) OR (m.HideAttribute & 4), $nameHidden, 0) |
+                        IF(m.HideBirthDate = 'Yes', $ageHidden, 0) |
+                        IF(m.HideGender = 'Yes', $genderHidden, 0) |
+                        IF(m.AdressHidden = 'Yes', $addressHidden, 0)
+                    ),
+                    m.bewelcomed,
+                    IF(m.BirthDate = '0000-00-00', '1970-01-01', m.BirthDate),
+                    IF(m.LastLogin = '0000-00-00 00:00:00', NULL, m.LastLogin),
+                    m.LastSwitchToActive,
+                    m.NbRemindWithoutLogingIn,
+                    IF(m.created = '0000-00-00 00:00:00', '1970-01-01 00:00:00', m.created),
+                    IF(m.updated = '0000-00-00 00:00:00' OR m.updated IS NULL, '1970-01-01 00:00:00', m.updated),
+                    m.registration_key,
+                    CASE WHEN m.Accomodation IN ('dependonrequest', 'anytime') THEN 'yes' ELSE 'no' END,
+                    IF(m.MaxGuest > 100, 100, m.MaxGuest),
+                    m.hosting_interest,
+                    TRIM(LEADING ',' FROM CONCAT_WS(',', 
+                        IF(m.TypicOffer LIKE '%Dinner%', '$dinnerOffer', NULL), 
+                        IF(m.TypicOffer LIKE '%GuidedTour%', '$guidedTourOffer', NULL)
+                    )),
+                    NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+                    CASE m.Restrictions 
+                        WHEN 'NoSmoker' THEN '$noSmoking'
+                        WHEN 'NoDrugs' THEN '$noDrugs'
+                        WHEN 'NoAlchool' THEN '$noAlcohol'   
+                    END,
+                    NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
+                FROM members m
+                LEFT JOIN memberspreferences mp ON mp.IdMember = m.id AND mp.IdPreference = 1
+                LEFT JOIN languages l ON mp.Value = l.id
+                WHERE m.Status IN ($statuses)
+            SQL;
 
-            foreach ($memberTranslations as $memberTranslation) {
-                $language = $this->languages[$memberTranslation['IdLanguage']] ?? null;
-                if (null === $language) {
-                    $this->addErrorLanguage($member, $memberTranslation['IdLanguage']);
-                    $this->progressBar->setMessage($member['Username'], 'error');
-                } else {
-                    $locale = $language->getShortCode();
-                    $field = $this->mapField($memberTranslation['TableColumn']);
-                    if (!isset($processedTranslations[$locale][$field])) {
-                        if (!isset($processedTranslations[$locale]['ProfileLanguage'])) {
-                            $queryString .= $this->addTranslation($memberId, $locale, 'ProfileLanguage', $locale);
-                            $processedTranslations[$locale]['ProfileLanguage'] = true;
-                        }
-
-                        $content = $memberTranslation['Sentence'];
-                        if (!empty($content)) {
-                            $queryString .= $this->addTranslation($memberId, $locale, $field, $content);
-                        }
-                        $processedTranslations[$locale][$field] = true;
-                    }
-                }
-            }
-            unset($processedTranslations, $memberTranslations);
-
-            $values = substr($queryString, 2);
-
-            $sql = 'INSERT INTO member_translations (object_id, Locale, Field, Content) VALUES ' . $values;
-
-            try {
-                $this->connection->executeStatement($sql);
-            } catch (Exception $e) {
-                $this->progressBar->setMessage($member['Username'], 'error');
-                $this->addErrorTranslationSql($member, $e->getMessage());
-            }
-        }
-
-        unset($translationIds);
+        $this->connection->executeStatement($sql);
     }
 
-    private function migrateMemberLanguageLevels(array $member): void
+    private function migrateAddressTable(string $statuses): void
     {
-        $memberId = $member['id'];
+        $sql = <<<SQL
+                INSERT IGNORE INTO address (member_id, active, location, latitude, longitude, wheelChairAccessible)
+                SELECT 
+                    m.id, 
+                    1, 
+                    g.geoname_id, 
+                    m.Latitude, 
+                    m.Longitude, 
+                    IF(m.TypicOffer LIKE '%WheelchairAccessible%', 1, 0)
+                FROM members m
+                INNER JOIN geo__names g ON m.IdCity = g.geoname_id
+                WHERE m.Status NOT IN ('AskToLeave', 'TakenOut')
+                AND m.Status IN ($statuses)
+            SQL;
 
-        // migrate language levels
-        $languageLevels = $this->connection->executeQuery(
-            'select * from memberslanguageslevel where Idmember = ' . $memberId
-        )->fetchAllAssociative();
-        foreach ($languageLevels as $languageLevel) {
-            $statement = $this->connection->prepare(
-                'INSERT INTO member_language_level (member_id, language, level) ' .
-                'VALUES (:member_id, :language, :level)'
-            );
-
-            $language = $this->languages[$languageLevel['IdLanguage']] ?? null;
-            $level = $this->migrateLanguageLevel($languageLevel['Level']);
-
-            if (null === $language) {
-                $this->progressBar->setMessage($member['Username'], 'error');
-                $this->addErrorLanguage($member, $languageLevel['IdLanguage']);
-            } elseif (!empty($level)) {
-                $statement->bindValue('member_id', $memberId);
-                $statement->bindValue('language', $language->getShortCode());
-                $statement->bindValue('level', $level);
-                try {
-                    $statement->executeStatement();
-                } catch (Exception $e) {
-                    $this->progressBar->setMessage($member['Username'], 'error');
-                    $this->addErrorLanguage($member, $languageLevel['IdLanguage']);
-                }
-            }
-        }
-        unset($languageLevels);
+        $this->connection->executeStatement($sql);
     }
 
-    private function migrateFamilyAndFriends(array $member): void
+    private function migrateBaseTranslations(string $statuses): void
     {
-        $memberId = $member['id'];
-        // migrate special relations (family and friends)
-        $statement = $this->connection->prepare('
-                        select 
-                            sr.* 
-                        from 
-                            specialrelations sr 
-                        where 
-                            sr.IdOwner = :memberId OR sr.IdRelation = :memberId
-                    ');
-        $statement->bindValue('memberId', $memberId);
+        $sql = <<<SQL
+                INSERT IGNORE INTO member_translations (object_id, locale, field, content)
+                SELECT id, 'en', 'ProfileLanguage', 'en'
+                FROM members 
+                WHERE Status IN ($statuses)
+            SQL;
 
-        $specialRelations = $statement->executeQuery()->fetchAllAssociative();
-
-        foreach ($specialRelations as $specialRelation) {
-            $statement = $this->connection->prepare(
-                'INSERT IGNORE INTO friend (created, updated, confirmed, left_id, right_id) ' .
-                'VALUES (:created, :updated, :confirmed, :left_id, :right_id)'
-            );
-
-            $statement->bindValue('created', $specialRelation['created']);
-            $statement->bindValue('updated', $specialRelation['updated']);
-            $statement->bindValue('confirmed', 'Yes' === $specialRelation['Confirmed'] ? 1 : 0);
-            $left_id = min($specialRelation['IdOwner'], $specialRelation['IdRelation']);
-            $right_id = max($specialRelation['IdOwner'], $specialRelation['IdRelation']);
-            $statement->bindValue('left_id', $left_id);
-            $statement->bindValue('right_id', $right_id);
-            try {
-                $statement->executeStatement();
-            } catch (Exception $e) {
-                $this->progressBar->setMessage($member['Username'], 'error');
-                $this->addErrorMemberSql($member, $e->getMessage());
-            }
-        }
-        unset($specialRelations);
+        $this->connection->executeStatement($sql);
     }
 
-    private function migrateAccommodation(?string $accommodation): string
+    private function migrateDerivedTranslations(string $statuses): void
     {
-        return match ($accommodation) {
-            'dependonrequest', 'anytime' => 'yes',
-            default => 'no',
-        };
+        $sql = <<<SQL
+                INSERT IGNORE INTO member_translations (object_id, locale, field, content)
+                SELECT DISTINCT mt.IdOwner, l.ShortCode, 'ProfileLanguage', l.ShortCode
+                FROM memberstrads mt
+                INNER JOIN members m ON m.id = mt.IdOwner
+                INNER JOIN languages l ON mt.IdLanguage = l.id
+                WHERE mt.TableColumn LIKE 'members.%'
+                AND m.Status IN ($statuses)
+            SQL;
+
+        $this->connection->executeStatement($sql);
     }
 
-    private function migrateTypicalOffer(string $typicalOffer): string
+    private function migrateTranslations(string $statuses): void
     {
-        $standardOffer = '';
-        if (str_contains(TypicalOfferType::DINNER, $typicalOffer)) {
-            $standardOffer .= ',' . StandardOffersType::DINNER;
-        }
-        if (str_contains(TypicalOfferType::GUIDED_TOUR, $typicalOffer)) {
-            $standardOffer .= ',' . StandardOffersType::GUIDED_TOUR;
-        }
+        $sql = <<<SQL
+                INSERT IGNORE INTO member_translations (object_id, locale, field, content)
+                SELECT mt.IdOwner, l.ShortCode, 
+                    CASE REPLACE(mt.TableColumn, 'members.', '')
+                        WHEN 'ProfileSummary' THEN 'AboutMe'
+                        WHEN 'AdditionalAccomodationInfo' THEN 'AdditionalAccommodationInfo'
+                        WHEN 'MaxLenghtOfStay' THEN 'MaxLengthOfStay'
+                        ELSE REPLACE(mt.TableColumn, 'members.', '')
+                    END,
+                    mt.Sentence
+                FROM memberstrads mt
+                INNER JOIN members m ON m.id = mt.IdOwner
+                INNER JOIN languages l ON mt.IdLanguage = l.id
+                WHERE mt.Sentence IS NOT NULL AND mt.Sentence != ''
+                AND mt.TableColumn LIKE 'members.%'
+                AND m.Status IN ($statuses)
+            SQL;
 
-        return substr($standardOffer, 1);
+        $this->connection->executeStatement($sql);
     }
 
-    private function isWheelchairAccessible(string $typicalOffer): bool
+    private function migrateLanguageLevels(string $statuses): void
     {
-        return str_contains(TypicalOfferType::WHEELCHAIR_ACCESSIBLE, $typicalOffer);
-    }
+        $motherTongue = LanguageLevelType::MOTHER_TONGUE;
+        $expert = LanguageLevelType::EXPERT;
+        $fluent = LanguageLevelType::FLUENT;
+        $intermediate = LanguageLevelType::INTERMEDIATE;
+        $beginner = LanguageLevelType::BEGINNER;
+        $helloOnly = LanguageLevelType::HELLO_ONLY;
 
-    private function getFullname(array $member): string
-    {
-        $name = $member['FirstName'] . ' ' . $member['SecondName'] . ' ' . $member['LastName'];
+        $sql = <<<SQL
+                INSERT IGNORE INTO member_language_level (member_id, language, level)
+                SELECT 
+                    mll.IdMember, 
+                    l.ShortCode,
+                    CASE mll.Level
+                        WHEN 'MotherLanguage' THEN '$motherTongue'
+                        WHEN 'Expert' THEN '$expert'
+                        WHEN 'Fluent' THEN '$fluent'
+                        WHEN 'Intermediate' THEN '$intermediate'
+                        WHEN 'Beginner' THEN '$beginner'
+                        WHEN 'HelloOnly' THEN '$helloOnly'
+                        ELSE ''
+                    END AS parsed_level
+                FROM memberslanguageslevel mll
+                INNER JOIN languages l ON mll.IdLanguage = l.id
+                INNER JOIN members m ON m.id = mll.IdMember
+                WHERE m.Status IN ($statuses)
+                HAVING parsed_level != ''
+            SQL;
 
-        return str_replace('  ', ' ', $name);
-    }
-
-    private function isFirstnameShown(array $member): bool
-    {
-        return ($member['HideAttribute'] & self::MEMBER_FIRSTNAME_HIDDEN) !== self::MEMBER_FIRSTNAME_HIDDEN;
-    }
-
-    private function migrateRestrictions(mixed $restrictions): string
-    {
-        $hostRestrictions = '';
-        if (str_contains($restrictions, 'NoSmoker')) {
-            $hostRestrictions .= ',' . HostRestrictionsType::NO_SMOKING;
-        }
-        if (str_contains($restrictions, 'NoAlchool')) {
-            $hostRestrictions .= ',' . HostRestrictionsType::NO_ALCOHOL;
-        }
-        if (str_contains($restrictions, 'NoDrugs')) {
-            $hostRestrictions .= ',' . HostRestrictionsType::NO_DRUGS;
-        }
-
-        return substr($hostRestrictions, 1);
-    }
-
-    private function mapField(string $tableColumn): string
-    {
-        $tableColumn = str_replace('members.', '', $tableColumn);
-        $tableColumn = match ($tableColumn) {
-            'ProfileSummary' => 'AboutMe',
-            'AdditionalAccomodationInfo' => 'AdditionalAccommodationInfo',
-            'MaxLenghtOfStay' => 'MaxLengthOfStay',
-            default => $tableColumn,
-        };
-
-        return $tableColumn;
-    }
-
-    private function addTranslation(int $memberId, string $locale, string $field, string $content): string
-    {
-        $locale = $this->connection->quote($locale);
-        $field = $this->connection->quote($field);
-        $content = $this->connection->quote($content);
-
-        return ", ({$memberId}, {$locale}, {$field}, {$content})";
-    }
-
-    private function addErrorMember(array $member): void
-    {
-        // Organize errors based on status and username
-        if (!isset($this->errorMembers[$member['Status']])) {
-            $this->errorMembers[$member['Status']] = [];
-        }
-        if (!isset($this->errorMembers[$member['Status']][$member['Username']])) {
-            $this->errorMembers[$member['Status']][$member['Username']] = [];
-        }
-    }
-
-    private function addErrorCity(array $member): void
-    {
-        $this->addErrorMember($member);
-
-        $this->errorMembers[$member['Status']][$member['Username']]['city'] = $member['IdCity'];
-    }
-
-    private function addErrorAddress(array $member, string $message): void
-    {
-        $this->addErrorMember($member);
-
-        $this->errorMembers[$member['Status']][$member['Username']]['address'] = $message;
-    }
-
-    private function addErrorMemberSql(array $member, string $message): void
-    {
-        $this->addErrorMember($member);
-        $this->errorMembers[$member['Status']][$member['Username']]['member_sql'] = $message;
-    }
-
-    private function addErrorTranslationSql(array $member, string $message): void
-    {
-        $this->addErrorMember($member);
-        $this->errorMembers[$member['Status']][$member['Username']]['translation_sql'] = $message;
-    }
-
-    private function addErrorNoTranslations(array $member): void
-    {
-        //        $this->addErrorMember($member);
-        //        $this->errorMembers[$member['Status']][$member['Username']]['no_translations'] = 'No Translations';
-    }
-
-    private function addErrorLanguage(array $member, mixed $language): void
-    {
-        $this->addErrorMember($member);
-        $this->errorMembers[$member['Status']][$member['Username']]['language'] = $language;
-    }
-
-    private function migrateHiddenFields(array $member): int
-    {
-        $hideAttribute = 0;
-        if (
-            ($member['HideAttribute'] && self::MEMBER_FIRSTNAME_HIDDEN)
-            || ($member['HideAttribute'] && self::MEMBER_SECONDNAME_HIDDEN)
-            || ($member['HideAttribute'] && self::MEMBER_LASTNAME_HIDDEN)
-        ) {
-            $hideAttribute |= Member::NAME_HIDDEN;
-        }
-
-        if ('Yes' === $member['HideBirthDate']) {
-            $hideAttribute |= Member::AGE_HIDDEN;
-        }
-
-        if ('Yes' === $member['HideGender']) {
-            $hideAttribute |= Member::GENDER_HIDDEN;
-        }
-
-        if ('Yes' === $member['AdressHidden']) {
-            $hideAttribute |= Member::ADDRESS_HIDDEN;
-        }
-
-        return $hideAttribute;
-    }
-
-    private function migrateGender(string $gender): string
-    {
-        return match ($gender) {
-            'IDontTell' => 'other',
-            default => $gender,
-        };
-    }
-
-    private function migrateLanguageLevel(string $level): string
-    {
         try {
-            return match ($level) {
-                'MotherLanguage' => LanguageLevelType::MOTHER_TONGUE,
-                'Expert' => LanguageLevelType::EXPERT,
-                'Fluent' => LanguageLevelType::FLUENT,
-                'Intermediate' => LanguageLevelType::INTERMEDIATE,
-                'Beginner' => LanguageLevelType::BEGINNER,
-                'HelloOnly' => LanguageLevelType::HELLO_ONLY,
-                default => '',
-            };
-        } catch (Throwable $throwable) {
-            echo 'Level: ' . $level;
-            exit;
+            $this->connection->executeStatement($sql);
+        } catch (Exception $e) {
+            // If it fails, let's dump the actual columns to help debug
+            if (str_contains($e->getMessage(), 'Unknown column')) {
+                $columns = $this->connection->executeQuery('SHOW COLUMNS FROM member_language_level')->fetchAllAssociative();
+                $columnNames = array_column($columns, 'Field');
+                throw new RuntimeException('Column error during language level migration. Actual columns in member_language_level: ' . implode(', ', $columnNames) . "\nOriginal error: " . $e->getMessage());
+            }
+            throw $e;
         }
     }
 
-    private function reportErrors(int $offset): void
+    private function migrateFriends(string $statuses): void
     {
-        if (!empty($this->errorMembers)) {
-            $file = fopen("migrateMembers.errors-{$offset}.txt", 'w');
-            $countOfErrorMembers = 0;
-            foreach ($this->errorMembers as $errors) {
-                $countOfErrorMembers += \count($errors);
-            }
+        $sql = <<<SQL
+                INSERT IGNORE INTO friend (created, updated, left_confirmed, left_id, right_id, right_confirmed)
+                SELECT 
+                    sr.created,
+                    sr.updated,
+                    IF(sr.Confirmed = 'Yes', 1, 0),
+                    LEAST(sr.IdOwner, sr.IdRelation),
+                    GREATEST(sr.IdOwner, sr.IdRelation),
+                    IF(sr.Confirmed = 'Yes', 1, 0)
+                FROM specialrelations sr
+                INNER JOIN members m ON (m.id = sr.IdOwner OR m.id = sr.IdRelation)
+                WHERE m.Status IN ($statuses)
+            SQL;
 
-            $this->io->error("Error migrating {$countOfErrorMembers} members.");
+        $this->connection->executeStatement($sql);
+    }
 
-            fwrite($file, 'Members with errors: ' . $countOfErrorMembers . "\n");
-            foreach ($this->errorMembers as $status => $membersWithErrors) {
-                $countOfErrorMembers = \count($membersWithErrors);
-                fwrite($file, "{$status}: {$countOfErrorMembers}" . \PHP_EOL);
-                $errorsByCategory = [];
-                foreach ($membersWithErrors as $errors) {
-                    foreach ($errors as $category => $error) {
-                        if (!isset($errorsByCategory[$category])) {
-                            $errorsByCategory[$category] = 0;
-                        }
-                        ++$errorsByCategory[$category];
-                    }
-                }
-                foreach (array_keys($errorsByCategory) as $category) {
-                    fwrite($file, "    {$category}: {$errorsByCategory[$category]}" . \PHP_EOL);
-                }
-            }
-            fwrite($file, \PHP_EOL);
+    private function migrateComments(string $statuses): void
+    {
+        $positive = CommentQualityType::POSITIVE;
+        $neutral = CommentQualityType::NEUTRAL;
+        $negative = CommentQualityType::NEGATIVE;
 
-            foreach ($this->errorMembers as $status => $membersWithErrors) {
-                foreach ($membersWithErrors as $username => $errors) {
-                    $errorText = [];
-                    $errorText[] = "Error migrating member: {$status} - {$username}";
+        $wasGuest = CommentRelationsType::WAS_GUEST;
+        $wasHost = CommentRelationsType::WAS_HOST;
+        $metOnce = CommentRelationsType::ONLY_MET_ONCE;
+        $family = CommentRelationsType::IS_FAMILY;
+        $closeFriend = CommentRelationsType::IS_CLOSE_FRIEND;
+        $travelBuddy = CommentRelationsType::TRAVEL_BUDDY;
+        $friend = CommentRelationsType::IS_FRIEND;
+        $chatted = CommentRelationsType::ONLINE_COMMUNICATION;
 
-                    if (\array_key_exists('city', $errors)) {
-                        $errorText[] = "City not found: {$errors['city']}";
-                    }
-                    if (\array_key_exists('address', $errors)) {
-                        $errorText[] = "Address: {$errors['address']}";
-                    }
-                    if (\array_key_exists('language', $errors)) {
-                        $errorText[] = "Language not found: {$errors['language']}";
-                    }
-                    if (\array_key_exists('no_translations', $errors)) {
-                        $errorText[] = 'No translations in database!';
-                    }
-                    if (\array_key_exists('member_sql', $errors)) {
-                        $errorText[] = $errors['member_sql'];
-                    }
-                    if (\array_key_exists('translation_sql', $errors)) {
-                        $errorText[] = $errors['translation_sql'];
-                    }
-                    fwrite($file, implode(\PHP_EOL, $errorText));
-                    fwrite($file, \PHP_EOL);
-                }
-            }
+        $sql = <<<SQL
+                INSERT IGNORE INTO comment (
+                    id, to_member_id, from_member_id, relations, quality, comment, created, updated,
+                    admin_action, show_to_other_members, allow_edit
+                )
+                SELECT
+                    c.id,
+                    c.IdToMember,
+                    c.IdFromMember,
+                    REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(c.Relations,
+                        'hewasmyguest', '$wasGuest'),
+                        'hehostedme', '$wasHost'),
+                        'OnlyOnce', '$metOnce'),
+                        'HeIsMyFamily', '$family'),
+                        'HeHisMyOldCloseFriend', '$closeFriend'),
+                        'TravelledTogether', '$travelBuddy'),
+                        'WeAreFriends', '$friend'),
+                        'CommunicatedOnline', '$chatted'
+                    ),
+                    CASE c.Quality
+                        WHEN 'Good' THEN '$positive'
+                        WHEN 'Neutral' THEN '$neutral'
+                        WHEN 'Bad' THEN '$negative'
+                        ELSE '$neutral'
+                    END,
+                    c.TextFree,
+                    c.created,
+                    c.updated,
+                    c.AdminAction,
+                    c.DisplayInPublic,
+                    c.AllowEdit
+                FROM comments c
+                INNER JOIN member m_to ON c.IdToMember = m_to.id
+                INNER JOIN member m_from ON c.IdFromMember = m_from.id
+                WHERE m_to.Status IN ($statuses) AND m_from.Status IN ($statuses)
+            SQL;
 
-            fclose($file);
-        }
+        $this->connection->executeStatement($sql);
+    }
+
+    private function migrateLanguages(): void
+    {
+        $sql = <<<'SQL'
+                INSERT IGNORE INTO language (
+                    shortCode, name, isWrittenLanguage, isSpokenLanguage, isSignLanguage
+                )
+                SELECT
+                    l.ShortCode,
+                    l.Name,
+                    l.IsWrittenLanguage,
+                    l.IsSpokenLanguage,
+                    l.IsSignLanguage
+                FROM languages l
+            SQL;
+
+        $this->connection->executeStatement($sql);
+    }
+
+    private function migrateWords(): void
+    {
+        $sql = <<<'SQL'
+                INSERT IGNORE INTO word (
+                    code, domain, shortCode, sentence, created, updated, majorupdate,
+                    donottranslate, author_id, description, translationPriority, isarchived
+                )
+                SELECT
+                    w.code,
+                    w.domain,
+                    l.ShortCode,
+                    w.Sentence,
+                    w.created,
+                    w.updated,
+                    w.majorUpdate,
+                    w.donottranslate,
+                    w.IdMember,
+                    w.Description,
+                    w.TranslationPriority,
+                    w.isarchived
+                FROM words w
+                INNER JOIN languages l ON w.IdLanguage = l.id
+            SQL;
+
+        $this->connection->executeStatement($sql);
+    }
+
+    private function migrateForumThreads(): void
+    {
+        $sql = <<<'SQL'
+                INSERT IGNORE INTO forum_thread (
+                    id, expiredate, IdTitle, title, first_postid, last_postid, replies, views,
+                    stickyvalue, ShortCode, IdGroup, ThreadVisibility, WhoCanReply, ThreadDeleted
+                )
+                SELECT
+                    ft.id,
+                    ft.expiredate,
+                    ft.IdTitle,
+                    w.Sentence,
+                    ft.first_postid,
+                    ft.last_postid,
+                    ft.replies,
+                    ft.views,
+                    ft.stickyvalue,
+                    l.ShortCode,
+                    ft.IdGroup,
+                    ft.ThreadVisibility,
+                    ft.WhoCanReply,
+                    ft.ThreadDeleted
+                FROM forums_threads ft
+                INNER JOIN words w ON ft.IdTitle = w.id
+                INNER JOIN languages l ON w.IdLanguage = l.id
+            SQL;
+
+        $this->connection->executeStatement($sql);
+    }
+
+    private function migrateForumPosts(): void
+    {
+        $sql = <<<'SQL'
+                INSERT IGNORE INTO forum_post (
+                    id, threadid, PostVisibility, IdWriter, create_time, message, IdContent,
+                    OwnerCanStillEdit, last_edittime, last_editorid, edit_count, ShortCode, PostDeleted
+                )
+                SELECT
+                    fp.id,
+                    fp.threadid,
+                    fp.PostVisibility,
+                    fp.IdWriter,
+                    fp.create_time,
+                    w.Sentence,
+                    fp.IdContent,
+                    fp.OwnerCanStillEdit,
+                    fp.last_edittime,
+                    fp.last_editorid,
+                    fp.edit_count,
+                    l.ShortCode,
+                    fp.PostDeleted
+                FROM forums_posts fp
+                INNER JOIN words w ON fp.IdContent = w.id
+                INNER JOIN languages l ON w.IdLanguage = l.id
+            SQL;
+
+        $this->connection->executeStatement($sql);
+    }
+
+    private function migrateMemberPhotos(string $statuses): void
+    {
+        $sql = <<<SQL
+                INSERT IGNORE INTO member_photo (
+                    id, FilePath, member_id, created
+                )
+                SELECT
+                    mp.id,
+                    mp.FilePath,
+                    mp.IdMember,
+                    mp.created
+                FROM membersphotos mp
+                INNER JOIN member m ON m.id = mp.IdMember
+                WHERE m.Status IN ($statuses)
+            SQL;
+
+        $this->connection->executeStatement($sql);
     }
 }

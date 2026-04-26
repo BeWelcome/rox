@@ -17,7 +17,7 @@ class AuthListener
     {
     }
 
-    public function onAuthenticationSuccess(InteractiveLoginEvent $event)
+    public function onAuthenticationSuccess(InteractiveLoginEvent $event): void
     {
         /** @var Member $member */
         $member = $event->getAuthenticationToken()->getUser();

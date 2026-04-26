@@ -1,4 +1,4 @@
-import 'leaflet';
+import L from 'leaflet';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 import {initializeSingleAutoComplete} from "../suggest/locations";
@@ -20,12 +20,15 @@ function Map() {
     this.map = undefined;
     this.noRefresh = false;
     this.initializing = false;
-    this.mapBox = $("#map-box");
+    this.mapBox = document.getElementById("map-box");
 }
 
 Map.prototype.showMap = function () {
     if (this.map === undefined) {
-        this.mapBox.append('<div id="map" class="map u:w-full"></div>');
+        const mapDiv = document.createElement('div');
+        mapDiv.id = 'map';
+        mapDiv.className = 'map u:w-full';
+        this.mapBox.appendChild(mapDiv);
         this.map = L.map('map', {
             center: [15, 0],
             zoomSnap: 0.25,
@@ -68,31 +71,33 @@ Map.prototype.addMarkers = function (map) {
         }
     });
 
-    $.each(mapMembers, function (index, value) {
-        let iconFile = 'undefined';
+    if (typeof mapMembers !== 'undefined' && mapMembers !== null) {
+        mapMembers.forEach(function(value) {
+            let iconFile = 'undefined';
 
-        switch (value.Accommodation) {
-            case 'yes':
-                iconFile = 'yes';
-                break;
+            switch (value.Accommodation) {
+                case 'yes':
+                    iconFile = 'yes';
+                    break;
 
-            case 'no':
-                iconFile = 'no';
-                break;
-        }
+                case 'no':
+                    iconFile = 'no';
+                    break;
+            }
 
-        var icon = new L.DivIcon({
-            html: '<div><img src="/images/icons/' + iconFile + '.png" class="mapicon"></div>',
-            className: '',
-            iconSize: new L.Point(17, 17)
+            var icon = new L.DivIcon({
+                html: '<div><img src="/images/icons/' + iconFile + '.png" class="mapicon"></div>',
+                className: '',
+                iconSize: new L.Point(17, 17)
+            });
+            const latlng = new L.LatLng(value.latitude, value.longitude);
+            var marker = new L.marker([value.latitude, value.longitude], {
+                icon: icon,
+                className: 'marker-cluster marker-cluster-unique'
+            });
+            markers.addLayer(marker);
         });
-        const latlng = new L.LatLng(value.latitude, value.longitude);
-        var marker = new L.marker([value.latitude, value.longitude], {
-            icon: icon,
-            className: 'marker-cluster marker-cluster-unique'
-        });
-        markers.addLayer(marker);
-    });
+    }
 
     try {
         map.addLayer(markers);
@@ -101,7 +106,7 @@ Map.prototype.addMarkers = function (map) {
     return markers;
 };
 
-$(function () {
+document.addEventListener('DOMContentLoaded', function () {
     var map = new Map({
         center: [0, 0],
         zoom: 0,

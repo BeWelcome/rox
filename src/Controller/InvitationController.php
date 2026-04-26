@@ -356,7 +356,7 @@ class InvitationController extends BaseRequestAndInvitationController
         ]);
     }
 
-    protected function addExpiredFlash(Member $receiver)
+    protected function addExpiredFlash(Member $receiver): void
     {
         $this->addTranslatedFlash('notice', 'flash.invitation.expired', [
             '%link_start%' => '<a href="' . $this->generateUrl('message_new', [

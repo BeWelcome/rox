@@ -27,7 +27,7 @@ class HostingRequestAbstractType extends AbstractType
         return 'app_message';
     }
 
-    protected function addMessageTextArea(FormInterface $form, string $placeholder)
+    protected function addMessageTextArea(FormInterface $form, string $placeholder): void
     {
         $form
             ->add('message', CkEditorType::class, [

@@ -5,6 +5,7 @@ namespace App\Model\Admin;
 use App\Entity\Comment;
 use App\Entity\Member;
 use App\Repository\CommentRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 
 /**
@@ -15,6 +16,11 @@ use Pagerfanta\Pagerfanta;
  */
 class CommentModel
 {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
+
     /**
      * @param int $page
      * @param int $limit

@@ -81,7 +81,7 @@ class HostingInterest
      * Triggered on insert.
      */
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->initialized = new DateTime('now');
     }
@@ -90,7 +90,7 @@ class HostingInterest
      * Triggered on update.
      */
     #[ORM\PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
     }

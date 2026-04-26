@@ -1,10 +1,10 @@
 <li id="login_signup" class="nav-item">
-    <form class="ml-auto form-inline" method="post" action="{{ url('security_check') }}">
-        <div class="form-label-group my-1 ml-md-1 mr-0 m-lg-1">
+    <form class="ms-auto d-flex align-items-center" method="post" action="{{ url('security_check') }}">
+        <div class="form-label-group my-1 ms-md-1 me-0 m-lg-1">
             <input class="form-control" type="text" id="_username_1" name="_username" placeholder="{{ 'username'|trans }}" autofocus="">
             <label for="_username_1">{{ 'username'|trans }}</label>
         </div>
-        <div class="form-label-group my-1 ml-md-1 mr-0 m-lg-1">
+        <div class="form-label-group my-1 ms-md-1 me-0 m-lg-1 position-relative">
             <input class="form-control js-password-input" type="password" id="_password_1" name="_password" placeholder="{{ 'login.password'|trans }}">
             <button type="button" id="password_show_hide" class="u:absolute u:text-gray-500 u:border-0 u:bg-white u:h-full u:top-0 u:end-0 js-password-show-hide" style="height: 38px; margin: 1px; background-color: transparent">
                 <svg class="" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -17,8 +17,8 @@
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         <div class="btn-group m-1">
             <button type="submit" class="btn btn-primary border-white" id="login">{{ 'indexpageloginsubmit' | trans }}</button>
-            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split border-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="sr-only">Toggle Dropdown</span>
+            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split border-white" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="visually-hidden">Toggle Dropdown</span>
             </button>
             <div class="dropdown-menu text-white">
                 <div class="form-check">

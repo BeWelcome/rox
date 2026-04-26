@@ -3,9 +3,11 @@
 
 {% block javascripts %}
 <script type="text/javascript">
-    $(window).on('load', function () {
-        $('#checkAllDelete').click(function () {
-            $('input:checkbox.checkableDelete').prop('checked', this.checked);
+    document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('checkAllDelete').addEventListener('click', function () {
+            document.querySelectorAll('input:checkbox.checkableDelete').forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
         });
     });
 </script>
@@ -18,7 +20,7 @@
         {{ form_start(form) }}
         {{ form_errors(form) }}
         {% if reported.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( reported, 'rox_default') }}
             </div>
         {% endif %}
@@ -45,12 +47,12 @@
         {% endfor %}
         </table>
         <div class="row">
-            <div class="col-12 text-right">
+            <div class="col-12 text-end">
                 <button type="submit" class="btn btn-primary">{{ 'button.delete' | trans }}</button>
             </div>
         </div>
         {% if reported.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( reported, 'rox_default') }}
             </div>
         {% endif %}

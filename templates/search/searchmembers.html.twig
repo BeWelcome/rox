@@ -20,7 +20,7 @@
          value="{{ form.username.vars.value }}"
          required="required"
          placeholder="{{ 'search.member.placeholder'|trans }}"
-         class="member-autocomplete-start"
+         class="member-autocomplete-start o-input"
   >
   {{ form_help(form.username) }}
   {% do form.username.setRendered %}
@@ -29,9 +29,9 @@
     <div class="u:w-full u:grid u:grid-cols-1 {% if members|length > 0 %}u:sm:grid-cols-2 u:md:grid-cols-3{% endif %} u:gap-12">
       {% for member in members %}
         {% set translations = member.translations %}
-          <div class="media">
+          <div class="d-flex">
             {{ macros.avatar(member.username, 72, true) }}
-            <div class="ml-3 media-body">
+            <div class="ms-3 flex-grow-1">
               <h5 class="mt-0">{{ member.username }}</h5>
               {% set address = member.activeAddress %}
               {% if not address is same as(false) %}

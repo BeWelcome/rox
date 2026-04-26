@@ -17,7 +17,7 @@
             <div class="col-12 col-sm-6">
                 <a class="btn btn-primary mb-3" href="{{ url('wiki_page_edit', { 'pageTitle': title}) }}">{{ 'wiki.page.edit' | trans }}</a>
             </div>
-            <div class="col-12 col-sm-6 text-right">{{ 'version'| trans| capitalize }}: {{ wikipage.version }} -
+            <div class="col-12 col-sm-6 text-end">{{ 'version'| trans| capitalize }}: {{ wikipage.version }} -
                 {{ 'wiki.page.created.by.on'|trans({'by': wikipage.author, 'on': wikipage.created|date('U')|format_datetime('short', 'short')}) }}
             </div>
         </div>

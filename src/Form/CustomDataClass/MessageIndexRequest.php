@@ -7,7 +7,7 @@ class MessageIndexRequest
     /** @var array */
     private $messages;
 
-    public function setMessages($messages)
+    public function setMessages($messages): void
     {
         $this->messages = $messages;
     }

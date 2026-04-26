@@ -29,7 +29,7 @@ class AboutModel
         return $qb->getQuery()->getResult();
     }
 
-    public function sendFeedbackEmail($data)
+    public function sendFeedbackEmail($data): void
     {
         /** @var FeedbackCategory $category */
         $category = $data['IdCategory'];
@@ -42,7 +42,7 @@ class AboutModel
         $this->mailer->sendFeedbackEmail($feedbackEmail, $notifyEmail, $data);
     }
 
-    public function addFeedback($data)
+    public function addFeedback($data): void
     {
         $feedback = new Feedback();
         if (null !== $data['member']) {

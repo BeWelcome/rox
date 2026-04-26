@@ -1,8 +1,23 @@
 parameters:
-    level: 0
+    level: 1
     paths:
-        - bin/
-        - config/
-        - public/
-        - src/
-        - tests/
+        - src
+        - tests
+#        - build
+    excludePaths:
+        - vendor
+        - var
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+        constantHassers: false
+    doctrine:
+        ormRepositoryClass: Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
+#    ignoreErrors:
+#        # Ignore some legacy mixed type issues while migrating
+#        - identifier: missingType.iterableValue
+#        - identifier: missingType.generics
+
+#includes:
+#    - vendor/phpstan/phpstan-symfony/extension.neon
+#    - vendor/phpstan/phpstan-doctrine/extension.neon
+#    - vendor/phpstan/phpstan-mockery/extension.neon

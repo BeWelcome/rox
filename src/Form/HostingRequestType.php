@@ -98,7 +98,7 @@ class HostingRequestType extends AbstractType
         $form->add('numberOfTravellers', HiddenType::class);
     }
 
-    private function addFieldsForRequest(FormInterface $form, array $options, $data)
+    private function addFieldsForRequest(FormInterface $form, array $options, $data): void
     {
         $numberOfTravellersOptions = [
             'label' => 'request.number_of_travellers',

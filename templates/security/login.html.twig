@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="{{ asset('/images/favicon-96x96.png') }}" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="{{ asset('/images/favicon.svg') }}" />
-    <link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/images/apple-touch-icon.png') }}" />
     <meta name="apple-mobile-web-app-title" content="beWelcome" />
 
@@ -114,8 +113,8 @@
             {% endif %}
 
             <div class="col-10 offset-1 col-sm-8 offset-sm-2">
-                <div class="card-deck">
-                    <div class="card o-card">
+                <div class="row">
+                    <div class="card col-6">
                         <form id="main-login-form"
                               class="u:m-0"
                               role="form"
@@ -184,7 +183,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="card o-card">
+                    <div class="card col-6">
                         <div class="card-body p-2">
                             <h4 class="card-title">{{ 'signupnow' | trans }}</h4>
                             <p class="u:text-18 u:mt-24">{{ 'login.signup.info'|trans|raw }}</p>

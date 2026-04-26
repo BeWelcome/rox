@@ -1,16 +1,32 @@
 function updateCount() {
-    $.ajax({
-        type: 'POST',
-        url: '/count/conversations/unread',
-        dataType: 'json',
-        success: function (data) {
-            $('#conversationCount').replaceWith(data.html);
-            if (typeof autocollapse_menu === "function") {
-                autocollapse_menu(true);
+    fetch('/count/conversations/unread', {
+        method: 'POST',
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        const conversationCount = document.getElementById('conversationCount');
+        if (conversationCount && data && data.html !== undefined) {
+            conversationCount.outerHTML = data.html;
+            if (typeof window.autocollapse_menu === "function") {
+                window.autocollapse_menu(true);
             }
-        }});
+        }
+    })
+    .catch(error => {
+        console.error('Error fetching unread count:', error);
+    });
 }
 
-let interval = setInterval(function () { updateCount(); }, 60000 * 1000);
+const interval = setInterval(function () { updateCount(); }, 600000);
 
+// Initial call
 updateCount();

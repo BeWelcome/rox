@@ -43,7 +43,7 @@ class TripModel
         return $radius;
     }
 
-    public function setTripsRadius($member, $radius)
+    public function setTripsRadius($member, $radius): void
     {
         $preferenceRepository = $this->entityManager->getRepository(Preference::class);
 
@@ -126,7 +126,7 @@ class TripModel
         }
     }
 
-    public function hideTrip(Trip $trip)
+    public function hideTrip(Trip $trip): void
     {
         $trip->setDeleted(new DateTime());
 

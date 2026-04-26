@@ -30,9 +30,9 @@
                     <div>
                         <div class=" u:font-display u:italic u:text-white u:mb-8">{{ trip.description | nl2br | purify | truncate(200) }}</div>
                         <div class="u:text-white u:font-display u:mt-8 u:mb-16 u:md:m-0 u:flex u:flex-column">
-                            <div class="u:mr-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}
+                            <div class="u:me-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}
                              {% for leg in trip.subtrips %}
-                                {% if leg.location %}<span class="u:whitespace-nowrap u:mr-8">
+                                {% if leg.location %}<span class="u:whitespace-nowrap u:me-8">
                                     {% if leg.location.country %}
                                         <i class="o-flag o-flag--{{ leg.location.country.countryId }} u:-mb-4" title="{{ leg.location.country.name }}"></i>
                                     {% endif %}
@@ -61,7 +61,7 @@
                 </div>
                 <div class="u:flex u:justify-center u:md:justify-between u:items-center u:mt-16 u:md:m-0">
                     {% if not trip.isExpired %}
-                    <a class="o-rounded o-rounded--l u:text-18 u:mr-20 u:md:m-0"
+                    <a class="o-rounded o-rounded--l u:text-18 u:me-20 u:md:m-0"
                        href="{{ path('trip_edit', {'id': trip.id}) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
                         <i class="far fa-edit"></i>
                     </a>

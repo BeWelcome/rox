@@ -2,6 +2,7 @@ let Encore = require('@symfony/webpack-encore');
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -10,6 +11,14 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 }
 
 Encore
+    .enableVersioning(Encore.isProduction())
+    .configureWatchOptions((watchOptions) => {
+        watchOptions.ignored = [
+            '**/node_modules/**',
+            '**/var/**',
+            '**/public/build/**'
+        ];
+    })
     // directory where compiled assets will be stored
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
@@ -29,7 +38,6 @@ Encore
     .addEntry('search/loadcontent', './assets/js/search/loadajax.js')
     .addEntry('search/locations', './assets/js/search/locations.js')
     .addEntry('search/map', './assets/js/search/map.js')
-    .addEntry('tempusdominus', './assets/js/tempusdominus.js')
     .addEntry('requests', './assets/js/requests.js')
     .addEntry('message', './assets/js/message.js')
     .addEntry('trips', './assets/js/trips.js')
@@ -60,7 +68,6 @@ Encore
     .addEntry('scrollingtabs', './assets/js/scrollingtabs.js')
     .addEntry('email', './assets/scss/email.scss')
     .addEntry('roxeditor', './assets/js/roxeditor.js')
-    .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('highlight', './assets/js/highlight.js')
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
@@ -89,23 +96,13 @@ Encore
     }, {
         resolveUrlLoader: true
     })
-    // allow legacy applications to use $/jQuery as a global variable, make popper visible for bootstrap
-    .autoProvidejQuery()
-    .autoProvideVariables({
-        Popper: ['popper.js', 'default'],
-    })
     .addAliases({
         'TweenLite': 'gsap/src/minified/TweenLite.min.js',
         'TweenMax': 'gsap/src/minified/TweenMax.min.js',
         'TimelineLite': 'gsap/src/minified/TimelineLite.min.js',
         'TimelineMax': 'gsap/src/minified/TimelineMax.min.js'
     })
-    .addLoader({
-        test: require.resolve('select2'),
-        use: "imports-loader?define=>false"
-    })
     .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(true)
     // Use raw-loader for CKEditor 5 SVG files.
     .configureCssLoader((config) => {
         config.url = {

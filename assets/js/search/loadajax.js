@@ -1,23 +1,35 @@
-$(document).ready(function() {
-    $('.ajaxload').click(Search.loadContent);
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.ajaxload').forEach(element => {
+        element.addEventListener('click', Search.loadContent);
+    });
 });
 
-var Search = {
+const Search = {
     loadContent: function (e) {
         e.preventDefault();
-        $('#overlay').addClass("loading");
-        let url = $(this).attr('href');
-        // Get parameters
-        $.ajax({
-            type: 'POST',
-            url: url,
-            dataType: 'html',
-            success: function (data) {
-                let searchResults = $('#searchresults');
-                searchResults.replaceWith(data);
-                $('#overlay').removeClass("loading");
-                $(".ajaxload").click(Search.loadContent);
+        document.getElementById('overlay').classList.add("loading");
+        let url = this.getAttribute('href');
+        
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
             }
+        })
+        .then(response => response.text())
+        .then(data => {
+            let searchResults = document.getElementById('searchresults');
+            if (searchResults) {
+                searchResults.outerHTML = data;
+            }
+            document.getElementById('overlay').classList.remove("loading");
+            document.querySelectorAll(".ajaxload").forEach(element => {
+                element.addEventListener('click', Search.loadContent);
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('overlay').classList.remove("loading");
         });
     }
 };

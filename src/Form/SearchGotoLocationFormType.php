@@ -27,7 +27,7 @@ class SearchGotoLocationFormType extends AbstractType
         $this->addButtons($builder);
     }
 
-    private function addHiddenFields(FormBuilderInterface $formBuilder)
+    private function addHiddenFields(FormBuilderInterface $formBuilder): void
     {
         $formBuilder
             ->add('search_geoname_id', HiddenType::class)
@@ -36,7 +36,7 @@ class SearchGotoLocationFormType extends AbstractType
         ;
     }
 
-    private function addButtons(FormBuilderInterface $formBuilder)
+    private function addButtons(FormBuilderInterface $formBuilder): void
     {
         $formBuilder->add('update_map', SubmitType::class);
     }

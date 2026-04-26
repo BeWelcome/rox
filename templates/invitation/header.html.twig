@@ -4,30 +4,30 @@
             <div class="u:p-4">
                 {% if original.Initiator == myself %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
-                    class="fa fa-question mr-1"></i> {{ 'invitation.host.open'|trans }}{% endif %}
+                    class="fa fa-question me-1"></i> {{ 'invitation.host.open'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
-                    class="fa fa-times mr-1"></i> {{ 'invitation.host.cancelled'|trans }}{% endif %}
+                    class="fa fa-times me-1"></i> {{ 'invitation.host.cancelled'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i
-                    class="fa fa-times mr-1"></i> {{ 'invitation.host.declined'|trans }}{% endif %}
+                    class="fa fa-times me-1"></i> {{ 'invitation.host.declined'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i
-                    class="far fa-handshake mr-1"></i> {{ 'invitation.host.accepted'|trans }}{% endif %}
+                    class="far fa-handshake me-1"></i> {{ 'invitation.host.accepted'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
-                    class="fa fa-question mr-1"></i> {{ 'invitation.host.tentatively'|trans }}{% endif %}
+                    class="fa fa-question me-1"></i> {{ 'invitation.host.tentatively'|trans }}{% endif %}
             {% else %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
-                    class="fa fa-question  mr-1"></i> {{ 'invitation.guest.open'|trans }}{% endif %}
+                    class="fa fa-question  me-1"></i> {{ 'invitation.guest.open'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
-                    class="fa fa-times mr-1"></i> {{ 'invitation.guest.cancelled'|trans }}{% endif %}
+                    class="fa fa-times me-1"></i> {{ 'invitation.guest.cancelled'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i
-                    class="fa fa-times mr-1"></i> {{ 'invitation.guest.declined'|trans }}{% endif %}
+                    class="fa fa-times me-1"></i> {{ 'invitation.guest.declined'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i
-                    class="far fa-handshake mr-1"></i> {{ 'invitation.guest.accepted'|trans }}{% endif %}
+                    class="far fa-handshake me-1"></i> {{ 'invitation.guest.accepted'|trans }}{% endif %}
                 {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
-                    class="fa fa-question mr-1"></i> {{ 'invitation.guest.tentatively'|trans }}{% endif %}
+                    class="fa fa-question me-1"></i> {{ 'invitation.guest.tentatively'|trans }}{% endif %}
             {% endif %}
             </div>
             <div class="u:p-4">
-                <i class="fa fa-calendar u:mr-8"></i>
+                <i class="fa fa-calendar u:me-8"></i>
                 {{ invitation.arrival|format_date('full') }}
                 -
                 {{ invitation.departure|format_date('full') }}
@@ -35,7 +35,7 @@
         </div>
         <div>
             <div class="u:p-4">
-                <i class="fa fa-moon u:mr-8"></i>
+                <i class="fa fa-moon u:me-8"></i>
                 {% set difference = date(invitation.departure).diff(date(invitation.arrival)) %}
                 {% set nights = difference.days %}
                 {{ 'request.night.stay'|trans ({'numbernights': nights}) }}
@@ -43,11 +43,11 @@
         </div>
         <div>
             <div class="u:p-4">
-                <i class="fa fa-users u:mr-4"></i>
+                <i class="fa fa-users u:me-4"></i>
                 {{ 'request.number.persons'|trans ({'numberpersons': invitation.numberOfTravellers}) }}
             </div>
             <div class="u:p-4">
-                <i class="fas fa-sync u:mr-8"></i>
+                <i class="fas fa-sync u:me-8"></i>
                 {% if invitation.flexible %}
                     {{ 'request.flexible.with.arrival.departure'|trans }}
                 {% else %}

@@ -28,7 +28,7 @@ class MessagesExtractor extends AbstractExtractor implements ExtractorInterface
         );
     }
 
-    protected function process($items, $directory, $template, $sent)
+    protected function process($items, $directory, $template, $sent): void
     {
         $i = 1;
         foreach ($items as $message) {

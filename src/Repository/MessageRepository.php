@@ -384,14 +384,16 @@ class MessageRepository extends EntityRepository
         $qb = $this->createQueryBuilder('m');
         $qb
             ->join(Member::class, 'mb', Join::WITH, 'm.sender = mb.id')
-            ->where('m.spamInfo LIKE :spamInfo')
-            ->setParameter('spamInfo', '%' . SpamInfoType::SPAM_BLOCKED_WORD . '%')
+            ->where($qb->expr()->notLike('m.spamInfo', ':blockedWord'))
+            ->andWhere($qb->expr()->notLike('m.spamInfo', ':checkerSaysSpam'))
             ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->eq('m.status', ':status'),
                     $qb->expr()->eq('mb.status', ':banned'),
                 )
             )
+            ->setParameter('blockedWord', '%' . SpamInfoType::SPAM_BLOCKED_WORD . '%')
+            ->setParameter('checkerSaysSpam', '%' . SpamInfoType::CHECKER_SAYS_SPAM . '%')
             ->setParameter('status', MessageStatusType::CHECKED)
             ->setParameter('banned', MemberStatusType::BANNED)
             ->orderBy('m.created', 'DESC')

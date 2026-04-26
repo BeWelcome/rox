@@ -409,7 +409,7 @@ class GroupController extends AbstractController
         ]);
     }
 
-    private function sendNewGroupApprovedNotification(Group $group, Member $creator)
+    private function sendNewGroupApprovedNotification(Group $group, Member $creator): void
     {
         $subject = $this->translator->trans(// 'email.subject.group.approved'
             '[New Group] %group% approved',

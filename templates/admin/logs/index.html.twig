@@ -19,7 +19,7 @@
 
 {% block content %}
     {%  if form is defined %}
-    {% form_theme form 'bootstrap_4_horizontal_layout.html.twig' %}
+    {% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
     {{ form_start(form) }}
     {{ form_rest(form) }}
     <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
@@ -30,7 +30,7 @@
         <div class="alert alert-warning">{{ 'admin.logs.no.logs' | trans }}</div>
     {% else %}
         {% if logs.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( logs, 'rox_default' ) }}
             </div>
         {% endif %}
@@ -52,7 +52,7 @@
         {% endfor %}
         </table>
         {% if logs.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( logs, 'rox_default') }}
             </div>
         {% endif %}

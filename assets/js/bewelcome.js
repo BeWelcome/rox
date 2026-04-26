@@ -1,10 +1,9 @@
-import 'jquery';
-import 'popper.js';
+import * as bootstrap from 'bootstrap'
 
-import 'bootstrap';
 import '../../public/script/common/common.js';
-import '../scss/bewelcome.scss';
 import 'cookieconsent/src/cookieconsent.js';
+
+import '../scss/bewelcome.scss';
 import 'cookieconsent/src/styles/animation.css';
 import 'cookieconsent/src/styles/base.css';
 import 'cookieconsent/src/styles/layout.css';
@@ -12,17 +11,17 @@ import 'cookieconsent/src/styles/media.css';
 import 'cookieconsent/src/styles/themes/classic.css';
 import 'cookieconsent/src/styles/themes/edgeless.css';
 import '../scss/cookie-consent.scss';
-import 'select2/dist/js/select2.full.js';
-import './loginmessages.js';
 import '@fortawesome/fontawesome-free/js/all.js';
 import './collapsemenu.js';
 import './member-menu-dropdown.js';
 import './tom-select.js';
 
-$(".select2").select2({
-    theme: 'bootstrap4',
-    width: 'auto',
-    dropdownAutoWidth: true
-});
+window.bootstrap = bootstrap;
 
-$(".toast").toast('show');
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.toast').forEach(toastNode => {
+        const toast = new window.bootstrap.Toast(toastNode);
+        toast.show();
+    });
+});

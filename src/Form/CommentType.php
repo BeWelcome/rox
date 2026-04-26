@@ -55,7 +55,7 @@ class CommentType extends AbstractType
                     new NotBlank(),
                 ],
             ])
-            ->add('textfree', TextareaType::class, [
+            ->add('comment', TextareaType::class, [
                 'label' => 'label.comment.text',
                 'attr' => [
                     'rows' => 6,

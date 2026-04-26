@@ -30,7 +30,7 @@ class PaypalIPN
      *
      * @return void
      */
-    public function useSandbox()
+    public function useSandbox(): void
     {
         $this->use_sandbox = true;
     }
@@ -41,7 +41,7 @@ class PaypalIPN
      *
      * @return void
      */
-    public function usePHPCerts()
+    public function usePHPCerts(): void
     {
         $this->use_local_certs = false;
     }

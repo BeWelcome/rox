@@ -1,8 +1,8 @@
 import 'jquery';
-import 'popper.js';
+import '@popperjs/core';
 
-import 'bootstrap';
-import '../scss/home.scss';
+import * as bootstrap from 'bootstrap'
+
 import 'cookieconsent/src/cookieconsent.js';
 import 'cookieconsent/src/styles/animation.css';
 import 'cookieconsent/src/styles/base.css';
@@ -11,15 +11,19 @@ import 'cookieconsent/src/styles/media.css';
 import 'cookieconsent/src/styles/themes/classic.css';
 import 'cookieconsent/src/styles/themes/edgeless.css';
 import '../scss/cookie-consent.scss';
-import 'select2/dist/js/select2.full.js';
+// import 'select2/dist/js/select2.full.js';
 import '@fortawesome/fontawesome-free/js/all.js';
 import './collapsemenu.js';
+import '../scss/home.scss';
 
-$(".select2").select2({
+window.bootstrap = bootstrap;
+
+/* $(".select2").select2({
     theme: 'bootstrap4',
     width: 'auto',
     dropdownAutoWidth: true,
 });
+*/
 
 // ── Home login bottom sheet (mobile only) ──────────────────────────
 (function () {

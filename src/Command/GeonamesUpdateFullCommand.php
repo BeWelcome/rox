@@ -525,7 +525,7 @@ class GeonamesUpdateFullCommand extends Command
         $connection->executeStatement('SET FOREIGN_KEY_CHECKS=0');
         // Build the query from scratch
         $query =
-            'INSERT IGNORE INTO geo__names (`geoname_id`, `name`, `latitude`, `longitude`, `feature_class`, `feature_code`,'
+            'INSERT IGNORE INTO geo__names (`geoname_id`, `name`, `coordinates`, `latitude`, `longitude`, `feature_class`, `feature_code`,'
             . '`country_id`, `admin_1_id`, `admin_2_id`, `admin_3_id`, `admin_4_id`, `population`, `moddate`) '
             . 'VALUES '
         ;
@@ -535,10 +535,13 @@ class GeonamesUpdateFullCommand extends Command
             }
 
             try {
+                $pointWkt = \sprintf('POINT(%s %s)', $row[5], $row[4]);
+
                 $query .= \sprintf(
-                    '(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s), ',
+                    '(%s, %s, ST_GeomFromText(%s, 4326), %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s), ',
                     $connection->quote($row[0]),
                     $connection->quote($row[1]),
+                    $connection->quote($pointWkt),
                     $connection->quote($row[4]),
                     $connection->quote($row[5]),
                     $connection->quote($row[6]),

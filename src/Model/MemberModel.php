@@ -97,7 +97,7 @@ class MemberModel
         return $zipFilename;
     }
 
-    private function preparePersonalData(Member $member, string $tempDir)
+    private function preparePersonalData(Member $member, string $tempDir): void
     {
         $memoryLimit = \ini_get('memory_limit');
         ini_set('memory_limit', '512M');
@@ -117,7 +117,7 @@ class MemberModel
      * @throws RuntimeError
      * @throws SyntaxError
      */
-    private function writeRenderedTemplate($filename, $template, $parameters)
+    private function writeRenderedTemplate($filename, $template, $parameters): void
     {
         $this->entrypointLookup->reset();
         $parameters = array_merge($parameters, ['date_generated' => new DateTime()]);
@@ -143,7 +143,7 @@ class MemberModel
         return $template;
     }
 
-    private function createStylesheetAndImageFolder(string $projectDir)
+    private function createStylesheetAndImageFolder(string $projectDir): void
     {
         $filesystem = new Filesystem();
 

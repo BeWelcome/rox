@@ -21,22 +21,19 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'comments')]
+#[ORM\Table(name: 'comment')]
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Comment
 {
-    #[ORM\Column(name: 'Relations', type: 'comment_relations', nullable: false)]
+    #[ORM\Column(name: 'relations', type: 'comment_relations', nullable: false)]
     private string $relations = CommentRelationsType::ONLY_MET_ONCE;
 
-    #[ORM\Column(name: 'Quality', type: 'comment_quality', nullable: false)]
+    #[ORM\Column(name: 'quality', type: 'comment_quality', nullable: false)]
     private string $quality = CommentQualityType::NEUTRAL;
 
-    #[ORM\Column(name: 'TextFree', type: 'text', length: 65535, nullable: false)]
-    private string $textfree;
-
-    #[ORM\Column(name: 'TextWhere', type: 'text', length: 65535, nullable: false)]
-    private string $textwhere = '';
+    #[ORM\Column(name: 'comment', type: 'text', length: 65535, nullable: false)]
+    private string $comment;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
     private ?DateTime $updated;
@@ -44,16 +41,13 @@ class Comment
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    #[ORM\Column(name: 'AdminAction', type: 'comment_admin_action', nullable: false)]
+    #[ORM\Column(name: 'admin_action', type: 'comment_admin_action', nullable: false)]
     private string $adminAction = CommentAdminActionType::NOTHING_NEEDED;
 
-    #[ORM\Column(name: 'DisplayableInCommentOfTheMonth', type: 'string', nullable: false)]
-    private string $allowDisplayInCommentOfTheMonth = 'Yes';
+    #[ORM\Column(name: 'show_to_other_members', type: 'boolean', nullable: false)]
+    private bool $showToOtherMembers = true;
 
-    #[ORM\Column(name: 'DisplayInPublic', type: 'boolean', nullable: false)]
-    private bool $displayInPublic = true;
-
-    #[ORM\Column(name: 'AllowEdit', type: 'boolean', nullable: false)]
+    #[ORM\Column(name: 'allow_edit', type: 'boolean', nullable: false)]
     private bool $editingAllowed = true;
 
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -61,11 +55,11 @@ class Comment
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    #[ORM\JoinColumn(name: 'IdToMember', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'to_member_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $toMember;
 
-    #[ORM\JoinColumn(name: 'IdFromMember', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'from_member_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $fromMember;
 
@@ -93,28 +87,16 @@ class Comment
         return $this->quality;
     }
 
-    public function setTextfree(string $textfree): self
+    public function setComment(string $comment): self
     {
-        $this->textfree = $textfree;
+        $this->comment = $comment;
 
         return $this;
     }
 
-    public function getTextfree(): string
+    public function getComment(): string
     {
-        return $this->textfree;
-    }
-
-    public function setTextwhere($textwhere): self
-    {
-        $this->textwhere = $textwhere;
-
-        return $this;
-    }
-
-    public function getTextwhere(): string
-    {
-        return $this->textwhere;
+        return $this->comment;
     }
 
     public function setUpdated(DateTime $updated): self
@@ -157,16 +139,16 @@ class Comment
         return $this->adminAction;
     }
 
-    public function setDisplayInPublic(bool $displayInPublic): self
+    public function setShowToOtherMembers(bool $showToOtherMembers): self
     {
-        $this->displayInPublic = $displayInPublic;
+        $this->showToOtherMembers = $showToOtherMembers;
 
         return $this;
     }
 
-    public function getDisplayInPublic(): bool
+    public function getShowToOtherMembers(): bool
     {
-        return $this->displayInPublic;
+        return $this->showToOtherMembers;
     }
 
     public function setEditingAllowed(bool $editingAllowed): self
@@ -213,7 +195,7 @@ class Comment
     public function getShowCondition(Member $loggedInMember): int
     {
         // show comment when marked as display in public (default situation)
-        if ($this->displayInPublic) {
+        if ($this->showToOtherMembers) {
             return 1;
         }
 
@@ -246,9 +228,8 @@ class Comment
      * Triggered on insert.
      */
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
-        $this->updated = null;
     }
 }

@@ -1,11 +1,6 @@
-require('ekko-lightbox');
-require('ekko-lightbox/dist/ekko-lightbox.css');
+import Lightbox from 'bs5-lightbox';
 
-$(function () {
-$(document).on('click', '[data-toggle="lightbox"]', function(event) {
-        event.preventDefault();
-        $(this).ekkoLightbox({
-            alwaysShowClose: true,
-        });
-    });
-});
+document.querySelectorAll('[data-toggle="lightbox"]')
+    .forEach(
+        el => el.addEventListener('click', Lightbox.initialize)
+    );

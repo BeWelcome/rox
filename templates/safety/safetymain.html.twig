@@ -21,11 +21,11 @@
             <a id="trustworthy"></a>
             <h3>{{'safety_trustworthy' | trans | purify }}</h3>
             <p>{{'safety_trustworthyintro' | trans | purify }}</p>
-            <p><a class="btn btn-outline-primary" href="{{ path('safety_basics', {'_fragment': 'trustworthy'}) }}"> <i class="fa fa-handshake mr-2"></i>{{'safety_read.more.trustworthy' | trans }}</a></p>
+            <p><a class="btn btn-outline-primary" href="{{ path('safety_basics', {'_fragment': 'trustworthy'}) }}"> <i class="fa fa-handshake me-2"></i>{{'safety_read.more.trustworthy' | trans }}</a></p>
             <a id="uncomfortable"></a>
             <h3>{{'safety_uncomfortablesituation' | trans | purify }}</h3>
             <p>{{'safety_uncomfortablesituationintro' | trans | purify  }}</p>
-            <p><a class="btn btn-outline-primary" href="{{ path('safety_what_to_do', {'_fragment': 'uncomfortable'}) }}"><i class="fa fa-question mr-2"></i>{{'safety_read.more.uncomfortablesituation' | trans }}</a></p>
+            <p><a class="btn btn-outline-primary" href="{{ path('safety_what_to_do', {'_fragment': 'uncomfortable'}) }}"><i class="fa fa-question me-2"></i>{{'safety_read.more.uncomfortablesituation' | trans }}</a></p>
             <a id="emergency"></a>
             <h3>{{'safety_emergency' | trans | purify }}</h3>
             <p>{{
@@ -34,7 +34,7 @@
                 }) | purify
             }}
             </p>
-            <p><a class="btn btn-outline-primary" href="{{ path('safety_what_to_do', {'_fragment': 'emergency'}) }}"><i class="fa fa-first-aid mr-2"></i>{{'safety_read.more.emergency' | trans }}</a></p>
+            <p><a class="btn btn-outline-primary" href="{{ path('safety_what_to_do', {'_fragment': 'emergency'}) }}"><i class="fa fa-first-aid me-2"></i>{{'safety_read.more.emergency' | trans }}</a></p>
             
         </div>
         <div class="col-12 col-md-6">
@@ -46,7 +46,7 @@
                     | purify
                     }}
                 </p>
-                <a class="btn btn-outline-primary" href="{{ path('safety_team')}}"><i class="fa fa-users mr-1"></i>{{'safety_learnaboutteam' | trans }}</a>
+                <a class="btn btn-outline-primary" href="{{ path('safety_team')}}"><i class="fa fa-users me-1"></i>{{'safety_learnaboutteam' | trans }}</a>
             </div>
             <div class="p-2">
                 <a id="keepitsafe"></a>
@@ -62,13 +62,13 @@
                 <h3>{{'safety_tipsoverview' | trans | purify }}</h3>
                     <div class="list-group">
                         <a class="list-group-item list-group-item-action" href="{{ url('safety_faq') }}" title="{{'safety_list.link.faq' | trans  }}">
-                        <i class="fa fa-check mr-2"></i>{{'safety_list.link.faq' | trans  }}
+                        <i class="fa fa-check me-2"></i>{{'safety_list.link.faq' | trans  }}
                         </a>
                         <a <a class="list-group-item list-group-item-action" href="{{ url('safety_tips') }}" title="{{'safety_list.link.tips' | trans  }}">
-                        <i class="fa fa-check mr-2"></i>{{'safety_list.link.tips' | trans  }}
+                        <i class="fa fa-check me-2"></i>{{'safety_list.link.tips' | trans  }}
                         </a>
                         <a <a class="list-group-item list-group-item-action" href="{{ path('safety_tips', {'_fragment': 'female'}) }}" title="{{'safety_list.link.female' | trans  }}">
-                        <i class="fa fa-check mr-2"></i>{{'safety_list.link.female' | trans  }}
+                        <i class="fa fa-check me-2"></i>{{'safety_list.link.female' | trans  }}
                         </a>
                     </div>  
             </div>

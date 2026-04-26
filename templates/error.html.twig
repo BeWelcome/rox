@@ -3,7 +3,6 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="/favicon.ico">
 
     <title>
         {%- if block('title') is defined -%}
@@ -17,7 +16,12 @@
 
     {{ encore_entry_link_tags('bewelcome') }}
     {% block stylesheets %}{% endblock %}
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/png" href="{{ asset('/images/favicon-96x96.png') }}" sizes="96x96"/>
+  <link rel="icon" type="image/svg+xml" href="{{ asset('/images/favicon.svg') }}"/>
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/images/apple-touch-icon.png') }}"/>
+  <meta name="apple-mobile-web-app-title" content="beWelcome"/>
+
 </head>
 <body>
 <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-primary bordert-1 borderb-1">

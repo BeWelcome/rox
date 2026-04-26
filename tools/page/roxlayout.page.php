@@ -97,7 +97,15 @@ class PageWithRoxLayout extends PageWithHTML
     {
         $template = 'menu.html.twig';
 
-        $topmenu = $this->environment->render($template, ['slim_nav' => true]);
+        $slim_nav = false;
+        $model = $this->getModel();
+        if (null !== $model && $model instanceof RoxModelBase) {
+            $loggedInMember = $model->getLoggedInMember();
+            if (null === $loggedInMember) {
+                $slim_nav = true;
+            }
+        }
+        $topmenu = $this->environment->render($template, ['slim_nav' => $slim_nav]);
 
         echo $topmenu;
     }

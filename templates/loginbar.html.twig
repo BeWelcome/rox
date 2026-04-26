@@ -29,8 +29,8 @@
                 <button type="button"
                         class="text-nowrap dropdown-toggle{% if slim_nav %} btn btn-sm text-white border-0 shadow-none bg-transparent loginbar-slim__lang-toggle{% else %} btn btn-primary border{% endif %}"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'menu.language.toggle'|trans }}">{{ language_name(app.request.locale) }}</button>
-                <div id="language_dropdown" class="dropdown-menu dropdown-menu-right u:w-150 u:md:w-300 u:max-h-[50vh] u:overscroll-contain u:overflow-y-auto">
-                    <div class="u:grid u:grid-cols-1 u:md:gap-8 u:md:grid-cols-2 u:p-8">
+                <div id="language_dropdown" class="dropdown-menu dropdown-menu-right u-w-150 md:u-w-300 u-max-h-[50vh] u-overscroll-contain u-overflow-y-auto">
+                    <div class="u-grid u-grid-cols-1 md:u-gap-8 md:u-grid-cols-2 u-p-8">
                         {% for lang in locales %}
                             <a class="dropdown-item {% if lang == app.request.locale %}u:bg-bewelcome{% endif %} u:my-4 u:p-4" href="{{ path('language', { locale: lang }) }}">
                                 {{ language_name(lang) }}

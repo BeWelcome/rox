@@ -9,19 +9,27 @@
 @import "./latofonts.css";
 
 // Core variables and mixins
-@import "custom";
-$font-family-bold: Signika;
 
-@import "~bootstrap";
+// 1. Import Bootstrap functions first
+@import "../../node_modules/bootstrap/scss/functions";
+
+// 2. Define your variable overrides (colors, fonts, etc.)
+@import "custom";
+
+// 3. Import the rest of Bootstrap
+@import "../../node_modules/bootstrap/scss/variables";
+$btn-color: #fff;
+@import "../../node_modules/bootstrap/scss/maps";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/root";
+
+// 4. Import the components you need
+@import "../../node_modules/bootstrap/scss/utilities";
+@import "../../node_modules/bootstrap/scss/bootstrap"; // Or import specific parts
 
 @import "navbar";
 @import "home-landing";
 @import "floating_labels";
 
-// select2 (footer language + any selects on landing)
-@import "~select2/src/scss/core";
-@import "~@ttskch/select2-bootstrap4-theme/src/single";
-@import "~@ttskch/select2-bootstrap4-theme/src/multiple";
-@import "~@ttskch/select2-bootstrap4-theme/src/layout";
 
 @import "footer";

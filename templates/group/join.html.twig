@@ -13,25 +13,25 @@
         <div class="col-12 col-md-6 mb-1">
             <label class="">{{ form.notifications.vars.label|trans }}</label>
 
-            <div class="btn-group w-100" data-toggle="buttons">
+            <div class="btn-group w-100" role="group" aria-label="{{ form.notifications.vars.label|trans }}">
 
                 {% for key, item in form.notifications.children %}
-                    <label for="{{ item.vars.id }}"
-                           class="btn btn-outline-primary {{ item.vars.checked ? ' active' : '' }}">
-                        <input
-                            type="radio"
-                            value="{{ item.vars.value }}"
-                            id="{{ item.vars.id }}"
-                            name="{{ item.vars.full_name }}"
-                            class="o-input noradio"
-                            {{ item.vars.checked ? 'checked' : '' }}
-                        >{{ item.vars.label | trans }}</label>
+                    <input
+                        type="radio"
+                        value="{{ item.vars.value }}"
+                        id="{{ item.vars.id }}"
+                        name="{{ item.vars.full_name }}"
+                        class="btn-check"
+                        {{ item.vars.checked ? 'checked' : '' }}
+                        autocomplete="off"
+                    >
+                    <label for="{{ item.vars.id }}" class="btn btn-outline-primary">{{ item.vars.label | trans }}</label>
                     {% do item.setRendered %}
                 {% endfor %}
             </div>
         </div>
         <div class="col-12">
-            {{ form_row(form.join, { 'attr': { 'class': 'btn-primary pull-right'}}) }}
+            {{ form_row(form.join, { 'attr': { 'class': 'btn-primary float-end'}}) }}
         </div>
     </div>
     {{ form_end(form) }}

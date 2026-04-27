@@ -1,12 +1,6 @@
 // assets/js/main.js
 
-const $ = require('jquery');
+import * as bootstrap from 'bootstrap';
+window.bootstrap = bootstrap;
 
-global.$ = global.jQuery = $;
-
-require('popper.js');
-
-require('bootstrap');
-
-require('/scss/bewelcome.scss');
-
+import '/scss/bewelcome.scss';

@@ -24,7 +24,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 #[ORM\Entity]
 class Address
 {
-    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'addresses')]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'LAZY', inversedBy: 'addresses')]
     private Member $member;
 
     #[ORM\Column(name: 'HouseNumber', type: Types::STRING, nullable: true)]

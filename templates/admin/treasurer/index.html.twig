@@ -43,7 +43,7 @@
         <div class="alert alert-warning">{{ 'admin.treasurer.no.donations' | trans }}</div>
     {% else %}
         {% if donations.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( donations, 'rox_default' ) }}
             </div>
         {% endif %}
@@ -80,7 +80,7 @@
             </tbody>
         </table>
         {% if donations.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( donations, 'rox_default') }}
             </div>
         {% endif %}

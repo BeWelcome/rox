@@ -12,7 +12,7 @@ trait TranslatorSingletonTrait
     /**
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    protected function setTranslatorSingleton()
+    protected function setTranslatorSingleton(): void
     {
         $this->_translator = TranslatorSingleton::getTranslator();
     }

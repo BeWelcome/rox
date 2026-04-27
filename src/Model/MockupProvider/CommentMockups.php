@@ -83,7 +83,7 @@ class CommentMockups implements MockupProviderInterface
         $mockComment = Mockery::mock(Comment::class, [
             'getQuality' => $parameters['quality'] ?? CommentQualityType::NEUTRAL,
             'getTextWhere' => 'Somewhere over the rainbow',
-            'getTextFree' => 'A comment.',
+            'getComment' => 'A comment.',
         ]);
 
         return [

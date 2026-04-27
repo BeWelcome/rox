@@ -12,7 +12,7 @@ trait SessionTrait
     /**
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    protected function setSession()
+    protected function setSession(): void
     {
         $this->session = SessionSingleton::getSession();
     }

@@ -1,4 +1,4 @@
-@layer theme, base, components, utilities;
+@layer theme, base, components, utilities, bootstrap;
 
 @import "tailwindcss/theme.css" layer(theme) prefix(u);
 @import "tailwindcss/utilities.css" layer(utilities);
@@ -14,6 +14,7 @@
   --color-bewelcome: oklch(0.6914 0.1856 48.95);
   --color-bewelcome-dark: oklch(0.3457 0.1856 48.95);
   --color-bewelcome-light: oklch(0.7977 0.1856 48.95);
+  --color-hosting: rgb(0, 184, 85);
 
   --spacing: 1px;
   --spacing-0: 0px;

@@ -89,9 +89,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
         return $carbon->diffForHumans();
     }
 
-    public function privacy(string $isoDate): string
+    public function privacy(?Carbon $date): string
     {
-        $date = Carbon::createFromFormat('Y-m-d', $isoDate);
+        if (null === $date) {
+            return '';
+        }
+
         if ($date->diffInDays() <= 7) {
             return $this->translator->trans('lastloginprivacy');
         }

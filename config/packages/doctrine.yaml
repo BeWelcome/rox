@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=../../vendor/symfony/dependency-injection/Loader/schema/services.schema.json
 parameters:
     database_host:     "%env(DB_HOST)%"
     database_port:     "%env(DB_PORT)%"
@@ -57,6 +58,7 @@ doctrine:
             subtrip_options: App\Doctrine\SubtripOptionsType
             trip_additional_info: App\Doctrine\TripAdditionalInfoType
             gender_type: App\Doctrine\GenderType
+            point: LongitudeOne\Spatial\DBAL\Types\Geometry\PointType
 
         mapping_types:
             enum:       string
@@ -97,7 +99,15 @@ doctrine:
             datetime_functions:
                 datediff: App\Doctrine\Functions\DateDiff
                 yearweek: App\Doctrine\Functions\YearWeek
+            numeric_functions:
+                ST_Distance_Sphere: LongitudeOne\Spatial\ORM\Query\AST\Functions\MariaDB\SpDistanceSphere
                 geodistance: App\Doctrine\Functions\GeoDistance
+            string_functions:
+                ST_GeomFromText: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromText
+                ST_Envelope: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StEnvelope
+                ST_Contains: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StContains
+                MBRContains: LongitudeOne\Spatial\ORM\Query\AST\Functions\MariaDB\SpMbrContains
+                LineString: LongitudeOne\Spatial\ORM\Query\AST\Functions\MariaDB\SpLineString
 
 when@test:
     doctrine:

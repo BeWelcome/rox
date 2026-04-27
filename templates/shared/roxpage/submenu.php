@@ -1,6 +1,6 @@
 <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
-    <div class="w-100 p-1 text-right d-md-none">
-        <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
+    <div class="w-100 p-1 text-end d-md-none">
+        <button type="button" class="btn btn-sm" aria-label="Close" data-bs-toggle="offcanvas">
             <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
         </button>
     </div>
@@ -18,9 +18,9 @@ foreach ($this->getSubmenuItems() as $index => $item) {
     $label = $item[2];
     $active = ($name === $active_menu_item) ? " active" : "";
     if (!empty($url)) {
-        echo '<a class="list-group-item nav-link' . $active .'" href="' . $url . '">' . $label . '</a>';
+        echo '<a class="list-group-item list-group-item-action' . $active .'" href="' . $url . '">' . $label . '</a>';
     } else {
-        echo '<span class="list-group-item nav-link' . $active .'" >' . $label . '</span>';
+        echo '<span class="list-group-item ' . $active .'" >' . $label . '</span>';
     }
 
     ?>

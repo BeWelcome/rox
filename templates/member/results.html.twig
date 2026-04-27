@@ -1,90 +1,107 @@
 {% import 'macros.twig' as macros %}
+
 <div id="searchresults" class="u:w-full">
     <div id="overlay" class="u:mt-8">
         <div class="u:flex u:flex-col u:md:flex-row u:md:justify-between u:my-8">
-            <div class="u:text-14 u:md:self-center">{% trans with {'%first%': pager.getCurrentPageOffsetStart, '%last%': pager.getCurrentPageOffsetEnd, '%count%': pager.getNbResults} %}search.members.showing{% endtrans %}</div>
-            {% if pager.haveToPaginate %}
-                {{ pagerfanta( pager, 'rounded_pagination', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}
+            <div class="u:text-14 u:md:self-center">{% trans with {'%first%': members.getCurrentPageOffsetStart, '%last%': members.getCurrentPageOffsetEnd, '%count%': members.getNbResults} %}search.members.showing{% endtrans %}</div>
+            {% if members.haveToPaginate %}
+                {{ pagerfanta( members, 'rounded_pagination', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}
             {% endif %}
         </div>
-        {% for member in pager.currentPageResults %}
+        {% for result in members.currentPageResults %}
+        {% set member = result.member %}
         <div class="l-search-result {% if loop.index0 is even %}l-search-result__dark{% endif %}">
             <div class="c-search-avatar">
                 <div class="o-avatar">
-                    {{ macros.roundedavatarstack(member.Username, 96) }}
+                    {{ macros.roundedavatarstack(member.username, 96) }}
                 </div>
             </div>
             <div class="c-search-member">
                 {% set displayName %}
-                    {% if member.Name is empty %}{{ member.Username }}{% else %}{{ member.Name }}{% endif %}
+                    {% if member.name is empty %}{{ member.username }}{% else %}{{ member.name }}{% endif %}
                 {% endset %}
-                <strong>{{ macros.profilelink( member.Username, displayName, false, true ) }}</strong>
-                {% if (member.MessageCount) %}
-                    <a href="{{ path('conversations_with', {username: member.Username} ) }}">
+                <strong>{{ macros.profilelink( member.username, displayName, false, true ) }}</strong>
+                {% if (result.messageCount) %}
+                    <a href="{{ path('conversations_with', {username: member.username} ) }}">
                         <i class="fas fa-mail-bulk"
-                           title="{{ 'messages_allmessageswith' | trans | format( member.Username ) | raw }}"></i>
+                           title="{{ 'messages_allmessageswith' | trans | format( member.username ) | raw }}"></i>
                     </a>
                 {% endif %}
-                <p class="m-0 mb-2">{% if (member.Age) -%}
-                        {{ 'searchyearsold' | trans | format( member.Age) | raw -}}
+                <p class="m-0 mb-2">{% if (member.isAgeVisible) -%}
+                        {{ 'searchyearsold' | trans | format( member.age) | raw -}}
                     {% endif -%}
-                    {%- if (member.HideGender == 'No') %}
-                        {%- if member.Age %}, {% endif %}
-                        {{- member.Gender|trans }}
+                    {%- if (member.isGenderVisible) %}
+                        {%- if member.isAgeVisible %}, {% endif %}
+                        {{- member.gender|trans }}
                     {% endif %}
                 </p>
+                {% set address = member.getActiveAddress %}
                 <div class="m-0 mb-2 u:flex u:flex-row">
-                    <div class="mr-1"><i class="fa fa-2x fa-map-marker-alt"></i></div>
-                    <div><strong>{{ member.CityName }}</strong><br>{{ member.CountryName }}</div>
+                    <div class="me-1"><i class="fa fa-2x fa-map-marker-alt"></i></div>
+                    <div><strong>{{ address.location.name }}</strong><br>{{ address.location.country.name }}</div>
                 </div>
             </div>
             <div class="c-search-about_me">
-                {% if member.ProfileSummary|length %}
+                {% set translations = member.translations %}
+                {% set locale = app.request.locale %}
+                {% set profileSummary = '' %}
+                {% set occupation = '' %}
+
+                {% if translations[locale] is defined %}
+                    {% set profileSummary = translations[locale]['AboutMe'] ?? '' %}
+                    {% set occupation = translations[locale]['Occupation'] ?? '' %}
+                {% elseif translations|length > 0 %}
+                    {% set fallbackLocale = translations|keys|first %}
+                    {% set profileSummary = translations[fallbackLocale]['AboutMe'] ?? '' %}
+                    {% set occupation = translations[fallbackLocale]['Occupation'] ?? '' %}
+                {% endif %}
+
+                {% if profileSummary|length %}
                 <div class="d-block d-md-none">
-                    <a class="btn btn-block btn-secondary" data-toggle="collapse" href="#collapse-{{ loop.index }}" role="button" aria-expanded="false" aria-controls="collapse-{{ loop.index }}">
+                    <a class="btn btn-block btn-secondary" data-bs-toggle="collapse" href="#collapse-{{ loop.index }}" role="button" aria-expanded="false" aria-controls="collapse-{{ loop.index }}">
                         <strong>{{ 'profilesummary' | trans | capitalize }}</strong>
                     </a>
                     <div class="collapse bg-white u:p-4" id="collapse-{{ loop.index }}">
-                        <a href="/members/{{ member.Username }}"
-                           class="profilesummary">{{ member.ProfileSummary | truncate(250) | purify }}</a>
-                        {% if member.Occupation|length %}<p class="font-italic">{{ 'occupation' | trans | capitalize }}: {{ member.Occupation | raw }}</p>{% endif %}
+                        <a href="/members/{{ member.username }}"
+                           class="profilesummary">{{ profileSummary | truncate(250) | purify }}</a>
+                        {% if occupation|length %}<p class="font-italic">{{ 'occupation' | trans | capitalize }}: {{ occupation | raw }}</p>{% endif %}
                     </div>
                 </div>
                 <div class="d-none d-md-block">
-                    <a href="/members/{{ member.Username }}"
-                       class="profilesummary">{{ member.ProfileSummary | truncate(250) | purify }}</a>
-                    {% if member.Occupation|length %}<p class="font-italic">{{ 'occupation' | trans | capitalize }}: {{ member.Occupation | raw }}</p>{% endif %}
+                    <a href="/members/{{ member.username }}"
+                       class="profilesummary">{{ profileSummary | truncate(250) | purify }}</a>
+                    {% if occupation|length %}<p class="font-italic">{{ 'occupation' | trans | capitalize }}: {{ occupation | raw }}</p>{% endif %}
                 </div>
                 {% endif %}
             </div>
             <div class="c-search-hosting">
                 <div class="u:flex u:flex-row u:gap-4">
-                    <div class="u:self-center"><img src="/images/icons/{{ member.Accommodation }}.png"
-                                                 alt="{{ member.Accommodation | trans }}"></div>
+                    <div class="u:self-center"><img src="/images/icons/{{ member.accommodation }}.png"
+                                                 alt="{{ member.accommodation | trans }}"></div>
                     <div class="u:self-center"><i class="fa fa-2x fa-bed "></i></div>
-                    <div class="u:self-center u:text-24">{{ member.MaxGuest }}</div>
+                    <div class="u:self-center u:text-24">{{ member.maxGuests }}</div>
                     <div class="d-block d-sm-none u:self-center d-block d-sm-none"><i class="fa fa-2x fa-comments m-1"></i></div>
                     <div class="d-block d-sm-none u:self-center u:text-24 d-block d-sm-none">
-                        <a href="/members/{{ member.Username }}/comments">{{ member.CommentCount }}</a>
+                        <a href="/members/{{ member.username }}/comments">{{ result.commentCount ?? 0 }}</a>
                     </div>
                 </div>
                 <div class="d-none d-sm-block u:w-full u:font-400 text-nowrap">
-                    <i class="fa fa-comments mr-1"></i><a href="/members/{{ member.Username }}/comments">{{ 'searchcommentsinfo' | trans | format( member.CommentCount) | raw }}
+                    <i class="fa fa-comments me-1"></i><a href="/members/{{ member.username }}/comments">{{ 'searchcommentsinfo' | trans | format( result.commentCount ?? 0) | raw }}
                     </a>
                 </div>
             </div>
             <div class="c-search-extra_info">
                 <div class="d-flex flex-column flex-md-row flex-lg-column u:gap-4">
-                    <small>{{ 'search.last.login' | trans }}<br><strong>{{ member.LastLogin|privacy }}</strong></small>
+                    <small>{{ 'search.last.login' | trans }}<br><strong>{{ member.lastActive|privacy }}</strong></small>
                     <small>{{ 'search.member.since' | trans }}<br><strong>{{ member.created|privacy }}</strong></small>
                 </div>
             </div>
         </div>
         {% endfor %}
 
-        {% if pager.haveToPaginate %}
+        {% if members.haveToPaginate %}
             <div class="u:flex u:justify-end u:my-8">
-                {{ pagerfanta( pager, 'rounded_pagination', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}
+                {{ pagerfanta( members, 'rounded_pagination', { 'routeName': routeName, 'routeParams': routeParams, 'ajaxFunction': 'loadAjax' } ) }}
             </div>
         {% endif %}
     </div>

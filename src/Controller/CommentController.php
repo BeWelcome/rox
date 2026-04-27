@@ -287,7 +287,7 @@ class CommentController extends AbstractController
             $entityManager->persist($comment);
             $entityManager->flush();
 
-            if ($comment->getDisplayInPublic()) {
+            if ($comment->getShowToOtherMembers()) {
                 $mailer->sendCommentUpdateNotification($comment);
             }
 

@@ -37,7 +37,7 @@
                             <footer id="modal-footer" class="modal__footer u:flex u:flex-row u:justify-between">
                                 <button class="o-button" data-micromodal-close aria-label="{{ 'modal.continue'|trans }}">
                                     {{ 'modal.continue'|trans }}</button>
-                                <a href="{{ url('conversation_report_spam', {'id': messageId }) }}" class="o-button" data-dismiss="modal">{{ 'conversation.report.message'|trans }}</a>
+                                <a href="{{ url('conversation_report_spam', {'id': messageId }) }}" class="o-button" data-bs-dismiss="modal">{{ 'conversation.report.message'|trans }}</a>
                             </footer>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                 {{ form_row(form.FeedbackQuestion) }}
                 {{ form_errors(form.FeedbackQuestion) }}
                 {{ form_rest(form) }}
-                <div class="o-form-group">
+                <div class="mb-3">
                     <button type="submit" id="submit" name="submit" class="o-button">{{ 'submit'|trans }}</button>
                 </div>
                 {{ form_end(form) }}

@@ -46,7 +46,7 @@ class AdminCommentFormType extends AbstractType
             /** @var Comment $comment */
             $comment = $event->getData();
             $form = $event->getForm();
-            if ($comment->getDisplayInPublic()) {
+            if ($comment->getShowToOtherMembers()) {
                 $form->add('hideComment', SubmitType::class, [
                     'attr' => [
                         'class' => 'btn-primary btn-sm mb-2 mr-sm-2',

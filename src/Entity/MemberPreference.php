@@ -183,7 +183,7 @@ class MemberPreference
      * Triggered on insert.
      */
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
         $this->updated = new DateTime('now');
@@ -193,7 +193,7 @@ class MemberPreference
      * Triggered on update.
      */
     #[ORM\PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
     }

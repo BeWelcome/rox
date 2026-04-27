@@ -275,7 +275,7 @@ class CommunityNews
      * Triggered on insert.
      */
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->createdAt = new DateTime('now');
     }
@@ -284,7 +284,7 @@ class CommunityNews
      * Triggered on update.
      */
     #[ORM\PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updatedAt = new DateTime('now');
     }

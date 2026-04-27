@@ -22,7 +22,7 @@ use Exception;
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'forums_threads')]
+#[ORM\Table(name: 'forum_thread')]
 #[ORM\Index(name: 'first_postid', columns: ['first_postid'])]
 #[ORM\Index(name: 'last_postid', columns: ['last_postid'])]
 #[ORM\Index(name: 'IdGroup', columns: ['IdGroup'])]
@@ -724,7 +724,7 @@ class ForumThread
     /**
      * Remove post.
      */
-    public function removePost(ForumPost $post)
+    public function removePost(ForumPost $post): void
     {
         $this->posts->removeElement($post);
     }

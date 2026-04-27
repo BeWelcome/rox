@@ -48,7 +48,7 @@ class LanguageFilter extends SQLFilter
         return $query;
     }
 
-    public function setAnnotationReader(Reader $reader)
+    public function setAnnotationReader(Reader $reader): void
     {
         $this->reader = $reader;
     }

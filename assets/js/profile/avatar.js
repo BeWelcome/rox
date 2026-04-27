@@ -34,7 +34,7 @@ avatarFile.addEventListener('change', function(e) {
         const reader = new FileReader();
 
         reader.onload = function (e) {
-            $('.upload-demo').addClass('ready');
+            // document.querySelector('.upload-demo').classList.add('ready');
             croppie.bind({
                 url: e.target.result
             }).then(function(){

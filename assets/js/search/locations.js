@@ -1,6 +1,13 @@
 import {initializeSingleAutoComplete} from '../suggest/locations';
+import {initializeTomSelects} from '../tom-select';
+
+import L from 'leaflet';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
+import 'leaflet.markercluster';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet/dist/leaflet.css';
 
 function onChange(element, result) {
     const locationFullName = document.getElementById('search_location_fullname');
@@ -23,7 +30,7 @@ function Map() {
     this.map = undefined;
     this.noRefresh = false;
     this.initializing = false;
-    this.mapBox = $("#map-box");
+    this.mapBox = document.getElementById("map-box");
 }
 
 Map.prototype.showMap = function () {
@@ -31,8 +38,13 @@ Map.prototype.showMap = function () {
         this.initializing = true;
 
         // add the container hosting the map
-        this.mapBox.toggleClass("map-box");
-        this.mapBox.append('<div id="map" class="map p-2 framed w-100"></div>');
+        this.mapBox.classList.toggle("map-box");
+        
+        const mapDiv = document.createElement('div');
+        mapDiv.id = 'map';
+        mapDiv.className = 'map p-2 framed w-100';
+        this.mapBox.appendChild(mapDiv);
+        
         this.map = L.map('map', {
             center: [15, 0],
             zoomSnap: 0.25,
@@ -56,7 +68,7 @@ Map.prototype.showMap = function () {
         this.noRefresh = true;
         if (this.markerClusterGroup.getLayers().length > 0) {
             // Check if a rectangle is set if so use this for the bounds else fit the bounds to the markerClusterGroup
-            var query = this.getQueryStrings($(".search_form").serialize());
+            var query = this.getQueryStrings(new FormData(document.querySelector(".search_form")));
 
             // Distinguish between /search/members and /search/map
             if (query["search[distance]"] === -1) {
@@ -100,12 +112,12 @@ Map.prototype.centerMap = function () {
         return;
     }
 
-    const sw_latitude = document.getElementById('search_sw_latitude').value;
-    const sw_longitude = document.getElementById('search_sw_longitude').value;
-    const ne_latitude = document.getElementById('search_ne_latitude').value;
-    const ne_longitude = document.getElementById('search_ne_longitude').value;
-    const sw = L.latLng(sw_latitude, sw_longitude);
-    const ne = L.latLng(ne_latitude, ne_longitude);
+    const min_latitude = document.getElementById('min_latitude').value;
+    const max_latitude = document.getElementById('max_latitude').value;
+    const min_longitude = document.getElementById('min_longitude').value;
+    const max_longitude = document.getElementById('max_longitude').value;
+    const sw = L.latLng(min_latitude, min_longitude);
+    const ne = L.latLng(max_latitude, max_longitude);
     const bounds = new L.latLngBounds(sw, ne);
 
     let mapMarkerIcon = L.icon({
@@ -127,7 +139,8 @@ Map.prototype.centerMap = function () {
 Map.prototype.hideMap = function () {
     if (this.map !== undefined) {
         // remove the container hosting the map
-        this.mapBox.toggleClass("map-box").empty(); // get rid of the map
+        this.mapBox.classList.toggle("map-box");
+        this.mapBox.innerHTML = ''; // get rid of the map
 
         this.map.remove();
         this.map = undefined;
@@ -141,7 +154,17 @@ Map.prototype.refreshMap = function () {
     var bounds = this.map.getBounds();
     var ne = bounds.getNorthEast();
     var sw = bounds.getSouthWest();
-    var query = this.getQueryStrings($("[name=search]").serialize());
+    
+    var searchForm = document.querySelector("[name='search']");
+    if (!searchForm) {
+        // If the form isn't found by name, it might be the top-level form. 
+        // We'll construct the query parameters manually.
+        var query = {};
+    } else {
+        var formData = new FormData(searchForm);
+        var query = this.getQueryStrings(formData);
+    }
+    
     query["search[location_latitude]"] = lat;
     query["search[location_longitude]"] = lng;
     query["search[distance]"] = -1;
@@ -157,23 +180,12 @@ Map.prototype.refreshMap = function () {
         window.location.host +
         window.location.pathname + this.createQueryString(query)
     ;
-}; // http://stackoverflow.com/questions/2907482
+}; 
 
-Map.prototype.getQueryStrings = function (url) {
+Map.prototype.getQueryStrings = function (formData) {
     var assoc = {};
-
-    var decode = function decode(s) {
-        return decodeURIComponent(s.replace(/\+/g, " "));
-    };
-
-    var keyValues = url.split('&');
-
-    for (var i in keyValues) {
-        var key = keyValues[i].split('=');
-
-        if (key.length > 1) {
-            assoc[decode(key[0]).toLowerCase()] = decode(key[1]);
-        }
+    for (const [key, value] of formData.entries()) {
+        assoc[key] = value;
     }
     return assoc;
 };
@@ -183,7 +195,7 @@ Map.prototype.createQueryString = function (queryDict) {
 
     for (var key in queryDict) {
         if (queryDict.hasOwnProperty(key)) {
-            queryStringBits.push(key + "=" + queryDict[key]);
+            queryStringBits.push(encodeURIComponent(key) + "=" + encodeURIComponent(queryDict[key]));
         }
     }
 
@@ -214,42 +226,42 @@ Map.prototype.addMarkers = function (map) {
      * @param value.longitude
      */
 
-    $.each(mapMembers, function (index, value) {
-        var iconFile = 'undefined';
+    if (typeof mapMembers !== 'undefined' && mapMembers !== null) {
+        mapMembers.forEach(function(value) {
+            const icon = new L.DivIcon({
+                html: '<div><img src="/images/icons/' + value.Accommodation + '.png" class="mapicon"></div>',
+                className: '',
+                iconSize: new L.Point(17, 17)
+            });
 
-        var icon = new L.DivIcon({
-            html: '<div><img src="/images/icons/' + value.Accommodation + '.png" class="mapicon"></div>',
-            className: '',
-            iconSize: new L.Point(17, 17)
+            const marker = new L.marker([value.latitude, value.longitude], {
+                icon: icon,
+                className: 'marker-cluster marker-cluster-unique'
+            });
+
+            if (value.Username) {
+                let popupContent = '<div class="d-flex flex-column">';
+                popupContent += '<div class="d-flex flex-row">'
+                popupContent += '<div><img class="profileimg avatar-48" src="/members/avatar/' + value.Username + '/48" width="48" height="48"></div>';
+                popupContent += '<div class="d-flex flex-column justify-content-between">';
+                popupContent += '<div><img src="/images/icons/' + value.Accommodation + '.png" width="22"></div>';
+                popupContent += '<div class="text-nowrap" style="font-size: 16px">';
+                popupContent += '<i class="fa fa-bed fa-lg p-1"></i>' + value.MaxGuests + '';
+                popupContent += '</div>';
+                popupContent += '</div>';
+                popupContent += '</div>';
+                popupContent += '<div class="d-flex"><strong><a href="/members/' + value.Username + '" target="_blank" class="mt-1">' + value.Username + '</a></strong></div>';
+                popupContent += '</div>';
+                marker.bindPopup(popupContent, {
+                    'closeButton': false,
+                    'maxWidth': 200,
+                    'minWidth': 90,
+                }); // groups[accommodation].addLayer(marker);
+            }
+
+            markers.addLayer(marker);
         });
-        const latlng = new L.LatLng(value.latitude, value.longitude);
-        var marker = new L.marker([value.latitude, value.longitude], {
-            icon: icon,
-            className: 'marker-cluster marker-cluster-unique'
-        });
-
-        if (value.Username) {
-            var popupContent = '<div class="d-flex flex-column">';
-            popupContent += '<div class="d-flex flex-row">'
-            popupContent += '<div><img class="profileimg avatar-48" src="/members/avatar/' + value.Username + '/48" width="48" height="48"></div>';
-            popupContent += '<div class="d-flex flex-column justify-content-between">';
-            popupContent += '<div><img src="/images/icons/' + iconFile + '.png" width="22"></div>';
-            popupContent += '<div class="text-nowrap" style="font-size: 16px">';
-            popupContent += '<i class="fa fa-bed fa-lg p-1"></i>' + value.CanHost + '';
-            popupContent += '</div>';
-            popupContent += '</div>';
-            popupContent += '</div>';
-            popupContent += '<div class="d-flex"><strong><a href="/members/' + value.Username + '" target="_blank" class="mt-1">' + value.Username + '</a></strong></div>';
-            popupContent += '</div>';
-            marker.bindPopup(popupContent, {
-                'closeButton': false,
-                'maxWidth': 200,
-                'minWidth': 90,
-            }); // groups[accommodation].addLayer(marker);
-        }
-
-        markers.addLayer(marker);
-    });
+    }
 
     try {
         map.addLayer(markers);
@@ -265,26 +277,38 @@ Map.prototype.boundingBox = function(latitude, longitude, distance) {
     return L.latLngBounds( ne, sw);
 };
 
-$(function () {
-    var map = new Map({
-        fullscreenControl: true,
-        fullscreenControlOptions: {
-            position: 'topleft'
-        }
-    });
-    $(".show_options").click(function(){
-        $("#search_options").toggleClass("d-block").toggleClass("d-none");
-        $(".search").toggleClass("d-block").toggleClass("d-none");
+document.addEventListener('DOMContentLoaded', function () {
+    var map = new Map();
+    
+    const showOptionsElements = document.querySelectorAll('.show_options');
+    showOptionsElements.forEach(function(element) {
+        element.addEventListener('click', function() {
+            const searchOptions = document.getElementById("search_options");
+            if (searchOptions) {
+                searchOptions.classList.toggle("d-block");
+                searchOptions.classList.toggle("d-none");
+            }
+            const searches = document.querySelectorAll(".search");
+            searches.forEach(function(search) {
+                search.classList.toggle("d-block");
+                search.classList.toggle("d-none");
+            });
+        });
     });
 
-    if ($(".show_map").is(":checked")) {
-        map.showMap();
-    }
-    $(".show_map").click(function(){
-        if ($(this).is(":checked")) {
+    const showMapCheckbox = document.querySelector(".show_map");
+    if (showMapCheckbox) {
+        if (showMapCheckbox.checked) {
             map.showMap();
-        } else {
-            map.hideMap();
         }
-    });
+        showMapCheckbox.addEventListener('click', function() {
+            if (this.checked) {
+                map.showMap();
+            } else {
+                map.hideMap();
+            }
+        });
+    }
 });
+
+initializeTomSelects();

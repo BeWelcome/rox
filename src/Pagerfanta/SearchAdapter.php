@@ -2,246 +2,214 @@
 
 namespace App\Pagerfanta;
 
-use App\Doctrine\StandardOffersType;
+use AnthonyMartin\GeoLocation\GeoPoint;
+use App\Dto\MemberSearchResult;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Form\CustomDataClass\SearchFormRequest;
-use App\Utilities\SessionSingleton;
-use App\Utilities\TranslatorSingleton;
-use Doctrine\DBAL\Exception\InvalidArgumentException;
+use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use EnvironmentExplorer;
-use Exception;
+use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\AdapterInterface;
-use SearchModel;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SearchAdapter implements AdapterInterface
 {
-    /** @var array */
-    private $modelData;
-
-    /** @var SearchModel */
-    private $model;
-
-    /**
-     * Length of parameter list due to legacy code.
-     *
-     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
-     *
-     * Singletons needed for legay code
-     * @SuppressWarnings("PHPMD.StaticAccess")
-     */
     public function __construct(
-        SearchFormRequest $data,
-        SessionInterface $session,
-        EntityManagerInterface $em,
-        TranslatorInterface $translator,
-        string $dbHost,
-        string $dbName,
-        string $dbUser,
-        string $dbPassword,
-        string $manticoreHost,
-        int $manticorePort,
+        private readonly SearchFormRequest $searchRequest,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Member $currentUser,
     ) {
-        // Kick-start the Symfony session. This replaces session_start() in the
-        // old code, which is now turned off.
-        $session->start();
-
-        if (!$session->has('IdMember')) {
-            $rememberMeToken = unserialize($session->get('_security_main'));
-            if (null === $rememberMeToken) {
-                throw new AccessDeniedException();
-            }
-            if (false !== $rememberMeToken) {
-                /** @var Member $user */
-                $user = $rememberMeToken->getUser();
-                if (null !== $user) {
-                    $session->set('IdMember', $user->getId());
-                    $session->set('MemberStatus', $user->getStatus());
-                }
-            }
-        }
-
-        // Make sure the Rox classes find this session
-        SessionSingleton::createInstance($session);
-        TranslatorSingleton::createInstance($translator);
-
-        // make sure everything's setup for the old code used below
-        $environmentExplorer = new EnvironmentExplorer();
-        $environmentExplorer->initializeGlobalState(
-            $dbHost,
-            $dbName,
-            $dbUser,
-            $dbPassword,
-            $manticoreHost,
-            $manticorePort
-        );
-        $dbPassword = str_repeat('*', \strlen($dbPassword));
-        $this->model = new SearchModel($em);
-        $this->modelData = $this->prepareModelData($data);
-
-        // Determine if we search for a country or an admin unit and call prepareQuery accordingly
-        $repository = $em->getRepository(Location::class);
-        /** @var Location $location */
-        $location = null;
-        try {
-            $location = $repository->find($data->location_geoname_id);
-        } catch (Exception $e) {
-            throw new InvalidArgumentException($e->getMessage(), $e->getCode());
-        }
-
-        $adminUnits = [];
-        $country = false;
-        // Are we looking at an admin unit?
-        if (null !== $location && 'A' === $location->getFeatureClass()) {
-            $country = $location->getCountryId();
-            // Is it a country?
-            if (!str_contains($location->getFeatureCode(), 'PCL')) {
-                // find lowest admin unit in location and use it for search
-                $adminUnits = $this->getRankedAdminUnitIds($location);
-            }
-        }
-        $this->model->prepareQuery($this->modelData, $adminUnits, $country);
     }
 
-    /**
-     * Returns the number of results.
-     */
     public function getNbResults(): int
     {
-        return $this->model->getMembersCount();
+        $isDistanceSearch = $this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude;
+
+        $qb = $this->entityManager->createQueryBuilder();
+
+        if ($isDistanceSearch) {
+            $qb->select('COUNT(DISTINCT m.id)')
+                ->from(Location::class, 'l')
+                ->join('App\Entity\Address', 'a', 'WITH', 'a.location = l.geonameId AND a.active = 1')
+                ->join('a.member', 'm');
+        } else {
+            $qb->select('COUNT(DISTINCT m.id)')
+                ->from(Member::class, 'm');
+        }
+
+        $this->applySearchFilters($qb);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    /**
-     * Returns full results.
-     */
-    public function getFullResults(): array
-    {
-        $results = $this->model->getResultsForLocation();
-
-        return $results;
-    }
-
-    /**
-     * Returns map data.
-     */
-    public function getMapResults(): array
-    {
-        $results = $this->model->getMapResultsForLocation();
-
-        $results['map'] = array_map(static function ($value) {
-            $value->Username = '';
-
-            return $value;
-        }, $results['map']);
-
-        return $results;
-    }
-
-    /**
-     * Returns a slice of the results.
-     */
     public function getSlice(int $offset, int $length): iterable
     {
-        $this->modelData['search-number-items'] = $length;
-        $this->modelData['search-page'] = ($offset / $length) + 1;
-        $results = $this->model->getResultsForLocation();
+        $isDistanceSearch = $this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude;
 
-        return $results['members'];
+        // 1. Fetch only IDs to avoid running expensive subqueries and fetching all columns for discarded rows
+        $idQb = $this->entityManager->createQueryBuilder();
+        $idQb->select('DISTINCT m.id');
+
+        if ($isDistanceSearch) {
+            $idQb->from(Location::class, 'l')
+                ->join('App\Entity\Address', 'a', 'WITH', 'a.location = l.geonameId AND a.active = 1')
+                ->join('a.member', 'm');
+        } else {
+            $idQb->from(Member::class, 'm');
+        }
+
+        $this->applySearchFilters($idQb);
+        $this->applySorting($idQb);
+
+        $idQb->setFirstResult($offset)
+            ->setMaxResults($length);
+
+        $memberIds = array_column($idQb->getQuery()->getScalarResult(), 'id');
+
+        if (empty($memberIds)) {
+            return [];
+        }
+
+        // 2. Fetch full data for the matched IDs
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->from(Member::class, 'm')
+            ->where('m.id IN (:memberIds)')
+            ->setParameter('memberIds', $memberIds);
+
+        if ($this->currentUser) {
+            $senderCountQueryBuilder = $this->entityManager->createQueryBuilder()
+                ->select('COUNT(msgS.id)')
+                ->from('App\Entity\Message', 'msgS')
+                ->where('msgS.sender = m.id AND msgS.receiver = :currentUserId');
+
+            $receiverCountQueryBuilder = $this->entityManager->createQueryBuilder()
+                ->select('COUNT(msgR.id)')
+                ->from('App\Entity\Message', 'msgR')
+                ->where('msgR.sender = :currentUserId AND msgR.receiver = m.id');
+
+            $commentCountQueryBuilder = $this->entityManager->createQueryBuilder()
+                ->select('COUNT(commentCountTable.id)')
+                ->from('App\Entity\Comment', 'commentCountTable')
+                ->where('commentCountTable.toMember = m.id');
+
+            $qb->select(
+                \sprintf(
+                    'NEW %s(m, (%s), (%s), (%s))',
+                    MemberSearchResult::class,
+                    $senderCountQueryBuilder->getDQL(),
+                    $receiverCountQueryBuilder->getDQL(),
+                    $commentCountQueryBuilder->getDQL()
+                )
+            )->setParameter('currentUserId', $this->currentUser->getId());
+        } else {
+            $qb->select(\sprintf('NEW %s(m, 0, 0, 0)', MemberSearchResult::class));
+        }
+
+        // Re-apply sorting to the second query to ensure the order is preserved
+        $this->applySorting($qb);
+
+        return $qb->getQuery()->getResult();
     }
 
-    private function prepareModelData(SearchFormRequest $data): array
+    private function applySearchFilters(QueryBuilder $qb): void
     {
-        $vars = [];
-        $vars['search-location'] = $data->location;
-        $vars['location-geoname-id'] = $data->location_geoname_id;
-        $vars['location-latitude'] = $data->location_latitude;
-        $vars['location-longitude'] = $data->location_longitude;
-        $vars['ne-latitude'] = $data->ne_latitude;
-        $vars['ne-longitude'] = $data->ne_longitude;
-        $vars['sw-latitude'] = $data->sw_latitude;
-        $vars['sw-longitude'] = $data->sw_longitude;
-        $vars['search-accommodation'] = [];
+        /** @var MemberRepository $memberRepository */
+        $memberRepository = $this->entityManager->getRepository(Member::class);
 
-        if ($data->accommodation_anytime) {
-            $vars['search-accommodation'][] = 'anytime';
-        }
+        if ($this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude) {
+            // 1. Calculate the bounding box
+            $center = new GeoPoint($this->searchRequest->location_latitude, $this->searchRequest->location_longitude);
+            $boundingBox = $center->boundingBox($this->searchRequest->distance, 'km');
 
-        if ($data->accommodation_neverask) {
-            $vars['search-accommodation'][] = 'neverask';
-        }
+            $minLat = $boundingBox->getMinLatitude();
+            $maxLat = $boundingBox->getMaxLatitude();
+            $minLng = $boundingBox->getMinLongitude();
+            $maxLng = $boundingBox->getMaxLongitude();
 
-        $vars['search-has-profile-picture'] = $data->has_profile_picture;
-        $vars['search-has-about-me'] = $data->has_about_me;
-        $vars['search-has-comments'] = $data->has_comments;
+            // 2. Create a LINESTRING for ST_Envelope to define the bounding box polygon
+            $lineString = \sprintf('LINESTRING(%F %F, %F %F)', $minLng, $minLat, $maxLng, $maxLat);
 
-        foreach (
-            [
-                'offers_dinner' => StandardOffersType::DINNER,
-                'offers_tour' => StandardOffersType::GUIDED_TOUR,
-            ] as $param => $value
-        ) {
-            if ($data->$param) {
-                $vars['search-typical-offers'][] = $value;
+            // Ensure joins are present if not already added by root entity change
+            if (!\in_array('a', $qb->getAllAliases(), true)) {
+                $qb->join('m.addresses', 'a', 'WITH', 'a.active = 1');
             }
-        }
-
-        foreach (
-            [
-                'no_smoking' => 'NoSmoker',
-                'no_alcohol' => 'NoAlchool',
-                'no_drugs' => 'NoDrugs',
-            ] as $param => $value
-        ) {
-            if ($data->$param) {
-                $vars['search-restriction'][] = $value;
+            if (!\in_array('l', $qb->getAllAliases(), true)) {
+                $qb->join('a.location', 'l');
             }
+
+            $qb->andWhere('l.latitude BETWEEN :minLat AND :maxLat')
+                ->andWhere('l.longitude BETWEEN :minLng AND :maxLng')
+                ->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:lineString, 0)), l.coordinates) = 1')
+                ->andWhere('ST_Distance_Sphere(l.coordinates, ST_GeomFromText(:centerPoint, 0)) <= :distanceInMeters')
+                ->setParameter('minLat', $minLat)
+                ->setParameter('maxLat', $maxLat)
+                ->setParameter('minLng', $minLng)
+                ->setParameter('maxLng', $maxLng)
+                ->setParameter('lineString', $lineString)
+                ->setParameter('centerPoint', \sprintf('POINT(%F %F)', $this->searchRequest->location_longitude, $this->searchRequest->location_latitude))
+                ->setParameter('distanceInMeters', $this->searchRequest->distance * 1000); // ST_Distance_Sphere uses meters
+        } elseif ($this->searchRequest->location_geoname_id) {
+            if (!\in_array('a', $qb->getAllAliases(), true)) {
+                $qb->join('m.addresses', 'a', 'WITH', 'a.active = 1 AND a.location = :location_id');
+            } else {
+                $qb->andWhere('a.location = :location_id');
+            }
+            $qb->setParameter('location_id', $this->searchRequest->location_geoname_id);
         }
 
-        $vars['search-distance'] = $data->distance;
-        $vars['search-can-host'] = $data->can_host;
-
-        $gender = [
-            null => '',
-            1 => 'male',
-            2 => 'female',
-            4 => 'other',
-        ];
-
-        $vars['search-gender'] = $gender[$data->gender] ?? '';
-        $vars['search-age-minimum'] = $data->min_age;
-        $vars['search-age-maximum'] = $data->max_age;
-        $vars['search-groups'] = $data->groups;
-        $vars['search-languages'] = $data->languages;
-        $vars['search-text'] = $data->keywords;
-        $vars['search-last-login'] = $data->last_login;
-        $vars['search-page'] = $data->page ?? 1;
-        $vars['search-sort-order'] = $data->order;
-        $vars['search-sort-direction'] = $data->direction;
-        $vars['search-number-items'] = $data->items;
-
-        return $vars;
+        $memberRepository->applySearchFilters($qb, $this->searchRequest);
     }
 
-    private function getRankedAdminUnitIds(Location $location): array
+    private function applySorting(QueryBuilder $qb): void
     {
-        $adminUnits = [];
-        if (null !== $location->getAdmin1Id()) {
-            $adminUnits[] = $location->getAdmin1Id();
-        }
-        if (null !== $location->getAdmin2Id()) {
-            $adminUnits[] = $location->getAdmin2Id();
-        }
-        if (null !== $location->getAdmin3Id()) {
-            $adminUnits[] = $location->getAdmin3Id();
-        }
-        if (null !== $location->getAdmin4Id()) {
-            $adminUnits[] = $location->getAdmin4Id();
-        }
+        $direction = (MemberRepository::DIRECTION_ASCENDING === $this->searchRequest->direction) ? 'ASC' : 'DESC';
 
-        return $adminUnits;
+        switch ($this->searchRequest->order) {
+            case MemberRepository::ORDER_USERNAME:
+                $qb->orderBy('m.username', $direction);
+                break;
+            case MemberRepository::ORDER_ACCOMMODATION:
+                $qb->orderBy('m.accommodation', $direction)
+                    ->addOrderBy('m.hostingInterest', 'ASC')
+                    ->addOrderBy('m.lastActive', 'ASC');
+                break;
+            case MemberRepository::ORDER_LOGIN:
+                $qb->orderBy('m.lastActive', 'ASC' === $direction ? 'DESC' : 'ASC');
+                break;
+            case MemberRepository::ORDER_MEMBERSHIP:
+                $qb->orderBy('m.created', $direction);
+                break;
+            case MemberRepository::ORDER_COMMENTS:
+                if ($this->currentUser) {
+                    $commentOrderQb = $this->entityManager->createQueryBuilder()
+                        ->select('COUNT(commentOrder.id)')
+                        ->from('App\Entity\Comment', 'commentOrder')
+                        ->where('commentOrder.toMember = m.id');
+                    $qb->orderBy('(' . $commentOrderQb->getDQL() . ')', $direction);
+                } else {
+                    $qb->orderBy('m.lastActive', 'DESC');
+                }
+                break;
+            case MemberRepository::ORDER_DISTANCE:
+                if ($this->searchRequest->location_latitude && $this->searchRequest->location_longitude) {
+                    $centerPointWkt = \sprintf('POINT(%F %F)', $this->searchRequest->location_longitude, $this->searchRequest->location_latitude);
+                    if (!\in_array('a', $qb->getAllAliases(), true)) {
+                        $qb->join('m.addresses', 'a', 'WITH', 'a.active = 1');
+                    }
+                    if (!\in_array('l', $qb->getAllAliases(), true)) {
+                        $qb->join('a.location', 'l');
+                    }
+                    $qb->addSelect('ST_Distance_Sphere(l.coordinates, ST_GeomFromText(:centerPoint, 0)) AS HIDDEN distance')
+                        ->setParameter('centerPoint', $centerPointWkt)
+                        ->orderBy('distance', $direction)
+                        ->addOrderBy('m.hostingInterest', 'DESC')
+                        ->addOrderBy('m.lastActive', 'DESC');
+                } else {
+                    $qb->orderBy('m.lastActive', 'DESC');
+                }
+                break;
+            default:
+                $qb->orderBy('m.lastActive', $direction);
+        }
     }
 }

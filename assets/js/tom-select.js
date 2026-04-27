@@ -1,6 +1,6 @@
 import TomSelect from 'tom-select';
 import 'tom-select/dist/esm/plugins/remove_button/plugin';
-// import '../scss/tom-select/tom-select.scss';
+import 'tom-select/dist/css/tom-select.bootstrap5.min.css';
 
 let tomSelects = [];
 
@@ -42,7 +42,6 @@ export function initializeTomSelects(cssClass = ".js-tom-select") {
                 }
                 if (tomSelectOptions.plugins !== undefined) {
                     settings.plugins = tomSelectOptions.plugins.split(",");
-                    settings.sortField = {field: 'text'};
                 }
                 if (autocompleteChoices) {
                     settings.valueField = 'title';
@@ -51,7 +50,7 @@ export function initializeTomSelects(cssClass = ".js-tom-select") {
                     settings.options = JSON.parse(tomSelectOptions.autocompleteChoices);
                 }
                 settings.maxOptions = null;
-
+                settings.sortField = [{field:'$order'},{field:'$score'}];
                 tomSelects.push(new TomSelect(element, settings));
             } catch(e) { }
 

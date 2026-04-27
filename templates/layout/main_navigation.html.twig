@@ -16,9 +16,9 @@
             {% if teams|length != 0 %}
             <li class="nav-item dropdown">
                 <a id="volunteer_menu_toggle" href="#volunteer_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
-                   data-target="volunteer_menu" data-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
+                   data-target="volunteer_menu" data-bs-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
                    aria-label="{{ 'volunteer' | trans }}">
-                    <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-user-shield"></i></span>
+                    <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-hand-holding-hand"></i></span>
                 </a>
                 <ul id="volunteer_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
                     <li class="member-menu__toolbar d-flex d-xl-none">
@@ -46,7 +46,7 @@
             {% endif %}
             <li class="nav-item dropdown">
                 <a id="search_menu_toggle" href="#search_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
-                   data-target="search_menu" data-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
+                   data-target="search_menu" data-bs-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
                    aria-label="{{ 'findmembers' | trans }}">
                     <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-search"></i></span>
                 </a>
@@ -65,7 +65,7 @@
             </li>
             <li class="nav-item dropdown">
                 <a id="community_menu_toggle" href="#community_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
-                   data-target="community_menu" data-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
+                   data-target="community_menu" data-bs-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
                    aria-label="{{ 'communitymenu' | trans }}">
                     <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-users"></i></span>
                 </a>
@@ -91,7 +91,7 @@
 
             <li class="nav-item dropdown">
                 <a id="member_menu_toggle" href="#member_menu" class="nav-link dropdown-toggle topbar-member-toggle"
-                   data-target="member_menu" data-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}">
+                   data-target="member_menu" data-bs-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false" aria-label="{{ 'profile' | trans }}">
                     <img class="profileimg px-0 js-profile-picture" src="{{ url('avatar', { username: loggedInMember.username, size: 36 })}}" width="32" height="32" alt="{{ 'profile.picture' }}">
                     <span class="d-none d-md-inline topbar-member__name">{{ loggedInMember.Username }}</span>
                 </a>

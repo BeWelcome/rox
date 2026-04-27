@@ -48,6 +48,11 @@ class MemberStatusType extends EnumType
         self::OUT_OF_REMIND . "', '" .
         self::PENDING . "'";
 
+    public const array ACTIVE_SEARCH_ARRAY = [
+        self::ACTIVE,
+        self::OUT_OF_REMIND,
+    ];
+
     public const string ACTIVE_WITH_MESSAGES = "'" .
         self::ACTIVE . "', '" .
         self::OUT_OF_REMIND . "', '" .

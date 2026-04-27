@@ -180,7 +180,7 @@ class PrivilegeScope
      * Triggered on persist.
      */
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->updated = new DateTime('now');
     }
@@ -189,7 +189,7 @@ class PrivilegeScope
      * Triggered on update.
      */
     #[ORM\PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
     }

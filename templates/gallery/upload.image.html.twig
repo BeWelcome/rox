@@ -178,17 +178,17 @@
 {% endblock stylesheets %}
 
 {% block content %}
-   <div class="row no-gutters">
+   <div class="row g-0">
        <div class="col-12"><h1><span class="d-none d-md-block">{{ 'gallery' | trans }} - </span>{{ 'upload' | trans }}</h1>
        <p class="u:mb-8">{{ 'gallery.upload.abstract'|trans({'size': constraints.size})}}</p></div>
        {{ form_start(form, {'attr': {'class': 'col-12'}}) }}
        {{ form_row(form.albums) }}
-       <div class="custom-file col-12 u:mb-8">
-           <input type="file" class="custom-file-input" multiple="multiple" id="form_files" data-browse="{{ 'browsefile'|trans }}">
-           <label class="custom-file-label custom-file-label-fix" id="form_files_label" for="form_files">{{ 'choosefile'|trans }}</label>
+       <div class="col-12 u:mb-8">
+           <label class="form-label" id="form_files_label" for="form_files">{{ 'choosefile'|trans }}</label>
+           <input type="file" class="form-control" multiple="multiple" id="form_files" data-browse="{{ 'browsefile'|trans }}">
        </div>
 
-       <button id="upload" class="btn btn-primary u:mb-8 u:mr-8" type="button">{{ 'upload'|trans }}</button>
+       <button id="upload" class="btn btn-primary u:mb-8 u:me-8" type="button">{{ 'upload'|trans }}</button>
        <button id="abort" class="btn btn-danger u:mb-8" type="button" disabled="disabled" onclick="uploadAbort()">{{ 'abort'|trans }}</button>
 
        <div id="image-progress" class="d-none u:flex u:items-center">

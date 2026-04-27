@@ -15,15 +15,7 @@ use Pagerfanta\Pagerfanta;
 
 class CommentRepository extends EntityRepository
 {
-    /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities.
-     *
-     * @param int $page
-     * @param int $items
-     *
-     * @return Pagerfanta
-     */
-    public function pageAll($page = 1, $items = 10)
+    public function pageAll($page = 1, $items = 10): Pagerfanta
     {
         $paginator = new Pagerfanta(new QueryAdapter($this->queryAll()));
         $paginator->setMaxPerPage($items);
@@ -32,10 +24,7 @@ class CommentRepository extends EntityRepository
         return $paginator;
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    public function queryAll()
+    public function queryAll(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('c')
             ->orderBy('c.created', 'desc');
@@ -43,15 +32,7 @@ class CommentRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities.
-     *
-     * @param int $page
-     * @param int $items
-     *
-     * @return Pagerfanta
-     */
-    public function pageAllForMember(Member $member, $page = 1, $items = 10)
+    public function pageAllForMember(Member $member, $page = 1, $items = 10): Pagerfanta
     {
         $paginator = new Pagerfanta(new QueryAdapter($this->queryAllForMember($member)));
         $paginator->setMaxPerPage($items);
@@ -60,10 +41,7 @@ class CommentRepository extends EntityRepository
         return $paginator;
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    public function queryAllForMember(Member $member)
+    public function queryAllForMember(Member $member): QueryBuilder
     {
         $qb = $this->queryAll()
             ->where('c.toMember = :member')
@@ -72,15 +50,7 @@ class CommentRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities.
-     *
-     * @param int $page
-     * @param int $items
-     *
-     * @return Pagerfanta
-     */
-    public function pageAllFromMember(Member $member, $page = 1, $items = 10)
+    public function pageAllFromMember(Member $member, $page = 1, $items = 10): Pagerfanta
     {
         $paginator = new Pagerfanta(new QueryAdapter($this->queryAllFromMember($member)));
         $paginator->setMaxPerPage($items);
@@ -89,10 +59,7 @@ class CommentRepository extends EntityRepository
         return $paginator;
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    public function queryAllFromMember(Member $member)
+    public function queryAllFromMember(Member $member): QueryBuilder
     {
         $qb = $this->queryAll()
             ->where('c.fromMember = :member')
@@ -101,15 +68,7 @@ class CommentRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities.
-     *
-     * @param int $page
-     * @param int $items
-     *
-     * @return Pagerfanta
-     */
-    public function pageAllByQuality($quality, $page = 1, $items = 10)
+    public function pageAllByQuality($quality, $page = 1, $items = 10): Pagerfanta
     {
         $paginator = new Pagerfanta(new QueryAdapter($this->queryAllByQuality($quality)));
         $paginator->setMaxPerPage($items);
@@ -118,10 +77,7 @@ class CommentRepository extends EntityRepository
         return $paginator;
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    public function queryAllByQuality($quality)
+    public function queryAllByQuality($quality): QueryBuilder
     {
         $qb = $this->queryAll()
             ->where('c.quality = :quality')
@@ -130,15 +86,7 @@ class CommentRepository extends EntityRepository
         return $qb;
     }
 
-    /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities.
-     *
-     * @param int $page
-     * @param int $items
-     *
-     * @return Pagerfanta
-     */
-    public function pageAllByAdminAction($action, $page = 1, $items = 10)
+    public function pageAllByAdminAction($action, $page = 1, $items = 10): Pagerfanta
     {
         $paginator = new Pagerfanta(new QueryAdapter($this->queryAllByAdminAction($action)));
         $paginator->setMaxPerPage($items);
@@ -147,10 +95,7 @@ class CommentRepository extends EntityRepository
         return $paginator;
     }
 
-    /**
-     * @return QueryBuilder
-     */
-    public function queryAllByAdminAction($action)
+    public function queryAllByAdminAction($action): QueryBuilder
     {
         $qb = $this->queryAll()
             ->where('c.adminAction = :action')
@@ -181,7 +126,7 @@ class CommentRepository extends EntityRepository
                 $qb->expr()->in('m.status', MemberStatusType::MEMBER_COMMENTS_ARRAY)
             ))
             ->where('c.toMember = :member')
-            ->andWhere($qb->expr()->eq('c.displayInPublic', 1))
+            ->andWhere($qb->expr()->eq('c.showToOtherMembers', 1))
             ->setParameter('member', $member)
             ->select('c.quality, count(c.fromMember) AS count')
             ->groupBy('c.quality')
@@ -228,7 +173,7 @@ class CommentRepository extends EntityRepository
     {
         return $this->getCommentsForMemberQueryBuilder($member)
             ->select('count(c.fromMember)')
-            ->andWhere('c.displayInPublic = 1')
+            ->andWhere('c.showToOtherMembers = 1')
             ->getQuery()
             ->getSingleScalarResult()
         ;
@@ -237,7 +182,7 @@ class CommentRepository extends EntityRepository
     public function getVisibleCommentsForMember(Member $member): array
     {
         return $this->getCommentsForMemberQueryBuilder($member)
-            ->andWhere('c.displayInPublic = 1')
+            ->andWhere('c.showToOtherMembers = 1')
             ->getQuery()
             ->getResult()
         ;

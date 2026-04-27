@@ -58,7 +58,7 @@ class SuggestLocationController extends AbstractController
         return $response;
     }
 
-    private function logSearchInfo(string $function, array $searchTerms)
+    private function logSearchInfo(string $function, array $searchTerms): void
     {
         $this->logger->alert($function, ['locale' => $this->translator->getLocale(), 'searchTerms' => $searchTerms]);
     }

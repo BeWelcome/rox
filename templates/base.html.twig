@@ -7,7 +7,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" href="{{ asset('/images/favicon-96x96.png') }}" sizes="96x96"/>
   <link rel="icon" type="image/svg+xml" href="{{ asset('/images/favicon.svg') }}"/>
-  <link rel="shortcut icon" href="{{ asset('/images/favicon.ico') }}"/>
   <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/images/apple-touch-icon.png') }}"/>
   <meta name="apple-mobile-web-app-title" content="beWelcome"/>
 
@@ -93,15 +92,15 @@
       {% if sidebar %}
         <div class="row mt-2">
           <div class="col-12 col-md-9">
-            <p class="float-right d-md-none">
-              <button type="button" class="btn btn-primary btn-sm ml-3" aria-label="Open sidemenu"
-                      data-toggle="offcanvas"><span class="navbar-dark navbar-toggler-icon"></span></button>
+            <p class="float-end d-md-none">
+              <button type="button" class="btn btn-primary btn-sm ms-3" aria-label="Open sidemenu"
+                      data-bs-toggle="offcanvas"><span class="navbar-dark navbar-toggler-icon"></span></button>
             </p>
             {{ contentBlock | raw }}
           </div>
           <div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">
-            <div class="w-100 p-1 text-right d-md-none">
-              <button type="button" class="btn btn-sm" aria-label="Close" data-toggle="offcanvas">
+            <div class="w-100 p-1 text-end d-md-none">
+              <button type="button" class="btn btn-sm" aria-label="Close" data-bs-toggle="offcanvas">
                 <i class="fa fa-lg fa-times white" aria-hidden="true"></i>
               </button>
             </div>
@@ -114,7 +113,7 @@
             {% endif %}
             <div class="list-group u:rounded-8 mb-2">
               {% elseif 'profile_picture' in filter %}
-                <div class="u:w-full u:relative u:pb-[100%]">
+                <div class="u:w-full u:relative u:pb-[100%] mb-2">
                   <div class="u:absolute u:left-0 u:top-0 u:w-full u:h-full">
                     <a href="{{ url('avatar', {username: member.username, size:48}) }}" title="{{ 'profile.picture.title'|trans({username: member.username}) }}" class="js-profile-picture" data-toggle="lightbox" data-type="image">
                       <img class="u:rounded-8 u:w-full u:h-full u:object-cover js-profile-picture"
@@ -123,16 +122,16 @@
                   </div>
                 </div>
                 {% if loggedInMember == member %}
-                  <div><a href="{{ url('profile_edit_avatar', {username: member.username}) }}" class="btn btn-info btn-block">{{ 'profile.change.avatar'|trans }}</a></div>
+                  <div><a href="{{ url('profile_edit_avatar', {username: member.username}) }}" class="o-button">{{ 'profile.change.avatar'|trans }}</a></div>
                 {% endif %}
               {% else %}
-                <a class="list-group-item nav-link{% if submenu.active == filter %} active{% endif %}"
+                <a class="list-group-item list-group-item-action{% if submenu.active == filter %} active{% endif %}"
                    href="{{ menuItem.url }}">{% if menuItem.icon is defined %}<i
                     class="fas fa-fw fa-{{ menuItem.icon }}"></i> {% endif %}{{ menuItem.key | lower | trans }}
                   {% if menuItem.count is defined -%}
                     <span class="badge
-                                  {% if submenu.active == filter %}bg-white text-primary{% else %}badge-primary{% endif %}
-                                   u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center pull-right">
+                                  {% if submenu.active == filter %}bg-white text-primary{% else %}text-bg-primary{% endif %}
+                                   u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center float-end">
                                     {{ menuItem.count }}
                                 </span>
                   {%- endif %}

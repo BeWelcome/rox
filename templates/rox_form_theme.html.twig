@@ -154,12 +154,22 @@
 {%- endblock widget_attributes -%}
 
 {% block button_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('btn-secondary') ~ ' btn')|trim}) -%}
+    {%- set current_class = attr.class|default('btn-secondary') -%}
+    {%- if 'o-button' not in current_class and 'btn' not in current_class -%}
+        {%- set current_class = current_class ~ ' btn' -%}
+    {%- endif -%}
+    {%- set attr = attr|merge({class: current_class|trim}) -%}
     {{- parent() -}}
 {%- endblock button_widget %}
 
 {% block submit_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('btn-primary'))|trim}) -%}
+    {%- set current_class = attr.class|default('') -%}
+    {%- if current_class is empty -%}
+        {%- set current_class = 'btn btn-primary' -%}
+    {%- elseif 'o-button' not in current_class and 'btn' not in current_class -%}
+        {%- set current_class = current_class ~ ' btn btn-primary' -%}
+    {%- endif -%}
+    {%- set attr = attr|merge({class: current_class|trim}) -%}
     {{- parent() -}}
 {%- endblock submit_widget %}
 
@@ -171,8 +181,8 @@
             {{- form_label(form, null, { widget: parent() }) -}}
         </div>
     {%- elseif 'switch-custom' in parent_label_class -%}
-        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' custom-control-input')|trim}) -%}
-        <div class="custom-control custom-switch{{ 'switch-inline' in parent_label_class ? ' custom-control-inline' }}">
+        {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-check-input')|trim, 'role': 'switch'}) -%}
+        <div class="form-check form-switch{{ 'switch-inline' in parent_label_class ? ' form-check-inline' }}">
             {{- form_label(form, null, { widget: parent() }) -}}
         </div>
     {%- else -%}
@@ -263,7 +273,11 @@
         {% set is_parent_custom = parent_label_class is defined and ('checkbox-custom' in parent_label_class or 'radio-custom' in parent_label_class or 'switch-custom' in parent_label_class) %}
         {% set is_custom = label_attr.class is defined and ('checkbox-custom' in label_attr.class or 'radio-custom' in label_attr.class or 'switch-custom' in label_attr.class) %}
         {%- if is_parent_custom or is_custom -%}
-            {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' custom-control-label')|trim}) -%}
+            {%- if 'switch-custom' in parent_label_class or 'switch-custom' in label_attr.class -%}
+                {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' form-check-label')|trim}) -%}
+            {%- else -%}
+                {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' custom-control-label')|trim}) -%}
+            {%- endif -%}
         {%- else %}
             {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' o-checkbox__label')|trim}) -%}
         {%- endif %}
@@ -274,7 +288,7 @@
             {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) -%}
         {%- endif -%}
         {%- if parent_label_class is defined -%}
-            {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|replace({'checkbox-inline': '', 'radio-inline': '', 'checkbox-custom': '', 'radio-custom': ''})|trim}) -%}
+            {%- set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|replace({'checkbox-inline': '', 'radio-inline': '', 'checkbox-custom': '', 'radio-custom': '', 'switch-custom': ''})|trim}) -%}
         {%- endif -%}
         {%- if label is not same as(false) and label is empty -%}
             {%- if label_format is not empty -%}

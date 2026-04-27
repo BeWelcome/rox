@@ -120,47 +120,47 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
   }
 
   .btn[data-action="incrementHours"]::after {
-    @extend .sr-only;
+    @extend .sr-only !optional;
     content: "Increment Hours";
   }
 
   .btn[data-action="incrementMinutes"]::after {
-    @extend .sr-only;
+    @extend .sr-only !optional;
     content: "Increment Minutes";
   }
 
   .btn[data-action="decrementHours"]::after {
-    @extend .sr-only;
+    @extend .sr-only !optional;
     content: "Decrement Hours";
   }
 
   .btn[data-action="decrementMinutes"]::after {
-    @extend .sr-only;
+    @extend .sr-only !optional;
     content: "Decrement Minutes";
   }
 
   .btn[data-action="showHours"]::after {
-    @extend .sr-only;
+    @extend .sr-only !optional;
     content: "Show Hours";
   }
 
   .btn[data-action="showMinutes"]::after {
-    @extend .sr-only;
+    @extend .sr-only !optional;
     content: "Show Minutes";
   }
 
   .btn[data-action="togglePeriod"]::after {
-    @extend .sr-only;
+    @extend .sr-only !optional;
     content: "Toggle AM/PM";
   }
 
   .btn[data-action="clear"]::after {
-    @extend .sr-only;
+    @extend .sr-only !optional;
     content: "Clear the picker";
   }
 
   .btn[data-action="today"]::after {
-    @extend .sr-only;
+    @extend .sr-only !optional;
     content: "Set the date to today";
   }
 
@@ -168,7 +168,7 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
     text-align: center;
 
     &::after {
-      @extend .sr-only;
+      @extend .sr-only !optional;
       content: "Toggle Date and Time Screens";
     }
 
@@ -215,12 +215,12 @@ $bs-datetimepicker-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25) !default;
       }
 
       &.prev::after {
-        @extend .sr-only;
+        @extend .sr-only !optional;
         content: "Previous Month";
       }
 
       &.next::after {
-        @extend .sr-only;
+        @extend .sr-only !optional;
         content: "Next Month";
       }
     }

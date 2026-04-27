@@ -37,7 +37,7 @@ abstract class AbstractExtractor
         return $template;
     }
 
-    protected function writeRenderedTemplate($filename, $template, $parameters)
+    protected function writeRenderedTemplate($filename, $template, $parameters): void
     {
         $this->entrypointLookup->reset();
         $parameters = array_merge($parameters, ['date_generated' => new DateTime()]);
@@ -53,7 +53,7 @@ abstract class AbstractExtractor
      * @param string $subDirectory Subdirectory name (no trailing /)
      * @param string $filename     File to be written (.html is added)
      */
-    protected function writePersonalDataFileSubDirectory($parameters, $template, $subDirectory, $filename = null)
+    protected function writePersonalDataFileSubDirectory($parameters, $template, $subDirectory, $filename = null): void
     {
         if (!is_dir($subDirectory)) {
             mkdir($subDirectory);

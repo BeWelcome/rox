@@ -38,7 +38,7 @@ class RightVolunteer
     private $member;
 
     #[ORM\JoinColumn(name: 'IdRight', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: Right::class, inversedBy: 'rightVolunteers')]
+    #[ORM\ManyToOne(targetEntity: Right::class, inversedBy: 'rightVolunteers', fetch: 'EAGER')]
     private $right;
 
     /**
@@ -82,7 +82,7 @@ class RightVolunteer
     /**
      * @param Member $member
      */
-    public function setMember($member)
+    public function setMember($member): void
     {
         $this->member = $member;
     }
@@ -92,7 +92,7 @@ class RightVolunteer
         return $this->right;
     }
 
-    public function setRight($right)
+    public function setRight($right): void
     {
         $this->right = $right;
     }
@@ -231,7 +231,7 @@ class RightVolunteer
      * Triggered on insert.
      */
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
     }
@@ -240,7 +240,7 @@ class RightVolunteer
      * Triggered on update.
      */
     #[ORM\PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
     }

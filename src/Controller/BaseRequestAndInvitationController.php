@@ -21,8 +21,10 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 
     protected ConversationModel $conversationModel;
 
-    public function __construct(protected BaseRequestModel $model, protected EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        protected readonly BaseRequestModel $model,
+        protected readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     abstract protected function addExpiredFlash(Member $receiver);

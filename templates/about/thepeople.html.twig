@@ -20,14 +20,14 @@
     </div>
     <div class="col-12">
         <!-- bootstrap carousel !-->
-        <div id="carousel-team" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carousel-team" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-team" data-slide-to="1"></li>
-                <li data-target="#carousel-team" data-slide-to="2"></li>
-                <li data-target="#carousel-team" data-slide-to="3"></li>
-                <li data-target="#carousel-team" data-slide-to="4"></li>
-            </ol>
+        <div id="carousel-team" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carousel-team" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carousel-team" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carousel-team" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#carousel-team" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                <button type="button" data-bs-target="#carousel-team" data-bs-slide-to="4" aria-label="Slide 5"></button>
+            </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <img class="d-block w-100" src="https://farm3.static.flickr.com/2200/2204242456_f2a726c103.jpg">
@@ -45,14 +45,14 @@
                     <img class="d-block w-100" src="https://farm3.static.flickr.com/2179/2204240888_d90054b31a.jpg">
                 </div>
             </div>
-            <a class="carousel-control-prev" href="#carousel-team" role="button" data-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-team" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">{{ 'the.people.previous' | trans }}</span>
-            </a>
-            <a class="carousel-control-next" href="#carousel-team" role="button" data-slide="next">
+                <span class="visually-hidden">{{ 'the.people.previous' | trans }}</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel-team" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">{{ 'the.people.next' | trans }}</span>
-            </a>
+                <span class="visually-hidden">{{ 'the.people.next' | trans }}</span>
+            </button>
         </div><!-- end: bootstrap carousel !-->
             <div class=" pt-1 caption">
                 <p class="small">{{ 'thepeople_picturetext1' | trans | purify }} <a title="unconference: A meeting with a non-fixed schedule that can be changed all the time."></a>

@@ -39,8 +39,8 @@ class RequestController extends BaseRequestAndInvitationController
         ConversationModel $conversationModel,
         HostingRequestModel $requestModel,
         EntityManagerInterface $entityManager,
-        private Mailer $mailer,
-        private Logger $logger,
+        private readonly Mailer $mailer,
+        private readonly Logger $logger,
     ) {
         parent::__construct($requestModel, $entityManager);
 
@@ -52,7 +52,7 @@ class RequestController extends BaseRequestAndInvitationController
      */
     public function decline(Message $message): Response
     {
-        $conversationThread = new ConversationThread($this->getManager());
+        $conversationThread = new ConversationThread($this->entityManager);
         $conversation = $conversationThread->getThread($message);
         $current = $conversation[0];
         $request = $current->getRequest();
@@ -190,7 +190,7 @@ class RequestController extends BaseRequestAndInvitationController
         ]);
     }
 
-    protected function addExpiredFlash(Member $receiver)
+    protected function addExpiredFlash(Member $receiver): void
     {
         $this->addTranslatedFlash('notice', 'flash.request.expired', [
             '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
@@ -313,7 +313,7 @@ class RequestController extends BaseRequestAndInvitationController
         );
     }
 
-    private function sendInitialRequestNotification(Member $host, Member $guest, Message $request)
+    private function sendInitialRequestNotification(Member $host, Member $guest, Message $request): void
     {
         $subject = $request->getSubject()->getSubject();
 

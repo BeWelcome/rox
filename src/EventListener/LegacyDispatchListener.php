@@ -34,7 +34,7 @@ class LegacyDispatchListener
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         // Only act if the exception was a 404 error, we will then try to route
         // it with the legacy kernel.

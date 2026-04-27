@@ -1,6 +1,6 @@
 {% if groups|length %}
 <p>{{ 'group.create.check.double' | trans }}</p>
-<div class="form-row">
+<div class="row g-3">
 {% for group in groups %}
     <div class="col-12 col-sm-6 col-md-4 mb-3"><a href="/groups/{{ group.id }}" class="btn btn-primary">{{ group.name }}</a></div>
 {% endfor %}

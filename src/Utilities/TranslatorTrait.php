@@ -11,7 +11,7 @@ trait TranslatorTrait
     private $translator;
 
     #[\Symfony\Contracts\Service\Attribute\Required]
-    public function setTranslator(TranslatorInterface $translator)
+    public function setTranslator(TranslatorInterface $translator): void
     {
         $this->translator = $translator;
     }
@@ -27,7 +27,7 @@ trait TranslatorTrait
     /**
      * Make sure to sent the email notification in the preferred language of the user.
      */
-    protected function setTranslatorLocale(Member $receiver)
+    protected function setTranslatorLocale(Member $receiver): void
     {
         $language = $receiver->getPreferredLanguage();
         $this->translator->setLocale($language->getShortCode());

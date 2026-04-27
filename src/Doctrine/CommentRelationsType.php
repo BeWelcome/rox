@@ -4,14 +4,14 @@ namespace App\Doctrine;
 
 class CommentRelationsType extends SetType
 {
-    public const string WAS_GUEST = 'hewasmyguest';
-    public const string WAS_HOST = 'hehostedme';
-    public const string ONLY_MET_ONCE = 'OnlyOnce';
-    public const string IS_FAMILY = 'HeIsMyFamily';
-    public const string IS_CLOSE_FRIEND = 'HeHisMyOldCloseFriend';
-    public const string TRAVEL_BUDDY = 'TravelledTogether';
-    public const string IS_FRIEND = 'WeAreFriends';
-    public const string ONLINE_COMMUNICATION = 'CommunicatedOnline';
+    public const string WAS_GUEST = 'was_my_guest';
+    public const string WAS_HOST = 'hosted_me';
+    public const string ONLY_MET_ONCE = 'only_once';
+    public const string IS_FAMILY = 'family';
+    public const string IS_CLOSE_FRIEND = 'close_friend';
+    public const string TRAVEL_BUDDY = 'travelled_Together';
+    public const string IS_FRIEND = 'friends';
+    public const string ONLINE_COMMUNICATION = 'chatted';
 
     protected string $name = 'comment_relations';
 

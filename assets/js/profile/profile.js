@@ -1,4 +1,3 @@
-require('ekko-lightbox');
 const L = require("leaflet");
 
 const locationMaps = document.querySelectorAll('[id^=location-map]')

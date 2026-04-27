@@ -207,7 +207,7 @@ class Group
     /**
      * Remove description.
      */
-    public function removeDescription(MemberTranslation $description)
+    public function removeDescription(MemberTranslation $description): void
     {
         $this->descriptions->removeElement($description);
     }

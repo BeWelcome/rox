@@ -145,7 +145,7 @@ class SpecialRelation
      * Triggered on insert.
      */
     #[ORM\PrePersist]
-    public function onPrePersist(PrePersistEventArgs $args)
+    public function onPrePersist(PrePersistEventArgs $args): void
     {
         $this->created = new DateTime('now');
         $this->updated = $this->created;
@@ -159,7 +159,7 @@ class SpecialRelation
      * Triggered on update.
      */
     #[ORM\PostUpdate]
-    public function onPostUpdate(PostUpdateEventArgs $args)
+    public function onPostUpdate(PostUpdateEventArgs $args): void
     {
         if (0 !== $this->comment) {
             $objectManager = $args->getObjectManager();

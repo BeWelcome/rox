@@ -289,7 +289,7 @@ class CommentController extends AbstractController
             'toMember' => $toMember,
             'fromMember' => $fromMember,
         ]);
-        $comment->setDisplayInPublic(false);
+        $comment->setShowToOtherMembers(false);
         $this->entityManager->persist($comment);
         $this->entityManager->flush();
 
@@ -316,7 +316,7 @@ class CommentController extends AbstractController
             'toMember' => $toMember,
             'fromMember' => $fromMember,
         ]);
-        $comment->setDisplayInPublic(true);
+        $comment->setShowToOtherMembers(true);
         $this->entityManager->persist($comment);
         $this->entityManager->flush();
 
@@ -420,15 +420,15 @@ class CommentController extends AbstractController
         ];
     }
 
-    private function handleClickedButton($clickedButton, Comment &$comment)
+    private function handleClickedButton($clickedButton, Comment &$comment): void
     {
         switch ($clickedButton) {
             case 'hideComment':
-                $comment->setDisplayinpublic(false);
+                $comment->setShowToOtherMembers(false);
                 $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
                 break;
             case 'showComment':
-                $comment->setDisplayinpublic(true);
+                $comment->setShowToOtherMembers(true);
                 $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
                 break;
             case 'allowEditing':

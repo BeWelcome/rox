@@ -42,6 +42,7 @@
         "laminas/laminas-eventmanager": "^3.0",
         "laminas/laminas-uri": "^2.7",
         "league/html-to-markdown": "^4.8",
+        "longitude-one/doctrine-spatial": "^5.0",
         "manticoresoftware/manticoresearch-php": "^4.0",
         "nelmio/cors-bundle": "^2.1",
         "nelmio/security-bundle": "3.*",

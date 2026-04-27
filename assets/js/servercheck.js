@@ -1,14 +1,16 @@
 require('popper.js/dist/umd/popper');
 
-$(function () {
-    setInterval(checkServer(), 1000);
+document.addEventListener('DOMContentLoaded', function () {
+    setInterval(checkServer, 1000);
 
     function checkServer() {
-        var instance = new Tooltip(document.getElementById("#requestCount"), {
-            title: "Hey there",
-            trigger: "click",
-        });
-        instance.show();
-        instance.show();
+        var el = document.getElementById("requestCount");
+        if (el) {
+            var instance = new Tooltip(el, {
+                title: "Hey there",
+                trigger: "click",
+            });
+            instance.show();
+        }
     }
 });

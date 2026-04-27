@@ -12,22 +12,22 @@
 {% block content %}
     <div class="community-news-wrapper u:bg-gray-5 u:p-16 u:rounded-8 u:my-16">
         <div class="u:flex u:justify-start u:items-center">
-            <div class="u:ml-auto u:shrink-0 u:mr-16">
+            <div class="u:ms-auto u:shrink-0 u:me-16">
                 <a href="{{ url( 'communitynews' ) }}">
                     <i class="fa fa-chevron-left"></i>
                 </a>
             </div>
 
-            <div class="o-avatar o-avatar--m u:mt-8 u:mr-16">
+            <div class="o-avatar o-avatar--m u:mt-8 u:me-16">
                 {{ macros.roundedavatarstack( communityNews.createdBy.Username, 72) }}
             </div>
             <div class="u:place-self-center u:w-full">
                 <p class="u:text-20 u:md:text-28 u:font-700">{{ communityNews.title }}</p>
                 <small class="u:mb-8 u:text-gray-65">
-                    <i class="fa fa-fw fa-clock u:mr-2"></i>
+                    <i class="fa fa-fw fa-clock u:me-2"></i>
                     {{ communityNews.createdAt.DiffForHumans }}
                     {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %}<br>
-                        <i class="fa fa-fw fa-pen u:mr-2"></i>
+                        <i class="fa fa-fw fa-pen u:me-2"></i>
                         {{ 'bewelcome_news.lastupdater' | trans}}
                         {{ macros.profilelink( communityNews.updatedBy.Username ) }}
                         {{ communityNews.updatedAt.DiffForHumans }}
@@ -36,10 +36,10 @@
             </div>
         </div>
 
-        <div class="u:ml-24 u:my-16 u:mr-16">
+        <div class="u:ms-24 u:my-16 u:me-16">
             {{ communityNews.text| raw }}
         </div>
-        <div class="u:ml-24 u:mr-16">
+        <div class="u:ms-24 u:me-16">
             <h4 class="font-weight-bold">{% set commentsCount = communityNews.comments | length %}{% trans %}%commentsCount% comments{% endtrans %}</h4>
         </div>
     </div>
@@ -68,20 +68,20 @@
         {% for comment in comments.currentPageResults %}
             <div class="u:bg-gray-5 u:p-16 u:rounded-8 u:my-24">
                 <div class="u:flex u:justify-start u:items-center">
-                    <div class="o-avatar o-avatar--s o-avatar--noname u:mr-16">
+                    <div class="o-avatar o-avatar--s o-avatar--noname u:me-16">
                         {{ macros.roundedavatarstack( comment.author.Username, 50) }}
                     </div>
                     <div class="u:place-self-center u:w-full">
                         <p class="u:text-20 u:md:text-28 u:font-700">{{ comment.title }}</p>
                         <small class="u:mb-8 u:text-gray-65">
                             {{ macros.profilelink( comment.author.Username ) }}
-                            <i class="fa fa-fw fa-clock u:mr-2"></i>
+                            <i class="fa fa-fw fa-clock u:me-2"></i>
                             {{ comment.created.DiffForHumans | trans }}
 
                         </small>
                     </div>
                 </div>
-                <div class="u:my-16 u:mr-16 u:ml-4">
+                <div class="u:my-16 u:me-16 u:ms-4">
                     {{ comment.text | raw }}
                 </div>
             </div>
@@ -95,5 +95,3 @@
 
     {% endif %}
 {% endblock content %}
-
-

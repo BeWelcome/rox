@@ -16,7 +16,15 @@ class PoliciesController extends AbstractController
         $this->documentLocales = explode(',', $locales);
     }
 
-    #[Route(path: '/terms/{locale}', name: 'terms_of_use')]
+    #[Route(path: ' /terms/new/{locale}', name: 'terms_of_use_new', priority: 10)]
+    public function showNewTermsOfUse(Request $request, ?string $locale = null): Response
+    {
+        $locale = $this->ensureLocaleAllowed($locale, $request);
+
+        return $this->render('policies/terms.new.' . $locale . '.html.twig');
+    }
+
+    #[Route(path: ' /terms/{locale}', name: 'terms_of_use')]
     public function showTermsOfUse(Request $request, ?string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);

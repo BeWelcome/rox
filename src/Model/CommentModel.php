@@ -47,8 +47,8 @@ class CommentModel
             return true;
         }
 
-        $originalText = $original->getTextFree();
-        $updatedText = $updated->getTextFree();
+        $originalText = $original->getComment();
+        $updatedText = $updated->getComment();
         if ($originalText === $updatedText) {
             return false;
         }
@@ -109,7 +109,7 @@ class CommentModel
 
     public function checkForEmailAddress(Comment $comment): bool
     {
-        $commentText = $comment->getTextfree();
+        $commentText = $comment->getComment();
         $count = preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $commentText);
 
         return $count > 0;
@@ -117,7 +117,7 @@ class CommentModel
 
     public function checkForPhoneNumber(Comment $comment): bool
     {
-        $commentText = $comment->getTextfree();
+        $commentText = $comment->getComment();
         $found = preg_match("/([0-9][\. \)-]*){8,}/", $commentText);
 
         return $found > 0;
@@ -154,11 +154,11 @@ class CommentModel
                 ->executeQuery(
                     '
                         SELECT
-                            c.TextFree
+                            c.comment
                         FROM
                             comments c
                         WHERE
-                            c.IdFromMember = :memberId
+                            c.from_member_id = :memberId
                             AND TIMEDIFF(NOW(), created) < :duration
                     ',
                     ['memberId' => $member->getId(), 'duration' => $duration]
@@ -174,13 +174,13 @@ class CommentModel
     private function checkCommentSimilarity(array $comments, Comment $comment): bool
     {
         $similar = 0;
-        $comments[\count($comments)] = ['TextFree' => $comment->getTextfree()];
+        $comments[\count($comments)] = ['comment' => $comment->getComment()];
         $count = \count($comments);
         for ($i = 0; $i < $count - 1; ++$i) {
             for ($j = $i + 1; $j < $count; ++$j) {
                 similar_text(
-                    (string) $comments[$i]['TextFree'],
-                    (string) $comments[$j]['TextFree'],
+                    (string) $comments[$i]['comment'],
+                    (string) $comments[$j]['comment'],
                     $percent
                 );
                 if ($percent > 95) {

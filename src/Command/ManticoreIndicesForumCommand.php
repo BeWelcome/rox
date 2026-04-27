@@ -97,7 +97,7 @@ class ManticoreIndicesForumCommand extends Command
         return $index;
     }
 
-    private function addForumDocuments(Table $index, OutputInterface $output)
+    private function addForumDocuments(Table $index, OutputInterface $output): void
     {
         /*
           SELECT ft.id AS threadid, sentence as text, IdGroup, \

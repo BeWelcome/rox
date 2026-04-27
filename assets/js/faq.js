@@ -1,33 +1,45 @@
 import '../scss/faq.scss';
 
-var faqs = jQuery('#faqs');
-faqs.find("dd").hide();
-faqs.find("dt").click(function (e) {
-    e.preventDefault();
-    jQuery(this).next("#faqs dd").slideToggle(500);
-
-});
-
 document.addEventListener('DOMContentLoaded', function () {
-    jQuery('dt').on('click', function () {
-        jQuery(this)
-        .find('[data-fa-i2svg]')
-        .toggleClass('fa-plus-circle')
-        .toggleClass('fa-minus-circle');
-    });
-  });
+    const faqs = document.getElementById('faqs');
+    if (faqs) {
+        const dds = faqs.querySelectorAll('dd');
+        dds.forEach(dd => dd.style.display = 'none');
+
+        const dts = faqs.querySelectorAll('dt');
+        dts.forEach(dt => {
+            dt.addEventListener('click', function (e) {
+                e.preventDefault();
+                const nextDd = this.nextElementSibling;
+                if (nextDd && nextDd.tagName === 'DD') {
+                    if (nextDd.style.display === 'none') {
+                        nextDd.style.display = 'block';
+                    } else {
+                        nextDd.style.display = 'none';
+                    }
+                }
+                
+                const icon = this.querySelector('[data-fa-i2svg]');
+                if (icon) {
+                    icon.classList.toggle('fa-plus-circle');
+                    icon.classList.toggle('fa-minus-circle');
+                }
+            });
+        });
+    }
+    
+    openHash();
+});
 
 window.addEventListener('hashchange', openHash);
 
-function openHash()
-{
-    // Alerts every time the hash changes!
+function openHash() {
     let hash = location.hash;
-    $(hash).click();
-    $(document).scrollTop($(hash).offset().top);
+    if (hash) {
+        const element = document.querySelector(hash);
+        if (element) {
+            element.click();
+            element.scrollIntoView();
+        }
+    }
 }
-
-$(function () {
-    // Trigger the event (useful on page load).
-    openHash();
-});

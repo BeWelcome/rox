@@ -763,7 +763,7 @@ class Params
      * Triggered on update.
      */
     #[ORM\PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updated = new DateTime('now');
     }

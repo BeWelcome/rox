@@ -33,6 +33,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'member')]
+#[ORM\Index(name: 'idx_member_status_lastactive', columns: ['Status', 'LastActive'])]
+#[ORM\Index(name: 'idx_member_accommodation', columns: ['Accommodation'])]
+#[ORM\Index(name: 'ft_member_search', columns: ['Username', 'Name', 'AboutMe', 'Hobbies', 'Books', 'Music', 'Movies', 'Occupation', 'PastTrips', 'PlannedTrips', 'PleaseBring', 'WhereYouSleep', 'OfferGuests', 'OfferHosts', 'GettingThere', 'Organizations', 'AdditionalAccommodationInfo', 'ILiveWith', 'MaxLengthOfStay', 'HouseRules'], flags: ['fulltext'])]
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[Gedmo\TranslationEntity(class: MemberTranslation::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -235,7 +238,7 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     #[ORM\OneToMany(targetEntity: MemberPreference::class, mappedBy: 'member', cascade: ['persist', 'remove'])]
     private Collection $preferences;
 
-    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'member', cascade: ['persist', 'remove'], fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'member', cascade: ['persist', 'remove'], fetch: 'LAZY')]
     private Collection $addresses;
 
     private ?Language $preferredLanguage = null;
@@ -1353,18 +1356,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
         }
 
         return null;
-    }
-
-    public function setGenderOfGuests(?string $genderOfGuests): self
-    {
-        $this->genderOfGuests = $genderOfGuests;
-
-        return $this;
-    }
-
-    public function getGenderOfGuests(): string
-    {
-        return $this->genderOfGuests;
     }
 
     public function getRawTranslations(): Collection

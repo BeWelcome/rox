@@ -358,7 +358,7 @@ class GalleryImage
      * Triggered on insert.
      */
     #[ORM\PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
     }
@@ -376,7 +376,7 @@ class GalleryImage
     /**
      * Set gallery.
      */
-    public function addGallery(Gallery $gallery)
+    public function addGallery(Gallery $gallery): void
     {
         $this->galleries->add($gallery);
     }

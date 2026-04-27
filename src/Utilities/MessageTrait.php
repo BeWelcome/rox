@@ -20,7 +20,7 @@ trait MessageTrait
     private $environment;
 
     #[\Symfony\Contracts\Service\Attribute\Required]
-    public function setTwigEnvironment(Environment $environment)
+    public function setTwigEnvironment(Environment $environment): void
     {
         $this->environment = $environment;
     }
@@ -35,7 +35,7 @@ trait MessageTrait
         Member $receiver,
         string $template,
         ...$params,
-    ) {
+    ): void {
         $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver], ...$params);
 
         $em = $this->getManager();

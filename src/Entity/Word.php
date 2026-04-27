@@ -21,22 +21,21 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'word')]
-#[ORM\UniqueConstraint(name: 'code', columns: ['code', 'ShortCode'])]
 #[ORM\Entity(repositoryClass: WordRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Word
 {
+    #[ORM\Id]
     #[ORM\Column(name: 'code', type: 'string', length: 128, nullable: false)]
     private string $code;
 
+    #[ORM\Id]
+    #[ORM\JoinColumn(name: 'ShortCode', referencedColumnName: 'ShortCode', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Language::class)]
+    private Language $language;
+
     #[ORM\Column(name: 'domain', type: 'domain', length: 16, nullable: false)]
     private string $domain;
-
-    #[ORM\Column(name: 'ShortCode', type: 'string', length: 16, nullable: false)]
-    private string $shortCode = 'en';
-
-    // Storing the language object for now (should be an association with OneToMany)
-    private Language $language;
 
     #[ORM\Column(name: 'Sentence', type: 'text', length: 65535, nullable: false)]
     private string $sentence;
@@ -66,11 +65,6 @@ class Word
     #[ORM\Column(name: 'isarchived', type: 'boolean', nullable: true)]
     private ?bool $isArchived = null;
 
-    #[ORM\Column(name: 'id', type: 'integer')]
-    #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private int $id;
-
     public function setCode(string $code): self
     {
         $this->code = $code;
@@ -83,16 +77,16 @@ class Word
         return $this->code;
     }
 
-    public function setShortCode(string $shortCode): self
+    public function setLanguage(Language $language): self
     {
-        $this->shortCode = $shortCode;
+        $this->language = $language;
 
         return $this;
     }
 
-    public function getShortCode(): string
+    public function getLanguage(): Language
     {
-        return $this->shortCode;
+        return $this->language;
     }
 
     public function setSentence(string $sentence): self
@@ -159,19 +153,6 @@ class Word
         return $this->translationAllowed;
     }
 
-    public function setLanguage(Language $language): self
-    {
-        $this->language = $language;
-        $this->setShortCode($language->getShortCode());
-
-        return $this;
-    }
-
-    public function getLanguage(): Language
-    {
-        return $this->language;
-    }
-
     public function setDescription(string $description): self
     {
         $this->description = $description;
@@ -218,11 +199,6 @@ class Word
     public function getIsArchived(): ?bool
     {
         return $this->isArchived;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     public function getDomain(): string

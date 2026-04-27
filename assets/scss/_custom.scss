@@ -7,11 +7,14 @@ $topbar-unread-badge-bg:    #3781eb;
 // BeWelcome accent used in the landing page cards
 $bw-blue-dark:   #153B74;
 
-$link-color:                 #4c6c9b; // Use original bootstrap primary for links instead of BW orange
-$link-hover-decoration:      none;
+$link-color: #1f4f9a;
+$link-decoration: none !important;
+$link-hover-decoration: none !important;
 $grid-gutter-width:          1.875rem; // 30px
 
 $font-family-sans-serif:     'LatoWeb', 'LatoWebLight';
+$font-family-bold: 'Signika';
+
 $line-height:                1.5;
 
 $headings-font-family:       "Signika";
@@ -24,6 +27,13 @@ $input-btn-padding-x-sm:      .75rem;
 $input-btn-padding-x-lg:      1.25rem;
 $btn-block-spacing-y:            5px;
 $btn-toolbar-margin:             5px;
+$color-contrast-dark: #000;
+$color-contrast-light: #fff;
+$min-contrast-ratio: 2.1;
+
+$btn-color: #fff;
+$btn-font-weight: 400;
+
 $input-padding-x:                .375rem;
 $input-padding-y:                .375rem;
 $input-border-color:             #ccc;

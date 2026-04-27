@@ -55,7 +55,7 @@
     "mark.js": "^8.11.1",
     "masonry-layout": "^4.2.2",
     "micromodal": "^0.4.10",
-    "minimatch": "^10.2.5",
+    "minimatch": "3.1.3",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.48",
     "move-js": "^0.5.0",
@@ -88,6 +88,11 @@
     "webpack": "^5.106.2",
     "webpack-cli": "^5.1.4",
     "workbox-webpack-plugin": "^7.4.0"
+  },
+  "overrides": {
+      "minimatch": "^3.1.3",
+      "serialize-javascript": "^7.0.2",
+      "uuid": "^14"
   },
   "scripts": {
     "encoreWatch": "encore dev --watch"

@@ -21,7 +21,6 @@ use Doctrine\ORM\Mapping as ORM;
  * Auto generated class do not check mess
  */
 #[ORM\Table(name: 'word')]
-#[ORM\UniqueConstraint(name: 'code', columns: ['code', 'ShortCode'])]
 #[ORM\Entity(repositoryClass: WordRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Word
@@ -30,6 +29,7 @@ class Word
     #[ORM\Column(name: 'code', type: 'string', length: 128, nullable: false)]
     private string $code;
 
+    #[ORM\Id]
     #[ORM\JoinColumn(name: 'ShortCode', referencedColumnName: 'ShortCode', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Language::class)]
     private Language $language;

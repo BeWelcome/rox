@@ -41,7 +41,7 @@ class WordRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('t');
         $qb
-            ->where('t.shortCode = :locale')
+            ->where('t.language = :locale')
             ->andWhere(
                 $qb->expr()->orX(
                     't.isArchived = 0 OR t.isArchived IS NULL',
@@ -118,10 +118,9 @@ class WordRepository extends EntityRepository
     private function getLatestChange(string $locale): ?array
     {
         $qb = $this->createQueryBuilder('t')
-            ->where('t.shortCode = :locale')
-            ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
+            ->where('t.language = :locale')
+            ->andWhere('(t.isArchived = 0 OR t.isArchived IS NULL)')
             ->andWhere('t.translationAllowed = :translationAllowed')
-            ->andWhere('t.shortCode = :locale')
             ->setParameter('translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
             ->setParameter('locale', $locale)
             ->orderBy('t.updated', 'DESC')
@@ -150,7 +149,7 @@ class WordRepository extends EntityRepository
     private function queryAll($locale, $code = ''): QueryBuilder
     {
         $qb = $this->createQueryBuilder('t')
-            ->where('t.shortCode = :locale')
+            ->where('t.language = :locale')
             ->setParameter('locale', $locale)
             ->orderBy('t.created', 'DESC')
             ->addOrderBy('t.code', 'ASC');
@@ -166,7 +165,7 @@ class WordRepository extends EntityRepository
     private function getTranslatableItemsForLocaleQuery(string $locale, ?string $domain = null): QueryBuilder
     {
         $qb = $this->createQueryBuilder('t')
-            ->where('t.shortCode = :locale')
+            ->where('t.language = :locale')
             ->andWhere('(t.isArchived = 0 OR t.isArchived IS NULL)')
             ->setParameter('locale', $locale)
         ;

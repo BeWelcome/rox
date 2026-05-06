@@ -5,7 +5,7 @@
     <h1>{{ 'error.page.server.error'|trans }}</h1>
 
     {% if app.user %}
-        <p>{{ 'error.greeting'|trans(app.user.Username) }}<p>
+        <p>{{ 'error.greeting'|trans({username: app.user.Username}) }}<p>
         <p>{{ 'error.500'|trans }}</p>
     {% else %}
         <p>{{ 'error.500'|trans }}</p>

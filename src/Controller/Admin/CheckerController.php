@@ -9,6 +9,8 @@ use App\Form\SpamMessagesIndexFormType;
 use App\Model\ActivityModel;
 use App\Model\Admin\CheckerModel;
 use App\Model\CommunityNewsModel;
+use App\Utilities\ItemsPerPageTraits;
+use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -20,48 +22,58 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class CheckerController extends AbstractController
 {
+    use ItemsPerPageTraits;
+
     private const MESSAGES_REPORTED = 1;
     private const MESSAGES_PROCESSED = 2;
+    private const MESSAGES_BLOCK_WORDS = 3;
+    private const MESSAGES_BLOCK_WORDS_PROCESSED = 4;
 
     private CheckerModel $checkerModel;
+    private EntityManagerInterface $entityManager;
 
-    public function __construct(CheckerModel $checkerModel)
+    public function __construct(CheckerModel $checkerModel, EntityManagerInterface $entityManager)
     {
         $this->checkerModel = $checkerModel;
+        $this->entityManager = $entityManager;
     }
 
     /**
      * @Route("/admin/spam/messages", name="admin_spam_messages")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function showReportedMessages(Request $request)
+    public function showReportedMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_REPORTED);
     }
 
     /**
      * @Route("/admin/spam/messages/processed", name="admin_spam_messages_processed")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function showProcessedMessages(Request $request)
+    public function showProcessedMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_PROCESSED);
     }
 
     /**
-     * @Route("/admin/spam/activities", name="admin_spam_activities")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
+     * @Route("/admin/spam/messages/blocked", name="admin_spam_messages_block_words")
      */
-    public function showActivities(Request $request, ActivityModel $activitiesModel)
+    public function showBlockWordMessages(Request $request): Response
+    {
+        return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS);
+    }
+
+    /**
+     * @Route("/admin/spam/messages/blocked/processed", name="admin_spam_messages_block_words_processed")
+     */
+    public function showProcessedBlockWordMessages(Request $request): Response
+    {
+        return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS_PROCESSED);
+    }
+
+    /**
+     * @Route("/admin/spam/activities", name="admin_spam_activities")
+     */
+    public function showActivities(Request $request, ActivityModel $activitiesModel): Response
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
@@ -104,12 +116,8 @@ class CheckerController extends AbstractController
 
     /**
      * @Route("/admin/spam/communitynews", name="admin_spam_community_news")
-     *
-     * @throws AccessDeniedException
-     *
-     * @return Response
      */
-    public function showCommunityNewsComments(Request $request, CommunityNewsModel $communityNewsModel)
+    public function showCommunityNewsComments(Request $request, CommunityNewsModel $communityNewsModel): Response
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
@@ -153,12 +161,12 @@ class CheckerController extends AbstractController
     /**
      * @Route("/admin/spam", name="admin_spam")
      */
-    public function redirectToSpamMessages()
+    public function redirectToSpamMessages(): RedirectResponse
     {
         return new RedirectResponse($this->generateUrl('admin_spam_messages'));
     }
 
-    private function getSubmenuItems()
+    private function getSubmenuItems(): array
     {
         return [
             'messages' => [
@@ -168,6 +176,14 @@ class CheckerController extends AbstractController
             'processed_messages' => [
                 'key' => 'reported.messages.processed',
                 'url' => $this->generateUrl('admin_spam_messages_processed'),
+            ],
+            'blocked_words' => [
+                'key' => 'block.words.messages',
+                'url' => $this->generateUrl('admin_spam_messages_block_words'),
+            ],
+            'processed_blocked_words' => [
+                'key' => 'block.words.processed',
+                'url' => $this->generateUrl('admin_spam_messages_block_words_processed'),
             ],
             'activities' => [
                 'key' => 'activities',
@@ -180,7 +196,7 @@ class CheckerController extends AbstractController
         ];
     }
 
-    private function handleMessages(Request $request, int $type)
+    private function handleMessages(Request $request, int $type): Response
     {
         if (
             !$this->isGranted(Member::ROLE_ADMIN_CHECKER)
@@ -190,7 +206,9 @@ class CheckerController extends AbstractController
         }
 
         $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
+        /** @var Member $member */
+        $member = $this->getUser();
+        $limit = $this->getItemsPerPage($member);
 
         switch ($type) {
             case self::MESSAGES_REPORTED:
@@ -200,6 +218,14 @@ class CheckerController extends AbstractController
             case self::MESSAGES_PROCESSED:
                 $active = 'processed_messages';
                 $messages = $this->checkerModel->getProcessedReportedMessages($page, $limit);
+                break;
+            case self::MESSAGES_BLOCK_WORDS:
+                $active = 'blocked_words';
+                $messages = $this->checkerModel->getBlockWordsMessages($page, $limit);
+                break;
+            case self::MESSAGES_BLOCK_WORDS_PROCESSED:
+                $active = 'processed_blocked_words';
+                $messages = $this->checkerModel->getProcessedBlockWordsMessages($page, $limit);
                 break;
             default:
                 throw new InvalidArgumentException();

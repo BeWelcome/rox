@@ -51,8 +51,14 @@
   &__brand {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
+    justify-content: center;
+    margin-bottom: 1.6rem;
+  }
+
+  &__logo-full {
+    width: min(100%, 19rem);
+    height: auto;
+    object-fit: contain;
   }
 
   &__logo-icon {

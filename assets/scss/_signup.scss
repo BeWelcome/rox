@@ -455,113 +455,96 @@
 
   &__accommodation-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(8.5rem, 11rem));
-    justify-content: center;
-    text-align: center;
+    grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
-    margin: 0.65rem 0.35rem 0.35rem;
+    margin: 0.65rem 0 0.35rem;
   }
 
   &__accommodation-option {
     margin: 0;
-    min-height: 2.95rem;
     padding: 0;
     border: 0;
-    border-radius: 0.9rem;
     background: transparent;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: box-shadow 0.16s ease, outline-color 0.16s ease;
+    display: block;
 
-    &:hover {}
-
-    &--left {
+    input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
     }
-
-    &--right {
-    }
-
   }
 
   &__accommodation-content {
-    display: inline-flex;
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 0.65rem;
-    font-size: 0.9rem;
-    line-height: 1.2;
-    width: 100%;
-    max-width: none;
-    height: 100%;
-    min-height: 2.95rem;
-    padding: 0.4rem 0.75rem;
-    border-radius: 0.8rem;
-    color: #fff;
-    transition: filter 0.16s ease, box-shadow 0.16s ease, outline-color 0.16s ease;
+    gap: 0.6rem;
+    padding: 0.65rem 1rem;
+    border-radius: 0.875rem;
+    border: 1.5px solid #e5e7eb;
+    background: #f8fafc;
+    transition: border-color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
 
-    &--no {
-      background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
+    small {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #64748b;
+      margin: 0;
+      transition: color 0.16s ease;
     }
 
-    &--yes {
-      background: linear-gradient(135deg, #86efac 0%, #4ade80 100%);
-    }
-
-    &--active {
-      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.85);
-      outline: 0;
-      outline-offset: 0;
-
-      small {
-        font-weight: 700;
-        color: #fff;
-      }
-
-      .signup-finalize__accommodation-icon {
-        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.45);
-      }
+    &:hover {
+      border-color: #cbd5e1;
+      background: #f1f5f9;
     }
 
     &--no#{&}--active {
-      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.82), 0 0 0 2px rgba(220, 38, 38, 0.28);
+      border-color: #f87171;
+      background: rgba(239, 68, 68, 0.05);
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+
+      small { color: #dc2626; }
     }
 
     &--yes#{&}--active {
-      background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-      box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.82), 0 0 0 2px rgba(22, 163, 74, 0.28);
-    }
+      border-color: #4ade80;
+      background: rgba(22, 163, 74, 0.05);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
 
-    small {
-      display: inline-flex;
-      align-items: center;
-      color: rgba(255, 255, 255, 0.88);
-      transition: font-weight 0.16s ease, color 0.16s ease;
-      font-size: 0.9rem;
-      margin: 0;
+      small { color: #15803d; }
     }
   }
 
   &__accommodation-icon {
     display: inline-flex;
-    width: 1.65rem;
-    height: 1.65rem;
+    width: 1.75rem;
+    height: 1.75rem;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
-    font-size: 0.78rem;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    transition: background 0.16s ease, color 0.16s ease;
 
     &--no {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.2);
+      background: #f1f5f9;
+      color: #94a3b8;
     }
 
     &--yes {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.2);
+      background: #f1f5f9;
+      color: #94a3b8;
+    }
+
+    .signup-finalize__accommodation-content--no.signup-finalize__accommodation-content--active & {
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+    }
+
+    .signup-finalize__accommodation-content--yes.signup-finalize__accommodation-content--active & {
+      background: rgba(22, 163, 74, 0.1);
+      color: #16a34a;
     }
   }
 

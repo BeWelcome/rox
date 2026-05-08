@@ -13,7 +13,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.0",
     "@babel/plugin-transform-runtime": "^7.29.0",
-    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-env": "^7.29.5",
     "@babel/preset-react": "^7.28.5",
     "@fontsource/lato": "^5.2.7",
     "@fontsource/signika": "^5.2.8",
@@ -60,7 +60,7 @@
     "moment-timezone": "^0.5.48",
     "move-js": "^0.5.0",
     "path": "^0.12.7",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.14",
     "postcss-import": "^15.1.0",
     "postcss-loader": "^7.3.4",
     "postcss-nesting": "^11.3.0",
@@ -74,7 +74,7 @@
     "regenerator-runtime": "^0.13.11",
     "respond.js": "^1.4.2",
     "sass": "^1.99.0",
-    "sass-loader": "^16.0.7",
+    "sass-loader": "^16.0.8",
     "scrolling-tabs-bootstrap-5": "^1.1.1",
     "scrollmagic": "^2.0.9",
     "show-more-read": "tomik23/show-more",
@@ -87,12 +87,12 @@
     "vanilla-calendar-pro": "^3.1.0",
     "webpack": "^5.106.2",
     "webpack-cli": "^5.1.4",
-    "workbox-webpack-plugin": "^7.4.0"
+    "workbox-webpack-plugin": "^7.4.1"
   },
   "overrides": {
-      "minimatch": "^3.1.3",
-      "serialize-javascript": "^7.0.2",
-      "uuid": "^14"
+    "minimatch": "^3.1.3",
+    "serialize-javascript": "^7.0.2",
+    "uuid": "^14"
   },
   "scripts": {
     "encoreWatch": "encore dev --watch"

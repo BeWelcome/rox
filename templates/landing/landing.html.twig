@@ -19,57 +19,55 @@
     member: app.user
     } only %}
 
-	<div class="l-welcome-card">
-
-		<div class="u:flex u:flex-col u:justify-center u:py-16 u:px-24">
-        <p class="u:text-26 u:leading-32 u:font-400 u:font-display u:mb-8">{{ 'landing.welcomeback' | trans }}<span class="u:font-300">{{ macros.profilelink(app.user.Username) }}</span></p>
-            {# accomoodation null indicates that the meber hasn't finished setting up yet #}
-            {% if not app.user.Accommodation is null %}
-			<div class="u:flex u:items-center">
-				{% include 'landing/widget/accommodation.html.twig' with {
-                    member: app.user
-                } only %}
-				<p class="u:text-20 u:leading-26 u:gray-60 u:font-display u:font-300 u:ms-4">in</p>
-				{# Provide a way to search in member's location #}
-                {{ form_start( searchLocation, { 'action': path('search_locations'), 'attr' : {'style' : 'display: inline;'}} ) }}
-				<button type="submit" id="home_updateMap" name="home[updateMap]" class="searchsubmit u:text-22 u:leading-26 u:ms-4 u:mb-0 u:font-display u:font-400 u:text-bewelcome btn">
-					{{ searchLocation.vars.value.location }}
-				</button>
-				{% do searchLocation.updateMap.setRendered %}
-				<div class="d-none invisible">{{ form_rest(searchLocation) }}</div>
-				{{ form_end(searchLocation) }}
-			</div>
-            {% else %}
-                <p>{{ 'profile.created'|trans }}<p>
-            {% endif %}
+	<div class="l-welcome-strip__info">
+		<p class="l-welcome-strip__label">{{ 'landing.welcomeback' | trans }}</p>
+		<div class="l-welcome-strip__name-row">
+			<p class="l-welcome-strip__name">{{ macros.profilelink(app.user.Username) }}</p>
+			{% if not app.user.Accommodation is null %}
+			{{ form_start(searchLocation, { 'action': path('search_locations'), 'attr': {'class': 'l-welcome-strip__city-form'} }) }}
+			<button type="submit" id="home_updateMap" name="home[updateMap]" class="searchsubmit l-welcome-strip__city btn">
+				<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+				{{ searchLocation.vars.value.location }}
+			</button>
+			{% do searchLocation.updateMap.setRendered %}
+			<div class="d-none invisible">{{ form_rest(searchLocation) }}</div>
+			{{ form_end(searchLocation) }}
+			{% endif %}
 		</div>
-		{# where do you want to go? #}
-		<div class="u:flex u:items-center u:justify-center u:bg-gray-5 u:py-16 u:px-24 u:rounded-r-16">
-			{{ form_start( tinySearch, { 'action': path('search_locations'), 'attr': {'class': 'u:w-full'} } ) }}
-
-			<label for="{{ tinySearch.location.vars.id}}" class="visually-hidden">{{ 'landing.whereyougo' | trans }}</label>
-			<div class="input-group">
-                <div class="auto-search-wrapper max-height loupe">
-                    <input type="text" id="{{ tinySearch.location.vars.id}}" name="{{ tinySearch.location.vars.full_name }}"
-                           class="js-location-picker" autocomplete="off"
-                           placeholder="{{ 'trip.leg.location'|trans }}"
-                           aria-label="{{ 'trip.leg.location'|trans }}"
-                           {% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
-                    >
-                </div>
-                <div class="u:block">{{ form_errors(tinySearch.location) }}</div>
-                {% do tinySearch.location.setRendered %}
-                <span class="input-group-append">
-					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="btn o-button">{{ 'go'|trans }}</button>
-				</span>
-			</div>
-            <div class="u:block">{{ form_errors(tinySearch.location) }}</div>
-            {% do tinySearch.location.setRendered %}
-            {% do tinySearch.updateMap.setRendered %}
-			<div class="d-none" aria-hidden="true">{{ form_rest( tinySearch ) }}</div>
-			{{ form_end( tinySearch ) }}
-
+		{% if not app.user.Accommodation is null %}
+		<div class="l-welcome-strip__meta">
+			{% include 'landing/widget/accommodation.html.twig' with { member: app.user } only %}
 		</div>
+		{% else %}
+			<p class="l-welcome-strip__not-setup">{{ 'profile.created'|trans }}</p>
+		{% endif %}
+	</div>
+
+	<div class="l-welcome-strip__search">
+		{{ form_start(tinySearch, { 'action': path('search_locations'), 'attr': {'class': 'u:w-full'} }) }}
+		<label for="{{ tinySearch.location.vars.id }}" class="visually-hidden">{{ 'landing.whereyougo' | trans }}</label>
+		<div class="l-welcome-strip__search-bar">
+			<div class="auto-search-wrapper max-height loupe">
+				<input type="text"
+					id="{{ tinySearch.location.vars.id }}"
+					name="{{ tinySearch.location.vars.full_name }}"
+					class="l-welcome-strip__search-input js-location-picker"
+					autocomplete="off"
+					placeholder="{{ 'landing.whereyougo' | trans }}"
+					aria-label="{{ 'landing.whereyougo' | trans }}"
+					{% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
+				>
+			</div>
+			<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="l-welcome-strip__search-btn">
+				{{ 'go'|trans }}
+				<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+			</button>
+		</div>
+		<div class="u:block">{{ form_errors(tinySearch.location) }}</div>
+		{% do tinySearch.location.setRendered %}
+		{% do tinySearch.updateMap.setRendered %}
+		<div class="d-none" aria-hidden="true">{{ form_rest(tinySearch) }}</div>
+		{{ form_end(tinySearch) }}
 	</div>
 </div>
 

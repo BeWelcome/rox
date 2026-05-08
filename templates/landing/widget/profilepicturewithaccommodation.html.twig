@@ -1,5 +1,5 @@
 {% import 'macros.twig' as macros %}
-<div class="u:relative u:flex u:items-center" id="welcomeavatar">
+<div class="u:relative u:flex u:items-center" id="welcomeavatar"{% if not member.Accommodation is null %} data-hosting="{{ member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') ? 'yes' : 'no' }}"{% endif %}>
     <div class="o-avatar o-avatar--l o-avatar--noname o-avatar--shadow">
         {{ macros.roundedavatarstack( member.Username, 120, false, true) }}
         {% if not member.Accommodation is null %}

@@ -30,17 +30,8 @@
 
 </head>
 <body>
-    <nav class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary bordert-1 borderb-1">
-        <div class="container-lg">
-            <a class="navbar-brand" href="{{ url('homepage') }}">
-                <div class="u:flex u:flex-row u:h-[40px] u:w-[220px]">
-                    <img class="u:pl-4 u:md:pl-8 u:md:pr-8" src="{{ asset('images/logo_icon_2025.svg') }}" alt="BeWelcome logo"/>
-                    <img class="" src="{{ asset('images/logo_text_2025.svg') }}" alt="BeWelcome text"/>
-                </div>
-            </a>
-        </div>
-    </nav>
-    <main role="main">
+    {% include 'loginbar.html.twig' with { slim_nav: true } %}
+    <main role="main" class="{% block main_class %}{% endblock %}">
         <noscript><div class="container-lg"><div class="alert alert-danger"><p class="h5">You need to activate Javascript for bewelcome.org</p><small>Without it some function won't work.</small></div></div></noscript>
         <div class="container-lg">
             {% for label, messages in app.flashes %}
@@ -55,9 +46,11 @@
                 </div>
             {% endfor %}
         </div>
+        {% block main_content %}
         <div class="container-lg">
             {% block content %}{% endblock %}
         </div>
+        {% endblock main_content %}
     </main>
     {% include 'footer.html.twig' %}
     {{ encore_entry_script_tags('bewelcome') }}

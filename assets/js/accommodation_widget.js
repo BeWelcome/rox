@@ -14,10 +14,12 @@ const radioHandler = (event) => {
             hostingInterest.classList.remove('u:hidden');
             hostingInterest.classList.add('u:block');
         }
-        accommodationRadiobuttons.forEach( (radio) => {
-            radio.parentElement.classList.remove('u:bg-gray-400')
+        accommodationRadiobuttons.forEach((radio) => {
+            const optionContent = radio.parentElement.querySelector('.signup-finalize__accommodation-content');
+            optionContent?.classList.remove('signup-finalize__accommodation-content--active');
         })
-        event.target.parentElement.classList.add('u:bg-gray-400');
+        const selectedOptionContent = event.target.parentElement.querySelector('.signup-finalize__accommodation-content');
+        selectedOptionContent?.classList.add('signup-finalize__accommodation-content--active');
     }
 }
 
@@ -39,15 +41,21 @@ const slider = document.querySelectorAll('input[type="range"]');
 
 function updateValueOutput(value) {
     const valueOutput = document.getElementsByClassName('rangeSlider__value-output');
+    const markerIndex = Math.max(0, Math.min(markers.length - 1, Number(value)));
     if (valueOutput.length) {
-        valueOutput[0].innerHTML = markers[value];
+        valueOutput[0].innerHTML = markers[markerIndex];
     }
 }
 
 const initializeHostingInterestSlider = () => {
+    if (slider.length && Number.parseInt(slider[0].value ?? '0', 10) <= 0) {
+        slider[0].value = '5';
+    }
+
     return rangeSlider.create(slider, {
         onInit: function () {
-            updateValueOutput(0);
+            const currentValue = Number.parseInt(slider[0]?.value ?? '0', 10);
+            updateValueOutput(Number.isNaN(currentValue) ? 5 : currentValue);
         },
         onSlide: function (value, percent, position) {
             updateValueOutput(value);

@@ -134,7 +134,7 @@ class SignupFormFinalizeType extends AbstractType
                     'min' => 0,
                     'max' => 10,
                 ],
-                'data' => 0,
+                'data' => 5,
             ])
             ->add('newsletters', CheckboxType::class, [
                 'label' => 'signup.label.newsletters',

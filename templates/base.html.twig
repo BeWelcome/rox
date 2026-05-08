@@ -49,12 +49,23 @@
         {% if not hide_finish_setup is defined %}
           {% if loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::MAIL_CONFIRMED') or
             loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::AWAITING_MAIL_CONFIRMATION') %}
-            <div class="u:flex u:flex-col u:md:flex-row u:justify-between u:mt-8 alert alert-notice">
-              <div>{% set deletionDate = app.user.created|date_modify("+7 days")|format_date('long') %}
-                {{ 'profile.finish.setup'|trans({deletion_date: deletionDate})|raw }}</div>
-              <div><a class="o-button bg-primary white"
-                      href="{{ url('finish_setup', {username: app.user.Username}) }}">{{ 'profile.finish.setup.button'|trans }}</a>
+            {% set deletionDate = app.user.created|date_modify("+7 days")|format_date('long') %}
+            <div class="setup-banner">
+              <div class="setup-banner__body">
+                <div class="setup-banner__icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+                <p class="setup-banner__message">{{ 'profile.finish.setup'|trans({deletion_date: deletionDate})|raw }}</p>
               </div>
+              <a class="setup-banner__action" href="{{ url('finish_setup', {username: app.user.Username}) }}">
+                {{ 'profile.finish.setup.button'|trans }}
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </a>
             </div>
           {% endif %}
           {% if loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::ACCOUNT_ACTIVATED') %}

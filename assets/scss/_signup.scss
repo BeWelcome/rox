@@ -564,3 +564,89 @@
     margin: 0 0.35rem 0.35rem;
   }
 }
+
+// Setup completion banner
+.setup-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  margin: 1rem 0 0.25rem;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.14) 0%, rgba(37, 99, 235, 0.08) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.22);
+  border-left: 3.5px solid #2563eb;
+  border-radius: 0.875rem;
+
+  &__body {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  &__icon {
+    flex: 0 0 auto;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 50%;
+    color: #2563eb;
+  }
+
+  &__message {
+    font-size: 0.9375rem;
+    color: #1f2937;
+    font-weight: 500;
+    line-height: 1.5;
+    margin: 0;
+    min-width: 0;
+  }
+
+  &__action {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5625rem 1.25rem;
+    background: linear-gradient(135deg, #60a5fa 0%, #2563eb 60%, #1d4ed8 100%);
+    color: #fff !important;
+    border-radius: 999px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: filter 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.28);
+
+    &:hover,
+    &:focus {
+      filter: brightness(1.07);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.38);
+      color: #fff !important;
+      text-decoration: none;
+    }
+
+    svg {
+      flex: 0 0 auto;
+    }
+  }
+
+  @media (max-width: 576px) {
+    flex-wrap: wrap;
+
+    &__body {
+      flex: 0 0 100%;
+    }
+
+    &__action {
+      flex: 0 0 100%;
+      justify-content: center;
+      margin-top: 0.25rem;
+    }
+  }
+}

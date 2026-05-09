@@ -39,10 +39,23 @@
 <body>
 {% set sidebar = (submenu is defined) %}
 {% include 'menu.html.twig' %}
+<div id="toasts" class="position-fixed end-0 p-3" style="z-index:1100;top:72px">
+  {% for label, messages in app.flashes %}
+    {% for message in messages %}
+      {% if label == 'success' %}{% set toastClass = 'bw-toast--success' %}{% set icon = 'fa-check-circle' %}
+      {% elseif label == 'danger' or label == 'error' %}{% set toastClass = 'bw-toast--error' %}{% set icon = 'fa-exclamation-circle' %}
+      {% elseif label == 'warning' %}{% set toastClass = 'bw-toast--warning' %}{% set icon = 'fa-exclamation-triangle' %}
+      {% else %}{% set toastClass = 'bw-toast--notice' %}{% set icon = 'fa-bell' %}{% endif %}
+      <div class="bw-toast {{ toastClass }}" role="alert">
+        <div class="bw-toast__icon"><i class="fas {{ icon }}"></i></div>
+        <div class="bw-toast__body">{{ message | raw }}</div>
+        <button type="button" class="bw-toast__close" aria-label="Close" onclick="this.closest('.bw-toast').remove()"><i class="fas fa-times"></i></button>
+      </div>
+    {% endfor %}
+  {% endfor %}
+</div>
 {% block main %}
   <main role="main">
-    <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000">
-    </div>
     {% set contentBlock %}
       {% set loggedInMember = app.user %}
       {% if not loggedInMember is null %}
@@ -86,21 +99,10 @@
           {% endif %}
         {% endif %}
       {% endif %}
-      {% for label, messages in app.flashes %}
-        <div class="row">
-          {% for message in messages %}
-            <div class="col-12">
-              <div class="alert alert-{{ label }}">
-                {{ message | raw }}
-              </div>
-            </div>
-          {% endfor %}
-        </div>
-      {% endfor %}
       {% block content %}{% endblock %}
     {% endset %}
     <div class="container-lg">
-      {% if sidebar %}
+      {% if sidebar and (hide_sidebar is not defined) %}
         <div class="row mt-2">
           <div class="col-12 col-md-9">
             <p class="float-end d-md-none">

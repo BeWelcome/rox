@@ -14,41 +14,32 @@
   {{ encore_entry_script_tags('profile/show') }}
 {% endblock %}
 
-{% block page_content %}
-    {% set translated_fields = member.translations %}
-    {% set profile_languages = translated_fields|keys %}
-    {% set own = app.user == member %}
-    {% if not language is null %}
-        {% set active_locale = language in profile_languages ? language : 'en' %}
-    {% else %}
-        {% set active_locale = locale in profile_languages ? locale : 'en' %}
-    {% endif %}
-    {% set language_levels = member.languageLevels %}
-    {% set countLanguages = 0 %}
-    {% for profile_language in profile_languages %}
-        {% if translated_fields[profile_language]|length > 1 %}
-            {% set countLanguages = countLanguages + 1 %}
-        {% endif %}
-    {% endfor %}
-    {% if countLanguages > 1 %}
-    <div id="language-switch-container" class="u:p-8 u:my-4 u:z-[999] u:flex u:items-baseline u:justify-end {% if own %}u:sticky{% endif %} u:bg-white u:border-bewelcome u:rounded-8" style="top:60px; border: 2px solid #f37000;">
-        <label for="language-switch" class="u:me-8">{{ 'profile.switch.language'|trans }}</label>
-        <select id="language-switch" class="u:py-8 u:px-16 u:rounded-8" name="language-switch">
-            {% for profile_language in profile_languages %}
-                {# only add languages that actually have content except for own profile in edit to show missing content #}
-                {% if translated_fields[profile_language]|length > 1 %}
-                    <option value="{{ profile_language }}" {% if profile_language is same as(active_locale) %}selected="selected"{% endif %}>{{ ("lang_" ~ profile_language)|lower|trans({}, "messages", profile_language) }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    {% endif %}
+{% block above_body %}{% endblock %}
 
-    {% if countLanguages >= 1 %}
-        {% for profile_language in profile_languages %}
-            {% include 'profile/content.html.twig' with {profile_language: profile_language, translated_fields: translated_fields, active_locale:active_locale, edit:false} %}
-        {% endfor %}
-    {% else %}
-        {% include 'profile/content.html.twig' with {profile_language: locale, translated_fields: translated_fields, active_locale: locale, edit:false} %}
+{% block page_content %}
+  {% set translated_fields = member.translations %}
+  {% set profile_languages = translated_fields|keys %}
+  {% set own = app.user == member %}
+  {% if not language is null %}
+    {% set active_locale = language in profile_languages ? language : 'en' %}
+  {% else %}
+    {% set active_locale = locale in profile_languages ? locale : 'en' %}
+  {% endif %}
+  {% set language_levels = member.languageLevels %}
+  {% set countLanguages = 0 %}
+  {% for profile_language in profile_languages %}
+    {% if translated_fields[profile_language]|length > 1 %}
+      {% set countLanguages = countLanguages + 1 %}
     {% endif %}
+  {% endfor %}
+
+  {% if countLanguages >= 1 %}
+    {% for profile_language in profile_languages %}
+      {% include 'profile/content.html.twig' with {profile_language: profile_language, translated_fields: translated_fields, active_locale: active_locale, edit: false} %}
+    {% endfor %}
+  {% else %}
+    {% include 'profile/content.html.twig' with {profile_language: locale, translated_fields: translated_fields, active_locale: locale, edit: false} %}
+  {% endif %}
 {% endblock page_content %}
+
+{% block below_body %}{% endblock %}

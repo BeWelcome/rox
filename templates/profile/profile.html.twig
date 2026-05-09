@@ -5,6 +5,7 @@
 {% block javascripts %}
   {{ parent() }}
   {{ encore_entry_script_tags('profile/profile') }}
+  {{ encore_entry_script_tags('lightbox') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
@@ -13,12 +14,13 @@
   {{ encore_entry_link_tags('leaflet') }}
 {% endblock %}
 
-{% block content %}
-    <div class="u:mb-16">
-        {% include 'profile/header.html.twig' %}
-    </div>
-    <div class="u:mb-16">
-        {% block page_content%}
-        {% endblock page_content %}
-    </div>
-{% endblock content %}
+{% block main %}
+<main role="main">
+  {% include 'profile/header.html.twig' %}
+  <div class="container-lg pt-0">
+    {% block above_body %}{% endblock %}
+    {% block page_content %}{% endblock %}
+    {% block below_body %}{% endblock %}
+  </div>
+</main>
+{% endblock main %}

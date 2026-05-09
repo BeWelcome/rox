@@ -667,7 +667,7 @@ class ProfileController extends AbstractController
 
         $template = $editMode ? 'profile/edit.html.twig' : 'profile/show.html.twig';
 
-        return $this->render($template, [
+        $params = [
             'member' => $member,
             'comments' => $comments,
             'comments_count' => $commentCounts,
@@ -678,7 +678,13 @@ class ProfileController extends AbstractController
             'status_form' => $this->profileModel->getStatusForm($loggedInMember, $member),
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member),
-        ]);
+        ];
+
+        if (!$editMode) {
+            $params['hide_sidebar'] = true;
+        }
+
+        return $this->render($template, $params);
     }
 
     private function getSectionForm(?string $section, Member $member, string $language): ?FormInterface

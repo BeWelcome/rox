@@ -1,3 +1,6 @@
+import { Toast } from 'bootstrap';
+document.querySelectorAll('.p-toast[data-bs-autohide="true"]').forEach(el => new Toast(el).show());
+
 const L = require("leaflet");
 
 const locationMaps = document.querySelectorAll('[id^=location-map]')

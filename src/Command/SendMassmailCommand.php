@@ -46,7 +46,55 @@ class SendMassmailCommand extends Command
 
         $sent = 0;
         if (!empty($scheduledBroadcastMessages)) {
-            $sent = $this->sendMassmail($scheduledBroadcastMessages, $io);
+            /** @var BroadcastMessage $scheduled */
+            foreach ($scheduledBroadcastMessages as $scheduled) {
+                $parameters = [];
+                if ($lastBroadcastId != $scheduled->getNewsletter()->getId()) {
+                    // Check if the current newsletter contains images and set the parameter
+                    $newsletterTranslations = $scheduled->getNewsletter()->getTranslations();
+                    $anyNewsletter = reset($newsletterTranslations);
+
+                    $hasImages = false !== strpos($anyNewsletter['body'], "<figure");
+                    if ($hasImages) {
+                        $parameters['has_images'] = true;
+                    }
+
+                    $lastBroadcastId = $scheduled->getNewsletter()->getId();
+                }
+                $receiver = $scheduled->getReceiver();
+                $status = $receiver->getStatus();
+                if (
+                    (MemberStatusType::SUSPENDED === $status && $receiver->getRemindersWithOutLogin() !== 100)
+                    && MemberStatusType::ACTIVE !== $status
+                    && MemberStatusType::OUT_OF_REMIND !== $status
+                    && MemberStatusType::CHOICE_INACTIVE !== $status
+                ) {
+                    // Only send messages to members that are active or have just been suspended RemindersWithoutLogin
+                    // is set to 100 on suspension
+                    continue;
+                }
+                try {
+                    $unsubscribeKey = bin2hex(random_bytes(32));
+
+                    $parameters['unsubscribe_key'] = $unsubscribeKey;
+                    $this->mailer->sendNewsletterEmail(
+                        $scheduled->getNewsletter(),
+                        $receiver,
+                        $parameters
+                    );
+
+                    $scheduled
+                        ->setStatus('Sent')
+                        ->setUnsubscribeKey($unsubscribeKey)
+                    ;
+                    ++$sent;
+                } catch (Exception $e) {
+                    $io->error('Message Frozen: ' . $e->getMessage());
+                    $scheduled->setStatus('Freeze');
+                }
+                $this->entityManager->persist($scheduled);
+            }
+            $this->entityManager->flush();
         }
 
         $io->success(\sprintf('Sent %d messages', $sent));

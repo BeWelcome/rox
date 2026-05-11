@@ -95,11 +95,7 @@ class SendMassmailCommand extends Command
                     continue;
                 }
                 try {
-                    try {
-                        $unsubscribeKey = random_bytes(32);
-                    } catch (Exception $e) {
-                        $unsubscribeKey = openssl_random_pseudo_bytes(32);
-                    }
+                    $unsubscribeKey = bin2hex(random_bytes(32));
 
                     $parameters['unsubscribe_key'] = $unsubscribeKey;
                     $this->mailer->sendNewsletterEmail(
@@ -110,7 +106,7 @@ class SendMassmailCommand extends Command
 
                     $scheduled
                         ->setStatus('Sent')
-                        ->setUnsubscribeKey(bin2hex($unsubscribeKey))
+                        ->setUnsubscribeKey($unsubscribeKey)
                     ;
                     ++$sent;
                 } catch (Exception $e) {

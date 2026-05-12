@@ -1423,18 +1423,6 @@ main:has(.p-hero) {
   color: #f37000;
   margin-top: 1.1rem;
   margin-bottom: 0.3rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.p-profile-main .h5::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: #f37000;
-  border-radius: 50%;
-  flex-shrink: 0;
 }
 
 /* ── Accommodation stats ────────────────────────────────── */

@@ -339,19 +339,21 @@
           {% for picture in pictures|slice(0, 5) %}
             {% set isLast = loop.last and pictures|length > 5 %}
             {% if isLast %}
-              <a href="{{ url('gallery', {username: member.username}) }}" class="p-gallery-cell p-gallery-cell--more">
-                <img src="{{ url('gallery_thumbnail', {id: picture.id, t: 1}) }}" alt="{{ picture.title }}">
+              <a href="{{ url('gallery', {username: member.username}) }}"
+                 class="p-gallery-cell p-gallery-cell--more"
+                 style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
+                 aria-label="{{ picture.title }}">
                 <span class="p-gallery-cell__more-label">+{{ pictures|length - 4 }}</span>
               </a>
             {% else %}
               <a href="{{ url('gallery_image', {id: picture.id}) }}"
                  class="p-gallery-cell"
+                 style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
                  data-toggle="lightbox"
                  data-gallery="profile-gallery"
                  data-type="image"
-                 data-title="{{ picture.title }}">
-                <img src="{{ url('gallery_thumbnail', {id: picture.id, t: 1}) }}" alt="{{ picture.title }}">
-              </a>
+                 data-title="{{ picture.title }}"
+                 aria-label="{{ picture.title }}"></a>
             {% endif %}
           {% endfor %}
         </div>

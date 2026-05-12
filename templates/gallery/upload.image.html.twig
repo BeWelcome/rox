@@ -10,19 +10,79 @@
         const imageSizeErrorTemplate = document.getElementById("image-size-error");
         const imageTypeErrorTemplate = document.getElementById("image-type-error");
         const progressBars = document.getElementById("progressbars");
+        const queueSection = document.getElementById("upload-queue");
 
         const upload = document.getElementById("upload");
         const abort = document.getElementById("abort");
+        const dropzone = document.getElementById("dropzone");
+        const fileInput = document.getElementById("form_files");
+        const dropzoneSummary = document.getElementById("dropzone-summary");
+        const dropzoneSummaryText = document.getElementById("dropzone-summary-text");
+        const dropzoneClear = document.getElementById("dropzone-clear");
+
         upload.addEventListener("click", uploadFiles);
         abort.addEventListener("click", uploadAbort);
 
         let clients = [];
 
+        dropzone.addEventListener("click", (e) => {
+            if (e.target.closest('#dropzone-clear')) return;
+            fileInput.click();
+        });
+        dropzone.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                fileInput.click();
+            }
+        });
+
+        ["dragenter", "dragover"].forEach(evt => {
+            dropzone.addEventListener(evt, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.add("p-upload__dropzone--active");
+            });
+        });
+        ["dragleave", "drop"].forEach(evt => {
+            dropzone.addEventListener(evt, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropzone.classList.remove("p-upload__dropzone--active");
+            });
+        });
+        dropzone.addEventListener("drop", (e) => {
+            if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                updateDropzoneSummary();
+            }
+        });
+        fileInput.addEventListener("change", updateDropzoneSummary);
+        dropzoneClear.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            fileInput.value = "";
+            updateDropzoneSummary();
+        });
+
+        function updateDropzoneSummary() {
+            const count = fileInput.files ? fileInput.files.length : 0;
+            if (count > 0) {
+                dropzoneSummary.classList.remove("d-none");
+                dropzoneSummaryText.textContent =
+                    count === 1 ? "1 file selected" : count + " files selected";
+                upload.disabled = false;
+            } else {
+                dropzoneSummary.classList.add("d-none");
+                upload.disabled = true;
+            }
+        }
+        updateDropzoneSummary();
+
         function uploadFiles() {
             if (progressBars.children.length !== 0) {
                 progressBars.replaceChildren();
             }
-            let files = document.getElementById("form_files").files;
+            let files = fileInput.files;
 
             upload.disabled = true;
             abort.disabled = false;
@@ -56,6 +116,7 @@
             }
 
             progressBars.classList.remove('d-none');
+            queueSection.classList.remove("d-none");
 
             if (count === 0) {
                 resetForm();
@@ -80,17 +141,22 @@
 
             client.onload = function(e) {
                 const imageProgress = document.getElementById('image-progress-' + index);
-                imageProgress.children[1].remove();
+                const progressEl = document.getElementById('progress-' + index);
+                if (progressEl) progressEl.remove();
 
-                const infoDiv = document.createElement('div');
-                infoDiv.classList.add('u:p-8');
                 let response = JSON.parse(client.responseText);
+                const statusDiv = document.createElement('div');
+                statusDiv.classList.add('p-upload__item-status');
                 if (response.success) {
-                    infoDiv.innerText = response.filename + " - {{ 'gallery.upload.successful'|trans }}";
+                    statusDiv.classList.add('p-upload__item-status--success');
+                    statusDiv.innerHTML = '<i class="fas fa-circle-check" aria-hidden="true"></i> ' +
+                        response.filename + ' — {{ 'gallery.upload.successful'|trans }}';
                 } else {
-                    infoDiv.innerText = response.filename + " - " + response.error;
+                    statusDiv.classList.add('p-upload__item-status--error');
+                    statusDiv.innerHTML = '<i class="fas fa-circle-exclamation" aria-hidden="true"></i> ' +
+                        response.filename + ' — ' + response.error;
                 }
-                imageProgress.append(infoDiv);
+                imageProgress.append(statusDiv);
                 clients = clients.filter((value)=>value!==client);
                 if (clients.length === 0) {
                     resetForm();
@@ -104,7 +170,7 @@
                 percent.setAttribute('aria-value-now', p);
 
                 const filename = document.getElementById('filename-' + index);
-                filename.innerText = file.name + " - " + p + "%";
+                filename.innerText = file.name + " — " + p + "%";
             };
 
             client.onabort = function(e) {
@@ -117,7 +183,8 @@
 
         function uploadAbort() {
             for(let index = 0; index < clients.length; index++) {
-                document.getElementById('image-progress-' + index).remove();
+                const item = document.getElementById('image-progress-' + index);
+                if (item) item.remove();
                 clients[index].abort();
             }
             alert("{{ 'upload.canceled'|trans }}");
@@ -131,7 +198,7 @@
             const imageTypeError = imageTypeErrorTemplate.cloneNode(true);
             imageTypeError.id = 'image-progress-' + index;
             const error = imageTypeError.children[1];
-            error.innerText = file.name + " - {{ 'gallery.upload.type.error'|trans }}";
+            error.innerText = file.name + " — {{ 'gallery.upload.type.error'|trans }}";
 
             return imageTypeError;
         }
@@ -140,7 +207,7 @@
             const imageSizeError = imageSizeErrorTemplate.cloneNode(true);
             imageSizeError.id = 'image-progress-' + index;
             const error = imageSizeError.children[1];
-            error.innerText = file.name + " - {{ 'gallery.upload.size.error'|trans }}";
+            error.innerText = file.name + " — {{ 'gallery.upload.size.error'|trans }}";
 
             setImage(imageSizeError, index, file);
             return imageSizeError;
@@ -149,11 +216,11 @@
         function getImageProgressUpload(index, file) {
             const imageProgress = imageProgressTemplate.cloneNode(true);
             imageProgress.id = 'image-progress-' + index;
-            const flex = imageProgress.children[1];
-            const progress = flex.children[0];
+            const body = imageProgress.children[1];
+            const progress = body.children[1];
             progress.id = 'progress-' + index;
             progress.children[0].id = 'percent-' + index;
-            flex.children[1].id = 'filename-' + index;
+            body.children[0].id = 'filename-' + index;
 
             setImage(imageProgress, index, file);
             return imageProgress;
@@ -166,9 +233,9 @@
         }
 
         function resetForm() {
-            let form = document.querySelector('form');
-            form.reset()
-            upload.disabled = false;
+            fileInput.value = "";
+            updateDropzoneSummary();
+            upload.disabled = true;
             abort.disabled = true;
         }
     </script>
@@ -178,44 +245,104 @@
 {% endblock stylesheets %}
 
 {% block content %}
-   <div class="row g-0">
-       <div class="col-12"><h1><span class="d-none d-md-block">{{ 'gallery' | trans }} - </span>{{ 'upload' | trans }}</h1>
-       <p class="u:mb-8">{{ 'gallery.upload.abstract'|trans({'size': constraints.size})}}</p></div>
-       {{ form_start(form, {'attr': {'class': 'col-12'}}) }}
-       {{ form_row(form.albums) }}
-       <div class="col-12 u:mb-8">
-           <label class="form-label" id="form_files_label" for="form_files">{{ 'choosefile'|trans }}</label>
-           <input type="file" class="form-control" multiple="multiple" id="form_files" data-browse="{{ 'browsefile'|trans }}">
-       </div>
+    <div class="p-upload-page">
 
-       <button id="upload" class="btn btn-primary u:mb-8 u:me-8" type="button">{{ 'upload'|trans }}</button>
-       <button id="abort" class="btn btn-danger u:mb-8" type="button" disabled="disabled" onclick="uploadAbort()">{{ 'abort'|trans }}</button>
+        {# ── Header ── #}
+        <div class="p-gallery-manage__pagehead">
+            <div class="p-gallery-manage__pagehead-row">
+                <div class="p-gallery-manage__pagehead-copy">
+                    <div class="p-gallery-manage__pagehead-heading">
+                        <a href="{{ path('gallery_manage') }}"
+                           class="p-edit-subpage__back"
+                           aria-label="{{ 'gallery.upload.back.to.gallery'|trans }}">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                        </a>
+                        <div>
+                            <p class="p-gallery-manage__pagehead-eyebrow">{{ 'Gallery'|trans }}</p>
+                            <h1 class="p-gallery-manage__pagehead-title">{{ 'galleryupload'|trans }}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-       <div id="image-progress" class="d-none u:flex u:items-center">
-           <div><img src="" style="width: 100px; object-fit: fill; padding:8px;"></div>
-           <div class="u:flex u:flex-col u:w-full">
-               <div class="progress u:w-full">
-                   <div class="progress-bar u:h-16" role="progressbar" style="width: 0;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-               </div>
-               <small class="justify-content-center white d-flex position-absolute w-100">{filename}</small>
-           </div>
-       </div>
+        {# ── Form card ── #}
+        <div class="p-upload">
+            {{ form_start(form, {'attr': {'class': 'p-upload__form', 'novalidate': 'novalidate'}}) }}
 
-       <div id="image-size-error" class="d-none u:flex u:flex-row u:items-center">
-           <div><img src="" style="max-height:100px; min-height: 40px; width: 100px; object-fit: fill; padding:8px;"></div>
-           <div class="alert-danger u:rounded-4 u:p-8"></div>
-       </div>
+            <div class="p-upload__card">
+                <p class="p-upload__abstract">{{ 'gallery.upload.abstract'|trans({'size': constraints.size}) }}</p>
 
-       <div id="image-type-error" class="d-none u:flex u:flex-row u:items-center">
-           <div style="height: 60px; width: 100px; padding:8px;"></div>
-           <div class="alert-danger u:rounded-4 u:p-8"></div>
-       </div>
+                <div class="p-upload__field">
+                    {{ form_label(form.albums, null, {'label_attr': {'class': 'p-upload__label'}}) }}
+                    {{ form_widget(form.albums, {'attr': {'class': 'p-upload__select'}}) }}
+                    {{ form_help(form.albums) }}
+                    {{ form_errors(form.albums) }}
+                </div>
 
-       <div id="progressbars"></div>
+                <div id="dropzone" class="p-upload__dropzone" role="button" tabindex="0" aria-label="{{ 'gallery.upload.dropzone.title'|trans }}">
+                    <div class="p-upload__dropzone-icon" aria-hidden="true">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="p-upload__dropzone-title">{{ 'gallery.upload.dropzone.title'|trans }}</div>
+                    <div class="p-upload__dropzone-subtitle">{{ 'gallery.upload.dropzone.subtitle'|trans }}</div>
+                    <input type="file" class="p-upload__file-input" multiple="multiple" id="form_files"
+                           accept="image/*"
+                           data-browse="{{ 'browsefile'|trans }}">
+                    <div id="dropzone-summary" class="p-upload__dropzone-summary d-none">
+                        <i class="fas fa-images" aria-hidden="true"></i>
+                        <span id="dropzone-summary-text"></span>
+                        <button id="dropzone-clear" type="button" class="p-upload__dropzone-clear" aria-label="{{ 'cancel'|trans }}">
+                            <i class="fas fa-times" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
 
-       {% do form.files.setRendered %}
-       {% do form.upload.setRendered %}
-       {% do form.abort.setRendered %}
-       {{ form_end(form) }}
+                <div class="p-upload__actions">
+                    <button id="upload" class="p-upload__btn p-upload__btn--primary" type="button" disabled>
+                        <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                        <span>{{ 'upload'|trans }}</span>
+                    </button>
+                    <button id="abort" class="p-upload__btn p-upload__btn--ghost" type="button" disabled="disabled">
+                        <i class="fas fa-times" aria-hidden="true"></i>
+                        <span>{{ 'abort'|trans }}</span>
+                    </button>
+                </div>
+            </div>
+
+            <section id="upload-queue" class="p-upload__queue d-none">
+                <h2 class="p-upload__queue-title">{{ 'gallery.upload.queue.title'|trans }}</h2>
+
+                <div id="image-progress" class="p-upload__item d-none">
+                    <div class="p-upload__item-thumb"><img src="" alt=""></div>
+                    <div class="p-upload__item-body">
+                        <div class="p-upload__item-filename">{filename}</div>
+                        <div class="p-upload__progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <div class="p-upload__progress-bar" style="width: 0;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="image-size-error" class="p-upload__item p-upload__item--error d-none">
+                    <div class="p-upload__item-thumb"><img src="" alt=""></div>
+                    <div class="p-upload__item-status p-upload__item-status--error"></div>
+                </div>
+
+                <div id="image-type-error" class="p-upload__item p-upload__item--error d-none">
+                    <div class="p-upload__item-thumb p-upload__item-thumb--placeholder" aria-hidden="true">
+                        <i class="fas fa-file"></i>
+                    </div>
+                    <div class="p-upload__item-status p-upload__item-status--error"></div>
+                </div>
+
+                <div id="progressbars" class="p-upload__queue-list"></div>
+            </section>
+
+            {% do form.files.setRendered %}
+            {% do form.upload.setRendered %}
+            {% do form.abort.setRendered %}
+            {{ form_end(form) }}
+        </div>
+
     </div>
 {% endblock content %}

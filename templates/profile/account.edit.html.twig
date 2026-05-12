@@ -1,4 +1,4 @@
-{% extends 'profile/profile.html.twig' %}
+{% extends 'profile/edit_subpage.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
@@ -10,59 +10,101 @@
   {{ encore_entry_link_tags('profile/account') }}
 {% endblock %}
 
-{% block page_content %}
-  <div class="u:w-full">
-    <div class="card">
-      <div class="card-header">
-        {{ 'account.edit'|trans }}
-      </div>
-      <div class="card-block p-2">
-        <div class="card-text">
+{% block subpage_title -%}
+  {{ 'account.edit'|trans }}
+{%- endblock %}
 
-          {{ form_start(form) }}
-          {{ form_errors(form) }}
+{% block subpage_body %}
+  {{ form_start(form, {attr: {class: 'p-account-form'}}) }}
+  {{ form_errors(form) }}
 
-          {{ form_label(form.name) }}
-          {{ form_widget(form.name) }}
-          {{ form_errors(form.name) }}
-          {{ form_help(form.name) }}
+  {# Display name #}
+  <section class="p-account-section">
+    <label class="p-account-section__label" for="{{ form.name.vars.id }}">{{ form.name.vars.label|trans }}</label>
+    {{ form_widget(form.name) }}
+    {{ form_errors(form.name) }}
+    {{ form_help(form.name, {help_attr: {class: 'p-account-section__help'}}) }}
+    <label class="p-account-toggle" for="{{ form.show_name.vars.id }}">
+      <input type="checkbox" id="{{ form.show_name.vars.id }}" name="{{ form.show_name.vars.full_name }}"
+             class="p-preference-toggle__input"
+             {% if form.show_name.vars.checked %}checked{% endif %}>
+      <span class="p-preference-toggle__track" aria-hidden="true">
+        <span class="p-preference-toggle__thumb"></span>
+      </span>
+      <span class="p-account-toggle__label">{{ form.show_name.vars.label|trans }}</span>
+    </label>
+    {% do form.show_name.setRendered %}
+  </section>
 
-          {{ form_row(form.show_name) }}
-          {{ form_row(form.short_name) }}
+  {# Short name (username) #}
+  <section class="p-account-section">
+    <label class="p-account-section__label" for="{{ form.short_name.vars.id }}">{{ form.short_name.vars.label|trans }}</label>
+    {{ form_widget(form.short_name) }}
+    {{ form_errors(form.short_name) }}
+    {{ form_help(form.short_name, {help_attr: {class: 'p-account-section__help'}}) }}
+  </section>
 
-          <label class="form-label">{{ form.gender.vars.label|trans }}</label>
-          <div class="u:flex u:flex-row u:justify-between">
-            {% for child in form.gender %}
-              <div class="o-radio">
-                <input type="radio" class="o-radio__input"
-                       id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
-                       value="{{ child.vars.value }}"
-                       {% if child.vars.checked %}checked="checked"{% endif %}
-                >
-                <label class="o-radio__label">{{ child.vars.label|trans }}</label></div>
-              {% do child.setRendered %}
-            {% endfor %}
+  {# Birthdate #}
+  <section class="p-account-section">
+    <label class="p-account-section__label" for="{{ form.birthdate.vars.id }}">{{ form.birthdate.vars.label|trans }}</label>
+    {{ form_widget(form.birthdate) }}
+    {{ form_errors(form.birthdate) }}
+    {{ form_help(form.birthdate, {help_attr: {class: 'p-account-section__help'}}) }}
+    <label class="p-account-toggle" for="{{ form.show_age.vars.id }}">
+      <input type="checkbox" id="{{ form.show_age.vars.id }}" name="{{ form.show_age.vars.full_name }}"
+             class="p-preference-toggle__input"
+             {% if form.show_age.vars.checked %}checked{% endif %}>
+      <span class="p-preference-toggle__track" aria-hidden="true">
+        <span class="p-preference-toggle__thumb"></span>
+      </span>
+      <span class="p-account-toggle__label">{{ form.show_age.vars.label|trans }}</span>
+    </label>
+    {% do form.show_age.setRendered %}
+  </section>
+
+  {# Gender #}
+  <section class="p-account-section">
+    <div class="p-pill-group">
+      <span class="p-pill-group__label">{{ form.gender.vars.label|trans }}</span>
+      <div class="p-pill-group__options">
+        {% for child in form.gender %}
+          <div class="p-pill-option">
+            <input type="radio" class="p-pill-option__input"
+                   id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
+                   value="{{ child.vars.value }}"
+                   {% if child.vars.checked %}checked="checked"{% endif %}>
+            <label class="p-pill-option__label" for="{{ child.vars.id }}">{{ child.vars.label|trans }}</label>
           </div>
-          {{ form_row(form.show_gender) }}
-
-          {{ form_label(form.birthdate) }}
-          {{ form_widget(form.birthdate) }}
-          {{ form_errors(form.birthdate) }}
-          {{ form_help(form.birthdate) }}
-
-          {{ form_row(form.show_age) }}
-
-          {{ form_label(form.email) }}
-          {{ form_widget(form.email) }}
-          {{ form_errors(form.email) }}
-          {{ form_help(form.email) }}
-
-          <div class="u:flex u:justify-end u:my-8">
-            <input type="submit" class="o-button" value="{{ 'account.update'|trans }}">
-          </div>
-          {{ form_end(form) }}
-        </div>
+          {% do child.setRendered %}
+        {% endfor %}
       </div>
     </div>
+    {{ form_errors(form.gender) }}
+    {% if form.gender.vars.help %}
+      <small class="p-account-section__help">{{ form.gender.vars.help|trans }}</small>
+    {% endif %}
+    <label class="p-account-toggle" for="{{ form.show_gender.vars.id }}">
+      <input type="checkbox" id="{{ form.show_gender.vars.id }}" name="{{ form.show_gender.vars.full_name }}"
+             class="p-preference-toggle__input"
+             {% if form.show_gender.vars.checked %}checked{% endif %}>
+      <span class="p-preference-toggle__track" aria-hidden="true">
+        <span class="p-preference-toggle__thumb"></span>
+      </span>
+      <span class="p-account-toggle__label">{{ form.show_gender.vars.label|trans }}</span>
+    </label>
+    {% do form.show_gender.setRendered %}
+  </section>
+
+  {# Email #}
+  <section class="p-account-section">
+    <label class="p-account-section__label" for="{{ form.email.vars.id }}">{{ form.email.vars.label|trans }}</label>
+    {{ form_widget(form.email) }}
+    {{ form_errors(form.email) }}
+    {{ form_help(form.email, {help_attr: {class: 'p-account-section__help'}}) }}
+  </section>
+
+  <div class="p-edit-subpage__actions">
+    <input type="submit" class="o-button" value="{{ 'account.update'|trans }}">
   </div>
-{% endblock page_content %}
+  {{ form_end(form) }}
+{% endblock subpage_body %}

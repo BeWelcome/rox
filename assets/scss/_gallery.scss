@@ -57,4 +57,276 @@
     width: 100px;
   }
 
+  // gallery/edit.image.html.twig
+  .p-gallery-edit {
+    max-width: 56rem;
+    margin-inline: auto;
+    padding: 0 0.5rem;
+
+    @media (min-width: 576px) {
+      padding: 0;
+    }
+
+    &__hero {
+      margin-bottom: 1.75rem;
+      padding: 1.25rem 1.35rem 1.35rem;
+      background: #fff;
+      border: 1px solid #e8ecf1;
+      border-radius: 0.875rem;
+      box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.04),
+        0 4px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    &__toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    &__back-btn {
+      font-weight: 600;
+    }
+
+    &__intro {
+      margin: 0;
+    }
+
+    &__title {
+      margin: 0;
+      font-size: clamp(1.25rem, 4vw, 1.65rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      color: #0f172a;
+      word-break: break-word;
+    }
+
+    &__preview {
+      max-width: 100%;
+      overflow: hidden;
+      text-align: center;
+      border-radius: 0.75rem;
+      border: 1px solid #e8ecf1;
+      background: #f8fafc;
+      padding: 0.75rem;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+      .p-gallery-edit__preview-link {
+        display: inline-block;
+        max-width: 100%;
+      }
+
+      img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        max-height: min(75vh, 640px);
+        object-fit: contain;
+      }
+    }
+
+    &__full-link-wrap {
+      margin: 0.75rem 0 0;
+      font-size: 0.8125rem;
+      text-align: center;
+
+      @media (min-width: 992px) {
+        text-align: left;
+      }
+    }
+
+    &__full-link {
+      color: #64748b;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: #f37000;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+      }
+    }
+
+    &__card {
+      border-radius: 0.875rem;
+      border: 1px solid #e8ecf1 !important;
+      box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.04),
+        0 6px 28px rgba(15, 23, 42, 0.07);
+    }
+
+    &__form {
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.375rem;
+        color: var(--bs-body-color);
+      }
+    }
+
+    &__title-input {
+      font-size: 1.0625rem;
+    }
+
+    &__textarea {
+      line-height: 1.45;
+      resize: vertical;
+      min-height: 9rem;
+    }
+
+    &__actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 1.5rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid #f1f5f9;
+    }
+
+    &__submit {
+      width: 100%;
+
+      @media (min-width: 576px) {
+        width: auto;
+        min-width: 12rem;
+      }
+    }
+  }
+
+  .p-gallery-manage__pagehead-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /*
+   * Legacy /gallery/manage — header is PHP-only and loads bewelcome.css before tailwind.css.
+   * Keep back + title + upload styles here so the back control stays visible even with an old tailwind build.
+   */
+  .p-gallery-manage__pagehead {
+    max-width: 1100px;
+    margin: 0.5rem auto 1rem;
+    padding: 0 1rem;
+    color: #1f2937;
+  }
+
+  .p-gallery-manage__pagehead-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .p-gallery-manage__pagehead-copy {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .p-gallery-manage__pagehead-eyebrow {
+    margin: 0 0 0.15rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #f37000;
+  }
+
+  .p-gallery-manage__pagehead-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .p-gallery-manage__pagehead-cta {
+    flex: 0 0 auto;
+    margin-left: auto;
+    align-self: center;
+  }
+
+  .p-gallery-manage__subtitle {
+    margin: 0.35rem 0 0;
+    font-size: 0.85rem;
+    color: #64748b;
+  }
+
+  .p-gallery-manage__upload-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 999px;
+    background: #f37000;
+    color: #fff !important;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none !important;
+    box-shadow: 0 2px 6px rgba(243, 112, 0, 0.25);
+    transition:
+      background-color 0.15s ease,
+      box-shadow 0.15s ease,
+      transform 0.15s ease;
+
+    &:hover,
+    &:focus-visible {
+      background: #d96400;
+      box-shadow: 0 4px 12px rgba(243, 112, 0, 0.35);
+      transform: translateY(-1px);
+      outline: none;
+      color: #fff !important;
+    }
+
+    i {
+      font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .p-gallery-manage__pagehead-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .p-gallery-manage__pagehead-cta {
+      margin-left: 0;
+      width: 100%;
+    }
+
+    .p-gallery-manage__pagehead-cta .p-gallery-manage__upload-cta {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  // legacy class kept for any other use; edit page uses .p-gallery-edit__preview
+  .gallery-edit-preview {
+    max-width: 100%;
+    overflow: hidden;
+    text-align: center;
+
+    a {
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    img {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      max-height: min(75vh, 640px);
+      object-fit: contain;
+    }
+  }
+
 }

@@ -1,11 +1,65 @@
-<div class="u:flex u:flex-col u:md:flex-row u:justify-between u:gap-4">
-    <div class="btn-group u:bg-white">
-    {% for profile_language in profile_languages %}
-        {% set active = profile_language is same as(active_locale) %}
-        <button class="btn {% if active %}btn-primary{% else %}btn-outline-primary{% endif %}" data-edit-language="{{ profile_language }}">{{ ('lang_' ~ profile_language)|lower|trans({}, 'messages', profile_language) }}</button>
-    {% endfor %}
+<header class="p-edit-header">
+    <div class="p-edit-header__top">
+        <a href="{{ url('profile_edit_avatar', {username: member.username}) }}"
+           class="p-edit-header__avatar"
+           title="{{ 'profile.change.avatar'|trans }}">
+            <img src="{{ url('avatar', {username: member.username, size: 160}) }}" alt="{{ member.username }}">
+            <span class="p-edit-header__avatar-overlay" aria-hidden="true">
+                <i class="fas fa-camera"></i>
+            </span>
+        </a>
+
+        <div class="p-edit-header__identity">
+            <p class="p-edit-header__eyebrow">{{ 'profile.edit'|trans }}</p>
+            <h1 class="p-edit-header__name">{{ member.username }}</h1>
+        </div>
+
+        <div class="p-edit-header__actions">
+            <a href="{{ url('profile_edit_avatar', {username: member.username}) }}"
+               class="p-edit-header__btn p-edit-header__btn--primary">
+                <i class="fas fa-camera"></i>
+                <span>{{ 'profile.change.avatar'|trans }}</span>
+            </a>
+            <a href="{{ url('account_edit', {username: member.username}) }}"
+               class="p-edit-header__btn p-edit-header__btn--secondary">
+                <i class="fas fa-cog"></i>
+                <span>{{ 'account.edit'|trans }}</span>
+            </a>
+        </div>
     </div>
-    <div class="u:ms-auto"><div class="u:bg-white"><a href="{{ url('profile_add_language', {username: member.username}) }}" class="btn btn-outline-primary"><i class="fa fa-plus u:bg-bewelcome u:text-white "></i> {{ 'profile.add.language'|trans }}</a></div></div>
-</div>
-{#  add modal here #}
-<hr class="u:border-0 u:px-8 u:h-2 u:bg-bewelcome">
+
+    <div class="p-edit-header__langs">
+        <div class="p-edit-header__lang-tabs" role="tablist">
+            {% for profile_language in profile_languages %}
+                {% set active = profile_language is same as(active_locale) %}
+                <button type="button"
+                        role="tab"
+                        class="p-edit-header__lang-tab{% if active %} p-edit-header__lang-tab--active{% endif %}"
+                        data-edit-language="{{ profile_language }}"
+                        aria-selected="{{ active ? 'true' : 'false' }}">
+                    {{ ('lang_' ~ profile_language)|lower|trans({}, 'messages', profile_language) }}
+                </button>
+            {% endfor %}
+        </div>
+        <a href="{{ url('profile_add_language', {username: member.username}) }}"
+           class="p-edit-header__add-lang">
+            <i class="fas fa-plus"></i>
+            <span>{{ 'profile.add.language'|trans }}</span>
+        </a>
+    </div>
+
+    <div class="p-edit-header__quicklinks">
+        <a href="{{ url('members_profile', {username: member.username}) }}" class="p-edit-header__quicklink">
+            <i class="fas fa-eye"></i>
+            <span>{{ 'profile.menu.profile'|trans }}</span>
+        </a>
+        <a href="{{ url('preferences', {username: member.username}) }}" class="p-edit-header__quicklink">
+            <i class="fas fa-cogs"></i>
+            <span>{{ 'profile.menu.preferences'|trans }}</span>
+        </a>
+        <a href="{{ url('profile_personal_data', {username: member.username}) }}" class="p-edit-header__quicklink">
+            <i class="fas fa-database"></i>
+            <span>{{ 'profile.menu.my.data'|trans }}</span>
+        </a>
+    </div>
+</header>

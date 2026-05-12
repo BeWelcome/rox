@@ -36,18 +36,7 @@
 <body class="p-login__body" style="background-image:url('{{ asset('images/homepicture-big-1.jpg') }}')">
 <div class="p-login__overlay" aria-hidden="true"></div>
 
-<nav class="p-login__nav">
-    <div class="container-lg p-login__nav-inner">
-        <a class="p-login__brand" href="{{ url('homepage') }}">
-            <img class="p-login__brand-icon" src="{{ asset('images/logo_icon_2025.svg') }}" alt="BeWelcome logo"/>
-            <img class="p-login__brand-text" src="{{ asset('images/logo_text_2025.svg') }}" alt="BeWelcome"/>
-        </a>
-        <div class="p-login__nav-cta">
-            <span class="p-login__nav-prompt">{{ 'menu.not.a.member.yet' | trans }}</span>
-            <a class="p-login__nav-link" href="{{ url('signup') }}">{{ 'navbar.button.signup' | trans }}</a>
-        </div>
-    </div>
-</nav>
+{% include 'loginbar.html.twig' with { slim_nav: true, slim_cta: 'signup' } %}
 
 {% block content %}
 <main role="main" class="p-login">

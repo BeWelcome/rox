@@ -1,14 +1,11 @@
-{% extends 'profile/profile.html.twig' %}
+{% extends 'profile/edit_subpage.html.twig' %}
 
-{% block redirect %}<meta
-    http-equiv="refresh"
-    content="1; URL='{{url}}'">{% endblock %}
+{% block redirect %}<meta http-equiv="refresh" content="1; URL='{{ url }}'">{% endblock %}
 
-{% block page_content %}
-    <h1>{{ 'mydata.headline.download'|trans }}</h1>
-    <p>{{ 'mydata.download.start'|trans }}
-        <br>
-        <br>
-        <a class="btn btn-primary" href="{{ url('members_profile', {username: username}) }}">{{ 'profile.back'|trans }}</a>
-    </p>
-{% endblock page_content %}
+{% block subpage_title -%}
+  {{ 'mydata.headline.download'|trans }}
+{%- endblock %}
+
+{% block subpage_body %}
+  <p>{{ 'mydata.download.start'|trans }}</p>
+{% endblock subpage_body %}

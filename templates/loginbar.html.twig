@@ -1,5 +1,6 @@
 {% import 'macros.twig' as macros %}
 {% set slim_nav = slim_nav|default(false) %}
+{% set slim_cta = slim_cta|default('login') %}
 <nav id="main_menu" class="navbar sticky-top navbar-dark navbar-expand bg-primary justify-content-between{% if slim_nav %} loginbar--slim{% endif %}">
     <div class="container-lg bw-topbar__container">
         <ul id="collapsing_menu" class="navbar navbar-nav">
@@ -18,8 +19,13 @@
             {% endif %}
             {% if slim_nav %}
                 <li class="nav-item d-flex align-items-center flex-wrap justify-content-end loginbar-slim__cta text-right px-1 px-sm-2">
-                    <span class="small text-white-50 mr-1 d-none d-sm-inline">{{ 'menu.already.a.member' | trans }}</span>
-                    <a class="small font-weight-bold text-white text-nowrap" href="{{ url('security_login') }}">{{ 'login' | trans }}</a>
+                    {% if slim_cta == 'signup' %}
+                        <span class="small text-white-50 mr-1 d-none d-sm-inline">{{ 'menu.not.a.member.yet' | trans }}</span>
+                        <a class="small font-weight-bold text-white text-nowrap" href="{{ url('signup') }}">{{ 'navbar.button.signup' | trans }}</a>
+                    {% else %}
+                        <span class="small text-white-50 mr-1 d-none d-sm-inline">{{ 'menu.already.a.member' | trans }}</span>
+                        <a class="small font-weight-bold text-white text-nowrap" href="{{ url('security_login') }}">{{ 'login' | trans }}</a>
+                    {% endif %}
                 </li>
             {% endif %}
             {% if slim_nav %}

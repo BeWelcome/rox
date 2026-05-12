@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% set hide_sidebar = true %}
+
+{% block title %}
+  {%- block subpage_title %}{% endblock -%}
+  {{ ' · ' ~ 'profile.edit'|trans }}
+{% endblock %}
+
+{% block content %}
+  <section class="p-edit-subpage">
+    <header class="p-edit-subpage__header">
+      <a href="{{ url('profile_edit', {username: member.username}) }}"
+         class="p-edit-subpage__back"
+aria-label="{{ 'profile.back'|trans }}">
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+      </a>
+      <div class="p-edit-subpage__heading">
+        <p class="p-edit-subpage__eyebrow">{{ 'profile.edit'|trans }}</p>
+        <h1 class="p-edit-subpage__title">{{ block('subpage_title') }}</h1>
+      </div>
+    </header>
+
+    <div class="p-edit-subpage__card">
+      {% block subpage_body %}{% endblock %}
+    </div>
+  </section>
+{% endblock content %}

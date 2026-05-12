@@ -24,7 +24,7 @@ $p = PFunctions::paginate($statement, $page, $itemsPerPage);
 $statement = $p[0];
 
 ?>
-<div id="masonry-grid" class="row" data-masonry='{"percentPosition": true }'>
+<div id="masonry-grid" class="row">
     <?php
     foreach ($statement as $d) {
         echo '<div class="col-sm-6 col-lg-4 mb-4">';

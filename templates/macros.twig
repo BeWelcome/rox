@@ -212,8 +212,8 @@
 
 {% macro field_translation(form, uiLanguage, language, field, username, translations) %}
   {% import _self as macros %}
-  <div class="u:mb-16">
-    <div class="u:inline-block u:mb-8">{{ form.vars.label|trans({}, 'messages', language) }}</div>
+  <div class="u:mb-16 o-field-translation">
+    <label class="o-field-translation__label" for="{{ form.vars.id }}">{{ form.vars.label|trans({}, 'messages', language) }}</label>
     <div class="u:flex u:flex-col u:md:flex-row u:gap-16 u:items-stretch">
       {% set attr = form.vars.attr|merge({'data-language': language}) %}
       {% set attr = attr|merge({'data-field': field}) %}

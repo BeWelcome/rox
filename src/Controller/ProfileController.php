@@ -680,9 +680,7 @@ class ProfileController extends AbstractController
             'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member),
         ];
 
-        if (!$editMode) {
-            $params['hide_sidebar'] = true;
-        }
+        $params['hide_sidebar'] = true;
 
         return $this->render($template, $params);
     }

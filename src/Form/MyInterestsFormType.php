@@ -4,47 +4,38 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class MyInterestsFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $textareaOptions = [
+            'required' => false,
+            'attr' => ['class' => 'o-input', 'rows' => 4],
+        ];
+
         $builder
-            ->add('hobbies', CkEditorType::class, [
+            ->add('hobbies', TextareaType::class, $textareaOptions + [
                 'label' => 'profile.hobbies',
                 'help' => 'help.profile.hobbies',
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'required' => false,
-                'image_upload' => false,
             ])
-            ->add('books', CkEditorType::class, [
+            ->add('books', TextareaType::class, $textareaOptions + [
                 'label' => 'profile.books',
                 'help' => 'help.profile.books',
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'required' => false,
-                'image_upload' => false,
             ])
-            ->add('music', CkEditorType::class, [
+            ->add('music', TextareaType::class, $textareaOptions + [
                 'label' => 'profile.music',
                 'help' => 'help.profile.music',
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'required' => false,
-                'image_upload' => false,
             ])
-            ->add('movies', CkEditorType::class, [
+            ->add('movies', TextareaType::class, $textareaOptions + [
                 'label' => 'profile.movies',
                 'help' => 'help.profile.movies',
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'required' => false,
-                'image_upload' => false,
             ])
-            ->add('organizations', CkEditorType::class, [
+            ->add('organizations', TextareaType::class, $textareaOptions + [
                 'label' => 'profile.organizations',
                 'help' => 'help.profile.organizations',
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'required' => false,
-                'image_upload' => false,
             ])
             ->add('language', HiddenType::class)
         ;

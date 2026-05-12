@@ -23,68 +23,6 @@
   pointer-events: none;
 }
 
-/* ── Top navigation (brand + signup CTA) ─────────────── */
-.p-login__nav {
-  position: relative;
-  z-index: 2;
-  padding: 0.75rem 0;
-}
-
-.p-login__nav-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.p-login__brand {
-  display: inline-flex;
-  align-items: center;
-  height: 40px;
-  text-decoration: none;
-}
-
-.p-login__brand-icon { height: 40px; width: auto; }
-.p-login__brand-text { height: 40px; width: auto; margin-left: 0.5rem; }
-
-.p-login__nav-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.p-login__nav-prompt {
-  display: none;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.8125rem;
-}
-
-.p-login__nav-link {
-  display: inline-flex;
-  align-items: center;
-  height: 36px;
-  padding: 0 1rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.p-login__nav-link:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.4);
-  color: #fff;
-  text-decoration: none;
-}
-
-@media (min-width: 540px) {
-  .p-login__nav-prompt { display: inline; }
-}
-
 .p-login {
   position: relative;
   z-index: 1;

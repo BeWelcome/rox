@@ -1,0 +1,56 @@
+// bs5-lightbox sets inline background-color: #000 on .ratio — use transparent so only the image reads.
+.modal.lightbox {
+  .modal-content {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+  }
+
+  .modal-body {
+    background-color: transparent;
+  }
+
+  .carousel-inner {
+    background-color: transparent;
+  }
+
+  .carousel-item .ratio {
+    background-color: transparent !important;
+  }
+
+  .carousel-item {
+    background-color: transparent;
+  }
+}
+
+// bs5-lightbox uses a 16:9 ratio wrapper; for still images that wastes space for portraits.
+.modal.lightbox .carousel-item .ratio:has(> img) {
+  &::before {
+    display: none !important;
+  }
+
+  min-height: min(72vh, 900px);
+  max-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > img {
+    position: static !important;
+    z-index: 1;
+    max-height: min(88vh, 100%);
+    max-width: 100%;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain;
+  }
+}
+
+.modal.lightbox.modal-fullscreen .carousel-item .ratio:has(> img) {
+  min-height: 100vh;
+  max-height: 100vh;
+
+  > img {
+    max-height: min(96vh, 100%);
+  }
+}

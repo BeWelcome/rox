@@ -1,22 +1,17 @@
 {% import 'macros.twig' as macros %}
 <!doctype html>
-<html lang="en">
+<html lang="{{ app.request.locale }}">
 <head>
     <base href="/">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="{{ asset('/images/favicon-96x96.png') }}" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="{{ asset('/images/favicon.svg') }}" />
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/images/apple-touch-icon.png') }}" />
-    <meta name="apple-mobile-web-app-title" content="beWelcome" />
+    <link rel="icon" type="image/png" href="{{ asset('/images/favicon-96x96.png') }}" sizes="96x96"/>
+    <link rel="icon" type="image/svg+xml" href="{{ asset('/images/favicon.svg') }}"/>
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/images/apple-touch-icon.png') }}"/>
+    <meta name="apple-mobile-web-app-title" content="beWelcome"/>
 
-
-    <title>
-        {% apply spaceless %}
-            {{ 'login' | trans }} | BeWelcome
-        {% endapply %}
-    </title>
+    <title>{{ 'login' | trans }} | BeWelcome</title>
 
     <meta name="description" content="{{ 'default_meta_description' | trans }}">
     <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">
@@ -27,173 +22,159 @@
     {{ encore_entry_link_tags('bewelcome') }}
     {{ encore_entry_link_tags('tailwind') }}
 
-
     <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
 
     <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <script>
-        // Check that service workers are supported
         if ('serviceWorker' in navigator) {
-            // Use the window load event to keep the page load performant
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('{{ asset('service-worker.js') }}');
             });
         }
     </script>
 </head>
-<body style="
-  /* Location of the image */
-  background-image: url(/images/homepicture-big-1.jpg);
+<body class="p-login__body" style="background-image:url('{{ asset('images/homepicture-big-1.jpg') }}')">
+<div class="p-login__overlay" aria-hidden="true"></div>
 
-  /* Background image is centered vertically and horizontally at all times */
-  background-position: center center;
-
-  /* Background image doesn't tile */
-  background-repeat: no-repeat;
-
-  /* Background image is fixed in the viewport so that it doesn't move when
-     the content's height is greater than the image's height */
-  background-attachment: fixed;
-
-  /* This is what makes the background image rescale based
-     on the container's size */
-  background-size: cover;
-
-  /* Set a background color that will be displayed
-     while the background image is loading */
-  background-color: #464646;
-">
-<nav id="main_menu" class="navbar sticky-top navbar-dark navbar-expand bg-primary justify-content-between loginbar--slim">
-    <div class="container-lg bw-topbar__container">
-        <div class="bw-header-logo">
-            <img class="bw-header-logo__icon" src="{{ asset('images/logo_icon_2025.svg') }}" alt="" width="44" height="44" decoding="async"/>
-            <img class="bw-header-logo__text" src="{{ asset('images/logo_text_2025.svg') }}" alt="BeWelcome" decoding="async"/>
+<nav class="p-login__nav">
+    <div class="container-lg p-login__nav-inner">
+        <a class="p-login__brand" href="{{ url('homepage') }}">
+            <img class="p-login__brand-icon" src="{{ asset('images/logo_icon_2025.svg') }}" alt="BeWelcome logo"/>
+            <img class="p-login__brand-text" src="{{ asset('images/logo_text_2025.svg') }}" alt="BeWelcome"/>
+        </a>
+        <div class="p-login__nav-cta">
+            <span class="p-login__nav-prompt">{{ 'menu.not.a.member.yet' | trans }}</span>
+            <a class="p-login__nav-link" href="{{ url('signup') }}">{{ 'navbar.button.signup' | trans }}</a>
         </div>
     </div>
 </nav>
+
 {% block content %}
-<main role="main">
+<main role="main" class="p-login">
     <noscript>
         <div class="container-lg">
-            <div class="alert alert-danger"><p class="h5">You need to activate Javascript for bewelcome.org</p><small>Without
-                    it some function won't work.</small></div>
+            <div class="alert alert-danger u:mt-16">
+                <p class="h5">You need to activate Javascript for bewelcome.org</p>
+                <small>Without it some functions won't work.</small>
+            </div>
         </div>
     </noscript>
+
     <div class="container-lg">
         {% for label, messages in app.flashes %}
-            <div class="row">
-                {% for message in messages %}
-                    <div class="col-12">
-                        <div class="alert alert-{{ label }}">
-                            {{ message }}
-                        </div>
-                    </div>
-                {% endfor %}
-            </div>
+            {% for message in messages %}
+                <div class="alert alert-{{ label }} p-login__flash">{{ message }}</div>
+            {% endfor %}
         {% endfor %}
     </div>
-    <div class="container-lg">
-        <div class="u-flex u-flex-col">
-            <div class="col-10 offset-1 col-sm-8 offset-sm-2">
-                {% for flash_message in app.session.flashBag.get('error') %}
-                    <div class="flash error">
-                        {{ flash_message | trans }}
-                    </div>
-                {% endfor %}
-                {% for flash_message in app.session.flashBag.get('notice') %}
-                    <div class="flash notice">
-                        {{ flash_message | trans }}
-                    </div>
-                {% endfor %}
-                <h1 class="u-text-32 u-leading-40 u-text-white u-text-center u-my-16 u-font-700">BeWelcome - {{ 'indexpageteaseropendoor' | trans }}</h1>
-            </div>
+
+    <div class="p-login__shell">
+        <header class="p-login__intro">
+            <h1 class="p-login__title">{{ 'indexpageteaseropendoor' | trans }}</h1>
+            <p class="p-login__subtitle">{{ 'login.signup.info' | trans | striptags }}</p>
+        </header>
+
+        <section class="p-login__card" aria-labelledby="login-card-title">
+            <h2 id="login-card-title" class="p-login__card-title">{{ 'login' | trans }}</h2>
+
             {% if error %}
-                <div class="col-10 offset-1 col-sm-8 offset-sm-2">
-                    <div class="alert alert-danger">
-                        {{ error.messageKey|trans(error.messageData, 'messages')|raw }}
-                    </div>
+                <div class="p-login__error alert alert-danger u:mb-16" role="alert">
+                    {{ error.messageKey|trans(error.messageData, 'messages')|raw }}
                 </div>
             {% endif %}
 
-            <div class="col-10 offset-1 col-sm-8 offset-sm-2">
-                <div class="card-deck">
-                    <div class="card o-card">
-                        <form id="main-login-form"
-                              class="u-m-0"
-                              role="form"
-                              method="post"
-                              action="{{ path('security_check') }}">
-                            <div class="card-body p-2">
-                                <h4 class="card-title">{{ 'login' | trans }}</h4>
-                                <div class="o-form-group">
-                                    <label for="login-u">{{ 'login.username.or.email' | trans }}</label>
-                                    <input type="text" id="login-u" name="_username" autofocus required
-                                           value="{{ last_username }}"
-                                           class="o-input">
-                                </div>
-                                <div class="o-form-group">
-                                    <label for="login-p">{{ 'password' | trans }}</label>
-                                    <input type="password" id="login-p" name="_password" class="o-input">
-                                </div>
-                                <div class="o-checkbox u-flex u-items-center u-my-8">
-                                    <input type="checkbox"
-                                           id="login-r"
-                                           class="o-checkbox__input"
-                                           value="1"
-                                           name="_remember_me">
-                                    <label class="o-checkbox__label" for="login-r">{{ 'stayloggedin' | trans }}</label>
-                                </div>
-                                <input type="hidden" name="_csrf_token"
-                                       value="{{ csrf_token('authenticate') }}"
-                                >
-                                {% if not error is null %}
-                                    <p class="mt-3">
-                                        {% if error.messageKey == 'Invalid credentials.' %}
-                                            {{ 'login.forgot.password' | trans }}<br>
-                                            <a href="{{ url('member_request_reset_password') }}">{{ 'login.password.getnew' | trans }}</a>
-                                            <br>
-                                            {{ 'login.forgot.username' | trans }}
-                                        {% endif %}
-                                        {% if error.messageKey == 'login.mail.not_confirmed' %}
-                                            {{ 'login.mail.not_confirmed' | trans }}<br>
-                                            <a href="{{ url('resend_confirmation_email', { 'username': last_username}) }}">{{ 'login.resend.confirmation' | trans }}</a>
-                                        {% endif %}
-                                        {% if error.messageKey == 'member_banned' %}
-                                            {{ 'login.account.banned' | trans }}
-                                        {% endif %}
-                                        {% if error.messageKey == 'member_expired' %}
-                                            {{ 'login.account.expired' | trans }}
-                                        {% endif %}
-                                        {% if error.messageKey == 'member_not_allowed_to_login' %}
-                                            {{ 'login.account.no_login' | trans }}
-                                        {% endif %}
-                                        <br>
-                                        <a href="{{ url('feedback', { 'IdCategory': 3}) }}">{{ 'login.contact.support' | trans }}</a>
-                                    </p>
-                                {% endif %}
-                            </div>
-                            <div class="u-flex u-justify-center u-items-center">
-                                <button type="submit"
-                                        class="o-button o-button--full">{{ 'indexpageloginsubmit' | trans }}</button>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="card o-card">
-                        <div class="card-body p-2">
-                            <h4 class="card-title">{{ 'signupnow' | trans }}</h4>
-                            <p class="u-text-18 u-mt-24">{{ 'login.signup.info'|trans|raw }}</p>
-                        </div>
-                        <div class="u-flex u-justify-center u-items-center"><a href="{{ url('signup_1') }}" class="o-button o-button--full" role="button">
-                                {{ 'signup'|trans }}</a>
-                        </div>
+            {% for flash_message in app.session.flashBag.get('error') %}
+                <div class="p-login__error alert alert-danger u:mb-16">{{ flash_message | trans }}</div>
+            {% endfor %}
+            {% for flash_message in app.session.flashBag.get('notice') %}
+                <div class="p-login__notice alert alert-info u:mb-16">{{ flash_message | trans }}</div>
+            {% endfor %}
+
+            <form id="main-login-form"
+                  class="p-login__form"
+                  role="form"
+                  method="post"
+                  action="{{ path('security_check') }}">
+                <div class="o-form-group">
+                    <label for="login-u">{{ 'login.username.or.email' | trans }}</label>
+                    <input type="text" id="login-u" name="_username" autofocus required autocomplete="username"
+                           value="{{ last_username }}"
+                           class="o-input">
+                </div>
+
+                <div class="o-form-group">
+                    <label for="login-p">{{ 'password' | trans }}</label>
+                    <div class="p-login__password">
+                        <input type="password" id="login-p" name="_password" required autocomplete="current-password"
+                               class="o-input js-password-input">
+                        <button type="button" id="password_show_hide"
+                                class="p-login__password-toggle js-password-show-hide"
+                                aria-label="{{ 'password' | trans }}">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path class="block" d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                <circle class="block" cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
                     </div>
                 </div>
-            </div>
-        </div>
+
+                <div class="p-login__row">
+                    <div class="o-checkbox">
+                        <input type="checkbox" id="login-r" class="o-checkbox__input" value="1" name="_remember_me">
+                        <label class="o-checkbox__label" for="login-r">{{ 'stayloggedin' | trans }}</label>
+                    </div>
+                    <a class="p-login__forgot" href="{{ url('member_request_reset_password') }}">
+                        {{ 'login.password.getnew' | trans }}
+                    </a>
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <button type="submit" class="o-button o-button--l o-button--full p-login__submit">
+                    {{ 'indexpageloginsubmit' | trans }}
+                </button>
+
+                {% if error %}
+                    <div class="p-login__help">
+                        {% if error.messageKey == 'Invalid credentials.' %}
+                            <p>{{ 'login.forgot.password' | trans }}
+                                <a href="{{ url('member_request_reset_password') }}">{{ 'login.password.getnew' | trans }}</a>
+                            </p>
+                            <p>{{ 'login.forgot.username' | trans }}</p>
+                        {% endif %}
+                        {% if error.messageKey == 'login.mail.not_confirmed' %}
+                            <p>{{ 'login.mail.not_confirmed' | trans }}
+                                <a href="{{ url('resend_confirmation_email', { 'username': last_username}) }}">{{ 'login.resend.confirmation' | trans }}</a>
+                            </p>
+                        {% endif %}
+                        {% if error.messageKey == 'member_banned' %}
+                            <p>{{ 'login.account.banned' | trans }}</p>
+                        {% endif %}
+                        {% if error.messageKey == 'member_expired' %}
+                            <p>{{ 'login.account.expired' | trans }}</p>
+                        {% endif %}
+                        {% if error.messageKey == 'member_not_allowed_to_login' %}
+                            <p>{{ 'login.account.no_login' | trans }}</p>
+                        {% endif %}
+                        <p>
+                            <a href="{{ url('feedback', { 'IdCategory': 3}) }}">{{ 'login.contact.support' | trans }}</a>
+                        </p>
+                    </div>
+                {% endif %}
+            </form>
+
+            <div class="p-login__separator" aria-hidden="true"><span>{{ 'menu.not.a.member.yet' | trans }}</span></div>
+
+            <a href="{{ url('signup') }}" class="o-button o-button--outline o-button--full p-login__signup">
+                {{ 'signupnow' | trans }}
+            </a>
+        </section>
     </div>
 </main>
 {% endblock content %}
-{% include 'footer.html.twig' %}
+
 {{ encore_entry_script_tags('bewelcome') }}
+{{ encore_entry_script_tags('password/showhide') }}
 </body>
 </html>

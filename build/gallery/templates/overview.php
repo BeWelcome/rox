@@ -24,7 +24,7 @@ if ($statement) {
     require 'pages.php';
     $words = $this->words;
     ?>
-    <div id="masonry-grid" class="row" data-masonry='{"percentPosition": true }'>
+    <div id="masonry-grid" class="row">
         <?php
         foreach ($statement as $d) {
         echo '<div class="col-sm-6 col-lg-4 mb-4">';
@@ -38,7 +38,11 @@ if ($statement) {
         $edit = ($loggedmember && $loggedmember->Username == $d->user_handle);
         echo '<div class="card-body p-1">';
         if ($edit) {
-            echo '<div class="o-checkbox u:m-4"><input type="checkbox" class="o-checkbox__input mr-0" name="imageId[]" value="' . $d->id . '"></div> ';
+            $imageTitle = htmlspecialchars((string) $d->title, ENT_QUOTES, 'UTF-8');
+            echo '<label class="p-gallery-manage__image-select" aria-label="Select image ' . $imageTitle . '">';
+            echo '<input type="checkbox" class="p-gallery-manage__image-select-input" name="imageId[]" value="' . $d->id . '">';
+            echo '<span class="p-gallery-manage__image-select-box" aria-hidden="true"></span>';
+            echo '</label>';
         }
         echo '<h6 class="card-title text-truncate"></h6><a href="gallery/img?id='. $d->id .'" alt="'. $d->title .'">'. $title_short . '</a>';
         if (null !== $d->albumId) {

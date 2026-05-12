@@ -26,7 +26,7 @@
 
 <div id="profile-language-{{ profile_language }}"
      class="{% if profile_language != active_locale %}u:hidden! {% endif %}">
-  <div class="p-profile-layout">
+  <div class="p-profile-layout{% if edit %} p-profile-layout--edit{% endif %}">
 
     {# ═══════════════════════════════════════════
        MAIN — About Me · Accommodation · Comments
@@ -41,7 +41,7 @@
           {%- if edit -%}
             {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'aboutme'}) %}
             {% set edit_text = 'profile.edit.about.me'|trans({}, 'messages', profile_language) %}
-            <div><a href="{{ edit_link }}"><i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+            <div><a href="{{ edit_link }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
           {%- endif -%}
         </div>
         <div class="card-body">
@@ -71,22 +71,28 @@
           {%- if edit -%}
             {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'accommodation'}) %}
             {% set edit_text = 'profile.edit.accommodation'|trans({}, 'messages', profile_language) %}
-            <div><a href="{{ edit_link }}"><i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+            <div><a href="{{ edit_link }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
           {%- endif -%}
         </div>
         <div class="card-body">
           <div class="card-text m-0">
             {% if not member.accommodation is null or edit %}
               {% if edit and not address is same as(false) %}
-                <div class="u:flex u:flex-row u:justify-between align-items-center u:mb-8 u:gap-8">
-                  <div>
-                    <p class="h5">{{ 'profile.location'|trans({}, 'messages', profile_language) }}</p>
-                    <p class="u:font-700">{{ address.location.name }}</p>
-                    <p>{{ address.location.admin1.name }} - {{ address.location.country.name }}</p>
-                    <a href="{{ url('profile_set_location', {username: member.username}) }}" class="o-button o-button--outline">{{ 'profile.change.location'|trans({}, 'messages', profile_language) }}</a>
+                <section class="p-accom-summary">
+                  <div class="p-accom-summary__info">
+                    <span class="p-accom-summary__eyebrow">
+                      <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                      {{ 'profile.location'|trans({}, 'messages', profile_language) }}
+                    </span>
+                    <h3 class="p-accom-summary__city">{{ address.location.name }}</h3>
+                    <p class="p-accom-summary__region">{{ address.location.admin1.name }} · {{ address.location.country.name }}</p>
+                    <a href="{{ url('profile_set_location', {username: member.username}) }}" class="p-accom-summary__change">
+                      <i class="fas fa-location-arrow" aria-hidden="true"></i>
+                      {{ 'profile.change.location'|trans({}, 'messages', profile_language) }}
+                    </a>
                   </div>
-                  <div id="location-map-{{ profile_language }}" class="u:w-[40%] u:aspect-3/2 u:border-1 u:border-bewelcome"></div>
-                </div>
+                  <div id="location-map-{{ profile_language }}" class="p-accom-summary__map" aria-label="{{ 'profile.location'|trans({}, 'messages', profile_language) }}"></div>
+                </section>
               {% endif %}
               <div class="p-accom-stats u:mb-8">
                 {% if edit or (member.maxGuests != 0 and member.accommodation == constant('App\\Doctrine\\AccommodationType::YES')) %}
@@ -170,15 +176,11 @@
         </div>
       </div>
 
-      {# ── Comments ────────────────────────────── #}
+      {# ── Comments (hidden in edit mode: not editable content) ── #}
+      {% if not edit %}
       <div class="card">
         <div class="card-header u:flex u:flex-row u:justify-between">
           {{ 'profile.comments'|trans({}, "messages", profile_language) }}
-          {%- if edit and comments|slice(0,10)|length > 0 -%}
-            {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'comments'}) %}
-            {% set edit_text = 'profile.edit.comments'|trans({}, 'messages', profile_language) %}
-            <div><a href="{{ edit_link }}"><i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
-          {%- endif -%}
         </div>
         <div class="card-body">
           {% if comments|length > 0 %}
@@ -222,6 +224,7 @@
           {% endif %}
         </div>
       </div>
+      {% endif %}
 
     </div>{# /.p-profile-main #}
 
@@ -237,7 +240,7 @@
           {%- if edit -%}
             {% set edit_link = url('profile_edit_languages', {username: member.username, language: profile_language}) %}
             {% set edit_text = 'profile.edit.languages'|trans({}, 'messages', profile_language) %}
-            <div><a href="{{ edit_link }}"><i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+            <div><a href="{{ edit_link }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
           {%- endif -%}
         </div>
         <div class="card-body">
@@ -262,9 +265,10 @@
           {%- if edit -%}
             {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'interests'}) %}
             {% set edit_text = 'profile.edit.interests'|trans({}, 'messages', profile_language) %}
-            <div><a href="{{ edit_link }}"><i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+            <div><a href="{{ edit_link }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
           {% endif %}
         </div>
+        {% if interests %}
         <div class="card-body">
           <div class="card-text m-0">
             {% if hobbies|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.hobbies'|trans({}, "messages", profile_language) }}</div><div>{{ hobbies|purify }}</div>{% endif %}
@@ -274,6 +278,7 @@
             {% if organizations|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.organizations'|trans({}, "messages", profile_language) }}</div><div>{{ organizations|purify }}</div>{% endif %}
           </div>
         </div>
+        {% endif %}
       </div>
       {% endif %}
 
@@ -285,15 +290,17 @@
           {%- if edit -%}
             {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'travels'}) %}
             {% set edit_text = 'profile.edit.travel.experience'|trans({}, 'messages', profile_language) %}
-            <div><a href="{{ edit_link }}"><i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+            <div><a href="{{ edit_link }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
           {%- endif -%}
         </div>
+        {% if pastTrips|length > 0 or plannedTrips|length > 0 %}
         <div class="card-body">
           <div class="card-text m-0">
             {% if pastTrips|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.past.trips'|trans({}, "messages", profile_language)|raw }}</div><div>{{ pastTrips|purify }}</div>{% endif %}
             {% if plannedTrips|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.planned.trips'|trans({}, "messages", profile_language)|raw }}</div><div>{{ plannedTrips|purify }}</div>{% endif %}
           </div>
         </div>
+        {% endif %}
       </div>
       {% endif %}
 
@@ -305,9 +312,10 @@
           {%- if edit -%}
             {% set edit_link = url('groups_mygroups') %}
             {% set edit_text = 'profile.edit.groups'|trans({}, 'messages', profile_language) %}
-            <div><a href="{{ edit_link }}"><i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+            <div><a href="{{ edit_link }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
           {%- endif -%}
         </div>
+        {% if member.groups|length > 0 %}
         <div class="card-body">
           {% for group in member.groups|slice(0, 5) %}
             <div class="p-sidebar-card__group-item">
@@ -324,17 +332,28 @@
             </a>
           {% endif %}
         </div>
+        {% endif %}
       </div>
       {% endif %}
 
       {# ── Gallery ─────────────────────────────── #}
       {% if pictures|length > 0 or edit %}
       <div class="card p-gallery-card">
-        {%- if edit -%}
-          <div class="card-header u:flex u:flex-row u:justify-end">
-            <a href="{{ url('gallery_manage') }}"><i class="fa fa-edit" title="{{ 'profile.edit.images'|trans({}, 'messages', profile_language) }}" aria-hidden="true"></i></a>
+        <div class="card-header u:flex u:flex-row u:justify-between">
+          {{ 'profile.menu.images'|trans({}, "messages", profile_language)|raw }}
+          {%- if edit -%}
+            {% set edit_text = 'profile.edit.images'|trans({}, 'messages', profile_language) %}
+            <div><a href="{{ url('gallery_manage') }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+          {%- endif -%}
+        </div>
+        {% if pictures|length == 0 and edit %}
+          <div class="p-gallery-empty">
+            <a href="{{ url('gallery_manage') }}" class="p-gallery-empty__btn">
+              <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+              <span>{{ 'galleryupload'|trans({}, 'messages', profile_language) }}</span>
+            </a>
           </div>
-        {%- endif -%}
+        {% else %}
         <div class="p-gallery-grid">
           {% for picture in pictures|slice(0, 5) %}
             {% set isLast = loop.last and pictures|length > 5 %}
@@ -342,7 +361,7 @@
               <a href="{{ url('gallery', {username: member.username}) }}"
                  class="p-gallery-cell p-gallery-cell--more"
                  style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
-                 aria-label="{{ picture.title }}">
+                 aria-label="{{ picture.title|e('html_attr') }}">
                 <span class="p-gallery-cell__more-label">+{{ pictures|length - 4 }}</span>
               </a>
             {% else %}
@@ -352,11 +371,12 @@
                  data-toggle="lightbox"
                  data-gallery="profile-gallery"
                  data-type="image"
-                 data-title="{{ picture.title }}"
-                 aria-label="{{ picture.title }}"></a>
+                 data-caption="{{ picture.title|e('html_attr') }}"
+                 aria-label="{{ picture.title|e('html_attr') }}"></a>
             {% endif %}
           {% endfor %}
         </div>
+        {% endif %}
         {% if pictures|length > 5 %}
           <div class="p-gallery-footer">
             <a href="{{ url('gallery', {username: member.username}) }}">
@@ -376,9 +396,10 @@
           {%- if edit -%}
             {% set edit_link = url('profile_edit_section', {username: member.username, language: profile_language, section: 'relations'}) %}
             {% set edit_text = 'profile.edit.family.and.friends'|trans({}, 'messages', profile_language) %}
-            <div><a href="{{ edit_link }}"><i class="fa fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+            <div><a href="{{ edit_link }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
           {%- endif -%}
         </div>
+        {% if friends|length > 0 %}
         <div class="card-body">
           <div class="u:grid u:grid-cols-3 u:gap-8 u:mb-8">
             {% for friend in friends|slice(0, 9) %}
@@ -395,6 +416,7 @@
             </a>
           {% endif %}
         </div>
+        {% endif %}
       </div>
       {% endif %}
 

@@ -51,10 +51,10 @@
           {% if use_lightbox is defined %}
             <a class="js-profile-picture"
                href="{{ url('avatar', {username: member.Username, size: 'original'}) }}"
-               data-bs-toggle="lightbox"
-               data-always-show-close="true"
+               data-toggle="lightbox"
                data-type="image"
-               data-title="{{ 'profile.picture.title'|trans }}">
+               data-size="fullscreen"
+               data-caption="{{ 'profile.picture.title'|trans|e('html_attr') }}">
               <img class="p-hero__avatar-img js-profile-picture"
                    src="{{ url('avatar', {username: member.Username, size: 320}) }}"
                    alt="{{ 'profile.picture.title'|trans }}">

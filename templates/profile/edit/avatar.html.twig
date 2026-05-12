@@ -1,11 +1,8 @@
-{% extends 'profile/profile.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'profile/edit_subpage.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
   {{ encore_entry_script_tags('avatar') }}
-  <script type="application/javascript">
-  </script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -13,34 +10,27 @@
   {{ encore_entry_link_tags('avatar') }}
 {% endblock %}
 
-{% block page_content %}
-  <div class="u:w-full">
-    <div class="card">
-      <div class="card-header u:flex u:flex-row u:justify-between">
-        {{ 'profile.avatar.picture'|trans|raw }}
+{% block subpage_title -%}
+  {{ 'profile.avatar.picture'|trans|raw }}
+{%- endblock %}
+
+{% block subpage_body %}
+  <div class="u:flex u:flex-col">
+    <div class="u:w-full u:nd:min-w-500 u:max-w-500 u:aspect-square u:mx-auto u:mb-50">
+      <input id="member" name="member" type="hidden" value="{{ member.username }}">
+      <div id="avatar_container" class="u:w-full u:h-full"></div>
+    </div>
+    <div class="u:flex u:flex-row u:h-100 u:w-full u:overflow-x-auto">
+      {% for picture in pictures %}
+        <img class="img-thumbnail u:mr-20" loading="lazy" data-image-id="{{ picture.id }}" src="gallery/thumbimg?id={{ picture.id }}" alt="{{ picture.title }}">
+      {% endfor %}
+    </div>
+    <div class="p-edit-subpage__actions" style="justify-content: space-between;">
+      <div class="u:relative">
+        <button id="avatar-new" class="o-button">{{ 'profile.avatar.new'|trans }}</button>
+        <input id="avatar-file" class="u:absolute u:top-0 u:left-0 u:w-full u:h-full u:opacity-0" type="file" accept="image/*">
       </div>
-      <div class="card-block p-2">
-        <div class="card-text m-0">
-          <div class="u:flex u:flex-col">
-            <div class="u:w-full u:nd:min-w-500 u:max-w-500 u:aspect-square u:mx-auto u:mb-50">
-              <input id="member" name="member" type="hidden" value="{{ member.username }}">
-              <div id="avatar_container" class="u:w-full u:h-full"></div>
-            </div>
-            <div class="u:flex u:flex-row u:h-100 u:w-full u:overflow-x-auto">
-              {% for picture in pictures %}
-                <img class="img-thumbnail u:mr-20" loading="lazy" data-image-id="{{ picture.id }}" src="gallery/thumbimg?id={{ picture.id }}" alt="{{ picture.title }}">
-              {% endfor %}
-            </div>
-            <div class="u:flex u:justify-between u:my-8">
-              <div class="u:relative">
-                <button id="avatar-new" class="o-button">{{ 'profile.avatar.new'|trans }}</button>
-                <input id="avatar-file" class="u:absolute u:top-0 u:left-0 u:w-full u:h-full u:opacity-0" type="file" accept="image/*">
-              </div>
-              <button id="avatar-update" class="o-button">{{ 'profile.avatar.update'|trans }}</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <button id="avatar-update" class="o-button">{{ 'profile.avatar.update'|trans }}</button>
     </div>
   </div>
-{% endblock page_content %}
+{% endblock subpage_body %}

@@ -7,6 +7,8 @@ editLanguages.forEach(editLanguage => {
         editLanguages.forEach(editLanguage => {
             editLanguage.classList.add('btn-outline-primary')
             editLanguage.classList.remove('btn-primary')
+            editLanguage.classList.remove('p-edit-header__lang-tab--active')
+            editLanguage.setAttribute('aria-selected', 'false')
         })
 
         const languages = document.querySelectorAll('[id^=profile-language-]')
@@ -14,13 +16,15 @@ editLanguages.forEach(editLanguage => {
             language.classList.add('u:hidden!')
         })
 
-        const language = e.target.dataset.editLanguage
+        const language = e.currentTarget.dataset.editLanguage
         const activeLanguage = document.getElementById("profile-language-" + language)
-        const editLanguageButton = document.querySelector("[data-edit-language=" + language + "]")
+        const editLanguageButton = e.currentTarget
 
         activeLanguage.classList.remove('u:hidden!')
         editLanguageButton.classList.add("btn-primary")
         editLanguageButton.classList.remove("btn-outline-primary")
+        editLanguageButton.classList.add("p-edit-header__lang-tab--active")
+        editLanguageButton.setAttribute('aria-selected', 'true')
     })
 })
 

@@ -1,4 +1,4 @@
-import {initializeTomSelects, destroyTomSelects} from "../tom-select";
+import {initializeTomSelects} from "../tom-select";
 
 document
     .querySelectorAll('.js-add-language')
@@ -20,7 +20,6 @@ function addFormToCollection(e) {
         );
 
     collectionHolder.insertAdjacentHTML('beforeend', html)
-    collectionHolder.insertAdjacentHTML('beforeend', '<hr class="u:bg-bewelcome" style="margin-top:0">')
     collectionHolder.dataset.index++
 
     addDeleteLanguageEventListener()
@@ -29,7 +28,6 @@ function addFormToCollection(e) {
 
 function deleteFormFromCollection(e) {
     const current  = document.getElementById(e.currentTarget.dataset.related);
-    console.log(current)
     current.remove()
 
     const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);

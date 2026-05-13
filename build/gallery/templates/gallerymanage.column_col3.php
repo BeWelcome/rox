@@ -17,7 +17,10 @@ $gmkToBytes = static fn (string $v): int => match (strtolower(substr($v, -1))) {
 $maxUploadBytes = min($gmkToBytes(ini_get('upload_max_filesize')), $gmkToBytes(ini_get('post_max_size')));
 $maxUploadMB = max(1, (int) round($maxUploadBytes / 1048576));
 
-$defaultTab = $hasPhotos ? 'photos' : 'upload';
+$activeSet = $this->activeSet ?? null;
+$setStatement = $this->setStatement ?? null;
+$forcedTab = isset($_GET['tab']) ? $_GET['tab'] : null;
+$defaultTab = $activeSet ? 'albums' : ($forcedTab ?? ($hasPhotos ? 'photos' : 'upload'));
 ?>
 
 <div class="p-gallery-manage__pagehead">
@@ -160,11 +163,106 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
 
 <?php /* ── ALBUMS TAB ── */ ?>
 <div id="tab-albums" class="p-gallery-tab-panel">
+<?php if ($activeSet): ?>
+    <div class="p-gallery-set-view">
+        <div class="p-gallery-set-nav">
+            <a href="/gallery/manage?tab=albums" class="p-gallery-set-nav__back">
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                <?= $words->get('GalleryTitleSets') ?: 'Albums' ?>
+            </a>
+            <span class="p-gallery-set-nav__sep" aria-hidden="true">/</span>
+            <span class="p-gallery-set-nav__title"><?= htmlspecialchars((string) $activeSet->title) ?></span>
+            <button type="button"
+                    class="p-gallery-set-nav__delete"
+                    data-set-id="<?= (int) $activeSet->id ?>"
+                    data-set-title="<?= htmlspecialchars((string) $activeSet->title, ENT_QUOTES, 'UTF-8') ?>">
+                <i class="fas fa-trash" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <!-- Delete album modal -->
+        <div id="delete-album-modal" class="c-confirm-modal" aria-hidden="true" role="dialog">
+            <div class="c-confirm-modal__backdrop"></div>
+            <div class="c-confirm-modal__dialog">
+                <p class="c-confirm-modal__text">
+                    <?= $words->get('gallery.album.delete.confirm') ?: 'Delete this album? Photos will not be deleted.' ?>
+                </p>
+                <div class="c-confirm-modal__actions">
+                    <button type="button" class="c-confirm-modal__btn c-confirm-modal__btn--cancel" id="delete-album-cancel">
+                        <?= $words->get('Cancel') ?: 'Cancel' ?>
+                    </button>
+                    <button type="button" class="c-confirm-modal__btn c-confirm-modal__btn--danger" id="delete-album-confirm">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                        <?= $words->get('Delete') ?: 'Delete' ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <?php if ($setStatement): ?>
+        <div class="p-gallery-photo-grid" data-gallery="set-<?= $activeSet->id ?>">
+            <?php foreach ($setStatement as $d): ?>
+            <div class="p-gallery-photo-item"
+                 data-photo-id="<?= (int) $d->id ?>"
+                 data-photo-title="<?= htmlspecialchars((string) $d->title, ENT_QUOTES, 'UTF-8') ?>"
+                 data-photo-thumb="gallery/thumbimg?id=<?= $d->id ?>&t=2"
+                 data-photo-edit="gallery/show/image/<?= $d->id ?>/edit"
+                 data-photo-delete="gallery/show/image/<?= $d->id ?>/delete">
+                <a href="gallery/img?id=<?= $d->id ?>"
+                   class="p-gallery-photo-item__link"
+                   data-toggle="lightbox"
+                   data-type="image"
+                   data-title="<?= htmlspecialchars((string) $d->title) ?>"
+                   data-gallery="set-<?= $activeSet->id ?>">
+                    <img src="gallery/thumbimg?id=<?= $d->id ?>&t=2"
+                         alt="<?= htmlspecialchars((string) $d->title) ?>"
+                         loading="lazy">
+                </a>
+                <button type="button"
+                        class="p-gallery-photo-item__menu-btn"
+                        aria-label="<?= htmlspecialchars($words->get('Options') ?: 'Options', ENT_QUOTES, 'UTF-8') ?>">
+                    <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
+                </button>
+            </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- Photo action sheet (single instance, shared across all photos) -->
+        <div id="photo-action-sheet" class="p-photo-sheet" aria-hidden="true" role="dialog" aria-modal="true"
+             aria-label="<?= htmlspecialchars($words->get('Options') ?: 'Photo options', ENT_QUOTES, 'UTF-8') ?>">
+            <div class="p-photo-sheet__backdrop"></div>
+            <div class="p-photo-sheet__panel">
+                <div class="p-photo-sheet__handle" aria-hidden="true"></div>
+                <button type="button" class="p-photo-sheet__close" aria-label="<?= htmlspecialchars($words->get('Close') ?: 'Close', ENT_QUOTES, 'UTF-8') ?>">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                <div class="p-photo-sheet__preview">
+                    <img id="photo-sheet-thumb" src="" alt="" class="p-photo-sheet__img">
+                </div>
+                <p id="photo-sheet-title" class="p-photo-sheet__title"></p>
+                <div class="p-photo-sheet__actions">
+                    <a id="photo-sheet-edit" href="#" class="p-photo-sheet__btn p-photo-sheet__btn--primary">
+                        <i class="fas fa-edit" aria-hidden="true"></i>
+                        <span><?= htmlspecialchars($words->get('Edit') ?: 'Edit', ENT_QUOTES, 'UTF-8') ?></span>
+                    </a>
+                    <button type="button" id="photo-sheet-delete" class="p-photo-sheet__btn p-photo-sheet__btn--danger">
+                        <i class="fas fa-trash" aria-hidden="true"></i>
+                        <span><?= htmlspecialchars($words->get('Delete') ?: 'Delete', ENT_QUOTES, 'UTF-8') ?></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <?php else: ?>
+        <p class="p-profile-empty-hint" style="margin-top:1rem;"><?= $words->get('gallery.manage.empty.title') ?: 'No photos in this album yet.' ?></p>
+        <?php endif; ?>
+    </div>
+<?php else: ?>
     <div class="p-gallery-albums-wrap">
-        <?php
+        <?php $inManage = true;
             require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
         ?>
     </div>
+<?php endif; ?>
 </div>
 
 <?php /* ── UPLOAD TAB ── */ ?>
@@ -259,6 +357,7 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
     const tabs = document.querySelectorAll('.p-gallery-tab-btn');
     const panels = document.querySelectorAll('.p-gallery-tab-panel');
     const defaultTab = <?= json_encode($defaultTab) ?>;
+    let hadUploads = false;
 
     function activateTab(name) {
         const valid = ['photos', 'albums', 'upload'];
@@ -284,21 +383,31 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
     const initialHash = location.hash.replace('#', '');
     activateTab(initialHash || defaultTab);
 
+    /* Clean up ?tab= from URL after activation */
+    if (location.search.includes('tab=') && history.replaceState) {
+        history.replaceState(null, '', location.pathname + '#' + (initialHash || defaultTab));
+    }
+
+
     /* ── Manage form (Photos tab) ── */
     const manageForm = document.getElementById('manage');
     if (manageForm) {
-        const deleteImages = document.getElementById('deleteImages');
-        const moveImages = document.getElementById('moveImages');
-        const selectAll = document.getElementById('selectAll');
-        const checkboxes = document.getElementsByName('imageId[]');
-        const deleteOrMove = document.getElementById('deleteOrMove');
-        const newOrExistingAlbum = document.getElementsByName('newOrExistingAlbum');
+        const deleteImages  = document.getElementById('deleteImages');
+        const moveImages    = document.getElementById('moveImages');
+        const selectAll     = document.getElementById('selectAll');
+        const checkboxes    = document.getElementsByName('imageId[]');
+        const deleteOrMove  = document.getElementById('deleteOrMove');
+        const existingRadio = document.getElementById('existingAlbum');  // may be null (no albums yet)
+        const newRadio      = document.getElementById('newAlbum');
         const newAlbumTitle = document.getElementById('newAlbumTitle');
+        const albumSelect   = document.getElementById('albums');
 
+        /* Auto-select the "New" radio when user types in the text field */
         if (newAlbumTitle) {
-            newAlbumTitle.addEventListener('change', () => {
-                if (newOrExistingAlbum[0]) newOrExistingAlbum[0].checked = false;
-                if (newOrExistingAlbum[1]) newOrExistingAlbum[1].checked = true;
+            newAlbumTitle.addEventListener('input', () => {
+                if (newRadio) newRadio.checked = true;
+                if (existingRadio) existingRadio.checked = false;
+                updateManageButtons();
             });
         }
 
@@ -312,17 +421,17 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
         moveImages && moveImages.addEventListener('click', (e) => {
             e.preventDefault();
             if (moveImages.disabled) return;
-            if ((!newOrExistingAlbum[0] || !newOrExistingAlbum[0].checked) &&
-                (!newOrExistingAlbum[1] || !newOrExistingAlbum[1].checked)) {
+            const existingChosen = existingRadio && existingRadio.checked;
+            const newChosen      = newRadio && newRadio.checked;
+            if (!existingChosen && !newChosen) {
                 alert(<?= json_encode($words->get('gallery.move.not.possible')) ?>);
                 return;
             }
-            const albums = document.getElementById('albums');
-            if (newOrExistingAlbum[0] && newOrExistingAlbum[0].checked && albums && albums.value === '') {
+            if (existingChosen && albumSelect && albumSelect.value === '') {
                 alert(<?= json_encode($words->get('gallery.no.album.selected')) ?>);
                 return;
             }
-            if (newOrExistingAlbum[1] && newOrExistingAlbum[1].checked && newAlbumTitle && newAlbumTitle.value === '') {
+            if (newChosen && newAlbumTitle && newAlbumTitle.value.trim() === '') {
                 alert(<?= json_encode($words->get('gallery.no.album.given')) ?>);
                 return;
             }
@@ -339,10 +448,29 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
 
         checkboxes.forEach(cb => cb.addEventListener('change', updateManageButtons));
 
+        if (albumSelect) {
+            albumSelect.addEventListener('change', () => {
+                if (albumSelect.value !== '') {
+                    if (existingRadio) existingRadio.checked = true;
+                    if (newRadio) newRadio.checked = false;
+                }
+                updateManageButtons();
+            });
+        }
+
+        if (existingRadio) existingRadio.addEventListener('change', updateManageButtons);
+        if (newRadio)      newRadio.addEventListener('change', updateManageButtons);
+
         function updateManageButtons() {
-            const hasSelection = Array.from(checkboxes).some(cb => cb.checked);
+            const hasSelection      = Array.from(checkboxes).some(cb => cb.checked);
             if (deleteImages) deleteImages.disabled = !hasSelection;
-            if (moveImages) moveImages.disabled = !hasSelection;
+
+            const existingAlbumChosen = existingRadio && existingRadio.checked && albumSelect && albumSelect.value !== '';
+            const newAlbumChosen      = newRadio && newRadio.checked && newAlbumTitle && newAlbumTitle.value.trim() !== '';
+            const albumReady          = existingAlbumChosen || newAlbumChosen;
+
+            if (moveImages) moveImages.disabled = !(hasSelection && albumReady);
+
             if (selectAll && checkboxes.length > 0) {
                 selectAll.checked = Array.from(checkboxes).every(cb => cb.checked);
             }
@@ -369,7 +497,6 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
     const typeTpl = document.getElementById('upload-type-error-tpl');
 
     let uploadClients = [];
-    let hadUploads = false;
 
     function updateDropzoneSummary() {
         const count = fileInput.files ? fileInput.files.length : 0;
@@ -558,6 +685,118 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
         updateDropzoneSummary();
         uploadBtn.disabled = true;
         abortBtn.disabled = true;
+    }
+
+    /* ── Photo action sheet ── */
+    const photoSheet = document.getElementById('photo-action-sheet');
+    if (photoSheet) {
+        const sheetPanel   = photoSheet.querySelector('.p-photo-sheet__panel');
+        const sheetBackdrop= photoSheet.querySelector('.p-photo-sheet__backdrop');
+        const sheetClose   = photoSheet.querySelector('.p-photo-sheet__close');
+        const sheetThumb   = document.getElementById('photo-sheet-thumb');
+        const sheetTitle   = document.getElementById('photo-sheet-title');
+        const sheetEdit    = document.getElementById('photo-sheet-edit');
+        const sheetDelete  = document.getElementById('photo-sheet-delete');
+        const lblDelete    = <?= json_encode($words->get('Delete') ?: 'Delete') ?>;
+        const lblConfirm   = <?= json_encode($words->get('gallery.photo.delete.confirm') ?: 'Confirm delete') ?>;
+        const lblDeleting  = <?= json_encode($words->get('gallery.photo.deleting') ?: 'Deleting…') ?>;
+
+        let currentItem = null;
+        let confirmPending = false;
+
+        function openSheet(item) {
+            currentItem = item;
+            confirmPending = false;
+            sheetDelete.disabled = false;
+            sheetDelete.classList.remove('p-photo-sheet__btn--danger-confirm');
+            sheetDelete.innerHTML = '<i class="fas fa-trash" aria-hidden="true"></i><span>' + lblDelete + '</span>';
+            sheetThumb.src  = item.dataset.photoThumb;
+            sheetThumb.alt  = item.dataset.photoTitle;
+            sheetTitle.textContent = item.dataset.photoTitle;
+            sheetEdit.href  = item.dataset.photoEdit;
+            photoSheet.setAttribute('aria-hidden', 'false');
+            photoSheet.classList.add('p-photo-sheet--open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeSheet() {
+            photoSheet.setAttribute('aria-hidden', 'true');
+            photoSheet.classList.remove('p-photo-sheet--open');
+            document.body.style.overflow = '';
+            confirmPending = false;
+            currentItem = null;
+        }
+
+        document.querySelectorAll('.p-gallery-photo-item__menu-btn').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.stopPropagation();
+                openSheet(btn.closest('.p-gallery-photo-item'));
+            });
+        });
+
+        sheetClose.addEventListener('click', closeSheet);
+        sheetBackdrop.addEventListener('click', closeSheet);
+
+        sheetDelete.addEventListener('click', () => {
+            if (!confirmPending) {
+                confirmPending = true;
+                sheetDelete.classList.add('p-photo-sheet__btn--danger-confirm');
+                sheetDelete.innerHTML = '<i class="fas fa-exclamation-triangle" aria-hidden="true"></i><span>' + lblConfirm + '</span>';
+                return;
+            }
+            const item = currentItem;
+            sheetDelete.disabled = true;
+            sheetDelete.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>' + lblDeleting + '</span>';
+            fetch(item.dataset.photoDelete, { credentials: 'same-origin' })
+                .then(() => {
+                    item.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => item.remove(), 260);
+                    closeSheet();
+                })
+                .catch(() => {
+                    sheetDelete.disabled = false;
+                    sheetDelete.classList.remove('p-photo-sheet__btn--danger-confirm');
+                    sheetDelete.innerHTML = '<i class="fas fa-trash" aria-hidden="true"></i><span>' + lblDelete + '</span>';
+                    confirmPending = false;
+                });
+        });
+
+        /* Swipe down to dismiss */
+        let touchStartY = 0;
+        sheetPanel.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
+        sheetPanel.addEventListener('touchmove', e => { if (e.touches[0].clientY - touchStartY > 60) closeSheet(); }, { passive: true });
+    }
+
+    /* ── Delete album modal ── */
+    const deleteAlbumModal = document.getElementById('delete-album-modal');
+    const deleteAlbumConfirm = document.getElementById('delete-album-confirm');
+    const deleteAlbumCancel = document.getElementById('delete-album-cancel');
+    const deleteAlbumBtn = document.querySelector('.p-gallery-set-nav__delete');
+
+    if (deleteAlbumBtn && deleteAlbumModal) {
+        const openModal = () => {
+            deleteAlbumModal.setAttribute('aria-hidden', 'false');
+            deleteAlbumModal.classList.add('c-confirm-modal--open');
+        };
+        const closeModal = () => {
+            deleteAlbumModal.setAttribute('aria-hidden', 'true');
+            deleteAlbumModal.classList.remove('c-confirm-modal--open');
+        };
+
+        deleteAlbumBtn.addEventListener('click', openModal);
+        deleteAlbumCancel.addEventListener('click', closeModal);
+        deleteAlbumModal.querySelector('.c-confirm-modal__backdrop').addEventListener('click', closeModal);
+
+        deleteAlbumConfirm.addEventListener('click', () => {
+            const setId = deleteAlbumBtn.dataset.setId;
+            deleteAlbumConfirm.disabled = true;
+            deleteAlbumConfirm.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i>';
+            fetch('gallery/show/sets/' + setId + '/delete/true', { credentials: 'same-origin' })
+                .then(() => { window.location.href = '/gallery/manage?tab=albums'; })
+                .catch(() => { window.location.href = '/gallery/manage?tab=albums'; });
+        });
     }
 
 })();

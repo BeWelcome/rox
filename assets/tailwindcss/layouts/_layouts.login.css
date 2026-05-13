@@ -18,7 +18,9 @@
 .p-login__overlay {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.55) 0%, rgba(15, 23, 42, 0.7) 100%);
+  background: rgba(5, 14, 28, 0.52);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 0;
   pointer-events: none;
 }
@@ -31,7 +33,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem 1rem 3rem;
+  padding: 5rem 1rem 3rem;
 }
 
 .p-login__flash {
@@ -41,10 +43,24 @@
 
 .p-login__shell {
   width: 100%;
-  max-width: 440px;
+  max-width: 460px;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
+  animation: loginShellIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes loginShellIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Transparent navbar on login page ─────────────────── */
+.p-login__body #main_menu {
+  background: transparent !important;
+  box-shadow: none;
+  position: absolute;
+  width: 100%;
 }
 
 /* ── Intro (tagline above card) ────────────────────────── */
@@ -55,37 +71,45 @@
 }
 
 .p-login__title {
-  font-size: 1.625rem;
-  font-weight: 700;
-  line-height: 1.25;
-  margin: 0 0 0.5rem;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  font-size: 1.875rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 0.6rem;
+  letter-spacing: -0.02em;
 }
 
 .p-login__subtitle {
-  font-size: 0.9375rem;
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.5;
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.55;
   margin: 0;
-  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+  font-weight: 400;
 }
 
 /* ── Card ─────────────────────────────────────────────── */
 .p-login__card {
-  background: #fff;
-  border-radius: 1.25rem;
-  padding: 1.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 1.75rem;
+  padding: 2rem 1.85rem 1.75rem;
   box-shadow:
-    0 1px 3px rgba(15, 23, 42, 0.08),
-    0 12px 40px rgba(15, 23, 42, 0.25);
+    0 2px 4px rgba(15, 23, 42, 0.06),
+    0 32px 72px -8px rgba(15, 23, 42, 0.28);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .p-login__card { background: #fff; }
 }
 
 .p-login__card-title {
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0 0 1.25rem;
-  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #d97a2e;
+  margin: 0 0 1.15rem;
+  text-align: left;
 }
 
 /* ── Form ─────────────────────────────────────────────── */
@@ -106,15 +130,22 @@
 .p-login__form .o-input {
   height: 44px;
   font-size: 0.9375rem;
-  border-radius: 0.625rem;
-  border-color: #cbd5e1;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 0.875rem;
+  background: #f1f5f9;
+  border: 1.5px solid transparent;
+  color: #0f172a;
+  transition: background-color 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.p-login__form .o-input::placeholder {
+  color: #94a3b8;
 }
 
 .p-login__form .o-input:focus {
-  border-color: #f37000;
-  box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.15);
   outline: none;
+  background: #fff;
+  border-color: #f37000;
+  box-shadow: 0 0 0 4px rgba(243, 112, 0, 0.13);
 }
 
 /* Password field with toggle */
@@ -179,14 +210,30 @@
 /* Submit button */
 .p-login__submit {
   margin-top: 0.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 8px rgba(243, 112, 0, 0.25);
-  transition: filter 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #ff9a2e 0%, #f37000 60%, #e06000 100%);
+  box-shadow:
+    0 4px 14px rgba(243, 112, 0, 0.32),
+    0 1px 3px rgba(243, 112, 0, 0.15);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  transition: filter 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
-.p-login__submit:hover {
-  filter: brightness(1.05);
-  box-shadow: 0 4px 14px rgba(243, 112, 0, 0.35);
+.p-login__submit:hover,
+.p-login__submit:focus {
+  filter: brightness(1.07);
+  box-shadow:
+    0 6px 20px rgba(243, 112, 0, 0.38),
+    0 2px 6px rgba(243, 112, 0, 0.18);
+  transform: translateY(-1px);
+}
+
+.p-login__submit:active {
+  transform: translateY(0);
+  filter: brightness(0.97);
 }
 
 /* ── Help / error messages ────────────────────────────── */
@@ -232,25 +279,25 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin: 1.5rem 0 1rem;
-  color: #94a3b8;
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  margin: 1.1rem 0 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(15, 23, 42, 0.07);
+  color: #64748b;
+  font-size: 0.8125rem;
+  text-align: center;
+  justify-content: center;
 }
 
 .p-login__separator::before,
 .p-login__separator::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: #e2e8f0;
+  content: none;
 }
 
 .p-login__signup {
-  border-radius: 0.75rem;
+  border-radius: 999px;
   height: 44px;
   font-size: 0.9375rem;
+  font-weight: 700;
 }
 
 /* ── Responsive ───────────────────────────────────────── */

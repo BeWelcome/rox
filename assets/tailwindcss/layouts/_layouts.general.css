@@ -3555,13 +3555,7 @@ main:has(.p-hero) {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.75rem 1.25rem;
-  padding: 1rem 1.1rem;
-  border: 1px solid #eef2f7;
-  border-radius: 1rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-  box-shadow:
-    0 1px 3px rgba(15, 23, 42, 0.04),
-    0 4px 12px rgba(15, 23, 42, 0.05);
+  padding: 0.5rem 0;
 }
 
 .p-gallery-manage__panel-row {
@@ -3802,7 +3796,7 @@ main:has(.p-hero) {
 #masonry-grid {
   --gallery-grid-gap: 0.875rem;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   gap: var(--gallery-grid-gap);
   margin: 0 !important;
   padding: 0 !important;
@@ -4150,7 +4144,7 @@ main:has(.p-hero) {
   }
 
   .p-gallery-manage__panel {
-    padding: 0.85rem;
+    padding: 0.25rem 0;
   }
 
   .p-gallery-manage__buttons {
@@ -4173,8 +4167,8 @@ main:has(.p-hero) {
   }
 
   .p-gallery-manage__grid-wrap #masonry-grid {
-    --gallery-grid-gap: 0.75rem;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    --gallery-grid-gap: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -4246,6 +4240,70 @@ main:has(.p-hero) {
 @keyframes galleryTabIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Album set sub-view (within Albums tab) ── */
+
+.p-gallery-set-view {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem 1.5rem;
+}
+
+.p-gallery-set-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0 0.75rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.p-gallery-set-nav__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #f37000;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.p-gallery-set-nav__back:hover {
+  color: #d96400;
+}
+
+.p-gallery-set-nav__sep {
+  color: #cbd5e1;
+}
+
+.p-gallery-set-nav__title {
+  color: #1e293b;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.p-gallery-set-nav__delete {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #94a3b8;
+  cursor: pointer;
+  margin-left: auto;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.p-gallery-set-nav__delete:hover {
+  background: #fef2f2;
+  color: #dc2626;
 }
 
 /* ── Albums tab ── */

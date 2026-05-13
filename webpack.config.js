@@ -52,6 +52,14 @@ Encore
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('scrollingtabs', './assets/js/scrollingtabs.js')
     .addEntry('email', './assets/scss/email.scss')
+    .addEntry('password/showhide', './assets/js/password/showhide.js')
+    // CKEditor
+    .addPlugin(new CKEditorTranslationsPlugin({
+        language: 'en',
+        additionalLanguages: 'all',
+        outputDirectory: 'cktranslations',
+        buildAllTranslationsToSeparateFiles: true
+    }))
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
     .addEntry('block_highlight', './assets/js/block_highlight.js')

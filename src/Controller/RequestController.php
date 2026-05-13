@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
+use App\Doctrine\MemberStatusType;
+use App\Doctrine\SpamInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
@@ -41,11 +43,11 @@ class RequestController extends BaseRequestAndInvitationController
     private Logger $logger;
 
     public function __construct(
-        ConversationModel $conversationModel,
-        HostingRequestModel $requestModel,
+        ConversationModel      $conversationModel,
+        HostingRequestModel    $requestModel,
         EntityManagerInterface $entityManager,
-        Mailer $mailer,
-        Logger $logger
+        Mailer                 $mailer,
+        Logger                 $logger
     ) {
         parent::__construct($requestModel, $entityManager);
 
@@ -169,6 +171,7 @@ class RequestController extends BaseRequestAndInvitationController
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
             // Write request to database after doing some checks
             $hostingRequest = $this->getMessageFromData($requestForm->getData(), $guest, $host);
+            $hostingRequest = $this->conversationModel->formatConversation($hostingRequest);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($hostingRequest);
@@ -318,7 +321,9 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
+        if (strpos($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
+            $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
+        }
     }
 
     private function sendHostReplyNotification(

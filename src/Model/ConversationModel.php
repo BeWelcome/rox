@@ -14,18 +14,21 @@ use App\Utilities\ConversationThread;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
 {
     private Mailer $mailer;
     private EntityManagerInterface $entityManager;
     private ConversationThread $conversationThread;
+    private TranslatorInterface $translator;
 
-    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager)
+    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
         $this->mailer = $mailer;
         $this->entityManager = $entityManager;
         $this->conversationThread = new ConversationThread($entityManager);
+        $this->translator = $translator;
     }
 
     /**
@@ -283,6 +286,21 @@ class ConversationModel
             }
         }
         $em->flush();
+    }
+
+    public function formatConversation(Message $message): Message
+    {
+        $messageText = $message->getMessage();
+        $found = preg_match("/@|\.at\.|-at-|\(at\)/i", $messageText);
+
+        if ($found != 0) {
+            $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
+            $message->setFolder(InFolderType::SPAM);
+            $message->setStatus(MessageStatusType::CHECK);
+            $message->setMessage($messageText);
+        }
+
+        return $message;
     }
 
     private function hasLimitExceeded(Member $member, string $sql, int $perHour, int $perDay): bool

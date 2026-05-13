@@ -121,7 +121,7 @@ abstract class AbstractConversationsAdapter
 
     protected function getNotSpamCondition(): string
     {
-        return 'InFolder <> \'' . InFolderType::SPAM . '\'';
+        return '(m.initiator_id = :memberId or InFolder <> \'' . InFolderType::SPAM . '\')';
     }
 
     abstract protected function getConversationsQuery(): string;

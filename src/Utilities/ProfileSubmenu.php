@@ -109,7 +109,7 @@ class ProfileSubmenu
 
         if (!$ownProfile) {
             $comment = $commentRepository->findOneBy(['fromMember' => $loggedInMember, 'toMember' => $member]);
-            $memberInfo['comment'] = null !== $comment;
+            $memberInfo['comment'] = $comment;
 
             $note = $noteRepository->findOneBy(['owner' => $loggedInMember, 'member' => $member]);
             $memberInfo['note'] = null !== $note;
@@ -201,12 +201,16 @@ class ProfileSubmenu
             ]);
         }
 
-        if ($parameters['comment']) {
-            $this->addSubmenuItem('comment', [
-                'key' => 'EditComments',
-                'icon' => 'comment',
-                'url' => $this->routing->generate('edit_comment', ['username' => $username]),
-            ]);
+        /** @var Comment $comment */
+        $comment = $parameters['comment'];
+        if (null !== $comment) {
+            if ($comment->getEditingAllowed()) {
+                $this->addSubmenuItem('comment', [
+                    'key' => 'EditComments',
+                    'icon' => 'comment',
+                    'url' => $this->routing->generate('edit_comment', ['username' => $username]),
+                ]);
+            }
         } else {
             $this->addSubmenuItem('comment', [
                 'key' => 'AddComments',
@@ -215,7 +219,8 @@ class ProfileSubmenu
             ]);
         }
 
-        if ($parameters['family_or_friend']) {
+/*        if ($parameters['family_or_friend']) {
+
             $this->addSubmenuItem('family_or_friend', [
                 'key' => 'profile.relation.edit',
                 'icon' => 'handshake',
@@ -228,7 +233,7 @@ class ProfileSubmenu
                 'url' => $this->routing->generate('add_relation', ['username' => $username]),
             ]);
         }
-
+*/
         if ($parameters['note']) {
             $this->addSubmenuItem('edit_note', [
                 'key' => 'NoteEditMyNotesOfMember',

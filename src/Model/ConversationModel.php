@@ -14,16 +14,21 @@ use App\Utilities\ConversationThread;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Normalizer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
 {
-    private readonly ConversationThread $conversationThread;
+    private Mailer $mailer;
+    private EntityManagerInterface $entityManager;
+    private ConversationThread $conversationThread;
+    private TranslatorInterface $translator;
 
-    public function __construct(private readonly Mailer $mailer, private readonly EntityManagerInterface $entityManager, private readonly TranslatorInterface $translator)
+    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
-        $this->conversationThread = new ConversationThread($this->entityManager);
+        $this->mailer = $mailer;
+        $this->entityManager = $entityManager;
+        $this->conversationThread = new ConversationThread($entityManager);
+        $this->translator = $translator;
     }
 
     /**
@@ -277,18 +282,14 @@ class ConversationModel
 
     public function formatConversation(Message $message): Message
     {
-        $messageText = preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $message->getMessage());
-        $normalized = Normalizer::normalize($messageText, Normalizer::FORM_KC);
-        if (false === $normalized) {
-            $normalized = $messageText;
-        }
-        $found = preg_match("/@|\.at\.|-at-|\(at\)|verif|\.shop|system|support/i", $normalized);
+        $messageText = $message->getMessage();
+        $found = preg_match("/@|\.at\.|-at-|\(at\)/i", $messageText);
 
-        if (0 !== $found) {
+        if ($found != 0) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
             $message->setFolder(InFolderType::SPAM);
             $message->setStatus(MessageStatusType::CHECK);
-            $message->setMessage($messageText . '<p>Potential spam. Please report if necessary.</p>');
+            $message->setMessage($messageText);
         }
 
         return $message;

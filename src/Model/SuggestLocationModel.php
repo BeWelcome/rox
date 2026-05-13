@@ -273,7 +273,7 @@ class SuggestLocationModel
 
     private function getCountries(array $parts, int $limit = 3): array
     {
-        if (1 !== \count($parts)) {
+        if (1 !== count($parts)) {
             return [];
         }
 
@@ -432,7 +432,7 @@ class SuggestLocationModel
 
     private function getQueryForGeonamesRt(): Search
     {
-        $config = ['host' => $this->manticoreHost, 'port' => $this->manticorePort];
+        $config = ['host' => $this->manticoreHost,'port' => $this->manticorePort];
         $client = new Client($config);
         $query = new Search($client);
         $query

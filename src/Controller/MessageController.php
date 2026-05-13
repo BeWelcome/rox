@@ -185,8 +185,8 @@ class MessageController extends AbstractController
             $subject = new Subject();
             $subject->setSubject($subjectText);
             $request = null;
-            $this->entityManager->persist($subject);
-            $this->entityManager->flush();
+            $em->persist($subject);
+            $em->flush();
             $message = $this->conversationModel->formatConversation($message);
         } else {
             $subject = $parent->getSubject();
@@ -199,10 +199,10 @@ class MessageController extends AbstractController
         $message->setParent($parent);
         $message->setSender($sender);
         $message->setReceiver($receiver);
-        $this->entityManager->persist($message);
-        $this->entityManager->flush();
+        $em->persist($message);
+        $em->flush();
 
-        if (!str_contains($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+        if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
             $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
                 'message' => $message,
                 'subject' => $subjectText,

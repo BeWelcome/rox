@@ -150,22 +150,20 @@ class MemberPage extends PageWithActiveSkin
             if (isset($TCom[0])) {
                 if ($TCom[0]->AllowEdit) {
                     $tt = array_merge($tt, [
-                        [ 'commmentsadd', "members/$username/comment/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd']
+                        ['commmentsadd', "members/$username/comment/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd']
                     ]);
                 }
             } else {
                 $tt = array_merge($tt, [['commmentsadd', "members/$username/comment/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd']]);
             }
             $tt = array_merge($tt, [
-/*                (null === $relation)
-                    ? array('relationsadd', "members/$username/relation/add", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.add'), 'relationsadd')
-                    : array('relationsadd', "members/$username/relation/edit", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.edit'), 'relationsadd'),                array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
-*/                ['report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')],
-                ['separator-1', '', '', 'space'],
-                ['profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage],
-                ['comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' ' . $this->getBadge($comments_count['all'])],
-                ['relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $words->get('profile.relations').' ' . $this->getBadge($relations_count)],
-                ['gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)],
+                array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
+                array('report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),
+                array('separator-1', '', '', 'space'),
+                array('profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage),
+                array('comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' ' . $this->getBadge($comments_count['all'])),
+                array('relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $words->get('profile.relations').' ' . $this->getBadge($relations_count)),
+                array('gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)),
             ]);
             if (MemberStatusType::PASSED_AWAY !== $member->Status) {
                 if ($this->leg) {

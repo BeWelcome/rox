@@ -49,8 +49,10 @@ class WordRepository extends EntityRepository
                 )
             )
             ->andWhere('t.domain = :domain')
-            ->setParameter('locale', $locale)
-            ->setParameter('domain', $domain);
+            ->setParameter(':locale', $locale)
+            ->setParameter(':domain', $domain)
+            ->orderBy('t.updated', 'DESC')
+        ;
 
         $translations = $qb
             ->getQuery()

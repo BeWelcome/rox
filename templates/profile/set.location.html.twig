@@ -43,8 +43,8 @@
     {{ form_widget(form.latitude) }}
     {{ form_widget(form.longitude) }}
     {% set address = member.activeAddress %}
-    <input type="hidden" id="original_latitude" value="{{ address.latitude }}">
-    <input type="hidden" id="original_longitude" value="{{ address.longitude }}">
+    <input type="hidden" id="original_latitude" value="{{ address ? address.latitude : '' }}">
+    <input type="hidden" id="original_longitude" value="{{ address ? address.longitude : '' }}">
 
     <input type="hidden" id="marker_label_text" value="{{ 'profile.setlocation.marker'|trans }}">
     <div class="p-location-map" id="map">

@@ -164,13 +164,13 @@ class ProfileController extends AbstractController
 
         $address = $member->getActiveAddress();
 
-        $setLocationForm = $this->createForm(SetLocationType::class, [
+        $setLocationForm = $this->createForm(SetLocationType::class, $address ? [
             'fullname' => $address->getLocation()->getFullname(),
             'name' => $address->getLocation()->getName(),
             'geoname_id' => $address->getLocation()->getGeonameId(),
             'latitude' => $address->getLatitude(),
             'longitude' => $address->getLongitude(),
-        ]);
+        ] : []);
         $setLocationForm->handleRequest($request);
 
         if ($setLocationForm->isSubmitted() && $setLocationForm->isValid()) {
@@ -180,6 +180,11 @@ class ProfileController extends AbstractController
             /** @var Location $location */
             $location = $locationRepository->find($data['geoname_id']);
             if (null !== $location) {
+                if (!$address) {
+                    $address = new \App\Entity\Address();
+                    $address->setMember($member);
+                    $address->setActive(true);
+                }
                 $address->setLocation($location);
                 $address->setLatitude($data['latitude']);
                 $address->setLongitude($data['longitude']);

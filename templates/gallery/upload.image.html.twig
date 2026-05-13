@@ -145,18 +145,29 @@
                 if (progressEl) progressEl.remove();
 
                 let response = JSON.parse(client.responseText);
-                const statusDiv = document.createElement('div');
-                statusDiv.classList.add('p-upload__item-status');
+                const body = imageProgress.querySelector('.p-upload__item-body');
+                const msg = document.createElement('div');
+                msg.className = 'p-upload__item-message';
+
                 if (response.success) {
-                    statusDiv.classList.add('p-upload__item-status--success');
-                    statusDiv.innerHTML = '<i class="fas fa-circle-check" aria-hidden="true"></i> ' +
-                        response.filename + ' — {{ 'gallery.upload.successful'|trans }}';
+                    const thumb = imageProgress.querySelector('.p-upload__item-thumb');
+                    const check = document.createElement('div');
+                    check.className = 'p-upload__item-thumb-check';
+                    check.innerHTML = '<i class="fas fa-circle-check" aria-hidden="true"></i>';
+                    thumb.appendChild(check);
+
+                    const filenameEl = body.querySelector('.p-upload__item-filename');
+                    if (filenameEl) filenameEl.textContent = response.filename;
+
+                    msg.classList.add('p-upload__item-message--success');
+                    msg.textContent = '{{ 'gallery.upload.successful'|trans }}';
                 } else {
-                    statusDiv.classList.add('p-upload__item-status--error');
-                    statusDiv.innerHTML = '<i class="fas fa-circle-exclamation" aria-hidden="true"></i> ' +
+                    msg.classList.add('p-upload__item-message--error');
+                    msg.innerHTML = '<i class="fas fa-circle-exclamation" aria-hidden="true"></i> ' +
                         response.filename + ' — ' + response.error;
                 }
-                imageProgress.append(statusDiv);
+                body.appendChild(msg);
+
                 clients = clients.filter((value)=>value!==client);
                 if (clients.length === 0) {
                     resetForm();
@@ -168,9 +179,6 @@
                 const percent = document.getElementById('percent-' + index);
                 percent.style.width = p + "%";
                 percent.setAttribute('aria-value-now', p);
-
-                const filename = document.getElementById('filename-' + index);
-                filename.innerText = file.name + " — " + p + "%";
             };
 
             client.onabort = function(e) {
@@ -197,8 +205,9 @@
         function getFileTypeError(index, file) {
             const imageTypeError = imageTypeErrorTemplate.cloneNode(true);
             imageTypeError.id = 'image-progress-' + index;
-            const error = imageTypeError.children[1];
-            error.innerText = file.name + " — {{ 'gallery.upload.type.error'|trans }}";
+            const error = imageTypeError.querySelector('.p-upload__item-message');
+            error.innerHTML = '<i class="fas fa-circle-exclamation" aria-hidden="true"></i> ' +
+                file.name + " — {{ 'gallery.upload.type.error'|trans }}";
 
             return imageTypeError;
         }
@@ -206,8 +215,9 @@
         function getFileSizeErrorImage(index, file) {
             const imageSizeError = imageSizeErrorTemplate.cloneNode(true);
             imageSizeError.id = 'image-progress-' + index;
-            const error = imageSizeError.children[1];
-            error.innerText = file.name + " — {{ 'gallery.upload.size.error'|trans }}";
+            const error = imageSizeError.querySelector('.p-upload__item-message');
+            error.innerHTML = '<i class="fas fa-circle-exclamation" aria-hidden="true"></i> ' +
+                file.name + " — {{ 'gallery.upload.size.error'|trans }}";
 
             setImage(imageSizeError, index, file);
             return imageSizeError;
@@ -325,14 +335,18 @@
 
                 <div id="image-size-error" class="p-upload__item p-upload__item--error d-none">
                     <div class="p-upload__item-thumb"><img src="" alt=""></div>
-                    <div class="p-upload__item-status p-upload__item-status--error"></div>
+                    <div class="p-upload__item-body">
+                        <div class="p-upload__item-message p-upload__item-message--error"></div>
+                    </div>
                 </div>
 
                 <div id="image-type-error" class="p-upload__item p-upload__item--error d-none">
                     <div class="p-upload__item-thumb p-upload__item-thumb--placeholder" aria-hidden="true">
                         <i class="fas fa-file"></i>
                     </div>
-                    <div class="p-upload__item-status p-upload__item-status--error"></div>
+                    <div class="p-upload__item-body">
+                        <div class="p-upload__item-message p-upload__item-message--error"></div>
+                    </div>
                 </div>
 
                 <div id="progressbars" class="p-upload__queue-list"></div>

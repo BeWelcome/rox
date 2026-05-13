@@ -71,9 +71,9 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
         <div class="p-gallery-manage__empty-icon" aria-hidden="true">
             <i class="fas fa-images"></i>
         </div>
-        <h2 class="p-gallery-manage__empty-title"><?= $words->get('gallery.manage.empty.title') ?></h2>
+        <h2 class="p-gallery-manage__empty-title"><?= $words->get('gallery.manage.empty.title') ?: 'No photos yet' ?></h2>
         <p class="p-gallery-manage__empty-text">
-            <?= $words->get('gallery.manage.empty.text') ?>
+            <?= $words->get('gallery.manage.empty.text') ?: 'Share your travels and memories with the community by uploading your first photos.' ?>
         </p>
         <button class="p-gallery-manage__empty-btn" type="button" data-goto-tab="upload">
             <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
@@ -233,14 +233,18 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
 
             <div id="upload-size-error-tpl" class="p-upload__item p-upload__item--error d-none">
                 <div class="p-upload__item-thumb"><img src="" alt=""></div>
-                <div class="p-upload__item-status p-upload__item-status--error"></div>
+                <div class="p-upload__item-body">
+                    <div class="p-upload__item-message p-upload__item-message--error"></div>
+                </div>
             </div>
 
             <div id="upload-type-error-tpl" class="p-upload__item p-upload__item--error d-none">
                 <div class="p-upload__item-thumb p-upload__item-thumb--placeholder" aria-hidden="true">
                     <i class="fas fa-file"></i>
                 </div>
-                <div class="p-upload__item-status p-upload__item-status--error"></div>
+                <div class="p-upload__item-body">
+                    <div class="p-upload__item-message p-upload__item-message--error"></div>
+                </div>
             </div>
 
             <div id="upload-progressbars" class="p-upload__queue-list"></div>
@@ -259,6 +263,11 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
     function activateTab(name) {
         const valid = ['photos', 'albums', 'upload'];
         const target = valid.includes(name) ? name : defaultTab;
+        if (hadUploads && target !== 'upload') {
+            location.href = location.pathname + '#' + target;
+            location.reload();
+            return;
+        }
         tabs.forEach(t => t.classList.toggle('p-gallery-tab-btn--active', t.dataset.tab === target));
         panels.forEach(p => p.classList.toggle('p-gallery-tab-panel--active', p.id === 'tab-' + target));
         if (history.replaceState) {
@@ -360,6 +369,7 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
     const typeTpl = document.getElementById('upload-type-error-tpl');
 
     let uploadClients = [];
+    let hadUploads = false;
 
     function updateDropzoneSummary() {
         const count = fileInput.files ? fileInput.files.length : 0;
@@ -460,18 +470,26 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
             if (progEl) progEl.remove();
             let res;
             try { res = JSON.parse(client.responseText); } catch(e) { res = {success: false, error: 'Parse error', filename: file.name}; }
-            const statusDiv = document.createElement('div');
-            statusDiv.classList.add('p-upload__item-status');
+            const body = row && row.querySelector('.p-upload__item-body');
+            const msg = document.createElement('div');
+            msg.classList.add('p-upload__item-message');
             if (res.success) {
-                statusDiv.classList.add('p-upload__item-status--success');
-                statusDiv.innerHTML = '<i class="fas fa-circle-check" aria-hidden="true"></i> ' +
-                    res.filename + ' — <?= addslashes($words->get('gallery.upload.successful') ?: 'uploaded successfully') ?>';
+                const thumb = row.querySelector('.p-upload__item-thumb');
+                const check = document.createElement('div');
+                check.className = 'p-upload__item-thumb-check';
+                check.innerHTML = '<i class="fas fa-circle-check" aria-hidden="true"></i>';
+                thumb && thumb.appendChild(check);
+                const fnEl = row.querySelector('.p-upload__item-filename');
+                if (fnEl) fnEl.textContent = res.filename;
+                msg.classList.add('p-upload__item-message--success');
+                msg.textContent = <?= json_encode($words->get('gallery.upload.successful') ?: 'Image uploaded successfully.') ?>;
+                hadUploads = true;
             } else {
-                statusDiv.classList.add('p-upload__item-status--error');
-                statusDiv.innerHTML = '<i class="fas fa-circle-exclamation" aria-hidden="true"></i> ' +
+                msg.classList.add('p-upload__item-message--error');
+                msg.innerHTML = '<i class="fas fa-circle-exclamation" aria-hidden="true"></i> ' +
                     res.filename + ' — ' + (res.error || 'Error');
             }
-            row && row.append(statusDiv);
+            body && body.appendChild(msg);
             uploadClients = uploadClients.filter(c => c !== client);
             if (uploadClients.length === 0) resetUploadForm();
         };
@@ -480,8 +498,6 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
             const p = Math.round(100 / e.total * e.loaded);
             const pct = document.getElementById('upload-pct-' + i);
             if (pct) { pct.style.width = p + '%'; pct.setAttribute('aria-valuenow', p); }
-            const fn = document.getElementById('upload-fn-' + i);
-            if (fn) fn.innerText = file.name + ' — ' + p + '%';
         };
 
         client.onabort = () => {
@@ -517,7 +533,9 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
     function getSizeErrorTpl(i, file) {
         const el = sizeTpl.cloneNode(true);
         el.id = 'upload-item-' + i;
-        el.children[1].innerText = file.name + ' — <?= addslashes($words->get('gallery.upload.size.error') ?: 'File too large') ?>';
+        const err = el.querySelector('.p-upload__item-message');
+        if (err) err.innerHTML = '<i class="fas fa-circle-exclamation" aria-hidden="true"></i> ' +
+            file.name + ' — <?= addslashes($words->get('gallery.upload.size.error') ?: 'File too large') ?>';
         setThumb(el, file);
         return el;
     }
@@ -525,7 +543,9 @@ $defaultTab = $hasPhotos ? 'photos' : 'upload';
     function getTypeErrorTpl(i, file) {
         const el = typeTpl.cloneNode(true);
         el.id = 'upload-item-' + i;
-        el.children[1].innerText = file.name + ' — <?= addslashes($words->get('gallery.upload.type.error') ?: 'Not an image') ?>';
+        const err = el.querySelector('.p-upload__item-message');
+        if (err) err.innerHTML = '<i class="fas fa-circle-exclamation" aria-hidden="true"></i> ' +
+            file.name + ' — <?= addslashes($words->get('gallery.upload.type.error') ?: 'Not an image') ?>';
         return el;
     }
 

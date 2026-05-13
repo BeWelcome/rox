@@ -38,11 +38,11 @@ class RequestController extends BaseRequestAndInvitationController
     use TranslatorTrait;
 
     public function __construct(
-        ConversationModel $conversationModel,
-        HostingRequestModel $requestModel,
+        ConversationModel      $conversationModel,
+        HostingRequestModel    $requestModel,
         EntityManagerInterface $entityManager,
-        private Mailer $mailer,
-        private Logger $logger,
+        Mailer                 $mailer,
+        Logger                 $logger
     ) {
         parent::__construct($requestModel, $entityManager);
 
@@ -319,7 +319,7 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        if (!str_contains($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+        if (strpos($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
             $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
         }
     }

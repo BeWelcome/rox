@@ -406,3 +406,6 @@ help.email.change:
 profile.avatar.picture:
     - Profile picture
     - Headline on the profile picture update page
+profile.edit.section.empty:
+    - 'Nothing added yet. Click the edit button to add content.'
+    - Hint shown on the profile edit page when a subsection has no content yet.

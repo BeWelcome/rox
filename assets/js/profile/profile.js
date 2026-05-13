@@ -11,7 +11,12 @@ locationMaps.forEach( locationMap => {
 
     const map = L.map(locationMap, {
         zoomControl: false,
-        boxZoom: false
+        boxZoom: false,
+        dragging: false,
+        scrollWheelZoom: false,
+        touchZoom: false,
+        doubleClickZoom: false,
+        keyboard: false,
     }).setView([latitude, longitude], 10)
 
     map.attributionControl.setPrefix(false)

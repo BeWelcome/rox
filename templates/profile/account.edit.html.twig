@@ -66,6 +66,9 @@
   <section class="p-account-section">
     <div class="p-pill-group">
       <span class="p-pill-group__label">{{ form.gender.vars.label|trans }}</span>
+      {% if form.gender.vars.help %}
+        <small class="p-account-section__help">{{ form.gender.vars.help|trans }}</small>
+      {% endif %}
       <div class="p-pill-group__options">
         {% for child in form.gender %}
           <div class="p-pill-option">
@@ -80,9 +83,6 @@
       </div>
     </div>
     {{ form_errors(form.gender) }}
-    {% if form.gender.vars.help %}
-      <small class="p-account-section__help">{{ form.gender.vars.help|trans }}</small>
-    {% endif %}
     <label class="p-account-toggle" for="{{ form.show_gender.vars.id }}">
       <input type="checkbox" id="{{ form.show_gender.vars.id }}" name="{{ form.show_gender.vars.full_name }}"
              class="p-preference-toggle__input"

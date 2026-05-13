@@ -49,16 +49,16 @@
             {% if aboutMe|length != 0 %}
               {{ aboutMe|purify|nl2br }}
             {% elseif edit %}
-              <div class="h5 u:mt-8 u:mb-0">{{ 'profile.about.me'|trans({}, "messages", profile_language)|raw }}</div>
+              <p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>
             {% endif %}
             {% if edit %}
               <div class="h5 u:mt-8 u:mb-0">{{ 'profile.occupation'|trans({}, "messages", profile_language)|raw }}</div>
-              <div>{% if occupation|length != 0 %}{{ occupation|purify|nl2br }}{% endif %}</div>
+              {% if occupation|length != 0 %}<div>{{ occupation|purify|nl2br }}</div>{% else %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
             {% endif %}
           </div>
           {% if offerHosts|length > 0 or edit %}
             <div class="stay h5 u:mt-8 u:mb-0">{{ 'profile.offer.hosts'|trans({}, "messages", profile_language)|raw }}</div>
-            {% if offerHosts|length > 0 %}<div>{{ profileTranslation['OfferHosts']|purify }}</div>{% endif %}
+            {% if offerHosts|length > 0 %}<div>{{ profileTranslation['OfferHosts']|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
           {% endif %}
         </div>
       </div>
@@ -77,21 +77,25 @@
         <div class="card-body">
           <div class="card-text m-0">
             {% if not member.accommodation is null or edit %}
-              {% if edit and not address is same as(false) %}
+              {% if edit %}
                 <section class="p-accom-summary">
                   <div class="p-accom-summary__info">
                     <span class="p-accom-summary__eyebrow">
                       <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
                       {{ 'profile.location'|trans({}, 'messages', profile_language) }}
                     </span>
-                    <h3 class="p-accom-summary__city">{{ address.location.name }}</h3>
-                    <p class="p-accom-summary__region">{{ address.location.admin1.name }} · {{ address.location.country.name }}</p>
+                    {% if not address is same as(false) %}
+                      <h3 class="p-accom-summary__city">{{ address.location.name }}</h3>
+                      <p class="p-accom-summary__region">{{ address.location.admin1.name }} · {{ address.location.country.name }}</p>
+                    {% endif %}
                     <a href="{{ url('profile_set_location', {username: member.username}) }}" class="p-accom-summary__change">
                       <i class="fas fa-location-arrow" aria-hidden="true"></i>
                       {{ 'profile.change.location'|trans({}, 'messages', profile_language) }}
                     </a>
                   </div>
-                  <div id="location-map-{{ profile_language }}" class="p-accom-summary__map" aria-label="{{ 'profile.location'|trans({}, 'messages', profile_language) }}"></div>
+                  {% if not address is same as(false) %}
+                    <div id="location-map-{{ profile_language }}" class="p-accom-summary__map" aria-label="{{ 'profile.location'|trans({}, 'messages', profile_language) }}"></div>
+                  {% endif %}
                 </section>
               {% endif %}
               <div class="p-accom-stats u:mb-8">
@@ -128,41 +132,45 @@
 
             {% if maxLengthOfStay|length != 0 or edit %}
               <div class="stay h5 u:mt-8 u:mb-0">{{ 'profile.max.length.of.stay'|trans({}, "messages", profile_language)|raw }}</div>
-              {% if maxLengthOfStay|length != 0 %}<div>{{ profileTranslation['MaxLengthOfStay']|purify }}</div>{% endif %}
+              {% if maxLengthOfStay|length != 0 %}<div>{{ profileTranslation['MaxLengthOfStay']|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
             {% endif %}
             {% if iLiveWith|length > 0 or edit %}
               <div class="stay h5 u:mt-8 u:mb-0">{{ 'profile.i.live.with'|trans({}, "messages", profile_language)|raw }}</div>
-              {% if iLiveWith|length > 0 %}<div>{{ profileTranslation['ILiveWith']|purify }}</div>{% endif %}
+              {% if iLiveWith|length > 0 %}<div>{{ profileTranslation['ILiveWith']|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
             {% endif %}
             {% if pleaseBring|length > 0 or edit %}
               <div class="stay h5 u:mt-8 u:mb-0">{{ 'profile.please.bring'|trans({}, "messages", profile_language)|raw }}</div>
-              {% if pleaseBring|length > 0 %}<div>{{ profileTranslation['PleaseBring']|purify }}</div>{% endif %}
+              {% if pleaseBring|length > 0 %}<div>{{ profileTranslation['PleaseBring']|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
             {% endif %}
             {% if whereYouSleep|length > 0 or edit %}
               <div class="h5 u:mt-8 u:mb-0">{{ 'profile.where.you.sleep'|trans({}, "messages", profile_language)|raw }}</div>
-              <div>{% if whereYouSleep|length > 0 %}{{ whereYouSleep|purify }}{% endif %}</div>
+              {% if whereYouSleep|length > 0 %}<div>{{ whereYouSleep|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
             {% endif %}
             {% if standardOffers|length > 0 or offerGuests|length > 0 or edit %}
               <div class="h5 u:mt-8 u:mb-0">{{ 'profile.offer.guests'|trans({}, "messages", profile_language)|raw }}</div>
+              {% if standardOffers|length > 0 or offerGuests|length > 0 %}
               <div>
                 {% for offer in standardOffers %}{{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, "messages", profile_language) }}<br>{% endfor %}
                 {% if offerGuests|length > 0 %}{{ offerGuests|purify }}{% endif %}
               </div>
+              {% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
             {% endif %}
             {% if additionalInfo|length != 0 or edit %}
               <div class="h5 u:mt-8 u:mb-0">{{ 'profile.additional.information.for.guests'|trans({}, "messages", profile_language)|raw }}</div>
-              {% if additionalInfo|length != 0 %}{{ additionalInfo|purify }}{% endif %}
+              {% if additionalInfo|length != 0 %}{{ additionalInfo|purify }}{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
             {% endif %}
             {% if gettingThere|length != 0 or edit %}
               <div class="stay h5 u:mt-8 u:mb-0">{{ 'profile.getting.there'|trans({}, "messages", profile_language)|raw }}</div>
-              {% if gettingThere|length != 0 %}<div>{{ profileTranslation['GettingThere']|purify }}</div>{% endif %}
+              {% if gettingThere|length != 0 %}<div>{{ profileTranslation['GettingThere']|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
             {% endif %}
             {% if restrictions|length > 0 or houseRules|length > 0 or edit %}
               <div class="h5 u:mt-8">{{ 'profile.house.rules'|trans({}, "messages", profile_language)|raw }}</div>
+              {% if restrictions|length > 0 or houseRules|length > 0 %}
               <div>
                 {% for restriction in restrictions %}{{ ('restriction_' ~ restriction)|lower|trans({}, "messages", profile_language) }}<br>{% endfor %}
                 {% if houseRules|length > 0 %}{{ houseRules|purify }}{% endif %}
               </div>
+              {% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}
             {% endif %}
 
             {% if not edit and app.user != member and member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
@@ -271,12 +279,16 @@
         {% if interests %}
         <div class="card-body">
           <div class="card-text m-0">
-            {% if hobbies|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.hobbies'|trans({}, "messages", profile_language) }}</div><div>{{ hobbies|purify }}</div>{% endif %}
-            {% if books|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.books'|trans({}, "messages", profile_language) }}</div><div>{{ books|purify }}</div>{% endif %}
-            {% if music|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.music'|trans({}, "messages", profile_language) }}</div><div>{{ music|purify }}</div>{% endif %}
-            {% if movies|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.movies'|trans({}, "messages", profile_language) }}</div><div>{{ movies|purify }}</div>{% endif %}
-            {% if organizations|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.organizations'|trans({}, "messages", profile_language) }}</div><div>{{ organizations|purify }}</div>{% endif %}
+            {% if hobbies|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.hobbies'|trans({}, "messages", profile_language) }}</div>{% if hobbies|length != 0 %}<div>{{ hobbies|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}{% endif %}
+            {% if books|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.books'|trans({}, "messages", profile_language) }}</div>{% if books|length != 0 %}<div>{{ books|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}{% endif %}
+            {% if music|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.music'|trans({}, "messages", profile_language) }}</div>{% if music|length != 0 %}<div>{{ music|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}{% endif %}
+            {% if movies|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.movies'|trans({}, "messages", profile_language) }}</div>{% if movies|length != 0 %}<div>{{ movies|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}{% endif %}
+            {% if organizations|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.organizations'|trans({}, "messages", profile_language) }}</div>{% if organizations|length != 0 %}<div>{{ organizations|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}{% endif %}
           </div>
+        </div>
+        {% elseif edit %}
+        <div class="card-body">
+          <p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>
         </div>
         {% endif %}
       </div>
@@ -296,9 +308,13 @@
         {% if pastTrips|length > 0 or plannedTrips|length > 0 %}
         <div class="card-body">
           <div class="card-text m-0">
-            {% if pastTrips|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.past.trips'|trans({}, "messages", profile_language)|raw }}</div><div>{{ pastTrips|purify }}</div>{% endif %}
-            {% if plannedTrips|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.planned.trips'|trans({}, "messages", profile_language)|raw }}</div><div>{{ plannedTrips|purify }}</div>{% endif %}
+            {% if pastTrips|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.past.trips'|trans({}, "messages", profile_language)|raw }}</div>{% if pastTrips|length != 0 %}<div>{{ pastTrips|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}{% endif %}
+            {% if plannedTrips|length != 0 or edit %}<div class="h5 u:mt-8 u:mb-0">{{ 'profile.planned.trips'|trans({}, "messages", profile_language)|raw }}</div>{% if plannedTrips|length != 0 %}<div>{{ plannedTrips|purify }}</div>{% elseif edit %}<p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>{% endif %}{% endif %}
           </div>
+        </div>
+        {% elseif edit %}
+        <div class="card-body">
+          <p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>
         </div>
         {% endif %}
       </div>
@@ -331,6 +347,10 @@
               <span class="p-sidebar-card__count-badge">{{ member.groups|length }}</span>
             </a>
           {% endif %}
+        </div>
+        {% elseif edit %}
+        <div class="card-body">
+          <p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>
         </div>
         {% endif %}
       </div>
@@ -415,6 +435,10 @@
               {{ 'profile.all.friends'|trans({}, "messages", profile_language) }} <span class="badge text-bg-primary u:rounded-8 u:px-8 u:min-w-20">{{ friends|length }}</span>
             </a>
           {% endif %}
+        </div>
+        {% elseif edit %}
+        <div class="card-body">
+          <p class="p-profile-empty-hint">{{ 'profile.edit.section.empty'|trans }}</p>
         </div>
         {% endif %}
       </div>

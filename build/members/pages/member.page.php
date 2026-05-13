@@ -145,13 +145,16 @@ class MemberPage extends PageWithActiveSkin
             if ($this->message !== 0) {
                 $feedbackUrl .= "&messageId=" . $this->message;
             }
+            if (isset($TCom[0])) {
+                if ($TCom[0]->AllowEdit) {
+                    $tt = array_merge($tt, [
+                        ['commmentsadd', "members/$username/comment/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd']
+                    ]);
+                }
+            } else {
+                $tt = array_merge($tt, [['commmentsadd', "members/$username/comment/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd']]);
+            }
             $tt = array_merge($tt, [
-                (isset($TCom[0]))
-                    ? array('commmentsadd', "members/$username/comment/edit", '<i class="fa fa-fw fa-comment"></i> ' . $ww->EditComments, 'commentsadd')
-                    : array('commmentsadd', "members/$username/comment/add", '<i class="fa fa-fw fa-comment"></i> ' . $ww->AddComments, 'commentsadd'),
-                (null === $relation)
-                    ? array('relationsadd', "members/$username/relation/add", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.add'), 'relationsadd')
-                    : array('relationsadd', "members/$username/relation/edit", '<i class="fa fa-fw fa-handshake"></i> ' . $words->get('profile.relation.edit'), 'relationsadd'),
                 array('notes', $mynotelinkname, '<i class="fa fa-fw fa-pencil-alt"></i> ' . $mynotewordsname, 'mynotes'),
                 array('report', $feedbackUrl, '<i class="fas fa-fw fa-flag"></i> ' . $words->getSilent('profile.report')),
                 array('separator-1', '', '', 'space'),

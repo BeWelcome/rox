@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
+use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
@@ -64,9 +66,8 @@ class MessageController extends AbstractController
 
         if (!$receiver->isBrowsable()) {
             $this->addTranslatedFlash('error', 'flash.member.invalid');
-            $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
         }
 
         if (
@@ -178,12 +179,15 @@ class MessageController extends AbstractController
     ): Message {
         $em = $this->getDoctrine()->getManager();
         $message = new Message();
+        $message->setMessage($body);
+        $message->setStatus('Sent');
         if (null === $parent) {
             $subject = new Subject();
             $subject->setSubject($subjectText);
             $request = null;
             $em->persist($subject);
             $em->flush();
+            $message = $this->conversationModel->formatConversation($message);
         } else {
             $subject = $parent->getSubject();
             $request = $parent->getRequest();
@@ -195,16 +199,16 @@ class MessageController extends AbstractController
         $message->setParent($parent);
         $message->setSender($sender);
         $message->setReceiver($receiver);
-        $message->setMessage($body);
-        $message->setStatus('Sent');
         $em->persist($message);
         $em->flush();
 
-        $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
-            'message' => $message,
-            'subject' => $subjectText,
-            'body' => $body,
-        ]);
+        if (strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
+            $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
+                'message' => $message,
+                'subject' => $subjectText,
+                'body' => $body,
+            ]);
+        }
 
         return $message;
     }

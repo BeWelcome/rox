@@ -32,7 +32,7 @@ class RoxPostHandler extends ObjectWithInjection
         }
         
         if (isset($post_args['formkit_memory_recovery'])) {
-            $mem_from_recovery = unserialize(stripslashes(htmlspecialchars_decode($post_args['formkit_memory_recovery'])));
+            $mem_from_recovery = false; // unserialize(stripslashes(htmlspecialchars_decode($post_args['formkit_memory_recovery'])));
         } else {
             $mem_from_recovery = false;
         }

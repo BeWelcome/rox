@@ -43,24 +43,24 @@ class SuggestLocationModel
         $this->manticorePort = $manticorePort;
     }
 
-    public function getSuggestionsForPlaces(string $term): array
+    public function getSuggestionsForPlaces(array $terms): array
     {
-        $places = $this->getPlaces($term, 25);
+        $places = $this->getPlaces($terms, 25);
 
         return ['locations' => $places];
     }
 
-    public function getSuggestionsForPlacesExact(string $term): array
+    public function getSuggestionsForPlacesExact(array $terms): array
     {
-        return ['locations' => $this->getPlacesExact($term, 100)];
+        return ['locations' => $this->getPlacesExact($terms, 100)];
     }
 
-    public function getSuggestionsForLocations(string $term): array
+    public function getSuggestionsForLocations(array $terms): array
     {
-        $placesExact = $this->getPlacesExact($term, 10, self::EXACT_PLACE);
-        $places = $this->getPlaces($term, 20);
-        $adminUnits = $this->getAdminUnits($term, 10);
-        $countries = $this->getCountries($term, 5);
+        $placesExact = $this->getPlacesExact($terms, 10, self::EXACT_PLACE);
+        $places = $this->getPlaces($terms, 20);
+        $adminUnits = $this->getAdminUnits($terms, 10);
+        $countries = $this->getCountries($terms, 5);
         $results = array_merge($placesExact, $places, $adminUnits, $countries);
 
         return ['locations' => $this->removeDuplicates('id', $results)];
@@ -71,10 +71,8 @@ class SuggestLocationModel
      *
      * place[[, admin unit], country]
      */
-    private function getPlacesExact(string $term, int $limit, ?string $translationId = null): array
+    private function getPlacesExact(array $parts, int $limit, ?string $translationId = null): array
     {
-        $parts = array_map('trim', explode(',', $term));
-
         $countryId = '';
         $adminUnits = [];
         if (1 < count($parts)) {
@@ -128,10 +126,8 @@ class SuggestLocationModel
         return $this->getLocationDetails($results, $translationId);
     }
 
-    private function getPlaces(string $term, int $limit): array
+    private function getPlaces(array $parts, int $limit): array
     {
-        $parts = array_map('trim', explode(',', $term));
-
         $countryId = '';
         $adminUnits = [];
         if (1 < count($parts)) {
@@ -181,10 +177,8 @@ class SuggestLocationModel
         return $this->getLocationDetails($results, self::PLACE);
     }
 
-    private function getAdminUnits(string $term, int $limit = 10): array
+    private function getAdminUnits(array $parts, int $limit = 10): array
     {
-        $parts = array_map('trim', explode(',', $term));
-
         $countryId = '';
         $adminUnits = [];
         if (1 < count($parts)) {
@@ -232,10 +226,8 @@ class SuggestLocationModel
         return $this->getLocationDetails($results, self::ADMIN_UNIT);
     }
 
-    private function getCountries(string $term, int $limit = 3): array
+    private function getCountries(array $parts, int $limit = 3): array
     {
-        $parts = array_map('trim', explode(',', $term));
-
         if (1 !== count($parts)) {
             return [];
         }
@@ -445,7 +437,6 @@ class SuggestLocationModel
 
     private function getQueryForGeonamesRt(): Search
     {
-        $locale = $this->translator->getLocale();
         $config = ['host' => $this->manticoreHost,'port' => $this->manticorePort];
         $client = new Client($config);
         $query = new Search($client);

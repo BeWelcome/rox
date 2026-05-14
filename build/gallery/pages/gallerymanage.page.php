@@ -30,6 +30,17 @@ class GalleryManagePage extends GalleryUserPage
     }
 
     #[\Override]
+    protected function getSubmenuItems()
+    {
+        return [];
+    }
+
+    #[\Override]
+    protected function teaser()
+    {
+    }
+
+    #[\Override]
     public function leftSidebar()
     {
         $galleries = $this->galleries;
@@ -44,6 +55,9 @@ class GalleryManagePage extends GalleryUserPage
         $words = $this->getWords();
         $member = $this->loggedInMember;
         $galleries = $this->galleries;
+$backToEditHref = ($this->loggedInMember && $this->loggedInMember->Username)
+            ? '/members/' . rawurlencode((string) $this->loggedInMember->Username) . '/edit'
+            : '#';
         $mem_redirect = $this->layoutkit->formkit->getMemFromRedirect();
         $page_url = PVars::getObj('env')->baseuri . implode('/', PRequest::get()->request);
         $formkit = $this->layoutkit->formkit;

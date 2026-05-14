@@ -30,51 +30,18 @@ class GallerySetPage extends GalleryBasePage
     }
 
     #[\Override]
-    protected function teaser() {
-        ?>
-        <div>
-            <div>
-            <?=$this->breadcrumbs()?>
-            </div>
-            <div class="w-100">
-                <?=$this->teaserHeadline()?>
-            </div>
-        </div>
-        <?php
+    protected function teaser() {}
+
+    #[\Override]
+    protected function getSubmenuItems()
+    {
+        return [];
     }
 
     #[\Override]
     protected function getTopmenuActiveItem()
     {
         return 'gallery';
-    }
-
-    #[\Override]
-    protected function getSubmenuActiveItem()
-    {
-        if ($this->upload) return 'upload';
-        return 'thumbnails';
-    }
-
-    #[\Override]
-    protected function getSubmenuItems()
-    {
-        $username = $this->member->Username;
-        $member = $this->member;
-        $gallery = $this->gallery;
-        $words = $this->getWords();
-        $ww = $this->ww;
-        $wwsilent = $this->wwsilent;
-
-        $tt = [];
-            $tt[]= ['albums', 'gallery/show/user/'. $username .'/sets', $ww->GalleryTitleSets];
-            // $tt[]= array('details', 'gallery/show/sets/'.$gallery->id.'/details/'.$this->page.'', $ww->GalleryDetails);
-        if ($this->myself) {
-            $tt[]= ["manage", 'gallery/manage', $ww->GalleryManage, 'manage'];
-            $tt[]= ["upload", 'gallery/upload_multiple', $ww->GalleryUpload, 'upload'];
-            $tt[]= ["delete", 'gallery/show/sets/'.$gallery->id.'/delete', $ww->GalleryDelete, 'delete'];
-        }
-        return($tt) ;
     }
 
     protected function column_col3() {

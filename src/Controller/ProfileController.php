@@ -164,13 +164,13 @@ class ProfileController extends AbstractController
 
         $address = $member->getActiveAddress();
 
-        $setLocationForm = $this->createForm(SetLocationType::class, [
+        $setLocationForm = $this->createForm(SetLocationType::class, $address ? [
             'fullname' => $address->getLocation()->getFullname(),
             'name' => $address->getLocation()->getName(),
             'geoname_id' => $address->getLocation()->getGeonameId(),
             'latitude' => $address->getLatitude(),
             'longitude' => $address->getLongitude(),
-        ]);
+        ] : []);
         $setLocationForm->handleRequest($request);
 
         if ($setLocationForm->isSubmitted() && $setLocationForm->isValid()) {
@@ -180,6 +180,11 @@ class ProfileController extends AbstractController
             /** @var Location $location */
             $location = $locationRepository->find($data['geoname_id']);
             if (null !== $location) {
+                if (!$address) {
+                    $address = new \App\Entity\Address();
+                    $address->setMember($member);
+                    $address->setActive(true);
+                }
                 $address->setLocation($location);
                 $address->setLatitude($data['latitude']);
                 $address->setLongitude($data['longitude']);
@@ -667,7 +672,7 @@ class ProfileController extends AbstractController
 
         $template = $editMode ? 'profile/edit.html.twig' : 'profile/show.html.twig';
 
-        return $this->render($template, [
+        $params = [
             'member' => $member,
             'comments' => $comments,
             'comments_count' => $commentCounts,
@@ -678,7 +683,11 @@ class ProfileController extends AbstractController
             'status_form' => $this->profileModel->getStatusForm($loggedInMember, $member),
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member),
-        ]);
+        ];
+
+        $params['hide_sidebar'] = true;
+
+        return $this->render($template, $params);
     }
 
     private function getSectionForm(?string $section, Member $member, string $language): ?FormInterface

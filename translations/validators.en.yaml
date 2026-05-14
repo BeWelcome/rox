@@ -1,0 +1,4 @@
+signup.error.terms_privacy: "You must agree to the Terms of Use and Privacy Policy to continue."
+signup.error.username: "Please enter a username."
+signup.error.email.blank: "Please enter your email address."
+signup.error.password.blank: "Please enter a password."

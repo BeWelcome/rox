@@ -1,11 +1,12 @@
-const languageSwitch = document.getElementById("language-switch");
+import { Tooltip } from 'bootstrap';
 
-languageSwitch.addEventListener("change", e => {
-    const languages = document.querySelectorAll('[id^=profile-language-]');
-    languages.forEach(language => {
-        language.classList.add('u:hidden!');
-    })
-    const current = document.getElementById("profile-language-" + e.target.value);
-    current.classList.remove('u:hidden!')
-})
+document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new Tooltip(el));
 
+document.querySelectorAll('.p-lang-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('[id^=profile-language-]').forEach(el => el.classList.add('u:hidden!'));
+        document.getElementById('profile-language-' + btn.dataset.lang).classList.remove('u:hidden!');
+        document.querySelectorAll('.p-lang-pill').forEach(b => b.classList.remove('p-lang-pill--active'));
+        btn.classList.add('p-lang-pill--active');
+    });
+});

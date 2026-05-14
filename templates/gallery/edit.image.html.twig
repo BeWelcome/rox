@@ -1,21 +1,71 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
 
-{% block javascripts %}
-{% endblock javascripts %}
-
-{% block stylesheets %}
-{% endblock stylesheets %}
+{% block title %}{{ image.title|e }} — {{ 'gallery.image.edit.page_title'|trans }}{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col-12 col-md-6 text-center">
-            <a href="/gallery/img?id={{ image.id }}" class="w-100" title="{{ image.title }}" rel="image">
-                <img src="/gallery/thumbimg?id={{ image.id}}&amp;t=2" class="framed big" alt="image">
-            </a>
-        </div>
-        <div class="col-12 col-md-6">
-            {{ form(form) }}
-        </div>
+  <div class="p-gallery-edit">
+    <div class="p-gallery-edit__toolbar mb-3">
+      <a href="{{ url('gallery_manage') }}"
+         class="btn btn-outline-secondary d-inline-flex align-items-center gap-2 p-gallery-edit__back-btn">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        <span>{{ 'gallery.image.edit.back'|trans }}</span>
+      </a>
     </div>
+
+    <div class="p-gallery-edit__hero">
+      <header class="p-gallery-edit__intro">
+        <h1 class="p-gallery-edit__title">{{ image.title|e }}</h1>
+      </header>
+    </div>
+
+    <div class="row g-4 g-lg-5 align-items-start">
+      <div class="col-12 col-lg-5">
+        <div class="gallery-edit-preview p-gallery-edit__preview">
+          <a href="{{ url('gallery_image', {id: image.id}) }}"
+             class="p-gallery-edit__preview-link"
+             title="{{ image.title|e('html_attr') }}"
+             rel="image">
+            <img src="{{ url('gallery_thumbnail', {id: image.id, t: 2}) }}"
+                 class="img-fluid framed"
+                 alt="{{ image.title|e }}">
+          </a>
+        </div>
+        <p class="p-gallery-edit__full-link-wrap">
+          <a href="{{ url('gallery_image', {id: image.id}) }}" class="p-gallery-edit__full-link">
+            {{ 'gallery.image.edit.view_full'|trans }}
+            <i class="fas fa-external-link-alt fa-xs ms-1" aria-hidden="true"></i>
+          </a>
+        </p>
+      </div>
+
+      <div class="col-12 col-lg-7">
+        <div class="card border-0 p-gallery-edit__card">
+          <div class="card-body p-4 p-md-5">
+            {{ form_start(form, { attr: { class: 'p-gallery-edit__form', novalidate: 'novalidate' } }) }}
+            {{ form_errors(form) }}
+
+            <div class="mb-4">
+              {{ form_label(form.title) }}
+              {{ form_widget(form.title) }}
+              {{ form_errors(form.title) }}
+            </div>
+
+            <div class="mb-2">
+              {{ form_label(form.description) }}
+              {{ form_widget(form.description) }}
+              {{ form_errors(form.description) }}
+            </div>
+
+            {{ form_widget(form.id) }}
+
+            <div class="p-gallery-edit__actions">
+              {{ form_widget(form.submit) }}
+            </div>
+
+            {{ form_end(form) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock content %}

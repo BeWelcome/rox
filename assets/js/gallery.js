@@ -1,19 +1,2 @@
-let Masonry = require('masonry-layout');
-let imagesLoaded = require('imagesloaded');
-
-document.addEventListener('DOMContentLoaded', function () {
-    // init Masonry
-    let grid = document.getElementById('masonry-grid');
-
-    if (grid !== null)
-    {
-        var msnry = new Masonry( grid, {
-            percentPosition: true
-        });
-
-        imagesLoaded( grid ).on( 'progress', function() {
-            // layout Masonry after each image loads
-            msnry.layout();
-        });
-    }
-});
+// Gallery layout is handled entirely via CSS Grid (see #masonry-grid in _layouts.general.css).
+// This entry file is kept so existing pages that include `gallery.js` continue to work without changes.

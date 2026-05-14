@@ -389,7 +389,7 @@ AND ';
         }
         $query .= '1 = 1';
         $query .= '
-ORDER BY `created` DESC
+ORDER BY i.`created` DESC
         ';
 
         $s = $this->dao->query($query);

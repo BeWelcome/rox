@@ -319,6 +319,14 @@ class GalleryController extends RoxControllerBase {
         $page->statement = $this->_model->getLatestItems($this->member->id);
         $page->cnt_pictures = $page->statement ? $page->statement->numRows() : 0;
         $page->loggedInMember = $this->loggedInMember;
+        $setId = isset($_GET['set']) ? (int) $_GET['set'] : 0;
+        if ($setId > 0) {
+            $set = $this->_model->getGallery($setId);
+            if ($set && (int) $set->user_id_foreign === (int) $this->member->id) {
+                $page->activeSet = $set;
+                $page->setStatement = $this->_model->getLatestItems('', $setId);
+            }
+        }
         return $page;
     }
 
@@ -591,10 +599,18 @@ class GalleryController extends RoxControllerBase {
             return false;
         }
         $vars = $args->post;
-        $request = $args->request;
         if (array_key_exists('imageId', $vars))
             $mem_redirect->message_gallery = count($vars['imageId']);
-        return $this->_model->updateGalleryProcess($vars);
+        $isDelete = isset($vars['deleteOrMove']) && $vars['deleteOrMove'] === 'Delete';
+        $result = $this->_model->updateGalleryProcess($vars);
+        if (!$isDelete && is_string($result)) {
+            // result is 'gallery/show/sets/{id}' — redirect to manage sub-view instead
+            $setId = (int) str_replace('gallery/show/sets/', '', $result);
+            if ($setId > 0) {
+                return 'gallery/manage?set=' . $setId;
+            }
+        }
+        return 'gallery/manage?tab=photos';
     }
 
     public function updateGalleryCallback($args, $action, $mem_redirect, $mem_resend)

@@ -19,6 +19,9 @@ class GalleryUserGalleriesPage extends GalleryUserPage
     }
 
     #[\Override]
+    protected function teaser() {}
+
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'overview';
@@ -42,13 +45,39 @@ class GalleryUserGalleriesPage extends GalleryUserPage
 
     #[\Override]
     protected function column_col3() {
+        $member = $this->member;
         $statement = $this->statement;
         $galleries = $this->galleries;
         $words = new MOD_words();
         ?>
-        <h2><?php echo $words->getFormatted('GalleryTitleSets'); ?></h2>
+        <div class="p-gallery-show">
+            <div class="p-gallery-manage__pagehead">
+                <div class="p-gallery-manage__pagehead-row">
+                    <div class="p-gallery-manage__pagehead-copy">
+                        <div class="p-gallery-manage__pagehead-heading">
+                            <a href="members/<?= htmlspecialchars((string) $member->Username) ?>"
+                               class="p-edit-subpage__back"
+                               aria-label="Back to profile">
+                                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                            </a>
+                            <div>
+                                <p class="p-gallery-manage__pagehead-eyebrow"><?= htmlspecialchars((string) $member->Username) ?></p>
+                                <h1 class="p-gallery-manage__pagehead-title"><?= $words->get('Gallery') ?></h1>
+                            </div>
+                        </div>
+                    </div>
+                    <?php if ($this->myself): ?>
+                    <div class="p-gallery-manage__pagehead-actions">
+                        <a href="gallery/manage" class="o-button">
+                            <i class="fas fa-cog" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php'; ?>
+        </div>
         <?php
-        require SCRIPT_BASE . 'build/gallery/templates/galleries_overview.php';
     }
 
 }

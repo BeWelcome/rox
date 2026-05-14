@@ -1,26 +1,32 @@
 <div class="o-form-group u:content-center mt-2 {% if form.accommodation.vars.valid == false %}is-invalid{% endif %}">
   <span class="o-input-label">Accommodation</span>
   {{ form_errors(form.accommodation) }}
-  <div class="u:grid u:grid-cols-2 u:text-center">
-    <label for="{{ form.accommodation.children[0].vars.id }}" style="margin: 0" class="u:rounded-ss-4 u:rounded-es-4 u:p-4 u:bg-gray-200 {% if form.accommodation.vars.value == form.accommodation.children[0].vars.value %}u:bg-gray-400{% endif %} u:hover:bg-gray-400">
+  <div class="signup-finalize__accommodation-grid">
+    <label for="{{ form.accommodation.children[0].vars.id }}" class="signup-finalize__accommodation-option signup-finalize__accommodation-option--left">
       <input type="radio" id="{{ form.accommodation.children[0].vars.id }}"
              name="{{ form.accommodation.children[0].vars.full_name }}"
              value="{{ form.accommodation.children[0].vars.value }}"
              data-username="{{ member.username }}"
-             {% if form.accommodation.vars.value == form.accommodation.children[0].vars.value %}checked="checked"{% endif %}
+             {% if form.accommodation.vars.value is null or form.accommodation.vars.value == form.accommodation.children[0].vars.value %}checked="checked"{% endif %}
              class="noradio js-accommodation">
-      <div class="u:text-12 u:leading-16"><img src="images/icons/no.png" alt="" title=""><br>
+      <div class="signup-finalize__accommodation-content signup-finalize__accommodation-content--no {% if form.accommodation.vars.value is null or form.accommodation.vars.value == form.accommodation.children[0].vars.value %}signup-finalize__accommodation-content--active{% endif %}">
+        <span class="signup-finalize__accommodation-icon signup-finalize__accommodation-icon--no" aria-hidden="true">
+          <i class="fas fa-house"></i>
+        </span>
         <small>{{ form.accommodation.children[0].vars.label|trans }}</small>
       </div>
     </label>
-    <label for="{{ form.accommodation.children[1].vars.id }}" style="margin: 0" class="u:rounded-ee-4 u:rounded-se-4 u:p-4 u:bg-gray-200 {% if form.accommodation.vars.value == form.accommodation.children[1].vars.value %}u:bg-gray-400{% endif %} u:hover:bg-gray-400">
+    <label for="{{ form.accommodation.children[1].vars.id }}" class="signup-finalize__accommodation-option signup-finalize__accommodation-option--right">
       <input type="radio" id="{{ form.accommodation.children[1].vars.id }}"
              name="{{ form.accommodation.children[1].vars.full_name }}"
              value="{{ form.accommodation.children[1].vars.value }}"
              {% if form.accommodation.vars.value == form.accommodation.children[1].vars.value %}checked="checked"{% endif %}
              data-username="{{ member.username }}"
              class="noradio js-accommodation">
-      <div class="u:text-12 u:leading-16"><img src="images/icons/yes.png" alt="" title=""><br>
+      <div class="signup-finalize__accommodation-content signup-finalize__accommodation-content--yes {% if form.accommodation.vars.value == form.accommodation.children[1].vars.value %}signup-finalize__accommodation-content--active{% endif %}">
+        <span class="signup-finalize__accommodation-icon signup-finalize__accommodation-icon--yes" aria-hidden="true">
+          <i class="fas fa-house-user"></i>
+        </span>
         <small>{{ form.accommodation.children[1].vars.label|trans }}</small>
       </div>
     </label>

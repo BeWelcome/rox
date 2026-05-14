@@ -1,0 +1,3 @@
+signup.error.terms_privacy:
+    - You must agree to the Terms of Use and Privacy Policy to continue.
+    - Validation error shown when the terms checkbox is not checked on the signup page.

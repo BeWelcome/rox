@@ -1,8 +1,4 @@
-{% extends 'profile/profile.html.twig' %}
-
-{% block title %}
-    {{ 'profile.set.location' | trans }}
-{% endblock %}
+{% extends 'profile/edit_subpage.html.twig' %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -15,33 +11,48 @@
     {{ encore_entry_script_tags('profile/setlocation') }}
 {% endblock javascripts %}
 
-{% block page_content %}
-    <h1>{{ 'profile.set.location' | trans }}</h1>
-    {{ form_start(form) }}
-    <div class="u:w-full u:mb-8 u:md:width-auto">
-        <div class="auto-search-wrapper max-height loupe">
-            <input type="text" id="{{ form.fullname.vars.id}}" name="{{ form.fullname.vars.full_name }}"
-                   class="o-input js-location-picker" autocomplete="off"
+{% block subpage_title -%}
+    {{ 'profile.set.location' | trans }}
+{%- endblock %}
+
+{% block subpage_body %}
+    {{ form_start(form, {attr: {class: 'p-location-form'}}) }}
+    <div class="p-location-panel">
+        <label class="p-language-form__label" for="{{ form.fullname.vars.id }}">
+            {{ 'trip.leg.location'|trans }}
+        </label>
+        <div class="auto-search-wrapper max-height p-location-search">
+            <i class="fas fa-search p-location-search__icon" aria-hidden="true"></i>
+            <input type="text"
+                   id="{{ form.fullname.vars.id}}"
+                   name="{{ form.fullname.vars.full_name }}"
+                   class="o-input js-location-picker"
+                   autocomplete="off"
                    placeholder="{{ 'trip.leg.location'|trans }}"
                    aria-label="{{ 'trip.leg.location'|trans }}"
-                   {% if form.fullname.vars.value %}value="{{ form.fullname.vars.value }}"{% endif %}
-            >
+                   {% if form.fullname.vars.value %}value="{{ form.fullname.vars.value }}"{% endif %}>
         </div>
-        <div class="u:block">{{ form_errors(form.fullname) }}{{ form_errors(form.geoname_id) }}</div>
-        {% do form.fullname.setRendered %}
-        {{ form_widget(form.geoname_id) }}
-        {{ form_widget(form.latitude) }}
-        {{ form_widget(form.longitude) }}
-        {% set address = member.activeAddress %}
-        <input type="hidden" id="original_latitude" value="{{ address.latitude }}">
-        <input type="hidden" id="original_longitude" value="{{ address.longitude }}">
+        <div class="p-location-form__errors">
+            {{ form_errors(form.fullname) }}
+            {{ form_errors(form.geoname_id) }}
+        </div>
     </div>
+
+    {% do form.fullname.setRendered %}
+    {{ form_widget(form.geoname_id) }}
+    {{ form_widget(form.latitude) }}
+    {{ form_widget(form.longitude) }}
+    {% set address = member.activeAddress %}
+    <input type="hidden" id="original_latitude" value="{{ address ? address.latitude : '' }}">
+    <input type="hidden" id="original_longitude" value="{{ address ? address.longitude : '' }}">
+
     <input type="hidden" id="marker_label_text" value="{{ 'profile.setlocation.marker'|trans }}">
-    <div id="map" style="width: 100%; height: 440px; border: 1px solid rgb(170, 170, 170);">
+    <div class="p-location-map" id="map">
     </div>
-    <div class="u:flex u:justify-end u:mt-8">
+
+    <div class="p-edit-subpage__actions">
         <input type="submit" class="o-button" value="{{ 'save location'|trans }}">
     </div>
-    {{ form_end(form) }}
 
-{% endblock %}
+    {{ form_end(form) }}
+{% endblock subpage_body %}

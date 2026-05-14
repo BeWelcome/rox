@@ -18,8 +18,6 @@ preferences.forEach(
 
             await fetch("/members/update/preference", { method: 'POST', body: form })
                 .then(() => { /* Nothing to do here */ })
-
-            console.log(form)
         })
     }
 )

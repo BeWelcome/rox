@@ -1,10 +1,14 @@
-<div id="accommodation" class="btn-group u:mr-4">
-    <button type="button" class="o-button o-button--br-16 dropdown-toggle u:font-700 u:capitalize {% if member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}u:bg-hosting{% else %}u:bg-bewelcome{% endif %}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {%  if member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}{{ 'hosting' | trans }}{% endif %}
-        {%  if member.Accommodation == constant('App\\Doctrine\\AccommodationType::NO') %}{{ 'not hosting' | trans }}{% endif %}
-    </button>
-    <div class="dropdown-menu hoststatusdropdown">
-        <a id="{{ constant('App\\Doctrine\\AccommodationType::YES') }}" class="hosting dropdown-item u:font-700 u:capitalize" href="#">{{ 'dashboard.hosting.yes' | trans }}</a>
-        <a id="{{ constant('App\\Doctrine\\AccommodationType::NO') }}" class="hosting dropdown-item u:font-700 u:capitalize" href="#">{{ 'dashboard.hosting.no' | trans }}</a>
-    </div>
+<div id="accommodation" class="l-hosting-toggle">
+    <a id="{{ constant('App\\Doctrine\\AccommodationType::YES') }}"
+       class="hosting l-hosting-toggle__opt l-hosting-toggle__opt--yes{% if member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %} l-hosting-toggle__opt--active{% endif %}"
+       href="#" title="{{ 'dashboard.hosting.yes'|trans }}">
+        <i class="fas fa-house-user"></i>
+        <span>{{ 'hosting'|trans }}</span>
+    </a>
+    <a id="{{ constant('App\\Doctrine\\AccommodationType::NO') }}"
+       class="hosting l-hosting-toggle__opt l-hosting-toggle__opt--no{% if member.Accommodation == constant('App\\Doctrine\\AccommodationType::NO') %} l-hosting-toggle__opt--active{% endif %}"
+       href="#" title="{{ 'dashboard.hosting.no'|trans }}">
+        <i class="fas fa-house"></i>
+        <span>{{ 'not hosting'|trans }}</span>
+    </a>
 </div>

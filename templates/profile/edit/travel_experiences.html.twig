@@ -1,37 +1,20 @@
-{% extends 'profile/profile.html.twig' %}
+{% extends 'profile/edit_subpage.html.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% block javascripts %}
-  {{ parent() }}
-  {{ encore_entry_script_tags('roxeditor') }}
-{% endblock %}
+{% block subpage_title -%}
+  {{ 'profile.travel.experience'|trans({}, 'messages', language)|raw }} · {{ ('lang_' ~ language)|lower|trans({}, 'messages', language) }}
+{%- endblock %}
 
-{% block stylesheets %}
-  {{ parent() }}
-  {{ encore_entry_link_tags('roxeditor') }}
-{% endblock %}
+{% block subpage_body %}
+  {{ form_start(form) }}
 
-{% block page_content %}
-  <div class="u:w-full">
-    <div class="card">
-      <div class="card-header u:flex u:flex-row u:justify-between">
-        {{ 'profile.travel.experience'|trans({}, "messages", language)|raw }}
-      </div>
-      <div class="card-block p-2">
-        <div class="card-text">
-          {{ form_start(form) }}
+  {% set username = member.username %}
+  {% set translations = member.translations %}
+  {{ macros.field_translation(form.past, locale, language, 'PastTrips', username, translations) }}
+  {{ macros.field_translation(form.planned, locale, language, 'PlannedTrips', username, translations) }}
 
-          {% set username = member.username %}
-          {% set translations = member.translations %}
-          {{ macros.field_translation(form.past, locale, language, 'PastTrips', username, translations) }}
-          {{ macros.field_translation(form.planned, locale, language, 'PlannedTrips', username, translations) }}
-
-          <div class="u:flex u:justify-end u:my-8">
-            <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>
-          </div>
-          {{ form_end(form) }}
-        </div>
-      </div>
-    </div>
+  <div class="p-edit-subpage__actions">
+    <input type="submit" class="o-button" value="{{ 'save'|trans({}, 'messages', language) }}">
   </div>
-{% endblock page_content %}
+  {{ form_end(form) }}
+{% endblock subpage_body %}

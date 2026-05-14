@@ -8,7 +8,6 @@ use App\Entity\Member;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
-use App\Form\GalleryUploadForm;
 use App\Logger\Logger;
 use App\Model\GalleryModel;
 use App\Utilities\TranslatedFlashTrait;
@@ -53,7 +52,7 @@ class GalleryController extends AbstractController
     {
         $user = $this->getUser();
         if ($user !== $image->getOwner()) {
-            $this->createAccessDeniedException('Not your image!');
+            throw $this->createAccessDeniedException('Not your image!');
         }
 
         $editImageRequest = new GalleryImageEditRequest($image);
@@ -198,39 +197,9 @@ class GalleryController extends AbstractController
      * @return Response
      */
     #[Route(path: '/gallery/upload_multiple', name: 'gallery_upload_multiple')]
-    public function uploadImagesToGallery(Request $request)
+    public function uploadImagesToGallery(): Response
     {
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $galleryRepository = $this->entityManager->getRepository(Gallery::class);
-        $galleries = $galleryRepository->findBy(['owner' => $member]);
-
-        $albumTitles = [];
-        if ($galleries) {
-            $albumTitles[0] = '';
-            foreach ($galleries as $gallery) {
-                $albumTitles[$gallery->getId()] = $gallery->getTitle();
-            }
-        }
-        $uploadImageForm = $this->createForm(GalleryUploadForm::class, null, ['albums' => $albumTitles]);
-        $uploadImageForm->handleRequest($request);
-        if ($uploadImageForm->isSubmitted() && $uploadImageForm->isValid()) {
-            // if this is called someone tries to hack the system as the Javascript on the upload page
-            // takes care of uploading the files so we return a 403 error
-            return new Response(403);
-        }
-
-        return $this->render('gallery/upload.image.html.twig', [
-            'form' => $uploadImageForm->createView(),
-            'submenu' => [
-                'active' => 'upload',
-                'items' => $this->getSubmenuItems(),
-            ],
-            'constraints' => [
-                'size' => $this->getMaxUploadSizeInMegaBytes(),
-            ],
-        ]);
+        return $this->redirectToRoute('gallery_manage', [], 301);
     }
 
     /**
@@ -348,32 +317,4 @@ class GalleryController extends AbstractController
         return $response;
     }
 
-    /**
-     * @return array
-     */
-    private function getSubmenuItems()
-    {
-        $member = $this->getUser();
-        $submenuItems = [
-            'manage' => [
-                'key' => 'GalleryManage',
-                'url' => $this->generateUrl('gallery_manage'),
-            ],
-            'upload' => [
-                'key' => 'GalleryUpload',
-                'url' => $this->generateUrl('gallery_upload_multiple'),
-            ],
-            'albums' => [
-                'key' => 'GalleryTitleSets',
-                'url' => $this->generateUrl('gallery_show_user_albums', ['username' => $member->getUsername()]),
-            ],
-        ];
-
-        return $submenuItems;
-    }
-
-    private function getMaxUploadSizeInMegaBytes()
-    {
-        return UploadedFile::getMaxFilesize() / 1024 / 1024;
-    }
 }

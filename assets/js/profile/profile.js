@@ -1,3 +1,6 @@
+import { Toast } from 'bootstrap';
+document.querySelectorAll('.p-toast[data-bs-autohide="true"]').forEach(el => new Toast(el).show());
+
 const L = require("leaflet");
 
 const locationMaps = document.querySelectorAll('[id^=location-map]')
@@ -8,7 +11,12 @@ locationMaps.forEach( locationMap => {
 
     const map = L.map(locationMap, {
         zoomControl: false,
-        boxZoom: false
+        boxZoom: false,
+        dragging: false,
+        scrollWheelZoom: false,
+        touchZoom: false,
+        doubleClickZoom: false,
+        keyboard: false,
     }).setView([latitude, longitude], 10)
 
     map.attributionControl.setPrefix(false)

@@ -9,19 +9,25 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<div class="u:min-w-[320px] u:max-w-[640px] u:m-auto">
+<div class="signup-finalize">
+<div class="signup-finalize__inner">
 
-<h1>{{ 'members.finalize.account'|trans }}</h1>
-    {{ 'members.finalize.account.blurb'|trans|raw }}
+<h1 class="signup-finalize__heading">{{ 'members.finalize.account'|trans }}</h1>
+    <p class="signup-finalize__subheading">{{ 'members.finalize.account.blurb'|trans|striptags }}</p>
     {{ form_start(finalize, { 'attr': { autocomplete: 'off', class: 'u:mt-8' } }) }}
-    {{ form_row(finalize.registration_key) }}
-    {{ form_row(finalize.name) }}
-    {{ form_row(finalize.short_name) }}
-    {{ form_row(finalize.mother_tongue) }}
-    {{ form_row(finalize.birthdate) }}
-    <div class="o-form-group u:grid u:grid-cols-3">
+    <section class="signup-finalize__section">
+        <h2 class="signup-finalize__section-title">{{ 'profile'|trans }}</h2>
+        {{ form_row(finalize.registration_key) }}
+        {{ form_row(finalize.name) }}
+        {{ form_row(finalize.short_name) }}
+        {{ form_row(finalize.mother_tongue) }}
+        {{ form_row(finalize.birthdate) }}
+        <div class="o-form-group signup-finalize__gender">
         <div class="u:col-span-3"><label>{{ 'label.gender'|trans }}</label></div>
         <div class="u:col-span-3">{{ form_errors(finalize.gender) }}</div>
+        <div class="u:col-span-3">
+            <small id="{{ finalize.gender.vars.id }}_help" class="form-text text-muted">{{ finalize.gender.vars.help|trans }}</small>
+        </div>
         <div class="o-radio-button">
             <input type="radio" id="{{ finalize.gender.children[0].vars.id }}" name="{{ finalize.gender.children[0].vars.full_name }}"
                    class="o-radio-button__input" value="{{ finalize.gender.children[0].vars.value}}"
@@ -43,42 +49,44 @@
             >
             <label for="{{ finalize.gender.children[2].vars.id}}">{{ finalize.gender.children[2].vars.value}}</label>
         </div>
-        <div class="u:col-span-3">
-            <small id="{{ finalize.gender.vars.id }}_help" class="form-text text-muted">{{ finalize.gender.vars.help|trans }}</small>
         </div>
-    </div>
+    </section>
     {% do finalize.gender.setRendered %}
-    <div class="o-form-group">
-    <label for="{{ finalize.location.fullname.vars.id}}">{{ finalize.location.vars.label}}</label>
-    {{ form_errors(finalize.location.fullname) }}
-    <div class="auto-search-wrapper max-height loupe">
-        <input type="text" id="{{ finalize.location.fullname.vars.id}}" name="{{ finalize.location.fullname.vars.full_name }}"
-               class="o-input js-location-picker{% if finalize.location.fullname.vars.errors|length > 0 %} is-invalid{% endif %}" autocomplete="off"
-               placeholder="{{ 'trip.leg.location'|trans }}"
-               aria-label="{{ 'trip.leg.location'|trans }}"
-               {% if finalize.location.fullname.vars.value %}value="{{ finalize.location.fullname.vars.value }}"{% endif %}
-        >
-    </div>
-    {{ form_help(finalize.location) }}
-    {% do finalize.location.setRendered %}
-    </div>
+    <section class="signup-finalize__section">
+        <h2 class="signup-finalize__section-title">{{ 'profile.location'|trans }}</h2>
+        <div class="o-form-group">
+            <label for="{{ finalize.location.fullname.vars.id}}">{{ finalize.location.vars.label}}</label>
+            {{ form_errors(finalize.location.fullname) }}
+            <div class="auto-search-wrapper max-height loupe">
+                <input type="text" id="{{ finalize.location.fullname.vars.id}}" name="{{ finalize.location.fullname.vars.full_name }}"
+                       class="o-input js-location-picker{% if finalize.location.fullname.vars.errors|length > 0 %} is-invalid{% endif %}" autocomplete="off"
+                       placeholder="{{ 'trip.leg.location'|trans }}"
+                       aria-label="{{ 'trip.leg.location'|trans }}"
+                       {% if finalize.location.fullname.vars.value %}value="{{ finalize.location.fullname.vars.value }}"{% endif %}
+                >
+            </div>
+            {{ form_help(finalize.location) }}
+            {% do finalize.location.setRendered %}
+        </div>
 
-    {{ form_widget(finalize.location.geoname_id) }}
-    {{ form_widget(finalize.location.latitude) }}
-    {{ form_widget(finalize.location.longitude) }}
+        {{ form_widget(finalize.location.geoname_id) }}
+        {{ form_widget(finalize.location.latitude) }}
+        {{ form_widget(finalize.location.longitude) }}
 
-    {% include 'profile/accommodation_widget.html.twig' with {form: finalize} %}
+        {% include 'profile/accommodation_widget.html.twig' with {form: finalize} %}
+    </section>
 
-    <div class="u:mt-8">
-        <p class="u:text-18 u:mb-8 u:font-600">{{ 'signup.optional'|trans }}</p>
+    <section class="signup-finalize__section">
+        <h2 class="signup-finalize__section-title">{{ 'signup.optional'|trans }}</h2>
         {{ form_row(finalize.newsletters) }}
         {{ form_row(finalize.local_events) }}
         {# {{ form_row(finalize.trips_notifications) }}  #}
-    </div>
-    <div class="u:flex u:justify-end u:mt-8">
-        <input type="submit" class="o-button" value="{{ 'signup.activate'|trans }}">
+    </section>
+    <div class="signup-finalize__actions">
+        <input type="submit" class="o-button signup-layout__submit" value="{{ 'signup.activate'|trans }}">
     </div>
 
     {{ form_end(finalize) }}
+</div>
 </div>
 {% endblock content %}

@@ -5,17 +5,19 @@
 {% endblock stylesheets %}
 
 {% block content %}
-<div class="u:min-w-[320px] u:max-w-[640px] u:m-auto">
+<div class="signup-finalize">
+<div class="signup-finalize__inner">
 
-<h1>{{ 'members.confirm.email'|trans }}</h1>
-    {{ 'members.confirm.email.blurb'|trans|raw }}
+<h1 class="signup-finalize__heading">{{ 'members.confirm.email'|trans }}</h1>
+    <p class="signup-finalize__subheading">{{ 'members.confirm.email.blurb'|trans|striptags }}</p>
     {{ form_start(confirm_email, { 'attr': { autocomplete: 'off', class: 'u:mt-8' } }) }}
     {{ form_row(confirm_email.registration_key) }}
 
-    <div class="u:flex u:justify-end u:mt-8">
-        <input type="submit" class="o-button" value="{{ 'members.confirm.email.button'|trans }}">
+    <div class="signup-finalize__actions">
+        <input type="submit" class="o-button signup-layout__submit" value="{{ 'members.confirm.email.button'|trans }}">
     </div>
 
     {{ form_end(confirm_email) }}
+</div>
 </div>
 {% endblock content %}

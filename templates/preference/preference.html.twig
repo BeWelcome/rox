@@ -1,39 +1,54 @@
-{% extends 'profile/profile.html.twig' %}
+{% extends 'profile/edit_subpage.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
   {{ encore_entry_script_tags('profile/preference') }}
 {% endblock javascripts %}
 
-{% block page_content %}
-    <h1>{{ 'profile.preferences'|trans }}</h1>
-    {{ form_start(form) }}
-    <input type="hidden" id="member" value="{{ member.username }}">
+{% block subpage_title -%}
+  {{ 'profile.preferences'|trans }}
+{%- endblock %}
+
+{% block subpage_body %}
+  {{ form_start(form, {attr: {class: 'p-preferences-form'}}) }}
+  <input type="hidden" id="member" value="{{ member.username }}">
+
+  <div class="p-preferences-list">
     {% for name, child in form.children %}
-        {% if not (name starts with '_') %}
-            <div class="u:mb-16">
-                <legend class="o-label" aria-label="{{ child.vars.label|trans }}">{{ child.vars.label|trans }}</legend>
-              {% if child.vars.choices|length == 2 %}
-                <label class="u:inline-flex u:items-center u:cursor-pointer" style="display: inline-flex;">
-                  <span class="u:select-none u:font-medium u:text-heading switch">{{ child.vars.choices|keys|first|trans }}</span>
-                  <input id="{{ child.vars.id }}" name="{{ child.vars.full_name }}" type="checkbox" class="u:sr-only u:peer preference" value="{{ child.vars.choices|last }}" {% if child.vars.data == child.vars.choices|last %}checked="checked"{% endif %}>
-                  <div class="u:relative u:mx-9 u:w-24 u:h-12 u:bg-bewelcome u:peer-focus:outline-none u:peer-focus:ring-1 u:peer-focus:ring-bewelcome-light
-                              u:rounded-6 u:peer u:peer-checked:after:translate-x-12 u:rtl:peer-checked:after:-translate-x-full u:peer-checked:after:border-buffer
-                              u:after:content-[''] u:after:absolute after:top-[2px] u:after:bg-white u:after:rounded-6 u:after:h-12
-                              u:after:w-12 u:after:transition-all u:peer-checked:bg-bewelcome"></div>
-                  <span class="u:select-none u:text-sm u:font-medium u:text-heading">{{ child.vars.choices|keys|last|trans }}</span>
-                </label>
-                {% do child.setRendered %}
-              {% else %}
-                <div class="u:grid u:grid-cols-1">{{ form_widget(child) }}</div>
-                  {% endif %}
-                {{ form_help(child) }}
-            </div>
-        {% endif %}
+      {% if not (name starts with '_') %}
+        <section class="p-preference-card">
+          <div class="p-preference-card__copy">
+            <h2 class="p-preference-card__title">{{ child.vars.label|trans }}</h2>
+            {{ form_help(child, {help_attr: {class: 'p-preference-card__help'}}) }}
+          </div>
+
+          <div class="p-preference-card__control">
+            {% if child.vars.choices|length == 2 %}
+              <label class="p-preference-toggle" for="{{ child.vars.id }}">
+                <span class="p-preference-toggle__label">{{ child.vars.choices|keys|first|trans }}</span>
+                <input id="{{ child.vars.id }}"
+                       name="{{ child.vars.full_name }}"
+                       type="checkbox"
+                       class="p-preference-toggle__input preference"
+                       value="{{ child.vars.choices|last }}"
+                       {% if child.vars.data == child.vars.choices|last %}checked="checked"{% endif %}>
+                <span class="p-preference-toggle__track" aria-hidden="true">
+                  <span class="p-preference-toggle__thumb"></span>
+                </span>
+                <span class="p-preference-toggle__label p-preference-toggle__label--active">{{ child.vars.choices|keys|last|trans }}</span>
+              </label>
+              {% do child.setRendered %}
+            {% else %}
+              {% set control_class = (child.vars.attr.class|default('') ~ ' p-preference-select')|trim %}
+              {{ form_widget(child, {attr: child.vars.attr|merge({class: control_class})}) }}
+            {% endif %}
+            {{ form_errors(child) }}
+          </div>
+        </section>
+      {% endif %}
     {% endfor %}
-    {{ form_rest(form) }}
-    <div class="u:flex u:justify-end">
-        <a href="{{ url('members_profile', {username: member.username}) }}" class="o-button">{{ 'profile.back'|trans }}</a>
-    </div>
-    {{ form_end(form) }}
-{% endblock %}
+  </div>
+
+  {{ form_rest(form) }}
+  {{ form_end(form) }}
+{% endblock subpage_body %}

@@ -77,3 +77,21 @@ gallery.image.edit.view_full:
 gallery.image.edit.save:
     - 'Save changes'
     - Primary submit button on the gallery image edit form.
+gallery.upload_to_album:
+    - 'Album (optional)'
+    - Placeholder/label for the album selector in the upload tab of the gallery manage page.
+gallery.album.delete.confirm:
+    - 'Delete this album? Photos will not be deleted.'
+    - Confirmation message shown in the modal when the member tries to delete an album.
+gallery.photo.saving:
+    - 'Saving…'
+    - Label on the save button in the photo edit sheet while the AJAX request is in progress.
+gallery.photo.saved:
+    - 'Saved'
+    - Label on the save button in the photo edit sheet after a successful save.
+gallery.photo.deleting:
+    - 'Deleting…'
+    - Label on the delete button in the photo edit sheet while the delete request is in progress.
+gallery.photo.sheet.description.placeholder:
+    - 'Add a description…'
+    - Placeholder text for the description textarea in the photo edit bottom sheet.

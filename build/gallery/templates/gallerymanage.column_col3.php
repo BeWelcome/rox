@@ -55,13 +55,13 @@ $defaultTab = $activeSet ? 'albums' : ($forcedTab ?? ($hasPhotos ? 'photos' : 'u
         <i class="fas fa-images" aria-hidden="true"></i>
         <span><?= $words->get('Photos') ?: 'Photos' ?></span>
     </button>
-    <button class="p-gallery-tab-btn" data-tab="albums" type="button">
-        <i class="fas fa-layer-group" aria-hidden="true"></i>
-        <span><?= $words->get('GalleryTitleSets') ?: 'Albums' ?></span>
-    </button>
     <button class="p-gallery-tab-btn" data-tab="upload" type="button">
         <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
         <span><?= $words->get('galleryupload') ?: 'Upload' ?></span>
+    </button>
+    <button class="p-gallery-tab-btn" data-tab="albums" type="button">
+        <i class="fas fa-layer-group" aria-hidden="true"></i>
+        <span><?= $words->get('GalleryTitleSets') ?: 'Albums' ?></span>
     </button>
 </nav>
 
@@ -177,6 +177,7 @@ $defaultTab = $activeSet ? 'albums' : ($forcedTab ?? ($hasPhotos ? 'photos' : 'u
                     data-set-id="<?= (int) $activeSet->id ?>"
                     data-set-title="<?= htmlspecialchars((string) $activeSet->title, ENT_QUOTES, 'UTF-8') ?>">
                 <i class="fas fa-trash" aria-hidden="true"></i>
+                <span><?= htmlspecialchars($words->get('Delete') ?: 'Delete', ENT_QUOTES, 'UTF-8') ?></span>
             </button>
         </div>
 
@@ -185,7 +186,7 @@ $defaultTab = $activeSet ? 'albums' : ($forcedTab ?? ($hasPhotos ? 'photos' : 'u
             <div class="c-confirm-modal__backdrop"></div>
             <div class="c-confirm-modal__dialog">
                 <p class="c-confirm-modal__text">
-                    <?= $words->get('gallery.album.delete.confirm') ?: 'Delete this album? Photos will not be deleted.' ?>
+                    <?= $words->getSilent('gallery.album.delete.confirm') ?: 'Delete this album? Photos will not be deleted.' ?>
                 </p>
                 <div class="c-confirm-modal__actions">
                     <button type="button" class="c-confirm-modal__btn c-confirm-modal__btn--cancel" id="delete-album-cancel">
@@ -217,39 +218,8 @@ $defaultTab = $activeSet ? 'albums' : ($forcedTab ?? ($hasPhotos ? 'photos' : 'u
                          alt="<?= htmlspecialchars((string) $d->title) ?>"
                          loading="lazy">
                 </a>
-                <button type="button"
-                        class="p-gallery-photo-item__menu-btn"
-                        aria-label="<?= htmlspecialchars($words->get('Options') ?: 'Options', ENT_QUOTES, 'UTF-8') ?>">
-                    <i class="fas fa-ellipsis-v" aria-hidden="true"></i>
-                </button>
             </div>
             <?php endforeach; ?>
-        </div>
-
-        <!-- Photo action sheet (single instance, shared across all photos) -->
-        <div id="photo-action-sheet" class="p-photo-sheet" aria-hidden="true" role="dialog" aria-modal="true"
-             aria-label="<?= htmlspecialchars($words->get('Options') ?: 'Photo options', ENT_QUOTES, 'UTF-8') ?>">
-            <div class="p-photo-sheet__backdrop"></div>
-            <div class="p-photo-sheet__panel">
-                <div class="p-photo-sheet__handle" aria-hidden="true"></div>
-                <button type="button" class="p-photo-sheet__close" aria-label="<?= htmlspecialchars($words->get('Close') ?: 'Close', ENT_QUOTES, 'UTF-8') ?>">
-                    <i class="fas fa-times" aria-hidden="true"></i>
-                </button>
-                <div class="p-photo-sheet__preview">
-                    <img id="photo-sheet-thumb" src="" alt="" class="p-photo-sheet__img">
-                </div>
-                <p id="photo-sheet-title" class="p-photo-sheet__title"></p>
-                <div class="p-photo-sheet__actions">
-                    <a id="photo-sheet-edit" href="#" class="p-photo-sheet__btn p-photo-sheet__btn--primary">
-                        <i class="fas fa-edit" aria-hidden="true"></i>
-                        <span><?= htmlspecialchars($words->get('Edit') ?: 'Edit', ENT_QUOTES, 'UTF-8') ?></span>
-                    </a>
-                    <button type="button" id="photo-sheet-delete" class="p-photo-sheet__btn p-photo-sheet__btn--danger">
-                        <i class="fas fa-trash" aria-hidden="true"></i>
-                        <span><?= htmlspecialchars($words->get('Delete') ?: 'Delete', ENT_QUOTES, 'UTF-8') ?></span>
-                    </button>
-                </div>
-            </div>
         </div>
 
         <?php else: ?>
@@ -271,13 +241,13 @@ $defaultTab = $activeSet ? 'albums' : ($forcedTab ?? ($hasPhotos ? 'photos' : 'u
         <div class="p-upload__card">
             <div class="p-upload__field">
                 <label class="p-upload__label" for="upload-album-input">
-                    <?= htmlspecialchars($words->get('gallery.upload_to_album') ?: 'Album (optional)', ENT_QUOTES, 'UTF-8') ?>
+                    <?= htmlspecialchars($words->getSilent('gallery.upload_to_album') ?: 'Album (optional)', ENT_QUOTES, 'UTF-8') ?>
                 </label>
                 <input type="text"
                        id="upload-album-input"
                        class="p-upload__select"
                        list="upload-albums-list"
-                       placeholder="<?= htmlspecialchars($words->get('gallery.upload_to_album') ?: 'Album name (optional)', ENT_QUOTES, 'UTF-8') ?>"
+                       placeholder="<?= htmlspecialchars($words->getSilent('gallery.upload_to_album') ?: 'Album name (optional)', ENT_QUOTES, 'UTF-8') ?>"
                        autocomplete="off">
                 <datalist id="upload-albums-list">
                     <?php if (isset($galleries) && $galleries): ?>
@@ -349,6 +319,46 @@ $defaultTab = $activeSet ? 'albums' : ($forcedTab ?? ($hasPhotos ? 'photos' : 'u
         </section>
     </div>
 </div>
+
+<!-- ── Sheets (outside tab panels so display:none on parent never hides them) ── -->
+
+<div id="photos-action-sheet" class="p-photo-sheet" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="p-photo-sheet__backdrop"></div>
+    <div class="p-photo-sheet__panel">
+        <div class="p-photo-sheet__preview">
+            <div class="p-photo-sheet__handle" aria-hidden="true"></div>
+            <button type="button" class="p-photo-sheet__close" aria-label="<?= htmlspecialchars($words->get('Close') ?: 'Close', ENT_QUOTES, 'UTF-8') ?>">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+            <img id="photos-sheet-thumb" src="" alt="" class="p-photo-sheet__img">
+        </div>
+        <div class="p-photo-sheet__body">
+            <div class="p-photo-sheet__form">
+                <label class="p-photo-sheet__label" for="photos-sheet-title-input">
+                    <?= htmlspecialchars($words->getSilent('GalleryTitle') ?: 'Title', ENT_QUOTES, 'UTF-8') ?>
+                </label>
+                <input type="text" id="photos-sheet-title-input" class="p-photo-sheet__input" maxlength="100"
+                       placeholder="<?= htmlspecialchars($words->getSilent('GalleryTitle') ?: 'Title', ENT_QUOTES, 'UTF-8') ?>">
+                <label class="p-photo-sheet__label" for="photos-sheet-desc-input">
+                    <?= htmlspecialchars($words->getSilent('GalleryDescription') ?: 'Description', ENT_QUOTES, 'UTF-8') ?>
+                </label>
+                <textarea id="photos-sheet-desc-input" class="p-photo-sheet__textarea" rows="3"
+                          placeholder="<?= htmlspecialchars($words->getSilent('gallery.photo.sheet.description.placeholder') ?: 'Add a description…', ENT_QUOTES, 'UTF-8') ?>"></textarea>
+            </div>
+            <div class="p-photo-sheet__actions">
+                <button type="button" id="photos-sheet-save" class="p-photo-sheet__btn p-photo-sheet__btn--primary">
+                    <i class="fas fa-save" aria-hidden="true"></i>
+                    <span><?= htmlspecialchars($words->get('Save') ?: 'Save', ENT_QUOTES, 'UTF-8') ?></span>
+                </button>
+                <button type="button" id="photos-sheet-delete" class="p-photo-sheet__btn p-photo-sheet__btn--danger">
+                    <i class="fas fa-trash" aria-hidden="true"></i>
+                    <span><?= htmlspecialchars($words->get('Delete') ?: 'Delete', ENT_QUOTES, 'UTF-8') ?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script type="text/javascript">
 (function () {
@@ -687,86 +697,108 @@ $defaultTab = $activeSet ? 'albums' : ($forcedTab ?? ($hasPhotos ? 'photos' : 'u
         abortBtn.disabled = true;
     }
 
-    /* ── Photo action sheet ── */
-    const photoSheet = document.getElementById('photo-action-sheet');
-    if (photoSheet) {
-        const sheetPanel   = photoSheet.querySelector('.p-photo-sheet__panel');
-        const sheetBackdrop= photoSheet.querySelector('.p-photo-sheet__backdrop');
-        const sheetClose   = photoSheet.querySelector('.p-photo-sheet__close');
-        const sheetThumb   = document.getElementById('photo-sheet-thumb');
-        const sheetTitle   = document.getElementById('photo-sheet-title');
-        const sheetEdit    = document.getElementById('photo-sheet-edit');
-        const sheetDelete  = document.getElementById('photo-sheet-delete');
-        const lblDelete    = <?= json_encode($words->get('Delete') ?: 'Delete') ?>;
-        const lblConfirm   = <?= json_encode($words->get('gallery.photo.delete.confirm') ?: 'Confirm delete') ?>;
-        const lblDeleting  = <?= json_encode($words->get('gallery.photo.deleting') ?: 'Deleting…') ?>;
+    /* ── Photos tab — edit/delete sheet ── */
+    const photosSheet = document.getElementById('photos-action-sheet');
+    if (photosSheet) {
+        const psPanel      = photosSheet.querySelector('.p-photo-sheet__panel');
+        const psBackdrop   = photosSheet.querySelector('.p-photo-sheet__backdrop');
+        const psCloseBtn   = photosSheet.querySelector('.p-photo-sheet__close');
+        const psThumb      = document.getElementById('photos-sheet-thumb');
+        const psTitleInput = document.getElementById('photos-sheet-title-input');
+        const psDescInput  = document.getElementById('photos-sheet-desc-input');
+        const psSave       = document.getElementById('photos-sheet-save');
+        const psDelete     = document.getElementById('photos-sheet-delete');
+        const lblSave      = <?= json_encode($words->getSilent('Save') ?: 'Save') ?>;
+        const lblSaving    = <?= json_encode($words->getSilent('gallery.photo.saving') ?: 'Saving…') ?>;
+        const lblSaved     = <?= json_encode($words->getSilent('gallery.photo.saved') ?: 'Saved') ?>;
+        const lblDelete    = <?= json_encode($words->getSilent('Delete') ?: 'Delete') ?>;
+        const lblDeleting  = <?= json_encode($words->getSilent('gallery.photo.deleting') ?: 'Deleting…') ?>;
 
-        let currentItem = null;
-        let confirmPending = false;
+        let psCurrentItem = null;
 
-        function openSheet(item) {
-            currentItem = item;
-            confirmPending = false;
-            sheetDelete.disabled = false;
-            sheetDelete.classList.remove('p-photo-sheet__btn--danger-confirm');
-            sheetDelete.innerHTML = '<i class="fas fa-trash" aria-hidden="true"></i><span>' + lblDelete + '</span>';
-            sheetThumb.src  = item.dataset.photoThumb;
-            sheetThumb.alt  = item.dataset.photoTitle;
-            sheetTitle.textContent = item.dataset.photoTitle;
-            sheetEdit.href  = item.dataset.photoEdit;
-            photoSheet.setAttribute('aria-hidden', 'false');
-            photoSheet.classList.add('p-photo-sheet--open');
+        function psOpen(item) {
+            psCurrentItem = item;
+            psDelete.disabled = false;
+            psDelete.innerHTML = '<i class="fas fa-trash" aria-hidden="true"></i><span>' + lblDelete + '</span>';
+            psSave.disabled = false;
+            psSave.innerHTML = '<i class="fas fa-save" aria-hidden="true"></i><span>' + lblSave + '</span>';
+            psThumb.src = item.dataset.photoThumb;
+            psThumb.alt = item.dataset.photoTitle;
+            psTitleInput.value = item.dataset.photoTitle || '';
+            psDescInput.value  = item.dataset.photoDesc  || '';
+            photosSheet.setAttribute('aria-hidden', 'false');
+            photosSheet.classList.add('p-photo-sheet--open');
             document.body.style.overflow = 'hidden';
         }
 
-        function closeSheet() {
-            photoSheet.setAttribute('aria-hidden', 'true');
-            photoSheet.classList.remove('p-photo-sheet--open');
+        function psClose() {
+            photosSheet.setAttribute('aria-hidden', 'true');
+            photosSheet.classList.remove('p-photo-sheet--open');
             document.body.style.overflow = '';
-            confirmPending = false;
-            currentItem = null;
+            psDeletePending = false;
+            psCurrentItem = null;
         }
 
-        document.querySelectorAll('.p-gallery-photo-item__menu-btn').forEach(btn => {
-            btn.addEventListener('click', e => {
+        document.querySelectorAll('.p-gallery-manage__photo-trigger').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
                 e.stopPropagation();
-                openSheet(btn.closest('.p-gallery-photo-item'));
+                psOpen(link.closest('[data-photo-id]'));
             });
         });
 
-        sheetClose.addEventListener('click', closeSheet);
-        sheetBackdrop.addEventListener('click', closeSheet);
+        psCloseBtn.addEventListener('click', psClose);
+        psBackdrop.addEventListener('click', psClose);
 
-        sheetDelete.addEventListener('click', () => {
-            if (!confirmPending) {
-                confirmPending = true;
-                sheetDelete.classList.add('p-photo-sheet__btn--danger-confirm');
-                sheetDelete.innerHTML = '<i class="fas fa-exclamation-triangle" aria-hidden="true"></i><span>' + lblConfirm + '</span>';
-                return;
-            }
-            const item = currentItem;
-            sheetDelete.disabled = true;
-            sheetDelete.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>' + lblDeleting + '</span>';
-            fetch(item.dataset.photoDelete, { credentials: 'same-origin' })
+        psSave.addEventListener('click', () => {
+            if (!psCurrentItem) return;
+            const id    = psCurrentItem.dataset.photoId;
+            const title = psTitleInput.value.trim();
+            const desc  = psDescInput.value.trim();
+            if (!title) { psTitleInput.focus(); return; }
+
+            psSave.disabled = true;
+            psSave.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>' + lblSaving + '</span>';
+
+            const fetchTitle = fetch('gallery/ajax/image?item=' + encodeURIComponent(id) + '&title=' + encodeURIComponent(title), { credentials: 'same-origin' });
+            const fetchDesc  = fetch('gallery/ajax/image?item=' + encodeURIComponent(id) + '&text='  + encodeURIComponent(desc),  { credentials: 'same-origin' });
+
+            Promise.all([fetchTitle, fetchDesc])
                 .then(() => {
-                    item.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
-                    item.style.opacity = '0';
-                    item.style.transform = 'scale(0.8)';
-                    setTimeout(() => item.remove(), 260);
-                    closeSheet();
+                    psCurrentItem.dataset.photoTitle = title;
+                    psCurrentItem.dataset.photoDesc  = desc;
+                    psSave.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i><span>' + lblSaved + '</span>';
+                    setTimeout(psClose, 900);
                 })
                 .catch(() => {
-                    sheetDelete.disabled = false;
-                    sheetDelete.classList.remove('p-photo-sheet__btn--danger-confirm');
-                    sheetDelete.innerHTML = '<i class="fas fa-trash" aria-hidden="true"></i><span>' + lblDelete + '</span>';
-                    confirmPending = false;
+                    psSave.disabled = false;
+                    psSave.innerHTML = '<i class="fas fa-save" aria-hidden="true"></i><span>' + lblSave + '</span>';
                 });
         });
 
-        /* Swipe down to dismiss */
-        let touchStartY = 0;
-        sheetPanel.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, { passive: true });
-        sheetPanel.addEventListener('touchmove', e => { if (e.touches[0].clientY - touchStartY > 60) closeSheet(); }, { passive: true });
+        psDelete.addEventListener('click', () => {
+            if (!psCurrentItem) return;
+            const item = psCurrentItem;
+            psDelete.disabled = true;
+            psDelete.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i><span>' + lblDeleting + '</span>';
+            fetch(item.dataset.photoDelete, { credentials: 'same-origin' })
+                .then(() => {
+                    const col = item.closest('[data-photo-id]') || item;
+                    col.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+                    col.style.opacity = '0';
+                    col.style.transform = 'scale(0.85)';
+                    setTimeout(() => col.remove(), 260);
+                    psClose();
+                })
+                .catch(() => {
+                    psDelete.disabled = false;
+                    psDelete.innerHTML = '<i class="fas fa-trash" aria-hidden="true"></i><span>' + lblDelete + '</span>';
+                });
+        });
+
+        let psTouchStartY = 0;
+        psPanel.addEventListener('touchstart', e => { psTouchStartY = e.touches[0].clientY; }, { passive: true });
+        psPanel.addEventListener('touchmove',  e => { if (e.touches[0].clientY - psTouchStartY > 60) psClose(); }, { passive: true });
     }
 
     /* ── Delete album modal ── */

@@ -98,6 +98,7 @@ doctrine:
         dql:
             datetime_functions:
                 datediff: App\Doctrine\Functions\DateDiff
+                timestampdiff: App\Doctrine\Functions\TimestampDiff
                 yearweek: App\Doctrine\Functions\YearWeek
             numeric_functions:
                 ST_Distance_Sphere: LongitudeOne\Spatial\ORM\Query\AST\Functions\MariaDB\SpDistanceSphere

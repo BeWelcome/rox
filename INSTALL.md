@@ -59,6 +59,10 @@ Wait a few minutes for containers to build and start (it might take awhile). Pro
 
 Please read [Useful hints](#useful-hints) section below.
 
+### Stage / production deployment
+
+Production images bake in Composer `vendor/` and Webpack `public/build/` at build time — no host-side `bun encore` step. See [docker/DEPLOYMENT.md](docker/DEPLOYMENT.md).
+
 ## B) Installation step by step of BW-Rox (GNU/Linux)
 
 These steps have been tested on Debian/Ubuntu based systems. Commands,

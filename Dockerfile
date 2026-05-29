@@ -94,15 +94,25 @@ RUN set -eux; \
 	composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest; \
 	composer clear-cache
 
-# prevent the reinstallation of node_modules at every changes in the source code
-#COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
-#RUN set -eux; \
-#	bun i --frozen-lockfile; \
-#	bun encore production --mode=production
+# Stub var/translations so encore can compile (entrypoint cache warmup fills real translations at runtime)
+RUN mkdir -p var/translations && printf '%s\n' \
+	'// auto-generated stub for image build' \
+	'export const localeFallbacks = {"en":"en"};' \
+	'export const messages = {};' \
+	> var/translations/index.js
+
+# Cache deps install: this layer only re-runs when these files change, not on every source change
+COPY package.json bun.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
+# Build assets into public/build, then drop node_modules (not needed at runtime) to shrink the image
+RUN set -eux; \
+	bun i --frozen-lockfile; \
+	bun encore production --mode=production; \
+	rm -rf node_modules
 
 # do not use .env files in production
 COPY .env ./
-RUN composer dump-env prod; \
+RUN set -eux; \
+	composer dump-env prod; \
 	rm .env
 
 RUN set -eux; \

@@ -112,3 +112,12 @@ profile.delete.confirm:
 profile.delete.not.logged.in:
     - 'Please enter your credentials to confirm that you want to delete your profile. Additionally you can leave feedback why you leave and ask to get your data removed within the next 24 hours.'
     - Additional information on the delete profile page if the member isn't logged in.
+profile.menu.edit.profile:
+    - '@editmyprofile'
+profile.menu.preferences:
+    - '@profile.preferences.menu'
+profile.menu.my.notes:
+    - '@mynotes'
+menu.already.a.member:
+    - 'Already a member?'
+    - Text in the menu shown to label the link to login

@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 
 const birthdate = document.getElementById('birth-date');
 const maxDate = dayjs().subtract(18, "years");
+const minDate = dayjs().subtract(120, "years");
 
 if (birthdate) {
     const picker = new Litepicker({
@@ -10,8 +11,8 @@ if (birthdate) {
         singleMode: true,
         allowRepick: true,
         dropdowns: {
-            "minYear":1900,
-            "maxYear":2004,
+            "minYear":minDate.year(),
+            "maxYear":maxDate.year(),
             "months":true,
             "years":true},
         maxDate: maxDate,

@@ -113,6 +113,7 @@
     width: clamp(13.6rem, 34vw, 20.5rem);
     height: auto;
     flex: 0 0 auto;
+    margin-bottom: clamp(1.25rem, 3vw, 1.9rem);
   }
 
   .home-heading__subtitle {

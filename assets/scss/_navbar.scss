@@ -450,8 +450,8 @@
 
 }
 
-/* Full-viewport sheets below xl: profile, search, community (compact dropdown from `xl` up — see next block). */
-@include media-breakpoint-down(xl) {
+/* Full-viewport sheets below md: profile, search, community (compact dropdown from `md` up — see next block). */
+@include media-breakpoint-down(md) {
   body.topbar-sheet-open {
     overflow: hidden;
     overscroll-behavior: none;
@@ -661,8 +661,8 @@
   }
 }
 
-/* Wide screens (≥ xl): compact dropdowns — same rhythm as profile menu; do NOT target .dropdown-menu without .show. */
-@include media-breakpoint-up(xl) {
+/* Wide screens (≥ md): compact dropdowns — same rhythm as profile menu; do NOT target .dropdown-menu without .show. */
+@include media-breakpoint-up(md) {
   .member-menu.dropdown-menu.show,
   #main_menu .nav-top-dropdown.dropdown-menu.show {
     position: absolute !important;

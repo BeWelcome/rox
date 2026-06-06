@@ -19,12 +19,12 @@
                     <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-handshake"></i></span>
                 </a>
                 <ul id="volunteer_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
-                    <li class="member-menu__toolbar d-flex d-xl-none">
+                    <li class="member-menu__toolbar d-flex d-md-none">
                         <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
                             <span class="member-menu__close-icon" aria-hidden="true">&times;</span>
                         </button>
                     </li>
-                    <li class="nav-top-dropdown__title d-xl-none">
+                    <li class="nav-top-dropdown__title d-md-none">
                         <h6 class="dropdown-header text-left mb-0">{{ 'volunteer' | trans }}</h6>
                     </li>
                     {% for team in teams %}
@@ -49,7 +49,7 @@
                     <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-search"></i></span>
                 </a>
                 <ul id="search_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
-                    <li class="member-menu__toolbar member-menu__toolbar--with-title d-flex d-xl-none">
+                    <li class="member-menu__toolbar member-menu__toolbar--with-title d-flex d-md-none">
                         <h6 class="member-menu__toolbar-title mb-0">{{ 'findmembers' | trans }}</h6>
                         <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
                             <span class="member-menu__close-icon" aria-hidden="true">&times;</span>
@@ -68,7 +68,7 @@
                     <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-users"></i></span>
                 </a>
                 <ul id="community_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
-                    <li class="member-menu__toolbar member-menu__toolbar--with-title d-flex d-xl-none">
+                    <li class="member-menu__toolbar member-menu__toolbar--with-title d-flex d-md-none">
                         <h6 class="member-menu__toolbar-title mb-0">{{ 'communitymenu' | trans }}</h6>
                         <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
                             <span class="member-menu__close-icon" aria-hidden="true">&times;</span>
@@ -95,7 +95,7 @@
                 </a>
                 <ul id="member_menu" class="dropdown-menu dropdown-menu-right member-menu" role="menu">
                     {# Close: full-screen sheet below xl. #}
-                    <li class="member-menu__toolbar d-flex d-xl-none">
+                    <li class="member-menu__toolbar d-flex d-md-none">
                         <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
                             <span class="member-menu__close-icon" aria-hidden="true">&times;</span>
                         </button>

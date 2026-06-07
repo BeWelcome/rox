@@ -12,7 +12,6 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
-  font-family: Signika, sans-serif;
 }
 
 .p-login__overlay {
@@ -124,6 +123,7 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   text-wrap: balance;
+  font-family: Signika, sans-serif;
 }
 
 /* ── Card ─────────────────────────────────────────────── */

@@ -663,7 +663,6 @@
 
 /* Wide screens (≥ md): compact dropdowns — same rhythm as profile menu; do NOT target .dropdown-menu without .show. */
 @include media-breakpoint-up(md) {
-  .member-menu.dropdown-menu.show,
   #main_menu .nav-top-dropdown.dropdown-menu.show {
     position: absolute !important;
     top: 100% !important;
@@ -671,6 +670,35 @@
     bottom: auto !important;
     left: auto !important;
     inset: auto !important;
+    z-index: 1000;
+    display: block !important;
+    flex-direction: unset !important;
+    width: auto !important;
+    min-width: 10rem;
+    max-width: min(22rem, calc(100vw - 2rem));
+    min-height: 0 !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    overflow-y: visible !important;
+    margin: 0.125rem 0 0 !important;
+    padding: 0.65rem 0 !important;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.25rem;
+    /* Less transparent than global $dropdown-bg (was ~80% black). */
+    background-color: rgba(22, 24, 28, 0.97);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.28);
+    backdrop-filter: none !important;
+    transform: none !important;
+  }
+
+  .member-menu.dropdown-menu.dropdown-menu-right.show {
+    position: absolute !important;
+    top: 100% !important;
+    inset: auto;
+    right: 0 !important;
+    bottom: auto !important;
+    left: auto !important;
     z-index: 1000;
     display: block !important;
     flex-direction: unset !important;

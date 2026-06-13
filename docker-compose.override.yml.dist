@@ -1,9 +1,10 @@
+# Copy to docker-compose.override.yml for local development (see Makefile install).
 services:
   app:
-    ports:
-      - target: 80
-        published: 8080
-        protocol: tcp
+    build:
+      target: bewelcome_php_dev
+    volumes:
+      - .:/srv/bewelcome:rw,cached
 
   mailer:
     ports:

@@ -6,6 +6,19 @@ if [ "${1#-}" != "$1" ]; then
 	set -- frankenphp run "$@"
 fi
 
+ensure_composer_dependencies() {
+	if [ -f vendor/autoload_runtime.php ]; then
+		return 0
+	fi
+
+	echo "Installing Composer dependencies (vendor/autoload_runtime.php missing)..."
+	if [ "$APP_ENV" = 'prod' ]; then
+		composer install --prefer-dist --no-dev --no-progress --no-interaction --no-scripts
+	else
+		composer install --prefer-dist --no-progress --no-interaction --no-scripts
+	fi
+}
+
 if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ "$1" = 'ls' ]; then
  	PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-production"
 	if [ "$APP_ENV" != 'prod' ]; then
@@ -38,6 +51,8 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 		bun i --frozen-lockfile
 	fi
 
+	ensure_composer_dependencies
+
 	if [ -f .env ]; then
 	    database_host=$(grep '^DB_HOST=' .env | cut -f 2 -d '=')
 	    database_port=$(grep '^DB_PORT=' .env | cut -f 2 -d '=')
@@ -47,12 +62,11 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 	fi
 
 	# Fall back to environment variables if .env is absent or values are empty
-	database_host="${database_host:-${DB_HOST}}"
-	database_port="${database_port:-${DB_PORT}}"
-	database_name="${database_name:-${DB_NAME}}"
-	database_user="${database_user:-${DB_USER}}"
-	database_password="${database_password:-${DB_PASS}}"
-
+	database_host="${database_host:-${DB_HOST:-db}}"
+	database_port="${database_port:-${DB_PORT:-3306}}"
+	database_name="${database_name:-${DB_NAME:-bewelcome}}"
+	database_user="${database_user:-${DB_USER:-bewelcome}}"
+	database_password="${database_password:-${DB_PASS:-bewelcome}}"
 
 	echo "Waiting for db to be ready..."
 	until mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" -e "select 1" > /dev/null 2>&1; do
@@ -96,9 +110,9 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 		bun encore dev --mode=development
 	fi
 
-	# create manticore indices
-	bin/console manticore:indices:forum
-	bin/console manticore:indices:geonames
+	# Manticore indexing must not block HTTP when search data or schema is not ready yet.
+	bin/console manticore:indices:forum || echo "Warning: manticore:indices:forum failed (exit $?); container continues."
+	bin/console manticore:indices:geonames || echo "Warning: manticore:indices:geonames failed (exit $?); container continues."
 fi
 
 exec "$@"

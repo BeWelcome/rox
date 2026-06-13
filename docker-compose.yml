@@ -7,7 +7,7 @@ services:
   app:
     build:
       context: .
-      target: bewelcome_php_dev
+      target: bewelcome_php
       <<: *cache-from
     image: ${APP_IMAGE:-bewelcome/app}
     environment:
@@ -22,10 +22,8 @@ services:
       - db
       - manticore
       - mailer
-    volumes:
-      - .:/srv/bewelcome:rw,cached
-      # if you develop on Linux, you may use a bind-mounted host directory instead
-      # - ./var:/srv/bewelcome/var:rw
+    # Production image runs from baked-in /srv/bewelcome (vendor included).
+    # Local development bind-mounts the repo via docker-compose.override.yml.
     ports:
       - "8080:80"
       - "8043:443"

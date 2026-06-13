@@ -101,11 +101,11 @@ class ManticoreIndicesForumCommand extends Command
     {
         /*
           SELECT ft.id AS threadid, sentence as text, IdGroup, \
-            IdWriter, UNIX_TIMESTAMP(create_time) as created FROM forums_threads ft, forums_posts fp, forum_trads ftr \
+            IdWriter, UNIX_TIMESTAMP(create_time) as created FROM forum_thread ft, forum_post fp, forum_trads ftr \
         WHERE fp.id = ft.first_postid AND ft.IdTitle = ftr.IdTrad AND ftr.IdLanguage = 0 AND ThreadDeleted = 'NotDeleted'
 
-        sql_joined_field = text from query; SELECT fp.id, message FROM forums_posts fp WHERE PostDeleted = 'NotDeleted' ORDER BY fp.id ASC
-    sql_joined_field = text from query; SELECT ft.id, Sentence FROM forums_threads ft, forum_trads ftr WHERE ft.ThreadDeleted = "NotDeleted" AND ft.IdTitle = ftr.IdTrad AND IDLanguage <> 0 ORDER BY ft.id ASC
+        sql_joined_field = text from query; SELECT fp.id, message FROM forum_post fp WHERE PostDeleted = 'NotDeleted' ORDER BY fp.id ASC
+    sql_joined_field = text from query; SELECT ft.id, Sentence FROM forum_thread ft, forum_trads ftr WHERE ft.ThreadDeleted = "NotDeleted" AND ft.IdTitle = ftr.IdTrad AND IDLanguage <> 0 ORDER BY ft.id ASC
 
 
          */
@@ -118,7 +118,7 @@ class ManticoreIndicesForumCommand extends Command
                     SELECT
                         count(*) as cnt
                     FROM
-                        forums_posts fp
+                        forum_post fp
                 ___SQL);
 
         $count = $stmt->fetchNumeric()[0];
@@ -140,8 +140,8 @@ class ManticoreIndicesForumCommand extends Command
                             fp.IdWriter as author,
                             l.shortcode as locale
                         FROM
-                            forums_posts fp
-                        JOIN forums_threads ft ON fp.threadid = ft.id
+                            forum_post fp
+                        JOIN forum_thread ft ON fp.threadid = ft.id
                         JOIN forum_trads ftr ON fp.IdContent = ftr.IdTrad
                         JOIN languages l ON ftr.IdLanguage = l.id
                         LIMIT {$firstResult}, {$this->chunkSize}

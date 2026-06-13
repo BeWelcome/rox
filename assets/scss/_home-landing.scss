@@ -109,17 +109,10 @@
     margin-bottom: 0.55rem;
   }
 
-  .home-heading__logo-mark {
-    width: clamp(2.1rem, 5vw, 3rem);
+  .home-heading__logo-full {
+    width: clamp(13.6rem, 34vw, 20.5rem);
     height: auto;
     flex: 0 0 auto;
-  }
-
-  .home-heading__logo-text {
-    width: clamp(10.5rem, 29vw, 16.5rem);
-    height: auto;
-    flex: 0 0 auto;
-    transform: translateY(0.08rem);
   }
 
   .home-heading__subtitle {
@@ -199,14 +192,14 @@
   }
 
   /* ── Mobile: hero copy full-viewport, aside becomes bottom sheet ── */
-  @include media-breakpoint-down(md) {
+  @include media-breakpoint-down(lg) {
     .home-hero {
       min-height: calc(100vh - var(--bw-topbar-offset, 64px));
       min-height: calc(100dvh - var(--bw-topbar-offset, 64px));
       align-items: center;
     }
 
-    .home-hero__body {
+    .home-hero__body  {
       padding-top: 1.5rem;
       padding-bottom: 2rem;
     }
@@ -657,7 +650,7 @@
     }
   }
 
-  @include media-breakpoint-down(md) {
+  @include media-breakpoint-down(lg) {
     .home-login-panel {
       padding: 1.35rem 1.2rem 1.15rem;
     }

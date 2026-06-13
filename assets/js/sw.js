@@ -3,7 +3,6 @@ import { NetworkFirst } from 'workbox-strategies';
 import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { registerRoute } from 'workbox-routing';
 import { ExpirationPlugin } from 'workbox-expiration';
-import { Workbox } from 'workbox-window';
 
 precacheAndRoute(self.__WB_MANIFEST);
 

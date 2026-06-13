@@ -18,7 +18,7 @@
             {% endif %}
             {% if slim_nav %}
                 <li class="nav-item d-flex align-items-center flex-wrap justify-content-end loginbar-slim__cta text-right px-1 px-sm-2">
-                    <span class="small text-white-50 mr-1 d-none d-sm-inline">{{ 'menu.not.a.member.yet' | trans }}</span>
+                    <span class="small text-white-50 me-1 d-none d-sm-inline">{{ 'menu.not.a.member.yet' | trans }}</span>
                     <a class="small font-weight-bold text-white text-nowrap" href="{{ url('signup') }}">{{ 'navbar.button.signup' | trans }}</a>
                 </li>
             {% endif %}
@@ -28,8 +28,8 @@
             <li class="nav-item dropdown">
                 <button type="button"
                         class="text-nowrap dropdown-toggle{% if slim_nav %} btn btn-sm text-white border-0 shadow-none bg-transparent loginbar-slim__lang-toggle{% else %} btn btn-primary border{% endif %}"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'menu.language.toggle'|trans }}">{{ language_name(app.request.locale) }}</button>
-                <div id="language_dropdown" class="dropdown-menu dropdown-menu-right u:w-150 u:md:w-300 u:max-h-[50vh] u:overscroll-contain u:overflow-y-auto">
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'menu.language.toggle'|trans }}">{{ language_name(app.request.locale) }}</button>
+                <div id="language_dropdown" class="dropdown-menu dropdown-menu-end u:w-150 u:md:w-300 u:max-h-[50vh] u:overscroll-contain u:overflow-y-auto">
                     <div class="u:grid u:grid-cols-1 u:md:gap-8 u:md:grid-cols-2 u:p-8">
                     {% for lang in locales %}
                         <a class="dropdown-item {% if lang == app.request.locale %}u:bg-bewelcome{% endif %} u:my-4 u:p-4" href="{{ path('language', { locale: lang }) }}">

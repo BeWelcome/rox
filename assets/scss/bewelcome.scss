@@ -6,6 +6,7 @@
   @import "@fontsource/signika";
   @import "@fontsource/signika/300.css";
   @import "@fontsource/signika/700.css";
+  @import "@fontsource/noto-sans";
   @import "toastify-js/src/toastify.css";
 
   // 1. Import Bootstrap functions first
@@ -23,7 +24,7 @@
   // 4. Import the components you need
   @import "../../node_modules/bootstrap/scss/utilities";
   @import "../../node_modules/bootstrap/scss/bootstrap"; // Or import specific parts
-  @import "./latofonts.css";
+
 
   // Core variables and mixins
   @import "general";
@@ -457,11 +458,12 @@
   }
 
   .o-checkbox__input {
-    @extend .form-check-input
+    @extend .form-check-input;
+    appearance: auto !important;
   }
 
   .o-checkbox__label {
-    @extend .form-check-label
+    @extend .form-check-label;
   }
 
   .input-group > .input-group-prepend > .input-group-text {

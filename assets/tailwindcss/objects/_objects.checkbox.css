@@ -14,14 +14,15 @@
 .o-checkbox__input {
   margin-right: 8px;
   cursor: pointer;
-  border: 1px solid var(--u-color-gray-20);
+  border: 1px solid var(--u-color-gray-400);
   border-radius: 2px;
+  appearance: auto;
 }
 
 .o-radio-button__input {
   margin-right: 8px;
   cursor: pointer;
-  border: 1px solid var(--u-color-gray-20);
+  border: 1px solid var(--u-color-gray-400);
   border-radius: 100%;
 }
 

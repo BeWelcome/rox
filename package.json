@@ -21,7 +21,7 @@
     "@symfony/ux-translator": "file:vendor/symfony/ux-translator/assets",
     "@symfony/webpack-encore": "^5.3.1",
     "@tailwindcss/forms": "^0.5.11",
-    "@tailwindcss/postcss": "^4.3.0",
+    "@tailwindcss/postcss": "^4.3.1",
     "@tomickigrzegorz/autocomplete": "^3.3.2",
     "@trevoreyre/autocomplete-js": "^3.0.3",
     "@types/geojson": "^7946.0.16",
@@ -33,7 +33,7 @@
     "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
     "bs-custom-file-input": "^1.3.4",
     "chart.js": "^3.9.1",
-    "ckeditor5": "^48.1.1",
+    "ckeditor5": "^48.2.0",
     "cookieconsent": "^3.1.1",
     "croppie": "^2.6.5",
     "dayjs": "^1.11.21",
@@ -72,12 +72,12 @@
     "react-dropzone": "^14.4.1",
     "regenerator-runtime": "^0.13.11",
     "respond.js": "^1.4.2",
-    "sass": "^1.100.0",
+    "sass": "^1.101.0",
     "sass-loader": "^16.0.8",
     "scrolling-tabs-bootstrap-5": "^1.1.1",
     "scrollmagic": "^2.0.9",
     "show-more-read": "tomik23/show-more",
-    "tailwindcss": "^4.3.0",
+    "tailwindcss": "^4.3.1",
     "toastify-js": "^1.12.0",
     "tom-select": "^2.6.1",
     "ts-loader": "^9.6.0",
@@ -93,9 +93,9 @@
     "minimatch": "^3.1.3",
     "serialize-javascript": "^7.0.2",
     "uuid": "^14",
-      "qs": "^6.15.2",
-      "tmp": "^0.2.6",
-      "ws": "^8.20.1"
+    "qs": "^6.15.2",
+    "tmp": "^0.2.6",
+    "ws": "^8.20.1"
   },
   "scripts": {
     "encoreWatch": "encore dev --watch"
@@ -105,6 +105,6 @@
     "bs5-lightbox": "^1.8.5",
     "circle-flags": "^2.8.3",
     "sortablejs": "^1.15.7",
-    "webpack-dev-server": "^5.2.4"
+    "webpack-dev-server": "^5.2.5"
   }
 }

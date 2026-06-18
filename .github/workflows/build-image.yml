@@ -1,0 +1,104 @@
+name: Build and publish image
+
+# Builds the production (bewelcome_php) image once in CI, pushes it to GHCR with
+# immutable tags, and notifies BeWelcome/sysadmins-infra to deploy. The deploy
+# server then only runs `docker compose pull && up -d` — no on-server build.
+
+on:
+  push:
+    branches: [develop]
+    # Only rebuild when something that ends up in the image actually changes.
+    paths:
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'docker/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'symfony.lock'
+      - 'package.json'
+      - 'bun.lock'
+      - 'webpack.config.js'
+      - 'tailwind.config.js'
+      - 'postcss.config.js'
+      - 'src/**'
+      - 'assets/**'
+      - 'config/**'
+      - 'templates/**'
+      - 'public/**'
+      - 'bin/**'
+      - 'bootstrap/**'
+      - 'routes.php'
+      - '.github/workflows/build-image.yml'
+    tags:
+      - 'v*'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-image:
+    name: Build and push image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Match the 7-char short sha used by docker/metadata-action's `type=sha`
+      # so the deploy payload references the exact tag that was pushed.
+      - name: Compute short sha
+        id: vars
+        run: echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/bewelcome/rox
+          tags: |
+            type=sha,prefix=sha-
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push production image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: bewelcome_php
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Trigger the stage deploy only for develop pushes. Tag (v*) builds publish
+      # SemVer images but are deployed manually/gated from sysadmins-infra.
+      - name: Notify sysadmins-infra to deploy stage
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.SYSADMINS_INFRA_DISPATCH_TOKEN }}
+          repository: BeWelcome/sysadmins-infra
+          event-type: rox-image-pushed
+          client-payload: |
+            {
+              "image": "ghcr.io/bewelcome/rox:sha-${{ steps.vars.outputs.short_sha }}@${{ steps.build.outputs.digest }}",
+              "tag": "sha-${{ steps.vars.outputs.short_sha }}",
+              "sha": "${{ github.sha }}",
+              "ref": "${{ github.ref }}",
+              "environment": "stage"
+            }

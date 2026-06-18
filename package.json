@@ -95,7 +95,8 @@
     "uuid": "^14",
     "qs": "^6.15.2",
     "tmp": "^0.2.6",
-    "ws": "^8.20.1"
+    "ws": "^8.20.1",
+    "http-proxy-middleware": "^3.0.6"
   },
   "scripts": {
     "encoreWatch": "encore dev --watch"

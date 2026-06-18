@@ -73,10 +73,13 @@ only runs `docker compose pull && docker compose up -d` — there is no on-serve
 ### How the image is built
 
 The [`build-image`](.github/workflows/build-image.yml) workflow builds the
-production `bewelcome_php` target from the [`Dockerfile`](Dockerfile) and pushes it
-to `ghcr.io/bewelcome/rox`. The image is self-contained: `vendor/` and the compiled
-front-end assets (`public/build/`) are baked in at build time, so it boots with no
-host checkout and no bind-mount of the source tree.
+production `bewelcome_php` target from the [`Dockerfile`](Dockerfile) and pushes a
+multi-arch (`linux/amd64` + `linux/arm64`) manifest to `ghcr.io/bewelcome/rox`. Each
+architecture is built on a native runner (no QEMU) and pushed by digest, then a
+merge job stitches the digests into one tagged manifest list so `docker pull`
+resolves the right arch automatically. The image is self-contained: `vendor/` and
+the compiled front-end assets (`public/build/`) are baked in at build time, so it
+boots with no host checkout and no bind-mount of the source tree.
 
 It runs:
 

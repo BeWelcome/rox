@@ -116,11 +116,16 @@ Redeploy a previous immutable tag from `sysadmins-infra` by pointing the deploy 
 an earlier `ghcr.io/bewelcome/rox:sha-<shortsha>` (the digest is recorded in the
 dispatch payload, so the rollback target is exact).
 
-### Required secret
+### Required secrets
 
-The cross-repo dispatch needs a token with write access to `sysadmins-infra`, stored
-in this repo as the `SYSADMINS_INFRA_DISPATCH_TOKEN` secret (a fine-grained PAT or
-GitHub App token). GHCR push itself uses the built-in `GITHUB_TOKEN`.
+The cross-repo dispatch authenticates as the `bewelcome-platform-deployer` GitHub
+App (installed on `sysadmins-infra`). The workflow mints a short-lived installation
+token at run time from two Actions secrets in this repo:
+
+* `DEPLOY_APP_ID` — the App's ID
+* `DEPLOY_APP_PRIVATE_KEY` — the App's private key
+
+GHCR push itself uses the built-in `GITHUB_TOKEN` (`permissions: packages: write`).
 
 ## Useful links
 * [Writing great Git commit messages](http://chris.beams.io/posts/git-commit/)

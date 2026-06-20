@@ -105,7 +105,7 @@ jobs:
       - name: Run Integration tests
         run: bin/phpunit --log-junit=build/logs/phpunit/integration.xml --colors=never --order-by=random --group=integration
 
-      - uses: actions/upload-artifact@e043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag=v7.0.1
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # tag=v7.0.1
         if: ${{ always() }}
         with:
           name: infection.log

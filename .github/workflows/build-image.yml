@@ -1,0 +1,202 @@
+name: Build and publish image
+
+# Builds the production (bewelcome_php) image once in CI for both linux/amd64 and
+# linux/arm64, pushes a multi-arch manifest to GHCR with immutable tags, and
+# notifies BeWelcome/sysadmins-infra to deploy. The deploy server then only runs
+# `docker compose pull && up -d` — no on-server build.
+#
+# Each architecture is built on a native runner (no QEMU emulation) and pushed
+# by digest; a final job stitches the per-arch digests into one manifest list so
+# `docker pull` resolves the right arch automatically.
+
+on:
+  push:
+    branches: [develop]
+    # Only rebuild when something that ends up in the image actually changes.
+    paths:
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'docker/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'symfony.lock'
+      - 'package.json'
+      - 'bun.lock'
+      - 'webpack.config.js'
+      - 'tailwind.config.js'
+      - 'postcss.config.js'
+      - 'src/**'
+      - 'assets/**'
+      - 'config/**'
+      - 'templates/**'
+      - 'public/**'
+      - 'bin/**'
+      - 'bootstrap/**'
+      - 'routes.php'
+      - '.github/workflows/build-image.yml'
+    tags:
+      - 'v*'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE: ghcr.io/bewelcome/rox
+
+# Serialize per-ref so rapid develop pushes don't race two builds and fire two
+# competing deploy dispatches; the newer push wins.
+concurrency:
+  group: build-image-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            platform: linux/amd64
+            runner: ubuntu-latest
+          - arch: arm64
+            platform: linux/arm64
+            runner: ubuntu-24.04-arm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Build the single-arch image and push it by digest only (no tags yet);
+      # the merge job assembles the tagged multi-arch manifest from these digests.
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: bewelcome_php
+          platforms: ${{ matrix.platform }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
+          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.arch }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge:
+    name: Merge manifest and deploy
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=sha,prefix=sha-
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+
+      - name: Create and push multi-arch manifest
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create \
+            $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.IMAGE }}@sha256:%s ' *)
+
+      # The recomputed 7-char short sha MUST match docker/metadata-action's
+      # `type=sha` output (default short format = 7 chars). If anyone switches
+      # metadata-action to `format=long`, the `imagetools inspect :sha-<shortsha>`
+      # lookup below (and the deploy payload tag) will no longer match the pushed
+      # tag and must be updated accordingly.
+      - name: Compute short sha
+        id: vars
+        run: echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      # Resolve the immutable digest of the freshly pushed manifest list so the
+      # deploy payload (and rollback) pins an exact, arch-agnostic reference.
+      - name: Capture manifest digest
+        id: manifest
+        run: |
+          digest=$(docker buildx imagetools inspect "${{ env.IMAGE }}:sha-${{ steps.vars.outputs.short_sha }}" --format '{{json .Manifest.Digest}}' | tr -d '"')
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+      # Mint a short-lived installation token for the bewelcome-platform-deployer
+      # GitHub App (installed on sysadmins-infra) to authenticate the cross-repo
+      # dispatch, scoped to just that repo.
+      - name: Mint cross-repo token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.DEPLOY_APP_ID }}
+          private-key: ${{ secrets.DEPLOY_APP_PRIVATE_KEY }}
+          owner: BeWelcome
+          repositories: sysadmins-infra
+
+      # Trigger the stage deploy only for develop pushes. Tag (v*) builds publish
+      # SemVer images but are deployed manually/gated from sysadmins-infra.
+      - name: Notify sysadmins-infra to deploy stage
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: BeWelcome/sysadmins-infra
+          event-type: rox-image-pushed
+          client-payload: |
+            {
+              "image": "${{ env.IMAGE }}:sha-${{ steps.vars.outputs.short_sha }}@${{ steps.manifest.outputs.digest }}",
+              "tag": "sha-${{ steps.vars.outputs.short_sha }}",
+              "sha": "${{ github.sha }}",
+              "ref": "${{ github.ref }}",
+              "environment": "stage"
+            }

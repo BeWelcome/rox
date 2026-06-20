@@ -64,6 +64,69 @@ everytime you see a change in either ```package.json``` or ```bun.lock```.
 
 If any ```.scss``` file or a file in ```assets/``` changed a ```make build``` is necessary.
 
+## Production image & deployment :rocket:
+
+The production image is **built in CI, not on the deploy server**. The deploy host
+only runs `docker compose pull && docker compose up -d` — there is no on-server
+`docker compose ... --build` and no `composer install` on the server.
+
+### How the image is built
+
+The [`build-image`](.github/workflows/build-image.yml) workflow builds the
+production `bewelcome_php` target from the [`Dockerfile`](Dockerfile) and pushes a
+multi-arch (`linux/amd64` + `linux/arm64`) manifest to `ghcr.io/bewelcome/rox`. Each
+architecture is built on a native runner (no QEMU) and pushed by digest, then a
+merge job stitches the digests into one tagged manifest list so `docker pull`
+resolves the right arch automatically. The image is self-contained: `vendor/` and
+the compiled front-end assets (`public/build/`) are baked in at build time, so it
+boots with no host checkout and no bind-mount of the source tree.
+
+It runs:
+
+* on every push to `develop` that touches image-affecting paths (`Dockerfile`,
+  `src/**`, `composer.lock`, `assets/**`, etc.), and
+* on every `v*` tag push.
+
+Tags are produced by `docker/metadata-action`:
+
+| Tag | Meaning |
+| --- | --- |
+| `sha-<shortsha>` | Immutable per-commit pin — **use this to deploy and roll back** |
+| `develop` | Moving pointer to the latest `develop` build (convenience only) |
+| `vX.Y.Z`, `X.Y`, `X` | SemVer tags, published only for `v*` tag pushes |
+
+After a successful push **on `develop`**, the workflow sends a `repository_dispatch`
+(`event_type: rox-image-pushed`) to `BeWelcome/sysadmins-infra`, which deploys the
+new `sha-<shortsha>` image to **stage** automatically. The dispatch is *not* sent for
+`v*` tags — production releases are triggered manually/gated from `sysadmins-infra`.
+
+### Cut a production release
+
+```bash
+git tag vX.Y.Z
+git push --tags
+```
+
+This publishes the SemVer image tags. Promote it to production from the
+`sysadmins-infra` deploy workflow.
+
+### Roll back
+
+Redeploy a previous immutable tag from `sysadmins-infra` by pointing the deploy at
+an earlier `ghcr.io/bewelcome/rox:sha-<shortsha>` (the digest is recorded in the
+dispatch payload, so the rollback target is exact).
+
+### Required secrets
+
+The cross-repo dispatch authenticates as the `bewelcome-platform-deployer` GitHub
+App (installed on `sysadmins-infra`). The workflow mints a short-lived installation
+token at run time from two Actions secrets in this repo:
+
+* `DEPLOY_APP_ID` — the App's ID
+* `DEPLOY_APP_PRIVATE_KEY` — the App's private key
+
+GHCR push itself uses the built-in `GITHUB_TOKEN` (`permissions: packages: write`).
+
 ## Useful links
 * [Writing great Git commit messages](http://chris.beams.io/posts/git-commit/)
 * [Git crash course](http://git.or.cz/course/svn.html)

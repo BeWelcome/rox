@@ -21,6 +21,7 @@ RUN apk add --no-cache \
 		file \
 		gettext \
 		git \
+		mariadb-client \
 		openssh-client \
 		python3 \
 	;

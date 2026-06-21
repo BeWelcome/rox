@@ -95,10 +95,22 @@ Tags are produced by `docker/metadata-action`:
 | `develop` | Moving pointer to the latest `develop` build (convenience only) |
 | `vX.Y.Z`, `X.Y`, `X` | SemVer tags, published only for `v*` tag pushes |
 
+Every published image is scanned with [Trivy](https://trivy.dev/) (CRITICAL/HIGH/MEDIUM;
+unfixed CVEs only). Results appear in the **Scan image** job log.
+
 After a successful push **on `develop`**, the workflow sends a `repository_dispatch`
 (`event_type: rox-image-pushed`) to `BeWelcome/sysadmins-infra`, which deploys the
-new `sha-<shortsha>` image to **stage** automatically. The dispatch is *not* sent for
-`v*` tags — production releases are triggered manually/gated from `sysadmins-infra`.
+new `sha-<shortsha>` image to **stage** automatically — but **only if all three
+gates pass**:
+
+1. the image build and push succeed,
+2. the Trivy scan finds no CRITICAL/HIGH/MEDIUM unfixed vulnerabilities, and
+3. the parallel [`CI`](.github/workflows/ci.yml) workflow on the same commit also
+   succeeds (phpunit, linters, security checks, etc.).
+
+If CI fails, the image may still be pushed to GHCR for inspection, but stage deploy
+is blocked. The dispatch is *not* sent for `v*` tags — production releases are
+triggered manually/gated from `sysadmins-infra`.
 
 ### Cut a production release
 

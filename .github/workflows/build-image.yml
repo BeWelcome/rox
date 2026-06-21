@@ -69,10 +69,10 @@ jobs:
             runner: ubuntu-24.04-arm
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # tag=v4.2.2
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -80,18 +80,18 @@ jobs:
 
       - name: Extract image metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96  # tag=v5.6.1
         with:
           images: ${{ env.IMAGE }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5  # tag=v3.8.0
 
       # Build the single-arch image and push it by digest only (no tags yet);
       # the merge job assembles the tagged multi-arch manifest from these digests.
       - name: Build and push by digest
         id: build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75  # tag=v6.9.0
         with:
           context: .
           target: bewelcome_php
@@ -108,30 +108,12 @@ jobs:
           touch "/tmp/digests/${digest#sha256:}"
 
       - name: Upload digest
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # tag=v4.6.2
         with:
           name: digests-${{ matrix.arch }}
           path: /tmp/digests/*
           if-no-files-found: error
           retention-days: 1
-
-  # CI (ci.yml) runs in parallel on the same push. Block stage deploy until it
-  # completes successfully so a broken commit cannot reach sysadmins-infra just
-  # because the image build finished first.
-  wait-for-ci:
-    name: Wait for CI
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-    steps:
-      - name: Wait for CI checks on this commit
-        uses: lewagon/wait-on-check-action@v1.8.0
-        with:
-          ref: ${{ github.sha }}
-          running-workflow-name: 'Build and publish image'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 30
-          checks-discovery-timeout: 120
-          allowed-conclusions: success,skipped
 
   merge:
     name: Push manifest
@@ -142,25 +124,25 @@ jobs:
       digest: ${{ steps.manifest.outputs.digest }}
     steps:
       - name: Download digests
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # tag=v4.1.8
         with:
           path: /tmp/digests
           pattern: digests-*
           merge-multiple: true
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses:docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5  # tag=v3.8.0
 
       - name: Extract image metadata
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96  # tag=v5.6.1
         with:
           images: ${{ env.IMAGE }}
           tags: |
@@ -200,14 +182,16 @@ jobs:
     needs: [merge]
     steps:
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses:docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@v0.36.0
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # tag=v0.36.0
+        env:
+          TRIVY_DISABLE_VEX_NOTICE: '1'
         with:
           image-ref: ${{ env.IMAGE }}:sha-${{ needs.merge.outputs.short_sha }}
           format: table
@@ -218,21 +202,65 @@ jobs:
   deploy:
     name: Deploy to stage
     runs-on: ubuntu-latest
-    needs: [merge, scan, wait-for-ci]
+    needs: [merge, scan]
     if: >
-      always() &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/develop' &&
       needs.merge.result == 'success' &&
-      needs.scan.result == 'success' &&
-      needs.wait-for-ci.result == 'success'
+      needs.scan.result == 'success'
     steps:
+      - name: Wait for CI workflow on this commit
+        # Poll ci.yml on this SHA only (not every GitHub check on the commit).
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea  # tag=v7.0.1
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const sha = context.sha;
+            const pollIntervalMs = 15_000;
+            const maxAttempts = 40;
+
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+            for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+              const { data } = await github.rest.actions.listWorkflowRuns({
+                owner,
+                repo,
+                workflow_id: 'ci.yml',
+                head_sha: sha,
+                per_page: 1,
+              });
+
+              const run = data.workflow_runs[0];
+              if (!run) {
+                core.info(`CI workflow not started yet (attempt ${attempt}/${maxAttempts})`);
+                await sleep(pollIntervalMs);
+                continue;
+              }
+
+              core.info(`CI workflow ${run.html_url} status=${run.status} conclusion=${run.conclusion ?? 'pending'}`);
+
+              if (run.status !== 'completed') {
+                await sleep(pollIntervalMs);
+                continue;
+              }
+
+              if (run.conclusion !== 'success') {
+                core.setFailed(`CI workflow finished with conclusion "${run.conclusion}" — stage deploy blocked`);
+                return;
+              }
+
+              core.info('CI workflow passed');
+              return;
+            }
+
+            core.setFailed('Timed out waiting for CI workflow to complete');
+
       # Mint a short-lived installation token for the bewelcome-platform-deployer
       # GitHub App (installed on sysadmins-infra) to authenticate the cross-repo
       # dispatch, scoped to just that repo.
       - name: Mint cross-repo token
         id: app-token
-        uses: actions/create-github-app-token@v1
+        uses: actions/create-github-app-token@5d869da34e18e7287c1daad50e0b8ea0f506ce69  # tag=v1.11.0
         with:
           app-id: ${{ secrets.DEPLOY_APP_ID }}
           private-key: ${{ secrets.DEPLOY_APP_PRIVATE_KEY }}
@@ -242,7 +270,7 @@ jobs:
       # Trigger the stage deploy only for develop pushes. Tag (v*) builds publish
       # SemVer images but are deployed manually/gated from sysadmins-infra.
       - name: Notify sysadmins-infra to deploy stage
-        uses: peter-evans/repository-dispatch@v3
+        uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0  # tag=v3.0.0
         with:
           token: ${{ steps.app-token.outputs.token }}
           repository: BeWelcome/sysadmins-infra

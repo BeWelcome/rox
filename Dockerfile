@@ -124,7 +124,9 @@ RUN set -eux; \
 RUN set -eux; \
 	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
-	chmod +x bin/console; sync
+	chmod +x bin/console; \
+	apk upgrade --no-cache; \
+	sync
 VOLUME /srv/bewelcome/var
 VOLUME /srv/bewelcome/data
 

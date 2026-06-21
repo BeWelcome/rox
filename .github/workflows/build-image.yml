@@ -115,24 +115,6 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  # CI (ci.yml) runs in parallel on the same push. Block stage deploy until it
-  # completes successfully so a broken commit cannot reach sysadmins-infra just
-  # because the image build finished first.
-  wait-for-ci:
-    name: Wait for CI
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
-    steps:
-      - name: Wait for CI checks on this commit
-        uses: lewagon/wait-on-check-action@v1.8.0
-        with:
-          ref: ${{ github.sha }}
-          running-workflow-name: 'Build and publish image'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          wait-interval: 30
-          checks-discovery-timeout: 120
-          allowed-conclusions: success,skipped
-
   merge:
     name: Push manifest
     runs-on: ubuntu-latest
@@ -208,6 +190,8 @@ jobs:
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@v0.36.0
+        env:
+          TRIVY_DISABLE_VEX_NOTICE: '1'
         with:
           image-ref: ${{ env.IMAGE }}:sha-${{ needs.merge.outputs.short_sha }}
           format: table
@@ -218,15 +202,59 @@ jobs:
   deploy:
     name: Deploy to stage
     runs-on: ubuntu-latest
-    needs: [merge, scan, wait-for-ci]
+    needs: [merge, scan]
     if: >
-      always() &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/develop' &&
       needs.merge.result == 'success' &&
-      needs.scan.result == 'success' &&
-      needs.wait-for-ci.result == 'success'
+      needs.scan.result == 'success'
     steps:
+      - name: Wait for CI workflow on this commit
+        # Poll ci.yml on this SHA only (not every GitHub check on the commit).
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const sha = context.sha;
+            const pollIntervalMs = 15_000;
+            const maxAttempts = 40;
+
+            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+            for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+              const { data } = await github.rest.actions.listWorkflowRuns({
+                owner,
+                repo,
+                workflow_id: 'ci.yml',
+                head_sha: sha,
+                per_page: 1,
+              });
+
+              const run = data.workflow_runs[0];
+              if (!run) {
+                core.info(`CI workflow not started yet (attempt ${attempt}/${maxAttempts})`);
+                await sleep(pollIntervalMs);
+                continue;
+              }
+
+              core.info(`CI workflow ${run.html_url} status=${run.status} conclusion=${run.conclusion ?? 'pending'}`);
+
+              if (run.status !== 'completed') {
+                await sleep(pollIntervalMs);
+                continue;
+              }
+
+              if (run.conclusion !== 'success') {
+                core.setFailed(`CI workflow finished with conclusion "${run.conclusion}" — stage deploy blocked`);
+                return;
+              }
+
+              core.info('CI workflow passed');
+              return;
+            }
+
+            core.setFailed('Timed out waiting for CI workflow to complete');
+
       # Mint a short-lived installation token for the bewelcome-platform-deployer
       # GitHub App (installed on sysadmins-infra) to authenticate the cross-repo
       # dispatch, scoped to just that repo.

@@ -124,7 +124,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     steps:
       - name: Wait for CI checks on this commit
-        uses: lewagon/wait-on-check-action@v1.11.0
+        uses: lewagon/wait-on-check-action@v1.8.0
         with:
           ref: ${{ github.sha }}
           running-workflow-name: 'Build and publish image'

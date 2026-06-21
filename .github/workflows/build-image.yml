@@ -1,8 +1,9 @@
 name: Build and publish image
 
 # Builds the production (bewelcome_php) image once in CI for both linux/amd64 and
-# linux/arm64, pushes a multi-arch manifest to GHCR with immutable tags, and
-# notifies BeWelcome/sysadmins-infra to deploy. The deploy server then only runs
+# linux/arm64, pushes a multi-arch manifest to GHCR with immutable tags, scans the
+# image with Trivy, and — only when the parallel CI workflow also passes — notifies
+# BeWelcome/sysadmins-infra to deploy. The deploy server then only runs
 # `docker compose pull && up -d` — no on-server build.
 #
 # Each architecture is built on a native runner (no QEMU emulation) and pushed
@@ -41,6 +42,7 @@ on:
 permissions:
   contents: read
   packages: write
+  actions: read
 
 env:
   IMAGE: ghcr.io/bewelcome/rox
@@ -113,10 +115,31 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  # CI (ci.yml) runs in parallel on the same push. Block stage deploy until it
+  # completes successfully so a broken commit cannot reach sysadmins-infra just
+  # because the image build finished first.
+  wait-for-ci:
+    name: Wait for CI
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+    steps:
+      - name: Wait for CI checks on this commit
+        uses: lewagon/wait-on-check-action@v1.11.0
+        with:
+          ref: ${{ github.sha }}
+          running-workflow-name: 'Build and publish image'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 30
+          checks-discovery-timeout: 120
+          allowed-conclusions: success,skipped
+
   merge:
-    name: Merge manifest and deploy
+    name: Push manifest
     runs-on: ubuntu-latest
     needs: [build]
+    outputs:
+      short_sha: ${{ steps.vars.outputs.short_sha }}
+      digest: ${{ steps.manifest.outputs.digest }}
     steps:
       - name: Download digests
         uses: actions/download-artifact@v4
@@ -171,6 +194,39 @@ jobs:
           digest=$(docker buildx imagetools inspect "${{ env.IMAGE }}:sha-${{ steps.vars.outputs.short_sha }}" --format '{{json .Manifest.Digest}}' | tr -d '"')
           echo "digest=$digest" >> "$GITHUB_OUTPUT"
 
+  scan:
+    name: Scan image
+    runs-on: ubuntu-latest
+    needs: [merge]
+    steps:
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@0.30.0
+        with:
+          image-ref: ${{ env.IMAGE }}:sha-${{ needs.merge.outputs.short_sha }}
+          format: table
+          severity: CRITICAL,HIGH,MEDIUM
+          exit-code: '1'
+          ignore-unfixed: true
+
+  deploy:
+    name: Deploy to stage
+    runs-on: ubuntu-latest
+    needs: [merge, scan, wait-for-ci]
+    if: >
+      always() &&
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/develop' &&
+      needs.merge.result == 'success' &&
+      needs.scan.result == 'success' &&
+      needs.wait-for-ci.result == 'success'
+    steps:
       # Mint a short-lived installation token for the bewelcome-platform-deployer
       # GitHub App (installed on sysadmins-infra) to authenticate the cross-repo
       # dispatch, scoped to just that repo.
@@ -186,7 +242,6 @@ jobs:
       # Trigger the stage deploy only for develop pushes. Tag (v*) builds publish
       # SemVer images but are deployed manually/gated from sysadmins-infra.
       - name: Notify sysadmins-infra to deploy stage
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ steps.app-token.outputs.token }}
@@ -194,8 +249,8 @@ jobs:
           event-type: rox-image-pushed
           client-payload: |
             {
-              "image": "${{ env.IMAGE }}:sha-${{ steps.vars.outputs.short_sha }}@${{ steps.manifest.outputs.digest }}",
-              "tag": "sha-${{ steps.vars.outputs.short_sha }}",
+              "image": "${{ env.IMAGE }}:sha-${{ needs.merge.outputs.short_sha }}@${{ needs.merge.outputs.digest }}",
+              "tag": "sha-${{ needs.merge.outputs.short_sha }}",
               "sha": "${{ github.sha }}",
               "ref": "${{ github.ref }}",
               "environment": "stage"

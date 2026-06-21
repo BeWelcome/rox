@@ -99,8 +99,16 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Install bun dependencies and run webpack
-        run: bun i --frozen-lockfile && bun encore dev
+      - name: Install bun dependencies
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 5
+          retry_wait_seconds: 15
+          command: bun i --frozen-lockfile
+
+      - name: Run webpack
+        run: bun encore dev
 
       - name: Run Integration tests
         run: bin/phpunit --log-junit=build/logs/phpunit/integration.xml --colors=never --order-by=random --group=integration
@@ -352,9 +360,15 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install project dependencies
-        run: |
-          composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
-          bun i --frozen-lockfile
+        run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
+
+      - name: Install bun dependencies
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 5
+          retry_wait_seconds: 15
+          command: bun i --frozen-lockfile
 
       - name: Run PHP security checker
         run: symfony security:check

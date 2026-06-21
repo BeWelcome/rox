@@ -124,7 +124,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
     steps:
       - name: Wait for CI checks on this commit
-        uses: lewagon/wait-on-check-action@v1.11.0
+        uses: lewagon/wait-on-check-action@v1.8.0
         with:
           ref: ${{ github.sha }}
           running-workflow-name: 'Build and publish image'
@@ -207,7 +207,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@0.30.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ${{ env.IMAGE }}:sha-${{ needs.merge.outputs.short_sha }}
           format: table

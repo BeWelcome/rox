@@ -106,12 +106,7 @@ RUN mkdir -p var/translations && printf '%s\n' \
 COPY package.json bun.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
 # Build assets into public/build, then drop node_modules (not needed at runtime) to shrink the image
 RUN set -eux; \
-	for attempt in 1 2 3 4 5; do \
-		bun i --frozen-lockfile && break; \
-		if [ "$attempt" -eq 5 ]; then exit 1; fi; \
-		echo "bun install failed (attempt $attempt), retrying in 15s..."; \
-		sleep 15; \
-	done; \
+	bun i --frozen-lockfile; \
 	bun encore production --mode=production; \
 	rm -rf node_modules
 

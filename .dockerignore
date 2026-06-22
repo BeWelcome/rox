@@ -7,4 +7,16 @@ db_dumps/
 data/
 var/
 coverage/
+VERSION
+rox_local.ini
+config/reference.php
+docker-compose.override.yml
+docker/db/*.sql
+!docker/db/word.sql
+docker/db/*.zip
+docker/db/*.txt
 public/build/
+public/bundles/
+public/main.js*
+public/service-worker.js*
+public/images/newsletters/

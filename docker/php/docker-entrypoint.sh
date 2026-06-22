@@ -11,27 +11,34 @@ ensure_composer_dependencies() {
 		return 0
 	fi
 
-	echo "Installing Composer dependencies (vendor/autoload_runtime.php missing)..."
 	if [ "$APP_ENV" = 'prod' ]; then
-		composer install --prefer-dist --no-dev --no-progress --no-interaction --no-scripts
-	else
-		composer install --prefer-dist --no-progress --no-interaction --no-scripts
+		echo "Missing vendor/autoload_runtime.php in production image; rebuild the image instead of installing dependencies at runtime." >&2
+		exit 1
 	fi
+
+	echo "Installing Composer dependencies (vendor/autoload_runtime.php missing)..."
+	composer install --prefer-dist --no-progress --no-interaction --no-scripts
 }
 
 if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ "$1" = 'ls' ]; then
- 	PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-production"
+	PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-production"
 	if [ "$APP_ENV" != 'prod' ]; then
 		PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-development"
 	fi
-	rm -f "$PHP_INI_DIR/php.ini"
-	ln -s "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
-    sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" "$PHP_INI_DIR/php.ini"
+	if [ -w "$PHP_INI_DIR" ]; then
+		rm -f "$PHP_INI_DIR/php.ini"
+		ln -s "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
+		sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" "$PHP_INI_DIR/php.ini"
+	fi
 
-	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images
+	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images public/bundles
 	CURRENT_UID="$(id -u)"
-	setfacl -R -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX var build data upload 2>/dev/null || true
-	setfacl -dR -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX var build data upload 2>/dev/null || true
+	ACL_PATHS="var data upload public/bundles"
+	if [ "$APP_ENV" != 'prod' ]; then
+		ACL_PATHS="$ACL_PATHS build"
+	fi
+	setfacl -R -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX $ACL_PATHS 2>/dev/null || true
+	setfacl -dR -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX $ACL_PATHS 2>/dev/null || true
 	if [ "$APP_ENV" != 'prod' ] && [ -f /certs/localCA.crt ]; then
 		ln -sf /certs/localCA.crt /usr/local/share/ca-certificates/localCA.crt
 		update-ca-certificates
@@ -41,9 +48,11 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 		cp rox_docker.ini rox_local.ini
 	fi
 
-	git config --global --add safe.directory /srv/bewelcome 2>/dev/null || true
-	if [ "$APP_ENV" != 'prod' ] && [ ! -f VERSION ]; then
-		git rev-parse --short HEAD > VERSION
+	if [ "$APP_ENV" != 'prod' ]; then
+		git config --global --add safe.directory /srv/bewelcome 2>/dev/null || true
+		if [ ! -f VERSION ]; then
+			git rev-parse --short HEAD > VERSION
+		fi
 	fi
 
 	if [ "$APP_ENV" != 'prod' ]; then
@@ -79,9 +88,9 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 		bin/console test:database:create --drop --force --no-interaction
 		echo "Database created."
 
-        echo "Importing translations"
+		echo "Importing translations"
 		if [ -f docker/db/word.sql ]; then
-            echo "Yepp, really. Importing translations"
+			echo "Yepp, really. Importing translations"
 			mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" < docker/db/word.sql
 		fi
 		if [ -f docker/db/geonamesadminunits.sql ]; then
@@ -90,21 +99,21 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 
 		bin/console translations:add:missing > /dev/null
 
-	elif ls -A src/Migrations/*.php > /dev/null 2>&1; then
+	elif ls -A Migrations/*.php > /dev/null 2>&1; then
 		bin/console doctrine:migrations:migrate --no-interaction
 	fi
 
-    # WarmUp translations now database is up to date
-    if [ "$APP_ENV" != 'prod' ]; then
-        composer run-script post-install-cmd
-        composer dump-autoload --classmap-authoritative
-    else
-        composer run-script --no-dev post-install-cmd
-        composer dump-autoload --classmap-authoritative --no-dev
-    fi
-
-    echo "Warmup cache"
-    bin/console cache:clear
+	# WarmUp translations now database is up to date
+	if [ "$APP_ENV" != 'prod' ]; then
+		composer run-script post-install-cmd
+		composer dump-autoload --classmap-authoritative
+		echo "Warmup cache"
+		bin/console cache:clear
+	else
+		echo "Warmup cache"
+		bin/console cache:clear
+		bin/console assets:install public
+	fi
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		bun encore dev --mode=development

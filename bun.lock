@@ -31,6 +31,7 @@
         "add-to-homescreen": "^3.2.6",
         "autoprefixer": "^10.5.0",
         "bootstrap": "^5.3.8",
+        "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
         "bs-custom-file-input": "^1.3.4",
         "chart.js": "^3.9.1",
         "ckeditor5": "^48.2.0",
@@ -82,6 +83,7 @@
         "tom-select": "^2.6.1",
         "ts-loader": "^9.6.0",
         "typescript": "^5.9.3",
+        "ux-translator": "symfony/ux-translator",
         "vanilla-calendar-pro": "^3.1.0",
         "webpack": "^5.107.2",
         "webpack-cli": "^5.1.4",
@@ -943,6 +945,8 @@
     "boolbase": ["boolbase@1.0.0", "", {}, "sha512-JZOSA7Mo9sNGB8+UjSgzdLtokWAky1zbztM3WRLCbZ70/3cTANmQmOdR7y2g+J0e2WXywy1yS468tY+IruqEww=="],
 
     "bootstrap": ["bootstrap@5.3.8", "", { "peerDependencies": { "@popperjs/core": "^2.11.8" } }, "sha512-HP1SZDqaLDPwsNiqRqi5NcP0SSXciX2s9E+RyqJIIqGo+vJeN5AJVM98CXmW/Wux0nQ5L7jeWUdplCEf0Ee+tg=="],
+
+    "bootstrap-autohidingnavbar": ["bootstrap-autohidingnavbar@github:istvan-ujjmeszaros/bootstrap-autohidingnavbar#0077987", {}, "istvan-ujjmeszaros-bootstrap-autohidingnavbar-0077987", "sha512-5nsIOoG8CA47Uq4joJ+89UPzX1NGzIxdlxSJv3kODFKDMoDirXH7pUoDiIk36712tgz4aTLZZkEYBSbXGzVgmA=="],
 
     "bootstrap-icons": ["bootstrap-icons@1.13.1", "", {}, "sha512-ijombt4v6bv5CLeXvRWKy7CuM3TRTuPEuGaGKvTV5cz65rQSY8RQ2JcHt6b90cBBAC7s8fsf2EkQDldzCoXUjw=="],
 
@@ -2275,6 +2279,8 @@
     "utils-merge": ["utils-merge@1.0.1", "", {}, "sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA=="],
 
     "uuid": ["uuid@14.0.0", "", { "bin": { "uuid": "dist-node/bin/uuid" } }, "sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg=="],
+
+    "ux-translator": ["ux-translator@github:symfony/ux-translator#f6bd0e4", {}, "symfony-ux-translator-f6bd0e4", "sha512-zw3ZhSZp77LGHLpbSrVurbCA4dYN0K7Wxy65UUrnofs9vHb3miDhfxSQru+TjlIjFqn2VPvdbWxSEB14XoxyKQ=="],
 
     "vanilla-calendar-pro": ["vanilla-calendar-pro@3.1.0", "", {}, "sha512-yXDtCaedcKz6i5OOdWGwui0C8MAmjXjj7JzKZyjDlkczSRqnhI8BDGFygqT2K+qL1uY7R2fLYlTlxA6oyFs2yg=="],
 

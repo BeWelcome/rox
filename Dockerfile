@@ -124,6 +124,9 @@ RUN set -eux; \
 # Self-contained production image.
 FROM bewelcome_php_base AS bewelcome_php
 
+ARG GIT_SHA=unknown
+ARG GIT_COMMIT_DATE=
+
 ENV APP_ENV=prod
 
 COPY --from=bewelcome_source /srv/bewelcome/bin bin/
@@ -148,10 +151,17 @@ COPY --from=bewelcome_vendor /srv/bewelcome/.env.local.php ./
 COPY --from=bewelcome_assets /srv/bewelcome/public/build public/build/
 COPY --from=bewelcome_assets /srv/bewelcome/public/main.js /srv/bewelcome/public/service-worker.js public/
 
+# Footer revision line reads project-root VERSION (see App\Utilities\VersionInfo).
+# Docker images exclude .git, so we cannot run `make version` here; CI passes the
+# commit SHA/date as build args — same outcome as:
+#   git rev-parse --short HEAD > VERSION
+#   touch -d $(TIME_STAMP) VERSION
 RUN set -eux; \
+	printf '%s\n' "${GIT_SHA}" | cut -c1-7 > VERSION; \
+	if [ -n "${GIT_COMMIT_DATE}" ]; then touch -d "${GIT_COMMIT_DATE}" VERSION; fi; \
 	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images public/bundles /config /data; \
 	find public -name '*.map' -type f -delete; \
-	chown -R www-data:www-data var data upload public/bundles /config /data; \
+	chown -R www-data:www-data var data upload public/bundles /config /data VERSION; \
 	chmod +x bin/console; \
 	apk upgrade --no-cache; \
 	sync

@@ -71,6 +71,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # tag=v4.2.2
 
+      - name: Commit metadata for VERSION file
+        id: git
+        run: echo "commit_date=$(git log -1 --format=%aI)" >> "$GITHUB_OUTPUT"
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
         with:
@@ -97,6 +101,9 @@ jobs:
           target: bewelcome_php
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            GIT_SHA=${{ github.sha }}
+            GIT_COMMIT_DATE=${{ steps.git.outputs.commit_date }}
           cache-from: type=gha,scope=${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=${{ matrix.arch }}
           outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true

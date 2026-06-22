@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Utilities\ForumUtilities;
+use App\Utilities\VersionInfo;
 use Carbon\Carbon;
 use HTMLPurifier;
 use HTMLPurifier_HTML5Config;
@@ -38,6 +39,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         /** @var false|string[] */
         private readonly array $locales,
         private readonly string $publicDirectory,
+        private readonly VersionInfo $versionInfo,
     ) {
     }
 
@@ -284,22 +286,15 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     public function getGlobals(): array
     {
-        $version = '';
         $locale = 'en';
-        $versionCreated = new Carbon();
 
         if (null !== $this->requestStack->getCurrentRequest()) {
             $locale = $this->requestStack->getSession()->get('locale', 'en');
         }
 
-        if (file_exists('../VERSION')) {
-            $version = trim(file_get_contents('../VERSION'));
-            $versionCreated = Carbon::createFromTimestamp(filemtime('../VERSION'));
-        }
-
         return [
-            'version' => $version,
-            'version_dt' => $versionCreated,
+            'version' => $this->versionInfo->getShortHash(),
+            'version_dt' => $this->versionInfo->getBuiltAt(),
             'title' => 'BeWelcome',
             'locales' => $this->locales,
             'robots' => 'ALL',

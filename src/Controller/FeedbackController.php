@@ -6,7 +6,7 @@ use App\Form\FeedbackFormType;
 use App\Model\AboutModel;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use Carbon\Carbon;
+use App\Utilities\VersionInfo;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +28,7 @@ class FeedbackController extends AboutBaseController
     #[Route(path: '/contactus')]
     #[Route(path: '/support')]
     #[Route(path: '/feedback', name: 'feedback')]
-    public function feedback(Request $request, AboutModel $aboutModel, TranslatorInterface $translator): Response
+    public function feedback(Request $request, AboutModel $aboutModel, TranslatorInterface $translator, VersionInfo $versionInfo): Response
     {
         $noModal = $request->query->get('no', false);
 
@@ -82,12 +82,7 @@ class FeedbackController extends AboutBaseController
             if ($form->isValid()) {
                 $data['member'] = $member;
                 $data['browser'] = $request->headers->get('User-Agent');
-                $data['version'] = 'no version set';
-                if (file_exists('../VERSION')) {
-                    $version = trim(file_get_contents('../VERSION'));
-                    $versionCreated = Carbon::createFromTimestamp(filemtime('../VERSION'));
-                    $data['version'] = $version . ' (' . $versionCreated . ')';
-                }
+                $data['version'] = $versionInfo->getFormattedForFeedback();
 
                 $data['host'] = $request->headers->get('Host');
                 $aboutModel->sendFeedbackEmail($data);

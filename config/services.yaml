@@ -266,6 +266,7 @@ services:
     rox.twig_extension:
         public: true
         class: App\Twig\Extension
+        autowire: true
         arguments:
             $publicDirectory: '%kernel.project_dir%/public'
         tags: [twig.extension]

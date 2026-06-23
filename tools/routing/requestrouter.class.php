@@ -1,6 +1,10 @@
 <?php
 
 
+use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\Routing\Exception\MissingMandatoryParametersException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 
@@ -34,7 +38,7 @@ class RequestRouter implements UrlGeneratorInterface
     {
         if (empty(self::$_routes))
         {
-            require_once(SCRIPT_BASE . 'routes.php');
+            require(SCRIPT_BASE . 'routes.php');
         }
     }
 
@@ -136,9 +140,19 @@ class RequestRouter implements UrlGeneratorInterface
      */
     public function url($route, $vars = array(), $add_base = true)
     {
+        $routeName = $route;
         $route = $this->getRoute($route);
         if (empty($route))
         {
+            // Fall back to Symfony's URL generator for routes not in legacy routes.php
+            $symfonyGenerator = PVars::get()->symfony_url_generator;
+            if ($symfonyGenerator !== false && $symfonyGenerator !== null) {
+                try {
+                    return $symfonyGenerator->generate($routeName, $vars);
+                } catch (\Exception $e) {
+                    // Route not found in Symfony either
+                }
+            }
             return '';
         }
         $url = $route['url'];
@@ -212,14 +226,14 @@ class RequestRouter implements UrlGeneratorInterface
         if ($controller) {
             $classname = ucfirst($controller).'Controller';
             if (class_exists($classname) && (
-                is_subclass_of($classname, 'PAppController') ||
-                is_subclass_of($classname, 'RoxControllerBase')
-            )) {
+                    is_subclass_of($classname, 'PAppController') ||
+                    is_subclass_of($classname, 'RoxControllerBase')
+                )) {
                 return array($classname, 'index', null);
             }
         }
 
-        throw new \Symfony\Component\Routing\Exception\ResourceNotFoundException(sprintf('No routes found for "%s".', $name));
+        throw new ResourceNotFoundException(sprintf('No routes found for "%s".', $name));
     }
 
 
@@ -258,7 +272,7 @@ class RequestRouter implements UrlGeneratorInterface
     protected function loadRoutingAliasTable()
     {
         $alias_table = array();
-		// Added check for PVars::getObj('syshcvol')->IniCache to be able to switch on/off caching for the alias.ini files
+        // Added check for PVars::getObj('syshcvol')->IniCache to be able to switch on/off caching for the alias.ini files
         $force_refresh = ('localhost' == $_SERVER['SERVER_NAME'] || PVars::getObj('syshcvol')->IniCache == 0);
         if (is_file($cachefile = SCRIPT_BASE.'build/alias.cache.ini') && !$force_refresh) {
             $this->iniParse($cachefile, $alias_table);
@@ -332,18 +346,12 @@ class RequestRouter implements UrlGeneratorInterface
      *
      * @param RequestContext $context The context
      */
-    public function setContext(
-        RequestContext $context
-    ) {
+    public function setContext(RequestContext $context): void
+    {
         $this->_context = $context;
     }
 
-    /**
-     * Gets the request context.
-     *
-     * @return RequestContext The context
-     */
-    public function getContext()
+    public function getContext(): RequestContext
     {
         return $this->_context;
     }
@@ -369,17 +377,14 @@ class RequestRouter implements UrlGeneratorInterface
      *
      * @return string The generated URL
      *
-     * @throws \Symfony\Component\Routing\Exception\RouteNotFoundException              If the named route doesn't exist
-     * @throws \Symfony\Component\Routing\Exception\MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
-     * @throws \Symfony\Component\Routing\Exception\InvalidParameterException           When a parameter value for a placeholder is not correct because
+     * @throws RouteNotFoundException              If the named route doesn't exist
+     * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
+     * @throws InvalidParameterException           When a parameter value for a placeholder is not correct because
      *                                             it does not match the requirement
      */
-    public function generate(
-        $name,
-        $parameters = array(),
-        $referenceType = self::ABSOLUTE_PATH
-    ) {
-        $url = $this->url($name, $parameters, $referenceType == self::ABSOLUTE_PATH ? true : false);
+    public function generate(string $name,array $parameters = [], int $referenceType = self::ABSOLUTE_PATH): string
+    {
+        $url = $this->url($name, $parameters, $referenceType == self::ABSOLUTE_PATH);
         if (empty($url)) {
             $url = false;
         }

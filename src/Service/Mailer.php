@@ -108,6 +108,25 @@ class Mailer
         );
     }
 
+    public function sendNewEmailConfirmationEmail(Member $receiver, array $parameters): bool
+    {
+        $currentLocale = $this->translator->getLocale();
+        $this->setTranslatorLocale($receiver);
+        $parameters['receiver'] = $receiver;
+        $parameters['receiverLocale'] = $receiver->getLocale();
+
+        try {
+            return $this->sendTemplateEmail(
+                self::SIGNUP_EMAIL_ADDRESS,
+                new Address($parameters['email_address'], $receiver->getUsername()),
+                'newemail',
+                $parameters
+            );
+        } finally {
+            $this->translator->setLocale($currentLocale);
+        }
+    }
+
     public function sendNewsletterEmail(Newsletter $newsletter, Member $receiver, array $parameters): bool
     {
         $parameters = array_merge($parameters, $this->prepareParametersForNewsletter($newsletter, $receiver));
@@ -281,7 +300,7 @@ class Mailer
     {
         $currentLocale = $this->translator->getLocale();
         $success = true;
-        $locale = 'en';
+        $locale = $parameters['receiverLocale'] ?? 'en';
         if ($receiver instanceof Member) {
             $this->setTranslatorLocale($receiver);
             $locale = $receiver->getLocale();

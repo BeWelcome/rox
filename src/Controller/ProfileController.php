@@ -149,6 +149,21 @@ class ProfileController extends AbstractController
         return $this->redirectToRoute('profile_set_location', ['username' => $this->getUser()->getUsername()]);
     }
 
+    #[Route(
+        path: '/editmyprofile{legacyPath}',
+        name: 'legacy_edit_profile_redirect',
+        requirements: ['legacyPath' => '(/.*)?'],
+        defaults: ['legacyPath' => ''],
+        priority: 100
+    )]
+    public function redirectLegacyEditProfile(): RedirectResponse
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        return $this->redirectToRoute('profile_edit', ['username' => $member->getUsername()]);
+    }
+
     #[Route(path: '/members/{username:member}/location', name: 'profile_set_location', priority: 11)]
     public function setLocation(
         Request $request,

@@ -46,6 +46,37 @@ function SpecialCharactersTextExtended( editor ) {
     ] );
 }
 
+function insertConversationTemplate( editor, template ) {
+    if (!template) {
+        return;
+    }
+
+    editor.editing.view.focus();
+    const viewFragment = editor.data.processor.toView(template);
+    const modelFragment = editor.data.toModel(viewFragment);
+    editor.model.insertContent(modelFragment);
+}
+
+function registerConversationTemplateHandlers( editor ) {
+    const editorId = editor.sourceElement.id;
+    const templateButtons = document.querySelectorAll('.js-conversation-template');
+
+    templateButtons.forEach((button) => {
+        if (button.dataset.conversationTemplateEditorId !== editorId) {
+            return;
+        }
+
+        if (button.dataset.conversationTemplateRegistered === 'yes') {
+            return;
+        }
+
+        button.dataset.conversationTemplateRegistered = 'yes';
+        button.addEventListener('click', () => {
+            insertConversationTemplate(editor, button.dataset.conversationTemplate);
+        });
+    });
+}
+
 const uploadPath = document.getElementById('upload_path');
 let uploadUrl = "/gallery/upload/image";
 if (null !== uploadPath) {
@@ -188,6 +219,7 @@ sourceElements.forEach( (element) => {
             const form = editor.sourceElement.closest('form')
 
             registerSubmitHandler(form);
+            registerConversationTemplateHandlers(editor);
 
             const storedData = JSON.parse(window.localStorage.getItem(editor.sourceElement.id));
             if (storedData !== null) {
@@ -212,9 +244,13 @@ sourceElements.forEach( (element) => {
 
 
 function registerSubmitHandler( form ) {
-    form.addEventListener('submit', function( form ) {
+    if (!form) {
+        return;
+    }
+
+    form.addEventListener('submit', function() {
         // Remove data from localeStorage.
-        for (let [editor] of editors.entries()) {
+        for (let [, editor] of editors.entries()) {
             const element = editor.sourceElement
 
             window.localStorage.removeItem(element.id);

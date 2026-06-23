@@ -18,6 +18,7 @@
     <div class="u:grid u:grid-cols-1">
         <div class="u:mb-4">
             {{ form_row(form.message) }}
+            {% include 'conversations/_reply_templates.html.twig' %}
             {% do form.subject.setRendered %}
             {{ form_rest(form) }}
         </div>

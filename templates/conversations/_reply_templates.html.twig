@@ -26,7 +26,7 @@
             {% for template in conversation_templates %}
                 <button type="button"
                         class="dropdown-item js-conversation-template"
-                        data-conversation-template-editor-id="{{ form.message.vars.id }}"
+                        data-conversation-template-editor-id="{{ editor_id }}"
                         data-conversation-template="{{ template.body|trans|e('html_attr') }}">
                     {{ template.label|trans }}
                 </button>

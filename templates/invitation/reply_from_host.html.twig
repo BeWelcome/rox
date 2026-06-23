@@ -37,7 +37,6 @@
             {{ form_label(form.message) }}
             {{ form_widget(form.message) }}
             {{ form_errors(form.message) }}
-            {% include 'conversations/_reply_templates.html.twig' %}
             {% if current.sender.Username == app.user.Username %}
                 {% set label = 'update' %}
             {% else %}

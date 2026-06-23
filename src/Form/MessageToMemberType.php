@@ -27,6 +27,7 @@ class MessageToMemberType extends AbstractType
                 'constraints' => [
                     new NotBlank(message: 'please.enter.a.message.text'),
                 ],
+                'include_reply_templates' => $options['include_reply_templates'],
             ])
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
@@ -46,7 +47,9 @@ class MessageToMemberType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Message::class,
+            'include_reply_templates' => false,
         ]);
+        $resolver->addAllowedTypes('include_reply_templates', 'bool');
     }
 
     #[Override]

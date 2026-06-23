@@ -25,7 +25,7 @@ class InvitationHost extends HostingRequestAbstractType
             $form->add('update', SubmitType::class, [
                 'label' => 'label.hosting.update',
             ]);
-            $this->addMessageTextArea($form, 'invitation.enter.message.for.guest');
+            $this->addMessageTextArea($form, 'invitation.enter.message.for.guest', true);
         });
     }
 

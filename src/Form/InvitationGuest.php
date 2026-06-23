@@ -39,6 +39,7 @@ class InvitationGuest extends HostingRequestAbstractType
                     new NotBlank(message: 'please.enter.a.message.text'),
                 ],
                 'empty_data' => '',
+                'include_reply_templates' => true,
             ])
             ->add('request', HostingRequestType::class, [
                 'invitation' => true,

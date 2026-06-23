@@ -33,7 +33,7 @@ class HostingRequestGuest extends HostingRequestAbstractType
                 ]);
                 $form->add('subject', SubjectType::class);
             } else {
-                $this->addMessageTextArea($form, 'please.enter.a.message.for.your.host');
+                $this->addMessageTextArea($form, 'please.enter.a.message.for.your.host', true);
                 $form->add('cancel', SubmitType::class, [
                     'label' => 'label.hosting.cancel',
                 ]);

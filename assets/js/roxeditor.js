@@ -46,7 +46,7 @@ function SpecialCharactersTextExtended( editor ) {
     ] );
 }
 
-function insertConversationTemplate( editor, template ) {
+function insertReplyTemplate( editor, template ) {
     if (!template) {
         return;
     }
@@ -57,7 +57,7 @@ function insertConversationTemplate( editor, template ) {
     editor.model.insertContent(modelFragment);
 }
 
-function registerConversationTemplateHandlers( editor ) {
+function registerReplyTemplateHandler( editor ) {
     const editorId = editor.sourceElement.id;
     const templateButtons = document.querySelectorAll('.js-conversation-template');
 
@@ -72,7 +72,7 @@ function registerConversationTemplateHandlers( editor ) {
 
         button.dataset.conversationTemplateRegistered = 'yes';
         button.addEventListener('click', () => {
-            insertConversationTemplate(editor, button.dataset.conversationTemplate);
+            insertReplyTemplate(editor, button.dataset.conversationTemplate);
         });
     });
 }
@@ -219,7 +219,9 @@ sourceElements.forEach( (element) => {
             const form = editor.sourceElement.closest('form')
 
             registerSubmitHandler(form);
-            registerConversationTemplateHandlers(editor);
+            if (editor.sourceElement.dataset.includeReplyTemplates === 'yes') {
+                registerReplyTemplateHandler(editor);
+            }
 
             const storedData = JSON.parse(window.localStorage.getItem(editor.sourceElement.id));
             if (storedData !== null) {
@@ -244,13 +246,9 @@ sourceElements.forEach( (element) => {
 
 
 function registerSubmitHandler( form ) {
-    if (!form) {
-        return;
-    }
-
     form.addEventListener('submit', function() {
         // Remove data from localeStorage.
-        for (let [, editor] of editors.entries()) {
+        for (const editor of editors.values()) {
             const element = editor.sourceElement
 
             window.localStorage.removeItem(element.id);

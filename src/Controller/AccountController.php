@@ -139,6 +139,13 @@ class AccountController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
+        $newEmail = $member->getNewEmail();
+        if (null === $newEmail) {
+            $this->addTranslatedFlash('error', 'flash.profile.mail.already.confirmed');
+
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
         $changeEmailAddressForm = $this->createForm(ConfirmEmailAddressFormType::class, [
             'registration_key' => $registrationKey,
         ]);
@@ -146,7 +153,13 @@ class AccountController extends AbstractController
         if ($changeEmailAddressForm->isSubmitted() && $changeEmailAddressForm->isValid()) {
             $registrationKey = $changeEmailAddressForm['registration_key']->getData();
             if ($registrationKey === $member->getRegistrationKey()) {
-                $member->setEmail($member->getNewEmail());
+                if (!$this->signupModel->checkEmailAddress($newEmail, $member)) {
+                    $this->addTranslatedFlash('error', 'account.new.email.taken');
+
+                    return $this->redirectToRoute('account_edit', ['username' => $member->getUsername()]);
+                }
+
+                $member->setEmail($newEmail);
                 $member->setNewEmail(null);
 
                 $member->setRegistrationKey(null);

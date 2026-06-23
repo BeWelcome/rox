@@ -536,6 +536,13 @@ class MembersController extends RoxControllerBase
         if (isset($args->post)) {
             $vars = $this->cleanVars($args->post);
             $request = $args->request;
+            $rights = new MOD_right;
+            if (!($rights->hasRight('Admin') || $rights->hasRight('SafetyTeam')))
+            {
+                $loggedInMember = $this->model->getLoggedInMember();
+                $vars['memberid'] = $loggedInMember->getPKValue();
+                $vars['Email'] = $loggedInMember->Email;
+            }
             $errors = $this->model->checkProfileForm($vars);
 
             $uploadFailed = false;
@@ -565,11 +572,6 @@ class MembersController extends RoxControllerBase
                 // show form again
                 $mem_redirect->post = $vars;
                 return false;
-            }
-            $rights = new MOD_right;
-            if (!($rights->hasRight('Admin') || $rights->hasRight('SafetyTeam')))
-            {
-                $vars['memberid'] = $this->model->getLoggedInMember()->getPKValue();
             }
             $vars['member'] = $this->getMember($vars['memberid']);
             $vars = $this->model->polishProfileFormValues($vars);

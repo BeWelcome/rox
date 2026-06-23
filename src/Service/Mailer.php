@@ -108,6 +108,17 @@ class Mailer
         );
     }
 
+    public function sendSignupEmailToAddress(Member $receiver, string $emailAddress, string $template, $parameters): bool
+    {
+        return $this->sendTemplateEmail(
+            self::SIGNUP_EMAIL_ADDRESS,
+            new Address($emailAddress, $receiver->getUsername()),
+            $template,
+            $parameters,
+            $receiver
+        );
+    }
+
     public function sendNewsletterEmail(Newsletter $newsletter, Member $receiver, array $parameters): bool
     {
         $parameters = array_merge($parameters, $this->prepareParametersForNewsletter($newsletter, $receiver));
@@ -277,19 +288,23 @@ class Mailer
      * @param Member|Address        $receiver
      * @param mixed                 $parameters
      */
-    private function sendTemplateEmail($sender, $receiver, string $template, array $parameters): bool
+    private function sendTemplateEmail($sender, $receiver, string $template, array $parameters, ?Member $receiverContext = null): bool
     {
         $currentLocale = $this->translator->getLocale();
         $success = true;
         $locale = 'en';
         if ($receiver instanceof Member) {
-            $this->setTranslatorLocale($receiver);
-            $locale = $receiver->getLocale();
-            $parameters['receiver'] = $receiver;
+            $receiverContext = $receiver;
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
         } elseif (!$receiver instanceof Address) {
             $message = \sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class);
             throw new InvalidArgumentException($message);
+        }
+
+        if ($receiverContext instanceof Member) {
+            $this->setTranslatorLocale($receiverContext);
+            $locale = $receiverContext->getLocale();
+            $parameters['receiver'] = $receiverContext;
         }
 
         $parameters['template'] = $template;

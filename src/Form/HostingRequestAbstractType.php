@@ -31,8 +31,7 @@ class HostingRequestAbstractType extends AbstractType
         FormInterface $form,
         string $placeholder,
         bool $includeReplyTemplates = false,
-    ): void
-    {
+    ): void {
         $form
             ->add('message', CkEditorType::class, [
                 'label' => 'label.message',

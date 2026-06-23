@@ -194,22 +194,20 @@ class SignupModel
     /**
      * Email is either taken directly or is currently changed and awaiting confirmation.
      */
-    public function checkEmailAddress(string $email, ?Member $ignoredMember = null): bool
+    public function checkEmailAddress(string $email): bool
     {
         $memberRepository = $this->entityManager->getRepository(Member::class);
-        $queryBuilder = $memberRepository->createQueryBuilder('m')
-            ->select('COUNT(m.id)')
-            ->where('m.email = :email OR m.newEmail = :email')
-            ->setParameter('email', $email)
-        ;
+        $member = $memberRepository->findOneBy(['email' => $email]);
 
-        if (null !== $ignoredMember) {
-            $queryBuilder
-                ->andWhere('m.id != :ignoredMemberId')
-                ->setParameter('ignoredMemberId', $ignoredMember->getId())
-            ;
+        if (null !== $member) {
+            return false;
         }
 
-        return 0 === (int) $queryBuilder->getQuery()->getSingleScalarResult();
+        $member = $memberRepository->findOneBy(['newEmail' => $email]);
+        if (null !== $member) {
+            return false;
+        }
+
+        return true;
     }
 }

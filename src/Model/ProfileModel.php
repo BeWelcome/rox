@@ -224,7 +224,7 @@ readonly class ProfileModel
             'key' => $member->getRegistrationKey(),
         ];
 
-        $this->mailer->sendSignupEmailToAddress($member, $email, 'newemail', $parameters);
+        $this->mailer->sendNewEmailConfirmationEmail($member, $parameters);
     }
 
     private function handleAboutMe(Member $member, array $data): array

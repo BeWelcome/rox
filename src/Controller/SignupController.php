@@ -188,13 +188,6 @@ class SignupController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
-        if (null !== $member->getNewEmail()) {
-            return $this->redirectToRoute('change_email', [
-                'username' => $member->getUsername(),
-                'registrationKey' => $registrationKey,
-            ]);
-        }
-
         if (null === $member->getRegistrationKey()) {
             $this->addTranslatedFlash('error', 'flash.profile.mail.already.confirmed');
 

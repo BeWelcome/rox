@@ -59,59 +59,22 @@ class AccountControllerTest extends WebTestCase
         $this->assertNull($member->getRegistrationKey());
     }
 
-    public function testChangeEmailConfirmationRejectsEmailTakenAfterRequest(): void
+    public function testEmailChangeRejectsUnconfirmedCurrentEmail(): void
     {
         $client = static::createClient();
         $member = $this->loginMember($client, 'bwadmin');
         $oldEmail = $member->getEmail();
-        $newEmail = 'taken-late-' . uniqid() . '@example.test';
-
-        $this->submitAccountEmailChange($client, $member, $newEmail);
-        $member = $this->reloadMember('bwadmin');
-        $registrationKey = $member->getRegistrationKey();
-        $this->assertNotNull($registrationKey);
-
-        $otherMember = $this->reloadMember('member-6');
-        $otherMember->setEmail($newEmail);
+        $registrationKey = 'unconfirmed-current-email';
+        $member->setRegistrationKey($registrationKey);
         $this->getEntityManager()->flush();
 
-        $crawler = $client->request('GET', '/members/bwadmin/change/email/' . $registrationKey);
-        $this->assertResponseIsSuccessful();
-        $form = $crawler->filter('form')->form();
-        $client->submit($form);
+        $this->submitAccountEmailChange($client, $member, 'blocked-' . uniqid() . '@example.test');
 
-        $this->assertResponseRedirects('/members/bwadmin/account');
+        $this->assertResponseStatusCodeSame(422);
+        self::assertEmailCount(0);
         $member = $this->reloadMember('bwadmin');
         $this->assertSame($oldEmail, $member->getEmail());
-        $this->assertSame($newEmail, $member->getNewEmail());
-        $this->assertSame($registrationKey, $member->getRegistrationKey());
-    }
-
-    public function testChangeEmailConfirmationRejectsPendingEmailTakenAfterRequest(): void
-    {
-        $client = static::createClient();
-        $member = $this->loginMember($client, 'bwadmin');
-        $oldEmail = $member->getEmail();
-        $newEmail = 'pending-taken-late-' . uniqid() . '@example.test';
-
-        $this->submitAccountEmailChange($client, $member, $newEmail);
-        $member = $this->reloadMember('bwadmin');
-        $registrationKey = $member->getRegistrationKey();
-        $this->assertNotNull($registrationKey);
-
-        $otherMember = $this->reloadMember('member-6');
-        $otherMember->setNewEmail($newEmail);
-        $this->getEntityManager()->flush();
-
-        $crawler = $client->request('GET', '/members/bwadmin/change/email/' . $registrationKey);
-        $this->assertResponseIsSuccessful();
-        $form = $crawler->filter('form')->form();
-        $client->submit($form);
-
-        $this->assertResponseRedirects('/members/bwadmin/account');
-        $member = $this->reloadMember('bwadmin');
-        $this->assertSame($oldEmail, $member->getEmail());
-        $this->assertSame($newEmail, $member->getNewEmail());
+        $this->assertNull($member->getNewEmail());
         $this->assertSame($registrationKey, $member->getRegistrationKey());
     }
 
@@ -167,27 +130,6 @@ class AccountControllerTest extends WebTestCase
         $this->assertSame($oldEmail, $member->getEmail());
         $this->assertNull($member->getNewEmail());
         $this->assertNull($member->getRegistrationKey());
-    }
-
-    public function testOldSignupConfirmationRouteRedirectsPendingEmailChange(): void
-    {
-        $client = static::createClient();
-        $member = $this->loginMember($client, 'bwadmin');
-        $oldEmail = $member->getEmail();
-        $newEmail = 'old-link-' . uniqid() . '@example.test';
-
-        $this->submitAccountEmailChange($client, $member, $newEmail);
-        $member = $this->reloadMember('bwadmin');
-        $registrationKey = $member->getRegistrationKey();
-        $this->assertNotNull($registrationKey);
-
-        $client->request('GET', '/members/bwadmin/confirm/' . $registrationKey);
-
-        $this->assertResponseRedirects('/members/bwadmin/change/email/' . $registrationKey);
-        $member = $this->reloadMember('bwadmin');
-        $this->assertSame($oldEmail, $member->getEmail());
-        $this->assertSame($newEmail, $member->getNewEmail());
-        $this->assertSame($registrationKey, $member->getRegistrationKey());
     }
 
     public function testLegacyEditProfileRedirectsToModernProfileEdit(): void

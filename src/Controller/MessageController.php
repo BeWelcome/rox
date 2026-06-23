@@ -141,9 +141,7 @@ class MessageController extends AbstractController
         $replyMessage = new Message();
         $replyMessage->setSubject($message->getSubject());
 
-        $replyForm = $this->createForm(MessageToMemberType::class, $replyMessage, [
-            'include_reply_templates' => true,
-        ]);
+        $replyForm = $this->createForm(MessageToMemberType::class, $replyMessage);
         $replyForm->handleRequest($request);
 
         if ($replyForm->isSubmitted() && $replyForm->isValid()) {

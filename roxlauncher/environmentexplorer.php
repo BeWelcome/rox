@@ -50,6 +50,10 @@ class EnvironmentExplorer
         $this->_initPVars($settings);
         $this->_initBWGlobals($settings);
 
+        // Make Symfony's URL generator available to legacy code
+        if ($this->urlGenerator !== null) {
+            PVars::register('symfony_url_generator', $this->urlGenerator);
+        }
 
         PSurveillance::setPoint('base_loaded');
 
@@ -196,14 +200,14 @@ class EnvironmentExplorer
         }
         // some of the keys need another name
         foreach (array(
-            'db' => 'db',
-            'config_rdbms' => 'db',
-            'config_smtp' => 'smtp',
-            'config_mailAddresses' => 'mailAddresses',
-            'config_request' => 'request',
-            'config_google' => 'google',
-            'env' => 'env'
-        ) as $key_in_pvars => $key_in_inifile) {
+                     'db' => 'db',
+                     'config_rdbms' => 'db',
+                     'config_smtp' => 'smtp',
+                     'config_mailAddresses' => 'mailAddresses',
+                     'config_request' => 'request',
+                     'config_google' => 'google',
+                     'env' => 'env'
+                 ) as $key_in_pvars => $key_in_inifile) {
             $keymap[$key_in_pvars] = $key_in_inifile;
         }
         foreach ($keymap as $key => $value) {
@@ -280,7 +284,7 @@ class EnvironmentExplorer
         $_SYSHCVOL['SiteCloseMessage'] = "The site is temporary closed"; // Message wich is displayed when the site is closed
 
         // possible answers for accomodation
-         $_SYSHCVOL['Accomodation'] = array (   'dependonrequest',  'neverask', 'anytime');
+        $_SYSHCVOL['Accomodation'] = array (   'dependonrequest',  'neverask', 'anytime');
 
         // possible lenght of stay
         $_SYSHCVOL['CommentsRelation'] = array ('hewasmyguest', 'hehostedme', 'OnlyOnce', 'HeIsMyFamily', 'HeHisMyOldCloseFriend', 'CommunicatedOnline',
@@ -385,4 +389,3 @@ class EnvironmentExplorer
         }
     }
 }
-?>

@@ -20,6 +20,7 @@ RUN apk add --no-cache \
 RUN set -eux; \
 	install-php-extensions \
 		apcu \
+		curl \
 		intl \
 		gd \
 		mysqli \

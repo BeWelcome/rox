@@ -9,3 +9,4 @@ framework:
             - submit
             - authenticate
             - logout
+            - browser_push_subscription

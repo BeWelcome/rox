@@ -52,7 +52,7 @@
   @apply u:flex u:flex-row u:gap-8 u:justify-end;
 }
 
-@media (min-width: 600px) {
+@variant md {
   .notes-card {
     display: grid;
     grid-template-areas:

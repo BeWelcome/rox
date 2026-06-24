@@ -27,8 +27,11 @@ class HostingRequestAbstractType extends AbstractType
         return 'app_message';
     }
 
-    protected function addMessageTextArea(FormInterface $form, string $placeholder): void
-    {
+    protected function addMessageTextArea(
+        FormInterface $form,
+        string $placeholder,
+        bool $includeReplyTemplates = false,
+    ): void {
         $form
             ->add('message', CkEditorType::class, [
                 'label' => 'label.message',
@@ -41,6 +44,7 @@ class HostingRequestAbstractType extends AbstractType
                     new NotBlank(message: 'please.enter.a.message.text'),
                 ],
                 'empty_data' => '',
+                'include_reply_templates' => $includeReplyTemplates,
             ])
         ;
     }

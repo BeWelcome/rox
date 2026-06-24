@@ -1,0 +1,36 @@
+{% set conversation_templates = [
+    {
+        label: 'conversation.reply.template.interested.label',
+        body: 'conversation.reply.template.interested.body'
+    },
+    {
+        label: 'conversation.reply.template.need_details.label',
+        body: 'conversation.reply.template.need_details.body'
+    },
+    {
+        label: 'conversation.reply.template.not_available.label',
+        body: 'conversation.reply.template.not_available.body'
+    }
+] %}
+
+<div class="u:flex u:justify-end u:mt-2">
+    <div class="btn-group">
+        <button type="button"
+                class="o-button o-button--s o-button--outline dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false">
+            {{ 'conversation.reply.templates'|trans }}
+        </button>
+        <div class="dropdown-menu dropdown-menu-end">
+            {% for template in conversation_templates %}
+                <button type="button"
+                        class="dropdown-item js-conversation-template"
+                        data-conversation-template-editor-id="{{ editor_id }}"
+                        data-conversation-template="{{ template.body|trans|e('html_attr') }}">
+                    {{ template.label|trans }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+</div>

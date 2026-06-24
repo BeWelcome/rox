@@ -44,3 +44,24 @@ contact.not.without.about_me:
     - 'To contact {username} you need to fill out the About Me section of your profile.'
     - Flash shown when trying to send a request to a member that has the preference "Allow requests without about me to 'No'"
 
+conversation.reply.templates:
+    - Templates
+    - Button label for the reply template dropdown on conversation reply forms
+conversation.reply.template.interested.label:
+    - "I'm interested"
+    - Label for a conversation reply template
+conversation.reply.template.interested.body:
+    - '<p>Thanks for your message. This sounds good to me. I will get back to you with the details soon.</p>'
+    - Body for a conversation reply template
+conversation.reply.template.need_details.label:
+    - 'I need more details'
+    - Label for a conversation reply template
+conversation.reply.template.need_details.body:
+    - '<p>Thanks for your message. Could you send me a little more information before I confirm?</p>'
+    - Body for a conversation reply template
+conversation.reply.template.not_available.label:
+    - "I'm not available"
+    - Label for a conversation reply template
+conversation.reply.template.not_available.body:
+    - '<p>Thanks for your message. Unfortunately this will not work for me this time. I hope you find another option.</p>'
+    - Body for a conversation reply template

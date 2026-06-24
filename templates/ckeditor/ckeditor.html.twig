@@ -1,5 +1,6 @@
 {% block ckeditor_widget %}
     {% set attr = attr|merge({}) %}
+    {% set include_reply_templates = include_reply_templates|default(false) %}
     {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_INLINE') or
           editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_DECOUPLED')
       %}
@@ -7,7 +8,7 @@
         {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_DECOUPLED') %}
           <div id="form.vars.id ~ '_toolbar'"></div>
         {% endif %}
-        <div {{ block('widget_attributes') }} data-progress="{{ form.vars.id ~ '_progress' }}" data-editor-type="{{ editor_type }}" data-image-upload="{{ image_upload ? 'yes' : 'no' }}">
+        <div {{ block('widget_attributes') }} data-progress="{{ form.vars.id ~ '_progress' }}" data-editor-type="{{ editor_type }}" data-image-upload="{{ image_upload ? 'yes' : 'no' }}" data-include-reply-templates="{{ include_reply_templates ? 'yes' : 'no' }}">
           {{ value|raw }}
         </div>
         {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_INLINE') %}
@@ -18,7 +19,11 @@
     {% else %}
       {% set attr = attr|merge({'data-editor-type': editor_type}) %}
       {% set attr = attr|merge({'data-image-upload': image_upload ? 'yes' : 'no'}) %}
+      {% set attr = attr|merge({'data-include-reply-templates': include_reply_templates ? 'yes' : 'no'}) %}
       <textarea {{ block('widget_attributes') }}>{{ value }}</textarea>
+    {% endif %}
+    {% if include_reply_templates %}
+      {% include 'conversations/_reply_templates.html.twig' with {'editor_id': form.vars.id} only %}
     {% endif %}
     {% if not async %}
       {{ block( '_ckeditor_javascript' ) }}

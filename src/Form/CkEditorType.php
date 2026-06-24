@@ -22,6 +22,7 @@ class CkEditorType extends TextareaType
         $builder->setAttribute('async', $options['async']);
         $builder->setAttribute('image_upload', $options['image_upload']);
         $builder->setAttribute('editor_type', $options['editor_type']);
+        $builder->setAttribute('include_reply_templates', $options['include_reply_templates']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -36,10 +37,12 @@ class CkEditorType extends TextareaType
                 'placeholder' => '',
                 'error_bubbling' => false,
                 'editor_type' => self::EDITOR_TYPE_TEXTAREA,
+                'include_reply_templates' => false,
             ])
             ->addAllowedTypes('placeholder', 'string')
             ->addAllowedTypes('async', 'bool')
             ->addAllowedTypes('editor_type', 'string')
+            ->addAllowedTypes('include_reply_templates', 'bool')
             ->setAllowedValues('editor_type', [
                 self::EDITOR_TYPE_DECOUPLED,
                 self::EDITOR_TYPE_TEXTAREA,
@@ -55,6 +58,7 @@ class CkEditorType extends TextareaType
         $view->vars['async'] = $form->getConfig()->getAttribute('async');
         $view->vars['image_upload'] = $form->getConfig()->getAttribute('image_upload');
         $view->vars['editor_type'] = $form->getConfig()->getAttribute('editor_type');
+        $view->vars['include_reply_templates'] = $form->getConfig()->getAttribute('include_reply_templates');
     }
 
     #[Override]

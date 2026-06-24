@@ -17,6 +17,12 @@
   height: auto;
 }
 
+.notes-card figure {
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .note-avatar {
   grid-area: avatar;
   display: flex;
@@ -32,6 +38,7 @@
 
 .note-note {
   grid-area: note;
+  min-width: 0;
   @apply u:break-words u:mb-8;
 }
 
@@ -45,7 +52,7 @@
   @apply u:flex u:flex-row u:gap-8 u:justify-end;
 }
 
-@media screen(sm) {
+@variant md {
   .notes-card {
     display: grid;
     grid-template-areas:

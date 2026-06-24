@@ -45,14 +45,17 @@
 
 {% block modals %}
     {% for note in notes %}
-        <div class="micromodal-slide" id="note-delete-{{ note.id }}">
-            <div class="modal__overlay u:bg-gray-80 u:bg-opacity-50 u:flex u:justify-center u:absolute u:inset-0 u:z-[2001]">
-            <div class="u:bg-white u:p-16 u:m-16 u:rounded-8 u:w-[70%] u:sm:w-[30%] u:md:w-[20%] u:max-w-[90%]">
-                <p class="u:text-24 u:mb-4 u:font-700 ">{{ 'profile.notes.modal'|trans }}</p>
+        {% set preview = note.comment|purify|striptags|trim|truncate(150) %}
+        <div class="modal micromodal-slide" id="note-delete-{{ note.id }}" aria-hidden="true">
+            <div class="modal__overlay u:bg-gray-80 u:bg-opacity-50 u:flex u:justify-center u:items-center u:z-[2001]" tabindex="-1" data-micromodal-close>
+            <div class="u:bg-white u:p-16 u:m-16 u:rounded-8 u:w-[70%] u:sm:w-[30%] u:md:w-[20%] u:max-w-[90%] u:max-h-[80vh] u:overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="note-delete-{{ note.id }}-title">
+                <p class="u:text-24 u:mb-4 u:font-700" id="note-delete-{{ note.id }}-title">{{ 'profile.notes.modal'|trans }}</p>
                 <p class="u:text-16 u:mb-8">{{ 'profile.notes.delete'|trans }}</p>
                 <hr>
-                {{ note.comment|purify|truncate(150) }}
-                <hr>
+                {% if preview is not empty %}
+                    <p class="u:text-16 u:my-8">{{ preview }}</p>
+                    <hr>
+                {% endif %}
                 <footer class="u:flex u:flex-row u:justify-between">
                     <button class="o-button" data-micromodal-close>{{ 'profile.notes.no'|trans|capitalize }}</button>
                     <a href="{{ url('delete_note', {'username': note.member.username }) }}" class="o-button">{{ 'profile.notes.yes'|trans|capitalize }}</a>

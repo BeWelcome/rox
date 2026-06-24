@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 {% import 'macros.twig' as macros %}
 
+{% block title %}{{ 'search.locations'|trans }}{% endblock %}
+
 {% block javascripts %}
     {{ encore_entry_script_tags('search/loadcontent') }}
     {{ encore_entry_script_tags('search/locations') }}

@@ -6,6 +6,8 @@ use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\PreferencesType;
 use App\Model\PreferenceModel;
+use App\Service\BrowserPushConfig;
+use App\Service\BrowserPushSubscriptionRemover;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,6 +23,7 @@ class PreferenceController extends AbstractController
     public function __construct(
         private readonly PreferenceModel $preferenceModel,
         private readonly EntityManagerInterface $entityManager,
+        private readonly BrowserPushSubscriptionRemover $browserPushSubscriptionRemover,
     ) {
     }
 
@@ -36,6 +39,7 @@ class PreferenceController extends AbstractController
         Member $member,
         ProfileSubmenu $profileSubmenu,
         ChangeProfilePictureGlobals $globals,
+        BrowserPushConfig $browserPushConfig,
     ): Response {
         /** Member must be the logged in member to be able to access this page.
          * @var Member $loggedInMember
@@ -46,6 +50,13 @@ class PreferenceController extends AbstractController
         }
 
         $preferences = $this->preferenceModel->getPreferences();
+        if (!$browserPushConfig->isConfigured()) {
+            $preferences = array_filter(
+                $preferences,
+                static fn (Preference $preference): bool => Preference::BROWSER_NOTIFICATIONS
+                    !== $preference->getCodename()
+            );
+        }
         $memberPreferences = $this->preferenceModel->getMemberPreferences($loggedInMember, $preferences);
         $data = [];
         foreach ($memberPreferences as $memberPreference) {
@@ -61,6 +72,9 @@ class PreferenceController extends AbstractController
             'member' => $loggedInMember,
             'form' => $preferenceForm,
             'preferences' => $preferences,
+            'browser_push_enabled' => $browserPushConfig->isConfigured(),
+            'browser_push_public_key' => $browserPushConfig->getPublicKey(),
+            'browser_push_preference' => $this->getBrowserPushPreferenceValue($loggedInMember, $browserPushConfig),
             'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, [
                 'active' => 'preferences',
@@ -99,6 +113,9 @@ class PreferenceController extends AbstractController
                 }
 
                 $memberPreference->setValue($value);
+                if (Preference::BROWSER_NOTIFICATIONS === $preference->getCodename() && 'No' === $value) {
+                    $this->browserPushSubscriptionRemover->removeAllForMember($loggedInMember);
+                }
 
                 $this->entityManager->persist($memberPreference);
                 $this->entityManager->flush();
@@ -106,5 +123,18 @@ class PreferenceController extends AbstractController
         }
 
         return new Response();
+    }
+
+    private function getBrowserPushPreferenceValue(Member $member, BrowserPushConfig $browserPushConfig): string
+    {
+        if (!$browserPushConfig->isConfigured()) {
+            return 'No';
+        }
+
+        $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
+            'codename' => Preference::BROWSER_NOTIFICATIONS,
+        ]);
+
+        return $preference instanceof Preference ? $member->getMemberPreferenceValue($preference) : 'Yes';
     }
 }

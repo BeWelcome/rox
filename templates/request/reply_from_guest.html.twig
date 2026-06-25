@@ -18,6 +18,7 @@
     {% set receiver =  original.receiver %}
 
     {{ macros.messageheader_no_buttons(thread) }}
+    {% include 'notifications/browser_push_action_trigger.html.twig' %}
 
     {% include 'request/header.html.twig' %}
 

@@ -13,6 +13,10 @@ use App\Form\HostingRequestHost;
 use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
+use App\Service\BrowserNotificationPayload;
+use App\Service\BrowserNotificationService;
+use App\Service\BrowserPushConfig;
+use App\Service\BrowserPushPreferenceService;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
@@ -41,8 +45,11 @@ class RequestController extends BaseRequestAndInvitationController
         EntityManagerInterface $entityManager,
         private readonly Mailer $mailer,
         private readonly Logger $logger,
+        private readonly BrowserNotificationService $browserNotificationService,
+        BrowserPushConfig $browserPushConfig,
+        BrowserPushPreferenceService $browserPushPreferenceService,
     ) {
-        parent::__construct($requestModel, $entityManager);
+        parent::__construct($requestModel, $entityManager, $browserPushConfig, $browserPushPreferenceService);
 
         $this->conversationModel = $conversationModel;
     }
@@ -187,7 +194,7 @@ class RequestController extends BaseRequestAndInvitationController
             'guest' => $guest,
             'host' => $host,
             'form' => $requestForm->createView(),
-        ]);
+        ] + $this->getBrowserPushTemplateData($guest));
     }
 
     protected function addExpiredFlash(Member $receiver): void
@@ -243,7 +250,7 @@ class RequestController extends BaseRequestAndInvitationController
             'host' => $host,
             'form' => $requestForm->createView(),
             'thread' => $thread,
-        ]);
+        ] + $this->getBrowserPushTemplateData($guest));
     }
 
     private function hostReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
@@ -292,7 +299,7 @@ class RequestController extends BaseRequestAndInvitationController
             'host' => $host,
             'form' => $requestForm->createView(),
             'thread' => $thread,
-        ]);
+        ] + $this->getBrowserPushTemplateData($host));
     }
 
     private function sendGuestReplyNotification(
@@ -379,6 +386,13 @@ class RequestController extends BaseRequestAndInvitationController
             'request' => $request->getRequest(),
             'changed' => $requestChanged,
         ]);
+        $this->browserNotificationService->queue(
+            $receiver,
+            BrowserNotificationPayload::request(
+                $sender,
+                $this->generateUrl('conversation_view', ['id' => $request->getId()])
+            )
+        );
 
         return true;
     }

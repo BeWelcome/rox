@@ -15,6 +15,7 @@
     {% set guest = leg.trip.creator %}
 
     {{ macros.new_conversation_header(guest, 'invite.username') }}
+    {% include 'notifications/browser_push_action_trigger.html.twig' %}
 
     {% include 'invitation/trip.summary.html.twig' with {'open': true} %}
 

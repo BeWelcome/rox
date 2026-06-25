@@ -14,6 +14,10 @@ use App\Form\InvitationType;
 use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\InvitationModel;
+use App\Service\BrowserNotificationPayload;
+use App\Service\BrowserNotificationService;
+use App\Service\BrowserPushConfig;
+use App\Service\BrowserPushPreferenceService;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
@@ -43,8 +47,11 @@ class InvitationController extends BaseRequestAndInvitationController
         EntityManagerInterface $entityManager,
         private Mailer $mailer,
         private Logger $logger,
+        private readonly BrowserNotificationService $browserNotificationService,
+        BrowserPushConfig $browserPushConfig,
+        BrowserPushPreferenceService $browserPushPreferenceService,
     ) {
-        parent::__construct($invitationModel, $entityManager);
+        parent::__construct($invitationModel, $entityManager, $browserPushConfig, $browserPushPreferenceService);
         $this->conversationModel = $conversationModel;
         $this->invitationModel = $invitationModel;
     }
@@ -166,7 +173,7 @@ class InvitationController extends BaseRequestAndInvitationController
             'leg' => $leg,
             'subject' => '',
             'form' => $invitationForm->createView(),
-        ]);
+        ] + $this->getBrowserPushTemplateData($host));
     }
 
     /**
@@ -288,7 +295,7 @@ class InvitationController extends BaseRequestAndInvitationController
             'already_accepted' => $alreadyAccepted,
             'thread' => $thread,
             'leg' => $leg,
-        ]);
+        ] + $this->getBrowserPushTemplateData($guest));
     }
 
     public function hostReply(Request $request, Message $invitation, Member $guest, Member $host): Response
@@ -353,7 +360,7 @@ class InvitationController extends BaseRequestAndInvitationController
             'invitation' => $invitation->getRequest(),
             'thread' => $thread,
             'leg' => $leg,
-        ]);
+        ] + $this->getBrowserPushTemplateData($host));
     }
 
     protected function addExpiredFlash(Member $receiver): void
@@ -463,6 +470,13 @@ class InvitationController extends BaseRequestAndInvitationController
             'changed' => $requestChanged,
             'leg' => $leg,
         ]);
+        $this->browserNotificationService->queue(
+            $receiver,
+            BrowserNotificationPayload::invitation(
+                $sender,
+                $this->generateUrl('conversation_view', ['id' => $request->getId()])
+            )
+        );
 
         return true;
     }

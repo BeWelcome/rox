@@ -16,6 +16,64 @@ addEventListener("message", event => {
     }
 });
 
+self.addEventListener('push', event => {
+    const payload = getPushPayload(event);
+    const url = getSameOriginPath(payload.url);
+
+    event.waitUntil(
+        self.registration.showNotification(payload.title || 'BeWelcome', {
+            body: payload.body || '',
+            data: { url },
+            icon: '/images/icon-192x192.png',
+            badge: '/images/icon-96x96.png',
+        })
+    );
+});
+
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    const url = getSameOriginPath(event.notification.data && event.notification.data.url);
+    const absoluteUrl = new URL(url, self.location.origin).href;
+
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true })
+            .then(windowClients => {
+                for (const client of windowClients) {
+                    if (client.url === absoluteUrl && 'focus' in client) {
+                        return client.focus();
+                    }
+                }
+
+                return clients.openWindow(url);
+            })
+    );
+});
+
+function getPushPayload(event) {
+    if (!event.data) {
+        return {};
+    }
+
+    try {
+        return event.data.json();
+    } catch (error) {
+        return {};
+    }
+}
+
+function getSameOriginPath(url) {
+    try {
+        const target = new URL(url || '/', self.location.origin);
+        if (target.origin !== self.location.origin) {
+            return '/';
+        }
+
+        return target.pathname + target.search + target.hash;
+    } catch (error) {
+        return '/';
+    }
+}
+
 // Always try to read the landing page from the network
 registerRoute(
     ({url}) => url.pathname === '/',

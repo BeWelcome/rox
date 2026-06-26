@@ -1,4 +1,9 @@
 {% extends 'base.html.twig' %}
+{% import _self as getactive %}
+
+{% macro inline_trans(key) %}
+	{{- key | trans | purify | striptags('<a>') | trim | raw -}}
+{% endmacro %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('tailwind') }}
@@ -23,7 +28,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-code" aria-hidden="true"></i>
 						{{ 'getactivedevtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcomedevtags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivedevcontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomedevtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivedevcontact') }}</p>
 					<p class="card-text">{{ 'getactivedevtext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -35,7 +40,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-flask" aria-hidden="true"></i>
 						{{ 'getactivetestingtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcometestingtags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivetestingcontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcometestingtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivetestingcontact') }}</p>
 					<p class="card-text">{{ 'getactivetestingtext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -47,7 +52,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-server" aria-hidden="true"></i>
 						{{ 'getactivesysadmintitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpsysadmintags' | trans | purify }}<br>{{ 'helpsysadmincontact' | trans | purify }}: {{ 'getactivesysadmincontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpsysadmintags') }}<br>{{ getactive.inline_trans('helpsysadmincontact') }}: {{ getactive.inline_trans('getactivesysadmincontact') }}</p>
 					<p class="card-text">{{ 'getactivesysadmintext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -59,7 +64,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-paint-brush" aria-hidden="true"></i>
 						{{ 'getactivedesigntitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcomedesigntags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivedesigncontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomedesigntags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivedesigncontact') }}</p>
 					<p class="card-text">{{ 'getactivedesigntext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -71,7 +76,7 @@
 					<h3 class="card-title">
 						<i class="far fa-question-circle" aria-hidden="true"></i>
 						{{ 'getactivesupporttitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcomesupporttags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivesupportcontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomesupporttags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivesupportcontact') }}</p>
 					<p class="card-text">{{ 'getactivesupporttext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -84,7 +89,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-language" aria-hidden="true"></i>
 						{{ 'getactivetranslatetitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcometranslatetags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivetranslatecontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcometranslatetags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivetranslatecontact') }}</p>
 					<p class="card-text">{{ 'getactivetranslatetext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -96,7 +101,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-bullhorn" aria-hidden="true"></i>
 						{{ 'getactiveprtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcomeprtags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactiveprcontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomeprtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactiveprcontact') }}</p>
 					<p class="card-text">{{ 'getactiveprtext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -108,7 +113,7 @@
 					<h3 class="card-title">
 						<i class="far fa-handshake" aria-hidden="true"></i>
 						{{ 'getactivenmbwtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcomenmbwtags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivenmbwcontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomenmbwtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivenmbwcontact') }}</p>
 					<p class="card-text">{{ 'getactivenmbwtext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -120,7 +125,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-user-circle" aria-hidden="true"></i>
 						{{ 'getactivemodtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcomemodtags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivemodcontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomemodtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivemodcontact') }}</p>
 					<p class="card-text">{{ 'getactivemodtext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -132,7 +137,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-map-marker-alt" aria-hidden="true"></i>
 						{{ 'getactivelocaltitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcomelocaltags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivelocalcontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomelocaltags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivelocalcontact') }}</p>
 					<p class="card-text">{{ 'getactivelocaltext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -144,7 +149,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-euro-sign" aria-hidden="true"></i>
 						{{ 'getactivedonationtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcomedonationtags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivedonationcontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomedonationtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivedonationcontact') }}</p>
 					<p class="card-text">{{ 'getactivedonationtext' | trans | purify }}</p>
 				</div>
 			</div>
@@ -156,7 +161,7 @@
 					<h3 class="card-title">
 						<i class="fa fa-heart" aria-hidden="true"></i>
 						{{ 'getactivebvtitle' | trans }}</h3>
-					<p class="text-muted u:font-display">{{ 'helpbewelcomebvtags' | trans | purify }}<br>{{ 'helpbewelcomecontact' | trans | purify }}: {{ 'getactivebvcontact' | trans | purify }}</p>
+					<p class="text-muted u:font-display">{{ getactive.inline_trans('helpbewelcomebvtags') }}<br>{{ getactive.inline_trans('helpbewelcomecontact') }}: {{ getactive.inline_trans('getactivebvcontact') }}</p>
 					<p class="card-text">{{ 'getactivebvtext' | trans | purify }}</p>
 
 				</div>

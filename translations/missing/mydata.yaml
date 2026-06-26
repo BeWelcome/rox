@@ -79,3 +79,63 @@ mydata.polls.choices:
 mydata.polls.groups:
     - 'Groups involved'
     - This is shown if the poll is limited to a group
+mydata.browser.push.subscriptions.headline:
+    - Browser notification subscriptions
+    - Headline for browser push subscriptions in the personal data export.
+mydata.browser.push.subscriptions.abstract:
+    - This lists safe metadata for browser notification subscriptions connected to your account.
+    - Short paragraph explaining browser push metadata in the personal data export.
+mydata.browser.push.subscriptions.no.subscriptions:
+    - You do not have any browser notification subscriptions.
+    - Text in the browser push subscriptions section when no subscriptions were found.
+mydata.browser.push.subscriptions.endpoint.hash:
+    - Endpoint hash
+    - Table header for the hashed browser push endpoint.
+mydata.browser.push.subscriptions.endpoint.host:
+    - Endpoint host
+    - Table header for the browser push endpoint host.
+mydata.browser.push.subscriptions.user.agent:
+    - Browser
+    - Table header for the browser user agent stored with a push subscription.
+mydata.browser.push.subscriptions.content.encoding:
+    - Content encoding
+    - Table header for the push subscription content encoding.
+mydata.browser.push.subscriptions.created:
+    - Created
+    - Table header for when a browser push subscription was created.
+mydata.browser.push.subscriptions.last.seen:
+    - Last seen
+    - Table header for when a browser push subscription was last refreshed.
+mydata.browser.push.subscriptions.last.error:
+    - Last error
+    - Table header for the last push delivery error for a browser subscription.
+mydata.browser.push.notifications.headline:
+    - Queued browser notifications
+    - Headline for queued browser push notifications in the personal data export.
+mydata.browser.push.notifications.abstract:
+    - This lists queued browser notification metadata connected to your account.
+    - Short paragraph explaining queued browser push notification metadata in the personal data export.
+mydata.browser.push.notifications.no.notifications:
+    - You do not have any queued browser notifications.
+    - Text in the browser push notifications section when no queued notifications were found.
+mydata.browser.push.notifications.type:
+    - Type
+    - Table header for the browser push notification type.
+mydata.browser.push.notifications.sender:
+    - Sender
+    - Table header for the browser push notification sender username.
+mydata.browser.push.notifications.url:
+    - URL
+    - Table header for the browser push notification target URL.
+mydata.browser.push.notifications.status:
+    - Status
+    - Table header for the browser push notification queue status.
+mydata.browser.push.notifications.created:
+    - Created
+    - Table header for when a browser push notification queue row was created.
+mydata.browser.push.notifications.updated:
+    - Updated
+    - Table header for when a browser push notification queue row was updated.
+mydata.browser.push.notifications.last.error:
+    - Last error
+    - Table header for the last browser push notification queue error.

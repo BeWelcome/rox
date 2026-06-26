@@ -3,12 +3,16 @@
 namespace App\Command;
 
 use App\Doctrine\AccommodationType;
+use App\Entity\BrowserPushNotification;
+use App\Entity\BrowserPushSubscription;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\MemberTranslation;
 use App\Logger\Logger;
+use App\Repository\BrowserPushNotificationRepository;
 use App\Repository\MemberRepository;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Exception;
@@ -57,6 +61,7 @@ class DataRetentionCommand extends Command
 
         $io->title('Running Data Retention');
 
+        $this->removeOldBrowserPushNotifications();
         $retired = $this->removeMembers($io);
 
         $io->success(\sprintf('Data of %d members has been deleted.', $retired));
@@ -100,6 +105,7 @@ class DataRetentionCommand extends Command
                     $entityManager->remove($address);
                 }
 
+                $this->removeBrowserPushData($member);
                 $member = $this->removeMemberInfo($member);
                 $this->removeUserInfo($member);
                 $this->removeProfilePictures($member);
@@ -118,6 +124,30 @@ class DataRetentionCommand extends Command
         }
 
         return \count($members);
+    }
+
+    private function removeOldBrowserPushNotifications(): void
+    {
+        /** @var BrowserPushNotificationRepository $notificationRepository */
+        $notificationRepository = $this->entityManager->getRepository(BrowserPushNotification::class);
+        $notificationRepository->deleteTerminalNotificationsOlderThan(new DateTimeImmutable('-7 days'));
+    }
+
+    private function removeBrowserPushData(Member $member): void
+    {
+        $subscriptions = $this->entityManager->getRepository(BrowserPushSubscription::class)->findBy([
+            'member' => $member,
+        ]);
+        foreach ($subscriptions as $subscription) {
+            $this->entityManager->remove($subscription);
+        }
+
+        $notifications = $this->entityManager->getRepository(BrowserPushNotification::class)->findBy([
+            'receiver' => $member,
+        ]);
+        foreach ($notifications as $notification) {
+            $this->entityManager->remove($notification);
+        }
     }
 
     private function removeMemberInfo(Member $member): Member

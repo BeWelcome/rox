@@ -102,7 +102,7 @@ class TripModelNotificationTest extends TestCase
         $trip = new Trip();
         $this->setEntityId($trip, 42);
         $existingRead = new MemberTripRead($member, $trip);
-        $notification = (new Notification())->setChecked(false);
+        $notification = new Notification()->setChecked(false);
 
         $readRepository = $this->createMock(EntityRepository::class);
         $readRepository

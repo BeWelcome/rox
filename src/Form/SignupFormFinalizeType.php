@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Doctrine\AccommodationType;
+use App\Entity\Preference;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -142,6 +143,16 @@ class SignupFormFinalizeType extends AbstractType
             ->add('local_events', CheckboxType::class, [
                 'label' => 'signup.label.local_events',
                 'required' => false,
+            ])
+            ->add('trips_notifications', ChoiceType::class, [
+                'label' => 'label.trips_notifications',
+                'help' => 'help.trips_notifications',
+                'choices' => [
+                    'trips.no' => Preference::TRIP_NOTIFICATIONS_NEVER,
+                    'trips.yes' => Preference::TRIP_NOTIFICATIONS_IMMEDIATELY,
+                ],
+                'data' => Preference::TRIP_NOTIFICATIONS_NEVER,
+                'required' => true,
             ])
         ;
     }

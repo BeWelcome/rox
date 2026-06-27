@@ -100,6 +100,7 @@ class TripController extends AbstractController
 
                 $entityManager->persist($trip);
                 $entityManager->flush();
+                $this->tripModel->notifyHostsAboutTrip($trip);
 
                 $this->addTranslatedFlash('success', 'trip.created');
 
@@ -177,6 +178,24 @@ class TripController extends AbstractController
         $newTrip = $this->tripModel->copyTrip($trip);
 
         return $this->redirectToRoute('trip_edit', ['id' => $newTrip->getId()]);
+    }
+
+    #[Route(path: '/trip/{id}/read', name: 'trip_mark_read', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function markRead(Request $request, Trip $trip): RedirectResponse
+    {
+        if (!$this->isCsrfTokenValid('trip_read' . $trip->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+
+        /** @var Member $member */
+        $member = $this->getUser();
+        $this->tripModel->markTripAsRead($member, $trip);
+
+        if ('homepage' === $request->request->get('redirectTo')) {
+            return $this->redirectToRoute('homepage', ['_fragment' => 'visitors']);
+        }
+
+        return $this->redirectToRoute('visitors');
     }
 
     /**

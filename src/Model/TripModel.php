@@ -3,9 +3,14 @@
 namespace App\Model;
 
 use App\Entity\Member;
+use App\Entity\MemberTripRead;
+use App\Entity\Notification;
 use App\Entity\Preference;
+use App\Entity\Subtrip;
 use App\Entity\Trip;
+use App\Repository\SubtripRepository;
 use App\Repository\TripRepository;
+use App\Service\Mailer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -17,6 +22,7 @@ class TripModel
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly ?Mailer $mailer = null,
     ) {
     }
 
@@ -131,6 +137,64 @@ class TripModel
         $trip->setDeleted(new DateTime());
 
         $this->entityManager->persist($trip);
+        $this->entityManager->flush();
+    }
+
+    public function markTripAsRead(Member $member, Trip $trip): void
+    {
+        $repository = $this->entityManager->getRepository(MemberTripRead::class);
+        $read = $repository->findOneBy(['member' => $member, 'trip' => $trip]);
+        $changed = false;
+
+        if (null === $read) {
+            $this->entityManager->persist(new MemberTripRead($member, $trip));
+            $changed = true;
+        }
+
+        $notificationRepository = $this->entityManager->getRepository(Notification::class);
+        $notifications = $notificationRepository->findBy([
+            'member' => $member,
+            'type' => 'trip',
+            'link' => '/trip/' . $trip->getId(),
+            'checked' => false,
+        ]);
+
+        foreach ($notifications as $notification) {
+            $notification->setChecked(true);
+            $changed = true;
+        }
+
+        if ($changed) {
+            $this->entityManager->flush();
+        }
+    }
+
+    public function notifyHostsAboutTrip(Trip $trip): void
+    {
+        /** @var SubtripRepository $repository */
+        $repository = $this->entityManager->getRepository(Subtrip::class);
+        $hosts = $repository->getMembersToNotifyAboutTrip($trip);
+
+        if ([] === $hosts) {
+            return;
+        }
+
+        foreach ($hosts as $host) {
+            $notification = new Notification();
+            $notification
+                ->setMember($host)
+                ->setRelMember($trip->getCreator())
+                ->setType('trip')
+                ->setLink('/trip/' . $trip->getId())
+                ->setWordcode('trip.notification.new')
+                ->setChecked(false)
+                ->setSendmail(null !== $this->mailer)
+            ;
+
+            $this->entityManager->persist($notification);
+            $this->mailer?->sendTripNotificationEmail($host, $trip);
+        }
+
         $this->entityManager->flush();
     }
 

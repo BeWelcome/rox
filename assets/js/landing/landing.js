@@ -28,6 +28,10 @@ document.addEventListener('DOMContentLoaded', function() {
     tabElements.forEach(tab => {
         tab.addEventListener('show.bs.tab', Home.onTabChange);
     });
+    const tabFromHash = Array.from(tabElements).find(tab => tab.getAttribute('href') === window.location.hash);
+    if (tabFromHash) {
+        window.bootstrap.Tab.getOrCreateInstance(tabFromHash).show();
+    }
 
     const allRadio = document.getElementById('all');
     if (allRadio) {

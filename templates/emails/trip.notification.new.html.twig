@@ -1,0 +1,13 @@
+{% extends 'emails/email.html.twig' %}
+
+{% block content %}
+    <p>{{ 'trip.notification.new.email'|trans({'username': sender.username}) }}</p>
+    <row>
+        <columns>
+            <center>
+                <button class="rounded" href="{{ url('trip_show', {id: trip.id}) }}">{{ 'trip.show'|trans }}</button>
+            </center>
+        </columns>
+    </row>
+    <p><a href="{{ url('preferences', {username: receiver.username}) }}">{{ 'trip.notification.preference.link'|trans }}</a></p>
+{% endblock %}

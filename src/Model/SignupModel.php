@@ -176,6 +176,18 @@ class SignupModel
         ;
         $this->entityManager->persist($localEventsPreference);
 
+        $preference = $this->entityManager->getRepository(Preference::class)->findOneBy([
+            'codename' => Preference::TRIP_NOTIFICATIONS,
+        ]);
+
+        $tripNotificationsPreference = new MemberPreference();
+        $tripNotificationsPreference
+            ->setMember($member)
+            ->setPreference($preference)
+            ->setValue($data['trips_notifications'])
+        ;
+        $this->entityManager->persist($tripNotificationsPreference);
+
         $this->entityManager->flush();
     }
 

@@ -125,6 +125,21 @@ trip.location.none:
 trip.show:
     - 'Show'
     - Tool tip/aria label for the icon to show a trip.
+trip.mark.read:
+    - 'Hide this trip'
+    - Tool tip/aria label for the button that hides a trip from the visitors list.
+trip.notification.new:
+    - '%s added a trip in your area.'
+    - Dashboard notification text for a new trip in the logged-in member's area.
+trip.notification.new.subject:
+    - '{username} added a trip in your area.'
+    - Email subject for trip notifications.
+trip.notification.new.email:
+    - '{username} added a trip in your area.'
+    - Email body for trip notifications.
+trip.notification.preference.link:
+    - Change your trip notification preference
+    - Link text in trip notification emails pointing to the preferences page.
 trip.created:
     - 'Trip has been created.'
     - Flash message shown after trip creation (on top of the full list of own trips).

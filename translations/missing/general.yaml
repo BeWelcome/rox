@@ -63,12 +63,18 @@ help.password:
 label.trips_notifications:
     - How often do you want to be informed about members visiting your area?
     - Label for the drop down for trips notifications.
+trips.no:
+    - '@no'
+    - One of the options for trips notifications
+trips.yes:
+    - '@yes'
+    - One of the options for trips notifications
 trips.never:
-    - Never
-    - One of the options for trips notifications
+    - '@no'
+    - One of the options for trips notifications (legacy value).
 trips.immediately:
-    - Immediately
-    - One of the options for trips notifications
+    - '@yes'
+    - One of the options for trips notifications (legacy value).
 trips.daily:
     - Daily
     - One of the options for trips notifications

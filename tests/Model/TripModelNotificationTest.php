@@ -3,8 +3,7 @@
 namespace App\Tests\Model;
 
 use App\Entity\Member;
-use App\Entity\MemberTripRead;
-use App\Entity\Notification;
+use App\Entity\MemberSubtripRead;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Model\TripModel;
@@ -17,139 +16,78 @@ use ReflectionProperty;
 
 class TripModelNotificationTest extends TestCase
 {
-    public function testMarkTripAsReadPersistsReadState(): void
+    public function testMarkSubtripAsReadPersistsReadState(): void
     {
         $member = new Member();
-        $trip = new Trip();
-        $this->setEntityId($trip, 42);
+        $subtrip = new Subtrip();
 
         $readRepository = $this->createMock(EntityRepository::class);
         $readRepository
             ->expects($this->once())
             ->method('findOneBy')
-            ->with(['member' => $member, 'trip' => $trip])
+            ->with(['member' => $member, 'subtrip' => $subtrip])
             ->willReturn(null)
-        ;
-        $notificationRepository = $this->createMock(EntityRepository::class);
-        $notificationRepository
-            ->expects($this->once())
-            ->method('findBy')
-            ->willReturn([])
         ;
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('getRepository')
-            ->willReturnMap([
-                [MemberTripRead::class, $readRepository],
-                [Notification::class, $notificationRepository],
-            ])
+            ->with(MemberSubtripRead::class)
+            ->willReturn($readRepository)
         ;
         $entityManager
             ->expects($this->once())
             ->method('persist')
-            ->with($this->callback(static function (MemberTripRead $read) use ($member, $trip): bool {
-                return $read->getMember() === $member && $read->getTrip() === $trip;
+            ->with($this->callback(static function (MemberSubtripRead $read) use ($member, $subtrip): bool {
+                return $read->getMember() === $member && $read->getSubtrip() === $subtrip;
             }))
         ;
         $entityManager->expects($this->once())->method('flush');
 
         $tripModel = new TripModel($entityManager);
-        $tripModel->markTripAsRead($member, $trip);
+        $tripModel->markSubtripAsRead($member, $subtrip);
     }
 
-    public function testMarkTripAsReadDoesNotDuplicateReadState(): void
+    public function testMarkSubtripAsReadDoesNotDuplicateReadState(): void
     {
         $member = new Member();
-        $trip = new Trip();
-        $this->setEntityId($trip, 42);
-        $existingRead = new MemberTripRead($member, $trip);
+        $subtrip = new Subtrip();
+        $existingRead = new MemberSubtripRead($member, $subtrip);
 
         $readRepository = $this->createMock(EntityRepository::class);
         $readRepository
             ->expects($this->once())
             ->method('findOneBy')
-            ->with(['member' => $member, 'trip' => $trip])
+            ->with(['member' => $member, 'subtrip' => $subtrip])
             ->willReturn($existingRead)
-        ;
-        $notificationRepository = $this->createMock(EntityRepository::class);
-        $notificationRepository
-            ->expects($this->once())
-            ->method('findBy')
-            ->willReturn([])
         ;
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('getRepository')
-            ->willReturnMap([
-                [MemberTripRead::class, $readRepository],
-                [Notification::class, $notificationRepository],
-            ])
+            ->with(MemberSubtripRead::class)
+            ->willReturn($readRepository)
         ;
         $entityManager->expects($this->never())->method('persist');
         $entityManager->expects($this->never())->method('flush');
 
         $tripModel = new TripModel($entityManager);
-        $tripModel->markTripAsRead($member, $trip);
+        $tripModel->markSubtripAsRead($member, $subtrip);
     }
 
-    public function testMarkTripAsReadChecksTripNotifications(): void
-    {
-        $member = new Member();
-        $trip = new Trip();
-        $this->setEntityId($trip, 42);
-        $existingRead = new MemberTripRead($member, $trip);
-        $notification = new Notification()->setChecked(false);
-
-        $readRepository = $this->createMock(EntityRepository::class);
-        $readRepository
-            ->expects($this->once())
-            ->method('findOneBy')
-            ->with(['member' => $member, 'trip' => $trip])
-            ->willReturn($existingRead)
-        ;
-        $notificationRepository = $this->createMock(EntityRepository::class);
-        $notificationRepository
-            ->expects($this->once())
-            ->method('findBy')
-            ->with([
-                'member' => $member,
-                'type' => 'trip',
-                'link' => '/trip/42',
-                'checked' => false,
-            ])
-            ->willReturn([$notification])
-        ;
-
-        $entityManager = $this->createMock(EntityManagerInterface::class);
-        $entityManager
-            ->expects($this->exactly(2))
-            ->method('getRepository')
-            ->willReturnMap([
-                [MemberTripRead::class, $readRepository],
-                [Notification::class, $notificationRepository],
-            ])
-        ;
-        $entityManager->expects($this->never())->method('persist');
-        $entityManager->expects($this->once())->method('flush');
-
-        $tripModel = new TripModel($entityManager);
-        $tripModel->markTripAsRead($member, $trip);
-
-        $this->assertTrue($notification->getChecked());
-    }
-
-    public function testNotifyHostsAboutTripCreatesUnreadNotificationsForMatchingHosts(): void
+    public function testNotifyHostsAboutTripSendsEmailsToMatchingHostsOnce(): void
     {
         $creator = new Member()->setUsername('traveller');
         $host = new Member();
+        $sameHost = new Member();
+        $this->setEntityId($host, 12);
+        $this->setEntityId($sameHost, 12);
         $trip = new Trip()->setCreator($creator);
         $this->setEntityId($trip, 42);
 
-        $subtripRepository = $this->createSubtripRepository([$host]);
+        $subtripRepository = $this->createSubtripRepository([$host, $sameHost]);
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
@@ -158,18 +96,8 @@ class TripModelNotificationTest extends TestCase
             ->with(Subtrip::class)
             ->willReturn($subtripRepository)
         ;
-        $entityManager
-            ->expects($this->once())
-            ->method('persist')
-            ->with($this->callback(static function (Notification $notification) use ($creator, $host): bool {
-                return $notification->getMember() === $host
-                    && $notification->getRelMember() === $creator
-                    && 'trip.notification.new' === $notification->getWordcode()
-                    && '/trip/42' === $notification->getLink()
-                    && false === $notification->getChecked();
-            }))
-        ;
-        $entityManager->expects($this->once())->method('flush');
+        $entityManager->expects($this->never())->method('persist');
+        $entityManager->expects($this->never())->method('flush');
         $mailer = $this->createMock(Mailer::class);
         $mailer
             ->expects($this->once())

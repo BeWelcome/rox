@@ -128,9 +128,6 @@ trip.show:
 trip.mark.read:
     - 'Hide this trip'
     - Tool tip/aria label for the button that hides a trip from the visitors list.
-trip.notification.new:
-    - '%s added a trip in your area.'
-    - Dashboard notification text for a new trip in the logged-in member's area.
 trip.notification.new.subject:
     - '{username} added a trip in your area.'
     - Email subject for trip notifications.

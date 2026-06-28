@@ -69,5 +69,14 @@ tripsnotificationsnever:
     - '@no'
     - Option on the preferences page for trip notifications (legacy value).
 tripsnotificationsimmediately:
-    - '@yes'
-    - Option on the preferences page for trip notifications (legacy value).
+    - Immediately
+    - Option on the preferences page for trip notifications.
+tripsnotificationsdaily:
+    - Daily
+    - Option on the preferences page for trip notifications.
+tripsnotificationsweekly:
+    - Weekly
+    - Option on the preferences page for trip notifications.
+tripsnotificationsmonthly:
+    - Monthly
+    - Option on the preferences page for trip notifications.

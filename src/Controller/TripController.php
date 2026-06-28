@@ -180,16 +180,16 @@ class TripController extends AbstractController
         return $this->redirectToRoute('trip_edit', ['id' => $newTrip->getId()]);
     }
 
-    #[Route(path: '/trip/{id}/read', name: 'trip_mark_read', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function markRead(Request $request, Trip $trip): RedirectResponse
+    #[Route(path: '/trip/leg/{id}/read', name: 'trip_mark_read', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function markRead(Request $request, Subtrip $subtrip): RedirectResponse
     {
-        if (!$this->isCsrfTokenValid('trip_read' . $trip->getId(), $request->request->get('_token'))) {
+        if (!$this->isCsrfTokenValid('subtrip_read' . $subtrip->getId(), $request->request->get('_token'))) {
             throw $this->createAccessDeniedException();
         }
 
         /** @var Member $member */
         $member = $this->getUser();
-        $this->tripModel->markTripAsRead($member, $trip);
+        $this->tripModel->markSubtripAsRead($member, $subtrip);
 
         if ('homepage' === $request->request->get('redirectTo')) {
             return $this->redirectToRoute('homepage', ['_fragment' => 'visitors']);

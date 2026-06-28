@@ -2,12 +2,12 @@
 
 namespace App\Repository;
 
+use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
-use App\Entity\MemberTripRead;
+use App\Entity\MemberSubtripRead;
 use App\Entity\Preference;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityRepository;
@@ -79,72 +79,117 @@ class SubtripRepository extends EntityRepository
             return [];
         }
 
+        if (null !== $trip->getDeleted()) {
+            return [];
+        }
+
+        $activeStatuses = [MemberStatusType::ACTIVE, MemberStatusType::OUT_OF_REMIND];
+        if (!\in_array($trip->getCreator()->getStatus(), $activeStatuses, true)) {
+            return [];
+        }
+
         $now = CarbonImmutable::today();
         $durationMonthsAhead = $now->addMonths($duration);
+        $hosts = [];
 
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb
-            ->select('DISTINCT host')
-            ->from(Member::class, 'host')
-            ->from(Subtrip::class, 's')
-            ->join('host.addresses', 'a', Join::WITH, 'a.active = true')
-            ->leftJoin(
-                'host.preferences',
-                'tripNotifications',
-                Join::WITH,
-                'tripNotifications.preference = :tripNotificationPreference'
-            )
-            ->leftJoin(
-                'host.preferences',
-                'radiusPreference',
-                Join::WITH,
-                'radiusPreference.preference = :radiusPreference'
-            )
-            ->join('s.location', 'l')
-            ->join('s.trip', 't')
-            ->join('t.creator', 'creator')
-            ->where('s.trip = :trip')
-            ->andWhere('s.arrival >= :now')
-            ->andWhere('s.arrival <= :durationMonthsAhead')
-            ->andWhere($qb->expr()->notLike('s.options', ':privateOption'))
-            ->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->isNull('s.invitedBy'),
-                    $qb->expr()->eq('s.invitedBy', 'host'),
-                    $qb->expr()->in('s.options', ':meetLocalsOptions')
-                )
-            )
-            ->andWhere($qb->expr()->in('host.status', ':activeStatuses'))
-            ->andWhere($qb->expr()->in('creator.status', ':activeStatuses'))
-            ->andWhere('host <> creator')
-            ->andWhere('t.countOfTravellers <= host.maxGuests')
-            ->andWhere($qb->expr()->isNull('t.deleted'))
-            ->andWhere(
-                'COALESCE(tripNotifications.value, :defaultNotification) = :immediately'
-            )
-            ->andWhere(
-                'GeoDistance(a.latitude, a.longitude, l.latitude, l.longitude) <= COALESCE(radiusPreference.value, :defaultRadius)'
-            )
-            ->andWhere(
-                $qb->expr()->orX(
-                    $qb->expr()->lte('GeoDistance(a.latitude, a.longitude, l.latitude, l.longitude)', 't.invitationRadius'),
-                    $qb->expr()->eq('s.location', 'a.location')
-                )
-            )
-            ->setParameter('trip', $trip)
-            ->setParameter('now', $now)
-            ->setParameter('durationMonthsAhead', $durationMonthsAhead)
-            ->setParameter('privateOption', '%' . SubtripOptionsType::PRIVATE . '%')
-            ->setParameter('meetLocalsOptions', [SubtripOptionsType::MEET_LOCALS])
-            ->setParameter('activeStatuses', [MemberStatusType::ACTIVE, MemberStatusType::OUT_OF_REMIND])
-            ->setParameter('tripNotificationPreference', $tripNotificationPreference)
-            ->setParameter('radiusPreference', $radiusPreference)
-            ->setParameter('defaultNotification', Preference::TRIP_NOTIFICATIONS_NEVER)
-            ->setParameter('immediately', Preference::TRIP_NOTIFICATIONS_IMMEDIATELY)
-            ->setParameter('defaultRadius', $radiusPreference->getDefaultValue())
-        ;
+        foreach ($trip->getSubtrips() as $subtrip) {
+            $arrival = $subtrip->getArrival();
+            $location = $subtrip->getLocation();
+            $options = $subtrip->getOptions();
 
-        return $qb->getQuery()->getResult();
+            if (
+                null === $arrival
+                || null === $location
+                || $arrival < $now
+                || $arrival > $durationMonthsAhead
+                || \in_array(SubtripOptionsType::PRIVATE, $options, true)
+            ) {
+                continue;
+            }
+
+            $qb = $this->getEntityManager()->createQueryBuilder();
+            $qb
+                ->select('DISTINCT host')
+                ->from(Member::class, 'host')
+                ->join('host.addresses', 'a', Join::WITH, 'a.active = true')
+                ->join('a.location', 'hostLocation')
+                ->leftJoin(
+                    'host.preferences',
+                    'tripNotifications',
+                    Join::WITH,
+                    'tripNotifications.preference = :tripNotificationPreference'
+                )
+                ->leftJoin(
+                    'host.preferences',
+                    'radiusPreference',
+                    Join::WITH,
+                    'radiusPreference.preference = :radiusPreference'
+                )
+                ->where($qb->expr()->in('host.status', ':activeStatuses'))
+                ->andWhere('host <> :creator')
+                ->andWhere('host.maxGuests >= :travellers')
+                ->andWhere('COALESCE(tripNotifications.value, :defaultNotification) IN (:immediateNotifications)')
+                ->andWhere(
+                    'ST_Distance_Sphere(hostLocation.coordinates, ST_GeomFromText(:centerPoint, 0)) <= 1000 * COALESCE(radiusPreference.value, :defaultRadius)'
+                )
+                ->setParameter('activeStatuses', $activeStatuses)
+                ->setParameter('creator', $trip->getCreator())
+                ->setParameter('travellers', $trip->getCountOfTravellers())
+                ->setParameter('tripNotificationPreference', $tripNotificationPreference)
+                ->setParameter('radiusPreference', $radiusPreference)
+                ->setParameter('defaultNotification', Preference::TRIP_NOTIFICATIONS_NEVER)
+                ->setParameter(
+                    'immediateNotifications',
+                    [
+                        Preference::TRIP_NOTIFICATIONS_IMMEDIATELY,
+                        Preference::TRIP_NOTIFICATIONS_LEGACY_IMMEDIATELY,
+                    ]
+                )
+                ->setParameter('defaultRadius', $radiusPreference->getDefaultValue())
+                ->setParameter('centerPoint', \sprintf('POINT(%F %F)', $location->getLongitude(), $location->getLatitude()))
+            ;
+
+            if (null !== $subtrip->getInvitedBy() && !\in_array(SubtripOptionsType::MEET_LOCALS, $options, true)) {
+                $qb
+                    ->andWhere('host = :invitedBy')
+                    ->setParameter('invitedBy', $subtrip->getInvitedBy())
+                ;
+            }
+
+            if (0 === $trip->getInvitationRadius()) {
+                $qb
+                    ->andWhere('a.location = :location')
+                    ->setParameter('location', $location)
+                ;
+            } else {
+                $center = new GeoPoint((float) $location->getLatitude(), (float) $location->getLongitude());
+                $boundingBox = $center->boundingBox($trip->getInvitationRadius(), 'km');
+                $lineString = \sprintf(
+                    'LINESTRING(%F %F, %F %F)',
+                    $boundingBox->getMinLongitude(),
+                    $boundingBox->getMinLatitude(),
+                    $boundingBox->getMaxLongitude(),
+                    $boundingBox->getMaxLatitude()
+                );
+
+                $qb
+                    ->andWhere('hostLocation.latitude BETWEEN :minLat AND :maxLat')
+                    ->andWhere('hostLocation.longitude BETWEEN :minLng AND :maxLng')
+                    ->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:lineString, 0)), hostLocation.coordinates) = 1')
+                    ->andWhere('ST_Distance_Sphere(hostLocation.coordinates, ST_GeomFromText(:centerPoint, 0)) <= :invitationRadiusMeters')
+                    ->setParameter('minLat', $boundingBox->getMinLatitude())
+                    ->setParameter('maxLat', $boundingBox->getMaxLatitude())
+                    ->setParameter('minLng', $boundingBox->getMinLongitude())
+                    ->setParameter('maxLng', $boundingBox->getMaxLongitude())
+                    ->setParameter('lineString', $lineString)
+                    ->setParameter('invitationRadiusMeters', $trip->getInvitationRadius() * 1000)
+                ;
+            }
+
+            array_push($hosts, ...$qb->getQuery()->getResult());
+        }
+
+        return $hosts;
     }
 
     private function getLegsInAreaQueryBuilder(Member $member, int $distance, int $duration): QueryBuilder
@@ -162,7 +207,7 @@ class SubtripRepository extends EntityRepository
             ->join('s.location', 'l')
             ->join('s.trip', 't')
             ->join('t.creator', 'm')
-            ->leftJoin(MemberTripRead::class, 'readTrip', Join::WITH, 'readTrip.trip = t AND readTrip.member = :member')
+            ->leftJoin(MemberSubtripRead::class, 'readSubtrip', Join::WITH, 'readSubtrip.subtrip = s AND readSubtrip.member = :member')
             ->where($qb->expr()->notLike('s.options', $qb->expr()->literal('%' . SubtripOptionsType::PRIVATE . '%')))
             ->andWhere(
                 $qb->expr()->orX(
@@ -176,7 +221,7 @@ class SubtripRepository extends EntityRepository
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')
             ->andWhere($qb->expr()->isNull('t.deleted'))
-            ->andWhere($qb->expr()->isNull('readTrip.id'))
+            ->andWhere($qb->expr()->isNull('readSubtrip.id'))
             ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) <= :distance')
             ->andWhere(
                 $qb->expr()->orX(

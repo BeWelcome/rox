@@ -36,7 +36,11 @@ class Preference
     public const TRIPS_VICINITY_RADIUS = 'TripLegsVicinityRadius';
     public const TRIP_NOTIFICATIONS = 'TripsNotifications';
     public const TRIP_NOTIFICATIONS_NEVER = 'No';
-    public const TRIP_NOTIFICATIONS_IMMEDIATELY = 'Yes';
+    public const TRIP_NOTIFICATIONS_IMMEDIATELY = 'Immediately';
+    public const TRIP_NOTIFICATIONS_LEGACY_IMMEDIATELY = 'Yes';
+    public const TRIP_NOTIFICATIONS_DAILY = 'Daily';
+    public const TRIP_NOTIFICATIONS_WEEKLY = 'Weekly';
+    public const TRIP_NOTIFICATIONS_MONTHLY = 'Monthly';
     public const SHOW_PROFILE_VISITORS = 'PreferenceShowProfileVisits';
     public const SHOW_FORUMS_POSTS = 'MyForumPostsPagePublic';
     public const SEARCH_OPTIONS = 'SearchOptions';

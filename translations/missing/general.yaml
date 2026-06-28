@@ -74,7 +74,7 @@ trips.never:
     - One of the options for trips notifications (legacy value).
 trips.immediately:
     - '@yes'
-    - One of the options for trips notifications (legacy value).
+    - One of the options for trips notifications
 trips.daily:
     - Daily
     - One of the options for trips notifications

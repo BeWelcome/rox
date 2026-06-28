@@ -149,7 +149,10 @@ class SignupFormFinalizeType extends AbstractType
                 'help' => 'help.trips_notifications',
                 'choices' => [
                     'trips.no' => Preference::TRIP_NOTIFICATIONS_NEVER,
-                    'trips.yes' => Preference::TRIP_NOTIFICATIONS_IMMEDIATELY,
+                    'trips.immediately' => Preference::TRIP_NOTIFICATIONS_IMMEDIATELY,
+                    'trips.daily' => Preference::TRIP_NOTIFICATIONS_DAILY,
+                    'trips.weekly' => Preference::TRIP_NOTIFICATIONS_WEEKLY,
+                    'trips.monthly' => Preference::TRIP_NOTIFICATIONS_MONTHLY,
                 ],
                 'data' => Preference::TRIP_NOTIFICATIONS_NEVER,
                 'required' => true,

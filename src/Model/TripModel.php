@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Entity\Member;
+use App\Entity\MemberTripNotificationSent;
 use App\Entity\MemberSubtripRead;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
@@ -11,13 +12,20 @@ use App\Repository\SubtripRepository;
 use App\Repository\TripRepository;
 use App\Service\Mailer;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class TripModel
 {
     private const array ALLOWED_TRIPS_RADIUS = [0, 5, 10, 20, 50, 100];
+    private const array SCHEDULED_TRIP_NOTIFICATIONS = [
+        Preference::TRIP_NOTIFICATIONS_DAILY,
+        Preference::TRIP_NOTIFICATIONS_WEEKLY,
+        Preference::TRIP_NOTIFICATIONS_MONTHLY,
+    ];
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -152,15 +160,43 @@ class TripModel
 
     public function notifyHostsAboutTrip(Trip $trip): void
     {
-        /** @var SubtripRepository $repository */
-        $repository = $this->entityManager->getRepository(Subtrip::class);
-        $hosts = $repository->getMembersToNotifyAboutTrip($trip);
+        $this->sendTripNotifications($trip, [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY]);
+    }
 
-        if ([] === $hosts) {
-            return;
+    public function sendScheduledTripNotifications(
+        string $frequency,
+        DateTimeInterface $since,
+        DateTimeInterface $until,
+    ): int {
+        if (!\in_array($frequency, self::SCHEDULED_TRIP_NOTIFICATIONS, true)) {
+            throw new InvalidArgumentException('Unsupported trip notification frequency.');
         }
 
+        /** @var TripRepository $tripRepository */
+        $tripRepository = $this->entityManager->getRepository(Trip::class);
+        $trips = $tripRepository->findTripsCreatedBetween($since, $until);
+
+        $sent = 0;
+        foreach ($trips as $trip) {
+            $sent += $this->sendTripNotifications($trip, [$frequency]);
+        }
+
+        return $sent;
+    }
+
+    private function sendTripNotifications(Trip $trip, array $notificationValues): int
+    {
+        /** @var SubtripRepository $repository */
+        $repository = $this->entityManager->getRepository(Subtrip::class);
+        $hosts = $repository->getMembersToNotifyAboutTrip($trip, $notificationValues);
+
+        if ([] === $hosts) {
+            return 0;
+        }
+
+        $sentRepository = $this->entityManager->getRepository(MemberTripNotificationSent::class);
         $sent = [];
+        $sentCount = 0;
         foreach ($hosts as $host) {
             $hostId = $host->getId();
             if (isset($sent[$hostId])) {
@@ -168,8 +204,42 @@ class TripModel
             }
 
             $sent[$hostId] = true;
-            $this->mailer?->sendTripNotificationEmail($host, $trip);
+            $lockName = $this->acquireTripNotificationLock($host, $trip);
+            if (null === $lockName) {
+                continue;
+            }
+
+            try {
+                if (null !== $sentRepository->findOneBy(['member' => $host, 'trip' => $trip])) {
+                    continue;
+                }
+
+                if (true !== $this->mailer?->sendTripNotificationEmail($host, $trip)) {
+                    continue;
+                }
+
+                $this->entityManager->persist(new MemberTripNotificationSent($host, $trip));
+                $this->entityManager->flush();
+                ++$sentCount;
+            } finally {
+                $this->releaseTripNotificationLock($lockName);
+            }
         }
+
+        return $sentCount;
+    }
+
+    private function acquireTripNotificationLock(Member $member, Trip $trip): ?string
+    {
+        $lockName = \sprintf('trip-notification:%d:%d', $member->getId(), $trip->getId());
+        $locked = $this->entityManager->getConnection()->fetchOne('SELECT GET_LOCK(?, 0)', [$lockName]);
+
+        return 1 === (int) $locked ? $lockName : null;
+    }
+
+    private function releaseTripNotificationLock(string $lockName): void
+    {
+        $this->entityManager->getConnection()->fetchOne('SELECT RELEASE_LOCK(?)', [$lockName]);
     }
 
     public function hasTripExpired(Trip $trip)

@@ -65,8 +65,13 @@ class SubtripRepository extends EntityRepository
                 ->getQuery();
     }
 
-    public function getMembersToNotifyAboutTrip(Trip $trip, int $duration = 3): array
-    {
+    public function getMembersToNotifyAboutTrip(
+        Trip $trip,
+        array $notificationValues = [
+            Preference::TRIP_NOTIFICATIONS_IMMEDIATELY,
+        ],
+        int $duration = 3,
+    ): array {
         $preferenceRepository = $this->getEntityManager()->getRepository(Preference::class);
         $tripNotificationPreference = $preferenceRepository->findOneBy([
             'codename' => Preference::TRIP_NOTIFICATIONS,
@@ -128,7 +133,7 @@ class SubtripRepository extends EntityRepository
                 ->where($qb->expr()->in('host.status', ':activeStatuses'))
                 ->andWhere('host <> :creator')
                 ->andWhere('host.maxGuests >= :travellers')
-                ->andWhere('COALESCE(tripNotifications.value, :defaultNotification) IN (:immediateNotifications)')
+                ->andWhere('COALESCE(tripNotifications.value, :defaultNotification) IN (:tripNotificationValues)')
                 ->andWhere(
                     'ST_Distance_Sphere(hostLocation.coordinates, ST_GeomFromText(:centerPoint, 0)) <= 1000 * COALESCE(radiusPreference.value, :defaultRadius)'
                 )
@@ -139,11 +144,8 @@ class SubtripRepository extends EntityRepository
                 ->setParameter('radiusPreference', $radiusPreference)
                 ->setParameter('defaultNotification', Preference::TRIP_NOTIFICATIONS_NEVER)
                 ->setParameter(
-                    'immediateNotifications',
-                    [
-                        Preference::TRIP_NOTIFICATIONS_IMMEDIATELY,
-                        Preference::TRIP_NOTIFICATIONS_LEGACY_IMMEDIATELY,
-                    ]
+                    'tripNotificationValues',
+                    $notificationValues
                 )
                 ->setParameter('defaultRadius', $radiusPreference->getDefaultValue())
                 ->setParameter('centerPoint', \sprintf('POINT(%F %F)', $location->getLongitude(), $location->getLatitude()))

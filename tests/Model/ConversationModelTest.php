@@ -11,6 +11,7 @@ use App\Entity\Message;
 use App\Entity\Subject;
 use App\Model\ConversationModel;
 use App\Service\Mailer;
+use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
@@ -94,7 +95,7 @@ class ConversationModelTest extends TestCase
     public function testFormatConversationDetectsSpamPatterns(): void
     {
         $message = new Message();
-        $message->setMessage('Contact me at test (at) example.com');
+        $message->setMessage('Contact me at test (AT) example.com');
         $message->setStatus(MessageStatusType::SENT);
         $message->setFolder(InFolderType::NORMAL);
 
@@ -168,7 +169,7 @@ class ConversationModelTest extends TestCase
         $senderMessage->setReceiver(new Member());
         $senderMessage->setSender($receiver);
         $senderMessage->setFirstRead(null);
-        $alreadyReadAt = new \DateTime('2026-06-28 12:00:00');
+        $alreadyReadAt = new DateTime('2026-06-28 12:00:00');
         $alreadyReadMessage = new Message();
         $alreadyReadMessage->setReceiver($receiver);
         $alreadyReadMessage->setFirstRead($alreadyReadAt);

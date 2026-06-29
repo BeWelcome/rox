@@ -5,6 +5,8 @@ namespace App\Tests\Command;
 use App\Command\SendTripNotificationsCommand;
 use App\Entity\Preference;
 use App\Model\TripModel;
+use DateInterval;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -31,10 +33,10 @@ class SendTripNotificationsCommandTest extends TestCase
             ->with(
                 $preference,
                 $this->callback(static function (DateTimeInterface $since) use ($days): bool {
-                    $now = new \DateTimeImmutable();
+                    $now = new DateTimeImmutable();
 
-                    return $since <= $now->sub(new \DateInterval('P' . $days . 'D'))->modify('+5 seconds')
-                        && $since >= $now->sub(new \DateInterval('P' . $days . 'D'))->modify('-5 seconds');
+                    return $since <= $now->sub(new DateInterval('P' . $days . 'D'))->modify('+5 seconds')
+                        && $since >= $now->sub(new DateInterval('P' . $days . 'D'))->modify('-5 seconds');
                 }),
                 $this->isInstanceOf(DateTimeInterface::class),
             )

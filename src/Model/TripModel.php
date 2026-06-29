@@ -3,8 +3,8 @@
 namespace App\Model;
 
 use App\Entity\Member;
+use App\Entity\MemberSubtripHidden;
 use App\Entity\MemberTripNotificationSent;
-use App\Entity\MemberSubtripRead;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -147,13 +147,13 @@ class TripModel
         $this->entityManager->flush();
     }
 
-    public function markSubtripAsRead(Member $member, Subtrip $subtrip): void
+    public function markSubtripAsHidden(Member $member, Subtrip $subtrip): void
     {
-        $repository = $this->entityManager->getRepository(MemberSubtripRead::class);
-        $read = $repository->findOneBy(['member' => $member, 'subtrip' => $subtrip]);
+        $repository = $this->entityManager->getRepository(MemberSubtripHidden::class);
+        $hidden = $repository->findOneBy(['member' => $member, 'subtrip' => $subtrip]);
 
-        if (null === $read) {
-            $this->entityManager->persist(new MemberSubtripRead($member, $subtrip));
+        if (null === $hidden) {
+            $this->entityManager->persist(new MemberSubtripHidden($member, $subtrip));
             $this->entityManager->flush();
         }
     }
@@ -182,6 +182,40 @@ class TripModel
         }
 
         return $sent;
+    }
+
+    public function hasTripExpired(Trip $trip)
+    {
+        return $trip->isExpired();
+    }
+
+    public function copyTrip(Trip $trip)
+    {
+        $em = $this->entityManager;
+
+        $newTrip = clone $trip;
+        $newTrip->setSummary($trip->getSummary() . ' - copy');
+        $newTrip->setUpdated(new DateTime());
+
+        // Move legs arrival and departure consistently +1month
+        $nextMonth = new DateTime()->modify('+1month');
+        $firstArrival = $trip->getSubtrips()->first()->getArrival();
+        $adjust = $firstArrival->diff($nextMonth);
+
+        foreach ($trip->getSubTrips() as $leg) {
+            $newLeg = clone $leg;
+            $newLeg->setArrival($leg->getArrival()->add($adjust));
+            $newLeg->setDeparture($leg->getDeparture()->add($adjust));
+            $newLeg->setInvitedBy(null);
+            $newTrip->addSubTrip($newLeg);
+            $em->persist($newLeg);
+            $em->flush();
+        }
+
+        $em->persist($newTrip);
+        $em->flush();
+
+        return $newTrip;
     }
 
     private function sendTripNotifications(Trip $trip, array $notificationValues): int
@@ -240,39 +274,5 @@ class TripModel
     private function releaseTripNotificationLock(string $lockName): void
     {
         $this->entityManager->getConnection()->fetchOne('SELECT RELEASE_LOCK(?)', [$lockName]);
-    }
-
-    public function hasTripExpired(Trip $trip)
-    {
-        return $trip->isExpired();
-    }
-
-    public function copyTrip(Trip $trip)
-    {
-        $em = $this->entityManager;
-
-        $newTrip = clone $trip;
-        $newTrip->setSummary($trip->getSummary() . ' - copy');
-        $newTrip->setUpdated(new DateTime());
-
-        // Move legs arrival and departure consistently +1month
-        $nextMonth = new DateTime()->modify('+1month');
-        $firstArrival = $trip->getSubtrips()->first()->getArrival();
-        $adjust = $firstArrival->diff($nextMonth);
-
-        foreach ($trip->getSubTrips() as $leg) {
-            $newLeg = clone $leg;
-            $newLeg->setArrival($leg->getArrival()->add($adjust));
-            $newLeg->setDeparture($leg->getDeparture()->add($adjust));
-            $newLeg->setInvitedBy(null);
-            $newTrip->addSubTrip($newLeg);
-            $em->persist($newLeg);
-            $em->flush();
-        }
-
-        $em->persist($newTrip);
-        $em->flush();
-
-        return $newTrip;
     }
 }

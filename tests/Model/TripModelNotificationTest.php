@@ -3,8 +3,8 @@
 namespace App\Tests\Model;
 
 use App\Entity\Member;
+use App\Entity\MemberSubtripHidden;
 use App\Entity\MemberTripNotificationSent;
-use App\Entity\MemberSubtripRead;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -20,13 +20,13 @@ use ReflectionProperty;
 
 class TripModelNotificationTest extends TestCase
 {
-    public function testMarkSubtripAsReadPersistsReadState(): void
+    public function testMarkSubtripAsHiddenPersistsHiddenState(): void
     {
         $member = new Member();
         $subtrip = new Subtrip();
 
-        $readRepository = $this->createMock(EntityRepository::class);
-        $readRepository
+        $hiddenRepository = $this->createMock(EntityRepository::class);
+        $hiddenRepository
             ->expects($this->once())
             ->method('findOneBy')
             ->with(['member' => $member, 'subtrip' => $subtrip])
@@ -37,48 +37,48 @@ class TripModelNotificationTest extends TestCase
         $entityManager
             ->expects($this->once())
             ->method('getRepository')
-            ->with(MemberSubtripRead::class)
-            ->willReturn($readRepository)
+            ->with(MemberSubtripHidden::class)
+            ->willReturn($hiddenRepository)
         ;
         $entityManager
             ->expects($this->once())
             ->method('persist')
-            ->with($this->callback(static function (MemberSubtripRead $read) use ($member, $subtrip): bool {
-                return $read->getMember() === $member && $read->getSubtrip() === $subtrip;
+            ->with($this->callback(static function (MemberSubtripHidden $hidden) use ($member, $subtrip): bool {
+                return $hidden->getMember() === $member && $hidden->getSubtrip() === $subtrip;
             }))
         ;
         $entityManager->expects($this->once())->method('flush');
 
         $tripModel = new TripModel($entityManager);
-        $tripModel->markSubtripAsRead($member, $subtrip);
+        $tripModel->markSubtripAsHidden($member, $subtrip);
     }
 
-    public function testMarkSubtripAsReadDoesNotDuplicateReadState(): void
+    public function testMarkSubtripAsHiddenDoesNotDuplicateHiddenState(): void
     {
         $member = new Member();
         $subtrip = new Subtrip();
-        $existingRead = new MemberSubtripRead($member, $subtrip);
+        $existingHidden = new MemberSubtripHidden($member, $subtrip);
 
-        $readRepository = $this->createMock(EntityRepository::class);
-        $readRepository
+        $hiddenRepository = $this->createMock(EntityRepository::class);
+        $hiddenRepository
             ->expects($this->once())
             ->method('findOneBy')
             ->with(['member' => $member, 'subtrip' => $subtrip])
-            ->willReturn($existingRead)
+            ->willReturn($existingHidden)
         ;
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
             ->expects($this->once())
             ->method('getRepository')
-            ->with(MemberSubtripRead::class)
-            ->willReturn($readRepository)
+            ->with(MemberSubtripHidden::class)
+            ->willReturn($hiddenRepository)
         ;
         $entityManager->expects($this->never())->method('persist');
         $entityManager->expects($this->never())->method('flush');
 
         $tripModel = new TripModel($entityManager);
-        $tripModel->markSubtripAsRead($member, $subtrip);
+        $tripModel->markSubtripAsHidden($member, $subtrip);
     }
 
     public function testNotifyHostsAboutTripSendsEmailsToMatchingHostsOnce(): void

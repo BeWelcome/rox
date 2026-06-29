@@ -5,11 +5,11 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'member_subtrip_read')]
-#[ORM\UniqueConstraint(name: 'member_subtrip_read_unique', columns: ['member_id', 'subtrip_id'])]
+#[ORM\Table(name: 'member_subtrip_hidden')]
+#[ORM\UniqueConstraint(name: 'member_subtrip_hidden_unique', columns: ['member_id', 'subtrip_id'])]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
-class MemberSubtripRead
+class MemberSubtripHidden
 {
     #[ORM\JoinColumn(name: 'member_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Member::class)]

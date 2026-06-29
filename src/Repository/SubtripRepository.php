@@ -6,7 +6,7 @@ use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
-use App\Entity\MemberSubtripRead;
+use App\Entity\MemberSubtripHidden;
 use App\Entity\Preference;
 use App\Entity\Trip;
 use Carbon\CarbonImmutable;
@@ -209,7 +209,7 @@ class SubtripRepository extends EntityRepository
             ->join('s.location', 'l')
             ->join('s.trip', 't')
             ->join('t.creator', 'm')
-            ->leftJoin(MemberSubtripRead::class, 'readSubtrip', Join::WITH, 'readSubtrip.subtrip = s AND readSubtrip.member = :member')
+            ->leftJoin(MemberSubtripHidden::class, 'hiddenSubtrip', Join::WITH, 'hiddenSubtrip.subtrip = s AND hiddenSubtrip.member = :member')
             ->where($qb->expr()->notLike('s.options', $qb->expr()->literal('%' . SubtripOptionsType::PRIVATE . '%')))
             ->andWhere(
                 $qb->expr()->orX(
@@ -223,7 +223,7 @@ class SubtripRepository extends EntityRepository
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')
             ->andWhere($qb->expr()->isNull('t.deleted'))
-            ->andWhere($qb->expr()->isNull('readSubtrip.id'))
+            ->andWhere($qb->expr()->isNull('hiddenSubtrip.id'))
             ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) <= :distance')
             ->andWhere(
                 $qb->expr()->orX(

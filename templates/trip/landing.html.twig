@@ -20,10 +20,10 @@
         <p class="u:font-300 u:text-14">{{ 'trip.posted.by'|trans({username: macros.profilelink(leg.trip.creator.username)})|raw }}</p>
     </div>
     <div class="c-dashboard__trip-actions">
-        <form method="post" action="{{ path('trip_mark_read', {id: leg.id}) }}">
-            <input type="hidden" name="_token" value="{{ csrf_token('subtrip_read' ~ leg.id) }}">
+        <form method="post" action="{{ path('trip_hide', {id: leg.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('hide_subtrip') }}">
             <input type="hidden" name="redirectTo" value="homepage">
-            <button type="submit" class="o-rounded" aria-label="{{ 'trip.mark.read'|trans }}" title="{{ 'trip.mark.read'|trans }}">
+            <button type="submit" class="o-rounded" aria-label="{{ 'trip.hide'|trans }}" title="{{ 'trip.hide'|trans }}">
                 <i class="fa fa-fw fa-times"></i>
             </button>
         </form>

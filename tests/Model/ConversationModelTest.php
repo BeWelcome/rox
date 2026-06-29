@@ -27,14 +27,7 @@ class ConversationModelTest extends TestCase
     protected function setUp(): void
     {
         $this->entityManager = $this->createStub(EntityManagerInterface::class);
-        $mailer = $this->createStub(Mailer::class);
-        $translator = $this->createStub(TranslatorInterface::class);
-
-        $this->model = new ConversationModel(
-            $mailer,
-            $this->entityManager,
-            $translator
-        );
+        $this->model = $this->createModel($this->entityManager);
     }
 
     public function testMarkConversationPurgedUpdatesMessages(): void
@@ -45,6 +38,8 @@ class ConversationModelTest extends TestCase
         $message->setReceiver($receiver);
         $message->setSender($sender);
         $message->setDeleteRequest('');
+        $message->setFolder(InFolderType::SPAM);
+        $this->expectPersistAndFlush($message);
 
         $conversation = [$message];
 
@@ -64,6 +59,8 @@ class ConversationModelTest extends TestCase
         $message->setReceiver($receiver);
         $message->setSender($sender);
         $message->setDeleteRequest('');
+        $message->setFolder(InFolderType::SPAM);
+        $this->expectPersistAndFlush($message);
 
         $conversation = [$message];
 
@@ -82,6 +79,7 @@ class ConversationModelTest extends TestCase
         $message->setReceiver($receiver);
         $message->setFolder(InFolderType::NORMAL);
         $message->setStatus(MessageStatusType::SENT);
+        $this->expectPersistAndFlush($message);
 
         $conversation = [$message];
 
@@ -129,6 +127,8 @@ class ConversationModelTest extends TestCase
         $message->setSender($sender);
         // Start as deleted
         $message->setDeleteRequest(DeleteRequestType::RECEIVER_DELETED);
+        $message->setFolder(InFolderType::SPAM);
+        $this->expectPersistAndFlush($message);
 
         $conversation = [$message];
 
@@ -147,6 +147,7 @@ class ConversationModelTest extends TestCase
         $message->setFolder(InFolderType::SPAM);
         $message->setStatus(MessageStatusType::CHECK);
         $message->setSpamInfo(SpamInfoType::MEMBER_SAYS_SPAM);
+        $this->expectPersistAndFlush($message);
 
         $conversation = [$message];
 
@@ -163,12 +164,23 @@ class ConversationModelTest extends TestCase
         $message = new Message();
         $message->setReceiver($receiver);
         $message->setFirstRead(null); // Initialize to avoid type error
+        $senderMessage = new Message();
+        $senderMessage->setReceiver(new Member());
+        $senderMessage->setSender($receiver);
+        $senderMessage->setFirstRead(null);
+        $alreadyReadAt = new \DateTime('2026-06-28 12:00:00');
+        $alreadyReadMessage = new Message();
+        $alreadyReadMessage->setReceiver($receiver);
+        $alreadyReadMessage->setFirstRead($alreadyReadAt);
+        $this->expectPersistAndFlush($message);
 
-        $conversation = [$message];
+        $conversation = [$message, $senderMessage, $alreadyReadMessage];
 
         $this->model->markConversationAsRead($receiver, $conversation);
 
         $this->assertNotNull($message->getFirstRead());
+        $this->assertNull($senderMessage->getFirstRead());
+        $this->assertSame($alreadyReadAt->getTimestamp(), $alreadyReadMessage->getFirstRead()->getTimestamp());
     }
 
     public function testGetLastMessageInConversationReturnsLatest(): void
@@ -180,10 +192,12 @@ class ConversationModelTest extends TestCase
         $msg1 = new Message();
         $msg2 = new Message();
 
-        $repo = $this->createStub(EntityRepository::class);
-        $repo->method('findBy')->willReturn([$msg1, $msg2]);
+        $repo = $this->createMock(EntityRepository::class);
+        $repo->expects($this->once())->method('findBy')->with(['subject' => $subject])->willReturn([$msg1, $msg2]);
 
-        $this->entityManager->method('getRepository')->willReturn($repo);
+        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->entityManager->expects($this->once())->method('getRepository')->with(Message::class)->willReturn($repo);
+        $this->model = $this->createModel($this->entityManager);
 
         $result = $this->model->getLastMessageInConversation($parent);
 
@@ -252,5 +266,22 @@ class ConversationModelTest extends TestCase
         $conn->method('prepare')->willReturn($stmt);
 
         $this->entityManager->method('getConnection')->willReturn($conn);
+    }
+
+    private function expectPersistAndFlush(Message $message): void
+    {
+        $this->entityManager = $this->createMock(EntityManagerInterface::class);
+        $this->entityManager->expects($this->once())->method('persist')->with($message);
+        $this->entityManager->expects($this->once())->method('flush');
+        $this->model = $this->createModel($this->entityManager);
+    }
+
+    private function createModel(EntityManagerInterface $entityManager): ConversationModel
+    {
+        return new ConversationModel(
+            $this->createStub(Mailer::class),
+            $entityManager,
+            $this->createStub(TranslatorInterface::class)
+        );
     }
 }

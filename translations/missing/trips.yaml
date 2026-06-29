@@ -125,7 +125,7 @@ trip.location.none:
 trip.show:
     - 'Show'
     - Tool tip/aria label for the icon to show a trip.
-trip.mark.read:
+trip.hide:
     - 'Hide this trip'
     - Tool tip/aria label for the button that hides a trip from the visitors list.
 trip.notification.new.subject:

@@ -67,3 +67,24 @@ preferencebrowsernotificationsopenonly:
 preferencebrowsernotificationsalways:
     - Always
     - Browser notifications preference option
+tripsnotifications:
+    - Trip notifications
+    - Label on the preferences page for trip notifications.
+trips.notifications:
+    - Choose whether to be notified when members add trips in your area.
+    - Help text on the preferences page for trip notifications.
+tripsnotificationsnever:
+    - Never
+    - Option on the preferences page for trip notifications.
+tripsnotificationsimmediately:
+    - Immediately
+    - Option on the preferences page for trip notifications.
+tripsnotificationsdaily:
+    - Daily
+    - Option on the preferences page for trip notifications.
+tripsnotificationsweekly:
+    - Weekly
+    - Option on the preferences page for trip notifications.
+tripsnotificationsmonthly:
+    - Monthly
+    - Option on the preferences page for trip notifications.

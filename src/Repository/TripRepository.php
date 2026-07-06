@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Member;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
@@ -30,5 +31,22 @@ class TripRepository extends EntityRepository
             ->setParameter('creator', $member)
             ->orderBy('t.created', 'DESC')
             ->getQuery();
+    }
+
+    /**
+     * @return array<int, \App\Entity\Trip>
+     */
+    public function findTripsCreatedBetween(DateTimeInterface $since, DateTimeInterface $until): array
+    {
+        return $this->createQueryBuilder('t')
+            ->where('t.created >= :since')
+            ->andWhere('t.created < :until')
+            ->andWhere('t.deleted IS NULL')
+            ->setParameter('since', $since)
+            ->setParameter('until', $until)
+            ->orderBy('t.created', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

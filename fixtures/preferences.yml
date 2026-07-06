@@ -224,3 +224,12 @@ App\Entity\Preference:
         DefaultValue: No
         PossibleValues: No;Yes
         Status: 'Normal'
+    TRIP_NOTIFICATIONS:
+        position: 65
+        codename: 'TripsNotifications'
+        codeDescription: 'trips.notifications'
+        description: 'How often the member wants notifications for trips in their area'
+        created: <DateTime()>
+        DefaultValue: Never
+        PossibleValues: Never;Immediately;Daily;Weekly;Monthly
+        Status: 'Normal'

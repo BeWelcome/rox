@@ -125,6 +125,9 @@ RUN set -eux; \
 # Self-contained production image.
 FROM bewelcome_php_base AS bewelcome_php
 
+ARG APP_VERSION=unknown
+ARG APP_VERSION_TIMESTAMP=
+
 ENV APP_ENV=prod
 
 COPY --from=bewelcome_source /srv/bewelcome/bin bin/
@@ -150,6 +153,8 @@ COPY --from=bewelcome_assets /srv/bewelcome/public/build public/build/
 COPY --from=bewelcome_assets /srv/bewelcome/public/main.js /srv/bewelcome/public/service-worker.js public/
 
 RUN set -eux; \
+	printf '%s\n' "$APP_VERSION" > VERSION; \
+	if [ -n "$APP_VERSION_TIMESTAMP" ]; then php -r 'touch("VERSION", (int) $argv[1]);' "$APP_VERSION_TIMESTAMP"; fi; \
 	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images public/bundles /config /data; \
 	find public -name '*.map' -type f -delete; \
 	chown -R www-data:www-data var data upload public/bundles /config /data; \

@@ -1,6 +1,6 @@
 {% import 'macros.twig' as macros %}
 
-<div class="c-dashboard__item">
+<div class="c-dashboard__item c-dashboard__item--trip">
     <div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u:mr-16 u:min-w-0">{{ macros.roundedavatarstack(leg.trip.creator.username, 72, false) }}</div>
     <div class="u:flex u:flex-col u:h-full u:justify-center u:px-8 u:w-min-0 u:overflow-hidden">
         <p class="u:font-display"><a href="{{ url('trip_show', {id: leg.trip.id, _fragment: 'leg' ~ leg.id}) }}"><strong>{{ leg.location.name }}</strong>,</a>
@@ -19,9 +19,16 @@
         </p>
         <p class="u:font-300 u:text-14">{{ 'trip.posted.by'|trans({username: macros.profilelink(leg.trip.creator.username)})|raw }}</p>
     </div>
-    <div class="u:ml-auto u:shrink-0">
+    <div class="c-dashboard__trip-actions">
+        <form method="post" action="{{ path('trip_hide', {id: leg.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('hide_subtrip') }}">
+            <input type="hidden" name="redirectTo" value="homepage">
+            <button type="submit" class="o-rounded" aria-label="{{ 'trip.hide'|trans }}" title="{{ 'trip.hide'|trans }}">
+                <i class="fa fa-fw fa-times"></i>
+            </button>
+        </form>
         {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
-            <a class="o-rounded u:mx-4" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}">
+            <a class="o-rounded" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}">
                 <i class="fa fa-fw fa-envelope"></i>
             </a>
         {% endif %}
@@ -29,15 +36,14 @@
             {% if leg.invitationBy(app.user) %}
                 {% set invitation = leg.invitationBy(app.user) %}
                 {% set username = invitation.messages[0].initiator.Username %}
-                <a class="o-rounded u:m-4{% if leg.invitedBy == app.user %} u:bg-green-dark {% endif %}" href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}" aria-label="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}">
+                <a class="o-rounded{% if leg.invitedBy == app.user %} u:bg-green-dark {% endif %}" href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}" aria-label="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}">
                     <i class="fa fa-fw fa-house-user"></i>
                 </a>
             {% else %}
-                <a class="o-rounded u:m-4" href="{{ path('hosting_invitation', { 'leg': leg.id }) }}">
+                <a class="o-rounded" href="{{ path('hosting_invitation', { 'leg': leg.id }) }}">
                     <i class="fa fa-fw fa-house-user"></i>
                 </a>
             {% endif %}
         {% endif %}
     </div>
 </div>
-

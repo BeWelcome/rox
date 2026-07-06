@@ -17,7 +17,7 @@ final readonly class BrowserNotificationMessage
         return json_encode($this->toArray(), \JSON_THROW_ON_ERROR);
     }
 
-    private function toArray(): array
+    public function toArray(): array
     {
         return [
             'type' => $this->type,

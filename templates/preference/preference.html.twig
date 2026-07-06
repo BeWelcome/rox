@@ -26,7 +26,16 @@
                 </label>
                 {% do child.setRendered %}
               {% else %}
-                <div class="u:grid u:grid-cols-1">{{ form_widget(child) }}</div>
+                <div class="u:grid u:grid-cols-1">
+                  {{ form_widget(child, is_browser_push_preference ? {'attr': child.vars.attr|merge({
+                    'data-browser-push-preference': '1',
+                    'data-browser-push-configured': '1',
+                    'data-browser-push-preference-value': browser_push_preference,
+                    'data-public-key': browser_push_public_key,
+                    'data-subscribe-url': path('browser_push_subscription_upsert'),
+                    'data-csrf-token': csrf_token('browser_push_subscription')
+                  })} : {}) }}
+                </div>
                   {% endif %}
               {% if is_browser_push_preference %}
                 <div class="u:mt-4">

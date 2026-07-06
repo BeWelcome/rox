@@ -76,6 +76,7 @@ class BrowserPushNotificationRepository extends EntityRepository
                     BrowserPushNotification::STATUS_SENT,
                     BrowserPushNotification::STATUS_FAILED,
                     BrowserPushNotification::STATUS_FROZEN,
+                    BrowserPushNotification::STATUS_OPEN_ONLY,
                 ])
                 ->setParameter('olderThan', $olderThan)
                 ->getQuery()
@@ -115,6 +116,7 @@ class BrowserPushNotificationRepository extends EntityRepository
                 ->setParameter('pendingStatuses', [
                     BrowserPushNotification::STATUS_SCHEDULED,
                     BrowserPushNotification::STATUS_PROCESSING,
+                    BrowserPushNotification::STATUS_OPEN_ONLY,
                 ])
                 ->getQuery()
                 ->execute()
@@ -122,5 +124,24 @@ class BrowserPushNotificationRepository extends EntityRepository
         } catch (TableNotFoundException) {
             return 0;
         }
+    }
+
+    /**
+     * @return BrowserPushNotification[]
+     */
+    public function findOpenOnlyNotificationsSince(Member $member, int $sinceId, int $limit = 5): array
+    {
+        return $this->createQueryBuilder('n')
+            ->where('n.receiver = :member')
+            ->andWhere('n.status = :status')
+            ->andWhere('n.id > :sinceId')
+            ->setParameter('member', $member)
+            ->setParameter('status', BrowserPushNotification::STATUS_OPEN_ONLY)
+            ->setParameter('sinceId', $sinceId)
+            ->orderBy('n.id', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

@@ -13,6 +13,7 @@ use App\Service\BrowserNotificationMessage;
 use App\Service\BrowserNotificationService;
 use App\Service\BrowserPushConfig;
 use App\Service\BrowserPushNotificationProcessor;
+use App\Service\BrowserPushPreferenceService;
 use App\Service\PushGatewayInterface;
 use App\Service\PushSendReport;
 use Doctrine\DBAL\Connection;
@@ -205,7 +206,8 @@ class BrowserPushNotificationProcessorTest extends TestCase
             new BrowserPushConfig('mailto:test@example.org', 'public-key', 'private-key'),
             $gateway,
             $this->translator(),
-            new NullLogger()
+            new NullLogger(),
+            $this->preferenceService()
         );
         $processor = new BrowserPushNotificationProcessor($entityManager, $service);
         $processor->process(10);
@@ -345,5 +347,19 @@ class BrowserPushNotificationProcessorTest extends TestCase
         });
 
         return $translator;
+    }
+
+    private function preferenceService(): BrowserPushPreferenceService
+    {
+        $connection = $this->createStub(Connection::class);
+        $connection->method('fetchAssociative')->willReturn([
+            'id' => 1,
+            'DefaultValue' => BrowserPushPreferenceService::VALUE_ALWAYS,
+        ]);
+        $connection->method('fetchOne')->willReturn(BrowserPushPreferenceService::VALUE_ALWAYS);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('getConnection')->willReturn($connection);
+
+        return new BrowserPushPreferenceService($entityManager);
     }
 }

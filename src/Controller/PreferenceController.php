@@ -7,6 +7,7 @@ use App\Entity\Preference;
 use App\Form\PreferencesType;
 use App\Model\PreferenceModel;
 use App\Service\BrowserPushConfig;
+use App\Service\BrowserPushPreferenceService;
 use App\Service\BrowserPushSubscriptionRemover;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
@@ -24,6 +25,7 @@ class PreferenceController extends AbstractController
         private readonly PreferenceModel $preferenceModel,
         private readonly EntityManagerInterface $entityManager,
         private readonly BrowserPushSubscriptionRemover $browserPushSubscriptionRemover,
+        private readonly BrowserPushPreferenceService $browserPushPreferenceService,
     ) {
     }
 
@@ -61,7 +63,9 @@ class PreferenceController extends AbstractController
         $data = [];
         foreach ($memberPreferences as $memberPreference) {
             $preference = $memberPreference->getPreference();
-            $data[$preference->getCodename()] = $memberPreference->getValue();
+            $data[$preference->getCodename()] = Preference::BROWSER_NOTIFICATIONS === $preference->getCodename()
+                ? $this->browserPushPreferenceService->getValue($loggedInMember)
+                : $memberPreference->getValue();
         }
 
         $preferenceForm = $this->createForm(PreferencesType::class, $data, [
@@ -113,7 +117,10 @@ class PreferenceController extends AbstractController
                 }
 
                 $memberPreference->setValue($value);
-                if (Preference::BROWSER_NOTIFICATIONS === $preference->getCodename() && 'No' === $value) {
+                if (
+                    Preference::BROWSER_NOTIFICATIONS === $preference->getCodename()
+                    && BrowserPushPreferenceService::VALUE_ALWAYS !== BrowserPushPreferenceService::normalize($value)
+                ) {
                     $this->browserPushSubscriptionRemover->removeAllForMember($loggedInMember);
                 }
 
@@ -135,6 +142,8 @@ class PreferenceController extends AbstractController
             'codename' => Preference::BROWSER_NOTIFICATIONS,
         ]);
 
-        return $preference instanceof Preference ? $member->getMemberPreferenceValue($preference) : 'Yes';
+        return $preference instanceof Preference
+            ? $this->browserPushPreferenceService->getValue($member)
+            : BrowserPushPreferenceService::VALUE_ALWAYS;
     }
 }

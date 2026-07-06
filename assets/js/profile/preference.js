@@ -1,5 +1,6 @@
 import {
     handleBrowserPushPreferenceChange,
+    requestBrowserNotificationPermission,
     requestBrowserPushPermission,
 } from '../browserPushPreference';
 
@@ -18,6 +19,12 @@ preferences.forEach(
                 }
             } else {
                 value = event.target.value
+                if (isBrowserPushPreference(preference) && value === 'Always') {
+                    browserPushPermission = requestBrowserPushPermission(preference)
+                }
+                if (isBrowserPushPreference(preference) && value === 'OpenOnly') {
+                    browserPushPermission = requestBrowserNotificationPermission(preference)
+                }
             }
 
             const form = new FormData();

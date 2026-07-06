@@ -1,5 +1,9 @@
+const browserNotificationLastIdKey = 'bewelcomeBrowserNotificationLastId';
+const browserNotificationInterval = 120000;
+
 function updateCount() {
-    fetch('/count/conversations/unread', {
+    const browserNotificationLastId = localStorage.getItem(browserNotificationLastIdKey) || 0;
+    fetch('/count/conversations/unread?browserNotificationSince=' + encodeURIComponent(browserNotificationLastId), {
         method: 'POST',
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -20,13 +24,53 @@ function updateCount() {
                 window.autocollapse_menu(true);
             }
         }
+        showBrowserNotifications(data);
     })
     .catch(error => {
         console.error('Error fetching unread count:', error);
     });
 }
 
-const interval = setInterval(function () { updateCount(); }, 600000);
+function showBrowserNotifications(data) {
+    if (!data || !data.browserNotification) {
+        return;
+    }
+
+    const latestId = data.browserNotification.latestId || 0;
+    const previousLastId = localStorage.getItem(browserNotificationLastIdKey);
+    if (!previousLastId) {
+        if (latestId) {
+            localStorage.setItem(browserNotificationLastIdKey, latestId);
+        }
+        return;
+    }
+
+    if (!('Notification' in window) || Notification.permission !== 'granted') {
+        localStorage.setItem(browserNotificationLastIdKey, latestId);
+        return;
+    }
+
+    data.browserNotification.notifications.forEach(notification => {
+        if (notification.id <= previousLastId) {
+            return;
+        }
+        const browserNotification = new Notification(notification.title, {
+            body: notification.body,
+            tag: 'bewelcome-open-' + notification.id,
+        });
+        browserNotification.onclick = function () {
+            const url = new URL(notification.url, window.location.origin);
+            if (url.origin === window.location.origin) {
+                window.focus();
+                window.location.href = url.href;
+            }
+        };
+    });
+
+    localStorage.setItem(browserNotificationLastIdKey, latestId);
+}
+
+const interval = setInterval(function () { updateCount(); }, browserNotificationInterval);
 
 // Initial call
 updateCount();

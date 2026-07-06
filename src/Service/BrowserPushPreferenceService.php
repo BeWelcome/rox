@@ -8,13 +8,27 @@ use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class BrowserPushPreferenceService
 {
+    public const string VALUE_NO = 'No';
+    public const string VALUE_OPEN_ONLY = 'OpenOnly';
+    public const string VALUE_ALWAYS = 'Always';
+
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 
     public function isEnabled(Member $member): bool
     {
-        return 'No' !== $this->getValue($member);
+        return self::VALUE_NO !== $this->getValue($member);
+    }
+
+    public function isAlways(Member $member): bool
+    {
+        return self::VALUE_ALWAYS === $this->getValue($member);
+    }
+
+    public function isOpenOnly(Member $member): bool
+    {
+        return self::VALUE_OPEN_ONLY === $this->getValue($member);
     }
 
     public function getValue(Member $member): string
@@ -25,7 +39,7 @@ final readonly class BrowserPushPreferenceService
             [Preference::BROWSER_NOTIFICATIONS]
         );
         if (false === $preference) {
-            return 'Yes';
+            return self::VALUE_ALWAYS;
         }
 
         $value = $connection->fetchOne(
@@ -33,6 +47,16 @@ final readonly class BrowserPushPreferenceService
             [$member->getId(), (int) $preference['id']]
         );
 
-        return false === $value ? (string) $preference['DefaultValue'] : (string) $value;
+        return self::normalize(false === $value ? (string) $preference['DefaultValue'] : (string) $value);
+    }
+
+    public static function normalize(string $value): string
+    {
+        return match ($value) {
+            'Yes' => self::VALUE_ALWAYS,
+            self::VALUE_OPEN_ONLY => self::VALUE_OPEN_ONLY,
+            self::VALUE_ALWAYS => self::VALUE_ALWAYS,
+            default => self::VALUE_NO,
+        };
     }
 }

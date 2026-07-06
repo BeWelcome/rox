@@ -39,6 +39,14 @@ export async function requestBrowserPushPermission(element) {
     if (!isBrowserPushAvailable(element)) {
         return false
     }
+
+    return await requestBrowserNotificationPermission(element)
+}
+
+export async function requestBrowserNotificationPermission(element) {
+    if (!isBrowserNotificationAvailable(element)) {
+        return false
+    }
     if (Notification.permission === 'denied') {
         return false
     }
@@ -50,9 +58,13 @@ export async function requestBrowserPushPermission(element) {
 }
 
 export async function handleBrowserPushPreferenceChange(element, permissionPromise = null) {
-    element.dataset.browserPushPreferenceValue = element.checked ? 'No' : 'Yes'
-    if (element.checked) {
+    const value = getBrowserPushPreferenceValue(element)
+    element.dataset.browserPushPreferenceValue = value
+    if (value !== 'Always') {
         await unsubscribeCurrentBrowser(element)
+        if (value === 'OpenOnly') {
+            await (permissionPromise || requestBrowserNotificationPermission(element))
+        }
         return
     }
 
@@ -96,17 +108,29 @@ async function unsubscribeCurrentBrowser(element) {
 
 function shouldTryBrowserPush(element) {
     return isBrowserPushAvailable(element)
-        && element.dataset.browserPushPreferenceValue !== 'No'
+        && element.dataset.browserPushPreferenceValue === 'Always'
         && Notification.permission !== 'denied'
 }
 
 function isBrowserPushAvailable(element) {
-    return element
-        && element.dataset.browserPushConfigured === '1'
+    return isBrowserNotificationAvailable(element)
         && 'serviceWorker' in navigator
         && 'PushManager' in window
+}
+
+function isBrowserNotificationAvailable(element) {
+    return element
+        && element.dataset.browserPushConfigured === '1'
         && 'Notification' in window
         && window.isSecureContext
+}
+
+function getBrowserPushPreferenceValue(element) {
+    if (element.type === 'checkbox') {
+        return element.checked ? 'No' : 'Always'
+    }
+
+    return element.value || element.dataset.browserPushPreferenceValue || 'No'
 }
 
 async function createOrUpdateBrowserPushSubscription(element, registration) {

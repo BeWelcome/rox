@@ -76,7 +76,7 @@ class BrowserPushSubscriptionController extends AbstractController
 
         /** @var Member $member */
         $member = $this->getUser();
-        if (!$this->browserPushPreferenceService->isEnabled($member)) {
+        if (!$this->browserPushPreferenceService->isAlways($member)) {
             return new JsonResponse(['error' => 'preference_disabled'], JsonResponse::HTTP_CONFLICT);
         }
 

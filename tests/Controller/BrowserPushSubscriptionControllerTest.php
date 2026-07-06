@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\BrowserPushNotification;
 use App\Entity\BrowserPushSubscription;
 use App\Entity\Member;
 use DateTimeImmutable;
@@ -268,6 +269,37 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
         );
     }
 
+    public function testBrowserPushPreferenceOpenOnlyDeletesAllCurrentMemberSubscriptions(): void
+    {
+        $client = static::createClient();
+        $this->ensureBrowserPushPreferenceExists();
+        $endpoint = $this->endpoint('preference-open-only-delete-all');
+        $member = $this->loginMember($client, 'member-2');
+
+        $this->requestJson(
+            $client,
+            'POST',
+            '/notifications/browser/subscriptions',
+            $this->validSubscription('preference-open-only-delete-all', $endpoint),
+            $this->csrfToken()
+        );
+        $this->assertResponseStatusCodeSame(201);
+
+        $client->request('POST', '/members/update/preference', [
+            'member' => $member->getUsername(),
+            'preference' => 'PreferenceBrowserNotifications',
+            'value' => 'OpenOnly',
+        ]);
+
+        $this->assertResponseIsSuccessful();
+        self::assertCount(
+            0,
+            $this->getEntityManager()
+                ->getRepository(BrowserPushSubscription::class)
+                ->findBy(['member' => $member])
+        );
+    }
+
     public function testSubscribeRejectsWhenBrowserPushPreferenceIsNo(): void
     {
         $client = static::createClient();
@@ -288,6 +320,58 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
             ['error' => 'preference_disabled'],
             json_decode($client->getResponse()->getContent(), true, 512, \JSON_THROW_ON_ERROR)
         );
+    }
+
+    public function testSubscribeRejectsWhenBrowserPushPreferenceIsOpenOnly(): void
+    {
+        $client = static::createClient();
+        $preferenceId = $this->ensureBrowserPushPreferenceExists();
+        $member = $this->loginMember($client, 'member-2');
+        $this->setBrowserPushPreference($member, $preferenceId, 'OpenOnly');
+
+        $this->requestJson(
+            $client,
+            'POST',
+            '/notifications/browser/subscriptions',
+            $this->validSubscription('preference-open-only-reject'),
+            $this->csrfToken()
+        );
+
+        $this->assertResponseStatusCodeSame(409);
+        self::assertSame(
+            ['error' => 'preference_disabled'],
+            json_decode($client->getResponse()->getContent(), true, 512, \JSON_THROW_ON_ERROR)
+        );
+    }
+
+    public function testUnreadCountReturnsOpenOnlyBrowserNotificationForCurrentMember(): void
+    {
+        $client = static::createClient();
+        $preferenceId = $this->ensureBrowserPushPreferenceExists();
+        $member = $this->loginMember($client, 'member-2');
+        $this->setBrowserPushPreference($member, $preferenceId, 'OpenOnly');
+        $member = $this->reloadMember('member-2');
+        $otherMember = $this->reloadMember('member-5');
+
+        $notification = $this->storeOpenOnlyNotification($member, 'sender', '/conversation/123');
+        $this->storeOpenOnlyNotification($otherMember, 'other-sender', '/conversation/999');
+
+        $client->request('POST', '/count/conversations/unread?browserNotificationSince=0');
+
+        $this->assertResponseIsSuccessful();
+        $response = json_decode($client->getResponse()->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+        self::assertSame($member->getId(), $response['browserNotification']['memberId']);
+        self::assertSame($notification->getId(), $response['browserNotification']['latestId']);
+        self::assertCount(1, $response['browserNotification']['notifications']);
+        self::assertSame($notification->getId(), $response['browserNotification']['notifications'][0]['id']);
+        self::assertSame('message', $response['browserNotification']['notifications'][0]['type']);
+        self::assertSame('/conversation/123', $response['browserNotification']['notifications'][0]['url']);
+        self::assertArrayHasKey('title', $response['browserNotification']['notifications'][0]);
+        self::assertArrayHasKey('body', $response['browserNotification']['notifications'][0]);
+        self::assertStringNotContainsString('private', json_encode(
+            $response['browserNotification']['notifications'][0],
+            \JSON_THROW_ON_ERROR
+        ));
     }
 
     private function requestJson(
@@ -411,8 +495,8 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
             'codeDescription' => 'BrowserNotificationsDesc',
             'Description' => 'This preference stores if the member wants browser push notifications.',
             'created' => $now,
-            'DefaultValue' => 'Yes',
-            'PossibleValues' => 'Yes;No',
+            'DefaultValue' => 'Always',
+            'PossibleValues' => 'No;OpenOnly;Always',
             'Status' => 'Normal',
         ]);
 
@@ -437,5 +521,22 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
         $this->getEntityManager()->clear();
         $clientMember = $this->reloadMember($member->getUsername());
         self::assertSame($member->getId(), $clientMember->getId());
+    }
+
+    private function storeOpenOnlyNotification(Member $member, string $sender, string $url): BrowserPushNotification
+    {
+        $notification = new BrowserPushNotification()
+            ->setReceiver($member)
+            ->setStatus(BrowserPushNotification::STATUS_OPEN_ONLY)
+            ->setType('message')
+            ->setSenderUsername($sender)
+            ->setUrl($url)
+            ->setLastError('private text must not leak')
+        ;
+        $entityManager = $this->getEntityManager();
+        $entityManager->persist($notification);
+        $entityManager->flush();
+
+        return $notification;
     }
 }

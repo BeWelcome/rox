@@ -16,9 +16,11 @@ use App\Repository\PostNotificationRepository;
 use App\Service\BrowserNotificationService;
 use App\Service\BrowserPushConfig;
 use App\Service\BrowserPushNotificationProcessor;
+use App\Service\BrowserPushPreferenceService;
 use App\Service\Mailer;
 use App\Service\PushGatewayInterface;
 use DateTime;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
@@ -33,6 +35,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class SendNotificationsCommandTest extends TestCase
 {
+    private int $nextMemberId = 1;
+
     public function testProcessesBrowserPushQueueWhenForumQueueIsEmpty(): void
     {
         $postNotificationRepository = $this->createMock(PostNotificationRepository::class);
@@ -65,7 +69,8 @@ class SendNotificationsCommandTest extends TestCase
                 new BrowserPushConfig('', '', ''),
                 $this->createStub(PushGatewayInterface::class),
                 $this->createStub(TranslatorInterface::class),
-                new NullLogger()
+                new NullLogger(),
+                $this->preferenceService()
             ),
             $this->createStub(UrlGeneratorInterface::class),
             $browserPushNotificationProcessor,
@@ -140,7 +145,8 @@ class SendNotificationsCommandTest extends TestCase
                 new BrowserPushConfig('mailto:test@example.org', 'public-key', 'private-key'),
                 $this->createStub(PushGatewayInterface::class),
                 $this->createStub(TranslatorInterface::class),
-                new NullLogger()
+                new NullLogger(),
+                $this->preferenceService()
             ),
             $urlGenerator,
             $browserPushNotificationProcessor,
@@ -190,7 +196,8 @@ class SendNotificationsCommandTest extends TestCase
                 new BrowserPushConfig('', '', ''),
                 $this->createStub(PushGatewayInterface::class),
                 $this->createStub(TranslatorInterface::class),
-                new NullLogger()
+                new NullLogger(),
+                $this->preferenceService()
             ),
             $this->createStub(UrlGeneratorInterface::class),
             $browserPushNotificationProcessor,
@@ -237,6 +244,7 @@ class SendNotificationsCommandTest extends TestCase
             ->setStatus(MemberStatusType::ACTIVE)
             ->setLocale('en')
         ;
+        $this->setPrivateProperty($member, 'id', $this->nextMemberId++);
         $this->setPrivateProperty($member, 'preferredLanguage', $language);
 
         return $member;
@@ -246,5 +254,19 @@ class SendNotificationsCommandTest extends TestCase
     {
         $reflectionProperty = new ReflectionProperty($object, $property);
         $reflectionProperty->setValue($object, $value);
+    }
+
+    private function preferenceService(): BrowserPushPreferenceService
+    {
+        $connection = $this->createStub(Connection::class);
+        $connection->method('fetchAssociative')->willReturn([
+            'id' => 1,
+            'DefaultValue' => BrowserPushPreferenceService::VALUE_ALWAYS,
+        ]);
+        $connection->method('fetchOne')->willReturn(BrowserPushPreferenceService::VALUE_ALWAYS);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('getConnection')->willReturn($connection);
+
+        return new BrowserPushPreferenceService($entityManager);
     }
 }

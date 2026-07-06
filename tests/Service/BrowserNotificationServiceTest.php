@@ -10,6 +10,7 @@ use App\Service\BrowserNotificationMessage;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
 use App\Service\BrowserPushConfig;
+use App\Service\BrowserPushPreferenceService;
 use App\Service\PushGatewayInterface;
 use App\Service\PushSendReport;
 use Doctrine\DBAL\Connection;
@@ -25,6 +26,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BrowserNotificationServiceTest extends TestCase
 {
+    private int $nextMemberId = 1;
+
     public function testDoesNothingWhenDisabled(): void
     {
         $entityManager = $this->createMock(EntityManagerInterface::class);
@@ -81,7 +84,40 @@ class BrowserNotificationServiceTest extends TestCase
         $entityManager->expects($this->never())->method('persist');
 
         $service = $this->service($entityManager, $this->createStub(PushGatewayInterface::class));
-        $service->queue(new Member(), $this->payload());
+        $service->queue($this->member('receiver'), $this->payload());
+    }
+
+    public function testQueuesOpenOnlyPayloadWithoutWebPushDelivery(): void
+    {
+        $receiver = $this->member('receiver');
+        $entityManager = $this->createMock(EntityManagerInterface::class);
+        $persistedEntities = [];
+        $entityManager
+            ->expects($this->never())
+            ->method('getRepository')
+        ;
+        $entityManager
+            ->expects($this->once())
+            ->method('persist')
+            ->willReturnCallback(static function (object $entity) use (&$persistedEntities): void {
+                $persistedEntities[] = $entity;
+            })
+        ;
+        $entityManager->expects($this->once())->method('flush');
+
+        $service = $this->service(
+            $entityManager,
+            $this->createStub(PushGatewayInterface::class),
+            preferenceService: $this->preferenceService('OpenOnly')
+        );
+        $service->queue($receiver, $this->payload());
+
+        self::assertCount(1, $persistedEntities);
+        self::assertInstanceOf(BrowserPushNotification::class, $persistedEntities[0]);
+        self::assertSame($receiver, $persistedEntities[0]->getReceiver());
+        self::assertSame(BrowserPushNotification::STATUS_OPEN_ONLY, $persistedEntities[0]->getStatus());
+        self::assertSame('message', $persistedEntities[0]->getType());
+        self::assertSame('/conversation/123', $persistedEntities[0]->getUrl());
     }
 
     public function testQueueFailureIsLoggedAndSwallowed(): void
@@ -99,7 +135,7 @@ class BrowserNotificationServiceTest extends TestCase
         );
 
         $service = $this->service($entityManager, $this->createStub(PushGatewayInterface::class), logger: $logger);
-        $service->queue(new Member(), $this->payload());
+        $service->queue($this->member('receiver'), $this->payload());
     }
 
     public function testSendsTranslatedPayloadToDeliverySubscription(): void
@@ -250,6 +286,7 @@ class BrowserNotificationServiceTest extends TestCase
         ?BrowserPushConfig $config = null,
         ?TranslatorInterface $translator = null,
         ?LoggerInterface $logger = null,
+        ?BrowserPushPreferenceService $preferenceService = null,
     ): BrowserNotificationService {
         return new BrowserNotificationService(
             $entityManager,
@@ -257,6 +294,7 @@ class BrowserNotificationServiceTest extends TestCase
             $gateway,
             $translator ?? $this->translator(),
             $logger ?? new NullLogger(),
+            $preferenceService ?? $this->preferenceService(),
             $enabled
         );
     }
@@ -264,6 +302,20 @@ class BrowserNotificationServiceTest extends TestCase
     private function configuredPush(): BrowserPushConfig
     {
         return new BrowserPushConfig('mailto:test@example.org', 'public-key', 'private-key');
+    }
+
+    private function preferenceService(string $value = 'Always'): BrowserPushPreferenceService
+    {
+        $connection = $this->createStub(Connection::class);
+        $connection->method('fetchAssociative')->willReturn([
+            'id' => 1,
+            'DefaultValue' => 'Always',
+        ]);
+        $connection->method('fetchOne')->willReturn($value);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('getConnection')->willReturn($connection);
+
+        return new BrowserPushPreferenceService($entityManager);
     }
 
     /**
@@ -326,6 +378,7 @@ class BrowserNotificationServiceTest extends TestCase
         $member = new Member();
         $member->setUsername($username);
         $member->setLocale($locale);
+        $this->setMemberId($member, $this->nextMemberId++);
 
         return $member;
     }

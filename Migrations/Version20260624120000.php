@@ -115,8 +115,8 @@ final class Version20260624120000 extends AbstractMigration
                     'BrowserNotificationsDesc',
                     'This preference stores if the member wants browser push notifications.',
                     CURRENT_TIMESTAMP,
-                    'Yes',
-                    'Yes;No',
+                    'Always',
+                    'No;OpenOnly;Always',
                     'Normal'
                 )
             ");

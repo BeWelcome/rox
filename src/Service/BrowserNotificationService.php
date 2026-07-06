@@ -20,6 +20,7 @@ final readonly class BrowserNotificationService
         private PushGatewayInterface $gateway,
         private TranslatorInterface $translator,
         private LoggerInterface $logger,
+        private BrowserPushPreferenceService $browserPushPreferenceService,
         private bool $enabled = true,
     ) {
     }
@@ -31,8 +32,8 @@ final readonly class BrowserNotificationService
         }
 
         try {
-            $subscriptions = $this->findSubscriptions($receiver);
-            if ([] === $subscriptions) {
+            $preferenceValue = $this->browserPushPreferenceService->getValue($receiver);
+            if (BrowserPushPreferenceService::VALUE_NO === $preferenceValue) {
                 return;
             }
 
@@ -42,6 +43,19 @@ final readonly class BrowserNotificationService
                 ->setSenderUsername($payload->getSenderUsername())
                 ->setUrl($payload->getUrl())
             ;
+
+            if (BrowserPushPreferenceService::VALUE_OPEN_ONLY === $preferenceValue) {
+                $notification->setStatus(BrowserPushNotification::STATUS_OPEN_ONLY);
+                $this->entityManager->persist($notification);
+                $this->entityManager->flush();
+
+                return;
+            }
+
+            $subscriptions = $this->findSubscriptions($receiver);
+            if ([] === $subscriptions) {
+                return;
+            }
 
             $this->entityManager->persist($notification);
             foreach ($subscriptions as $subscription) {

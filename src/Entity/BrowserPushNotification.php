@@ -19,6 +19,7 @@ class BrowserPushNotification
     public const string STATUS_SENT = 'Sent';
     public const string STATUS_FAILED = 'Failed';
     public const string STATUS_FROZEN = 'Freeze';
+    public const string STATUS_OPEN_ONLY = 'OpenOnly';
 
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]

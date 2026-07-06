@@ -1,4 +1,4 @@
-{% if browser_push_enabled|default(false) and browser_push_preference|default('No') == 'Yes' %}
+{% if browser_push_enabled|default(false) and browser_push_preference|default('No') == 'Always' %}
   <div hidden
        data-browser-push-trigger-config
        data-browser-push-configured="1"

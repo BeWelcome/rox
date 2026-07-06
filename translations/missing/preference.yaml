@@ -57,9 +57,13 @@ preferencebrowsernotifications:
     - Browser notifications
     - Section header for the preference that allows members to receive browser push notifications
 browsernotificationsdesc:
-    - If set to Yes, BeWelcome will send you browser notifications for new messages and requests.
+    - Choose whether BeWelcome should send browser notifications for new messages and requests.
     - Help text for the preference Browser notifications
-preferencebrowsernotificationsyes:
-    - '@yes'
 preferencebrowsernotificationsno:
-    - '@no'
+    - "No"
+preferencebrowsernotificationsopenonly:
+    - Only when BeWelcome is open
+    - Browser notifications preference option
+preferencebrowsernotificationsalways:
+    - Always
+    - Browser notifications preference option

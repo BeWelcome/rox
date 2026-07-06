@@ -81,7 +81,7 @@
             </li>
             {# conversations #}
             <li class="nav-item topbar-messages">
-                <div id="conversationCount" class="nav-link topbar-counter px-0" data-count="-1">
+                <div id="conversationCount" class="nav-link topbar-counter px-0" data-count="-1" data-member-id="{{ loggedInMember.id }}">
                     <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="topbar-counter__link text-white">
                         <span class="topbar-counter__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
                         <span class="badge topbar-counter__badge"><i class="fa fa-fw fa-spinner"></i></span>

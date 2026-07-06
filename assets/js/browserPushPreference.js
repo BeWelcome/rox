@@ -82,7 +82,10 @@ async function maybeSubscribeCurrentBrowser(element, permissionPromise = null) {
             return null
         }
 
-        const registration = await navigator.serviceWorker.ready
+        const registration = await withTimeout(navigator.serviceWorker.ready, BROWSER_PUSH_SUBSCRIBE_TIMEOUT_MS)
+        if (!registration) {
+            return null
+        }
 
         return await createOrUpdateBrowserPushSubscription(element, registration)
     } catch (error) {
@@ -96,7 +99,10 @@ async function unsubscribeCurrentBrowser(element) {
     }
 
     try {
-        const registration = await navigator.serviceWorker.ready
+        const registration = await withTimeout(navigator.serviceWorker.ready, BROWSER_PUSH_SUBSCRIBE_TIMEOUT_MS)
+        if (!registration) {
+            return
+        }
         const subscription = await registration.pushManager.getSubscription()
         if (subscription) {
             await subscription.unsubscribe()

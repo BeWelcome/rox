@@ -1,8 +1,12 @@
-const browserNotificationLastIdKey = 'bewelcomeBrowserNotificationLastId';
-const browserNotificationInterval = 120000;
+const browserNotificationLastIdKeyPrefix = 'bewelcomeBrowserNotificationLastId:';
+const browserNotificationDefaultInterval = 600000;
+const browserNotificationOpenOnlyInterval = 120000;
+const browserNotificationMemoryLastIds = {};
+let browserNotificationIntervalId = null;
+let browserNotificationCurrentInterval = browserNotificationDefaultInterval;
 
 function updateCount() {
-    const browserNotificationLastId = localStorage.getItem(browserNotificationLastIdKey) || 0;
+    const browserNotificationLastId = getBrowserNotificationLastId(getBrowserNotificationMemberId());
     fetch('/count/conversations/unread?browserNotificationSince=' + encodeURIComponent(browserNotificationLastId), {
         method: 'POST',
         headers: {
@@ -25,6 +29,7 @@ function updateCount() {
             }
         }
         showBrowserNotifications(data);
+        updateBrowserNotificationInterval(data && data.browserNotification ? browserNotificationOpenOnlyInterval : browserNotificationDefaultInterval);
     })
     .catch(error => {
         console.error('Error fetching unread count:', error);
@@ -37,16 +42,17 @@ function showBrowserNotifications(data) {
     }
 
     const latestId = data.browserNotification.latestId || 0;
-    const previousLastId = localStorage.getItem(browserNotificationLastIdKey);
+    const memberId = data.browserNotification.memberId || getBrowserNotificationMemberId();
+    const previousLastId = getBrowserNotificationLastId(memberId);
     if (!previousLastId) {
         if (latestId) {
-            localStorage.setItem(browserNotificationLastIdKey, latestId);
+            setBrowserNotificationLastId(memberId, latestId);
         }
         return;
     }
 
     if (!('Notification' in window) || Notification.permission !== 'granted') {
-        localStorage.setItem(browserNotificationLastIdKey, latestId);
+        setBrowserNotificationLastId(memberId, latestId);
         return;
     }
 
@@ -67,10 +73,62 @@ function showBrowserNotifications(data) {
         };
     });
 
-    localStorage.setItem(browserNotificationLastIdKey, latestId);
+    setBrowserNotificationLastId(memberId, latestId);
 }
 
-const interval = setInterval(function () { updateCount(); }, browserNotificationInterval);
+function getBrowserNotificationMemberId() {
+    const conversationCount = document.getElementById('conversationCount');
+
+    return conversationCount ? conversationCount.dataset.memberId || '' : '';
+}
+
+function getBrowserNotificationLastId(memberId) {
+    if (!memberId) {
+        return 0;
+    }
+
+    const value = getBrowserNotificationStoredValue(browserNotificationLastIdKeyPrefix + memberId);
+    const lastId = Number(value);
+
+    return Number.isFinite(lastId) ? lastId : 0;
+}
+
+function setBrowserNotificationLastId(memberId, lastId) {
+    if (!memberId) {
+        return;
+    }
+
+    setBrowserNotificationStoredValue(browserNotificationLastIdKeyPrefix + memberId, lastId);
+}
+
+function getBrowserNotificationStoredValue(key) {
+    try {
+        return window.localStorage.getItem(key) || browserNotificationMemoryLastIds[key] || null;
+    } catch (error) {
+        return browserNotificationMemoryLastIds[key] || null;
+    }
+}
+
+function setBrowserNotificationStoredValue(key, value) {
+    browserNotificationMemoryLastIds[key] = String(value);
+    try {
+        window.localStorage.setItem(key, value);
+    } catch (error) {
+        // Storage can be blocked; the in-memory marker still prevents duplicates in this tab.
+    }
+}
+
+function updateBrowserNotificationInterval(interval) {
+    if (interval === browserNotificationCurrentInterval && browserNotificationIntervalId) {
+        return;
+    }
+
+    window.clearInterval(browserNotificationIntervalId);
+    browserNotificationCurrentInterval = interval;
+    browserNotificationIntervalId = window.setInterval(function () { updateCount(); }, interval);
+}
+
+updateBrowserNotificationInterval(browserNotificationDefaultInterval);
 
 // Initial call
 updateCount();

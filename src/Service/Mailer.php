@@ -7,7 +7,7 @@ use App\Entity\FeedbackCategory;
 use App\Entity\Friend;
 use App\Entity\Member;
 use App\Entity\Newsletter;
-use App\Entity\Trip;
+use App\Entity\Subtrip;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -190,8 +190,9 @@ class Mailer
         );
     }
 
-    public function sendTripNotificationEmail(Member $receiver, Trip $trip): bool
+    public function sendTripNotificationEmail(Member $receiver, Subtrip $subtrip): bool
     {
+        $trip = $subtrip->getTrip();
         $sender = $trip->getCreator();
 
         return $this->sendTemplateEmail(
@@ -206,6 +207,7 @@ class Mailer
                         'username' => $sender->getUsername(),
                     ],
                 ],
+                'subtrip' => $subtrip,
                 'trip' => $trip,
             ]
         );

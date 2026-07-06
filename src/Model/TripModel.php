@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Entity\Member;
 use App\Entity\MemberSubtripHidden;
-use App\Entity\MemberTripNotificationSent;
+use App\Entity\MemberSubtripNotificationSent;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -160,13 +160,20 @@ class TripModel
 
     public function notifyHostsAboutTrip(Trip $trip): void
     {
-        $this->sendTripNotifications($trip, [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY]);
+        foreach ($trip->getSubtrips() as $subtrip) {
+            $this->notifyHostsAboutVisitors($subtrip);
+        }
+    }
+
+    public function notifyHostsAboutVisitors(Subtrip $subtrip): int
+    {
+        return $this->sendSubtripNotifications($subtrip, [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY]);
     }
 
     public function sendScheduledTripNotifications(
         string $frequency,
-        DateTimeInterface $since,
-        DateTimeInterface $until,
+        DateTimeInterface $createdSince,
+        DateTimeInterface $createdUntil,
     ): int {
         if (!\in_array($frequency, self::SCHEDULED_TRIP_NOTIFICATIONS, true)) {
             throw new InvalidArgumentException('Unsupported trip notification frequency.');
@@ -174,11 +181,13 @@ class TripModel
 
         /** @var TripRepository $tripRepository */
         $tripRepository = $this->entityManager->getRepository(Trip::class);
-        $trips = $tripRepository->findTripsCreatedBetween($since, $until);
+        $trips = $tripRepository->findTripsCreatedBetween($createdSince, $createdUntil);
 
         $sent = 0;
         foreach ($trips as $trip) {
-            $sent += $this->sendTripNotifications($trip, [$frequency]);
+            foreach ($trip->getSubtrips() as $subtrip) {
+                $sent += $this->sendSubtripNotifications($subtrip, [$frequency]);
+            }
         }
 
         return $sent;
@@ -218,17 +227,17 @@ class TripModel
         return $newTrip;
     }
 
-    private function sendTripNotifications(Trip $trip, array $notificationValues): int
+    private function sendSubtripNotifications(Subtrip $subtrip, array $notificationValues): int
     {
         /** @var SubtripRepository $repository */
         $repository = $this->entityManager->getRepository(Subtrip::class);
-        $hosts = $repository->getMembersToNotifyAboutTrip($trip, $notificationValues);
+        $hosts = $repository->getMembersToNotifyAboutSubtrip($subtrip, $notificationValues);
 
         if ([] === $hosts) {
             return 0;
         }
 
-        $sentRepository = $this->entityManager->getRepository(MemberTripNotificationSent::class);
+        $sentRepository = $this->entityManager->getRepository(MemberSubtripNotificationSent::class);
         $sent = [];
         $sentCount = 0;
         foreach ($hosts as $host) {
@@ -238,21 +247,21 @@ class TripModel
             }
 
             $sent[$hostId] = true;
-            $lockName = $this->acquireTripNotificationLock($host, $trip);
+            $lockName = $this->acquireSubtripNotificationLock($host, $subtrip);
             if (null === $lockName) {
                 continue;
             }
 
             try {
-                if (null !== $sentRepository->findOneBy(['member' => $host, 'trip' => $trip])) {
+                if (null !== $sentRepository->findOneBy(['member' => $host, 'subtrip' => $subtrip])) {
                     continue;
                 }
 
-                if (true !== $this->mailer?->sendTripNotificationEmail($host, $trip)) {
+                if (true !== $this->mailer?->sendTripNotificationEmail($host, $subtrip)) {
                     continue;
                 }
 
-                $this->entityManager->persist(new MemberTripNotificationSent($host, $trip));
+                $this->entityManager->persist(new MemberSubtripNotificationSent($host, $subtrip));
                 $this->entityManager->flush();
                 ++$sentCount;
             } finally {
@@ -263,9 +272,9 @@ class TripModel
         return $sentCount;
     }
 
-    private function acquireTripNotificationLock(Member $member, Trip $trip): ?string
+    private function acquireSubtripNotificationLock(Member $member, Subtrip $subtrip): ?string
     {
-        $lockName = \sprintf('trip-notification:%d:%d', $member->getId(), $trip->getId());
+        $lockName = \sprintf('member-subtrip-notification-sent:%d:%d', $member->getId(), $subtrip->getId());
         $locked = $this->entityManager->getConnection()->fetchOne('SELECT GET_LOCK(?, 0)', [$lockName]);
 
         return 1 === (int) $locked ? $lockName : null;

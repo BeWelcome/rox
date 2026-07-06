@@ -48,9 +48,9 @@ class SendTripNotificationsCommand extends Command
         }
 
         [$preferenceValue, $period] = self::FREQUENCIES[$frequency];
-        $until = new DateTimeImmutable();
-        $since = $until->sub(new DateInterval($period));
-        $sent = $this->tripModel->sendScheduledTripNotifications($preferenceValue, $since, $until);
+        $createdUntil = new DateTimeImmutable();
+        $createdSince = $createdUntil->sub(new DateInterval($period));
+        $sent = $this->tripModel->sendScheduledTripNotifications($preferenceValue, $createdSince, $createdUntil);
 
         $io->success(\sprintf('Sent %d trip notification emails.', $sent));
 

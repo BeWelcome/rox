@@ -148,7 +148,7 @@ class SignupFormFinalizeType extends AbstractType
                 'label' => 'label.trips_notifications',
                 'help' => 'help.trips_notifications',
                 'choices' => [
-                    'trips.no' => Preference::TRIP_NOTIFICATIONS_NEVER,
+                    'trips.never' => Preference::TRIP_NOTIFICATIONS_NEVER,
                     'trips.immediately' => Preference::TRIP_NOTIFICATIONS_IMMEDIATELY,
                     'trips.daily' => Preference::TRIP_NOTIFICATIONS_DAILY,
                     'trips.weekly' => Preference::TRIP_NOTIFICATIONS_WEEKLY,

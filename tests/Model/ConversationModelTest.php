@@ -106,6 +106,20 @@ class ConversationModelTest extends TestCase
         $this->assertEquals(SpamInfoType::SPAM_BLOCKED_WORD, $message->getSpamInfo());
     }
 
+    public function testFormatConversationDetectsUppercaseObfuscatedAt(): void
+    {
+        $message = new Message();
+        $message->setMessage('TEST (AT) EXAMPLE.COM');
+        $message->setStatus(MessageStatusType::SENT);
+        $message->setFolder(InFolderType::NORMAL);
+
+        $this->model->formatConversation($message);
+
+        $this->assertEquals(InFolderType::SPAM, $message->getFolder());
+        $this->assertEquals(MessageStatusType::CHECK, $message->getStatus());
+        $this->assertEquals(SpamInfoType::SPAM_BLOCKED_WORD, $message->getSpamInfo());
+    }
+
     public function testFormatConversationIgnoresCleanMessages(): void
     {
         $message = new Message();

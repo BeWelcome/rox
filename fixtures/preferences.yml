@@ -221,6 +221,6 @@ App\Entity\Preference:
         codeDescription: 'trips.notifications'
         description: 'How often the member wants notifications for trips in their area'
         created: <DateTime()>
-        DefaultValue: No
-        PossibleValues: No;Immediately;Daily;Weekly;Monthly
+        DefaultValue: Never
+        PossibleValues: Never;Immediately;Daily;Weekly;Monthly
         Status: 'Normal'

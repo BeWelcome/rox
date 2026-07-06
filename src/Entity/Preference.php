@@ -35,7 +35,7 @@ class Preference
     public const FORUM_ORDER_LIST_ASC = 'PreferenceForumOrderListAsc';
     public const TRIPS_VICINITY_RADIUS = 'TripLegsVicinityRadius';
     public const TRIP_NOTIFICATIONS = 'TripsNotifications';
-    public const TRIP_NOTIFICATIONS_NEVER = 'No';
+    public const TRIP_NOTIFICATIONS_NEVER = 'Never';
     public const TRIP_NOTIFICATIONS_IMMEDIATELY = 'Immediately';
     public const TRIP_NOTIFICATIONS_DAILY = 'Daily';
     public const TRIP_NOTIFICATIONS_WEEKLY = 'Weekly';

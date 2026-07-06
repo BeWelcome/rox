@@ -59,8 +59,8 @@ tripsnotifications:
 trips.notifications:
     - Choose whether to be notified when members add trips in your area.
     - Help text on the preferences page for trip notifications.
-tripsnotificationsno:
-    - '@no'
+tripsnotificationsnever:
+    - Never
     - Option on the preferences page for trip notifications.
 tripsnotificationsimmediately:
     - Immediately

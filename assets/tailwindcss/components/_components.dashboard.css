@@ -22,6 +22,31 @@
 	overflow: hidden;
 }
 
+.c-dashboard__trip-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
+	justify-content: center;
+	gap: 4px;
+	width: 68px;
+	margin-left: auto;
+	flex-shrink: 0;
+}
+
+.c-dashboard__trip-actions form {
+	display: flex;
+	margin: 0;
+}
+
+@media (max-width: 480px) {
+	.c-dashboard__item--trip {
+		height: auto;
+		min-height: 80px;
+		padding-top: 8px;
+		padding-bottom: 8px;
+	}
+}
+
 .c-dashboard__message-item {
   display: grid;
   align-items: center;
@@ -33,5 +58,3 @@
   overflow: hidden;
   grid-template-columns: 80px auto 16px;
 }
-
-

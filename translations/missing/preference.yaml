@@ -53,3 +53,24 @@ preference.allow.no.picture:
 preference.allow.no.about_me:
     - If set to 'No' you will only get requests or invitations from members who've written something about themselves (in about me).
     - Description on the preference page
+tripsnotifications:
+    - Trip notifications
+    - Label on the preferences page for trip notifications.
+trips.notifications:
+    - Choose whether to be notified when members add trips in your area.
+    - Help text on the preferences page for trip notifications.
+tripsnotificationsnever:
+    - Never
+    - Option on the preferences page for trip notifications.
+tripsnotificationsimmediately:
+    - Immediately
+    - Option on the preferences page for trip notifications.
+tripsnotificationsdaily:
+    - Daily
+    - Option on the preferences page for trip notifications.
+tripsnotificationsweekly:
+    - Weekly
+    - Option on the preferences page for trip notifications.
+tripsnotificationsmonthly:
+    - Monthly
+    - Option on the preferences page for trip notifications.

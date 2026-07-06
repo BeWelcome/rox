@@ -3,20 +3,33 @@
 namespace App\Model;
 
 use App\Entity\Member;
+use App\Entity\MemberSubtripHidden;
+use App\Entity\MemberSubtripNotificationSent;
 use App\Entity\Preference;
+use App\Entity\Subtrip;
 use App\Entity\Trip;
+use App\Repository\SubtripRepository;
 use App\Repository\TripRepository;
+use App\Service\Mailer;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class TripModel
 {
     private const array ALLOWED_TRIPS_RADIUS = [0, 5, 10, 20, 50, 100];
+    private const array SCHEDULED_TRIP_NOTIFICATIONS = [
+        Preference::TRIP_NOTIFICATIONS_DAILY,
+        Preference::TRIP_NOTIFICATIONS_WEEKLY,
+        Preference::TRIP_NOTIFICATIONS_MONTHLY,
+    ];
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly ?Mailer $mailer = null,
     ) {
     }
 
@@ -134,6 +147,52 @@ class TripModel
         $this->entityManager->flush();
     }
 
+    public function markSubtripAsHidden(Member $member, Subtrip $subtrip): void
+    {
+        $repository = $this->entityManager->getRepository(MemberSubtripHidden::class);
+        $hidden = $repository->findOneBy(['member' => $member, 'subtrip' => $subtrip]);
+
+        if (null === $hidden) {
+            $this->entityManager->persist(new MemberSubtripHidden($member, $subtrip));
+            $this->entityManager->flush();
+        }
+    }
+
+    public function notifyHostsAboutTrip(Trip $trip): void
+    {
+        foreach ($trip->getSubtrips() as $subtrip) {
+            $this->notifyHostsAboutVisitors($subtrip);
+        }
+    }
+
+    public function notifyHostsAboutVisitors(Subtrip $subtrip): int
+    {
+        return $this->sendSubtripNotifications($subtrip, [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY]);
+    }
+
+    public function sendScheduledTripNotifications(
+        string $frequency,
+        DateTimeInterface $createdSince,
+        DateTimeInterface $createdUntil,
+    ): int {
+        if (!\in_array($frequency, self::SCHEDULED_TRIP_NOTIFICATIONS, true)) {
+            throw new InvalidArgumentException('Unsupported trip notification frequency.');
+        }
+
+        /** @var TripRepository $tripRepository */
+        $tripRepository = $this->entityManager->getRepository(Trip::class);
+        $trips = $tripRepository->findTripsCreatedBetween($createdSince, $createdUntil);
+
+        $sent = 0;
+        foreach ($trips as $trip) {
+            foreach ($trip->getSubtrips() as $subtrip) {
+                $sent += $this->sendSubtripNotifications($subtrip, [$frequency]);
+            }
+        }
+
+        return $sent;
+    }
+
     public function hasTripExpired(Trip $trip)
     {
         return $trip->isExpired();
@@ -166,5 +225,63 @@ class TripModel
         $em->flush();
 
         return $newTrip;
+    }
+
+    private function sendSubtripNotifications(Subtrip $subtrip, array $notificationValues): int
+    {
+        /** @var SubtripRepository $repository */
+        $repository = $this->entityManager->getRepository(Subtrip::class);
+        $hosts = $repository->getMembersToNotifyAboutSubtrip($subtrip, $notificationValues);
+
+        if ([] === $hosts) {
+            return 0;
+        }
+
+        $sentRepository = $this->entityManager->getRepository(MemberSubtripNotificationSent::class);
+        $sent = [];
+        $sentCount = 0;
+        foreach ($hosts as $host) {
+            $hostId = $host->getId();
+            if (isset($sent[$hostId])) {
+                continue;
+            }
+
+            $sent[$hostId] = true;
+            $lockName = $this->acquireSubtripNotificationLock($host, $subtrip);
+            if (null === $lockName) {
+                continue;
+            }
+
+            try {
+                if (null !== $sentRepository->findOneBy(['member' => $host, 'subtrip' => $subtrip])) {
+                    continue;
+                }
+
+                if (true !== $this->mailer?->sendTripNotificationEmail($host, $subtrip)) {
+                    continue;
+                }
+
+                $this->entityManager->persist(new MemberSubtripNotificationSent($host, $subtrip));
+                $this->entityManager->flush();
+                ++$sentCount;
+            } finally {
+                $this->releaseTripNotificationLock($lockName);
+            }
+        }
+
+        return $sentCount;
+    }
+
+    private function acquireSubtripNotificationLock(Member $member, Subtrip $subtrip): ?string
+    {
+        $lockName = \sprintf('member-subtrip-notification-sent:%d:%d', $member->getId(), $subtrip->getId());
+        $locked = $this->entityManager->getConnection()->fetchOne('SELECT GET_LOCK(?, 0)', [$lockName]);
+
+        return 1 === (int) $locked ? $lockName : null;
+    }
+
+    private function releaseTripNotificationLock(string $lockName): void
+    {
+        $this->entityManager->getConnection()->fetchOne('SELECT RELEASE_LOCK(?)', [$lockName]);
     }
 }

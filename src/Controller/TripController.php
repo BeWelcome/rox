@@ -22,6 +22,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TripController extends AbstractController
@@ -100,6 +101,7 @@ class TripController extends AbstractController
 
                 $entityManager->persist($trip);
                 $entityManager->flush();
+                $this->tripModel->notifyHostsAboutTrip($trip);
 
                 $this->addTranslatedFlash('success', 'trip.created');
 
@@ -177,6 +179,21 @@ class TripController extends AbstractController
         $newTrip = $this->tripModel->copyTrip($trip);
 
         return $this->redirectToRoute('trip_edit', ['id' => $newTrip->getId()]);
+    }
+
+    #[Route(path: '/trip/leg/{id}/hide', name: 'trip_hide', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[IsCsrfTokenValid('hide_subtrip')]
+    public function hideSubtrip(Request $request, Subtrip $subtrip): RedirectResponse
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+        $this->tripModel->markSubtripAsHidden($member, $subtrip);
+
+        if ('homepage' === $request->request->get('redirectTo')) {
+            return $this->redirectToRoute('homepage', ['_fragment' => 'visitors']);
+        }
+
+        return $this->redirectToRoute('visitors');
     }
 
     /**

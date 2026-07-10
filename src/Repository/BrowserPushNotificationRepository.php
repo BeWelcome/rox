@@ -13,7 +13,7 @@ use Throwable;
 
 class BrowserPushNotificationRepository extends EntityRepository
 {
-    private const int PROCESSING_LEASE_MINUTES = 15;
+    private const int PROCESSING_LEASE_MINUTES = 30;
 
     /**
      * @return BrowserPushNotification[]
@@ -29,7 +29,7 @@ class BrowserPushNotificationRepository extends EntityRepository
                     SELECT id
                     FROM browser_push_notification
                     WHERE status = ?
-                    ORDER BY created ASC
+                    ORDER BY created ASC, id ASC
                     LIMIT ?
                     FOR UPDATE SKIP LOCKED
                 ',
@@ -65,19 +65,12 @@ class BrowserPushNotificationRepository extends EntityRepository
         ;
     }
 
-    public function deleteTerminalNotificationsOlderThan(DateTimeInterface $olderThan): int
+    public function deleteNotificationsOlderThan(DateTimeInterface $olderThan): int
     {
         try {
             return $this->createQueryBuilder('n')
                 ->delete()
-                ->where('n.status IN (:terminalStatuses)')
-                ->andWhere('n.created < :olderThan')
-                ->setParameter('terminalStatuses', [
-                    BrowserPushNotification::STATUS_SENT,
-                    BrowserPushNotification::STATUS_FAILED,
-                    BrowserPushNotification::STATUS_FROZEN,
-                    BrowserPushNotification::STATUS_OPEN_ONLY,
-                ])
+                ->where('n.created < :olderThan')
                 ->setParameter('olderThan', $olderThan)
                 ->getQuery()
                 ->execute()
@@ -102,6 +95,22 @@ class BrowserPushNotificationRepository extends EntityRepository
                 self::PROCESSING_LEASE_MINUTES,
             ],
             [ParameterType::STRING, ParameterType::STRING, ParameterType::INTEGER]
+        );
+    }
+
+    /**
+     * @param int[] $notificationIds
+     */
+    public function renewProcessingLease(array $notificationIds): int|string
+    {
+        if ([] === $notificationIds) {
+            return 0;
+        }
+
+        return $this->getEntityManager()->getConnection()->executeStatement(
+            'UPDATE browser_push_notification SET updated = CURRENT_TIMESTAMP WHERE status = ? AND id IN (?)',
+            [BrowserPushNotification::STATUS_PROCESSING, $notificationIds],
+            [ParameterType::STRING, ArrayParameterType::INTEGER]
         );
     }
 
@@ -143,5 +152,46 @@ class BrowserPushNotificationRepository extends EntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findLatestOpenOnlyNotificationId(Member $member): int
+    {
+        return (int) $this->createQueryBuilder('n')
+            ->select('COALESCE(MAX(n.id), 0)')
+            ->where('n.receiver = :member')
+            ->andWhere('n.status = :status')
+            ->setParameter('member', $member)
+            ->setParameter('status', BrowserPushNotification::STATUS_OPEN_ONLY)
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    public function deleteNotificationsFromSender(string $username): int
+    {
+        try {
+            return $this->createQueryBuilder('n')
+                ->delete()
+                ->where('n.senderUsername = :username')
+                ->setParameter('username', $username)
+                ->getQuery()
+                ->execute()
+            ;
+        } catch (TableNotFoundException) {
+            return 0;
+        }
+    }
+
+    public function updateSenderUsername(string $oldUsername, string $newUsername): int|string
+    {
+        try {
+            return $this->getEntityManager()->getConnection()->executeStatement(
+                'UPDATE browser_push_notification SET sender_username = ? WHERE sender_username = ?',
+                [$newUsername, $oldUsername],
+                [ParameterType::STRING, ParameterType::STRING]
+            );
+        } catch (TableNotFoundException) {
+            return 0;
+        }
     }
 }

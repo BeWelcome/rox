@@ -7,8 +7,6 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
-use App\Service\BrowserPushConfig;
-use App\Service\BrowserPushPreferenceService;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
@@ -26,8 +24,6 @@ abstract class BaseRequestAndInvitationController extends AbstractController
     public function __construct(
         protected readonly BaseRequestModel $model,
         protected readonly EntityManagerInterface $entityManager,
-        protected readonly BrowserPushConfig $browserPushConfig,
-        protected readonly BrowserPushPreferenceService $browserPushPreferenceService,
     ) {
     }
 
@@ -99,23 +95,6 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         $locale = $newRequest->getReceiver()->getPreferredLanguage()->getShortCode();
 
         return $this->adjustSubject($newRequest->getRequest()->getStatus(), $subject, $locale);
-    }
-
-    protected function getBrowserPushTemplateData(Member $member): array
-    {
-        if (!$this->browserPushConfig->isConfigured()) {
-            return [
-                'browser_push_enabled' => false,
-                'browser_push_public_key' => '',
-                'browser_push_preference' => 'No',
-            ];
-        }
-
-        return [
-            'browser_push_enabled' => true,
-            'browser_push_public_key' => $this->browserPushConfig->getPublicKey(),
-            'browser_push_preference' => $this->browserPushPreferenceService->getValue($member),
-        ];
     }
 
     private function adjustSubject(int $status, string $subject, string $locale): string

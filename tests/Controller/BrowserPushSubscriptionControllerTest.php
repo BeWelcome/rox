@@ -182,13 +182,14 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $endpoint = $this->endpoint('transfer');
+        $payload = $this->validSubscription('transfer', $endpoint);
 
         $this->loginMember($client, 'member-2');
         $this->requestJson(
             $client,
             'POST',
             '/notifications/browser/subscriptions',
-            $this->validSubscription('transfer', $endpoint),
+            $payload,
             $this->csrfToken()
         );
         $this->assertResponseStatusCodeSame(201);
@@ -201,7 +202,7 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
             $client,
             'POST',
             '/notifications/browser/subscriptions',
-            $this->validSubscription('transfer-new-owner', $endpoint),
+            $payload,
             $this->csrfToken()
         );
 
@@ -209,7 +210,92 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
         $subscriptions = $this->findSubscriptions($endpoint);
         self::assertCount(1, $subscriptions);
         self::assertSame($newOwner->getId(), $subscriptions[0]->getMember()->getId());
-        self::assertNotSame($previousSubscriptionId, $subscriptions[0]->getId());
+        self::assertSame($previousSubscriptionId, $subscriptions[0]->getId());
+    }
+
+    public function testSubscribeDoesNotTransferEndpointWithoutMatchingKeyMaterial(): void
+    {
+        $client = static::createClient();
+        $endpoint = $this->endpoint('protected-transfer');
+        $originalOwner = $this->loginMember($client, 'member-2');
+        $this->requestJson(
+            $client,
+            'POST',
+            '/notifications/browser/subscriptions',
+            $this->validSubscription('protected-transfer', $endpoint),
+            $this->csrfToken()
+        );
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->loginMember($client, 'member-5');
+        $this->requestJson(
+            $client,
+            'POST',
+            '/notifications/browser/subscriptions',
+            $this->validSubscription('different-keys', $endpoint),
+            $this->csrfToken()
+        );
+
+        $this->assertResponseStatusCodeSame(409);
+        $this->assertJsonResponseSame(['error' => 'endpoint_owned'], $client);
+        self::assertSame($originalOwner->getId(), $this->findSubscription($endpoint)?->getMember()->getId());
+    }
+
+    public function testUnsubscribeRemovesCurrentBrowserEndpointAcrossAccountSwitch(): void
+    {
+        $client = static::createClient();
+        $endpoint = $this->endpoint('unsubscribe');
+        $payload = $this->validSubscription('unsubscribe', $endpoint);
+        $this->loginMember($client, 'member-2');
+        $this->requestJson($client, 'POST', '/notifications/browser/subscriptions', $payload, $this->csrfToken());
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->loginMember($client, 'member-5');
+        $this->requestJson($client, 'DELETE', '/notifications/browser/subscriptions', $payload, $this->csrfToken());
+
+        $this->assertResponseStatusCodeSame(204);
+        self::assertNull($this->findSubscription($endpoint));
+    }
+
+    public function testUnsubscribeRejectsMismatchedKeyMaterial(): void
+    {
+        $client = static::createClient();
+        $endpoint = $this->endpoint('unsubscribe-protected');
+        $this->loginMember($client, 'member-2');
+        $this->requestJson(
+            $client,
+            'POST',
+            '/notifications/browser/subscriptions',
+            $this->validSubscription('unsubscribe-protected', $endpoint),
+            $this->csrfToken()
+        );
+
+        $this->requestJson(
+            $client,
+            'DELETE',
+            '/notifications/browser/subscriptions',
+            $this->validSubscription('different-keys', $endpoint),
+            $this->csrfToken()
+        );
+
+        $this->assertResponseStatusCodeSame(409);
+        self::assertNotNull($this->findSubscription($endpoint));
+    }
+
+    public function testUnsubscribeUsesCanonicalEndpoint(): void
+    {
+        $client = static::createClient();
+        $endpoint = 'https://FCM.googleapis.com./canonical-unsubscribe';
+        $canonicalEndpoint = 'https://fcm.googleapis.com/canonical-unsubscribe';
+        $payload = $this->validSubscription('canonical-unsubscribe', $endpoint);
+        $this->loginMember($client, 'member-2');
+        $this->requestJson($client, 'POST', '/notifications/browser/subscriptions', $payload, $this->csrfToken());
+        $this->assertResponseStatusCodeSame(201);
+
+        $this->requestJson($client, 'DELETE', '/notifications/browser/subscriptions', $payload, $this->csrfToken());
+
+        $this->assertResponseStatusCodeSame(204);
+        self::assertNull($this->findSubscription($canonicalEndpoint));
     }
 
     public function testSubscribePrunesOldestMemberSubscriptions(): void
@@ -254,10 +340,10 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
         );
         $this->assertResponseStatusCodeSame(201);
 
-        $client->request('POST', '/members/update/preference', [
+        $this->requestPreferenceUpdate($client, [
             'member' => $member->getUsername(),
             'preference' => 'PreferenceBrowserNotifications',
-            'value' => 'true',
+            'value' => 'No',
         ]);
 
         $this->assertResponseIsSuccessful();
@@ -285,7 +371,7 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
         );
         $this->assertResponseStatusCodeSame(201);
 
-        $client->request('POST', '/members/update/preference', [
+        $this->requestPreferenceUpdate($client, [
             'member' => $member->getUsername(),
             'preference' => 'PreferenceBrowserNotifications',
             'value' => 'OpenOnly',
@@ -298,6 +384,20 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
                 ->getRepository(BrowserPushSubscription::class)
                 ->findBy(['member' => $member])
         );
+    }
+
+    public function testPreferenceUpdateRequiresCsrfToken(): void
+    {
+        $client = static::createClient();
+        $member = $this->loginMember($client, 'member-2');
+
+        $client->request('POST', '/members/update/preference', [
+            'member' => $member->getUsername(),
+            'preference' => 'PreferenceBrowserNotifications',
+            'value' => 'No',
+        ]);
+
+        $this->assertResponseStatusCodeSame(403);
     }
 
     public function testSubscribeRejectsWhenBrowserPushPreferenceIsNo(): void
@@ -374,6 +474,30 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
         ));
     }
 
+    public function testUnreadCountInitializesOpenOnlyCursorWithoutReturningClosedTabBacklog(): void
+    {
+        $client = static::createClient();
+        $preferenceId = $this->ensureBrowserPushPreferenceExists();
+        $member = $this->loginMember($client, 'member-2');
+        $this->setBrowserPushPreference($member, $preferenceId, 'OpenOnly');
+        $member = $this->reloadMember('member-2');
+        $latestNotification = null;
+        for ($index = 0; $index < 6; ++$index) {
+            $latestNotification = $this->storeOpenOnlyNotification(
+                $member,
+                'sender-' . $index,
+                '/conversation/' . $index
+            );
+        }
+
+        $client->request('POST', '/count/conversations/unread');
+
+        $this->assertResponseIsSuccessful();
+        $response = json_decode($client->getResponse()->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+        self::assertSame($latestNotification?->getId(), $response['browserNotification']['latestId']);
+        self::assertSame([], $response['browserNotification']['notifications']);
+    }
+
     private function requestJson(
         KernelBrowser $client,
         string $method,
@@ -408,6 +532,14 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
         );
     }
 
+    private function requestPreferenceUpdate(KernelBrowser $client, array $parameters): void
+    {
+        $client->request('POST', '/members/update/preference', $parameters, [], [
+            'HTTP_X_CSRF_TOKEN' => $this->csrfToken(),
+            'HTTP_SEC_FETCH_SITE' => 'same-origin',
+        ]);
+    }
+
     private function validSubscription(string $id, ?string $endpoint = null): array
     {
         return [
@@ -438,6 +570,8 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
 
     private function loginMember(KernelBrowser $client, string $username): Member
     {
+        $member = $this->reloadMember($username);
+        $this->setBrowserPushPreference($member, $this->ensureBrowserPushPreferenceExists(), 'Always');
         $member = $this->reloadMember($username);
         $client->loginUser($member);
 
@@ -485,6 +619,11 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
             ['PreferenceBrowserNotifications']
         );
         if (false !== $preferenceId) {
+            $connection->update('preferences', [
+                'DefaultValue' => 'No',
+                'PossibleValues' => 'No;OpenOnly;Always',
+            ], ['id' => $preferenceId]);
+
             return (int) $preferenceId;
         }
 
@@ -495,7 +634,7 @@ class BrowserPushSubscriptionControllerTest extends WebTestCase
             'codeDescription' => 'BrowserNotificationsDesc',
             'Description' => 'This preference stores if the member wants browser push notifications.',
             'created' => $now,
-            'DefaultValue' => 'Always',
+            'DefaultValue' => 'No',
             'PossibleValues' => 'No;OpenOnly;Always',
             'Status' => 'Normal',
         ]);

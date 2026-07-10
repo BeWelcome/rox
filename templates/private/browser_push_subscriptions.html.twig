@@ -13,6 +13,9 @@
                     <tr>
                         <th>{{ 'mydata.browser.push.subscriptions.endpoint.hash'|trans }}</th>
                         <th>{{ 'mydata.browser.push.subscriptions.endpoint.host'|trans }}</th>
+                        <th>{{ 'mydata.browser.push.subscriptions.endpoint'|trans }}</th>
+                        <th>{{ 'mydata.browser.push.subscriptions.public.key'|trans }}</th>
+                        <th>{{ 'mydata.browser.push.subscriptions.auth.token'|trans }}</th>
                         <th>{{ 'mydata.browser.push.subscriptions.user.agent'|trans }}</th>
                         <th>{{ 'mydata.browser.push.subscriptions.content.encoding'|trans }}</th>
                         <th>{{ 'mydata.browser.push.subscriptions.created'|trans }}</th>
@@ -25,6 +28,9 @@
                         <tr>
                             <td class="align-middle">{{ subscription.endpointHash }}</td>
                             <td class="align-middle">{{ subscription.endpointHost }}</td>
+                            <td class="align-middle">{{ subscription.endpoint }}</td>
+                            <td class="align-middle">{{ subscription.publicKey }}</td>
+                            <td class="align-middle">{{ subscription.authToken }}</td>
                             <td class="align-middle">{{ subscription.userAgent }}</td>
                             <td class="align-middle">{{ subscription.contentEncoding }}</td>
                             <td class="align-middle">{{ subscription.created|format_datetime('medium', 'short') }}</td>

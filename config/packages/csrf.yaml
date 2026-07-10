@@ -10,3 +10,4 @@ framework:
             - authenticate
             - logout
             - browser_push_subscription
+            - preference_update

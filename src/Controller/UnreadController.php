@@ -60,9 +60,17 @@ class UnreadController extends AbstractController
         TranslatorInterface $translator,
         Member $member,
     ): array {
-        $sinceId = max(0, $request->query->getInt('browserNotificationSince'));
         /** @var BrowserPushNotificationRepository $notificationRepository */
         $notificationRepository = $entityManager->getRepository(BrowserPushNotification::class);
+        if (!$request->query->has('browserNotificationSince')) {
+            return [
+                'memberId' => $member->getId(),
+                'latestId' => $notificationRepository->findLatestOpenOnlyNotificationId($member),
+                'notifications' => [],
+            ];
+        }
+
+        $sinceId = max(0, $request->query->getInt('browserNotificationSince'));
         $notifications = $notificationRepository->findOpenOnlyNotificationsSince($member, $sinceId);
         $latestId = $sinceId;
         $payloads = [];

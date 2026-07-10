@@ -39,7 +39,7 @@ final readonly class BrowserPushPreferenceService
             [Preference::BROWSER_NOTIFICATIONS]
         );
         if (false === $preference) {
-            return self::VALUE_ALWAYS;
+            return self::VALUE_NO;
         }
 
         $value = $connection->fetchOne(

@@ -83,7 +83,7 @@ mydata.browser.push.subscriptions.headline:
     - Browser notification subscriptions
     - Headline for browser push subscriptions in the personal data export.
 mydata.browser.push.subscriptions.abstract:
-    - This lists safe metadata for browser notification subscriptions connected to your account.
+    - This lists the technical browser notification subscription data connected to your account. Treat exported authentication tokens as sensitive.
     - Short paragraph explaining browser push metadata in the personal data export.
 mydata.browser.push.subscriptions.no.subscriptions:
     - You do not have any browser notification subscriptions.
@@ -94,6 +94,15 @@ mydata.browser.push.subscriptions.endpoint.hash:
 mydata.browser.push.subscriptions.endpoint.host:
     - Endpoint host
     - Table header for the browser push endpoint host.
+mydata.browser.push.subscriptions.endpoint:
+    - Endpoint
+    - Table header for the full browser push endpoint.
+mydata.browser.push.subscriptions.public.key:
+    - Public key
+    - Table header for the browser push subscription public key.
+mydata.browser.push.subscriptions.auth.token:
+    - Authentication token
+    - Table header for the browser push subscription authentication token.
 mydata.browser.push.subscriptions.user.agent:
     - Browser
     - Table header for the browser user agent stored with a push subscription.
@@ -139,3 +148,26 @@ mydata.browser.push.notifications.updated:
 mydata.browser.push.notifications.last.error:
     - Last error
     - Table header for the last browser push notification queue error.
+mydata.browser.push.deliveries.headline:
+    - Browser notification deliveries
+    - Headline for browser push delivery metadata in the personal data export.
+mydata.browser.push.deliveries.abstract:
+    - This lists delivery attempts for browser notifications connected to your account.
+    - Short paragraph explaining browser push delivery metadata.
+mydata.browser.push.deliveries.no.deliveries:
+    - You do not have any browser notification delivery records.
+    - Text shown when no browser push delivery records were found.
+mydata.browser.push.deliveries.notification:
+    - Notification ID
+mydata.browser.push.deliveries.subscription:
+    - Subscription endpoint hash
+mydata.browser.push.deliveries.status:
+    - Status
+mydata.browser.push.deliveries.attempts:
+    - Attempts
+mydata.browser.push.deliveries.created:
+    - Created
+mydata.browser.push.deliveries.updated:
+    - Updated
+mydata.browser.push.deliveries.last.error:
+    - Last error

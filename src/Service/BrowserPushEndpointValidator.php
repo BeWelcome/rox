@@ -19,6 +19,43 @@ final readonly class BrowserPushEndpointValidator
 
     public function getValidatedEndpoint(string $endpoint): ?ValidatedBrowserPushEndpoint
     {
+        $supportedEndpoint = $this->getSupportedEndpoint($endpoint);
+        if (null === $supportedEndpoint) {
+            return null;
+        }
+
+        $parts = $supportedEndpoint['parts'];
+        $host = $supportedEndpoint['host'];
+        $port = $supportedEndpoint['port'];
+        $addresses = $this->resolver->resolve($host);
+        if ([] === $addresses) {
+            return null;
+        }
+
+        foreach ($addresses as $address) {
+            if (!$this->isPublicIp($address)) {
+                return null;
+            }
+        }
+
+        return new ValidatedBrowserPushEndpoint(
+            $host,
+            $port,
+            $addresses[0],
+            $this->canonicalizeEndpoint($parts, $host, $port)
+        );
+    }
+
+    public function isSupportedEndpoint(string $endpoint): bool
+    {
+        return null !== $this->getSupportedEndpoint($endpoint);
+    }
+
+    /**
+     * @return array{parts: array, host: string, port: int}|null
+     */
+    private function getSupportedEndpoint(string $endpoint): ?array
+    {
         $parts = parse_url($endpoint);
         if (
             false === $parts
@@ -26,6 +63,7 @@ final readonly class BrowserPushEndpointValidator
             || 'https' !== strtolower((string) $parts['scheme'])
             || isset($parts['user'])
             || isset($parts['pass'])
+            || isset($parts['fragment'])
         ) {
             return null;
         }
@@ -55,23 +93,7 @@ final readonly class BrowserPushEndpointValidator
             return null;
         }
 
-        $addresses = $this->resolver->resolve($host);
-        if ([] === $addresses) {
-            return null;
-        }
-
-        foreach ($addresses as $address) {
-            if (!$this->isPublicIp($address)) {
-                return null;
-            }
-        }
-
-        return new ValidatedBrowserPushEndpoint(
-            $host,
-            $port,
-            $addresses[0],
-            $this->canonicalizeEndpoint($parts, $host, $port)
-        );
+        return ['parts' => $parts, 'host' => $host, 'port' => $port];
     }
 
     private function normalizeHost(string $host): ?string

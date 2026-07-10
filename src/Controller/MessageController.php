@@ -11,8 +11,6 @@ use App\Form\MessageToMemberType;
 use App\Model\ConversationModel;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
-use App\Service\BrowserPushConfig;
-use App\Service\BrowserPushPreferenceService;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
@@ -44,8 +42,6 @@ class MessageController extends AbstractController
         private readonly ConversationThread $conversationThread,
         private readonly EntityManagerInterface $entityManager,
         private readonly BrowserNotificationService $browserNotificationService,
-        private readonly BrowserPushConfig $browserPushConfig,
-        private readonly BrowserPushPreferenceService $browserPushPreferenceService,
     ) {
     }
 
@@ -130,7 +126,7 @@ class MessageController extends AbstractController
         return $this->render('message/message.html.twig', [
             'receiver' => $receiver,
             'form' => $messageForm->createView(),
-        ] + $this->getBrowserPushTemplateData($sender));
+        ]);
     }
 
     public function reply(Request $request, Message $message): Response
@@ -171,7 +167,7 @@ class MessageController extends AbstractController
             'receiver' => $receiver,
             'current' => $message,
             'thread' => $thread,
-        ] + $this->getBrowserPushTemplateData($sender));
+        ]);
     }
 
     /**
@@ -225,22 +221,5 @@ class MessageController extends AbstractController
         }
 
         return $message;
-    }
-
-    private function getBrowserPushTemplateData(Member $member): array
-    {
-        if (!$this->browserPushConfig->isConfigured()) {
-            return [
-                'browser_push_enabled' => false,
-                'browser_push_public_key' => '',
-                'browser_push_preference' => 'No',
-            ];
-        }
-
-        return [
-            'browser_push_enabled' => true,
-            'browser_push_public_key' => $this->browserPushConfig->getPublicKey(),
-            'browser_push_preference' => $this->browserPushPreferenceService->getValue($member),
-        ];
     }
 }

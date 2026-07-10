@@ -4,6 +4,8 @@ import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { registerRoute } from 'workbox-routing';
 import { ExpirationPlugin } from 'workbox-expiration';
 
+const BROWSER_PUSH_LOGOUT_TIMEOUT_MS = 5000;
+
 precacheAndRoute(self.__WB_MANIFEST);
 
 addEventListener('install', event => {
@@ -71,6 +73,43 @@ function getSameOriginPath(url) {
         return target.pathname + target.search + target.hash;
     } catch (error) {
         return '/';
+    }
+}
+
+registerRoute(
+    ({ request, url }) =>
+        request.mode === 'navigate' &&
+        url.origin === self.location.origin &&
+        url.pathname === '/logout',
+    async ({ request }) => {
+        await unsubscribeBrowserPushBeforeLogout();
+
+        return fetch(request);
+    },
+);
+
+async function unsubscribeBrowserPushBeforeLogout() {
+    try {
+        const subscription = await self.registration.pushManager.getSubscription();
+        if (subscription) {
+            await withTimeout(subscription.unsubscribe(), BROWSER_PUSH_LOGOUT_TIMEOUT_MS);
+        }
+    } catch (error) {
+        // Logout must still proceed if local push cleanup fails.
+    }
+}
+
+async function withTimeout(promise, timeoutMs) {
+    let timeoutId;
+    try {
+        return await Promise.race([
+            promise,
+            new Promise(resolve => {
+                timeoutId = setTimeout(resolve, timeoutMs);
+            }),
+        ]);
+    } finally {
+        clearTimeout(timeoutId);
     }
 }
 

@@ -12,7 +12,6 @@
 {% block content %}
     {% import 'macros.twig' as macros %}
     {{ macros.new_conversation_header(host, 'request.write_to') }}
-    {% include 'notifications/browser_push_action_trigger.html.twig' %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
 

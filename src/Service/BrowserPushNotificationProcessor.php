@@ -29,7 +29,11 @@ class BrowserPushNotificationProcessor
         $deliveryQueue = $this->entityManager->getRepository(BrowserPushNotificationDelivery::class);
         $scheduledNotifications = $notificationQueue->claimScheduledNotifications($batchSize);
 
-        foreach ($scheduledNotifications as $notification) {
+        foreach ($scheduledNotifications as $index => $notification) {
+            $notificationQueue->renewProcessingLease(array_map(
+                static fn (BrowserPushNotification $queuedNotification): int => $queuedNotification->getId(),
+                \array_slice($scheduledNotifications, $index)
+            ));
             $notificationStatus = BrowserPushNotification::STATUS_FROZEN;
             $receiver = $notification->getReceiver();
             $deliveries = $deliveryQueue->findForNotification($notification);
@@ -50,9 +54,6 @@ class BrowserPushNotificationProcessor
 
             $notification->setStatus($notificationStatus);
             $this->entityManager->persist($notification);
-        }
-
-        if ([] !== $scheduledNotifications) {
             $this->entityManager->flush();
         }
     }

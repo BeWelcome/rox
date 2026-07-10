@@ -25,7 +25,6 @@
     {% set myself = app.user %}
 
     {{ macros.messageheader_no_buttons(thread) }}
-    {% include 'notifications/browser_push_action_trigger.html.twig' %}
 
     {% include 'invitation/trip.summary.html.twig' with {'open': true} %}
 

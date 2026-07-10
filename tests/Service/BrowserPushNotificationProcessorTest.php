@@ -11,7 +11,6 @@ use App\Repository\BrowserPushNotificationDeliveryRepository;
 use App\Repository\BrowserPushNotificationRepository;
 use App\Service\BrowserNotificationMessage;
 use App\Service\BrowserNotificationService;
-use App\Service\BrowserPushConfig;
 use App\Service\BrowserPushNotificationProcessor;
 use App\Service\BrowserPushPreferenceService;
 use App\Service\PushGatewayInterface;
@@ -28,6 +27,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class BrowserPushNotificationProcessorTest extends TestCase
 {
     private int $nextMemberId = 1;
+    private int $nextNotificationId = 1;
     private int $nextSubscriptionId = 1;
 
     public function testSendsQueuedBrowserPushNotification(): void
@@ -203,7 +203,7 @@ class BrowserPushNotificationProcessorTest extends TestCase
     {
         $service = new BrowserNotificationService(
             $entityManager,
-            new BrowserPushConfig('mailto:test@example.org', 'public-key', 'private-key'),
+            BrowserPushTestConfig::create(),
             $gateway,
             $this->translator(),
             new NullLogger(),
@@ -227,6 +227,22 @@ class BrowserPushNotificationProcessorTest extends TestCase
             ->method('claimScheduledNotifications')
             ->with(10)
             ->willReturn($notifications)
+        ;
+        $expectedLeaseRenewals = [];
+        foreach (array_keys($notifications) as $index) {
+            $expectedLeaseRenewals[] = array_map(
+                static fn (BrowserPushNotification $notification): int => $notification->getId(),
+                \array_slice($notifications, $index)
+            );
+        }
+        $notificationRepository
+            ->expects($this->exactly(\count($notifications)))
+            ->method('renewProcessingLease')
+            ->willReturnCallback(static function (array $ids) use (&$expectedLeaseRenewals): int {
+                self::assertSame(array_shift($expectedLeaseRenewals), $ids);
+
+                return \count($ids);
+            })
         ;
         $deliveryRepository = $this->createMock(BrowserPushNotificationDeliveryRepository::class);
         $deliveryRepository
@@ -283,12 +299,15 @@ class BrowserPushNotificationProcessorTest extends TestCase
 
     private function notification(Member $receiver): BrowserPushNotification
     {
-        return new BrowserPushNotification()
+        $notification = new BrowserPushNotification()
             ->setReceiver($receiver)
             ->setType('message')
             ->setSenderUsername('sender')
             ->setUrl('/conversation/123')
         ;
+        $this->setId($notification, $this->nextNotificationId++);
+
+        return $notification;
     }
 
     private function subscription(Member $receiver, string $id = 'push'): BrowserPushSubscription

@@ -8,6 +8,8 @@ use Psr\Log\LoggerInterface;
 
 final readonly class MinishlinkPushGateway implements PushGatewayInterface
 {
+    private const int NOTIFICATION_TTL_SECONDS = 3600;
+
     public function __construct(
         private BrowserPushConfig $config,
         private BrowserPushEndpointValidator $endpointValidator,
@@ -23,6 +25,10 @@ final readonly class MinishlinkPushGateway implements PushGatewayInterface
         }
         $validatedEndpoint = $this->endpointValidator->getValidatedEndpoint($subscription->getEndpoint());
         if (null === $validatedEndpoint) {
+            if ($this->endpointValidator->isSupportedEndpoint($subscription->getEndpoint())) {
+                return PushSendReport::failed('Browser push endpoint could not be resolved safely.');
+            }
+
             return PushSendReport::rejected('Invalid browser push endpoint.');
         }
 
@@ -41,7 +47,8 @@ final readonly class MinishlinkPushGateway implements PushGatewayInterface
                 'authToken' => $subscription->getAuthToken(),
                 'contentEncoding' => $subscription->getContentEncoding() ?? 'aes128gcm',
             ]),
-            $message->toJson()
+            $message->toJson(),
+            ['TTL' => self::NOTIFICATION_TTL_SECONDS]
         );
 
         return PushSendReport::fromMessageSentReport($report);
@@ -49,22 +56,26 @@ final readonly class MinishlinkPushGateway implements PushGatewayInterface
 
     private function getClientOptions(ValidatedBrowserPushEndpoint $endpoint): array
     {
+        $clientOptions = [
+            'allow_redirects' => false,
+            'connect_timeout' => 5,
+            'timeout' => 10,
+        ];
         $pinnedIp = $endpoint->getPinnedIp();
         if (null === $pinnedIp) {
-            return ['allow_redirects' => false];
+            return $clientOptions;
         }
 
         if (filter_var($pinnedIp, \FILTER_VALIDATE_IP, \FILTER_FLAG_IPV6)) {
             $pinnedIp = '[' . $pinnedIp . ']';
         }
 
-        return [
-            'allow_redirects' => false,
-            'curl' => [
-                \CURLOPT_RESOLVE => [
-                    \sprintf('%s:%d:%s', $endpoint->getHost(), $endpoint->getPort(), $pinnedIp),
-                ],
+        $clientOptions['curl'] = [
+            \CURLOPT_RESOLVE => [
+                \sprintf('%s:%d:%s', $endpoint->getHost(), $endpoint->getPort(), $pinnedIp),
             ],
         ];
+
+        return $clientOptions;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\BrowserPushSubscriptionRepository;
 use App\Utilities\LifecycleCallbacksTrait;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Table(name: 'browser_push_subscription')]
 #[ORM\UniqueConstraint(name: 'uniq_browser_push_subscription_endpoint_hash', columns: ['endpoint_hash'])]
 #[ORM\Index(name: 'idx_browser_push_subscription_member', columns: ['member_id'])]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: BrowserPushSubscriptionRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class BrowserPushSubscription
 {

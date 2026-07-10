@@ -19,7 +19,6 @@
     {% set myself = app.user %}
 
     {{ macros.new_conversation_header(receiver, 'message.write_to') }}
-    {% include 'notifications/browser_push_action_trigger.html.twig' %}
 
     <div class="u:grid u:grid-cols-1">
         <div class="u:mb-4">

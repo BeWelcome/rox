@@ -46,11 +46,11 @@ class BrowserPushEndpointValidatorTest extends TestCase
             'fcm.googleapis.com' => ['142.250.185.10'],
         ]);
 
-        $endpoint = $validator->getValidatedEndpoint('https://FCM.googleapis.com./send?token=123#fragment');
+        $endpoint = $validator->getValidatedEndpoint('https://FCM.googleapis.com./send?token=123');
 
         self::assertNotNull($endpoint);
         self::assertSame('fcm.googleapis.com', $endpoint->getHost());
-        self::assertSame('https://fcm.googleapis.com/send?token=123#fragment', $endpoint->getCanonicalEndpoint());
+        self::assertSame('https://fcm.googleapis.com/send?token=123', $endpoint->getCanonicalEndpoint());
     }
 
     public function testRejectsMalformedEndpoint(): void
@@ -66,6 +66,11 @@ class BrowserPushEndpointValidatorTest extends TestCase
     public function testRejectsEndpointWithUserInfo(): void
     {
         self::assertNull($this->validator()->getValidatedEndpoint('https://user:password@push.example.org/push'));
+    }
+
+    public function testRejectsEndpointWithFragment(): void
+    {
+        self::assertNull($this->validator()->getValidatedEndpoint('https://fcm.googleapis.com/push#duplicate'));
     }
 
     public function testRejectsNonDefaultHttpsPort(): void
@@ -99,6 +104,7 @@ class BrowserPushEndpointValidatorTest extends TestCase
         ]);
 
         self::assertNull($validator->getValidatedEndpoint('https://fcm.googleapis.com/push'));
+        self::assertTrue($validator->isSupportedEndpoint('https://fcm.googleapis.com/push'));
     }
 
     private function validator(array $records = []): BrowserPushEndpointValidator

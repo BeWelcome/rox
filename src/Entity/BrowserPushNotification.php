@@ -7,7 +7,8 @@ use App\Utilities\LifecycleCallbacksTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'browser_push_notification')]
-#[ORM\Index(name: 'idx_browser_push_notification_status', columns: ['status'])]
+#[ORM\Index(name: 'idx_browser_push_notification_status_created', columns: ['status', 'created', 'id'])]
+#[ORM\Index(name: 'idx_browser_push_notification_member_status', columns: ['member_id', 'status', 'id'])]
 #[ORM\Entity(repositoryClass: BrowserPushNotificationRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class BrowserPushNotification

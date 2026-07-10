@@ -10,6 +10,7 @@ use App\Entity\Member;
 use App\Entity\MemberTranslation;
 use App\Logger\Logger;
 use App\Repository\BrowserPushNotificationRepository;
+use App\Repository\BrowserPushSubscriptionRepository;
 use App\Repository\MemberRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -62,6 +63,7 @@ class DataRetentionCommand extends Command
         $io->title('Running Data Retention');
 
         $this->removeOldBrowserPushNotifications();
+        $this->removeInactiveBrowserPushSubscriptions();
         $retired = $this->removeMembers($io);
 
         $io->success(\sprintf('Data of %d members has been deleted.', $retired));
@@ -83,6 +85,7 @@ class DataRetentionCommand extends Command
             /** @var Member $member */
             foreach ($members as $member) {
                 $username = $member->getUsername();
+                $this->removeBrowserPushNotificationsFromSender($username);
                 $cryptedFields = $member->getCryptedFields();
                 foreach ($cryptedFields as $cryptedField) {
                     $entityManager->remove($cryptedField);
@@ -130,7 +133,21 @@ class DataRetentionCommand extends Command
     {
         /** @var BrowserPushNotificationRepository $notificationRepository */
         $notificationRepository = $this->entityManager->getRepository(BrowserPushNotification::class);
-        $notificationRepository->deleteTerminalNotificationsOlderThan(new DateTimeImmutable('-7 days'));
+        $notificationRepository->deleteNotificationsOlderThan(new DateTimeImmutable('-7 days'));
+    }
+
+    private function removeInactiveBrowserPushSubscriptions(): void
+    {
+        /** @var BrowserPushSubscriptionRepository $subscriptionRepository */
+        $subscriptionRepository = $this->entityManager->getRepository(BrowserPushSubscription::class);
+        $subscriptionRepository->deleteInactiveSubscriptionsOlderThan(new DateTimeImmutable('-1 year'));
+    }
+
+    private function removeBrowserPushNotificationsFromSender(string $username): void
+    {
+        /** @var BrowserPushNotificationRepository $notificationRepository */
+        $notificationRepository = $this->entityManager->getRepository(BrowserPushNotification::class);
+        $notificationRepository->deleteNotificationsFromSender($username);
     }
 
     private function removeBrowserPushData(Member $member): void

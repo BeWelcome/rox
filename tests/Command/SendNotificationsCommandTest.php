@@ -19,6 +19,7 @@ use App\Service\BrowserPushNotificationProcessor;
 use App\Service\BrowserPushPreferenceService;
 use App\Service\Mailer;
 use App\Service\PushGatewayInterface;
+use App\Tests\Service\BrowserPushTestConfig;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -142,7 +143,7 @@ class SendNotificationsCommandTest extends TestCase
             $mailer,
             new BrowserNotificationService(
                 $entityManager,
-                new BrowserPushConfig('mailto:test@example.org', 'public-key', 'private-key'),
+                BrowserPushTestConfig::create(),
                 $this->createStub(PushGatewayInterface::class),
                 $this->createStub(TranslatorInterface::class),
                 new NullLogger(),

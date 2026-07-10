@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import Litepicker from 'litepicker';
 import {disableButtonOnSubmit} from './submit_button_disable';
-import {initBrowserPushTriggers} from './browserPushPreference';
 
 import '../scss/_daterangepicker.scss';
 
@@ -42,5 +41,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-initBrowserPushTriggers();
 disableButtonOnSubmit();

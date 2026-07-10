@@ -87,9 +87,9 @@ class BrowserPushSubscriptionController extends AbstractController
             $subscription instanceof BrowserPushSubscription
             && !$this->isSameMember($subscription->getMember(), $member)
         ) {
-            $this->entityManager->remove($subscription);
-            $this->entityManager->flush();
-            $subscription = null;
+            if (!$this->hasMatchingKeyMaterial($subscription, $publicKey, $authToken)) {
+                return new JsonResponse(['error' => 'endpoint_owned'], JsonResponse::HTTP_CONFLICT);
+            }
         }
         if (!$subscription instanceof BrowserPushSubscription) {
             $subscription = new BrowserPushSubscription();
@@ -117,6 +117,51 @@ class BrowserPushSubscriptionController extends AbstractController
         );
     }
 
+    #[Route(path: '/notifications/browser/subscriptions', name: 'browser_push_subscription_delete', methods: ['DELETE'])]
+    public function unsubscribe(Request $request): JsonResponse
+    {
+        $this->denyInvalidCsrf($request);
+        $payload = $this->decodePayload($request);
+        if (null === $payload) {
+            return new JsonResponse(['error' => 'invalid_json'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+
+        $endpoint = $payload['endpoint'] ?? null;
+        $publicKey = $payload['keys']['p256dh'] ?? null;
+        $authToken = $payload['keys']['auth'] ?? null;
+        if (
+            !\is_string($endpoint)
+            || '' === $endpoint
+            || self::MAX_ENDPOINT_LENGTH < mb_strlen($endpoint)
+            || !\is_string($publicKey)
+            || self::PUBLIC_KEY_LENGTH !== $this->decodedBase64UrlLength($publicKey)
+            || !\is_string($authToken)
+            || self::AUTH_TOKEN_LENGTH !== $this->decodedBase64UrlLength($authToken)
+        ) {
+            return new JsonResponse(['error' => 'invalid_subscription'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+        $validatedEndpoint = $this->endpointValidator->getValidatedEndpoint($endpoint);
+        if (null === $validatedEndpoint) {
+            return new JsonResponse(['error' => 'invalid_endpoint'], JsonResponse::HTTP_BAD_REQUEST);
+        }
+        $endpoint = $validatedEndpoint->getCanonicalEndpoint();
+
+        $subscription = $this->entityManager->getRepository(BrowserPushSubscription::class)->findOneBy([
+            'endpointHash' => BrowserPushSubscription::hashEndpoint($endpoint),
+        ]);
+        if (!$subscription instanceof BrowserPushSubscription) {
+            return new JsonResponse(status: JsonResponse::HTTP_NO_CONTENT);
+        }
+        if (!$this->hasMatchingKeyMaterial($subscription, $publicKey, $authToken)) {
+            return new JsonResponse(['error' => 'endpoint_owned'], JsonResponse::HTTP_CONFLICT);
+        }
+
+        $this->entityManager->remove($subscription);
+        $this->entityManager->flush();
+
+        return new JsonResponse(status: JsonResponse::HTTP_NO_CONTENT);
+    }
+
     private function isSameMember(Member $first, Member $second): bool
     {
         if ($first === $second) {
@@ -128,6 +173,15 @@ class BrowserPushSubscriptionController extends AbstractController
         } catch (Error) {
             return false;
         }
+    }
+
+    private function hasMatchingKeyMaterial(
+        BrowserPushSubscription $subscription,
+        string $publicKey,
+        string $authToken,
+    ): bool {
+        return hash_equals($subscription->getPublicKey(), $publicKey)
+            && hash_equals($subscription->getAuthToken(), $authToken);
     }
 
     private function pruneMemberSubscriptions(Member $member): void

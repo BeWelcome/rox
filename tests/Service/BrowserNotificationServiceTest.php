@@ -301,7 +301,7 @@ class BrowserNotificationServiceTest extends TestCase
 
     private function configuredPush(): BrowserPushConfig
     {
-        return new BrowserPushConfig('mailto:test@example.org', 'public-key', 'private-key');
+        return BrowserPushTestConfig::create();
     }
 
     private function preferenceService(string $value = 'Always'): BrowserPushPreferenceService

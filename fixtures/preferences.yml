@@ -122,7 +122,7 @@ App\Entity\Preference:
         codeDescription: 'BrowserNotificationsDesc'
         Description: 'This preference stores if the member wants browser push notifications.'
         created: <DateTime()>
-        DefaultValue: 'Always'
+        DefaultValue: 'No'
         PossibleValues: 'No;OpenOnly;Always'
         Status: 'Normal'
     GROUPS_THREADS_LANDING_PAGE:

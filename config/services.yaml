@@ -172,6 +172,10 @@ services:
             $alias: browser_push_notifications
         tags: [ 'app.member_data_extractor' ]
 
+    app.member_data_extractor.browser_push_notification_deliveries:
+        class: App\Model\MemberDataExtractor\BrowserPushNotificationDeliveriesExtractor
+        tags: [ 'app.member_data_extractor' ]
+
     app.member_data_extractor.newsletters:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
         factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]

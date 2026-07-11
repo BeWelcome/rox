@@ -120,7 +120,7 @@ class Mailer
 
         try {
             return $this->sendTemplateEmail(
-                self::SIGNUP_EMAIL_ADDRESS,
+                $this->signupEmailAddress,
                 new Address($parameters['email_address'], $receiver->getUsername()),
                 'newemail',
                 $parameters

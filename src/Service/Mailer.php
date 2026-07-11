@@ -24,18 +24,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class Mailer
 {
-    private const string NO_REPLY_EMAIL_ADDRESS = 'noreply@bewelcome.org';
-    private const string MESSAGE_EMAIL_ADDRESS = 'message@bewelcome.org';
-    private const string GROUP_EMAIL_ADDRESS = 'group@bewelcome.org';
-    private const string PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
-    private const string SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
-    private const string ACCOUNT_FEEDBACK_ADDRESS = 'account@bewelcome.org';
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
         private readonly MailerInterface $mailer,
+        private readonly string $noReplyEmailAddress = 'noreply@bewelcome.org',
+        private readonly string $messageEmailAddress = 'message@bewelcome.org',
+        private readonly string $groupEmailAddress = 'group@bewelcome.org',
+        private readonly string $passwordEmailAddress = 'password@bewelcome.org',
+        private readonly string $signupEmailAddress = 'signup@bewelcome.org',
+        private readonly string $accountFeedbackAddress = 'account@bewelcome.org',
+        private readonly string $reminderEmailAddress = 'reminder@bewelcome.org',
+        private readonly string $termsOfUseEmailAddress = 'tou@bewelcome.org',
+        private readonly string $newsletterEmailAddress = 'newsletter@bewelcome.org',
     ) {
     }
 
@@ -57,7 +59,7 @@ class Mailer
         $parameters['receiver'] = $receiver;
 
         return $this->sendTemplateEmail(
-            $this->getBeWelcomeAddress($sender, self::GROUP_EMAIL_ADDRESS),
+            $this->getBeWelcomeAddress($sender, $this->groupEmailAddress),
             $receiver,
             $template,
             $parameters
@@ -67,7 +69,7 @@ class Mailer
     public function sendGroupEmail(Member $receiver, string $template, $parameters): bool
     {
         return $this->sendTemplateEmail(
-            self::GROUP_EMAIL_ADDRESS,
+            $this->groupEmailAddress,
             $receiver,
             $template,
             $parameters
@@ -92,7 +94,7 @@ class Mailer
     public function sendPasswordResetLinkEmail(Member $receiver, $parameters): bool
     {
         return $this->sendTemplateEmail(
-            self::PASSWORD_EMAIL_ADDRESS,
+            $this->passwordEmailAddress,
             $receiver,
             'reset.password',
             $parameters
@@ -102,7 +104,7 @@ class Mailer
     public function sendSignupEmail(Member $receiver, string $template, $parameters): bool
     {
         return $this->sendTemplateEmail(
-            self::SIGNUP_EMAIL_ADDRESS,
+            $this->signupEmailAddress,
             $receiver,
             $template,
             $parameters
@@ -183,7 +185,7 @@ class Mailer
         ];
 
         return $this->sendTemplateEmail(
-            $this->getBeWelcomeAddress($requester, self::NO_REPLY_EMAIL_ADDRESS),
+            $this->getBeWelcomeAddress($requester, $this->noReplyEmailAddress),
             $receiver,
             'friendship.request',
             $parameters
@@ -196,7 +198,7 @@ class Mailer
         $sender = $trip->getCreator();
 
         return $this->sendTemplateEmail(
-            $this->getBeWelcomeAddress($sender, self::NO_REPLY_EMAIL_ADDRESS),
+            $this->getBeWelcomeAddress($sender, $this->noReplyEmailAddress),
             $receiver,
             'trip.notification.new',
             [
@@ -250,7 +252,7 @@ class Mailer
         $parameters = $this->getParametersForCommentReminder($guest, $host, 'comment.reminder.guest.subject', $host);
 
         return $this->sendTemplateEmail(
-            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
+            new Address($this->noReplyEmailAddress, 'BeWelcome'),
             $guest,
             $template,
             $parameters
@@ -262,7 +264,7 @@ class Mailer
         $parameters = $this->getParametersForCommentReminder($guest, $host, 'comment.reminder.host.subject', $guest);
 
         return $this->sendTemplateEmail(
-            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
+            new Address($this->noReplyEmailAddress, 'BeWelcome'),
             $host,
             'comment.reminder.host',
             $parameters
@@ -272,8 +274,8 @@ class Mailer
     public function sendProfileDeletionFeedback(Member $retiree, string $body): bool
     {
         return $this->sendTemplateEmail(
-            $this->getBeWelcomeAddress($retiree, self::NO_REPLY_EMAIL_ADDRESS),
-            new Address(self::ACCOUNT_FEEDBACK_ADDRESS, 'BeWelcome'),
+            $this->getBeWelcomeAddress($retiree, $this->noReplyEmailAddress),
+            new Address($this->accountFeedbackAddress, 'BeWelcome'),
             'profile.delete.feedback',
             [
                 'subject' => 'profile.delete.feedback',
@@ -290,7 +292,7 @@ class Mailer
         $parameters['comment'] = $comment;
 
         return $this->sendTemplateEmail(
-            $this->getBeWelcomeAddress($comment->getFromMember(), self::NO_REPLY_EMAIL_ADDRESS),
+            $this->getBeWelcomeAddress($comment->getFromMember(), $this->noReplyEmailAddress),
             $comment->getToMember(),
             $template,
             $parameters
@@ -303,7 +305,7 @@ class Mailer
      */
     private function getBeWelcomeAddressWithUsername(Member $sender): Address
     {
-        return new Address(self::MESSAGE_EMAIL_ADDRESS, $sender->getUsername() . ' [BeWelcome]');
+        return new Address($this->messageEmailAddress, $sender->getUsername() . ' [BeWelcome]');
     }
 
     /**
@@ -407,9 +409,9 @@ class Mailer
     private function determineSenderForNewsletter($type): Address
     {
         $sender = match ($type) {
-            'RemindToLog', 'MailToConfirmReminder', Newsletter::SUSPENSION_NOTIFICATION => new Address('reminder@bewelcome.org', 'BeWelcome'),
-            Newsletter::TERMS_OF_USE => new Address('tou@bewelcome.org', 'BeWelcome'),
-            default => new Address('newsletter@bewelcome.org', 'BeWelcome'),
+            'RemindToLog', 'MailToConfirmReminder', Newsletter::SUSPENSION_NOTIFICATION => new Address($this->reminderEmailAddress, 'BeWelcome'),
+            Newsletter::TERMS_OF_USE => new Address($this->termsOfUseEmailAddress, 'BeWelcome'),
+            default => new Address($this->newsletterEmailAddress, 'BeWelcome'),
         };
 
         return $sender;

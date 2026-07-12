@@ -5,7 +5,7 @@ namespace App\Service;
 use Minishlink\WebPush\WebPush;
 use Psr\Log\LoggerInterface;
 
-final readonly class MinishlinkBrowserPushWebPushFactory implements BrowserPushWebPushFactoryInterface
+final readonly class BrowserPushWebPushFactory implements BrowserPushWebPushFactoryInterface
 {
     public function create(array $auth, array $clientOptions, ?LoggerInterface $logger): WebPush
     {

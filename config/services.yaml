@@ -76,9 +76,9 @@ services:
         arguments:
             $batchSize: '%forum_notification_batch_size%'
 
-    App\Service\PushGatewayInterface: '@App\Service\MinishlinkPushGateway'
+    App\Service\PushGatewayInterface: '@App\Service\PushGateway'
     App\Service\BrowserPushEndpointResolverInterface: '@App\Service\DnsBrowserPushEndpointResolver'
-    App\Service\BrowserPushWebPushFactoryInterface: '@App\Service\MinishlinkBrowserPushWebPushFactory'
+    App\Service\BrowserPushWebPushFactoryInterface: '@App\Service\BrowserPushWebPushFactory'
 
     app.member_data_extractor.activities:
         class: App\Model\MemberDataExtractor\ActivitiesExtractor

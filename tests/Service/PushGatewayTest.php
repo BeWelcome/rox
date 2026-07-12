@@ -8,7 +8,7 @@ use App\Service\BrowserNotificationMessage;
 use App\Service\BrowserPushEndpointResolverInterface;
 use App\Service\BrowserPushEndpointValidator;
 use App\Service\BrowserPushWebPushFactoryInterface;
-use App\Service\MinishlinkPushGateway;
+use App\Service\PushGateway;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Minishlink\WebPush\MessageSentReport;
@@ -17,11 +17,11 @@ use Minishlink\WebPush\WebPush;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
-class MinishlinkPushGatewayTest extends TestCase
+class PushGatewayTest extends TestCase
 {
     public function testRejectsInvalidEndpointBeforeSending(): void
     {
-        $gateway = new MinishlinkPushGateway(
+        $gateway = new PushGateway(
             BrowserPushTestConfig::create(),
             new BrowserPushEndpointValidator($this->createStub(BrowserPushEndpointResolverInterface::class)),
             new NullLogger(),
@@ -41,7 +41,7 @@ class MinishlinkPushGatewayTest extends TestCase
         $resolver->method('resolve')->willReturn([]);
         $factory = $this->createMock(BrowserPushWebPushFactoryInterface::class);
         $factory->expects($this->never())->method('create');
-        $gateway = new MinishlinkPushGateway(
+        $gateway = new PushGateway(
             BrowserPushTestConfig::create(),
             new BrowserPushEndpointValidator($resolver),
             new NullLogger(),
@@ -100,7 +100,7 @@ class MinishlinkPushGatewayTest extends TestCase
             ->with('fcm.googleapis.com')
             ->willReturn(['142.250.185.10'])
         ;
-        $gateway = new MinishlinkPushGateway(
+        $gateway = new PushGateway(
             BrowserPushTestConfig::create(),
             new BrowserPushEndpointValidator($resolver),
             new NullLogger(),

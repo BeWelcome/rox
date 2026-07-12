@@ -6,7 +6,7 @@ use App\Entity\BrowserPushSubscription;
 use Minishlink\WebPush\Subscription as WebPushSubscription;
 use Psr\Log\LoggerInterface;
 
-final readonly class MinishlinkPushGateway implements PushGatewayInterface
+final readonly class PushGateway implements PushGatewayInterface
 {
     private const int NOTIFICATION_TTL_SECONDS = 3600;
 

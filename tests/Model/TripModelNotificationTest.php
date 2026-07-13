@@ -3,8 +3,8 @@
 namespace App\Tests\Model;
 
 use App\Entity\Member;
-use App\Entity\MemberSubtripHidden;
-use App\Entity\MemberSubtripNotificationSent;
+use App\Entity\MemberLegHidden;
+use App\Entity\MemberLegNotificationSent;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -22,16 +22,16 @@ use ReflectionProperty;
 
 class TripModelNotificationTest extends TestCase
 {
-    public function testMarkSubtripAsHiddenPersistsHiddenState(): void
+    public function testMarkLegAsHiddenPersistsHiddenState(): void
     {
         $member = new Member();
-        $subtrip = new Subtrip();
+        $leg = new Subtrip();
 
         $hiddenRepository = $this->createMock(EntityRepository::class);
         $hiddenRepository
             ->expects($this->once())
             ->method('findOneBy')
-            ->with(['member' => $member, 'subtrip' => $subtrip])
+            ->with(['member' => $member, 'leg' => $leg])
             ->willReturn(null)
         ;
 
@@ -39,33 +39,33 @@ class TripModelNotificationTest extends TestCase
         $entityManager
             ->expects($this->once())
             ->method('getRepository')
-            ->with(MemberSubtripHidden::class)
+            ->with(MemberLegHidden::class)
             ->willReturn($hiddenRepository)
         ;
         $entityManager
             ->expects($this->once())
             ->method('persist')
-            ->with($this->callback(static function (MemberSubtripHidden $hidden) use ($member, $subtrip): bool {
-                return $hidden->getMember() === $member && $hidden->getSubtrip() === $subtrip;
+            ->with($this->callback(static function (MemberLegHidden $hidden) use ($member, $leg): bool {
+                return $hidden->getMember() === $member && $hidden->getLeg() === $leg;
             }))
         ;
         $entityManager->expects($this->once())->method('flush');
 
         $tripModel = new TripModel($entityManager);
-        $tripModel->markSubtripAsHidden($member, $subtrip);
+        $tripModel->markLegAsHidden($member, $leg);
     }
 
-    public function testMarkSubtripAsHiddenDoesNotDuplicateHiddenState(): void
+    public function testMarkLegAsHiddenDoesNotDuplicateHiddenState(): void
     {
         $member = new Member();
-        $subtrip = new Subtrip();
-        $existingHidden = new MemberSubtripHidden($member, $subtrip);
+        $leg = new Subtrip();
+        $existingHidden = new MemberLegHidden($member, $leg);
 
         $hiddenRepository = $this->createMock(EntityRepository::class);
         $hiddenRepository
             ->expects($this->once())
             ->method('findOneBy')
-            ->with(['member' => $member, 'subtrip' => $subtrip])
+            ->with(['member' => $member, 'leg' => $leg])
             ->willReturn($existingHidden)
         ;
 
@@ -73,14 +73,14 @@ class TripModelNotificationTest extends TestCase
         $entityManager
             ->expects($this->once())
             ->method('getRepository')
-            ->with(MemberSubtripHidden::class)
+            ->with(MemberLegHidden::class)
             ->willReturn($hiddenRepository)
         ;
         $entityManager->expects($this->never())->method('persist');
         $entityManager->expects($this->never())->method('flush');
 
         $tripModel = new TripModel($entityManager);
-        $tripModel->markSubtripAsHidden($member, $subtrip);
+        $tripModel->markLegAsHidden($member, $leg);
     }
 
     public function testNotifyHostsAboutVisitorsSendsEmailsToMatchingHostsOnce(): void
@@ -90,22 +90,22 @@ class TripModelNotificationTest extends TestCase
         $sameHost = new Member();
         $this->setEntityId($host, 12);
         $this->setEntityId($sameHost, 12);
-        $subtripCalls = [];
+        $legCalls = [];
         $finds = [];
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
             ->method('getRepository')
             ->willReturnMap([
-                [Subtrip::class, $this->createSubtripRepository([$host, $sameHost], $subtripCalls)],
-                [MemberSubtripNotificationSent::class, $this->createSentRepository(null, $finds)],
+                [Subtrip::class, $this->createSubtripRepository([$host, $sameHost], $legCalls)],
+                [MemberLegNotificationSent::class, $this->createSentRepository(null, $finds)],
             ])
         ;
         $entityManager
             ->expects($this->once())
             ->method('persist')
-            ->with($this->callback(static function (MemberSubtripNotificationSent $sent) use ($host, $leg): bool {
-                return $sent->getMember() === $host && $sent->getSubtrip() === $leg;
+            ->with($this->callback(static function (MemberLegNotificationSent $sent) use ($host, $leg): bool {
+                return $sent->getMember() === $host && $sent->getLeg() === $leg;
             }))
         ;
         $entityManager->expects($this->once())->method('flush');
@@ -124,7 +124,7 @@ class TripModelNotificationTest extends TestCase
 
         $this->assertSame([
             [$leg, [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY], 3],
-        ], $subtripCalls);
+        ], $legCalls);
         $this->assertCount(1, $finds);
     }
 
@@ -158,7 +158,7 @@ class TripModelNotificationTest extends TestCase
             ->method('getRepository')
             ->willReturnMap([
                 [Subtrip::class, $this->createSubtripRepository([$host])],
-                [MemberSubtripNotificationSent::class, $this->createSentRepository(new MemberSubtripNotificationSent($host, $leg), $finds)],
+                [MemberLegNotificationSent::class, $this->createSentRepository(new MemberLegNotificationSent($host, $leg), $finds)],
             ])
         ;
         $entityManager->expects($this->never())->method('persist');
@@ -186,7 +186,7 @@ class TripModelNotificationTest extends TestCase
             ->method('getRepository')
             ->willReturnMap([
                 [Subtrip::class, $this->createSubtripRepository([$host])],
-                [MemberSubtripNotificationSent::class, $this->createSentRepository(null, $finds)],
+                [MemberLegNotificationSent::class, $this->createSentRepository(null, $finds)],
             ])
         ;
         $entityManager->expects($this->never())->method('persist');
@@ -225,7 +225,7 @@ class TripModelNotificationTest extends TestCase
             ->willReturnMap([
                 [Trip::class, $tripRepository],
                 [Subtrip::class, $this->createSubtripRepository([$host], $subtripCalls)],
-                [MemberSubtripNotificationSent::class, $this->createSentRepository()],
+                [MemberLegNotificationSent::class, $this->createSentRepository()],
             ])
         ;
         $entityManager->expects($this->once())->method('persist');
@@ -268,7 +268,7 @@ class TripModelNotificationTest extends TestCase
             ->willReturnMap([
                 [Trip::class, $tripRepository],
                 [Subtrip::class, $this->createSubtripRepository([$host])],
-                [MemberSubtripNotificationSent::class, $this->createSentRepository()],
+                [MemberLegNotificationSent::class, $this->createSentRepository()],
             ])
         ;
         $entityManager->expects($this->never())->method('persist');
@@ -300,7 +300,7 @@ class TripModelNotificationTest extends TestCase
         $leg = new Subtrip();
         $leg->setArrival(new DateTime('+1 week'));
         $leg->setDeparture(new DateTime('+2 weeks'));
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
 
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager->expects($this->atLeast(2))->method('persist');
@@ -314,19 +314,19 @@ class TripModelNotificationTest extends TestCase
     }
 
     private function createSentRepository(
-        ?MemberSubtripNotificationSent $existing = null,
+        ?MemberLegNotificationSent $existing = null,
         array &$finds = [],
     ): EntityRepository {
         $repository = $this->createStub(EntityRepository::class);
         $repository
             ->method('findOneBy')
-            ->willReturnCallback(static function (array $criteria) use ($existing, &$finds): ?MemberSubtripNotificationSent {
+            ->willReturnCallback(static function (array $criteria) use ($existing, &$finds): ?MemberLegNotificationSent {
                 $finds[] = $criteria;
 
                 if (
                     null !== $existing
                     && $existing->getMember() === $criteria['member']
-                    && $existing->getSubtrip() === $criteria['subtrip']
+                    && $existing->getLeg() === $criteria['leg']
                 ) {
                     return $existing;
                 }
@@ -345,7 +345,7 @@ class TripModelNotificationTest extends TestCase
     {
         $repository = $this->createStub(SubtripRepository::class);
         $repository
-            ->method('getMembersToNotifyAboutSubtrip')
+            ->method('getMembersToNotifyAboutLeg')
             ->willReturnCallback(static function (
                 Subtrip $subtrip,
                 array $notificationValues = [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY],
@@ -367,7 +367,7 @@ class TripModelNotificationTest extends TestCase
     {
         $trip = new Trip()->setCreator(new Member()->setUsername('traveller'));
         $leg = new Subtrip();
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
         $this->setEntityId($trip, 42);
         $this->setEntityId($leg, 7);
 

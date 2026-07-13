@@ -2,13 +2,13 @@
 
 namespace App\Form\DataTransformer;
 
-use App\Doctrine\SubtripOptionsType;
+use App\Doctrine\LegOptionsType;
 use Symfony\Component\Form\DataTransformerInterface;
 
-class SubtripOptionsTypeTransformer implements DataTransformerInterface
+class LegOptionsTypeTransformer implements DataTransformerInterface
 {
     /**
-     * @param ?SubtripOptionsType $value
+     * @param ?LegOptionsType $value
      *
      * @return array
      */

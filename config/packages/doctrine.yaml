@@ -55,7 +55,7 @@ doctrine:
             who_spoke_last: App\Doctrine\WhoSpokeLastType
             translation_allowed: App\Doctrine\TranslationAllowedType
             host_restrictions: App\Doctrine\HostRestrictionsType
-            subtrip_options: App\Doctrine\SubtripOptionsType
+            leg_options: App\Doctrine\LegOptionsType
             trip_additional_info: App\Doctrine\TripAdditionalInfoType
             gender_type: App\Doctrine\GenderType
             point: LongitudeOne\Spatial\DBAL\Types\Geometry\PointType

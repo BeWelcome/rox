@@ -2,7 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Doctrine\SubtripOptionsType;
+use App\Doctrine\LegOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Location;
 use App\Entity\Member;
@@ -74,7 +74,7 @@ class LandingMockups implements MockupProviderInterface
             'getId' => 1,
             'getArrival' => new Carbon(),
             'getDeparture' => new Carbon(),
-            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
+            'getOptions' => [LegOptionsType::MEET_LOCALS],
             'getLocation' => $location,
             'getTrip' => $trip,
             'getInvitedBy' => $user,
@@ -84,7 +84,7 @@ class LandingMockups implements MockupProviderInterface
             'getId' => 2,
             'getArrival' => new Carbon(),
             'getDeparture' => new Carbon(),
-            'getOptions' => [SubtripOptionsType::LOOKING_FOR_HOST],
+            'getOptions' => [LegOptionsType::LOOKING_FOR_HOST],
             'getLocation' => $location,
             'getTrip' => $trip,
             'getInvitedBy' => $user,

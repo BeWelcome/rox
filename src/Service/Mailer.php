@@ -192,9 +192,9 @@ class Mailer
         );
     }
 
-    public function sendTripNotificationEmail(Member $receiver, Subtrip $subtrip): bool
+    public function sendTripNotificationEmail(Member $receiver, Subtrip $leg): bool
     {
-        $trip = $subtrip->getTrip();
+        $trip = $leg->getTrip();
         $sender = $trip->getCreator();
 
         return $this->sendTemplateEmail(
@@ -209,7 +209,7 @@ class Mailer
                         'username' => $sender->getUsername(),
                     ],
                 ],
-                'subtrip' => $subtrip,
+                'leg' => $leg,
                 'trip' => $trip,
             ]
         );

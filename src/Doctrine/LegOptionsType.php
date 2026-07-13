@@ -2,13 +2,13 @@
 
 namespace App\Doctrine;
 
-class SubtripOptionsType extends SetType
+class LegOptionsType extends SetType
 {
     public const string PRIVATE = 'Private';
     public const string MEET_LOCALS = 'MeetLocals';
     public const string LOOKING_FOR_HOST = 'LookingForHosts';
 
-    protected string $name = 'subtrip_options';
+    protected string $name = 'leg_options';
 
     protected array $values = [
         self::PRIVATE,

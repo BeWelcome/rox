@@ -3,7 +3,7 @@
 namespace App\Model\MockupProvider;
 
 use App\Doctrine\GroupMembershipStatusType;
-use App\Doctrine\SubtripOptionsType;
+use App\Doctrine\LegOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Activity;
 use App\Entity\BroadcastMessage;
@@ -439,18 +439,18 @@ class MyDataMockups implements MockupProviderInterface
             'getId' => 1,
             'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
             'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
-            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
+            'getOptions' => [LegOptionsType::MEET_LOCALS],
             'getLocation' => $location,
             'getTrip' => $mockTrip,
             'getInvitedBy' => $host,
         ]);
-        $mockTrip->shouldReceive('addSubtrip')
+        $mockTrip->shouldReceive('addLeg')
             ->once()
             ->with($leg)
             ->andReturn($mockTrip);
-        $mockTrip->addSubtrip($leg);
+        $mockTrip->addLeg($leg);
         $mockTrip
-            ->shouldReceive('getSubtrips')
+            ->shouldReceive('getLegs')
             ->andReturn(new ArrayCollection([$leg]));
 
         return $mockTrip;

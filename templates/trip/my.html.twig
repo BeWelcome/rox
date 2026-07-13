@@ -30,8 +30,8 @@
                     <div>
                         <div class=" u:font-display u:italic u:text-white u:mb-8">{{ trip.description | nl2br | purify | truncate(200) }}</div>
                         <div class="u:text-white u:font-display u:mt-8 u:mb-16 u:md:m-0 u:flex u:flex-column">
-                            <div class="u:me-8">{{ trip.subtrips|length }} {{ 'trip.legs'|trans }}
-                             {% for leg in trip.subtrips %}
+                            <div class="u:me-8">{{ trip.legs|length }} {{ 'trip.legs'|trans }}
+                             {% for leg in trip.legs %}
                                 {% if leg.location %}<span class="u:whitespace-nowrap u:me-8">
                                     {% if leg.location.country %}
                                         <i class="o-flag o-flag--{{ leg.location.country.countryId }} u:-mb-4" title="{{ leg.location.country.name }}"></i>
@@ -45,7 +45,7 @@
                     <div>
                         <div class="c-trip-card__icon-grid">
                             <div><i class="far fa-calendar-alt u:text-white u:text-16 u:justify-self-center u:self-center"></i></div>
-                            <div><p class="u:text-white u:font-display">{{ (trip.subtrips|first).arrival|format_date('full') }} –<br>{{ (trip.subtrips|last).departure|format_date('full') }}</p></div>
+                            <div><p class="u:text-white u:font-display">{{ (trip.legs|first).arrival|format_date('full') }} –<br>{{ (trip.legs|last).departure|format_date('full') }}</p></div>
                         </div>
                         <div class="c-trip-card__icon-grid u:leading-24">
                             <i class="fa fa-users u:text-white u:text-16 u:justify-self-center u:self-center"></i>

@@ -144,11 +144,31 @@ class Mailer
 
     public function sendNotificationEmail(Address $sender, Member $receiver, $parameters): bool
     {
+        $notification = $parameters['notification'];
+        $threadMessageId = \sprintf(
+            'forum-thread-%d-member-%d%s',
+            $notification->getPost()->getThread()->getId(),
+            $receiver->getId(),
+            strrchr($sender->getAddress(), '@')
+        );
+        $identificationHeaders = 'newthread' === $notification->getType()
+            ? ['Message-ID' => $threadMessageId]
+            : [
+                'Message-ID' => \sprintf(
+                    'forum-notification-%d%s',
+                    $notification->getId(),
+                    strrchr($sender->getAddress(), '@')
+                ),
+                'In-Reply-To' => $threadMessageId,
+                'References' => $threadMessageId,
+            ];
+
         return $this->sendTemplateEmail(
             $sender,
             $receiver,
             'notifications',
-            $parameters
+            $parameters,
+            $identificationHeaders
         );
     }
 
@@ -322,8 +342,13 @@ class Mailer
      * @param Member|Address        $receiver
      * @param mixed                 $parameters
      */
-    private function sendTemplateEmail($sender, $receiver, string $template, array $parameters): bool
-    {
+    private function sendTemplateEmail(
+        $sender,
+        $receiver,
+        string $template,
+        array $parameters,
+        array $identificationHeaders = [],
+    ): bool {
         $currentLocale = $this->translator->getLocale();
         $success = true;
         $locale = $parameters['receiverLocale'] ?? 'en';
@@ -354,6 +379,10 @@ class Mailer
 
         if (isset($parameters['datesent'])) {
             $email->date($parameters['datesent']);
+        }
+
+        foreach ($identificationHeaders as $name => $ids) {
+            $email->getHeaders()->addIdHeader($name, $ids);
         }
 
         if (!\is_string($sender) && !$sender instanceof Address) {

@@ -373,20 +373,49 @@ SQL;
             return false;
         }
 
-        $members = $this->getMembers();
-        foreach ($members as $member)
+        $dao = $this->dao;
+        $dao->exec('START TRANSACTION');
+        $committed = false;
+        try
         {
-            $this->memberLeave($member);
-        }
+            $groupOwner = $this->createEntity('Role')->findByName('GroupOwner');
+            if ($groupOwner)
+            {
+                $groupOwnerScopes = $this->createEntity('PrivilegeScope')->findByWhereMany("IdRole = '{$groupOwner->getPKValue()}' AND IdType = '{$this->getPKValue()}'");
+                foreach ($groupOwnerScopes as $scope)
+                {
+                    if (!$scope->delete())
+                    {
+                        return false;
+                    }
+                }
+            }
 
-        if ($this->delete())
-        {
+            $memberships = $this->createEntity('GroupMembership')->findByWhereMany("IdGroup = '{$this->getPKValue()}'");
+            foreach ($memberships as $membership)
+            {
+                if (!$membership->delete())
+                {
+                    return false;
+                }
+            }
+
+            if (!$this->delete())
+            {
+                return false;
+            }
+
+            $dao->exec('COMMIT');
+            $committed = true;
             $this->memberships = false;
             return true;
         }
-        else
+        finally
         {
-            return false;
+            if (!$committed)
+            {
+                $dao->exec('ROLLBACK');
+            }
         }
     }
 

@@ -848,10 +848,16 @@ class GroupsController extends RoxControllerBase
 
         if (isset($request[3]) && strtolower($request[3]) == 'true')
         {
-            $this->_model->deleteGroup($group);
-            $this->logWrite("Group #{$group->getPKValue()} was deleted by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-            $this->redirectAbsolute('/groups');
-            PPHP::PExit();
+            $groupId = $group->getPKValue();
+            if ($this->_model->deleteGroup($group))
+            {
+                $this->logWrite("Group #{$groupId} was deleted by member #{$this->_model->getLoggedInMember()->getPKValue()}");
+                $this->redirectAbsolute('/groups');
+                PPHP::PExit();
+            }
+
+            $this->setFlashError($this->getWords()->getSilent('flash.group.delete.error'));
+            $page = new GroupDeletePage();
         }
         else
         {

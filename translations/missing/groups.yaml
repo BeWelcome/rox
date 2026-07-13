@@ -22,3 +22,6 @@ flash.group.invite.withdrawn:
 flash.group.invite.withdrawn.error:
     - 'There was an error when trying to withdraw the invitation to this group. Please inform the dev team.'
     - Error message shown as flash message.
+flash.group.delete.error:
+    - 'The group could not be deleted.'
+    - Error message shown when deleting a group fails.

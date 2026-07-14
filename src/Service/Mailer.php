@@ -144,24 +144,14 @@ class Mailer
 
     public function sendNotificationEmail(Address $sender, Member $receiver, $parameters): bool
     {
-        $notification = $parameters['notification'];
-        $threadMessageId = \sprintf(
-            'forum-thread-%d-member-%d%s',
-            $notification->getPost()->getThread()->getId(),
-            $receiver->getId(),
-            strrchr($sender->getAddress(), '@')
-        );
-        $identificationHeaders = 'newthread' === $notification->getType()
-            ? ['Message-ID' => $threadMessageId]
-            : [
-                'Message-ID' => \sprintf(
-                    'forum-notification-%d%s',
-                    $notification->getId(),
-                    strrchr($sender->getAddress(), '@')
-                ),
-                'In-Reply-To' => $threadMessageId,
-                'References' => $threadMessageId,
-            ];
+        $identificationHeaders = [
+            'Message-ID' => $parameters['messageId'],
+        ];
+        $references = $parameters['previousMessageIds'] ?? [];
+        if ($references) {
+            $identificationHeaders['In-Reply-To'] = $references[array_key_last($references)];
+            $identificationHeaders['References'] = $references;
+        }
 
         return $this->sendTemplateEmail(
             $sender,

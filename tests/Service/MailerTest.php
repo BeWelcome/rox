@@ -19,7 +19,7 @@ use Symfony\Component\Translation\Translator;
 
 class MailerTest extends TestCase
 {
-    public function testNewThreadNotificationSetsStableMessageId(): void
+    public function testFirstNotificationStartsThread(): void
     {
         $notification = $this->createNotification('newthread');
         $transport = $this->createMock(MailerInterface::class);
@@ -29,7 +29,7 @@ class MailerTest extends TestCase
             ->with($this->callback(static function (RawMessage $message): bool {
                 self::assertInstanceOf(TemplatedEmail::class, $message);
                 self::assertSame(
-                    '<forum-thread-42-member-7@bewelcome.org>',
+                    '<forum-notification-501@bewelcome.org>',
                     $message->getHeaders()->get('Message-ID')?->getBodyAsString()
                 );
                 self::assertNull($message->getHeaders()->get('In-Reply-To'));
@@ -42,11 +42,15 @@ class MailerTest extends TestCase
         $this->assertTrue($this->createMailer($transport)->sendNotificationEmail(
             new Address('forum@bewelcome.org'),
             $notification->getReceiver(),
-            ['subject' => 'Forum topic', 'notification' => $notification]
+            [
+                'subject' => 'Forum topic',
+                'notification' => $notification,
+                'messageId' => 'forum-notification-501@bewelcome.org',
+            ]
         ));
     }
 
-    public function testReplyNotificationReferencesThreadMessage(): void
+    public function testReplyNotificationReferencesPreviousMessage(): void
     {
         $notification = $this->createNotification('reply');
         $transport = $this->createMock(MailerInterface::class);
@@ -60,11 +64,11 @@ class MailerTest extends TestCase
                     $message->getHeaders()->get('Message-ID')?->getBodyAsString()
                 );
                 self::assertSame(
-                    '<forum-thread-42-member-7@bewelcome.org>',
+                    '<forum-notification-500@bewelcome.org>',
                     $message->getHeaders()->get('In-Reply-To')?->getBodyAsString()
                 );
                 self::assertSame(
-                    '<forum-thread-42-member-7@bewelcome.org>',
+                    '<forum-notification-500@bewelcome.org>',
                     $message->getHeaders()->get('References')?->getBodyAsString()
                 );
 
@@ -75,52 +79,55 @@ class MailerTest extends TestCase
         $this->assertTrue($this->createMailer($transport)->sendNotificationEmail(
             new Address('forum@bewelcome.org'),
             $notification->getReceiver(),
-            ['subject' => 'Re: Forum topic', 'notification' => $notification]
+            [
+                'subject' => 'Re: Forum topic',
+                'notification' => $notification,
+                'messageId' => 'forum-notification-501@bewelcome.org',
+                'previousMessageIds' => ['forum-notification-500@bewelcome.org'],
+            ]
         ));
     }
 
-    public function testLaterNotificationsForSamePostStayDistinctInSameGroupThread(): void
+    public function testLaterNotificationIncludesFullReferenceChain(): void
     {
-        $messages = [];
-        $transport = $this->createStub(MailerInterface::class);
+        $notification = $this->createNotification('reply', 503);
+        $transport = $this->createMock(MailerInterface::class);
         $transport
+            ->expects($this->once())
             ->method('send')
-            ->willReturnCallback(static function (RawMessage $message) use (&$messages): void {
-                $messages[] = $message;
-            })
+            ->with($this->callback(static function (RawMessage $message): bool {
+                self::assertInstanceOf(TemplatedEmail::class, $message);
+                self::assertSame(
+                    '<forum-notification-503@bewelcome.org>',
+                    $message->getHeaders()->get('Message-ID')?->getBodyAsString()
+                );
+                self::assertSame(
+                    '<forum-notification-502@bewelcome.org>',
+                    $message->getHeaders()->get('In-Reply-To')?->getBodyAsString()
+                );
+                self::assertSame(
+                    '<forum-notification-500@bewelcome.org> <forum-notification-501@bewelcome.org> <forum-notification-502@bewelcome.org>',
+                    $message->getHeaders()->get('References')?->getBodyAsString()
+                );
+
+                return true;
+            }))
         ;
-        $mailer = $this->createMailer($transport);
-        $sender = new Address('group@bewelcome.org');
-        $notifications = [
-            $this->createNotification('useredit', 501),
-            $this->createNotification('moderatoraction', 502),
-        ];
 
-        foreach ($notifications as $notification) {
-            $mailer->sendNotificationEmail(
-                $sender,
-                $notification->getReceiver(),
-                ['subject' => $notification->getType(), 'notification' => $notification]
-            );
-        }
-
-        self::assertSame(
-            ['<forum-notification-501@bewelcome.org>', '<forum-notification-502@bewelcome.org>'],
-            array_map(
-                static fn (TemplatedEmail $message): ?string => $message->getHeaders()->get('Message-ID')?->getBodyAsString(),
-                $messages
-            )
-        );
-        foreach ($messages as $message) {
-            self::assertSame(
-                '<forum-thread-42-member-7@bewelcome.org>',
-                $message->getHeaders()->get('In-Reply-To')?->getBodyAsString()
-            );
-            self::assertSame(
-                '<forum-thread-42-member-7@bewelcome.org>',
-                $message->getHeaders()->get('References')?->getBodyAsString()
-            );
-        }
+        $this->assertTrue($this->createMailer($transport)->sendNotificationEmail(
+            new Address('group@bewelcome.org'),
+            $notification->getReceiver(),
+            [
+                'subject' => 'Re: Group topic',
+                'notification' => $notification,
+                'messageId' => 'forum-notification-503@bewelcome.org',
+                'previousMessageIds' => [
+                    'forum-notification-500@bewelcome.org',
+                    'forum-notification-501@bewelcome.org',
+                    'forum-notification-502@bewelcome.org',
+                ],
+            ]
+        ));
     }
 
     private function createMailer(MailerInterface $transport): Mailer

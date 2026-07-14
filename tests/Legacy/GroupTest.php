@@ -5,6 +5,7 @@ namespace App\Tests\Legacy;
 use App\Entity\Member;
 use App\Repository\MemberRepository;
 use App\Utilities\SessionSingleton;
+use Doctrine\ORM\EntityManagerInterface;
 use EnvironmentExplorer;
 use Group;
 use InvalidArgumentException;
@@ -27,10 +28,12 @@ final class GroupTest extends KernelTestCase
         static::bootKernel();
         $container = static::getContainer();
         $memberRepository = $container->get(MemberRepository::class);
+        $databaseName = $container->get(EntityManagerInterface::class)->getConnection()->getDatabase();
         $owner = $memberRepository->loadUserByIdentifier('bwadmin');
         $applicant = $memberRepository->loadUserByIdentifier('member-1');
         $inactiveMember = $memberRepository->loadUserByIdentifier('member-banned');
 
+        self::assertNotNull($databaseName);
         self::assertInstanceOf(Member::class, $owner);
         self::assertInstanceOf(Member::class, $applicant);
         self::assertInstanceOf(Member::class, $inactiveMember);
@@ -51,7 +54,7 @@ final class GroupTest extends KernelTestCase
                 self::assertTrue(chdir($container->getParameter('kernel.project_dir') . '/public'));
                 new EnvironmentExplorer($container->get(UrlGeneratorInterface::class))->initializeGlobalState(
                     $container->getParameter('database_host'),
-                    $container->getParameter('database_name'),
+                    $databaseName,
                     $container->getParameter('database_user'),
                     $container->getParameter('database_password'),
                     $container->getParameter('manticore.host'),

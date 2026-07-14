@@ -16,7 +16,7 @@ final class Version20260714110000 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE posts_notificationqueue ADD MessageId VARCHAR(255) DEFAULT NULL, ADD UNIQUE INDEX posts_notificationqueue_message_id_unique (MessageId)');
+        $this->addSql('ALTER TABLE posts_notificationqueue ADD COLUMN IF NOT EXISTS MessageId VARCHAR(255) DEFAULT NULL, ADD UNIQUE INDEX IF NOT EXISTS posts_notificationqueue_message_id_unique (MessageId)');
     }
 
     #[Override]

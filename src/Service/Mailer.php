@@ -144,11 +144,21 @@ class Mailer
 
     public function sendNotificationEmail(Address $sender, Member $receiver, $parameters): bool
     {
+        $identificationHeaders = [
+            'Message-ID' => $parameters['messageId'],
+        ];
+        $references = $parameters['previousMessageIds'] ?? [];
+        if ($references) {
+            $identificationHeaders['In-Reply-To'] = $references[array_key_last($references)];
+            $identificationHeaders['References'] = $references;
+        }
+
         return $this->sendTemplateEmail(
             $sender,
             $receiver,
             'notifications',
-            $parameters
+            $parameters,
+            $identificationHeaders
         );
     }
 
@@ -322,8 +332,13 @@ class Mailer
      * @param Member|Address        $receiver
      * @param mixed                 $parameters
      */
-    private function sendTemplateEmail($sender, $receiver, string $template, array $parameters): bool
-    {
+    private function sendTemplateEmail(
+        $sender,
+        $receiver,
+        string $template,
+        array $parameters,
+        array $identificationHeaders = [],
+    ): bool {
         $currentLocale = $this->translator->getLocale();
         $success = true;
         $locale = $parameters['receiverLocale'] ?? 'en';
@@ -354,6 +369,10 @@ class Mailer
 
         if (isset($parameters['datesent'])) {
             $email->date($parameters['datesent']);
+        }
+
+        foreach ($identificationHeaders as $name => $ids) {
+            $email->getHeaders()->addIdHeader($name, $ids);
         }
 
         if (!\is_string($sender) && !$sender instanceof Address) {

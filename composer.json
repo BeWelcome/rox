@@ -6,7 +6,6 @@
     "license": "GPL",
     "require": {
         "ext-exif": "*",
-        "ext-curl": "*",
         "ext-fileinfo": "*",
         "ext-gd": "*",
         "ext-intl": "*",
@@ -45,7 +44,6 @@
         "league/html-to-markdown": "^4.8",
         "longitude-one/doctrine-spatial": "^5.0",
         "manticoresoftware/manticoresearch-php": "^4.0",
-        "minishlink/web-push": "^10.1",
         "nelmio/cors-bundle": "^2.1",
         "nelmio/security-bundle": "3.*",
         "nesbot/carbon": "3.*",

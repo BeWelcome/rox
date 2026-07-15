@@ -3,13 +3,10 @@
 namespace App\Command;
 
 use App\Doctrine\AccommodationType;
-use App\Entity\BrowserPushNotification;
-use App\Entity\BrowserPushSubscription;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\MemberTranslation;
 use App\Logger\Logger;
-use App\Repository\BrowserPushNotificationRepository;
 use App\Repository\MemberRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -81,7 +78,6 @@ class DataRetentionCommand extends Command
             /** @var Member $member */
             foreach ($members as $member) {
                 $username = $member->getUsername();
-                $this->removeBrowserPushNotificationsFromSender($username);
                 $cryptedFields = $member->getCryptedFields();
                 foreach ($cryptedFields as $cryptedField) {
                     $entityManager->remove($cryptedField);
@@ -104,7 +100,6 @@ class DataRetentionCommand extends Command
                     $entityManager->remove($address);
                 }
 
-                $this->removeBrowserPushData($member);
                 $member = $this->removeMemberInfo($member);
                 $this->removeUserInfo($member);
                 $this->removeProfilePictures($member);
@@ -123,30 +118,6 @@ class DataRetentionCommand extends Command
         }
 
         return \count($members);
-    }
-
-    private function removeBrowserPushNotificationsFromSender(string $username): void
-    {
-        /** @var BrowserPushNotificationRepository $notificationRepository */
-        $notificationRepository = $this->entityManager->getRepository(BrowserPushNotification::class);
-        $notificationRepository->deleteNotificationsFromSender($username);
-    }
-
-    private function removeBrowserPushData(Member $member): void
-    {
-        $subscriptions = $this->entityManager->getRepository(BrowserPushSubscription::class)->findBy([
-            'member' => $member,
-        ]);
-        foreach ($subscriptions as $subscription) {
-            $this->entityManager->remove($subscription);
-        }
-
-        $notifications = $this->entityManager->getRepository(BrowserPushNotification::class)->findBy([
-            'receiver' => $member,
-        ]);
-        foreach ($notifications as $notification) {
-            $this->entityManager->remove($notification);
-        }
     }
 
     private function removeMemberInfo(Member $member): Member

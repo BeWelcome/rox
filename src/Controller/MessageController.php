@@ -9,6 +9,8 @@ use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\MessageToMemberType;
 use App\Model\ConversationModel;
+use App\Service\BrowserNotificationPayload;
+use App\Service\BrowserNotificationService;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
@@ -39,6 +41,7 @@ class MessageController extends AbstractController
         private readonly ConversationModel $conversationModel,
         private readonly ConversationThread $conversationThread,
         private readonly EntityManagerInterface $entityManager,
+        private readonly BrowserNotificationService $browserNotificationService,
     ) {
     }
 
@@ -208,6 +211,13 @@ class MessageController extends AbstractController
                 'subject' => $subjectText,
                 'body' => $body,
             ]);
+            $this->browserNotificationService->queue(
+                $receiver,
+                BrowserNotificationPayload::message(
+                    $sender,
+                    $this->generateUrl('conversation_view', ['id' => $message->getId()])
+                )
+            );
         }
 
         return $message;

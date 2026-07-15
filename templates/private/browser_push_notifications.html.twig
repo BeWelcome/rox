@@ -1,0 +1,40 @@
+{% extends 'private/mydata.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'mydata.browser.push.notifications.headline'|trans }}</h1>
+    <p>{{ 'mydata.browser.push.notifications.abstract'|trans }}</p>
+    {% if browser_push_notifications|length == 0 %}
+        <p><strong>{{ 'mydata.browser.push.notifications.no.notifications'|trans }}</strong></p>
+    {% else %}
+        <div class="row">
+            <div class="col-12 table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ 'mydata.browser.push.notifications.type'|trans }}</th>
+                        <th>{{ 'mydata.browser.push.notifications.sender'|trans }}</th>
+                        <th>{{ 'mydata.browser.push.notifications.url'|trans }}</th>
+                        <th>{{ 'mydata.browser.push.notifications.status'|trans }}</th>
+                        <th>{{ 'mydata.browser.push.notifications.created'|trans }}</th>
+                        <th>{{ 'mydata.browser.push.notifications.updated'|trans }}</th>
+                        <th>{{ 'mydata.browser.push.notifications.last.error'|trans }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for notification in browser_push_notifications %}
+                        <tr>
+                            <td class="align-middle">{{ notification.type }}</td>
+                            <td class="align-middle">{{ notification.senderUsername }}</td>
+                            <td class="align-middle">{{ notification.url }}</td>
+                            <td class="align-middle">{{ notification.status }}</td>
+                            <td class="align-middle">{{ notification.created|format_datetime('medium', 'short') }}</td>
+                            <td class="align-middle">{% if notification.updated %}{{ notification.updated|format_datetime('medium', 'short') }}{% endif %}</td>
+                            <td class="align-middle">{{ notification.lastError }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

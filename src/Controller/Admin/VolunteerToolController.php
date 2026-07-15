@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\BrowserPushNotification;
 use App\Entity\LoginMessage;
 use App\Entity\Member;
 use App\Entity\Message;
@@ -14,6 +15,7 @@ use App\Form\FindUserFormType;
 use App\Form\LoginMessageType;
 use App\Logger\Logger;
 use App\Model\FeedbackModel;
+use App\Repository\BrowserPushNotificationRepository;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
 use DateTime;
@@ -92,9 +94,21 @@ class VolunteerToolController extends AbstractController
                         'adminquery'
                     );
 
-                    $oldMember->setUsername($data->newUsername);
-                    $entityManager->persist($oldMember);
-                    $entityManager->flush();
+                    $entityManager->getConnection()->transactional(static function () use (
+                        $data,
+                        $entityManager,
+                        $oldMember,
+                    ): void {
+                        /** @var BrowserPushNotificationRepository $browserNotificationRepository */
+                        $browserNotificationRepository = $entityManager->getRepository(BrowserPushNotification::class);
+                        $browserNotificationRepository->updateSenderUsername(
+                            $data->oldUsername,
+                            $data->newUsername
+                        );
+                        $oldMember->setUsername($data->newUsername);
+                        $entityManager->persist($oldMember);
+                        $entityManager->flush();
+                    });
                     $flashMessage = $translator->trans('flash.admin.tools.changed', [
                         '%oldname%' => $data->oldUsername,
                         '%newname%' => $data->newUsername,

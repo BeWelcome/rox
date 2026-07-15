@@ -116,6 +116,15 @@ App\Entity\Preference:
         DefaultValue: 'Yes'
         PossibleValues: 'Yes;No'
         Status: 'Normal'
+    BROWSER_NOTIFICATIONS:
+        position: 56
+        codename: 'PreferenceBrowserNotifications'
+        codeDescription: 'BrowserNotificationsDesc'
+        Description: 'This preference stores if the member wants browser push notifications.'
+        created: <DateTime()>
+        DefaultValue: 'No'
+        PossibleValues: 'No;OpenOnly;Always'
+        Status: 'Normal'
     GROUPS_THREADS_LANDING_PAGE:
         position: 55
         codename: 'GroupsThreadsOnLandingPage'

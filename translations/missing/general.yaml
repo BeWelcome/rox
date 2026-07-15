@@ -81,3 +81,18 @@ trips.biweekly:
 trips.monthly:
     - Monthly
     - Label of the options for trips notifications
+browser.notification.message.title:
+    - 'New message from {username}'
+    - Browser push notification title for a new private message. Keep {username}.
+browser.notification.request.title:
+    - 'Hosting request update from {username}'
+    - Browser push notification title for a hosting request. Keep {username}.
+browser.notification.invitation.title:
+    - 'Hosting invitation update from {username}'
+    - Browser push notification title for a hosting invitation. Keep {username}.
+browser.notification.forum.title:
+    - 'Forum update from {username}'
+    - Browser push notification title for a subscribed forum thread. Keep {username}.
+browser.notification.body:
+    - Open BeWelcome to read it.
+    - Generic browser push notification body. Do not include private message, request, or forum content.

@@ -79,7 +79,7 @@ using a browser or use curl _url_ > _filename_.
 * [PHP GD lib enabled](https://www.php.net/manual/en/image.installation.php)
 * PHP extensions: mbstring, xml, fileinfo, intl, xsl, xmlrpc (see composer.json)
   * note that the xml extension does not need to be installed on Windows as it is [installed by default](https://www.php.net/manual/en/xml.installation.php)
-* MariaDB >=10.1
+* MariaDB >=10.6
 * [symfony command line interface](https://symfony.com/download) (download/setup)
 * SMTP server for email features
 * [Composer](https://www.getcomposer.org) Version 2 (installed globally)

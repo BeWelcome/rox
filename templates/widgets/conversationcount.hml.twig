@@ -1,4 +1,4 @@
-<div id="conversationCount" class="nav-link topbar-counter pl-0 pl-md-1" data-count="{{ conversationCount }}">
+<div id="conversationCount" class="nav-link topbar-counter pl-0 pl-md-1" data-count="{{ conversationCount }}" data-member-id="{{ app.user.id|default('') }}">
     <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="topbar-counter__link text-white">
       <span class="topbar-counter__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
       <span class="badge topbar-counter__badge">{{ conversationCount }}</span>

@@ -81,7 +81,7 @@ services:
         arguments:
             $batchSize: '%massmail_batch_size%'
 
-    App\Command\SendNotificationsCommand:
+    App\Command\SendAndPushNotificationsCommand:
         arguments:
             $batchSize: '%forum_notification_batch_size%'
 

@@ -2,7 +2,7 @@
 
 namespace App\Tests\Command;
 
-use App\Command\SendNotificationsCommand;
+use App\Command\SendAndPushNotificationsCommand;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\NotificationStatusType;
 use App\Entity\BrowserPushNotification;
@@ -35,7 +35,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class SendNotificationsCommandTest extends TestCase
+class SendAndPushNotificationsCommandTest extends TestCase
 {
     private int $nextMemberId = 1;
 
@@ -62,7 +62,7 @@ class SendNotificationsCommandTest extends TestCase
             ->with(10)
         ;
 
-        $command = new SendNotificationsCommand(
+        $command = new SendAndPushNotificationsCommand(
             $entityManager,
             $this->createStub(LoggerInterface::class),
             $this->createStub(Mailer::class),
@@ -144,7 +144,7 @@ class SendNotificationsCommandTest extends TestCase
             ->willReturn('/forums/s456#post123')
         ;
 
-        $command = new SendNotificationsCommand(
+        $command = new SendAndPushNotificationsCommand(
             $entityManager,
             $this->createStub(LoggerInterface::class),
             $mailer,
@@ -196,7 +196,7 @@ class SendNotificationsCommandTest extends TestCase
             ->willThrowException(new RuntimeException('Queue unavailable.'))
         ;
 
-        $command = new SendNotificationsCommand(
+        $command = new SendAndPushNotificationsCommand(
             $entityManager,
             $this->createStub(LoggerInterface::class),
             $this->createStub(Mailer::class),
@@ -349,7 +349,7 @@ class SendNotificationsCommandTest extends TestCase
             ->with(100)
         ;
 
-        $command = new SendNotificationsCommand(
+        $command = new SendAndPushNotificationsCommand(
             $entityManager,
             $this->createStub(LoggerInterface::class),
             $mailer,

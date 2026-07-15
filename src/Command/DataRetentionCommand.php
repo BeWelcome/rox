@@ -10,10 +10,8 @@ use App\Entity\Member;
 use App\Entity\MemberTranslation;
 use App\Logger\Logger;
 use App\Repository\BrowserPushNotificationRepository;
-use App\Repository\BrowserPushSubscriptionRepository;
 use App\Repository\MemberRepository;
 use DateTime;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Exception;
@@ -62,8 +60,6 @@ class DataRetentionCommand extends Command
 
         $io->title('Running Data Retention');
 
-        $this->removeOldBrowserPushNotifications();
-        $this->removeInactiveBrowserPushSubscriptions();
         $retired = $this->removeMembers($io);
 
         $io->success(\sprintf('Data of %d members has been deleted.', $retired));
@@ -127,20 +123,6 @@ class DataRetentionCommand extends Command
         }
 
         return \count($members);
-    }
-
-    private function removeOldBrowserPushNotifications(): void
-    {
-        /** @var BrowserPushNotificationRepository $notificationRepository */
-        $notificationRepository = $this->entityManager->getRepository(BrowserPushNotification::class);
-        $notificationRepository->deleteNotificationsOlderThan(new DateTimeImmutable('-7 days'));
-    }
-
-    private function removeInactiveBrowserPushSubscriptions(): void
-    {
-        /** @var BrowserPushSubscriptionRepository $subscriptionRepository */
-        $subscriptionRepository = $this->entityManager->getRepository(BrowserPushSubscription::class);
-        $subscriptionRepository->deleteInactiveSubscriptionsOlderThan(new DateTimeImmutable('-1 year'));
     }
 
     private function removeBrowserPushNotificationsFromSender(string $username): void

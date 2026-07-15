@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use ZxcvbnPhp\Zxcvbn;
 
 class PasswordController extends AbstractController
@@ -160,7 +159,6 @@ class PasswordController extends AbstractController
         ProfileSubmenu $profileSubmenu,
         PasswordModel $passwordModel,
         ChangeProfilePictureGlobals $globals,
-        TokenStorageInterface $tokenStorage,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -181,10 +179,7 @@ class PasswordController extends AbstractController
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
 
-                $tokenStorage->setToken(null);
-                $request->getSession()->invalidate();
-
-                return $this->render('profile/password.changed.html.twig');
+                return $this->redirectToRoute('_logout_main');
             }
         }
 

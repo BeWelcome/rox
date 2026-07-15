@@ -35,7 +35,7 @@ use Throwable;
     aliases: [],
     hidden: false,
 )]
-class SendNotificationsCommand extends Command
+class SendAndPushNotificationsCommand extends Command
 {
     use TranslatorTrait;
 

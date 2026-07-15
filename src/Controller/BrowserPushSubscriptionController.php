@@ -194,7 +194,8 @@ class BrowserPushSubscriptionController extends AbstractController
             return;
         }
 
-        foreach (\array_slice($subscriptions, self::MAX_SUBSCRIPTIONS_PER_MEMBER) as $subscription) {
+        $subscriptionsToRemove = \array_slice($subscriptions, self::MAX_SUBSCRIPTIONS_PER_MEMBER);
+        foreach ($subscriptionsToRemove as $subscription) {
             $this->entityManager->remove($subscription);
         }
         $this->entityManager->flush();

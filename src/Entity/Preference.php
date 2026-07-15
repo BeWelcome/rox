@@ -23,7 +23,6 @@ class Preference
     public const SHOW_ONLINE_ACTIVITIES = 'PreferenceOnlineActivities';
     public const NEWSLETTERS_VIA_EMAIL = 'PreferenceAcceptNewsByMail';
     public const LOCAL_EVENT_NOTIFICATIONS = 'PreferenceLocalEvent';
-    public const BROWSER_NOTIFICATIONS = 'PreferenceBrowserNotifications';
     public const LOCALE = 'PreferenceLanguage';
     public const TIMEZONE = 'PreferenceLocalTime';
     public const HTML_MAILS = 'PreferenceHtmlMails';

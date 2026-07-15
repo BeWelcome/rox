@@ -10,8 +10,6 @@ use App\Entity\Message;
 use App\Repository\CommentRepository;
 use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
-use App\Service\BrowserPushConfig;
-use App\Service\BrowserPushPreferenceService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
@@ -102,8 +100,6 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly Security $security,
-        private readonly BrowserPushConfig $browserPushConfig,
-        private readonly BrowserPushPreferenceService $browserPushPreferenceService,
     ) {
         $this->member = $this->security->getUser();
     }
@@ -115,7 +111,6 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         }
 
         $teams = $this->getTeams();
-        $browserPushEnabled = $this->browserPushConfig->isConfigured();
 
         return [
             'loginmessages' => $this->getLoginMessages(),
@@ -124,11 +119,6 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             'reportedMessagesCount' => $this->getReportedMessagesCount(),
             'conversationCount' => $this->getUnreadConversationsCount(),
             'teams' => $teams,
-            'browser_push_enabled' => $browserPushEnabled,
-            'browser_push_public_key' => $browserPushEnabled ? $this->browserPushConfig->getPublicKey() : '',
-            'browser_push_preference' => $browserPushEnabled
-                ? $this->browserPushPreferenceService->getValue($this->member)
-                : BrowserPushPreferenceService::VALUE_NO,
         ];
     }
 

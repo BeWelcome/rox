@@ -7,21 +7,14 @@ use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Message;
 use App\Repository\MessageRepository;
-use App\Service\BrowserNotificationPayload;
-use App\Service\BrowserNotificationService;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CheckerModel
 {
-    public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly Mailer $mailer,
-        private readonly BrowserNotificationService $browserNotificationService,
-        private readonly UrlGeneratorInterface $urlGenerator,
-    ) {
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly Mailer $mailer)
+    {
     }
 
     public function markAsSpamByChecker(array $messageIds): void
@@ -124,16 +117,5 @@ class CheckerModel
                 'changed' => false,
             ]);
         }
-
-        $url = $this->urlGenerator->generate('conversation_view', ['id' => $message->getId()]);
-        $hostingRequest = $message->getRequest();
-        if (null === $hostingRequest) {
-            $payload = BrowserNotificationPayload::message($message->getSender(), $url);
-        } elseif (null !== $hostingRequest->getInviteForLeg()) {
-            $payload = BrowserNotificationPayload::invitation($message->getSender(), $url);
-        } else {
-            $payload = BrowserNotificationPayload::request($message->getSender(), $url);
-        }
-        $this->browserNotificationService->queue($message->getReceiver(), $payload);
     }
 }

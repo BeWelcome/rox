@@ -2,7 +2,7 @@
 
 namespace App\Controller\Admin;
 
-use App\Doctrine\SubtripOptionsType;
+use App\Doctrine\LegOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Activity;
 use App\Entity\ForumPost;
@@ -447,7 +447,7 @@ class MockupController extends TranslationController
             'getId' => 1,
             'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
             'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
-            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
+            'getOptions' => [LegOptionsType::MEET_LOCALS],
             'getLocation' => $location,
             'getTrip' => $trip,
             'getInvitedBy' => $this->getUser(),
@@ -456,7 +456,7 @@ class MockupController extends TranslationController
             'getId' => 2,
             'getArrival' => Carbon::instance(new DateTime('2021-03-23')),
             'getDeparture' => Carbon::instance(new DateTime('2021-03-24')),
-            'getOptions' => [SubtripOptionsType::LOOKING_FOR_HOST],
+            'getOptions' => [LegOptionsType::LOOKING_FOR_HOST],
             'getLocation' => $location,
             'getTrip' => $trip,
             'getInvitedBy' => $this->getUser(),

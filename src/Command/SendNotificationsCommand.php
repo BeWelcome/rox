@@ -31,7 +31,7 @@ use Throwable;
  */
 #[AsCommand(
     name: 'send:notifications',
-    description: 'Send a batch of notification email every time the command is called',
+    description: 'Send notification emails and browser push notifications',
     aliases: [],
     hidden: false,
 )]
@@ -54,7 +54,7 @@ class SendNotificationsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('batchSize', InputArgument::OPTIONAL, 'Count of mails send while the command is running')
+            ->addArgument('batchSize', InputArgument::OPTIONAL, 'Number of notifications sent per run')
         ;
     }
 
@@ -75,6 +75,7 @@ class SendNotificationsCommand extends Command
 
         $sent = 0;
         if (!empty($scheduledNotifications)) {
+            $notificationReferences = [];
             /** @var PostNotification $scheduled */
             foreach ($scheduledNotifications as $scheduled) {
                 $receiver = $scheduled->getReceiver();
@@ -86,18 +87,33 @@ class SendNotificationsCommand extends Command
                         $this->setTranslatorLocale($receiver);
                         $sender = $this->determineSender($scheduled->getPost());
                         $subject = $this->getSubject($scheduled);
-                        $this->mailer->sendNotificationEmail(
+                        $thread = $scheduled->getPost()->getThread();
+                        $referenceKey = $thread->getId() . '-' . $receiver->getId();
+                        $previousMessageIds = $notificationReferences[$referenceKey]
+                            ??= $notificationQueue->getSentMessageIds($receiver, $thread);
+                        $messageId = \sprintf(
+                            'forum-notification-%d%s',
+                            $scheduled->getId(),
+                            strrchr($sender->getAddress(), '@')
+                        );
+                        $success = $this->mailer->sendNotificationEmail(
                             $sender,
                             $receiver,
                             [
                                 'subject' => $subject,
                                 'notification' => $scheduled,
                                 'datesent' => $scheduled->getCreated(),
+                                'messageId' => $messageId,
+                                'previousMessageIds' => $previousMessageIds,
                             ]
                         );
                         $this->sendBrowserNotification($scheduled);
-                        $notificationStatus = NotificationStatusType::SENT;
-                        ++$sent;
+                        if ($success) {
+                            $notificationStatus = NotificationStatusType::SENT;
+                            $scheduled->setMessageId($messageId);
+                            $notificationReferences[$referenceKey][] = $messageId;
+                            ++$sent;
+                        }
                     } catch (Exception $e) {
                         $io->error($e->getMessage());
                     }

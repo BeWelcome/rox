@@ -88,6 +88,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+document.addEventListener('submit', function(event) {
+    const form = event.target.closest('.js-hide-leg');
+    if (!form) {
+        return;
+    }
+
+    event.preventDefault();
+
+    fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    }).then(function(response) {
+        if (response.ok) {
+            form.closest('.c-dashboard__item').remove();
+        }
+    });
+});
+
 var Home = {
     onTabChange: function (e) {
         switch(e.target.getAttribute('aria-controls')) {

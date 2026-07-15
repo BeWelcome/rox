@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Doctrine\TripAdditionalInfoType;
-use App\Entity\Trip;
+use App\Dto\TripDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TripType extends AbstractType
 {
@@ -27,9 +26,6 @@ class TripType extends AbstractType
                 ],
                 'label' => 'trip.summary',
                 'required' => false,
-                'constraints' => [
-                    new NotBlank(),
-                ],
             ])
             ->add('description', TextareaType::class, [
                 'attr' => [
@@ -37,11 +33,8 @@ class TripType extends AbstractType
                 ],
                 'label' => 'trip.description',
                 'required' => false,
-                'constraints' => [
-                    new NotBlank(),
-                ],
             ])
-            ->add('countoftravellers', ChoiceType::class, [
+            ->add('countOfTravellers', ChoiceType::class, [
                 'choices' => [
                     '' => 0,
                     '1' => 1,
@@ -54,7 +47,7 @@ class TripType extends AbstractType
                 'label' => 'trip.travellers',
                 'choice_translation_domain' => false,
             ])
-            ->add('invitationradius', ChoiceType::class, [
+            ->add('invitationRadius', ChoiceType::class, [
                 'choices' => [
                     'exact' => 0,
                     '5km' => 5,
@@ -66,7 +59,7 @@ class TripType extends AbstractType
                 'label' => 'trip.invitation.radius',
                 'choice_translation_domain' => false,
             ])
-            ->add('additionalinfo', ChoiceType::class, [
+            ->add('additionalInfo', ChoiceType::class, [
                 'choices' => [
                     'trip.additional.info.none' => TripAdditionalInfoType::NONE,
                     'trip.additional.info.couple' => TripAdditionalInfoType::COUPLE,
@@ -77,8 +70,8 @@ class TripType extends AbstractType
                 'label' => 'trip.additional.info',
                 'required' => true,
             ])
-            ->add('subtrips', CollectionType::class, [
-                'entry_type' => SubtripType::class,
+            ->add('legs', CollectionType::class, [
+                'entry_type' => LegType::class,
                 'entry_options' => [
                     'label' => false,
                     'error_bubbling' => false,
@@ -98,7 +91,7 @@ class TripType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Trip::class,
+            'data_class' => TripDto::class,
         ]);
     }
 }

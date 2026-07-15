@@ -2,9 +2,9 @@
 
 namespace App\Tests\Model;
 
-use App\Doctrine\SubtripOptionsType;
-use App\Entity\Subtrip;
-use App\Entity\Trip;
+use App\Doctrine\LegOptionsType;
+use App\Dto\LegDto;
+use App\Dto\TripDto;
 use DateTime;
 
 /**
@@ -14,84 +14,78 @@ class TripModelTest extends TripModelTestCase
 {
     public function testConsecutiveDatesReturnNoErrors(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $leg1->setArrival(new DateTime('2021-02-22'));
-        $leg1->setDeparture(new DateTime('2021-02-24'));
-        $leg1->setOptions([SubtripOptionsType::MEET_LOCALS]);
-        $leg2 = new Subtrip();
-        $leg2->setArrival(new DateTime('2021-02-24'));
-        $leg2->setDeparture(new DateTime('2021-02-25'));
-        $leg2->setOptions([SubtripOptionsType::MEET_LOCALS]);
-        $leg3 = new Subtrip();
-        $leg3->setArrival(new DateTime('2021-02-25'));
-        $leg3->setDeparture(new DateTime('2021-02-26'));
-        $leg3->setOptions([SubtripOptionsType::MEET_LOCALS]);
-        $leg4 = new Subtrip();
-        $leg4->setArrival(new DateTime('2021-02-26'));
-        $leg4->setDeparture(new DateTime('2021-02-28'));
-        $leg4->setOptions([SubtripOptionsType::PRIVATE]);
-        $trip
-            ->addSubtrip($leg1)
-            ->addSubtrip($leg2)
-            ->addSubtrip($leg3)
-            ->addSubtrip($leg4)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $leg1->arrival = new DateTime('2021-02-22');
+        $leg1->departure = new DateTime('2021-02-24');
+        $leg1->options = [LegOptionsType::MEET_LOCALS];
+        $leg2 = new LegDto();
+        $leg2->arrival = new DateTime('2021-02-24');
+        $leg2->departure = new DateTime('2021-02-25');
+        $leg2->options = [LegOptionsType::MEET_LOCALS];
+        $leg3 = new LegDto();
+        $leg3->arrival = new DateTime('2021-02-25');
+        $leg3->departure = new DateTime('2021-02-26');
+        $leg3->options = [LegOptionsType::MEET_LOCALS];
+        $leg4 = new LegDto();
+        $leg4->arrival = new DateTime('2021-02-26');
+        $leg4->departure = new DateTime('2021-02-28');
+        $leg4->options = [LegOptionsType::PRIVATE];
+        $tripDto->legs->add($leg1);
+        $tripDto->legs->add($leg2);
+        $tripDto->legs->add($leg3);
+        $tripDto->legs->add($leg4);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertSame(0, \count($errors));
     }
 
     public function testNonConsecutiveDatesReturnNoErrors(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $leg1->setArrival(new DateTime('2021-02-22'));
-        $leg1->setDeparture(new DateTime('2021-02-24'));
-        $leg1->setOptions([SubtripOptionsType::MEET_LOCALS]);
-        $leg2 = new Subtrip();
-        $leg2->setArrival(new DateTime('2021-02-25'));
-        $leg2->setDeparture(new DateTime('2021-02-27'));
-        $leg2->setOptions([SubtripOptionsType::PRIVATE]);
-        $leg3 = new Subtrip();
-        $leg3->setArrival(new DateTime('2021-02-28'));
-        $leg3->setDeparture(new DateTime('2021-03-02'));
-        $leg3->setOptions([SubtripOptionsType::PRIVATE]);
-        $leg4 = new Subtrip();
-        $leg4->setArrival(new DateTime('2021-03-03'));
-        $leg4->setDeparture(new DateTime('2021-03-28'));
-        $leg4->setOptions([SubtripOptionsType::PRIVATE]);
-        $trip
-            ->addSubtrip($leg1)
-            ->addSubtrip($leg2)
-            ->addSubtrip($leg3)
-            ->addSubtrip($leg4)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $leg1->arrival = new DateTime('2021-02-22');
+        $leg1->departure = new DateTime('2021-02-24');
+        $leg1->options = [LegOptionsType::MEET_LOCALS];
+        $leg2 = new LegDto();
+        $leg2->arrival = new DateTime('2021-02-25');
+        $leg2->departure = new DateTime('2021-02-27');
+        $leg2->options = [LegOptionsType::PRIVATE];
+        $leg3 = new LegDto();
+        $leg3->arrival = new DateTime('2021-02-28');
+        $leg3->departure = new DateTime('2021-03-02');
+        $leg3->options = [LegOptionsType::PRIVATE];
+        $leg4 = new LegDto();
+        $leg4->arrival = new DateTime('2021-03-03');
+        $leg4->departure = new DateTime('2021-03-28');
+        $leg4->options = [LegOptionsType::PRIVATE];
+        $tripDto->legs->add($leg1);
+        $tripDto->legs->add($leg2);
+        $tripDto->legs->add($leg3);
+        $tripDto->legs->add($leg4);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertSame(0, \count($errors));
     }
 
     public function testOverlappingDatesTwoLegsReturnErrors(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $leg1->setArrival(new DateTime('2021-02-22'));
-        $leg1->setDeparture(new DateTime('2021-02-24'));
-        $leg2 = new Subtrip();
-        $leg2->setArrival(new DateTime('2021-02-21'));
-        $leg2->setDeparture(new DateTime('2021-02-23'));
-        $trip
-            ->addSubtrip($leg1)
-            ->addSubtrip($leg2)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $leg1->arrival = new DateTime('2021-02-22');
+        $leg1->departure = new DateTime('2021-02-24');
+        $leg2 = new LegDto();
+        $leg2->arrival = new DateTime('2021-02-21');
+        $leg2->departure = new DateTime('2021-02-23');
+        $tripDto->legs->add($leg1);
+        $tripDto->legs->add($leg2);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertNotSame(0, \count($errors));
         $this->assertTrue(isset($errors[0]['leg']));
@@ -102,24 +96,22 @@ class TripModelTest extends TripModelTestCase
 
     public function testOverlappingDatesSeveralLegsReturnErrors(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $leg1->setArrival(new DateTime('2021-02-22'));
-        $leg1->setDeparture(new DateTime('2021-02-24'));
-        $leg2 = new Subtrip();
-        $leg2->setArrival(new DateTime('2021-02-24'));
-        $leg2->setDeparture(new DateTime('2021-02-25'));
-        $leg3 = new Subtrip();
-        $leg3->setArrival(new DateTime('2021-02-22'));
-        $leg3->setDeparture(new DateTime('2021-02-24'));
-        $trip
-            ->addSubtrip($leg1)
-            ->addSubtrip($leg2)
-            ->addSubtrip($leg3)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $leg1->arrival = new DateTime('2021-02-22');
+        $leg1->departure = new DateTime('2021-02-24');
+        $leg2 = new LegDto();
+        $leg2->arrival = new DateTime('2021-02-24');
+        $leg2->departure = new DateTime('2021-02-25');
+        $leg3 = new LegDto();
+        $leg3->arrival = new DateTime('2021-02-22');
+        $leg3->departure = new DateTime('2021-02-24');
+        $tripDto->legs->add($leg1);
+        $tripDto->legs->add($leg2);
+        $tripDto->legs->add($leg3);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertNotSame(0, \count($errors));
         $this->assertTrue(isset($errors[0]['leg']));
@@ -130,28 +122,26 @@ class TripModelTest extends TripModelTestCase
 
     public function testSeveralOverlappingLegsReturnErrors(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $leg1->setArrival(new DateTime('2021-02-22'));
-        $leg1->setDeparture(new DateTime('2021-02-24'));
-        $leg2 = new Subtrip();
-        $leg2->setArrival(new DateTime('2021-02-24'));
-        $leg2->setDeparture(new DateTime('2021-02-25'));
-        $leg3 = new Subtrip();
-        $leg3->setArrival(new DateTime('2021-02-22'));
-        $leg3->setDeparture(new DateTime('2021-02-24'));
-        $leg4 = new Subtrip();
-        $leg4->setArrival(new DateTime('2021-01-22'));
-        $leg4->setDeparture(new DateTime('2021-03-24'));
-        $trip
-            ->addSubtrip($leg1)
-            ->addSubtrip($leg2)
-            ->addSubtrip($leg3)
-            ->addSubtrip($leg4)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $leg1->arrival = new DateTime('2021-02-22');
+        $leg1->departure = new DateTime('2021-02-24');
+        $leg2 = new LegDto();
+        $leg2->arrival = new DateTime('2021-02-24');
+        $leg2->departure = new DateTime('2021-02-25');
+        $leg3 = new LegDto();
+        $leg3->arrival = new DateTime('2021-02-22');
+        $leg3->departure = new DateTime('2021-02-24');
+        $leg4 = new LegDto();
+        $leg4->arrival = new DateTime('2021-01-22');
+        $leg4->departure = new DateTime('2021-03-24');
+        $tripDto->legs->add($leg1);
+        $tripDto->legs->add($leg2);
+        $tripDto->legs->add($leg3);
+        $tripDto->legs->add($leg4);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertNotSame(0, \count($errors));
         $this->assertTrue(isset($errors[0]['leg']));
@@ -164,29 +154,25 @@ class TripModelTest extends TripModelTestCase
 
     public function testSingleLegWithOptionsSelectedReturnsNoError(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $leg1->setOptions([SubtripOptionsType::MEET_LOCALS]);
-        $trip
-            ->addSubtrip($leg1)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $leg1->options = [LegOptionsType::MEET_LOCALS];
+        $tripDto->legs->add($leg1);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertSame(0, \count($errors));
     }
 
     public function testSingleLegNoOptionsSelectedReturnsAnError(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $trip
-            ->addSubtrip($leg1)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $tripDto->legs->add($leg1);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertNotSame(0, \count($errors));
         $this->assertTrue(isset($errors[0]['leg']));
@@ -197,16 +183,14 @@ class TripModelTest extends TripModelTestCase
 
     public function testMultipleLegNoOptionsSelectedReturnsAnError(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $leg2 = new Subtrip();
-        $trip
-            ->addSubtrip($leg1)
-            ->addSubtrip($leg2)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $leg2 = new LegDto();
+        $tripDto->legs->add($leg1);
+        $tripDto->legs->add($leg2);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertSame(2, \count($errors));
         $this->assertTrue(isset($errors[0]['leg']));
@@ -219,63 +203,59 @@ class TripModelTest extends TripModelTestCase
 
     public function testMultipleLegWithOptionsSelectedReturnsNoError(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $leg1->setOptions([SubtripOptionsType::LOOKING_FOR_HOST]);
-        $leg2 = new Subtrip();
-        $leg2->setOptions([SubtripOptionsType::LOOKING_FOR_HOST, SubtripOptionsType::MEET_LOCALS]);
-        $leg3 = new Subtrip();
-        $leg3->setOptions([SubtripOptionsType::MEET_LOCALS]);
-        $leg4 = new Subtrip();
-        $leg4->setOptions([SubtripOptionsType::PRIVATE]);
-        $trip
-            ->addSubtrip($leg1)
-            ->addSubtrip($leg2)
-            ->addSubtrip($leg3)
-            ->addSubtrip($leg4)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $leg1->options = [LegOptionsType::LOOKING_FOR_HOST];
+        $leg2 = new LegDto();
+        $leg2->options = [LegOptionsType::LOOKING_FOR_HOST, LegOptionsType::MEET_LOCALS];
+        $leg3 = new LegDto();
+        $leg3->options = [LegOptionsType::MEET_LOCALS];
+        $leg4 = new LegDto();
+        $leg4->options = [LegOptionsType::PRIVATE];
+        $tripDto->legs->add($leg1);
+        $tripDto->legs->add($leg2);
+        $tripDto->legs->add($leg3);
+        $tripDto->legs->add($leg4);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertSame(0, \count($errors));
     }
 
     public function testLegsAreNotReturnedSortedOnCreateIfErrorsWereFound(): void
     {
-        $trip = new Trip();
-        $leg1 = new Subtrip();
-        $leg1->setArrival(new DateTime('2021-02-22'));
-        $leg1->setDeparture(new DateTime('2021-02-24'));
-        $leg1->setOptions([SubtripOptionsType::MEET_LOCALS]);
-        $leg2 = new Subtrip();
-        $leg2->setArrival(new DateTime('2021-02-24'));
-        $leg2->setDeparture(new DateTime('2021-02-25'));
-        $leg2->setOptions([SubtripOptionsType::MEET_LOCALS]);
-        $leg3 = new Subtrip();
-        $leg3->setArrival(new DateTime('2021-02-22'));
-        $leg3->setDeparture(new DateTime('2021-02-24'));
-        $leg3->setOptions([SubtripOptionsType::LOOKING_FOR_HOST]);
-        $leg4 = new Subtrip();
-        $leg4->setArrival(new DateTime('2021-01-22'));
-        $leg4->setDeparture(new DateTime('2021-03-24'));
-        $leg4->setOptions([SubtripOptionsType::PRIVATE]);
-        $trip
-            ->addSubtrip($leg1)
-            ->addSubtrip($leg2)
-            ->addSubtrip($leg3)
-            ->addSubtrip($leg4)
-        ;
+        $tripDto = new TripDto();
+        $leg1 = new LegDto();
+        $leg1->arrival = new DateTime('2021-02-22');
+        $leg1->departure = new DateTime('2021-02-24');
+        $leg1->options = [LegOptionsType::MEET_LOCALS];
+        $leg2 = new LegDto();
+        $leg2->arrival = new DateTime('2021-02-24');
+        $leg2->departure = new DateTime('2021-02-25');
+        $leg2->options = [LegOptionsType::MEET_LOCALS];
+        $leg3 = new LegDto();
+        $leg3->arrival = new DateTime('2021-02-22');
+        $leg3->departure = new DateTime('2021-02-24');
+        $leg3->options = [LegOptionsType::LOOKING_FOR_HOST];
+        $leg4 = new LegDto();
+        $leg4->arrival = new DateTime('2021-01-22');
+        $leg4->departure = new DateTime('2021-03-24');
+        $leg4->options = [LegOptionsType::PRIVATE];
+        $tripDto->legs->add($leg1);
+        $tripDto->legs->add($leg2);
+        $tripDto->legs->add($leg3);
+        $tripDto->legs->add($leg4);
 
         $tripModel = $this->getTripModel();
-        $errors = $tripModel->checkTripCreateOrEditData($trip);
+        $errors = $tripModel->checkTripCreateOrEditData($tripDto);
 
         $this->assertNotSame(0, \count($errors));
 
-        $legs = $trip->getSubtrips();
-        $this->assertEquals(new DateTime('2021-02-22'), $legs[0]->getArrival());
-        $this->assertEquals(new DateTime('2021-02-24'), $legs[1]->getArrival());
-        $this->assertEquals(new DateTime('2021-02-22'), $legs[2]->getArrival());
-        $this->assertEquals(new DateTime('2021-01-22'), $legs[3]->getArrival());
+        $legs = $tripDto->legs;
+        $this->assertEquals(new DateTime('2021-02-22'), $legs[0]->arrival);
+        $this->assertEquals(new DateTime('2021-02-24'), $legs[1]->arrival);
+        $this->assertEquals(new DateTime('2021-02-22'), $legs[2]->arrival);
+        $this->assertEquals(new DateTime('2021-01-22'), $legs[3]->arrival);
     }
 }

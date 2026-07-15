@@ -151,10 +151,10 @@ class LandingModel
 
     public function getTravellersInAreaOfMember(Member $member, int $radius): array
     {
-        /** @var SubtripRepository $subTripRepository */
-        $subTripRepository = $this->entityManager->getRepository(Subtrip::class);
+        /** @var SubtripRepository $legRepository */
+        $legRepository = $this->entityManager->getRepository(Subtrip::class);
 
-        return $subTripRepository->getLegsInAreaMaxGuests($member, $radius);
+        return $legRepository->getLegsInAreaMaxGuests($member, $radius);
     }
 
     public function updateMemberAccommodation(Member $member, string $accommodation): Member

@@ -78,8 +78,15 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 	database_password="${database_password:-${DB_PASS:-bewelcome}}"
 
 	echo "Waiting for db to be ready..."
-	until mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" -e "select 1" > /dev/null 2>&1; do
+	db_wait_seconds=0
+	db_wait_max="${BEWELCOME_DB_READY_MAX_WAIT_SECONDS:-300}"
+	until php -r "new PDO('mysql:host=${database_host};port=${database_port};dbname=${database_name}', '${database_user}', '${database_password}');" > /dev/null 2>&1; do
+		if [ "$db_wait_seconds" -ge "$db_wait_max" ]; then
+			echo "Database not ready after ${db_wait_max}s; aborting." >&2
+			exit 1
+		fi
 		sleep 1
+		db_wait_seconds=$((db_wait_seconds + 1))
 	done
 
 	echo "db ready!"

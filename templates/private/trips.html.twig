@@ -16,7 +16,7 @@
                         <p>{{ trip.description }}</p>
                         <p>{{ 'trip.count.of.travellers'|trans({'countOfTravellers':trip.countOfTravellers}) }}</p>
                         <p>{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
-                        {% for leg in trip.subtrips %}
+                        {% for leg in trip.legs %}
                             <p>
                                 {% if leg.location %}
                                     {{ leg.location.name }}, {{ leg.location.country.name }}
@@ -24,15 +24,15 @@
                                     {{ 'trip.location.none'|trans }}
                                 {% endif %}
                             </p>
-                            {% if constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in leg.options %}
+                            {% if constant('App\\Doctrine\\LegOptionsType::PRIVATE') in leg.options %}
                                 <p>{{ 'trip.option.private'|trans }}</p>
                             {% endif %}
 
-                            {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
+                            {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
                                 <p>{{ 'trip.option.meet.locals'|trans }}</p>
                             {% endif %}
 
-                            {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
+                            {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
                                 <p>{{ 'trip.option.looking.for.host'|trans }}</p>
                             {% endif %}
                         {% endfor %}

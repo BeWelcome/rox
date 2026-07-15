@@ -45,12 +45,10 @@
             {{ form_widget(form.duration, {'attr': attributes}) }}
             <div class="u:block">{{ form_errors(form.duration) }}</div>
         </div>
-        {% if not form.location.fullname.vars.disabled %}
-        <button class="btn-remove js-btn-remove o-rounded o-rounded--l u:justify-self-center u:self-center c-trips__info-btn-grid"
+        <button type="button" class="btn-remove js-btn-remove o-rounded o-rounded--l u:justify-self-center u:self-center c-trips__info-btn-grid"
                 data-related="{{ name }}">
             <i class="fa fa-times"></i>
         </button>
-        {% endif %}
         <div class="u:flex u:flex-col u:md:flex-row u:md:mt-16 u:flex-wrap u:col-span-2">
             <div class="u:mb-8 u:md:mr-24">
                 {% set attributes = {
@@ -95,33 +93,33 @@
                 <div class="u:flex u:flex-col u:md:flex-row u:col-span-2 u:mb-24">
                     <div
                         class="u:flex u:flex-col u:md:flex-row u:items-start u:md:items-center u:md:mr-24 u:mb-8 u:md:mb-0 u:flex-1">
-                        {{ form_label(form.countoftravellers, null, {'label_attr': { 'class': 'o-label o-label--white u:mt-8 u:mr-8 u:flex u:items-center u:whitespace-nowrap'}}) }}
+                        {{ form_label(form.countOfTravellers, null, {'label_attr': { 'class': 'o-label o-label--white u:mt-8 u:mr-8 u:flex u:items-center u:whitespace-nowrap'}}) }}
                         <div class="u:relative u:w-full">
-                            {{ form_widget(form.countoftravellers, {'attr': { 'class': 'o-input--select o-input--select-short u:md:w-auto'}}) }}
+                            {{ form_widget(form.countOfTravellers, {'attr': { 'class': 'o-input--select o-input--select-short u:md:w-auto'}}) }}
                         </div>
                     </div>
                     <div class="u:flex u:flex-col u:md:flex-row u:items-start u:md:items-center  u:md:mr-24 u:mb-16 u:md:mb-0 u:flex-1">
-                        {{ form_label(form.additionalinfo, null, {'label_attr': { 'class': 'o-label o-label--white u:mt-8 u:mr-8 u:flex u:items-center u:whitespace-nowrap'}}) }}
+                        {{ form_label(form.additionalInfo, null, {'label_attr': { 'class': 'o-label o-label--white u:mt-8 u:mr-8 u:flex u:items-center u:whitespace-nowrap'}}) }}
                         <div class="u:relative u:w-full">
-                            {{ form_widget(form.additionalinfo, {'attr': { 'class': 'o-input--select o-input--select-short u:md:w-auto'}}) }}
+                            {{ form_widget(form.additionalInfo, {'attr': { 'class': 'o-input--select o-input--select-short u:md:w-auto'}}) }}
                         </div>
                     </div>
                     <div class="u:flex u:flex-col u:md:flex-row u:items-start u:md:items-center u:mb-16 u:md:mb-0 u:flex-1">
-                        {{ form_label(form.invitationradius, null, {'label_attr': { 'class': 'o-label o-label--white u:mt-8 u:mr-8 u:flex u:items-center u:whitespace-nowrap'}}) }}
+                        {{ form_label(form.invitationRadius, null, {'label_attr': { 'class': 'o-label o-label--white u:mt-8 u:mr-8 u:flex u:items-center u:whitespace-nowrap'}}) }}
                         <div class="u:relative u:w-full">
-                            {{ form_widget(form.invitationradius, {'attr': { 'class': 'o-input--select o-input--select-short u:md:w-auto'}}) }}
+                            {{ form_widget(form.invitationRadius, {'attr': { 'class': 'o-input--select o-input--select-short u:md:w-auto'}}) }}
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="subtrips-list"
-                 data-prototype="{{ _self.widget_prototype(form.subtrips.vars.prototype)|escape('html_attr') }}">
-                {% for subtrip in form.subtrips %}
-                    {{ _self.widget_prototype(subtrip) }}
+            <div id="legs-list"
+                 data-prototype="{{ _self.widget_prototype(form.legs.vars.prototype)|escape('html_attr') }}">
+                {% for leg in form.legs %}
+                    {{ _self.widget_prototype(leg) }}
                 {% endfor %}
             </div>
-            <button class="btn-add js-btn-add o-rounded o-rounded--l"
-                    data-target="subtrips-list">
+            <button type="button" class="btn-add js-btn-add o-rounded o-rounded--l"
+                    data-target="legs-list">
                 <i class="fa fa-plus"></i>
             </button>
             <div class="u:flex u:justify-end u:mt-48 u:md:mt-0">

@@ -2,7 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Doctrine\SubtripOptionsType;
+use App\Doctrine\LegOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Location;
@@ -115,7 +115,7 @@ class InvitationUtility
             'getId' => 1,
             'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
             'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
-            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
+            'getOptions' => [LegOptionsType::MEET_LOCALS],
             'getLocation' => $location,
             'getTrip' => $trip,
             'getInvitedBy' => $host,

@@ -24,7 +24,7 @@ class TripModelTestTripExpired extends TripModelTestCase
         $leg->setDeparture(new DateTime('2020-01-01'));
 
         $trip = new Trip();
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
 
         $tripModel = $this->getTripModel();
         $expired = $tripModel->hasTripExpired($trip);
@@ -39,7 +39,7 @@ class TripModelTestTripExpired extends TripModelTestCase
         $leg->setDeparture($tomorrow);
 
         $trip = new Trip();
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
 
         $tripModel = $this->getTripModel();
         $expired = $tripModel->hasTripExpired($trip);
@@ -58,9 +58,9 @@ class TripModelTestTripExpired extends TripModelTestCase
 
         $trip = new Trip();
         $trip
-            ->addSubtrip($firstLeg)
-            ->addSubtrip($secondLeg)
-            ->addSubtrip($thirdLeg)
+            ->addLeg($firstLeg)
+            ->addLeg($secondLeg)
+            ->addLeg($thirdLeg)
         ;
 
         $tripModel = $this->getTripModel();
@@ -83,9 +83,9 @@ class TripModelTestTripExpired extends TripModelTestCase
 
         $trip = new Trip();
         $trip
-            ->addSubtrip($firstLeg)
-            ->addSubtrip($secondLeg)
-            ->addSubtrip($thirdLeg)
+            ->addLeg($firstLeg)
+            ->addLeg($secondLeg)
+            ->addLeg($thirdLeg)
         ;
 
         $tripModel = $this->getTripModel();
@@ -108,9 +108,9 @@ class TripModelTestTripExpired extends TripModelTestCase
 
         $trip = new Trip();
         $trip
-            ->addSubtrip($firstLeg)
-            ->addSubtrip($secondLeg)
-            ->addSubtrip($thirdLeg)
+            ->addLeg($firstLeg)
+            ->addLeg($secondLeg)
+            ->addLeg($thirdLeg)
         ;
 
         $tripModel = $this->getTripModel();

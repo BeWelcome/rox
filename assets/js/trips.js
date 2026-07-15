@@ -66,10 +66,11 @@ function initializePicker(value) {
 }
 
 document.addEventListener('click', function(event) {
-    if (event.target.matches('.js-btn-add[data-target]')) {
+    const addBtn = event.target.closest('.js-btn-add[data-target]');
+    if (addBtn) {
         event.preventDefault();
-        
-        const targetId = event.target.getAttribute('data-target');
+
+        const targetId = addBtn.getAttribute('data-target');
         let collectionHolder = document.getElementById(targetId);
 
         if (!collectionHolder.hasAttribute('data-counter')) {
@@ -87,22 +88,23 @@ document.addEventListener('click', function(event) {
         /* enable a search picker on all location fields (including the newly added one */
         initializeMultipleAutoCompletes("/suggest/locations/places", 'js-location-picker', onChange);
 
-        const duration = document.getElementById('trip_subtrips_' + counter + '_duration');
+        const duration = document.getElementById('trip_legs_' + counter + '_duration');
         if (lastEndDateSet != null) {
-            const arrival = document.getElementById('trip_subtrips_' + counter + '_arrival');
+            const arrival = document.getElementById('trip_legs_' + counter + '_arrival');
             arrival.value = lastEndDateSet;
             const nextDay = dayjs(lastEndDateSet).add(1, 'day');
-            const departure = document.getElementById('trip_subtrips_' + counter + '_departure');
+            const departure = document.getElementById('trip_legs_' + counter + '_departure');
             departure.value = nextDay.format('YYYY-MM-DD');
         }
 
         initializePicker(duration);
     }
     
-    if (event.target.matches('.js-btn-remove[data-related]')) {
+    const removeBtn = event.target.closest('.js-btn-remove[data-related]');
+    if (removeBtn) {
         event.preventDefault();
-        
-        const relatedName = event.target.getAttribute('data-related');
+
+        const relatedName = removeBtn.getAttribute('data-related');
         const elementsToRemove = document.querySelectorAll('*[data-content="' + relatedName + '"]');
         elementsToRemove.forEach(el => el.remove());
     }

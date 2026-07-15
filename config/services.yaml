@@ -45,6 +45,15 @@ services:
             $webPushVapidSubject: '%web_push_vapid_subject%'
             $webPushVapidPublicKey: '%web_push_vapid_public_key%'
             $webPushVapidPrivateKey: '%web_push_vapid_private_key%'
+            $noReplyEmailAddress: '%env(MAILER_NO_REPLY_ADDRESS)%'
+            $messageEmailAddress: '%env(MAILER_MESSAGE_ADDRESS)%'
+            $groupEmailAddress: '%env(MAILER_GROUP_ADDRESS)%'
+            $passwordEmailAddress: '%env(MAILER_PASSWORD_ADDRESS)%'
+            $signupEmailAddress: '%env(MAILER_SIGNUP_ADDRESS)%'
+            $accountFeedbackAddress: '%env(MAILER_ACCOUNT_FEEDBACK_ADDRESS)%'
+            $reminderEmailAddress: '%env(MAILER_REMINDER_ADDRESS)%'
+            $termsOfUseEmailAddress: '%env(MAILER_TERMS_OF_USE_ADDRESS)%'
+            $newsletterEmailAddress: '%env(MAILER_NEWSLETTER_ADDRESS)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

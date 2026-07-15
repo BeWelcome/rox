@@ -20,7 +20,6 @@ class RoxEntityFactory
     private $_entities = array(
         'Activity'          => 'build/activities/activity.entity',
         'Address'           => 'build/members/address.entity',
-        'BlogEntity'        => 'build/blog/blog.entity',
         'Comment'           => 'build/members/comment.entity',
         'Donation'          => 'build/donate/donation.entity',
         'Feedback'          => 'build/about/feedback.entity',
@@ -41,9 +40,6 @@ class RoxEntityFactory
         'Member'            => 'build/members/member.entity',
         'MemberLanguage'    => 'build/members/memberlanguage.entity',
         'MemberRole'        => 'build/rights/memberrole.entity',
-        'Message'           => 'build/messages/message.entity',
-        'ProfileVisit'      => 'build/members/profilevisit.entity',
-        'ProfileNote'       => 'build/members/profilenote.entity',
         'Note'              => 'build/notify/note.entity',
         'Post'              => 'build/forums/post.entity',
         'Privilege'         => 'build/rights/privilege.entity',
@@ -51,13 +47,8 @@ class RoxEntityFactory
         'Right'             => 'build/admin/rights/adminrights.entity',
         'Role'              => 'build/rights/role.entity',
         'RolePrivilege'     => 'build/rights/roleprivilege.entity',
-        'SubTrip'           => 'build/trips/subtrip.entity',
-        'Suggestion'        => 'build/suggestions/suggestion.entity',
-        'SuggestionOption'  => 'build/suggestions/suggestionoption.entity',
         'Thread'            => 'build/forums/thread.entity',
         'ThreadVote'        => 'build/forums/threadvote.entity',
-        'Trip'              => 'build/trips/trip.entity',
-        'VolunteerBoard'    => 'build/admin/volunteerboard.entity',
         );
 
     /**

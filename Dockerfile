@@ -14,7 +14,6 @@ RUN apk add --no-cache \
 		libpng \
 		fcgi \
 		gettext \
-		mariadb-client \
 	;
 
 RUN set -eux; \
@@ -184,7 +183,7 @@ ENV APP_ENV=dev
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN set -eux; \
-	apk add --no-cache bash curl git make mysql-client openssh-client python3 unzip; \
+	apk add --no-cache bash curl git make mariadb-client openssh-client python3 unzip; \
 	curl -fsSL https://bun.sh/install -o bun-install.sh; \
 	bash bun-install.sh; \
 	ln -s /root/.bun/bin/bun /usr/local/bin/bun; \

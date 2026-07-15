@@ -21,7 +21,6 @@ use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Serializable;
 use Stringable;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -39,7 +38,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
 #[Gedmo\TranslationEntity(class: MemberTranslation::class)]
 #[ORM\HasLifecycleCallbacks]
-class Member implements Stringable, Serializable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
+class Member implements Stringable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
 {
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
@@ -826,22 +825,6 @@ class Member implements Stringable, Serializable, UserInterface, PasswordHasherA
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function serialize(): string
-    {
-        return serialize([
-            $this->id,
-            $this->username,
-            $this->password,
-            // see section on salt below
-            // $this->salt,
-        ]);
-    }
-
-    public function unserialize($data): void
-    {
-        [$this->id, $this->username, $this->password] = unserialize($data);
     }
 
     public function getRoles(): array

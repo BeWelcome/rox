@@ -66,15 +66,15 @@ class Trip
     #[Assert\Count(min: 1)]
     #[ORM\OneToMany(targetEntity: Subtrip::class, mappedBy: 'trip', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['arrival' => 'ASC'])]
-    private Collection $subtrips;
+    private Collection $legs;
 
     #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: Member::class)]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private Member $creator;
 
     public function __construct()
     {
-        $this->subtrips = new ArrayCollection();
+        $this->legs = new ArrayCollection();
     }
 
     public function setSummary(string $summary): self
@@ -182,39 +182,39 @@ class Trip
         return $this->creator;
     }
 
-    public function getSubtrips(): Collection
+    public function getLegs(): Collection
     {
-        return $this->subtrips;
+        return $this->legs;
     }
 
-    public function setSubtrips(Collection $subtrips): self
+    public function setLegs(Collection $legs): self
     {
-        $this->subtrips = $subtrips;
+        $this->legs = $legs;
 
         return $this;
     }
 
-    public function addSubtrip(Subtrip $subtrip): self
+    public function addLeg(Subtrip $leg): self
     {
-        $this->subtrips->add($subtrip);
-        $subtrip->setTrip($this);
+        $this->legs->add($leg);
+        $leg->setTrip($this);
 
         return $this;
     }
 
-    public function removeSubtrip(Subtrip $subtrip): void
+    public function removeLeg(Subtrip $leg): void
     {
-        if (!$this->subtrips->contains($subtrip)) {
+        if (!$this->legs->contains($leg)) {
             return;
         }
 
-        $this->subtrips->removeElement($subtrip);
-        $subtrip->setTrip(null);
+        $this->legs->removeElement($leg);
+        $leg->setTrip(null);
     }
 
     public function isExpired(): bool
     {
-        $legs = $this->getSubtrips();
+        $legs = $this->getLegs();
 
         if (0 === $legs->count()) {
             throw new InvalidArgumentException('No trip legs');

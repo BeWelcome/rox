@@ -2,9 +2,11 @@
 
 namespace App\Model;
 
+use App\Dto\TripDto;
+use App\Entity\Location;
 use App\Entity\Member;
-use App\Entity\MemberSubtripHidden;
-use App\Entity\MemberSubtripNotificationSent;
+use App\Entity\MemberLegHidden;
+use App\Entity\MemberLegNotificationSent;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -79,10 +81,10 @@ class TripModel
         return (int) $memberPreference->getValue();
     }
 
-    public function checkTripCreateOrEditData(Trip $data): array
+    public function checkTripCreateOrEditData(TripDto $data): array
     {
         $errors = [];
-        $legs = $data->getSubtrips();
+        $legs = $data->legs;
         $keys = $legs->getKeys();
 
         for ($i = 0; $i < \count($keys); ++$i) {
@@ -90,7 +92,7 @@ class TripModel
                 $a = $legs[$keys[$i]];
                 $b = $legs[$keys[$j]];
                 // (StartA < EndB) and (EndA > StartB)
-                if ($a->getArrival() < $b->getDeparture() && $a->getDeparture() > $b->getArrival()) {
+                if ($a->arrival < $b->departure && $a->departure > $b->arrival) {
                     $errors[] = [
                         'leg' => $i,
                         'field' => 'duration',
@@ -104,7 +106,7 @@ class TripModel
                 }
             }
 
-            if (empty($legs[$keys[$i]]->getOptions())) {
+            if (empty($legs[$keys[$i]]->options)) {
                 $errors[] = [
                     'leg' => $i,
                     'field' => 'options',
@@ -116,12 +118,12 @@ class TripModel
         return $errors;
     }
 
-    public function orderTripLegs(Trip &$trip): void
+    public function orderTripLegs(TripDto &$tripDto): void
     {
-        $legs = iterator_to_array($trip->getSubtrips());
+        $legs = iterator_to_array($tripDto->legs);
         usort($legs, static function ($a, $b) {
-            $arrivalA = $a->getArrival();
-            $arrivalB = $b->getArrival();
+            $arrivalA = $a->arrival;
+            $arrivalB = $b->arrival;
 
             if ($arrivalA === $arrivalB) {
                 return 0;
@@ -130,12 +132,49 @@ class TripModel
             return ($arrivalA <= $arrivalB) ? -1 : 1;
         });
 
-        foreach ($trip->getSubtrips() as $leg) {
-            $trip->removeSubtrip($leg);
-        }
+        $tripDto->legs->clear();
 
         foreach ($legs as $leg) {
-            $trip->addSubtrip($leg);
+            $tripDto->legs->add($leg);
+        }
+    }
+
+    public function syncLegs(Trip $trip, TripDto $tripDto): void
+    {
+        $existingLegs = [];
+        foreach ($trip->getLegs() as $leg) {
+            if (null !== $leg->getId()) {
+                $existingLegs[$leg->getId()] = $leg;
+            }
+        }
+
+        $locationRepository = $this->entityManager->getRepository(Location::class);
+        $keptIds = [];
+
+        foreach ($tripDto->legs as $legDto) {
+            $leg = null !== $legDto->id ? ($existingLegs[$legDto->id] ?? null) : null;
+
+            if (null === $leg) {
+                $leg = new Subtrip();
+                $trip->addLeg($leg);
+            } else {
+                $keptIds[] = $legDto->id;
+            }
+
+            $leg->setArrival($legDto->arrival);
+            $leg->setDeparture($legDto->departure);
+            $leg->setOptions($legDto->options);
+            $leg->setLocation(
+                null !== $legDto->location
+                    ? $locationRepository->findOneBy(['geonameId' => $legDto->location])
+                    : null
+            );
+        }
+
+        foreach ($existingLegs as $id => $leg) {
+            if (!\in_array($id, $keptIds, true)) {
+                $trip->removeLeg($leg);
+            }
         }
     }
 
@@ -147,27 +186,27 @@ class TripModel
         $this->entityManager->flush();
     }
 
-    public function markSubtripAsHidden(Member $member, Subtrip $subtrip): void
+    public function markLegAsHidden(Member $member, Subtrip $leg): void
     {
-        $repository = $this->entityManager->getRepository(MemberSubtripHidden::class);
-        $hidden = $repository->findOneBy(['member' => $member, 'subtrip' => $subtrip]);
+        $repository = $this->entityManager->getRepository(MemberLegHidden::class);
+        $hidden = $repository->findOneBy(['member' => $member, 'leg' => $leg]);
 
         if (null === $hidden) {
-            $this->entityManager->persist(new MemberSubtripHidden($member, $subtrip));
+            $this->entityManager->persist(new MemberLegHidden($member, $leg));
             $this->entityManager->flush();
         }
     }
 
     public function notifyHostsAboutTrip(Trip $trip): void
     {
-        foreach ($trip->getSubtrips() as $subtrip) {
-            $this->notifyHostsAboutVisitors($subtrip);
+        foreach ($trip->getLegs() as $leg) {
+            $this->notifyHostsAboutVisitors($leg);
         }
     }
 
-    public function notifyHostsAboutVisitors(Subtrip $subtrip): int
+    public function notifyHostsAboutVisitors(Subtrip $leg): int
     {
-        return $this->sendSubtripNotifications($subtrip, [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY]);
+        return $this->sendLegNotifications($leg, [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY]);
     }
 
     public function sendScheduledTripNotifications(
@@ -185,8 +224,8 @@ class TripModel
 
         $sent = 0;
         foreach ($trips as $trip) {
-            foreach ($trip->getSubtrips() as $subtrip) {
-                $sent += $this->sendSubtripNotifications($subtrip, [$frequency]);
+            foreach ($trip->getLegs() as $leg) {
+                $sent += $this->sendLegNotifications($leg, [$frequency]);
             }
         }
 
@@ -208,15 +247,15 @@ class TripModel
 
         // Move legs arrival and departure consistently +1month
         $nextMonth = new DateTime()->modify('+1month');
-        $firstArrival = $trip->getSubtrips()->first()->getArrival();
+        $firstArrival = $trip->getLegs()->first()->getArrival();
         $adjust = $firstArrival->diff($nextMonth);
 
-        foreach ($trip->getSubTrips() as $leg) {
+        foreach ($trip->getLegs() as $leg) {
             $newLeg = clone $leg;
             $newLeg->setArrival($leg->getArrival()->add($adjust));
             $newLeg->setDeparture($leg->getDeparture()->add($adjust));
             $newLeg->setInvitedBy(null);
-            $newTrip->addSubTrip($newLeg);
+            $newTrip->addLeg($newLeg);
             $em->persist($newLeg);
             $em->flush();
         }
@@ -227,17 +266,17 @@ class TripModel
         return $newTrip;
     }
 
-    private function sendSubtripNotifications(Subtrip $subtrip, array $notificationValues): int
+    private function sendLegNotifications(Subtrip $leg, array $notificationValues): int
     {
         /** @var SubtripRepository $repository */
         $repository = $this->entityManager->getRepository(Subtrip::class);
-        $hosts = $repository->getMembersToNotifyAboutSubtrip($subtrip, $notificationValues);
+        $hosts = $repository->getMembersToNotifyAboutLeg($leg, $notificationValues);
 
         if ([] === $hosts) {
             return 0;
         }
 
-        $sentRepository = $this->entityManager->getRepository(MemberSubtripNotificationSent::class);
+        $sentRepository = $this->entityManager->getRepository(MemberLegNotificationSent::class);
         $sent = [];
         $sentCount = 0;
         foreach ($hosts as $host) {
@@ -247,21 +286,21 @@ class TripModel
             }
 
             $sent[$hostId] = true;
-            $lockName = $this->acquireSubtripNotificationLock($host, $subtrip);
+            $lockName = $this->acquireLegNotificationLock($host, $leg);
             if (null === $lockName) {
                 continue;
             }
 
             try {
-                if (null !== $sentRepository->findOneBy(['member' => $host, 'subtrip' => $subtrip])) {
+                if (null !== $sentRepository->findOneBy(['member' => $host, 'leg' => $leg])) {
                     continue;
                 }
 
-                if (true !== $this->mailer?->sendTripNotificationEmail($host, $subtrip)) {
+                if (true !== $this->mailer?->sendTripNotificationEmail($host, $leg)) {
                     continue;
                 }
 
-                $this->entityManager->persist(new MemberSubtripNotificationSent($host, $subtrip));
+                $this->entityManager->persist(new MemberLegNotificationSent($host, $leg));
                 $this->entityManager->flush();
                 ++$sentCount;
             } finally {
@@ -272,9 +311,9 @@ class TripModel
         return $sentCount;
     }
 
-    private function acquireSubtripNotificationLock(Member $member, Subtrip $subtrip): ?string
+    private function acquireLegNotificationLock(Member $member, Subtrip $leg): ?string
     {
-        $lockName = \sprintf('member-subtrip-notification-sent:%d:%d', $member->getId(), $subtrip->getId());
+        $lockName = \sprintf('member-leg-notification-sent:%d:%d', $member->getId(), $leg->getId());
         $locked = $this->entityManager->getConnection()->fetchOne('SELECT GET_LOCK(?, 0)', [$lockName]);
 
         return 1 === (int) $locked ? $lockName : null;

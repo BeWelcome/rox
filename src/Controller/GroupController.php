@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Throwable;
 
 /**
  * Class GroupController.
@@ -313,6 +314,37 @@ class GroupController extends AbstractController
         $referer = $request->headers->get('referer');
 
         return $this->redirect($referer);
+    }
+
+    #[Route(
+        path: '/group/{id}/delete/true',
+        name: 'group_delete_confirmed',
+        requirements: ['id' => '\\d+'],
+        methods: ['GET'],
+        priority: 10,
+    )]
+    public function deleteGroup(Group $group, Logger $logger): RedirectResponse
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+        $isGroupsAdmin = $this->isGranted(Member::ROLE_ADMIN_GROUP)
+            && 10 === $member->getLevelForRight(Member::ROLE_ADMIN_GROUP);
+        if (!$group->isAdmin($member) && !$isGroupsAdmin) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $groupId = $group->getId();
+        try {
+            $this->groupModel->delete($group);
+        } catch (Throwable) {
+            $this->addTranslatedFlash('error', 'flash.group.delete.error');
+
+            return $this->redirectToRoute('group_delete', ['group_id' => $groupId]);
+        }
+
+        $logger->write("Group #{$groupId} was deleted by member #{$member->getId()}", 'Group');
+
+        return $this->redirectToRoute('groups_redirect');
     }
 
     #[Route(path: '/new/group', name: 'new_group')]

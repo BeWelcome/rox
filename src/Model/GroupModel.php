@@ -17,6 +17,7 @@ use App\Entity\Role;
 use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
 use App\Utilities\MessageTrait;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Exception;
@@ -298,6 +299,26 @@ class GroupModel
         $em->flush();
 
         return $group;
+    }
+
+    public function delete(Group $group): void
+    {
+        $groupId = $group->getId();
+        $this->entityManager->getConnection()->transactional(
+            static function (Connection $connection) use ($groupId): void {
+                $connection->executeStatement(
+                    <<<'SQL'
+                        DELETE scopes
+                        FROM privilegescopes scopes
+                        INNER JOIN roles role ON role.id = scopes.IdRole
+                        WHERE role.name = ? AND scopes.IdType = ?
+                        SQL,
+                    [Role::GROUP_OWNER, (string) $groupId],
+                );
+                $connection->executeStatement('DELETE FROM membersgroups WHERE IdGroup = ?', [$groupId]);
+                $connection->executeStatement('DELETE FROM `groups` WHERE id = ?', [$groupId]);
+            },
+        );
     }
 
     public function acceptJoin(Group $group, Member $member, Member $admin)

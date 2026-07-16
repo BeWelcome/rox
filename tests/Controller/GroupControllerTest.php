@@ -21,19 +21,15 @@ final class GroupControllerTest extends WebTestCase
         $inactiveMember = $this->getMember($entityManager, 'member-banned');
         $groupId = random_int(1_500_000_000, 2_000_000_000);
 
-        try {
-            $this->createGroupFixture($connection, $groupId, $owner, $applicant, $inactiveMember);
-            $client->loginUser($owner);
+        $this->createGroupFixture($connection, $groupId, $owner, $applicant, $inactiveMember);
+        $client->loginUser($owner);
 
-            $client->request('GET', "/group/{$groupId}/delete/true");
+        $client->request('GET', "/group/{$groupId}/delete/true");
 
-            self::assertResponseRedirects('/groups/');
-            self::assertSame(0, $this->countRows($connection, 'groups', 'id', $groupId));
-            self::assertSame(0, $this->countRows($connection, 'membersgroups', 'IdGroup', $groupId));
-            self::assertSame(0, $this->countRows($connection, 'privilegescopes', 'IdType', $groupId));
-        } finally {
-            $this->removeGroupFixture($connection, $groupId);
-        }
+        self::assertResponseRedirects('/groups/');
+        self::assertSame(0, $this->countRows($connection, 'groups', 'id', $groupId));
+        self::assertSame(0, $this->countRows($connection, 'membersgroups', 'IdGroup', $groupId));
+        self::assertSame(0, $this->countRows($connection, 'privilegescopes', 'IdType', $groupId));
     }
 
     public function testDeleteFailureRollsBackAndReturnsToConfirmation(): void
@@ -46,21 +42,17 @@ final class GroupControllerTest extends WebTestCase
         $inactiveMember = $this->getMember($entityManager, 'member-banned');
         $groupId = random_int(1_500_000_000, 2_000_000_000);
 
-        try {
-            $this->createGroupFixture($connection, $groupId, $owner, $applicant, $inactiveMember);
-            $this->createGroupDeleteBlocker($connection, $groupId);
-            $client->loginUser($owner);
+        $this->createGroupFixture($connection, $groupId, $owner, $applicant, $inactiveMember);
+        $this->createGroupDeleteBlocker($connection, $groupId);
+        $client->loginUser($owner);
 
-            $client->request('GET', "/group/{$groupId}/delete/true");
+        $client->request('GET', "/group/{$groupId}/delete/true");
 
-            self::assertResponseRedirects("/group/{$groupId}/delete");
-            self::assertNotEmpty($client->getRequest()->getSession()->getFlashBag()->peek('error'));
-            self::assertSame(1, $this->countRows($connection, 'groups', 'id', $groupId));
-            self::assertSame(3, $this->countRows($connection, 'membersgroups', 'IdGroup', $groupId));
-            self::assertSame(1, $this->countRows($connection, 'privilegescopes', 'IdType', $groupId));
-        } finally {
-            $this->removeGroupFixture($connection, $groupId);
-        }
+        self::assertResponseRedirects("/group/{$groupId}/delete");
+        self::assertNotEmpty($client->getRequest()->getSession()->getFlashBag()->peek('error'));
+        self::assertSame(1, $this->countRows($connection, 'groups', 'id', $groupId));
+        self::assertSame(3, $this->countRows($connection, 'membersgroups', 'IdGroup', $groupId));
+        self::assertSame(1, $this->countRows($connection, 'privilegescopes', 'IdType', $groupId));
     }
 
     private function getMember(EntityManagerInterface $entityManager, string $username): Member
@@ -145,14 +137,5 @@ final class GroupControllerTest extends WebTestCase
             "SELECT COUNT(*) FROM `{$table}` WHERE `{$column}` = ?",
             [$groupId],
         );
-    }
-
-    private function removeGroupFixture(Connection $connection, int $groupId): void
-    {
-        $connection->executeStatement('DELETE FROM polls_list_allowed_groups WHERE IdGroup = ?', [$groupId]);
-        $connection->executeStatement('DELETE FROM polls WHERE id = ?', [$groupId]);
-        $connection->executeStatement('DELETE FROM privilegescopes WHERE IdType = ?', [(string) $groupId]);
-        $connection->executeStatement('DELETE FROM membersgroups WHERE IdGroup = ?', [$groupId]);
-        $connection->executeStatement('DELETE FROM groups WHERE id = ?', [$groupId]);
     }
 }

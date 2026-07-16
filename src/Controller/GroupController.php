@@ -325,13 +325,12 @@ class GroupController extends AbstractController
     )]
     public function deleteGroup(Group $group, Logger $logger): RedirectResponse
     {
-        /** @var Member|null $member */
+        /** @var Member $member */
         $member = $this->getUser();
-        $isGroupsAdmin = $member instanceof Member
-            && $this->isGranted(Member::ROLE_ADMIN_GROUP)
+        $isGroupsAdmin = $this->isGranted(Member::ROLE_ADMIN_GROUP)
             && 10 === $member->getLevelForRight(Member::ROLE_ADMIN_GROUP);
-        if (!$member instanceof Member || (!$group->isAdmin($member) && !$isGroupsAdmin)) {
-            throw $this->createAccessDeniedException('No group admin');
+        if (!$group->isAdmin($member) && !$isGroupsAdmin) {
+            throw $this->createAccessDeniedException();
         }
 
         $groupId = $group->getId();

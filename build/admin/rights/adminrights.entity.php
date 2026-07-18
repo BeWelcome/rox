@@ -43,6 +43,7 @@ class Right extends RoxEntityBase
             WHERE
                 rv.IdRight = " . $this->id . "
                 AND rv.IdMember = " . $member->id . "
+                AND rv.Level <> 0
             ";
         return $this->singleLookup($query);
     }

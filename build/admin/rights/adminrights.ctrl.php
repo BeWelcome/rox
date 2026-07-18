@@ -98,9 +98,10 @@ class AdminRightsController extends AdminBaseController
             $history= true;
         }
         $mem_redirect->vars = $vars;
-        $mem_redirect->members = $this->model->getMembersWithRights(false);
+        $members = $this->model->getMembersWithRights(false);
+        $mem_redirect->members = $members;
         // get list of members with rights (as assigned, filter by $member if set)
-        $mem_redirect->membersWithRights = $this->model->getMembersWithRights($member);
+        $mem_redirect->membersWithRights = $member ? $this->model->getMembersWithRights($member) : $members;
     }
 
     public function listMembers()
@@ -120,7 +121,7 @@ class AdminRightsController extends AdminBaseController
         // get list of members (with assigned rights)
         $page->members = $this->model->getMembersWithRights();
         // get list of members with rights (as assigned, filter by $member if set)
-        $page->membersWithRights = $this->model->getMembersWithRights($member);
+        $page->membersWithRights = $member ? $this->model->getMembersWithRights($member) : $page->members;
         if (($member) && (count($page->membersWithRights) == 0)) {
             $this->redirectAbsolute('/admin/rights/assign/' . $this->route_vars['username']);
         }

@@ -5,88 +5,81 @@ namespace App\Tests\Controller;
 use AdminRightsController;
 use AdminRightsModel;
 use App\Entity\Member;
+use App\Utilities\SessionSingleton;
+use DAMA\DoctrineTestBundle\PHPUnit\SkipDatabaseRollback;
 use Doctrine\ORM\EntityManagerInterface;
+use EnvironmentExplorer;
+use InvalidArgumentException;
 use PDB;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\IgnoreDeprecations;
-use PHPUnit\Framework\Attributes\PreserveGlobalState;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use ReadOnlyObject;
 use ReadWriteObject;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Group('integration')]
-#[IgnoreDeprecations('^Creation of dynamic property RoxFrontRouter::\$(?:classes|session_memory) is deprecated$')]
+#[SkipDatabaseRollback]
 /**
  * @infection-ignore-all
  */
-final class AdminRightsControllerTest extends WebTestCase
+final class AdminRightsControllerTest extends KernelTestCase
 {
-    #[RunInSeparateProcess]
-    #[PreserveGlobalState(false)]
-    public function testMemberRightsListRenders(): void
+    public function testMemberRightsListIncludesMemberWithoutAddressAndReusesResult(): void
     {
-        $client = $this->createAdminClient();
-        $_SERVER['REQUEST_URI'] = '/admin/rights/list/members';
-        $_SERVER['SCRIPT_NAME'] = '/index.php';
-
-        $client->request('GET', '/admin/rights/list/members');
-
-        $this->assertResponseIsSuccessful();
-
+        $this->initializeLegacyEnvironment();
         $model = new AdminRightsModel();
         $dao = $this->addRightForMemberWithoutAddress($model);
         try {
-            $members = $model->getMembersWithRights();
-            $this->assertArrayHasKey('member-empty', $members);
-            $this->assertMemberDetails($members['member-empty']);
+            $page = new AdminRightsController()->listMembers();
+
+            $this->assertArrayHasKey('member-empty', $page->members);
+            $this->assertMemberDetails($page->members['member-empty']);
+            $this->assertSame($page->members, $page->membersWithRights);
         } finally {
             $dao->exec('ROLLBACK');
         }
     }
 
-    #[RunInSeparateProcess]
-    #[PreserveGlobalState(false)]
     public function testMemberRightsListRefreshesSelectedMember(): void
     {
-        $client = $this->createAdminClient();
-        $_SERVER['REQUEST_URI'] = '/admin/rights/list/members';
-        $_SERVER['SCRIPT_NAME'] = '/index.php';
-
-        $crawler = $client->request('GET', '/admin/rights/list/members');
-        $option = $crawler->filterXPath('//select[@id="member"]/option[@value != "0"]')->first();
-        $memberId = $option->attr('value');
-        $username = trim($option->text());
-        $this->assertNotNull($memberId);
-
-        $args = (object) ['post' => ['member' => $memberId, 'history' => 1]];
-        $redirect = new ReadWriteObject();
+        $this->initializeLegacyEnvironment();
+        $model = new AdminRightsModel();
+        $dao = $this->addRightForMemberWithoutAddress($model);
         $controller = new AdminRightsController();
-        $controller->listMembersCallback($args, new ReadOnlyObject([]), $redirect, new ReadWriteObject());
+        try {
+            $unfilteredArgs = (object) ['post' => ['member' => 0]];
+            $unfilteredRedirect = new ReadWriteObject();
+            $controller->listMembersCallback(
+                $unfilteredArgs,
+                new ReadOnlyObject([]),
+                $unfilteredRedirect,
+                new ReadWriteObject()
+            );
+            $this->assertSame($unfilteredRedirect->members, $unfilteredRedirect->membersWithRights);
 
-        $this->assertSame($args->post, $redirect->vars);
-        $this->assertArrayHasKey($username, $redirect->membersWithRights);
-        $this->assertCount(1, $redirect->membersWithRights);
+            $memberId = $unfilteredRedirect->members['member-empty']->id;
+            $args = (object) ['post' => ['member' => $memberId, 'history' => 1]];
+            $redirect = new ReadWriteObject();
+            $controller->listMembersCallback($args, new ReadOnlyObject([]), $redirect, new ReadWriteObject());
+
+            $this->assertSame($args->post, $redirect->vars);
+            $this->assertArrayHasKey('member-empty', $redirect->membersWithRights);
+            $this->assertCount(1, $redirect->membersWithRights);
+        } finally {
+            $dao->exec('ROLLBACK');
+        }
     }
 
-    #[RunInSeparateProcess]
-    #[PreserveGlobalState(false)]
-    public function testRightsMemberListRenders(): void
+    public function testRightsMemberListIncludesMemberWithoutAddress(): void
     {
-        $client = $this->createAdminClient();
-        $_SERVER['REQUEST_URI'] = '/admin/rights/list/rights';
-        $_SERVER['SCRIPT_NAME'] = '/index.php';
-
-        $client->request('GET', '/admin/rights/list/rights');
-
-        $this->assertResponseIsSuccessful();
-
+        $this->initializeLegacyEnvironment();
         $model = new AdminRightsModel();
         $dao = $this->addRightForMemberWithoutAddress($model);
         try {
             $memberDetails = null;
-            foreach ($model->getRightsWithMembers() as $right) {
+            foreach (new AdminRightsController()->listRights()->rightsWithMembers as $right) {
                 foreach ($right->Members as $member) {
                     if ('member-empty' === $member->Username) {
                         $memberDetails = $member;
@@ -101,16 +94,9 @@ final class AdminRightsControllerTest extends WebTestCase
         }
     }
 
-    #[RunInSeparateProcess]
-    #[PreserveGlobalState(false)]
     public function testRightCanBeAssignedWithoutHistory(): void
     {
-        $client = $this->createAdminClient();
-        $_SERVER['REQUEST_URI'] = '/admin/rights/assign/member-empty';
-        $_SERVER['SCRIPT_NAME'] = '/index.php';
-        $client->request('GET', '/admin/rights/assign/member-empty');
-        $this->assertResponseIsSuccessful();
-
+        $this->initializeLegacyEnvironment();
         $model = new AdminRightsModel();
         $dao = $model->dao;
         $dao->exec('START TRANSACTION');
@@ -149,16 +135,9 @@ final class AdminRightsControllerTest extends WebTestCase
         }
     }
 
-    #[RunInSeparateProcess]
-    #[PreserveGlobalState(false)]
     public function testRemovedRightCanBeAssignedAgain(): void
     {
-        $client = $this->createAdminClient();
-        $_SERVER['REQUEST_URI'] = '/admin/rights/assign/member-empty';
-        $_SERVER['SCRIPT_NAME'] = '/index.php';
-        $client->request('GET', '/admin/rights/assign/member-empty');
-        $this->assertResponseIsSuccessful();
-
+        $this->initializeLegacyEnvironment();
         $model = new AdminRightsModel();
         $dao = $model->dao;
         $dao->exec('START TRANSACTION');
@@ -197,23 +176,44 @@ final class AdminRightsControllerTest extends WebTestCase
         }
     }
 
-    private function createAdminClient(): KernelBrowser
+    private function initializeLegacyEnvironment(): void
     {
-        chdir(__DIR__ . '/../../public');
-        unset($_SERVER['argc'], $_SERVER['argv']);
-
-        $client = static::createClient();
-        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        static::bootKernel();
+        $container = static::getContainer();
+        $entityManager = $container->get(EntityManagerInterface::class);
         $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => 'bwadmin']);
         $this->assertInstanceOf(Member::class, $member);
-        $client->loginUser($member);
 
-        return $client;
+        try {
+            $session = SessionSingleton::getSession();
+        } catch (InvalidArgumentException) {
+            $session = new Session(new MockArraySessionStorage());
+            SessionSingleton::createInstance($session);
+        }
+        $session->set('IdMember', $member->getId());
+
+        $databaseName = $entityManager->getConnection()->getDatabase();
+        $this->assertNotNull($databaseName);
+
+        $workingDirectory = getcwd();
+        try {
+            $this->assertTrue(chdir($container->getParameter('kernel.project_dir') . '/public'));
+            new EnvironmentExplorer($container->get(UrlGeneratorInterface::class))->initializeGlobalState(
+                $container->getParameter('database_host'),
+                $databaseName,
+                $container->getParameter('database_user'),
+                $container->getParameter('database_password'),
+                $container->getParameter('manticore.host'),
+                $container->getParameter('manticore.port'),
+            );
+        } finally {
+            chdir($workingDirectory);
+        }
     }
 
     private function assertMemberDetails(object $member): void
     {
-        $this->assertMatchesRegularExpression('/^\d{4}-\d{2}-\d{2}$/', $member->LastLogin);
+        $this->assertSame('2026-01-02', $member->LastLogin);
     }
 
     private function addRightForMemberWithoutAddress(AdminRightsModel $model): PDB
@@ -226,6 +226,9 @@ final class AdminRightsControllerTest extends WebTestCase
             WHERE a.member_id = m.id AND a.active = 1 AND m.Username = 'member-empty'
             SQL)->fetch(PDB::FETCH_OBJ);
         $this->assertSame(0, (int) $addressCount->count);
+        $dao->exec(<<<'SQL'
+            UPDATE member SET LastActive = '2026-01-02 03:04:05' WHERE Username = 'member-empty'
+            SQL);
         $dao->exec(<<<'SQL'
             INSERT INTO rightsvolunteers (Level, Scope, Comment, updated, created, IdMember, IdRight)
             SELECT 10, '"All"', 'Issue 154 regression', NOW(), NOW(), m.id, r.id

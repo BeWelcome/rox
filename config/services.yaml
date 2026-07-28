@@ -23,6 +23,9 @@ parameters:
     username.pattern: "/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i"
     manticore.host: '%env(MANTICORE_HOST)%'
     manticore.port: '%env(int:MANTICORE_PORT)%'
+    web_push_vapid_subject: '%env(WEB_PUSH_VAPID_SUBJECT)%'
+    web_push_vapid_public_key: '%env(WEB_PUSH_VAPID_PUBLIC_KEY)%'
+    web_push_vapid_private_key: '%env(WEB_PUSH_VAPID_PRIVATE_KEY)%'
 
 services:
     _defaults:
@@ -39,6 +42,9 @@ services:
             $locales: '%locales%'
             $formLoginAuthenticator: '@security.authenticator.form_login.main'
             $usernamePattern: '%username.pattern%'
+            $webPushVapidSubject: '%web_push_vapid_subject%'
+            $webPushVapidPublicKey: '%web_push_vapid_public_key%'
+            $webPushVapidPrivateKey: '%web_push_vapid_private_key%'
             $noReplyEmailAddress: '%env(MAILER_NO_REPLY_ADDRESS)%'
             $messageEmailAddress: '%env(MAILER_MESSAGE_ADDRESS)%'
             $groupEmailAddress: '%env(MAILER_GROUP_ADDRESS)%'
@@ -75,9 +81,13 @@ services:
         arguments:
             $batchSize: '%massmail_batch_size%'
 
-    App\Command\SendNotificationsCommand:
+    App\Command\SendAndPushNotificationsCommand:
         arguments:
             $batchSize: '%forum_notification_batch_size%'
+
+    App\Service\PushGatewayInterface: '@App\Service\PushGateway'
+    App\Service\BrowserPushEndpointResolverInterface: '@App\Service\DnsBrowserPushEndpointResolver'
+    App\Service\BrowserPushWebPushFactoryInterface: '@App\Service\BrowserPushWebPushFactory'
 
     app.member_data_extractor.activities:
         class: App\Model\MemberDataExtractor\ActivitiesExtractor
@@ -151,6 +161,28 @@ services:
             $className: 'App\Entity\BroadcastMessage'
             $memberRelationName: receiver
             $alias: broadcasts
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.browser_push_subscriptions:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\BrowserPushSubscription'
+            $memberRelationName: member
+            $alias: browser_push_subscriptions
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.browser_push_notifications:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\BrowserPushNotification'
+            $memberRelationName: receiver
+            $alias: browser_push_notifications
+        tags: [ 'app.member_data_extractor' ]
+
+    app.member_data_extractor.browser_push_notification_deliveries:
+        class: App\Model\MemberDataExtractor\BrowserPushNotificationDeliveriesExtractor
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.newsletters:
@@ -463,3 +495,8 @@ services:
 #    App\Processor\LocationProcessor: ~
 # #   App\Processor\MemberProcessor: ~
 #    App\Processor\LanguageProcessor: ~
+
+when@test:
+    services:
+        App\Tests\Service\StaticBrowserPushEndpointResolver: ~
+        App\Service\BrowserPushEndpointResolverInterface: '@App\Tests\Service\StaticBrowserPushEndpointResolver'

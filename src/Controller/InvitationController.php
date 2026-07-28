@@ -14,6 +14,8 @@ use App\Form\InvitationType;
 use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\InvitationModel;
+use App\Service\BrowserNotificationPayload;
+use App\Service\BrowserNotificationService;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
@@ -43,6 +45,7 @@ class InvitationController extends BaseRequestAndInvitationController
         EntityManagerInterface $entityManager,
         private Mailer $mailer,
         private Logger $logger,
+        private readonly BrowserNotificationService $browserNotificationService,
     ) {
         parent::__construct($invitationModel, $entityManager);
         $this->conversationModel = $conversationModel;
@@ -463,6 +466,13 @@ class InvitationController extends BaseRequestAndInvitationController
             'changed' => $requestChanged,
             'leg' => $leg,
         ]);
+        $this->browserNotificationService->queue(
+            $receiver,
+            BrowserNotificationPayload::invitation(
+                $sender,
+                $this->generateUrl('conversation_view', ['id' => $request->getId()])
+            )
+        );
 
         return true;
     }

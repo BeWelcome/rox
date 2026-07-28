@@ -7,6 +7,9 @@ use App\Doctrine\NotificationStatusType;
 use App\Entity\ForumPost;
 use App\Entity\PostNotification;
 use App\Repository\PostNotificationRepository;
+use App\Service\BrowserNotificationPayload;
+use App\Service\BrowserNotificationService;
+use App\Service\BrowserPushNotificationProcessor;
 use App\Service\Mailer;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,6 +22,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Throwable;
 
 /**
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
@@ -26,11 +31,11 @@ use Symfony\Component\Mime\Address;
  */
 #[AsCommand(
     name: 'send:notifications',
-    description: 'Send a batch of notification email every time the command is called',
+    description: 'Send notification emails and browser push notifications',
     aliases: [],
     hidden: false,
 )]
-class SendNotificationsCommand extends Command
+class SendAndPushNotificationsCommand extends Command
 {
     use TranslatorTrait;
 
@@ -38,6 +43,9 @@ class SendNotificationsCommand extends Command
         private EntityManagerInterface $entityManager,
         private LoggerInterface $logger,
         private Mailer $mailer,
+        private BrowserNotificationService $browserNotificationService,
+        private UrlGeneratorInterface $urlGenerator,
+        private BrowserPushNotificationProcessor $browserPushNotificationProcessor,
         private int $batchSize,
     ) {
         parent::__construct();
@@ -46,7 +54,7 @@ class SendNotificationsCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('batchSize', InputArgument::OPTIONAL, 'Count of mails send while the command is running')
+            ->addArgument('batchSize', InputArgument::OPTIONAL, 'Number of notifications sent per run')
         ;
     }
 
@@ -99,6 +107,7 @@ class SendNotificationsCommand extends Command
                                 'previousMessageIds' => $previousMessageIds,
                             ]
                         );
+                        $this->sendBrowserNotification($scheduled);
                         if ($success) {
                             $notificationStatus = NotificationStatusType::SENT;
                             $scheduled->setMessageId($messageId);
@@ -124,7 +133,28 @@ class SendNotificationsCommand extends Command
             $io->success('No messages to be sent');
         }
 
+        try {
+            $this->browserPushNotificationProcessor->process((int) $batchSize);
+        } catch (Throwable $throwable) {
+            $this->logger->warning('Browser push notification queue processing failed.', [
+                'exception' => $throwable,
+            ]);
+        }
+
         return 0;
+    }
+
+    private function sendBrowserNotification(PostNotification $notification): void
+    {
+        if ('members_threads_subscribed' !== $notification->getTableSubscription()) {
+            return;
+        }
+
+        $post = $notification->getPost();
+        $this->browserNotificationService->queue(
+            $notification->getReceiver(),
+            BrowserNotificationPayload::forum($post->getAuthor(), $this->getForumPostUrl($post))
+        );
     }
 
     private function determineSender(ForumPost $post): Address
@@ -137,6 +167,29 @@ class SendNotificationsCommand extends Command
         }
 
         return $from;
+    }
+
+    private function getForumPostUrl(ForumPost $post): string
+    {
+        $thread = $post->getThread();
+        if (null === $thread) {
+            return '/forums';
+        }
+
+        $fragment = 'post' . $post->getId();
+        $group = $thread->getGroup();
+        if (null !== $group) {
+            return $this->urlGenerator->generate('group_forum_thread', [
+                'group_id' => $group->getId(),
+                'thread' => $thread->getId(),
+                '_fragment' => $fragment,
+            ]);
+        }
+
+        return $this->urlGenerator->generate('forum_thread', [
+            'threadId' => $thread->getId(),
+            '_fragment' => $fragment,
+        ]);
     }
 
     private function getSubject(PostNotification $notification): string

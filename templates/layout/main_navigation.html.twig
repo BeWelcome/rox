@@ -81,7 +81,7 @@
             </li>
             {# conversations #}
             <li class="nav-item topbar-messages">
-                <div id="conversationCount" class="nav-link topbar-counter px-0" data-count="-1">
+                <div id="conversationCount" class="nav-link topbar-counter px-0" data-count="-1" data-member-id="{{ loggedInMember.id }}">
                     <a href="{{ path('conversations', {'conversationsType': 'conversations'}) }}" aria-label="{{ 'conversations' | trans }}" class="topbar-counter__link text-white">
                         <span class="topbar-counter__icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
                         <span class="badge topbar-counter__badge"><i class="fa fa-fw fa-spinner"></i></span>
@@ -116,7 +116,15 @@
                                               class="dropdown-item text-left">{{ 'profile.change.password.menu' | trans }}</a></li>
                     <li><div class="dropdown-divider"></div></li>
                     <li class="member-menu__logout-item">
-                        <a href="{{ url('_logout_main') }}" class="member-menu__logout">
+                        <a href="{{ url('_logout_main') }}" class="member-menu__logout"
+                           data-browser-push-session
+                           data-browser-push-configured="{{ browser_push_enabled ? '1' : '0' }}"
+                           data-browser-push-preference-value="{{ browser_push_preference }}"
+                           data-member-id="{{ loggedInMember.id }}"
+                           data-public-key="{{ browser_push_public_key }}"
+                           data-subscribe-url="{{ path('browser_push_subscription_upsert') }}"
+                           data-unsubscribe-url="{{ path('browser_push_subscription_delete') }}"
+                           data-csrf-token="{{ csrf_token('browser_push_subscription') }}">
                             <span class="member-menu__logout-icon" aria-hidden="true"><i class="fas fa-sign-out-alt"></i></span>
                             <span class="member-menu__logout-text">{{ 'logout' | trans }}</span>
                         </a>

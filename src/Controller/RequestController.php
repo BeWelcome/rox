@@ -13,6 +13,8 @@ use App\Form\HostingRequestHost;
 use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
+use App\Service\BrowserNotificationPayload;
+use App\Service\BrowserNotificationService;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
@@ -41,6 +43,7 @@ class RequestController extends BaseRequestAndInvitationController
         EntityManagerInterface $entityManager,
         private readonly Mailer $mailer,
         private readonly Logger $logger,
+        private readonly BrowserNotificationService $browserNotificationService,
     ) {
         parent::__construct($requestModel, $entityManager);
 
@@ -379,6 +382,13 @@ class RequestController extends BaseRequestAndInvitationController
             'request' => $request->getRequest(),
             'changed' => $requestChanged,
         ]);
+        $this->browserNotificationService->queue(
+            $receiver,
+            BrowserNotificationPayload::request(
+                $sender,
+                $this->generateUrl('conversation_view', ['id' => $request->getId()])
+            )
+        );
 
         return true;
     }

@@ -20,19 +20,19 @@
         <p class="u:font-300 u:text-14">{{ 'trip.posted.by'|trans({username: macros.profilelink(leg.trip.creator.username)})|raw }}</p>
     </div>
     <div class="c-dashboard__trip-actions">
-        <form method="post" action="{{ path('trip_hide', {id: leg.id}) }}">
-            <input type="hidden" name="_token" value="{{ csrf_token('hide_subtrip') }}">
+        <form method="post" action="{{ path('trip_hide', {id: leg.id}) }}" class="js-hide-leg">
+            <input type="hidden" name="_token" value="{{ csrf_token('hide_leg') }}">
             <input type="hidden" name="redirectTo" value="homepage">
             <button type="submit" class="o-rounded" aria-label="{{ 'trip.hide'|trans }}" title="{{ 'trip.hide'|trans }}">
-                <i class="fa fa-fw fa-times"></i>
+                <i class="fa fa-fw fa-eye-slash"></i>
             </button>
         </form>
-        {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
+        {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
             <a class="o-rounded" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}">
                 <i class="fa fa-fw fa-envelope"></i>
             </a>
         {% endif %}
-        {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
+        {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
             {% if leg.invitationBy(app.user) %}
                 {% set invitation = leg.invitationBy(app.user) %}
                 {% set username = invitation.messages[0].initiator.Username %}

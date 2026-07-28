@@ -2,12 +2,12 @@
 
 <div class="c-trip-legs__item c-trip-legs__item--small {% if leg.invitedBy == app.user %}c-trip-legs__item--invited{% endif %}">
     <div class="c-trip-legs__icons-wrapper">
-        {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in leg.options %}
+        {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
             <a class="o-rounded u:mx-4" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}">
                 <i class="fa fa-fw fa-envelope"></i>
             </a>
         {% endif %}
-        {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in leg.options %}
+        {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
             {% if leg.invitationBy(app.user) %}
                 {% set invitation = leg.invitationBy(app.user) %}
                 {% set username = invitation.messages[0].initiator.Username %}

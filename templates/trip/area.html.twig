@@ -11,13 +11,35 @@
 
 {% block javascripts %}
   <script>
-      $('#trips_radius').change(function() {
-      setTimeout(updateTripsInArea, 500);
+    document.addEventListener('DOMContentLoaded', function () {
+      const radius = document.getElementById('trips_radius');
+      if (radius) {
+        radius.addEventListener('change', function () {
+          setTimeout(function () {
+            document.getElementById('trips').requestSubmit();
+          }, 500);
+        });
+      }
     });
 
-    function updateTripsInArea() {
-        $('#trips').submit();
-    }
+    document.addEventListener('submit', function (event) {
+      const form = event.target.closest('.js-hide-leg');
+      if (!form) {
+        return;
+      }
+
+      event.preventDefault();
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: {'X-Requested-With': 'XMLHttpRequest'},
+      }).then(function (response) {
+        if (response.ok) {
+          form.closest('.c-trip-legs__item').remove();
+        }
+      });
+    });
   </script>
 {% endblock javascripts %}
 

@@ -36,7 +36,7 @@ class Subtrip
     #[ORM\Column(name: 'departure', type: 'date', nullable: false)]
     private ?DateTime $departure = null;
 
-    #[ORM\Column(name: 'options', type: 'subtrip_options', nullable: true)]
+    #[ORM\Column(name: 'options', type: 'leg_options', nullable: true)]
     private ?string $options = null;
 
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -46,10 +46,10 @@ class Subtrip
 
     #[ORM\JoinColumn(name: 'invited_by', referencedColumnName: 'id', nullable: true)]
     #[ORM\OneToOne(targetEntity: Member::class)]
-    private ?Member $invitedBy;
+    private ?Member $invitedBy = null;
 
     #[ORM\JoinColumn(name: 'trip_id', referencedColumnName: 'id', nullable: false)]
-    #[ORM\ManyToOne(targetEntity: Trip::class, cascade: ['persist', 'remove'], inversedBy: 'subtrips')]
+    #[ORM\ManyToOne(targetEntity: Trip::class, cascade: ['persist', 'remove'], inversedBy: 'legs')]
     private ?Trip $trip = null;
 
     #[ORM\OneToMany(targetEntity: HostingRequest::class, mappedBy: 'inviteForLeg')]

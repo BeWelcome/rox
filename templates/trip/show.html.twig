@@ -65,23 +65,23 @@
             <div class="l-trips-overlay-wrapper">
                 <ul>
                     {% set current = 1 %}
-                    {% set lastLongitude = ((trip.subtrips)|first).location.longitude %}
-                    {% for subtrip in trip.subtrips %}
-                        {% if not(constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in subtrip.options) or (member is same as (trip.creator)) %}
+                    {% set lastLongitude = ((trip.legs)|first).location.longitude %}
+                    {% for leg in trip.legs %}
+                        {% if not(constant('App\\Doctrine\\LegOptionsType::PRIVATE') in leg.options) or (member is same as (trip.creator)) %}
                             <li class="l-trip-show">
                                 <span
                                     class="o-number o-number--white o-number--l u:relative u:ms-__18">{{ current }}</span>
-                                <div><a class="anchor" id="leg{{subtrip.id}}"></a>
+                                <div><a class="anchor" id="leg{{leg.id}}"></a>
                                     <div class="u:ms-16 u:md:ms-0 u:md:mt-4">
                                         <p class="u:text-24 u:text-white u:font-display u:mb-8 u:font-300"><span
-                                                class="u:font-500">{{ subtrip.location.fullname }}</span>
-                                            <i class="o-flag o-flag--{{ subtrip.location.country.countryId }} u:ms-4" title="{{ subtrip.location.country.name }}"></i>
+                                                class="u:font-500">{{ leg.location.fullname }}</span>
+                                            <i class="o-flag o-flag--{{ leg.location.country.countryId }} u:ms-4" title="{{ leg.location.country.name }}"></i>
                                         </p>
-                                        <p class="u:text-white u:font-display u:font-300">{{ subtrip.arrival|format_date('full') }}{% if subtrip.arrival != subtrip.departure %} - <br>{{ subtrip.departure|format_date('full') }}{% endif %}</p>
+                                        <p class="u:text-white u:font-display u:font-300">{{ leg.arrival|format_date('full') }}{% if leg.arrival != leg.departure %} - <br>{{ leg.departure|format_date('full') }}{% endif %}</p>
                                     </div>
                                     <div class="u:ms-16 u:md:ms-0 u:mt-8">
                                         {% if app.user == trip.creator %}
-                                            {% if constant('App\\Doctrine\\SubtripOptionsType::PRIVATE') in subtrip.options %}
+                                            {% if constant('App\\Doctrine\\LegOptionsType::PRIVATE') in leg.options %}
                                                 <div class="c-trip-card__icon-grid u:mb-8">
                                                     <i class="fa fa-check u:text-white u:text-16 u:justify-self-center u:self-center"></i>
                                                     <p class="u:text-white u:font-display"
@@ -89,7 +89,7 @@
                                                 </div>
                                             {% endif %}
 
-                                            {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
+                                            {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
                                                 <div class="c-trip-card__icon-grid u:mb-8">
                                                     <i class="fa fa-check u:text-white u:text-16 u:justify-self-center u:self-center"></i>
                                                     <p class="u:text-white u:font-display"
@@ -97,15 +97,15 @@
                                                 </div>
                                             {% endif %}
 
-                                            {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
+                                            {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
                                                 <div class="c-trip-card__icon-grid u:mb-8">
                                                     <i class="fa fa-check u:text-white u:text-16 u:justify-self-center u:self-center"></i>
                                                     <p class="u:text-white u:font-display"
                                                        aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.looking.for.host'|trans }}</p>
                                                 </div>
                                             {% endif %}
-                                            {% if subtrip.acceptedInvitation %}
-                                                {% set invitation = subtrip.acceptedInvitation %}
+                                            {% if leg.acceptedInvitation %}
+                                                {% set invitation = leg.acceptedInvitation %}
                                                 {% set username = invitation.messages[0].initiator.Username %}
                                                 <div class="o-avatar__img-wrapper o-avatar--shadow-s o-avatar--shadow-green"
                                                      style="width:48px; height:48px;">
@@ -117,7 +117,7 @@
                                                     </a>
                                                 </div>
                                             {% else %}
-                                                {% set invitations = subtrip.openInvitations %}
+                                                {% set invitations = leg.openInvitations %}
                                                 {% for invitation in invitations|slice(0,4) %}
                                                     {% set username = invitation.messages[0].initiator.Username %}
                                                     <div class="o-avatar__img-wrapper o-avatar--shadow-s"
@@ -133,17 +133,17 @@
                                                 {% if invitations|length > 5 %}<a href="{{ url('conversations', {conversationsType: 'invitations'}) }}">...</a>{% endif %}
                                             {% endif %}
                                         {% else %}
-                                            {% if distance(subtrip.location.latitude, subtrip.location.longitude, address.latitude, address.longitude) <= trip.invitationRadius or subtrip.location.geonameId == address.location.geonameId %}
+                                            {% if distance(leg.location.latitude, leg.location.longitude, address.latitude, address.longitude) <= trip.invitationRadius or leg.location.geonameId == address.location.geonameId %}
                                                 <div class="u:flex">
-                                                    {% if constant('App\\Doctrine\\SubtripOptionsType::MEET_LOCALS') in subtrip.options %}
+                                                    {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
                                                         <a class="o-rounded o-rounded--l u:mx-4"
                                                            href="{{ path('message_new', { 'username': trip.creator.username }) }}"
                                                            aria-label="{{ 'message.write_to' | trans | format(trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(trip.creator.username) }}">
                                                             <i class="fa fa-fw fa-envelope"></i>
                                                         </a>
                                                     {% endif %}
-                                                    {% if constant('App\\Doctrine\\SubtripOptionsType::LOOKING_FOR_HOST') in subtrip.options %}
-                                                        {% set invitation = subtrip.invitationBy(member) %}
+                                                    {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
+                                                        {% set invitation = leg.invitationBy(member) %}
                                                         {% if invitation %}
                                                             {% set invited = invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
                                                            <a class="o-rounded o-rounded--l u:mx-4 {% if invited %}u:bg-green-dark{% endif %}"
@@ -154,7 +154,7 @@
                                                         {% else %}
                                                                 <a class="o-rounded o-rounded--l u:mx-4"
                                                                     href="{{ path('hosting_invitation', {
-                                                                        'leg': subtrip.id
+                                                                        'leg': leg.id
                                                                     }) }}"
                                                                     aria-label="{{ 'invite.username' | trans | format(trip.creator.username) }}" title="{{ 'invite.username' | trans | format(trip.creator.username) }}">
                                                                     <i class="fa fa-fw fa-house-user"></i>
@@ -166,16 +166,16 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                                {% set calculatedLongitude = subtrip.location.longitude %}
-                                {% if lastLongitude != subtrip.location.longitude %}
-                                    {% if sgn(lastLongitude) != sgn(subtrip.location.longitude) %}
-                                        {% if lastLongitude|abs > 170 or subtrip.location.longitude|abs > 170 %}
-                                            {% set calculatedLongitude = subtrip.location.longitude + 360.0 %}
+                                {% set calculatedLongitude = leg.location.longitude %}
+                                {% if lastLongitude != leg.location.longitude %}
+                                    {% if sgn(lastLongitude) != sgn(leg.location.longitude) %}
+                                        {% if lastLongitude|abs > 170 or leg.location.longitude|abs > 170 %}
+                                            {% set calculatedLongitude = leg.location.longitude + 360.0 %}
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
                                 <input type="hidden" class="js-data"
-                                       value="{{ subtrip.location.name }},{{ subtrip.location.latitude }},{{ calculatedLongitude }},{{ subtrip.location.country.name }},{{ subtrip.arrival|format_date('short') }}{% if subtrip.arrival != subtrip.departure %} - {{ subtrip.departure|format_date('short') }}{% endif %}">
+                                       value="{{ leg.location.name }},{{ leg.location.latitude }},{{ calculatedLongitude }},{{ leg.location.country.name }},{{ leg.arrival|format_date('short') }}{% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('short') }}{% endif %}">
                             </li>
                             {% set current = current + 1 %}
                         {% endif %}
@@ -196,6 +196,4 @@
             searchRadius: {{ searchRadius }},
         }
     </script>
-
 {% endblock content %}
-

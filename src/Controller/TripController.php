@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
+use App\Dto\LegDto;
+use App\Dto\TripDto;
 use App\Entity\Member;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -32,6 +34,7 @@ class TripController extends AbstractController
 
     public function __construct(
         private readonly TripModel $tripModel,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -72,7 +75,7 @@ class TripController extends AbstractController
     }
 
     #[Route(path: '/new/trip', name: 'new_trip')]
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    public function create(Request $request): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -83,24 +86,25 @@ class TripController extends AbstractController
             return $this->redirectToRoute('trips');
         }
 
-        $trip = new Trip();
-        $trip->setCreator($member);
+        $tripDto = new TripDto();
+        $tripDto->creator = $member;
+        $tripDto->legs->add(new LegDto());
 
-        $leg = new Subtrip();
-        $trip->addSubtrip($leg);
-
-        $createForm = $this->createForm(TripType::class, $trip);
+        $createForm = $this->createForm(TripType::class, $tripDto);
         $createForm->handleRequest($request);
 
         if ($createForm->isSubmitted() && $createForm->isValid()) {
-            $trip = $createForm->getData();
-
-            $errors = $this->tripModel->checkTripCreateOrEditData($trip);
+            $errors = $this->tripModel->checkTripCreateOrEditData($tripDto);
             if (empty($errors)) {
-                $this->tripModel->orderTripLegs($trip);
+                $trip = new Trip();
+                $trip->setCreator($member);
+                $tripDto->toEntity($trip);
 
-                $entityManager->persist($trip);
-                $entityManager->flush();
+                $this->tripModel->orderTripLegs($tripDto);
+                $this->tripModel->syncLegs($trip, $tripDto);
+
+                $this->entityManager->persist($trip);
+                $this->entityManager->flush();
                 $this->tripModel->notifyHostsAboutTrip($trip);
 
                 $this->addTranslatedFlash('success', 'trip.created');
@@ -123,7 +127,7 @@ class TripController extends AbstractController
 
     #[Route(path: '/trip/{id}/edit', name: 'trip_edit', requirements: ['id' => '\d+'])]
     #[IsGranted('TRIP_EDIT', subject: 'trip')]
-    public function edit(Request $request, Trip $trip, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Trip $trip): Response
     {
         if ($this->tripModel->hasTripExpired($trip)) {
             $this->addTranslatedFlash('notice', 'trip.flash.expired');
@@ -131,19 +135,23 @@ class TripController extends AbstractController
             return $this->redirectToRoute('trip_show', ['id' => $trip->getId()]);
         }
 
-        $editForm = $this->createForm(TripType::class, $trip);
+        $tripDto = TripDto::fromEntity($trip);
+        $editForm = $this->createForm(TripType::class, $tripDto);
 
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $editedTrip = $editForm->getData();
-
-            $errors = $this->tripModel->checkTripCreateOrEditData($editedTrip);
+            $errors = $this->tripModel->checkTripCreateOrEditData($tripDto);
             if (empty($errors)) {
-                // \todo Check for deleted legs and take care to remove link to invitation
+                $tripDto->toEntity($trip);
 
-                $entityManager->persist($editedTrip);
-                $entityManager->flush();
+                $this->tripModel->orderTripLegs($tripDto);
+                // \todo Check for deleted legs and take care to remove link to invitation
+                $this->tripModel->syncLegs($trip, $tripDto);
+
+                $this->entityManager->persist($trip);
+                $this->entityManager->flush();
+                $this->tripModel->notifyHostsAboutTrip($trip);
 
                 $this->addTranslatedFlash('success', 'trip.edited');
 
@@ -182,12 +190,12 @@ class TripController extends AbstractController
     }
 
     #[Route(path: '/trip/leg/{id}/hide', name: 'trip_hide', requirements: ['id' => '\d+'], methods: ['POST'])]
-    #[IsCsrfTokenValid('hide_subtrip')]
-    public function hideSubtrip(Request $request, Subtrip $subtrip): RedirectResponse
+    #[IsCsrfTokenValid('hide_leg')]
+    public function hideLeg(Request $request, Subtrip $leg): RedirectResponse
     {
         /** @var Member $member */
         $member = $this->getUser();
-        $this->tripModel->markSubtripAsHidden($member, $subtrip);
+        $this->tripModel->markLegAsHidden($member, $leg);
 
         if ('homepage' === $request->request->get('redirectTo')) {
             return $this->redirectToRoute('homepage', ['_fragment' => 'visitors']);
@@ -199,10 +207,9 @@ class TripController extends AbstractController
     /**
      * Show all trip legs that are in the vicinity of a member.
      */
-    #[Route(path: '/visitors/{page}', requirements: ['page' => '\d+'], name: 'visitors')]
+    #[Route(path: '/visitors/{page}', name: 'visitors', requirements: ['page' => '\d+'])]
     public function tripsInArea(
         Request $request,
-        EntityManagerInterface $entityManager,
         int $page = 1,
     ): Response {
         /** @var Member $host */
@@ -223,9 +230,9 @@ class TripController extends AbstractController
             }
         }
 
-        /** @var SubtripRepository $subtripRepository */
-        $subtripRepository = $entityManager->getRepository(Subtrip::class);
-        $legsQuery = $subtripRepository->getLegsInAreaQuery($host, $radius);
+        /** @var SubtripRepository $legRepository */
+        $legRepository = $this->entityManager->getRepository(Subtrip::class);
+        $legsQuery = $legRepository->getLegsInAreaQuery($host, $radius);
 
         $legsAdapter = new QueryAdapter($legsQuery);
         $tripLegs = new Pagerfanta($legsAdapter);
@@ -244,7 +251,7 @@ class TripController extends AbstractController
 
     private function getSubMenuItems(): array
     {
-        $submenu = [
+        $subMenu = [
             'trip_mytrips' => [
                 'key' => 'trips.mytrips',
                 'url' => $this->generateUrl('trips'),
@@ -259,14 +266,14 @@ class TripController extends AbstractController
             ],
         ];
 
-        return $submenu;
+        return $subMenu;
     }
 
     private function handleErrors(FormInterface &$form, array $errors): void
     {
         foreach ($errors as $error) {
             if (isset($error['leg'])) {
-                $form->get('subtrips')->get($error['leg'])->get($error['field'])->addError(
+                $form->get('legs')->get($error['leg'])->get($error['field'])->addError(
                     new FormError($this->getTranslator()->trans($error['error']))
                 );
             } else {

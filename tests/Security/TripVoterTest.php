@@ -2,7 +2,7 @@
 
 namespace App\Tests\Security;
 
-use App\Doctrine\SubtripOptionsType;
+use App\Doctrine\LegOptionsType;
 use App\Entity\Member;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
@@ -30,7 +30,7 @@ class TripVoterTest extends TestCase
 
         $trip = new Trip();
         $trip->setCreator($member);
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
 
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_EDIT]);
@@ -50,7 +50,7 @@ class TripVoterTest extends TestCase
 
         $trip = new Trip();
         $trip->setCreator($member);
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
 
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_EDIT]);
@@ -70,7 +70,7 @@ class TripVoterTest extends TestCase
 
         $trip = new Trip();
         $trip->setCreator($member);
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
 
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
@@ -91,7 +91,7 @@ class TripVoterTest extends TestCase
         $creator = Mockery::mock(Member::class);
         $trip = new Trip();
         $trip->setCreator($creator);
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
 
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
@@ -108,11 +108,11 @@ class TripVoterTest extends TestCase
         $tomorrow = new DateTime('+1day');
         $leg = new Subtrip();
         $leg->setDeparture($tomorrow);
-        $leg->setOptions([SubtripOptionsType::PRIVATE]);
+        $leg->setOptions([LegOptionsType::PRIVATE]);
 
         $trip = new Trip();
         $trip->setCreator($creator);
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
 
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
@@ -129,12 +129,12 @@ class TripVoterTest extends TestCase
         $yesterday = new DateTime('+1day');
         $leg = new Subtrip();
         $leg->setDeparture($yesterday);
-        $leg->setOptions([SubtripOptionsType::PRIVATE]);
+        $leg->setOptions([LegOptionsType::PRIVATE]);
 
         $creator = Mockery::mock(Member::class);
         $trip = new Trip();
         $trip->setCreator($creator);
-        $trip->addSubtrip($leg);
+        $trip->addLeg($leg);
 
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);

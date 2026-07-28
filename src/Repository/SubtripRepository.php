@@ -3,10 +3,10 @@
 namespace App\Repository;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
+use App\Doctrine\LegOptionsType;
 use App\Doctrine\MemberStatusType;
-use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
-use App\Entity\MemberSubtripHidden;
+use App\Entity\MemberLegHidden;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
 use Carbon\CarbonImmutable;
@@ -65,14 +65,14 @@ class SubtripRepository extends EntityRepository
                 ->getQuery();
     }
 
-    public function getMembersToNotifyAboutSubtrip(
-        Subtrip $subtrip,
+    public function getMembersToNotifyAboutLeg(
+        Subtrip $leg,
         array $notificationValues = [
             Preference::TRIP_NOTIFICATIONS_IMMEDIATELY,
         ],
         int $duration = 3,
     ): array {
-        $trip = $subtrip->getTrip();
+        $trip = $leg->getTrip();
         $preferenceRepository = $this->getEntityManager()->getRepository(Preference::class);
         $tripNotificationPreference = $preferenceRepository->findOneBy([
             'codename' => Preference::TRIP_NOTIFICATIONS,
@@ -96,16 +96,16 @@ class SubtripRepository extends EntityRepository
 
         $now = CarbonImmutable::today();
         $durationMonthsAhead = $now->addMonths($duration);
-        $arrival = $subtrip->getArrival();
-        $location = $subtrip->getLocation();
-        $options = $subtrip->getOptions();
+        $arrival = $leg->getArrival();
+        $location = $leg->getLocation();
+        $options = $leg->getOptions();
 
         if (
             null === $arrival
             || null === $location
             || $arrival < $now
             || $arrival > $durationMonthsAhead
-            || \in_array(SubtripOptionsType::PRIVATE, $options, true)
+            || \in_array(LegOptionsType::PRIVATE, $options, true)
         ) {
             return [];
         }
@@ -149,10 +149,10 @@ class SubtripRepository extends EntityRepository
             ->setParameter('centerPoint', \sprintf('POINT(%F %F)', $location->getLongitude(), $location->getLatitude()))
         ;
 
-        if (null !== $subtrip->getInvitedBy() && !\in_array(SubtripOptionsType::MEET_LOCALS, $options, true)) {
+        if (null !== $leg->getInvitedBy() && !\in_array(LegOptionsType::MEET_LOCALS, $options, true)) {
             $qb
                 ->andWhere('host = :invitedBy')
-                ->setParameter('invitedBy', $subtrip->getInvitedBy())
+                ->setParameter('invitedBy', $leg->getInvitedBy())
             ;
         }
 
@@ -204,13 +204,13 @@ class SubtripRepository extends EntityRepository
             ->join('s.location', 'l')
             ->join('s.trip', 't')
             ->join('t.creator', 'm')
-            ->leftJoin(MemberSubtripHidden::class, 'hiddenSubtrip', Join::WITH, 'hiddenSubtrip.subtrip = s AND hiddenSubtrip.member = :member')
-            ->where($qb->expr()->notLike('s.options', $qb->expr()->literal('%' . SubtripOptionsType::PRIVATE . '%')))
+            ->leftJoin(MemberLegHidden::class, 'hiddenLeg', Join::WITH, 'hiddenLeg.leg = s AND hiddenLeg.member = :member')
+            ->where($qb->expr()->notLike('s.options', $qb->expr()->literal('%' . LegOptionsType::PRIVATE . '%')))
             ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->isNull('s.invitedBy'),
                     $qb->expr()->eq('s.invitedBy', $member->getId()),
-                    $qb->expr()->in('s.options', [SubtripOptionsType::MEET_LOCALS])
+                    $qb->expr()->in('s.options', [LegOptionsType::MEET_LOCALS])
                 )
             )
             ->andWhere('s.arrival >= :now')
@@ -218,7 +218,7 @@ class SubtripRepository extends EntityRepository
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')
             ->andWhere($qb->expr()->isNull('t.deleted'))
-            ->andWhere($qb->expr()->isNull('hiddenSubtrip.id'))
+            ->andWhere($qb->expr()->isNull('hiddenLeg.id'))
             ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) <= :distance')
             ->andWhere(
                 $qb->expr()->orX(

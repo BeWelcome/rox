@@ -48,15 +48,20 @@
                 </p>
                 <a class="btn btn-outline-primary" href="{{ path('safety_team')}}"><i class="fa fa-users me-1"></i>{{'safety_learnaboutteam' | trans }}</a>
             </div>
-            <div class="p-2">
-                <a id="keepitsafe"></a>
-                <h3>{{'safety_keepitsafe' | trans | purify }}</h3>
-                <p>{{'safety_keepitsafetext'| trans 
-                    ({ 'safety.keepitsafe.contact.form' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.keepitsafe.contact.form'|trans ~ '</a>' })
-                    | purify
-                    }}
-                </p>
-            </div>
+          <div class="p-2">
+            <a id="keepitsafe"></a>
+            <h3>{{'safety_keepitsafe' | trans | purify }}</h3>
+            <p>{{'safety_keepitsafetext'| trans
+                ({ 'safety.keepitsafe.contact.form' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.keepitsafe.contact.form'|trans ~ '</a>' })
+              | purify
+              }}
+            </p>
+          </div>
+          <div class="p-2">
+            <a id="external" class="anchor"></a>
+            <h3>{{'safety_external.contact.headline' | trans | purify }}</h3>
+            {{'safety_external.contact'| trans | purify }}
+          </div>
             <div class="p-2">
                 <a id="tips"></a>
                 <h3>{{'safety_tipsoverview' | trans | purify }}</h3>
@@ -64,10 +69,10 @@
                         <a class="list-group-item list-group-item-action" href="{{ url('safety_faq') }}" title="{{'safety_list.link.faq' | trans  }}">
                         <i class="fa fa-check me-2"></i>{{'safety_list.link.faq' | trans  }}
                         </a>
-                        <a <a class="list-group-item list-group-item-action" href="{{ url('safety_tips') }}" title="{{'safety_list.link.tips' | trans  }}">
+                        <a class="list-group-item list-group-item-action" href="{{ url('safety_tips') }}" title="{{'safety_list.link.tips' | trans  }}">
                         <i class="fa fa-check me-2"></i>{{'safety_list.link.tips' | trans  }}
                         </a>
-                        <a <a class="list-group-item list-group-item-action" href="{{ path('safety_tips', {'_fragment': 'female'}) }}" title="{{'safety_list.link.female' | trans  }}">
+                        <a class="list-group-item list-group-item-action" href="{{ path('safety_tips', {'_fragment': 'female'}) }}" title="{{'safety_list.link.female' | trans  }}">
                         <i class="fa fa-check me-2"></i>{{'safety_list.link.female' | trans  }}
                         </a>
                     </div>  

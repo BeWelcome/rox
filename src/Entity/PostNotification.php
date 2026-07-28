@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'posts_notificationqueue')]
 #[ORM\Index(name: 'posts_notificationqueue_status', columns: ['Status'])]
+#[ORM\UniqueConstraint(name: 'posts_notificationqueue_message_id_unique', columns: ['MessageId'])]
 #[ORM\Entity(repositoryClass: PostNotificationRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class PostNotification
@@ -38,6 +39,9 @@ class PostNotification
 
     #[ORM\Column(name: 'TableSubscription', type: 'string', length: 64, nullable: false)]
     private string $tableSubscription = 'NotSet';
+
+    #[ORM\Column(name: 'MessageId', type: 'string', length: 255, nullable: true)]
+    private ?string $messageId = null;
 
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
@@ -114,6 +118,18 @@ class PostNotification
     public function getTableSubscription(): string
     {
         return $this->tableSubscription;
+    }
+
+    public function setMessageId(?string $messageId): self
+    {
+        $this->messageId = $messageId;
+
+        return $this;
+    }
+
+    public function getMessageId(): ?string
+    {
+        return $this->messageId;
     }
 
     public function getId(): int

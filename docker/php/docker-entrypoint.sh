@@ -90,6 +90,16 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 	done
 
 	echo "db ready!"
+
+	# In prod: clear and recompile the Symfony DI container from the current
+	# image's config BEFORE running migrations. Without this, a stale compiled
+	# container (from a previous deploy's var/ volume) that references a renamed
+	# or removed class will crash doctrine:migrations:migrate.
+	if [ "$APP_ENV" = 'prod' ]; then
+		echo "Warmup cache"
+		bin/console cache:clear
+	fi
+
 	if [ "$APP_ENV" != 'prod' ]; then
 		echo "Creating database..."
 		bin/console test:database:create --drop --force --no-interaction
@@ -117,8 +127,6 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 		echo "Warmup cache"
 		bin/console cache:clear
 	else
-		echo "Warmup cache"
-		bin/console cache:clear
 		bin/console assets:install public
 	fi
 

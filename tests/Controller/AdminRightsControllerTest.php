@@ -35,7 +35,9 @@ final class AdminRightsControllerTest extends KernelTestCase
             $page = new AdminRightsController()->listMembers();
 
             $this->assertArrayHasKey('member-empty', $page->members);
-            $this->assertMemberDetails($page->members['member-empty']);
+            $this->assertMemberWithoutAddress($page->members['member-empty']);
+            $this->assertSame('Berlin', $page->members['bwadmin']->PlaceName);
+            $this->assertSame('Germany', $page->members['bwadmin']->CountryName);
             $this->assertSame($page->members, $page->membersWithRights);
         } finally {
             $dao->exec('ROLLBACK');
@@ -78,17 +80,23 @@ final class AdminRightsControllerTest extends KernelTestCase
         $model = new AdminRightsModel();
         $dao = $this->addRightForMemberWithoutAddress($model);
         try {
-            $memberDetails = null;
+            $memberWithoutAddress = null;
+            $memberWithAddress = null;
             foreach (new AdminRightsController()->listRights()->rightsWithMembers as $right) {
                 foreach ($right->Members as $member) {
                     if ('member-empty' === $member->Username) {
-                        $memberDetails = $member;
-                        break 2;
+                        $memberWithoutAddress = $member;
+                    }
+                    if ('bwadmin' === $member->Username) {
+                        $memberWithAddress = $member;
                     }
                 }
             }
-            $this->assertNotNull($memberDetails);
-            $this->assertMemberDetails($memberDetails);
+            $this->assertNotNull($memberWithoutAddress);
+            $this->assertMemberWithoutAddress($memberWithoutAddress);
+            $this->assertNotNull($memberWithAddress);
+            $this->assertSame('Berlin', $memberWithAddress->PlaceName);
+            $this->assertSame('Germany', $memberWithAddress->CountryName);
         } finally {
             $dao->exec('ROLLBACK');
         }
@@ -135,7 +143,7 @@ final class AdminRightsControllerTest extends KernelTestCase
         }
     }
 
-    public function testRemovedRightCanBeAssignedAgain(): void
+    public function testRemovedRightRemainsAvailableForEditing(): void
     {
         $this->initializeLegacyEnvironment();
         $model = new AdminRightsModel();
@@ -144,7 +152,7 @@ final class AdminRightsControllerTest extends KernelTestCase
         try {
             $dao->exec(<<<'SQL'
                 INSERT INTO rightsvolunteers (Level, Scope, Comment, updated, created, IdMember, IdRight)
-                SELECT 0, '"All"', 'Removed right history', NOW(), NOW(), m.id, r.id
+                SELECT 0, '"All"', 'Removed right history', NOW(), '2020-01-02 03:04:05', m.id, r.id
                 FROM member m, rights r
                 WHERE m.Username = 'member-empty' AND r.Name = 'Words'
                 SQL);
@@ -157,11 +165,18 @@ final class AdminRightsControllerTest extends KernelTestCase
                 'comment' => 'Assigned again',
             ];
 
-            $this->assertSame([], $model->checkAssignVarsOk($vars));
-            $model->assignRight($vars);
+            $this->assertContains('AdminRightsAlreadyAssigned', $model->checkAssignVarsOk($vars));
+
+            $member = $dao->query("SELECT id FROM member WHERE Username = 'member-empty'")->fetch(PDB::FETCH_OBJ);
+            $history = $model->getMembersWithRights($member);
+            $this->assertSame(0, (int) $history['member-empty']->Rights[$right->id]->level);
+            $this->assertSame('Removed right history', $history['member-empty']->Rights[$right->id]->comment);
+
+            $model->edit($vars);
 
             $assignment = $dao->query(<<<'SQL'
-                SELECT COUNT(*) AS count, MAX(rv.Level) AS Level, MAX(rv.Scope) AS Scope, MAX(rv.Comment) AS Comment
+                SELECT COUNT(*) AS count, MAX(rv.Level) AS Level, MAX(rv.Scope) AS Scope,
+                    MAX(rv.Comment) AS Comment, MAX(rv.created) AS created
                 FROM rightsvolunteers rv, member m, rights r
                 WHERE rv.IdMember = m.id AND rv.IdRight = r.id
                     AND m.Username = 'member-empty' AND r.Name = 'Words'
@@ -170,6 +185,7 @@ final class AdminRightsControllerTest extends KernelTestCase
             $this->assertSame(10, (int) $assignment->Level);
             $this->assertSame('"All"', $assignment->Scope);
             $this->assertSame('Assigned again', $assignment->Comment);
+            $this->assertSame('2020-01-02 03:04:05', $assignment->created);
             $this->assertContains('AdminRightsAlreadyAssigned', $model->checkAssignVarsOk($vars));
         } finally {
             $dao->exec('ROLLBACK');
@@ -211,9 +227,11 @@ final class AdminRightsControllerTest extends KernelTestCase
         }
     }
 
-    private function assertMemberDetails(object $member): void
+    private function assertMemberWithoutAddress(object $member): void
     {
         $this->assertSame('2026-01-02', $member->LastLogin);
+        $this->assertNull($member->PlaceName);
+        $this->assertNull($member->CountryName);
     }
 
     private function addRightForMemberWithoutAddress(AdminRightsModel $model): PDB

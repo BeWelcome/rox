@@ -47,6 +47,9 @@ $layoutbits = new MOD_layoutbits();
 		echo $layoutbits->PIC_50_50($username, 'class="profileimg"') . '<br>';
 		echo $username; ?><br/>
             <span class="small"><?= $details->Status ?></span><br>
+            <?php if ($details->PlaceName || $details->CountryName) : ?>
+                <span class="small"><?= implode(', ', array_filter([$details->PlaceName, $details->CountryName])) ?></span><br>
+            <?php endif; ?>
             <span class="smaller">Last login: <?= $details->LastLogin ?></span><br>
         <a href="admin/rights/assign/<?= $username ?>" class="btn btn-outline-primary btn-sm">
             <i class="fa fa-plus-square"></i>

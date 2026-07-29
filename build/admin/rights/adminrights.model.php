@@ -80,12 +80,7 @@ class AdminRightsModel extends RoxModelBase {
                 Level = '" . $this->dao->escape($vars['level']) . "',
                 Comment = '" . $this->dao->escape($vars['comment']) . "',
                 updated = NOW(),
-                created = NOW()
-            ON DUPLICATE KEY UPDATE
-                Scope = VALUES(Scope),
-                Level = VALUES(Level),
-                Comment = VALUES(Comment),
-                Updated = NOW()";
+                created = NOW()";
         $this->dao->query($query);
     }
 
@@ -103,14 +98,19 @@ class AdminRightsModel extends RoxModelBase {
                 m.id as id,
                 m.status,
                 m.LastActive as LastLogin,
+                place.name as PlaceName,
+                country.name as CountryName,
                 r.id rightId,
                 rv.Level,
                 rv.Scope,
                 rv.Comment
             FROM
-                rights r,
-                rightsvolunteers rv,
-                member m
+                rights r
+                INNER JOIN rightsvolunteers rv ON rv.IdRight = r.id
+                INNER JOIN member m ON rv.IdMember = m.id
+                LEFT JOIN address a ON a.member_id = m.id AND a.active = 1
+                LEFT JOIN geo__names place ON a.location = place.geoname_id
+                LEFT JOIN geo__names country ON place.country = country.geoname_id
             WHERE
                 m.Status in (' . MemberStatusType::ACTIVE_ALL . ')';
         if ($member) {
@@ -122,9 +122,6 @@ class AdminRightsModel extends RoxModelBase {
             AND
 				r.Name IN ('" . $rights . "') ";
         }
-        $query .= '
-                AND rv.IdMember = m.id
-                AND rv.IdRight = r.id ';
         $query .= '
             ORDER BY
                 m.Username,
@@ -139,6 +136,8 @@ class AdminRightsModel extends RoxModelBase {
                 $memberDetails->id = $mwr->id;
                 $memberDetails->Status = $mwr->status;
                 $memberDetails->LastLogin = date('Y-m-d', strtotime((string) $mwr->LastLogin));
+                $memberDetails->PlaceName = $mwr->PlaceName;
+                $memberDetails->CountryName = $mwr->CountryName;
                 $memberDetails->Rights = [];
                 $membersWithRights[$mwr->Username] = $memberDetails;
             }
@@ -168,15 +167,18 @@ class AdminRightsModel extends RoxModelBase {
                 m.Username,
                 m.id as id,
                 m.status,
-                m.LastActive as LastLogin
+                m.LastActive as LastLogin,
+                place.name as PlaceName,
+                country.name as CountryName
             FROM
-                rights r,
-                rightsvolunteers rv,
-                member m
+                rights r
+                INNER JOIN rightsvolunteers rv ON rv.IdRight = r.id
+                INNER JOIN member m ON rv.IdMember = m.id
+                LEFT JOIN address a ON a.member_id = m.id AND a.active = 1
+                LEFT JOIN geo__names place ON a.location = place.geoname_id
+                LEFT JOIN geo__names country ON place.country = country.geoname_id
             WHERE
-                m.Status in (' . MemberStatusType::ACTIVE_ALL . ')
-                AND rv.IdMember = m.id
-                AND rv.IdRight = r.id';
+                m.Status in (' . MemberStatusType::ACTIVE_ALL . ')';
         if ($rightId) {
             $query .= ' AND r.id = ' . $rightId;
         }
@@ -207,6 +209,8 @@ class AdminRightsModel extends RoxModelBase {
             $memberDetails->Status = $rwm->status;
             $memberDetails->LastLogin = date('Y-m-d', strtotime((string) $rwm->LastLogin));
             $memberDetails->Username = $rwm->Username;
+            $memberDetails->PlaceName = $rwm->PlaceName;
+            $memberDetails->CountryName = $rwm->CountryName;
             $memberDetails->level = $rwm->Level;
             $memberDetails->scope = $rwm->Scope;
             $memberDetails->comment = $rwm->Comment;

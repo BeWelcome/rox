@@ -56,7 +56,10 @@ $layoutbits = new MOD_layoutbits();
 			<?= $layoutbits->PIC_30_30($memberDetails->Username) ?><br>
             <a href="members/<?= $memberDetails->Username ?>" target="_blank"><?= $memberDetails->Username ?></a><br>
                 <span class="small"><?= $memberDetails->Status ?></span><br>
-                 <span class="smaller">Last login: <?= $memberDetails->LastLogin ?>
+                <?php if ($memberDetails->PlaceName || $memberDetails->CountryName) : ?>
+                    <span class="small"><?= implode(', ', array_filter([$memberDetails->PlaceName, $memberDetails->CountryName])) ?></span><br>
+                <?php endif; ?>
+                 <span class="smaller">Last login: <?= $memberDetails->LastLogin ?></span>
 		</td>
         <td><?= $ss . $memberDetails->level . $se ?></td>
         <td><?= $ss . $memberDetails->scope . $se ?></td>

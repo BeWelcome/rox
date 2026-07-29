@@ -1,0 +1,24 @@
+admin.assignments.scope.help:
+  - 'Separate scope values with commas or semicolons. Existing quoted scopes remain supported.'
+  - 'Help text for volunteer right and flag assignment scope.'
+admin.assignments.none:
+  - 'No assignments found.'
+  - 'Shown when an admin rights or flags filter has no results.'
+admin.assignments.filter:
+  - Filter
+  - 'Button for applying admin assignment list filters.'
+admin.assignments.created:
+  - Created
+  - 'Column heading for assignment creation time.'
+admin.assignments.updated:
+  - Updated
+  - 'Column heading for assignment update time.'
+admin.assignments.actions:
+  - Actions
+  - 'Column heading for assignment edit and remove actions.'
+admin.assignments.edit:
+  - 'Edit assignment'
+  - 'Accessible label for an assignment edit link.'
+admin.assignments.remove:
+  - 'Remove assignment'
+  - 'Accessible label for an assignment removal link.'

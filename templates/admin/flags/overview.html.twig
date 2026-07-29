@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+  <h1 class="u:text-24">{{ 'AdminFlagsOverview'|trans }}</h1>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>{{ 'AdminFlagsName'|trans }}</th>
+          <th>{{ 'AdminFlagsDescription'|trans }}</th>
+          <th>{{ 'admin.flags.relevance'|trans }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for flag in flags %}
+          <tr>
+            <td><a href="{{ url('admin_flags_flag', {id: flag.id}) }}">{{ flag.name }}</a></td>
+            <td>{{ flag.description }}</td>
+            <td>{{ flag.relevance }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="3">{{ 'admin.assignments.none'|trans }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

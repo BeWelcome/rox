@@ -188,10 +188,10 @@ class MemberPage extends PageWithActiveSkin
             $tt[] = ['mydata', 'members/'.$username.'/data', '<i class="fa fa-fw fa-database"></i> ' . $ww->PersonalData, 'personaldata'];
         }
         if ($rights->HasRight('Rights')) {
-            array_push($tt,['adminrights','admin/rights/list/member/'.$username, '<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminRights] ) ;
+            array_push($tt, ['adminrights', $this->router->url('admin_rights_member', ['username' => $username], false), '<i class="fa fa-fw fa-bed invisible"></i> ' . $ww->AdminRights]);
         }
         if ($rights->HasRight('Flags')) {
-            array_push($tt,['adminflags', 'admin/flags/list/member/'. $username, '<i class="fa fa-fw fa-flag"></i> ' .  $ww->AdminFlags] ) ;
+            array_push($tt, ['adminflags', $this->router->url('admin_flags_member', ['username' => $username], false), '<i class="fa fa-fw fa-flag"></i> ' . $ww->AdminFlags]);
         }
         if ($rights->HasRight('Logs')) {
             array_push($tt,['admin','admin/logs?log[username='.$username.']','<i class="fa fa-fw fa-bed invisible"></i> ' .  $ww->AdminLogs] ) ;

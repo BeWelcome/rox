@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+  <h1 class="u:text-24">{{ 'AdminRightsRemove'|trans }}</h1>
+  <p>{{ 'admin.rights.remove.confirm'|trans({
+    '%right%': assignment.right.name,
+    '%username%': assignment.member.username
+  }) }}</p>
+  <dl>
+    <dt>{{ 'AdminRightsLevel'|trans }}</dt>
+    <dd>{{ assignment.level }}</dd>
+    <dt>{{ 'AdminRightsScope'|trans }}</dt>
+    <dd>{{ assignment.scope }}</dd>
+    <dt>{{ 'AdminRightsComment'|trans }}</dt>
+    <dd>{{ assignment.comment|nl2br }}</dd>
+  </dl>
+  {{ form(form) }}
+{% endblock content %}

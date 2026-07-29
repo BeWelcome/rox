@@ -112,13 +112,6 @@ bwrox.selectScripts([
         ]
     },
     {
-        file: "adminrightstooltip.js",
-        pages: [
-            "admin/rights/list"
-        ]
-    },
-    {
         file: "util/console.js?1"
     }
 ]);
-

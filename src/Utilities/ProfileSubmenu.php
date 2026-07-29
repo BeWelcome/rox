@@ -338,14 +338,14 @@ class ProfileSubmenu
             $this->addSubmenuItem('adminrights', [
                 'key' => 'AdminRights',
                 'icon' => 'bed invisible',
-                'url' => 'admin/rights/list/member/' . $username,
+                'url' => $this->routing->generate('admin_rights_member', ['username' => $username]),
             ]);
         }
         if ($this->hasRole($roles, Member::ROLE_ADMIN_FLAGS)) {
             $this->addSubmenuItem('adminflags', [
                 'key' => 'AdminFlags',
                 'icon' => 'flag',
-                'url' => 'admin/flags/list/member/' . $username,
+                'url' => $this->routing->generate('admin_flags_member', ['username' => $username]),
             ]);
         }
         if ($this->hasRole($roles, Member::ROLE_ADMIN_LOGS)) {

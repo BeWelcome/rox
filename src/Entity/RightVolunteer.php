@@ -8,10 +8,10 @@
 
 namespace App\Entity;
 
+use App\Repository\RightVolunteerRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Right;
 
 /**
  * Rightsvolunteers.
@@ -21,7 +21,7 @@ use Right;
  */
 #[ORM\Table(name: 'rightsvolunteers')]
 #[ORM\UniqueConstraint(name: 'rightsvolunteers_members', columns: ['IdMember', 'IdRight'])]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: RightVolunteerRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class RightVolunteer
 {
@@ -233,7 +233,9 @@ class RightVolunteer
     #[ORM\PrePersist]
     public function onPrePersist(): void
     {
-        $this->created = new DateTime('now');
+        $now = new DateTime('now');
+        $this->created = $now;
+        $this->updated = $now;
     }
 
     /**

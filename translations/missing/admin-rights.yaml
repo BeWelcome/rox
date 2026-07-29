@@ -1,0 +1,15 @@
+admin.rights.edit:
+  - 'Edit right assignment'
+  - 'Heading for editing a member right.'
+admin.rights.created:
+  - 'Right %right% created.'
+  - 'Confirmation after creating a right. Keep %right%.'
+admin.rights.assigned:
+  - 'Assigned %right% to %username%.'
+  - 'Confirmation after assigning a right. Keep %right% and %username%.'
+admin.rights.removed:
+  - 'Removed %right% from %username%.'
+  - 'Confirmation after removing a right. Keep %right% and %username%.'
+admin.rights.remove.confirm:
+  - 'Remove %right% from %username%? The assignment remains in history.'
+  - 'Right removal confirmation. Keep %right% and %username%.'

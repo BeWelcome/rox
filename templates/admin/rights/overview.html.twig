@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+  <h1 class="u:text-24">{{ 'AdminRightsOverview'|trans }}</h1>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>{{ 'AdminRightsName'|trans }}</th>
+          <th>{{ 'AdminRightsDescription'|trans }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for right in rights %}
+          <tr>
+            <td>
+              <a href="{{ url('admin_rights_right', {id: right.id}) }}">{{ right.name }}</a>
+            </td>
+            <td>{{ right.description }}</td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="2">{{ 'admin.assignments.none'|trans }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock content %}

@@ -6,7 +6,7 @@ parameters:
 #        - build
     excludePaths:
         - vendor
-        - var
+        - var (?)
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
         constantHassers: false

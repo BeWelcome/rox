@@ -62,6 +62,11 @@ class LegacyHttpKernel extends HttpKernel
         if ('' === $content && !headers_sent()) {
             foreach (headers_list() as $header) {
                 if (preg_match('/^Location: (.*)$/', $header, $matches)) {
+                    // The legacy router already sent this via a raw header() call.
+                    // Response::sendHeaders() sends Location with replace=false, so
+                    // the raw header must be cleared here or it ends up duplicated.
+                    header_remove('Location');
+
                     return new RedirectResponse($matches[1]);
                 }
             }

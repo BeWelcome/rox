@@ -15,7 +15,6 @@ doctrine:
         #server_version: '16'
 
         profiling_collect_backtrace: '%kernel.debug%'
-        schema_filter: ~^(?!rememberme_token)~
 
         charset: utf8mb4
 

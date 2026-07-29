@@ -1,0 +1,21 @@
+admin.flags.edit:
+  - 'Edit flag assignment'
+  - 'Heading for editing a member flag.'
+admin.flags.created:
+  - 'Flag %flag% created.'
+  - 'Confirmation after creating a flag. Keep %flag%.'
+admin.flags.assigned:
+  - 'Assigned %flag% to %username%.'
+  - 'Confirmation after assigning a flag. Keep %flag% and %username%.'
+admin.flags.removed:
+  - 'Removed %flag% from %username%.'
+  - 'Confirmation after removing a flag. Keep %flag% and %username%.'
+admin.flags.remove.confirm:
+  - 'Remove %flag% from %username%? The assignment remains in history.'
+  - 'Flag removal confirmation. Keep %flag% and %username%.'
+admin.flags.relevance:
+  - Relevance
+  - 'Column heading for flag relevance.'
+admin.flags.superseded:
+  - Superseded
+  - 'Label for an older flag assignment cycle.'

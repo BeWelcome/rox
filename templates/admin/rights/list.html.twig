@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('member/autocomplete') }}
+{% endblock javascripts %}
+
+{% block content %}
+  <h1 class="u:text-24">
+    {{ (member_first ? 'AdminRightsListMembers' : 'AdminRightsListRights')|trans }}
+  </h1>
+
+  <form method="get" class="row g-2 align-items-end mb-3">
+    <div class="col-12 col-md-4">
+      <label for="rights-member" class="form-label">{{ 'AdminRightsMember'|trans }}</label>
+      <input id="rights-member" name="member" value="{{ filters.member }}"
+             class="form-control member-autocomplete-start">
+    </div>
+    <div class="col-12 col-md-3">
+      <label for="rights-right" class="form-label">{{ 'AdminRightsRight'|trans }}</label>
+      <select id="rights-right" name="right" class="form-select">
+        <option value=""></option>
+        {% for right in rights %}
+          <option value="{{ right.id }}"{% if filters.right == right.id %} selected{% endif %}>
+            {{ right.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if member_first %}
+      <input type="hidden" name="history" value="1">
+    {% else %}
+      <div class="col-8 col-md-3 form-check ms-2 mb-2">
+        <input type="hidden" name="history" value="0">
+        <input id="rights-history" name="history" value="1" type="checkbox"
+               class="form-check-input"{% if filters.history %} checked{% endif %}>
+        <label for="rights-history" class="form-check-label">{{ 'AdminRightsHistory'|trans }}</label>
+      </div>
+    {% endif %}
+    <div class="col-4 col-md-1">
+      <button class="btn btn-primary" type="submit">{{ 'admin.assignments.filter'|trans }}</button>
+    </div>
+  </form>
+
+  {% if assignments.nbResults > 0 %}
+    <div class="d-flex justify-content-end mb-2">{{ pagerfanta(assignments, 'rox_default') }}</div>
+  {% endif %}
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead>
+        <tr>
+          <th>{{ 'AdminRightsMember'|trans }}</th>
+          <th>{{ 'AdminRightsRight'|trans }}</th>
+          <th>{{ 'AdminRightsLevel'|trans }}</th>
+          <th>{{ 'AdminRightsScope'|trans }}</th>
+          <th>{{ 'AdminRightsComment'|trans }}</th>
+          <th>{{ 'admin.assignments.created'|trans }}</th>
+          <th>{{ 'admin.assignments.updated'|trans }}</th>
+          <th>{{ 'admin.assignments.actions'|trans }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for assignment in assignments %}
+          <tr{% if assignment.level == 0 %} class="text-muted"{% endif %}>
+            <td>
+              <div class="d-flex align-items-start gap-2">
+                {{ macros.avatar(assignment.username, 50, true) }}
+                <div>
+                  <a href="{{ url('members_profile', {username: assignment.username}) }}">
+                    {{ assignment.username }}
+                  </a>
+                  <div class="small">{{ assignment.status }}</div>
+                  <div class="small">
+                    {{ assignment.last_active ? assignment.last_active|date('Y-m-d') : '—' }}
+                  </div>
+                  <div class="small">
+                    {{ assignment.place_name|default('—') }}{% if assignment.country_name %}, {{ assignment.country_name }}{% endif %}
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <a href="{{ url('admin_rights_right', {id: assignment.definition_id}) }}">
+                {{ assignment.definition_name }}
+              </a>
+            </td>
+            <td>{{ assignment.level }}</td>
+            <td>{{ assignment.scope }}</td>
+            <td class="text-break">{{ assignment.comment|nl2br }}</td>
+            <td>{{ assignment.created_at|date('Y-m-d H:i') }}</td>
+            <td>{{ assignment.updated_at ? assignment.updated_at|date('Y-m-d H:i') : '—' }}</td>
+            <td class="text-nowrap">
+              <a class="btn btn-sm btn-outline-primary"
+                 href="{{ url('admin_rights_edit', {id: assignment.definition_id, username: assignment.username}) }}"
+                 aria-label="{{ 'admin.assignments.edit'|trans }}">
+                <i class="fa fa-edit" aria-hidden="true"></i>
+              </a>
+              {% if assignment.level != 0 %}
+                <a class="btn btn-sm btn-outline-danger"
+                   href="{{ url('admin_rights_remove', {id: assignment.definition_id, username: assignment.username}) }}"
+                   aria-label="{{ 'admin.assignments.remove'|trans }}">
+                  <i class="fa fa-times" aria-hidden="true"></i>
+                </a>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="8">{{ 'admin.assignments.none'|trans }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if assignments.nbResults > 0 %}
+    <div class="d-flex justify-content-end">{{ pagerfanta(assignments, 'rox_default') }}</div>
+  {% endif %}
+{% endblock content %}

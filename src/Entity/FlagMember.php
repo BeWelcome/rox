@@ -2,7 +2,8 @@
 
 namespace App\Entity;
 
-use App\Utilities\LifecycleCallbacksTrait;
+use App\Repository\FlagMemberRepository;
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,225 +14,138 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Table(name: 'flagsmembers')]
 #[ORM\Index(name: 'flagsmembers_members', columns: ['IdMember', 'IdFlag'])]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: FlagMemberRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class FlagMember
 {
-    use LifecycleCallbacksTrait;
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
+    private Member $member;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'IdMember', type: 'integer', nullable: false)]
-    private $idmember;
+    #[ORM\JoinColumn(name: 'IdFlag', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Flag::class)]
+    private Flag $flag;
 
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'IdFlag', type: 'integer', nullable: false)]
-    private $idflag;
-
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'Level', type: 'integer', nullable: false)]
-    private $level = '0';
+    private int $level = 0;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'Scope', type: 'text', length: 255, nullable: false)]
-    private $scope;
+    private string $scope;
 
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'Comment', type: 'text', length: 65535, nullable: false)]
-    private $comment;
+    private string $comment;
 
-    /**
-     * @var int
-     */
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private $id;
+    private int $id;
 
-    /**
-     * Set idmember.
-     *
-     * @param int $idmember
-     *
-     * @return FlagMember
-     */
-    public function setIdmember($idmember)
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
+    private DateTime $created;
+
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
+    private ?DateTime $updated = null;
+
+    public function setMember(Member $member): self
     {
-        $this->idmember = $idmember;
+        $this->member = $member;
 
         return $this;
     }
 
-    /**
-     * Get idmember.
-     *
-     * @return int
-     */
-    public function getIdmember()
+    public function getMember(): Member
     {
-        return $this->idmember;
+        return $this->member;
     }
 
-    /**
-     * Set idflag.
-     *
-     * @param int $idflag
-     *
-     * @return FlagMember
-     */
-    public function setIdflag($idflag)
+    public function setFlag(Flag $flag): self
     {
-        $this->idflag = $idflag;
+        $this->flag = $flag;
 
         return $this;
     }
 
-    /**
-     * Get idflag.
-     *
-     * @return int
-     */
-    public function getIdflag()
+    public function getFlag(): Flag
     {
-        return $this->idflag;
+        return $this->flag;
     }
 
-    /**
-     * Set level.
-     *
-     * @param int $level
-     *
-     * @return FlagMember
-     */
-    public function setLevel($level)
+    public function setLevel(int $level): self
     {
         $this->level = $level;
 
         return $this;
     }
 
-    /**
-     * Get level.
-     *
-     * @return int
-     */
-    public function getLevel()
+    public function getLevel(): int
     {
         return $this->level;
     }
 
-    /**
-     * Set scope.
-     *
-     * @param string $scope
-     *
-     * @return FlagMember
-     */
-    public function setScope($scope)
+    public function setScope(string $scope): self
     {
         $this->scope = $scope;
 
         return $this;
     }
 
-    /**
-     * Get scope.
-     *
-     * @return string
-     */
-    public function getScope()
+    public function getScope(): string
     {
         return $this->scope;
     }
 
-    /**
-     * Set comment.
-     *
-     * @param string $comment
-     *
-     * @return FlagMember
-     */
-    public function setComment($comment)
+    public function setComment(string $comment): self
     {
         $this->comment = $comment;
 
         return $this;
     }
 
-    /**
-     * Get comment.
-     *
-     * @return string
-     */
-    public function getComment()
+    public function getComment(): string
     {
         return $this->comment;
     }
 
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return FlagMember
-     */
-    public function setUpdated($updated)
+    public function setUpdated(?DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updated.
-     *
-     * @return DateTime
-     */
-    public function getUpdated()
+    public function getUpdated(): ?Carbon
     {
-        return $this->updated;
+        return Carbon::make($this->updated);
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return FlagMember
-     */
-    public function setCreated($created)
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return DateTime
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
-        return $this->created;
+        return Carbon::instance($this->created);
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        if (!isset($this->created)) {
+            $this->created = new DateTime('now');
+        }
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updated = new DateTime('now');
     }
 }

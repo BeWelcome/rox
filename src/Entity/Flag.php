@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\FlagRepository;
 use App\Utilities\LifecycleCallbacksTrait;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @SuppressWarnings("PHPMD")
  */
 #[ORM\Table(name: 'flags')]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: FlagRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Flag
 {

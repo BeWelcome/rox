@@ -176,6 +176,9 @@ jobs:
 
       - name: Install project dependencies
         run: composer install --prefer-dist --no-progress --no-interaction --no-scripts
+        
+      - name: Warmup cache
+        run: bin/console cache:clear --env=test
 
       - name: Run phpstan
         continue-on-error: true

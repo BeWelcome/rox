@@ -180,7 +180,7 @@ jobs:
       - name: Install MariaDB
         uses: getong/mariadb-action@v1.11
         with:
-          mysql database: 'bewelcome_test'
+          mysql database: 'bewelcome'
           mysql user: 'bewelcome'
           mysql password: 'bewelcome'
 

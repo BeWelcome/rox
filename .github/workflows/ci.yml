@@ -188,8 +188,13 @@ jobs:
         run: bin/console test:database:create --env=test
 
       - name: Warmup cache
-        run: bin/console cache:clear --env=test
-        
+        # phpstan-symfony reads var/cache/dev/App_KernelDevDebugContainer.xml (see phpstan.dist.neon),
+        # so the dev container needs to be warmed, not the test one. DB_HOST is overridden because
+        # .env points dev at the docker-compose hostname "db", which doesn't exist on the runner.
+        run: bin/console cache:clear --env=dev
+        env:
+          DB_HOST: 127.0.0.1
+
       - name: Run phpstan
         continue-on-error: true
         run: vendor/bin/phpstan

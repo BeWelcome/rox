@@ -185,12 +185,11 @@ jobs:
           mysql password: 'bewelcome'
 
       - name: Create test database
-        run: bin/console test:database:create
+        run: bin/console test:database:create --env=dev
+        env:
+          DB_HOST: 127.0.0.1
 
       - name: Warmup cache
-        # phpstan-symfony reads var/cache/dev/App_KernelDevDebugContainer.xml (see phpstan.dist.neon),
-        # so the dev container needs to be warmed, not the test one. DB_HOST is overridden because
-        # .env points dev at the docker-compose hostname "db", which doesn't exist on the runner.
         run: bin/console cache:clear --env=dev
         env:
           DB_HOST: 127.0.0.1

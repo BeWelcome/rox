@@ -185,7 +185,7 @@ jobs:
           mysql password: 'bewelcome'
 
       - name: Create test database
-        run: bin/console test:database:create --env=test
+        run: bin/console test:database:create
 
       - name: Warmup cache
         # phpstan-symfony reads var/cache/dev/App_KernelDevDebugContainer.xml (see phpstan.dist.neon),

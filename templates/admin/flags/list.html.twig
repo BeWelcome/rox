@@ -7,17 +7,17 @@
 
 {% block content %}
   <h1 class="u:text-24">
-    {{ (member_first ? 'AdminFlagsListMembers' : 'AdminFlagsListFlags')|trans }}
+    {{ (member_first ? 'admin.flags.list.members' : 'admin.flags.list.flags')|trans }}
   </h1>
 
   <form method="get" class="row g-2 align-items-end mb-3">
     <div class="col-12 col-md-4">
-      <label for="flags-member" class="form-label">{{ 'AdminFlagsMember'|trans }}</label>
+      <label for="flags-member" class="form-label">{{ 'admin.flags.member'|trans }}</label>
       <input id="flags-member" name="member" value="{{ filters.member }}"
              class="form-control member-autocomplete-start">
     </div>
     <div class="col-12 col-md-3">
-      <label for="flags-flag" class="form-label">{{ 'AdminFlagsFlag'|trans }}</label>
+      <label for="flags-flag" class="form-label">{{ 'admin.flags.flag'|trans }}</label>
       <select id="flags-flag" name="flag" class="form-select">
         <option value=""></option>
         {% for flag in flags %}
@@ -31,7 +31,7 @@
       <input type="hidden" name="history" value="0">
       <input id="flags-history" name="history" value="1" type="checkbox"
              class="form-check-input"{% if filters.history %} checked{% endif %}>
-      <label for="flags-history" class="form-check-label">{{ 'AdminFlagsHistory'|trans }}</label>
+      <label for="flags-history" class="form-check-label">{{ 'admin.flags.history'|trans }}</label>
     </div>
     <div class="col-4 col-md-1">
       <button class="btn btn-primary" type="submit">{{ 'admin.assignments.filter'|trans }}</button>
@@ -46,11 +46,11 @@
     <table class="table table-striped table-hover align-middle">
       <thead>
         <tr>
-          <th>{{ 'AdminFlagsMember'|trans }}</th>
-          <th>{{ 'AdminFlagsFlag'|trans }}</th>
-          <th>{{ 'AdminFlagsLevel'|trans }}</th>
-          <th>{{ 'AdminFlagsScope'|trans }}</th>
-          <th>{{ 'AdminFlagsComment'|trans }}</th>
+          <th>{{ 'admin.flags.member'|trans }}</th>
+          <th>{{ 'admin.flags.flag'|trans }}</th>
+          <th>{{ 'admin.flags.level'|trans }}</th>
+          <th>{{ 'admin.flags.scope'|trans }}</th>
+          <th>{{ 'admin.flags.comment'|trans }}</th>
           <th>{{ 'admin.assignments.created'|trans }}</th>
           <th>{{ 'admin.assignments.updated'|trans }}</th>
           <th>{{ 'admin.assignments.actions'|trans }}</th>

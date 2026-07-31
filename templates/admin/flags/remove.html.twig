@@ -1,17 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-  <h1 class="u:text-24">{{ 'AdminFlagsRemove'|trans }}</h1>
+  <h1 class="u:text-24">{{ 'admin.flags.remove'|trans }}</h1>
   <p>{{ 'admin.flags.remove.confirm'|trans({
     '%flag%': assignment.flag.name,
     '%username%': assignment.member.username
   }) }}</p>
   <dl>
-    <dt>{{ 'AdminFlagsLevel'|trans }}</dt>
+    <dt>{{ 'admin.flags.level'|trans }}</dt>
     <dd>{{ assignment.level }}</dd>
-    <dt>{{ 'AdminFlagsScope'|trans }}</dt>
+    <dt>{{ 'admin.flags.scope'|trans }}</dt>
     <dd>{{ assignment.scope }}</dd>
-    <dt>{{ 'AdminFlagsComment'|trans }}</dt>
+    <dt>{{ 'admin.flags.comment'|trans }}</dt>
     <dd>{{ assignment.comment|nl2br }}</dd>
   </dl>
   {{ form(form) }}

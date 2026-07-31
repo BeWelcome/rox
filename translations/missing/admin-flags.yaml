@@ -19,3 +19,39 @@ admin.flags.relevance:
 admin.flags.superseded:
   - Superseded
   - 'Label for an older flag assignment cycle.'
+admin.flags.list.members:
+  - '@-AdminFlagsListMembers'
+admin.flags.list.flags:
+  - '@-AdminFlagsListFlags'
+admin.flags.member:
+  - '@-AdminFlagsMember'
+admin.flags.flag:
+  - '@-AdminFlagsFlag'
+admin.flags.history:
+  - '@-AdminFlagsHistory'
+admin.flags.level:
+  - '@-AdminFlagsLevel'
+admin.flags.scope:
+  - '@-AdminFlagsScope'
+admin.flags.comment:
+  - '@-AdminFlagsComment'
+admin.flags.overview:
+  - '@-AdminFlagsOverview'
+admin.flags.name:
+  - '@-AdminFlagsName'
+admin.flags.description:
+  - '@-AdminFlagsDescription'
+admin.flags.remove:
+  - '@-AdminFlagsRemove'
+admin.flags.flag.exists:
+  - '@-AdminFlagsFlagExists'
+admin.flags.create:
+  - '@-AdminFlagsCreate'
+admin.flags.flag.edited:
+  - '@-AdminFlagsFlagEdited'
+admin.flags.username.not.existing:
+  - '@-AdminFlagsUsernameNotExisting'
+admin.flags.already.assigned:
+  - '@-AdminFlagsAlreadyAssigned'
+admin.flags.assign:
+  - '@-AdminFlagsAssign'

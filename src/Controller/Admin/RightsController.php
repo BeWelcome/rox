@@ -19,6 +19,9 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+use const ENT_QUOTES;
+use const ENT_SUBSTITUTE;
+
 #[IsGranted(Member::ROLE_ADMIN_RIGHTS)]
 class RightsController extends AbstractController
 {
@@ -150,7 +153,7 @@ class RightsController extends AbstractController
                     trim($data['scope']),
                     trim($data['comment']),
                 );
-                $this->addFlash('success', $this->translator->trans('AdminRightsRightEdited'));
+                $this->addFlash('success', $this->translator->trans('admin.rights.right.edited'));
 
                 return $this->redirectToRoute('admin_rights_member', [
                     'username' => $member->getUsername(),
@@ -338,7 +341,7 @@ class RightsController extends AbstractController
 
     private function escapeFlashValue(string $value): string
     {
-        return htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     private function getSubmenu(Member $manager, string $active): array

@@ -41,3 +41,5 @@ admin.rights.create:
   - '@-AdminRightsCreate'
 admin.rights.assign:
   - '@-AdminRightsAssign'
+admin.rights.right.edited:
+  - '@-AdminRightsRightEdited'

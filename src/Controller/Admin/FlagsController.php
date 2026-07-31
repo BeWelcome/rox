@@ -103,7 +103,7 @@ class FlagsController extends AbstractController
             $data = $form->getData();
             $flag = $this->model->create(trim($data['name']), trim($data['description']));
             if (null === $flag) {
-                $form->get('name')->addError(new FormError('AdminFlagsFlagExists'));
+                $form->get('name')->addError(new FormError('admin.flags.flag.exists'));
             } else {
                 $this->addFlash('success', $this->translator->trans('admin.flags.created', [
                     '%flag%' => $this->escapeFlashValue($flag->getName()),
@@ -114,7 +114,7 @@ class FlagsController extends AbstractController
         }
 
         return $this->render('admin/flags/form.html.twig', [
-            'headline' => 'AdminFlagsCreate',
+            'headline' => 'admin.flags.create',
             'form' => $form,
             'submenu' => $this->getSubmenu($manager, 'create'),
         ]);
@@ -156,7 +156,7 @@ class FlagsController extends AbstractController
             if (!$edited) {
                 throw $this->createNotFoundException('The flag assignment is no longer current.');
             }
-            $this->addFlash('success', $this->translator->trans('AdminFlagsFlagEdited'));
+            $this->addFlash('success', $this->translator->trans('admin.flags.flag.edited'));
 
             return $this->redirectToRoute('admin_flags_member', [
                 'username' => $member->getUsername(),
@@ -186,7 +186,7 @@ class FlagsController extends AbstractController
         $form = $this->createFormBuilder(null, [
             'csrf_token_id' => 'remove-flag-' . $assignment->getId(),
         ])->add('remove', SubmitType::class, [
-            'label' => 'AdminFlagsRemove',
+            'label' => 'admin.flags.remove',
             'attr' => ['class' => 'btn-danger'],
         ])->getForm();
         $form->handleRequest($request);
@@ -231,7 +231,7 @@ class FlagsController extends AbstractController
             $data = $form->getData();
             $targetMember = $member ?? $this->memberRepository->findOneBy(['username' => trim($data['username'])]);
             if (null === $targetMember) {
-                $form->get('username')->addError(new FormError('AdminFlagsUsernameNotExisting'));
+                $form->get('username')->addError(new FormError('admin.flags.username.not.existing'));
             } else {
                 /** @var Flag $flag */
                 $flag = $data['flag'];
@@ -244,7 +244,7 @@ class FlagsController extends AbstractController
                     trim($data['comment']),
                 );
                 if (FlagsModel::ASSIGNMENT_DUPLICATE === $result) {
-                    $form->get('flag')->addError(new FormError('AdminFlagsAlreadyAssigned'));
+                    $form->get('flag')->addError(new FormError('admin.flags.already.assigned'));
                 } else {
                     $this->addFlash('success', $this->translator->trans('admin.flags.assigned', [
                         '%flag%' => $this->escapeFlashValue($flag->getName()),
@@ -259,7 +259,7 @@ class FlagsController extends AbstractController
         }
 
         return $this->render('admin/flags/form.html.twig', [
-            'headline' => 'AdminFlagsAssign',
+            'headline' => 'admin.flags.assign',
             'form' => $form,
             'submenu' => $this->getSubmenu($manager, 'assign'),
             'autocomplete' => null === $member,
@@ -349,29 +349,29 @@ class FlagsController extends AbstractController
     {
         $items = [
             'assign' => [
-                'key' => 'AdminFlagsAssign',
+                'key' => 'admin.flags.assign',
                 'icon' => 'plus',
                 'url' => $this->generateUrl('admin_flags_assign'),
             ],
             'overview' => [
-                'key' => 'AdminFlagsOverview',
+                'key' => 'admin.flags.overview',
                 'icon' => 'list',
                 'url' => $this->generateUrl('admin_flags_overview'),
             ],
             'members' => [
-                'key' => 'AdminFlagsListMembers',
+                'key' => 'admin.flags.list.members',
                 'icon' => 'users',
                 'url' => $this->generateUrl('admin_flags_members'),
             ],
             'flags' => [
-                'key' => 'AdminFlagsListFlags',
+                'key' => 'admin.flags.list.flags',
                 'icon' => 'flag',
                 'url' => $this->generateUrl('admin_flags_flags'),
             ],
         ];
         if ($this->model->canCreate($manager)) {
             $items['create'] = [
-                'key' => 'AdminFlagsCreate',
+                'key' => 'admin.flags.create',
                 'icon' => 'plus-square',
                 'url' => $this->generateUrl('admin_flags_create'),
             ];

@@ -13,3 +13,31 @@ admin.rights.removed:
 admin.rights.remove.confirm:
   - 'Remove %right% from %username%? The assignment remains in history.'
   - 'Right removal confirmation. Keep %right% and %username%.'
+admin.rights.list.members:
+  - '@-AdminRightsListMembers'
+admin.rights.list.rights:
+  - '@-AdminRightsListRights'
+admin.rights.member:
+  - '@-AdminRightsMember'
+admin.rights.right:
+  - '@-AdminRightsRight'
+admin.rights.history:
+  - '@-AdminRightsHistory'
+admin.rights.level:
+  - '@-AdminRightsLevel'
+admin.rights.scope:
+  - '@-AdminRightsScope'
+admin.rights.comment:
+  - '@-AdminRightsComment'
+admin.rights.overview:
+  - '@-AdminRightsOverview'
+admin.rights.name:
+  - '@-AdminRightsName'
+admin.rights.description:
+  - '@-AdminRightsDescription'
+admin.rights.remove:
+  - '@-AdminRightsRemove'
+admin.rights.create:
+  - '@-AdminRightsCreate'
+admin.rights.assign:
+  - '@-AdminRightsAssign'

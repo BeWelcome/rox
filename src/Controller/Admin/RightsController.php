@@ -345,29 +345,29 @@ class RightsController extends AbstractController
     {
         $items = [
             'assign' => [
-                'key' => 'AdminRightsAssign',
+                'key' => 'admin.rights.assign',
                 'icon' => 'plus',
                 'url' => $this->generateUrl('admin_rights'),
             ],
             'overview' => [
-                'key' => 'AdminRightsOverview',
+                'key' => 'admin.rights.overview',
                 'icon' => 'list',
                 'url' => $this->generateUrl('admin_rights_overview'),
             ],
             'members' => [
-                'key' => 'AdminRightsListMembers',
+                'key' => 'admin.rights.list.members',
                 'icon' => 'users',
                 'url' => $this->generateUrl('admin_rights_members'),
             ],
             'rights' => [
-                'key' => 'AdminRightsListRights',
+                'key' => 'admin.rights.list.rights',
                 'icon' => 'key',
                 'url' => $this->generateUrl('admin_rights_rights'),
             ],
         ];
         if ($this->model->canCreate($manager)) {
             $items['create'] = [
-                'key' => 'AdminRightsCreate',
+                'key' => 'admin.rights.create',
                 'icon' => 'plus-square',
                 'url' => $this->generateUrl('admin_rights_create'),
             ];

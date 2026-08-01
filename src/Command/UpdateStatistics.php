@@ -6,9 +6,9 @@ use App\Model\StatisticsModel;
 use DateInterval;
 use DatePeriod;
 use DateTime;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
+use Doctrine\ORM\Exception as ORMException;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -16,7 +16,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Zend\Validator\Date;
 
 #[AsCommand(
     name: 'statistics:update',
@@ -41,10 +40,6 @@ class UpdateStatistics extends Command
     }
 
     /**
-     * @throws DBALException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     *
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     protected function execute(InputInterface $input, OutputInterface $output): int

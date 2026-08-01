@@ -16,22 +16,21 @@ use App\Entity\PrivilegeScope;
 use App\Entity\Role;
 use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
-use App\Utilities\MessageTrait;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GroupModel
 {
     use BewelcomeAddressTrait;
 
-    use MessageTrait;
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly TranslatorInterface $translator,
         private readonly Mailer $mailer,
     ) {
     }
@@ -48,18 +47,14 @@ class GroupModel
         $membership->setGroup($group);
         $membership->setMember($member);
 
-        $translator = $this->getTranslator();
-        $translator->setLocale($member->getPreferredLanguage()->getShortCode());
-        $comment = new MemberTranslation()
-            ->setLanguage($language)
-            ->setSentence($translator->trans('group.got.invited.by', ['admin' => $admin->getUsername()]))
-            ->setOwner($member)
-            ->setTranslator($member)
-        ;
+        $comment = new MemberTranslation(
+            $member->getPreferredLanguage()->getShortCode(),
+            'GroupMembership',
+            $this->translator->trans('group.got.invited.by', ['admin' => $admin->getUsername()])
+        );
+
         $em->persist($comment);
         $em->flush();
-
-        $translator->setLocale($admin->getPreferredLanguage()->getShortCode());
 
         $membership->addComment($comment);
         $membership->setStatus(GroupMembershipStatusType::INVITED_INTO_GROUP);
@@ -99,6 +94,7 @@ class GroupModel
 
     public function acceptInviteToGroup(Group $group, Member $member): bool
     {
+        $success = false;
         try {
             $membership = $this->getMembership($group, $member);
 
@@ -109,7 +105,6 @@ class GroupModel
                 $success = true;
             }
         } catch (Exception) {
-            $success = false;
         }
 
         return $success;
@@ -135,6 +130,7 @@ class GroupModel
 
     public function withdrawInviteMemberToGroup(Group $group, Member $member): bool
     {
+        $success = false;
         try {
             $membership = $this->getMembership($group, $member);
 
@@ -144,7 +140,6 @@ class GroupModel
                 $success = true;
             }
         } catch (Exception) {
-            $success = false;
         }
 
         return $success;
@@ -160,12 +155,7 @@ class GroupModel
             /** @var Language $language */
             $language = $languageRepository->findOneBy(['shortCode' => $locale]);
 
-            $comment = new MemberTranslation();
-            $comment->setLanguage($language);
-            $comment->setSentence($reason);
-            $comment->setOwner($member);
-            $comment->setTranslator($member);
-
+            $comment = new MemberTranslation($language->getShortCode(), 'GroupMembership', $reason);
             $em->persist($comment);
             $em->flush();
 
@@ -235,24 +225,12 @@ class GroupModel
         $em->flush();
 
         // Create the description as a member translation using the current language
-        $description = new MemberTranslation();
-        $description
-            ->setOwner($member)
-            ->setTranslator($member)
-            ->setSentence($data->description)
-            ->setRecord($group->getId())
-            ->setLanguage($language);
+        $description = new MemberTranslation($language->getShortCode(), 'GroupDescription', $data->description);
         $em->persist($description);
         $em->flush();
 
         // Add a comment for the creator of the group in English
-        $groupComment = new MemberTranslation();
-        $groupComment
-            ->setOwner($member)
-            ->setTranslator($member)
-            ->setSentence('Group creator')
-            ->setRecord($group->getId())
-            ->setLanguage($english);
+        $groupComment = new MemberTranslation($english->getShortCode(), 'GroupComment', 'Group creator');
         $em->persist($groupComment);
         $em->flush();
 

@@ -9,7 +9,7 @@ use App\Entity\Activity;
 use App\Entity\BroadcastMessage;
 use App\Entity\Comment;
 use App\Entity\CommunityNews;
-use App\Entity\Donations;
+use App\Entity\Donation;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\HostingRequest;
@@ -19,7 +19,6 @@ use App\Entity\Newsletter;
 use App\Entity\Poll;
 use App\Entity\PollChoice;
 use App\Entity\Right;
-use App\Entity\Shout;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
@@ -175,7 +174,7 @@ class MyDataMockups implements MockupProviderInterface
     {
         return match ($feature) {
             'post (thread)', 'post (group)' => ['deleted' => ['yes' => 'yes', 'no' => 'no']],
-            'broadcasts', 'comments', 'communitynews', 'communitynews_comments', 'donations', 'gallery', 'logs', 'newsletters', 'pictures', 'groups', 'polls_contributed', 'polls_created', 'polls_voted', 'relations', 'rights', 'privileges', 'trips', 'shouts', 'subscriptions', 'translations' => ['count' => ['none' => '0', 'some' => '2']],
+            'broadcasts', 'comments', 'communitynews', 'communitynews_comments', 'donations', 'gallery', 'logs', 'newsletters', 'pictures', 'groups', 'polls_contributed', 'polls_created', 'polls_voted', 'relations', 'rights', 'privileges', 'trips', 'subscriptions', 'translations' => ['count' => ['none' => '0', 'some' => '2']],
             default => match ($locale) {
                 'en', 'de', 'fr', 'es', 'pt', 'pt-br', 'gl' => [
                     'count' => [
@@ -225,7 +224,6 @@ class MyDataMockups implements MockupProviderInterface
             'relations',
             'rights',
             'trips',
-            'shouts',
             'subscriptions',
             'translations',
         ];
@@ -296,7 +294,7 @@ class MyDataMockups implements MockupProviderInterface
                 ];
                 break;
             case 'donations':
-                $mockEntity = Mockery::mock(Donations::class, [
+                $mockEntity = Mockery::mock(Donation::class, [
                     'money' => '€',
                     'amount' => 100.00,
                     'namegiven' => 'donor',
@@ -392,8 +390,6 @@ class MyDataMockups implements MockupProviderInterface
                     'getDescription' => 'Right Description',
                 ]);
                 break;
-            case 'shouts':
-                return $this->getShouts($count);
             case 'subscriptions':
                 return $this->getSubscriptions($count);
             case 'translations':
@@ -628,39 +624,6 @@ class MyDataMockups implements MockupProviderInterface
         return [
             'left' => $relation,
             'right' => $relation,
-        ];
-    }
-
-    private function getShouts($count): array
-    {
-        if (0 === $count) {
-            return ['shouts' => []];
-        }
-
-        return [
-            'shouts' => [
-                [
-                    'title' => 'Shout Title',
-                    'text' => 'Image',
-                    'table' => Shout::GALLERY_ITEM,
-                    'tableId' => 'Image',
-                ],
-                [
-                    'text' => 'Gallery',
-                    'table' => Shout::GALLERY,
-                    'tableId' => 'Gallery',
-                ],
-                [
-                    'text' => 'Group',
-                    'table' => Shout::GROUP,
-                    'tableId' => 'Group',
-                ],
-                [
-                    'text' => 'Trip',
-                    'table' => Shout::TRIP,
-                    'tableId' => 'Trip',
-                ],
-            ],
         ];
     }
 

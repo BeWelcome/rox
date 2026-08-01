@@ -28,11 +28,10 @@ abstract class EnumType extends Type
 
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
-        $values = array_map(static function ($val) {
-            return "'" . $val . "'";
-        }, $this->values);
-
-        return 'ENUM(' . implode(', ', $values) . ')';
+        return $platform->getStringTypeDeclarationSQL([
+            'length' => $this->getMaxLength(),
+            'fixed' => false,
+        ]);
     }
 
     #[Override]
@@ -69,5 +68,12 @@ abstract class EnumType extends Type
         });
 
         return array_combine($translationIds, $this->values);
+    }
+
+    private function getMaxLength(): int
+    {
+        $lengths = array_map('strlen', array_filter($this->values, 'is_string'));
+
+        return [] === $lengths ? 1 : max($lengths);
     }
 }

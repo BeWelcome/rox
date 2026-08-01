@@ -44,7 +44,7 @@ class HomeAndLoginMockups implements MockupProviderInterface
     {
         switch ($parameters['name']) {
             case 'homepage':
-                $searchFormRequest = new SearchFormRequest($this->entityManager);
+                $searchFormRequest = new SearchFormRequest();
                 $searchFormRequest->show_map = true;
                 $searchFormRequest->accommodation_neverask = true;
                 $searchFormRequest->inactive = true;

@@ -603,7 +603,8 @@ class GeonamesUpdateFullCommand extends Command
                     );
                 } catch (Exception $e) {
                     $io->note(
-                        'Skipped ' . $row[1] . ' (' . $row[8] . ', ' . $row[10] . ' - ' . $row[0] . ') -- ' . $e->getMessage()
+                        'Skipped ' . $content[1] . ' (' . $content[8] . ', ' . $content[10] . ' - ' . $content[0] . ')' .
+                        ' -- ' . $e->getMessage()
                     );
                 }
             }

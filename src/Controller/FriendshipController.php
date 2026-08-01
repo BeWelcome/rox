@@ -218,9 +218,4 @@ class FriendshipController extends AbstractController
             'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'friends']),
         ]);
     }
-
-    private function findFriendshipBetween(Member $loggedInMember, Member $member): ?Friend
-    {
-        return $relationRepository->findFriendshipBetween($loggedInMember, $member);
-    }
 }

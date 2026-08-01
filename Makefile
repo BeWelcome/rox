@@ -12,7 +12,7 @@ TIME_STAMP := $(shell git log -n 1 --format=%aI)
 
 all: phpci
 
-phpci: phpcpd phploc php-code-sniffer php-cs-fixer phpunit infection int-test version yaml-lint doctrine twig
+phpci: phpcpd phploc phpstan php-code-sniffer php-cs-fixer phpunit infection int-test version yaml-lint doctrine twig
 
 install:
 	git rev-parse --short HEAD > VERSION
@@ -74,6 +74,9 @@ phploc:
 
 phpmd:
 	"./vendor/bin/phpmd" $(SRC_DIR_COMMA) text phpmd.xml
+
+phpstan:
+	"./vendor/bin/phpstan" analyze
 
 php-cs-fixer:
 	"./vendor/bin/php-cs-fixer" fix -v --diff --dry-run

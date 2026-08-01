@@ -5,7 +5,6 @@ namespace App\Pagerfanta;
 use App\Doctrine\MessageResultSetMapping;
 use App\Entity\Member;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
@@ -24,24 +23,19 @@ class ConversationsWithAdapter implements AdapterInterface
 
     public function getNbResults(): int
     {
-        $count = 0;
-        try {
-            $countQuery = 'SELECT count(*) FROM (' . $this->getConversationsQuery() . ') m';
-            $result = $this->connection->executeQuery(
-                $countQuery,
-                [
-                    ':memberId' => $this->member->getId(),
-                    ':partnerId' => $this->partner->getId(),
-                ],
-                [
-                    PDO::PARAM_INT,
-                    PDO::PARAM_INT,
-                ]
-            );
-            $count = $result->fetchOne();
-        } catch (DBALException) {
-            // Return 0
-        }
+        $countQuery = 'SELECT count(*) FROM (' . $this->getConversationsQuery() . ') m';
+        $result = $this->connection->executeQuery(
+            $countQuery,
+            [
+                ':memberId' => $this->member->getId(),
+                ':partnerId' => $this->partner->getId(),
+            ],
+            [
+                PDO::PARAM_INT,
+                PDO::PARAM_INT,
+            ]
+        );
+        $count = $result->fetchOne();
 
         return $count;
     }

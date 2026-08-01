@@ -181,7 +181,7 @@ class StatisticsController extends AboutBaseController
         $data = [];
         switch ($type) {
             case 'other':
-                $data = $this->otherData();
+                $data = []; // $this->otherData();
                 break;
         }
 
@@ -189,52 +189,5 @@ class StatisticsController extends AboutBaseController
         $response->setData($data);
 
         return $response;
-    }
-
-    private function otherData(): array
-    {
-        $this->kickstartSession();
-        $statsModel = new StatsModel();
-        try {
-            $languages = $statsModel->getLanguages();
-            $preferredLanguages = $statsModel->getPreferredLanguages();
-            $logins = $statsModel->getLastLoginRankGrouped();
-            $countries = $statsModel->getMembersPerCountry();
-        } catch (PException) {
-            $logins = [];
-            $countries = [];
-            $languages = [];
-            $preferredLanguages = [];
-        }
-
-        return [
-            'languages' => $languages,
-            'preferred' => $preferredLanguages,
-            'countries' => $countries,
-            'logins' => $logins,
-        ];
-    }
-
-    /**
-     * @SuppressWarnings("PHPMD.StaticAccess")
-     */
-    private function kickstartSession(): void
-    {
-        // Kick-start the Symfony session. This replaces session_start() in the
-        // old code, which is now turned off.
-        $session = $this->get('session');
-        $session->start();
-
-        // Make sure the Rox classes find this session
-        SessionSingleton::createInstance($session);
-
-        // make sure everything's setup for the old code used below
-        $environmentExplorer = new EnvironmentExplorer($this->urlGenerator);
-        $environmentExplorer->initializeGlobalState(
-            $this->getParameter('database_host'),
-            $this->getParameter('database_name'),
-            $this->getParameter('database_user'),
-            $this->getParameter('database_password')
-        );
     }
 }

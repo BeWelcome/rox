@@ -5,15 +5,16 @@ namespace App\Model;
 use App\Entity\Params;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use stdClass;
 
-class DonateModel
+readonly class DonateModel
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
-    public function getStatForDonations()
+    public function getStatForDonations(): mixed
     {
         $campaignValue = $this->getCampaignValues();
         if ($campaignValue) {
@@ -31,6 +32,8 @@ class DonateModel
                 ";
             $connection = $this->entityManager->getConnection();
             $rowYear = $connection->executeQuery($sql)->fetchAssociative();
+
+            $start = $end = '';
             switch ($rowYear['quarter']) {
                 case 1:
                     $start = $rowYear['yearnow'] . '-01-01';

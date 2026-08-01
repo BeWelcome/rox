@@ -269,6 +269,91 @@ class ConversationModelTest extends TestCase
         $this->assertFalse($this->model->hasMessageLimitExceeded($member, 5, 20));
     }
 
+    public function testIsMarkedCorrectly(): void
+    {
+        $message = new Message();
+        $message->setMessage('Hello, how are you?');
+        $this->assertTrue(SpamInfoType::NO_SPAM === $this->model->formatConversation($message)->getSpamInfo());
+
+        $message = new Message();
+        $message->setMessage('bewelcome.919823.shop');
+        $this->assertTrue(SpamInfoType::SPAM_BLOCKED_WORD === $this->model->formatConversation($message)->getSpamInfo());
+
+        $message = new Message();
+        $message->setMessage('This is verification scam');
+        $this->assertTrue(SpamInfoType::SPAM_BLOCKED_WORD === $this->model->formatConversation($message)->getSpamInfo());
+
+        $message = new Message();
+        $message->setMessage(<<<MSG
+            Hello\u{200b}!\u{200b}
+
+            F\u{200b}o\u{200b}r\u{200b} \u{200b}s\u{200b}e\u{200b}c\u{200b}u\u{200b}r\u{200b}i\u{200b}t\u{200b}y\u{200b} \u{200b}w\u{200b}e\u{200b} \u{200b}n\u{200b}e\u{200b}e\u{200b}d\u{200b} \u{200b}a\u{200b} \u{200b}q\u{200b}u\u{200b}i\u{200b}c\u{200b}k\u{200b} \u{200b}I\u{200b}D\u{200b} \u{200b}c\u{200b}h\u{200b}e\u{200b}c\u{200b}k\u{200b}.\u{200b}
+
+            W\u{200b}i\u{200b}t\u{200b}h\u{200b}o\u{200b}u\u{200b}t\u{200b} \u{200b}i\u{200b}t\u{200b} \u{200b}y\u{200b}o\u{200b}u\u{200b}r\u{200b} \u{200b}B\u{200b}e\u{200b}W\u{200b}e\u{200b}l\u{200b}c\u{200b}o\u{200b}m\u{200b}e\u{200b} \u{200b}a\u{200b}c\u{200b}c\u{200b}o\u{200b}u\u{200b}n\u{200b}t\u{200b} \u{200b}w\u{200b}i\u{200b}l\u{200b}l\u{200b} \u{200b}b\u{200b}e\u{200b} \u{200b}s\u{200b}u\u{200b}s\u{200b}p\u{200b}e\u{200b}n\u{200b}d\u{200b}e\u{200b}d\u{200b}.\u{200b}
+
+            V\u{200b}e\u{200b}r\u{200b}i\u{200b}f\u{200b}y\u{200b}\u{200b}h\u{200b}e\u{200b}r\u{200b}e\u{200b}:\u{200b}
+            https://tr.ee/DC82PQI\u{200b}f\u{200b} \u{200b}y\u{200b}o\u{200b}u\u{200b} \u{200b}c\u{200b}a\u{200b}n\u{200b}'t\u{200b} \u{200b}c\u{200b}l\u{200b}i\u{200b}c\u{200b}k\u{200b} \u{200b}o\u{200b}n\u{200b} \u{200b}t\u{200b}h\u{200b}e\u{200b} \u{200b}l\u{200b}i\u{200b}n\u{200b}k\u{200b},\u{200b} \u{200b}c\u{200b}o\u{200b}p\u{200b}y\u{200b} \u{200b}a\u{200b}n\u{200b}d\u{200b} \u{200b}p\u{200b}a\u{200b}s\u{200b}t\u{200b}e\u{200b} \u{200b}i\u{200b}t\u{200b} \u{200b}i\u{200b}n\u{200b}t\u{200b}o\u{200b} \u{200b}y\u{200b}o\u{200b}u\u{200b}r\u{200b} \u{200b}b\u{200b}r\u{200b}o\u{200b}w\u{200b}s\u{200b}e\u{200b}r\u{200b} \u{200b}(S\u{200b}a\u{200b}f\u{200b}a\u{200b}r\u{200b}i\u{200b}/C\u{200b}h\u{200b}r\u{200b}o\u{200b}m\u{200b}e\u{200b},\u{200b} \u{200b}e\u{200b}t\u{200b}c\u{200b}.\u{200b}).")
+            MSG);
+        $this->assertTrue(SpamInfoType::SPAM_BLOCKED_WORD === $this->model->formatConversation($message)->getSpamInfo());
+
+        $message = new Message();
+        $message->setMessage(<<<MSG
+            Always good to meet travelers people :) 
+
+            Hello! 
+
+            We are a couple currently on a road trip from the South of France to the European Juggling Convention in Slovenia! starting on August 1st. 
+
+             We’re always looking for ways to learn and teach, meet good people, and be in a pleasant environment close to nature. \u{200b}
+
+            We would love to come stay with you,  If you’re spontaneous and it's feel good.  
+
+            We’re not afraid to try new things, so we’ve learned to do a wide variety of things. 
+
+            And we have a tent! :)
+
+            It's the first time for us in bewelcome, but we are many years in trustroots and workaway. 
+
+            It will be amazing for us to rest and stay 1 or 2 nights before the convention(30,31- or just one even).
+
+            We like cooking and baking sourdough brade, we travel with one ;)
+
+             \u{200b}Thanks in advance. Hope to get to know you  
+
+             Guy and Lirane :)
+            MSG
+        );
+
+        $message = new Message();
+        $message->setMessage(<<<'MSG'
+            Hi from Poland ! 
+
+            Hi!
+
+            I'm a solo traveller from Poland :P
+
+            I have expirence in solo travelling, already have been in Helsinki, Berlin, Lithuania, London and have to say that it is great opportunity to feel power and meet amazing people, have adventure and believe in myself 🙃 
+
+            I'm 30 years old system engineer still trying not to be so adult and sometimes travelling only with my backpack. 
+
+            I'm going to be in Emilia-Romagna on 8.08-10.08. 
+
+            My plan is in progress.. But I what I know for now is to see San Marino, buy 3days train pass and travel from city to city on east side of Emilia-Romagn
+
+            Maybe could you join me at least to show me your city and spend some time? ;)  
+
+            I can help in your daily activities and share my food culture. 🙆‍♀️
+
+            Let me know also if you would like to be my host even for a part of these days. if you want to see my reccomedations please check my profile.
+
+            Cheers! 
+
+            Jagoda
+            MSG
+        );
+        $this->assertTrue(SpamInfoType::NO_SPAM === $this->model->formatConversation($message)->getSpamInfo());
+    }
+
     private function setupLimitMock(array $returnData): void
     {
         $result = $this->createStub(Result::class);

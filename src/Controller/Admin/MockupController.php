@@ -294,6 +294,8 @@ class MockupController extends TranslationController
                 $params['token'] = '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7';
                 break;
             case 'emails/notifications.html.twig':
+                $mockPost = null;
+                $mockThread = null;
                 if (str_starts_with((string) $name, 'forum post')) {
                     $mockThread = Mockery::mock(ForumThread::class, [
                         'getId' => 1,

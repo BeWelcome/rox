@@ -150,8 +150,8 @@ services:
         class: App\Model\MemberDataExtractor\RightsExtractor
         tags: [ 'app.member_data_extractor' ]
 
-    app.member_data_extractor.special_relations:
-        class: App\Model\MemberDataExtractor\SpecialRelationsExtractor
+    app.member_data_extractor.friends:
+        class: App\Model\MemberDataExtractor\FriendsExtractor
         tags: [ 'app.member_data_extractor' ]
 
     app.member_data_extractor.broadcasts:
@@ -384,16 +384,6 @@ services:
             - { proximity: 1 }
         public: false
         tags: [ { name: pagerfanta.view, alias: rounded_pagination_end } ]
-
-    #  doctrine.filter.configurator:
-    #    public: true
-    #    class: App\Doctrine\Filter\Configurator
-    #    arguments:
-    #      - "@doctrine.orm.entity_manager"
-    #      - "@request_stack"
-    #      - "@annotation_reader"
-    #    tags:
-    #      - { name: kernel.event_listener, event: kernel.request }
 
     rox.wiki.model:
         public: true

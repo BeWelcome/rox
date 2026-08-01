@@ -20,11 +20,10 @@ abstract class SetType extends Type
 
     public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
-        $values = array_map(static function ($val) {
-            return "'" . $val . "'";
-        }, $this->values);
-
-        return 'SET(' . implode(', ', $values) . ')';
+        return $platform->getStringTypeDeclarationSQL([
+            'length' => $this->getMaxLength(),
+            'fixed' => false,
+        ]);
     }
 
     #[Override]
@@ -69,5 +68,10 @@ abstract class SetType extends Type
         });
 
         return array_combine($translationIds, $this->values);
+    }
+
+    private function getMaxLength(): int
+    {
+        return max(1, array_sum(array_map('strlen', $this->values)) + \count($this->values) - 1);
     }
 }

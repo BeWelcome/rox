@@ -277,7 +277,8 @@ class ConversationModel
     public function formatConversation(Message $message): Message
     {
         $messageText = $message->getMessage();
-        $found = preg_match("/@|\.at\.|-at-|\(at\)/i", $messageText);
+        $matches = [];
+        $found = preg_match("/@|\.at\.|-at-|\(at\)|verif|\.shop|system|\xE2\x80\x8B/i", $messageText, $matches);
 
         if (0 !== $found) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);

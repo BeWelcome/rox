@@ -9,7 +9,7 @@ use App\Repository\StatisticsRepository;
 use DatePeriod;
 use DateTime;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\Query;
@@ -100,11 +100,6 @@ class StatisticsModel
         return $stats;
     }
 
-    /**
-     * @throws DBALException
-     * @throws \Doctrine\ORM\Exception\ORMException
-     * @throws OptimisticLockException
-     */
     public function updateStatistics(DatePeriod $dates, OutputInterface $output): int
     {
         $progressBar = null;
@@ -428,12 +423,7 @@ class StatisticsModel
         return $result;
     }
 
-    /**
-     * @param Statistic $statistics
-     *
-     * @throws DBALException
-     */
-    private function setMemberInfo(Connection $connection, string $current, $statistics): void
+    private function setMemberInfo(Connection $connection, string $current, Statistic $statistics): void
     {
         // Active members
         $count = $connection->executeQuery(
@@ -475,20 +465,15 @@ class StatisticsModel
         $statistics->setMembersWithPositiveComment($count);
     }
 
-    /**
-     * @param Statistic $statistics
-     *
-     * @throws DBALException
-     */
-    private function setLoggedInMembers(Connection $connection, string $current, string $next, $statistics): void
+    private function setLoggedInMembers(Connection $connection, string $current, string $next, Statistic $statistics): void
     {
-        // Number of member who have logged in during the current date
+        // Number of members who have logged in during the current date
         $count = $connection->executeQuery(
             "
                         SELECT
                           COUNT(m.id) AS cnt
                         FROM
-                          members m
+                          member m
                         WHERE
                           m.`Status` IN ('Active','ChoiceInactive','OutOfRemind')
                           AND m.LastLogin >= :current
@@ -503,12 +488,7 @@ class StatisticsModel
         $statistics->setMembersWhoLoggedInToday($count);
     }
 
-    /**
-     * @param Statistic $statistics
-     *
-     * @throws DBALException
-     */
-    private function setMessagesSentAndRead(Connection $connection, string $current, string $next, $statistics): void
+    private function setMessagesSentAndRead(Connection $connection, string $current, string $next, Statistic $statistics): void
     {
         // Number of messages sent from one member to another during the current date
         $count = $connection->executeQuery(
@@ -551,16 +531,11 @@ class StatisticsModel
         $statistics->setMessagesRead($count);
     }
 
-    /**
-     * @param Statistic $statistics
-     *
-     * @throws DBALException
-     */
     private function setRequestsSentAndAccepted(
         Connection $connection,
         string $current,
         string $next,
-        $statistics,
+        Statistic $statistics,
     ): void {
         // Number of requests created from one member to another during the current date
         $count = $connection->executeQuery(
@@ -605,9 +580,6 @@ class StatisticsModel
         $statistics->setRequestsAccepted($count);
     }
 
-    /**
-     * @throws DBALException
-     */
     private function setLegsCreated(
         Connection $connection,
         string $current,
@@ -635,10 +607,6 @@ class StatisticsModel
             ->fetchOne();
         $statistics->setLegsCreated($count);
     }
-
-    /**
-     * @throws DBALException
-     */
     private function setInvitationsSentAndAccepted(
         Connection $connection,
         string $current,

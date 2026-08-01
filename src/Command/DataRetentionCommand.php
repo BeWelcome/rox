@@ -89,7 +89,7 @@ class DataRetentionCommand extends Command
 
                 $memberTranslationRepository = $entityManager->getRepository(MemberTranslation::class);
                 /** @var MemberTranslation[] $memberTranslations */
-                $memberTranslations = $memberTranslationRepository->findBy(['owner' => $member]);
+                $memberTranslations = $memberTranslationRepository->findBy(['object' => $member]);
                 foreach ($memberTranslations as $memberTranslation) {
                     $entityManager->remove($memberTranslation);
                 }

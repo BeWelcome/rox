@@ -8,7 +8,6 @@ use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
-use App\Form\MapSearchFormType;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
 use App\Repository\MemberRepository;
@@ -16,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -204,54 +202,6 @@ class SearchController extends AbstractController
     }
 
     /**
-     * This method is used on the home screen to allow people interested in BeWelcome to check how many members are
-     * available in a location.
-     *
-     * @return Response|RedirectResponse
-     *
-     * @SuppressWarnings("PHPMD.StaticAccess")
-     */
-    #[Route(path: '/search/map', name: 'search_map')]
-    public function searchOnMap(Request $request, TranslatorInterface $translator, MemberRepository $memberRepository): Response
-    {
-        // do not allow access to this page when logged in, redirect to /search/locations
-        if (null !== $this->getUser()) {
-            return $this->redirectToRoute('search_locations');
-        }
-
-        $results = null;
-
-        $form = $this->createForm(MapSearchFormType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $searchFormRequest = new SearchFormRequest();
-            $searchFormRequest->page = 1;
-            $searchFormRequest->location = $data['location'];
-            $searchFormRequest->location_geoname_id = $data['location_geoname_id'];
-            $searchFormRequest->location_latitude = $data['location_latitude'];
-            $searchFormRequest->location_longitude = $data['location_longitude'];
-            $searchFormRequest->accommodation_anytime = true;
-            $searchFormRequest->accommodation_neverask = true;
-            $searchFormRequest->has_profile_picture = false;
-            $searchFormRequest->has_about_me = false;
-            $searchFormRequest->has_comments = false;
-            $searchFormRequest->last_active = 2400;
-            $searchFormRequest->distance = 100;
-
-            $searchAdapter = new SearchAdapter($searchFormRequest, $this->entityManager, $memberRepository, null);
-            $results = $searchAdapter->getMapResults();
-        }
-
-        return $this->render('search/searchmap.html.twig', [
-            'form' => $form->createView(),
-            'map' => true,
-            'results' => $results,
-        ]);
-    }
-
-    /**
      * @SuppressWarnings("PHPMD.StaticAccess")
      */
     #[Route(path: '/search/locations/ajax', name: 'search_members_ajax')]
@@ -271,7 +221,7 @@ class SearchController extends AbstractController
         /** @var Member $member */
         $member = $this->getUser();
 
-        $searchAdapter = new SearchAdapter($searchFormRequest, $this->entityManager, $memberRepository, $member);
+        $searchAdapter = new SearchAdapter($searchFormRequest, $this->entityManager, $member);
         $pager = new Pagerfanta($searchAdapter);
         $pager->setMaxPerPage($searchFormRequest->items > 0 ? $searchFormRequest->items : 20);
         $pager->setCurrentPage($request->get('page', 1));

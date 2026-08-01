@@ -350,7 +350,10 @@ class TripModelNotificationTest extends TestCase
                 Subtrip $subtrip,
                 array $notificationValues = [Preference::TRIP_NOTIFICATIONS_IMMEDIATELY],
                 int $duration = 3,
-            ) use ($hosts, &$calls): array {
+            ) use (
+                $hosts,
+                &$calls
+            ): array {
                 $calls[] = [$subtrip, $notificationValues, $duration];
 
                 return $hosts;

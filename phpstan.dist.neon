@@ -6,18 +6,10 @@ parameters:
 #        - build
     excludePaths:
         - vendor
-        - var (?)
+        - var
+        - src/Entity
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
         constantHassers: false
     doctrine:
         ormRepositoryClass: Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
-#    ignoreErrors:
-#        # Ignore some legacy mixed type issues while migrating
-#        - identifier: missingType.iterableValue
-#        - identifier: missingType.generics
-
-#includes:
-#    - vendor/phpstan/phpstan-symfony/extension.neon
-#    - vendor/phpstan/phpstan-doctrine/extension.neon
-#    - vendor/phpstan/phpstan-mockery/extension.neon

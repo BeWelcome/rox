@@ -9,6 +9,10 @@ use App\Form\Admin\RightDefinitionType;
 use App\Model\Admin\RightsModel;
 use App\Repository\MemberRepository;
 use App\Repository\RightRepository;
+
+use const ENT_QUOTES;
+use const ENT_SUBSTITUTE;
+
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -18,9 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
-use const ENT_QUOTES;
-use const ENT_SUBSTITUTE;
 
 #[IsGranted(Member::ROLE_ADMIN_RIGHTS)]
 class RightsController extends AbstractController

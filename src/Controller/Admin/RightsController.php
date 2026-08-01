@@ -9,10 +9,6 @@ use App\Form\Admin\RightDefinitionType;
 use App\Model\Admin\RightsModel;
 use App\Repository\MemberRepository;
 use App\Repository\RightRepository;
-
-use const ENT_QUOTES;
-use const ENT_SUBSTITUTE;
-
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -342,7 +338,7 @@ class RightsController extends AbstractController
 
     private function escapeFlashValue(string $value): string
     {
-        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+        return htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
     }
 
     private function getSubmenu(Member $manager, string $active): array

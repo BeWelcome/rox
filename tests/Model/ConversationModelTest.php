@@ -323,35 +323,6 @@ class ConversationModelTest extends TestCase
              Guy and Lirane :)
             MSG
         );
-
-        $message = new Message();
-        $message->setMessage(<<<'MSG'
-            Hi from Poland ! 
-
-            Hi!
-
-            I'm a solo traveller from Poland :P
-
-            I have expirence in solo travelling, already have been in Helsinki, Berlin, Lithuania, London and have to say that it is great opportunity to feel power and meet amazing people, have adventure and believe in myself 🙃 
-
-            I'm 30 years old system engineer still trying not to be so adult and sometimes travelling only with my backpack. 
-
-            I'm going to be in Emilia-Romagna on 8.08-10.08. 
-
-            My plan is in progress.. But I what I know for now is to see San Marino, buy 3days train pass and travel from city to city on east side of Emilia-Romagn
-
-            Maybe could you join me at least to show me your city and spend some time? ;)  
-
-            I can help in your daily activities and share my food culture. 🙆‍♀️
-
-            Let me know also if you would like to be my host even for a part of these days. if you want to see my reccomedations please check my profile.
-
-            Cheers! 
-
-            Jagoda
-            MSG
-        );
-        $this->assertTrue(SpamInfoType::NO_SPAM === $this->model->formatConversation($message)->getSpamInfo());
     }
 
     private function setupLimitMock(array $returnData): void

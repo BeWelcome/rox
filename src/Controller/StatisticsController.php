@@ -3,10 +3,6 @@
 namespace App\Controller;
 
 use App\Model\StatisticsModel;
-use App\Utilities\SessionSingleton;
-use EnvironmentExplorer;
-use PException;
-use StatsModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

@@ -2,8 +2,8 @@
 
 namespace App\Model\MemberDataExtractor;
 
-use App\Entity\Member;
 use App\Entity\Friend;
+use App\Entity\Member;
 use App\Repository\FriendRepository;
 
 final class FriendsExtractor extends AbstractExtractor implements ExtractorInterface

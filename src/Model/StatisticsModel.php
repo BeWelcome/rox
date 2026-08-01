@@ -9,9 +9,7 @@ use App\Repository\StatisticsRepository;
 use DatePeriod;
 use DateTime;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\Query;
 use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\TranslatableListener;
@@ -607,6 +605,7 @@ class StatisticsModel
             ->fetchOne();
         $statistics->setLegsCreated($count);
     }
+
     private function setInvitationsSentAndAccepted(
         Connection $connection,
         string $current,

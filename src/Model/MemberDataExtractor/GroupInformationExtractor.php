@@ -12,7 +12,7 @@ final class GroupInformationExtractor extends AbstractExtractor implements Extra
         // Groups the member is in and why
         $memberships = [];
         $groupMemberships = $member->getGroupMemberships();
-        if ($groupMemberships->count() !== 0) {
+        if (0 !== $groupMemberships->count()) {
             foreach ($groupMemberships as $groupMembership) {
                 try {
                     // Database is messy. Check if group still exists

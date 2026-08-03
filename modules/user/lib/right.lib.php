@@ -138,7 +138,7 @@ public function hasRight($Name, $_Scope = "", $OptionalIdMember = 0)
 
 	$Scope = rtrim(ltrim($_Scope)); // ensure they are no extra spaces
 	if ($Scope != "") {
-		if ($Scope {0} != "\"")
+		if ($Scope[0] != "\"")
 		$Scope = "\"" . $Scope . "\""; // add the " " if they are missing
 	}
 

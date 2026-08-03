@@ -14,8 +14,8 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	ln -sf "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
 
 	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images
-	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
-	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
+#	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
+#	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
 
 	if [ "$APP_ENV" != 'prod' ] && [ -f /certs/localCA.crt ]; then
 		ln -sf /certs/localCA.crt /usr/local/share/ca-certificates/localCA.crt
@@ -27,6 +27,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	fi
 
 	if [ "$APP_ENV" != 'prod' ] && [ ! -f VERSION ]; then
+	    git config --global --add safe.directory /srv/bewelcome
 		git rev-parse --short HEAD > VERSION
 	fi
 
@@ -37,8 +38,8 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			mkdir -p config/jwt
 			echo "$jwt_passphrase" | openssl genpkey -out config/jwt/private.pem -pass stdin -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
 			echo "$jwt_passphrase" | openssl pkey -in config/jwt/private.pem -passin stdin -out config/jwt/public.pem -pubout
-			setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
-			setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+#			setfacl -R -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
+#			setfacl -dR -m u:www-data:rX -m u:"$(whoami)":rwX config/jwt
 		fi
 	fi
 
@@ -47,18 +48,30 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 	fi
 
+	database_host=$(grep '^DB_HOST=' .env | cut -f 2 -d '=')
+	database_port=$(grep '^DB_PORT=' .env | cut -f 2 -d '=')
+	database_name=$(grep '^DB_NAME=' .env | cut -f 2 -d '=')
+	database_user=$(grep '^DB_USER=' .env | cut -f 2 -d '=')
+	database_password=$(grep '^DB_PASS=' .env | cut -f 2 -d '=')
+
 	echo "Waiting for db to be ready..."
-	until bin/console doctrine:query:sql "SELECT 1" > /dev/null 2>&1; do
+	db_wait_seconds=0
+	db_wait_max="${BEWELCOME_DB_READY_MAX_WAIT_SECONDS:-300}"
+	echo "new PDO('mysql:host=${database_host};port=${database_port};dbname=${database_name}', '${database_user}', '${database_password}');"
+
+	until php -r "new PDO('mysql:host=${database_host};port=${database_port};dbname=${database_name}', '${database_user}', '${database_password}');" > /dev/null 2>&1; do
+		if [ "$db_wait_seconds" -ge "$db_wait_max" ]; then
+			echo "Database not ready after ${db_wait_max}s; aborting." >&2
+			exit 1
+		fi
 		sleep 1
+		echo "Waited... ${db_wait_seconds}s."
+		db_wait_seconds=$((db_wait_seconds + 1))
 	done
 
 	if [ "$APP_ENV" != 'prod' ]; then
 		bin/console test:database:create --drop --force --no-interaction
-		database_host=$(grep '^DB_HOST=' .env | cut -f 2 -d '=')
-		database_port=$(grep '^DB_PORT=' .env | cut -f 2 -d '=')
-		database_name=$(grep '^DB_NAME=' .env | cut -f 2 -d '=')
-		database_user=$(grep '^DB_USER=' .env | cut -f 2 -d '=')
-		database_password=$(grep '^DB_PASS=' .env | cut -f 2 -d '=')
+
 		if [ -f docker/db/languages.sql ]; then
 			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/languages.sql
 		fi

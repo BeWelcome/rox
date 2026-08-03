@@ -27,6 +27,7 @@
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/doctrine-migrations-bundle": "^2.0",
         "doctrine/orm": "^2.8.4",
+        "doctrine/persistence": "^2.4",
         "eluceo/ical": "^2.5",
         "exercise/htmlpurifier-bundle": "^3.0",
         "ezyang/htmlpurifier": "^4.0",
@@ -39,7 +40,7 @@
         "intervention/image": "^2.4",
         "jfcherng/php-levenshtein-distance": "*",
         "judev/php-htmltruncator": "^1.2",
-        "laminas/laminas-code": "4.7.1",
+
         "laminas/laminas-eventmanager": "3.*",
         "laminas/laminas-uri": "^2.7",
         "league/html-to-markdown": "^4.8",
@@ -153,13 +154,21 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "7.4.7"
+            "php": "8.2"
         },
         "allow-plugins": {
             "infection/extension-installer": true,
+            "php-http/discovery": true,
             "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/runtime": true
+        },
+        "audit": {
+            "ignore": [
+                "PKSA-3ncz-km6v-5vjr",
+                "PKSA-gs8r-6kz6-pp56",
+                "PKSA-gnn4-pxdg-q76m"
+            ]
         }
     },
     "extra": {

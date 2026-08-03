@@ -192,10 +192,10 @@ class PFunctions {
         mt_srand((double)microtime()*1000000);
         $r = mt_rand();
         $uuid = sha1(uniqid($r,true));
-        $uuid{12} = '4';
-        $n = 8 + (ord($uuid{16}) & 3);
+        $uuid[12] = '4';
+        $n = 8 + (ord($uuid[16]) & 3);
         $hex = '0123456789abcdef';
-        $uuid{16} = $hex{$n};
+        $uuid[16] = $hex[$n];
 
         // return formated uuid
         return substr($uuid,  0, 8)."-"
@@ -264,7 +264,7 @@ class PFunctions {
 
     function returnBytes($val) {
         $val = trim($val);
-        $last = strtolower($val{strlen($val)-1});
+        $last = strtolower($val[strlen($val)-1]);
         if (!is_numeric($val)) {
             $val = intval($val);
         }

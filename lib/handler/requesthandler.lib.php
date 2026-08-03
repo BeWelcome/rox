@@ -120,7 +120,7 @@ class PRequest {
         	// Ignore words with too low charactercodes (control characters etc)
         	$len = strlen($r);
         	for ($i = 0; $i < $len; $i++) {
-        		$c = ord($r{$i});
+        		$c = ord($r[$i]);
         		if ($c < 32) {
         			continue 2;
         		}

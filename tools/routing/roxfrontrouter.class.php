@@ -465,6 +465,8 @@ A TERRIBLE EXCEPTION
 
     protected function renderPage($page)
     {
+        if (null === $page) return;
+
         if (is_a($page, 'PageWithHTML')) {
             $page->layoutkit = $this->createLayoutkit();
         }

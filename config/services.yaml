@@ -48,6 +48,7 @@ services:
             $noReplyEmailAddress: '%env(MAILER_NO_REPLY_ADDRESS)%'
             $messageEmailAddress: '%env(MAILER_MESSAGE_ADDRESS)%'
             $groupEmailAddress: '%env(MAILER_GROUP_ADDRESS)%'
+            $forumEmailAddress: '%env(MAILER_FORUM_ADDRESS)%'
             $passwordEmailAddress: '%env(MAILER_PASSWORD_ADDRESS)%'
             $signupEmailAddress: '%env(MAILER_SIGNUP_ADDRESS)%'
             $accountFeedbackAddress: '%env(MAILER_ACCOUNT_FEEDBACK_ADDRESS)%'

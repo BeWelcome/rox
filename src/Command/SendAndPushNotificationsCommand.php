@@ -47,6 +47,8 @@ class SendAndPushNotificationsCommand extends Command
         private UrlGeneratorInterface $urlGenerator,
         private BrowserPushNotificationProcessor $browserPushNotificationProcessor,
         private int $batchSize,
+        private string $forumEmailAddress = 'noreply@bewelcome.org',
+        private string $groupEmailAddress = 'noreply@bewelcome.org',
     ) {
         parent::__construct();
     }
@@ -159,14 +161,11 @@ class SendAndPushNotificationsCommand extends Command
 
     private function determineSender(ForumPost $post): Address
     {
-        $thread = $post->getThread();
-        if ($thread->getGroup()) {
-            $from = new Address('group@bewelcome.org', 'BeWelcome - ' . $post->getAuthor()->getUsername());
-        } else {
-            $from = new Address('forum@bewelcome.org', 'BeWelcome - ' . $post->getAuthor()->getUsername());
-        }
+        $email = $post->getThread()->getGroup()
+            ? $this->groupEmailAddress
+            : $this->forumEmailAddress;
 
-        return $from;
+        return new Address($email, 'BeWelcome - ' . $post->getAuthor()->getUsername());
     }
 
     private function getForumPostUrl(ForumPost $post): string

@@ -123,9 +123,9 @@ class SendNotificationsCommand extends Command
     {
         $thread = $post->getThread();
         if ($thread->getGroup()) {
-            $from = new Address('group@bewelcome.org', 'BeWelcome - ' . $post->getAuthor()->getUsername());
+            $from = new Address('noreply@bewelcome.org', 'BeWelcome - ' . $post->getAuthor()->getUsername());
         } else {
-            $from = new Address('forum@bewelcome.org', 'BeWelcome - ' . $post->getAuthor()->getUsername());
+            $from = new Address('noreply@bewelcome.org', 'BeWelcome - ' . $post->getAuthor()->getUsername());
         }
 
         return $from;

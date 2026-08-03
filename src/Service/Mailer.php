@@ -23,8 +23,9 @@ use Twig\Environment;
 class Mailer
 {
     private const NO_REPLY_EMAIL_ADDRESS = 'noreply@bewelcome.org';
-    private const MESSAGE_EMAIL_ADDRESS = 'message@bewelcome.org';
-    private const GROUP_EMAIL_ADDRESS = 'group@bewelcome.org';
+    private const MESSAGE_EMAIL_ADDRESS = 'noreply@bewelcome.org';
+    private const GROUP_EMAIL_ADDRESS   = 'noreply@bewelcome.org';
+    private const FORUM_EMAIL_ADDRESS   = 'noreply@bewelcome.org';
     private const PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
     private const SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
     private const ACCOUNT_FEEDBACK_ADDRESS = 'account@bewelcome.org';

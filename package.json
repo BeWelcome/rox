@@ -25,7 +25,7 @@
     "@tomickigrzegorz/autocomplete": "^3.3.2",
     "@trevoreyre/autocomplete-js": "^3.0.3",
     "@types/geojson": "^7946.0.16",
-    "@types/leaflet": "^1.9.21",
+    "@types/leaflet": "^1.9.22",
     "@types/leaflet-fullscreen": "^1.0.10",
     "add-to-homescreen": "^3.2.6",
     "autoprefixer": "^10.5.4",
@@ -89,10 +89,10 @@
     "workbox-webpack-plugin": "^7.4.1"
   },
   "overrides": {
-    "brace-expansion": "^5.0.7",
+    "brace-expansion": "^5.0.9",
     "postcss": "^8.5.24",
     "shell-quote": "^1.8.5",
-    "fast-uri": "^3.1.4",
+    "fast-uri": "^3.1.5",
     "immutable": "^5.1.8",
     "svgo": "^4.0.2",
     "js-yaml": "^4.3.0",

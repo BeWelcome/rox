@@ -78,10 +78,11 @@ class Mailer
         $feedbackCategory = $feedbackCategoryRepository->findOneBy(['name' => 'Comment_issue']);
 
         return $this->sendTemplateEmail(
-            new Address($member->getEmail()),
+            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
             new Address($feedbackCategory->getEmailToNotify(), 'Comment Issue'),
             'comment.feedback',
-            $parameters
+            $parameters,
+            $member->getEmail(),
         );
     }
 
@@ -128,7 +129,8 @@ class Mailer
     }
 
     /**
-     * This feeds the feedback given by a user into the OTRS queues.
+     * Sends contact/feedback form submissions to the helpdesk queue.
+     * From: is always noreply@bewelcome.org to pass DMARC; the reporter's address goes in Reply-To.
      */
     public function sendFeedbackEmail($sender, Address $receiver, $parameters): bool
     {
@@ -136,10 +138,11 @@ class Mailer
             . str_replace('_', ' ', $parameters['IdCategory']->getName()) . "'";
 
         return $this->sendTemplateEmail(
-            $sender,
+            self::NO_REPLY_EMAIL_ADDRESS,
             $receiver,
             'feedback',
-            $parameters
+            $parameters,
+            \is_string($sender) ? $sender : null,
         );
     }
 
@@ -274,7 +277,7 @@ class Mailer
      * @param Member|Address        $receiver
      * @param mixed                 $parameters
      */
-    private function sendTemplateEmail($sender, $receiver, string $template, array $parameters): bool
+    private function sendTemplateEmail($sender, $receiver, string $template, array $parameters, ?string $replyTo = null): bool
     {
         $currentLocale = $this->translator->getLocale();
         $success = true;
@@ -312,6 +315,10 @@ class Mailer
             $sender = $email->from($this->getBeWelcomeAddressWithUsername($sender));
         }
         $email->from($sender);
+
+        if (null !== $replyTo) {
+            $email->replyTo(new Address($replyTo));
+        }
 
         try {
             $this->mailer->send($email);

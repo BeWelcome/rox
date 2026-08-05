@@ -72,9 +72,7 @@ class MailerTest extends TestCase
         $this->assertCount(1, $from);
         $this->assertSame('noreply@bewelcome.org', $from[0]->getAddress(), 'From must be noreply to pass DMARC');
 
-        $replyTo = $captured->getReplyTo();
-        $this->assertCount(1, $replyTo);
-        $this->assertSame('reporter@yahoo.fr', $replyTo[0]->getAddress(), 'Reply-To must be the reporter so staff can reply');
+        $this->assertEmpty($captured->getReplyTo(), 'No Reply-To: freemail Reply-To triggers SPOOF_REPLYTO in rspamd and routes to Junk');
     }
 
     public function testSendFeedbackEmailNullFallbackUsesNoreplyWithNoReplyTo(): void
@@ -155,8 +153,6 @@ class MailerTest extends TestCase
         $this->assertCount(1, $from);
         $this->assertSame('noreply@bewelcome.org', $from[0]->getAddress(), 'From must be noreply to pass DMARC');
 
-        $replyTo = $captured->getReplyTo();
-        $this->assertCount(1, $replyTo);
-        $this->assertSame('member@gmail.com', $replyTo[0]->getAddress(), 'Reply-To must be the member so staff can reply');
+        $this->assertEmpty($captured->getReplyTo(), 'No Reply-To: freemail Reply-To triggers SPOOF_REPLYTO in rspamd and routes to Junk');
     }
 }

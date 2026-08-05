@@ -112,6 +112,7 @@ COPY pthacks pthacks/
 COPY public public/
 COPY roxlauncher roxlauncher/
 COPY src src/
+COPY Migrations Migrations/
 COPY templates templates/
 COPY tools tools/
 COPY translations translations/

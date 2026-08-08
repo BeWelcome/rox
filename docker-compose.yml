@@ -21,12 +21,6 @@ services:
       - db
       - manticore
       - mailer
-    volumes:
-      - .:/srv/bewelcome:rw,cached
-      - ./docker/php/conf.d/bewelcome.dev.ini:/usr/local/etc/php/conf.d/bewelcome.ini
-      # if you develop on Linux, you may use a bind-mounted host directory instead
-      # - ./var:/srv/bewelcome/var:rw
-
   web:
     build:
       context: .
@@ -35,8 +29,6 @@ services:
     image: ${NGINX_IMAGE:-bewelcome/nginx}
     depends_on:
       - php
-    volumes:
-      - ./public:/srv/bewelcome/public:ro
 
   db:
     image: mariadb:12.0.2
@@ -50,9 +42,7 @@ services:
 
   manticore:
     container_name: manticore
-    image: manticoresearch/manticore:5.0.2
-    environment:
-      - EXTRA=1
+    image: manticoresearch/manticore:6.3.8
     restart: always
     ports:
       - 127.0.0.1:9306:9306

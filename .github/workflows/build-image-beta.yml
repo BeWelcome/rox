@@ -1,0 +1,264 @@
+name: Build and publish beta image
+
+# Builds the production images for the feature/docker-beta branch (PHP-FPM + Nginx
+# architecture, master-based) and pushes them to GHCR. Dispatches to sysadmins-infra
+# on success so the beta stack can be manually redeployed.
+#
+# Does NOT auto-deploy — the deploy-bewelcome-beta.yml workflow on sysadmins-infra
+# is triggered manually or via the repository_dispatch.
+#
+# Two images are published:
+#   ghcr.io/bewelcome/rox:docker-beta     — PHP-FPM (bewelcome_php target)
+#   ghcr.io/bewelcome/rox:docker-beta-web — Nginx   (bewelcome_nginx target)
+
+on:
+  push:
+    branches: [feature/docker-beta]
+    paths:
+      - 'Dockerfile'
+      - '.dockerignore'
+      - 'docker/**'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'symfony.lock'
+      - 'package.json'
+      - 'yarn.lock'
+      - 'webpack.config.js'
+      - 'src/**'
+      - 'assets/**'
+      - 'config/**'
+      - 'templates/**'
+      - 'public/**'
+      - 'bin/**'
+      - 'migrations/**'
+      - '.trivyignore'
+      - '.github/workflows/build-image-beta.yml'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  packages: write
+  actions: read
+
+env:
+  IMAGE: ghcr.io/bewelcome/rox
+
+concurrency:
+  group: build-image-beta-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build ${{ matrix.prefix }} ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {arch: amd64, platform: linux/amd64,  runner: ubuntu-latest,      target: bewelcome_php,   prefix: php}
+          - {arch: arm64, platform: linux/arm64,  runner: ubuntu-24.04-arm,   target: bewelcome_php,   prefix: php}
+          - {arch: amd64, platform: linux/amd64,  runner: ubuntu-latest,      target: bewelcome_nginx, prefix: nginx}
+          - {arch: arm64, platform: linux/arm64,  runner: ubuntu-24.04-arm,   target: bewelcome_nginx, prefix: nginx}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # tag=v4.2.2
+
+      - name: Compute version metadata
+        id: version
+        run: |
+          echo "revision=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+          echo "timestamp=$(git log -n 1 --format=%ct)" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96  # tag=v5.6.1
+        with:
+          images: ${{ env.IMAGE }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5  # tag=v3.8.0
+
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75  # tag=v6.9.0
+        with:
+          context: .
+          target: ${{ matrix.target }}
+          platforms: ${{ matrix.platform }}
+          build-args: |
+            APP_VERSION=${{ steps.version.outputs.revision }}
+            APP_VERSION_TIMESTAMP=${{ steps.version.outputs.timestamp }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=beta-${{ matrix.prefix }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=beta-${{ matrix.prefix }}-${{ matrix.arch }}
+          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # tag=v4.6.2
+        with:
+          name: digests-${{ matrix.prefix }}-${{ matrix.arch }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  merge-php:
+    name: Push PHP manifest
+    runs-on: ubuntu-latest
+    needs: [build]
+    outputs:
+      short_sha: ${{ steps.vars.outputs.short_sha }}
+      digest: ${{ steps.manifest.outputs.digest }}
+    steps:
+      - name: Download PHP digests
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # tag=v4.1.8
+        with:
+          path: /tmp/digests
+          pattern: digests-php-*
+          merge-multiple: true
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5  # tag=v3.8.0
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96  # tag=v5.6.1
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=sha,prefix=sha-
+            type=raw,value=docker-beta
+
+      - name: Create and push multi-arch manifest
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create \
+            $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.IMAGE }}@sha256:%s ' *)
+
+      - name: Compute short sha
+        id: vars
+        run: echo "short_sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
+
+      - name: Capture manifest digest
+        id: manifest
+        run: |
+          digest=$(docker buildx imagetools inspect "${{ env.IMAGE }}:sha-${{ steps.vars.outputs.short_sha }}" --format '{{json .Manifest.Digest}}' | tr -d '"')
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+
+  merge-nginx:
+    name: Push Nginx manifest
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Download Nginx digests
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # tag=v4.1.8
+        with:
+          path: /tmp/digests
+          pattern: digests-nginx-*
+          merge-multiple: true
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5  # tag=v3.8.0
+
+      - name: Extract image metadata
+        id: meta
+        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96  # tag=v5.6.1
+        with:
+          images: ${{ env.IMAGE }}
+          tags: |
+            type=raw,value=docker-beta-web
+
+      - name: Create and push multi-arch manifest
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create \
+            $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.IMAGE }}@sha256:%s ' *)
+
+  scan:
+    name: Scan image
+    runs-on: ubuntu-latest
+    needs: [merge-php]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # tag=v4.1.7
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # tag=v0.36.0
+        env:
+          TRIVY_DISABLE_VEX_NOTICE: '1'
+        with:
+          image-ref: ${{ env.IMAGE }}:sha-${{ needs.merge-php.outputs.short_sha }}
+          format: table
+          severity: CRITICAL,HIGH,MEDIUM
+          exit-code: '1'
+          ignore-unfixed: true
+          trivyignores: .trivyignore
+
+  notify:
+    name: Notify sysadmins-infra
+    runs-on: ubuntu-latest
+    needs: [merge-php, merge-nginx, scan]
+    if: >
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/feature/docker-beta' &&
+      needs.merge-php.result == 'success' &&
+      needs.merge-nginx.result == 'success' &&
+      needs.scan.result == 'success'
+    steps:
+      - name: Mint cross-repo token
+        id: app-token
+        uses: actions/create-github-app-token@5d869da34e18e7287c1daad50e0b8ea0f506ce69  # tag=v1.11.0
+        with:
+          app-id: ${{ secrets.DEPLOY_APP_ID }}
+          private-key: ${{ secrets.DEPLOY_APP_PRIVATE_KEY }}
+          owner: BeWelcome
+          repositories: sysadmins-infra
+
+      - name: Notify sysadmins-infra of new beta image
+        uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0  # tag=v3.0.0
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          repository: BeWelcome/sysadmins-infra
+          event-type: rox-beta-image-pushed
+          client-payload: |
+            {
+              "image": "${{ env.IMAGE }}:sha-${{ needs.merge-php.outputs.short_sha }}@${{ needs.merge-php.outputs.digest }}",
+              "tag": "sha-${{ needs.merge-php.outputs.short_sha }}",
+              "sha": "${{ github.sha }}",
+              "ref": "${{ github.ref }}"
+            }

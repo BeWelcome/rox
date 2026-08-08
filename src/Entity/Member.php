@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
@@ -29,7 +30,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Do not check entities with PHPMD.
  *
- * @SuppressWarnings("PHPMD")
+ * @SuppressWarnings(PHPMD)
  */
 #[ORM\Table(name: 'members')]
 #[ORM\Entity(repositoryClass: MemberRepository::class)]
@@ -64,8 +65,14 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
     #[ORM\Column(name: 'Username', type: 'string', length: 32, nullable: false)]
     protected string $username;
 
-    #[ORM\Column(name: 'Email', type: 'string', nullable: false)]
-    protected string $email;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Username", type="string", length=32, nullable=false)
+     *
+     * @Groups({"Member:Read"})
+     */
+    protected $username;
 
     #[ORM\Column(name: 'LastLogin', type: 'datetime', nullable: true)]
     protected ?DateTime $lastLogin = null;
@@ -78,8 +85,14 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     protected int $id;
 
-    #[ORM\Column(name: 'Status', type: 'member_status', nullable: false)]
-    private string $status = '';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    protected $id;
 
     #[ORM\JoinColumn(name: 'IdCity', referencedColumnName: 'geonameId', nullable: true)]
     #[ORM\ManyToOne(targetEntity: NewLocation::class)]
@@ -91,186 +104,555 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
     #[ORM\Column(name: 'Longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     private ?string $longitude;
 
-    #[ORM\Column(name: 'NbRemindWithoutLogingIn', type: 'integer', nullable: false)]
+    /**
+     * @var NewLocation
+     *
+     * @ORM\ManyToOne(targetEntity="NewLocation")
+     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $city;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Latitude", type="decimal", precision=10, scale=7, nullable=true)
+     */
+    private $latitude;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Longitude", type="decimal", precision=10, scale=7, nullable=true)
+     */
+    private $longitude;
+
+    /**
+     * @ORM\Column(name="NbRemindWithoutLogingIn", type="integer", nullable=false)
+     */
     private int $remindersWithOutLogin = 0;
 
-    #[ORM\Column(name: 'FirstName', type: 'string', nullable: false)]
-    private string $firstName = '';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="HomePhoneNumber", type="integer", nullable=false)
+     */
+    private $homephonenumber;
 
-    #[ORM\Column(name: 'SecondName', type: 'string', nullable: true)]
-    private ?string $secondName = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="CellPhoneNumber", type="integer", nullable=false)
+     */
+    private $cellphonenumber;
 
-    #[ORM\Column(name: 'LastName', type: 'string', nullable: true)]
-    private string $lastName = '';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="WorkPhoneNumber", type="integer", nullable=false)
+     */
+    private $workphonenumber;
 
-    #[ORM\Column(name: 'HideAttribute', type: 'integer', nullable: false)]
-    private int $hideAttribute = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN | self::MEMBER_LASTNAME_HIDDEN;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="SecEmail", type="integer", nullable=false)
+     */
+    private $secemail;
 
-    #[ORM\Column(name: 'Accomodation', type: 'accommodation', nullable: true)]
-    private ?string $accommodation = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="FirstName", type="string", nullable=false)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $firstName = '0';
 
-    #[ORM\Column(name: 'AdditionalAccomodationInfo', type: 'integer', nullable: false)]
-    private int $additionalAccommodationInfo = 0;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="SecondName", type="string", nullable=true)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $secondName = null;
 
-    #[ORM\Column(name: 'ILiveWith', type: 'integer', nullable: false)]
-    private int $iLiveWith = 0;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="LastName", type="string", nullable=false)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $lastName = '0';
 
-    #[ORM\Column(name: 'InformationToGuest', type: 'integer', nullable: false)]
-    private int $informationForGuest = 0;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="HideAttribute", type="integer", nullable=false)
+     */
+    private $hideAttribute = self::MEMBER_FIRSTNAME_HIDDEN | self::MEMBER_SECONDNAME_HIDDEN | self::MEMBER_LASTNAME_HIDDEN;
 
-    #[ORM\Column(name: 'TypicOffer', type: 'typical_offer', nullable: false)]
-    private string $typicalOffer = '';
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $accommodation = AccommodationType::MAYBE;
 
-    #[ORM\Column(name: 'Offer', type: 'integer', nullable: false)]
-    private int $offer = 0;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="AdditionalAccomodationInfo", type="integer", nullable=false)
+     */
+    private $additionalAccommodationInfo;
 
-    #[ORM\Column(name: 'MaxGuest', type: 'integer', nullable: false)]
-    private int $maxGuest = 1;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="ILiveWith", type="integer", nullable=false)
+     */
+    private $ilivewith;
 
-    #[ORM\Column(name: 'MaxLenghtOfStay', type: 'integer', nullable: false)]
-    private int $maxLengthOfStay = 0;
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="IdentityCheckLevel", type="boolean", nullable=false)
+     */
+    private $identitychecklevel = '000';
 
-    #[ORM\Column(name: 'Organizations', type: 'integer', nullable: false)]
-    private int $organizations = 0;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="InformationToGuest", type="integer", nullable=false)
+     */
+    private $informationtoguest;
 
-    #[ORM\Column(name: 'Restrictions', type: 'string', nullable: false)]
-    private string $restrictions = '';
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="TypicOffer", type="typical_offer", nullable=false)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $typicoffer;
 
-    #[ORM\Column(name: 'OtherRestrictions', type: 'integer', nullable: false)]
-    private int $otherRestrictions = 0;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Offer", type="integer", nullable=false)
+     */
+    private $offer;
 
-    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private DateTime $updated;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="MaxGuest", type="integer", nullable=false)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $maxguest = '0';
 
-    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private DateTime $created;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="MaxLenghtOfStay", type="integer", nullable=false)
+     */
+    private $maxlenghtofstay = '0';
 
-    #[ORM\Column(name: 'ProfileSummary', type: 'integer', nullable: false)]
-    private int $profileSummary = 0;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Organizations", type="integer", nullable=false)
+     */
+    private $organizations;
 
-    #[ORM\Column(name: 'Occupation', type: 'integer', nullable: false)]
-    private int $occupation = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Restrictions", type="string", nullable=false)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $restrictions;
 
-    #[ORM\Column(name: 'Gender', type: 'string', nullable: false)]
-    private string $gender = 'IDontTell';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="OtherRestrictions", type="integer", nullable=false)
+     */
+    private $otherrestrictions;
 
-    #[ORM\Column(name: 'HideGender', type: 'string', nullable: false)]
-    private string $hideGender = 'No';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="bday", type="integer", nullable=false)
+     */
+    private $bday;
 
-    #[ORM\Column(name: 'GenderOfGuest', type: 'string', nullable: false)]
-    private string $genderOfGuest = 'any';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="bmonth", type="integer", nullable=false)
+     */
+    private $bmonth;
 
-    #[ORM\Column(name: 'HideBirthDate', type: 'string', nullable: false)]
-    private string $hideAge = 'No';
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="byear", type="integer", nullable=false)
+     */
+    private $byear;
 
-    #[ORM\Column(name: 'BirthDate', type: 'date', nullable: true)]
-    private ?DateTime $birthdate = null;
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     */
+    private $updated;
 
-    #[ORM\Column(name: 'AdressHidden', type: 'string', nullable: false)]
-    private string $addressHidden = 'Yes';
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $created;
 
-    #[ORM\Column(name: 'WebSite', type: 'text', length: 255, nullable: true)]
-    private ?string $website = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="SecurityFlag", type="integer", nullable=false)
+     */
+    private $securityflag = '0';
 
-    #[ORM\Column(name: 'chat_SKYPE', type: 'text', length: 255, nullable: true)]
-    private ?string $chatSkype = null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Quality", type="string", nullable=false)
+     */
+    private $quality = 'NeverLog';
 
-    #[ORM\Column(name: 'chat_ICQ', type: 'text', length: 255, nullable: true)]
-    private ?string $chatIcq = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="ProfileSummary", type="integer", nullable=false)
+     */
+    private $profileSummary;
 
-    #[ORM\Column(name: 'chat_AOL', type: 'text', length: 255, nullable: true)]
-    private ?string $chatAol = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Occupation", type="integer", nullable=false)
+     */
+    private $occupation;
 
-    #[ORM\Column(name: 'chat_MSN', type: 'text', length: 255, nullable: true)]
-    private ?string $chatMsn = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="CounterGuests", type="integer", nullable=false)
+     */
+    private $counterguests = '0';
 
-    #[ORM\Column(name: 'chat_YAHOO', type: 'text', length: 255, nullable: true)]
-    private ?string $chatYahoo = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="CounterHosts", type="integer", nullable=false)
+     */
+    private $counterhosts = '0';
 
-    #[ORM\Column(name: 'chat_Others', type: 'text', length: 255, nullable: true)]
-    private ?string $chatOthers = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="CounterTrusts", type="integer", nullable=false)
+     */
+    private $countertrusts = '0';
 
-    #[ORM\Column(name: 'FutureTrips', type: 'integer', nullable: false)]
-    private int $futureTrips = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Gender", type="string", nullable=false)
+     */
+    private $gender = 'IDontTell';
 
-    #[ORM\Column(name: 'OldTrips', type: 'integer', nullable: false)]
-    private int $oldTrips = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HideGender", type="string", nullable=false)
+     */
+    private $hidegender = 'No';
 
-    #[ORM\Column(name: 'LogCount', type: 'integer', nullable: false)]
-    private int $logcount = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="GenderOfGuest", type="string", nullable=false)
+     */
+    private $genderofguest = 'any';
 
-    #[ORM\Column(name: 'Hobbies', type: 'integer', nullable: false)]
-    private int $hobbies = 0;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="MotivationForHospitality", type="integer", nullable=true)
+     */
+    private $motivationforhospitality;
 
-    #[ORM\Column(name: 'Books', type: 'integer', nullable: false)]
-    private int $books = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="HideBirthDate", type="string", nullable=false)
+     */
+    private $hideBirthDate = 'No';
 
-    #[ORM\Column(name: 'Music', type: 'integer', nullable: false)]
-    private int $music = 0;
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="BirthDate", type="date", nullable=true)
+     */
+    private $birthdate;
 
-    #[ORM\Column(name: 'PastTrips', type: 'integer', nullable: false)]
-    private int $pastTrips = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="AdressHidden", type="string", nullable=false)
+     */
+    private $adresshidden = 'Yes';
 
-    #[ORM\Column(name: 'PlannedTrips', type: 'integer', nullable: false)]
-    private int $plannedTrips = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="WebSite", type="text", length=255, nullable=true)
+     */
+    private $website;
 
-    #[ORM\Column(name: 'PleaseBring', type: 'integer', nullable: false)]
-    private int $pleaseBring = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_SKYPE", type="text", length=255, nullable=true)
+     */
+    private $chatSkype;
 
-    #[ORM\Column(name: 'OfferGuests', type: 'integer', nullable: false)]
-    private int $offerGuests = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_ICQ", type="text", length=255, nullable=true)
+     */
+    private $chatIcq;
 
-    #[ORM\Column(name: 'OfferHosts', type: 'integer', nullable: false)]
-    private int $offerHosts = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_AOL", type="text", length=255, nullable=true)
+     */
+    private $chatAol;
 
-    #[ORM\Column(name: 'PublicTransport', type: 'integer', nullable: false)]
-    private int $publicTransport = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_MSN", type="text", length=255, nullable=true)
+     */
+    private $chatMsn;
 
-    #[ORM\Column(name: 'Movies', type: 'integer', nullable: false)]
-    private int $movies = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_YAHOO", type="text", length=255, nullable=true)
+     */
+    private $chatYahoo;
 
-    #[ORM\Column(name: 'chat_GOOGLE', type: 'integer', nullable: false)]
-    private int $chatGoogle = 0;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="chat_Others", type="text", length=255, nullable=true)
+     */
+    private $chatOthers;
 
-    #[ORM\Column(name: 'LastSwitchToActive', type: 'datetime', nullable: true)]
-    private ?DateTime $lastSwitchToActive = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="FutureTrips", type="integer", nullable=false)
+     */
+    private $futuretrips = '0';
 
-    #[ORM\Column(name: 'bewelcomed', type: 'boolean', nullable: false)]
-    private bool $beWelcomed = false;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="OldTrips", type="integer", nullable=false)
+     */
+    private $oldtrips = '0';
 
-    #[ORM\Column(name: 'registration_key', type: 'string', nullable: true)]
-    private ?string $registrationKey = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="LogCount", type="integer", nullable=false)
+     */
+    private $logcount = '0';
 
-    #[ORM\Column(name: 'hosting_interest', type: 'integer', nullable: true)]
-    private ?int $hostingInterest = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Hobbies", type="integer", nullable=false)
+     */
+    private $hobbies;
 
-    #[ORM\OneToMany(targetEntity: CryptedField::class, mappedBy: 'member')]
-    private Collection $fields;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Books", type="integer", nullable=false)
+     */
+    private $books;
 
-    #[ORM\OneToMany(targetEntity: MemberTranslation::class, mappedBy: 'owner')]
-    private Collection $translatedFields;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Music", type="integer", nullable=false)
+     */
+    private $music;
 
-    #[ORM\OneToMany(targetEntity: RightVolunteer::class, mappedBy: 'member', fetch: 'EXTRA_LAZY')]
-    private Collection $volunteerRights;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="PastTrips", type="integer", nullable=false)
+     */
+    private $pasttrips;
 
-    #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'member', cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection $groupMemberships;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="PlannedTrips", type="integer", nullable=false)
+     */
+    private $plannedtrips;
 
-    #[ORM\OneToMany(targetEntity: MembersLanguagesLevel::class, mappedBy: 'member')]
-    private Collection $languageLevels;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="PleaseBring", type="integer", nullable=false)
+     */
+    private $pleasebring;
 
-    private array $memberFields;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="OfferGuests", type="integer", nullable=false)
+     */
+    private $offerguests;
 
-    #[ORM\OneToMany(targetEntity: Relation::class, mappedBy: 'receiver')]
-    private Collection $relations;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="OfferHosts", type="integer", nullable=false)
+     */
+    private $offerhosts;
 
-    #[ORM\OneToMany(targetEntity: MemberPreference::class, mappedBy: 'member')]
-    private Collection $preferences;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="PublicTransport", type="integer", nullable=false)
+     */
+    private $publictransport;
 
-    #[ORM\OneToMany(targetEntity: Address::class, mappedBy: 'member')]
-    private Collection $addresses;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Movies", type="integer", nullable=false)
+     */
+    private $movies;
 
-    private ?Language $preferredLanguage = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="chat_GOOGLE", type="integer", nullable=false)
+     */
+    private $chatGoogle;
+
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="LastSwitchToActive", type="datetime", nullable=true)
+     */
+    private $lastswitchtoactive;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="bewelcomed", type="integer", nullable=false)
+     */
+    private $bewelcomed;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="registration_key", type="string", nullable=false)
+     */
+    private $registrationKey;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="hosting_interest", type="integer", nullable=true)
+     */
+    private $hostingInterest;
+
+    /**
+     * @ORM\OneToMany(targetEntity="CryptedField", mappedBy="member", fetch="EAGER")
+     */
+    private $cryptedFields;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="RightVolunteer", mappedBy="member", fetch="LAZY")
+     */
+    private $volunteerRights;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="GroupMembership", mappedBy="member", cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $groupMemberships;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
+     *
+     * @Groups({"Member:Read"})
+     */
+    private $languageLevels;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $memberFields = null;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $comments;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $relationships;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="MemberPreference", mappedBy="member")
+     */
+    private $preferences;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Address", mappedBy="member")
+     */
+    private $addresses;
 
     public function __construct()
     {

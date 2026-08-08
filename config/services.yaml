@@ -51,15 +51,6 @@ services:
         tags: [ 'controller.service_arguments' ]
 
 
-    App\ApiPlatform\JWTAuthorizationDecorator:
-        decorates: 'api_platform.openapi.factory'
-        arguments: ['@.inner']
-
-#    App\Swagger\SwaggerDecorator:
-#        decorates: 'api_platform.swagger.normalizer.documentation'
-#        arguments: ['@App\Swagger\SwaggerDecorator.inner']
-#        autoconfigure: false
-
     App\Security\RefreshToken\RefreshTokenStorageInterface: '@App\Security\RefreshToken\DoctrineRefreshTokenStorage'
 
     App\Security\RefreshToken\JWTTokenManager:
@@ -82,11 +73,6 @@ services:
     App\Command\SendNotificationsCommand:
         arguments:
             $batchSize: '%forum_notification_batch_size%'
-
-    App\Serializer\MemberContextBuilder:
-        decorates: api_platform.serializer.context_builder
-        arguments:
-            $decorated: '@App\Serializer\MemberContextBuilder.inner'
 
     app.member_data_extractor.activities:
         class: App\Model\MemberDataExtractor\ActivitiesExtractor

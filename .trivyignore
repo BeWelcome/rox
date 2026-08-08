@@ -3,10 +3,3 @@
 # Remove once Alpine 3.24 ships nghttp2-libs >= 1.70.0-r0.
 CVE-2026-58055
 
-# api-platform/core v2.7.18 — CVEs fixed in v3.4.17+ / v4.x only.
-# Upgrading from v2 is a breaking change requiring code migration.
-# Track: https://github.com/api-platform/core/security/advisories
-CVE-2025-31481
-CVE-2025-31485
-CVE-2026-49858
-CVE-2026-54164

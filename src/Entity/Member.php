@@ -7,10 +7,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiProperty;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Doctrine\AccommodationType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
@@ -38,15 +34,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\HasLifecycleCallbacks
  *
  * @SuppressWarnings(PHPMD)
- *
- * @ApiResource(
- *     attributes={"identifiers"="username"},
- *     security="is_granted('ROLE_USER')",
- *     collectionOperations={},
- *     itemOperations={
- *          "get"={"normalization_context"={"groups"={"Member:Read"}}}
- *     }
- * )
  */
 class Member
     implements
@@ -107,10 +94,6 @@ class Member
      * @ORM\Column(name="Username", type="string", length=32, nullable=false)
      *
      * @Groups({"Member:Read"})
-     *
-     * @ApiProperty(identifier=true)
-     *
-     * @ApiFilter(SearchFilter::class, strategy="exact")
      */
     protected $username;
 
@@ -145,8 +128,6 @@ class Member
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ApiProperty(identifier=false)
      */
     protected $id;
 
@@ -178,9 +159,6 @@ class Member
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
      *
      * @Groups({"Member:Read"})
-     *
-     * @ApiFilter(SearchFilter::class, strategy="ipartial", properties={"city.name", "city.country.name"})
-     * @ApiFilter(SearchFilter::class, strategy="exact", properties={"city.latitude", "city.longitude"})
      */
     private $city;
 
@@ -271,8 +249,6 @@ class Member
      * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
      *
      * @Groups({"Member:Read"})
-     *
-     * @ApiFilter(SearchFilter::class, strategy="exact")
      */
     private $accommodation = AccommodationType::MAYBE;
 
@@ -326,8 +302,6 @@ class Member
      * @ORM\Column(name="MaxGuest", type="integer", nullable=false)
      *
      * @Groups({"Member:Read"})
-     *
-     * @ApiFilter(SearchFilter::class, strategy="exact")
      */
     private $maxguest = '0';
 
@@ -696,8 +670,6 @@ class Member
      * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
      *
      * @Groups({"Member:Read"})
-     *
-     * @ApiFilter(SearchFilter::class, strategy="exact", properties={"languageLevels.level", "languageLevels.language.name", "languageLevels.language.englishname", "languageLevels.language.shortCode"})
      */
     private $languageLevels;
 

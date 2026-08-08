@@ -1,0 +1,11 @@
+framework:
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_headers:
+        - x-forwarded-for
+        - x-forwarded-host
+        - x-forwarded-port
+        - x-forwarded-proto
+        - x-forwarded-prefix
+    session:
+        handler_id: 'session.handler.native_file'
+        save_path: '/var/session'

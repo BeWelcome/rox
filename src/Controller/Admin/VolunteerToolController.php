@@ -329,7 +329,7 @@ count(msg.id) AS Count
 FROM
 messages msg,
 members m
-LEFT JOIN geonames g ON m.IdCity = g.geonameID
+LEFT JOIN geo__names g ON m.IdCity = g.geoname_id
 WHERE
 m.id = msg.IdSender
 AND (DATE_ADD(msg.created,
@@ -369,7 +369,7 @@ count(msg.id) AS Count
 FROM
 messages msg,
 members m
-LEFT JOIN geonames g ON m.IdCity = g.geonameID
+LEFT JOIN geo__names g ON m.IdCity = g.geoname_id
 WHERE
 m.id = msg.IdSender
 AND NOT msg.request_id IS NULL
@@ -432,7 +432,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 $correspondent = ($sender === $member) ? $receiver : $sender;
                 $username = $correspondent->getUsername();
                 $type = $this->getConversationType($message);
-                if (!\array_key_exists($username, $results)) {
+                if (!array_key_exists($username, $results)) {
                     $results[$username] = [
                         'type' => $type,
                         'username' => $username,
@@ -489,11 +489,11 @@ ORDER BY count(msg.id) DESC')->fetchAll();
                 DATE_FORMAT(NOW(), '%Y') - ROUND(AVG(m.BirthDate) / 10000) AS 'Age'
             FROM
                 members m,
-                geonames g,
+                geo__names g,
                 geonamescountries gc
             WHERE
                 m.Status = 'Active'
-                AND m.IdCity = g.geonameId
+                AND m.IdCity = g.geoname_id
                 AND g.country = gc.country
             GROUP BY g.country
             ORDER BY 2 DESC;
@@ -712,7 +712,7 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
 
-        if (empty($subMenuItems) || ((null !== $tool) && !\array_key_exists($tool, $subMenuItems))) {
+        if (empty($subMenuItems) || ((null !== $tool) && !array_key_exists($tool, $subMenuItems))) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
             $referrer = $request->headers->get('referer');
 

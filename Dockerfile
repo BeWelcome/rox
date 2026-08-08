@@ -4,14 +4,17 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.2.33
+ARG PHP_VERSION=8.3.33
 ARG NGINX_VERSION=1.30.4
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine3.23 AS bewelcome_php
+FROM php:${PHP_VERSION}-fpm-alpine3.24 AS bewelcome_php
 
 # persistent / runtime deps
+# Upgrade all base packages to pick up security patches (CVE fixes in OS packages)
+RUN apk upgrade --no-cache
+
 RUN apk add --no-cache \
 		acl \
 		freetype \
@@ -25,7 +28,7 @@ RUN apk add --no-cache \
 		python3 \
 	;
 
-ARG APCU_VERSION=5.1.28
+ARG APCU_VERSION=5.1.18
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
@@ -112,7 +115,7 @@ COPY pthacks pthacks/
 COPY public public/
 COPY roxlauncher roxlauncher/
 COPY src src/
-COPY Migrations Migrations/
+COPY migrations migrations/
 COPY templates templates/
 COPY tools tools/
 COPY translations translations/
@@ -129,7 +132,9 @@ RUN set -eux; \
 COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
 RUN set -eux; \
 	yarn install --frozen-lock; \
-	yarn encore production --mode=production
+	yarn encore production --mode=production; \
+	rm -rf node_modules; \
+	yarn cache clean --force
 
 # do not use .env files in production
 COPY .env ./

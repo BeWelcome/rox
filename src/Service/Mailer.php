@@ -93,6 +93,7 @@ class Mailer
     {
         $parameters['sender'] = $member;
         $parameters['receiver'] = $member;
+        $parameters['reporterEmail'] = $member->getEmail();
         $feedbackCategoryRepository = $this->entityManager->getRepository(FeedbackCategory::class);
         $feedbackCategory = $feedbackCategoryRepository->findOneBy(['name' => 'Comment_issue']);
 
@@ -101,7 +102,6 @@ class Mailer
             new Address($feedbackCategory->getEmailToNotify(), 'Comment Issue'),
             'comment.feedback',
             $parameters,
-            $member->getEmail(),
         );
     }
 
@@ -149,7 +149,9 @@ class Mailer
 
     /**
      * Sends contact/feedback form submissions to the helpdesk queue.
-     * From: is always noreply@bewelcome.org to pass DMARC; the reporter's address goes in Reply-To.
+     * From: noreply@bewelcome.org (passes DMARC). No Reply-To — freemail in Reply-To triggers
+     * SPOOF_REPLYTO+FREEMAIL_REPLYTO_NEQ_FROM in rspamd, scoring ~8 pts and routing to Junk.
+     * The reporter's address is already rendered in the email body by feedback.html.twig.
      */
     public function sendFeedbackEmail($sender, Address $receiver, $parameters): bool
     {
@@ -161,7 +163,6 @@ class Mailer
             $receiver,
             'feedback',
             $parameters,
-            \is_string($sender) ? $sender : null,
         );
     }
 

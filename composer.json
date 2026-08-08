@@ -21,7 +21,6 @@
         "ext-zip": "*",
         "amphp/http-client": "^4.6",
         "anthonymartin/geo-location": "^2.0",
-        "api-platform/core": "2.*",
         "babdev/pagerfanta-bundle": "3.*",
         "beberlei/doctrineextensions": "^1.3",
         "doctrine/doctrine-bundle": "^2.0",

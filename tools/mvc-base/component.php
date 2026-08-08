@@ -18,7 +18,7 @@ class RoxComponentBase
 
     public function __construct() {
         $this->setSession();
-        $this->entryPointLookup = new EntrypointLookup('build/entrypoints.json');
+        $this->entryPointLookup = new EntrypointLookup(__DIR__ . '/../../public/build/entrypoints.json');
     }
 
     // TODO: The __get / __set mechanic is quite cool, but

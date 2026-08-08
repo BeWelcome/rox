@@ -26,7 +26,6 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Table(name="members")
@@ -93,7 +92,6 @@ class Member
      *
      * @ORM\Column(name="Username", type="string", length=32, nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     protected $username;
 
@@ -102,7 +100,6 @@ class Member
      *
      * @ORM\Column(name="Email", type="string", nullable=false)
      *
-     * @Groups({"Member:Read:Owner"})
      */
     protected $email;
 
@@ -111,7 +108,6 @@ class Member
      *
      * @ORM\Column(name="LastLogin", type="datetime", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     protected $lastLogin = null;
 
@@ -158,7 +154,6 @@ class Member
      * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
      *
-     * @Groups({"Member:Read"})
      */
     private $city;
 
@@ -214,7 +209,6 @@ class Member
      *
      * @ORM\Column(name="FirstName", type="string", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $firstName = '0';
 
@@ -223,7 +217,6 @@ class Member
      *
      * @ORM\Column(name="SecondName", type="string", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $secondName = null;
 
@@ -232,7 +225,6 @@ class Member
      *
      * @ORM\Column(name="LastName", type="string", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $lastName = '0';
 
@@ -248,7 +240,6 @@ class Member
      *
      * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $accommodation = AccommodationType::MAYBE;
 
@@ -285,7 +276,6 @@ class Member
      *
      * @ORM\Column(name="TypicOffer", type="typical_offer", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $typicoffer;
 
@@ -301,7 +291,6 @@ class Member
      *
      * @ORM\Column(name="MaxGuest", type="integer", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $maxguest = '0';
 
@@ -324,7 +313,6 @@ class Member
      *
      * @ORM\Column(name="Restrictions", type="string", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $restrictions;
 
@@ -368,7 +356,6 @@ class Member
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $created;
 
@@ -669,7 +656,6 @@ class Member
      *
      * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
      *
-     * @Groups({"Member:Read"})
      */
     private $languageLevels;
 
@@ -3135,7 +3121,6 @@ class Member
      *
      * Needs to be called explicitly
      *
-     * @Groups({"Member:Read"})
      */
     public function getMemberFields(): array
     {
@@ -3212,7 +3197,6 @@ class Member
     }
 
     /**
-     * @Groups({"Member:Read"})
      */
     public function getMessengers()
     {
@@ -3263,7 +3247,6 @@ class Member
     }
 
     /**
-     * @Groups({"Member:Read"})
      */
     public function getAge(): int
     {
@@ -3273,7 +3256,6 @@ class Member
     }
 
     /**
-     * @Groups({"Member:Read"})
      */
     public function getAvatar(): string
     {
@@ -3281,7 +3263,6 @@ class Member
     }
 
     /**
-     * @Groups({"Member:Read"})
      */
     public function getName(): string
     {

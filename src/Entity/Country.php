@@ -8,7 +8,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Country.
@@ -26,7 +25,6 @@ class Country
      *
      * @ORM\Column(name="geonameId", type="integer", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $geonameId;
 
@@ -35,7 +33,6 @@ class Country
      *
      * @ORM\Column(name="name", type="string", length=200, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $name;
 
@@ -44,7 +41,6 @@ class Country
      *
      * @ORM\Column(name="continent", type="string", length=2, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $continent;
 

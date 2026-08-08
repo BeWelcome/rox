@@ -102,6 +102,8 @@ WORKDIR /srv/bewelcome
 
 # build for production
 ARG APP_ENV=prod
+ARG APP_VERSION=unknown
+ARG APP_VERSION_TIMESTAMP=
 
 # copy only specifically what we need for production
 COPY assets assets/
@@ -145,6 +147,10 @@ RUN set -eux; \
 	mkdir -p var/cache var/log; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
 	chmod +x bin/console; sync
+
+RUN set -eux; \
+	printf '%s\n' "$APP_VERSION" > VERSION; \
+	if [ -n "$APP_VERSION_TIMESTAMP" ]; then php -r 'touch("VERSION", (int) $argv[1]);' "$APP_VERSION_TIMESTAMP"; fi
 VOLUME /srv/bewelcome/var
 VOLUME /srv/bewelcome/data
 

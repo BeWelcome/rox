@@ -193,6 +193,7 @@ jobs:
         with:
           images: ${{ env.IMAGE }}
           tags: |
+            type=sha,prefix=sha-,suffix=-web
             type=raw,value=docker-beta-web
 
       - name: Create and push multi-arch manifest
@@ -258,6 +259,7 @@ jobs:
           client-payload: |
             {
               "image": "${{ env.IMAGE }}:sha-${{ needs.merge-php.outputs.short_sha }}@${{ needs.merge-php.outputs.digest }}",
+              "web_image": "${{ env.IMAGE }}:sha-${{ needs.merge-php.outputs.short_sha }}-web",
               "tag": "sha-${{ needs.merge-php.outputs.short_sha }}",
               "sha": "${{ github.sha }}",
               "ref": "${{ github.ref }}"

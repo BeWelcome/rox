@@ -29,14 +29,29 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
 class Location
 {
-    #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: false)]
-    private string $name;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=200, nullable=true)
+     *
+     */
+    private $name;
 
-    #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
-    private string $latitude;
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
+     *
+     */
+    private $latitude;
 
-    #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
-    private string $longitude;
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
+     *
+     */
+    private $longitude;
 
     #[ORM\Column(name: 'fclass', type: 'string', length: 1, nullable: false)]
     private string $fclass;
@@ -44,9 +59,14 @@ class Location
     #[ORM\Column(name: 'fcode', type: 'string', length: 10, nullable: false)]
     private string $fcode;
 
-    #[ORM\JoinColumn(name: 'country', referencedColumnName: 'country')]
-    #[ORM\ManyToOne(targetEntity: Country::class)]
-    private Country $country;
+    /**
+     * @var Country
+     *
+     * @ORM\ManyToOne(targetEntity="Country")
+     * @ORM\JoinColumn(name="country", referencedColumnName="country")
+     *
+     */
+    private $country;
 
     #[ORM\Column(name: 'admin1', type: 'string', length: 20, nullable: true)]
     private ?string $admin1;
@@ -57,9 +77,15 @@ class Location
     #[ORM\Column(name: 'moddate', type: 'date', nullable: true)]
     private ?DateTime $moddate;
 
-    #[ORM\Column(name: 'geonameId', type: 'integer')]
-    #[ORM\Id]
-    private int $geonameId;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="geonameId", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     *
+     */
+    private $geonameId;
 
     public function setName(string $name): self
     {

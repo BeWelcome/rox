@@ -10,7 +10,6 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Do not check entities with PHPMD.
@@ -24,6 +23,9 @@ class Language
 {
     /**
      * @var string
+     *
+     * @ORM\Column(name="EnglishName", type="text", length=255, nullable=false)
+     *
      */
     #[ORM\Column(name: 'EnglishName', type: 'text', length: 255, nullable: false)]
     #[Groups(['Member:Read'])]
@@ -42,6 +44,9 @@ class Language
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
+     *
      */
     #[ORM\Column(name: 'ShortCode', type: 'string', length: 16, nullable: false)]
     #[Groups(['Member:Read'])]

@@ -11,7 +11,6 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * NewLocation.
@@ -47,7 +46,6 @@ class NewLocation implements Translatable
      * @Gedmo\Translatable
      * @ORM\Column(name="name", type="string", length=200, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $name;
 
@@ -63,7 +61,6 @@ class NewLocation implements Translatable
      *
      * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $latitude;
 
@@ -72,7 +69,6 @@ class NewLocation implements Translatable
      *
      * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $longitude;
 
@@ -95,7 +91,6 @@ class NewLocation implements Translatable
      *
      * @ORM\Column(name="country_id", type="string", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $countryId;
 
@@ -104,7 +99,6 @@ class NewLocation implements Translatable
      *
      * @ORM\Column(name="admin_1_id", type="string", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $admin1Id;
 
@@ -113,7 +107,6 @@ class NewLocation implements Translatable
      *
      * @ORM\Column(name="admin_2_id", type="string", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $admin2Id;
 
@@ -122,7 +115,6 @@ class NewLocation implements Translatable
      *
      * @ORM\Column(name="admin_3_id", type="string", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $admin3Id;
 
@@ -131,7 +123,6 @@ class NewLocation implements Translatable
      *
      * @ORM\Column(name="admin_4_id", type="string", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $admin4Id;
 
@@ -141,7 +132,6 @@ class NewLocation implements Translatable
      * @ORM\ManyToOne(targetEntity="NewLocation", fetch="EAGER")
      * @ORM\JoinColumn(name="country", referencedColumnName="geonameId", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $country;
 
@@ -197,7 +187,6 @@ class NewLocation implements Translatable
      * @ORM\Column(name="geonameId", type="integer")
      * @ORM\Id
      *
-     * @Groups({"Member:Read"})
      */
     private $geonameId;
 

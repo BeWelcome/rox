@@ -11,7 +11,6 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Do not check entities with PHPMD.
@@ -30,22 +29,38 @@ class Address
     #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'addresses')]
     private Member $member;
 
-    #[ORM\Column(name: 'HouseNumber', type: 'integer', nullable: false)]
-    #[Groups(['Member:Read'])]
-    private int $houseNumber;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="HouseNumber", type="integer", nullable=false)
+     *
+     */
+    private $houseNumber;
 
-    #[ORM\Column(name: 'StreetName', type: 'integer', nullable: false)]
-    #[Groups(['Member:Read'])]
-    private int $streetName;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="StreetName", type="integer", nullable=false)
+     *
+     */
+    private $streetName;
 
-    #[ORM\Column(name: 'Zip', type: 'integer', nullable: false)]
-    #[Groups(['Member:Read'])]
-    private int $zip;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Zip", type="integer", nullable=false)
+     *
+     */
+    private $zip;
 
-    #[ORM\JoinColumn(name: 'IdCity', referencedColumnName: 'geonameId')]
-    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
-    #[Groups(['Member:Read'])]
-    private NewLocation $location;
+    /**
+     * @var NewLocation
+     *
+     * @ORM\ManyToOne(targetEntity="NewLocation")
+     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
+     *
+     */
+    private $location;
 
     private float $latitude;
     private float $longitude;

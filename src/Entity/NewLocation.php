@@ -12,7 +12,6 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Do not check entities with PHPMD.
@@ -42,6 +41,8 @@ class NewLocation implements Translatable
      * @var string
      *
      * @Gedmo\Translatable
+     * @ORM\Column(name="name", type="string", length=200, nullable=true)
+     *
      */
     #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
     #[Groups(['Member:Read'])]
@@ -56,6 +57,9 @@ class NewLocation implements Translatable
 
     /**
      * @var float
+     *
+     * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
+     *
      */
     #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     #[Groups(['Member:Read'])]
@@ -63,6 +67,9 @@ class NewLocation implements Translatable
 
     /**
      * @var float
+     *
+     * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
+     *
      */
     #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
     #[Groups(['Member:Read'])]
@@ -82,6 +89,9 @@ class NewLocation implements Translatable
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="country_id", type="string", nullable=true)
+     *
      */
     #[ORM\Column(name: 'country_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -89,6 +99,9 @@ class NewLocation implements Translatable
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="admin_1_id", type="string", nullable=true)
+     *
      */
     #[ORM\Column(name: 'admin_1_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -96,6 +109,9 @@ class NewLocation implements Translatable
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="admin_2_id", type="string", nullable=true)
+     *
      */
     #[ORM\Column(name: 'admin_2_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -103,6 +119,9 @@ class NewLocation implements Translatable
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="admin_3_id", type="string", nullable=true)
+     *
      */
     #[ORM\Column(name: 'admin_3_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -110,6 +129,9 @@ class NewLocation implements Translatable
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="admin_4_id", type="string", nullable=true)
+     *
      */
     #[ORM\Column(name: 'admin_4_id', type: 'string', nullable: true)]
     #[Groups(['Member:Read'])]
@@ -117,6 +139,10 @@ class NewLocation implements Translatable
 
     /**
      * @var NewLocation
+     *
+     * @ORM\ManyToOne(targetEntity="NewLocation", fetch="EAGER")
+     * @ORM\JoinColumn(name="country", referencedColumnName="geonameId", nullable=true)
+     *
      */
     #[ORM\JoinColumn(name: 'country', referencedColumnName: 'geonameId', nullable: true)]
     #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
@@ -165,6 +191,10 @@ class NewLocation implements Translatable
 
     /**
      * @var int
+     *
+     * @ORM\Column(name="geonameId", type="integer")
+     * @ORM\Id
+     *
      */
     #[ORM\Column(name: 'geonameId', type: 'integer')]
     #[ORM\Id]

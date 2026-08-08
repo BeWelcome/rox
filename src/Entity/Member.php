@@ -70,15 +70,24 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\Column(name="Username", type="string", length=32, nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     protected $username;
 
-    #[ORM\Column(name: 'LastLogin', type: 'datetime', nullable: true)]
-    protected ?DateTime $lastLogin = null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="Email", type="string", nullable=false)
+     *
+     */
+    protected $email;
 
-    #[ORM\Column(name: 'PassWord', type: 'string', length: 100, nullable: true)]
-    protected ?string $password = null;
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="LastLogin", type="datetime", nullable=true)
+     *
+     */
+    protected $lastLogin = null;
 
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
@@ -110,7 +119,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
      *
-     * @Groups({"Member:Read"})
      */
     private $city;
 
@@ -166,7 +174,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\Column(name="FirstName", type="string", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $firstName = '0';
 
@@ -175,7 +182,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\Column(name="SecondName", type="string", nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $secondName = null;
 
@@ -184,7 +190,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\Column(name="LastName", type="string", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $lastName = '0';
 
@@ -200,7 +205,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $accommodation = AccommodationType::MAYBE;
 
@@ -237,7 +241,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\Column(name="TypicOffer", type="typical_offer", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $typicoffer;
 
@@ -253,7 +256,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\Column(name="MaxGuest", type="integer", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $maxguest = '0';
 
@@ -276,7 +278,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\Column(name="Restrictions", type="string", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $restrictions;
 
@@ -320,7 +321,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $created;
 
@@ -621,7 +621,6 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
      *
      * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
      *
-     * @Groups({"Member:Read"})
      */
     private $languageLevels;
 
@@ -1738,8 +1737,13 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
         return $this;
     }
 
-    #[ORM\PostLoad]
-    public function postLoad(PostLoadEventArgs $args): void
+    /**
+     * Provides an array collection of all translated items of a profile.
+     *
+     * Needs to be called explicitly
+     *
+     */
+    public function getMemberFields(): array
     {
         $entityManager = $args->getObjectManager();
 
@@ -1814,6 +1818,42 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
         return $this->memberFields;
     }
 
+    public function getPhoneNumbers()
+    {
+        $phoneNumbers = [
+            'HomePhoneNumber' => $this->getCryptedField('HomePhoneNumber'),
+            'CellPhoneNumber' => $this->getCryptedField('CellPhoneNumber'),
+            'WorkPhoneNumber' => $this->getCryptedField('WorkPhoneNumber'),
+        ];
+
+        return $phoneNumbers;
+    }
+
+    /**
+     */
+    public function getMessengers()
+    {
+        $messengers = [
+            'GOOGLE' => $this->getCryptedField('chat_GOOGLE'),
+            'SKYPE' => $this->getCryptedField('chat_SKYPE'),
+            'Others' => $this->getCryptedField('chat_Others'),
+        ];
+
+        return $messengers;
+    }
+
+    /**
+     * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     *
+     * @return void
+     */
+    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
+    {
+        $this->em = $objectManager;
+    }
+
     public function getRegistrationKey(): string
     {
         return $this->registrationKey;
@@ -1836,7 +1876,8 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
         return $this->city->getCountry();
     }
 
-    #[Groups(['Member:Read'])]
+    /**
+     */
     public function getAge(): int
     {
         if (null === $this->birthdate) {
@@ -1848,13 +1889,15 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
         return $birthday->diffInYears();
     }
 
-    #[Groups(['Member:Read'])]
+    /**
+     */
     public function getAvatar(): string
     {
         return '/members/avatar/' . $this->getUsername();
     }
 
-    #[Groups(['Member:Read'])]
+    /**
+     */
     public function getName(): string
     {
         $name = '';

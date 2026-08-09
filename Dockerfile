@@ -82,6 +82,7 @@ RUN export PATH="/usr/local/bin:$PATH"
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/bewelcome.prod.ini $PHP_INI_DIR/conf.d/bewelcome.ini
+COPY docker/php/fpm/z-workers.conf /usr/local/etc/php-fpm.d/z-workers.conf
 
 RUN set -eux; \
 	{ \

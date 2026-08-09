@@ -17,6 +17,7 @@
         "ext-pdo": "*",
         "ext-pdo_mysql": "*",
         "ext-session": "*",
+        "ext-xmlwriter": "*",
         "ext-xsl": "*",
         "ext-zip": "*",
         "amphp/http-client": "^5.2",

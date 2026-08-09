@@ -1,0 +1,43 @@
+# Sitemap configuration
+# Defines static routes and their priorities for the sitemap generator.
+#
+# Priority levels:
+#   1.0 - Main pages (home, signup, login, etc.)
+#   0.8 - Secondary pages (about sections, safety pages, etc.)
+#   0.6 - Tertiary content (FAQ articles, newsletters, etc.)
+
+sitemap:
+    # Static routes - URLs that don't require database lookup
+    static_routes:
+        - { path: '/', priority: 1.0 }
+        - { path: '/signup', priority: 1.0 }
+        - { path: '/about', priority: 1.0 }
+        - { path: '/terms', priority: 1.0 }
+        - { path: '/privacy', priority: 1.0 }
+        - { path: '/impressum', priority: 1.0 }
+        - { path: '/safety', priority: 1.0 }
+        - { path: '/volunteer', priority: 1.0 }
+        - { path: '/login', priority: 1.0 }
+        - { path: '/stats', priority: 1.0 }
+        - { path: '/about/faq', priority: 0.8 }
+        - { path: '/about/getactive', priority: 0.8 }
+        - { path: '/about/thepeople', priority: 0.8 }
+        - { path: '/about/credits', priority: 0.8 }
+        - { path: '/safety/basics', priority: 0.8 }
+        - { path: '/safety/whattodo', priority: 0.8 }
+        - { path: '/safety/team', priority: 0.8 }
+        - { path: '/safety/faq', priority: 0.8 }
+        - { path: '/safety/tips', priority: 0.8 }
+        - { path: '/about/statistics', priority: 0.8 }
+        - { path: '/about/commentguidelines', priority: 0.8 }
+        - { path: '/press-information', priority: 0.8 }
+        - { path: '/feedback', priority: 0.8 }
+
+    # Dynamic routes - URLs generated from database content
+    dynamic_routes:
+        faq_categories:
+            # FAQ categories from database
+            priority: 0.6
+        newsletters:
+            # Newsletter articles with language variants
+            priority: 0.6

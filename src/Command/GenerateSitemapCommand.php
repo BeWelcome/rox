@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\FaqCategory;
 use App\Entity\Newsletter;
 use App\Entity\Word;
+use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -179,7 +180,7 @@ class GenerateSitemapCommand extends Command
                 $languageCode = $translation->getLanguage()->getShortCode();
                 $urls[] = [
                     'loc' => "/newsletters/{$id}/{$languageCode}",
-                    'lastmod' => $created instanceof \Carbon\Carbon ? $created->toDateTime() : $created,
+                    'lastmod' => $created instanceof Carbon ? $created->toDateTime() : $created,
                     'priority' => $priority,
                 ];
             }
@@ -214,7 +215,7 @@ class GenerateSitemapCommand extends Command
             // Last modified
             $xml->startElement('lastmod');
             $lastmod = $urlData['lastmod'];
-            if ($lastmod instanceof \Carbon\Carbon) {
+            if ($lastmod instanceof Carbon) {
                 $lastmod = $lastmod->toDateTime();
             }
             $xml->text($lastmod->format(DateTime::W3C));

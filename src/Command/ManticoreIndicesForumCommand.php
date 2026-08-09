@@ -147,7 +147,27 @@ class ManticoreIndicesForumCommand extends Command
                         LIMIT {$firstResult}, {$this->chunkSize}
                     ___SQL, $this->getResultSetMappingForForumIndex());
 
-                $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
+        $firstResult = 0;
+        do {
+            $query = $this->entityManager->createNativeQuery(<<<___SQL
+                SELECT
+                    fp.id as post_id,
+                    fp.PostDeleted as post_deleted,
+                    fp.PostVisibility as post_visibility,
+                    ft.id AS thread_id,
+                    ft.ThreadDeleted AS thread_deleted,
+                    ft.ThreadVisibility AS thread_visibility,
+                    fp.message as content,
+                    ft.IdGroup AS `group`,
+                    fp.IdWriter as author,
+                    COALESCE(l.shortcode, 'en') as locale
+                FROM
+                    forums_posts fp
+                JOIN forums_threads ft ON fp.threadid = ft.id
+                LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
+                LIMIT {$firstResult}, {$this->chunkSize}
+            ___SQL
+                , $this->getResultSetMappingForForumIndex());
 
                 $firstResult += $this->chunkSize;
             } while ($addDocumentsCount > 0);

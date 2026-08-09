@@ -145,15 +145,14 @@ class ManticoreIndicesForumCommand extends Command
                     ft.id AS thread_id,
                     ft.ThreadDeleted AS thread_deleted,
                     ft.ThreadVisibility AS thread_visibility,
-                    ftr.Sentence as content,
+                    fp.message as content,
                     ft.IdGroup AS `group`,
                     fp.IdWriter as author,
-                    l.shortcode as locale
+                    COALESCE(l.shortcode, 'en') as locale
                 FROM
                     forums_posts fp
                 JOIN forums_threads ft ON fp.threadid = ft.id
-                JOIN forum_trads ftr ON fp.IdContent = ftr.IdTrad
-                JOIN languages l ON ftr.IdLanguage = l.id
+                LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
                 LIMIT {$firstResult}, {$this->chunkSize}
             ___SQL
                 , $this->getResultSetMappingForForumIndex());

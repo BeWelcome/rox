@@ -86,6 +86,7 @@
         "twig/intl-extra": "^3.0",
         "twig/markdown-extra": "^3.0",
         "twig/twig": "^3.0",
+        "willdurand/negotiation": "^3.1",
         "xemlock/htmlpurifier-html5": "^0.1.10"
     },
     "conflict": {

@@ -135,7 +135,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         do {
             $query = $this->entityManager->createNativeQuery(<<<___SQL
                 SELECT
-                    g.geonameid AS geonameid,
+                    g.geoname_id AS geonameid,
                     g.`name` AS name,
                     g.feature_class,
                     g.feature_code,
@@ -159,7 +159,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                     GROUP BY
                         m.IdCity
                 ) membercounts
-                ON (g.geonameid = membercounts.IdCity)
+                ON (g.geoname_id = membercounts.IdCity)
                 LIMIT {$firstResult}, {$this->chunkSize}
             ___SQL
                 , $this->getResultSetMappingForGeonamesIndex());
@@ -196,7 +196,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         do {
             $query = $this->entityManager->createNativeQuery(<<<___SQL
                 SELECT
-                    g.geonameid,
+                    g.geoname_id AS geonameid,
                     gt.`content` AS name,
                     g.feature_class,
                     g.feature_code,
@@ -211,7 +211,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                 FROM
                     geo__names g
                 JOIN
-                    geo__names_translations gt ON g.geonameId = gt.foreign_key
+                    geo__names_translations gt ON g.geoname_id = gt.foreign_key
                 LEFT JOIN (
                     SELECT
                         m.IdCity,
@@ -222,7 +222,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                     GROUP BY
                         m.IdCity
                 ) membercounts
-                ON (g.geonameid = membercounts.IdCity)
+                ON (g.geoname_id = membercounts.IdCity)
                 LIMIT {$firstResult}, {$this->chunkSize}
             ___SQL
                 , $this->getResultSetMappingForGeonamesIndex());

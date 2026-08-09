@@ -223,7 +223,7 @@ class AvatarController extends AbstractController
         if ('original' === $sizeOfAvatar) {
             $filename = $original;
         } else {
-            $filename = self::AVATAR_PATH . 'empty_avatar_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
+            $filename = self::AVATAR_PATH . 'empty_avatar_' . $sizeOfAvatar . '_' . $sizeOfAvatar . '.png';
             $img->resize($sizeOfAvatar, $sizeOfAvatar, function ($constraint) {
                 $constraint->aspectRatio();
             });

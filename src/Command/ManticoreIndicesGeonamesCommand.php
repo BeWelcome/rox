@@ -113,12 +113,49 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         $stmt = $this->entityManager
             ->getConnection()
-            ->executeQuery(<<<'___SQL'
+            ->executeQuery(<<<___SQL
+            SELECT
+                count(*) as cnt
+            FROM
+                geo__names g
+        ___SQL);
+
+        $count = ($stmt->fetchNumeric())[0];
+        $this->io->note($count);
+
+        $progressBar = $this->getProgressBar($output, $count);
+
+        $firstResult = 0;
+        do {
+            $query = $this->entityManager->createNativeQuery(<<<___SQL
+                SELECT
+                    g.geoname_id AS geonameid,
+                    g.`name` AS name,
+                    g.feature_class,
+                    g.feature_code,
+                    g.country_id,
+                    g.admin_1_id,
+                    g.admin_2_id,
+                    g.admin_3_id,
+                    g.admin_4_id,
+                    '_geo' AS locale,
+                    g.population,
+                    IFNULL(membercounts.total, 0) AS member_count
+                FROM
+                    geo__names g
+                LEFT JOIN (
                     SELECT
                         count(*) as cnt
                     FROM
-                        geo__names g
-                ___SQL);
+                        members m
+                    WHERE m.status IN ('Active', 'OutOfRemind')
+                    GROUP BY
+                        m.IdCity
+                ) membercounts
+                ON (g.geoname_id = membercounts.IdCity)
+                LIMIT {$firstResult}, {$this->chunkSize}
+            ___SQL
+                , $this->getResultSetMappingForGeonamesIndex());
 
         $count = $stmt->fetchNumeric()[0];
         if (0 !== $count) {
@@ -173,12 +210,51 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         $stmt = $this->entityManager
             ->getConnection()
-            ->executeQuery(<<<'___SQL'
+            ->executeQuery(<<<___SQL
+            SELECT
+                count(*) as cnt
+            FROM
+                geo__names_translations gt
+        ___SQL);
+
+        $count = ($stmt->fetchNumeric())[0];
+
+        $progressBar = $this->getProgressBar($output, $count);
+        $progressBar->start();
+
+        $firstResult = 0;
+        do {
+            $query = $this->entityManager->createNativeQuery(<<<___SQL
+                SELECT
+                    g.geoname_id AS geonameid,
+                    gt.`content` AS name,
+                    g.feature_class,
+                    g.feature_code,
+                    g.country_id,
+                    g.admin_1_id,
+                    g.admin_2_id,
+                    g.admin_3_id,
+                    g.admin_4_id,
+                    gt.`locale` AS locale,
+                    g.population,
+                    IFNULL(membercounts.total, 0) AS member_count
+                FROM
+                    geo__names g
+                JOIN
+                    geo__names_translations gt ON g.geoname_id = gt.foreign_key
+                LEFT JOIN (
                     SELECT
                         count(*) as cnt
                     FROM
-                        geo__names_translations gt
-                ___SQL);
+                        members m
+                    WHERE m.status IN ('Active', 'OutOfRemind')
+                    GROUP BY
+                        m.IdCity
+                ) membercounts
+                ON (g.geoname_id = membercounts.IdCity)
+                LIMIT {$firstResult}, {$this->chunkSize}
+            ___SQL
+                , $this->getResultSetMappingForGeonamesIndex());
 
         $count = $stmt->fetchNumeric()[0];
         if (0 !== $count) {

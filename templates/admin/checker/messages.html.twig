@@ -2,27 +2,30 @@
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
+  {{ encore_entry_script_tags('block_highlight') }}
 <script type="text/javascript">
-    const checkAllSpam = document.getElementById('checkAllSpam');
-    const checkAllNoSpam  = document.getElementById('checkAllNoSpam');
-    const spam = document.querySelectorAll('.checkableSpam');
-    const noSpam = document.querySelectorAll('.checkableNoSpam');
-    checkAllSpam.addEventListener('click', function() {
-        const status = checkAllSpam.checked;
-        spam.forEach((checkbox) => {checkbox.checked = status;});
-        if (status) {
-            checkAllNoSpam.checked = false;
-            noSpam.forEach((checkbox) => {checkbox.checked = false;});
-        }
-    });
-    checkAllNoSpam.addEventListener('click', function() {
-        console.log(checkAllNoSpam.checked);
-        const status = checkAllNoSpam.checked;
-        noSpam.forEach((checkbox) => {checkbox.checked = status;});
-        if (status) {
-            checkAllSpam.checked = false;
-            spam.forEach((checkbox) => {checkbox.checked = false;});
-        }
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkAllSpam = document.getElementById('checkAllSpam');
+        const checkAllNoSpam  = document.getElementById('checkAllNoSpam');
+        const spam = document.querySelectorAll('.checkableSpam');
+        const noSpam = document.querySelectorAll('.checkableNoSpam');
+        checkAllSpam.addEventListener('click', function() {
+            const status = checkAllSpam.checked;
+            spam.forEach((checkbox) => {checkbox.checked = status;});
+            if (status) {
+                checkAllNoSpam.checked = false;
+                noSpam.forEach((checkbox) => {checkbox.checked = false;});
+            }
+        });
+        checkAllNoSpam.addEventListener('click', function() {
+            console.log(checkAllNoSpam.checked);
+            const status = checkAllNoSpam.checked;
+            noSpam.forEach((checkbox) => {checkbox.checked = status;});
+            if (status) {
+                checkAllSpam.checked = false;
+                spam.forEach((checkbox) => {checkbox.checked = false;});
+            }
+        });
     });
 </script>
 {% endblock %}
@@ -34,15 +37,15 @@
         {{ form_start(form) }}
         {{ form_errors(form) }}
         {% if reported.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( reported, 'rox_default') }}
             </div>
-        {% endif %}
             <div class="row">
-                <div class="col-12 text-right">
+                <div class="col-12 text-end">
                     <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
                 </div>
             </div>
+        {% endif %}
         <table class="table table-striped table-hover">
 
             <tr>
@@ -63,7 +66,7 @@
             <tr>
                 <td>{{ macros.avatarstack(message.Sender.Username, 30) }}<br>
                     <small class="text-muted">{{ ('memberstatus' ~ message.Sender.Status)|lower|trans }}</small></td>
-                <td><strong>{{ message.subject.subject }}</strong>&nbsp;{% if message.request is null %}<i class="fa fa-envelope"></i>{% else %}<i class="fa fa-bed"></i>{% endif %}<br>
+                <td class="js-highlight"><strong>{{ message.subject.subject }}</strong>&nbsp;{% if message.request is null %}<i class="fa fa-envelope"></i>{% else %}<i class="fa fa-bed"></i>{% endif %}<br>
                     {{ message.Message|purify }}</td>
                 <td>{{ macros.avatarstack(message.Receiver.Username, 30) }}<br>
                     <small class="text-muted">{{ ('memberstatus' ~ message.Receiver.Status)|lower|trans }}</small></td>
@@ -76,12 +79,12 @@
         {% endfor %}
         </table>
         <div class="row">
-            <div class="col-12 text-right">
+            <div class="col-12 text-end">
                 <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
             </div>
         </div>
         {% if reported.haveToPaginate %}
-            <div class="float-left">
+            <div class="float-start">
                 {{ pagerfanta( reported, 'rox_default') }}
             </div>
         {% endif %}

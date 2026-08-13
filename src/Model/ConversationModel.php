@@ -14,6 +14,7 @@ use App\Utilities\ConversationThread;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Normalizer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
@@ -276,14 +277,18 @@ class ConversationModel
 
     public function formatConversation(Message $message): Message
     {
-        $messageText = $message->getMessage();
-        $found = preg_match("/@|\.at\.|-at-|\(at\)/i", $messageText);
+        $messageText = preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $message->getMessage());
+        $normalized = Normalizer::normalize($messageText, Normalizer::FORM_KC);
+        if (false === $normalized) {
+            $normalized = $messageText;
+        }
+        $found = preg_match("/@|\.at\.|-at-|\(at\)|verif|\.shop|system|support/i", $normalized);
 
         if (0 !== $found) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
             $message->setFolder(InFolderType::SPAM);
             $message->setStatus(MessageStatusType::CHECK);
-            $message->setMessage($messageText);
+            $message->setMessage($messageText . '<p>Potential spam. Please report if necessary.</p>');
         }
 
         return $message;

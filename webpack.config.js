@@ -69,6 +69,7 @@ Encore
     .addEntry('email', './assets/scss/email.scss')
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('highlight', './assets/js/highlight.js')
+    .addEntry('block_highlight', './assets/js/block_highlight.js')
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
     .addEntry('readmore', './assets/js/readmore.js')

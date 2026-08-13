@@ -53,11 +53,15 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	database_name=$(grep '^DB_NAME=' .env | cut -f 2 -d '=')
 	database_user=$(grep '^DB_USER=' .env | cut -f 2 -d '=')
 	database_password=$(grep '^DB_PASS=' .env | cut -f 2 -d '=')
+	database_host="${database_host:-${DB_HOST:-db}}"
+	database_port="${database_port:-${DB_PORT:-3306}}"
+	database_name="${database_name:-${DB_NAME:-bewelcome}}"
+	database_user="${database_user:-${DB_USER:-bewelcome}}"
+	database_password="${database_password:-${DB_PASSWORD:-bewelcome}}"
 
 	echo "Waiting for db to be ready..."
 	db_wait_seconds=0
 	db_wait_max="${BEWELCOME_DB_READY_MAX_WAIT_SECONDS:-300}"
-	echo "new PDO('mysql:host=${database_host};port=${database_port};dbname=${database_name}', '${database_user}', '${database_password}');"
 
 	until php -r "new PDO('mysql:host=${database_host};port=${database_port};dbname=${database_name}', '${database_user}', '${database_password}');" > /dev/null 2>&1; do
 		if [ "$db_wait_seconds" -ge "$db_wait_max" ]; then
@@ -81,7 +85,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		if [ -f docker/db/geonamesadminunits.sql ]; then
 			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/geonamesadminunits.sql
 		fi
-	elif ls -A src/Migrations/*.php > /dev/null 2>&1; then
+	elif ls -A Migrations/*.php > /dev/null 2>&1; then
 		bin/console doctrine:migrations:migrate --no-interaction
 	fi
 

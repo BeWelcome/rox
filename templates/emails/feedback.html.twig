@@ -1,5 +1,8 @@
 {% if member is not null %}
-    Member {{ member.username }} has sent some feedback.<br>
+    Member {{ member.username }} ({{ FeedbackEmail }}) has sent some feedback.<br>
+    <br>
+{% elseif FeedbackEmail is not null %}
+    From: {{ FeedbackEmail }}<br>
     <br>
 {% endif %}
 {{ FeedbackQuestion|raw }}

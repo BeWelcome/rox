@@ -223,15 +223,15 @@ class MigrateDatabaseCommand extends Command implements ResetInterface
     {
         $sql = <<<SQL
                 INSERT IGNORE INTO address (member_id, active, location, latitude, longitude, wheelChairAccessible)
-                SELECT 
-                    m.id, 
-                    1, 
-                    g.geoname_id, 
-                    m.Latitude, 
-                    m.Longitude, 
+                SELECT
+                    m.id,
+                    1,
+                    g.geonameId,
+                    m.Latitude,
+                    m.Longitude,
                     IF(m.TypicOffer LIKE '%WheelchairAccessible%', 1, 0)
                 FROM members m
-                INNER JOIN geo__names g ON m.IdCity = g.geoname_id
+                INNER JOIN geo__names g ON m.IdCity = g.geonameId
                 WHERE m.Status NOT IN ('AskToLeave', 'TakenOut')
                 AND m.Status IN ($statuses)
             SQL;

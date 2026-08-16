@@ -27,3 +27,10 @@ localhost:
     extensions:
         'Alex\MailCatcher\Behat\MailCatcherExtension\Extension':
             url: http://localhost:1080
+
+docker:
+    extensions:
+        'Behat\MinkExtension':
+            base_url: 'http://web'
+        'Alex\MailCatcher\Behat\MailCatcherExtension\Extension':
+            url: http://mailer:1080

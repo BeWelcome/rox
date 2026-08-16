@@ -301,9 +301,9 @@ App\Entity\Member:
         bewelcomed: 0
         registration_key: ''
     member_suspended:
-        Username: 'member-suspended'
+        Username: 'member-taken-out'
         BirthDate: <DateTime()>
-        email: 'member-suspended\@bewelcome.org'
+        email: 'member-taken-out\@bewelcome.org'
         created: <dateTimeBetween("-200 days", "now")>
         updated: <dateTimeBetween($created, "now")>
         LastLogin: <dateTimeBetween($created, "now")>
@@ -351,6 +351,157 @@ App\Entity\Member:
         MotivationForHospitality: 0
         HideBirthDate: <boolean(75)>
         AdressHidden: <boolean(75)>
+        WebSite: 0
+        ChatSkype: 0
+        ChatICQ: 0
+        ChatAOL: 0
+        ChatMSN: 0
+        ChatYahoo: 0
+        ChatOthers: 0
+        FutureTrips: 0
+        OldTrips: 0
+        LogCount: 0
+        Hobbies: 0
+        Books: 0
+        Music: 0
+        PastTrips: 0
+        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
+        PlannedTrips: 0
+        PleaseBring: 0
+        OfferGuests: 0
+        OfferHosts: 0
+        PublicTransport: 0
+        Movies: 0
+        ChatGoogle: 0
+        bewelcomed: 0
+        registration_key: ''
+    member_host:
+        Username: 'member-host'
+        BirthDate: <DateTime()>
+        email: 'member-host\@bewelcome.org'
+        created: <dateTimeBetween("-200 days", "now")>
+        updated: <dateTimeBetween($created, "now")>
+        LastLogin: <dateTimeBetween($created, "now")>
+        LastSwitchToActive: null
+        ExUserId: 0
+        Status: 'Active'
+        ChangedId: 0
+        city: '@NewBerlin'
+        Latitude: '@NewBerlin->Latitude'
+        Longitude: '@NewBerlin->Longitude'
+        remindersWithoutLogin: 0
+        HomePhoneNumber: 0
+        CellPhoneNumber: 0
+        WorkPhoneNumber: 0
+        SecEmail: 0
+        HideAttribute: 8
+        FirstName: <firstName()>
+        SecondName: ''
+        LastName: <lastName()>
+        Accommodation: 'anytime'
+        hostingInterest: 8
+        AdditionalAccommodationInfo: 0
+        ILiveWith: 0
+        IdentityCheckLevel: 0
+        InformationToGuest: 0
+        TypicOffer: null
+        Offer: 0
+        MaxGuest: 2
+        MaxLenghtOfStay: 7
+        Organizations: 0
+        Restrictions: 0
+        OtherRestrictions: 0
+        Bday: 1
+        Bmonth: 1
+        Byear: 1985
+        SecurityFlag: 0
+        Quality: 0
+        ProfileSummary: 1
+        Occupation: 1
+        CounterGuests: 0
+        CounterHosts: 0
+        CounterTrusts: 0
+        Gender: 'female'
+        HideGender: false
+        GenderOfGuest: ''
+        MotivationForHospitality: 0
+        HideBirthDate: false
+        AdressHidden: false
+        WebSite: 0
+        ChatSkype: 0
+        ChatICQ: 0
+        ChatAOL: 0
+        ChatMSN: 0
+        ChatYahoo: 0
+        ChatOthers: 0
+        FutureTrips: 0
+        OldTrips: 0
+        LogCount: 0
+        Hobbies: 0
+        Books: 0
+        Music: 0
+        PastTrips: 0
+        Password: '*2470C0C06DEE42FD1618BB99005ADCA2EC9D1E19'
+        PlannedTrips: 0
+        PleaseBring: 0
+        OfferGuests: 0
+        OfferHosts: 0
+        PublicTransport: 0
+        Movies: 0
+        ChatGoogle: 0
+        bewelcomed: 0
+        registration_key: ''
+    member_guest:
+        Username: 'member-guest'
+        BirthDate: <DateTime()>
+        email: 'member-guest\@bewelcome.org'
+        created: <dateTimeBetween("-200 days", "now")>
+        updated: <dateTimeBetween($created, "now")>
+        LastLogin: <dateTimeBetween($created, "now")>
+        LastSwitchToActive: null
+        ExUserId: 0
+        Status: 'Active'
+        ChangedId: 0
+        city: '@NewJayapura'
+        Latitude: '@NewJayapura->Latitude'
+        Longitude: '@NewJayapura->Longitude'
+        remindersWithoutLogin: 0
+        HomePhoneNumber: 0
+        CellPhoneNumber: 0
+        WorkPhoneNumber: 0
+        SecEmail: 0
+        HideAttribute: 8
+        FirstName: <firstName()>
+        SecondName: ''
+        LastName: <lastName()>
+        Accommodation: 'neverask'
+        AdditionalAccommodationInfo: 0
+        ILiveWith: 0
+        IdentityCheckLevel: 0
+        InformationToGuest: 0
+        TypicOffer: null
+        Offer: 0
+        MaxGuest: 0
+        MaxLenghtOfStay: 0
+        Organizations: 0
+        Restrictions: 0
+        OtherRestrictions: 0
+        Bday: 1
+        Bmonth: 6
+        Byear: 1990
+        SecurityFlag: 0
+        Quality: 0
+        ProfileSummary: 1
+        Occupation: 1
+        CounterGuests: 0
+        CounterHosts: 0
+        CounterTrusts: 0
+        Gender: 'male'
+        HideGender: false
+        GenderOfGuest: ''
+        MotivationForHospitality: 0
+        HideBirthDate: false
+        AdressHidden: false
         WebSite: 0
         ChatSkype: 0
         ChatICQ: 0

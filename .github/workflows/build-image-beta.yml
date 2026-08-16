@@ -114,10 +114,93 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  smoke-test:
+    name: Smoke test (amd64 image)
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # tag=v4.2.2
+
+      - name: Download PHP amd64 digest
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # tag=v4.1.8
+        with:
+          name: digests-php-amd64
+          path: /tmp/digests/php
+
+      - name: Download Nginx amd64 digest
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # tag=v4.1.8
+        with:
+          name: digests-nginx-amd64
+          path: /tmp/digests/nginx
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Start stack and check /login → 200
+        run: |
+          PHP_DIGEST=$(find /tmp/digests/php -maxdepth 1 -type f -printf '%f\n' | head -1)
+          WEB_DIGEST=$(find /tmp/digests/nginx -maxdepth 1 -type f -printf '%f\n' | head -1)
+          PHP_IMAGE="${{ env.IMAGE }}@sha256:${PHP_DIGEST}"
+          WEB_IMAGE="${{ env.IMAGE }}@sha256:${WEB_DIGEST}"
+
+          cat > docker-compose.smoke.yml <<EOF
+          services:
+            php:
+              image: ${PHP_IMAGE}
+              healthcheck:
+                test: ["CMD", "docker-healthcheck"]
+                start_period: 90s
+                interval: 10s
+                timeout: 3s
+                retries: 6
+              environment:
+                APP_ENV: prod
+                APP_SECRET: ci-smoke-only-not-a-real-secret
+                BEWELCOME_DEPLOY_ENV: stage
+                web_host: localhost
+                MAILER_DSN: smtp://mailer:1025
+                MAILER_NO_REPLY_ADDRESS: test@example.com
+                MAILER_MESSAGE_ADDRESS: test@example.com
+                MAILER_GROUP_ADDRESS: test@example.com
+                MAILER_PASSWORD_ADDRESS: test@example.com
+                MAILER_SIGNUP_ADDRESS: test@example.com
+                MAILER_ACCOUNT_FEEDBACK_ADDRESS: test@example.com
+                MAILER_REMINDER_ADDRESS: test@example.com
+                MAILER_TERMS_OF_USE_ADDRESS: test@example.com
+                MAILER_NEWSLETTER_ADDRESS: test@example.com
+                SYMFONY_TRUSTED_PROXIES: "127.0.0.1"
+                SYMFONY_TRUSTED_HEADERS: "x-forwarded-for,x-forwarded-proto"
+            web:
+              image: ${WEB_IMAGE}
+              ports:
+                - "8080:80"
+          EOF
+
+          docker compose -f docker-compose.yml -f docker-compose.smoke.yml \
+            up -d php web db mailer
+
+          echo "Waiting for php container to be healthy..."
+          for i in $(seq 1 36); do
+            cid=$(docker compose -f docker-compose.yml -f docker-compose.smoke.yml ps -q php)
+            status=$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{end}}' "$cid" 2>/dev/null || true)
+            [ "$status" = "healthy" ] && break
+            [ "$i" -eq 36 ] && { echo "Timed out — php never became healthy"; docker compose -f docker-compose.yml -f docker-compose.smoke.yml logs php; exit 1; }
+            sleep 5
+          done
+
+          code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/login)
+          [ "$code" = "200" ] || { echo "Expected 200 from /login, got $code"; exit 1; }
+          echo "Smoke test passed (GET /login → $code)"
+
   merge-php:
     name: Push PHP manifest
     runs-on: ubuntu-latest
-    needs: [build]
+    needs: [build, smoke-test]
     outputs:
       short_sha: ${{ steps.vars.outputs.short_sha }}
       digest: ${{ steps.manifest.outputs.digest }}

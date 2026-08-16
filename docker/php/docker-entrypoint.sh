@@ -89,8 +89,10 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		bin/console doctrine:migrations:migrate --no-interaction
 	fi
 
-	# WarmUp translations now database is up to date
-	composer run-script --no-dev post-install-cmd
+	if [ -z "${SKIP_DOCTRINE_MIGRATIONS}" ]; then
+		# WarmUp translations now database is up to date
+		composer run-script --no-dev post-install-cmd
+	fi
 
 	# cache:clear runs as root; fix ownership so www-data can write at runtime
 	chown -R www-data:www-data var/cache var/log

@@ -175,6 +175,7 @@ jobs:
                 MAILER_NEWSLETTER_ADDRESS: test@example.com
                 SYMFONY_TRUSTED_PROXIES: "127.0.0.1"
                 SYMFONY_TRUSTED_HEADERS: "x-forwarded-for,x-forwarded-proto"
+                SKIP_DOCTRINE_MIGRATIONS: "1"
             web:
               image: ${WEB_IMAGE}
               ports:

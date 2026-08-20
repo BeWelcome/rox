@@ -2,3 +2,19 @@
 # Track: https://pkgs.alpinelinux.org/packages?name=nghttp2&branch=v3.24
 # Remove once Alpine 3.24 ships nghttp2-libs >= 1.70.0-r0.
 CVE-2026-58055
+
+# python3/pyc 3.14.5-r0 — all CVEs below are fixed in 3.14.7-r0 which is in Alpine
+# edge but not yet backported to Alpine 3.24 stable. apk upgrade at build time
+# cannot install the fix. Remove all entries once Alpine 3.24 ships python3 >= 3.14.7-r0.
+# Track: https://pkgs.alpinelinux.org/packages?name=python3&branch=v3.24
+CVE-2025-15366
+CVE-2026-0864
+CVE-2026-11940
+CVE-2026-11972
+CVE-2026-15308
+CVE-2026-3276
+CVE-2026-4360
+CVE-2026-7210
+CVE-2026-7774
+CVE-2026-8328
+CVE-2026-9669

@@ -1,4 +1,4 @@
-name: Build and publish image
+name: Build and publish develop image
 
 # Builds the production (bewelcome_php) image once in CI for both linux/amd64 and
 # linux/arm64, pushes a multi-arch manifest to GHCR with immutable tags, scans the

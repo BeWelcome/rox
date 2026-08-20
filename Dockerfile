@@ -13,7 +13,7 @@ FROM php:${PHP_VERSION}-fpm-alpine3.24 AS bewelcome_php
 
 # persistent / runtime deps
 # Upgrade all base packages to pick up security patches (CVE fixes in OS packages)
-RUN apk upgrade --no-cache
+RUN apk update && apk upgrade --no-cache
 
 RUN apk add --no-cache \
 		acl \

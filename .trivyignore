@@ -1,5 +1,11 @@
-# CVE-2026-58055: nghttp2-libs 1.69.0-r0 — fix is 1.70.0-r0, not yet backported to Alpine 3.24.
+# CVE-2026-58055: nghttp2-libs 1.69.0-r0, fix is 1.70.0-r0, not yet backported to Alpine 3.24.
 # Track: https://pkgs.alpinelinux.org/packages?name=nghttp2&branch=v3.24
 # Remove once Alpine 3.24 ships nghttp2-libs >= 1.70.0-r0.
 CVE-2026-58055
+
+# CVE-2026-11940: pyc/python3 3.14.5-r0 (tarfile filter bypass), fix is 3.14.7-r0, not yet backported to Alpine 3.24.
+# apk upgrade runs at build time but 3.14.7-r0 is not in the 3.24 repo yet.
+# Track: https://pkgs.alpinelinux.org/packages?name=python3&branch=v3.24
+# Remove once Alpine 3.24 ships python3 >= 3.14.7-r0.
+CVE-2026-11940
 

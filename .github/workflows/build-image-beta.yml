@@ -30,7 +30,6 @@ on:
       - 'templates/**'
       - 'public/**'
       - 'bin/**'
-      - 'migrations/**'
       - '.trivyignore'
       - '.github/workflows/build-image-beta.yml'
   workflow_dispatch: {}

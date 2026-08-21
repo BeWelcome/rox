@@ -28,7 +28,7 @@ RUN apk add --no-cache \
 		python3 \
 	;
 
-ARG APCU_VERSION=5.1.18
+ARG APCU_VERSION=5.1.28
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
@@ -118,7 +118,6 @@ COPY pthacks pthacks/
 COPY public public/
 COPY roxlauncher roxlauncher/
 COPY src src/
-COPY migrations migrations/
 COPY templates templates/
 COPY tools tools/
 COPY translations translations/

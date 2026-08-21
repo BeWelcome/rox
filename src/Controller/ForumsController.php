@@ -142,7 +142,7 @@ class ForumsController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $em->persist($memberPreference);
         $em->flush();
-        $referrer = $request->headers->get('referer');
+        $referrer = $request->headers->get('referer') ?? $this->generateUrl('forums');
 
         return $this->redirect($referrer);
     }
@@ -165,7 +165,7 @@ class ForumsController extends AbstractController
         $em->persist($memberPreference);
         $em->flush();
 
-        $referrer = $request->headers->get('referer');
+        $referrer = $request->headers->get('referer') ?? $this->generateUrl('forums');
 
         return $this->redirect($referrer);
     }

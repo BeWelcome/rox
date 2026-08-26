@@ -1,6 +1,6 @@
 name: Build and publish beta image
 
-# Builds the production images for the feature/docker-beta branch (PHP-FPM + Nginx
+# Builds the production images for the feature/docker-master branch (PHP-FPM + Nginx
 # architecture, master-based) and pushes them to GHCR. Dispatches to sysadmins-infra
 # on success so the beta stack can be manually redeployed.
 #
@@ -8,12 +8,12 @@ name: Build and publish beta image
 # is triggered manually or via the repository_dispatch.
 #
 # Two images are published:
-#   ghcr.io/bewelcome/rox:docker-beta     — PHP-FPM (bewelcome_php target)
-#   ghcr.io/bewelcome/rox:docker-beta-web — Nginx   (bewelcome_nginx target)
+#   ghcr.io/bewelcome/rox:docker-master     — PHP-FPM (bewelcome_php target)
+#   ghcr.io/bewelcome/rox:docker-master-web — Nginx   (bewelcome_nginx target)
 
 on:
   push:
-    branches: [feature/docker-beta]
+    branches: [feature/docker-master]
     paths:
       - 'Dockerfile'
       - '.dockerignore'
@@ -146,7 +146,7 @@ jobs:
           images: ${{ env.IMAGE }}
           tags: |
             type=sha,prefix=sha-
-            type=raw,value=docker-beta
+            type=raw,value=docker-master
 
       - name: Create and push multi-arch manifest
         working-directory: /tmp/digests
@@ -194,7 +194,7 @@ jobs:
           images: ${{ env.IMAGE }}
           tags: |
             type=sha,prefix=sha-,suffix=-web
-            type=raw,value=docker-beta-web
+            type=raw,value=docker-master-web
 
       - name: Create and push multi-arch manifest
         working-directory: /tmp/digests
@@ -237,7 +237,7 @@ jobs:
     needs: [merge-php, merge-nginx, scan]
     if: >
       github.event_name == 'push' &&
-      github.ref == 'refs/heads/feature/docker-beta' &&
+      github.ref == 'refs/heads/feature/docker-master' &&
       needs.merge-php.result == 'success' &&
       needs.merge-nginx.result == 'success' &&
       needs.scan.result == 'success'

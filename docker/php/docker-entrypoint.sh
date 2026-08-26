@@ -85,8 +85,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		if [ -f docker/db/geonamesadminunits.sql ]; then
 			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/geonamesadminunits.sql
 		fi
-	elif ls -A migrations/*.php > /dev/null 2>&1; then
-		bin/console doctrine:migrations:migrate --no-interaction
 	fi
 
 	# WarmUp translations now database is up to date

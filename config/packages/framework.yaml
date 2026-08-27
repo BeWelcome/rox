@@ -21,7 +21,12 @@ framework:
     default_locale:  "en"
     trusted_hosts:   ~
     trusted_proxies: '%env(SYMFONY_TRUSTED_PROXIES)%'
-    trusted_headers: '%env(SYMFONY_TRUSTED_HEADERS)%'
+    trusted_headers:
+        - x-forwarded-for
+        - x-forwarded-host
+        - x-forwarded-proto
+        - x-forwarded-port
+        - x-forwarded-prefix
 #    error_controller:  Symfony\Bundle\TwigBundle\Controller\ExceptionController::showAction
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.

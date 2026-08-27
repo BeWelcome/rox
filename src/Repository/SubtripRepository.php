@@ -67,6 +67,15 @@ class SubtripRepository extends EntityRepository
         $now = new CarbonImmutable();
         $durationMonthsAhead = $now->addMonths($duration);
 
+        // Bounding-box pre-filter: cheap BETWEEN on indexed lat/lon columns cuts haversine
+        // candidates from the full sub_trips table (23K rows) to the small set that could
+        // plausibly be within range. geo__names already has geonames_idx_latitude and
+        // geonames_idx_longitude. Without this, the GeoDistance haversine formula runs on
+        // every row and takes 3–5 s on a cold buffer pool (see beta perf analysis, 2026-08).
+        // 1° latitude ≈ 111 km; 1° longitude ≈ 111 * cos(lat) km.
+        $latDelta = $distance / 111.0;
+        $lonDelta = $distance / (111.0 * max(cos(deg2rad((float) $member->getLatitude())), 0.01));
+
         $qb = $this->createQueryBuilder('s');
         $qb
             ->join('s.location', 'l')
@@ -85,6 +94,8 @@ class SubtripRepository extends EntityRepository
             ->andWhere($qb->expr()->in('m.status', ['Active', 'OutOfRemind']))
             ->andWhere('t.creator <> :member')
             ->andWhere($qb->expr()->isNull('t.deleted'))
+            ->andWhere('l.latitude BETWEEN :lat_min AND :lat_max')
+            ->andWhere('l.longitude BETWEEN :lon_min AND :lon_max')
             ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) <= :distance')
             ->andWhere(
                 $qb->expr()->orX(
@@ -97,6 +108,10 @@ class SubtripRepository extends EntityRepository
             ->setParameter(':city', $member->getCity())
             ->setParameter(':latitude', $member->getLatitude())
             ->setParameter(':longitude', $member->getLongitude())
+            ->setParameter(':lat_min', $member->getLatitude() - $latDelta)
+            ->setParameter(':lat_max', $member->getLatitude() + $latDelta)
+            ->setParameter(':lon_min', $member->getLongitude() - $lonDelta)
+            ->setParameter(':lon_max', $member->getLongitude() + $lonDelta)
             ->setParameter(':now', $now)
             ->setParameter(':durationMonthsAhead', $durationMonthsAhead)
             ->orderBy('s.arrival', 'ASC')

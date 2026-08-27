@@ -17,6 +17,8 @@ use Doctrine\ORM\ORMException;
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -28,75 +30,84 @@ class StatisticsModel
 {
     use ManagerTrait;
 
-    public function __construct(private TranslatorInterface $translator, private EntityManagerInterface $entityManager)
+    private TranslatorInterface $translator;
+    private EntityManagerInterface $entityManager;
+    private CacheInterface $cache;
+
+    public function __construct(TranslatorInterface $translator, EntityManagerInterface $entityManager, CacheInterface $cache)
     {
+        $this->translator = $translator;
+        $this->entityManager = $entityManager;
+        $this->cache = $cache;
     }
 
     public function getStatisticsHomepage(): array
     {
-        $connection = $this->entityManager->getConnection();
+        return $this->cache->get('homepage_statistics', function (ItemInterface $item) {
+            $item->expiresAfter(3600);
 
-        $members = $connection->executeQuery('
-            SELECT
-                COUNT(*) AS cnt
-            FROM
-                members m
-            WHERE
-                m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
-        ')->fetchOne();
+            $connection = $this->entityManager->getConnection();
 
-        $countries = $connection->executeQuery("
-            SELECT
-                DISTINCT gc.country
-            FROM
-                geonamescountries gc
-                join geonames g on gc.country = g.country
-                join members m on g.geonameId = m.IdCity and m.Status IN ('Active', 'OutOfRemind')
-        ")->fetchAllAssociative();
+            $members = $connection->executeQuery('
+                SELECT
+                    COUNT(*) AS cnt
+                FROM
+                    members m
+                WHERE
+                    m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
+            ')->fetch();
 
-        $languages = $connection->executeQuery('
-            SELECT
-                COUNT(DISTINCT l.id) AS cnt
-            FROM
-                languages l,
-                memberslanguageslevel mll,
-                members m
-            WHERE
-                l.id = mll.idLanguage
-                AND mll.IdMember = m.Id
-                AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-        ')->fetchOne();
+            $countries = $connection->executeQuery("
+                SELECT
+                    DISTINCT gc.country
+                FROM
+                    geonamescountries gc
+                    join geonames g on gc.country = g.country
+                    join members m on g.geonameId = m.IdCity and m.Status IN ('Active', 'OutOfRemind')
+            ")->fetchAll();
 
-        $positiveComments = $connection->executeQuery("
-            SELECT
-                COUNT(c.id) AS cnt
-            FROM
-                comments c,
-                members m
-            WHERE
-                c.Quality = 'Good'
-                AND IdFromMember = m.Id
-                AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ')
-        ')->fetchOne();
+            $languages = $connection->executeQuery('
+                SELECT
+                    COUNT(DISTINCT l.id) AS cnt
+                FROM
+                    languages l,
+                    memberslanguageslevel mll,
+                    members m
+                WHERE
+                    l.id = mll.idLanguage
+                    AND mll.IdMember = m.Id
+                    AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
+            ')->fetch();
 
-        $activities = $connection->executeQuery('
-            SELECT
-                COUNT(a.id)
-            FROM
-                activities a
-            WHERE
-                a.status = 0
-        ')->fetchOne();
+            $positiveComments = $connection->executeQuery("
+                SELECT
+                    COUNT(c.id) AS cnt
+                FROM
+                    comments c,
+                    members m
+                WHERE
+                    c.Quality = 'Good'
+                    AND IdFromMember = m.Id
+                    AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ')
+            ')->fetch();
 
-        $stats = [
-            'members' => $members,
-            'countries' => \count($countries),
-            'languages' => $languages,
-            'comments' => $positiveComments,
-            'activities' => $activities,
-        ];
+            $activities = $connection->executeQuery('
+                SELECT
+                    COUNT(a.id) AS cnt
+                FROM
+                    activities a
+                WHERE
+                    a.status = 0
+            ')->fetch();
 
-        return $stats;
+            return [
+                'members'    => $members['cnt'],
+                'countries'  => \count($countries),
+                'languages'  => $languages['cnt'],
+                'comments'   => $positiveComments['cnt'],
+                'activities' => $activities['cnt'],
+            ];
+        });
     }
 
     /**

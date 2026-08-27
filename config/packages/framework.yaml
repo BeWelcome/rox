@@ -20,15 +20,17 @@ framework:
     #serializer:      { enable_annotations: true }
     default_locale:  "en"
     trusted_hosts:   ~
-#    error_controller:  Symfony\\Bundle\\TwigBundle\\Controller\\ExceptionController::showAction
+    trusted_proxies: '%env(SYMFONY_TRUSTED_PROXIES)%'
+    trusted_headers: '%env(SYMFONY_TRUSTED_HEADERS)%'
+#    error_controller:  Symfony\Bundle\TwigBundle\Controller\ExceptionController::showAction
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
     session:
         handler_id: Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler
         cookie_lifetime: 28800
-        cookie_samesite: 'strict'
-        gc_probability: null
+        cookie_samesite: 'lax'
+        gc_probability: 1
 
     fragments:       ~
     http_method_override: true

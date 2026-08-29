@@ -1,4 +1,4 @@
-﻿{
+{
     "name": "BeWelcome Rox (Docker Master)",
     "dockerComposeFile": [
         "../docker-compose.yml",
@@ -27,6 +27,11 @@
         }
     },
     "postCreateCommand": "bzip2 -ckd docker/languages.sql.bz2 > docker/db/languages.sql && bzip2 -ckd docker/words.sql.bz2 > docker/db/words.sql",
+    "hostRequirements": {
+        "cpus": 2,
+        "memory": "4gb",
+        "storage": "32gb"
+    },
     "customizations": {
         "vscode": {
             "extensions": [

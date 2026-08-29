@@ -187,4 +187,7 @@ ARG NODE_ENV=production
 RUN set -eux; \
 	apk add --no-cache \
 		make \
-		mysql-client
+		mysql-client; \
+	install-php-extensions xdebug
+
+COPY docker/php/conf.d/bewelcome.xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini

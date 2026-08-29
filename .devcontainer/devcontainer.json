@@ -14,7 +14,7 @@
             "onAutoForward": "openBrowser"
         },
         "1080": {
-            "label": "MailCatcher Web UI",
+            "label": "MailPit Web UI",
             "onAutoForward": "notify"
         },
         "9306": {

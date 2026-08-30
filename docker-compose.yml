@@ -31,7 +31,7 @@ services:
       - php
 
   db:
-    image: mariadb:12.0.2
+    image: mariadb:12.3
     environment:
       MYSQL_ROOT_PASSWORD: bewelcome_root_dev
       MYSQL_DATABASE: bewelcome

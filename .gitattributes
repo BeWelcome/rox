@@ -1,0 +1,4 @@
+* text=auto
+*.sh text eol=lf
+bin/console text eol=lf
+.env text eol=lf

@@ -184,6 +184,8 @@ FROM bewelcome_php AS bewelcome_php_dev
 # build for production
 ARG NODE_ENV=production
 
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
 RUN set -eux; \
 	apk add --no-cache \
 		make \

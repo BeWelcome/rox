@@ -22,6 +22,12 @@ class SubscriptionController extends AbstractController
         string $username,
         string $unsubscribeKey
     ): Response {
+        if ($request->isMethod('POST') && 'List-Unsubscribe=One-Click' === $request->request->get('List-Unsubscribe')) {
+            $subscriptionModel->unsubscribeNewsletter($username, $unsubscribeKey);
+
+            return new Response('', Response::HTTP_OK);
+        }
+
         $form = $this->createForm(NewsletterUnsubscribeType::class);
         $form->handleRequest($request);
 

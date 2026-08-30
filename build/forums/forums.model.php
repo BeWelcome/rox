@@ -1361,12 +1361,12 @@ WHERE `id` = '$topicinfo->threadid'
         $this->dao->query("START TRANSACTION");
         $query = sprintf(
             "
-INSERT INTO `forums_posts` ( `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
-VALUES ('%d', NOW(), '%s','%d',%d,'%s')
+INSERT INTO `forums_posts` ( `threadid`, `create_time`, `message`,`authorid`, `IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
+VALUES ('%d', NOW(), '%s','%d','%d','%d','%s')
             ",
             $this->threadid,
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $this->session->get("IdMember"), $this->GetLanguageChoosen(), $postVisibility
+            $this->session->get("IdMember"), $this->session->get("IdMember"), $this->GetLanguageChoosen(), $postVisibility
         );
 
         $result = $this->dao->query($query);

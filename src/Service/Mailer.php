@@ -140,7 +140,9 @@ class Mailer
             $parameters['sender'],
             $receiver,
             'newsletter',
-            $parameters
+            $parameters,
+            [],
+            $this->buildNewsletterHeaders($newsletter, $receiver, $parameters),
         );
     }
 
@@ -335,6 +337,7 @@ class Mailer
         string $template,
         array $parameters,
         array $identificationHeaders = [],
+        array $extraTextHeaders = [],
     ): bool {
         $currentLocale = $this->translator->getLocale();
         $success = true;
@@ -377,6 +380,10 @@ class Mailer
         }
         $email->from($sender);
 
+        foreach ($extraTextHeaders as $name => $value) {
+            $email->getHeaders()->addTextHeader($name, $value);
+        }
+
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface) {
@@ -398,6 +405,36 @@ class Mailer
         }
 
         $this->translator->setLocale($receiver->getLocale());
+    }
+
+    private function buildNewsletterHeaders(Newsletter $newsletter, Member $receiver, array $parameters): array
+    {
+        $transactionalTypes = [
+            'RemindToLog',
+            'MailToConfirmReminder',
+            Newsletter::SUSPENSION_NOTIFICATION,
+            Newsletter::TERMS_OF_USE,
+        ];
+        if (\in_array($newsletter->getType(), $transactionalTypes, true)) {
+            return [];
+        }
+
+        $unsubscribeKey = $parameters['unsubscribe_key'] ?? null;
+        if (null === $unsubscribeKey) {
+            return [];
+        }
+
+        $unsubscribeUrl = $this->urlGenerator->generate(
+            'regular_newsletter_unsubscribe',
+            ['username' => $receiver->getUsername(), 'unsubscribeKey' => $unsubscribeKey],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+
+        return [
+            'Precedence'            => 'bulk',
+            'List-Unsubscribe'      => '<' . $unsubscribeUrl . '>',
+            'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click',
+        ];
     }
 
     private function prepareParametersForNewsletter(Newsletter $newsletter, Member $receiver): array

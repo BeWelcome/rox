@@ -74,16 +74,16 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	done
 
 	if [ "$APP_ENV" != 'prod' ]; then
-		bin/console test:database:create --drop --force --no-interaction
+		bin/console test:database:create --drop --force --no-interaction || true
 
 		if [ -f docker/db/languages.sql ]; then
-			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/languages.sql
+			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/languages.sql || true
 		fi
 		if [ -f docker/db/words.sql ]; then
-			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/words.sql
+			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/words.sql || true
 		fi
 		if [ -f docker/db/geonamesadminunits.sql ]; then
-			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/geonamesadminunits.sql
+			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/geonamesadminunits.sql || true
 		fi
 	fi
 

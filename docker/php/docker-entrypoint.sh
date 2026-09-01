@@ -81,6 +81,23 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			echo " Please fix the schema and run bin/console test:database:create manually." >&2
 			echo "=========================================================" >&2
 		else
+			# Download seed files if not already present (e.g. on first DevContainer boot)
+			if [ ! -f docker/db/languages.sql ] && [ ! -f docker/db/languages.sql.bz2 ]; then
+				echo "Downloading languages.sql seed file..."
+				curl -sL https://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2 -o docker/db/languages.sql.bz2 \
+					&& bunzip2 docker/db/languages.sql.bz2 \
+					|| echo "WARNING: Failed to download languages.sql.bz2" >&2
+			elif [ -f docker/db/languages.sql.bz2 ] && [ ! -f docker/db/languages.sql ]; then
+				bunzip2 docker/db/languages.sql.bz2 || echo "WARNING: Failed to decompress languages.sql.bz2" >&2
+			fi
+			if [ ! -f docker/db/words.sql ] && [ ! -f docker/db/words.sql.bz2 ]; then
+				echo "Downloading words.sql seed file..."
+				curl -sL https://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2 -o docker/db/words.sql.bz2 \
+					&& bunzip2 docker/db/words.sql.bz2 \
+					|| echo "WARNING: Failed to download words.sql.bz2" >&2
+			elif [ -f docker/db/words.sql.bz2 ] && [ ! -f docker/db/words.sql ]; then
+				bunzip2 docker/db/words.sql.bz2 || echo "WARNING: Failed to decompress words.sql.bz2" >&2
+			fi
 			if [ -f docker/db/languages.sql ]; then
 				mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/languages.sql || echo "ERROR: Failed to import languages.sql" >&2
 			fi

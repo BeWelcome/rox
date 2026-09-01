@@ -26,7 +26,6 @@
             "onAutoForward": "silent"
         }
     },
-    "postCreateCommand": "curl -sL https://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2 -o ./docker/db/languages.sql.bz2 && curl -sL https://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2 -o ./docker/db/words.sql.bz2 && bunzip2 --force ./docker/db/languages.sql.bz2 ./docker/db/words.sql.bz2",
     "hostRequirements": {
         "cpus": 2,
         "memory": "4gb",

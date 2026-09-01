@@ -84,7 +84,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			# Download seed files if not already present (e.g. on first DevContainer boot)
 			if [ ! -f docker/db/languages.sql ] && [ ! -f docker/db/languages.sql.bz2 ]; then
 				echo "Downloading languages.sql seed file..."
-				curl -sL https://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2 -o docker/db/languages.sql.bz2 \
+				curl -sL http://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2 -o docker/db/languages.sql.bz2 \
 					&& bunzip2 docker/db/languages.sql.bz2 \
 					|| echo "WARNING: Failed to download languages.sql.bz2" >&2
 			elif [ -f docker/db/languages.sql.bz2 ] && [ ! -f docker/db/languages.sql ]; then
@@ -92,7 +92,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 			fi
 			if [ ! -f docker/db/words.sql ] && [ ! -f docker/db/words.sql.bz2 ]; then
 				echo "Downloading words.sql seed file..."
-				curl -sL https://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2 -o docker/db/words.sql.bz2 \
+				curl -sL http://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2 -o docker/db/words.sql.bz2 \
 					&& bunzip2 docker/db/words.sql.bz2 \
 					|| echo "WARNING: Failed to download words.sql.bz2" >&2
 			elif [ -f docker/db/words.sql.bz2 ] && [ ! -f docker/db/words.sql ]; then

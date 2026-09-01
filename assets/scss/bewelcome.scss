@@ -213,7 +213,7 @@
         right: 0;
         bottom: calc(-1 * #{$nav-tabs-border-width});
         left: 0;
-        height: $nav-tabs-border-width;
+        height: calc(2 * #{$nav-tabs-border-width});
         background-color: $white;
         content: "";
       }

@@ -74,16 +74,22 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	done
 
 	if [ "$APP_ENV" != 'prod' ]; then
-		bin/console test:database:create --drop --force --no-interaction || true
-
-		if [ -f docker/db/languages.sql ]; then
-			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/languages.sql || true
-		fi
-		if [ -f docker/db/words.sql ]; then
-			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/words.sql || true
-		fi
-		if [ -f docker/db/geonamesadminunits.sql ]; then
-			mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/geonamesadminunits.sql || true
+		if ! bin/console test:database:create --drop --force --no-interaction; then
+			echo "=========================================================" >&2
+			echo " ERROR: Database creation failed!" >&2
+			echo " Skipping SQL imports to avoid swallowing real errors." >&2
+			echo " Please fix the schema and run bin/console test:database:create manually." >&2
+			echo "=========================================================" >&2
+		else
+			if [ -f docker/db/languages.sql ]; then
+				mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/languages.sql || echo "ERROR: Failed to import languages.sql" >&2
+			fi
+			if [ -f docker/db/words.sql ]; then
+				mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/words.sql || echo "ERROR: Failed to import words.sql" >&2
+			fi
+			if [ -f docker/db/geonamesadminunits.sql ]; then
+				mysql $database_name -u $database_user -p$database_password -h $database_host < docker/db/geonamesadminunits.sql || echo "ERROR: Failed to import geonamesadminunits.sql" >&2
+			fi
 		fi
 	fi
 

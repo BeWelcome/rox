@@ -40,9 +40,6 @@ services:
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    App\Form\DataTransformer\:
-        resource: '../src/Form/DataTransformer/*'
-
     App\:
         resource: '../src/*'
         exclude: '../src/{DependencyInjection,Entity,Migrations,Model/MemberDataExtractor/DoctrineExtractor.php,Twig,Tests,Kernel.php}'

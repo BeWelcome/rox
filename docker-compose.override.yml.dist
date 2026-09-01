@@ -11,5 +11,11 @@ services:
       # - ./var:/srv/bewelcome/var:rw
 
   web:
+    ports:
+      - "80:80"
     volumes:
       - ./public:/srv/bewelcome/public:ro
+
+  mailer:
+    ports:
+      - "1080:80"

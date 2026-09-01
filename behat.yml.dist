@@ -2,7 +2,6 @@ default:
     suites:
         default:
             contexts:
-                - 'Consensus\Behat\MailpitExtension\Context\MailpitContext': ~
                 - 'App\Tests\Behat\DatabaseContext': ~
                 - 'App\Tests\Behat\RefreshTokenContext': ~
                 - 'App\Tests\Behat\SecurityContext': ~
@@ -19,10 +18,4 @@ default:
                     symfony: ~
         'Behatch\Extension': ~
         'FriendsOfBehat\SymfonyExtension': ~
-        'Consensus\Behat\MailpitExtension':
-            base_url: http://mailer:80
 
-localhost:
-    extensions:
-        'Consensus\Behat\MailpitExtension':
-            base_url: http://localhost:1080

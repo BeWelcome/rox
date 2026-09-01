@@ -78,7 +78,7 @@
 	{# conversations box #}
 	<div class="u:w-full u:flex u:flex-col">
 
-        <ul class="nav nav-tabs" role="tablist">
+        <ul class="nav nav-tabs landing-dashboard-tabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" aria-controls="conversations" href="#conversations" role="tab"
                    data-bs-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}
@@ -98,7 +98,7 @@
             </li>
         </ul>
 
-        <div class="o-card o-card--tabbed tab-content u:p-16 u:bg-white">
+        <div class="o-card o-card--tabbed landing-dashboard-card tab-content u:p-16 u:bg-white">
 
 			{# conversations #}
 			<div role="tabpanel" class="o-tab tab-pane u:h-full active" id="conversations">
@@ -171,7 +171,7 @@
 	{# community box #}
 	<div class="u:w-full u:flex u:flex-col">
 
-		<ul class="nav nav-tabs" role="tablist">
+		<ul class="nav nav-tabs landing-dashboard-tabs" role="tablist">
 			<li class="nav-item">
           <a href="#threads" class="nav-link active" aria-controls="threads" role="tab"
              data-bs-toggle="tab">{{ 'landing.tab.forum' | trans }}</a>
@@ -188,7 +188,7 @@
             </li>
 		</ul>
 
-		<div class="o-card o-card--tabbed tab-content u:p-16">
+		<div class="o-card o-card--tabbed landing-dashboard-card tab-content u:p-16">
 			{# forum discussions #}
 			<div role="tabpanel" class="o-tab tab-pane u:h-full active" id="threads">
 

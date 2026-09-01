@@ -193,7 +193,6 @@ RUN set -eux; \
 		libstdc++ \
 		gcompat \
 		bash \
-		wget \
 		nodejs \
 		procps; \
 	install-php-extensions xdebug

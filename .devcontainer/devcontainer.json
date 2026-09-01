@@ -52,8 +52,7 @@
                     "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
                 },
                 "intelephense.environment.phpVersion": "8.3.0",
-                "intelephense.files.maxSize": 5000000,
-                "xdebug.remote_enable": true
+                "intelephense.files.maxSize": 5000000
             }
         }
     }

@@ -2,6 +2,8 @@
 # Not used by the beta or production stacks.
 services:
   php:
+    build:
+      target: bewelcome_php_dev
     volumes:
       - .:/srv/bewelcome:rw,cached
       - ./docker/php/conf.d/bewelcome.dev.ini:/usr/local/etc/php/conf.d/bewelcome.ini
@@ -9,5 +11,11 @@ services:
       # - ./var:/srv/bewelcome/var:rw
 
   web:
+    ports:
+      - "80:80"
     volumes:
       - ./public:/srv/bewelcome/public:ro
+
+  mailer:
+    ports:
+      - "1080:80"

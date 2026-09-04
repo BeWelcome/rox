@@ -184,7 +184,17 @@ FROM bewelcome_php AS bewelcome_php_dev
 # build for production
 ARG NODE_ENV=production
 
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
 RUN set -eux; \
 	apk add --no-cache \
 		make \
-		mysql-client
+		mysql-client \
+		libstdc++ \
+		gcompat \
+		bash \
+		nodejs \
+		procps; \
+	install-php-extensions xdebug
+
+COPY docker/php/conf.d/bewelcome.xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini

@@ -20,7 +20,7 @@ framework:
     #serializer:      { enable_annotations: true }
     default_locale:  "en"
     trusted_hosts:   ~
-    trusted_proxies: '%env(SYMFONY_TRUSTED_PROXIES)%'
+    trusted_proxies: '%env(string:default::SYMFONY_TRUSTED_PROXIES)%'
     trusted_headers:
         - x-forwarded-for
         - x-forwarded-host

@@ -20,13 +20,15 @@
 
 You like the idea? Development is only one way to contribute! Find out how to [get active](https://www.bewelcome.org/about/getactive), including as designer, tester, translator, moderator, helping others and much more! :heart_eyes:
 
-## Get your Rox development enviroment :computer:
+## Get your Rox development environment :computer:
 
-1. :balloon: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github.
+The fastest way to start is with VS Code DevContainers — one click sets up PHP, MariaDB, Manticore Search, and a local mailer automatically. GitHub Codespaces works too if you prefer not to install anything locally.
+
+1. :balloon: [Set up your local development environment](INSTALL.md) (DevContainer recommended) and fork the repository on GitHub.
 2. :mag: Pick a [good starter issue](https://github.com/BeWelcome/rox/labels/good%20starter%20issue)
 3. :sparkles: Create a [pull request](https://opensource.guide/how-to-contribute/#opening-a-pull-request) and `@mention` the people from the issue to review
 4. :sun_with_face: Fix the remaining things during review
-4. :tada: Wait for it being merged!
+5. :tada: Wait for it being merged!
 
 You probably want to get started by checking out the code in `src/`.
 

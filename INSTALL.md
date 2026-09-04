@@ -9,7 +9,7 @@ The repository ships a `.devcontainer` configuration that sets up the full stack
 ### Requirements
 
 - [VS Code](https://code.visualstudio.com/) with the [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
-- [Docker](https://docs.docker.com/get-docker/) (Docker Desktop, Rancher Desktop, or equivalent)
+- [Docker](https://docs.docker.com/get-docker/) (Engine + CLI — Docker Desktop or Rancher Desktop on macOS/Windows; Docker Engine directly on Linux)
 
 ### Start
 

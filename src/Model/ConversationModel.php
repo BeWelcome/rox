@@ -19,10 +19,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
 {
-    private readonly ConversationThread $conversationThread;
+    private Mailer $mailer;
+    private EntityManagerInterface $entityManager;
+    private TranslatorInterface $translator;
+    private ConversationThread $conversationThread;
 
-    public function __construct(private readonly Mailer $mailer, private readonly EntityManagerInterface $entityManager, private readonly TranslatorInterface $translator)
+    public function __construct(Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
+        $this->entityManager = $entityManager;
+        $this->mailer = $mailer;
+        $this->translator = $translator;
         $this->conversationThread = new ConversationThread($this->entityManager);
     }
 
@@ -288,7 +294,6 @@ class ConversationModel
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
             $message->setFolder(InFolderType::SPAM);
             $message->setStatus(MessageStatusType::CHECK);
-            $message->setMessage($messageText . '<p>Potential spam. Please report if necessary.</p>');
         }
 
         return $message;
@@ -306,7 +311,7 @@ class ConversationModel
 
             $result = $statement->executeQuery();
             $row = $result->fetchAssociative();
-        } catch (Exception) {
+        } catch (Exception $e) {
             return false;
         }
 

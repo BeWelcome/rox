@@ -2664,7 +2664,9 @@ ORDER BY `posttime` DESC",
             $groups[] = (int) $group->id;
         }
 
-        $config = ['host' => '127.0.0.1','port' => 9412];
+        $host = PVars::getObj('env')->manticore_host;
+        $port = PVars::getObj('env')->manticore_port;
+        $config = ['host' => $host, 'port' => $port];
         $client = new Client($config);
         $query = new Search($client);
         $query
@@ -2851,7 +2853,9 @@ ORDER BY `posttime` DESC",
     {
         $postId = (int)$vars['IdPost'];
         $threadId = (int)$vars['IdThread'];
-        $config = ['host' => '127.0.0.1','port' => 9412];
+        $host = PVars::getObj('env')->manticore_host;
+        $port = PVars::getObj('env')->manticore_port;
+        $config = ['host' => $host, 'port' => $port];
         $vars['Sentence'] = $vars['Sentence'] ?? $vars['topic_text'];
 
         $client = new Client($config);

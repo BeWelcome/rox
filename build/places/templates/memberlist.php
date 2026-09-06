@@ -44,7 +44,7 @@ foreach ($this->members as $member) {
             </p>
             <div class="m-0 mb-2 d-flex small">
                 <div class="mr-1"><i class="fa fa-2x fa-map-marker-alt"></i></div>
-                <div><strong><?= $member->city; ?></strong><br><?= htmlspecialchars($this->countryName); ?></div>
+                <div><strong><?= $member->city; ?></strong><br><?= htmlspecialchars(urldecode($this->countryName)); ?></div>
             </div>
         </div>
     </div>

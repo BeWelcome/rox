@@ -16,8 +16,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 
 */
@@ -31,32 +31,32 @@ $city = htmlspecialchars($city);
 <div id="teaser" class="page-teaser clearfix">
 <h1>
     <?php
-    if (!$countrycode OR !isset($country->name)) { 
+    if (!$countrycode OR !isset($country->name)) {
         echo $words->getFormatted('CountryTitle');
-    } else { 
+    } else {
         echo '<a href="places">'.$words->getFormatted('CountryTitle').'</a>';
         echo '<span class="small">';
-        if (!$region) { 
+        if (!$region) {
             echo ' &raquo; '.$country->name;
         } else {
-            echo ' &raquo; <a href="places/'.$countrycode.'">'.$country->name.'</a>'; 
-            if (!$city) { 
+            echo ' &raquo; <a href="places/'.$countrycode.'">'.urldecode($country->name).'</a>';
+            if (!$city) {
                 echo ' &raquo; '.$region;
             } else {
-                echo ' &raquo; <a href="places/'.$countrycode.'/'.$region.'">'.$region.'</a>'; 
-                echo ' &raquo; '.$city;
+                echo ' &raquo; <a href="places/'.$countrycode.'/'.$region.'">'.urldecode($region).'</a>';
+                echo ' &raquo; '.urldecode($city);
             }
         }
         echo '</span>';
     }
     ?>
-</h1> 
+</h1>
 <?php
 if (isset($title)) {
     if (MOD_right::get()->HasRight('Debug')) {  ?>
         <h2>
         <?php
-        echo $title; 
+        echo $title;
         // This is only visible to people with debug rights
         echo " <a href=\"geo/displaylocation/".$countryinfo->IdCountry."\" title=\" specific debug right view database records\">view geo record #".$countryinfo->IdCountry."</a>" ;
         ?></h2>

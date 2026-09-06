@@ -66,14 +66,11 @@ class Places extends RoxModelBase {
      * get members and count based on privacy setting
      *
      */
-    private function getMembersFiltered($query) {
-        // this condition makes sure that unlogged people won't see non-public profiles
+    private function getMembers($query) {
         $result = $this->dao->query($query);
         if (!$result) {
             throw new PException('Could not retrieve members list.');
         }
-        $countQuery = $this->dao->query("SELECT FOUND_ROWS() as cnt");
-        $count = $countQuery->fetch(PDB::FETCH_OBJ)->cnt;
 
         $members = array();
         $cities = array();
@@ -84,7 +81,7 @@ class Places extends RoxModelBase {
             $row->city = $cities[$row->idCity];
             $members[] = $row;
         }
-        return array($count, $members);
+        return $members;
     } // end of getMembersAll
 
     /**
@@ -157,7 +154,7 @@ class Places extends RoxModelBase {
     public function getMembersOfCountry($countrycode, $pageNumber) {
         $totalCount = $this->getTotalMemberCountCountry($countrycode);
         $query = sprintf("
-            SELECT SQL_CALC_FOUND_ROWS
+            SELECT
                 m.BirthDate,
                 m.HideBirthDate,
                 m.Accomodation,
@@ -176,15 +173,17 @@ class Places extends RoxModelBase {
             ORDER BY
                 m.Accomodation DESC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($countrycode));
-        list($count, $members) = $this->getMembersFiltered($query ." LIMIT "
+
+        $members = $this->getMembers($query ." LIMIT "
             . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
-        return array($count, $totalCount, $members);
+
+        return array($totalCount, $totalCount, $members);
     }
 
     public function getMembersOfRegion($regioncode, $countrycode, $pageNumber) {
         $totalCount = $this->getTotalMemberCountRegion($countrycode, $regioncode);
         $query = sprintf("
-            SELECT SQL_CALC_FOUND_ROWS
+            SELECT
                 m.BirthDate,
                 m.HideBirthDate,
                 m.Accomodation,
@@ -204,15 +203,17 @@ class Places extends RoxModelBase {
             ORDER BY
                 m.Accomodation DESC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($countrycode), $this->dao->escape($regioncode));
-        list($count, $members) = $this->getMembersFiltered($query ." LIMIT "
+
+        $members = $this->getMembers($query ." LIMIT "
             . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
-        return array($count, $totalCount, $members);
+
+        return array($totalCount, $totalCount, $members);
     }
 
     public function getMembersOfCity($cityCode, $cityName, $pageNumber) {
         $totalCount = $this->getTotalMemberCountCity($cityCode);
         $query = sprintf("
-            SELECT SQL_CALC_FOUND_ROWS
+            SELECT
                 m.BirthDate,
                 m.HideBirthDate,
                 m.Accomodation,
@@ -231,9 +232,9 @@ class Places extends RoxModelBase {
             ORDER BY
                 m.Accomodation DESC, HasProfileSummary DESC, m.LastLogin DESC",
             $this->dao->escape($cityCode));
-        list($count, $members) = $this->getMembersFiltered($query ." LIMIT "
+        $members = $this->getMembers($query ." LIMIT "
             . ($pageNumber-1) * self::MEMBERS_PER_PAGE . ", " . self::MEMBERS_PER_PAGE);
-        return array($count, $totalCount, $members);
+        return array($totalCount, $totalCount, $members);
     }
 
     private function compareCountryNames($a, $b) {

@@ -4,10 +4,8 @@ namespace App\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ForumCleanupCommand extends Command
 {
@@ -15,9 +13,6 @@ class ForumCleanupCommand extends Command
 
     private EntityManagerInterface $entityManager;
 
-    /**
-     * TestAddinitiatorCommand constructor.
-     */
     public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct();

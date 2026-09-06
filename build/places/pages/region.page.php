@@ -46,7 +46,7 @@ class RegionPage extends PageWithActiveSkin
         $words = $layoutkit->getWords();
         $countryName = htmlspecialchars($this->countryName);
         return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName . '/' . $this->countryCode . '">'
-            . $countryName . '</a>' . ' &raquo; ' . htmlspecialchars($this->regionName);
+            . urldecode($countryName) . '</a>' . ' &raquo; ' . htmlspecialchars(urldecode($this->regionName));
     }
 
     #[\Override]

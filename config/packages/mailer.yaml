@@ -1,6 +1,5 @@
 framework:
     mailer:
-        default_transport: main
         transports:
             main: '%env(MAILER_DSN)%'
             newsletter: '%env(NEWSLETTER_MAILER_DSN)%'

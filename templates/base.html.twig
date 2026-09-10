@@ -29,6 +29,11 @@
     {% block stylesheets %}{% endblock %}
 
     {% block matomo %}{% endblock %}
+    <script async src="https://analytics.stage.bewelcome.org/js/pa-MnFUesQjcl-wf7goTVXAR.js"></script>
+    <script>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init()
+    </script>
     <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
 
     <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">

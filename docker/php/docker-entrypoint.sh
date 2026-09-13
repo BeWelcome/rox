@@ -6,6 +6,8 @@ if [ "${1#-}" != "$1" ]; then
 	set -- php-fpm "$@"
 fi
 
+ENTRYPOINT_SETUP_RAN=false
+
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-production"
 	if [ "$APP_ENV" != 'prod' ]; then
@@ -119,6 +121,16 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	if [ "$APP_ENV" != 'prod' ]; then
 		yarn encore dev --mode=development
 	fi
+
+	ENTRYPOINT_SETUP_RAN=true
+fi
+
+# Non-php-fpm containers (cron, workers) skip the block above and receive no
+# cache:clear or warmup, leaving them vulnerable to stale anonymous-volume
+# content. Warm explicitly so every container type starts with a compiled
+# cache that reflects the current image's templates.
+if [ "$APP_ENV" = 'prod' ] && [ "$ENTRYPOINT_SETUP_RAN" = 'false' ]; then
+	php bin/console cache:warmup --env=prod --no-debug
 fi
 
 exec docker-php-entrypoint "$@"

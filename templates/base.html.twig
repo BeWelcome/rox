@@ -21,6 +21,7 @@
   {{ encore_entry_link_tags('tailwind') }}
 
   {% block stylesheets %}{% endblock %}
+            {{ encore_entry_link_tags('app') }}
 
   {% block matomo %}{% endblock %}
   <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
@@ -154,5 +155,6 @@
   {{ encore_entry_script_tags('offcanvas') }}
 {% endif %}
 {% block javascripts %}{% endblock javascripts %}
+            {{ encore_entry_script_tags('app') }}
 </body>
 </html>

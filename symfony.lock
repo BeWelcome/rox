@@ -412,15 +412,15 @@
         "version": "1.8.3"
     },
     "squizlabs/php_codesniffer": {
-        "version": "3.6",
+        "version": "3.13",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
+            "branch": "main",
             "version": "3.6",
-            "ref": "1019e5c08d4821cb9b77f4891f8e9c31ff20ac6f"
+            "ref": "3868461a63d8cc781a00c008baea09b6594871a6"
         },
         "files": [
-            "./phpcs.xml.dist"
+            "phpcs.xml.dist"
         ]
     },
     "stof/doctrine-extensions-bundle": {

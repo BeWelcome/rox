@@ -1,5 +1,5 @@
 {
-  "lockfileVersion": 1,
+  "lockfileVersion": 3,
   "configVersion": 1,
   "workspaces": {
     "": {
@@ -111,8 +111,10 @@
     "svgo": "^4.0.2",
     "tmp": "^0.2.6",
     "uuid": "^14",
-    "vitest": "^4.1.11",
-    "vitest/mocker": "^4.1.11",
+    "vitest": {
+      ".": "^4.1.11",
+      "mocker": "^4.1.11",
+    },
     "ws": "^8.20.1",
   },
   "packages": {

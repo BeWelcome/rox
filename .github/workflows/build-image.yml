@@ -23,7 +23,7 @@ on:
       - 'symfony.lock'
       - 'package.json'
       - 'bun.lock'
-      - 'webpack.config.js'
+      - 'webpack.config.mjs'
       - 'tailwind.config.js'
       - 'postcss.config.js'
       - 'src/**'

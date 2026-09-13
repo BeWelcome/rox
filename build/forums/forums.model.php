@@ -134,7 +134,7 @@ private function ReplaceInFTrad($ss, $TableColumn, $IdRecord, $IdTrad = 0, $IdOw
 * this retriewal is made according to the language of the post, the current language of the user
 */
 function FindAppropriatedLanguage($IdPost=0) {
-    $ss="select `IdContent` FROM `forums_posts` WHERE `id`=".$IdPost ;
+    $ss="select `IdContent` FROM `forums_posts` WHERE `id`={$IdPost}";
     $q = $this->dao->query($ss);
 	$row= $q->fetch(PDB::FETCH_OBJ);
 
@@ -148,7 +148,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 	}
 
 	// Try IdTrad with current language of the member
-  	$query ="SELECT IdLanguage FROM `forum_trads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=".$this->session->get("IdLanguage") ;
+  	$query ="SELECT IdLanguage FROM `forum_trads` WHERE `IdTrad`={$IdTrad} and `IdLanguage`='{$this->session->get("IdLanguage")}'";
 	$q = $this->dao->query($query);
 	$row = $q->fetch(PDB::FETCH_OBJ);
 	if (isset ($row->IdLanguage)) {
@@ -156,7 +156,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 	}
 
 	// Try with the original language used for this post
-	$query ="SELECT `IdLanguage` FROM `forum_trads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
+	$query ="SELECT `IdLanguage` FROM `forum_trads` WHERE `IdTrad`={$IdTrad} order by id asc limit 1" ;
 	$q = $this->dao->query($query);
 	$row = $q->fetch(PDB::FETCH_OBJ);
 
@@ -2201,7 +2201,7 @@ ORDER BY `posttime` DESC",    $IdMember   );
     } // end of cleanupText
 
     function GetLanguageName($IdLanguage) {
-        $query="select id as IdLanguage,Name,Name,ShortCode from languages where id=".($IdLanguage)
+        $query="select ShortCode, Name from language where ShortCode='{$IdLanguage}'"
             . " AND IsWrittenLanguage = 1";
         $s = $this->dao->query($query);
         if (!$s) {

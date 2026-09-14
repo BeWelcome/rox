@@ -63,7 +63,7 @@ COPY translations translations/
 COPY routes.php ./
 COPY rox_docker.ini /srv/bewelcome/rox_local.ini
 COPY composer.json composer.lock symfony.lock ./
-COPY package.json bun.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
+COPY package.json bun.lock webpack.config.mjs postcss.config.js tailwind.config.js tsconfig.json ./
 COPY .env ./
 
 

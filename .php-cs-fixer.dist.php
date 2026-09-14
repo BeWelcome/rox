@@ -1,13 +1,17 @@
 <?php
-$finder = new PhpCsFixer\Finder();
-$finder
+
+$finder = new PhpCsFixer\Finder()
+    ->in(['src/', 'tests/'])
+    ->exclude('var')
+    ->notPath([
+        'config/bundles.php',
+        'config/reference.php',
+    ])
     ->notName('*.twig')
     ->notName('*.yml')
-    ->in(['src/', 'tests/'])
 ;
 
-$config = new PhpCsFixer\Config();
-$config
+return new PhpCsFixer\Config()
     ->setParallelConfig(new PhpCsFixer\Runner\Parallel\ParallelConfig(4, 20))
     ->setRiskyAllowed(true)
     ->setRules([
@@ -57,6 +61,5 @@ $config
         'strict_param' => true,
         'concat_space' => ['spacing' => 'one'],
     ])
-    ->setFinder($finder);
-
-return $config;
+    ->setFinder($finder)
+;

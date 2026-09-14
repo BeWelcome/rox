@@ -1,8 +1,12 @@
-let Encore = require('@symfony/webpack-encore');
+import Encore from '@symfony/webpack-encore';
 
-const fs = require('fs');
-const path = require('path');
-const os = require('os');
+import {existsSync} from 'node:fs';
+import {dirname,relative,resolve} from 'node:path';
+
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
 // It's useful when you use tools that rely on webpack.config.js file.
@@ -85,7 +89,6 @@ Encore
     .enableTypeScriptLoader()
     .enableSassLoader(options => {
         // Prefer using sass instead of node-sass to not depend on Python
-        options.implementation = require('sass');
         options.sassOptions = {
             // Suppress deprecation warnings from node_modules dependencies
             quietDeps: true,
@@ -109,9 +112,9 @@ Encore
         config.url = {
             filter: (url, resourcePath) => {
                 if (/^(data:|https?:)/.test(url)) return true;
-                const resolved = path.resolve(path.dirname(resourcePath), url);
-                if (!fs.existsSync(resolved)) {
-                    console.warn(`\x1b[33mWARNING\x1b[0m CSS url() not found, skipping: ${url} (in ${path.relative(__dirname, resourcePath)})`);
+                const resolved = resolve(dirname(resourcePath), url);
+                if (!existsSync(resolved)) {
+                    console.warn(`\x1b[33mWARNING\x1b[0m CSS url() not found, skipping: ${url} (in ${relative(__dirname, resourcePath)})`);
                     return false;
                 }
                 return true;
@@ -124,13 +127,17 @@ Encore
             config: './postcss.config.js',
         }
     })
+    .configureBabel((config) => {
+        config.plugins.push(['polyfill-corejs3', { method: 'usage-global', version: '3.49' }]);
+    })
+    .enableIntegrityHashes(Encore.isProduction())
 ;
 
 const assetsConfig = Encore.getWebpackConfig();
 
-const WorkboxPlugin = require('workbox-webpack-plugin');
+import * as WorkboxPlugin from 'workbox-webpack-plugin';
 
-workboxConfig = {
+const workboxConfig = {
         mode: 'production', /* Encore.isProduction() ? 'production' : 'development', */
         entry: {
             main: "./assets/js/index.js"
@@ -138,7 +145,7 @@ workboxConfig = {
         output: {
             filename: "[name].js",
             chunkFilename: "[name].bundle.js",
-            path: path.resolve(__dirname, "public")
+            path: resolve(__dirname, "public")
         },
         plugins: [
         new WorkboxPlugin.InjectManifest({
@@ -153,4 +160,4 @@ workboxConfig = {
         devtool: "source-map"
 };
 
-module.exports = [ assetsConfig, workboxConfig ];
+export default [ assetsConfig, workboxConfig ];

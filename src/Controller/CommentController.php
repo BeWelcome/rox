@@ -190,6 +190,7 @@ class CommentController extends AbstractController
                         'username' => $member->getUsername(),
                     ]
                 );
+                $this->addFlash('plausible_event', 'Review Written');
 
                 return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
             }

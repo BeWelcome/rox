@@ -35,6 +35,9 @@
       window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
       plausible.init()
     </script>
+    {% for event in app.flashes('plausible_event') %}
+    <script>plausible('{{ event }}')</script>
+    {% endfor %}
     {% endif %}
     <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
 

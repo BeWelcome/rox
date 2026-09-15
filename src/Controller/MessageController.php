@@ -115,6 +115,7 @@ class MessageController extends AbstractController
 
             $this->addMessageAndSendNotification($sender, $receiver, null, $subject, $body);
             $this->addTranslatedFlash('notice', 'flash.message.sent');
+            $this->addFlash('plausible_event', 'Message Sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }

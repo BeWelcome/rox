@@ -1,15 +1,18 @@
-name: Build and publish beta image
+name: Build staging image
 
 # Builds the production images for the feature/docker-master branch (PHP-FPM + Nginx
-# architecture, master-based) and pushes them to GHCR. Dispatches to sysadmins-infra
-# on success so the beta stack can be manually redeployed.
+# architecture) and pushes them to GHCR. On success, dispatches a repository_dispatch
+# event to sysadmins-infra so the stage stack auto-redeploys.
 #
-# Does NOT auto-deploy — the deploy-bewelcome-beta.yml workflow on sysadmins-infra
-# is triggered manually or via the repository_dispatch.
+# Triggered by: pushes to feature/docker-master (code or Docker changes)
+# Deploys to:   stage only (leopard.stage.bewelcome.org)
+# Prod deploy:  manual — use the "Deploy prod" workflow in sysadmins-infra
 #
-# Two images are published:
-#   ghcr.io/bewelcome/rox:docker-master     — PHP-FPM (bewelcome_php target)
-#   ghcr.io/bewelcome/rox:docker-master-web — Nginx   (bewelcome_nginx target)
+# Two images are published per push:
+#   ghcr.io/bewelcome/rox:stage          — PHP-FPM (rolling stage tag)
+#   ghcr.io/bewelcome/rox:stage-web      — Nginx   (rolling stage tag)
+#   ghcr.io/bewelcome/rox:sha-<7char>    — PHP-FPM (immutable per-commit tag)
+#   ghcr.io/bewelcome/rox:sha-<7char>-web — Nginx  (immutable per-commit tag)
 
 on:
   push:
@@ -36,7 +39,7 @@ on:
       - 'public/**'
       - 'bin/**'
       - '.trivyignore'
-      - '.github/workflows/build-image-beta.yml'
+      - '.github/workflows/build-image-stage.yml'
   workflow_dispatch: {}
 
 permissions:
@@ -48,7 +51,7 @@ env:
   IMAGE: ghcr.io/bewelcome/rox
 
 concurrency:
-  group: build-image-beta-${{ github.ref }}
+  group: build-image-stage-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -100,8 +103,8 @@ jobs:
             APP_VERSION=${{ steps.version.outputs.revision }}
             APP_VERSION_TIMESTAMP=${{ steps.version.outputs.timestamp }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha,scope=beta-${{ matrix.prefix }}-${{ matrix.arch }}
-          cache-to: type=gha,mode=max,scope=beta-${{ matrix.prefix }}-${{ matrix.arch }}
+          cache-from: type=gha,scope=stage-${{ matrix.prefix }}-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=stage-${{ matrix.prefix }}-${{ matrix.arch }}
           outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
 
       - name: Export digest
@@ -150,7 +153,7 @@ jobs:
           images: ${{ env.IMAGE }}
           tags: |
             type=sha,prefix=sha-
-            type=raw,value=docker-master
+            type=raw,value=stage
 
       - name: Create and push multi-arch manifest
         working-directory: /tmp/digests
@@ -198,7 +201,7 @@ jobs:
           images: ${{ env.IMAGE }}
           tags: |
             type=sha,prefix=sha-,suffix=-web
-            type=raw,value=docker-master-web
+            type=raw,value=stage-web
 
       - name: Create and push multi-arch manifest
         working-directory: /tmp/digests
@@ -235,8 +238,8 @@ jobs:
           trivyignores: .trivyignore
           version: v0.74.0
 
-  notify:
-    name: Notify sysadmins-infra
+  trigger-stage-deploy:
+    name: Trigger stage deployment
     runs-on: ubuntu-latest
     needs: [merge-php, merge-nginx, scan]
     if: >
@@ -255,12 +258,12 @@ jobs:
           owner: BeWelcome
           repositories: sysadmins-infra
 
-      - name: Notify sysadmins-infra of new beta image
+      - name: Notify sysadmins-infra to redeploy stage
         uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0  # tag=v3.0.0
         with:
           token: ${{ steps.app-token.outputs.token }}
           repository: BeWelcome/sysadmins-infra
-          event-type: rox-beta-image-pushed
+          event-type: rox-stage-image-pushed
           client-payload: |
             {
               "image": "${{ env.IMAGE }}:sha-${{ needs.merge-php.outputs.short_sha }}@${{ needs.merge-php.outputs.digest }}",

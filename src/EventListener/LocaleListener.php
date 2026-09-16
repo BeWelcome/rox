@@ -7,6 +7,7 @@ namespace App\EventListener;
 use App\Entity\Language;
 use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
+use Negotiation\AcceptLanguage;
 use Negotiation\Exception\Exception;
 use Negotiation\LanguageNegotiator;
 use PVars;
@@ -14,10 +15,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class LocaleListener implements EventSubscriberInterface
+readonly class LocaleListener implements EventSubscriberInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly array $locales)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private array $locales,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -53,9 +56,10 @@ class LocaleListener implements EventSubscriberInterface
                 $locale = 'en';
                 $negotiator = new LanguageNegotiator();
                 try {
+                    /** @var AcceptLanguage $bestLanguage */
                     $bestLanguage = $negotiator->getBest($request->server->get('HTTP_ACCEPT_LANGUAGE'), $this->locales);
                     if (null !== $bestLanguage) {
-                        $locale = $bestLanguage->getType();
+                        $locale = $bestLanguage->getBasePart();
                     }
                 } catch (Exception) {
                     $locale = 'en';

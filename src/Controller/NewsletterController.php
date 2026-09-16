@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
@@ -9,6 +10,7 @@ use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class NewsletterController extends AbstractController
@@ -58,8 +60,9 @@ class NewsletterController extends AbstractController
      * Show a single newsletter translated.
      */
     #[Route(path: '/newsletters/{id}/{language}', name: 'newsletter_single')]
-    public function showSingleNewsletter(Newsletter $newsletter, string $language)
+    public function showSingleNewsletter(Newsletter $newsletter, string $language): Response
     {
+        /** @var Member $member */
         $member = $this->getUser();
         $username = (null === $member) ? 'anonymous' : $member->getUsername();
 

@@ -35,12 +35,7 @@ class MemberModel
     ) {
     }
 
-    /**
-     * @throws Exception
-     *
-     * @return string
-     */
-    public function collectPersonalData(Member $member)
+    public function collectPersonalData(Member $member): string
     {
         // Create temp directory
         $i = 0;
@@ -127,12 +122,7 @@ class MemberModel
         fclose($handle);
     }
 
-    /**
-     * @param array  $parameters
-     * @param string $template
-     * @param string $filename
-     */
-    private function writePersonalDataFile($parameters, $template, $filename = null): string
+    private function writePersonalDataFile(array $parameters, string $template, ?string $filename = null): string
     {
         $this->writeRenderedTemplate(
             $filename ?: $template,
@@ -176,7 +166,10 @@ class MemberModel
         }
 
         // Add the Bewelcome logo
-        $filesystem->copy($projectDir . '/public/images/logo_email_2025.png', $this->tempDir . 'images/logo_email_2025.png');
+        $filesystem->copy(
+            $projectDir . '/public/images/logo_email_2025.png',
+            $this->tempDir . 'images/logo_email_2025.png'
+        );
 
         // We also need to empty avatar image
         $filesystem->copy($projectDir . '/public/images/empty_avatar.png', $this->tempDir . 'images/empty_avatar.png');

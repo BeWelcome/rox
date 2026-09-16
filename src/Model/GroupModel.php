@@ -18,7 +18,6 @@ use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
 use Exception;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -167,7 +166,6 @@ class GroupModel
             if (GroupType::NEED_ACCEPTANCE === $group->getType()) {
                 $membership->setStatus(GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP);
 
-                /** @var Member[] $admins */
                 $params = [
                     'subject' => [
                         'translationId' => 'group.wantin',
@@ -179,6 +177,8 @@ class GroupModel
                     'group' => $group,
                     'reason' => $reason,
                 ];
+
+                /** @var Member[] $admins */
                 $admins = $group->getAdministrators();
                 foreach ($admins as $admin) {
                     $this->mailer->sendGroupNotificationEmail($member, $admin, 'group/wantin', $params);
@@ -250,12 +250,12 @@ class GroupModel
         $em->persist($group);
         $em->flush();
 
-        /** @var Role $groupOwner */
         $roleRepository = $em->getRepository(Role::class);
+        /** @var Role $groupOwner */
         $groupOwner = $roleRepository->findOneBy(['name' => Role::GROUP_OWNER]);
 
-        /** @var Privilege $groupController */
         $privilegeRepository = $em->getRepository(Privilege::class);
+        /** @var Privilege $groupController */
         $groupController = $privilegeRepository->findOneBy(['controller' => Privilege::GROUP_CONTROLLER]);
 
         $privilegeScopeRepository = $em->getRepository(PrivilegeScope::class);
@@ -420,10 +420,6 @@ class GroupModel
         return $membership;
     }
 
-    /**
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     private function updateMembership(Group $group, Member $member, string $status): void
     {
         $membershipRepository = $this->entityManager->getRepository(GroupMembership::class);
@@ -434,7 +430,7 @@ class GroupModel
         $this->entityManager->flush();
     }
 
-    private function checkMembershipStatus(Group $group, Member $member, string $status)
+    private function checkMembershipStatus(Group $group, Member $member, string $status): bool
     {
         $membershipRepository = $this->entityManager->getRepository(GroupMembership::class);
         $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);

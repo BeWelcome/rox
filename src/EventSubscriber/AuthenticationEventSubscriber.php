@@ -14,10 +14,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-class AuthenticationEventSubscriber implements EventSubscriberInterface
+readonly class AuthenticationEventSubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly ?TokenStorageInterface $tokenStorage = null, private readonly ?AuthorizationCheckerInterface $authorizationChecker = null)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private ?TokenStorageInterface $tokenStorage = null,
+        private ?AuthorizationCheckerInterface $authorizationChecker = null,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -79,13 +82,13 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        /** @var Member $member */
         $token = $this->tokenStorage->getToken();
 
         if (null === $token) {
             return;
         }
 
+        /** @var Member $member */
         $member = $token->getUser();
         if (false === $member->isBrowsable()) {
             $this->tokenStorage->setToken(null); // Force logout

@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 /**
  * Class SessionSingleton.
  */
-class SessionSingleton
+final class SessionSingleton
 {
     /**
      * @var SessionSingleton The reference to *SessionSingleton* instance of this class
@@ -19,7 +19,7 @@ class SessionSingleton
      * Protected constructor to prevent creating a new instance of the
      * *Singleton* via the `new` operator from outside of this class.
      */
-    protected function __construct(private readonly SessionInterface $session)
+    private function __construct(private readonly SessionInterface $session)
     {
     }
 

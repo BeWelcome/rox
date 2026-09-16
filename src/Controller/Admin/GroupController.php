@@ -6,10 +6,12 @@ use App\Entity\Group;
 use App\Entity\Member;
 use App\Logger\Logger;
 use App\Service\Mailer;
+use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use Exception;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,6 +22,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -31,6 +34,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class GroupController extends AbstractController
 {
+    use ItemsPerPageTraits;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -42,17 +46,16 @@ class GroupController extends AbstractController
      * Allows to set a status for group creation requests.
      *
      * @throws AccessDeniedException
-     *
-     * @return Response
      */
     #[Route(path: '/admin/groups/approval', name: 'admin_groups_approval')]
-    public function approveGroups()
+    public function approveGroups(): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.1');
         }
 
         if (!$this->hasGroupRightLevel(10)) {
+            /** @var Member $admin */
             $admin = $this->getUser();
             $level = $admin->getLevelForRight(Member::ROLE_ADMIN_GROUP);
             throw $this->createAccessDeniedException('You need to have level 10 to access this.' . $level);
@@ -78,11 +81,9 @@ class GroupController extends AbstractController
      * Allows to archive a group.
      *
      * @throws AccessDeniedException
-     *
-     * @return Response
      */
     #[Route(path: '/admin/groups/archival', name: 'admin_groups_archival')]
-    public function archiveGroups(Request $request)
+    public function archiveGroups(#[MapQueryParameter] int $currentPage = 1): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -98,13 +99,15 @@ class GroupController extends AbstractController
             ->from(Group::class, 'g')
             ->where("g.name NOT LIKE '[Archived] %'")
         ;
+
+        /** @var Member $user */
+        $user = $this->getUser();
+        $maxPerPage = $this->getItemsPerPage($user);
+
         $adapter = new QueryAdapter($queryBuilder);
         $pagerfanta = new Pagerfanta($adapter);
-
-        $pagerfanta->setMaxPerPage(30); // 10 by default
-
-        $currentPage = $request->get('page', '1');
-        $pagerfanta->setCurrentPage($currentPage); // 1 by default
+        $pagerfanta->setMaxPerPage($maxPerPage);
+        $pagerfanta->setCurrentPage($currentPage);
 
         return $this->render('admin/groups/archive.html.twig', [
             'groups' => $pagerfanta,
@@ -119,11 +122,9 @@ class GroupController extends AbstractController
      * Allows to unarchive a group.
      *
      * @throws AccessDeniedException
-     *
-     * @return Response
      */
     #[Route(path: '/admin/groups/unarchival', name: 'admin_groups_unarchival')]
-    public function unarchiveGroups(Request $request)
+    public function unarchiveGroups(#[MapQueryParameter] int $currentPage = 1): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -139,13 +140,16 @@ class GroupController extends AbstractController
             ->from(Group::class, 'g')
             ->where("g.name LIKE '[Archived] %'")
         ;
+
+        /** @var Member $user */
+        $user = $this->getUser();
+        $maxPerPage = $this->getItemsPerPage($user);
+
         $adapter = new QueryAdapter($queryBuilder);
         $pagerfanta = new Pagerfanta($adapter);
 
-        $pagerfanta->setMaxPerPage(30); // 10 by default
-
-        $currentPage = $request->get('page', '1');
-        $pagerfanta->setCurrentPage($currentPage); // 1 by default
+        $pagerfanta->setMaxPerPage($maxPerPage);
+        $pagerfanta->setCurrentPage($currentPage);
 
         return $this->render('admin/groups/archive.html.twig', [
             'groups' => $pagerfanta,
@@ -159,12 +163,10 @@ class GroupController extends AbstractController
     /**
      * Move a group creation requests to the discussion queue.
      *
-     * @throws AccessDeniedException
-     *
-     * @return RedirectResponse
+     * @throws AccessDeniedException|Exception
      */
     #[Route(path: '/admin/groups/{id}/discuss', name: 'admin_groups_discuss')]
-    public function discussGroup(Request $request, Group $group, Logger $logger)
+    public function discussGroup(Request $request, Group $group, Logger $logger): RedirectResponse
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -183,8 +185,10 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
+        /** @var Member $groupAdmin */
+        $groupAdmin = $this->getUser();
         $logger->write(
-            'Group ' . $this->getGroupLinkTag($group) . ' moved into discussion by ' . $this->getUser()->getUsername() . '.',
+            "Group {$this->getGroupLinkTag($group)} moved into discussion by {$groupAdmin->getUsername()}.",
             'Group'
         );
 
@@ -200,11 +204,9 @@ class GroupController extends AbstractController
      * Dismiss a group creation requests.
      *
      * @throws AccessDeniedException
-     *
-     * @return RedirectResponse
      */
     #[Route(path: '/admin/groups/{id}/dismiss', name: 'admin_groups_dismiss')]
-    public function dismissGroup(Request $request, Group $group, Logger $logger)
+    public function dismissGroup(Request $request, Group $group, Logger $logger): RedirectResponse
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -223,7 +225,9 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' dismissed by ' . $this->getUser()->getUsername() . '.', 'Group');
+        /** @var Member $groupAdmin */
+        $groupAdmin = $this->getUser();
+        $logger->write("Group {$this->getGroupLinkTag($group)} dismissed by {$groupAdmin->getUsername()}", 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -234,11 +238,9 @@ class GroupController extends AbstractController
      * Approve a group creation requests.
      *
      * @throws AccessDeniedException
-     *
-     * @return RedirectResponse
      */
     #[Route(path: '/admin/groups/{id}/approve', name: 'admin_groups_approve')]
-    public function approveGroup(Request $request, Group $group, Logger $logger)
+    public function approveGroup(Request $request, Group $group, Logger $logger): RedirectResponse
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have the Group right to access this.');
@@ -257,10 +259,14 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' approved by ' . $this->getUser()->getUsername() . '.', 'Group');
+        /** @var Member $groupAdmin */
+        $groupAdmin = $this->getUser();
+        $logger->write("Group {$this->getGroupLinkTag($group)} approved by {$groupAdmin->getUsername()}.", 'Group');
 
+        /** @var Member $creator */
         $creator = current($group->getMembers());
         $this->sendNewGroupApprovedNotification($group, $creator);
+
         $referrer = $request->headers->get('referer');
 
         return $this->redirect($referrer);
@@ -270,11 +276,9 @@ class GroupController extends AbstractController
      * Archive a group .
      *
      * @throws AccessDeniedException
-     *
-     * @return RedirectResponse
      */
     #[Route(path: '/admin/groups/{id}/archive', name: 'admin_groups_archive')]
-    public function archiveGroup(Request $request, Group $group, Logger $logger)
+    public function archiveGroup(Request $request, Group $group, Logger $logger): RedirectResponse
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -293,7 +297,9 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' archived by ' . $this->getUser()->getUsername() . '.', 'Group');
+        /** @var Member $groupAdmin */
+        $groupAdmin = $this->getUser();
+        $logger->write("Group {$this->getGroupLinkTag($group)} archived by {$groupAdmin->getUsername()}.", 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -304,11 +310,9 @@ class GroupController extends AbstractController
      * Un-archive a group .
      *
      * @throws AccessDeniedException
-     *
-     * @return RedirectResponse
      */
     #[Route(path: '/admin/groups/{id}/unarchive', name: 'admin_groups_unarchive')]
-    public function unarchiveGroup(Request $request, Group $group, Logger $logger)
+    public function unarchiveGroup(Request $request, Group $group, Logger $logger): RedirectResponse
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -327,7 +331,9 @@ class GroupController extends AbstractController
             '%name%' => $group->getName(),
         ]);
 
-        $logger->write('Group ' . $this->getGroupLinkTag($group) . ' un-archived by ' . $this->getUser()->getUsername() . '.', 'Group');
+        /** @var Member $groupAdmin */
+        $groupAdmin = $this->getUser();
+        $logger->write("Group {$this->getGroupLinkTag($group)} un-archived by {$groupAdmin->getUsername()}.", 'Group');
 
         $referrer = $request->headers->get('referer');
 
@@ -338,11 +344,9 @@ class GroupController extends AbstractController
      * Rename a group .
      *
      * @throws AccessDeniedException
-     *
-     * @return Response|RedirectResponse
      */
     #[Route(path: '/admin/groups/rename', name: 'admin_groups_rename')]
-    public function renameGroup(Request $request, Logger $logger)
+    public function renameGroup(Request $request, Logger $logger): Response|RedirectResponse
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
             throw $this->createAccessDeniedException('You need to have Group right to access this.');
@@ -379,6 +383,7 @@ class GroupController extends AbstractController
             ])
             ->add('submit', SubmitType::class)
             ->getForm();
+
         $groupForm->handleRequest($request);
         if ($groupForm->isSubmitted() && $groupForm->isValid()) {
             $data = $groupForm->getData();
@@ -390,15 +395,17 @@ class GroupController extends AbstractController
                 $group->setName($data['new_name']);
 
                 $this->entityManager->persist($group);
-                $this->entityManager->flush($group);
+                $this->entityManager->flush();
 
                 $this->addTranslatedFlash('notice', 'admin.group.renamed', [
                     'oldName' => $oldName,
                     'newName' => $data['new_name'],
                 ]);
 
-                $logger->write('Group ' . $oldName . ' renamed to ' . $this->getGroupLinkTag($group)
-                    . ' by ' . $this->getUser()->getUsername() . '.', 'Group');
+                /** @var Member $groupAdmin */
+                $groupAdmin = $this->getUser();
+                $logger->write("Group {$oldName} renamed to {$this->getGroupLinkTag($group)} by "
+                    . $groupAdmin->getUsername() . '.', 'Group');
 
                 return $this->redirectToRoute('admin_groups_approval');
             }
@@ -423,7 +430,7 @@ class GroupController extends AbstractController
         ]);
     }
 
-    private function hasGroupRightLevel(int $level)
+    private function hasGroupRightLevel(int $level): bool
     {
         /** @var Member $admin */
         $admin = $this->getUser();
@@ -431,10 +438,7 @@ class GroupController extends AbstractController
         return $admin->getLevelForRight(Member::ROLE_ADMIN_GROUP) === $level;
     }
 
-    /**
-     * @return array
-     */
-    private function getSubMenuItems()
+    private function getSubMenuItems(): array
     {
         return [
             'approval' => [
@@ -460,8 +464,9 @@ class GroupController extends AbstractController
         ];
     }
 
-    private function getGroupLinkTag(Group $group)
+    private function getGroupLinkTag(Group $group): string
     {
-        return '<a href="' . $this->generateUrl('group_start', ['group_id' => $group->getId()]) . '">' . $group->getName() . '</a>';
+        return '<a href="' . $this->generateUrl('group_start', ['group_id' => $group->getId()]) . '">'
+            . $group->getName() . '</a>';
     }
 }

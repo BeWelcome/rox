@@ -11,6 +11,7 @@ use App\Entity\Subtrip;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -27,6 +28,7 @@ class Mailer
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UrlGeneratorInterface $urlGenerator,
+        /** @var Translator $translator */
         private readonly TranslatorInterface $translator,
         private readonly MailerInterface $mailer,
         private readonly string $noReplyEmailAddress = 'noreply@bewelcome.org',
@@ -327,14 +329,9 @@ class Mailer
         return new Address($email, 'BeWelcome - ' . $sender->getUsername());
     }
 
-    /**
-     * @param Member|Address|string $sender
-     * @param Member|Address        $receiver
-     * @param mixed                 $parameters
-     */
     private function sendTemplateEmail(
-        $sender,
-        $receiver,
+        Address|Member|string $sender,
+        Address|Member $receiver,
         string $template,
         array $parameters,
         array $identificationHeaders = [],

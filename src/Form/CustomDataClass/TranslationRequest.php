@@ -4,33 +4,23 @@ namespace App\Form\CustomDataClass;
 
 use App\Entity\Word;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TranslationRequest extends FormType
 {
-    /**
-     * @var Word
-     */
-    public $original;
+    public Word $original;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank()
-     */
-    public $translation;
+    #[NotBlank]
+    public string $translation;
 
-    /**
-     * @var string
-     */
-    public $locale;
+    public string $locale;
 
     public static function fromTranslations(Word $original, Word $translation): self
     {
         $translationRequest = new self();
         $translationRequest->original = $original;
         $translationRequest->translation = $translation->getSentence();
-        $translationRequest->locale = $translation->getShortCode();
+        $translationRequest->locale = $translation->getLanguage()->getShortCode();
 
         return $translationRequest;
     }

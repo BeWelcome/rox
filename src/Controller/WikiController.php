@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 
 class WikiController extends AbstractController
@@ -25,27 +26,19 @@ class WikiController extends AbstractController
     use TranslatorTrait;
 
     public function __construct(
-        private EntityManagerInterface $entityManager,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/wiki', name: 'wiki_front_page')]
-    public function showWikiFrontPage(WikiModel $wikiModel)
+    public function showWikiFrontPage(WikiModel $wikiModel): Response
     {
         return $this->showWikiPage('WikiFrontPage', $wikiModel, 0);
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/wiki/recent', name: 'wiki_recent')]
-    public function showRecentChanges(Request $request)
+    public function showRecentChanges(#[MapQueryParameter] $page = 1): Response
     {
-        $page = $request->get('page', 1);
-
         /** @var WikiRepository $wikiRepository */
         $wikiRepository = $this->entityManager->getRepository(Wiki::class);
         $recentChanges = $wikiRepository->getRecentChanges();
@@ -123,11 +116,8 @@ class WikiController extends AbstractController
         ]);
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/wiki/{pageTitle}/edit', name: 'wiki_page_edit')]
-    public function editWikiPage(Request $request, WikiModel $wikiModel, string $pageTitle)
+    public function editWikiPage(Request $request, WikiModel $wikiModel, string $pageTitle): Response
     {
         /** @var Wiki $wikiPage */
         $wikiPage = $wikiModel->getPage($pageTitle);
@@ -175,11 +165,8 @@ class WikiController extends AbstractController
         ]);
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/wiki/{pageTitle}/create', name: 'wiki_page_create')]
-    public function createWikiPage(Request $request, WikiModel $wikiModel, $pageTitle)
+    public function createWikiPage(Request $request, WikiModel $wikiModel, $pageTitle): Response
     {
         $wikiPage = $wikiModel->getPage($pageTitle);
 

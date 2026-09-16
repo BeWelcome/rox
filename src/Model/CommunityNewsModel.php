@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: saeed
- * Date: 12/22/16
- * Time: 12:36 AM.
- */
-
 namespace App\Model;
 
 use App\Entity\CommunityNews;
@@ -17,23 +10,14 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\Collections\CollectionAdapter;
 use Pagerfanta\Pagerfanta;
 
-/**
- * @method getLatestAdminPaginator($page, $limit)
- */
-class CommunityNewsModel
+readonly class CommunityNewsModel
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private EntityManagerInterface $entityManager,
     ) {
     }
 
-    /**
-     * @param int $page
-     * @param int $limit
-     *
-     * @return Pagerfanta
-     */
-    public function getPaginator($page, $limit)
+    public function getPaginator(int $page, int $limit): Pagerfanta
     {
         /** @var NotificationRepository $repository */
         $repository = $this->entityManager->getRepository(CommunityNews::class);
@@ -41,13 +25,7 @@ class CommunityNewsModel
         return $repository->pagePublic($page, $limit);
     }
 
-    /**
-     * @param int $page
-     * @param int $limit
-     *
-     * @return Pagerfanta
-     */
-    public function getAdminPaginator($page, $limit)
+    public function getAdminPaginator(int $page, int $limit): Pagerfanta
     {
         /** @var NotificationRepository $repository */
         $repository = $this->entityManager->getRepository(CommunityNews::class);
@@ -55,7 +33,7 @@ class CommunityNewsModel
         return $repository->pageAll($page, $limit);
     }
 
-    public function getLatest()
+    public function getLatest(): mixed
     {
         /** @var NotificationRepository $repository */
         $repository = $this->entityManager->getRepository(CommunityNews::class);
@@ -63,7 +41,7 @@ class CommunityNewsModel
         return $repository->getLatest();
     }
 
-    public function getCommentsPaginator(CommunityNews $communityNews, $page, $limit)
+    public function getCommentsPaginator(CommunityNews $communityNews, int $page, int $limit): Pagerfanta
     {
         $adapter = new CollectionAdapter($communityNews->getComments());
         $pagerfanta = new Pagerfanta($adapter);
@@ -74,7 +52,7 @@ class CommunityNewsModel
         return $pagerfanta;
     }
 
-    public function getLatestCommunityNewsComments($page, $limit)
+    public function getLatestCommunityNewsComments(int $page, int $limit): Pagerfanta
     {
         /** @var CommunityNewsCommentRepository $repository */
         $repository = $this->entityManager->getRepository(CommunityNewsComment::class);
@@ -82,16 +60,15 @@ class CommunityNewsModel
         return $repository->findLatestCommunityNewsComments($page, $limit);
     }
 
-    public function deleteAsSpamByChecker($commentIds): void
+    public function deleteAsSpamByChecker(array $commentIds): void
     {
-        // delete all activities based on there ids
-        $em = $this->entityManager;
-        /** @var CommunityNewsCommentRepository $repository */
-        $communityNewsCommentRepository = $em->getRepository(CommunityNewsComment::class);
+        // delete all activities based on their ids
+        /** @var CommunityNewsCommentRepository $communityNewsCommentRepository */
+        $communityNewsCommentRepository = $this->entityManager->getRepository(CommunityNewsComment::class);
         $comments = $communityNewsCommentRepository->findBy(['id' => $commentIds]);
         foreach ($comments as $comment) {
-            $em->remove($comment);
+            $this->entityManager->remove($comment);
         }
-        $em->flush();
+        $this->entityManager->flush();
     }
 }

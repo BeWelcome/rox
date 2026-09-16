@@ -17,7 +17,7 @@ class AboutModel
 
     public function getFeedbackCategories()
     {
-        $qb = $this->entityManager->createQueryBuilder('c');
+        $qb = $this->entityManager->createQueryBuilder();
         $qb
             ->select('c')
             ->from(FeedbackCategory::class, 'c')

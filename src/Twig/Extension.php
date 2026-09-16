@@ -6,7 +6,6 @@ use App\Utilities\ForumUtilities;
 use Carbon\Carbon;
 use HTMLPurifier;
 use HTMLPurifier_HTML5Config;
-use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
 use Override;
 use Psr\Log\LoggerInterface;
@@ -35,7 +34,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
         protected TranslatorInterface $translator,
         private readonly EntrypointLookupInterface $entrypointLookup,
         private readonly LoggerInterface $logger,
-        /** @var false|string[] */
         private readonly array $locales,
         private readonly string $publicDirectory,
     ) {
@@ -146,8 +144,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     /**
      * Truncates a string up to a number of characters while preserving whole words and HTML tags.
-     *
-     * @throws InvalidHtmlException
      */
     public function truncate(string $text, int $length = 100, string $ellipsis = '&#8230;'): string
     {

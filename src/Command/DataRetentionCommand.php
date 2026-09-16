@@ -73,7 +73,7 @@ class DataRetentionCommand extends Command
 
         $members = $this->memberRepository->loadDataRetentionMembers();
 
-        if (null !== $members) {
+        if (!empty($members)) {
             $msg = 'Removing private data for ' . \count($members) . ' members.';
             $io->info($msg);
             $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
@@ -82,18 +82,16 @@ class DataRetentionCommand extends Command
             foreach ($members as $member) {
                 $username = $member->getUsername();
                 $this->removeBrowserPushNotificationsFromSender($username);
-                $cryptedFields = $member->getCryptedFields();
-                foreach ($cryptedFields as $cryptedField) {
-                    $entityManager->remove($cryptedField);
-                }
 
-                $memberTranslationRepository = $entityManager->getRepository(MemberTranslation::class);
-                /** @var MemberTranslation[] $memberTranslations */
-                $memberTranslations = $memberTranslationRepository->findBy(['object' => $member]);
-                foreach ($memberTranslations as $memberTranslation) {
-                    $entityManager->remove($memberTranslation);
-                }
-
+                /**
+                 * todo remove translated data and local data
+                 * $cryptedFields = $member->getCryptedFields();
+                 * $memberTranslationRepository = $entityManager->getRepository(MemberTranslation::class);
+                 * $memberTranslations = $memberTranslationRepository->findBy(['object' => $member]);
+                 * foreach ($memberTranslations as $memberTranslation) {
+                 *   $entityManager->remove($memberTranslation);
+                 * }.
+                 */
                 $languageLevels = $member->getLanguageLevels();
                 foreach ($languageLevels as $languageLevel) {
                     $entityManager->remove($languageLevel);
@@ -117,8 +115,10 @@ class DataRetentionCommand extends Command
                 $io->info($msg);
                 $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
             }
+
             $msg = 'Removed private data for ' . \count($members) . ' members.';
             $io->info($msg);
+
             $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
         }
 
@@ -161,75 +161,46 @@ class DataRetentionCommand extends Command
 
         $member
             ->setAccommodation(AccommodationType::NO)
-            ->setAdditionalAccommodationinfo(0)
-            ->setAddressHidden('')
-            ->setBday(0)
+            ->setAdditionalAccommodationinfo('')
             ->setBewelcomed(0)
             ->setBirthdate($longAgo)
-            ->setBmonth(0)
-            ->setByear(0)
-            ->setBooks(0)
-            ->setCellphonenumber(0)
-            ->setChangedid(0)
-            ->setChatAol($client->generateId())
-            ->setChatGoogle($client->generateId())
-            ->setChatIcq($client->generateId())
-            ->setChatMsn($client->generateId())
-            ->setChatOthers($client->generateId())
-            ->setChatSkype($client->generateId())
-            ->setChatYahoo($client->generateId())
-            ->setCounterguests(0)
-            ->setCounterhosts(0)
-            ->setCountertrusts(0)
+            ->setBooks(null)
             ->setEmail($client->generateId() . '@example.com')
-            ->setExUserId(0)
-            ->setFirstName('')
-            ->setSecondName(0)
-            ->setLastName('')
-            ->setFuturetrips(0)
+            ->setName('')
+            ->setShortName('')
             ->setGender('other')
-            ->setGenderofguest('other')
             ->setHideAttribute(255)
-            ->setHideBirthDate('hidden')
-            ->setHidegender('hidden')
-            ->setHobbies(0)
-            ->setHomephonenumber(0)
-            ->setHostingInterest(0)
-            ->setIdentitychecklevel(false)
-            ->setIlivewith(0)
-            ->setInformationtoguest(0)
+            ->setHobbies(null)
+            ->setHostingInterest(null)
+            ->setIlivewith(null)
             ->setLastswitchtoactive($longAgo)
-            ->setLatitude('')
-            ->setLongitude('')
-            ->setLogcount(0)
-            ->setMaxguest(0)
-            ->setMaxlenghtofstay(0)
-            ->setMotivationforhospitality(0)
-            ->setMovies(0)
-            ->setMusic(0)
+            ->setMaxGuests(0)
+            ->setMaxLengthOfStay(null)
+            ->setMovies(null)
+            ->setMusic(null)
             ->setRemindersWithOutLogin(0)
-            ->setOccupation(0)
-            ->setOffer(0)
-            ->setOfferguests(0)
-            ->setOfferhosts(0)
-            ->setOldtrips(0)
-            ->setOrganizations(0)
-            ->setOtherrestrictions(0)
-            ->setPasttrips(0)
-            ->setPlannedtrips(0)
-            ->setPleasebring(0)
-            ->setProfileSummary(0)
-            ->setPublictransport(0)
-            ->setQuality('')
-            ->setRegistrationKey('')
-            ->setRestrictions('')
-            ->setSecurityflag(0)
+            ->setOccupation(null)
+            ->setStandardOffers([])
+            ->setOfferguests(null)
+            ->setOfferhosts(null)
+            ->setOrganizations(null)
+            ->setRestrictions([])
+            ->setPasttrips(null)
+            ->setPlannedtrips(null)
+            ->setPleasebring(null)
+            ->setAboutMe(null)
+            ->setRegistrationKey(null)
             ->setStatus('AskToLeave')
-            ->setTypicoffer('')
-            ->setWebsite('')
-            ->setWorkphonenumber(0)
+            ->hideAge()
+            ->hideGender()
+            ->hideName()
+            ->setWhereYouSleep(null)
+            ->setProfileLanguage('none')
+            ->setAdditionalAccommodationInfo(null)
+            ->setCreated($longAgo)
+            ->setUpdated($longAgo)
+            ->setPleaseBring(null)
             ->setPassword($client->generateId())
-            ->setCity($location)
         ;
 
         return $member;

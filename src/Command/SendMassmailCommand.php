@@ -36,7 +36,8 @@ class SendMassmailCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $massmailRepository = $this->entityManager->getRepository(BroadcastMessage::class);
-        /** @var BroadcastMessage[] $scheduled */
+
+        /** @var BroadcastMessage[] $scheduledBroadcastMessages */
         $scheduledBroadcastMessages = $massmailRepository->findBy(
             ['status' => 'ToSend'],
             ['updated' => 'ASC'],

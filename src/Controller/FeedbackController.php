@@ -30,14 +30,14 @@ class FeedbackController extends AboutBaseController
     #[Route(path: '/feedback', name: 'feedback')]
     public function feedback(Request $request, AboutModel $aboutModel, TranslatorInterface $translator): Response
     {
-        $noModal = $request->query->get('no', false);
+        $noModal = $request->query->getBoolean('no', false);
 
         $member = $this->getUser();
         $categories = $aboutModel->getFeedbackCategories();
-        $categoryId = $request->get('IdCategory', null);
+        $categoryId = $request->query->get('IdCategory', null);
         $category = (null !== $categoryId) ? $categories[$categoryId] : null;
-        $messageId = $request->get('messageId', null);
-        $username = $request->get('username', null);
+        $messageId = $request->query->get('messageId', null);
+        $username = $request->query->get('username', null);
         $feedbackQuestion = '';
         if (null !== $username) {
             $feedbackQuestion = $translator->trans('profile.report.text');
@@ -110,11 +110,8 @@ class FeedbackController extends AboutBaseController
         ]);
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/feedback/received', name: 'feedback_received')]
-    public function feedbackReceived(Request $request)
+    public function feedbackReceived(Request $request): Response
     {
         return $this->render('about/feedback.received.html.twig', [
             'submenu' => [

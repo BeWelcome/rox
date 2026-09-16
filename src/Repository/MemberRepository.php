@@ -14,6 +14,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -40,11 +41,12 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
 
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        /* @var Member $user */
-        // set the new hashed password on the User object
+        if (!$user instanceof Member) {
+            throw new UnsupportedUserException(\sprintf('Instances of "%s" are not supported.', get_debug_type($user)));
+        }
+
         $user->setPassword($newHashedPassword);
 
-        // execute the queries on the database
         $this->getEntityManager()->flush();
     }
 

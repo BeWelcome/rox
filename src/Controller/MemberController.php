@@ -10,7 +10,6 @@ use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
@@ -19,7 +18,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -34,26 +32,23 @@ class MemberController extends AbstractController
     use TranslatorTrait;
 
     public function __construct(
-        private ProfileSubmenu $profileSubmenu,
-        private ChangeProfilePictureGlobals $globals,
+        private readonly ProfileSubmenu $profileSubmenu,
+        private readonly ChangeProfilePictureGlobals $globals,
     ) {
     }
 
     #[Route(path: '/mydata', name: 'profile_personal_data_redirect')]
-    public function redirectMyData()
+    public function redirectMyData(): RedirectResponse
     {
-        $username = $this->getUser()->getUsername();
+        /** @var Member $member */
+        $member = $this->getUser();
+        $username = $member->getUsername();
 
         return $this->redirectToRoute('profile_personal_data', [
             'username' => $username,
         ]);
     }
 
-    /**
-     * @throws Exception
-     *
-     * @return StreamedResponse|Response
-     */
     #[Route(path: '/members/{username:member}/mydata', name: 'profile_personal_data')]
     public function getPersonalDataSelf(
         Request $request,
@@ -63,7 +58,7 @@ class MemberController extends AbstractController
         EntrypointLookupInterface $entrypointLookup,
         PasswordHasherFactoryInterface $passwordHasherFactory,
     ): Response|RedirectResponse {
-        /** @var Member $member */
+        /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
         if ($member->getUsername() !== $loggedInMember->getUsername()) {
@@ -156,20 +151,13 @@ class MemberController extends AbstractController
         ]);
     }
 
-    /**
-     * @throws Exception
-     *
-     * @return BinaryFileResponse|RedirectResponse
-     *
-     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
-     */
     #[Route(path: '/mydata/{username:member}/download', name: 'member_download_data')]
-    public function downloadPersonalData(Request $request, Member $member)
+    public function downloadPersonalData(Request $request, Member $member): BinaryFileResponse|RedirectResponse
     {
         $zipFilename = $request->getSession()->get('mydata_file');
         if (file_exists($zipFilename)) {
             // main dir is left over!
-            $response = new BinaryFileResponse($zipFilename);
+            $response = $this->file($zipFilename);
             $response->headers->set('Content-Type', 'application/zip');
             $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_INLINE);
             $response->deleteFileAfterSend(true);

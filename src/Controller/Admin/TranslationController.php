@@ -189,7 +189,8 @@ class TranslationController extends AbstractController
 
         // Check if an English entry already exists
         $translationRepository = $this->entityManager->getRepository(Word::class);
-        /** @var Word $original */
+
+        /** @var Word $englishTranslation */
         $englishTranslation = $translationRepository->findOneBy([
             'code' => $translationId,
             'shortCode' => 'en',
@@ -648,6 +649,7 @@ class TranslationController extends AbstractController
      */
     private function getTranslatorLocales(): array
     {
+        /** @var Member $volunteer */
         $volunteer = $this->getUser();
 
         /** @var RightVolunteer $wordRight */

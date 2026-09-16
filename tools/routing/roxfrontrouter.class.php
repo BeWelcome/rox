@@ -11,6 +11,8 @@ class RoxFrontRouter
 
     private $args;
     private $router;
+    public array $classes = [];
+    public $session_memory;
 
     public function __construct(Environment $environment)
     {
@@ -210,7 +212,6 @@ class RoxFrontRouter
             $posthandler = new RoxPostHandler();
         }
         $this->posthandler = $posthandler;
-        // $posthandler->classes = $this->classes;
 
         if ($action = $posthandler->getCallbackAction($this->args->post)) {
 

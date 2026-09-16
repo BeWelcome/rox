@@ -89,7 +89,7 @@ class SearchController extends AbstractController
         $showOptionsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_SEARCH_OPTIONS]);
         $showOptions = $member->getMemberPreferenceValue($showOptionsPreference);
 
-        /** @var Preference $storedSearchFilter */
+        /** @var Preference $searchOptionsPreference */
         $searchOptionsPreference = $preferenceRepository->findOneBy(['codename' => Preference::SEARCH_OPTIONS]);
         $memberSearchOptionsPreference = $member->getMemberPreference($searchOptionsPreference);
         $searchOptions = $memberSearchOptionsPreference->getValue();
@@ -224,7 +224,7 @@ class SearchController extends AbstractController
         $searchAdapter = new SearchAdapter($searchFormRequest, $this->entityManager, $member);
         $pager = new Pagerfanta($searchAdapter);
         $pager->setMaxPerPage($searchFormRequest->items > 0 ? $searchFormRequest->items : 20);
-        $pager->setCurrentPage($request->get('page', 1));
+        $pager->setCurrentPage($request->query->getInt('page', 1));
 
         return $this->render('member/results.html.twig', [
             'pager' => $pager,

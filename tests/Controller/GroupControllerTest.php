@@ -7,6 +7,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 #[Group('integration')]
 final class GroupControllerTest extends WebTestCase
@@ -49,7 +50,9 @@ final class GroupControllerTest extends WebTestCase
         $client->request('GET', "/group/{$groupId}/delete/true");
 
         self::assertResponseRedirects("/group/{$groupId}/delete");
-        self::assertNotEmpty($client->getRequest()->getSession()->getFlashBag()->peek('error'));
+        /** @var Session $session */
+        $session = $client->getRequest()->getSession();
+        self::assertNotEmpty($session->getFlashBag()->peek('error'));
         self::assertSame(1, $this->countRows($connection, 'groups', 'id', $groupId));
         self::assertSame(3, $this->countRows($connection, 'membersgroups', 'IdGroup', $groupId));
         self::assertSame(1, $this->countRows($connection, 'privilegescopes', 'IdType', $groupId));

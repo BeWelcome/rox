@@ -39,17 +39,18 @@ class NewsletterRepository extends EntityRepository
         $newsletters = [];
         /** @var Word $item */
         foreach ($translatedNews as $item) {
-            if (!isset($newsletters[$item->getLanguage()->getShortCode()])) {
+            $shortCode = $item->getLanguage()->getShortCode();
+            if (!isset($newsletters[$shortCode])) {
                 $newsletter = [];
             } else {
-                $newsletter = $newsletters[$item->getLanguage()->getShortCode()];
+                $newsletter = $newsletters[$shortCode];
             }
             // Determine if this is the title or the body of the newsletter (code is broadcast_title|body_$name)
             $part = str_ireplace('Broadcast_', '', str_ireplace('_' . $name, '', $item->getCode()));
             $newsletter[$part] = $item->getSentence();
             $newsletter['author'] = $item->getAuthor();
-            $newsletter['locale'] = $item->getShortCode();
-            $newsletters[$item->getLanguage()->getShortCode()] = $newsletter;
+            $newsletter['locale'] = $shortCode;
+            $newsletters[$shortCode] = $newsletter;
         }
 
         return $newsletters;

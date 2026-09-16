@@ -302,8 +302,8 @@ class LandingController extends AbstractController
             $searchHomeRequest->location_geoname_id = $location->getGeonameId();
             $searchHomeRequest->location_latitude = $address->getLatitude();
             $searchHomeRequest->location_longitude = $address->getLongitude();
-            $searchHomeRequest->accommodation_anytime = true;
-            $searchHomeRequest->accommodation_neverask = true;
+            $searchHomeRequest->accommodation_yes = true;
+            $searchHomeRequest->accommodation_no = true;
         }
 
         return $searchHomeRequest;

@@ -25,7 +25,7 @@ class EditTranslationRequest extends TranslationRequest
         $editTranslationRequest->domain = $original->getDomain();
         $editTranslationRequest->englishText = $original->getSentence();
         $editTranslationRequest->description = $original->getDescription();
-        $editTranslationRequest->locale = $translation->getShortCode();
+        $editTranslationRequest->locale = $translation->getLanguage()->getShortCode();
         $editTranslationRequest->isMajorUpdate = ($original->getMajorUpdate() > $translation->getUpdated());
         $editTranslationRequest->isArchived = $original->getIsArchived();
         $editTranslationRequest->translationAllowed = (TranslationAllowedType::TRANSLATION_ALLOWED === $original->getTranslationAllowed());

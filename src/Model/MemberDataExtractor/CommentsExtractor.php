@@ -13,10 +13,11 @@ final class CommentsExtractor extends AbstractExtractor implements ExtractorInte
         // Comments the member left others
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->getRepository(Comment::class);
-        /** @var Comment[] $comments */
         $commentsForMember = $commentRepository->getVisibleCommentsForMember($member);
         $commentsFromMember = $commentRepository->getCommentsFromMember($member);
+
         $comments = [];
+
         /** @var Comment $comment */
         foreach ($commentsForMember as $comment) {
             $commentArray = [

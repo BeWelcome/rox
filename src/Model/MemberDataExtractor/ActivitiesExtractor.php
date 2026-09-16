@@ -13,11 +13,12 @@ final class ActivitiesExtractor extends AbstractExtractor implements ExtractorIn
         $activities = [];
         /** @var ActivityAttendeeRepository $attendeeRepository */
         $attendeeRepository = $this->getRepository(ActivityAttendee::class);
-        /** @var ActivityAttendee[] $activities */
+        /** @var ActivityAttendee[] $activitiesOfMember */
         $activitiesOfMember = $attendeeRepository->findActivitiesOfMember($member);
         if (!empty($activitiesOfMember)) {
-            /** @var ActivityAttendee $attendee */
             $i = 1;
+
+            /** @var ActivityAttendee $attendee */
             foreach ($activitiesOfMember as $attendee) {
                 $this->writePersonalDataFileSubDirectory(
                     [

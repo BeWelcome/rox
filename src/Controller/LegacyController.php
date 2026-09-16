@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LegacyController extends AbstractController
@@ -38,7 +37,7 @@ class LegacyController extends AbstractController
 
         // Make sure the Rox classes find this session and the translator
         SessionSingleton::createInstance($session);
-        TranslatorSingleton::createInstance($translator);
+        //        TranslatorSingleton::createInstance($translator);
 
         $environmentExplorer = new EnvironmentExplorer($urlGenerator);
         $environmentExplorer->initializeGlobalState(
@@ -59,7 +58,7 @@ class LegacyController extends AbstractController
             $member = $securityHelper->getUser();
             $rememberMeToken = $securityHelper->getToken();
             if (null === $rememberMeToken && !$public) {
-                throw new AccessDeniedException();
+                throw $this->createAccessDeniedException();
             }
             if (false !== $rememberMeToken) {
                 if (null !== $member) {

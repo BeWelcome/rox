@@ -77,7 +77,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
                         admin1 = :admin1,
                         moddate = :mod_date
                 ');
-                $statement->execute();
+
+                $statement->executeStatement();
+
                 if ('A' === $change[6]) {
                     // update geonamesadminunits accordingly
                     $statement = $connection->prepare('
@@ -92,7 +94,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
                             admin1 = :admin1,
                             moddate = :mod_date
     				');
-                    $statement->execute();
+                    $statement->executeStatement();
                 }
             }
         }
@@ -106,14 +108,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
                 $newGeonameId = str_replace('duplicate ', '', $delete[2]);
                 $this->handleDuplicates($removeGeonameId, $newGeonameId);
             }
-            // Remove id from data base
+            // Remove id from database
             $statement = $connection->prepare('
                 DELETE FROM
                     `geonames`
                 WHERE
                     geonameid = :geoname_id
             ');
-            $statement->execute();
+            $statement->executeStatement();
         }
 
         return $count;
@@ -144,7 +146,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
                         iscolloquial = :iscolloquial,
                         ishistoric = :ishistoric
                 ');
-                $statement->execute();
+                $statement->executeStatement();
             }
         }
 
@@ -159,7 +161,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
     				    alternatenameid = :alternate_id
     				    AND geonameid = :geoname_id
     		    ');
-                $statement->execute();
+                $statement->executeStatement();
             }
         }
 
@@ -199,7 +201,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
                 WHERE
                     IdCity = :old_geoname_id
             ');
-        $statement->execute();
+        $statement->executeStatement();
 
         // Second update addresses table
         $statement = $connection->prepare('
@@ -210,7 +212,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
                 WHERE
                     IdCity = :old_geoname_id
             ');
-        $statement->execute();
+        $statement->executeStatement();
 
         // Third update activities table
         $statement = $connection->prepare('
@@ -222,7 +224,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
                     locationId = :old_geoname_id
             ');
 
-        $statement->execute();
+        $statement->executeStatement();
 
         $statement = $connection->prepare('
                 UPDATE
@@ -232,6 +234,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
                 WHERE
                     geonameid = :old_geoname_id
             ');
-        $statement->execute();
+        $statement->executeStatement();
     }
 }

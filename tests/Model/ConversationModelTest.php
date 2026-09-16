@@ -17,12 +17,13 @@ use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModelTest extends TestCase
 {
-    private EntityManagerInterface $entityManager;
+    private EntityManagerInterface&Stub $entityManager;
     private ConversationModel $model;
 
     protected function setUp(): void

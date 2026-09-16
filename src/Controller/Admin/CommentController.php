@@ -13,6 +13,7 @@ use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -190,6 +191,7 @@ class CommentController extends AbstractController
             'fromMember' => $toMember,
         ]);
 
+        /** @var Form $form */
         $form = $this->createForm(AdminCommentFormType::class, $comment);
         $form->handleRequest($request);
 

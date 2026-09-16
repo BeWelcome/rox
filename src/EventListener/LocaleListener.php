@@ -14,10 +14,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class LocaleListener implements EventSubscriberInterface
+readonly class LocaleListener implements EventSubscriberInterface
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly array $locales)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private array $locales,
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -55,7 +57,7 @@ class LocaleListener implements EventSubscriberInterface
                 try {
                     $bestLanguage = $negotiator->getBest($request->server->get('HTTP_ACCEPT_LANGUAGE'), $this->locales);
                     if (null !== $bestLanguage) {
-                        $locale = $bestLanguage->getType();
+                        $locale = $bestLanguage;
                     }
                 } catch (Exception) {
                     $locale = 'en';

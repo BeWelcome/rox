@@ -12,7 +12,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -48,7 +47,6 @@ class AvatarController extends AbstractController
             return new Response($uploadFailedTranslation, Response::HTTP_UNAUTHORIZED);
         }
 
-        /** @var UploadedFile $avatarFile */
         $avatar = $request->request->get('avatar');
 
         if (null === $avatar) {

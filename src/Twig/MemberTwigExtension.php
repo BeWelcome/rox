@@ -230,7 +230,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 
     protected function getLoginMessages(): array
     {
-        /** @var LoginMessageRepository $loginMessagsRepository */
+        /** @var LoginMessageRepository $loginMessageRepository */
         $loginMessageRepository = $this->entityManager->getRepository(LoginMessage::class);
 
         return $loginMessageRepository->getLoginMessages($this->member);

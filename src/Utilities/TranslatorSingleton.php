@@ -5,7 +5,7 @@ namespace App\Utilities;
 use InvalidArgumentException;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class TranslatorSingleton
+final class TranslatorSingleton
 {
     /**
      * @var TranslatorSingleton The reference to *TranslatorSingleton* instance of this class
@@ -16,7 +16,7 @@ class TranslatorSingleton
      * Protected constructor to prevent creating a new instance of the
      * *Singleton* via the `new` operator from outside of this class.
      */
-    protected function __construct(private readonly TranslatorInterface $translator)
+    private function __construct(private readonly TranslatorInterface $translator)
     {
     }
 

@@ -46,8 +46,7 @@ class HomeAndLoginMockups implements MockupProviderInterface
             case 'homepage':
                 $searchFormRequest = new SearchFormRequest();
                 $searchFormRequest->show_map = true;
-                $searchFormRequest->accommodation_neverask = true;
-                $searchFormRequest->inactive = true;
+                $searchFormRequest->accommodation_no = true;
                 $searchFormRequest->distance = 100;
                 $searchForm = $this->formFactory->createNamed('map', SearchFormType::class, $searchFormRequest, [
                     'action' => '/search/map',

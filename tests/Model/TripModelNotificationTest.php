@@ -17,6 +17,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
 
@@ -157,8 +158,14 @@ class TripModelNotificationTest extends TestCase
         $entityManager
             ->method('getRepository')
             ->willReturnMap([
-                [Subtrip::class, $this->createSubtripRepository([$host])],
-                [MemberLegNotificationSent::class, $this->createSentRepository(new MemberLegNotificationSent($host, $leg), $finds)],
+                [
+                    Subtrip::class,
+                    $this->createSubtripRepository([$host]),
+                ],
+                [
+                    MemberLegNotificationSent::class,
+                    $this->createSentRepository(new MemberLegNotificationSent($host, $leg), $finds),
+                ],
             ])
         ;
         $entityManager->expects($this->never())->method('persist');
@@ -383,6 +390,9 @@ class TripModelNotificationTest extends TestCase
         $property->setValue($entity, $id);
     }
 
+    /**
+     * @param EntityManagerInterface&MockObject $entityManager
+     */
     private function allowTripNotificationLocks(EntityManagerInterface $entityManager): void
     {
         $connection = $this->createStub(Connection::class);
@@ -390,6 +400,9 @@ class TripModelNotificationTest extends TestCase
         $entityManager->method('getConnection')->willReturn($connection);
     }
 
+    /**
+     * @param EntityManagerInterface&MockObject $entityManager
+     */
     private function denyTripNotificationLocks(EntityManagerInterface $entityManager): void
     {
         $connection = $this->createStub(Connection::class);

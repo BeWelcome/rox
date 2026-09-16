@@ -8,10 +8,11 @@ use App\Entity\Member;
 use App\Repository\LocationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-class DonationModel
+readonly class DonationModel
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
     }
 
     public function processDonation(?Member $member, array $parameters): bool
@@ -33,7 +34,7 @@ class DonationModel
             /** @var LocationRepository $locationRepository */
             $locationRepository = $this->entityManager->getRepository(Location::class);
             /** @var ?Location $country */
-            $country = $locationRepository->findCountry($member->getCountry()->getCountryId());
+            $country = $locationRepository->findCountry($member->getActiveAddress()->getCountry()->getCountryId());
 
             if (null !== $country) {
                 $donation->setCountry($country);

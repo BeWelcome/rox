@@ -20,6 +20,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -121,6 +122,7 @@ class ConversationsController extends AbstractController
         }
 
         $messageRequest = new MessageIndexRequest();
+        /** @var Form $form */
         $form = $this->createForm(MessageIndexFormType::class, $messageRequest, [
             'folder' => $active,
             'ids' => $messageIds,

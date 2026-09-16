@@ -41,8 +41,9 @@ class GalleryController extends AbstractController
     use TranslatorTrait;
     use UniqueFilenameTrait;
 
-    public function __construct(private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     /**
@@ -53,7 +54,7 @@ class GalleryController extends AbstractController
     {
         $user = $this->getUser();
         if ($user !== $image->getOwner()) {
-            $this->createAccessDeniedException('Not your image!');
+            throw $this->createAccessDeniedException('Not your image!');
         }
 
         $editImageRequest = new GalleryImageEditRequest($image);
@@ -348,11 +349,9 @@ class GalleryController extends AbstractController
         return $response;
     }
 
-    /**
-     * @return array
-     */
-    private function getSubmenuItems()
+    private function getSubmenuItems(): array
     {
+        /** @var Member $member */
         $member = $this->getUser();
         $submenuItems = [
             'manage' => [

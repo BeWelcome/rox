@@ -138,6 +138,8 @@ class MockupController extends TranslationController
 
     private function getMockTemplateParams($template, $name = null): array
     {
+        /** @var Member $member */
+        $member = $this->getUser();
         $params = [
             'extracted' => [
                 'activities',
@@ -165,8 +167,8 @@ class MockupController extends TranslationController
                 'subscriptions',
                 'translations',
             ],
-            'member' => $this->getUser(),
-            'profilepicture' => '/members/avatar/' . $this->getUser()->getUsername() . '/48',
+            'member' => $member,
+            'profilepicture' => '/members/avatar/' . $member->getUsername() . '/48',
         ];
 
         if (!str_contains((string) $name, 'some')) {
@@ -187,7 +189,9 @@ class MockupController extends TranslationController
 
     private function getMockParams($template, $name = null): array
     {
-        // Use the bwAdmin account as counter part for all of this
+        /** @var Member $member */
+        $member = $this->getUser();
+        // Use the bwAdmin account as counterpart for all of this
         $memberRepository = $this->entityManager->getRepository(Member::class);
         $bwAdmin = $memberRepository->find(1);
 
@@ -226,7 +230,7 @@ class MockupController extends TranslationController
             case 'home/home.html.twig':
                 $searchFormRequest = new SearchFormRequest();
                 $searchFormRequest->show_map = true;
-                $searchFormRequest->accommodation_neverask = true;
+                $searchFormRequest->accommodation_no = true;
                 $searchFormRequest->distance = 100;
                 $searchForm = $this->formFactory->createNamed(
                     'map',
@@ -256,13 +260,13 @@ class MockupController extends TranslationController
                 $params['search'] = $searchForm->createView();
                 break;
             case 'emails/message.html.twig':
-                $params['sender'] = $this->getUser();
+                $params['sender'] = $member;
                 $params['receiver'] = $bwAdmin;
                 break;
             case 'emails/request.html.twig':
             case 'emails/reply_from_guest.html.twig':
                 $params['host'] = $bwAdmin;
-                $params['sender'] = $this->getUser();
+                $params['sender'] = $member;
                 $params['receiver'] = $bwAdmin;
                 $params['receiverLocale'] = 'en';
                 $params['changed'] = true;
@@ -270,7 +274,7 @@ class MockupController extends TranslationController
             case 'emails/reply_from_host.html.twig':
                 $params['host'] = $bwAdmin;
                 $params['sender'] = $bwAdmin;
-                $params['receiver'] = $this->getUser();
+                $params['receiver'] = $member;
                 $params['receiverLocale'] = 'en';
                 $params['changed'] = true;
                 break;
@@ -283,14 +287,14 @@ class MockupController extends TranslationController
             case 'emails/group/join.declined.html.twig':
                 $params['sender'] = $bwAdmin;
                 $params['admin'] = $bwAdmin;
-                $params['receiver'] = $this->getUser();
+                $params['receiver'] = $member;
                 $params['group'] = $group;
                 $params['subject'] = 'group.invitation';
                 $params['reason'] = 'I just want to be a member of something.';
                 break;
             case 'emails/reset.password.html.twig':
                 $params['sender'] = $bwAdmin;
-                $params['receiver'] = $this->getUser();
+                $params['receiver'] = $member;
                 $params['token'] = '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7';
                 break;
             case 'emails/notifications.html.twig':
@@ -327,7 +331,7 @@ class MockupController extends TranslationController
                     $subscription = 123456;
                 }
                 $params['sender'] = $bwAdmin;
-                $params['receiver'] = $this->getUser();
+                $params['receiver'] = $member;
                 $params['notification'] = [
                     'post' => $mockPost,
                     'subscription' => $subscription,
@@ -335,7 +339,7 @@ class MockupController extends TranslationController
                 break;
             case 'security/login.html.twig':
                 $params['error'] = null;
-                $params['last_username'] = $this->getUser()->getUsername();
+                $params['last_username'] = $member->getUsername();
                 $params['invalid_credentials'] = false;
                 $params['resend_confirmation'] = false;
                 $params['member_banned'] = false;
@@ -368,9 +372,11 @@ class MockupController extends TranslationController
     private function getUnsubscribeParameters(string $template, string $name)
     {
         $unsubscribeForm = $this->createForm(NewsletterUnsubscribeType::class);
+        /** @var Member $member */
+        $member = $this->getUser();
 
         return [
-            'username' => $this->getUser()->getUsername(),
+            'username' => $member->getUsername(),
             'form' => $unsubscribeForm->createView(),
         ];
     }

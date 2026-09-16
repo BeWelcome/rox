@@ -146,7 +146,10 @@ class ProfileController extends AbstractController
     #[Route(path: '/setlocation', name: 'profile_set_location_redirect')]
     public function redirectToSetLocation(): RedirectResponse
     {
-        return $this->redirectToRoute('profile_set_location', ['username' => $this->getUser()->getUsername()]);
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        return $this->redirectToRoute('profile_set_location', ['username' => $member->getUsername()]);
     }
 
     #[Route(

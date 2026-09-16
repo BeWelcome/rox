@@ -44,7 +44,12 @@ class DatabaseLoader implements LoaderInterface
 
     private function getTranslationsForLocale($locale, $domain)
     {
-        return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
+        try {
+            return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
+        } catch (\Doctrine\DBAL\Exception $e) {
+            // Schema doesn't exist yet (fresh install/rebuild) — return no translations.
+            return null;
+        }
     }
 
     private function loadTranslationsForLocale($locale, $domain): MessageCatalogue

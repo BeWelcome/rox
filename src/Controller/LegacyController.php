@@ -37,7 +37,7 @@ class LegacyController extends AbstractController
 
         // Make sure the Rox classes find this session and the translator
         SessionSingleton::createInstance($session);
-        //        TranslatorSingleton::createInstance($translator);
+        TranslatorSingleton::createInstance($translator);
 
         $environmentExplorer = new EnvironmentExplorer($urlGenerator);
         $environmentExplorer->initializeGlobalState(

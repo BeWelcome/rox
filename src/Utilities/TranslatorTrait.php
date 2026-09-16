@@ -18,7 +18,7 @@ trait TranslatorTrait
         $this->translator = $translator;
     }
 
-    protected function getTranslator(): Translator
+    protected function getTranslator(): TranslatorInterface
     {
         /** @var Translator $translator */
         $translator = $this->translator;

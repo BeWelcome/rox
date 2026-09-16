@@ -12,13 +12,13 @@ use App\Form\GalleryUploadForm;
 use App\Logger\Logger;
 use App\Model\GalleryModel;
 use App\Utilities\TranslatedFlashTrait;
-use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Hidehalo\Nanoid\Client;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,6 +29,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
@@ -38,11 +39,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class GalleryController extends AbstractController
 {
     use TranslatedFlashTrait;
-    use TranslatorTrait;
     use UniqueFilenameTrait;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        /** @var Translator $translator */
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -94,23 +96,27 @@ class GalleryController extends AbstractController
         $response = new JsonResponse();
         // Create Image constraint to check if uploaded file is an image and not something else
 
-        $this->getTranslator()->setLocale($request->getLocale());
-
         /** @var UploadedFile $image */
         $image = $request->files->get('file');
 
         if (null === $image) {
+            $this->translator->setLocale($request->getLocale());
+
             $response->setData([
                 'success' => false,
-                'filename' => $this->getTranslator()->trans('upload.error.no_image'),
-                'error' => $this->getTranslator()->trans('upload.error.too_large'),
+                'filename' => $this->translator->trans('upload.error.no_image'),
+                'error' => $this->translator->trans('upload.error.too_large'),
             ]);
             $response->setStatusCode(413);
 
             return $response;
         }
 
-        $constraint = new Image(maxSize: UploadedFile::getMaxFilesize(), mimeTypes: ['image/jpeg', 'image/png', 'image/gif'], mimeTypesMessage: 'upload.error.not_supported');
+        $constraint = new Image(
+            maxSize: UploadedFile::getMaxFilesize(),
+            mimeTypes: ['image/jpeg', 'image/png', 'image/gif'],
+            mimeTypesMessage: 'upload.error.not_supported'
+        );
 
         $violations = $validator->validate($image, $constraint);
 

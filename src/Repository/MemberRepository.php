@@ -17,7 +17,6 @@ use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Member>
@@ -54,12 +53,8 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
      * Loads the user for the given username.
      *
      * This method must return null if the user is not found.
-     *
-     * @param string $username The username
-     *
-     * @return UserInterface|null
      */
-    public function loadMembersByUsernamePart(string $username)
+    public function loadMembersByUsernamePart(string $username): mixed
     {
         return $this->createQueryBuilder('u')
             ->select('u.username')
@@ -87,12 +82,12 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getOneOrNullResult();
     }
 
-    public function loadUserByUsername(string $username)
+    public function loadUserByUsername(string $username): ?Member
     {
         return $this->loadUserByIdentifier($username);
     }
 
-    public function findByProfileInfo($term)
+    public function findByProfileInfo($term): mixed
     {
         return $this->createQueryBuilder('u')
             ->where('u.username like :term')
@@ -103,7 +98,7 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getResult();
     }
 
-    public function findByProfileInfoStartsWith($term)
+    public function findByProfileInfoStartsWith($term): mixed
     {
         return $this->createQueryBuilder('u')
             ->where('u.username like :term')

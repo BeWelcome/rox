@@ -9,8 +9,6 @@ class LegOptionsTypeTransformer implements DataTransformerInterface
 {
     /**
      * @param ?LegOptionsType $value
-     *
-     * @return array
      */
     public function transform(mixed $value): mixed
     {

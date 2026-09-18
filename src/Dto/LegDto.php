@@ -8,7 +8,7 @@ use DateTime;
 class LegDto
 {
     public ?int $id = null;
-    public ?string $location = null;
+    public ?int $location = null;
     public ?DateTime $arrival = null;
     public ?DateTime $departure = null;
     public ?array $options = [];

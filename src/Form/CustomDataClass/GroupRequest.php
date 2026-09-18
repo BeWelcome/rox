@@ -8,29 +8,21 @@ use Symfony\Component\Validator\Constraints as Assert;
 class GroupRequest
 {
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
      */
-    public $name;
+    public string $name;
 
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
      */
-    public $description;
+    public string $description;
 
     /**
-     * @var string
-     *
      * @Assert\NotBlank()
      */
-    public $type = 'Public';
+    public string $type = 'Public';
 
     /**
-     * @var File
-     *
      * @Assert\NotBlank()
      *
      * @Assert\Image(
@@ -40,17 +32,7 @@ class GroupRequest
      *     maxHeight = 400
      * )
      */
-    public $picture;
+    public File $picture;
 
-    /**
-     * @var bool
-     */
-    public $membersOnly = 'Yes';
-
-    /**
-     * Visible comments? always false for new groups.
-     *
-     * @var bool
-     */
-    public $comments = false;
+    public bool $comments = false;
 }

@@ -105,7 +105,10 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         private readonly BrowserPushConfig $browserPushConfig,
         private readonly BrowserPushPreferenceService $browserPushPreferenceService,
     ) {
-        $this->member = $this->security->getUser();
+        /** @var Member $member */
+        $member = $this->security->getUser();
+
+        $this->member = $member;
     }
 
     public function getGlobals(): array

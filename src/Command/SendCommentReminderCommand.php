@@ -68,7 +68,7 @@ class SendCommentReminderCommand extends Command
             $hostReminderReturnCode = $this->sendHostReminders();
         }
 
-        return $firstReminderReturnCode && $secondReminderReturnCode && $hostReminderReturnCode;
+        return $firstReminderReturnCode | $secondReminderReturnCode | $hostReminderReturnCode;
     }
 
     private function sendFirstGuestReminders(): int

@@ -14,9 +14,9 @@ class LocationTransformer implements DataTransformerInterface
     }
 
     /**
-     * Transforms a geoname id (string) into a Location entity.
+     * Transforms a geoname id (int) into a Location entity.
      *
-     * Direction: model (DTO: ?string geonameId) -> norm (Location)
+     * Direction: model (DTO: ?int geonameId) -> norm (Location)
      */
     public function transform($value): ?Location
     {
@@ -37,11 +37,11 @@ class LocationTransformer implements DataTransformerInterface
     }
 
     /**
-     * Transforms a Location entity into its geoname id (string).
+     * Transforms a Location entity into its geoname id (int).
      *
-     * Direction: norm (Location) -> model (DTO: ?string geonameId)
+     * Direction: norm (Location) -> model (DTO: ?int geonameId)
      */
-    public function reverseTransform($value): ?string
+    public function reverseTransform($value): ?int
     {
         if (null === $value) {
             return null;

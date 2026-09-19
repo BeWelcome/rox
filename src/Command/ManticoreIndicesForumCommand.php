@@ -70,8 +70,11 @@ class ManticoreIndicesForumCommand extends Command
 
     private function createForumIndex(): ?Index
     {
-        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
-        $index = $client->index('forum_rt');
+        $client = new Client(['host' => $this->manticoreHost,'port' => $this->manticorePort]);
+
+        $index = $client->index(self::FORUM_INDEX);
+        // If the index doesn't exist, drop fails with an error message. So we run it silenced.
+        $index->drop(true);
 
         try {
             $index->create(
@@ -97,14 +100,15 @@ class ManticoreIndicesForumCommand extends Command
                     'ngram_len' => '1',
                 ]
             );
-        } catch (Exception $e) {
-            // $index = null;
 
+            return $index;
+        } catch (Exception $e) {
             $this->io->error($e->getMessage());
-            $this->io->error('Index ' . self::FORUM_INDEX . ' already exists or another problem occurred.');
+            $this->io->error('Index ' . self::FORUM_INDEX . ' couldn\'t be created.');
+
+            return null;
         }
 
-        return $index;
     }
 
     private function addForumDocuments(Index $index, OutputInterface $output)

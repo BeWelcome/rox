@@ -45,6 +45,8 @@ class ManticoreIndicesForumCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        ini_set('memory_limit', '-1');
+
         $this->io = new SymfonyStyle($input, $output);
         $this->io->note('Creating manticore forum real-time index.');
         $this->io->newLine();
@@ -98,7 +100,7 @@ class ManticoreIndicesForumCommand extends Command
                 ]
             );
         } catch (Exception $e) {
-            // $index = null;
+            $index = null;
 
             $this->io->error($e->getMessage());
             $this->io->error('Index ' . self::FORUM_INDEX . ' already exists or another problem occurred.');

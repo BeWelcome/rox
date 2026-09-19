@@ -45,6 +45,8 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        ini_set('memory_limit', '-1');
+
         $this->io = new SymfonyStyle($input, $output);
         $this->io->note('Creating manticore geonames real-time index.');
         $this->io->newLine();
@@ -52,6 +54,8 @@ class ManticoreIndicesGeonamesCommand extends Command
         $index = $this->createGeonamesIndex();
         if (null !== $index) {
             $this->addGeonamesDocuments($index, $output);
+
+            $this->optimizeGeonamesIndex();
 
             $this->addAlternateNamesDocuments($index, $output);
 
@@ -103,13 +107,29 @@ class ManticoreIndicesGeonamesCommand extends Command
                 ]
             );
         } catch (Exception $e) {
-            // $index = null;
+            $index = null;
 
             $this->io->error($e->getMessage());
             $this->io->error('Index ' . self::GEONAMES_INDEX . ' already exists or another problem occurred.');
         }
 
         return $index;
+    }
+
+    private function optimizeGeonamesIndex(): void
+    {
+        $this->io->note('Optimizing ' . self::GEONAMES_INDEX . ' index (merging disk chunks before translations phase).');
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
+        try {
+            // raw=true is required for non-SELECT DDL commands via the /sql endpoint.
+            // The response for OPTIMIZE cannot be parsed by the PHP client, so suppress empty exceptions.
+            $client->sql('OPTIMIZE TABLE ' . self::GEONAMES_INDEX . ' OPTION cutoff=1, sync=1', true);
+        } catch (\Exception $e) {
+            if ($e->getMessage() !== '') {
+                throw $e;
+            }
+        }
+        $this->io->note('Optimization complete.');
     }
 
     private function addGeonamesDocuments(Index $index, OutputInterface $output)
@@ -271,6 +291,11 @@ class ManticoreIndicesGeonamesCommand extends Command
         }
         $count = \count($locations);
         unset($locations);
+
+        if ($count === 0) {
+            return 0;
+        }
+
         $index->addDocuments($documents);
         $index->flush();
 

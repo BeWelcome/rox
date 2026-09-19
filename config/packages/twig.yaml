@@ -7,6 +7,9 @@ twig:
     - 'ckeditor/ckeditor.html.twig'
     - 'tomselect/tomselect.html.twig'
 
+  globals:
+      plausible_script_url: '%env(default::PLAUSIBLE_SCRIPT_URL)%'
+
   paths:
       '%kernel.project_dir%/build': 'build'
       '%kernel.project_dir%/public/images': 'images'

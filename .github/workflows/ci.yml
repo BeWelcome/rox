@@ -6,11 +6,12 @@ on:
     - cron: 0 2 * * *
   # Run CI on every Pull Request
   pull_request: ~
-  # Run CI only on push on bootstrap4 branch
+  # Run CI on push to active development branches
   push:
     branches:
       - bootstrap4
       - feature/trips
+      - feature/docker-master
 
 jobs:
   phpcpd:

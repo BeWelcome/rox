@@ -393,6 +393,7 @@ class Mailer
         );
 
         return [
+            'X-Transport'           => 'newsletter',
             'Precedence'            => 'bulk',
             'List-Unsubscribe'      => '<' . $unsubscribeUrl . '>',
             'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click',

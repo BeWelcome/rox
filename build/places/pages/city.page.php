@@ -43,14 +43,14 @@ class CityPage extends PageWithActiveSkin
         $layoutkit = $this->layoutkit;
         $formkit = $layoutkit->formkit;
         $words = $layoutkit->getWords();
-        $countryName = htmlspecialchars($this->countryName);
-        $regionName = htmlspecialchars($this->regionName);
-        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . $countryName. '/' . $this->countryCode . '/">'
-            . $countryName . '</a> &raquo; <a href="/places/' . $countryName. '/' . $this->countryCode . '/'
-            . $regionName . '/' . $this->regionCode . '/">' . $regionName . '</a>'
-            . ' &raquo; ' . htmlspecialchars($this->cityName);
+        $countryName = urldecode($this->countryName);
+        $regionName = htmlspecialchars(urldecode($this->regionName));
+        return '<a href="/places">' . $words->get('Countries'). '</a> &raquo; <a href="/places/' . urlencode($this->countryName). '/' . $this->countryCode . '/">'
+            . urldecode($countryName) . '</a> &raquo; <a href="/places/' . urlencode($this->countryName). '/' . $this->countryCode . '/'
+            . urlencode($this->regionName) . '/' . urlencode($this->regionCode) . '/">' . urldecode($regionName) . '</a>'
+            . ' &raquo; ' . htmlspecialchars(urldecode($this->cityName));
     }
-    
+
     protected function getColumnNames()
     {
         // we don't need the other columns

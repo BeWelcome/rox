@@ -4,14 +4,17 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.2.33
+ARG PHP_VERSION=8.3.33
 ARG NGINX_VERSION=1.30.4
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine3.23 AS bewelcome_php
+FROM php:${PHP_VERSION}-fpm-alpine3.24 AS bewelcome_php
 
 # persistent / runtime deps
+# Upgrade all base packages to pick up security patches (CVE fixes in OS packages)
+RUN apk update && apk upgrade --no-cache
+
 RUN apk add --no-cache \
 		acl \
 		freetype \
@@ -79,6 +82,7 @@ RUN export PATH="/usr/local/bin:$PATH"
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/bewelcome.prod.ini $PHP_INI_DIR/conf.d/bewelcome.ini
+COPY docker/php/fpm/z-workers.conf /usr/local/etc/php-fpm.d/z-workers.conf
 
 RUN set -eux; \
 	{ \
@@ -99,6 +103,8 @@ WORKDIR /srv/bewelcome
 
 # build for production
 ARG APP_ENV=prod
+ARG APP_VERSION=unknown
+ARG APP_VERSION_TIMESTAMP=
 
 # copy only specifically what we need for production
 COPY assets assets/
@@ -112,7 +118,6 @@ COPY pthacks pthacks/
 COPY public public/
 COPY roxlauncher roxlauncher/
 COPY src src/
-COPY Migrations Migrations/
 COPY templates templates/
 COPY tools tools/
 COPY translations translations/
@@ -129,7 +134,9 @@ RUN set -eux; \
 COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
 RUN set -eux; \
 	yarn install --frozen-lock; \
-	yarn encore production --mode=production
+	yarn encore production --mode=production; \
+	rm -rf node_modules; \
+	yarn cache clean --force
 
 # do not use .env files in production
 COPY .env ./
@@ -140,6 +147,10 @@ RUN set -eux; \
 	mkdir -p var/cache var/log; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
 	chmod +x bin/console; sync
+
+RUN set -eux; \
+	printf '%s\n' "$APP_VERSION" > VERSION; \
+	if [ -n "$APP_VERSION_TIMESTAMP" ]; then php -r 'touch("VERSION", (int) $argv[1]);' "$APP_VERSION_TIMESTAMP"; fi
 VOLUME /srv/bewelcome/var
 VOLUME /srv/bewelcome/data
 
@@ -173,7 +184,17 @@ FROM bewelcome_php AS bewelcome_php_dev
 # build for production
 ARG NODE_ENV=production
 
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
 RUN set -eux; \
 	apk add --no-cache \
 		make \
-		mysql-client
+		mysql-client \
+		libstdc++ \
+		gcompat \
+		bash \
+		nodejs \
+		procps; \
+	install-php-extensions xdebug
+
+COPY docker/php/conf.d/bewelcome.xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini

@@ -1361,12 +1361,12 @@ WHERE `id` = '$topicinfo->threadid'
         $this->dao->query("START TRANSACTION");
         $query = sprintf(
             "
-INSERT INTO `forums_posts` ( `threadid`, `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
-VALUES ('%d', NOW(), '%s','%d',%d,'%s')
+INSERT INTO `forums_posts` ( `threadid`, `create_time`, `message`,`authorid`, `IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
+VALUES ('%d', NOW(), '%s','%d','%d','%d','%s')
             ",
             $this->threadid,
             $this->dao->escape($this->cleanupText($vars['topic_text'])),
-            $this->session->get("IdMember"), $this->GetLanguageChoosen(), $postVisibility
+            $this->session->get("IdMember"), $this->session->get("IdMember"), $this->GetLanguageChoosen(), $postVisibility
         );
 
         $result = $this->dao->query($query);
@@ -2609,7 +2609,9 @@ public function NotAllowedForGroup($IdMember, $rPost) {
             $groups[] = (int) $group->id;
         }
 
-        $config = ['host' => '127.0.0.1','port' => 9412];
+        $host = PVars::getObj('env')->manticore_host;
+        $port = PVars::getObj('env')->manticore_port;
+        $config = ['host' => $host, 'port' => $port];
         $client = new Client($config);
         $query = new Search($client);
         $query
@@ -2678,7 +2680,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
             $separatedGroupIds = implode(',', $groups);
             $offset = ($currentPage - 1) * $items;
             $query = "
-                SELECT SQL_CALC_FOUND_ROWS
+                SELECT
                     `forums_posts`.`id`,
                     `members`.`Username`,
                     `forums_posts`.`message`,
@@ -2795,7 +2797,9 @@ public function NotAllowedForGroup($IdMember, $rPost) {
     {
         $postId = (int)$vars['IdPost'];
         $threadId = (int)$vars['IdThread'];
-        $config = ['host' => '127.0.0.1','port' => 9412];
+        $host = PVars::getObj('env')->manticore_host;
+        $port = PVars::getObj('env')->manticore_port;
+        $config = ['host' => $host, 'port' => $port];
         $vars['Sentence'] = $vars['Sentence'] ?? $vars['topic_text'];
 
         $client = new Client($config);
@@ -2966,14 +2970,15 @@ class Board implements Iterator {
 		}
 		$row = $s->fetch(PDB::FETCH_OBJ);
 		$this->numberOfThreads = $row->number;
+        $this->totalThreads = $this->numberOfThreads;
 
-		if ($page == 0) {
+        if ($page == 0) {
 		    $from = 0;
         } else {
 		    $from = $this->THREADS_PER_PAGE * ($page - 1);
         }
 
-		$query = "SELECT SQL_CALC_FOUND_ROWS `forums_threads`.`id`,
+		$query = "SELECT `forums_threads`.`id`,
 		 		  `forums_threads`.`id` as IdThread, `forums_threads`.`title`,
 				  `forums_threads`.`IdTitle`,
 				  `forums_threads`.`IdGroup`,
@@ -3011,14 +3016,6 @@ class Board implements Iterator {
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $this->threads[] = $row;
         }
-
-		$sFounRow = $this->dao->query("SELECT FOUND_ROWS() AS `found_rows`");
-		if (!$sFounRow) {
-			throw new PException('Could not retrieve number of rows!');
-		}
-        $rowFounRow = $sFounRow->fetch(PDB::FETCH_OBJ);
-        $this->totalThreads = $rowFounRow->found_rows;
-
     } // end of initThreads
 
     private $threads = array();

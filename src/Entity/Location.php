@@ -9,7 +9,6 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Location.
@@ -35,7 +34,6 @@ class Location
      *
      * @ORM\Column(name="name", type="string", length=200, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $name;
 
@@ -44,7 +42,6 @@ class Location
      *
      * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $latitude;
 
@@ -53,7 +50,6 @@ class Location
      *
      * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
      *
-     * @Groups({"Member:Read"})
      */
     private $longitude;
 
@@ -77,7 +73,6 @@ class Location
      * @ORM\ManyToOne(targetEntity="Country")
      * @ORM\JoinColumn(name="country", referencedColumnName="country")
      *
-     * @Groups({"Member:Read"})
      */
     private $country;
 
@@ -109,7 +104,6 @@ class Location
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @Groups({"Member:Read"})
      */
     private $geonameId;
 

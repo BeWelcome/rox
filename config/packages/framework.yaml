@@ -20,7 +20,14 @@ framework:
     #serializer:      { enable_annotations: true }
     default_locale:  "en"
     trusted_hosts:   ~
-#    error_controller:  Symfony\\Bundle\\TwigBundle\\Controller\\ExceptionController::showAction
+    trusted_proxies: '%env(string:default::SYMFONY_TRUSTED_PROXIES)%'
+    trusted_headers:
+        - x-forwarded-for
+        - x-forwarded-host
+        - x-forwarded-proto
+        - x-forwarded-port
+        - x-forwarded-prefix
+#    error_controller:  Symfony\Bundle\TwigBundle\Controller\ExceptionController::showAction
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.

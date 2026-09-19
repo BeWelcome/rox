@@ -10,7 +10,6 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Addresses.
@@ -41,7 +40,6 @@ class Address
      *
      * @ORM\Column(name="HouseNumber", type="integer", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $houseNumber;
 
@@ -50,7 +48,6 @@ class Address
      *
      * @ORM\Column(name="StreetName", type="integer", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $streetName;
 
@@ -59,7 +56,6 @@ class Address
      *
      * @ORM\Column(name="Zip", type="integer", nullable=false)
      *
-     * @Groups({"Member:Read"})
      */
     private $zip;
 
@@ -69,7 +65,6 @@ class Address
      * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
      *
-     * @Groups({"Member:Read"})
      */
     private $location;
 

@@ -2,7 +2,6 @@ default:
     suites:
         default:
             contexts:
-                - 'Alex\MailCatcher\Behat\MailCatcherContext': ~
                 - 'App\Tests\Behat\DatabaseContext': ~
                 - 'App\Tests\Behat\RefreshTokenContext': ~
                 - 'App\Tests\Behat\SecurityContext': ~
@@ -19,11 +18,4 @@ default:
                     symfony: ~
         'Behatch\Extension': ~
         'FriendsOfBehat\SymfonyExtension': ~
-        'Alex\MailCatcher\Behat\MailCatcherExtension\Extension':
-            url: http://mailcatcher
-            purge_before_scenario: true
 
-localhost:
-    extensions:
-        'Alex\MailCatcher\Behat\MailCatcherExtension\Extension':
-            url: http://localhost:1080

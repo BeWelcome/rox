@@ -62,9 +62,7 @@ class MOD_mail
         return self::$_instance;
     }
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     private function __clone() {}
 
@@ -117,7 +115,7 @@ class MOD_mail
 
     public static function sendEmail($subject, $from, $to, $title, $body, $lang = 'de', $html = true, $siteUrl = '')
     {
-         self::init();
+        self::init();
 
         // Check that $to/$from are both arrays
         $from = (is_array($from)) ? $from : explode(',', $from);
@@ -154,9 +152,12 @@ class MOD_mail
         $mail_html = ob_get_contents();
         ob_end_clean();
 
-        $converter = new Html2Text($mail_html, [
-            'do_links' => 'table',
-            'width' => 75]
+        $converter = new Html2Text(
+            $mail_html,
+            [
+                'do_links' => 'table',
+                'width' => 75
+            ]
         );
         $plain = $converter->getText();
 

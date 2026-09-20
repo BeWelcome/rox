@@ -250,57 +250,27 @@ class MOD_words
     }
 
     /**
-     * Get text as is from the database no call to vsprintf
+     * Get text as is from the translator no call to vsprintf
      * (Needed for newsletter that contain links and %username% tags)
      *
-     * @param string $code         keyword for finding text, not allowed to be empty
+     * @param string       $code keyword for finding text, not allowed to be empty
+     * @param string|false $lang ShortCode of language, 2 to 4 letter
      *
      * @return string localized text, in case of no hit the word keycode
      */
-    public function getAsIs($code)
+    public function getAsIs($code, $lang = false)
     {
-        $lang = $this->_lang;
-        $whereCategory = $this->_whereCategory;
-
-        if (is_numeric($code)) {
-            $query =
-                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
-                "FROM `words` ".
-                "WHERE `id`=" . $this->_dao->escape($code)
-            ;
-        } else {
-            // First try in memcache
-            if ($value=$this->WordMemcache->GetValue($code,$lang)) {
-                return $value;
-            }
-            $query =
-                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
-                "FROM `words` ".
-                "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='" . $this->_dao->escape($lang) . "'"
-            ;
+        if ($lang === false) {
+            $lang = $this->_lang;
         }
 
-        $q = $this->_dao->query($query);
-        $rows = $q->numRows();
-        if ($rows <> 0) {
-            $row = $q->fetch(PDB::FETCH_OBJ);
-        } else {
-            // Try again in English
-            $query =
-                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated` ".
-                "FROM `words` ".
-                "WHERE `code`='" . $this->_dao->escape($code) . "' and `ShortCode`='en'"
-            ;
-            $q = $this->_dao->query($query);
-            $rows = $q->numRows();
-            if ($rows <> 0) {
-                $row = $q->fetch(PDB::FETCH_OBJ);
-            } else {
-                $row = new StdClass;
-                $row->Sentence = $code;
-            }
+        $trans = $this->_translator->trans(strtolower($code), [], null, $lang);
+
+        if ($trans === strtolower($code)) {
+            return $code;
         }
-        return $row->Sentence;
+
+        return $trans;
     }
 
     /**
@@ -432,68 +402,73 @@ class MOD_words
 
 
     /**
-     * looks up a word keycode in the DB, and returns an object of type LookedUpWord.
+     * looks up a word keycode in the translator, and returns an object of type LookedUpWord.
      * If a translation in the intended language is not found, it uses the English version.
      * If no English definition exists, the keycode itself is used.
      *
-     * @param unknown_type $code the key code for the db lookup
+     * @param string       $code    the key code for the lookup
+     * @param array        $args    arguments for formatting
+     * @param string|false $lang    language code
+     * @param boolean      $get_raw true for raw string
      * @return LookedUpWord information that is created from the word lookup
      */
-    private function _lookup($code, $args, $lang = false, $get_raw = false)    {
-        if($lang == false) {
+    private function _lookup($code, $args, $lang = false, $get_raw = false)
+    {
+        if ($lang === false) {
             $lang = $this->_lang;
         }
 
-        $row = $this->_lookup_row($code, $lang);
-        // select the English wordcode only if not archived
-        $row_en = $this->_lookup_row($code, 'en');
-        $R = MOD_right::get();
+        $trans = $this->_translator->trans(strtolower($code), [], null, $lang);
 
-        // for normal people no translation stuff
-        if(!$row_en) {
-            // if English doesn't exist, show code
+        if ($trans === strtolower($code)) {
             $lookup_result = $code;
-        } elseif (!$row || $row->updated < $row_en->majorupdate) {
-            // if no translation or translation is outdated, show English
-            $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
         } else {
-            // if up-to-date translation present, show translation
-            $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
+            $lookup_result = $this->_modified_sentence($trans, $args, $get_raw);
         }
 
-        if ($this->_offerTranslationLink) {
-            // make sure translation shows up in new translation interface
-            $trans = $this->_translator->trans(strtolower($code));
-        }
         return new LookedUpWord($code, $lang, $lookup_result);
     }
 
-
-
     /**
-     * Reads the (modified) translation sentence from a row in the database.
+     * Reads the (modified) translation sentence.
      * Modifications (if $get_raw is false):
      *  - stripslashes
-     *  - n12br
+     *  - nl2br
      *
-     * @param dbrow $row
-     * @param array $args
+     * @param string  $sentence
+     * @param array   $args
      * @param boolean $get_raw true for raw string, false for modified string
-     * @return string modified sentence from db
+     * @return string modified sentence
      */
-    private function _modified_sentence_from_row($row, $args, $get_raw = false)
+    private function _modified_sentence($sentence, $args, $get_raw = false)
     {
-        $row_sentence = $row->Sentence;
         if ($get_raw) {
-            $lookup_string = $row_sentence;
+            $lookup_string = $sentence;
         } else {
-            $lookup_string = nl2br(stripslashes($row_sentence));
+            $lookup_string = nl2br(stripslashes($sentence));
         }
         while (!$res = @vsprintf($lookup_string, $args)) {
             // if not enough arguments given, fill up with dummy arguments
             $args[] = ' -x- ';
         }
         return $res;
+    }
+
+    /**
+     * Reads the (modified) translation sentence from a row in the database.
+     * Modifications (if $get_raw is false):
+     *  - stripslashes
+     *  - nl2br
+     *
+     * @param dbrow|string $row
+     * @param array        $args
+     * @param boolean      $get_raw true for raw string, false for modified string
+     * @return string modified sentence from db
+     */
+    private function _modified_sentence_from_row($row, $args, $get_raw = false)
+    {
+        $sentence = is_object($row) ? $row->Sentence : $row;
+        return $this->_modified_sentence($sentence, $args, $get_raw);
     }
 
 

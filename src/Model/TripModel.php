@@ -14,9 +14,12 @@ use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Utilities\ItemsPerPageTraits;
 
 class TripModel
 {
+    use ItemsPerPageTraits;
+
     private const ALLOWED_TRIPS_RADIUS = [0, 5, 10, 20, 50, 100];
 
     private EntityManagerInterface $entityManager;
@@ -35,8 +38,10 @@ class TripModel
         $query = $repository->queryTripsOfMember($member);
 
         $paginator = new Pagerfanta(new QueryAdapter($query, false));
-        // \todo: Remove after testing.
-        $paginator->setMaxPerPage(10);
+
+        $itemsPerPage = $this->getItemsPerPage($member);
+
+        $paginator->setMaxPerPage($itemsPerPage);
         $paginator->setCurrentPage($page);
 
         return $paginator;

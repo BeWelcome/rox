@@ -12,7 +12,9 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\Proxy;
 
 /**
  * SubTrip.
@@ -100,6 +102,14 @@ class Subtrip
 
     public function getLocation(): ?NewLocation
     {
+        if ($this->location instanceof Proxy && !$this->location->__isInitialized()) {
+            try {
+                $this->location->__load();
+            } catch (EntityNotFoundException $e) {
+                $this->location = null;
+            }
+        }
+
         return $this->location;
     }
 

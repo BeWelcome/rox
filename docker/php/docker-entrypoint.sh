@@ -112,6 +112,9 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		fi
 	fi
 
+    # Import missing translations
+	bin/console translations:add:missing
+	
 	# WarmUp translations now database is up to date
 	composer run-script --no-dev post-install-cmd
 

@@ -49,7 +49,9 @@ security:
             remember_me:
                 secret: '%env(APP_SECRET)%'
                 lifetime: 31536000 # 1 year in seconds
-                samesite: 'strict'
+                # lax (Symfony's default): sent when a member follows a link from an
+                # email or another site; strict made them land logged out.
+                samesite: 'lax'
                 path: /
                 token_provider:
                     doctrine: true

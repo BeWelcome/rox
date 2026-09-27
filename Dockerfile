@@ -12,8 +12,12 @@ ARG NGINX_VERSION=1.30.4
 FROM php:${PHP_VERSION}-fpm-alpine3.24 AS bewelcome_php
 
 # persistent / runtime deps
-# Upgrade all base packages to pick up security patches (CVE fixes in OS packages)
-RUN apk update && apk upgrade --no-cache
+# Upgrade all base packages to pick up security patches (CVE fixes in OS packages).
+# CI sets APK_UPGRADE_DATE to the current UTC date, so this layer is rebuilt at least
+# once a day instead of being served from the build cache indefinitely (a cached layer
+# kept libexpat 2.8.4 after Alpine shipped the CVE-2026-93990 fix in 2.8.5).
+ARG APK_UPGRADE_DATE=unset
+RUN echo "apk upgrade for ${APK_UPGRADE_DATE}" && apk update && apk upgrade --no-cache
 
 RUN apk add --no-cache \
 		acl \

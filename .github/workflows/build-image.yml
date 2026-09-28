@@ -55,6 +55,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.repository == 'BeWelcome/rox'
     name: Build ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:
@@ -213,6 +214,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [merge, scan]
     if: >
+      github.repository == 'BeWelcome/rox' &&
       github.event_name == 'push' &&
       github.ref == 'refs/heads/develop' &&
       needs.merge.result == 'success' &&

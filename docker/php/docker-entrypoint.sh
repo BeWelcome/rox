@@ -106,9 +106,9 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 		echo "Database created."
 
 		echo "Importing translations"
-		if [ -f docker/db/word.sql ]; then
+		if [ -f docker/db/words.sql ]; then
 			echo "Yepp, really. Importing translations"
-			mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" < docker/db/word.sql
+			mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" < docker/db/words.sql
 		fi
 		if [ -f docker/db/geonamesadminunits.sql ]; then
 			mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" < docker/db/geonamesadminunits.sql

@@ -192,9 +192,11 @@ RUN set -eux; \
 	chmod a+w "$PHP_INI_DIR"; \
 	mkdir -p vendor var/cache var/log; \
 	chmod -R a+w vendor; \
-	chmod -R 777 var
+	chmod -R 777 var; \
+	install-php-extensions xdebug
 
 COPY docker/frankenphp/Caddyfile /etc/caddy/Caddyfile
+COPY docker/php/conf.d/bewelcome.xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 

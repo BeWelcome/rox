@@ -288,6 +288,26 @@ final class AdminRightsControllerTest extends WebTestCase
         self::assertSame('2020-01-02 03:04:05', $reactivated['created']);
     }
 
+    public function testEmptyRightFilterIsIgnored(): void
+    {
+        $client = static::createClient();
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $this->grantManagementRight($connection, 'member-2', 'Rights', '"All"');
+        $this->login($client, 'member-2', $entityManager);
+
+        $crawler = $client->request('GET', '/admin/rights/list/members', [
+            'member' => 'member-2',
+            'right' => '',
+            'history' => 1,
+        ]);
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('member-2', $crawler->filter('table tbody')->text());
+
+        $client->request('GET', '/admin/rights/list/rights', ['right' => 'abc', 'history' => '0']);
+        self::assertResponseIsSuccessful();
+    }
+
     public function testRightRouteNamesAndProfileAdminLinkRemainValid(): void
     {
         $client = static::createClient();

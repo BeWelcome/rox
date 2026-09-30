@@ -18,8 +18,6 @@ use Pagerfanta\Pagerfanta;
  */
 class RightVolunteerRepository extends ServiceEntityRepository
 {
-    public const int PAGE_SIZE = 50;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, RightVolunteer::class);
@@ -57,6 +55,7 @@ class RightVolunteerRepository extends ServiceEntityRepository
         bool $includeHistory,
         bool $memberFirst,
         int $page,
+        int $itemsPerPage,
     ): Pagerfanta {
         $connection = $this->getEntityManager()->getConnection();
         $query = $connection->createQueryBuilder()
@@ -121,10 +120,10 @@ class RightVolunteerRepository extends ServiceEntityRepository
                 ->addOrderBy('m.Username', 'ASC');
         }
 
-        return $this->paginate($query, $page);
+        return $this->paginate($query, $page, $itemsPerPage);
     }
 
-    private function paginate(QueryBuilder $query, int $page): Pagerfanta
+    private function paginate(QueryBuilder $query, int $page, int $itemsPerPage): Pagerfanta
     {
         $adapter = new QueryAdapter(
             $query,
@@ -133,7 +132,7 @@ class RightVolunteerRepository extends ServiceEntityRepository
                 ->resetOrderBy(),
         );
         $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(self::PAGE_SIZE);
+        $pager->setMaxPerPage($itemsPerPage);
         $pager->setCurrentPage(min(max(1, $page), max(1, $pager->getNbPages())));
 
         return $pager;

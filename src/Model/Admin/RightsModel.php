@@ -141,6 +141,7 @@ class RightsModel
         bool $includeHistory,
         bool $memberFirst,
         int $page,
+        int $itemsPerPage,
     ): Pagerfanta {
         $allowedNames = array_map(
             static fn (Right $right): string => $right->getName(),
@@ -154,6 +155,7 @@ class RightsModel
             $includeHistory,
             $memberFirst,
             $page,
+            $itemsPerPage,
         );
     }
 

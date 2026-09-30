@@ -98,7 +98,7 @@ final class AdminFlagsControllerTest extends WebTestCase
         self::assertStringContainsString('member-empty', $crawler->filter('table')->text());
     }
 
-    public function testFlagAssignmentsArePaginatedAtFiftyRows(): void
+    public function testFlagAssignmentsArePaginatedByItemsPerPagePreference(): void
     {
         $client = static::createClient();
         $entityManager = $this->getEntityManager();
@@ -106,7 +106,7 @@ final class AdminFlagsControllerTest extends WebTestCase
         $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
         $suffix = (string) random_int(100_000, 999_999);
 
-        for ($index = 1; $index <= 51; ++$index) {
+        for ($index = 1; $index <= 6; ++$index) {
             $flagId = $this->createFlag($connection, "Paging flag {$suffix}-{$index}");
             $this->addFlagAssignment(
                 $connection,
@@ -117,13 +117,14 @@ final class AdminFlagsControllerTest extends WebTestCase
                 \sprintf('2026-01-01 00:%02d:00', $index % 60),
             );
         }
+        $this->setItemsPerPage($connection, 'bwadmin', 5);
         $this->login($client, 'bwadmin', $entityManager);
 
         $crawler = $client->request('GET', '/admin/flags/list/members', [
             'member' => 'member-empty',
         ]);
         self::assertResponseIsSuccessful();
-        self::assertCount(50, $crawler->filter('table tbody tr'));
+        self::assertCount(5, $crawler->filter('table tbody tr'));
 
         $crawler = $client->request('GET', '/admin/flags/list/members', [
             'member' => 'member-empty',
@@ -444,6 +445,20 @@ final class AdminFlagsControllerTest extends WebTestCase
                     updated = NOW()
                 SQL,
             [$scope, $username],
+        );
+    }
+
+    private function setItemsPerPage(Connection $connection, string $username, int $itemsPerPage): void
+    {
+        $connection->executeStatement(
+            <<<'SQL'
+                INSERT INTO memberspreferences (IdMember, IdPreference, Value, updated, created)
+                SELECT m.id, p.id, ?, NOW(), NOW()
+                FROM member m
+                INNER JOIN preferences p ON p.codename = 'ItemsPerPage'
+                WHERE m.Username = ?
+                SQL,
+            [(string) $itemsPerPage, $username],
         );
     }
 

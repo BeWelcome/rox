@@ -166,6 +166,7 @@ class FlagsModel
         bool $includeHistory,
         bool $memberFirst,
         int $page,
+        int $itemsPerPage,
     ): Pagerfanta {
         return $this->flagMemberRepository->paginateAssignments(
             $username,
@@ -173,6 +174,7 @@ class FlagsModel
             $includeHistory,
             $memberFirst,
             $page,
+            $itemsPerPage,
         );
     }
 }

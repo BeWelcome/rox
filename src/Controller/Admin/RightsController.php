@@ -9,6 +9,8 @@ use App\Form\Admin\RightDefinitionType;
 use App\Model\Admin\RightsModel;
 use App\Repository\MemberRepository;
 use App\Repository\RightRepository;
+use App\Utilities\ItemsPerPageTraits;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,11 +24,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[IsGranted(Member::ROLE_ADMIN_RIGHTS)]
 class RightsController extends AbstractController
 {
+    use ItemsPerPageTraits;
+
     public function __construct(
         private readonly RightsModel $model,
         private readonly MemberRepository $memberRepository,
         private readonly RightRepository $rightRepository,
         private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -287,6 +292,7 @@ class RightsController extends AbstractController
             $includeHistory,
             $memberFirst,
             $request->query->getInt('page', 1),
+            $this->getItemsPerPage($manager),
         );
 
         if (null !== $member && 0 === $assignments->getNbResults()) {

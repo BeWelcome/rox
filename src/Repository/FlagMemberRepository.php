@@ -18,8 +18,6 @@ use Pagerfanta\Pagerfanta;
  */
 class FlagMemberRepository extends ServiceEntityRepository
 {
-    public const int PAGE_SIZE = 50;
-
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, FlagMember::class);
@@ -46,6 +44,7 @@ class FlagMemberRepository extends ServiceEntityRepository
         bool $includeHistory,
         bool $memberFirst,
         int $page,
+        int $itemsPerPage,
     ): Pagerfanta {
         $connection = $this->getEntityManager()->getConnection();
         $newerAssignment = <<<'SQL'
@@ -121,10 +120,10 @@ class FlagMemberRepository extends ServiceEntityRepository
         $query->addOrderBy('fm.created', 'DESC')
             ->addOrderBy('fm.id', 'DESC');
 
-        return $this->paginate($query, $page);
+        return $this->paginate($query, $page, $itemsPerPage);
     }
 
-    private function paginate(QueryBuilder $query, int $page): Pagerfanta
+    private function paginate(QueryBuilder $query, int $page, int $itemsPerPage): Pagerfanta
     {
         $adapter = new QueryAdapter(
             $query,
@@ -133,7 +132,7 @@ class FlagMemberRepository extends ServiceEntityRepository
                 ->resetOrderBy(),
         );
         $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage(self::PAGE_SIZE);
+        $pager->setMaxPerPage($itemsPerPage);
         $pager->setCurrentPage(min(max(1, $page), max(1, $pager->getNbPages())));
 
         return $pager;

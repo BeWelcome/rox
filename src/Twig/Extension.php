@@ -127,12 +127,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     public function languageName(string $locale): string
     {
-        return $this->translator->trans(strtolower('lang_' . $locale), [], null, $locale);
+        return trim($this->translator->trans(strtolower('lang_' . $locale), [], null, $locale));
     }
 
     public function languageNameTranslated(string $locale, string $display): string
     {
-        return $this->translator->trans(strtolower('lang_' . $locale), [], null, $display);
+        return trim($this->translator->trans(strtolower('lang_' . $locale), [], null, $display));
     }
 
     public function ago(Carbon $carbon): string

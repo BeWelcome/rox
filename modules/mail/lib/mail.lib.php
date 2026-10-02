@@ -143,8 +143,7 @@ class MOD_mail
         }
 
         // Translate footer text (used in HTML template)
-        $words = new MOD_words();
-        $footer_message = $words->getPurified('MailFooterMessage', array(date('Y')), $lang);
+        $footer_message = ''; // Whole library is obsolete so removing call to function in MOD_words to allow to remove that function in MOD_words.
 
         // Using a html-template
         ob_start();

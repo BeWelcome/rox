@@ -16,6 +16,7 @@ use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Hidehalo\Nanoid\Client;
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -138,12 +139,10 @@ class GalleryController extends AbstractController
         );
 
         // creates a thumbnail for the current image
-        $imageManager = new ImageManager();
-        $img = $imageManager->make($image->getRealPath())->orientate();
+        $imageManager = new ImageManager(new Driver());
+        $img = $imageManager->decodePath($image->getRealPath())->orient();
         if ($width > 240 || $height > 240) {
-            $img->resize(240, 240, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $img->scale(240, 240);
         }
         $img->save($uploadDirectory . '/thumb' . $fileName);
 
@@ -343,9 +342,10 @@ class GalleryController extends AbstractController
             $filepath = sprintf($uploadDirectory . 'placeholder_%d_%d.png', $image->getWidth(), $image->getHeight());
             if (!file_exists($filepath)) {
                 // create image!
-                $imageManager = new ImageManager();
+                $imageManager = new ImageManager(new Driver());
                 $imageManager
-                    ->canvas($image->getWidth(), $image->getHeight(), '#ccc')
+                    ->createImage($image->getWidth(), $image->getHeight())
+                    ->fill('#ccc')
                     ->save($filepath);
             }
         } else {

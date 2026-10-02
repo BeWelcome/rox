@@ -1,7 +1,7 @@
 <?php
 class DummyImage
 {
-    protected $blueprint;// Imageresource where physical images will be based on
+    protected $blueprint; // Imageresource where physical images will be based on
     protected $size;     // Array containing metadata about original image
     protected $id;       // pictureid for this image
     protected $name;     // filename for this image
@@ -21,27 +21,29 @@ class DummyImage
      * @param integer $factor Relative difference between main and related colors
      * @return array Collection of both colors
      **/
-    protected function getColor($divmod,$pow1,$pow2,$add,$factor = 1)
+    protected function getColor($divmod, $pow1, $pow2, $add, $factor = 1)
     {
         // define main color
-        $div = bcadd(bcpow(256,3),bcmod($this->id,$divmod));
-        $val = bcadd(bcpow($this->id,$pow1),bcpow($this->id + $add,$pow2));
-        $mod = bcmod($val,$div);
-        $c1 = floor($mod / pow(256,2));
-        $c2 = floor($mod / 256 % 256);
-        $c3 = $mod % 256;
+        $div = bcadd(bcpow(256, 3), bcmod($this->id, $divmod));
+        $val = bcadd(bcpow($this->id, $pow1), bcpow($this->id + $add, $pow2));
+        $mod = bcmod($val, $div);
+        $c1 = (int) floor($mod / pow(256, 2));
+        $c2 = ((int) floor($mod / 256)) % 256;
+        $c3 = ((int) $mod) % 256;
         // get related color, based on the other color
-        if (($c1+$c2+$c3)/3 < 128){
-            $c4 = min(255,round($c1 * $factor));
-            $c5 = min(255,round($c2 * $factor));
-            $c6 = min(255,round($c3 * $factor));
+        if (($c1 + $c2 + $c3) / 3 < 128) {
+            $c4 = (int) min(255, round($c1 * $factor));
+            $c5 = (int) min(255, round($c2 * $factor));
+            $c6 = (int) min(255, round($c3 * $factor));
         } else {
-            $c4 = floor($c1 / $factor);
-            $c5 = floor($c2 / $factor);
-            $c6 = floor($c3 / $factor);
+            $c4 = (int) floor($c1 / $factor);
+            $c5 = (int) floor($c2 / $factor);
+            $c6 = (int) floor($c3 / $factor);
         }
-        return array(imagecolorallocate($this->blueprint,$c1,$c2,$c3),
-                     imagecolorallocate($this->blueprint,$c4,$c5,$c6));
+        return array(
+            imagecolorallocate($this->blueprint, $c1, $c2, $c3),
+            imagecolorallocate($this->blueprint, $c4, $c5, $c6)
+        );
     }
 
     /**
@@ -54,7 +56,7 @@ class DummyImage
      * @param array $size Array with basic metadata of baseimage
      * @return array Collection of parameters for resizing
      **/
-    protected function getThumbSize($max_x = false, $max_y = false, $mode = 'square',$size)
+    protected function getThumbSize($max_x, $max_y, $mode, $size)
     {
         $size_x = $size[0];
         $size_y = $size[1];
@@ -63,22 +65,22 @@ class DummyImage
         if (!$max_x || !$max_y) {
             if ($max_x && intval($max_x) > 0 && $size_x) {
                 $th_size_x = intval($max_x);
-                $th_size_y = intval($size_y*$th_size_x/$size_x);
+                $th_size_y = intval($size_y * $th_size_x / $size_x);
                 $size_x = $th_size_x;
                 $size_y = $th_size_y;
             }
             if ($max_y && intval($max_y) > 0 && $size_y > $max_y) {
                 $th_size_y = intval($max_y);
-                $th_size_x = intval($size_x*$th_size_y/$size_y);
+                $th_size_x = intval($size_x * $th_size_y / $size_y);
             }
             $startx = 0;
             $starty = 0;
             $size_x = $size[0];
             $size_y = $size[1];
         } else {
-            switch($mode){
+            switch ($mode) {
                 case "ratio":
-                    if (($max_x / $size_x) >= ($max_y / $size_y)){
+                    if (($max_x / $size_x) >= ($max_y / $size_y)) {
                         $ratio = $max_y / $size_y;
                     } else {
                         $ratio = $max_x / $size_x;
@@ -87,27 +89,27 @@ class DummyImage
                     $starty = 0;
                     break;
                 default:
-                    if ($size_x >= $size_y){
-                        $startx = ($size_x - $size_y) / 2;
+                    if ($size_x >= $size_y) {
+                        $startx = (int) (($size_x - $size_y) / 2);
                         $starty = 0;
                         $size_x = $size_y;
                     } else {
-                        $starty = ($size_y - $size_x) / 2;
+                        $starty = (int) (($size_y - $size_x) / 2);
                         $startx = 0;
                         $size_y = $size_x;
                     }
 
-                    if ($max_x >= $max_y){
+                    if ($max_x >= $max_y) {
                         $ratio = $max_y / $size_y;
                     } else {
                         $ratio = $max_x / $size_x;
                     }
                     break;
             }
-            $th_size_x = $size_x * $ratio;
-            $th_size_y = $size_y * $ratio;
+            $th_size_x = (int) round($size_x * $ratio);
+            $th_size_y = (int) round($size_y * $ratio);
         }
-        return array(0, 0, $startx, $starty, $th_size_x, $th_size_y, $size_x, $size_y);
+        return array(0, 0, (int) $startx, (int) $starty, $th_size_x, $th_size_y, (int) $size_x, (int) $size_y);
     }
 
     /**
@@ -123,12 +125,22 @@ class DummyImage
     {
         $imgCount = 0;
         echo "Processing image";
-        foreach ($thumbData as $thname => $th){
+        foreach ($thumbData as $thname => $th) {
             echo "... " . $thname;
-            $newImage = imagecreatetruecolor($th[4], $th[5]);
+            $newImage = imagecreatetruecolor((int) $th[4], (int) $th[5]);
             $newFile = $this->imgDir . '/' . $this->getFileName($thname);
-            imagecopyresized($newImage, $this->blueprint,$th[0], $th[1],
-                             $th[2], $th[3], $th[4], $th[5], $th[6], $th[7]);
+            imagecopyresized(
+                $newImage,
+                $this->blueprint,
+                (int) $th[0],
+                (int) $th[1],
+                (int) $th[2],
+                (int) $th[3],
+                (int) $th[4],
+                (int) $th[5],
+                (int) $th[6],
+                (int) $th[7]
+            );
             switch ($this->size[2]) {
                 case IMAGETYPE_GIF:
                 case 'image/gif':
@@ -144,7 +156,9 @@ class DummyImage
                     imagepng($newImage, $newFile);
                     break;
             }
-            if (is_readable($newFile)) {$imgCount++;}
+            if (is_readable($newFile)) {
+                $imgCount++;
+            }
         }
         if ($this->blueprint) {
             imagedestroy($this->blueprint);
@@ -161,7 +175,7 @@ class DummyImage
      **/
     protected function getImageDir()
     {
-        return STATIC::IMAGE_DIR;
+        return static::IMAGE_DIR;
     }
 
     /**
@@ -171,9 +185,9 @@ class DummyImage
      **/
     protected function setImageDir()
     {
-        $imgDir = STATIC::IMAGE_DIR;
+        $imgDir = static::IMAGE_DIR;
         if (!is_dir($imgDir)) {
-            mkdir($imgDir,'0777',true);
+            mkdir($imgDir, '0777', true);
         }
         $this->imgDir = $imgDir;
     }

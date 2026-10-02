@@ -1,4 +1,8 @@
 <?php
+
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
+
 class AvatarDummyImage extends DummyImage
 {
     const IMAGE_DIR = '../../../data/user/avatars';
@@ -14,25 +18,25 @@ class AvatarDummyImage extends DummyImage
     {
         srand();
         echo "Generate images for user " . $data['name'] . PHP_EOL;
-        $imageManager = new \Intervention\Image\ImageManager();
-        $original = 'lfw/image'.rand(0,99).'.png';
+        $imageManager = new ImageManager(new Driver());
+        $original = 'lfw/image' . rand(0, 99) . '.png';
 
-        $img = $imageManager->make($original);
-        switch(rand(0,3)) {
+        $img = $imageManager->decodePath($original);
+        switch (rand(0, 3)) {
             case 0:
                 $img->blur(rand(0, 100));
                 break;
             case 1:
-                $img->colorize(rand(0,200) - 100,rand(0,200) - 100, rand(0,200) - 100);
+                $img->colorize(rand(0, 200) - 100, rand(0, 200) - 100, rand(0, 200) - 100);
                 break;
             case 2:
-                $img->greyscale();
+                $img->grayscale();
                 break;
             case 3:
-                $img->contrast(rand(0,100));
+                $img->contrast(rand(0, 100));
                 break;
         }
-        $img->save(self::IMAGE_DIR . '/' . $data['name'] . '_original' );
+        $img->encodeUsingFileExtension('png', quality: 100)->save(self::IMAGE_DIR . '/' . $data['name'] . '_original');
     }
 
     /**
@@ -43,20 +47,20 @@ class AvatarDummyImage extends DummyImage
      **/
     public function filesMake()
     {
-        $max_x = min($this->size[0],150);
+        $max_x = min($this->size[0], 150);
         $max_y = $this->size[1];
         $original_x = $this->getDimension(3);
         $original_y = $this->getDimension(5);
 
         $thumbData = array();
-        $thumbData['_original']=array(0,0,0,0,$original_x, $original_y, $this->size[0],$this->size[1]);
-        $thumbData['_200']    = $this->getThumbSize(200, 266, 'ratio' , $this->size);
-        $thumbData['_xs']     = $this->getThumbSize( 50,  50, 'square', $this->size);
-        $thumbData['_75_75']  = $this->getThumbSize( 75,  75, 'square', $this->size);
+        $thumbData['_original'] = array(0, 0, 0, 0, $original_x, $original_y, $this->size[0], $this->size[1]);
+        $thumbData['_200']    = $this->getThumbSize(200, 266, 'ratio', $this->size);
+        $thumbData['_xs']     = $this->getThumbSize(50,  50, 'square', $this->size);
+        $thumbData['_75_75']  = $this->getThumbSize(75,  75, 'square', $this->size);
         $thumbData['_150']    = $this->getThumbSize(150, 150, 'square', $this->size);
-        $thumbData['_30_30']  = $this->getThumbSize( 30,  30, 'square', $this->size);
-        $thumbData['_500']    = $this->getThumbSize(500, 500, 'ratio' , $this->size);
-        $thumbData['']        = $this->getThumbSize($max_x,$max_y, '' , $this->size);
+        $thumbData['_30_30']  = $this->getThumbSize(30,  30, 'square', $this->size);
+        $thumbData['_500']    = $this->getThumbSize(500, 500, 'ratio', $this->size);
+        $thumbData['']        = $this->getThumbSize($max_x, $max_y, '', $this->size);
 
         return $this->createFiles($thumbData);
     }
@@ -70,8 +74,8 @@ class AvatarDummyImage extends DummyImage
      **/
     protected function getDimension($factor)
     {
-        $dim = intval(75*log(1/((($this->id*$this->id*$factor)%1024+1)/1024)-1)+450);
-        return min(max($dim,100),1024);
+        $dim = intval(75 * log(1 / ((($this->id * $this->id * $factor) % 1024 + 1) / 1024) - 1) + 450);
+        return min(max($dim, 100), 1024);
     }
 
     /**

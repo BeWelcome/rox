@@ -12,8 +12,13 @@ ARG NGINX_VERSION=1.30.4
 FROM php:${PHP_VERSION}-fpm-alpine3.24 AS bewelcome_php
 
 # persistent / runtime deps
-# Upgrade all base packages to pick up security patches (CVE fixes in OS packages)
-RUN apk update && apk upgrade --no-cache
+# Upgrade all base packages to pick up security patches (CVE fixes in OS packages).
+# The CI builds use a layer cache, so without a changing value here this layer
+# (and every apk package) would stay at the version of the first cached build,
+# and Trivy fails on CVEs that Alpine has long fixed. The workflows pass the
+# build date, so the packages are refreshed at most once a day.
+ARG APK_REFRESH=unset
+RUN echo "apk refresh: ${APK_REFRESH}" && apk update && apk upgrade --no-cache
 
 RUN apk add --no-cache \
 		acl \
@@ -25,7 +30,6 @@ RUN apk add --no-cache \
 		gettext \
 		git \
 		openssh-client \
-		python3 \
 	;
 
 ARG APCU_VERSION=5.1.28

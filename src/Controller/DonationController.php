@@ -25,6 +25,8 @@ class DonationController extends AbstractController
     use TranslatedFlashTrait;
 
     private const PAYPAL_NONCE = 'paypal_nonce';
+    // Amount of the donation just recorded, for the Plausible revenue event (#540).
+    private const DONATION_ANALYTICS = 'donation_analytics';
 
     /**
      * @Route("/donations", name="donations")
@@ -61,6 +63,12 @@ class DonationController extends AbstractController
         /** @var Member $donor */
         $donor = $this->getUser();
         $success = $donationModel->processDonation($donor, $parameters);
+        if ($success) {
+            $session->set(self::DONATION_ANALYTICS, [
+                'amount' => (float) ($parameters['amt'] ?? 0),
+                'currency' => strtoupper((string) ($parameters['cc'] ?? 'EUR')),
+            ]);
+        }
 
         return new JsonResponse(['success' => $success]);
     }
@@ -71,6 +79,16 @@ class DonationController extends AbstractController
     public function donationCompletedSuccessfully(Request $request): RedirectResponse
     {
         $this->addTranslatedFlash('notice', 'donation.thanks');
+
+        // Plausible revenue goal "Donation" (#540). Only for a donation recorded by
+        // finishDonation in this session, so reloading this URL counts nothing.
+        $donation = $request->getSession()->remove(self::DONATION_ANALYTICS);
+        if (is_array($donation) && $donation['amount'] > 0) {
+            $this->addFlash('plausible_event', [
+                'name' => 'Donation',
+                'revenue' => ['currency' => $donation['currency'], 'amount' => $donation['amount']],
+            ]);
+        }
 
         return $this->redirectToRoute('donations');
     }

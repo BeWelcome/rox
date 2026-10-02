@@ -143,6 +143,8 @@ class SignupController extends AbstractController
             $em->flush();
 
             $this->addFlash('notice', $this->getTranslator()->trans('flash.signup.activated'));
+            // Last step of the signup funnel in Plausible (#540), sent on the login page.
+            $this->addFlash('plausible_event', 'Signup Confirmed');
             $request->getSession()->set(Security::LAST_USERNAME, $username);
 
             return $this->redirect('/login');

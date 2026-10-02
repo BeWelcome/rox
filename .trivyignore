@@ -1,5 +1,5 @@
-# CVE-2026-58055: nghttp2-libs 1.69.0-r0 — fix is 1.70.0-r0, not yet backported to Alpine 3.24.
-# Track: https://pkgs.alpinelinux.org/packages?name=nghttp2&branch=v3.24
-# Remove once Alpine 3.24 ships nghttp2-libs >= 1.70.0-r0.
-CVE-2026-58055
-
+# CVEs Trivy may skip in the image scan (build-image-stage.yml, build-image-prod.yml).
+# Only for a vulnerability with no fixed package available yet. One ID per line,
+# with a comment: package, fixed version, and when to remove the line.
+# The image refreshes apk packages daily (APK_REFRESH), so a fixed package is
+# picked up on the next day's build.

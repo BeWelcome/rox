@@ -9,6 +9,9 @@ rox_local.ini
 !data/user/avatars/.gitkeep
 !data/gallery/member/.gitkeep
 google*.html
+# Google Search Console ownership files for bewelcome.org (served from public/, moved from lion)
+!/public/google842bc9393a58153c.html
+!/public/googled8d91860c601b562.html
 tools/testenv/images/status.csv
 components/*
 revision.txt

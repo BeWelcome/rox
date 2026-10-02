@@ -73,8 +73,12 @@ jobs:
       - name: Compute version metadata
         id: version
         run: |
-          echo "revision=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
-          echo "timestamp=$(git log -n 1 --format=%ct)" >> "$GITHUB_OUTPUT"
+          {
+            echo "revision=$(git rev-parse --short HEAD)"
+            echo "timestamp=$(git log -n 1 --format=%ct)"
+            # Build date: refreshes the apk layer once a day despite the layer cache (Dockerfile APK_REFRESH).
+            echo "build_date=$(date -u +%F)"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772  # tag=v3.4.0
@@ -102,6 +106,7 @@ jobs:
           build-args: |
             APP_VERSION=${{ steps.version.outputs.revision }}
             APP_VERSION_TIMESTAMP=${{ steps.version.outputs.timestamp }}
+            APK_REFRESH=${{ steps.version.outputs.build_date }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=stage-${{ matrix.prefix }}-${{ matrix.arch }}
           cache-to: type=gha,mode=max,scope=stage-${{ matrix.prefix }}-${{ matrix.arch }}

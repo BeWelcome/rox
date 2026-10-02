@@ -28,6 +28,7 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('leaflet') }}
     {% endblock stylesheets %}
+    {% include '_analytics.html.twig' %}
 </head>
 <body class="Site">
 {% include 'loginbar.html.twig' %}

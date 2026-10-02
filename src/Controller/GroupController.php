@@ -22,6 +22,7 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Exception;
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
@@ -571,11 +572,9 @@ class GroupController extends AbstractController
                 $groupImageDir,
                 $fileName
             );
-            $imageManager = new ImageManager();
-            $img = $imageManager->make($groupImageDir . '/' . $fileName);
-            $img->resize(80, null, function ($constraint) {
-                $constraint->aspectRatio();
-            });
+            $imageManager = new ImageManager(new Driver());
+            $img = $imageManager->decodePath($groupImageDir . '/' . $fileName);
+            $img->scale(width: 80);
             $img->save($groupImageDir . '/thumb' . $fileName);
 
             return $fileName;

@@ -1,0 +1,5 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target" : { "namespace": "android_app", "package_name": "org.bewelcome.beta.twa",
+                   "sha256_cert_fingerprints": ["95:D3:26:E9:F6:2A:1E:92:38:1B:0E:B2:D7:9D:C7:46:A7:02:61:66:F2:58:81:98:62:4F:92:E9:C8:21:81:57"] }
+    }]

@@ -13,8 +13,6 @@ new TomSelect('.member-autocomplete-start', {
         });
     },
     maxItems: 1,
-    create: true,
-    createOnBlur: true,
     valueField: 'id',
     labelField: 'id',
     searchField: 'id',

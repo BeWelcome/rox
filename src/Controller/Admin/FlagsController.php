@@ -9,6 +9,8 @@ use App\Form\Admin\FlagDefinitionType;
 use App\Model\Admin\FlagsModel;
 use App\Repository\FlagRepository;
 use App\Repository\MemberRepository;
+use App\Utilities\ItemsPerPageTraits;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -22,11 +24,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[IsGranted(Member::ROLE_ADMIN_FLAGS)]
 class FlagsController extends AbstractController
 {
+    use ItemsPerPageTraits;
+
     public function __construct(
         private readonly FlagsModel $model,
         private readonly MemberRepository $memberRepository,
         private readonly FlagRepository $flagRepository,
         private readonly TranslatorInterface $translator,
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
@@ -291,6 +296,7 @@ class FlagsController extends AbstractController
             $includeHistory,
             $memberFirst,
             $request->query->getInt('page', 1),
+            $this->getItemsPerPage($manager),
         );
 
         if (null !== $member && 0 === $assignments->getNbResults() && !$includeHistory) {

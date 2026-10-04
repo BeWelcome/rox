@@ -120,18 +120,19 @@ final class AdminRightsControllerTest extends WebTestCase
         self::assertStringNotContainsString('Berlin', $crawler->filter('table tbody')->text());
     }
 
-    public function testAssignmentsArePaginatedAtFiftyRows(): void
+    public function testAssignmentsArePaginatedByItemsPerPagePreference(): void
     {
         $client = static::createClient();
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $suffix = (string) random_int(100_000, 999_999);
 
-        for ($index = 1; $index <= 51; ++$index) {
+        for ($index = 1; $index <= 6; ++$index) {
             $rightId = $this->createRight($connection, "Paging {$suffix}-{$index}");
             $this->addRightAssignment($connection, 'member-empty', $rightId, 1, '"All"', 'Paging test');
         }
         $this->grantManagementRight($connection, 'member-2', 'Rights', '"All"');
+        $this->setItemsPerPage($connection, 'member-2', 5);
         $this->login($client, 'member-2', $entityManager);
 
         $crawler = $client->request('GET', '/admin/rights/list/members', [
@@ -139,7 +140,7 @@ final class AdminRightsControllerTest extends WebTestCase
             'history' => 1,
         ]);
         self::assertResponseIsSuccessful();
-        self::assertCount(50, $crawler->filter('table tbody tr'));
+        self::assertCount(5, $crawler->filter('table tbody tr'));
 
         $crawler = $client->request('GET', '/admin/rights/list/members', [
             'member' => 'member-empty',
@@ -365,6 +366,20 @@ final class AdminRightsControllerTest extends WebTestCase
                     updated = NOW()
                 SQL,
             [$scope, $rightName, $username],
+        );
+    }
+
+    private function setItemsPerPage(Connection $connection, string $username, int $itemsPerPage): void
+    {
+        $connection->executeStatement(
+            <<<'SQL'
+                INSERT INTO memberspreferences (IdMember, IdPreference, Value, updated, created)
+                SELECT m.id, p.id, ?, NOW(), NOW()
+                FROM member m
+                INNER JOIN preferences p ON p.codename = 'ItemsPerPage'
+                WHERE m.Username = ?
+                SQL,
+            [(string) $itemsPerPage, $username],
         );
     }
 

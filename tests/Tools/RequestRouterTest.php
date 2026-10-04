@@ -5,14 +5,14 @@ namespace App\Tests\Tools;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
+use PHPUnit\Framework\TestCase;
 use PVars;
 use RequestRouter;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 #[RunTestsInSeparateProcesses]
 #[PreserveGlobalState(false)]
-class RequestRouterTest extends KernelTestCase
+class RequestRouterTest extends TestCase
 {
     #[DataProvider('cacheModes')]
     public function testAliasRoutingRespectsCacheSetting(string $server, int $cacheEnabled, bool $expectCache): void

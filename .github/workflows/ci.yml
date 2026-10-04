@@ -360,4 +360,4 @@ jobs:
         run: symfony security:check
 
       - name: Run JS security checker
-        run: bun audit
+        run: bun run audit

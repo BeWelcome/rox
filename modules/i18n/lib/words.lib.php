@@ -32,7 +32,6 @@ Boston, MA  02111-1307, USA.
 use App\Utilities\SessionTrait;
 use App\Utilities\TranslatorSingletonTrait;
 
-
 /**
  * Enables us to use content from words table of BW from within the platform PT structure.
  * Instantiate in the first lines of your template, then call the "get" method.
@@ -454,8 +453,22 @@ class MOD_words
 
         // pad the args array with ' -x- ' so that vsprintf doesn't fail
         $args = array_pad($args, 10, ' -x- ');
+        $translation =  $lookup_string;
 
-        return vsprintf($lookup_string, $args);
+        try {
+            $translation = vsprintf($lookup_string, $args);
+        } catch (ValueError) {
+            // A stray % in the translation string tripped vsprintf try to fix by replacing
+            // every % that does not start a valid conversion with an escaped version %%, then retry.
+            $escaped = preg_replace('/%(?!%|(?:\d+\$)?[-+ 0]*(?:\'.)?\d*(?:\.\d+)?[bcdeEfFgGosuxX])/', '%%', $lookup_string);
+            try {
+                $translation = vsprintf($escaped, $args);
+            } catch (ValueError) {
+                // do nothing here $translation is returned as is.
+            }
+        }
+
+        return $translation;
     }
 
     /**

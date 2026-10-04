@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LocaleController extends AbstractController
 {
@@ -18,7 +19,7 @@ class LocaleController extends AbstractController
      *
      * @return RedirectResponse
      */
-    public function selectLocaleAction(Request $request, Language $language)
+    public function selectLocaleAction(Request $request, Language $language, UrlGeneratorInterface $urlGenerator): RedirectResponse
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -28,8 +29,8 @@ class LocaleController extends AbstractController
 
         $redirect = $request->headers->get('referer');
 
-        if (!$redirect) {
-            $redirect = $this->redirectToRoute('homepage');
+        if (null === $redirect) {
+            $redirect = $urlGenerator->generate('homepage', referenceType: UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $locale = $request->attributes->get('locale');

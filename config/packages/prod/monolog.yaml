@@ -3,7 +3,7 @@
 # Production logs go to stderr, not to files in the container: Docker keeps them
 # (docker logs) and Vector ships them to VictoriaLogs. Records of a request are
 # buffered and only written when that request logs an error, so normal requests
-# produce no log lines (#524).
+# produce no log lines (#524). Warnings are written as they happen.
 #
 # Deprecations are off unless DEPRECATION_LOG is set, e.g. php://stderr on stage.
 # It is read at runtime: changing it needs a container restart, not a new image.
@@ -25,6 +25,22 @@ monolog:
       path: php://stderr
       level: debug
       formatter: monolog.formatter.json
+
+    # Warnings are written as they happen, without a buffer: they often point
+    # at a problem before it becomes an error. Only the warning level passes;
+    # errors stay with "main" so they are not written twice.
+    warnings:
+      type: filter
+      handler: warnings_stream
+      min_level: warning
+      max_level: warning
+      channels: ['!deprecation']
+
+    warnings_stream:
+      type: stream
+      path: php://stderr
+      formatter: monolog.formatter.json
+      nested: true
 
     deprecation:
       type: stream

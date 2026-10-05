@@ -1,0 +1,42 @@
+# config/packages/prod/monolog.yaml
+#
+# Production logs go to stderr, not to files in the container: Docker keeps them
+# (docker logs) and Vector ships them to VictoriaLogs. Records of a request are
+# buffered and only written when that request logs an error, so normal requests
+# produce no log lines (#524).
+#
+# Deprecations are off unless DEPRECATION_LOG is set, e.g. php://stderr on stage.
+# It is read at runtime: changing it needs a container restart, not a new image.
+monolog:
+  channels: [deprecation]
+  handlers:
+    main:
+      type: fingers_crossed
+      # if *one* log is error or higher, pass the buffered records to nested
+      action_level: error
+      handler: nested
+      excluded_http_codes: [404, 405]
+      channels: ['!deprecation']
+      # records kept per request, limits memory on long requests
+      buffer_size: 50
+
+    nested:
+      type: stream
+      path: php://stderr
+      level: debug
+      formatter: monolog.formatter.json
+
+    deprecation:
+      type: stream
+      channels: [deprecation]
+      path: '%env(DEPRECATION_LOG)%'
+      formatter: monolog.formatter.json
+
+    # bin/console output (cron container)
+    console:
+      type: console
+      process_psr_3_messages: false
+      channels: ['!event', '!doctrine', '!deprecation']
+
+parameters:
+  env(DEPRECATION_LOG): /dev/null

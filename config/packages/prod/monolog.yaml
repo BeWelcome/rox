@@ -1,28 +1,42 @@
 # config/packages/prod/monolog.yaml
+#
+# Production logs go to stderr, not to files in the container: Docker keeps them
+# (docker logs) and Vector ships them to VictoriaLogs. Records of a request are
+# buffered and only written when that request logs an error, so normal requests
+# produce no log lines (#524).
+#
+# Deprecations are off unless DEPRECATION_LOG is set, e.g. php://stderr on stage.
+# It is read at runtime: changing it needs a container restart, not a new image.
 monolog:
+  channels: [deprecation]
   handlers:
-    filter_for_errors:
-      type: fingers_crossed
-      # if *one* log is error or higher, pass *all* to file_log
-      action_level: error
-      handler: file_log
-      excluded_404s:
-        - ^/
-
-    # now passed *all* logs, but only if one log is error or higher
-    file_log:
-      type: stream
-      path: "%kernel.logs_dir%/%kernel.environment%.log"
-
-    # still passed *all* logs, and still only logs error or higher
-    syslog_handler:
-      type: syslog
-      level: error
-
     main:
-      type:  rotating_file
-      path:  '%kernel.logs_dir%/%kernel.environment%.log'
+      type: fingers_crossed
+      # if *one* log is error or higher, pass the buffered records to nested
+      action_level: error
+      handler: nested
+      excluded_http_codes: [404, 405]
+      channels: ['!deprecation']
+      # records kept per request, limits memory on long requests
+      buffer_size: 50
+
+    nested:
+      type: stream
+      path: php://stderr
       level: debug
-      # max number of log files to keep
-      # defaults to zero, which means infinite files
-      max_files: 10
+      formatter: monolog.formatter.json
+
+    deprecation:
+      type: stream
+      channels: [deprecation]
+      path: '%env(DEPRECATION_LOG)%'
+      formatter: monolog.formatter.json
+
+    # bin/console output (cron container)
+    console:
+      type: console
+      process_psr_3_messages: false
+      channels: ['!event', '!doctrine', '!deprecation']
+
+parameters:
+  env(DEPRECATION_LOG): /dev/null

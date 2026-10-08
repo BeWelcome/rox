@@ -8,19 +8,6 @@
     <link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
     <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="beWelcome" />
-    <?php
-    // Self-referencing canonical (BeWelcome/sysadmins-infra#654). Legacy pages may rely on the
-    // query string, so only tracking parameters are dropped.
-    $canonicalParts = parse_url($_SERVER['REQUEST_URI'] ?? '/');
-    parse_str($canonicalParts['query'] ?? '', $canonicalQuery);
-    $canonicalQuery = array_filter($canonicalQuery, function ($key) {
-        return !preg_match('/^(utm_.*|gclid|gbraid|wbraid|fbclid|msclkid)$/', $key);
-    }, ARRAY_FILTER_USE_KEY);
-    $canonicalScheme = (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https' || !empty($_SERVER['HTTPS'])) ? 'https' : 'http';
-    $canonicalUrl = $canonicalScheme . '://' . $_SERVER['HTTP_HOST'] . ($canonicalParts['path'] ?? '/')
-        . ($canonicalQuery ? '?' . http_build_query($canonicalQuery) : '');
-    ?>
-    <link rel="canonical" href="<?= htmlspecialchars($canonicalUrl, ENT_QUOTES) ?>" />
 
     <link rel="stylesheet" href="/build/bewelcome.css" />
 

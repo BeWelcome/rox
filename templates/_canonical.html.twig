@@ -1,0 +1,4 @@
+{# Self-referencing canonical without query string (#654 in BeWelcome/sysadmins-infra).
+   Built from the route so defaults normalise (/faq/1 and /faq share one URL). #}
+{% set canonical_route = app.request.attributes.get('_route') %}
+<link rel="canonical" href="{{ canonical_route ? url(canonical_route, app.request.attributes.get('_route_params', {})) : app.request.schemeAndHttpHost ~ app.request.baseUrl ~ app.request.pathInfo }}">

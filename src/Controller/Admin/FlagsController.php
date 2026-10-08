@@ -341,7 +341,7 @@ class FlagsController extends AbstractController
 
     private function getFilterId(Request $request, string $name): ?int
     {
-        $id = $request->query->getInt($name);
+        $id = $request->query->filter($name, null, \FILTER_VALIDATE_INT, ['flags' => \FILTER_NULL_ON_FAILURE]);
 
         return $id > 0 ? $id : null;
     }

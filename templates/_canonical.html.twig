@@ -1,0 +1,7 @@
+{# Self-referencing canonical without query string (BeWelcome/sysadmins-infra#654).
+   Built from the route so defaults normalise (/faq/1 and /faq share one URL).
+   Error pages are rendered without a route, so they get no canonical. #}
+{% set canonical_route = app.request.attributes.get('_route') %}
+{% if canonical_route %}
+<link rel="canonical" href="{{ url(canonical_route, app.request.attributes.get('_route_params', {})) }}">
+{% endif %}

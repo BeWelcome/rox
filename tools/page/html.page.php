@@ -340,10 +340,26 @@ class PageWithHTML extends AbstractBasePage
         <meta name="description" content="<?=$this->getPage_meta_description()?>" />
         <meta name="keywords" content="<?=$this->getPage_meta_keyword()?>" />
         <meta name="robots" content="<?=$this->getPage_meta_robots()?>" />
+        <link rel="canonical" href="<?= htmlspecialchars($this->getCanonicalUrl($baseuri), ENT_QUOTES) ?>" />
         <?php
         $this->includeStylesheets();
         $this->includeCustomElements();
         $this->_tr_buffer_header = $this->getWords()->flushBuffer();
+    }
+
+    /**
+     * Self-referencing canonical (BeWelcome/sysadmins-infra#654). Legacy pages may rely on the
+     * query string, so only tracking parameters are dropped.
+     */
+    protected function getCanonicalUrl($baseuri)
+    {
+        $parts = parse_url($_SERVER['REQUEST_URI'] ?? '/');
+        parse_str($parts['query'] ?? '', $query);
+        $query = array_filter($query, function ($key) {
+            return !preg_match('/^(utm_.*|gclid|gbraid|wbraid|fbclid|msclkid)$/', $key);
+        }, ARRAY_FILTER_USE_KEY);
+
+        return rtrim($baseuri, '/') . ($parts['path'] ?? '/') . ($query ? '?' . http_build_query($query) : '');
     }
 
     protected function getPagePermalink() {

@@ -283,7 +283,9 @@ class RequestRouter implements UrlGeneratorInterface
                     $this->iniParse($filename, $alias_table);
                 }
             }
-            $this->iniWrite($cachefile, $alias_table);
+            if (!$force_refresh) {
+                $this->iniWrite($cachefile, $alias_table);
+            }
         }
         return $alias_table;
     }

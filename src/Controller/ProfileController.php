@@ -31,6 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 
 /**
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
@@ -45,12 +46,8 @@ class ProfileController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
     ) {
     }
-
-    /**
-     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
-     */
     #[Route(path: '/members/{username:member}/new', name: 'members_profile_new')]
-    public function show(Member $member): Response
+    public function show(#[MapEntity(mapping: ['username' => 'username'])] Member $member): Response
     {
         if (!$member->isBrowsable()) {
             throw new AccessDeniedException();
@@ -92,7 +89,7 @@ class ProfileController extends AbstractController
         return new RedirectResponse($request->headers->get('referer'));
     }
 
-    #[Route(path: '/members/{username}/visitors/{page}', name: 'profile_visitors')]
+    #[Route(path: '/members/{username:member}/visitors/{page}', name: 'profile_visitors')]
     public function showMyVisitors(
         Member $member,
         EntityManagerInterface $entityManager,
@@ -133,7 +130,7 @@ class ProfileController extends AbstractController
         return $this->redirectToRoute('profile_set_location', ['username' => $this->getUser()->getUsername()]);
     }
 
-    #[Route(path: '/members/{username}/location', name: 'profile_set_location')]
+    #[Route(path: '/members/{username:member}/location', name: 'profile_set_location')]
     public function setLocation(
         Request $request,
         Member $member,
@@ -238,7 +235,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/delete', name: 'profile_delete')]
+    #[Route(path: '/members/{username:member}/delete', name: 'profile_delete')]
     public function deleteProfile(
         Request $request,
         TokenStorageInterface $tokenStorage,

@@ -30,8 +30,8 @@ class ConversationsWithAdapter implements AdapterInterface
             $result = $this->connection->executeQuery(
                 $countQuery,
                 [
-                    ':memberId' => $this->member->getId(),
-                    ':partnerId' => $this->partner->getId(),
+                    'memberId' => $this->member->getId(),
+                    'partnerId' => $this->partner->getId(),
                 ],
                 [
                     PDO::PARAM_INT,

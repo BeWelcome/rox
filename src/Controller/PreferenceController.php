@@ -22,7 +22,7 @@ class PreferenceController extends AbstractController
         return $this->redirectToRoute('preferences', ['username' => $this->getUser()->getUsername()]);
     }
 
-    #[Route(path: '/members/{username}/preferences', name: 'preferences')]
+    #[Route(path: '/members/{username:member}/preferences', name: 'preferences')]
     public function preferences(
         Request $request,
         Member $member,

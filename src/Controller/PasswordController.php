@@ -102,7 +102,7 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/resetpassword/{username}/{token}', name: 'member_reset_password', requirements: ['token' => '[a-z0-9]{64}'])]
+    #[Route(path: '/resetpassword/{username:member}/{token}', name: 'member_reset_password', requirements: ['token' => '[a-z0-9]{64}'])]
     public function resetPassword(
         Request $request,
         Member $member,
@@ -152,7 +152,7 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/password/change', name: 'change_password', requirements: ['token' => '[a-z0-9]{64}'])]
+    #[Route(path: '/members/{username:member}/password/change', name: 'change_password', requirements: ['token' => '[a-z0-9]{64}'])]
     public function changePassword(
         Request $request,
         Member $member,

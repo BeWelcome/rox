@@ -15,13 +15,10 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class LocaleController extends AbstractController
 {
-    /**
-     * @ParamConverter("language", class="App\Entity\Language", options={"mapping": {"locale": "shortCode"}})
-     */
     #[Route(path: '/rox/in/{locale}', name: 'language', requirements: ['locale' => '[a-z]{2}(-[A-Za-z]{2,})?'])]
     public function selectLocaleAction(
         Request $request,
-        #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
+        #[MapEntity(mapping: ['locale' => 'shortCode'])] #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
         EntityManagerInterface $entityManager,
     ): RedirectResponse {
         /** @var Member $member */

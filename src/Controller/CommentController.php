@@ -43,11 +43,6 @@ class CommentController extends AbstractController
     public function __construct(private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
     {
     }
-
-    /**
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     */
     #[Route(
         path: '/members/{to_member}/comment/{from_member}/report',
         name: 'report_comment',
@@ -55,8 +50,8 @@ class CommentController extends AbstractController
     )]
     public function reportCommentAction(
         Request $request,
-        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
-        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+        #[MapEntity(mapping: ['to_member' => 'username'])] #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
         EntityManagerInterface $entityManager,
         Mailer $mailer,
     ): Response {
@@ -120,7 +115,7 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username}/comment/add', name: 'add_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
+    #[Route(path: '/members/{username:member}/comment/add', name: 'add_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function addComment(
         Request $request,
         Member $member,
@@ -213,7 +208,7 @@ class CommentController extends AbstractController
     /**
      * @return Response|RedirectResponse
      */
-    #[Route(path: '/members/{username}/comment/edit', name: 'edit_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
+    #[Route(path: '/members/{username:member}/comment/edit', name: 'edit_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function editComment(
         Request $request,
         Member $member,
@@ -298,15 +293,10 @@ class CommentController extends AbstractController
             'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
         ]);
     }
-
-    /**
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     */
     #[Route(path: '/members/{from_member}/comment/{to_member}/new', name: 'comment_new_experience', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function setNewExperienceForComment(
-        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
-        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+        #[MapEntity(mapping: ['to_member' => 'username'])] #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         CommentModel $commentModel,
         EntityManagerInterface $entityManager,
     ): RedirectResponse {
@@ -332,7 +322,7 @@ class CommentController extends AbstractController
 
     #[Route(path: '/members/{username}/comments', name: 'profile_comments', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function showCommentsForMember(
-        Member $member,
+        #[MapEntity(mapping: ['username' => 'username'])] Member $member,
         ProfileModel $profileModel,
         EntityManagerInterface $entityManager,
     ): Response {

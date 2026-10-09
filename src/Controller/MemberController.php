@@ -25,6 +25,7 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 
 /**
  * Class MemberController.
@@ -111,14 +112,10 @@ class MemberController extends AbstractController
             'form' => $passwordForm->createView(),
         ]);
     }
-
-    /**
-     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
-     */
     #[Route(path: '/members/{username:member}/data', name: 'admin_personal_data')]
     public function getPersonalData(
         Request $request,
-        Member $member,
+        #[MapEntity(mapping: ['username' => 'username'])] Member $member,
         Logger $logger,
         EntrypointLookupInterface $entrypointLookup,
         MemberModel $memberModel,
@@ -158,10 +155,9 @@ class MemberController extends AbstractController
      *
      * @return BinaryFileResponse|RedirectResponse
      *
-     * @ParamConverter("member", class="App\Entity\Member", options={"mapping": {"username": "username"}})
      */
     #[Route(path: '/mydata/{username:member}/download', name: 'member_download_data')]
-    public function downloadPersonalData(Request $request, Member $member)
+    public function downloadPersonalData(Request $request, #[MapEntity(mapping: ['username' => 'username'])] Member $member)
     {
         $zipFilename = $request->getSession()->get('mydata_file');
         if (file_exists($zipFilename)) {

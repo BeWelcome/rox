@@ -62,11 +62,8 @@ class ManticoreIndicesForumCommand extends Command
 
     private function createForumIndex(): ?Table
     {
-        $client = new Client(['host' => $this->manticoreHost,'port' => $this->manticorePort]);
-
-        $index = $client->index(self::FORUM_INDEX);
-        // If the index doesn't exist, drop fails with an error message. So we run it silenced.
-        $index->drop(true);
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
+        $index = $client->table('forum_rt');
 
         try {
             $index->create(
@@ -92,15 +89,14 @@ class ManticoreIndicesForumCommand extends Command
                     'ngram_len' => '1',
                 ]
             );
-
-            return $index;
         } catch (Exception $e) {
-            $this->io->error($e->getMessage());
-            $this->io->error('Index ' . self::FORUM_INDEX . ' couldn\'t be created.');
+            // $index = null;
 
-            return null;
+            $this->io->error($e->getMessage());
+            $this->io->error('Index ' . self::FORUM_INDEX . ' already exists or another problem occurred.');
         }
 
+        return $index;
     }
 
     private function addForumDocuments(Table $index, OutputInterface $output)
@@ -141,39 +137,18 @@ class ManticoreIndicesForumCommand extends Command
                             ft.id AS thread_id,
                             ft.ThreadDeleted AS thread_deleted,
                             ft.ThreadVisibility AS thread_visibility,
-                            ftr.Sentence as content,
+                            fp.message as content,
                             ft.IdGroup AS `group`,
                             fp.IdWriter as author,
-                            l.shortcode as locale
+                            COALESCE(l.shortcode, 'en') as locale
                         FROM
                             forums_posts fp
                         JOIN forums_threads ft ON fp.threadid = ft.id
-                        JOIN forum_trads ftr ON fp.IdContent = ftr.IdTrad
-                        JOIN languages l ON ftr.IdLanguage = l.id
+                        LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
                         LIMIT {$firstResult}, {$this->chunkSize}
                     ___SQL, $this->getResultSetMappingForForumIndex());
 
-        $firstResult = 0;
-        do {
-            $query = $this->entityManager->createNativeQuery(<<<___SQL
-                SELECT
-                    fp.id as post_id,
-                    fp.PostDeleted as post_deleted,
-                    fp.PostVisibility as post_visibility,
-                    ft.id AS thread_id,
-                    ft.ThreadDeleted AS thread_deleted,
-                    ft.ThreadVisibility AS thread_visibility,
-                    fp.message as content,
-                    ft.IdGroup AS `group`,
-                    fp.IdWriter as author,
-                    COALESCE(l.shortcode, 'en') as locale
-                FROM
-                    forums_posts fp
-                JOIN forums_threads ft ON fp.threadid = ft.id
-                LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
-                LIMIT {$firstResult}, {$this->chunkSize}
-            ___SQL
-                , $this->getResultSetMappingForForumIndex());
+                $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
 
                 $firstResult += $this->chunkSize;
             } while ($addDocumentsCount > 0);

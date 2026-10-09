@@ -2,12 +2,14 @@
 
 namespace App\Command;
 
-use Doctrine\DBAL\Connection;
+use App\Entity\NewLocation;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NativeQuery;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Exception;
 use Manticoresearch\Client;
-use Manticoresearch\Exceptions\ResponseException;
-use Manticoresearch\Index;
+use Manticoresearch\Table;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,32 +24,16 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class ManticoreIndicesGeonamesCommand extends Command
 {
-    private const GEONAMES_INDEX = 'geonames_rt';
-
-    /** Number of rows read from the database per query. */
-    private const FETCH_SIZE = 20000;
-
-    /** Number of documents sent to Manticore in a single bulk request. */
-    private const BULK_SIZE = 2000;
-
-    protected static $defaultName = 'manticore:indices:geonames';
-    protected static $defaultDescription = 'Creates the manticore indices for the location search';
-    private EntityManagerInterface $entityManager;
+    private const string GEONAMES_INDEX = 'geonames_rt';
+    private int $chunkSize = 250000;
     private SymfonyStyle $io;
 
-    /** @var array<int, int> geoname id => number of active members in that city */
-    private array $memberCounts = [];
-
-    /** @var array<int, array<string, mixed>> documents waiting to be sent to Manticore */
-    private array $documents = [];
-
-    public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
-    {
-        parent::__construct(self::$defaultName);
-
-        $this->entityManager = $entityManager;
-        $this->manticoreHost = $manticoreHost;
-        $this->manticorePort = $manticorePort;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly string $manticoreHost,
+        private readonly int $manticorePort,
+    ) {
+        parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -60,15 +46,9 @@ class ManticoreIndicesGeonamesCommand extends Command
 
         $index = $this->createGeonamesIndex();
         if (null !== $index) {
-            $this->memberCounts = $this->getMemberCounts();
-
             $this->addGeonamesDocuments($index, $output);
 
-            $this->optimizeGeonamesIndex();
-
             $this->addAlternateNamesDocuments($index, $output);
-
-            $index->flush();
 
             $this->io->newLine();
             $this->io->note('Created ' . self::GEONAMES_INDEX . '.');
@@ -88,11 +68,8 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     private function createGeonamesIndex(): ?Table
     {
-        $client = new Client(['host' => $this->manticoreHost,'port' => $this->manticorePort]);
-
-        $index = $client->index(self::GEONAMES_INDEX);
-        // If the index doesn't exist, drop() fails with an error message. So we run it silenced.
-        $index->drop(true);
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
+        $index = $client->table('geonames_rt');
 
         try {
             $index->create(
@@ -121,107 +98,65 @@ class ManticoreIndicesGeonamesCommand extends Command
                     'ngram_len' => '1',
                 ]
             );
+        } catch (Exception $e) {
+            // $index = null;
 
-            return $index;
-        } catch(Exception $e) {
             $this->io->error($e->getMessage());
-            $this->io->error('Index ' . self::GEONAMES_INDEX . ' couldn\'t be created.');
-
-            return null;
-        }
-    }
-
-    private function optimizeGeonamesIndex(): void
-    {
-        $this->io->note('Optimizing ' . self::GEONAMES_INDEX . ' index (merging disk chunks before translations phase).');
-        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
-        try {
-            // raw=true is required for non-SELECT DDL commands via the /sql endpoint.
-            // The response for OPTIMIZE cannot be parsed by the PHP client, so suppress empty exceptions.
-            $client->sql('OPTIMIZE TABLE ' . self::GEONAMES_INDEX . ' OPTION cutoff=1, sync=1', true);
-        } catch (\Exception $e) {
-            if ($e->getMessage() !== '') {
-                throw $e;
-            }
-        }
-        $this->io->note('Optimization complete.');
-    }
-
-    /**
-     * The member counts are needed for every single document. Fetching them once keeps them out of the (paginated)
-     * geonames queries which would otherwise re-run the aggregation for every single chunk.
-     *
-     * @return array<int, int>
-     */
-    private function getMemberCounts(): array
-    {
-        $counts = $this->getConnection()
-            ->executeQuery(<<<___SQL
-                SELECT
-                    m.IdCity,
-                    COUNT(m.IdCity) AS total
-                FROM
-                    members m
-                WHERE m.status IN ('Active', 'OutOfRemind')
-                GROUP BY
-                    m.IdCity
-            ___SQL)
-            ->fetchAllKeyValue();
-
-        $memberCounts = [];
-        foreach ($counts as $cityId => $total) {
-            $memberCounts[(int) $cityId] = (int) $total;
+            $this->io->error('Index ' . self::GEONAMES_INDEX . ' already exists or another problem occurred.');
         }
 
-        return $memberCounts;
+        return $index;
     }
 
-    private function addGeonamesDocuments(Index $index, OutputInterface $output): void
+    private function addGeonamesDocuments(Table $index, OutputInterface $output): void
     {
         $this->io->note('Adding documents to geonames_rt from geo__names table.');
         $this->io->newLine();
 
-        $connection = $this->getConnection();
-        $count = (int) $connection->executeQuery('SELECT COUNT(*) FROM geo__names')->fetchOne();
-        $progressBar = $this->getProgressBar($output, $count);
+        $stmt = $this->entityManager
+            ->getConnection()
+            ->executeQuery(<<<'___SQL'
+                    SELECT
+                        count(*) as cnt
+                    FROM
+                        geo__names g
+                ___SQL);
 
-        // Keyset pagination. LIMIT <offset>, <chunk size> makes the database skip an ever growing number of rows
-        // which gets painfully slow towards the end of a table with several million rows.
-        $fetchSize = self::FETCH_SIZE;
-        $lastId = 0;
-        do {
-            $result = $connection->executeQuery(<<<___SQL
-                SELECT
-                    g.geonameId AS geonameid,
-                    g.`name` AS name,
-                    g.feature_class AS feature_class,
-                    g.feature_code AS feature_code,
-                    g.country_id AS country,
-                    g.admin_1_id AS admin1,
-                    g.admin_2_id AS admin2,
-                    g.admin_3_id AS admin3,
-                    g.admin_4_id AS admin4,
-                    '_geo' AS locale,
-                    g.population AS population
-                FROM
-                    geo__names g
-                WHERE
-                    g.geonameId > :lastId
-                ORDER BY
-                    g.geonameId
-                LIMIT {$fetchSize}
-            ___SQL, ['lastId' => $lastId]);
+        $count = $stmt->fetchNumeric()[0];
+        if (0 !== $count) {
+            $progressBar = $this->getProgressBar($output, $count);
 
-            $rowCount = 0;
-            foreach ($result->iterateAssociative() as $row) {
-                ++$rowCount;
-                $lastId = (int) $row['geonameid'];
-                $this->addDocument($index, $row, $progressBar);
-            }
-            $result->free();
-        } while ($rowCount > 0);
-
-        $this->sendPendingDocuments($index, $progressBar);
+            $firstResult = 0;
+            do {
+                $query = $this->entityManager->createNativeQuery(<<<___SQL
+                        SELECT
+                            g.geonameid AS geonameid,
+                            g.`name` AS name,
+                            g.feature_class,
+                            g.feature_code,
+                            g.country_id,
+                            g.admin_1_id,
+                            g.admin_2_id,
+                            g.admin_3_id,
+                            g.admin_4_id,
+                            '_geo' AS locale,
+                            g.population,
+                            IFNULL(membercounts.total, 0) AS member_count
+                        FROM
+                            geo__names g
+                        LEFT JOIN (
+                            SELECT
+                                m.IdCity,
+                                COUNT(m.IdCity) total
+                            FROM
+                                members m
+                            WHERE m.status IN ('Active', 'OutOfRemind')
+                            GROUP BY
+                                m.IdCity
+                        ) membercounts
+                        ON (g.geonameid = membercounts.IdCity)
+                        LIMIT {$firstResult}, {$this->chunkSize}
+                    ___SQL, $this->getResultSetMappingForGeonamesIndex());
 
                 $addDocumentsCount = $this->addGeonamesDocumentsToIndex($index, $query, $progressBar);
 
@@ -233,57 +168,58 @@ class ManticoreIndicesGeonamesCommand extends Command
         }
     }
 
-    private function addAlternateNamesDocuments(Index $index, OutputInterface $output): void
+    private function addAlternateNamesDocuments(Table $index, OutputInterface $output): void
     {
         $this->io->note('Adding documents to geonames_rt from geo__names_translations table.');
         $this->io->newLine();
 
-        $connection = $this->getConnection();
-        $count = (int) $connection->executeQuery('SELECT COUNT(*) FROM geo__names_translations')->fetchOne();
-        if (0 === $count) {
-            return;
-        }
+        $stmt = $this->entityManager
+            ->getConnection()
+            ->executeQuery(<<<'___SQL'
+                    SELECT
+                        count(*) as cnt
+                    FROM
+                        geo__names_translations gt
+                ___SQL);
 
-        $progressBar = $this->getProgressBar($output, $count);
+        $count = $stmt->fetchNumeric()[0];
+        if (0 !== $count) {
+            $progressBar = $this->getProgressBar($output, $count);
+            $progressBar->start();
 
-        $fetchSize = self::FETCH_SIZE;
-        $lastId = 0;
-        do {
-            $result = $connection->executeQuery(<<<___SQL
-                SELECT
-                    gt.id AS translation_id,
-                    g.geonameId AS geonameid,
-                    gt.`content` AS name,
-                    g.feature_class AS feature_class,
-                    g.feature_code AS feature_code,
-                    g.country_id AS country,
-                    g.admin_1_id AS admin1,
-                    g.admin_2_id AS admin2,
-                    g.admin_3_id AS admin3,
-                    g.admin_4_id AS admin4,
-                    gt.`locale` AS locale,
-                    g.population AS population
-                FROM
-                    geo__names_translations gt
-                JOIN
-                    geo__names g ON g.geonameId = gt.foreign_key
-                WHERE
-                    gt.id > :lastId
-                ORDER BY
-                    gt.id
-                LIMIT {$fetchSize}
-            ___SQL, ['lastId' => $lastId]);
-
-            $rowCount = 0;
-            foreach ($result->iterateAssociative() as $row) {
-                ++$rowCount;
-                $lastId = (int) $row['translation_id'];
-                $this->addDocument($index, $row, $progressBar);
-            }
-            $result->free();
-        } while ($rowCount > 0);
-
-        $this->sendPendingDocuments($index, $progressBar);
+            $firstResult = 0;
+            do {
+                $query = $this->entityManager->createNativeQuery(<<<___SQL
+                        SELECT
+                            g.geonameid,
+                            gt.`content` AS name,
+                            g.feature_class,
+                            g.feature_code,
+                            g.country_id,
+                            g.admin_1_id,
+                            g.admin_2_id,
+                            g.admin_3_id,
+                            g.admin_4_id,
+                            gt.`locale` AS locale,
+                            g.population,
+                            IFNULL(membercounts.total, 0) AS member_count
+                        FROM
+                            geo__names g
+                        JOIN
+                            geo__names_translations gt ON g.geonameId = gt.foreign_key
+                        LEFT JOIN (
+                            SELECT
+                                m.IdCity,
+                                COUNT(m.IdCity) total
+                            FROM
+                                members m
+                            WHERE m.status IN ('Active', 'OutOfRemind')
+                            GROUP BY
+                                m.IdCity
+                        ) membercounts
+                        ON (g.geonameid = membercounts.IdCity)
+                        LIMIT {$firstResult}, {$this->chunkSize}
+                    ___SQL, $this->getResultSetMappingForGeonamesIndex());
 
                 $addDocumentsCount = $this->addGeonamesDocumentsToIndex($index, $query, $progressBar);
 
@@ -296,104 +232,81 @@ class ManticoreIndicesGeonamesCommand extends Command
     }
 
     /**
-     * Collects documents and sends them off in small batches. Manticore refuses bulk requests larger than
-     * max_packet_size and building a single request for hundreds of thousands of documents holds several copies
-     * of the whole data set (rows, documents, bulk payload) in memory at the same time.
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      *
-     * @param array<string, mixed> $row
+     * Complexity is due to handling of Geonames (different feature codes) not because code is difficult to understand.
      */
-    private function addDocument(Index $index, array $row, ProgressBar $progress): void
+    private function addGeonamesDocumentsToIndex(Table $index, NativeQuery $query, ProgressBar $progress): int
     {
-        $featureClass = (string) $row['feature_class'];
-        $featureCode = (string) $row['feature_code'];
+        $locations = $query->getResult();
+        $documents = [];
 
-        $isPlace = 'P' === $featureClass && 'PPL' === substr($featureCode, 0, 3)
-            && 'PPLH' !== $featureCode && 'PPLCH' !== $featureCode
-            && 'PPLX' !== $featureCode && 'PPLQ' !== $featureCode;
-        $isCountry =
-            ('A' === $featureClass && 'PCL' === substr($featureCode, 0, 3)
-                && 'PRSH' !== $featureCode && 'PCLH' !== $featureCode)
-            || ('TERR' === $featureCode);
-        $isAdmin = 'A' === $featureClass && !$isCountry;
+        /** @var NewLocation $location */
+        foreach ($locations as $location) {
+            $isPlace = 'P' === $location['feature_class'] && str_starts_with((string) $location['feature_code'], 'PPL')
+                && 'PPLH' !== $location['feature_code'] && 'PPLCH' !== $location['feature_code']
+                && 'PPLX' !== $location['feature_code'] && 'PPLQ' !== $location['feature_code'];
+            $isCountry =
+                ('A' === $location['feature_class'] && str_starts_with((string) $location['feature_code'], 'PCL')
+                    && 'PRSH' !== $location['feature_code'] && 'PCLH' !== $location['feature_code'])
+                || ('TERR' === $location['feature_code']);
+            $isAdmin = 'A' === $location['feature_class'] && !$isCountry;
 
-        $geonameId = (int) $row['geonameid'];
-
-        $this->documents[] = [
-            'geoname_id' => $geonameId,
-            'name' => (string) $row['name'],
-            'country' => (string) $row['country'],
-            'isPlace' => $isPlace,
-            'isAdmin' => $isAdmin,
-            'isCountry' => $isCountry,
-            'locale' => $this->adaptLocale((string) $row['locale']),
-            'admin1' => (string) $row['admin1'],
-            'admin2' => (string) $row['admin2'],
-            'admin3' => (string) $row['admin3'],
-            'admin4' => (string) $row['admin4'],
-            'population' => (int) $row['population'],
-            'member_count' => $this->memberCounts[$geonameId] ?? 0,
-        ];
-
-        if (count($this->documents) >= self::BULK_SIZE) {
-            $this->sendPendingDocuments($index, $progress);
+            $documents[] = [
+                'geoname_id' => $location['geonameid'],
+                'name' => $location['name'],
+                'country' => $location['country'] ?? 0,
+                'isPlace' => $isPlace,
+                'isAdmin' => $isAdmin,
+                'isCountry' => $isCountry,
+                'locale' => $this->adaptLocale($location['locale']),
+                'admin1' => $location['admin1'] ?? 0,
+                'admin2' => $location['admin2'] ?? 0,
+                'admin3' => $location['admin3'] ?? 0,
+                'admin4' => $location['admin4'] ?? 0,
+                'population' => $location['population'] ?? 0,
+                'member_count' => $location['member_count'],
+            ];
+            $progress->advance();
         }
-    }
+        $count = \count($locations);
+        unset($locations);
 
-    private function sendPendingDocuments(Index $index, ProgressBar $progress): void
-    {
-        if ([] === $this->documents) {
-            return;
-        }
-
-        $documents = $this->documents;
-        $this->documents = [];
-
-        try {
+        if (0 !== $count) {
             $index->addDocuments($documents);
-        } catch (ResponseException $e) {
-            $this->reportBulkError($e);
+            $index->flush();
         }
 
-        $progress->advance(count($documents));
+        gc_collect_cycles();
+
+        return $count;
     }
 
-    /**
-     * Manticore's getError() runs the error through json_encode() which returns false - and therefore an empty
-     * exception message - as soon as the reported document contains invalid UTF-8. Dig the actual errors out of
-     * the response instead of showing an empty message.
-     */
-    private function reportBulkError(ResponseException $e): void
+    private function getResultSetMappingForGeonamesIndex(): ResultSetMapping
     {
-        $message = $e->getMessage();
-        if ('' === $message) {
-            $response = $e->getResponse()->getResponse();
-            $errors = [];
-            foreach ($response['items'] ?? [] as $item) {
-                foreach ((array) $item as $action) {
-                    if (!empty($action['error'])) {
-                        $errors[] = $action['error'];
-                    }
-                }
-            }
-            $message = json_encode(
-                [] === $errors ? $response : array_slice($errors, 0, 5),
-                JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_UNICODE
-            );
-            $message = substr((string) $message, 0, 2000);
-        }
+        $rsm = new ResultSetMapping();
+        $rsm
+            ->addScalarResult('geonameid', 'geonameid')
+            ->addScalarResult('name', 'name')
+            ->addScalarResult('country_id', 'country')
+            ->addScalarResult('admin_1_id', 'admin1')
+            ->addScalarResult('admin_2_id', 'admin2')
+            ->addScalarResult('admin_3_id', 'admin3')
+            ->addScalarResult('admin_4_id', 'admin4')
+            ->addScalarResult('feature_class', 'feature_class')
+            ->addScalarResult('feature_code', 'feature_code')
+            ->addScalarResult('locale', 'locale')
+            ->addScalarResult('population', 'population')
+            ->addScalarResult('member_count', 'member_count')
+        ;
 
-        $this->io->newLine();
-        $this->io->error('Manticore rejected a bulk request: ' . $message);
-    }
-
-    private function getConnection(): Connection
-    {
-        return $this->entityManager->getConnection();
+        return $rsm;
     }
 
     private function getProgressBar(OutputInterface $output, $count): ProgressBar
     {
         $progressBar = new ProgressBar($output, $count);
+        $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s%');
         $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s%');
         $progressBar->start();
         $progressBar->setRedrawFrequency(1000);

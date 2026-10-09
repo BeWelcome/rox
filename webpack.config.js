@@ -13,13 +13,14 @@ Encore
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
     .setPublicPath('/build')
-//    .splitEntryChunks()
+    .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .addEntry('bewelcome', './assets/js/bewelcome.js')
     .addEntry('home', './assets/js/home.js')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
     .addEntry('password/showhide', './assets/js/password/showhide.js')
+    .addEntry('block_highlight', './assets/js/block_highlight.js')
     .addEntry('password/check', './assets/js/password/check.js')
     .addEntry('signup/finalize', './assets/js/signup/finalize.js')
     .addEntry('members/editmyprofile', './assets/js/editmyprofile.js')
@@ -52,17 +53,8 @@ Encore
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('scrollingtabs', './assets/js/scrollingtabs.js')
     .addEntry('email', './assets/scss/email.scss')
-    .addEntry('password/showhide', './assets/js/password/showhide.js')
-    // CKEditor
-    .addPlugin(new CKEditorTranslationsPlugin({
-        language: 'en',
-        additionalLanguages: 'all',
-        outputDirectory: 'cktranslations',
-        buildAllTranslationsToSeparateFiles: true
-    }))
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
-    .addEntry('block_highlight', './assets/js/block_highlight.js')
     .addEntry('highlight', './assets/js/highlight.js')
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
@@ -93,7 +85,10 @@ Encore
         'TweenLite': 'gsap/src/minified/TweenLite.min.js',
         'TweenMax': 'gsap/src/minified/TweenMax.min.js',
         'TimelineLite': 'gsap/src/minified/TimelineLite.min.js',
-        'TimelineMax': 'gsap/src/minified/TimelineMax.min.js'
+        'TimelineMax': 'gsap/src/minified/TimelineMax.min.js',
+        'ScrollMagic': 'scrollmagic/scrollmagic/minified/ScrollMagic.min.js',
+        'animation.gsap': 'scrollmagic/scrollmagic/minified/plugins/animation.gsap.min.js',
+        'debug.addIndicators': 'scrollmagic/scrollmagic/minified/plugins/debug.addIndicators.min.js'
     })
     .addLoader({
         test: require.resolve('select2'),

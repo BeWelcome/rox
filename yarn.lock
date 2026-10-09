@@ -1926,9 +1926,10 @@
   dependencies:
     mini-svg-data-uri "^1.2.3"
 
-"@tomickigrzegorz/autocomplete@https://github.com/tomickigrzegorz/autocomplete":
-  version "3.0.0"
-  resolved "https://github.com/tomickigrzegorz/autocomplete#99e52014f1cd093f1afbed29e43f0d918e7a15d7"
+"@tomickigrzegorz/autocomplete@^3":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@tomickigrzegorz/autocomplete/-/autocomplete-3.4.0.tgz#e69c12cb895a63372c8523a94fac0f6deb7e94f0"
+  integrity sha512-6fmbHtBfwtpvmZB7YIN0ZnBNhLE90Uwmq8Cu82VKGpLkcID8BA0ZJwRF50rybcjHapRkYt20RKod7RcQu0pk3g==
 
 "@trevoreyre/autocomplete-js@3.*":
   version "3.0.3"
@@ -2664,9 +2665,10 @@ ci-info@^3.2.0:
   resolved "https://registry.yarnpkg.com/ci-info/-/ci-info-3.9.0.tgz#4279a62028a7b1f262f3473fc9605f5e218c59b4"
   integrity sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==
 
-"circle-flags@https://github.com/HatScripts/circle-flags":
-  version "1.0.0"
-  resolved "https://github.com/HatScripts/circle-flags#c7eb0a1f2de24fc036e25db5e22483745687baf2"
+circle-flags@^2.8.3:
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/circle-flags/-/circle-flags-2.8.3.tgz#0621e6fa1c00d8c94f1dc7615074c825a7387408"
+  integrity sha512-62gm4tY7evXzNdLP+nFOzxEtCagbY4nSnrPNn/yOWFAvApvOWCAvyqL+NeLN+nfhGOGc4L+oSgEheqM3XE5w7g==
 
 ckeditor5@46.0.3, ckeditor5@^46:
   version "46.0.3"

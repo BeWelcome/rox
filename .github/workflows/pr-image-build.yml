@@ -1,0 +1,123 @@
+name: PR image build
+
+# Builds the PHP-FPM and Nginx images (including yarn install and encore production)
+# for every pull request to main, without pushing them, so a broken Dockerfile,
+# lockfile or webpack config fails before the merge instead of on stage (#577).
+#
+# "Image build" always reports a result, so it can be a required check: it passes
+# straight away when a PR changes nothing the image is built from.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-image-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    name: Detect image changes
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.diff.outputs.image }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # tag=v4.2.2
+        with:
+          fetch-depth: 0
+
+      # Same inputs as the paths filter of build-image-stage.yml.
+      - name: Compare with the base branch
+        id: diff
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          pattern='^(Dockerfile|\.dockerignore|docker/|composer\.(json|lock)|symfony\.lock|package\.json|yarn\.lock|webpack\.config\.js|postcss\.config\.js|tailwind\.config\.js|tsconfig\.json|src/|assets/|build/|config/|lib/|modules/|roxlauncher/|templates/|tools/|public/|bin/|translations/|Mike42/|pthacks/|routes\.php|rox_docker\.ini|\.env$|\.trivyignore|\.github/workflows/(build-image-stage|pr-image-build)\.yml)'
+          changed=$(git diff --name-only "$BASE_SHA"...HEAD)
+          if printf '%s\n' "$changed" | grep -Eq "$pattern"; then
+            echo "image=true" >> "$GITHUB_OUTPUT"
+            echo "Image inputs changed:"; printf '%s\n' "$changed" | grep -E "$pattern" | head -20
+          else
+            echo "image=false" >> "$GITHUB_OUTPUT"
+            echo "No image inputs changed; skipping the build."
+          fi
+
+  build:
+    name: Build ${{ matrix.prefix }}
+    needs: [changes]
+    if: needs.changes.outputs.image == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {target: bewelcome_php,   prefix: php}
+          - {target: bewelcome_nginx, prefix: nginx}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0  # tag=v4.2.2
+
+      - name: Compute version metadata
+        id: version
+        run: |
+          {
+            echo "revision=$(git rev-parse --short HEAD)"
+            echo "timestamp=$(git log -n 1 --format=%ct)"
+            echo "build_date=$(date -u +%F)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@6524bf65af31da8d45b59e8c27de4bd072b392f5  # tag=v3.8.0
+
+      # Reads the stage layer cache; never writes it, so PR builds cannot change what stage builds from.
+      - name: Build (no push)
+        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75  # tag=v6.9.0
+        with:
+          context: .
+          target: ${{ matrix.target }}
+          platforms: linux/amd64
+          build-args: |
+            APP_VERSION=${{ steps.version.outputs.revision }}
+            APP_VERSION_TIMESTAMP=${{ steps.version.outputs.timestamp }}
+            APK_REFRESH=${{ steps.version.outputs.build_date }}
+          cache-from: type=gha,scope=stage-${{ matrix.prefix }}-amd64
+          push: false
+          load: ${{ matrix.prefix == 'php' }}
+          tags: rox-pr:${{ matrix.prefix }}
+
+      # Report only for now (#577): shows new CVEs before the merge without blocking.
+      - name: Scan the PHP image (report only)
+        if: matrix.prefix == 'php'
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25  # tag=v0.36.0
+        env:
+          TRIVY_DISABLE_VEX_NOTICE: '1'
+        with:
+          image-ref: rox-pr:php
+          format: table
+          severity: CRITICAL,HIGH,MEDIUM
+          exit-code: '0'
+          ignore-unfixed: true
+          trivyignores: .trivyignore
+          version: v0.74.0
+
+  result:
+    name: Image build
+    needs: [changes, build]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the build result
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          BUILD: ${{ needs.build.result }}
+        run: |
+          echo "changes: $CHANGES, build: $BUILD"
+          if [ "$CHANGES" != "success" ]; then exit 1; fi
+          case "$BUILD" in
+            success|skipped) exit 0 ;;
+            *) exit 1 ;;
+          esac

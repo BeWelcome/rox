@@ -306,5 +306,6 @@ jobs:
       - name: Run PHP security checker
         run: symfony security:check
 
+      # Runtime dependencies only, as on develop; build tooling (Encore 4, CKEditor 40 build utils) moves with the upgrade (#519).
       - name: Run JS security checker
-        run: yarn audit
+        run: yarn audit --groups dependencies

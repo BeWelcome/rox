@@ -61,7 +61,7 @@ class CommentModel
 
         $newExperience = false;
         try {
-            $maxlen = max(strlen($updatedText), strlen($originalText));
+            $maxlen = max(\strlen($updatedText), \strlen($originalText));
             $calculator = new LevenshteinDistance(false, 0, 1000 ** 2);
             $iteration = 0;
             $maxIteration = $maxlen / 1000;
@@ -71,7 +71,6 @@ class CommentModel
                 $levenshteinDistance = $calculator->calculate(
                     $currentUpdatedText,
                     $currentOriginalText
-                )
                 )['distance'];
 
                 if ($levenshteinDistance >= max(\strlen($currentUpdatedText), \strlen($currentOriginalText)) / 7) {
@@ -79,7 +78,7 @@ class CommentModel
                 }
                 ++$iteration;
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // ignore exception and just return false (likely consumed too much memory)
             return $newExperience;
         }
@@ -102,6 +101,22 @@ class CommentModel
         return $check1 || $check2 || $check3;
     }
 
+    public function checkForEmailAddress(Comment $comment): bool
+    {
+        $commentText = $comment->getTextfree();
+        $count = preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $commentText);
+
+        return $count > 0;
+    }
+
+    public function checkForPhoneNumber(Comment $comment): bool
+    {
+        $commentText = $comment->getTextfree();
+        $found = preg_match("/([0-9][\. \)-]*){8,}/", $commentText);
+
+        return $found > 0;
+    }
+
     private function checkCommentsDuration(Member $member, Comment $comment, array $params): bool
     {
         $duration = $params['duration'];
@@ -111,7 +126,7 @@ class CommentModel
         $commentCount = $this->entityManager
             ->getConnection()
             ->executeQuery(
-                "
+                '
                     SELECT
                         COUNT(*) as cnt
                     FROM
@@ -119,8 +134,8 @@ class CommentModel
                     WHERE
                         c.IdFromMember = :memberId
                         AND TIMEDIFF(NOW(), created) < :duration
-                ",
-                [ ':memberId' => $member->getId(), ':duration' => $duration]
+                ',
+                ['memberId' => $member->getId(), 'duration' => $duration]
             )
             ->fetchOne()
         ;
@@ -131,7 +146,7 @@ class CommentModel
             $comments = $this->entityManager
                 ->getConnection()
                 ->executeQuery(
-                    "
+                    '
                         SELECT
                             c.TextFree
                         FROM
@@ -139,8 +154,8 @@ class CommentModel
                         WHERE
                             c.IdFromMember = :memberId
                             AND TIMEDIFF(NOW(), created) < :duration
-                    ",
-                    [ ':memberId' => $member->getId(), ':duration' => $duration]
+                    ',
+                    ['memberId' => $member->getId(), 'duration' => $duration]
                 )
                 ->fetchAllAssociative()
             ;
@@ -153,28 +168,21 @@ class CommentModel
     private function checkCommentSimilarity(array $comments, Comment $comment): bool
     {
         $similar = 0;
-        $comments[count($comments)] = ['TextFree' => $comment->getTextfree()];
-        $count = count($comments);
-        for ($i = 0; $i < $count - 1; $i++) {
-            for ($j = $i + 1; $j < $count; $j++) {
+        $comments[\count($comments)] = ['TextFree' => $comment->getTextfree()];
+        $count = \count($comments);
+        for ($i = 0; $i < $count - 1; ++$i) {
+            for ($j = $i + 1; $j < $count; ++$j) {
                 similar_text(
-                    $comments[$i]['TextFree'],
-                    $comments[$j]['TextFree'],
+                    (string) $comments[$i]['TextFree'],
+                    (string) $comments[$j]['TextFree'],
                     $percent
                 );
                 if ($percent > 95) {
-                    $similar++;
+                    ++$similar;
                 }
             }
         }
-        return $similar != $count * ($count - 1);
-    }
 
-    public function checkForEmailAddress(Comment $comment): bool
-    {
-        $commentText = $comment->getTextfree();
-        $count = preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $commentText, $matches);
-
-        return $count > 0;
+        return $similar !== $count * ($count - 1);
     }
 }

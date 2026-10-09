@@ -1,4 +1,8 @@
 framework:
     mailer:
-        dsn: '%env(MAILER_DSN)%'
+        # The first transport is the default; newsletters set X-Transport: newsletter
+        # to go through the dedicated news relay (main 74529902e).
+        transports:
+            main: '%env(MAILER_DSN)%'
+            newsletter: '%env(NEWSLETTER_MAILER_DSN)%'
         message_bus: false

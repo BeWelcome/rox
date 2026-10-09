@@ -72,6 +72,9 @@ class TranslationsAddMissingCommand extends Command
                             FROM words
                             WHERE code = :reusedTranslationId
                         ');
+                        $statement->bindValue(':translationId', $translationId);
+                        $statement->bindValue(':reusedTranslationId', $reusedTranslationId);
+                        $statement->bindValue(':admin', $admin->getId());
                         $statement->executeQuery();
                     } else {
                         $io->note(\sprintf('Adding %s: %s', $translationId, $sentence));

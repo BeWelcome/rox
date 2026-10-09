@@ -45,7 +45,6 @@
   <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Model/MockupProvider/ProfileMockups.php"/>
   <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Model/PreferenceModel.php"/>
   <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Model/StatisticsModel.php"/>
-  <violation rule="PHPMD\Rule\Design\CountInLoopExpression" file="src/Model/StatisticsModel.php"/>
   <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Model/SuggestLocationModel.php"/>
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Model/SuggestLocationModel.php" method="searchAdminUnits"/>
   <violation rule="PHPMD\Rule\Design\LongParameterList" file="src/Pagerfanta/SearchAdapter.php" method="__construct"/>
@@ -57,8 +56,5 @@
   <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Service/Mailer.php" method="sendTemplateEmail"/>
   <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Service/Mailer.php" method="sendTemplateEmail"/>
   <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Twig/Extension.php"/>
-  <violation rule="PHPMD\Rule\UnusedPrivateMethod" file="src/Utilities/CommentSorter.php" method="commentsCompare"/>
-  <violation rule="PHPMD\Rule\UnusedPrivateMethod" file="src/Utilities/CommentSorterProfile.php" method="commentsCompare"/>
-  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Utilities/ForumUtilities.php" method="RemoveFQDN"/>
   <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="tests/Model/CommentModelTest.php"/>
 </phpmd-baseline>

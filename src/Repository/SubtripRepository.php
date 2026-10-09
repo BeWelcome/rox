@@ -2,14 +2,11 @@
 
 namespace App\Repository;
 
-use AnthonyMartin\GeoLocation\GeoLocation;
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
 use Carbon\CarbonImmutable;
-use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 
 /**

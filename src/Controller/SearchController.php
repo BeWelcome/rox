@@ -70,8 +70,6 @@ class SearchController extends AbstractController
     /**
      * @Route("/search/locations", name="search_locations")
      *
-     * @return Response
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.StaticAccess)
      */
@@ -101,7 +99,7 @@ class SearchController extends AbstractController
         $memberSearchOptionsPreference = $member->getMemberPreference($searchOptionsPreference);
         $searchOptions = $memberSearchOptionsPreference->getValue();
 
-        if ("" !== $searchOptions) {
+        if ('' !== $searchOptions) {
             $searchFormRequest = unserialize($searchOptions);
         } else {
             $searchFormRequest = new SearchFormRequest();

@@ -4,7 +4,6 @@ namespace App\Security\PasswordHasher;
 
 use Symfony\Component\PasswordHasher\Exception\InvalidPasswordException;
 use Symfony\Component\PasswordHasher\Hasher\CheckPasswordLengthTrait;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class LegacyPasswordHasher implements PasswordHasherInterface
@@ -27,6 +26,12 @@ class LegacyPasswordHasher implements PasswordHasherInterface
         return hash_equals($hashedPassword, $encodedPassword);
     }
 
+    public function needsRehash(string $hashedPassword): bool
+    {
+        // Always migrate passwords.
+        return true;
+    }
+
     private function encodePassword($plaintext): string
     {
         return '*' . strtoupper(
@@ -34,11 +39,5 @@ class LegacyPasswordHasher implements PasswordHasherInterface
                     sha1($plaintext, true)
                 )
             );
-    }
-
-    public function needsRehash(string $hashedPassword): bool
-    {
-        // Always migrate passwords.
-        return true;
     }
 }

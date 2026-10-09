@@ -8,7 +8,6 @@ use App\Pagerfanta\DoNotTranslateTranslationAdapter;
 use App\Pagerfanta\MissingTranslationAdapter;
 use App\Pagerfanta\TranslationAdapter;
 use App\Pagerfanta\UpdateTranslationAdapter;
-use App\Utilities\ManagerTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;

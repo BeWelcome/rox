@@ -6,7 +6,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CommunityNewsCommentType extends AbstractType
 {
@@ -18,8 +17,8 @@ class CommunityNewsCommentType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => 'label.commnunitynews.comment.title',
-                'label_attr'=> [
-                    'class'=> 'u-hidden',
+                'label_attr' => [
+                    'class' => 'u-hidden',
                 ],
                 'attr' => [
                     'class' => 'u-mt-32',
@@ -29,8 +28,8 @@ class CommunityNewsCommentType extends AbstractType
             ])
             ->add('text', CkEditorType::class, [
                 'label' => 'label.communitynews.comment.text',
-                'label_attr'=> [
-                    'class'=> 'u-hidden',
+                'label_attr' => [
+                    'class' => 'u-hidden',
                 ],
                 'attr' => [
                     'class' => 'editor form-control',

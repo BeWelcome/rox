@@ -33,7 +33,6 @@ class Location
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=200, nullable=true)
-     *
      */
     private $name;
 
@@ -41,7 +40,6 @@ class Location
      * @var float
      *
      * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
-     *
      */
     private $latitude;
 
@@ -49,7 +47,6 @@ class Location
      * @var float
      *
      * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
-     *
      */
     private $longitude;
 
@@ -72,7 +69,6 @@ class Location
      *
      * @ORM\ManyToOne(targetEntity="Country")
      * @ORM\JoinColumn(name="country", referencedColumnName="country")
-     *
      */
     private $country;
 
@@ -103,7 +99,6 @@ class Location
      * @ORM\Column(name="geonameId", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      */
     private $geonameId;
 

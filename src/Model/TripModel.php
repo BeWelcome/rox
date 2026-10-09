@@ -4,17 +4,14 @@ namespace App\Model;
 
 use App\Entity\Member;
 use App\Entity\Preference;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
-use Carbon\Carbon;
+use App\Utilities\ItemsPerPageTraits;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use App\Utilities\ItemsPerPageTraits;
 
 class TripModel
 {

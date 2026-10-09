@@ -4,15 +4,10 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PostLoadEventArgs;
-use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Event\PostUpdateEventArgs;
 use Doctrine\ORM\Event\PrePersistEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
-use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 
 /**
@@ -35,7 +30,7 @@ class Relation
      */
     private int $comment = 0;
 
-    private ?string $commentText = "";
+    private ?string $commentText = '';
 
     /**
      * @ORM\Column(name="created", type="datetime", nullable=false)
@@ -109,8 +104,6 @@ class Relation
 
     /**
      * Get owner.
-     *
-     * @return Member
      */
     public function getOwner(): Member
     {
@@ -193,7 +186,7 @@ class Relation
             $memberTranslationRepository = $objectManager->getRepository(MemberTranslation::class);
             $translatedComment = $memberTranslationRepository->findOneBy([
                 'translation' => $this->comment,
-                'owner' => $this->getOwner()
+                'owner' => $this->getOwner(),
             ]);
 
             $translatedComment->setSentence($this->commentText ?? '');
@@ -203,6 +196,18 @@ class Relation
             $translatedComment = $this->createRelationComment($args->getObjectManager());
             $this->comment = $translatedComment->getId();
         }
+    }
+
+    public function getCommentText(): ?string
+    {
+        return $this->commentText;
+    }
+
+    public function setCommentText(?string $commentText): self
+    {
+        $this->commentText = $commentText;
+
+        return $this;
     }
 
     private function createRelationComment(ObjectManager $objectManager): MemberTranslation
@@ -224,17 +229,5 @@ class Relation
         $objectManager->flush();
 
         return $translatedComment;
-    }
-
-    public function getCommentText(): ?string
-    {
-        return $this->commentText;
-    }
-
-    public function setCommentText(?string $commentText): self
-    {
-        $this->commentText = $commentText;
-
-        return $this;
     }
 }

@@ -4,10 +4,8 @@ namespace App\Command;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\BroadcastMessage;
-use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Service\Mailer;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -15,8 +13,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Mime\Address;
 
 class SendMassmailCommand extends Command
 {
@@ -75,7 +71,7 @@ class SendMassmailCommand extends Command
                     $newsletterTranslations = $scheduled->getNewsletter()->getTranslations();
                     $anyNewsletter = reset($newsletterTranslations);
 
-                    $hasImages = false !== strpos($anyNewsletter['body'], "<figure");
+                    $hasImages = false !== strpos($anyNewsletter['body'], '<figure');
                     if ($hasImages) {
                         $parameters['has_images'] = true;
                     }
@@ -85,7 +81,7 @@ class SendMassmailCommand extends Command
                 $receiver = $scheduled->getReceiver();
                 $status = $receiver->getStatus();
                 if (
-                    (MemberStatusType::SUSPENDED === $status && $receiver->getRemindersWithOutLogin() !== 100)
+                    (MemberStatusType::SUSPENDED === $status && 100 !== $receiver->getRemindersWithOutLogin())
                     && MemberStatusType::ACTIVE !== $status
                     && MemberStatusType::OUT_OF_REMIND !== $status
                     && MemberStatusType::CHOICE_INACTIVE !== $status

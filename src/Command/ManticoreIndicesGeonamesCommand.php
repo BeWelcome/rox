@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use function count;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -13,8 +14,6 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-
-use function count;
 
 class ManticoreIndicesGeonamesCommand extends Command
 {
@@ -75,6 +74,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                 'Skipped creation of ' . self::GEONAMES_INDEX . ' index. ' .
                 'Try using manticore:indices:update --geonames instead'
             );
+
             return Command::INVALID;
         }
 
@@ -85,7 +85,7 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     private function createGeonamesIndex(): ?Index
     {
-        $client = new Client(['host' => $this->manticoreHost,'port' => $this->manticorePort]);
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
 
         $index = $client->index(self::GEONAMES_INDEX);
         // If the index doesn't exist, drop() fails with an error message. So we run it silenced.
@@ -120,7 +120,7 @@ class ManticoreIndicesGeonamesCommand extends Command
             );
 
             return $index;
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             $this->io->error($e->getMessage());
             $this->io->error('Index ' . self::GEONAMES_INDEX . ' couldn\'t be created.');
 
@@ -137,7 +137,7 @@ class ManticoreIndicesGeonamesCommand extends Command
             // The response for OPTIMIZE cannot be parsed by the PHP client, so suppress empty exceptions.
             $client->sql('OPTIMIZE TABLE ' . self::GEONAMES_INDEX . ' OPTION cutoff=1, sync=1', true);
         } catch (\Exception $e) {
-            if ($e->getMessage() !== '') {
+            if ('' !== $e->getMessage()) {
                 throw $e;
             }
         }
@@ -153,7 +153,7 @@ class ManticoreIndicesGeonamesCommand extends Command
     private function getMemberCounts(): array
     {
         $counts = $this->getConnection()
-            ->executeQuery(<<<___SQL
+            ->executeQuery(<<<'___SQL'
                 SELECT
                     m.IdCity,
                     COUNT(m.IdCity) AS total
@@ -390,14 +390,14 @@ class ManticoreIndicesGeonamesCommand extends Command
     private function adaptLocale(string $locale)
     {
         switch ($locale) {
-            case "zh-TW":
-                $locale = "zh-hant";
+            case 'zh-TW':
+                $locale = 'zh-hant';
                 break;
-            case "zh-CN":
-                $locale = "zh-hans";
+            case 'zh-CN':
+                $locale = 'zh-hans';
                 break;
-            case "pt-BR":
-                $locale = "pt-br";
+            case 'pt-BR':
+                $locale = 'pt-br';
                 break;
         }
 

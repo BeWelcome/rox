@@ -9,7 +9,6 @@ use App\Entity\Preference;
 use App\Entity\ProfileVisit;
 use App\Form\DeleteProfileFormType;
 use App\Form\ProfileStatusFormType;
-use App\Form\SearchLocationType;
 use App\Form\SetLocationType;
 use App\Model\ProfileModel;
 use App\Repository\ProfileVisitRepository;
@@ -209,7 +208,7 @@ class ProfileController extends AbstractController
         $member = $this->getUser();
 
         if (null !== $member) {
-             return $this->redirectToRoute('profile_delete', ['username' => $member->getUsername()]);
+            return $this->redirectToRoute('profile_delete', ['username' => $member->getUsername()]);
         }
 
         $deleteProfileForm = $this->createForm(DeleteProfileFormType::class, null, [
@@ -245,7 +244,7 @@ class ProfileController extends AbstractController
         }
 
         return $this->render('profile/delete.not.logged.in.html.twig', [
-            'form' => $deleteProfileForm->createView()
+            'form' => $deleteProfileForm->createView(),
         ]);
     }
 
@@ -275,6 +274,7 @@ class ProfileController extends AbstractController
                 // force logout
                 $tokenStorage->setToken(null); // Force logout
                 $request->getSession()->invalidate();
+
                 return $this->redirectToRoute('homepage');
             }
         }
@@ -321,6 +321,5 @@ class ProfileController extends AbstractController
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
             'submenu' => $profileSubmenu->getSubmenu($member, $member, ['active' => 'profile']),
         ]);
-
     }
 }

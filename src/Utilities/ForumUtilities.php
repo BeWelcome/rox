@@ -4,7 +4,7 @@ namespace App\Utilities;
 
 class ForumUtilities
 {
-    function RemoveFQDN(string $postContent)
+    public function RemoveFQDN(string $postContent)
     {
         // Replace href in links
         $postContent = preg_replace(

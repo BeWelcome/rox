@@ -145,7 +145,7 @@ class RequestMockups implements MockupProviderInterface
         $guest = $parameters['admin'];
 
         $thread = $this->getThread($host, $guest, $parameters['status'], 3);
-        $form = $this->formFactory->create( ReportSpamType::class);
+        $form = $this->formFactory->create(ReportSpamType::class);
 
         return [
             'host' => $host,
@@ -164,7 +164,7 @@ class RequestMockups implements MockupProviderInterface
 
         $thread = $this->getThread($host, $guest, $parameters['status'], 4);
 
-        $form = $this->formFactory->create( ReportSpamType::class);
+        $form = $this->formFactory->create(ReportSpamType::class);
 
         return [
             'host' => $host,

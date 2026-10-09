@@ -20,7 +20,7 @@ class InvitationGuest extends HostingRequestAbstractType
 
     public function __construct(
         DateTransformer $dateTimeTransformer,
-        LegTransformer  $legTransformer
+        LegTransformer $legTransformer
     ) {
         $this->dateTimeTransformer = $dateTimeTransformer;
         $this->legTransformer = $legTransformer;

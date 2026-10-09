@@ -90,14 +90,14 @@ class MemberTranslation
      */
     private Language $language;
 
-    public function setOwner(Member $owner):self
+    public function setOwner(Member $owner): self
     {
         $this->owner = $owner;
 
         return $this;
     }
 
-    public function getOwner():Member
+    public function getOwner(): Member
     {
         return $this->owner;
     }

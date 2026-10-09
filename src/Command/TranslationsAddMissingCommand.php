@@ -6,7 +6,6 @@ use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,7 +13,6 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Yaml\Yaml;
 
 class TranslationsAddMissingCommand extends Command
@@ -65,7 +63,7 @@ class TranslationsAddMissingCommand extends Command
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {
                     ++$count;
-                    if ($sentence[0] == '@') {
+                    if ('@' == $sentence[0]) {
                         $reusedTranslationId = substr($sentence, 1);
                         $io->note(sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
                         $connection = $this->entityManager->getConnection();
@@ -78,7 +76,7 @@ class TranslationsAddMissingCommand extends Command
                         $statement->executeQuery([
                             ':admin' => $admin->getId(),
                             ':translationId' => $translationId,
-                            ':reusedTranslationId' => $reusedTranslationId
+                            ':reusedTranslationId' => $reusedTranslationId,
                         ]);
                     } else {
                         $io->note(sprintf('Adding %s: %s', $translationId, $sentence));

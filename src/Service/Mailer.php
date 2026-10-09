@@ -9,16 +9,13 @@ use App\Entity\Newsletter;
 use App\Entity\Relation;
 use App\Logger\Logger;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Twig\Environment;
 
 class Mailer
 {
@@ -152,6 +149,9 @@ class Mailer
     /**
      * Sends contact/feedback form submissions to the helpdesk queue.
      * From: is always noreply@bewelcome.org to pass DMARC; the reporter's address goes in Reply-To.
+     *
+     * @param mixed $sender
+     * @param mixed $parameters
      */
     public function sendFeedbackEmail($sender, Address $receiver, $parameters): bool
     {
@@ -256,7 +256,7 @@ class Mailer
             [
                 'subject' => 'profile.delete.feedback',
                 'member' => $retiree,
-                'body' => $body
+                'body' => $body,
             ]
         );
     }
@@ -298,10 +298,7 @@ class Mailer
     /**
      * @param Member|Address|string $sender
      * @param Member|Address        $receiver
-     * @param string                $template
      * @param mixed                 $parameters
-     *
-     * @return bool
      */
     private function sendTemplateEmail($sender, $receiver, string $template, array $parameters, ?string $replyTo = null, array $extraTextHeaders = []): bool
     {
@@ -393,9 +390,9 @@ class Mailer
         );
 
         return [
-            'X-Transport'           => 'newsletter',
-            'Precedence'            => 'bulk',
-            'List-Unsubscribe'      => '<' . $unsubscribeUrl . '>',
+            'X-Transport' => 'newsletter',
+            'Precedence' => 'bulk',
+            'List-Unsubscribe' => '<' . $unsubscribeUrl . '>',
             'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click',
         ];
     }

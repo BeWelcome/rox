@@ -21,9 +21,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
 use Exception;
-use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
-use Symfony\Component\Security\Core\Exception\RuntimeException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -34,16 +32,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *
  * @SuppressWarnings(PHPMD)
  */
-class Member
-    implements
-        \Serializable,
-        ObjectManagerAware,
-        UserInterface,
-        PasswordHasherAwareInterface,
-        PasswordAuthenticatedUserInterface
+class Member implements \Serializable, ObjectManagerAware, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
 {
     public const USERNAME_REGEXP = '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])';
-    
+
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
     public const ROLE_ADMIN_BETA = 'ROLE_ADMIN_BETA';
@@ -91,7 +83,6 @@ class Member
      * @var string
      *
      * @ORM\Column(name="Username", type="string", length=32, nullable=false)
-     *
      */
     protected $username;
 
@@ -99,7 +90,6 @@ class Member
      * @var string
      *
      * @ORM\Column(name="Email", type="string", nullable=false)
-     *
      */
     protected $email;
 
@@ -107,7 +97,6 @@ class Member
      * @var DateTime
      *
      * @ORM\Column(name="LastLogin", type="datetime", nullable=true)
-     *
      */
     protected $lastLogin = null;
 
@@ -153,7 +142,6 @@ class Member
      *
      * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
-     *
      */
     private $city;
 
@@ -208,7 +196,6 @@ class Member
      * @var int
      *
      * @ORM\Column(name="FirstName", type="string", nullable=false)
-     *
      */
     private $firstName = '0';
 
@@ -216,7 +203,6 @@ class Member
      * @var int
      *
      * @ORM\Column(name="SecondName", type="string", nullable=true)
-     *
      */
     private $secondName = null;
 
@@ -224,7 +210,6 @@ class Member
      * @var int
      *
      * @ORM\Column(name="LastName", type="string", nullable=false)
-     *
      */
     private $lastName = '0';
 
@@ -239,7 +224,6 @@ class Member
      * @var string
      *
      * @ORM\Column(name="Accomodation", type="accommodation", nullable=false)
-     *
      */
     private $accommodation = AccommodationType::MAYBE;
 
@@ -275,7 +259,6 @@ class Member
      * @var string
      *
      * @ORM\Column(name="TypicOffer", type="typical_offer", nullable=false)
-     *
      */
     private $typicoffer;
 
@@ -290,7 +273,6 @@ class Member
      * @var int
      *
      * @ORM\Column(name="MaxGuest", type="integer", nullable=false)
-     *
      */
     private $maxguest = '0';
 
@@ -312,7 +294,6 @@ class Member
      * @var string
      *
      * @ORM\Column(name="Restrictions", type="string", nullable=false)
-     *
      */
     private $restrictions;
 
@@ -355,7 +336,6 @@ class Member
      * @var DateTime
      *
      * @ORM\Column(name="created", type="datetime", nullable=false)
-     *
      */
     private $created;
 
@@ -655,7 +635,6 @@ class Member
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="MembersLanguagesLevel", mappedBy="member")
-     *
      */
     private $languageLevels;
 
@@ -2752,8 +2731,8 @@ class Member
             /** @var RightVolunteer $volunteerRight */
             foreach ($volunteerRights->getIterator() as $volunteerRight) {
                 if ($volunteerRight->getRight() === $right) {
-                   $hasRight = true;
-                   break;
+                    $hasRight = true;
+                    break;
                 }
             }
         }
@@ -2903,14 +2882,15 @@ class Member
     {
         return array_filter(
             $this->languageLevels->toArray(),
-            function (/** @var MembersLanguagesLevel */ $k) {
+            function (/* @var MembersLanguagesLevel */ $k) {
                 try {
                     // Make sure language exists in database
                     $language = $k->getLanguage();
                     $language->getName();
-                } catch(Exception $e) {
+                } catch (Exception $e) {
                     return false;
                 }
+
                 return true;
             }
         );
@@ -3120,7 +3100,6 @@ class Member
      * Provides an array collection of all translated items of a profile.
      *
      * Needs to be called explicitly
-     *
      */
     public function getMemberFields(): array
     {
@@ -3196,8 +3175,6 @@ class Member
         return $phoneNumbers;
     }
 
-    /**
-     */
     public function getMessengers()
     {
         $messengers = [
@@ -3246,8 +3223,6 @@ class Member
         return $this->city->getCountry();
     }
 
-    /**
-     */
     public function getAge(): int
     {
         $birthday = $this->getBirthdate();
@@ -3255,15 +3230,11 @@ class Member
         return $birthday->diffInYears();
     }
 
-    /**
-     */
     public function getAvatar(): string
     {
         return '/members/avatar/' . $this->getUsername();
     }
 
-    /**
-     */
     public function getName(): string
     {
         $name = '';
@@ -3271,7 +3242,7 @@ class Member
             $name .= $this->firstName . ' ';
         }
         if (!($this->hideAttribute & self::MEMBER_SECONDNAME_HIDDEN)) {
-            $name .= $this->secondName. ' ';
+            $name .= $this->secondName . ' ';
         }
         if (!($this->hideAttribute & self::MEMBER_LASTNAME_HIDDEN)) {
             $name .= $this->lastName;

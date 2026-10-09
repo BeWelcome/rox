@@ -87,18 +87,8 @@ class MemberStatusType extends EnumType
         'OutOfRemind',
         'ActiveHidden',
         'SuspendedBeta',
-        'AskToLeave'
+        'AskToLeave',
     ];
-
-    public function getStatuses(): array
-    {
-        $translationIds = self::STATUSES_IN_USE;
-        array_walk($translationIds, function (&$item) {
-            $item = strtolower("MemberStatus" . $item);
-        });
-
-        return array_combine($translationIds, self::STATUSES_IN_USE);
-    }
 
     /** @var string */
     protected $name = 'member_status';
@@ -125,4 +115,14 @@ class MemberStatusType extends EnumType
         self::PASSED_AWAY,
         self::BUGGY,
     ];
+
+    public function getStatuses(): array
+    {
+        $translationIds = self::STATUSES_IN_USE;
+        array_walk($translationIds, function (&$item) {
+            $item = strtolower('MemberStatus' . $item);
+        });
+
+        return array_combine($translationIds, self::STATUSES_IN_USE);
+    }
 }

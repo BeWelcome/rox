@@ -70,7 +70,6 @@ class ActivityAttendee
      */
     private $id;
 
-
     /**
      * ActivityAttendee constructor.
      *

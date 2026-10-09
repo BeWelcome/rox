@@ -5,7 +5,6 @@ namespace App\Security;
 use App\Doctrine\SubtripOptionsType;
 use App\Entity\Member;
 use App\Entity\Trip;
-use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -64,7 +63,7 @@ class TripVoter extends Voter
         }
 
         if (self::TRIP_REMOVE === $attribute || self::TRIP_COPY === $attribute) {
-            return ($member === $trip->getCreator());
+            return $member === $trip->getCreator();
         }
 
         return $this->canEdit($trip, $member);
@@ -72,6 +71,6 @@ class TripVoter extends Voter
 
     private function canEdit(Trip $trip, Member $member): bool
     {
-        return ($member === $trip->getCreator() && !$trip->isExpired());
+        return $member === $trip->getCreator() && !$trip->isExpired();
     }
 }

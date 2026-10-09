@@ -7,8 +7,6 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\Member;
 use App\Utilities\CommentSorter;
-use DateTimeImmutable;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;

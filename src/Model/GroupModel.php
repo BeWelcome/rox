@@ -319,7 +319,7 @@ class GroupModel
         $privilege = $privilegeScopeRepository->findOneBy([
             'member' => $member,
             'role' => $groupOwner,
-            'privilege' => $groupController
+            'privilege' => $groupController,
         ]);
 
         if (null === $privilege) {

@@ -160,9 +160,8 @@ class InvitationController extends BaseRequestAndInvitationController
         ]);
     }
 
-
     /**
-     * Deals with declines
+     * Deals with declines.
      */
     public function decline(Request $request, Message $message): Response
     {

@@ -547,9 +547,7 @@ class ForumPost implements ObjectManagerAware
         $thread = $this->thread;
         try {
             $threadTitle = $this->thread->getTitle();
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $thread = null;
         }
 

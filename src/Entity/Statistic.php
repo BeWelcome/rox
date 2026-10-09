@@ -243,7 +243,6 @@ class Statistic
         return $this->legsCreated;
     }
 
-
     /**
      * @param int $invitationsSent
      *
@@ -264,7 +263,6 @@ class Statistic
         return $this->invitationsSent;
     }
 
-
     /**
      * @param int $invitationsAccepted
      *
@@ -284,7 +282,6 @@ class Statistic
     {
         return $this->invitationsAccepted;
     }
-
 
     /**
      * Set number of requests which have been accepted.

@@ -2,22 +2,16 @@
 
 namespace App\Model;
 
+use function count;
 use Doctrine\ORM\EntityManagerInterface;
-use Foolz\SphinxQL\Drivers\Pdo\Connection;
-use Foolz\SphinxQL\Helper;
-use Foolz\SphinxQL\MatchBuilder;
-use Foolz\SphinxQL\SphinxQL;
 use Gedmo\Translatable\TranslatableListener;
 use Manticoresearch\Client;
-use Manticoresearch\Query;
 use Manticoresearch\Query\BoolQuery;
 use Manticoresearch\Query\Equals;
 use Manticoresearch\Query\MatchPhrase;
 use Manticoresearch\Query\MatchQuery;
 use Manticoresearch\Search;
 use Symfony\Contracts\Translation\TranslatorInterface;
-
-use function count;
 
 class SuggestLocationModel
 {
@@ -66,8 +60,64 @@ class SuggestLocationModel
         return ['locations' => $this->removeDuplicates('id', $results)];
     }
 
+    public function getLocationDetails(array $results, string $typeTranslationId = null): array
+    {
+        $locale = $this->translator->getLocale();
+        $type = '';
+        if (null !== $typeTranslationId) {
+            $type = $this->translator->trans($typeTranslationId);
+        }
+
+        $locations = [];
+        foreach ($results as $location) {
+            $locationEntity = $this->getDetailsForId($location['geoname_id']);
+            if (null !== $locationEntity) {
+                $name = $locationEntity->getName();
+                $admin1 = $locationEntity->getAdmin1();
+                if (null !== $admin1 && $locationEntity !== $admin1) {
+                    $admin1->setTranslatableLocale($locale);
+                    $this->entityManager->refresh($admin1);
+                    $name .= '#' . $admin1->getName();
+                }
+                $country = $locationEntity->getCountry();
+                if (null !== $country && $locationEntity !== $country) {
+                    $country->setTranslatableLocale($locale);
+                    $this->entityManager->refresh($country);
+                    $name .= '#' . $country->getName();
+                }
+
+                $locations[] = [
+                    'type' => $type,
+                    'isAdminUnit' => $location['isadmin'] || $location['iscountry'],
+                    'id' => $locationEntity->getGeonameId(),
+                    'name' => $name,
+                    'latitude' => $locationEntity->getLatitude(),
+                    'longitude' => $locationEntity->getLongitude(),
+                ];
+            }
+        }
+
+        return $locations;
+    }
+
+    public function removeDuplicates(string $key, ...$resultArrays): array
+    {
+        $geonameIds = [];
+        $places = [];
+        foreach ($resultArrays as $results) {
+            foreach ($results as $result) {
+                if (!\in_array($result[$key], $geonameIds, true)) {
+                    $geonameIds[] = $result[$key];
+                    $places[] = $result;
+                }
+            }
+        }
+
+        return $places;
+    }
+
     /**
-     * Search term looks like this:
+     * Search term looks like this:.
      *
      * place[[, admin unit], country]
      */
@@ -270,53 +320,14 @@ class SuggestLocationModel
 
         $countries = $this->getManticoreResults($query, 5);
 
-        if (1 <> count($countries)) {
+        if (1 != count($countries)) {
             return null;
         }
 
         // Return the only result.
         $country = reset($countries);
+
         return $country['country'];
-    }
-
-    public function getLocationDetails(array $results, string $typeTranslationId = null): array
-    {
-        $locale = $this->translator->getLocale();
-        $type = '';
-        if (null !== $typeTranslationId) {
-            $type = $this->translator->trans($typeTranslationId);
-        }
-
-        $locations = [];
-        foreach ($results as $location) {
-            $locationEntity = $this->getDetailsForId($location['geoname_id']);
-            if (null !== $locationEntity) {
-                $name = $locationEntity->getName();
-                $admin1 = $locationEntity->getAdmin1();
-                if (null !== $admin1 && $locationEntity !== $admin1) {
-                    $admin1->setTranslatableLocale($locale);
-                    $this->entityManager->refresh($admin1);
-                    $name .= '#' . $admin1->getName();
-                }
-                $country = $locationEntity->getCountry();
-                if (null !== $country && $locationEntity !== $country) {
-                    $country->setTranslatableLocale($locale);
-                    $this->entityManager->refresh($country);
-                    $name .= '#' . $country->getName();
-                }
-
-                $locations[] = [
-                    'type' => $type,
-                    'isAdminUnit' => $location['isadmin'] || $location['iscountry'],
-                    'id' => $locationEntity->getGeonameId(),
-                    'name' => $name,
-                    'latitude' => $locationEntity->getLatitude(),
-                    'longitude' => $locationEntity->getLongitude(),
-                ];
-            }
-        }
-
-        return $locations;
     }
 
     private function getDetailsForId($id)
@@ -346,22 +357,6 @@ class SuggestLocationModel
         return $query->getOneOrNullResult();
     }
 
-    public function removeDuplicates(string $key, ...$resultArrays): array
-    {
-        $geonameIds = [];
-        $places = [];
-        foreach ($resultArrays as $results) {
-            foreach ($results as $result) {
-                if (!\in_array($result[$key], $geonameIds, true)) {
-                    $geonameIds[] = $result[$key];
-                    $places[] = $result;
-                }
-            }
-        }
-
-        return $places;
-    }
-
     private function searchAdminUnits(array $adminUnits, ?string $countryId): array
     {
         if (null !== $countryId) {
@@ -376,7 +371,7 @@ class SuggestLocationModel
         $adminUnitIds = ['country' => $countryId ?? '', 'admin1' => '', 'admin2' => '', 'admin3' => '', 'admin4' => ''];
         $adminUnits = array_reverse($adminUnits);
         $countOfAdminUnits = count($adminUnits) - 1;
-        for ($index = 0; $index <= $countOfAdminUnits; $index++) {
+        for ($index = 0; $index <= $countOfAdminUnits; ++$index) {
             $adminUnit = $adminUnits[$index];
             $query = $this->getQueryForGeonamesRt();
             $query
@@ -402,7 +397,7 @@ class SuggestLocationModel
                     if (null === $countryId) {
                         $adminUnitIds['country'] = $foundAdminUnit['country'];
                     }
-                    for ($level = 1; $level <= 4; $level++) {
+                    for ($level = 1; $level <= 4; ++$level) {
                         $adminUnitIds['admin' . $level] = $foundAdminUnit['admin' . $level];
                     }
                 } else {
@@ -437,7 +432,7 @@ class SuggestLocationModel
 
     private function getQueryForGeonamesRt(): Search
     {
-        $config = ['host' => $this->manticoreHost,'port' => $this->manticorePort];
+        $config = ['host' => $this->manticoreHost, 'port' => $this->manticorePort];
         $client = new Client($config);
         $query = new Search($client);
         $query

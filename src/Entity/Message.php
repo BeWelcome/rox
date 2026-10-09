@@ -373,7 +373,6 @@ class Message
         return Carbon::instance($this->firstRead);
     }
 
-
     public function getCheckerComment(): string
     {
         return $this->checkerComment ?? '';

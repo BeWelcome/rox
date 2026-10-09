@@ -10,7 +10,6 @@ use Carbon\Carbon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Mailer\MailerInterface;
 
 class ProfileModel
 {

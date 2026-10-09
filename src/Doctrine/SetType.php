@@ -60,7 +60,7 @@ abstract class SetType extends Type
         if (null !== $value && !empty($value)) {
             if (is_array($value)) {
                 $value = implode(',', $value);
-            };
+            }
             if ($value) {
                 // Split given value
                 $values = explode(',', $value);

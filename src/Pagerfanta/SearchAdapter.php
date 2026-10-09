@@ -234,6 +234,7 @@ class SearchAdapter implements AdapterInterface
         if (null != $location->getAdmin4Id()) {
             $adminUnits[] = $location->getAdmin4Id();
         }
+
         return $adminUnits;
     }
 }

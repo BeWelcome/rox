@@ -39,7 +39,6 @@ class Address
      * @var int
      *
      * @ORM\Column(name="HouseNumber", type="integer", nullable=false)
-     *
      */
     private $houseNumber;
 
@@ -47,7 +46,6 @@ class Address
      * @var int
      *
      * @ORM\Column(name="StreetName", type="integer", nullable=false)
-     *
      */
     private $streetName;
 
@@ -55,7 +53,6 @@ class Address
      * @var int
      *
      * @ORM\Column(name="Zip", type="integer", nullable=false)
-     *
      */
     private $zip;
 
@@ -64,7 +61,6 @@ class Address
      *
      * @ORM\ManyToOne(targetEntity="NewLocation")
      * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
-     *
      */
     private $location;
 

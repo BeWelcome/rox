@@ -25,7 +25,7 @@ class HostingRequestType extends AbstractType
 
     public function __construct(
         DateTransformer $dateTimeTransformer,
-        LegTransformer  $legTransformer
+        LegTransformer $legTransformer
     ) {
         $this->dateTimeTransformer = $dateTimeTransformer;
         $this->legTransformer = $legTransformer;

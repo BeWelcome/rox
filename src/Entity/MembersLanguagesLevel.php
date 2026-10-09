@@ -51,7 +51,6 @@ class MembersLanguagesLevel
      *
      * @ORM\ManyToOne(targetEntity="Language", inversedBy="levels")
      * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id", nullable=FALSE)
-     *
      */
     private $language;
 
@@ -59,7 +58,6 @@ class MembersLanguagesLevel
      * @var string
      *
      * @ORM\Column(name="Level", type="language_level", nullable=false)
-     *
      */
     private $level = LanguageLevelType::BEGINNER;
 

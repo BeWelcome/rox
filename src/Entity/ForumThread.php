@@ -713,15 +713,13 @@ class ForumThread
         if (null === $this->group) {
             return null;
         }
-        
+
         // Database might still link to deleted group row try to access group name and
         // return null in case that triggers an exception
         $group = $this->group;
         try {
             $groupName = $this->group->getName();
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $group = null;
         }
 

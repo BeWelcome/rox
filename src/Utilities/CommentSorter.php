@@ -19,6 +19,7 @@ class CommentSorter
         $this->early20thCentury = new DateTimeImmutable('01-01-1900');
         $this->farFuture = new DateTimeImmutable('01-01-3000');
     }
+
     public function sortComments(array $comments): array
     {
         usort($comments, [$this, 'commentsCompare']);

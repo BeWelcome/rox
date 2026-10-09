@@ -6,7 +6,6 @@ use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 class LoginMessageRepository extends EntityRepository
 {
@@ -31,6 +30,7 @@ class LoginMessageRepository extends EntityRepository
             ->setParameter(':member', $member->getId())
             ->getQuery()
         ;
-        return  $query->getResult();
+
+        return $query->getResult();
     }
 }

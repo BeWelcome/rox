@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use App\Entity\Preference;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\ConversationsModel;

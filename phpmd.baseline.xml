@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<phpmd-baseline>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Command/ForumCleanupCommand.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Command/ManticoreIndicesGeonamesCommand.php" method="addDocument"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Command/SendMassmailCommand.php" method="execute"/>
+  <violation rule="PHPMD\Rule\UnusedPrivateField" file="src/Command/SendNotificationsCommand.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Controller/Admin/CheckerController.php" method="handleMessages"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Controller/Admin/CommentController.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Controller/Admin/VolunteerToolController.php"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Controller/Admin/VolunteerToolController.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Controller/CommentController.php" method="editComment"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Controller/CommentController.php" method="editComment"/>
+  <violation rule="PHPMD\Rule\CleanCode\BooleanArgumentFlag" file="src/Controller/ConversationController.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Controller/DonationController.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Controller/FeedbackController.php" method="feedback"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Controller/GalleryController.php"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Controller/GalleryController.php" method="handleImageUploadToGallery"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Controller/InvitationController.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Controller/InvitationController.php" method="newInvitation"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Controller/InvitationController.php" method="newInvitation"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Controller/InvitationController.php" method="newInvitation"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Controller/MessageController.php" method="newMessage"/>
+  <violation rule="PHPMD\Rule\Design\CouplingBetweenObjects" file="src/Controller/ProfileController.php"/>
+  <violation rule="PHPMD\Rule\UnusedPrivateMethod" file="src/Controller/ProfileController.php" method="deleteProfileProcess"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/Controller/ProfileController.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\UndefinedVariable" file="src/Controller/ProfileController.php"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Controller/RequestController.php" method="newHostingRequest"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Controller/SearchController.php" method="searchLocations"/>
+  <violation rule="PHPMD\Rule\Design\LongMethod" file="src/Controller/SearchController.php" method="searchLocations"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Controller/SearchController.php"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Controller/StatisticsController.php"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/Controller/TripController.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Form/Extension/AutoCompleteExtension.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Form/Extension/AutoCompleteExtension.php" method="finishView"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Form/Extension/AutoCompleteExtension.php" method="finishView"/>
+  <violation rule="PHPMD\Rule\CleanCode\MissingImport" file="src/Form/Extension/AutoCompleteExtension.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Form/ProfileStatusFormType.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Form/RelationType.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Form/SearchFormType.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Form/SetLocationType.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Model/CommentModel.php" method="checkIfNewExperience"/>
+  <violation rule="PHPMD\Rule\UnusedLocalVariable" file="src/Model/CommentModel.php"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Model/ConversationModel.php"/>
+  <violation rule="PHPMD\Rule\UnusedPrivateMethod" file="src/Model/MemberDataExtractor/ForumPostsExtractor.php" method="getThreadAndGroup"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Model/MockupProvider/ProfileMockups.php"/>
+  <violation rule="PHPMD\Rule\Naming\ShortVariable" file="src/Model/PreferenceModel.php"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Model/StatisticsModel.php"/>
+  <violation rule="PHPMD\Rule\Design\CountInLoopExpression" file="src/Model/StatisticsModel.php"/>
+  <violation rule="PHPMD\Rule\Design\WeightedMethodCount" file="src/Model/SuggestLocationModel.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Model/SuggestLocationModel.php" method="searchAdminUnits"/>
+  <violation rule="PHPMD\Rule\Design\LongParameterList" file="src/Pagerfanta/SearchAdapter.php" method="__construct"/>
+  <violation rule="PHPMD\Rule\CleanCode\StaticAccess" file="src/Pagerfanta/SearchAdapter.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Repository/TripRepository.php"/>
+  <violation rule="PHPMD\Rule\UnusedFormalParameter" file="src/Security/PasswordHasher/LegacyPasswordHasher.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Security/TripVoter.php" method="voteOnAttribute"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Service/Mailer.php"/>
+  <violation rule="PHPMD\Rule\CyclomaticComplexity" file="src/Service/Mailer.php" method="sendTemplateEmail"/>
+  <violation rule="PHPMD\Rule\Design\NpathComplexity" file="src/Service/Mailer.php" method="sendTemplateEmail"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="src/Twig/Extension.php"/>
+  <violation rule="PHPMD\Rule\UnusedPrivateMethod" file="src/Utilities/CommentSorter.php" method="commentsCompare"/>
+  <violation rule="PHPMD\Rule\UnusedPrivateMethod" file="src/Utilities/CommentSorterProfile.php" method="commentsCompare"/>
+  <violation rule="PHPMD\Rule\Controversial\CamelCaseMethodName" file="src/Utilities/ForumUtilities.php" method="RemoveFQDN"/>
+  <violation rule="PHPMD\Rule\Design\TooManyPublicMethods" file="tests/Model/CommentModelTest.php"/>
+</phpmd-baseline>

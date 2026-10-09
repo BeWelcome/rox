@@ -75,7 +75,7 @@ class SignupController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/signup/finalize/{username}', name: 'signup_finalize')]
+    #[Route(path: '/signup/finalize/{username:member}', name: 'signup_finalize')]
     public function signupFinalize(
         Request $request,
         Member $member,

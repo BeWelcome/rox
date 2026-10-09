@@ -148,7 +148,7 @@ class ForumsController extends AbstractController
         return $this->redirect($referrer);
     }
 
-    #[Route(path: '/members/{username}/posts/{page}/{search}', name: 'profile_forum_posts_search')]
+    #[Route(path: '/members/{username:member}/posts/{page}/{search}', name: 'profile_forum_posts_search')]
     #[Route(path: '/members/{username}/posts/{page}', name: 'profile_forum_posts', requirements: ['page' => '\d+'])]
     public function showPostsByMember(
         Request $request,

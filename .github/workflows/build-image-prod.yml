@@ -1,8 +1,8 @@
 name: Build production image
 
 # Builds and publishes versioned production images when a release tag (v*) is pushed.
-# This workflow fires after feature/docker-master is merged to master and a maintainer
-# creates a release tag (e.g. git tag v3.7.0 && git push origin v3.7.0).
+# This workflow fires when a maintainer creates a release tag on main
+# (e.g. git tag v3.7.0 && git push origin v3.7.0).
 #
 # Triggered by: push of a v* git tag (e.g. v3.7.0)
 # Deploys to:   prod — manually via the "Deploy prod" workflow in sysadmins-infra

@@ -7,11 +7,15 @@ parameters:
 
 doctrine:
     dbal:
-        url: '%env(resolve:DATABASE_URL)%'
-
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '16'
+        # Separate DB_* variables, as on main: stage and prod set these, and a URL built
+        # in .env would take the .env defaults instead of the real values.
+        driver: pdo_mysql
+        host: '%database_host%'
+        port: '%database_port%'
+        dbname: '%database_name%'
+        user: '%database_user%'
+        password: '%database_password%'
+        server_version: '12.3.0-MariaDB'
 
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true

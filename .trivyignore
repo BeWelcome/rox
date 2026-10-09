@@ -1,0 +1,5 @@
+# CVEs Trivy may skip in the image scan (build-image-stage.yml, build-image-prod.yml).
+# Only for a vulnerability with no fixed package available yet. One ID per line,
+# with a comment: package, fixed version, and when to remove the line.
+# The image refreshes apk packages daily (APK_REFRESH), so a fixed package is
+# picked up on the next day's build.

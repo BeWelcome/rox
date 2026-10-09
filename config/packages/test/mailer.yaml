@@ -1,3 +1,5 @@
 framework:
     mailer:
-        dsn: 'null://null'
+        transports:
+            main: 'null://null'
+            newsletter: 'null://null'

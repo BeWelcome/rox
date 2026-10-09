@@ -141,7 +141,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
             <?php
             $forumUtilities = new ForumUtilities();
-            $postContent = $forumUtilities->RemoveFQDN($words->fTrad($post->IdContent));
+            $postContent = $forumUtilities->removeFqdn($words->fTrad($post->IdContent));
 
 
             if (($post->PostDeleted == "Deleted")&&($this->BW_Right->HasRight("ForumModerator"))) {

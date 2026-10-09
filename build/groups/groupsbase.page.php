@@ -249,7 +249,7 @@ SEARCH_FORM;
         } else {
             $items[] = [ 'search', 'groups/search', $words->getSilent('GroupsSearchHeading') ];
             $items[] = [ 'rules', 'forums/rules', $words->getSilent('ForumRulesShort') ];
-            $items[] = [ 'faq', 'about/faq/6', $words->getSilent('ForumLinkToDoc') ];
+            $items[] = [ 'faq', 'faq/6', $words->getSilent('ForumLinkToDoc') ];
         }
 
         $items[] = [ 'subscription', 'forums/subscriptions', $this->words->getSilent('forum_YourSubscription') ];

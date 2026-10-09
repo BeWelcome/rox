@@ -15,7 +15,7 @@ class AboutBaseController extends AbstractController
             ],
             'about_faq' => [
                 'key' => 'Faq',
-                'url' => $this->generateUrl('about_faq'),
+                'url' => $this->generateUrl('faqs_overview'),
             ],
             'about_feedback' => [
                 'key' => 'ContactUs',

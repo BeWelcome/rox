@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Member;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\Query;
 
 /**
@@ -18,20 +19,18 @@ use Doctrine\ORM\Query;
 class TripRepository extends EntityRepository
 {
     /**
-     * @param mixed $id
-     * @param null  $lockMode
-     * @param null  $lockVersion
+     * Loads the legs with a LEFT JOIN, so a trip is found even when a leg's location is missing.
      *
      * @return Trip|null
      */
-    public function find($id, $lockMode = null, $lockVersion = null)
+    public function find(mixed $id, LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?object
     {
         return $this->createQueryBuilder('t')
             ->leftJoin('t.subtrips', 's')
             ->leftJoin('s.location', 'l')
             ->addSelect('s', 'l')
             ->where('t.id = :id')
-            ->setParameter(':id', $id)
+            ->setParameter('id', $id)
             ->addOrderBy('s.arrival', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();

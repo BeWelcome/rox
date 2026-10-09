@@ -41,6 +41,8 @@ concurrency:
 
 jobs:
   build:
+    # Forks have no GHCR, dispatch or GitLab secrets (same guard as #515 on develop).
+    if: github.repository == 'BeWelcome/rox'
     name: Build ${{ matrix.prefix }} ${{ matrix.arch }}
     runs-on: ${{ matrix.runner }}
     strategy:

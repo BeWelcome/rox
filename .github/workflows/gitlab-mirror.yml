@@ -10,6 +10,8 @@ on:
 
 jobs:
   trigger:
+    # Forks have no GHCR, dispatch or GitLab secrets (same guard as #515 on develop).
+    if: github.repository == 'BeWelcome/rox'
     runs-on: "ubuntu-latest"
     steps:
     - name: trigger

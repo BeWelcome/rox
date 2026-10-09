@@ -6,7 +6,9 @@ use App\Entity\Member;
 use App\Entity\MembersPhoto;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Intervention\Image\Format;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -71,8 +73,7 @@ class AvatarController extends AbstractController
         $isBrowsable = $member->isBrowsable();
         $isAdministrativeProfile =
             $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
-        ;
+            || $this->isGranted(Member::ROLE_ADMIN_PROFILE);
         if (!$isBrowsable && !$isAdministrativeProfile) {
             return $this->emptyAvatar($size);
         }
@@ -92,16 +93,16 @@ class AvatarController extends AbstractController
 
     private function storeAvatar(Member $member, UploadedFile $avatarFile): bool
     {
-        $imageManager = new ImageManager();
+        $imageManager = new ImageManager(new Driver());
         try {
-            $img = $imageManager->make($avatarFile->getRealPath())->orientate();
-        } catch (Throwable) {
+            $img = $imageManager->decodePath($avatarFile->getRealPath())->orient();
+        } catch (Throwable $e) {
             return false;
         }
 
         $this->removeAvatarFiles($member);
         $newFileName = self::AVATAR_PATH . $member->getId() . '_original';
-        $img->save($newFileName);
+        $img->encodeUsingFormat(Format::PNG, quality: 100)->save($newFileName);
 
         $memberPhotoRepository = $this->entityManager->getRepository(MembersPhoto::class);
         $memberPhoto = $memberPhotoRepository->findOneBy(['member' => $member->getId()], ['created' => 'DESC']);
@@ -132,7 +133,7 @@ class AvatarController extends AbstractController
 
     private function emptyAvatar($size): BinaryFileResponse
     {
-        $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size . '.png';
+        $filename = self::AVATAR_PATH . 'empty_avatar_' . $size . '_' . $size;
 
         if (!file_exists($filename)) {
             $filename = $this->createEmptyAvatarImage($size);
@@ -175,11 +176,11 @@ class AvatarController extends AbstractController
 
         $filename = self::AVATAR_PATH . $member->getId() . '_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
 
-        $imageManager = new ImageManager();
-        $img = $imageManager->make($original);
+        $imageManager = new ImageManager(new Driver());
+        $img = $imageManager->decodePath($original);
 
-        $height = $img->getHeight();
-        $width = $img->getWidth();
+        $height = $img->height();
+        $width = $img->width();
         if ($height !== $width) {
             $size = min($width, $height);
             $startX = (int) (($width - $size) / 2);
@@ -187,11 +188,9 @@ class AvatarController extends AbstractController
             $img->crop($size, $size, $startX, $startY);
         }
 
-        $img->resize($sizeOfAvatar, null, function ($constraint) {
-            $constraint->aspectRatio();
-        });
+        $img->scale((int) $sizeOfAvatar);
 
-        $img->save($filename, 100, 'jpg');
+        $img->encodeUsingFormat(Format::PNG, quality: 100)->save($filename);
     }
 
     private function createEmptyAvatarImage(string $sizeOfAvatar): string
@@ -199,16 +198,14 @@ class AvatarController extends AbstractController
         // creates a thumbnail of the empty avatar
         $original = self::EMPTY_AVATAR_PATH . 'empty_avatar_original.png';
 
-        $imageManager = new ImageManager();
-        $img = $imageManager->make($original);
+        $imageManager = new ImageManager(new Driver());
+        $img = $imageManager->decodePath($original);
         if ('original' === $sizeOfAvatar) {
             $filename = $original;
         } else {
             $filename = self::AVATAR_PATH . 'empty_avatar_' . $sizeOfAvatar . '_' . $sizeOfAvatar;
-            $img->resize($sizeOfAvatar, $sizeOfAvatar, function ($constraint) {
-                $constraint->aspectRatio();
-            });
-            $img->save($filename);
+            $img->scale((int) $sizeOfAvatar, (int) $sizeOfAvatar);
+            $img->encodeUsingFormat(Format::PNG, quality: 100)->save($filename);
         }
 
         return $filename;

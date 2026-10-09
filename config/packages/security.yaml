@@ -65,6 +65,7 @@ security:
         - { path: ^/signup, roles: PUBLIC_ACCESS }
         - { path: ^/suggest, roles: PUBLIC_ACCESS }
         - { path: ^/newsletter, roles: PUBLIC_ACCESS }
+        - { path: ^/gallery/show/uploaded/, roles: PUBLIC_ACCESS }
         - { path: ^/unsubscribe, roles: PUBLIC_ACCESS }
         - { path: ^/faq, roles: PUBLIC_ACCESS }
         - { path: ^/bod, roles: PUBLIC_ACCESS }

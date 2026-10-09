@@ -35,7 +35,7 @@
         "hidehalo/nanoid-php": "^1.1",
         "html2text/html2text": "*",
         "incenteev/composer-parameter-handler": "^2.0",
-        "intervention/image": "^2.4",
+        "intervention/image": "^4.0",
         "jfcherng/php-levenshtein-distance": "*",
         "judev/php-htmltruncator": "^1.2",
         "laminas/laminas-code": "^4.7.1",

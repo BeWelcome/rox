@@ -191,9 +191,6 @@
     "gregwar/captcha-bundle": {
         "version": "v2.1.5"
     },
-    "guzzlehttp/psr7": {
-        "version": "2.0.0"
-    },
     "hamcrest/hamcrest-php": {
         "version": "v2.0.1"
     },
@@ -410,9 +407,6 @@
     },
     "psr/log": {
         "version": "1.1.4"
-    },
-    "ralouphie/getallheaders": {
-        "version": "3.0.3"
     },
     "ramsey/collection": {
         "version": "1.2.1"

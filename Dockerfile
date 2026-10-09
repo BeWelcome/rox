@@ -4,14 +4,22 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.4
-ARG NGINX_VERSION=1.29
+ARG PHP_VERSION=8.4.26
+ARG NGINX_VERSION=1.30.4
 
 
 # "php" stage
-FROM php:${PHP_VERSION}-fpm-alpine AS bewelcome_php
+FROM php:${PHP_VERSION}-fpm-alpine3.24 AS bewelcome_php
 
 # persistent / runtime deps
+# Upgrade all base packages to pick up security patches (CVE fixes in OS packages).
+# The CI builds use a layer cache, so without a changing value here this layer
+# (and every apk package) would stay at the version of the first cached build,
+# and Trivy fails on CVEs that Alpine has long fixed. The workflows pass the
+# build date, so the packages are refreshed at most once a day.
+ARG APK_REFRESH=unset
+RUN echo "apk refresh: ${APK_REFRESH}" && apk update && apk upgrade --no-cache
+
 RUN apk add --no-cache \
 		acl \
 		freetype \
@@ -20,12 +28,9 @@ RUN apk add --no-cache \
 		fcgi \
 		file \
 		gettext \
-		git \
-		openssh-client \
-		python3 \
 	;
 
-ARG APCU_VERSION=5.1.24
+ARG APCU_VERSION=5.1.28
 RUN set -eux; \
 	apk add --no-cache --virtual .build-deps \
 		$PHPIZE_DEPS \
@@ -79,6 +84,7 @@ RUN export PATH="/usr/local/bin:$PATH"
 
 RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/bewelcome.prod.ini $PHP_INI_DIR/conf.d/bewelcome.ini
+COPY docker/php/fpm/z-workers.conf /usr/local/etc/php-fpm.d/z-workers.conf
 
 RUN set -eux; \
 	{ \
@@ -88,7 +94,6 @@ RUN set -eux; \
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER=1
-
 # install Symfony Flex globally to speed up download of Composer packages (parallelized prefetching)
 RUN set -eux; \
     composer global config --no-plugins allow-plugins.symfony/flex true; \
@@ -100,6 +105,8 @@ WORKDIR /srv/bewelcome
 
 # build for production
 ARG APP_ENV=prod
+ARG APP_VERSION=unknown
+ARG APP_VERSION_TIMESTAMP=
 
 # copy only specifically what we need for production
 COPY assets assets/
@@ -129,7 +136,9 @@ RUN set -eux; \
 COPY package.json yarn.lock webpack.config.js postcss.config.js tailwind.config.js tsconfig.json ./
 RUN set -eux; \
 	yarn install --frozen-lock; \
-	yarn encore production --mode=production
+	yarn encore production --mode=production; \
+	rm -rf node_modules; \
+	yarn cache clean --force
 
 # do not use .env files in production
 COPY .env ./
@@ -140,6 +149,10 @@ RUN set -eux; \
 	mkdir -p var/cache var/log; \
 	composer dump-autoload --classmap-authoritative --no-dev; \
 	chmod +x bin/console; sync
+
+RUN set -eux; \
+	printf '%s\n' "$APP_VERSION" > VERSION; \
+	if [ -n "$APP_VERSION_TIMESTAMP" ]; then php -r 'touch("VERSION", (int) $argv[1]);' "$APP_VERSION_TIMESTAMP"; fi
 VOLUME /srv/bewelcome/var
 VOLUME /srv/bewelcome/data
 
@@ -165,6 +178,7 @@ WORKDIR /srv/bewelcome/public
 
 COPY --from=bewelcome_php /srv/bewelcome/public ./
 
+
 # "php" dev stage
 # depends on the "php" stage above
 FROM bewelcome_php AS bewelcome_php_dev
@@ -172,7 +186,22 @@ FROM bewelcome_php AS bewelcome_php_dev
 # build for production
 ARG NODE_ENV=production
 
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+# git and openssh-client are only needed in development (docker-entrypoint writes VERSION from
+# git outside prod; .git is not in the image). Keeping them out of the runtime image also keeps
+# out libexpat, which only git depends on.
 RUN set -eux; \
 	apk add --no-cache \
+		git \
+		openssh-client \
 		make \
-		mysql-client
+		mysql-client \
+		libstdc++ \
+		gcompat \
+		bash \
+		nodejs \
+		procps; \
+	install-php-extensions xdebug
+
+COPY docker/php/conf.d/bewelcome.xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini

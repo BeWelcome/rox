@@ -50,8 +50,8 @@ class CommentController extends AbstractController
     )]
     public function reportCommentAction(
         Request $request,
-        #[MapEntity(mapping: ['to_member' => 'username'])] #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
-        #[MapEntity(mapping: ['from_member' => 'username'])] #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
         EntityManagerInterface $entityManager,
         Mailer $mailer,
     ): Response {
@@ -295,8 +295,8 @@ class CommentController extends AbstractController
     }
     #[Route(path: '/members/{from_member}/comment/{to_member}/new', name: 'comment_new_experience', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function setNewExperienceForComment(
-        #[MapEntity(mapping: ['from_member' => 'username'])] #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
-        #[MapEntity(mapping: ['to_member' => 'username'])] #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         CommentModel $commentModel,
         EntityManagerInterface $entityManager,
     ): RedirectResponse {

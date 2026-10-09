@@ -55,7 +55,7 @@ class StatisticsModel
                     members m
                 WHERE
                     m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
-            ')->fetch();
+            ')->fetchAssociative();
 
             $countries = $connection->executeQuery("
                 SELECT
@@ -64,7 +64,7 @@ class StatisticsModel
                     geonamescountries gc
                     join geonames g on gc.country = g.country
                     join members m on g.geonameId = m.IdCity and m.Status IN ('Active', 'OutOfRemind')
-            ")->fetchAll();
+            ")->fetchAllAssociative();
 
             $languages = $connection->executeQuery('
                 SELECT
@@ -77,7 +77,7 @@ class StatisticsModel
                     l.id = mll.idLanguage
                     AND mll.IdMember = m.Id
                     AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-            ')->fetch();
+            ')->fetchAssociative();
 
             $positiveComments = $connection->executeQuery("
                 SELECT
@@ -89,7 +89,7 @@ class StatisticsModel
                     c.Quality = 'Good'
                     AND IdFromMember = m.Id
                     AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ')
-            ')->fetch();
+            ')->fetchAssociative();
 
             $activities = $connection->executeQuery('
                 SELECT
@@ -98,7 +98,7 @@ class StatisticsModel
                     activities a
                 WHERE
                     a.status = 0
-            ')->fetch();
+            ')->fetchAssociative();
 
             return [
                 'members'    => $members['cnt'],

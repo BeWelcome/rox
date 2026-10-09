@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Language;
-use App\Entity\NewMember as Member;
+use App\Entity\Member;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;

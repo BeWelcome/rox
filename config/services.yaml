@@ -373,7 +373,8 @@ services:
 
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
-            - '%env(DATABASE_URL)%'
+            # Reuse the Doctrine connection, as on main (DBAL 4: getNativeConnection).
+            - !service { class: PDO, factory: [ '@database_connection', 'getNativeConnection' ] }
             - { lock_mode: !php/const Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler::LOCK_NONE }
 
     Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~

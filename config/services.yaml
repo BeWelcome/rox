@@ -276,6 +276,10 @@ services:
         arguments: [ '@router', '@security.helper' ]
         tags: [twig.extension]
 
+    # src/Twig is excluded from autowiring above, so every extension is listed here.
+    App\Twig\AnalyticsExtension:
+        tags: [twig.extension]
+
     pagerfanta.bootstrap4.ajax.template:
         public: true
         class: App\Pagerfanta\TwitterBootstrap4AjaxTemplate

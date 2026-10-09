@@ -1,4 +1,6 @@
-{% block content %}{% apply inky_to_html|inline_css(encore_entry_css_source('email')) %}
+{# utm_links: every bewelcome.org link carries the newsletter as campaign, so Plausible
+   can attribute visits, signups and donations to it (#540). #}
+{% block content %}{% apply inky_to_html|utm_links('newsletter-' ~ newsletter.id)|inline_css(encore_entry_css_source('email')) %}
     <wrapper class="header">
         <container>
             <row class="collapse">

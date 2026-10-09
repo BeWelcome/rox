@@ -14,3 +14,9 @@
         <br><a href="{{ url('homepage') }}">{{ 'error.return.home'|trans }}</a>
     </p>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Plausible 404 goal (#540): which paths are broken. #}
+    <script>window.plausible && plausible('404', {props: {path: document.location.pathname}})</script>
+{% endblock javascripts %}

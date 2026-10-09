@@ -22,13 +22,16 @@ class FaqController extends AbstractController
     }
 
     /**
+     * Old FAQ address, kept for external links and bookmarks. Permanent, so search engines
+     * move it to /faq (BeWelcome/sysadmins-infra#654).
+     *
      * @Route("/about/faq", name="about_faq")
      *
      * @return Response
      */
     public function showAboutFAQ()
     {
-        return $this->redirectToRoute('faqs_overview', ['categoryId' => 1]);
+        return $this->redirectToRoute('faqs_overview', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     /**

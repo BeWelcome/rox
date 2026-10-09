@@ -6,6 +6,7 @@ use App\Entity\Member;
 use App\Entity\MembersPhoto;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Format;
 use InvalidArgumentException;
@@ -35,10 +36,8 @@ class AvatarController extends AbstractController
     {
     }
 
-    /**
-     * @Route("/members/uploadavatar", methods={"POST"})
-     */
-    public function uploadAvatar(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route(path: '/members/uploadavatar', methods: ['POST'])]
+    public function uploadAvatar(Request $request): Response
     {
         $uploadFailedTranslation = $this->translator->trans('profile.picture.upload.failed');
 
@@ -55,7 +54,7 @@ class AvatarController extends AbstractController
             return new Response($uploadFailedTranslation, Response::HTTP_BAD_REQUEST);
         }
 
-        $this->storeAvatar($entityManager, $member, $avatarFile->getRealPath());
+        $success = $this->storeAvatar($member, $avatarFile);
 
         if ($success) {
             return new Response('');
@@ -75,7 +74,6 @@ class AvatarController extends AbstractController
         $isAdministrativeProfile =
             $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
             || $this->isGranted(Member::ROLE_ADMIN_PROFILE);
-
         if (!$isBrowsable && !$isAdministrativeProfile) {
             return $this->emptyAvatar($size);
         }
@@ -110,22 +108,13 @@ class AvatarController extends AbstractController
         return $this->createCacheableResponse($filename);
     }
 
-    private function storeAvatar($entityManager, $member, $tmpFilePath)
+    private function storeAvatar(Member $member, UploadedFile $avatarFile): bool
     {
-        // TODO
-        // $this->writeMemberphoto($memberId);
-        $memberId = $member->getId();
-        $this->removeAvatarFile($memberId);
-
-        $imageManager = new ImageManager();
-        $img = $imageManager->make($tmpFilePath)->orientate();
-        $height = $img->getHeight();
-        $width = $img->getWidth();
-        if ($height !== $width) {
-            $size = min($width, $height);
-            $startX = (int) (($width - $size) / 2);
-            $startY = (int) (($height - $size) / 2);
-            $img->crop($size, $size, $startX, $startY);
+        $imageManager = new ImageManager(new Driver());
+        try {
+            $img = $imageManager->decodePath($avatarFile->getRealPath())->orient();
+        } catch (Throwable $e) {
+            return false;
         }
 
         $this->removeAvatarFiles($member);
@@ -144,19 +133,6 @@ class AvatarController extends AbstractController
 
         $this->entityManager->persist($memberPhoto);
         $this->entityManager->flush();
-
-        $memberPhotoRepository = $entityManager->getRepository(MembersPhoto::class);
-        $memberPhoto = $memberPhotoRepository->findOneBy(['member' => $memberId], ['created' => 'DESC']);
-        if (null === $memberPhoto) {
-            $memberPhoto = new MembersPhoto();
-        }
-        $memberPhoto->setMember($member);
-        $memberPhoto->setFilepath($newFileName);
-        $memberPhoto->setCreated(new DateTime());
-        $memberPhoto->setComment('Uploaded new avatar');
-
-        $entityManager->persist($memberPhoto);
-        $entityManager->flush();
 
         $this->logger->info('New avatar picture was stored: ' . $newFileName);
 

@@ -373,13 +373,12 @@ class Message
         return Carbon::instance($this->firstRead);
     }
 
-
     public function getCheckerComment(): string
     {
         return $this->checkerComment ?? '';
     }
 
-    public function setCheckerComment(?string $checkerComment): Message
+    public function setCheckerComment(?string $checkerComment): self
     {
         $this->checkerComment = $checkerComment;
 

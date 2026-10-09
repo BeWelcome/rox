@@ -4,10 +4,7 @@ namespace App\Controller;
 
 use App\Entity\HostingRequest;
 use App\Entity\Member;
-use App\Entity\MembersPhoto;
-use App\Entity\MemberTranslation;
 use App\Entity\Message;
-use App\Entity\Preference;
 use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
 use App\Utilities\TranslatedFlashTrait;
@@ -19,8 +16,8 @@ use Symfony\Component\Form\Form;
 
 abstract class BaseRequestAndInvitationController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     protected BaseRequestModel $model;
     protected ConversationModel $conversationModel;

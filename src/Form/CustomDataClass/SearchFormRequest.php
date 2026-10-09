@@ -3,8 +3,6 @@
 namespace App\Form\CustomDataClass;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
 use SearchModel;
 use Symfony\Component\Form\FormInterface;
@@ -205,6 +203,17 @@ class SearchFormRequest
         return self::fillObjectFromRequest($searchFormRequest, $request);
     }
 
+    public static function determineValidationGroups(FormInterface $form)
+    {
+        $data = $form->getData();
+        $showOnMap = (bool) ($data->showOnMap);
+        if (true === $showOnMap) {
+            return ['map-search'];
+        }
+
+        return ['text-search'];
+    }
+
     private static function fillObjectFromRequest(self $searchFormRequest, Request $request): self
     {
         $data = [];
@@ -280,17 +289,6 @@ class SearchFormRequest
         }
 
         return $searchFormRequest;
-    }
-
-    public static function determineValidationGroups(FormInterface $form)
-    {
-        $data = $form->getData();
-        $showOnMap = (bool) ($data->showOnMap);
-        if (true === $showOnMap) {
-            return ['map-search'];
-        }
-
-        return ['text-search'];
     }
 
     private static function calculateBoundingBox($latitude, $longitude, $distance): array

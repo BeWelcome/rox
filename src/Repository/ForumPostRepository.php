@@ -2,10 +2,7 @@
 
 namespace App\Repository;
 
-use App\Doctrine\CommentAdminActionType;
-use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;

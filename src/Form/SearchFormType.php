@@ -115,7 +115,7 @@ class SearchFormType extends AbstractType
                     'label' => 'search.options.reset',
                     'attr' => [
                         'class' => 'o-button o-button--outline mr-1',
-                    ]
+                    ],
                 ])
             ;
         }
@@ -130,7 +130,7 @@ class SearchFormType extends AbstractType
                     'label' => 'search.options.reset',
                     'attr' => [
                         'class' => 'o-button o-button--outline mr-1',
-                    ]
+                    ],
                 ])
             ;
         }
@@ -309,7 +309,7 @@ class SearchFormType extends AbstractType
                 'label' => 'search.find.members',
                 'attr' => [
                     'class' => 'o-button',
-                ]
+                ],
             ])
         ;
     }

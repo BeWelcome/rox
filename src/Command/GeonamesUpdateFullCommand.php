@@ -589,7 +589,7 @@ class GeonamesUpdateFullCommand extends Command
             }
         }
         $query = substr($query, 0, -2);
-        $query .= " ON DUPLICATE KEY UPDATE";
+        $query .= ' ON DUPLICATE KEY UPDATE';
         $progressbar->setMessage('Executing query...', 'status');
         $connection->executeQuery($query);
         $connection->executeQuery('SET FOREIGN_KEY_CHECKS=1');

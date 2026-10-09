@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-
 use App\Entity\Preference;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,7 +18,7 @@ class PreferencesType extends AbstractType
 
         foreach ($preferences as $preference) {
             $choices = $this->getChoices($preference);
-            if (count($choices) === 2) {
+            if (2 === \count($choices)) {
                 // Create radio buttons
                 $fieldOptions = [
                     'expanded' => true,
@@ -39,7 +38,7 @@ class PreferencesType extends AbstractType
                     'required' => true,
                     'constraints' => [
                         new NotBlank(),
-                    ]
+                    ],
                 ]))
             ;
         }

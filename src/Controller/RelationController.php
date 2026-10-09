@@ -3,11 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use App\Entity\ProfileNote;
 use App\Entity\Relation;
-use App\Form\ProfileNoteType;
 use App\Form\RelationType;
-use App\Repository\ProfileNoteRepository;
 use App\Repository\RelationRepository;
 use App\Service\Mailer;
 use App\Utilities\ChangeProfilePictureGlobals;
@@ -21,13 +18,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class RelationController extends AbstractController
 {
-    use TranslatorTrait;
     use ItemsPerPageTraits;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private EntityManagerInterface $entityManager;
     private ChangeProfilePictureGlobals $globals;

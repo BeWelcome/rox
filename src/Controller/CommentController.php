@@ -26,13 +26,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CommentController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private ProfileSubmenu $profileSubmenu;
     private ChangeProfilePictureGlobals $globals;
@@ -233,7 +231,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('add_comment', ['username' => $member->getUsername()]);
         }
 
-        if ($comment->getQuality() == CommentQualityType::NEGATIVE && !$comment->getEditingAllowed()) {
+        if (CommentQualityType::NEGATIVE === $comment->getQuality() && !$comment->getEditingAllowed()) {
             $this->addTranslatedFlash('notice', 'comment.editing.not.allowed', []);
 
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
@@ -258,12 +256,12 @@ class CommentController extends AbstractController
             $checkForExperience = $commentModel->checkIfNewExperience($originalComment, $comment);
             $newExperience = $form['new_experience']->getData();
             $changedToNegative =
-                (CommentQualityType::NEGATIVE != $originalComment->getQuality()) &&
-                (CommentQualityType::NEGATIVE == $comment->getQuality())
+                (CommentQualityType::NEGATIVE !== $originalComment->getQuality()) &&
+                (CommentQualityType::NEGATIVE === $comment->getQuality())
             ;
             $changedToPositive =
-                (CommentQualityType::POSITIVE != $originalComment->getQuality()) &&
-                (CommentQualityType::POSITIVE == $comment->getQuality())
+                (CommentQualityType::POSITIVE !== $originalComment->getQuality()) &&
+                (CommentQualityType::POSITIVE === $comment->getQuality())
             ;
             if ($newExperience || $changedToNegative || $changedToPositive) {
                 $comment->setUpdated(new DateTime());

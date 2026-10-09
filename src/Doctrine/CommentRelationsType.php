@@ -12,10 +12,9 @@ class CommentRelationsType extends SetType
     public const TRAVEL_BUDDY = 'TravelledTogether';
     public const IS_FRIEND = 'WeAreFriends';
     public const ONLINE_COMMUNICATION = 'CommunicatedOnline';
-    /** No longer used
+    /** No longer used.
     public const ONLY_MET_ONLINE = 'NeverMetInRealLife';
      */
-
     protected $name = 'comment_relations';
 
     protected $translationPrefix = 'profile.comment.relation.';

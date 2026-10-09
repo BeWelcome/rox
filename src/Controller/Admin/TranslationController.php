@@ -32,7 +32,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TranslationController.
@@ -167,9 +166,10 @@ class TranslationController extends AbstractController
                 if (null === $referrer) {
                     return $this->redirectToRoute('translations_locale_code', [
                         'locale' => $language->getShortCode(),
-                        'type' => 'all'
+                        'type' => 'all',
                     ]);
                 }
+
                 return $this->redirect($referrer);
             }
             $editForm->get('translatedText')->addError(new FormError($invalidMessage));

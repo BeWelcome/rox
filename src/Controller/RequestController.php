@@ -3,14 +3,12 @@
 namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
-use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
-use App\Form\HostingRequestType;
 use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
@@ -43,11 +41,11 @@ class RequestController extends BaseRequestAndInvitationController
     private Logger $logger;
 
     public function __construct(
-        ConversationModel      $conversationModel,
-        HostingRequestModel    $requestModel,
+        ConversationModel $conversationModel,
+        HostingRequestModel $requestModel,
         EntityManagerInterface $entityManager,
-        Mailer                 $mailer,
-        Logger                 $logger
+        Mailer $mailer,
+        Logger $logger
     ) {
         parent::__construct($requestModel, $entityManager);
 
@@ -57,7 +55,7 @@ class RequestController extends BaseRequestAndInvitationController
     }
 
     /**
-     * Deals with declines
+     * Deals with declines.
      */
     public function decline(Message $message): Response
     {
@@ -322,7 +320,7 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        if (strpos($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD) === false) {
+        if (false === strpos($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
             $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
         }
     }

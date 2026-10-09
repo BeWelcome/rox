@@ -5,7 +5,6 @@ namespace App\Model\MockupProvider;
 use App\Doctrine\SubtripOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\HostingRequest;
-use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\NewLocation;

@@ -131,6 +131,10 @@ class ConversationModel
 
     /**
      * Tests if a member has exceeded their limit for sending messages.
+     *
+     * @param mixed $member
+     * @param mixed $perHour
+     * @param mixed $perDay
      */
     public function hasMessageLimitExceeded($member, $perHour, $perDay)
     {
@@ -189,6 +193,10 @@ class ConversationModel
 
     /**
      * Tests if a member has exceeded their limit for sending requests.
+     *
+     * @param mixed $member
+     * @param mixed $perHour
+     * @param mixed $perDay
      */
     public function hasRequestLimitExceeded($member, $perHour, $perDay): bool
     {

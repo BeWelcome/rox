@@ -43,7 +43,7 @@ class CommunityNewsController extends AbstractController
 
     /**
      * @Route("/communitynews/{id}", name="communitynews_show")
-     * 
+     *
      * @throws \Exception
      *
      * @return Response
@@ -56,8 +56,7 @@ class CommunityNewsController extends AbstractController
         $limit = $request->query->get('limit', 10);
 
         $comments = $this->communityNewsModel->getCommentsPaginator($communityNews, $page, $limit);
-    
-        
+
         $communityNewsCommentRequest = new CommunityNewsCommentRequest();
         $form = $this->createForm(CommunityNewsCommentType::class, $communityNewsCommentRequest);
         $form->handleRequest($request);

@@ -52,6 +52,7 @@ class MemberController extends AbstractController
     public function redirectMyData()
     {
         $username = $this->getUser()->getUsername();
+
         return $this->redirectToRoute('profile_personal_data', [
             'username' => $username,
         ]);

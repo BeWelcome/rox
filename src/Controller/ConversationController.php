@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Doctrine\SpamInfoType;
-use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Form\ReportSpamType;
@@ -44,6 +43,8 @@ class ConversationController extends AbstractController
      * )
      *
      * @IsGranted("CONVERSATION_VIEW", subject="message")
+     *
+     * @param mixed $openReportModal
      */
     public function viewConversation(Request $request, Message $message, $openReportModal = false): Response
     {
@@ -155,20 +156,6 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
-    private function markAsSpam(Message $message, ?string $comment): Response
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $conversationThread = new ConversationThread($this->entityManager);
-        $conversation = $conversationThread->getThread($message);
-        $this->conversationModel->markConversationAsSpam($member, $conversation, $comment);
-
-        $this->addTranslatedFlash('notice', 'flash.marked.spam');
-
-        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
-    }
-
     /**
      * @Route("/conversation/{id}/report", name="conversation_report_spam")
      */
@@ -187,7 +174,7 @@ class ConversationController extends AbstractController
     public function decline(Message $message): Response
     {
         if ($message->isMessage()) {
-            return $this->redirectToRoute('conversation_view', [ 'id' => $message->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
         }
 
         $controllerAndMethod = $this->getControllerAndMethod($message, 'decline');
@@ -209,6 +196,20 @@ class ConversationController extends AbstractController
         $this->conversationModel->unmarkConversationAsSpam($member, $conversation);
 
         $this->addTranslatedFlash('notice', 'flash.marked.nospam');
+
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+    }
+
+    private function markAsSpam(Message $message, ?string $comment): Response
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        $conversationThread = new ConversationThread($this->entityManager);
+        $conversation = $conversationThread->getThread($message);
+        $this->conversationModel->markConversationAsSpam($member, $conversation, $comment);
+
+        $this->addTranslatedFlash('notice', 'flash.marked.spam');
 
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
@@ -279,6 +280,7 @@ class ConversationController extends AbstractController
         $reportForm->handleRequest($request);
         if ($reportForm->isSubmitted() && $reportForm->isValid()) {
             $data = $reportForm->getData();
+
             return $this->markAsSpam($message, $data['comment']);
         }
 

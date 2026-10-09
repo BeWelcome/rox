@@ -164,7 +164,7 @@ class NoteController extends AbstractController
             ProfileNoteFilterType::class,
             [
                 'choices' => $categories,
-                'order' => $order
+                'order' => $order,
             ],
             [
                 'categories' => $selectableCategories,

@@ -160,9 +160,8 @@ class InvitationController extends BaseRequestAndInvitationController
         ]);
     }
 
-
     /**
-     * Deals with declines
+     * Deals with declines.
      */
     public function decline(Request $request, Message $message): Response
     {
@@ -469,8 +468,8 @@ class InvitationController extends BaseRequestAndInvitationController
         $leg->setInvitedBy($host);
         $this->entityManager->persist($leg);
         if (
-            $leg->getArrival()->format('Y-m-d') != $finalInvitation->getRequest()->getArrival()->format('Y-m-d') ||
-            $leg->getDeparture()->format('Y-m-d') != $finalInvitation->getRequest()->getDeparture()->format('Y-m-d')
+            $leg->getArrival()->format('Y-m-d') !== $finalInvitation->getRequest()->getArrival()->format('Y-m-d') ||
+            $leg->getDeparture()->format('Y-m-d') !== $finalInvitation->getRequest()->getDeparture()->format('Y-m-d')
         ) {
             $this->addTranslatedFlash('notice', 'trip.incomplete.leg', [
                 'location' => $leg->getLocation()->getFullname(),

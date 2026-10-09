@@ -97,10 +97,10 @@ class StatisticsModel
             ')->fetch();
 
             return [
-                'members'    => $members['cnt'],
-                'countries'  => \count($countries),
-                'languages'  => $languages['cnt'],
-                'comments'   => $positiveComments['cnt'],
+                'members' => $members['cnt'],
+                'countries' => \count($countries),
+                'languages' => $languages['cnt'],
+                'comments' => $positiveComments['cnt'],
                 'activities' => $activities['cnt'],
             ];
         });
@@ -275,7 +275,7 @@ class StatisticsModel
     public function getLanguagesData(): array
     {
         $connection = $this->entityManager->getConnection();
-        $result = $connection->executeQuery("
+        $result = $connection->executeQuery('
             SELECT
                 l.shortCode language,
                 COUNT(m.id) cnt
@@ -286,12 +286,12 @@ class StatisticsModel
             WHERE
                 l.id = mll.IdLanguage
                 AND mll.idMember = m.id
-                AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")
+                AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
             GROUP BY
                 l.name
             ORDER BY
                 cnt DESC
-        ");
+        ');
 
         $resultSet = $this->reduceResultSet(10, $result->fetchAllKeyValue());
 
@@ -301,7 +301,7 @@ class StatisticsModel
     public function getPreferredLanguagesData(): array
     {
         $connection = $this->entityManager->getConnection();
-        $result = $connection->executeQuery("
+        $result = $connection->executeQuery('
             SELECT
                 l.shortCode language,
                 COUNT(m.id) cnt
@@ -313,13 +313,13 @@ class StatisticsModel
                 m.id = mp.idmember
                 AND mp.idpreference = 1
             WHERE
-                m.status IN (" . MemberStatusType::ACTIVE_ALL . ")
+                m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
                 AND l.id = IFNULL(mp.value, 0)
             GROUP BY
                 language
             ORDER BY
                 cnt DESC
-        ");
+        ');
 
         $resultSet = $this->reduceResultSet(14, $result->fetchAllKeyValue());
 
@@ -329,7 +329,7 @@ class StatisticsModel
     public function getMembersPerCountryData(): array
     {
         $connection = $this->entityManager->getConnection();
-        $result = $connection->executeQuery("
+        $result = $connection->executeQuery('
             SELECT
                 gc.country AS country,
                 count(*) AS cnt
@@ -338,7 +338,7 @@ class StatisticsModel
                 geonamescountries gc,
                 geonames g
             WHERE
-                m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")
+                m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
                 AND
                 m.IdCity = g.geonameId
                 AND
@@ -347,7 +347,7 @@ class StatisticsModel
                 gc.country
             ORDER BY
                 cnt DESC
-        ");
+        ');
 
         $resultSet = $this->reduceResultSet(14, $result->fetchAllKeyValue());
 
@@ -360,16 +360,16 @@ class StatisticsModel
     public function getMembersPerLoginData(): array
     {
         $connection = $this->entityManager->getConnection();
-        $executionResult = $connection->executeQuery("
+        $executionResult = $connection->executeQuery('
             SELECT
                 TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff,
                 COUNT(*) AS cnt
             FROM members
             WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
-            AND status IN (" . MemberStatusType::ACTIVE_ALL . ")
+            AND status IN (' . MemberStatusType::ACTIVE_ALL . ')
             GROUP BY logindiff
             ORDER BY logindiff ASC
-        ");
+        ');
 
         $resultSet = $executionResult->fetchAllKeyValue();
 
@@ -395,7 +395,7 @@ class StatisticsModel
         $result['longer'] = 0;
 
         foreach ($resultSet as $diff => $count) {
-            if ($diff == 1) {
+            if (1 === $diff) {
                 $result['1 day'] += $count;
             } elseif ($diff <= 7) {
                 $result['1 week'] += $count;
@@ -417,23 +417,23 @@ class StatisticsModel
         foreach ($result as $key => $count) {
             $translatedResult[$translatedPeriods[$key]] = $count;
         }
+
         return $translatedResult;
     }
 
     private function reduceResultSet(int $count, array $resultSet): array
     {
-        $other = $this->translator->trans('statistics.other', [ 'count' => count($resultSet) - $count + 1]);
-        $result = array_slice($resultSet, 0, $count);
+        $other = $this->translator->trans('statistics.other', ['count' => \count($resultSet) - $count + 1]);
+        $result = \array_slice($resultSet, 0, $count);
         $keys = array_keys($resultSet);
-        for ($i = $count; $i < count($keys); $i++) {
-           if (!isset($result[$other])) {
-               $result[$other] = 0;
-           }
-           $result[$other] += $resultSet[$keys[$i]];
+        for ($i = $count; $i < \count($keys); ++$i) {
+            if (!isset($result[$other])) {
+                $result[$other] = 0;
+            }
+            $result[$other] += $resultSet[$keys[$i]];
         }
 
         return $result;
-
     }
 
     /**
@@ -762,7 +762,7 @@ class StatisticsModel
 
         $translatedCountries = [];
         foreach ($countryCodes as $key) {
-            if (2 === strlen($key) && isset($countries[$key])) {
+            if (2 === \strlen($key) && isset($countries[$key])) {
                 $translatedCountries[$countries[$key]->getName()] = $resultSet[$key];
             } else {
                 $translatedCountries[$key] = $resultSet[$key];

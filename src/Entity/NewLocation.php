@@ -45,7 +45,6 @@ class NewLocation implements Translatable
      *
      * @Gedmo\Translatable
      * @ORM\Column(name="name", type="string", length=200, nullable=true)
-     *
      */
     private $name;
 
@@ -60,7 +59,6 @@ class NewLocation implements Translatable
      * @var float
      *
      * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
-     *
      */
     private $latitude;
 
@@ -68,7 +66,6 @@ class NewLocation implements Translatable
      * @var float
      *
      * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
-     *
      */
     private $longitude;
 
@@ -90,7 +87,6 @@ class NewLocation implements Translatable
      * @var string
      *
      * @ORM\Column(name="country_id", type="string", nullable=true)
-     *
      */
     private $countryId;
 
@@ -98,7 +94,6 @@ class NewLocation implements Translatable
      * @var string
      *
      * @ORM\Column(name="admin_1_id", type="string", nullable=true)
-     *
      */
     private $admin1Id;
 
@@ -106,7 +101,6 @@ class NewLocation implements Translatable
      * @var string
      *
      * @ORM\Column(name="admin_2_id", type="string", nullable=true)
-     *
      */
     private $admin2Id;
 
@@ -114,7 +108,6 @@ class NewLocation implements Translatable
      * @var string
      *
      * @ORM\Column(name="admin_3_id", type="string", nullable=true)
-     *
      */
     private $admin3Id;
 
@@ -122,7 +115,6 @@ class NewLocation implements Translatable
      * @var string
      *
      * @ORM\Column(name="admin_4_id", type="string", nullable=true)
-     *
      */
     private $admin4Id;
 
@@ -131,7 +123,6 @@ class NewLocation implements Translatable
      *
      * @ORM\ManyToOne(targetEntity="NewLocation", fetch="EAGER")
      * @ORM\JoinColumn(name="country", referencedColumnName="geonameId", nullable=true)
-     *
      */
     private $country;
 
@@ -186,7 +177,6 @@ class NewLocation implements Translatable
      *
      * @ORM\Column(name="geonameId", type="integer")
      * @ORM\Id
-     *
      */
     private $geonameId;
 

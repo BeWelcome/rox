@@ -25,7 +25,6 @@ class Language
      * @var string
      *
      * @ORM\Column(name="EnglishName", type="text", length=255, nullable=false)
-     *
      */
     private $englishname;
 
@@ -45,7 +44,6 @@ class Language
      * @var string
      *
      * @ORM\Column(name="ShortCode", type="string", length=16, nullable=false)
-     *
      */
     private $shortCode;
 

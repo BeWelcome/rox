@@ -350,7 +350,6 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         );
     }
 
-
     /**
      * @Route("/admin/tools/requests/sent", name="admin_tools_requests_sent")
      */
@@ -609,9 +608,6 @@ ORDER BY count(msg.id) DESC')->fetchAll();
         return $this->redirectToRoute('admin_tools_login_messages_show');
     }
 
-    /**
-     * @return array
-     */
     private function getSubMenuItems(): array
     {
         $subMenu = [];
@@ -701,10 +697,6 @@ ORDER BY count(msg.id) DESC')->fetchAll();
     }
 
     /**
-     *
-     * @param Request     $request
-     * @param string|null $tool
-     *
      * @return RedirectResponse|array
      */
     private function checkPermissions(Request $request, string $tool = null)

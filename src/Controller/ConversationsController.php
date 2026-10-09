@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Member;
-use App\Entity\Preference;
 use App\Form\CustomDataClass\MessageIndexRequest;
 use App\Form\MessageIndexFormType;
 use App\Model\ConversationsModel;
@@ -31,9 +30,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ConversationsController extends AbstractController
 {
+    use ItemsPerPageTraits;
     use TranslatedFlashTrait;
     use TranslatorTrait;
-    use ItemsPerPageTraits;
 
     protected ConversationsModel $conversationsModel;
     private EntityManagerInterface $entityManager;

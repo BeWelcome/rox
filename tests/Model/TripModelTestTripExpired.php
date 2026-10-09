@@ -4,18 +4,14 @@ namespace App\Tests\Model;
 
 use App\Entity\Subtrip;
 use App\Entity\Trip;
-use App\Model\TripModel;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 
-class TripModelTestTripExpired extends TestCase
+class TripModelTestTripExpired extends TripModelTestCase
 {
     public function testTripExpiredThrowsInvalidArgumentWithNoLegs()
     {
-        $entityManager = $this->createStub(EntityManager::class);
-        $tripModel = new TripModel($entityManager);
+        $tripModel = $this->getTripModel();
         $trip = new Trip();
 
         $this->expectException(InvalidArgumentException::class);
@@ -24,8 +20,7 @@ class TripModelTestTripExpired extends TestCase
 
     public function testTripExpiredOneLeg()
     {
-        $entityManager = $this->createStub(EntityManager::class);
-        $tripModel = new TripModel($entityManager);
+        $tripModel = $this->getTripModel();
         $leg = new Subtrip();
         $leg->setDeparture(new DateTime('2020-01-01'));
 
@@ -39,8 +34,7 @@ class TripModelTestTripExpired extends TestCase
 
     public function testTripNotExpiredOneLeg()
     {
-        $entityManager = $this->createStub(EntityManager::class);
-        $tripModel = new TripModel($entityManager);
+        $tripModel = $this->getTripModel();
 
         $tomorrow = new DateTime('+1day');
         $leg = new Subtrip();
@@ -56,8 +50,7 @@ class TripModelTestTripExpired extends TestCase
 
     public function testTripExpiredMultipleLegs()
     {
-        $entityManager = $this->createStub(EntityManager::class);
-        $tripModel = new TripModel($entityManager);
+        $tripModel = $this->getTripModel();
         $firstLeg = new Subtrip();
         $firstLeg->setDeparture(new DateTime('2020-01-01'));
         $secondLeg = new Subtrip();
@@ -79,8 +72,7 @@ class TripModelTestTripExpired extends TestCase
 
     public function testTripNotExpiredMultipleLegs()
     {
-        $entityManager = $this->createStub(EntityManager::class);
-        $tripModel = new TripModel($entityManager);
+        $tripModel = $this->getTripModel();
 
         $tomorrow = new DateTime('+1day');
         $theDayAfterTomorrow = new DateTime('+2days');
@@ -106,8 +98,7 @@ class TripModelTestTripExpired extends TestCase
 
     public function testTripNotExpiredMultipleLegsPartlyInThePast()
     {
-        $entityManager = $this->createStub(EntityManager::class);
-        $tripModel = new TripModel($entityManager);
+        $tripModel = $this->getTripModel();
 
         $yesterday = new DateTime('-1day');
         $theDayAfterTomorrow = new DateTime('+2days');

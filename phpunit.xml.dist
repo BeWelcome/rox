@@ -10,7 +10,11 @@
         <ini name="error_reporting" value="-1"/>
         <server name="APP_ENV" value="test" force="true"/>
         <server name="SHELL_VERBOSITY" value="-1"/>
-        <server name="SYMFONY_PHPUNIT_VERSION" value="9.4"/>
+        <server name="SYMFONY_PHPUNIT_VERSION" value="9.6"/>
+        <!-- Same php-parser major as the app (vendor/), so coverage does not load two versions. -->
+        <server name="SYMFONY_PHPUNIT_REQUIRE" value="nikic/php-parser:^4.18"/>
+        <!-- Existing deprecations of the Symfony 5.3 stack are allowed; any new one fails. They go with the upgrade (#519). -->
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=26&amp;max[direct]=1&amp;max[total]=30"/>
 
         <!-- ###+ nelmio/cors-bundle ### -->
         <env name="CORS_ALLOW_ORIGIN" value="^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$"/>

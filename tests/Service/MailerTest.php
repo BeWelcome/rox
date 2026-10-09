@@ -13,7 +13,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\Translator;
 
 class MailerTest extends TestCase
 {
@@ -22,7 +22,8 @@ class MailerTest extends TestCase
 
     protected function setUp(): void
     {
-        $translator = $this->createStub(TranslatorInterface::class);
+        // Mailer calls getLocale(), which TranslatorInterface only declares from Symfony 6 on.
+        $translator = $this->createStub(Translator::class);
         $translator->method('getLocale')->willReturn('en');
         $translator->method('trans')->willReturnArgument(0);
 
@@ -135,7 +136,8 @@ class MailerTest extends TestCase
         $em = $this->createStub(EntityManagerInterface::class);
         $em->method('getRepository')->willReturn($repo);
 
-        $translator = $this->createStub(TranslatorInterface::class);
+        // Mailer calls getLocale(), which TranslatorInterface only declares from Symfony 6 on.
+        $translator = $this->createStub(Translator::class);
         $translator->method('getLocale')->willReturn('en');
         $translator->method('trans')->willReturnArgument(0);
 

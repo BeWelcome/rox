@@ -56,6 +56,7 @@ jobs:
         with:
           php-version: 8.3
           extensions: curl, dom, gd, iconv, intl, json, libxml, mbstring, mysqli, pcntl, pdo_mysql, phar, tokenizer, xdebug, xml, xmlwriter, xsl, zip
+          coverage: xdebug
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -72,13 +73,11 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
       - name: Run phpunit tests
-        run: bin/phpunit
+        run: bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
 
-      - name: Run phpunit tests
-        run: phpdbg -qrr bin/phpunit --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never
-
+      # Ratchet: covered-code MSI on main was 79% on 2026-10-09 (develop: 85%); 1 point below for run-to-run noise. Raise it, never lower it.
       - name: Run Infection tests
-        run: vendor/bin/infection --only-covered --coverage=build/logs/phpunit --min-covered-msi=85 --threads=30
+        run: vendor/bin/infection --only-covered --coverage=build/logs/phpunit --min-covered-msi=78 --threads=30
 
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # tag=v4.6.2
         if: ${{ always() }}

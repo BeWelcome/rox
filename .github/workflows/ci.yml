@@ -11,7 +11,7 @@ on:
     branches:
       - bootstrap4
       - feature/trips
-      - feature/docker-master
+      - main
 
 jobs:
   phpcpd:

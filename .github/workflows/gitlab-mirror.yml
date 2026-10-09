@@ -1,0 +1,21 @@
+name: trigger mirror to gitlab
+
+# Asks the self-hosted GitLab (gitlab.bewelcome.org) to pull main. Runs fail
+# until that GitLab is redeployed; the workflow and TRIGGER_TOKEN stay so the
+# mirror resumes on its own (moved here from master with rox#518).
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  trigger:
+    runs-on: "ubuntu-latest"
+    steps:
+    - name: trigger
+      uses: appleboy/gitlab-ci-action@v0.0.2
+      with:
+        host: "https://gitlab.bewelcome.org"
+        token: ${{ secrets.TRIGGER_TOKEN }}
+        project_id: 17
+        ref: main

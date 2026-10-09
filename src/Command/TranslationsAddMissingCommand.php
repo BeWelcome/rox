@@ -63,7 +63,7 @@ class TranslationsAddMissingCommand extends Command
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {
                     ++$count;
-                    if ('@' == $sentence[0]) {
+                    if ('@' === $sentence[0]) {
                         $reusedTranslationId = substr($sentence, 1);
                         $io->note(sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
                         $connection = $this->entityManager->getConnection();

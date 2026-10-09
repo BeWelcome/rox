@@ -88,14 +88,14 @@ class Relation
         return Carbon::instance($this->updated);
     }
 
-    public function setUpdated(DateTime $updated): Relation
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    public function setOwner(Member $owner): Relation
+    public function setOwner(Member $owner): self
     {
         $this->owner = $owner;
 

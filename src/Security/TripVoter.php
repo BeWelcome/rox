@@ -54,7 +54,7 @@ class TripVoter extends Voter
             // A trip that does not only consist of private legs can be viewed by everyone
             $view = false;
             foreach ($trip->getSubtrips() as $leg) {
-                $view = $view || !in_array(SubtripOptionsType::PRIVATE, $leg->getOptions());
+                $view = $view || !\in_array(SubtripOptionsType::PRIVATE, $leg->getOptions(), true);
             }
             // excepts if it is expired
             $view = $view && !$trip->isExpired();

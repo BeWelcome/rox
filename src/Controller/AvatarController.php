@@ -102,7 +102,7 @@ class AvatarController extends AbstractController
             } catch (InvalidArgumentException $e) {
                 return $this->emptyAvatar($size);
             } catch (Throwable $throwable) {
-                $this->logger->warning(\sprintf(
+                $this->logger->warning(sprintf(
                     'Creating avatar image (size %s) for member %d failed: %s',
                     $size,
                     $member->getId(),
@@ -114,7 +114,7 @@ class AvatarController extends AbstractController
         $filename = $this->getAvatarImageFilename($member, $size);
 
         if (!is_file($filename) || !is_readable($filename)) {
-            $this->logger->warning(\sprintf(
+            $this->logger->warning(sprintf(
                 'Avatar image %s for member %d is missing or not readable, falling back to empty avatar',
                 $filename,
                 $member->getId()

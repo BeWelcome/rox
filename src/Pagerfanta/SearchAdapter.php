@@ -222,16 +222,16 @@ class SearchAdapter implements AdapterInterface
     private function getRankedAdminUnitIds(NewLocation $location): array
     {
         $adminUnits = [];
-        if (null != $location->getAdmin1Id()) {
+        if ('' !== (string) $location->getAdmin1Id()) {
             $adminUnits[] = $location->getAdmin1Id();
         }
-        if (null != $location->getAdmin2Id()) {
+        if ('' !== (string) $location->getAdmin2Id()) {
             $adminUnits[] = $location->getAdmin2Id();
         }
-        if (null != $location->getAdmin3Id()) {
+        if ('' !== (string) $location->getAdmin3Id()) {
             $adminUnits[] = $location->getAdmin3Id();
         }
-        if (null != $location->getAdmin4Id()) {
+        if ('' !== (string) $location->getAdmin4Id()) {
             $adminUnits[] = $location->getAdmin4Id();
         }
 

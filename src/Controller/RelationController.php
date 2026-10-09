@@ -21,9 +21,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RelationController extends AbstractController
 {
-    use TranslatorTrait;
     use ItemsPerPageTraits;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private EntityManagerInterface $entityManager;
     private ChangeProfilePictureGlobals $globals;

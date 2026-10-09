@@ -31,7 +31,7 @@ class ProfileModel
     {
         $statusForm = null;
 
-        if (in_array(Member::ROLE_ADMIN_SAFETYTEAM, $loggedInMember->getRoles())) {
+        if (\in_array(Member::ROLE_ADMIN_SAFETYTEAM, $loggedInMember->getRoles(), true)) {
             $statusFormBuilder = $this->formFactory->createBuilder(ProfileStatusFormType::class, [
                 'status' => $member->getStatus(),
                 'member' => $member->getId(),

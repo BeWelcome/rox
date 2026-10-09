@@ -247,7 +247,7 @@ class Comment
         }
 
         // show comment to Safety team
-        if (in_array(Member::ROLE_ADMIN_COMMENTS, $loggedInMember->getRoles())) {
+        if (\in_array(Member::ROLE_ADMIN_COMMENTS, $loggedInMember->getRoles(), true)) {
             return 2;
         }
 

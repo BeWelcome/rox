@@ -2,7 +2,6 @@
 
 namespace App\Model;
 
-use function count;
 use Doctrine\ORM\EntityManagerInterface;
 use Gedmo\Translatable\TranslatableListener;
 use Manticoresearch\Client;
@@ -125,11 +124,11 @@ class SuggestLocationModel
     {
         $countryId = '';
         $adminUnits = [];
-        if (1 < count($parts)) {
+        if (1 < \count($parts)) {
             $countryOrAdminUnit = end($parts);
             $countryId = $this->getCountryId($countryOrAdminUnit);
 
-            $adminUnits = $this->searchAdminUnits(array_slice($parts, 1), $countryId);
+            $adminUnits = $this->searchAdminUnits(\array_slice($parts, 1), $countryId);
         }
 
         $query = $this->getQueryForGeonamesRt();
@@ -180,11 +179,11 @@ class SuggestLocationModel
     {
         $countryId = '';
         $adminUnits = [];
-        if (1 < count($parts)) {
+        if (1 < \count($parts)) {
             $countryOrAdminUnit = end($parts);
             $countryId = $this->getCountryId($countryOrAdminUnit);
 
-            $adminUnits = $this->searchAdminUnits(array_slice($parts, 1), $countryId);
+            $adminUnits = $this->searchAdminUnits(\array_slice($parts, 1), $countryId);
         }
 
         $query = $this->getQueryForGeonamesRt();
@@ -231,11 +230,11 @@ class SuggestLocationModel
     {
         $countryId = '';
         $adminUnits = [];
-        if (1 < count($parts)) {
+        if (1 < \count($parts)) {
             $countryOrAdminUnit = end($parts);
             $countryId = $this->getCountryId($countryOrAdminUnit);
 
-            $adminUnits = $this->searchAdminUnits(array_slice($parts, 1), $countryId);
+            $adminUnits = $this->searchAdminUnits(\array_slice($parts, 1), $countryId);
         }
 
         $query = $this->getQueryForGeonamesRt();
@@ -278,7 +277,7 @@ class SuggestLocationModel
 
     private function getCountries(array $parts, int $limit = 3): array
     {
-        if (1 !== count($parts)) {
+        if (1 !== \count($parts)) {
             return [];
         }
 
@@ -320,7 +319,7 @@ class SuggestLocationModel
 
         $countries = $this->getManticoreResults($query, 5);
 
-        if (1 != count($countries)) {
+        if (1 !== \count($countries)) {
             return null;
         }
 
@@ -360,7 +359,7 @@ class SuggestLocationModel
     private function searchAdminUnits(array $adminUnits, ?string $countryId): array
     {
         if (null !== $countryId) {
-            $adminUnits = array_slice($adminUnits, 0, -1);
+            $adminUnits = \array_slice($adminUnits, 0, -1);
         }
 
         if (empty($adminUnits)) {
@@ -370,7 +369,7 @@ class SuggestLocationModel
         $results = [];
         $adminUnitIds = ['country' => $countryId ?? '', 'admin1' => '', 'admin2' => '', 'admin3' => '', 'admin4' => ''];
         $adminUnits = array_reverse($adminUnits);
-        $countOfAdminUnits = count($adminUnits) - 1;
+        $countOfAdminUnits = \count($adminUnits) - 1;
         for ($index = 0; $index <= $countOfAdminUnits; ++$index) {
             $adminUnit = $adminUnits[$index];
             $query = $this->getQueryForGeonamesRt();
@@ -386,12 +385,12 @@ class SuggestLocationModel
             }
 
             $results = $this->getManticoreResults($query);
-            if (0 === count($results)) {
+            if (0 === \count($results)) {
                 // Either there is no admin unit with that name or the sequence is wrong. \todo error handling?
                 return [];
             }
             if ($index !== $countOfAdminUnits) {
-                if (1 === count($results)) {
+                if (1 === \count($results)) {
                     // Limit the next search to the found admin unit
                     $foundAdminUnit = reset($results);
                     if (null === $countryId) {
@@ -448,7 +447,7 @@ class SuggestLocationModel
         $localeQuery->should(new Equals('locale', '_geo'));
         $localeQuery->should(new Equals('locale', $locale));
 
-        if (strlen($locale) > 2) {
+        if (\strlen($locale) > 2) {
             $localeQuery->should(new Equals('locale', substr($locale, 0, 2)));
         }
 

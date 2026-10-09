@@ -35,8 +35,8 @@ class CommentModel
         $diff = array_diff($updatedRelations, $originalRelations);
 
         if (
-            in_array(CommentRelationsType::WAS_GUEST, $diff)
-            || in_array(CommentRelationsType::WAS_HOST, $diff)
+            \in_array(CommentRelationsType::WAS_GUEST, $diff, true)
+            || \in_array(CommentRelationsType::WAS_HOST, $diff, true)
         ) {
             return true;
         }
@@ -47,8 +47,8 @@ class CommentModel
             return false;
         }
 
-        $lenOriginalText = strlen($originalText);
-        $lenUpdatedText = strlen($updatedText);
+        $lenOriginalText = \strlen($originalText);
+        $lenUpdatedText = \strlen($updatedText);
         // If relations are unchanged check for changes in text of comment
         if (0 === strpos($updatedText, $originalText)) {
             // New text starts with old text and new text is longer
@@ -59,7 +59,7 @@ class CommentModel
 
         $newExperience = false;
         try {
-            $maxlen = max(strlen($updatedText), strlen($originalText));
+            $maxlen = max(\strlen($updatedText), \strlen($originalText));
             $calculator = new LevenshteinDistance(false, 0, 1000 ** 2);
             $iteration = 0;
             $maxIteration = $maxlen / 1000;
@@ -72,7 +72,7 @@ class CommentModel
                 )
                 )['distance'];
 
-                if ($levenshteinDistance >= max(strlen($currentUpdatedText), strlen($currentOriginalText)) / 7) {
+                if ($levenshteinDistance >= max(\strlen($currentUpdatedText), \strlen($currentOriginalText)) / 7) {
                     $newExperience = true;
                 }
                 ++$iteration;
@@ -159,8 +159,8 @@ class CommentModel
     private function checkCommentSimilarity(array $comments, Comment $comment): bool
     {
         $similar = 0;
-        $comments[count($comments)] = ['TextFree' => $comment->getTextfree()];
-        $count = count($comments);
+        $comments[\count($comments)] = ['TextFree' => $comment->getTextfree()];
+        $count = \count($comments);
         for ($i = 0; $i < $count - 1; ++$i) {
             for ($j = $i + 1; $j < $count; ++$j) {
                 similar_text(
@@ -174,6 +174,6 @@ class CommentModel
             }
         }
 
-        return $similar != $count * ($count - 1);
+        return $similar !== $count * ($count - 1);
     }
 }

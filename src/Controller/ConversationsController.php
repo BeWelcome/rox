@@ -30,9 +30,9 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ConversationsController extends AbstractController
 {
+    use ItemsPerPageTraits;
     use TranslatedFlashTrait;
     use TranslatorTrait;
-    use ItemsPerPageTraits;
 
     protected ConversationsModel $conversationsModel;
     private EntityManagerInterface $entityManager;

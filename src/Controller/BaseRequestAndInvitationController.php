@@ -16,8 +16,8 @@ use Symfony\Component\Form\Form;
 
 abstract class BaseRequestAndInvitationController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     protected BaseRequestModel $model;
     protected ConversationModel $conversationModel;

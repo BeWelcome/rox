@@ -66,7 +66,7 @@ class SendMassmailCommand extends Command
             /** @var BroadcastMessage $scheduled */
             foreach ($scheduledBroadcastMessages as $scheduled) {
                 $parameters = [];
-                if ($lastBroadcastId != $scheduled->getNewsletter()->getId()) {
+                if ($lastBroadcastId !== $scheduled->getNewsletter()->getId()) {
                     // Check if the current newsletter contains images and set the parameter
                     $newsletterTranslations = $scheduled->getNewsletter()->getTranslations();
                     $anyNewsletter = reset($newsletterTranslations);

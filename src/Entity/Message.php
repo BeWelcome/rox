@@ -378,7 +378,7 @@ class Message
         return $this->checkerComment ?? '';
     }
 
-    public function setCheckerComment(?string $checkerComment): Message
+    public function setCheckerComment(?string $checkerComment): self
     {
         $this->checkerComment = $checkerComment;
 

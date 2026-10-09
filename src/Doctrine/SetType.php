@@ -58,7 +58,7 @@ abstract class SetType extends Type
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
     {
         if (null !== $value && !empty($value)) {
-            if (is_array($value)) {
+            if (\is_array($value)) {
                 $value = implode(',', $value);
             }
             if ($value) {

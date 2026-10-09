@@ -355,7 +355,7 @@ class ProfileSubmenu
 
     private function hasRole(array $roles, string $role): bool
     {
-        return in_array($role, $roles);
+        return \in_array($role, $roles, true);
     }
 
     private function addSubmenuItem(string $key, array $value)

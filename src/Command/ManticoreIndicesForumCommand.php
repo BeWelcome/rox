@@ -51,7 +51,7 @@ class ManticoreIndicesForumCommand extends Command
             $this->io->note('Created ' . self::FORUM_INDEX . '.');
         } else {
             $this->io->note(
-                'Skipped creation of ' . self::FORUM_INDEX . ' index. ' . PHP_EOL .
+                'Skipped creation of ' . self::FORUM_INDEX . ' index. ' . \PHP_EOL .
                 'Index already exists.'
             );
 

@@ -18,7 +18,7 @@ class PreferencesType extends AbstractType
 
         foreach ($preferences as $preference) {
             $choices = $this->getChoices($preference);
-            if (2 === count($choices)) {
+            if (2 === \count($choices)) {
                 // Create radio buttons
                 $fieldOptions = [
                     'expanded' => true,

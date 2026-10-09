@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use function count;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -319,7 +318,7 @@ class ManticoreIndicesGeonamesCommand extends Command
             'member_count' => $this->memberCounts[$geonameId] ?? 0,
         ];
 
-        if (count($this->documents) >= self::BULK_SIZE) {
+        if (\count($this->documents) >= self::BULK_SIZE) {
             $this->sendPendingDocuments($index, $progress);
         }
     }
@@ -339,7 +338,7 @@ class ManticoreIndicesGeonamesCommand extends Command
             $this->reportBulkError($e);
         }
 
-        $progress->advance(count($documents));
+        $progress->advance(\count($documents));
     }
 
     /**
@@ -361,8 +360,8 @@ class ManticoreIndicesGeonamesCommand extends Command
                 }
             }
             $message = json_encode(
-                [] === $errors ? $response : array_slice($errors, 0, 5),
-                JSON_INVALID_UTF8_SUBSTITUTE | JSON_UNESCAPED_UNICODE
+                [] === $errors ? $response : \array_slice($errors, 0, 5),
+                \JSON_INVALID_UTF8_SUBSTITUTE | \JSON_UNESCAPED_UNICODE
             );
             $message = substr((string) $message, 0, 2000);
         }

@@ -186,9 +186,9 @@ class ForumsController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
         $roles = $loggedInMember->getRoles();
-        $adminShowForumPosts = (in_array(Member::ROLE_ADMIN_SAFETYTEAM, $roles)
-            || in_array(Member::ROLE_ADMIN_ADMIN, $roles)
-            || in_array(Member::ROLE_ADMIN_FORUMMODERATOR, $roles)
+        $adminShowForumPosts = (\in_array(Member::ROLE_ADMIN_SAFETYTEAM, $roles, true)
+            || \in_array(Member::ROLE_ADMIN_ADMIN, $roles, true)
+            || \in_array(Member::ROLE_ADMIN_FORUMMODERATOR, $roles, true)
         );
 
         $preferenceRepository = $entityManager->getRepository(Preference::class);

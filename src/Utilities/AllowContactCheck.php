@@ -42,7 +42,7 @@ class AllowContactCheck
         $profilePictureRepository = $this->entityManager->getRepository(MembersPhoto::class);
         $profilePictures = $profilePictureRepository->findBy(['member' => $member]);
 
-        return count($profilePictures) > 0;
+        return \count($profilePictures) > 0;
     }
 
     public function checkIfMemberHasAboutMe(Member $member): bool

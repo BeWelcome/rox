@@ -21,8 +21,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DonationController extends AbstractController
 {
-    use TranslatorTrait;
     use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     private const PAYPAL_NONCE = 'paypal_nonce';
     // Amount of the donation just recorded, for the Plausible revenue event (#540).
@@ -83,7 +83,7 @@ class DonationController extends AbstractController
         // Plausible revenue goal "Donation" (#540). Only for a donation recorded by
         // finishDonation in this session, so reloading this URL counts nothing.
         $donation = $request->getSession()->remove(self::DONATION_ANALYTICS);
-        if (is_array($donation) && $donation['amount'] > 0) {
+        if (\is_array($donation) && $donation['amount'] > 0) {
             $this->addFlash('plausible_event', [
                 'name' => 'Donation',
                 'revenue' => ['currency' => $donation['currency'], 'amount' => $donation['amount']],
@@ -120,7 +120,7 @@ class DonationController extends AbstractController
         $isTreasurer = false;
         if (null !== $member) {
             $roles = $member->getRoles();
-            $isTreasurer = in_array(Member::ROLE_ADMIN_TREASURER, $roles);
+            $isTreasurer = \in_array(Member::ROLE_ADMIN_TREASURER, $roles, true);
         }
 
         return $this->render('donation/list.html.twig', [

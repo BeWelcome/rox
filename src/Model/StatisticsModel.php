@@ -395,7 +395,7 @@ class StatisticsModel
         $result['longer'] = 0;
 
         foreach ($resultSet as $diff => $count) {
-            if (1 == $diff) {
+            if (1 === $diff) {
                 $result['1 day'] += $count;
             } elseif ($diff <= 7) {
                 $result['1 week'] += $count;
@@ -423,10 +423,10 @@ class StatisticsModel
 
     private function reduceResultSet(int $count, array $resultSet): array
     {
-        $other = $this->translator->trans('statistics.other', ['count' => count($resultSet) - $count + 1]);
-        $result = array_slice($resultSet, 0, $count);
+        $other = $this->translator->trans('statistics.other', ['count' => \count($resultSet) - $count + 1]);
+        $result = \array_slice($resultSet, 0, $count);
         $keys = array_keys($resultSet);
-        for ($i = $count; $i < count($keys); ++$i) {
+        for ($i = $count; $i < \count($keys); ++$i) {
             if (!isset($result[$other])) {
                 $result[$other] = 0;
             }
@@ -762,7 +762,7 @@ class StatisticsModel
 
         $translatedCountries = [];
         foreach ($countryCodes as $key) {
-            if (2 === strlen($key) && isset($countries[$key])) {
+            if (2 === \strlen($key) && isset($countries[$key])) {
                 $translatedCountries[$countries[$key]->getName()] = $resultSet[$key];
             } else {
                 $translatedCountries[$key] = $resultSet[$key];

@@ -30,6 +30,7 @@
     {% block stylesheets %}{% endblock %}
 
     {% block matomo %}{% endblock %}
+    {% include '_analytics.html.twig' %}
     <base id="baseuri" href="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl }}">
 
     <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">

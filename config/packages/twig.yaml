@@ -1,5 +1,7 @@
 # Twig Configuration
 twig:
+    globals:
+      plausible_script_url: '%env(default::PLAUSIBLE_SCRIPT_URL)%'
     file_name_pattern: '*.twig'
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"

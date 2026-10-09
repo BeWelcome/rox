@@ -245,6 +245,8 @@ class SignupController extends AbstractController
 
             $this->entityManager->persist($member);
             $this->entityManager->flush();
+            // Last step of the signup funnel in Plausible (#540), sent on the login page.
+            $this->addFlash('plausible_event', 'Signup Confirmed');
 
             if (null === $member->getAccommodation()) {
                 return $this->redirectToRoute('signup_finalize', ['username' => $member->getUsername()]);

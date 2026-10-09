@@ -3,16 +3,16 @@
 namespace App\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(name: 'forum:cleanup', description: 'Disallow editing after 30 minutes if someone replied')]
 class ForumCleanupCommand extends Command
 {
-    protected static $defaultName = 'forum:cleanup';
-
     private EntityManagerInterface $entityManager;
 
     /**

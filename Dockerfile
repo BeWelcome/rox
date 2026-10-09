@@ -28,8 +28,6 @@ RUN apk add --no-cache \
 		fcgi \
 		file \
 		gettext \
-		git \
-		openssh-client \
 	;
 
 ARG APCU_VERSION=5.1.28
@@ -190,8 +188,13 @@ ARG NODE_ENV=production
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
+# git and openssh-client are only needed in development (docker-entrypoint writes VERSION from
+# git outside prod; .git is not in the image). Keeping them out of the runtime image also keeps
+# out libexpat, which only git depends on.
 RUN set -eux; \
 	apk add --no-cache \
+		git \
+		openssh-client \
 		make \
 		mysql-client \
 		libstdc++ \

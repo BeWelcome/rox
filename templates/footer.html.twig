@@ -48,7 +48,7 @@
                             </h2>
                             <ul class="list-unstyled stickyfooter__link-list stickyfooter__link-list--legal mb-0">
                                 <li><a href="{{ url('about') }}">{{ 'aboutuspage' | trans }}</a></li>
-                                <li><a href="{{ url('about_faq') }}">{{ 'faq' | trans }}</a></li>
+                                <li><a href="{{ url('faqs_overview') }}">{{ 'faq' | trans }}</a></li>
                                 <li><a href="{{ url('feedback') }}">{{ 'contactus' | trans }}</a></li>
                                 <li><a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a></li>
                                 {% if app.user %}

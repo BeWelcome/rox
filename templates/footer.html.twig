@@ -23,30 +23,36 @@
                                 {% endfor %}
                             </select>
                         </div>
-                    </form>
-                </div>
-                <div class="col-sm-4">
-                    <div class="o-form-group form-row float-md-right">
-                            {% if is_granted('ROLE_ADMIN_WORDS') and hasCurrentLocaleRights %}
-                                <label for="translation_mode" class="col-auto col-form-label">
-                                    {{ 'translation.mode' | trans }}
-                                </label>
-                                <select id="translation_mode" name="translation_mode" class="o-input select2"
-                                        data-minimum-results-for-search="-1"
-                                        onchange="window.location.href=this.value; return false">
-                                    <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}
-                                            value="{{ url('translation_mode', {mode: 'on'}) }}">
-                                        {{ 'on' | trans }}
-                                    </option>
-                                    <option {% if app.session.get('translation_mode') != 'on' %}selected="selected"{% endif %}
-                                            value="{{ url('translation_mode', {mode: 'off'}) }}">
-                                        {{ 'off' | trans }}
-                                    </option>
-                                </select>
-                            {% else %}
-                                {% if is_granted('ROLE_USER') %}
-                                    <a class="btn btn-sm btn-outline-primary pull-right"
-                                    href="groups/60">{{ 'translation.help' | trans }}</a>
+                        {% endif %}
+                        <div class="{{ footer_col }}">
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-user-shield stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'safety' | trans }}
+                            </h2>
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
+                                <li><a href="{{ url('safety') }}">{{ 'menu.safety.information' | trans }}</a></li>
+                                <li><a href="{{ url('safety_contact_no_modal') }}">{{ 'menu.safety.report' | trans }}</a></li>
+                            </ul>
+                            {% if app.user %}
+                            <h2 class="stickyfooter__heading stickyfooter__heading--stacked">
+                                <i class="fa fa-heart stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'landing.beinvolved.title' | trans }}
+                            </h2>
+                            <ul class="list-unstyled stickyfooter__link-list mb-0">
+                                <li><a href="{{ url('donations') }}">{{ 'donate' | trans }}</a></li>
+                                <li><a href="{{ url('getactive') }}">{{ 'about_getactive' | trans }}</a></li>
+                            </ul>
+                            {% endif %}
+                        </div>
+                        <div class="{{ footer_col }}">
+                            <h2 class="stickyfooter__heading">
+                                <i class="fa fa-question-circle stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'getanswers' | trans }}
+                            </h2>
+                            <ul class="list-unstyled stickyfooter__link-list stickyfooter__link-list--legal mb-0">
+                                <li><a href="{{ url('about') }}">{{ 'aboutuspage' | trans }}</a></li>
+                                <li><a href="{{ url('faqs_overview') }}">{{ 'faq' | trans }}</a></li>
+                                <li><a href="{{ url('feedback') }}">{{ 'contactus' | trans }}</a></li>
+                                <li><a href="{{ url('feedback', { IdCategory: 1, RequestURI: url('homepage')}) }}">{{ 'footer.reportbug' | trans }}</a></li>
+                                {% if app.user %}
+                                <li><a href="{{ url('stats') }}">{{ 'statspage' | trans }}</a></li>
                                 {% endif %}
                             {% endif %}
                     </div>

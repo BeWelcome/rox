@@ -294,6 +294,11 @@ services:
         tags:
             - { name: twig.extension }
 
+    # src/Twig is excluded from autowiring above, so every extension is listed here.
+    App\Twig\AnalyticsExtension:
+        tags:
+            - { name: twig.extension }
+
     pagerfanta.bootstrap4.ajax.template:
         public: true
         class: App\Pagerfanta\TwitterBootstrap4AjaxTemplate

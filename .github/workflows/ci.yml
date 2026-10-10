@@ -9,8 +9,6 @@ on:
   # Run CI on push to active development branches
   push:
     branches:
-      - bootstrap4
-      - feature/trips
       - main
 
 jobs:

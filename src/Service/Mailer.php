@@ -36,19 +36,22 @@ class Mailer
     private $entityManager;
     private Logger $logger;
     private UrlGeneratorInterface $urlGenerator;
+    private ?string $suspensionBounceAddress;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         UrlGeneratorInterface $urlGenerator,
         TranslatorInterface $translator,
         MailerInterface $mailer,
-        Logger $logger
+        Logger $logger,
+        ?string $suspensionBounceAddress = null
     ) {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
         $this->translator = $translator;
         $this->mailer = $mailer;
         $this->logger = $logger;
+        $this->suspensionBounceAddress = $suspensionBounceAddress ?: null;
     }
 
     public function sendMessageNotificationEmail(Member $sender, Member $receiver, string $template, $parameters): bool
@@ -126,6 +129,9 @@ class Mailer
     {
         $parameters = array_merge($parameters, $this->prepareParametersForNewsletter($newsletter, $receiver));
 
+        // Bounces of suspension notices need no support action: send them to a mailbox Znuny does not fetch.
+        $returnPath = Newsletter::SUSPENSION_NOTIFICATION === $newsletter->getType() ? $this->suspensionBounceAddress : null;
+
         return $this->sendTemplateEmail(
             $parameters['sender'],
             $receiver,
@@ -133,6 +139,7 @@ class Mailer
             $parameters,
             null,
             $this->buildNewsletterHeaders($newsletter, $receiver, $parameters),
+            $returnPath,
         );
     }
 
@@ -300,7 +307,7 @@ class Mailer
      * @param Member|Address        $receiver
      * @param mixed                 $parameters
      */
-    private function sendTemplateEmail($sender, $receiver, string $template, array $parameters, ?string $replyTo = null, array $extraTextHeaders = []): bool
+    private function sendTemplateEmail($sender, $receiver, string $template, array $parameters, ?string $replyTo = null, array $extraTextHeaders = [], ?string $returnPath = null): bool
     {
         $currentLocale = $this->translator->getLocale();
         $success = true;
@@ -341,6 +348,11 @@ class Mailer
 
         if (null !== $replyTo) {
             $email->replyTo(new Address($replyTo));
+        }
+
+        if (null !== $returnPath) {
+            // Symfony Mailer uses Return-Path as the SMTP envelope sender, so bounces go there.
+            $email->returnPath(new Address($returnPath));
         }
 
         foreach ($extraTextHeaders as $name => $value) {

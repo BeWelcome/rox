@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
@@ -92,18 +93,104 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getResult();
     }
 
-    public function loadDataRetentionMembers(): array
+    public function loadDataRetentionMembers(?int $limit = null): array
     {
-        $query = $this->createQueryBuilder('m')
+        $qb = $this->createQueryBuilder('m')
             ->where('m.status = :askToLeave')
             ->andWhere('m.username NOT LIKE :retired')
-            ->andWhere('DATEDIFF(:now, m.lastLogin) > 365')
+            ->andWhere('(DATEDIFF(:now, m.lastLogin) > 365 OR (m.lastLogin IS NULL AND DATEDIFF(:now, m.created) > 365))')
             ->setParameter(':askToLeave', MemberStatusType::ASKED_TO_LEAVE)
             ->setParameter(':retired', 'Retired\_%')
             ->setParameter(':now', new DateTime())
-            ->getQuery()
+            ->orderBy('m.id', 'ASC')
         ;
 
-        return $query->getResult();
+        if (null !== $limit && $limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function scheduleSuspended(?DateTimeInterface $cutoffDate = null): int
+    {
+        if ($cutoffDate === null) {
+            $cutoffDate = (new DateTime())->modify('-5 years');
+        }
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            UPDATE members m
+            SET m.Status = :statusTarget
+            WHERE m.Status = :statusSuspended
+              AND (m.LastLogin < :cutoffDate OR (m.LastLogin IS NULL AND m.created < :cutoffDate))
+              AND NOT EXISTS (
+                  SELECT 1 FROM comments c WHERE c.IdToMember = m.id
+              )
+              AND NOT EXISTS (
+                  SELECT 1 FROM comments c WHERE c.IdFromMember = m.id
+              )
+        ";
+
+        return (int) $connection->executeStatement($sql, [
+            'statusTarget'    => MemberStatusType::ASKED_TO_LEAVE,
+            'statusSuspended' => MemberStatusType::SUSPENDED,
+            'cutoffDate'      => $cutoffDate->format('Y-m-d H:i:s'),
+        ]);
+    }
+
+    public function countSuspendedEligibleForDeletion(?DateTimeInterface $cutoffDate = null): int
+    {
+        if ($cutoffDate === null) {
+            $cutoffDate = (new DateTime())->modify('-5 years');
+        }
+
+        $connection = $this->getEntityManager()->getConnection();
+
+        $sql = "
+            SELECT COUNT(*)
+            FROM members m
+            WHERE m.Status = :statusSuspended
+              AND (m.LastLogin < :cutoffDate OR (m.LastLogin IS NULL AND m.created < :cutoffDate))
+              AND NOT EXISTS (
+                  SELECT 1 FROM comments c WHERE c.IdToMember = m.id
+              )
+              AND NOT EXISTS (
+                  SELECT 1 FROM comments c WHERE c.IdFromMember = m.id
+              )
+        ";
+
+        return (int) $connection->executeQuery($sql, [
+            'statusSuspended' => MemberStatusType::SUSPENDED,
+            'cutoffDate'      => $cutoffDate->format('Y-m-d H:i:s'),
+        ])->fetchOne();
+    }
+
+    public function findMembersToRemind(int $batchSize): array
+    {
+        $qb = $this->createQueryBuilder('m');
+        $expr = $qb->expr();
+        $qb
+            ->where(
+                $expr->in(
+                    'm.status',
+                    [MemberStatusType::ACTIVE, MemberStatusType::CHOICE_INACTIVE, MemberStatusType::OUT_OF_REMIND]
+                )
+            )
+            ->andWhere(
+                $expr->orX(
+                    $expr->gt('DATEDIFF(CURRENT_DATE(), m.lastLogin)', 365),
+                    $expr->andX(
+                        $expr->isNull('m.lastLogin'),
+                        $expr->gt('DATEDIFF(CURRENT_DATE(), m.created)', 365)
+                    )
+                )
+            )
+            ->andWhere('YEARDIFF(m.updated, CURRENT_DATE()) > 0')
+            ->orderBy('m.id', 'ASC')
+            ->setMaxResults($batchSize);
+
+        return $qb->getQuery()->getResult();
     }
 }

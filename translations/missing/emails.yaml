@@ -52,3 +52,27 @@ email.suffix.cancelled:
 email.suffix.maybe:
     - ' (maybe)'
     - suffix added to the notification email send for a request or invitation
+email.login.reminder.subject:
+    - We miss you!
+    - Subject of the automated login reminder email
+email.login.reminder.body:
+    - |
+        <p>Hi {username},<br>
+           We miss you!</p>
+        <p>&nbsp;</p>
+        <p>We have noticed that you haven’t logged in to <a href="https://bewelcome.org/">BeWelcome.org</a> for a while.
+            &nbsp;It is important that you keep the status of your profile up to date, so that your guests or hosts can expect a quick reply.
+            &nbsp;That’s why we would like to invite you to check if your data, especially your “<a href="https://bewelcome.org/editmyprofile"><u>Accommodation Status</u></a>” (are you offering to host?)
+            and your “<a href="https://bewelcome.org/editmyprofile"><u>Hosting interest</u></a>” (how strong is your interest in receiving requests?) are still up to date.</p>
+        <p>&nbsp;</p>
+        <p>At the moment your profile is set to “<i>inactive</i>”. &nbsp;It has neither been deleted nor removed. It just means that your profile does not show up in the standard search results any longer.
+            &nbsp;It is unlikely that other members will contact you as they don’t find your profile.
+            &nbsp;Next time you log in, your profile will automatically become “<i>active</i>” again.</p>
+        <p>&nbsp;</p>
+        <p>Should you wish to delete your profile and leave the BeWelcome community, you can do that <a href="https://bewelcome.org/deleteprofile"><u>here</u></a>.</p>
+        <p>&nbsp;</p>
+        <p>We are looking forward to welcoming you back!</p>
+        <p>The BeWelcome volunteers.</p>
+        <p>&nbsp;</p>
+        <p><a href="https://bewelcome.org/login">Log in</a> | <a href="https://bewelcome.org/resetpassword">Forgot password</a> | <a href="https://bewelcome.org/deleteprofile">Delete account</a></p>
+    - Body of the automated login reminder email

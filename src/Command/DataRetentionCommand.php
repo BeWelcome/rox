@@ -8,12 +8,14 @@ use App\Entity\MemberTranslation;
 use App\Entity\NewLocation;
 use App\Logger\Logger;
 use App\Repository\MemberRepository;
+use Doctrine\ORM\EntityRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 use Hidehalo\Nanoid\Client;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -22,27 +24,31 @@ use Symfony\Component\Finder\Finder;
 class DataRetentionCommand extends Command
 {
     protected static $defaultName = 'data:retention';
-    private Logger $logger;
-    private EntityManagerInterface $entityManager;
-    private string $dataDirectory;
+
+    public const MAX_EXECUTION_TIME_SECONDS = 110;
+
     private Member $bwAdmin;
-    private MemberRepository $memberRepository;
 
     public function __construct(
-        Logger $logger,
-        EntityManagerInterface $entityManager,
-        string $dataDirectory
+        private readonly Logger $logger,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly MemberRepository $memberRepository,
+        private readonly string $dataDirectory,
+        private readonly int $mailerBatchSize
     ) {
         parent::__construct();
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->dataDirectory = $dataDirectory;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Cleans the database of retired users (should be run at least once each day)')
+            ->addArgument(
+                'batch-size',
+                InputArgument::OPTIONAL,
+                sprintf('Number of members to process in this run (default: %d)', $this->mailerBatchSize),
+                null
+            )
         ;
     }
 
@@ -51,38 +57,60 @@ class DataRetentionCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var MemberRepository $memberRepository */
-        $memberRepository = $this->entityManager->getRepository(Member::class);
-        $this->memberRepository = $memberRepository;
-
         /** @var Member $bwAdmin */
-        $bwAdmin = $memberRepository->find(1);
+        $bwAdmin = $this->memberRepository->find(1);
         $this->bwAdmin = $bwAdmin;
 
         $io = new SymfonyStyle($input, $output);
 
         $io->title('Running Data Retention');
 
-        $retired = $this->removeMembers($io);
+        $batchSize = $input->getArgument('batchSize') ?? $this->mailerBatchSize;
+
+        if ($batchSize <= 0) {
+            $io->error('Batch size must be a positive integer.');
+
+            return Command::FAILURE;
+        }
+
+        $io->note(sprintf('Processing a batch of up to %d members (max execution time ~120s).', $batchSize));
+
+        $retired = $this->removeMembers($io, $batchSize);
 
         $io->success(sprintf('Data of %d members has been deleted.', $retired));
 
         return Command::SUCCESS;
     }
 
-    private function removeMembers(SymfonyStyle $io)
+    private function removeMembers(SymfonyStyle $io, int $batchSize): int
     {
         $entityManager = $this->entityManager;
+        $startTime = microtime(true);
 
-        $members = $this->memberRepository->loadDataRetentionMembers();
+        $members = $this->memberRepository->loadDataRetentionMembers($batchSize);
 
-        if (null !== $members) {
-            $msg = 'Removing private data for ' . \count($members) . ' members.';
+        if (!empty($members)) {
+            $totalFound = \count($members);
+            $msg = 'Removing private data for ' . $totalFound . ' members.';
             $io->info($msg);
             $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
 
+            $processedCount = 0;
             /** @var Member $member */
             foreach ($members as $member) {
+                // Check if approaching maximum execution time limit (120s)
+                if ((microtime(true) - $startTime) >= self::MAX_EXECUTION_TIME_SECONDS) {
+                    $warnMsg = sprintf(
+                        'Time limit approaching (%ds). Stopping batch early after processing %d of %d members.',
+                        self::MAX_EXECUTION_TIME_SECONDS,
+                        $processedCount,
+                        $totalFound
+                    );
+                    $io->warning($warnMsg);
+                    $this->logger->write($warnMsg, 'Data Retention', $this->bwAdmin);
+                    break;
+                }
+
                 $username = $member->getUsername();
                 $cryptedFields = $member->getCryptedFields();
                 foreach ($cryptedFields as $cryptedField) {
@@ -114,16 +142,23 @@ class DataRetentionCommand extends Command
                 $entityManager->persist($member);
                 $entityManager->flush();
 
+                ++$processedCount;
+
                 $msg = 'Removed private data for ' . $username . ' (retired_' . $member->getId() . ').';
                 $io->info($msg);
                 $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
             }
-            $msg = 'Removed private data for ' . \count($members) . ' members.';
-            $io->info($msg);
-            $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
+
+            $summaryMsg = sprintf('Removed private data for %d members.', $processedCount);
+            $io->info($summaryMsg);
+            $this->logger->write($summaryMsg, 'Data Retention', $this->bwAdmin);
+
+            return $processedCount;
         }
 
-        return \count($members);
+        $io->info('No members found for data retention.');
+
+        return 0;
     }
 
     private function removeMemberInfo(Member $member): Member
@@ -132,14 +167,14 @@ class DataRetentionCommand extends Command
         $client = new Client();
         $longAgo = new DateTime('1900-01-01');
 
-        /** @var EntityRepository $locationRepository */
+        /** @var EntityRepository<NewLocation> $locationRepository */
         $locationRepository = $this->entityManager->getRepository(NewLocation::class);
         $location = $locationRepository->findOneBy([]);
 
         $member
             ->setAccommodation(AccommodationType::NO)
             ->setAdditionalAccommodationinfo(0)
-            ->setAdresshidden('')
+            ->setAdresshidden('Yes')
             ->setBday(0)
             ->setBewelcomed(0)
             ->setBirthdate($longAgo)
@@ -165,10 +200,10 @@ class DataRetentionCommand extends Command
             ->setLastName('')
             ->setFuturetrips(0)
             ->setGender('other')
-            ->setGenderofguest('other')
+            ->setGenderofguest('any')
             ->setHideAttribute(255)
-            ->setHideBirthDate('hidden')
-            ->setHidegender('hidden')
+            ->setHideBirthDate('Yes')
+            ->setHidegender('Yes')
             ->setHobbies(0)
             ->setHomephonenumber(0)
             ->setHostingInterest(0)
@@ -176,8 +211,8 @@ class DataRetentionCommand extends Command
             ->setIlivewith(0)
             ->setInformationtoguest(0)
             ->setLastswitchtoactive($longAgo)
-            ->setLatitude('')
-            ->setLongitude('')
+            ->setLatitude(null)
+            ->setLongitude(null)
             ->setLogcount(0)
             ->setMaxguest(0)
             ->setMaxlenghtofstay(0)

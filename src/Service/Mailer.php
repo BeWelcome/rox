@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
 use App\Entity\Member;
@@ -257,6 +258,20 @@ class Mailer
                 'subject' => 'profile.delete.feedback',
                 'member' => $retiree,
                 'body' => $body,
+            ]
+        );
+    }
+
+    public function sendMemberLoginReminder(Member $member): bool
+    {
+        return $this->sendTemplateEmail(
+            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
+            new Address($member->getEmail(), $member->getUsername()),
+            'login.reminder',
+            [
+                'subject' => 'email.login.reminder.subject',
+                'receiver' => $member,
+                'countRemind' => $member->getRemindersWithOutLogin(),
             ]
         );
     }

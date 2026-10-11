@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityRepository;
 use Hidehalo\Nanoid\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -22,6 +23,7 @@ use Symfony\Component\Finder\Finder;
 class DataRetentionCommand extends Command
 {
     protected static $defaultName = 'data:retention';
+    private const DEFAULT_LIMIT = 500;
     private Logger $logger;
     private EntityManagerInterface $entityManager;
     private string $dataDirectory;
@@ -43,6 +45,13 @@ class DataRetentionCommand extends Command
     {
         $this
             ->setDescription('Cleans the database of retired users (should be run at least once each day)')
+            ->addOption(
+                'limit',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Maximum number of members cleaned per run, so a large backlog is spread over several nights (0 = no limit)',
+                self::DEFAULT_LIMIT
+            )
         ;
     }
 
@@ -63,18 +72,22 @@ class DataRetentionCommand extends Command
 
         $io->title('Running Data Retention');
 
-        $retired = $this->removeMembers($io);
+        $limit = max(0, (int) $input->getOption('limit'));
+        $retired = $this->removeMembers($io, $limit);
 
         $io->success(sprintf('Data of %d members has been deleted.', $retired));
+        if ($limit > 0 && $retired >= $limit) {
+            $io->note(sprintf('Limit of %d reached; the remaining members are cleaned on the next run.', $limit));
+        }
 
         return Command::SUCCESS;
     }
 
-    private function removeMembers(SymfonyStyle $io)
+    private function removeMembers(SymfonyStyle $io, int $limit)
     {
         $entityManager = $this->entityManager;
 
-        $members = $this->memberRepository->loadDataRetentionMembers();
+        $members = $this->memberRepository->loadDataRetentionMembers($limit);
 
         if (null !== $members) {
             $msg = 'Removing private data for ' . \count($members) . ' members.';

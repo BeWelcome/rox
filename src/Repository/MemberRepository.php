@@ -92,17 +92,24 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getResult();
     }
 
-    public function loadDataRetentionMembers(): array
+    /**
+     * @param int $limit maximum number of members returned, 0 = no limit
+     */
+    public function loadDataRetentionMembers(int $limit = 0): array
     {
-        $query = $this->createQueryBuilder('m')
+        $queryBuilder = $this->createQueryBuilder('m')
             ->where('m.status = :askToLeave')
             ->andWhere('m.username NOT LIKE :retired')
             ->andWhere('DATEDIFF(:now, m.lastLogin) > 365')
             ->setParameter(':askToLeave', MemberStatusType::ASKED_TO_LEAVE)
             ->setParameter(':retired', 'Retired\_%')
             ->setParameter(':now', new DateTime())
-            ->getQuery()
+            ->orderBy('m.id', 'ASC')
         ;
+        if ($limit > 0) {
+            $queryBuilder->setMaxResults($limit);
+        }
+        $query = $queryBuilder->getQuery();
 
         return $query->getResult();
     }

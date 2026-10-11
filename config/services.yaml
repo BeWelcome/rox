@@ -37,6 +37,8 @@ services:
             $manticorePort: '%manticore.port%'
             $locales: '%locales%'
             $formLoginAuthenticator: '@security.authenticator.form_login.main'
+            # Return-Path for suspension notices (bounces go to a mailbox Znuny does not fetch). Empty = unchanged.
+            $suspensionBounceAddress: '%env(default::MAILER_SUSPENSION_BOUNCE_ADDRESS)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

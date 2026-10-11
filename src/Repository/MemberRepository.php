@@ -112,61 +112,6 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
         return $qb->getQuery()->getResult();
     }
 
-    public function scheduleSuspended(?DateTimeInterface $cutoffDate = null): int
-    {
-        if ($cutoffDate === null) {
-            $cutoffDate = (new DateTime())->modify('-5 years');
-        }
-
-        $connection = $this->getEntityManager()->getConnection();
-
-        $sql = "
-            UPDATE members m
-            SET m.Status = :statusTarget
-            WHERE m.Status = :statusSuspended
-              AND (m.LastLogin < :cutoffDate OR (m.LastLogin IS NULL AND m.created < :cutoffDate))
-              AND NOT EXISTS (
-                  SELECT 1 FROM comments c WHERE c.IdToMember = m.id
-              )
-              AND NOT EXISTS (
-                  SELECT 1 FROM comments c WHERE c.IdFromMember = m.id
-              )
-        ";
-
-        return (int) $connection->executeStatement($sql, [
-            'statusTarget'    => MemberStatusType::ASKED_TO_LEAVE,
-            'statusSuspended' => MemberStatusType::SUSPENDED,
-            'cutoffDate'      => $cutoffDate->format('Y-m-d H:i:s'),
-        ]);
-    }
-
-    public function countSuspendedEligibleForDeletion(?DateTimeInterface $cutoffDate = null): int
-    {
-        if ($cutoffDate === null) {
-            $cutoffDate = (new DateTime())->modify('-5 years');
-        }
-
-        $connection = $this->getEntityManager()->getConnection();
-
-        $sql = "
-            SELECT COUNT(*)
-            FROM members m
-            WHERE m.Status = :statusSuspended
-              AND (m.LastLogin < :cutoffDate OR (m.LastLogin IS NULL AND m.created < :cutoffDate))
-              AND NOT EXISTS (
-                  SELECT 1 FROM comments c WHERE c.IdToMember = m.id
-              )
-              AND NOT EXISTS (
-                  SELECT 1 FROM comments c WHERE c.IdFromMember = m.id
-              )
-        ";
-
-        return (int) $connection->executeQuery($sql, [
-            'statusSuspended' => MemberStatusType::SUSPENDED,
-            'cutoffDate'      => $cutoffDate->format('Y-m-d H:i:s'),
-        ])->fetchOne();
-    }
-
     public function findMembersToRemind(int $batchSize): array
     {
         $qb = $this->createQueryBuilder('m');
@@ -190,6 +135,28 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->andWhere('YEARDIFF(m.updated, CURRENT_DATE()) > 0')
             ->orderBy('m.id', 'ASC')
             ->setMaxResults($batchSize);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * returns a list of members that have not confirmed their email address while creating the account more
+     * than 2 weeks ago
+     */
+    public function findMailNotConfirmedMembers(): array
+    {
+        $qb = $this->createQueryBuilder('m');
+        $expr = $qb->expr();
+        $qb
+            ->where(
+                $expr->in(
+                    'm.status',
+                    [MemberStatusType::AWAITING_MAIL_CONFIRMATION]
+                )
+            )
+            ->andWhere('DATEDIFF(CURRENT_DATE(), m.created) > 14')
+            ->orderBy('m.id', 'ASC')
+        ;
 
         return $qb->getQuery()->getResult();
     }

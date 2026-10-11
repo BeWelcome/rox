@@ -22,8 +22,8 @@ use Symfony\Component\Finder\Finder;
 
 class DataRetentionCommand extends Command
 {
-    protected static $defaultName = 'data:retention';
     private const DEFAULT_LIMIT = 500;
+    protected static $defaultName = 'data:retention';
     private Logger $logger;
     private EntityManagerInterface $entityManager;
     private string $dataDirectory;

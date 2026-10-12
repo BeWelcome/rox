@@ -15,21 +15,24 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(
-    name: 'manticore:indices:forum',
-    description: 'Creates the manticore indices for the forum search',
-    aliases: [],
-    hidden: false,
-)]
+#[AsCommand(name: 'manticore:indices:forum', description: 'Creates the manticore indices for the forum search')]
 class ManticoreIndicesForumCommand extends Command
 {
-    private const string FORUM_INDEX = 'forum_rt';
-    private int $chunkSize = 2500;
-    private SymfonyStyle $io;
+    private const FORUM_INDEX = 'forum_rt';
 
-    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly string $manticoreHost, private readonly int $manticorePort)
+    private int $chunkSize = 2500;
+    private EntityManagerInterface $entityManager;
+    private SymfonyStyle $io;
+    private string $manticoreHost;
+    private int $manticorePort;
+
+    public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
     {
         parent::__construct();
+
+        $this->entityManager = $entityManager;
+        $this->manticoreHost = $manticoreHost;
+        $this->manticorePort = $manticorePort;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -63,7 +66,10 @@ class ManticoreIndicesForumCommand extends Command
     private function createForumIndex(): ?Table
     {
         $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
-        $index = $client->table('forum_rt');
+
+        $index = $client->table(self::FORUM_INDEX);
+        // If the index doesn't exist, drop fails with an error message. So we run it silenced.
+        $index->drop(true);
 
         try {
             $index->create(
@@ -89,14 +95,14 @@ class ManticoreIndicesForumCommand extends Command
                     'ngram_len' => '1',
                 ]
             );
+
+            return $index;
         } catch (Exception $e) {
-            // $index = null;
-
             $this->io->error($e->getMessage());
-            $this->io->error('Index ' . self::FORUM_INDEX . ' already exists or another problem occurred.');
-        }
+            $this->io->error('Index ' . self::FORUM_INDEX . ' couldn\'t be created.');
 
-        return $index;
+            return null;
+        }
     }
 
     private function addForumDocuments(Table $index, OutputInterface $output)
@@ -117,45 +123,45 @@ class ManticoreIndicesForumCommand extends Command
         $stmt = $this->entityManager
             ->getConnection()
             ->executeQuery(<<<'___SQL'
-                    SELECT
-                        count(*) as cnt
-                    FROM
-                        forums_posts fp
-                ___SQL);
+            SELECT
+                count(*) as cnt
+            FROM
+                forums_posts fp
+        ___SQL);
 
-        $count = $stmt->fetchNumeric()[0];
-        if (0 !== $count) {
-            $progressBar = $this->getProgressBar($output, $count);
+        $count = ($stmt->fetchNumeric())[0];
 
-            $firstResult = 0;
-            do {
-                $query = $this->entityManager->createNativeQuery(<<<___SQL
-                        SELECT
-                            fp.id as post_id,
-                            fp.PostDeleted as post_deleted,
-                            fp.PostVisibility as post_visibility,
-                            ft.id AS thread_id,
-                            ft.ThreadDeleted AS thread_deleted,
-                            ft.ThreadVisibility AS thread_visibility,
-                            fp.message as content,
-                            ft.IdGroup AS `group`,
-                            fp.IdWriter as author,
-                            COALESCE(l.shortcode, 'en') as locale
-                        FROM
-                            forums_posts fp
-                        JOIN forums_threads ft ON fp.threadid = ft.id
-                        LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
-                        LIMIT {$firstResult}, {$this->chunkSize}
-                    ___SQL, $this->getResultSetMappingForForumIndex());
+        $progressBar = $this->getProgressBar($output, $count);
 
-                $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
+        $firstResult = 0;
+        do {
+            $query = $this->entityManager->createNativeQuery(<<<___SQL
+                SELECT
+                    fp.id as post_id,
+                    fp.PostDeleted as post_deleted,
+                    fp.PostVisibility as post_visibility,
+                    ft.id AS thread_id,
+                    ft.ThreadDeleted AS thread_deleted,
+                    ft.ThreadVisibility AS thread_visibility,
+                    fp.message as content,
+                    ft.IdGroup AS `group`,
+                    fp.IdWriter as author,
+                    COALESCE(l.shortcode, 'en') as locale
+                FROM
+                    forums_posts fp
+                JOIN forums_threads ft ON fp.threadid = ft.id
+                LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
+                LIMIT {$firstResult}, {$this->chunkSize}
+            ___SQL
+                , $this->getResultSetMappingForForumIndex());
 
-                $firstResult += $this->chunkSize;
-            } while ($addDocumentsCount > 0);
+            $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
 
-            $progressBar->finish();
-            $this->io->newLine();
-        }
+            $firstResult += $this->chunkSize;
+        } while ($addDocumentsCount > 0);
+
+        $progressBar->finish();
+        $this->io->newLine();
     }
 
     private function addForumDocumentsToIndex(Table $index, NativeQuery $query, ProgressBar $progress): int
@@ -181,10 +187,8 @@ class ManticoreIndicesForumCommand extends Command
         $count = \count($forumPosts);
         unset($forumPosts);
 
-        if (0 !== $count) {
-            $index->addDocuments($documents);
-            $index->flush();
-        }
+        $index->addDocuments($documents);
+        $index->flush();
 
         gc_collect_cycles();
 

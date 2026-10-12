@@ -17,6 +17,9 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class Mailer
 {
     private const NO_REPLY_EMAIL_ADDRESS = 'noreply@bewelcome.org';

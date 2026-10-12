@@ -39,6 +39,8 @@ services:
             $locales: '%locales%'
             $formLoginAuthenticator: '@security.authenticator.form_login.main'
             $mailerBatchSize: '%mailer_batch_size%'
+            # Return-Path for suspension notices (bounces go to a mailbox Znuny does not fetch). Empty = unchanged.
+            $suspensionBounceAddress: '%env(default::MAILER_SUSPENSION_BOUNCE_ADDRESS)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

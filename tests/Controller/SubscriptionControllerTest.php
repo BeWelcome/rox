@@ -41,9 +41,7 @@ class SubscriptionControllerTest extends TestCase
     public function testOneClickPostUnsubscribes()
     {
         // what Gmail, Yahoo and Apple Mail send (RFC 8058)
-        $request = Request::create('/unsubscribe/newsletter/member/' . self::KEY, 'POST', [
-            'List-Unsubscribe' => 'One-Click',
-        ]);
+        $request = $this->request('POST', ['List-Unsubscribe' => 'One-Click']);
 
         $this->subscriptionModel->expects($this->once())
             ->method('unsubscribeNewsletter')
@@ -58,9 +56,7 @@ class SubscriptionControllerTest extends TestCase
 
     public function testLinkInTheMailShowsTheConfirmationPage()
     {
-        $request = Request::create('/unsubscribe/newsletter/member/' . self::KEY, 'GET', [
-            'List-Unsubscribe' => 'One-Click',
-        ]);
+        $request = $this->request('GET', ['List-Unsubscribe' => 'One-Click']);
 
         $this->subscriptionModel->expects($this->never())->method('unsubscribeNewsletter');
 
@@ -71,14 +67,21 @@ class SubscriptionControllerTest extends TestCase
 
     public function testPostWithoutOneClickShowsTheConfirmationPage()
     {
-        $request = Request::create('/unsubscribe/newsletter/member/' . self::KEY, 'POST', [
-            'List-Unsubscribe' => 'List-Unsubscribe=One-Click',
-        ]);
+        $request = $this->request('POST', ['List-Unsubscribe' => 'List-Unsubscribe=One-Click']);
 
         $this->subscriptionModel->expects($this->never())->method('unsubscribeNewsletter');
 
         $response = $this->controller->unsubscribeNewsletter($request, $this->subscriptionModel, 'member', self::KEY);
 
         $this->assertSame('confirmation page', $response->getContent());
+    }
+
+    private function request(string $method, array $fields): Request
+    {
+        $server = ['REQUEST_METHOD' => $method, 'REQUEST_URI' => '/unsubscribe/newsletter/member/' . self::KEY];
+
+        return 'GET' === $method
+            ? new Request($fields, [], [], [], [], $server)
+            : new Request([], $fields, [], [], [], $server);
     }
 }

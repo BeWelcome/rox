@@ -2,8 +2,8 @@
 
 namespace App\Utilities;
 
-use Carbon\Carbon;
 use DateTimeImmutable;
+use DateTimeInterface;
 
 /**
  * Sorts comment pairs after lowest created as long as updated is null.
@@ -41,7 +41,7 @@ class CommentSorter
         return (-1) * ($aCriterionDate <=> $bCriterionDate);
     }
 
-    private function getCreatedCriterion(array $comment): Carbon
+    private function getCreatedCriterion(array $comment): DateTimeInterface
     {
         $createdTo = isset($comment['to']) ? $comment['to']->getCreated() : $this->farFuture;
         $createdFrom = isset($comment['from']) ? $comment['from']->getCreated() : $this->farFuture;
@@ -49,7 +49,7 @@ class CommentSorter
         return min($createdTo, $createdFrom);
     }
 
-    private function getUpdatedCriterion(array $comment): DateTimeImmutable
+    private function getUpdatedCriterion(array $comment): DateTimeInterface
     {
         $updatedTo = isset($comment['to'])
             ? ($comment['to']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;

@@ -10,7 +10,7 @@ class EditTranslationRequest extends TranslationRequest
 {
     public bool $isMajorUpdate;
 
-    public bool $isArchived;
+    public ?bool $isArchived = null; // words.isarchived is NULL for most rows
 
     public bool $translationAllowed;
 

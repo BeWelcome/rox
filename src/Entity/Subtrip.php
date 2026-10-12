@@ -32,10 +32,10 @@ class Subtrip
     #[ORM\ManyToOne(targetEntity: NewLocation::class)]
     private NewLocation $location;
 
-    #[ORM\Column(name: 'arrival', type: 'date', nullable: false)]
+    #[ORM\Column(name: 'arrival', type: 'date', nullable: true)]
     private ?DateTime $arrival = null;
 
-    #[ORM\Column(name: 'departure', type: 'date', nullable: false)]
+    #[ORM\Column(name: 'departure', type: 'date', nullable: true)]
     private ?DateTime $departure = null;
 
     #[ORM\Column(name: 'options', type: 'subtrip_options', nullable: true)]

@@ -20,8 +20,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: \App\Repository\WikiRepository::class)]
 class Wiki
 {
-    #[ORM\Column(name: 'content', type: 'text', length: 16777215, nullable: false)]
-    private string $content;
+    #[ORM\Column(name: 'content', type: 'text', length: 16777215, nullable: true)]
+    private ?string $content = null; // NULL in a few prod rows
 
     #[ORM\Column(name: 'author', type: 'string', length: 100, nullable: false)]
     private string $author = 'ewiki';
@@ -51,7 +51,7 @@ class Wiki
 
     public function getContent(): string
     {
-        return $this->content;
+        return $this->content ?? '';
     }
 
     public function setAuthor(string $author): self

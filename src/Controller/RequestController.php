@@ -41,8 +41,8 @@ class RequestController extends BaseRequestAndInvitationController
         ConversationModel      $conversationModel,
         HostingRequestModel    $requestModel,
         EntityManagerInterface $entityManager,
-        Mailer                 $mailer,
-        Logger                 $logger
+        private Mailer $mailer,
+        private Logger $logger,
     ) {
         parent::__construct($requestModel, $entityManager);
 

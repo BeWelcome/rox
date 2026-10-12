@@ -178,6 +178,7 @@ class MessageController extends AbstractController
         string $subjectText,
         string $body,
     ): Message {
+        $em = $this->entityManager;
         $message = new Message();
         $message->setMessage($body);
         $message->setStatus('Sent');

@@ -22,6 +22,7 @@ parameters:
     username.pattern: "/[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i"
     manticore.host: '%env(MANTICORE_HOST)%'
     manticore.port: '%env(int:MANTICORE_PORT)%'
+    mailer_batch_size: '%env(int:mailer_batch_size)%'
 
 services:
     _defaults:
@@ -37,6 +38,7 @@ services:
             $manticorePort: '%manticore.port%'
             $locales: '%locales%'
             $formLoginAuthenticator: '@security.authenticator.form_login.main'
+            $mailerBatchSize: '%mailer_batch_size%'
             # Return-Path for suspension notices (bounces go to a mailbox Znuny does not fetch). Empty = unchanged.
             $suspensionBounceAddress: '%env(default::MAILER_SUSPENSION_BOUNCE_ADDRESS)%'
 

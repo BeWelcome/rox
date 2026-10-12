@@ -679,6 +679,22 @@ class Member implements \Serializable, ObjectManagerAware, UserInterface, Passwo
         $this->preferences = new ArrayCollection();
     }
 
+    public function __serialize(): array
+    {
+        return [
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize(serialize($data));
+    }
+
     /**
      * Set exUserId.
      *

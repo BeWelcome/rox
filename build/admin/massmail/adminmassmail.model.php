@@ -594,10 +594,11 @@ class AdminMassmailModel extends RoxModelBase
                 UPDATE
                     members m
                 SET
-                    m.status = 'OutOfRemind'
+                    m.status = 'OutOfRemind',
+                    m.updated = NOW()
                 WHERE
                     (DATEDIFF(NOW(), m.LastLogin) > 365 OR m.LastLogin = '0000-00-00 00:00:00')
-                    AND m.status = 'Active'";
+                    AND m.status IN ('Active', 'OutOfRemind', 'ChoiceInactive')";
         $r = $this->dao->query($query);
 
         // then increase the counter for reminders without login for all members that are OutOfRemind

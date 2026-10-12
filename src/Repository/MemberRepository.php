@@ -92,18 +92,71 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getResult();
     }
 
-    public function loadDataRetentionMembers(): array
+    public function loadDataRetentionMembers(?int $limit = null): array
     {
-        $query = $this->createQueryBuilder('m')
+        $qb = $this->createQueryBuilder('m')
             ->where('m.status = :askToLeave')
             ->andWhere('m.username NOT LIKE :retired')
-            ->andWhere('DATEDIFF(:now, m.lastLogin) > 365')
+            ->andWhere('(DATEDIFF(:now, m.lastLogin) > 365 OR (m.lastLogin IS NULL AND DATEDIFF(:now, m.created) > 365))')
             ->setParameter(':askToLeave', MemberStatusType::ASKED_TO_LEAVE)
             ->setParameter(':retired', 'Retired\_%')
             ->setParameter(':now', new DateTime())
-            ->getQuery()
+            ->orderBy('m.id', 'ASC')
         ;
 
-        return $query->getResult();
+        if (null !== $limit && $limit > 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findMembersToRemind(int $batchSize): array
+    {
+        $qb = $this->createQueryBuilder('m');
+        $expr = $qb->expr();
+        $qb
+            ->where(
+                $expr->in(
+                    'm.status',
+                    [MemberStatusType::ACTIVE, MemberStatusType::CHOICE_INACTIVE, MemberStatusType::OUT_OF_REMIND]
+                )
+            )
+            ->andWhere(
+                $expr->orX(
+                    $expr->gt('DATEDIFF(CURRENT_DATE(), m.lastLogin)', 365),
+                    $expr->andX(
+                        $expr->isNull('m.lastLogin'),
+                        $expr->gt('DATEDIFF(CURRENT_DATE(), m.created)', 365)
+                    )
+                )
+            )
+            ->andWhere('YEARDIFF(m.updated, CURRENT_DATE()) > 0')
+            ->orderBy('m.id', 'ASC')
+            ->setMaxResults($batchSize);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * returns a list of members that have not confirmed their email address while creating the account more
+     * than 2 weeks ago.
+     */
+    public function findMailNotConfirmedMembers(): array
+    {
+        $qb = $this->createQueryBuilder('m');
+        $expr = $qb->expr();
+        $qb
+            ->where(
+                $expr->in(
+                    'm.status',
+                    [MemberStatusType::AWAITING_MAIL_CONFIRMATION]
+                )
+            )
+            ->andWhere('DATEDIFF(CURRENT_DATE(), m.created) > 14')
+            ->orderBy('m.id', 'ASC')
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 }

@@ -1,0 +1,24 @@
+{# utm_links: every bewelcome.org link carries the newsletter as campaign, so Plausible
+   can attribute visits, signups and donations to it (#540). #}
+{% block content %}{% apply inky_to_html|utm_links('reminder', 'login_reminder')|inline_css(encore_entry_css_source('email')) %}
+    <wrapper class="header">
+        <container>
+            <row class="collapse">
+                <columns small="12" valign="middle">
+                    <a href="{{ url('homepage') }}"><img
+                            src="{{ email.image('@images/logo_email_2025.png') }}"></a>
+                </columns>
+            </row>
+        </container>
+    </wrapper>
+
+    <container class="secondary">
+        <spacer size="16"></spacer>
+        <row>
+            <columns>
+                {{ 'email.login.reminder.body'|trans({'gender': receiver.gender, 'username': receiver.username})|purify }}
+            </columns>
+        </row>
+    </container>
+{% endapply %}
+{% endblock %}

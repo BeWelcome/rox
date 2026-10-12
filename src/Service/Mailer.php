@@ -17,6 +17,9 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 class Mailer
 {
     private const NO_REPLY_EMAIL_ADDRESS = 'noreply@bewelcome.org';
@@ -264,6 +267,20 @@ class Mailer
                 'subject' => 'profile.delete.feedback',
                 'member' => $retiree,
                 'body' => $body,
+            ]
+        );
+    }
+
+    public function sendMemberLoginReminder(Member $member): bool
+    {
+        return $this->sendTemplateEmail(
+            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
+            new Address($member->getEmail(), $member->getUsername()),
+            'login.reminder',
+            [
+                'subject' => 'email.login.reminder.subject',
+                'receiver' => $member,
+                'countRemind' => $member->getRemindersWithOutLogin(),
             ]
         );
     }

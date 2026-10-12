@@ -12,7 +12,7 @@ use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Finder\Finder;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +32,26 @@ class AvatarController extends AbstractController
     private const AVATAR_PATH = '../data/user/avatars/';
     private const EMPTY_AVATAR_PATH = 'images/';
 
-    /** @var LoggerInterface */
-    private $logger;
+    private const array SIZES = [
+        'xs',
+        '30',
+        '36',
+        '48',
+        '50',
+        '72',
+        '96',
+        '100',
+        '120',
+        '150',
+        '160',
+        '200',
+        '320',
+        '480',
+        '500',
+        'original',
+    ];
+
+    private LoggerInterface $logger;
     private EntityManagerInterface $entityManager;
     private TranslatorInterface $translator;
 
@@ -157,12 +175,21 @@ class AvatarController extends AbstractController
         return true;
     }
 
-    private function removeAvatarFiles($member)
+    private function removeAvatarFiles($member): void
     {
-        $finder = new Finder();
-        $finder->name($member->getId() . '_*');
-        foreach ($finder->files()->in(self::AVATAR_PATH) as $oldAvatarFile) {
-            unlink($oldAvatarFile->getRealPath());
+        $fileSystem = new Filesystem();
+
+        $memberPath = self::AVATAR_PATH . $member->getId();
+        foreach (self::SIZES as $size) {
+            // old format (and original)
+            if (file_exists($memberPath . '_' . $size)) {
+                $fileSystem->remove($memberPath . '_' . $size);
+            }
+
+            // new format
+            if (file_exists($memberPath . '_' . $size . '_' . $size)) {
+                $fileSystem->remove($memberPath . '_' . $size . '_' . $size);
+            }
         }
     }
 

@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -31,75 +32,32 @@ class SendMassmailCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        // the cron passes the batch size (send:massmail 100), as on main
+        $this->addArgument('batchSize', InputArgument::OPTIONAL, 'Count of mails send while the command is running');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        // use the default from the service configuration when no batch size is given
+        $batchSize = (int) $input->getArgument('batchSize') ?: $this->batchSize;
 
         $massmailRepository = $this->entityManager->getRepository(BroadcastMessage::class);
-        /** @var BroadcastMessage[] $scheduled */
+        /** @var BroadcastMessage[] $scheduledBroadcastMessages */
         $scheduledBroadcastMessages = $massmailRepository->findBy(
             ['status' => 'ToSend'],
             ['updated' => 'ASC'],
-            $this->batchSize,
+            $batchSize,
             0
         );
 
-        $sent = 0;
-        if (!empty($scheduledBroadcastMessages)) {
-            /** @var BroadcastMessage $scheduled */
-            foreach ($scheduledBroadcastMessages as $scheduled) {
-                $parameters = [];
-                if ($lastBroadcastId != $scheduled->getNewsletter()->getId()) {
-                    // Check if the current newsletter contains images and set the parameter
-                    $newsletterTranslations = $scheduled->getNewsletter()->getTranslations();
-                    $anyNewsletter = reset($newsletterTranslations);
-
-                    $hasImages = false !== strpos($anyNewsletter['body'], "<figure");
-                    if ($hasImages) {
-                        $parameters['has_images'] = true;
-                    }
-
-                    $lastBroadcastId = $scheduled->getNewsletter()->getId();
-                }
-                $receiver = $scheduled->getReceiver();
-                $status = $receiver->getStatus();
-                if (
-                    (MemberStatusType::SUSPENDED === $status && $receiver->getRemindersWithOutLogin() !== 100)
-                    && MemberStatusType::ACTIVE !== $status
-                    && MemberStatusType::OUT_OF_REMIND !== $status
-                    && MemberStatusType::CHOICE_INACTIVE !== $status
-                ) {
-                    // Only send messages to members that are active or have just been suspended RemindersWithoutLogin
-                    // is set to 100 on suspension
-                    continue;
-                }
-                try {
-                    $unsubscribeKey = bin2hex(random_bytes(32));
-
-                    $parameters['unsubscribe_key'] = $unsubscribeKey;
-                    $this->mailer->sendNewsletterEmail(
-                        $scheduled->getNewsletter(),
-                        $receiver,
-                        $parameters
-                    );
-
-                    $scheduled
-                        ->setStatus('Sent')
-                        ->setUnsubscribeKey($unsubscribeKey)
-                    ;
-                    ++$sent;
-                } catch (Exception $e) {
-                    $io->error('Message Frozen: ' . $e->getMessage());
-                    $scheduled->setStatus('Freeze');
-                }
-                $this->entityManager->persist($scheduled);
-            }
-            $this->entityManager->flush();
-        }
+        $sent = empty($scheduledBroadcastMessages) ? 0 : $this->sendMassmail($scheduledBroadcastMessages, $io);
 
         $io->success(\sprintf('Sent %d messages', $sent));
 
-        return 0;
+        return Command::SUCCESS;
     }
 
     private function sendMassmail(array $scheduledBroadcastMessages, SymfonyStyle $io): int
@@ -116,7 +74,7 @@ class SendMassmailCommand extends Command
                 $newsletterTranslations = $newsletterRepository->getTranslations($scheduled->getNewsletter());
                 $anyNewsletter = reset($newsletterTranslations);
 
-                $hasImages = str_contains((string) $anyNewsletter['body'], '<figure');
+                $hasImages = str_contains((string) ($anyNewsletter['body'] ?? ''), '<figure');
                 if ($hasImages) {
                     $parameters['has_images'] = true;
                 }

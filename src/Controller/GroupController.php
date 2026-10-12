@@ -23,11 +23,11 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -36,7 +36,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 
 /**
  * Class GroupController.
@@ -74,7 +73,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @return RedirectResponse
      */
     #[Route(path: '/groups/{groupId}/{path}', name: 'groups_redirect_path', requirements: ['groupId' => '\d+', 'path' => '.+'])]
@@ -85,7 +83,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @return RedirectResponse
      */
     #[Route(path: '/groups/{groupId}', name: 'groups_redirect_group', requirements: ['groupId' => '\d+'])]
@@ -95,7 +92,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
@@ -165,7 +161,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
@@ -195,7 +190,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
@@ -225,7 +219,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @throws AccessDeniedException
      *
      * @return JsonResponse
@@ -247,7 +240,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/accept/{memberId}', name: 'accept_invite_to_group')]
@@ -266,7 +258,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/decline/{memberId}', name: 'decline_invite_to_group')]
@@ -285,7 +276,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/withdraw/{memberId}', name: 'withdraw_member_invite_to_group')]

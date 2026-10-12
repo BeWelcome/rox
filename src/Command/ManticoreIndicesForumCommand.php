@@ -123,37 +123,36 @@ class ManticoreIndicesForumCommand extends Command
         $stmt = $this->entityManager
             ->getConnection()
             ->executeQuery(<<<'___SQL'
-            SELECT
-                count(*) as cnt
-            FROM
-                forums_posts fp
-        ___SQL);
+                    SELECT
+                        count(*) as cnt
+                    FROM
+                        forums_posts fp
+                ___SQL);
 
-        $count = ($stmt->fetchNumeric())[0];
+        $count = $stmt->fetchNumeric()[0];
 
         $progressBar = $this->getProgressBar($output, $count);
 
         $firstResult = 0;
         do {
             $query = $this->entityManager->createNativeQuery(<<<___SQL
-                SELECT
-                    fp.id as post_id,
-                    fp.PostDeleted as post_deleted,
-                    fp.PostVisibility as post_visibility,
-                    ft.id AS thread_id,
-                    ft.ThreadDeleted AS thread_deleted,
-                    ft.ThreadVisibility AS thread_visibility,
-                    fp.message as content,
-                    ft.IdGroup AS `group`,
-                    fp.IdWriter as author,
-                    COALESCE(l.shortcode, 'en') as locale
-                FROM
-                    forums_posts fp
-                JOIN forums_threads ft ON fp.threadid = ft.id
-                LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
-                LIMIT {$firstResult}, {$this->chunkSize}
-            ___SQL
-                , $this->getResultSetMappingForForumIndex());
+                    SELECT
+                        fp.id as post_id,
+                        fp.PostDeleted as post_deleted,
+                        fp.PostVisibility as post_visibility,
+                        ft.id AS thread_id,
+                        ft.ThreadDeleted AS thread_deleted,
+                        ft.ThreadVisibility AS thread_visibility,
+                        fp.message as content,
+                        ft.IdGroup AS `group`,
+                        fp.IdWriter as author,
+                        COALESCE(l.shortcode, 'en') as locale
+                    FROM
+                        forums_posts fp
+                    JOIN forums_threads ft ON fp.threadid = ft.id
+                    LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
+                    LIMIT {$firstResult}, {$this->chunkSize}
+                ___SQL, $this->getResultSetMappingForForumIndex());
 
             $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
 

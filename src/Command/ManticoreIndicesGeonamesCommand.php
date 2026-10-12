@@ -135,7 +135,7 @@ class ManticoreIndicesGeonamesCommand extends Command
             // raw=true is required for non-SELECT DDL commands via the /sql endpoint.
             // The response for OPTIMIZE cannot be parsed by the PHP client, so suppress empty exceptions.
             $client->sql('OPTIMIZE TABLE ' . self::GEONAMES_INDEX . ' OPTION cutoff=1, sync=1', true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ('' !== $e->getMessage()) {
                 throw $e;
             }
@@ -153,15 +153,15 @@ class ManticoreIndicesGeonamesCommand extends Command
     {
         $counts = $this->getConnection()
             ->executeQuery(<<<'___SQL'
-                SELECT
-                    m.IdCity,
-                    COUNT(m.IdCity) AS total
-                FROM
-                    members m
-                WHERE m.status IN ('Active', 'OutOfRemind')
-                GROUP BY
-                    m.IdCity
-            ___SQL)
+                    SELECT
+                        m.IdCity,
+                        COUNT(m.IdCity) AS total
+                    FROM
+                        members m
+                    WHERE m.status IN ('Active', 'OutOfRemind')
+                    GROUP BY
+                        m.IdCity
+                ___SQL)
             ->fetchAllKeyValue();
 
         $memberCounts = [];
@@ -187,26 +187,26 @@ class ManticoreIndicesGeonamesCommand extends Command
         $lastId = 0;
         do {
             $result = $connection->executeQuery(<<<___SQL
-                SELECT
-                    g.geonameId AS geonameid,
-                    g.`name` AS name,
-                    g.feature_class AS feature_class,
-                    g.feature_code AS feature_code,
-                    g.country_id AS country,
-                    g.admin_1_id AS admin1,
-                    g.admin_2_id AS admin2,
-                    g.admin_3_id AS admin3,
-                    g.admin_4_id AS admin4,
-                    '_geo' AS locale,
-                    g.population AS population
-                FROM
-                    geo__names g
-                WHERE
-                    g.geonameId > :lastId
-                ORDER BY
-                    g.geonameId
-                LIMIT {$fetchSize}
-            ___SQL, ['lastId' => $lastId]);
+                    SELECT
+                        g.geonameId AS geonameid,
+                        g.`name` AS name,
+                        g.feature_class AS feature_class,
+                        g.feature_code AS feature_code,
+                        g.country_id AS country,
+                        g.admin_1_id AS admin1,
+                        g.admin_2_id AS admin2,
+                        g.admin_3_id AS admin3,
+                        g.admin_4_id AS admin4,
+                        '_geo' AS locale,
+                        g.population AS population
+                    FROM
+                        geo__names g
+                    WHERE
+                        g.geonameId > :lastId
+                    ORDER BY
+                        g.geonameId
+                    LIMIT {$fetchSize}
+                ___SQL, ['lastId' => $lastId]);
 
             $rowCount = 0;
             foreach ($result->iterateAssociative() as $row) {
@@ -240,29 +240,29 @@ class ManticoreIndicesGeonamesCommand extends Command
         $lastId = 0;
         do {
             $result = $connection->executeQuery(<<<___SQL
-                SELECT
-                    gt.id AS translation_id,
-                    g.geonameId AS geonameid,
-                    gt.`content` AS name,
-                    g.feature_class AS feature_class,
-                    g.feature_code AS feature_code,
-                    g.country_id AS country,
-                    g.admin_1_id AS admin1,
-                    g.admin_2_id AS admin2,
-                    g.admin_3_id AS admin3,
-                    g.admin_4_id AS admin4,
-                    gt.`locale` AS locale,
-                    g.population AS population
-                FROM
-                    geo__names_translations gt
-                JOIN
-                    geo__names g ON g.geonameId = gt.foreign_key
-                WHERE
-                    gt.id > :lastId
-                ORDER BY
-                    gt.id
-                LIMIT {$fetchSize}
-            ___SQL, ['lastId' => $lastId]);
+                    SELECT
+                        gt.id AS translation_id,
+                        g.geonameId AS geonameid,
+                        gt.`content` AS name,
+                        g.feature_class AS feature_class,
+                        g.feature_code AS feature_code,
+                        g.country_id AS country,
+                        g.admin_1_id AS admin1,
+                        g.admin_2_id AS admin2,
+                        g.admin_3_id AS admin3,
+                        g.admin_4_id AS admin4,
+                        gt.`locale` AS locale,
+                        g.population AS population
+                    FROM
+                        geo__names_translations gt
+                    JOIN
+                        geo__names g ON g.geonameId = gt.foreign_key
+                    WHERE
+                        gt.id > :lastId
+                    ORDER BY
+                        gt.id
+                    LIMIT {$fetchSize}
+                ___SQL, ['lastId' => $lastId]);
 
             $rowCount = 0;
             foreach ($result->iterateAssociative() as $row) {

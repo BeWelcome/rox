@@ -77,7 +77,7 @@ class DonationController extends AbstractController
         // Plausible revenue goal "Donation" (#540). Only for a donation recorded by
         // finishDonation in this session, so reloading this URL counts nothing.
         $donation = $request->getSession()->remove(self::DONATION_ANALYTICS);
-        if (is_array($donation) && $donation['amount'] > 0) {
+        if (\is_array($donation) && $donation['amount'] > 0) {
             $this->addFlash('plausible_event', [
                 'name' => 'Donation',
                 'revenue' => ['currency' => $donation['currency'], 'amount' => $donation['amount']],

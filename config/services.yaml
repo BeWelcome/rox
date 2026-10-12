@@ -403,7 +403,7 @@ services:
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
             - !service { class: PDO, factory: [ '@database_connection', 'getWrappedConnection' ] }
-            - { lock_mode: LOCK_NONE }
+            - { lock_mode: LOCK_ADVISORY }
 
     Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
 

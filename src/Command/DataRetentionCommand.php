@@ -78,7 +78,7 @@ class DataRetentionCommand extends Command
             /** @var Member $member */
             foreach ($members as $member) {
                 $username = $member->getUsername();
-                $cryptedFields = $member->getCryptedFields();
+                $cryptedFields = $member->getFields();
                 foreach ($cryptedFields as $cryptedField) {
                     $entityManager->remove($cryptedField);
                 }

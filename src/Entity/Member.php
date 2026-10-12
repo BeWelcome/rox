@@ -244,6 +244,57 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
     #[ORM\Column(name: 'hosting_interest', type: 'integer', nullable: true)]
     private ?int $hostingInterest = null;
 
+    // Legacy columns of the members table (NOT NULL, no default): ids of crypted fields and the old birth date
+    // parts. Mapped so Doctrine inserts stay valid and data retention can clear them, as on main.
+    #[ORM\Column(name: 'HomePhoneNumber', type: 'integer', nullable: false)]
+    private int $homePhoneNumber = 0;
+
+    #[ORM\Column(name: 'CellPhoneNumber', type: 'integer', nullable: false)]
+    private int $cellPhoneNumber = 0;
+
+    #[ORM\Column(name: 'WorkPhoneNumber', type: 'integer', nullable: false)]
+    private int $workPhoneNumber = 0;
+
+    #[ORM\Column(name: 'SecEmail', type: 'integer', nullable: false)]
+    private int $secEmail = 0;
+
+    #[ORM\Column(name: 'bday', type: 'integer', nullable: false)]
+    private int $bday = 0;
+
+    #[ORM\Column(name: 'bmonth', type: 'integer', nullable: false)]
+    private int $bmonth = 0;
+
+    #[ORM\Column(name: 'byear', type: 'integer', nullable: false)]
+    private int $byear = 0;
+
+    // Further legacy members columns that data:retention clears (as on main); not used elsewhere.
+    #[ORM\Column(name: 'ChangedId', type: 'integer', nullable: false)]
+    private int $changedId = 0;
+
+    #[ORM\Column(name: 'CounterGuests', type: 'integer', nullable: false)]
+    private int $counterGuests = 0;
+
+    #[ORM\Column(name: 'CounterHosts', type: 'integer', nullable: false)]
+    private int $counterHosts = 0;
+
+    #[ORM\Column(name: 'CounterTrusts', type: 'integer', nullable: false)]
+    private int $counterTrusts = 0;
+
+    #[ORM\Column(name: 'ex_user_id', type: 'integer', nullable: true)]
+    private ?int $exUserId = 0;
+
+    #[ORM\Column(name: 'IdentityCheckLevel', type: 'boolean', nullable: false)]
+    private bool $identityCheckLevel = false;
+
+    #[ORM\Column(name: 'MotivationForHospitality', type: 'integer', nullable: true)]
+    private ?int $motivationForHospitality = null;
+
+    #[ORM\Column(name: 'Quality', type: 'string', nullable: false)]
+    private string $quality = 'NeverLog';
+
+    #[ORM\Column(name: 'SecurityFlag', type: 'integer', nullable: false)]
+    private int $securityFlag = 0;
+
     #[ORM\OneToMany(targetEntity: CryptedField::class, mappedBy: 'member')]
     private Collection $fields;
 
@@ -936,6 +987,274 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
     public function getFields(): Collection
     {
         return $this->fields;
+    }
+
+    // Setters with main's names, used by data:retention to clear a retired member's profile.
+
+    public function setChangedid(int $value): self
+    {
+        $this->changedId = $value;
+
+        return $this;
+    }
+
+    public function setChatAol(?string $value): self
+    {
+        $this->chatAol = $value;
+
+        return $this;
+    }
+
+    public function setChatGoogle(int $value): self
+    {
+        $this->chatGoogle = $value;
+
+        return $this;
+    }
+
+    public function setChatIcq(?string $value): self
+    {
+        $this->chatIcq = $value;
+
+        return $this;
+    }
+
+    public function setChatMsn(?string $value): self
+    {
+        $this->chatMsn = $value;
+
+        return $this;
+    }
+
+    public function setChatOthers(?string $value): self
+    {
+        $this->chatOthers = $value;
+
+        return $this;
+    }
+
+    public function setChatSkype(?string $value): self
+    {
+        $this->chatSkype = $value;
+
+        return $this;
+    }
+
+    public function setChatYahoo(?string $value): self
+    {
+        $this->chatYahoo = $value;
+
+        return $this;
+    }
+
+    public function setCounterguests(int $value): self
+    {
+        $this->counterGuests = $value;
+
+        return $this;
+    }
+
+    public function setCounterhosts(int $value): self
+    {
+        $this->counterHosts = $value;
+
+        return $this;
+    }
+
+    public function setCountertrusts(int $value): self
+    {
+        $this->counterTrusts = $value;
+
+        return $this;
+    }
+
+    public function setExUserId(?int $value): self
+    {
+        $this->exUserId = $value;
+
+        return $this;
+    }
+
+    public function setFuturetrips(int $value): self
+    {
+        $this->futureTrips = $value;
+
+        return $this;
+    }
+
+    public function setGenderofguest(string $value): self
+    {
+        $this->genderOfGuest = $value;
+
+        return $this;
+    }
+
+    public function setHideBirthDate(string $value): self
+    {
+        $this->hideAge = $value;
+
+        return $this;
+    }
+
+    public function setHidegender(string $value): self
+    {
+        $this->hideGender = $value;
+
+        return $this;
+    }
+
+    public function setIdentitychecklevel(bool $value): self
+    {
+        $this->identityCheckLevel = $value;
+
+        return $this;
+    }
+
+    public function setInformationtoguest(int $value): self
+    {
+        $this->informationForGuest = $value;
+
+        return $this;
+    }
+
+    public function setLogcount(int $value): self
+    {
+        $this->logcount = $value;
+
+        return $this;
+    }
+
+    public function setMaxlenghtofstay(int $value): self
+    {
+        $this->maxLengthOfStay = $value;
+
+        return $this;
+    }
+
+    public function setMotivationforhospitality(?int $value): self
+    {
+        $this->motivationForHospitality = $value;
+
+        return $this;
+    }
+
+    public function setOldtrips(int $value): self
+    {
+        $this->oldTrips = $value;
+
+        return $this;
+    }
+
+    public function setQuality(string $value): self
+    {
+        $this->quality = $value;
+
+        return $this;
+    }
+
+    public function setSecurityflag(int $value): self
+    {
+        $this->securityFlag = $value;
+
+        return $this;
+    }
+
+    public function setTypicoffer(string $value): self
+    {
+        $this->typicalOffer = $value;
+
+        return $this;
+    }
+
+    public function setWebsite(?string $value): self
+    {
+        $this->website = $value;
+
+        return $this;
+    }
+
+    public function getHomephonenumber(): int
+    {
+        return $this->homePhoneNumber;
+    }
+
+    public function setHomephonenumber(int $homePhoneNumber): self
+    {
+        $this->homePhoneNumber = $homePhoneNumber;
+
+        return $this;
+    }
+
+    public function getCellphonenumber(): int
+    {
+        return $this->cellPhoneNumber;
+    }
+
+    public function setCellphonenumber(int $cellPhoneNumber): self
+    {
+        $this->cellPhoneNumber = $cellPhoneNumber;
+
+        return $this;
+    }
+
+    public function getWorkphonenumber(): int
+    {
+        return $this->workPhoneNumber;
+    }
+
+    public function setWorkphonenumber(int $workPhoneNumber): self
+    {
+        $this->workPhoneNumber = $workPhoneNumber;
+
+        return $this;
+    }
+
+    public function getSecemail(): int
+    {
+        return $this->secEmail;
+    }
+
+    public function setSecemail(int $secEmail): self
+    {
+        $this->secEmail = $secEmail;
+
+        return $this;
+    }
+
+    public function getBday(): int
+    {
+        return $this->bday;
+    }
+
+    public function setBday(int $bday): self
+    {
+        $this->bday = $bday;
+
+        return $this;
+    }
+
+    public function getBmonth(): int
+    {
+        return $this->bmonth;
+    }
+
+    public function setBmonth(int $bmonth): self
+    {
+        $this->bmonth = $bmonth;
+
+        return $this;
+    }
+
+    public function getByear(): int
+    {
+        return $this->byear;
+    }
+
+    public function setByear(int $byear): self
+    {
+        $this->byear = $byear;
+
+        return $this;
     }
 
     public function getMemberFields(): array

@@ -31,7 +31,7 @@ framework:
         cookie_lifetime: 604800 # 7 days
         gc_maxlifetime: 604800  # 7 days
         cookie_samesite: lax
-        gc_probability: null
+        gc_probability: 1 # remove expired sessions now and then, as on main (5fdbc73ad); null never removed them
 
     fragments:       ~
     http_method_override: true

@@ -22,7 +22,8 @@ class SubscriptionController extends AbstractController
         string $username,
         string $unsubscribeKey
     ): Response {
-        if ($request->isMethod('POST') && 'List-Unsubscribe=One-Click' === $request->request->get('List-Unsubscribe')) {
+        // RFC 8058: mail clients POST the body "List-Unsubscribe=One-Click", so the field's value is "One-Click"
+        if ($request->isMethod('POST') && 'One-Click' === $request->request->get('List-Unsubscribe')) {
             $subscriptionModel->unsubscribeNewsletter($username, $unsubscribeKey);
 
             return new Response('', Response::HTTP_OK);

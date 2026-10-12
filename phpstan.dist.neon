@@ -1,5 +1,10 @@
+includes:
+    - phpstan-baseline.neon
+
 parameters:
-    level: 0
+    # Level 2 finds undefined variables, properties and methods (sysadmins-infra#505, rox#519 route C).
+    # Errors that existed when it was raised are in phpstan-baseline.neon; new ones fail CI.
+    level: 2
     paths:
         - bin/
         - config/

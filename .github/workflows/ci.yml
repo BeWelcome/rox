@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  PHP_VERSION: 8.3
+  PHP_VERSION: 8.4
   NODE_VERSION: 22
 
 permissions:
@@ -120,7 +120,7 @@ jobs:
 
 
   phpstan:
-    name: PHPStan (experimental)
+    name: PHPStan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -147,8 +147,7 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction --no-scripts
 
       - name: Run phpstan
-        continue-on-error: true
-        run: vendor/bin/phpstan
+        run: vendor/bin/phpstan --memory-limit=2G
 
   phpmd:
     name: PHPMD

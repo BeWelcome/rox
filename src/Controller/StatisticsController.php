@@ -9,6 +9,7 @@ use PException;
 use StatsModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -23,6 +24,7 @@ class StatisticsController extends AboutBaseController
     public function __construct(
         private readonly StatisticsModel $statisticsModel,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
@@ -222,7 +224,7 @@ class StatisticsController extends AboutBaseController
     {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
-        $session = $this->get('session');
+        $session = $this->requestStack->getSession(); // $this->get() is gone since Symfony 6
         $session->start();
 
         // Make sure the Rox classes find this session

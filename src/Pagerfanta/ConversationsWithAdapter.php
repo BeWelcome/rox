@@ -5,7 +5,7 @@ namespace App\Pagerfanta;
 use App\Doctrine\MessageResultSetMapping;
 use App\Entity\Member;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception as DBALException; // DBAL 4 name
 use Doctrine\ORM\EntityManager;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;

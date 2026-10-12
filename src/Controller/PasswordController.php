@@ -196,7 +196,7 @@ class PasswordController extends AbstractController
     {
         $username = $request->get('username');
         $email = $request->get('email');
-        $password = $request->get('password');
+        $password = (string) $request->get('password', ''); // the sweep and a cleared field send none
         $zxcvbn = new Zxcvbn();
         $result = $zxcvbn->passwordStrength($password, [$username, $email, 'BeWelcome', 'bewelcome']);
         $response = new JsonResponse();

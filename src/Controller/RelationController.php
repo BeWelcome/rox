@@ -98,7 +98,7 @@ class RelationController extends AbstractController
             $relation = $form->getData();
             $relation->setUpdated(new DateTime());
 
-            $this->entityManager->merge($relation);
+            $this->entityManager->persist($relation); // already managed; merge() is gone in ORM 3
             $this->entityManager->flush();
 
             return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);

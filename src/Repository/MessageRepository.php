@@ -12,7 +12,6 @@ use App\Entity\Member;
 use App\Entity\Message;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -147,17 +146,6 @@ class MessageRepository extends EntityRepository
         $paginator->setCurrentPage($page);
 
         return $paginator;
-    }
-
-    public function getThread(Message $message)
-    {
-        $qb = $this->createNativeNamedQuery('get_thread')
-            ->setHint('partial', Query::HINT_FORCE_PARTIAL_LOAD);
-        $result = $qb->execute([
-            'message_id' => $message->getId(),
-        ]);
-
-        return $result;
     }
 
     public function findAllMessagesBetween(

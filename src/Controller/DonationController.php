@@ -70,7 +70,7 @@ class DonationController extends AbstractController
     }
 
     #[Route(path: '/donation/complete', name: 'donation_complete')]
-    public function donationCompletedSuccessfully(): RedirectResponse
+    public function donationCompletedSuccessfully(Request $request): RedirectResponse
     {
         $this->addTranslatedFlash('notice', 'donation.thanks');
 

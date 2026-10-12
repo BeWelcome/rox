@@ -77,7 +77,7 @@ class GroupController extends AbstractController
      *
      * @return RedirectResponse
      */
-    #[Route(path: '/groups/{groupId:group}/{path}', name: 'groups_redirect_path', requirements: ['groupId' => '\d+', 'path' => '.+'])]
+    #[Route(path: '/groups/{groupId}/{path}', name: 'groups_redirect_path', requirements: ['groupId' => '\d+', 'path' => '.+'])]
     public function groupsRedirectPath(Request $request)
     {
         // We only need the request
@@ -88,7 +88,7 @@ class GroupController extends AbstractController
      *
      * @return RedirectResponse
      */
-    #[Route(path: '/groups/{groupId:group}', name: 'groups_redirect_group', requirements: ['groupId' => '\d+'])]
+    #[Route(path: '/groups/{groupId}', name: 'groups_redirect_group', requirements: ['groupId' => '\d+'])]
     public function groupsRedirect(Request $request)
     {
         return $this->redirectGroup($request);
@@ -99,7 +99,7 @@ class GroupController extends AbstractController
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    #[Route(path: '/group/{groupId:group}/join', name: 'join_group')]
+    #[Route(path: '/group/{groupId}/join', name: 'join_group')]
     public function join(Request $request, #[MapEntity(id: 'groupId')] Group $group): Response
     {
         /** @var Member $member */

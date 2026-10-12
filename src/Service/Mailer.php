@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\FeedbackCategory;
 use App\Entity\Member;

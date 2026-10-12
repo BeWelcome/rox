@@ -9,14 +9,13 @@ use App\Entity\MemberTranslation;
 use App\Entity\NewLocation;
 use App\Logger\Logger;
 use App\Repository\MemberRepository;
-use Doctrine\ORM\EntityRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Hidehalo\Nanoid\Client;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
@@ -24,7 +23,7 @@ use Symfony\Component\Finder\Finder;
 
 class DataRetentionCommand extends Command
 {
-    protected static $defaultName = 'data:retention';
+    public const int MAX_EXECUTION_TIME_SECONDS = 110;
 
     private const array SIZES = [
         'xs',
@@ -42,10 +41,9 @@ class DataRetentionCommand extends Command
         '320',
         '480',
         '500',
-        'original'
+        'original',
     ];
-
-    public const int MAX_EXECUTION_TIME_SECONDS = 110;
+    protected static $defaultName = 'data:retention';
 
     private Member $bwAdmin;
 
@@ -101,7 +99,7 @@ class DataRetentionCommand extends Command
 
         $this->io->success(sprintf('Data of %d members has been deleted.', $retired));
 
-        /**
+        /*
          * Need to find a way to delete the full chain of messages. While the code sets purge on all items in a thread,
          * sometimes the tree is broken and a message suddenly doesn't have a parent anymore.
          *
@@ -327,7 +325,7 @@ class DataRetentionCommand extends Command
             }
 
             // Current format
-            $avatarFile .=  '_' . $size;
+            $avatarFile .= '_' . $size;
             if (file_exists($avatarFile)) {
                 $filesystem->remove($avatarFile);
             }
@@ -389,7 +387,7 @@ class DataRetentionCommand extends Command
     {
         $connection = $this->entityManager->getConnection();
         $connection->executeStatement(
-            <<<SQL
+            <<<'SQL'
                 UPDATE messages
                 SET DeleteRequest = CONCAT_WS(',', NULLIF(DeleteRequest, ''), :receiverPurged)
                 WHERE messages.idReceiver = :memberId
@@ -402,7 +400,7 @@ class DataRetentionCommand extends Command
         );
 
         $connection->executeStatement(
-            <<<SQL
+            <<<'SQL'
                 UPDATE messages
                 SET DeleteRequest = CONCAT_WS(',', NULLIF(DeleteRequest, ''), :senderPurged)
                 WHERE messages.idSender = :memberId

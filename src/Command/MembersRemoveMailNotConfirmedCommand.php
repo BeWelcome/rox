@@ -4,17 +4,13 @@ namespace App\Command;
 
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
-use App\Service\Mailer;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsCommand(
     name: 'members:remove:notconfirmed',
@@ -45,7 +41,7 @@ class MembersRemoveMailNotConfirmedCommand extends Command
 
         $this->entityManager->flush();
 
-        $io->success(sprintf('members:remove:notconfirmed: Processed %d members', count($members)));
+        $io->success(sprintf('members:remove:notconfirmed: Processed %d members', \count($members)));
 
         return Command::SUCCESS;
     }

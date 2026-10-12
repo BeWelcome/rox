@@ -13,7 +13,6 @@ use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,9 +48,8 @@ class AvatarController extends AbstractController
         '320',
         '480',
         '500',
-        'original'
+        'original',
     ];
-
 
     private LoggerInterface $logger;
     private EntityManagerInterface $entityManager;

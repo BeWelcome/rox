@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use DateTime;
-use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
@@ -141,7 +140,7 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
 
     /**
      * returns a list of members that have not confirmed their email address while creating the account more
-     * than 2 weeks ago
+     * than 2 weeks ago.
      */
     public function findMailNotConfirmedMembers(): array
     {

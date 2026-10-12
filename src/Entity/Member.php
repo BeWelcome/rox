@@ -679,6 +679,22 @@ class Member implements \Serializable, ObjectManagerAware, UserInterface, Passwo
         $this->preferences = new ArrayCollection();
     }
 
+    public function __serialize(): array
+    {
+        return [
+            $this->id,
+            $this->username,
+            $this->password,
+            // see section on salt below
+            // $this->salt,
+        ];
+    }
+
+    public function __unserialize(array $data): void
+    {
+        $this->unserialize(serialize($data));
+    }
+
     /**
      * Set exUserId.
      *
@@ -2418,17 +2434,6 @@ class Member implements \Serializable, ObjectManagerAware, UserInterface, Passwo
         ]);
     }
 
-    public function __serialize(): array
-    {
-        return [
-            $this->id,
-            $this->username,
-            $this->password,
-            // see section on salt below
-            // $this->salt,
-        ];
-    }
-
     /**
      * Constructs the object.
      *
@@ -2449,11 +2454,6 @@ class Member implements \Serializable, ObjectManagerAware, UserInterface, Passwo
             // see section on salt below
             // $this->salt
             ) = unserialize($serialized);
-    }
-
-    public function __unserialize(array $data): void
-    {
-        $this->unserialize(serialize($data));
     }
 
     /**

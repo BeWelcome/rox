@@ -1633,30 +1633,6 @@ parameters:
 			path: src/Model/MockupProvider/HomeAndLoginMockups.php
 
 		-
-			message: '#^Access to constant GALLERY on an unknown class App\\Entity\\Shout\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Model/MockupProvider/MyDataMockups.php
-
-		-
-			message: '#^Access to constant GALLERY_ITEM on an unknown class App\\Entity\\Shout\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Model/MockupProvider/MyDataMockups.php
-
-		-
-			message: '#^Access to constant GROUP on an unknown class App\\Entity\\Shout\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Model/MockupProvider/MyDataMockups.php
-
-		-
-			message: '#^Access to constant TRIP on an unknown class App\\Entity\\Shout\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Model/MockupProvider/MyDataMockups.php
-
-		-
 			message: '#^Class App\\Entity\\Donations not found\.$#'
 			identifier: class.notFound
 			count: 1

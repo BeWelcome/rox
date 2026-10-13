@@ -186,6 +186,11 @@ class ManticoreIndicesForumCommand extends Command
         $count = \count($forumPosts);
         unset($forumPosts);
 
+        if (0 === $count) {
+            // the last page is empty: client 4 sends an empty bulk request, which Manticore answers with ""
+            return 0;
+        }
+
         $index->addDocuments($documents);
         $index->flush();
 

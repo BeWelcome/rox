@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Controller\SubscriptionController;
 use App\Model\SubscriptionModel;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormInterface;
@@ -11,6 +12,8 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+// The partial controller mock only stubs createForm() and render(); expectations are on the model mock.
+#[AllowMockObjectsWithoutExpectations]
 class SubscriptionControllerTest extends TestCase
 {
     private const KEY = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -21,7 +24,7 @@ class SubscriptionControllerTest extends TestCase
     /** @var SubscriptionModel&MockObject */
     private $subscriptionModel;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $form = $this->createStub(FormInterface::class);
         $form->method('handleRequest')->willReturnSelf();

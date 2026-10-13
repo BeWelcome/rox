@@ -12,6 +12,7 @@ use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Exception;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
@@ -25,7 +26,6 @@ use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 
 /**
  * Class MemberController.
@@ -112,6 +112,7 @@ class MemberController extends AbstractController
             'form' => $passwordForm->createView(),
         ]);
     }
+
     #[Route(path: '/members/{username:member}/data', name: 'admin_personal_data')]
     public function getPersonalData(
         Request $request,
@@ -154,7 +155,6 @@ class MemberController extends AbstractController
      * @throws Exception
      *
      * @return BinaryFileResponse|RedirectResponse
-     *
      */
     #[Route(path: '/mydata/{username:member}/download', name: 'member_download_data')]
     public function downloadPersonalData(Request $request, #[MapEntity(mapping: ['username' => 'username'])] Member $member)

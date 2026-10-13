@@ -285,7 +285,7 @@ class ConversationModel
         $messageText = $message->getMessage();
         $found = preg_match("/@|\.at\.|-at-|\(at\)|verif/i", $messageText);
 
-        if ($found != 0) {
+        if (0 !== $found) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
             $message->setFolder(InFolderType::SPAM);
             $message->setStatus(MessageStatusType::CHECK);

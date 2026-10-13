@@ -43,6 +43,7 @@ class CommentController extends AbstractController
     public function __construct(private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
     {
     }
+
     #[Route(
         path: '/members/{to_member}/comment/{from_member}/report',
         name: 'report_comment',
@@ -292,6 +293,7 @@ class CommentController extends AbstractController
             'submenu' => $this->profileSubmenu->getSubmenu($member, $loggedInMember, ['active' => 'comment']),
         ]);
     }
+
     #[Route(path: '/members/{from_member}/comment/{to_member}/new', name: 'comment_new_experience', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function setNewExperienceForComment(
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,

@@ -6,12 +6,12 @@ use App\Entity\Member;
 use App\Entity\Preference;
 use App\Entity\Trip;
 use App\Repository\TripRepository;
+use App\Utilities\ItemsPerPageTraits;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use App\Utilities\ItemsPerPageTraits;
 
 class TripModel
 {

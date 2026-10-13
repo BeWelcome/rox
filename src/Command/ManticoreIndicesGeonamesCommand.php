@@ -287,6 +287,8 @@ class ManticoreIndicesGeonamesCommand extends Command
      * of the whole data set (rows, documents, bulk payload) in memory at the same time.
      *
      * @param array<string, mixed> $row
+     *
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
     private function addDocument(Table $index, array $row, ProgressBar $progress): void
     {

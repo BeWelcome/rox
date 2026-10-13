@@ -4,8 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Member;
 use DateTime;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\LockMode;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
 /**
@@ -22,6 +22,8 @@ class TripRepository extends EntityRepository
      * Loads the legs with a LEFT JOIN, so a trip is found even when a leg's location is missing.
      *
      * @return Trip|null
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function find(mixed $id, LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?object
     {

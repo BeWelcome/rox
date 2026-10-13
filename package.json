@@ -99,5 +99,8 @@
     "tom-select": "2.*",
     "vanilla-calendar-pro": "^3.0",
     "webpack": "5.*"
+  },
+  "resolutions": {
+    "postcss-selector-parser": "^7.1.6"
   }
 }

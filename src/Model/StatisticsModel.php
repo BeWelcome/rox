@@ -101,10 +101,10 @@ class StatisticsModel
             ')->fetchAssociative();
 
             return [
-                'members'    => $members['cnt'],
-                'countries'  => \count($countries),
-                'languages'  => $languages['cnt'],
-                'comments'   => $positiveComments['cnt'],
+                'members' => $members['cnt'],
+                'countries' => \count($countries),
+                'languages' => $languages['cnt'],
+                'comments' => $positiveComments['cnt'],
                 'activities' => $activities['cnt'],
             ];
         });

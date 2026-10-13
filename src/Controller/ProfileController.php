@@ -21,6 +21,7 @@ use App\Repository\RelationRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,7 +32,6 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 
 /**
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
@@ -46,6 +46,7 @@ class ProfileController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
     ) {
     }
+
     #[Route(path: '/members/{username:member}/new', name: 'members_profile_new')]
     public function show(#[MapEntity(mapping: ['username' => 'username'])] Member $member): Response
     {

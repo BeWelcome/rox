@@ -282,6 +282,9 @@ class Mailer
      * @param Member|Address|string $sender
      * @param Member|Address        $receiver
      * @param mixed                 $parameters
+     *
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function sendTemplateEmail($sender, $receiver, string $template, array $parameters, ?string $replyTo = null, array $extraTextHeaders = [], ?string $returnPath = null): bool
     {
@@ -383,9 +386,9 @@ class Mailer
         );
 
         return [
-            'X-Transport'           => 'newsletter',
-            'Precedence'            => 'bulk',
-            'List-Unsubscribe'      => '<' . $unsubscribeUrl . '>',
+            'X-Transport' => 'newsletter',
+            'Precedence' => 'bulk',
+            'List-Unsubscribe' => '<' . $unsubscribeUrl . '>',
             'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click',
         ];
     }

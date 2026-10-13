@@ -47,5 +47,15 @@ class UserChecker implements UserCheckerInterface
         if ($user->isSuspended()) {
             throw new AccountSuspendedException();
         }
+
+        // Sign-up not finished: SecurityController::loginAction() sends these members to signup_finalize
+        // (develop 8415a52f7; lost in a840924b9). Without it they could log in without an address.
+        if ($user->isNotConfirmedYet()) {
+            throw new AccountMailNotConfirmedException();
+        }
+
+        if ($user->didConfirmMailAddress()) {
+            throw new AccountMailConfirmedException();
+        }
     }
 }

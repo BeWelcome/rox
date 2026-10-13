@@ -130,7 +130,9 @@ class ManticoreIndicesGeonamesCommand extends Command
     private function optimizeGeonamesIndex(): void
     {
         $this->io->note('Optimizing ' . self::GEONAMES_INDEX . ' index (merging disk chunks before translations phase).');
-        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
+        // sync=1 waits for the merge: on Manticore 29.9 it takes longer than the client's default 300 s
+        // (stage, 2026-10-13: about 10 chunk merges of 35 s to 1 min each).
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort, 'timeout' => 3600]);
         try {
             // raw=true is required for non-SELECT DDL commands via the /sql endpoint.
             // The response for OPTIMIZE cannot be parsed by the PHP client, so suppress empty exceptions.

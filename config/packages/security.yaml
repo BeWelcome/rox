@@ -50,6 +50,9 @@ security:
     access_control:
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles:  PUBLIC_ACCESS }
+        # Logged out, /logout must still just log out (to /), as on main. Otherwise it redirects to the login page,
+        # is remembered as the target path, and the member's next login ends in an immediate logout.
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
         - { path: ^/about, roles:  PUBLIC_ACCESS }
         - { path: ^/donate, roles:  PUBLIC_ACCESS }
         - { path: ^/donation, roles:  PUBLIC_ACCESS }

@@ -60,7 +60,7 @@
     </div>
     {% do finalize.gender.setRendered %}
     <div class="o-form-group">
-    <label for="{{ finalize.location.fullname.vars.id}}">{{ finalize.location.vars.label}}</label>
+    <label for="{{ finalize.location.fullname.vars.id}}">{{ finalize.location.vars.label|trans }}</label>
 
     <div class="auto-search-wrapper max-height loupe">
         <input type="text" id="{{ finalize.location.fullname.vars.id}}" name="{{ finalize.location.fullname.vars.full_name }}"

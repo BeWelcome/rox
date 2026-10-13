@@ -91,11 +91,17 @@ class SignupModel
             'geonameId' => $data['location']['geoname_id'],
         ]);
 
+        // The finalize form asks for one name; prod's members table and the legacy profile editor keep first
+        // and last name apart (the editor requires a last name). The last word becomes the last name.
+        $nameParts = preg_split('/\s+/', trim((string) $data['name'])) ?: [''];
+        $lastName = \count($nameParts) > 1 ? array_pop($nameParts) : '';
+
         $member
             ->setCity($location)
             ->setLatitude($data['location']['latitude'])
             ->setLongitude($data['location']['longitude'])
-            ->setFirstName($data['name'])
+            ->setFirstName(implode(' ', $nameParts))
+            ->setLastName($lastName)
             ->setBirthdate($data['birthdate'])
             ->setGender($data['gender'])
             ->setAccommodation($data['accommodation'])

@@ -880,7 +880,8 @@ ORDER BY
             $errors[] = 'SignupErrorInvalidFirstName';
         }
 
-        if (empty($vars['LastName'])) {
+        // A one-word name from route C's sign-up has no last name (the sign-up asks for a single name field).
+        if (empty($vars['LastName']) && preg_match('/\s/', trim($vars['FirstName'] ?? ''))) {
             $errors[] = 'SignupErrorInvalidLastName';
         }
 

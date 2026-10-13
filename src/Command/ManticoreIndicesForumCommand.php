@@ -130,6 +130,10 @@ class ManticoreIndicesForumCommand extends Command
                 ___SQL);
 
         $count = $stmt->fetchNumeric()[0];
+        if (0 === $count) {
+            // as on develop: no posts, nothing to add (a progress bar without steps throws)
+            return;
+        }
 
         $progressBar = $this->getProgressBar($output, $count);
 

@@ -287,7 +287,11 @@ class RequestRouter implements UrlGeneratorInterface
                     $this->iniParse($filename, $alias_table);
                 }
             }
-            $this->iniWrite($cachefile, $alias_table);
+            // Only write the cache when it is read: with IniCache off the file is never used, and the image's
+            // build/ directory is read-only, so the write failed and logged an error on every request (#605).
+            if (!$force_refresh) {
+                $this->iniWrite($cachefile, $alias_table);
+            }
         }
         return $alias_table;
     }

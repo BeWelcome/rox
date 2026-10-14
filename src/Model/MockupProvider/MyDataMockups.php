@@ -11,7 +11,6 @@ use App\Entity\Comment;
 use App\Entity\CommunityNews;
 use App\Entity\Donations;
 use App\Entity\Group;
-use App\Entity\GroupMembership;
 use App\Entity\HostingRequest;
 use App\Entity\Location;
 use App\Entity\Log;
@@ -685,14 +684,17 @@ class MyDataMockups implements MockupProviderInterface
     {
         $groupMemberships = [];
         for ($index = 0; $index < $count; ++$index) {
-            $groupMemberships[] = Mockery::mock(GroupMembership::class, [
-                'getGroup' => Mockery::mock(Group::class, [
-                    'getName' => 'group #' . ($index + 1),
-                    'getId' => ($index + 1),
-                ]),
-                'getCreated' => new DateTime(),
-                'getStatus' => GroupMembershipStatusType::CURRENT_MEMBER,
-                'getComments' => [
+            // Plain arrays, not Mockery mocks: the template only reads values, and Mockery (a dev
+            // dependency) is not in the prod image, so this preview failed with a 500 (rox#599).
+            $groupMemberships[] = [
+                'group' => [
+                    'name' => 'group #' . ($index + 1),
+                    'id' => ($index + 1),
+                ],
+                'created' => new DateTime(),
+                'updated' => new DateTime(),
+                'status' => GroupMembershipStatusType::CURRENT_MEMBER,
+                'comments' => [
                     [
                         'code' => 'mydata.translations.headline',
                         'Sentence' => 'Translations',
@@ -708,7 +710,7 @@ class MyDataMockups implements MockupProviderInterface
                         'created' => (new DateTime())->format('Y-m-d'),
                     ],
                 ],
-            ]);
+            ];
         }
 
         return $groupMemberships;

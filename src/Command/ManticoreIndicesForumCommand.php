@@ -91,7 +91,8 @@ class ManticoreIndicesForumCommand extends Command
                     'charset_table' => 'non_cjk,U+0020->_', // Ignore spaces (turns e.g. Los Angeles into Los_Angeles)
                     'min_prefix_len' => '1',
                     'prefix_fields' => 'name',
-                    'ngram_chars' => 'cjk',
+                    // cont = CJK and Thai: Manticore 7 took Thai out of cjk, so Thai text was not indexed
+                    'ngram_chars' => 'cont',
                     'ngram_len' => '1',
                 ]
             );

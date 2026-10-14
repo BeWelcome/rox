@@ -10,6 +10,7 @@ use App\Entity\NewLocation;
 use App\Logger\Logger;
 use App\Repository\MemberRepository;
 use DateTime;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Hidehalo\Nanoid\Client;
@@ -20,6 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Throwable;
 
 class DataRetentionCommand extends Command
 {
@@ -307,7 +309,11 @@ class DataRetentionCommand extends Command
         $statement->bindValue(':newHandle', 'retired_' . $member->getId());
         $statement->bindValue(':password', 'password');
         $statement->bindValue(':email', 'noemail@example.com');
-        $statement->executeQuery();
+        try {
+            $statement->executeQuery();
+        } catch (Throwable $t) {
+            // Ignore if user table doesn't exist (new schema or test database)
+        }
     }
 
     private function removeProfilePictures(Member $member): void
@@ -348,18 +354,25 @@ class DataRetentionCommand extends Command
             $galleryIds[] = $gallery['id'];
         }
 
-        $statement = $connection->prepare('
-            DELETE FROM gallery_items_to_gallery WHERE gallery_id_foreign IN (:galleryIds)
-        ');
-        $statement->executeStatement(['galleryIds' => implode('\'', $galleryIds)]);
+        $connection->executeStatement(
+            'DELETE FROM gallery_items_to_gallery WHERE gallery_id_foreign IN (:galleryIds)',
+            ['galleryIds' => $galleryIds],
+            ['galleryIds' => Connection::PARAM_INT_ARRAY]
+        );
 
         // Remove gallery items from database
         $statement = $connection->prepare('
             DELETE FROM gallery_items WHERE user_id_foreign = :memberId
-            ');
+        ');
         $statement->executeStatement(['memberId' => $member->getId()]);
 
-        $memberPath = $this->dataDirectory . '/user/gallery/member' . $member->getId();
+        // Remove gallery (albums) from database
+        $statement = $connection->prepare('
+            DELETE FROM gallery WHERE user_id_foreign = :memberId
+        ');
+        $statement->executeStatement(['memberId' => $member->getId()]);
+
+        $memberPath = $this->dataDirectory . '/gallery/member' . $member->getId();
 
         if (file_exists($memberPath)) {
             $filesystem = new Filesystem();

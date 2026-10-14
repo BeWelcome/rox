@@ -11,7 +11,6 @@ use App\Logger\Logger;
 use App\Repository\MemberRepository;
 use DateTime;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\ArrayType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Hidehalo\Nanoid\Client;

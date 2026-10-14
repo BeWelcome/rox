@@ -316,7 +316,6 @@ class DataRetentionCommand extends Command
             $statement->executeQuery();
         } catch (Throwable $t) {
             // Ignore if user table doesn't exist (new schema or test database)
-
         }
     }
 

@@ -34,17 +34,17 @@ help.trips_notifications:
 signup.error.not.unique:
     - Unfortunately either username or email are already in use by someone else.
     - Error message shown on the signup page.
-# Texts of the one-page sign-up and its finalize step (route C, rox#519). Most reuse the wording of the
-# legacy sign-up (SignupError... keys), so translators can copy their existing translations.
+# Texts of the one-page sign-up and its finalize step (route C, rox#519). Where the legacy sign-up or login has
+# the same text, the key reuses it ('@key'), so its translations come along.
 signup.error.email.blank:
-    - Please enter a valid e-mail address.
-    - Error on the sign-up page when the e-mail field is empty (as SignupErrorInvalidEmail).
+    - '@signuperrorinvalidemail'
+    - Error on the sign-up page when the e-mail field is empty.
 signup.error.password.blank:
-    - Please enter a password.
+    - '@loginerrornopassword'
     - Error when the password field is empty (sign-up and change password).
 signup.error.terms_privacy:
-    - You must accept the Terms of Use and the Privacy Policy to sign up.
-    - Error on the sign-up page when the terms and privacy checkbox is not ticked (as SignupMustacceptTerms).
+    - '@help.terms'
+    - Error on the sign-up page when the terms and privacy checkbox is not ticked.
 signup.account.created:
     - Your account has been created
     - Headline on the finalize page, shown after the first sign-up step.
@@ -52,38 +52,40 @@ signup.activate:
     - Activate my account
     - Button that sends the finalize form at the end of the sign-up.
 error.name:
-    - Please provide your name.
-    - Error on the finalize page when the name is empty (as signup.error.name.empty).
+    - '@signup.error.name.empty'
+    - Error on the finalize page when the name is empty.
 error.birthdate:
-    - Please select a valid date of birth.
-    - Error on the finalize page when the birth date is missing or invalid (as SignupErrorBirthDate).
+    - '@signuperrorbirthdate'
+    - Error on the finalize page when the birth date is missing or invalid.
 placeholder.birthdate:
     - YYYY-MM-DD
-    - Placeholder in the birth date field of the finalize page.
+    - Placeholder in the birth date field of the finalize page; the field expects this format.
+    - messages+intl-icu
+    - yes
 error.gender:
-    - It seems you forgot to select a gender. You can hide your gender on your profile later.
-    - Error on the finalize page when no gender is selected (as SignupErrorProvideGender).
+    - It seems you forgot to select a gender. You can hide it on your profile later.
+    - Error on the finalize page when no gender is selected.
 help.location:
     - Type the place where you live and choose it from the list. Members see the place, not your address.
     - Help text under the location field of the finalize page.
 accommodation.no:
-    - No
+    - '@no'
     - Label for the not hosting accommodation choice (finalize page).
 accommodation.yes:
-    - Yes
+    - '@yes'
     - Label for the hosting accommodation choice (finalize page).
 error.accommodation:
-    - Please choose your accommodation status.
-    - Error on the finalize page when neither yes nor no is chosen for hosting (as SignupErrorProvideAccommodation).
+    - '@signuperrorprovideaccommodation'
+    - Error on the finalize page when neither yes nor no is chosen for hosting.
 hosting.interest.set:
     - Please set your hosting interest.
     - Shown next to the hosting interest slider on the finalize page before it is moved.
 error.hosting.interest:
-    - You need to adjust your hosting interest (on a scale from 1 to 10).
-    - Error on the finalize page when hosting is yes but the interest is still 0 (as SignupErrorProvideHostingInterest).
+    - '@signuperrorprovidehostinginterest'
+    - Error on the finalize page when hosting is yes but the interest is still 0.
 member.mail.not.confirmed:
-    - Please confirm your e-mail address with the link we sent you when you signed up.
-    - Notice at the top of every page for a logged-in member whose e-mail address is not confirmed yet.
+    - Please confirm your email address with the link we sent you when you signed up.
+    - Notice at the top of every page for a logged-in member whose email address is not confirmed yet.
 profile.switch.locale:
     - Show this profile in
     - Label of the language switch on a profile that is written in several languages.
@@ -91,7 +93,8 @@ signup.welcome.subject:
     - Welcome to BeWelcome, {username}!
     - Subject of the welcome message every new member gets in the inbox from BeWelcome. {username} is the new member.
 signup.welcome.body:
-    - <p>Hello {username},</p><p>welcome to BeWelcome! Add a few words about yourself and a picture to your profile, so
-      other members get to know you before you write to them. If you have a question, the FAQ and the Safety pages are a
-      good start, or contact us through the Contact page.</p><p>Have fun travelling and hosting!</p><p>The BeWelcome team</p>
+    - <p>Hello {username},</p><p>Welcome to BeWelcome! Add a few words about yourself and a picture to your profile, so
+      other members get to know you before you write to them. If you have a question, the FAQ and Safety Information
+      pages are a good place to start, or you can reach us through Contact us.</p><p>Have fun travelling and
+      hosting!</p><p>The BeWelcome team</p>
     - Body of the welcome message every new member gets in the inbox from BeWelcome. {username} is the new member.

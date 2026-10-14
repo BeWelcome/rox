@@ -21,6 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  *
  * \todo split into different responsibilities instead of clubbing all into the same mailer service.
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
  */
 class Mailer
 {
@@ -242,6 +243,20 @@ class Mailer
                 'subject' => 'profile.delete.feedback',
                 'member' => $retiree,
                 'body' => $body,
+            ]
+        );
+    }
+
+    public function sendMemberLoginReminder(Member $member): bool
+    {
+        return $this->sendTemplateEmail(
+            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
+            new Address($member->getEmail(), $member->getUsername()),
+            'login.reminder',
+            [
+                'subject' => 'email.login.reminder.subject',
+                'receiver' => $member,
+                'countRemind' => $member->getRemindersWithOutLogin(),
             ]
         );
     }

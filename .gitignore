@@ -3,6 +3,7 @@
 errors.log
 rox_local.ini
 *.cache.ini
+!/build/alias.cache.ini
 .php_cs.cache
 .phpunit.result.cache
 /data/*

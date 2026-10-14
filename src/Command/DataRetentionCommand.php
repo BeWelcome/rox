@@ -10,7 +10,7 @@ use App\Entity\NewLocation;
 use App\Logger\Logger;
 use App\Repository\MemberRepository;
 use DateTime;
-use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Exception;
@@ -347,11 +347,10 @@ class DataRetentionCommand extends Command
         // \todo: use DQL as soon as database schema matches Doctrine entities
         // Remove albums created by member from database
         $connection = $this->entityManager->getConnection();
-        $query = $connection->prepare('
-            SELECT id FROM gallery WHERE user_id_foreign = :memberId
-            ');
-        $result = $query->executeQuery(['memberId' => $member->getId()]);
-        $galleries = $result->fetchAllAssociative();
+        $galleries = $connection->executeQuery(
+            'SELECT id FROM gallery WHERE user_id_foreign = :memberId',
+            ['memberId' => $member->getId()]
+        )->fetchAllAssociative();
 
         $galleryIds = [];
         foreach ($galleries as $gallery) {
@@ -361,20 +360,20 @@ class DataRetentionCommand extends Command
         $connection->executeStatement(
             'DELETE FROM gallery_items_to_gallery WHERE gallery_id_foreign IN (:galleryIds)',
             ['galleryIds' => $galleryIds],
-            ['galleryIds' => Connection::PARAM_INT_ARRAY]
+            ['galleryIds' => ArrayParameterType::INTEGER]
         );
 
         // Remove gallery items from database
-        $statement = $connection->prepare('
-            DELETE FROM gallery_items WHERE user_id_foreign = :memberId
-        ');
-        $statement->executeStatement(['memberId' => $member->getId()]);
+        $connection->executeStatement(
+            'DELETE FROM gallery_items WHERE user_id_foreign = :memberId',
+            ['memberId' => $member->getId()]
+        );
 
         // Remove gallery (albums) from database
-        $statement = $connection->prepare('
-            DELETE FROM gallery WHERE user_id_foreign = :memberId
-        ');
-        $statement->executeStatement(['memberId' => $member->getId()]);
+        $connection->executeStatement(
+            'DELETE FROM gallery WHERE user_id_foreign = :memberId',
+            ['memberId' => $member->getId()]
+        );
 
         $memberPath = $this->dataDirectory . '/gallery/member' . $member->getId();
 

@@ -76,3 +76,22 @@ email.login.reminder.body:
         <p>&nbsp;</p>
         <p><a href="https://bewelcome.org/login">Log in</a> | <a href="https://bewelcome.org/resetpassword">Forgot password</a> | <a href="https://bewelcome.org/deleteprofile">Delete account</a></p>
     - Body of the automated login reminder email
+email.suspension.notice.subject:
+    - Account suspended - will be deleted on {deletion_date, date, short}
+    - Subject of the automated suspension notice email
+email.suspension.notice.body:
+    - |
+        <p>Hello {username},</p>
+        <p>We would like to inform you that <strong>your BeWelcome account has been suspended</strong> because you
+            have not logged in for several years, despite our previous reminders.</p>
+        <p>If you would like to use BeWelcome again, <a href="https://bewelcome.org/feedback?IdCategory=3">please contact us</a>
+            to request the reactivation of your account.</p>
+        <p>&nbsp;</p>
+        <p><strong>Please note</strong> that your account will be permanently deleted on {deletion_date, date, long}.
+            After this date, it will no longer be possible to reactivate your account.</p>
+        <p>&nbsp;</p>
+        <p>There will be no further reminders before the deletion.</p>
+        <p>&nbsp;</p>
+        <p>Best regards,<br>
+            The BeWelcome Team</p>
+    - Body of the automated suspension notice email

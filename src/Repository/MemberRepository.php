@@ -159,4 +159,23 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findMembersToSuspend(mixed $batchSize): array
+    {
+        $qb = $this->createQueryBuilder('m');
+        $expr = $qb->expr();
+        $qb
+            ->where(
+                $expr->in(
+                    'm.status',
+                    [MemberStatusType::OUT_OF_REMIND]
+                )
+            )
+            ->andWhere('YEARDIFF(m.lastLogin, CURRENT_DATE()) > 4')
+            ->orderBy('m.id', 'ASC')
+            ->setMaxResults($batchSize);
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

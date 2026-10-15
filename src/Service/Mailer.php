@@ -8,6 +8,7 @@ use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Relation;
 use App\Logger\Logger;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -281,6 +282,27 @@ class Mailer
                 'subject' => 'email.login.reminder.subject',
                 'receiver' => $member,
                 'countRemind' => $member->getRemindersWithOutLogin(),
+            ]
+        );
+    }
+
+
+    public function sendMemberSuspensionNotice(mixed $member): bool
+    {
+        $deletionDate = new DateTime('+2months');
+        return $this->sendTemplateEmail(
+            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
+            new Address($member->getEmail(), $member->getUsername()),
+            'suspension.notice',
+            [
+                'subject' => [
+                    'translationId' => 'email.suspension.notice.subject',
+                    'parameters' => [
+                        'deletion_date' => $deletionDate,
+                    ],
+                ],
+                'receiver' => $member,
+                'deletion_date' => $deletionDate,
             ]
         );
     }

@@ -237,7 +237,7 @@ services:
     app.userprovider:
         public: true
         class: App\Provider\UserProvider
-        arguments: [ '@doctrine.orm.entity_manager' ]
+        # autowired: the constructor takes the MemberRepository (it was given the entity manager)
 
     #    rox.legacy_dispatch_listener:
     #        class: App\EventListener\LegacyDispatchListener

@@ -5,7 +5,6 @@ namespace App\Command;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Service\Mailer;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -54,7 +53,7 @@ class MembersRemindLoginCommand extends Command
         foreach ($members as $member) {
             $member->setStatus(MemberStatusType::OUT_OF_REMIND);
             $member->setRemindersWithOutLogin($member->getRemindersWithOutLogin() + 1);
-            $member->setUpdated(new DateTime());
+            // updated is set by Member::onPreUpdate (develop's Member has no setUpdated)
 
             $this->entityManager->persist($member);
             $this->mailer->sendMemberLoginReminder($member);

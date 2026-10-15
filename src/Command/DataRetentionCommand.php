@@ -3,79 +3,41 @@
 namespace App\Command;
 
 use App\Doctrine\AccommodationType;
-use App\Doctrine\DeleteRequestType;
 use App\Entity\Member;
 use App\Entity\MemberTranslation;
 use App\Entity\NewLocation;
 use App\Logger\Logger;
 use App\Repository\MemberRepository;
 use DateTime;
-use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Exception;
 use Hidehalo\Nanoid\Client;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Throwable;
 
 #[AsCommand(
     name: 'data:retention',
     description: 'Cleans the database of retired users (should be run at least once each day)',
+    aliases: [],
+    hidden: false,
 )]
 class DataRetentionCommand extends Command
 {
-    public const int MAX_EXECUTION_TIME_SECONDS = 110;
-
-    private const array SIZES = [
-        'xs',
-        '30',
-        '36',
-        '48',
-        '50',
-        '72',
-        '96',
-        '100',
-        '120',
-        '150',
-        '160',
-        '200',
-        '320',
-        '480',
-        '500',
-        'original',
-    ];
-
     private Member $bwAdmin;
-
-    private SymfonyStyle $io;
+    private MemberRepository $memberRepository;
 
     public function __construct(
         private readonly Logger $logger,
         private readonly EntityManagerInterface $entityManager,
-        private readonly MemberRepository $memberRepository,
         private readonly string $dataDirectory,
-        private readonly int $mailerBatchSize,
     ) {
         parent::__construct();
-    }
-
-    protected function configure(): void
-    {
-        $this
-            ->addArgument(
-                'batch-size',
-                InputArgument::OPTIONAL,
-                \sprintf('Number of members to process in this run (default: %d)', $this->mailerBatchSize),
-                null
-            )
-        ;
     }
 
     /**
@@ -83,81 +45,38 @@ class DataRetentionCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        /** @var MemberRepository $memberRepository */
+        $memberRepository = $this->entityManager->getRepository(Member::class);
+        $this->memberRepository = $memberRepository;
+
         /** @var Member $bwAdmin */
-        $bwAdmin = $this->memberRepository->find(1);
+        $bwAdmin = $memberRepository->find(1);
         $this->bwAdmin = $bwAdmin;
 
-        $this->io = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($input, $output);
 
-        $this->io->title('Running Data Retention');
+        $io->title('Running Data Retention');
 
-        $batchSize = $input->getArgument('batch-size') ?? $this->mailerBatchSize;
+        $retired = $this->removeMembers($io);
 
-        if ($batchSize <= 0) {
-            $this->io->error('Batch size must be a positive integer.');
-
-            return Command::FAILURE;
-        }
-
-        $this->io->note(\sprintf('Processing a batch of up to %d members (max execution time ~120s).', $batchSize));
-
-        $retired = $this->removeMembers($batchSize);
-
-        $this->io->success(\sprintf('Data of %d members has been deleted.', $retired));
-
-        /*
-         * Need to find a way to delete the full chain of messages. While the code sets purge on all items in a thread,
-         * sometimes the tree is broken and a message suddenly doesn't have a parent anymore.
-         *
-         * @todo Find a way to delete all messages that both side have been marked as purged.
-         *
-            $connection = $this->entityManager->getConnection();
-            $removedMessages = $connection->executeStatement(
-                <<<SQL
-                    DELETE FROM messages WHERE DeleteRequest IN (
-                        'senderpurged,receiverpurged',
-                        'senderdeleted,senderpurged,receiverpurged',
-                        'receiverdeleted,senderpurged,receiverpurged',
-                        'senderdeleted,receiverdeleted,senderpurged,receiverpurged'
-                    )
-                SQL
-            );
-
-            $this->io->note(sprintf('Removed messages where both members have been retired: %d.', $removedMessages));
-        */
+        $io->success(\sprintf('Data of %d members has been deleted.', $retired));
 
         return Command::SUCCESS;
     }
 
-    private function removeMembers(int $batchSize): int
+    private function removeMembers(SymfonyStyle $io): int
     {
         $entityManager = $this->entityManager;
-        $startTime = microtime(true);
 
-        $members = $this->memberRepository->loadDataRetentionMembers($batchSize);
+        $members = $this->memberRepository->loadDataRetentionMembers();
 
-        if (!empty($members)) {
-            $totalFound = \count($members);
-            $msg = 'Removing private data for ' . $totalFound . ' members.';
-            $this->io->info($msg);
+        if (null !== $members) {
+            $msg = 'Removing private data for ' . \count($members) . ' members.';
+            $io->info($msg);
             $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
 
-            $processedCount = 0;
             /** @var Member $member */
             foreach ($members as $member) {
-                // Check if approaching maximum execution time limit (120s)
-                if ((microtime(true) - $startTime) >= self::MAX_EXECUTION_TIME_SECONDS) {
-                    $warnMsg = \sprintf(
-                        'Time limit approaching (%ds). Stopping batch early after processing %d of %d members.',
-                        self::MAX_EXECUTION_TIME_SECONDS,
-                        $processedCount,
-                        $totalFound
-                    );
-                    $this->io->warning($warnMsg);
-                    $this->logger->write($warnMsg, 'Data Retention', $this->bwAdmin);
-                    break;
-                }
-
                 $username = $member->getUsername();
                 $cryptedFields = $member->getFields();
                 foreach ($cryptedFields as $cryptedField) {
@@ -184,30 +103,21 @@ class DataRetentionCommand extends Command
                 $member = $this->removeMemberInfo($member);
                 $this->removeUserInfo($member);
                 $this->removeProfilePictures($member);
-                $this->removeGalleryItems($member);
-                $this->markConversationsAsPurged($member);
 
                 $member->setUsername('retired_' . $member->getId());
                 $entityManager->persist($member);
                 $entityManager->flush();
 
-                ++$processedCount;
-
                 $msg = 'Removed private data for ' . $username . ' (retired_' . $member->getId() . ').';
-                $this->io->info($msg);
+                $io->info($msg);
                 $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
             }
-
-            $summaryMsg = \sprintf('Removed private data for %d members.', $processedCount);
-            $this->io->info($summaryMsg);
-            $this->logger->write($summaryMsg, 'Data Retention', $this->bwAdmin);
-
-            return $processedCount;
+            $msg = 'Removed private data for ' . \count($members) . ' members.';
+            $io->info($msg);
+            $this->logger->write($msg, 'Data Retention', $this->bwAdmin);
         }
 
-        $this->io->info('No members found for data retention.');
-
-        return 0;
+        return \count($members);
     }
 
     private function removeMemberInfo(Member $member): Member
@@ -216,14 +126,14 @@ class DataRetentionCommand extends Command
         $client = new Client();
         $longAgo = new DateTime('1900-01-01');
 
-        /** @var EntityRepository<NewLocation> $locationRepository */
+        /** @var EntityRepository $locationRepository */
         $locationRepository = $this->entityManager->getRepository(NewLocation::class);
         $location = $locationRepository->findOneBy([]);
 
         $member
             ->setAccommodation(AccommodationType::NO)
             ->setAdditionalAccommodationinfo(0)
-            ->setAddressHidden('Yes')
+            ->setAddressHidden('')
             ->setBday(0)
             ->setBewelcomed(0)
             ->setBirthdate($longAgo)
@@ -249,10 +159,10 @@ class DataRetentionCommand extends Command
             ->setLastName('')
             ->setFuturetrips(0)
             ->setGender('other')
-            ->setGenderofguest('any')
+            ->setGenderofguest('other')
             ->setHideAttribute(255)
-            ->setHideBirthDate('Yes')
-            ->setHidegender('Yes')
+            ->setHideBirthDate('hidden')
+            ->setHidegender('hidden')
             ->setHobbies(0)
             ->setHomephonenumber(0)
             ->setHostingInterest(0)
@@ -260,8 +170,8 @@ class DataRetentionCommand extends Command
             ->setIlivewith(0)
             ->setInformationtoguest(0)
             ->setLastswitchtoactive($longAgo)
-            ->setLatitude(null)
-            ->setLongitude(null)
+            ->setLatitude('')
+            ->setLongitude('')
             ->setLogcount(0)
             ->setMaxguest(0)
             ->setMaxlenghtofstay(0)
@@ -313,119 +223,27 @@ class DataRetentionCommand extends Command
         $statement->bindValue(':newHandle', 'retired_' . $member->getId());
         $statement->bindValue(':password', 'password');
         $statement->bindValue(':email', 'noemail@example.com');
-        try {
-            $statement->executeQuery();
-        } catch (Throwable $t) {
-            // Ignore if user table doesn't exist (new schema or test database)
-        }
+        $statement->executeQuery();
     }
 
     private function removeProfilePictures(Member $member): void
     {
-        $memberPath = $this->dataDirectory . '/user/avatars/' . $member->getId();
-
-        // Sizes used on bewelcome
+        $memberPath = $this->dataDirectory . '/user/avatars/';
 
         $filesystem = new Filesystem();
-        foreach (self::SIZES as $size) {
-            // Old format
-            $avatarFile = $memberPath . '_' . $size;
-            if (file_exists($avatarFile)) {
-                $filesystem->remove($avatarFile);
+        $finder = new Finder();
+        try {
+            $files = $finder->files()->name($member->getId() . '*')->in($memberPath);
+
+            foreach ($files as $file) {
+                $filesystem->remove($file);
             }
-
-            // Current format
-            $avatarFile .= '_' . $size;
-            if (file_exists($avatarFile)) {
-                $filesystem->remove($avatarFile);
-            }
+        } catch (Exception $e) {
+            $this->logger->write(
+                'Problem during retention run: ' . $e->getMessage(),
+                'Data Retention',
+                $this->bwAdmin
+            );
         }
-    }
-
-    private function removeGalleryItems(Member $member): void
-    {
-        // \todo: use DQL as soon as database schema matches Doctrine entities
-        // Remove albums created by member from database
-        $connection = $this->entityManager->getConnection();
-        $galleries = $connection->executeQuery(
-            'SELECT id FROM gallery WHERE user_id_foreign = :memberId',
-            ['memberId' => $member->getId()]
-        )->fetchAllAssociative();
-
-        $galleryIds = [];
-        foreach ($galleries as $gallery) {
-            $galleryIds[] = $gallery['id'];
-        }
-
-        $connection->executeStatement(
-            'DELETE FROM gallery_items_to_gallery WHERE gallery_id_foreign IN (:galleryIds)',
-            ['galleryIds' => $galleryIds],
-            ['galleryIds' => ArrayParameterType::INTEGER]
-        );
-
-        // Remove gallery items from database
-        $connection->executeStatement(
-            'DELETE FROM gallery_items WHERE user_id_foreign = :memberId',
-            ['memberId' => $member->getId()]
-        );
-
-        // Remove gallery (albums) from database
-        $connection->executeStatement(
-            'DELETE FROM gallery WHERE user_id_foreign = :memberId',
-            ['memberId' => $member->getId()]
-        );
-
-        $memberPath = $this->dataDirectory . '/gallery/member' . $member->getId();
-
-        if (file_exists($memberPath)) {
-            $filesystem = new Filesystem();
-            $finder = new Finder();
-            try {
-                $files = $finder->files()->name('*')->in($memberPath);
-
-                foreach ($files as $file) {
-                    $filesystem->remove($file);
-                }
-
-                $filesystem->remove($memberPath);
-            } catch (Exception $e) {
-                $this->io->error('Couldn\'t remove gallery for id ' . $member->getId() . ': ' . $e->getMessage());
-                $this->logger->write(
-                    \sprintf('Couldn\'t remove gallery for id %d: %s', $member->getId(), $e->getMessage()),
-                    'Data Retention',
-                    $this->bwAdmin
-                );
-            }
-        }
-    }
-
-    private function markConversationsAsPurged(Member $member): void
-    {
-        $connection = $this->entityManager->getConnection();
-        $connection->executeStatement(
-            <<<'SQL'
-                    UPDATE messages
-                    SET DeleteRequest = CONCAT_WS(',', NULLIF(DeleteRequest, ''), :receiverPurged)
-                    WHERE messages.idReceiver = :memberId
-                        AND FIND_IN_SET(:receiverPurged, DeleteRequest) = 0
-                SQL,
-            [
-                'memberId' => $member->getId(),
-                'receiverPurged' => DeleteRequestType::RECEIVER_PURGED,
-            ]
-        );
-
-        $connection->executeStatement(
-            <<<'SQL'
-                    UPDATE messages
-                    SET DeleteRequest = CONCAT_WS(',', NULLIF(DeleteRequest, ''), :senderPurged)
-                    WHERE messages.idSender = :memberId
-                        AND FIND_IN_SET(:senderPurged, DeleteRequest) = 0
-                SQL,
-            [
-                'memberId' => $member->getId(),
-                'senderPurged' => DeleteRequestType::SENDER_PURGED,
-            ]
-        );
     }
 }

@@ -32,7 +32,15 @@
         </properties>
     </rule>
 
-    <rule ref="rulesets/codesize.xml" />
+    <rule ref="rulesets/codesize.xml">
+        <exclude name="TooManyPublicMethods" />
+    </rule>
+
+    <rule ref="rulesets/codesize.xml/TooManyPublicMethods">
+        <properties>
+            <property name="ignorepattern" value="(^(set|get|is|has|with|find))i" />
+        </properties>
+    </rule>
 
     <rule ref="rulesets/controversial.xml" />
 

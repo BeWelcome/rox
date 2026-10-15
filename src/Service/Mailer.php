@@ -286,10 +286,10 @@ class Mailer
         );
     }
 
-
     public function sendMemberSuspensionNotice(mixed $member): bool
     {
         $deletionDate = new DateTime('+2months');
+
         return $this->sendTemplateEmail(
             new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
             new Address($member->getEmail(), $member->getUsername()),

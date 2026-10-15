@@ -174,7 +174,6 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->andWhere('YEARDIFF(m.lastLogin, CURRENT_DATE()) > 4')
             ->orderBy('m.id', 'ASC')
             ->setMaxResults($batchSize);
-        ;
 
         return $qb->getQuery()->getResult();
     }

@@ -34,7 +34,7 @@ class MembersRemindLoginCommand extends Command
             ->addArgument(
                 'batch-size',
                 InputArgument::OPTIONAL,
-                'How many members to process in this run',
+                'How many members get a login reminder at the same time.',
                 null
             );
     }

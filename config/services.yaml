@@ -69,7 +69,7 @@ services:
         arguments:
             $repository: '@App\Repository\MemberRepository'
 
-    App\Command\DataRetentionCommand:
+    App\Command\DataCleanupCommand:
         arguments:
             $dataDirectory: '%data_directory%'
 

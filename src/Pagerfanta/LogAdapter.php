@@ -3,10 +3,11 @@
 namespace App\Pagerfanta;
 
 use App\Entity\Member;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class LogAdapter implements AdapterInterface
 {
@@ -69,15 +70,17 @@ class LogAdapter implements AdapterInterface
         }
         if (!empty($this->types)) {
             $sql .= ' `type` IN (:types)';
-            $params[':types'] = $this->types;
+            // DBAL 4: parameter names without the leading ':', and the list expanded for IN ().
+            $params['types'] = $this->types;
+            $paramTypes['types'] = ArrayParameterType::STRING;
             if (null !== $this->member) {
                 $sql .= ' AND ';
             }
         }
         if (null !== $this->member) {
             $sql .= ' `l`.`IdMember` = :memberId';
-            $params[':memberId'] = $this->member->getId();
-            $paramTypes[':memberId'] = PDO::PARAM_INT;
+            $params['memberId'] = $this->member->getId();
+            $paramTypes['memberId'] = ParameterType::INTEGER;
         }
 
         return [$sql, $params, $paramTypes];

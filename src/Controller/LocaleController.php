@@ -40,7 +40,8 @@ class LocaleController extends AbstractController
                     ->setPreference($preference)
                 ;
             }
-            $memberPreference->setValue($language->getShortCode());
+            // the language id, as prod stores it and Member::initializePreferredLanguage() reads it
+            $memberPreference->setValue((string) $language->getId());
             $entityManager->persist($memberPreference);
             $entityManager->flush();
         }

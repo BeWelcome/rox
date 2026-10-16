@@ -1,5 +1,11 @@
 import ShowMore from 'show-more-read/dist/js/showMore.esm.js';
 
+// Translated button labels from the page's hidden inputs (as on prod); pages without them keep the library's text.
+const label = (id) => document.getElementById(id)?.value;
+const labels = () => Object.fromEntries(
+    [['more', label('read.more')], ['less', label('show.less')]].filter(([, text]) => undefined !== text)
+);
+
 document.addEventListener('DOMContentLoaded', function () {
     if (document.querySelectorAll('.js-read-more').length !== 0) {
         new ShowMore('.js-read-more', {
@@ -7,8 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 type: "text",
                 btnClass: "o-show-more-btn",
                 limit: 300,
-                more: document.getElementById('read.more').value,
-                less: document.getElementById('show.less').value
+                ...labels(),
             }
         });
     }
@@ -18,8 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
             limit: 240,
             after: 60,
             btnClass: "o-show-more-btn",
-//            more: document.getElementById('read.more').value,
-//            less: document.getElementById('show.less').value
+            ...labels(),
         }
     });
     new ShowMore('.js-read-more-written', {
@@ -28,15 +32,15 @@ document.addEventListener('DOMContentLoaded', function () {
             limit: 120,
             after: 30,
             btnClass: "o-show-more-btn",
-//            more: document.getElementById('read.more').value,
-//            less: document.getElementById('show.less').value
+            ...labels(),
         }
     });
     if (document.querySelectorAll('.js-read-more-comment').length !== 0) {
         new ShowMore(".js-read-more-comment", {
             config: {
                 type: "text",
-                btnClass: "o-show-more-btn"
+                btnClass: "o-show-more-btn",
+                ...labels(),
             }
         });
     }

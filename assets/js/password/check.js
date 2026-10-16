@@ -67,5 +67,5 @@ passwordField.addEventListener('keyup', () => {
 });
 
 if (passwordField.value != '') {
-    g
+    getPasswordScore();
 }

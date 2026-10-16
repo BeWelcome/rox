@@ -40,7 +40,6 @@ class PollsPage extends PageWithActiveSkin
         }
         if ('showpoll' === $this->_action || 'create' === $this->_action) {
             $this->addLateLoadScriptFile('build/roxeditor.js');
-            $this->addLateLoadScriptFile('build/cktranslations/'.$this->getSession()->get('lang', 'en').'.js');
             $this->addStylesheet('build/roxeditor.css');
         }
         if ('showpoll' === $this->_action) {

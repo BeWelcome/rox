@@ -41,7 +41,6 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
         $this->addLateLoadScriptFile('build/jquery_ui.js');
         $this->addLateLoadScriptFile('build/activities.js');
         $this->addLateLoadScriptFile('build/roxeditor.js');
-        $this->addLateLoadScriptFile('build/cktranslations/'.$this->getSession()->get('lang', 'en').'.js');
     }
 
     #[\Override]

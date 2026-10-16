@@ -2,49 +2,38 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ 'credits.title' | trans }}
+{{ 'credits.title' | trans }}
 {% endblock %}
 
-{% block matomo %}
-    <script type="application/javascript">
-    var _paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be calledbefore "trackPageView" */
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-    var u="//matomo.bewelcome.org/";
-    _paq.push(['setTrackerUrl', u+'matomo.php']);
-    _paq.push(['setSiteId', '1']);
-    var d=document, g=d.createElement('script'),s=d.getElementsByTagName('script')[0];
-    g.type='text/javascript'; g.async=true; g.defer=true;g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-    </script>
-{% endblock matomo %}
-
 {% block content %}
-    <h1>{{ 'credits.headline' | trans }}</h1>
-    <p>{{ 'credits.abstract' | trans }}</p>
-    <dl>
-        <dt><a id="geonames" href="https://geonames.org">Geonames</a></dt>
-        <dd>{{ 'credits.geonames'|trans }}</dd>
-        <dt><a id="OSM"></a><a href="https://openstreetmap.org">Open Street Map</a></dt>
-        <dd>{{ 'credits.osm'|trans }}</dd>
-        <dt><a id="Jetbrains"></a><a href="https://www.jetbrains.com/?from=bewelcome"><img src="{{ asset('images/phpstorm-text.svg') }}" height="24" alt="PHPStorm logo" title="PHPStorm"></a></dt>
-        <dd>{{ 'credits.jetbrains'|trans|purify }}</dd>
-        <dt><a id="Browserstack"></a><a href="https://browserstack.com"><img src="{{ asset('images/Browserstack-logo.svg') }}" height="24" alt="Browserstack logo" title="Browserstack"></a></dt>
-        <dd>{{ 'credits.browserstack'|trans }}</dd>
-        <dt><a id="Symfony"></a><a href="https://symfony.com"><img src="{{ asset('images/symfony_black_02.png') }}" height="24" alt="symfony logo" title="symfony"></a></dt>
-        <dd>{{ 'credits.symfony'|trans }}</dd>
-        <dt><a id="ckeditor"></a><a href="https://ckeditor.com/ckeditor-5/">CKEditor 5</a></dt>
-        <dd>{{ 'credits.ckeditor'|trans }}</dd>
-        <dt><a href="https://htmlpurifier.org/"><img
-                    src="https://htmlpurifier.org/live/art/powered.png"
-                    alt="Powered by HTML Purifier"></a></dt>
-        <dd>{{ 'credits.htmlpurifier'|trans }}</dd>
-        <dt><a href="https://meet.jitsi.org"><img
-                    src="https://jitsi.org/wp-content/themes/jitsi/images/logo-web-2020.png" height="24"></a></dt>
-        <dd>{{ 'credits.jitsi.meet'|trans }}</dd>
-        <dt><a href="https://framasoft.org">Framasoft</a></dt>
-        <dd>{{ 'credits.framasoft'|trans }}</dd>
-    </dl>
+<h1>{{ 'credits.headline' | trans }}</h1>
+<p>{{ 'credits.abstract' | trans }}</p>
+<dl>
+    <dt><a id="geonames" href="https://geonames.org">Geonames</a></dt>
+    <dd>{{ 'credits.geonames'|trans }}</dd>
+    <dt><a id="OSM"></a><a href="https://openstreetmap.org">Open Street Map</a></dt>
+    <dd>{{ 'credits.osm'|trans }}</dd>
+    <dt><a id="Jetbrains"></a><a href="https://www.jetbrains.com/?from=bewelcome"><img
+                src="{{ asset('images/phpstorm-text.svg') }}" height="24" alt="PHPStorm logo" title="PHPStorm"></a></dt>
+    <dd>{{ 'credits.jetbrains'|trans|purify }}</dd>
+    <dt><a id="Browserstack"></a><a href="https://browserstack.com"><img
+                src="{{ asset('images/Browserstack-logo.svg') }}" height="24" alt="Browserstack logo"
+                title="Browserstack"></a></dt>
+    <dd>{{ 'credits.browserstack'|trans }}</dd>
+    <dt><a id="Symfony"></a><a href="https://symfony.com"><img src="{{ asset('images/symfony_black_02.png') }}"
+                height="24" alt="symfony logo" title="symfony"></a></dt>
+    <dd>{{ 'credits.symfony'|trans }}</dd>
+    <dt><a id="ckeditor"></a><a href="https://ckeditor.com/ckeditor-5/">CKEditor 5</a></dt>
+    <dd>{{ 'credits.ckeditor'|trans }}</dd>
+    <dt><a id="znuny"></a><a href="https://www.znuny.org/">Znuny</a></dt>
+    <dd>{{ 'credits.znuny'|trans }}</dd>
+    <dt><a href="https://htmlpurifier.org/"><img src="/images/html_purifier_powered.png"
+                alt="Powered by HTML Purifier"></a></dt>
+    <dd>{{ 'credits.htmlpurifier'|trans }}</dd>
+    <dt><a href="https://meet.jitsi.org"><img src="https://jitsi.org/wp-content/themes/jitsi/images/logo-web-2020.png"
+                height="24"></a></dt>
+    <dd>{{ 'credits.jitsi.meet'|trans }}</dd>
+    <dt><a href="https://framasoft.org">Framasoft</a></dt>
+    <dd>{{ 'credits.framasoft'|trans }}</dd>
+</dl>
 {% endblock content %}

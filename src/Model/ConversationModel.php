@@ -14,6 +14,7 @@ use App\Utilities\ConversationThread;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Normalizer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
@@ -280,16 +281,24 @@ class ConversationModel
         $em->flush();
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     public function formatConversation(Message $message): Message
     {
-        $messageText = $message->getMessage();
-        $found = preg_match("/@|\.at\.|-at-|\(at\)|verif/i", $messageText);
+        // Check a normalised copy: zero-width characters removed and compatibility forms folded (NFKC), so
+        // contact details hidden with Unicode tricks are caught as well. The message itself stays as written.
+        $messageText = preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $message->getMessage());
+        $normalized = Normalizer::normalize($messageText, Normalizer::FORM_KC);
+        if (false === $normalized) {
+            $normalized = $messageText;
+        }
+        $found = preg_match("/@|\.at\.|-at-|\(at\)|verif|\.shop|system|support/i", $normalized);
 
         if (0 !== $found) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
             $message->setFolder(InFolderType::SPAM);
             $message->setStatus(MessageStatusType::CHECK);
-            $message->setMessage($messageText);
         }
 
         return $message;

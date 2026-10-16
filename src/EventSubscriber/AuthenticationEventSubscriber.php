@@ -48,7 +48,8 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
 
             // Update the last login if last login and current time differ for more than 5 minutes
             $lastLogin = $member->getLastLogin();
-            $diff = (new Carbon())->diffInMinutes($lastLogin);
+            // absolute: Carbon 3 returns a signed value (negative for a past date), so > 5 was never true
+            $diff = null === $lastLogin ? 0 : (new Carbon())->diffInMinutes($lastLogin, true);
             if (null === $lastLogin || $diff > 5) {
                 $member->setLastLogin(new DateTime());
 

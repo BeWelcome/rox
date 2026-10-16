@@ -1776,7 +1776,7 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
 
         $birthday = $this->getBirthdate();
 
-        return $birthday->diffInYears();
+        return (int) $birthday->diffInYears();
     }
 
     #[Groups(['Member:Read'])]

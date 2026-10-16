@@ -132,6 +132,16 @@ services:
         class: App\Model\MemberDataExtractor\RightsExtractor
         tags: [ 'app.member_data_extractor' ]
 
+    # Shouts left on gallery items, groups and trips until 2019 (as on prod, v3.8.5)
+    app.member_data_extractor.shouts:
+        class: App\Model\MemberDataExtractor\DoctrineExtractor
+        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
+        arguments:
+            $className: 'App\Entity\Shout'
+            $memberRelationName: member
+            $alias: shouts
+        tags: [ 'app.member_data_extractor' ]
+
     app.member_data_extractor.special_relations:
         class: App\Model\MemberDataExtractor\SpecialRelationsExtractor
         tags: [ 'app.member_data_extractor' ]

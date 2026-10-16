@@ -26,6 +26,13 @@ class SignupController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
+    /**
+     * Session key holding the id of the member who may finish the sign-up in this session. Set only where the
+     * visitor proved to own the account: right after step 1, through the confirmation link, or by logging in
+     * with the password. Without it anyone who knew a new member's username could fill in their profile.
+     */
+    public const string FINALIZE_MEMBER = 'signup_finalize_member';
+
     public function __construct(private EntityManagerInterface $entityManager)
     {
     }
@@ -63,6 +70,7 @@ class SignupController extends AbstractController
             if (0 === $errorCount) {
                 $locale = $request->getPreferredLanguage($locales);
                 $member = $signupModel->createAccount($signupData, $locale);
+                $request->getSession()->set(self::FINALIZE_MEMBER, $member->getId());
 
                 return $this->redirectToRoute('signup_finalize', [
                     'username' => $member->getUsername(),
@@ -86,6 +94,11 @@ class SignupController extends AbstractController
 
         if (null !== $loggedInMember) {
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
+        }
+
+        // Only the member who signed up, confirmed the address or logged in in this session (see FINALIZE_MEMBER).
+        if ($request->getSession()->get(self::FINALIZE_MEMBER) !== $member->getId()) {
+            return $this->redirectToRoute('security_login');
         }
 
         if (
@@ -114,6 +127,7 @@ class SignupController extends AbstractController
                 ;
             } else {
                 $signupModel->updateMember($member, $finalizeForm->getData());
+                $request->getSession()->remove(self::FINALIZE_MEMBER);
                 $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $member->getUsername());
 
                 return $this->redirectToRoute('editmyprofile');
@@ -249,6 +263,8 @@ class SignupController extends AbstractController
             $this->addFlash('plausible_event', 'Signup Confirmed');
 
             if (null === $member->getAccommodation()) {
+                $request->getSession()->set(self::FINALIZE_MEMBER, $member->getId());
+
                 return $this->redirectToRoute('signup_finalize', ['username' => $member->getUsername()]);
             }
 

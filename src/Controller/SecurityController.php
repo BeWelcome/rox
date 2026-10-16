@@ -11,6 +11,7 @@ use App\Security\AccountSuspendedException;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
@@ -30,7 +31,7 @@ class SecurityController extends AbstractController
     #[Route(path: '/login', name: 'login', defaults: ['access_denied_redirect' => '/'])]
     #[Route(path: '/login', name: 'security_login', defaults: ['access_denied_redirect' => '/'])]
     #[Route(path: '/login_check', name: 'security_check', defaults: ['access_denied_redirect' => '/'])]
-    public function loginAction(AuthenticationUtils $helper): Response
+    public function loginAction(Request $request, AuthenticationUtils $helper): Response
     {
         $user = $this->getUser();
         if (null !== $user) {
@@ -44,7 +45,10 @@ class SecurityController extends AbstractController
             $memberRepository = $this->entityManager->getRepository(Member::class);
             $member = $memberRepository->loadUserByIdentifier($lastUsername);
 
-            // We can assume we found a member as the exception is only thrown if we had a member.
+            // We can assume we found a member as the exception is only thrown if we had a member. UserChecker throws
+            // these in checkPostAuth, after the password was verified: this visitor owns the account.
+            $request->getSession()->set(SignupController::FINALIZE_MEMBER, $member->getId());
+
             return $this->redirectToRoute('signup_finalize', ['username' => $member->getUsername()]);
         }
 

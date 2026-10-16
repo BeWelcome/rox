@@ -1,6 +1,6 @@
-{# utm_links: every bewelcome.org link carries the newsletter as campaign, so Plausible
-   can attribute visits, signups and donations to it (#540). #}
-{% block content %}{% apply inky_to_html|utm_links('reminder', 'login_reminder')|inline_css(encore_entry_css_source('email')) %}
+{# utm_links: every bewelcome.org link carries the 'login' as source and 'reminder' as campaign, so Plausible
+   can attribute visits to it. #}
+{% block content %}{% apply inky_to_html|utm_links('login', 'reminder')|inline_css(encore_entry_css_source('email')) %}
     <wrapper class="header">
         <container>
             <row class="collapse">

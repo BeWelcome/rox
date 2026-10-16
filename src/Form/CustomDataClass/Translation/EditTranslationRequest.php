@@ -30,7 +30,7 @@ class EditTranslationRequest extends TranslationRequest
         $editTranslationRequest->isArchived = $original->getIsArchived();
         $editTranslationRequest->translationAllowed = (TranslationAllowedType::TRANSLATION_ALLOWED === $original->getTranslationAllowed());
         $editTranslationRequest->translatedText = $translation->getSentence();
-        if (null === $translation->getSentence() && str_starts_with($editTranslationRequest->wordCode, 'broadcast_body_')) {
+        if ('' === $translation->getSentence() && str_starts_with($editTranslationRequest->wordCode, 'broadcast_body_')) {
             $editTranslationRequest->translatedText = $original->getSentence();
         }
 

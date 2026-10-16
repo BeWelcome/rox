@@ -1465,19 +1465,13 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
         return MemberStatusType::BANNED === $this->status;
     }
 
+    /**
+     * As on prod (v3.8.5): only members whose profile cannot be browsed (taken out, suspended, banned, ...) are
+     * refused at login. An allow-list here locked out ChoiceInactive, NeedMore, ActiveHidden and Pending members.
+     */
     public function isDeniedAccess(): bool
     {
-        return !\in_array(
-            $this->status,
-            [
-                MemberStatusType::ACTIVE,
-                MemberStatusType::OUT_OF_REMIND,
-                MemberStatusType::ACCOUNT_ACTIVATED,
-                MemberStatusType::MAIL_CONFIRMED,
-                MemberStatusType::AWAITING_MAIL_CONFIRMATION,
-            ],
-            true
-        );
+        return !$this->isBrowsable();
     }
 
     public function isNotConfirmedYet(): bool

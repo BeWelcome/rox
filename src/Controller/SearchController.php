@@ -78,6 +78,7 @@ class SearchController extends AbstractController
         TranslatorInterface $translator,
         FormFactoryInterface $formFactory,
     ): Response {
+        $this->renameLegacySearchParameters($request);
         $pager = null;
         $results = null;
 
@@ -220,6 +221,8 @@ class SearchController extends AbstractController
             return $this->redirectToRoute('search_locations');
         }
 
+        $this->renameLegacySearchParameters($request);
+
         $results = null;
 
         $form = $this->createForm(MapSearchFormType::class);
@@ -322,5 +325,32 @@ class SearchController extends AbstractController
         }
 
         return $request;
+    }
+
+    /**
+     * Search URLs saved on prod (v3.8.5) still use the old field names; map them to the new ones, so a bookmark
+     * keeps its filters.
+     */
+    private function renameLegacySearchParameters(Request $request): void
+    {
+        $renamed = [
+            'offerdinner' => 'offers_dinner',
+            'offertour' => 'offers_tour',
+            'profile_picture' => 'has_profile_picture',
+            'about_me' => 'has_about_me',
+        ];
+        foreach (['tiny', 'home', 'search', 'map'] as $form) {
+            if (!$request->query->has($form)) {
+                continue;
+            }
+            $values = $request->query->all($form);
+            foreach ($renamed as $old => $new) {
+                if (\array_key_exists($old, $values) && !\array_key_exists($new, $values)) {
+                    $values[$new] = $values[$old];
+                    unset($values[$old]);
+                }
+            }
+            $request->query->set($form, $values);
+        }
     }
 }

@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Blank;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
@@ -79,6 +80,23 @@ class SignupFormType extends AbstractType
                 'constraints' => [
                     new IsTrue([
                         'message' => 'signup.error.terms_privacy',
+                    ]),
+                ],
+            ])
+            // Honeypot, as on prod's sign-up: hidden from people, filled in by bots; a filled-in value stops the
+            // sign-up with prod's message. The template renders it inside a hidden block.
+            ->add('sweet', TextType::class, [
+                'label' => 'signupsweet',
+                'mapped' => false,
+                'required' => false,
+                'error_bubbling' => true, // the field is hidden: show its message at the top of the form
+                'attr' => [
+                    'autocomplete' => 'off',
+                    'tabindex' => '-1',
+                ],
+                'constraints' => [
+                    new Blank([
+                        'message' => 'signuperrorsomethingwentwrong',
                     ]),
                 ],
             ])

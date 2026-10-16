@@ -29,6 +29,7 @@
     {{ 'signup.finalize'|trans|raw }}
     {{ form_start(finalize, { 'attr': { autocomplete: 'off', class: 'u-mt-8' } }) }}
     {{ form_row(finalize.name) }}
+    {{ form_row(finalize.mother_tongue) }}
     {{ form_row(finalize.birthdate) }}
     <div class="o-form-group u-grid u-grid-cols-3">
         <div class="u-col-span-3"><label>{{ 'label.gender'|trans }}</label></div>

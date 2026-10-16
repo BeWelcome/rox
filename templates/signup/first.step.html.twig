@@ -13,6 +13,10 @@
 {% block content %}
     <h1>{{ 'signup'|trans }}</h1>
     {{ form_start(signup, { 'attr': { autocomplete: 'off' } }) }}
+    {{ form_errors(signup) }}
+    <div class="u-hidden" aria-hidden="true" style="display: none">
+        {{ form_row(signup.sweet) }}
+    </div>
     {% if signup.username.vars.value is empty %}
         {{ form_row(signup.username, {'attr': {autofocus: 'autofocus'}}) }}
 

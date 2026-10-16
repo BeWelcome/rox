@@ -2,11 +2,13 @@
 
 namespace App\Model;
 
+use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Address;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\MemberPreference;
+use App\Entity\MembersLanguagesLevel;
 use App\Entity\MemberTranslation;
 use App\Entity\Message;
 use App\Entity\NewLocation;
@@ -117,6 +119,7 @@ class SignupModel
         }
 
         $this->entityManager->persist($member);
+        $this->addMotherTongue($member, $data['mother_tongue'] ?? null);
 
         $address = new Address();
         $address
@@ -238,5 +241,24 @@ class SignupModel
             $profileTranslation->setTranslation($profileTranslation->getId());
             $this->entityManager->persist($profileTranslation);
         }
+    }
+
+    /**
+     * Mother tongue from the finalize form, stored as prod's sign-up does (and develop's SignupModel): one
+     * MotherLanguage level for the member.
+     */
+    private function addMotherTongue(Member $member, ?Language $language): void
+    {
+        if (null === $language) {
+            return;
+        }
+
+        $motherTongue = new MembersLanguagesLevel();
+        $motherTongue
+            ->setMember($member)
+            ->setLanguage($language)
+            ->setLevel(LanguageLevelType::MOTHER_TONGUE)
+        ;
+        $this->entityManager->persist($motherTongue);
     }
 }

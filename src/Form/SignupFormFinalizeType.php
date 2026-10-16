@@ -3,6 +3,10 @@
 namespace App\Form;
 
 use App\Doctrine\AccommodationType;
+use App\Entity\Language;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -42,6 +46,28 @@ class SignupFormFinalizeType extends AbstractType
                 'constraints' => [
                     new NotBlank([
                         'message' => 'error.name',
+                    ]),
+                ],
+            ])
+            // Mother tongue, asked on prod's sign-up as well (one language, spoken and signed languages grouped).
+            // Translation keys are prod's; the catalogue holds them in lower case.
+            ->add('mother_tongue', EntityType::class, [
+                'class' => Language::class,
+                'query_builder' => fn (EntityRepository $repository): QueryBuilder => $repository
+                    ->createQueryBuilder('l')
+                    ->where('l.isspokenlanguage = true OR l.issignlanguage = true')
+                    ->orderBy('l.englishname', 'ASC'),
+                'choice_label' => fn (Language $language): string => strtolower((string) $language->getWordCode()),
+                'choice_translation_domain' => 'messages',
+                'group_by' => fn (Language $language): string => $language->getIsSignlanguage()
+                    ? 'signedlanguages' : 'spokenlanguages',
+                'label' => 'languagelevel_motherlanguage',
+                'placeholder' => 'signupselectmothertongue',
+                'help' => 'subline_mothertongue',
+                'required' => false,
+                'constraints' => [
+                    new NotNull([
+                        'message' => 'signup.error.mothertongue',
                     ]),
                 ],
             ])

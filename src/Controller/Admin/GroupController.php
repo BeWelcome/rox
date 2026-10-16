@@ -6,6 +6,7 @@ use App\Entity\Group;
 use App\Entity\Member;
 use App\Logger\Logger;
 use App\Service\Mailer;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,6 +32,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class GroupController extends AbstractController
 {
+    use RedirectToReferrerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -225,9 +227,7 @@ class GroupController extends AbstractController
 
         $logger->write('Group ' . $this->getGroupLinkTag($group) . ' dismissed by ' . $this->getUser()->getUsername() . '.', 'Group');
 
-        $referrer = $request->headers->get('referer');
-
-        return $this->redirect($referrer);
+        return $this->redirectToReferrer($request, 'admin_groups_approval');
     }
 
     /**
@@ -261,9 +261,8 @@ class GroupController extends AbstractController
 
         $creator = current($group->getMembers());
         $this->sendNewGroupApprovedNotification($group, $creator);
-        $referrer = $request->headers->get('referer');
 
-        return $this->redirect($referrer);
+        return $this->redirectToReferrer($request, 'admin_groups_approval');
     }
 
     /**
@@ -295,9 +294,7 @@ class GroupController extends AbstractController
 
         $logger->write('Group ' . $this->getGroupLinkTag($group) . ' archived by ' . $this->getUser()->getUsername() . '.', 'Group');
 
-        $referrer = $request->headers->get('referer');
-
-        return $this->redirect($referrer);
+        return $this->redirectToReferrer($request, 'admin_groups_approval');
     }
 
     /**
@@ -329,9 +326,7 @@ class GroupController extends AbstractController
 
         $logger->write('Group ' . $this->getGroupLinkTag($group) . ' un-archived by ' . $this->getUser()->getUsername() . '.', 'Group');
 
-        $referrer = $request->headers->get('referer');
-
-        return $this->redirect($referrer);
+        return $this->redirectToReferrer($request, 'admin_groups_approval');
     }
 
     /**

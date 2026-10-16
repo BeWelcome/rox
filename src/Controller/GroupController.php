@@ -19,6 +19,7 @@ use App\Model\WikiModel;
 use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
 use App\Utilities\ManagerTrait;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
@@ -49,6 +50,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 class GroupController extends AbstractController
 {
     use ManagerTrait;
+    use RedirectToReferrerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
     use UniqueFilenameTrait;
@@ -288,9 +290,8 @@ class GroupController extends AbstractController
         } else {
             $this->addTranslatedFlash('error', 'flash.group.invite.withdrawn.error');
         }
-        $referer = $request->headers->get('referer');
 
-        return $this->redirect($referer);
+        return $this->redirectToReferrer($request);
     }
 
     #[Route(path: '/new/group', name: 'new_group')]

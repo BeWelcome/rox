@@ -17,6 +17,7 @@ use App\Model\InvitationModel;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -32,6 +33,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class InvitationController extends BaseRequestAndInvitationController
 {
+    use RedirectToReferrerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -89,9 +91,8 @@ class InvitationController extends BaseRequestAndInvitationController
             )
         ) {
             $this->addTranslatedFlash('error', 'flash.request.limit');
-            $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->redirectToReferrer($request);
         }
 
         $redirectOnNotAllowed = false;

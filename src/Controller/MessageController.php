@@ -12,6 +12,7 @@ use App\Model\ConversationModel;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,6 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class MessageController extends AbstractController
 {
+    use RedirectToReferrerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -79,9 +81,8 @@ class MessageController extends AbstractController
             )
         ) {
             $this->addTranslatedFlash('error', 'flash.message.limit');
-            $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->redirectToReferrer($request);
         }
 
         $redirectOnNotAllowed = false;

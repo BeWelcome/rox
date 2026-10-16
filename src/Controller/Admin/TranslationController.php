@@ -15,6 +15,7 @@ use App\Form\TranslationFormType;
 use App\Model\TranslationModel;
 use App\Repository\LanguageRepository;
 use App\Repository\WordRepository;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
@@ -40,6 +41,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class TranslationController extends AbstractController
 {
+    use RedirectToReferrerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -432,9 +434,8 @@ class TranslationController extends AbstractController
         $this->addTranslatedFlash('notice', $flashId);
 
         $request->getSession()->set('translation_mode', $mode);
-        $referrer = $request->headers->get('referer');
 
-        return $this->redirect($referrer);
+        return $this->redirectToReferrer($request);
     }
 
     /**

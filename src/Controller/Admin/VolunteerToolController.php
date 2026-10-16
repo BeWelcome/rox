@@ -16,6 +16,7 @@ use App\Logger\Logger;
 use App\Model\FeedbackModel;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
+use App\Utilities\RedirectToReferrerTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -40,6 +41,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class VolunteerToolController extends AbstractController
 {
+    use RedirectToReferrerTrait;
+
     private const string CHANGE_USERNAME = 'admin.tools.change_username';
     private const string FIND_USER = 'admin.tools.find_user';
     private const string MESSAGES_SENT = 'admin.tools.messages_sent';
@@ -672,9 +675,8 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
 
         if (empty($subMenuItems) || ((null !== $tool) && !\array_key_exists($tool, $subMenuItems))) {
             $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->redirectToReferrer($request);
         }
 
         return $subMenuItems;

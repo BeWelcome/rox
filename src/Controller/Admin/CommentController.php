@@ -8,6 +8,7 @@ use App\Entity\Comment;
 use App\Entity\Member;
 use App\Form\AdminCommentFormType;
 use App\Model\Admin\CommentModel;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,6 +26,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class CommentController extends AbstractController
 {
+    use RedirectToReferrerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -241,7 +243,7 @@ class CommentController extends AbstractController
 
         $this->addTranslatedFlash('notice', 'flash.admin.comment.safetyteam');
 
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirectToReferrer($request);
     }
 
     #[Route(path: '/admin/comment/{to_member}/{from_member}/checked', name: 'admin_comment_mark_checked')]
@@ -268,7 +270,7 @@ class CommentController extends AbstractController
 
         $this->addTranslatedFlash('notice', 'flash.admin.comment.checked');
 
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirectToReferrer($request);
     }
 
     #[Route(path: '/admin/comment/{to_member}/{from_member}/hide', name: 'admin_comment_hide')]
@@ -295,7 +297,7 @@ class CommentController extends AbstractController
 
         $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
 
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirectToReferrer($request);
     }
 
     #[Route(path: '/admin/comment/{to_member}/{from_member}/show', name: 'admin_comment_show')]
@@ -322,7 +324,7 @@ class CommentController extends AbstractController
 
         $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
 
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirectToReferrer($request);
     }
 
     /**

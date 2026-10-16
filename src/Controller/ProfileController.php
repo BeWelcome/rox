@@ -20,6 +20,7 @@ use App\Repository\ProfileVisitRepository;
 use App\Repository\RelationRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
+use App\Utilities\RedirectToReferrerTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,6 +41,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ProfileController extends AbstractController
 {
+    use RedirectToReferrerTrait;
+
     public function __construct(
         private readonly ChangeProfilePictureGlobals $globals,
         private readonly ProfileSubmenu $profileSubmenu,
@@ -87,7 +90,7 @@ class ProfileController extends AbstractController
             }
         }
 
-        return new RedirectResponse($request->headers->get('referer'));
+        return $this->redirectToReferrer($request);
     }
 
     #[Route(path: '/members/{username:member}/visitors/{page}', name: 'profile_visitors')]

@@ -9,6 +9,7 @@ use App\Repository\ForumPostRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
+use App\Utilities\RedirectToReferrerTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,6 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class ForumsController extends AbstractController
 {
     use ItemsPerPageTraits;
+    use RedirectToReferrerTrait;
 
     private const int POSTS_DIFF = 3;
     private const int POSTS_MAX = 10;
@@ -123,9 +125,8 @@ class ForumsController extends AbstractController
         $memberPreference->setValue('Yes');
         $this->entityManager->persist($memberPreference);
         $this->entityManager->flush();
-        $referrer = $request->headers->get('referer');
 
-        return $this->redirect($referrer);
+        return $this->redirectToReferrer($request);
     }
 
     #[Route(path: '/forums/show/groups/all', name: 'forums_groups_all')]
@@ -143,9 +144,7 @@ class ForumsController extends AbstractController
         $this->entityManager->persist($memberPreference);
         $this->entityManager->flush();
 
-        $referrer = $request->headers->get('referer');
-
-        return $this->redirect($referrer);
+        return $this->redirectToReferrer($request);
     }
 
     #[Route(path: '/members/{username:member}/posts/{page}/{search}', name: 'profile_forum_posts_search')]

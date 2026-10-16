@@ -17,6 +17,7 @@ use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
 use App\Utilities\ManagerTrait;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Form;
@@ -35,6 +36,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class RequestController extends BaseRequestAndInvitationController
 {
     use ManagerTrait;
+    use RedirectToReferrerTrait;
     use TranslatorTrait;
 
     public function __construct(
@@ -130,9 +132,8 @@ class RequestController extends BaseRequestAndInvitationController
             )
         ) {
             $this->addTranslatedFlash('error', 'flash.request.limit');
-            $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->redirectToReferrer($request);
         }
 
         if (AccommodationType::NO === $host->getAccommodation()) {

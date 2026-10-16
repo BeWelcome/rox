@@ -16,6 +16,9 @@
 {% endblock stylesheets %}
 
 {% block content %}
+    {% if plausible_script_url and pager is not null %}
+    <script>plausible('Host Search')</script>
+    {% endif %}
     {% if pager is not null and pager.nbResults == 0 %}
     <div class="row no-gutters">
         <div class="col-12">

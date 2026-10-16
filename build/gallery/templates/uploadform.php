@@ -7,7 +7,7 @@ $callbacktag = $formkit->setPostCallback('GalleryController', 'uploadedProcess')
 //$Gallery = new GalleryController;
 //$callbackId = $Gallery->uploadProcess();
 //$vars = PPostHandler::getVars($callbackId);
-$galleryId = isset($this->galleryId) ? $this->galleryId : false;
+$galleryId = $this->galleryId ?? false;
 $galleryId = ($this->gallery) ? $this->gallery->id : $galleryId;
 $words = $this->words;
 // If the upload-form is NOT hidden, show it!
@@ -32,7 +32,7 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
 </div>
 <div class="col-12" id="gallery-upload-content">
     <form method="post" action="<?=$postURL?>" class="def-form" id="gallery-img-upload" enctype="multipart/form-data">
-    <input type="hidden" name="MAX_FILE_SIZE" value="<?=PFunctions::returnBytes(ini_get('upload_max_filesize'))?>"/>
+    <input type="hidden" name="MAX_FILE_SIZE" value="<?=(new PFunctions())->returnBytes(ini_get('upload_max_filesize'))?>"/>
     <div class="row">
         <div class="col-12 col-md-6">
             <div id="gallery-img-upload-files">
@@ -50,7 +50,7 @@ if ($galleryId) $postURL = 'gallery/show/sets/'.$galleryId;
         <div class="col-12 col-md-6">
 
             <div class="alert alert-warning">
-                <?=$words->getFormatted('Gallery_UploadWarning')?><?php printf("%.1f MB", PFunctions::returnBytes(ini_get('upload_max_filesize')) / 1048576); ?>
+                <?=$words->getFormatted('Gallery_UploadWarning')?><?php printf("%.1f MB", (new PFunctions())->returnBytes(ini_get('upload_max_filesize')) / 1048576); ?>
             </div>
         </div>
         <?=$words->flushBuffer()?>

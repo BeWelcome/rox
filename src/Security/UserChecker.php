@@ -13,7 +13,7 @@ class UserChecker implements UserCheckerInterface
      * @throws AccountBannedException
      * @throws AccountDeniedLoginException
      */
-    public function checkPreAuth(UserInterface $user)
+    public function checkPreAuth(UserInterface $user): void
     {
         if (!$user instanceof Member) {
             return;
@@ -31,9 +31,10 @@ class UserChecker implements UserCheckerInterface
     /**
      * @throws AccountExpiredException
      * @throws AccountSuspendedException
+     * @throws AccountMailConfirmedException
      * @throws AccountMailNotConfirmedException
      */
-    public function checkPostAuth(UserInterface $user)
+    public function checkPostAuth(UserInterface $user): void
     {
         if (!$user instanceof Member) {
             return;
@@ -47,8 +48,14 @@ class UserChecker implements UserCheckerInterface
             throw new AccountSuspendedException();
         }
 
+        // Sign-up not finished: SecurityController::loginAction() sends these members to signup_finalize
+        // (develop 8415a52f7; lost in a840924b9). Without it they could log in without an address.
         if ($user->isNotConfirmedYet()) {
             throw new AccountMailNotConfirmedException();
+        }
+
+        if ($user->didConfirmMailAddress()) {
+            throw new AccountMailConfirmedException();
         }
     }
 }

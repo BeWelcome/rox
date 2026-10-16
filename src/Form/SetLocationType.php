@@ -10,7 +10,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SetLocationType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Parameter $options not used but signature is given by symfony.
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('fullname', TextType::class, [

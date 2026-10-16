@@ -28,10 +28,9 @@ class LegacyDispatchListener
      */
     protected $tokenStorage;
 
-    public function __construct(LegacyHttpKernel $kernel, SessionInterface $session, TokenStorage $tokenStorage)
+    public function __construct(LegacyHttpKernel $kernel, TokenStorage $tokenStorage)
     {
         $this->kernel = $kernel;
-        $this->session = $session;
         $this->tokenStorage = $tokenStorage;
     }
 
@@ -61,21 +60,22 @@ class LegacyDispatchListener
 
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
-        $this->session->start();
-        if (!$this->session->has('IdMember')) {
-            $rememberMeToken = unserialize($this->session->get('_security_main'));
+        $session = $event->getRequest()->getSession();
+        $session->start();
+        if (!$session->has('IdMember')) {
+            $rememberMeToken = unserialize($session->get('_security_main'));
             if (null === $rememberMeToken) {
                 throw new AccessDeniedException();
             }
 
             $user = $rememberMeToken->getUser();
             if (null !== $user) {
-                $this->session->set('IdMember', $user->getId());
+                $session->set('IdMember', $user->getId());
             }
         }
         try {
             $response = $this->kernel->handle($event->getRequest(), $event->getRequestType());
-        } catch (ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException) {
             // If the legacy kernel also failed to route the request, let the
             // original error bubble back up to the new Symfony error handler.
             return;

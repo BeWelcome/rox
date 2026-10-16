@@ -2,31 +2,24 @@
 
 namespace App\Pagerfanta;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class MissingTranslationAdapter implements AdapterInterface
 {
     private string $query;
 
-    private string $term;
+    private readonly string $term;
 
-    private string $locale;
-
-    private Connection $connection;
-
-    public function __construct(Connection $connection, string $locale, string $term)
+    public function __construct(private readonly Connection $connection, private readonly string $locale, string $term)
     {
-        $this->connection = $connection;
-        $this->term = empty($term) ? $term : $connection->quote('%' . $term . '%');
-        $this->locale = $locale;
+        $this->term = empty($term) ? $term : $this->connection->quote('%' . $term . '%');
 
         $this->query = "
             SELECT
                 code,
                 domain,
-                shortcode,
+                shortCode,
                 sentence,
                 created
             FROM
@@ -61,10 +54,10 @@ class MissingTranslationAdapter implements AdapterInterface
         if (!empty($this->term)) {
             $query .= " AND code LIKE {$this->term}";
         }
-        $statement = $this->connection->query($query);
-        $result = $statement->fetch(PDO::FETCH_OBJ);
+        $statement = $this->connection->executeQuery($query);
+        $count = $statement->fetchOne();
 
-        return $result->cnt;
+        return $count;
     }
 
     /**
@@ -73,8 +66,8 @@ class MissingTranslationAdapter implements AdapterInterface
     public function getSlice(int $offset, int $length): iterable
     {
         $query = $this->query . ' LIMIT ' . $offset . ', ' . $length;
-        $statement = $this->connection->query($query);
+        $statement = $this->connection->executeQuery($query);
 
-        return $statement->fetchAll();
+        return $statement->fetchAllAssociative();
     }
 }

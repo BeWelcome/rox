@@ -17,61 +17,48 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class CheckerController extends AbstractController
 {
     use ItemsPerPageTraits;
 
-    private const MESSAGES_REPORTED = 1;
-    private const MESSAGES_PROCESSED = 2;
-    private const MESSAGES_BLOCK_WORDS = 3;
-    private const MESSAGES_BLOCK_WORDS_PROCESSED = 4;
+    private const int MESSAGES_REPORTED = 1;
+    private const int MESSAGES_PROCESSED = 2;
+    private const int MESSAGES_BLOCK_WORDS = 3;
+    private const int MESSAGES_BLOCK_WORDS_PROCESSED = 4;
 
-    private CheckerModel $checkerModel;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(CheckerModel $checkerModel, EntityManagerInterface $entityManager)
-    {
-        $this->checkerModel = $checkerModel;
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private readonly CheckerModel $checkerModel,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
-    /**
-     * @Route("/admin/spam/messages", name="admin_spam_messages")
-     */
+    #[Route(path: '/admin/spam/messages', name: 'admin_spam_messages')]
     public function showReportedMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_REPORTED);
     }
 
-    /**
-     * @Route("/admin/spam/messages/processed", name="admin_spam_messages_processed")
-     */
+    #[Route(path: '/admin/spam/messages/processed', name: 'admin_spam_messages_processed')]
     public function showProcessedMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_PROCESSED);
     }
 
-    /**
-     * @Route("/admin/spam/messages/blocked", name="admin_spam_messages_block_words")
-     */
+    #[Route(path: '/admin/spam/messages/blocked', name: 'admin_spam_messages_block_words')]
     public function showBlockWordMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS);
     }
 
-    /**
-     * @Route("/admin/spam/messages/blocked/processed", name="admin_spam_messages_block_words_processed")
-     */
+    #[Route(path: '/admin/spam/messages/blocked/processed', name: 'admin_spam_messages_block_words_processed')]
     public function showProcessedBlockWordMessages(Request $request): Response
     {
         return $this->handleMessages($request, self::MESSAGES_BLOCK_WORDS_PROCESSED);
     }
 
-    /**
-     * @Route("/admin/spam/activities", name="admin_spam_activities")
-     */
+    #[Route(path: '/admin/spam/activities', name: 'admin_spam_activities')]
     public function showActivities(Request $request, ActivityModel $activitiesModel): Response
     {
         if (
@@ -113,9 +100,7 @@ class CheckerController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/spam/communitynews", name="admin_spam_community_news")
-     */
+    #[Route(path: '/admin/spam/communitynews', name: 'admin_spam_community_news')]
     public function showCommunityNewsComments(Request $request, CommunityNewsModel $communityNewsModel): Response
     {
         if (
@@ -157,12 +142,36 @@ class CheckerController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/spam", name="admin_spam")
-     */
+    #[Route(path: '/admin/spam', name: 'admin_spam')]
     public function redirectToSpamMessages(): RedirectResponse
     {
         return new RedirectResponse($this->generateUrl('admin_spam_messages'));
+    }
+
+    public function getActiveMenuAndMessages(int $type, int $page, int $limit): array
+    {
+        switch ($type) {
+            case self::MESSAGES_REPORTED:
+                $active = 'messages';
+                $messages = $this->checkerModel->getReportedMessages($page, $limit);
+                break;
+            case self::MESSAGES_PROCESSED:
+                $active = 'processed_messages';
+                $messages = $this->checkerModel->getProcessedReportedMessages($page, $limit);
+                break;
+            case self::MESSAGES_BLOCK_WORDS:
+                $active = 'blocked_words';
+                $messages = $this->checkerModel->getBlockWordsMessages($page, $limit);
+                break;
+            case self::MESSAGES_BLOCK_WORDS_PROCESSED:
+                $active = 'processed_blocked_words';
+                $messages = $this->checkerModel->getProcessedBlockWordsMessages($page, $limit);
+                break;
+            default:
+                throw new InvalidArgumentException();
+        }
+
+        return [$active, $messages];
     }
 
     private function getSubmenuItems(): array
@@ -205,30 +214,12 @@ class CheckerController extends AbstractController
         }
 
         $page = $request->query->get('page', 1);
+
         /** @var Member $member */
         $member = $this->getUser();
         $limit = $this->getItemsPerPage($member);
 
-        switch ($type) {
-            case self::MESSAGES_REPORTED:
-                $active = 'messages';
-                $messages = $this->checkerModel->getReportedMessages($page, $limit);
-                break;
-            case self::MESSAGES_PROCESSED:
-                $active = 'processed_messages';
-                $messages = $this->checkerModel->getProcessedReportedMessages($page, $limit);
-                break;
-            case self::MESSAGES_BLOCK_WORDS:
-                $active = 'blocked_words';
-                $messages = $this->checkerModel->getBlockWordsMessages($page, $limit);
-                break;
-            case self::MESSAGES_BLOCK_WORDS_PROCESSED:
-                $active = 'processed_blocked_words';
-                $messages = $this->checkerModel->getProcessedBlockWordsMessages($page, $limit);
-                break;
-            default:
-                throw new InvalidArgumentException();
-        }
+        [$active, $messages] = $this->getActiveMenuAndMessages($type, $page, $limit);
 
         $messageIds = [];
         foreach ($messages->getIterator() as $key => $val) {
@@ -251,6 +242,10 @@ class CheckerController extends AbstractController
                 $this->checkerModel->markAsSpamByChecker($spamMessageIds);
                 $this->checkerModel->unmarkAsSpamByChecker($noSpamMessageIds);
                 $this->addFlash('notice', 'Set spam status');
+
+                if (self::MESSAGES_BLOCK_WORDS_PROCESSED === $type) {
+                    return $this->redirectToRoute('admin_spam_messages_block_words');
+                }
 
                 return $this->redirectToRoute('admin_spam_messages');
             }

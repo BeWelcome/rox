@@ -25,7 +25,7 @@ Boston, MA  02111-1307, USA.
 $request = PRequest::get()->request;
 
 if (!isset($vars['errors']) || !is_array($vars['errors'])) {
-    $vars['errors'] = array();
+    $vars['errors'] = [];
 }
 
 $list = $this->_data; // Retrieve the data to display (set by the controller)

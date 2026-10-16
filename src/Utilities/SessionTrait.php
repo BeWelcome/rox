@@ -10,7 +10,7 @@ trait SessionTrait
     protected $session;
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     protected function setSession()
     {

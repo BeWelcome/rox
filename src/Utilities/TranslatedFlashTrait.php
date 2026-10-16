@@ -9,11 +9,6 @@ namespace App\Utilities;
  */
 trait TranslatedFlashTrait
 {
-    /**
-     * @param $type
-     * @param $message
-     * @param mixed ...$params
-     */
     protected function addTranslatedFlash($type, $message, ...$params)
     {
         $this->addFlash($type, $this->getTranslator()->trans($message, ...$params));

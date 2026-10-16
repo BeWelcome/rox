@@ -60,6 +60,7 @@ class GroupForumPage extends GroupsSubPage
         }
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'forum';
     }

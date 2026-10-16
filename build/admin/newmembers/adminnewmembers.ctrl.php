@@ -44,6 +44,7 @@ class AdminNewMembersController extends AdminBaseController
         $this->model = new AdminNewMembersModel();
     }
 
+    #[\Override]
     public function __destruct() {
         unset($this->model);
     }
@@ -65,7 +66,7 @@ class AdminNewMembersController extends AdminBaseController
 
     public function listMembers()
     {
-        list($loggedInMember, $rights) = $this->CheckRights();
+        [$loggedInMember, $rights] = $this->CheckRights();
         $safetyTeamOrAdmin = false;
         if (isset($rights['SafetyTeam']) || isset($rights['Checker'])) {
             $safetyTeamOrAdmin = true;

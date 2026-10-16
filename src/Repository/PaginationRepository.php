@@ -71,14 +71,12 @@ class PaginationRepository extends EntityRepository
      * Gets the latest community news (only visible to the public) if any.
      *
      * @throws NonUniqueResultException
-     *
-     * @return mixed
      */
     public function getLatest()
     {
         return $this->createQueryBuilder('cn')
             ->where('cn.public = :public')
-            ->setParameter(':public', true)
+            ->setParameter('public', true)
             ->orderBy('cn.createdAt', 'desc')
             ->setMaxResults(4)
             ->getQuery()

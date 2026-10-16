@@ -3,63 +3,58 @@
 namespace App\Entity;
 
 use App\Utilities\LifecycleCallbacksTrait;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Flagsmembers.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="flagsmembers", indexes={
- *     @ORM\Index(name="flagsmembers_members", columns={"IdMember", "IdFlag"})
- * })
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'flagsmembers')]
+#[ORM\Index(name: 'flagsmembers_members', columns: ['IdMember', 'IdFlag'])]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class FlagMember
 {
     use LifecycleCallbacksTrait;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdMember", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdMember', type: 'integer', nullable: false)]
     private $idmember;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdFlag", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdFlag', type: 'integer', nullable: false)]
     private $idflag;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="Level", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'Level', type: 'integer', nullable: false)]
     private $level = '0';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Scope", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Scope', type: 'text', length: 255, nullable: false)]
     private $scope;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Comment", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'Comment', type: 'text', length: 65535, nullable: false)]
     private $comment;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -185,7 +180,7 @@ class FlagMember
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return FlagMember
      */
@@ -199,7 +194,7 @@ class FlagMember
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -209,7 +204,7 @@ class FlagMember
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return FlagMember
      */
@@ -223,7 +218,7 @@ class FlagMember
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {

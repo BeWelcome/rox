@@ -6,24 +6,28 @@ use App\Entity\Wiki;
 use App\Repository\WikiRepository;
 use App\Utilities\ManagerTrait;
 use App\Utilities\RoxWikiParserBackend;
+use Doctrine\ORM\EntityManagerInterface;
+use Mike42\Wikitext\HtmlRenderer;
 use Mike42\Wikitext\WikitextParser;
+use Symfony\Contracts\Service\Attribute\Required;
 
 class WikiModel
 {
     use ManagerTrait;
 
-    /** @var RoxWikiParserBackend */
-    private $roxWikiParserBackend;
+    private HtmlRenderer $roxWikiParserBackend;
 
-    /**
-     * @required
-     */
-    public function setWikiParserBackend(RoxWikiParserBackend $wikiParserBackend)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->roxWikiParserBackend = $wikiParserBackend;
     }
 
-    public function getPage($pageTitle, $version = 0)
+    #[Required]
+    public function setWikiParserBackend(RoxWikiParserBackend $roxWikiParserBackend): void
+    {
+        $this->roxWikiParserBackend = $roxWikiParserBackend;
+    }
+
+    public function getPage($pageTitle, $version = 0): ?Wiki
     {
         $pageName = $this->getPagename($pageTitle);
 
@@ -35,37 +39,30 @@ class WikiModel
         return $wikiPage;
     }
 
-    public function getPagename($pageTitle)
+    public function getPagename($pageTitle): string
     {
-        if ('Group ' === substr($pageTitle, 0, 6)) {
-            $pageTitle = str_replace('Group ', 'Group_', trim($pageTitle));
+        if (str_starts_with((string) $pageTitle, 'Group ')) {
+            $pageTitle = str_replace('Group ', 'Group_', trim((string) $pageTitle));
         }
 
-        if ('Group_' === substr($pageTitle, 0, 6)) {
-            return str_replace(' ', '', trim($pageTitle));
+        if (str_starts_with((string) $pageTitle, 'Group_')) {
+            return str_replace(' ', '', trim((string) $pageTitle));
         }
 
-        return str_replace(' ', '_', trim($pageTitle));
+        return str_replace(' ', '_', trim((string) $pageTitle));
     }
 
     /**
-     * @param $content
-     *
-     * @return string
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
-    public function parseWikiMarkup($content)
+    public function parseWikiMarkup($content): ?string
     {
-        try {
-            // Initialise the Parser
-            WikitextParser::init();
-            WikitextParser::$backend = $this->roxWikiParserBackend;
-            $parser = new WikitextParser($content);
-            $result = $parser->result;
-        } catch (\Exception $e) {
-            $result = null;
-        }
+        //         try {
+        $parser = new WikitextParser($this->roxWikiParserBackend);
+        $result = $parser->parse($content);
+        //        } catch (\Exception $e) {
+        //            $result = 'Wiki content could not be parsed: ' . $e->getMessage();
+        //        }
 
         return $result;
     }

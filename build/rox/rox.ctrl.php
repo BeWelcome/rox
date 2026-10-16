@@ -74,7 +74,7 @@ class RoxController extends RoxControllerBase
             // bw.org/in/lang, or bw.org/start
             array_shift($request);
         }
-        switch (isset($request[0]) ? $request[0] : false) {
+        switch ($request[0] ?? false) {
             case 'in':
                 // language switching
                 if (!isset($request[1])) {
@@ -154,7 +154,7 @@ class RoxController extends RoxControllerBase
     {
         $request = PRequest::get()->request;
         $loc_rel = implode('/',array_slice($request, $level));
-        $get = array();
+        $get = [];
         foreach ($_GET as $key => $value) {
             $get[] = $key.'='.$value;
         }

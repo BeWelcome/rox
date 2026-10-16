@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,34 +11,25 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * LoginMessageAcknowledged.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="login_messages_acknowledged")
- * @ORM\Entity
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'login_messages_acknowledged')]
+#[ORM\Entity]
 class LoginMessageAcknowledged
 {
-    /**
-     * @ORM\Column(name="acknowledged", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'acknowledged', type: 'boolean', nullable: false)]
     private bool $acknowledged;
 
-    /**
-     * @ORM\OneToOne(targetEntity="\App\Entity\LoginMessage")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="messageid", referencedColumnName="id")
-     * })
-     * @ORM\Id
-     */
+    #[ORM\JoinColumn(name: 'messageid', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: LoginMessage::class)]
+    #[ORM\Id]
     private LoginMessage $message;
 
-    /**
-     * @ORM\OneToOne(targetEntity="\App\Entity\Member")
-     * @ORM\Id
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="memberid", referencedColumnName="id")
-     * })
-     */
+    #[ORM\JoinColumn(name: 'memberid', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: Member::class)]
+    #[ORM\Id]
     private Member $member;
 
     public function setAcknowledged(): self
@@ -45,11 +37,6 @@ class LoginMessageAcknowledged
         $this->acknowledged = true;
 
         return $this;
-    }
-
-    public function getAcknowledged(): bool
-    {
-        return $this->acknowledged;
     }
 
     public function setMessage(LoginMessage $message): self

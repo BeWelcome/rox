@@ -23,7 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * This controller handles all requests regarding lists of conversations (messages, hosting requests and invitations).
@@ -34,54 +34,41 @@ class ConversationsController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    protected ConversationsModel $conversationsModel;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(ConversationsModel $conversationsModel, EntityManagerInterface $entityManager)
+    public function __construct(protected ConversationsModel $conversationsModel, private EntityManagerInterface $entityManager)
     {
-        $this->conversationsModel = $conversationsModel;
-        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/conversations/spam/", name="conversations_spam")
-     */
+    #[Route(path: '/conversations/spam/', name: 'conversations_spam')]
     public function showSpamConversations(Request $request): Response
     {
         return $this->handleRequest($request, 'spam');
     }
 
-    /**
-     * @Route("/conversations/deleted/", name="conversations_deleted")
-     */
+    #[Route(path: '/conversations/deleted/', name: 'conversations_deleted')]
     public function showDeletedConversations(Request $request): Response
     {
         return $this->handleRequest($request, 'deleted');
     }
 
-    /**
-     * @Route("/{conversationsType}/", name="conversations",
-     *     requirements={"conversationsType":"conversations|messages|requests|invitations"})
-     */
+    #[Route(path: '/{conversationsType}/', name: 'conversations', requirements: ['conversationsType' => 'conversations|messages|requests|invitations'])]
     public function showConversations(Request $request, string $conversationsType): Response
     {
         return $this->handleRequest($request, $conversationsType);
     }
 
     /**
-     * @Route("/conversations/with/{username}", name="conversations_with")
-     *
      * @throws InvalidArgumentException
      */
+    #[Route(path: '/conversations/with/{username:other}', name: 'conversations_with')]
     public function allConversationsWithMember(
         Request $request,
-        Member $other
+        Member $other,
     ): Response {
         /** @var Member $member */
         $member = $this->getUser();
         $page = $request->query->get('page', '1');
 
-        $messages = new PagerFanta(new ConversationsWithAdapter($this->entityManager, $member, $other));
+        $messages = new Pagerfanta(new ConversationsWithAdapter($this->entityManager, $member, $other));
         $messages->setMaxPerPage(15);
         $messages->setCurrentPage($page);
 
@@ -94,26 +81,15 @@ class ConversationsController extends AbstractController
     private function getAdapterFromConversationsType(string $conversationsType): string
     {
         $conversationsAdapter = '';
-        switch ($conversationsType) {
-            case 'conversations':
-                $conversationsAdapter = ConversationsAdapter::class;
-                break;
-            case 'messages':
-                $conversationsAdapter = MessagesAdapter::class;
-                break;
-            case 'requests':
-                $conversationsAdapter = RequestsAdapter::class;
-                break;
-            case 'invitations':
-                $conversationsAdapter = InvitationsAdapter::class;
-                break;
-            case 'spam':
-                $conversationsAdapter = SpamAdapter::class;
-                break;
-            case 'deleted':
-                $conversationsAdapter = DeletedAdapter::class;
-                break;
-        }
+        $conversationsAdapter = match ($conversationsType) {
+            'conversations' => ConversationsAdapter::class,
+            'messages' => MessagesAdapter::class,
+            'requests' => RequestsAdapter::class,
+            'invitations' => InvitationsAdapter::class,
+            'spam' => SpamAdapter::class,
+            'deleted' => DeletedAdapter::class,
+            default => $conversationsAdapter,
+        };
 
         return $conversationsAdapter;
     }
@@ -173,15 +149,12 @@ class ConversationsController extends AbstractController
         ]);
     }
 
-    /**
-     * @param mixed $data
-     */
     private function handleButtonClick(
         string $active,
         string $clickedButton,
         Member $member,
         Request $request,
-        $data
+        $data,
     ): ?RedirectResponse {
         $conversationIds = $data->getMessages();
         if ('purge' === $clickedButton) {

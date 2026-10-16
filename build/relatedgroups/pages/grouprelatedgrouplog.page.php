@@ -39,11 +39,13 @@ class GroupRelatedGroupLogPage extends GroupsSubPage
         $groupId = $this->group->id;
         require SCRIPT_BASE . "build/relatedgroups/templates/grouprelatedgrouplog.column_col3.php";
     }
+    #[\Override]
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/groups.css?3';
        return $stylesheets;
     }
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'relatedgroupsettings';
     }

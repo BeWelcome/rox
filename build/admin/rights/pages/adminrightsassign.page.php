@@ -15,12 +15,14 @@ class AdminRightsAssignPage extends AdminRightsBasePage
         $this->addLateLoadScriptFile('build/member/autocomplete.js');
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
         return $headline . " &raquo; <a href='admin/rights'>{$this->words->get('AdminRights')}</a>";
     }
 
+    #[\Override]
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();

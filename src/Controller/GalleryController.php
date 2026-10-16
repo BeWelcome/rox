@@ -24,32 +24,31 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ *
+ * \todo rewrite to reduce coupling
+ */
 class GalleryController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
     use UniqueFilenameTrait;
 
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
-     * @Route("/gallery/show/image/{id}/edit", name="gallery_edit_image",
-     *     requirements = {"id": "\d+"}
-     * )
-     *
      * @throws AccessDeniedException
      */
+    #[Route(path: '/gallery/show/image/{id}/edit', name: 'gallery_edit_image', requirements: ['id' => '\d+'])]
     public function editImage(Request $request, GalleryImage $image): Response
     {
         $user = $this->getUser();
@@ -79,8 +78,11 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/new/image/upload", name="gallery_upload_new")
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
+     *
+     * \todo Extract method(s) to break down in digestible pieces.)
      */
+    #[Route(path: '/new/image/upload', name: 'gallery_upload_new')]
     public function handleImageUploadToGallery(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
@@ -128,7 +130,7 @@ class GalleryController extends AbstractController
         }
 
         // We got an image and need to create a thumbnail for it and put it into the correct place
-        list($width, $height) = getimagesize($image);
+        [$width, $height] = getimagesize($image);
         $uploadDirectory = $this->getParameter('gallery_directory') . '/member' . $member->getId();
         $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
 
@@ -197,10 +199,9 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/gallery/upload_multiple", name="gallery_upload_multiple")
-     *
      * @return Response
      */
+    #[Route(path: '/gallery/upload_multiple', name: 'gallery_upload_multiple')]
     public function uploadImagesToGallery(Request $request)
     {
         /** @var Member $member */
@@ -237,12 +238,11 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * @Route("/gallery/upload/image", name="gallery_upload_ckeditor")
-     *
      * @throws AccessDeniedException
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
+    #[Route(path: '/gallery/upload/image', name: 'gallery_upload_ckeditor')]
     public function uploadImageFromCKEditor5(Request $request, GalleryModel $galleryModel): JsonResponse
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED');
@@ -269,7 +269,7 @@ class GalleryController extends AbstractController
         $existingImages = $uploadedImageRepository->findBy(['fileHash' => $hash]);
 
         if (0 === \count($existingImages)) {
-            list($width, $height) = getimagesize($image);
+            [$width, $height] = getimagesize($image);
             $uploadDirectory = $this->getParameter('upload_directory');
             $fileName = $this->generateUniqueFileName() . '.' . $image->guessExtension();
 
@@ -318,10 +318,7 @@ class GalleryController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/gallery/show/uploaded/{id}", name="gallery_uploaded_ckeditor_old",
-     *     requirements={"id":"\d+"})
-     */
+    #[Route(path: '/gallery/show/uploaded/{id}', name: 'gallery_uploaded_ckeditor_old', requirements: ['id' => '\d+'])]
     public function showUploadedImageOld(UploadedImage $image, Logger $logger): Response
     {
         $logger->write('Image ' . $image->getId() . ' accessed using old URL', 'Image');
@@ -331,15 +328,12 @@ class GalleryController extends AbstractController
             'fileInfo' => '', ]);
     }
 
-    /**
-     * @Route("/gallery/show/uploaded/{id}/{fileInfo}", name="gallery_uploaded_ckeditor",
-     *     requirements={"id":"\d+"})
-     */
+    #[Route(path: '/gallery/show/uploaded/{id}/{fileInfo}', name: 'gallery_uploaded_ckeditor', requirements: ['id' => '\d+'])]
     public function showUploadedImage(UploadedImage $image, string $fileInfo): BinaryFileResponse
     {
         $uploadDirectory = $this->getParameter('upload_directory') . '/';
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED') || $image->getFileInfo() !== $fileInfo) {
-            $filepath = sprintf($uploadDirectory . 'placeholder_%d_%d.png', $image->getWidth(), $image->getHeight());
+            $filepath = \sprintf($uploadDirectory . 'placeholder_%d_%d.png', $image->getWidth(), $image->getHeight());
             if (!file_exists($filepath)) {
                 // create image!
                 $imageManager = new ImageManager(new Driver());
@@ -351,7 +345,6 @@ class GalleryController extends AbstractController
         } else {
             $filepath = $this->getParameter('upload_directory') . '/' . $image->getFilename();
         }
-
         // Uploaded images aren't updated; set expiry to 1 year
         $response = new BinaryFileResponse($filepath);
         $response->setSharedMaxAge(31536000);
@@ -385,6 +378,6 @@ class GalleryController extends AbstractController
 
     private function getMaxUploadSizeInMegaBytes()
     {
-        return (UploadedFile::getMaxFilesize()) / 1024 / 1024;
+        return UploadedFile::getMaxFilesize() / 1024 / 1024;
     }
 }

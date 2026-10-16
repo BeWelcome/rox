@@ -3,39 +3,30 @@
 namespace App\Command;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
+#[AsCommand(
+    name: 'test:database:create',
+    description: 'Creates a database and seeds it so that it can be used for local development',
+    aliases: [],
+    hidden: false,
+)]
 class CreateTestDatabase extends Command
 {
-    /**
-     * @var string
-     *
-     * the name of the command (the part after "bin/console")
-     */
-    protected static $defaultName = 'test:database:create';
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
-
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
-        $descriptionAndHelp = 'Creates a database and seeds it so that it can be used for local development';
         $this
-            ->setDescription($descriptionAndHelp)
             ->addOption(
                 'force',
                 null,
@@ -54,19 +45,19 @@ class CreateTestDatabase extends Command
                 InputOption::VALUE_NONE,
                 'Will download the current translations and languages.'
             )
-            ->setHelp($descriptionAndHelp)
         ;
     }
 
     /**
-     * @return int
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * The method is 123 lines long due to the way the command output is organized.
+     * \todo think about a better way to call the external commands one after another.
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $nullOutput = new NullOutput();
+        $phpBinaryFinder = new PhpExecutableFinder();
+        $phpBinaryPath = $phpBinaryFinder->find();
+
         $output->writeln([
             'Creating test database',
             '======================',
@@ -81,129 +72,125 @@ class CreateTestDatabase extends Command
                 'Dropping the database',
                 '',
             ]);
-            $command = $this->getApplication()->find('doctrine:database:drop');
 
-            $arguments = [
-                '--force' => true,
-            ];
-
-            $dropDatabase = new ArrayInput($arguments);
-
-            // Ignore return code and output. If drop fails either no database existed yet or MYSQL isn't ready
-            $returnCode = $command->run($dropDatabase, $nullOutput);
+            $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:database:drop', '--force', '--no-interaction']);
+            $process->run();
+            if (!$process->isSuccessful()) {
+                $output->writeln([
+                    'Dropping the database failed (continuing anyway).',
+                    '',
+                ]);
+            }
         }
 
         $output->writeln([
             'Creating the database',
             '',
         ]);
-        $command = $this->getApplication()->find('doctrine:database:create');
+        $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:database:create', '--if-not-exists', '--no-interaction']);
+        $process->run();
 
-        $createDatabase = new ArrayInput(['--if-not-exists' => true]);
-
-        $returnCode = $command->run($createDatabase, $output);
-        if ($returnCode) {
+        if (!$process->isSuccessful()) {
             $output->writeln([
-                'Failed creating the database (see output above for reasons).',
+                'Failed creating the database (see output below for reasons).',
                 '',
+                $process->getOutput(),
+                $process->getErrorOutput(),
             ]);
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $output->writeln([
             'Creating the schema',
             '',
         ]);
-        $command = $this->getApplication()->find('doctrine:schema:create');
 
-        $createSchema = new ArrayInput([]);
+        $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:schema:create', '--dump-sql', '--no-interaction']);
+        $process->run();
+        $output->writeln([
+            'Creating the schema (see output below for SQL).',
+            '',
+            $process->getOutput(),
+            $process->getErrorOutput(),
+        ]);
 
-        $returnCode = $command->run($createSchema, $output);
-        if ($returnCode) {
+        $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:schema:create', '--no-interaction']);
+        $process->run();
+
+        if (!$process->isSuccessful()) {
             $output->writeln([
-                'Failed creating the schema (see output above for reasons).',
+                'Failed creating the schema (see output below for reasons).',
                 '',
+                $process->getOutput(),
+                $process->getErrorOutput(),
             ]);
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $output->writeln([
             'Adding stored functions',
             '',
         ]);
-        $command = $this->getApplication()->find('doctrine:migrations:migrate');
 
-        $addFunctions = new ArrayInput([]);
-        $addFunctions->setInteractive(false);
+        $process = new Process([$phpBinaryPath, 'bin/console', 'doctrine:migrations:migrate', '--no-interaction']);
+        $process->run();
 
-        $returnCode = $command->run($addFunctions, $output);
-        if ($returnCode) {
+        if (!$process->isSuccessful()) {
             $output->writeln([
-                'Failed adding functions (see above for reasons).',
+                'Failed adding functions (see below for reasons).',
                 '',
+                $process->getOutput(),
+                $process->getErrorOutput(),
             ]);
 
-            return 1;
+            return Command::FAILURE;
         }
 
         $output->writeln([
             'Seeding the database',
             '',
         ]);
-        $command = $this->getApplication()->find('hautelook:fixtures:load');
 
-        $addMissingTranslations = new ArrayInput([]);
-        $addMissingTranslations->setInteractive(false);
+        $process = new Process([$phpBinaryPath, 'bin/console', 'hautelook:fixtures:load', '--no-interaction']);
+        $process->run();
 
-        $returnCode = $command->run($addMissingTranslations, $output);
-        if ($returnCode) {
+        if (!$process->isSuccessful()) {
             $output->writeln([
                 'Failed seeding the database.',
                 '',
+                $process->getOutput(),
+                $process->getErrorOutput(),
             ]);
 
             return 1;
         }
 
+        $output->writeln([
+            'Fixing ids in the database',
+            '',
+        ]);
+
         // Now set id for English to 0 as the old code expects that
         $connection = $this->entityManager->getConnection();
-        $connection->executeStatement("
+        $connection->executeQuery("
             SET FOREIGN_KEY_CHECKS=0;
             UPDATE languages SET id = 0 WHERE ShortCode = 'en';
             UPDATE words SET IdLanguage = 0 WHERE ShortCode = 'en';
             UPDATE memberslanguageslevel SET IdLanguage = 0 WHERE IdLanguage = 1;
+            UPDATE memberstrads SET IdLanguage = 0 WHERE IdLanguage = 1;
             UPDATE languages SET id = 1 WHERE ShortCode = 'fr';
             UPDATE words SET IdLanguage = 1 WHERE ShortCode = 'fr';
             UPDATE memberslanguageslevel SET IdLanguage = 1 WHERE IdLanguage = 2;
+            UPDATE memberstrads SET IdLanguage = 1 WHERE IdLanguage = 2;
             SET FOREIGN_KEY_CHECKS=1;
         ");
-
-        $output->writeln([
-            'Importing missing translations',
-            '',
-        ]);
-        $command = $this->getApplication()->find('translations:add:missing');
-
-        $addMissingTranslations = new ArrayInput([]);
-        $addMissingTranslations->setInteractive(false);
-
-        $returnCode = $command->run($addMissingTranslations, $output);
-        if ($returnCode) {
-            $output->writeln([
-                'Failed seeding the database.',
-                '',
-            ]);
-
-            return 1;
-        }
-
         $output->writeln([
             '',
             'Finished have fun.',
         ]);
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

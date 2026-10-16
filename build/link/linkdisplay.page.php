@@ -25,7 +25,7 @@ class LinkDisplayPage extends LinkPage  /* HelloUniversePage doesn't work! */
         echo '
 <h3>The hello universe (advanced) middle column</h3>
 <p>
-Using the class "'.get_class($this).'".<br>
+Using the class "'.static::class.'".<br>
 Simple version in <a href="hellouniverse">hellouniverse</a>.<br>
 More beautiful in <a href="hellouniverse/advanced">hellouniverse/advanced</a>!<br>
 With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
@@ -52,6 +52,7 @@ A translated word (wordcode "Groups"):
     /**
      * configure the teaser (the content of the orange bar)
      */
+    #[\Override]
     protected function teaserHeadline() {
         echo 'Show links';
     }
@@ -60,6 +61,7 @@ A translated word (wordcode "Groups"):
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
      */
+    #[\Override]
     protected function getPageTitle() {
         return 'Link it!';
     }

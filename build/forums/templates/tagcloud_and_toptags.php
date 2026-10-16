@@ -28,7 +28,7 @@
 			   $TagCategory=$this->words->fTrad($tag->IdName) ;
 			   $TagDescription=$this->words->fTrad($tag->IdDescription) ;
 //              echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagCategory).'" title="'.$TagDescription.'">'.$TagCategory.'</a></li>' ;
-				echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagCategory).'">'.$TagCategory.'</a><br />' ;
+				echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode((string) $TagCategory).'">'.$TagCategory.'</a><br />' ;
 				echo ' <span class="forums_tag_description">'.$TagDescription.'</span></li>'; 
             }
             ?>

@@ -2,7 +2,7 @@ App\Entity\Country:
     Germany:
         name: 'Germany'
         geonameId: 2921044
-        continent: 'EU'
+        continent: 'EA'
         country: 'DE'
     Indonesia:
         name: 'Indonesia'

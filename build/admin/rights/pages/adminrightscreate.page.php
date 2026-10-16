@@ -13,6 +13,7 @@ class AdminRightsCreatePage extends AdminRightsBasePage
         $this->setCurrent('AdminRightsAssign');
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();

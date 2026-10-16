@@ -18,11 +18,8 @@ use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
 use App\Utilities\ManagerTrait;
 use App\Utilities\MessageTrait;
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use Exception;
-use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class GroupModel
@@ -31,20 +28,8 @@ class GroupModel
     use ManagerTrait;
     use MessageTrait;
 
-    /**
-     * @var UrlGenerator
-     */
-    private $urlGenerator;
-
-    /**
-     * @var Mailer
-     */
-    private $mailer;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator, Mailer $mailer)
+    public function __construct(private UrlGeneratorInterface $urlGenerator, private Mailer $mailer)
     {
-        $this->urlGenerator = $urlGenerator;
-        $this->mailer = $mailer;
     }
 
     /**
@@ -125,7 +110,7 @@ class GroupModel
                 $this->getManager()->flush();
                 $success = true;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $success = false;
         }
 
@@ -146,7 +131,7 @@ class GroupModel
                 $this->getManager()->flush();
                 $success = true;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $success = false;
         }
 
@@ -166,7 +151,7 @@ class GroupModel
                 $this->getManager()->flush();
                 $success = true;
             }
-        } catch (Exception $e) {
+        } catch (Exception) {
             $success = false;
         }
 
@@ -223,9 +208,7 @@ class GroupModel
             $em->persist($membership);
             $em->flush();
             $success = true;
-        } catch (OptimisticLockException $e) {
-            $success = false;
-        } catch (ORMException $e) {
+        } catch (Exception) {
             $success = false;
         }
 
@@ -233,17 +216,13 @@ class GroupModel
     }
 
     /**
-     * @param $data
-     * @param $locale
-     * @param $groupPicture
-     *
      * @throws DBALException
      * @throws ORMException
      * @throws OptimisticLockException
      *
      * @return Group
      *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * Because of the mix between old code and new code this method is way too long.
      */
     public function new($data, $locale, Member $member, $groupPicture)
@@ -381,16 +360,16 @@ class GroupModel
         return true;
     }
 
-    /**
-     * @param Member[] $admins
-     */
-    public function sendAdminNotificationDeclined(Group $group, Member $member, $admins)
+    public function sendAdminNotificationDeclined(Group $group, Member $member)
     {
+        $admins = $group->getAdministrators();
         foreach ($admins as $admin) {
             $this->mailer->sendGroupEmail($admin, 'group/declined.invite', [
                 'subject' => [
-                    'subject' => 'group.invitation.declined',
-                    'group' => $group,
+                    'translationId' => 'group.invitation.declined',
+                    'parameters' => [
+                        'group' => $group->getName(),
+                    ],
                 ],
                 'group' => $group,
                 'invitee' => $member,
@@ -405,8 +384,10 @@ class GroupModel
         foreach ($admins as $admin) {
             $this->mailer->sendGroupEmail($admin, 'group/accepted.invite', [
                 'subject' => [
-                    'subject' => 'group.invitation.accepted',
-                    'group' => $group,
+                    'translationId' => 'group.invitation.accepted',
+                    'parameters' => [
+                        'group' => $group->getName(),
+                    ],
                 ],
                 'group' => $group,
                 'invitee' => $member,
@@ -434,7 +415,7 @@ class GroupModel
         foreach ($privilegeScopes as $privilegeScope) {
             /** @var Member $admin */
             $admin = $privilegeScope->getMember();
-            if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
+            if (str_contains(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
                 $admins[] = $admin;
             }
         }
@@ -442,15 +423,11 @@ class GroupModel
         return $admins;
     }
 
-    /**
-     * @param $group
-     * @param $member
-     *
-     * @return object|null
-     */
-    private function getMembership($group, $member)
+    private function getMembership($group, $member): ?GroupMembership
     {
         $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
+
+        /** @var GroupMembership $membership */
         $membership = $membershipRepository->findOneBy([
             'group' => $group,
             'member' => $member,
@@ -467,8 +444,8 @@ class GroupModel
     {
         $membershipRepository = $this->getManager()->getRepository(GroupMembership::class);
         $membership = $membershipRepository->findOneBy(['group' => $group, 'member' => $member]);
-
         $membership->setStatus($status);
+
         $this->getManager()->persist($membership);
         $this->getManager()->flush();
     }

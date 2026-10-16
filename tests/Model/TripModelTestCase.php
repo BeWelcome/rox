@@ -13,8 +13,6 @@ class TripModelTestCase extends TestCase
     {
         $entityManager = $this->createStub(EntityManagerInterface::class);
         $translator = $this->createStub(TranslatorInterface::class);
-        // main's TripModel translates its error messages; return the key so tests can compare it.
-        $translator->method('trans')->willReturnArgument(0);
 
         return new TripModel($entityManager, $translator);
     }

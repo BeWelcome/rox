@@ -169,7 +169,7 @@ jobs:
           images: ${{ env.IMAGE }}
           tags: |
             type=sha,prefix=sha-
-            type=raw,value=stage
+            type=raw,value=stage,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Create and push multi-arch manifest
         working-directory: /tmp/digests
@@ -217,7 +217,7 @@ jobs:
           images: ${{ env.IMAGE }}
           tags: |
             type=sha,prefix=sha-,suffix=-web
-            type=raw,value=stage-web
+            type=raw,value=stage-web,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Create and push multi-arch manifest
         working-directory: /tmp/digests

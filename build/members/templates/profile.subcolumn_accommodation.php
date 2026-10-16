@@ -11,8 +11,8 @@
 
             <div id="quickinfo" class="float-right text-right">
                 <?php
-                $icons = array();
-                if (strstr($member->TypicOffer, "CanHostWeelChair"))
+                $icons = [];
+                if (strstr((string) $member->TypicOffer, "CanHostWeelChair"))
                 {
                     $icons[] = '<img src="images/icons/wheelchairblue.png" ' .
                         'alt="' . $words->getSilent('wheelchair') . '" ' .
@@ -50,7 +50,7 @@
                 $comma = false;
                 $offers = '';
 
-                $TabTypicOffer = explode(",", $member->TypicOffer);
+                $TabTypicOffer = explode(",", (string) $member->TypicOffer);
                 foreach($TabTypicOffer as $typicOffer) {
                     if ($typicOffer == '') continue;
                     if ($typicOffer == 'CanHostWeelChair') continue;
@@ -92,7 +92,7 @@
                 <?php }
 
                 $restrictions = '';
-                $TabRestrictions = explode(",", $member->Restrictions);
+                $TabRestrictions = explode(",", (string) $member->Restrictions);
                 $max = count($TabRestrictions);
 
                 $otherRestrictions = $member->get_trad("OtherRestrictions", $profile_language, true);

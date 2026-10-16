@@ -19,14 +19,10 @@ abstract class BaseRequestAndInvitationController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    protected BaseRequestModel $model;
     protected ConversationModel $conversationModel;
-    protected EntityManagerInterface $entityManager;
 
-    public function __construct(BaseRequestModel $model, EntityManagerInterface $entityManager)
+    public function __construct(protected BaseRequestModel $model, protected EntityManagerInterface $entityManager)
     {
-        $this->model = $model;
-        $this->entityManager = $entityManager;
     }
 
     abstract protected function addExpiredFlash(Member $receiver);
@@ -60,16 +56,15 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         Form $requestForm,
         $currentRequest,
         Member $sender,
-        Member $receiver
+        Member $receiver,
     ): Message {
         $data = $requestForm->getData();
-        $em = $this->getDoctrine()->getManager();
         $clickedButton = $requestForm->getClickedButton()->getName();
 
         // handle changes in request and subject
         $newRequest = $this->model->getFinalRequest($sender, $receiver, $currentRequest, $data, $clickedButton);
-        $em->persist($newRequest);
-        $em->flush();
+        $this->entityManager->persist($newRequest);
+        $this->entityManager->flush();
 
         return $newRequest;
     }
@@ -91,7 +86,7 @@ abstract class BaseRequestAndInvitationController extends AbstractController
     protected function getSubjectForReply(Message $newRequest): string
     {
         $subject = $newRequest->getSubject()->getSubject();
-        if ('Re:' !== substr($subject, 0, 3)) {
+        if (!str_starts_with($subject, 'Re:')) {
             $subject = 'Re: ' . $subject;
         }
 
@@ -102,29 +97,20 @@ abstract class BaseRequestAndInvitationController extends AbstractController
 
     private function adjustSubject(int $status, string $subject, string $locale): string
     {
-        switch ($status) {
-            case HostingRequest::REQUEST_DECLINED:
-                $suffix = 'email.suffix.declined';
-                break;
-            case HostingRequest::REQUEST_CANCELLED:
-                $suffix = 'email.suffix.cancelled';
-                break;
-            case HostingRequest::REQUEST_ACCEPTED:
-                $suffix = 'email.suffix.accepted';
-                break;
-            case HostingRequest::REQUEST_TENTATIVELY_ACCEPTED:
-                $suffix = 'email.suffix.maybe';
-                break;
-            default:
-                $suffix = '';
-        }
+        $suffix = match ($status) {
+            HostingRequest::REQUEST_DECLINED => 'email.suffix.declined',
+            HostingRequest::REQUEST_CANCELLED => 'email.suffix.cancelled',
+            HostingRequest::REQUEST_ACCEPTED => 'email.suffix.accepted',
+            HostingRequest::REQUEST_TENTATIVELY_ACCEPTED => 'email.suffix.maybe',
+            default => '',
+        };
 
         if (!empty($suffix)) {
             $translator = $this->getTranslator();
             $currentLocale = $translator->getLocale();
             $translator->setLocale($locale);
             $suffix = $translator->trans($suffix);
-            if (false === strpos($suffix, $subject)) {
+            if (!str_contains($suffix, $subject)) {
                 $subject .= ' ' . $suffix;
             }
             $translator->setLocale($currentLocale);

@@ -13,24 +13,18 @@ use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
  */
 class AuthListener
 {
-    /** @var EntityManagerInterface */
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function onAuthenticationSuccess(InteractiveLoginEvent $event)
     {
         /** @var Member $member */
         $member = $event->getAuthenticationToken()->getUser();
-        if (MemberStatusType::ACTIVE !== $member->getStatus() && MemberStatusType::CHOICE_INACTIVE !== $member->getStatus()) {
+        if (MemberStatusType::OUT_OF_REMIND === $member->getStatus()) {
             $member->setStatus(MemberStatusType::ACTIVE);
+            $this->entityManager->persist($member);
+            $this->entityManager->flush();
         }
-        $member->setRemindersWithOutLogin(100);
-
-        $this->entityManager->persist($member);
-        $this->entityManager->flush();
     }
 }

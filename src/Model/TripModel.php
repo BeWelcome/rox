@@ -19,16 +19,11 @@ class TripModel
 
     private const ALLOWED_TRIPS_RADIUS = [0, 5, 10, 20, 50, 100];
 
-    private EntityManagerInterface $entityManager;
-    private TranslatorInterface $translator;
-
-    public function __construct(EntityManagerInterface $entityManager, TranslatorInterface $translator)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly TranslatorInterface $translator)
     {
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
     }
 
-    public function paginateTripsOfMember(Member $member, int $page): PagerFanta
+    public function paginateTripsOfMember(Member $member, int $page): Pagerfanta
     {
         /** @var TripRepository $repository */
         $repository = $this->entityManager->getRepository(Trip::class);
@@ -73,7 +68,7 @@ class TripModel
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::TRIPS_VICINITY_RADIUS]);
         $memberPreference = $member->getMemberPreference($preference);
 
-        return (int) ($memberPreference->getValue());
+        return (int) $memberPreference->getValue();
     }
 
     public function checkTripCreateOrEditData(Trip $data): array
@@ -86,17 +81,17 @@ class TripModel
             for ($j = $i + 1; $j < \count($keys); ++$j) {
                 $a = $legs[$keys[$i]];
                 $b = $legs[$keys[$j]];
-                // (StartA <= EndB) and (EndA >= StartB)
+                // (StartA < EndB) and (EndA > StartB)
                 if ($a->getArrival() < $b->getDeparture() && $a->getDeparture() > $b->getArrival()) {
                     $errors[] = [
                         'leg' => $i,
                         'field' => 'duration',
-                        'error' => $this->translator->trans('trip.error.date.overlap'),
+                        'error' => 'trip.error.date.overlap',
                     ];
                     $errors[] = [
                         'leg' => $j,
                         'field' => 'duration',
-                        'error' => $this->translator->trans('trip.error.date.overlap'),
+                        'error' => 'trip.error.date.overlap',
                     ];
                 }
             }
@@ -105,7 +100,7 @@ class TripModel
                 $errors[] = [
                     'leg' => $i,
                     'field' => 'options',
-                    'error' => $this->translator->trans('trip.error.no.options'),
+                    'error' => 'trip.error.no.options',
                 ];
             }
         }
@@ -138,7 +133,7 @@ class TripModel
 
     public function hideTrip(Trip $trip)
     {
-        $trip->setDeleted(new DateTIme());
+        $trip->setDeleted(new DateTime());
 
         $this->entityManager->persist($trip);
         $this->entityManager->flush();

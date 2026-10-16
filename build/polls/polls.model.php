@@ -74,7 +74,7 @@ class PollsModel extends RoxModelBase
                 throw new PException('UpdatePoll::Failed to add back the Title and Description ');
             }
 
-            $TIdGrouRestricted = explode(",", $post["GroupIdLimit"]);
+            $TIdGrouRestricted = explode(",", (string) $post["GroupIdLimit"]);
             for ($ii = 0; $ii < count($TIdGrouRestricted); $ii++) {
                 $IdGroup = (int)$TIdGrouRestricted[$ii];
                 if ($IdGroup == 0) continue;
@@ -126,7 +126,7 @@ class PollsModel extends RoxModelBase
             $ss = $this->dao->escape($post['Title']);
             $words->ReplaceInFTrad($ss, "polls.Title", $rPoll->id, $rPoll->Title);
 
-            $TIdGrouRestricted = explode(",", $post["GroupIdLimit"]);
+            $TIdGrouRestricted = explode(",", (string) $post["GroupIdLimit"]);
             $this->dao->query("delete from polls_list_allowed_groups where IdPoll=" . $IdPoll);
             for ($ii = 0; $ii < count($TIdGrouRestricted); $ii++) {
                 $IdGroup = (int)$TIdGrouRestricted[$ii];
@@ -380,7 +380,7 @@ class PollsModel extends RoxModelBase
             MOD_log::get()->write("Cannot cancel vote from poll #" . $IdPoll . " which doesn't allow to change vote", "polls");
             return (false);
         }
-        $rContrib = array();
+        $rContrib = [];
 
         $wherefordelete = " (false==true) "; // very important to avoid to delete all votes
         if (!empty($IdMember)) {
@@ -454,7 +454,7 @@ class PollsModel extends RoxModelBase
     {
         $Data = new \stdClass();
         $Data->rPoll = $this->singleLookup("select * from polls where id=" . $IdPoll);
-        $choices_alreadydone = array();
+        $choices_alreadydone = [];
         if ($this->HasAlreadyContributed($IdPoll)) {
             if ($Data->rPoll->Anonym == "No") {
                 $ss = "select * from polls_record_of_choices where IdMember=" . $this->session->get("IdMember") . " and IdPoll=" . $IdPoll;
@@ -522,7 +522,7 @@ class PollsModel extends RoxModelBase
         $sQuery .= " left join polls_list_allowed_groups pg on pg.IdPoll = p.id ";
         $sQuery .= " left join groups g on g.id=pg.IdGroup ";
         $sQuery = $sQuery . $where . " order by p.created desc";
-        $tt = array();
+        $tt = [];
         $qry = $this->dao->query($sQuery);
         if (!$qry) {
             throw new PException('polls::LLoadList Could not retrieve the polls!');
@@ -568,7 +568,7 @@ class PollsModel extends RoxModelBase
                     $rr->PossibleActions = $rr->PossibleActions . "<a class='btn btn-sm btn-primary mb-2' href=\"polls/seeresults/" . $rr->id . "\">" . $words->getFormatted("polls_seeresults") . "</a>";
                 }
             }
-            if ($this->CanUserContribute($rr->id, "", $this->session->get("IdMember"))) {
+            if ($this->CanUserContribute($rr->id, "")) {
                 $rr->PossibleActions = $rr->PossibleActions . "<a class='btn btn-sm btn-primary mb-2' href=\"polls/contribute/" . $rr->id . "\">" . $words->getFormatted("polls_contribute") . "</a>";
             }
             if ($rr->Status == "Closed") {
@@ -597,11 +597,11 @@ class PollsModel extends RoxModelBase
             return (false);
         }
 // Check that we are is the range time people can contribute
-        if (time() < strtotime($rPoll->Started)) {
+        if (time() < strtotime((string) $rPoll->Started)) {
             MOD_log::get()->write("CanUserContribute in a not started poll time()=" . time() . " strtotime('" . $rPoll->Started . "')=" . $rPoll->Started, "polls");
             return (false);
         }
-        if ((time() > strtotime($rPoll->Ended)) and ($rPoll->Ended != "0000-00-00 00:00:00")) {
+        if ((time() > strtotime((string) $rPoll->Ended)) and ($rPoll->Ended != "0000-00-00 00:00:00")) {
 //			 echo " time()=",time()," strtotime(\$rPoll->Ended)=",strtotime($rPoll->Ended)," ",$rPoll->Ended ;
             MOD_log::get()->write("CanUserContribute in an already ended poll", "polls");
             return (false);

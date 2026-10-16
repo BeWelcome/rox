@@ -8,9 +8,6 @@ use App\Repository\ActivityAttendeeRepository;
 
 final class ActivitiesExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         $activities = [];

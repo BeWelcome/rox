@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -9,94 +10,62 @@ namespace App\Entity;
 
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
-use App\Doctrine\CommentRelationsType;
+use App\Repository\CommentRepository;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Comment.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="comments")
- * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'comments')]
+#[ORM\Entity(repositoryClass: CommentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Comment
 {
-    /**
-     * @ORM\Column(name="relations", type="comment_relations", nullable=false)
-     */
-    private string $relations = CommentRelationsType::ONLY_MET_ONCE;
+    #[ORM\Column(name: 'Relations', type: 'comment_relations', nullable: false)]
+    private string $relations = '';
 
-    /**
-     * @ORM\Column(name="Quality", type="comment_quality", nullable=false)
-     */
+    #[ORM\Column(name: 'Quality', type: 'comment_quality', nullable: false)]
     private string $quality = CommentQualityType::NEUTRAL;
 
-    /**
-     * @ORM\Column(name="TextFree", type="text", length=65535, nullable=false)
-     */
+    #[ORM\Column(name: 'TextFree', type: 'text', length: 65535, nullable: false)]
     private string $textfree;
 
-    /**
-     * @ORM\Column(name="TextWhere", type="text", length=65535, nullable=false)
-     */
+    #[ORM\Column(name: 'TextWhere', type: 'text', length: 65535, nullable: false)]
     private string $textwhere = '';
 
-    /**
-     * @ORM\Column(name="updated", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
     private ?DateTime $updated;
 
-    /**
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    /**
-     * @ORM\Column(name="AdminAction", type="comment_admin_action", nullable=false)
-     */
+    #[ORM\Column(name: 'AdminAction', type: 'comment_admin_action', nullable: false)]
     private string $adminAction = CommentAdminActionType::NOTHING_NEEDED;
 
-    /**
-     * @ORM\Column(name="DisplayableInCommentOfTheMonth", type="string", nullable=false)
-     */
+    #[ORM\Column(name: 'DisplayableInCommentOfTheMonth', type: 'string', nullable: false)]
     private string $allowDisplayInCommentOfTheMonth = 'Yes';
 
-    /**
-     * @ORM\Column(name="DisplayInPublic", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'DisplayInPublic', type: 'boolean', nullable: false)]
     private bool $displayInPublic = true;
 
-    /**
-     * @ORM\Column(name="AllowEdit", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'AllowEdit', type: 'boolean', nullable: false)]
     private bool $editingAllowed = true;
 
-    /**
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdToMember", referencedColumnName="id")
-     * })
-     */
+    #[ORM\JoinColumn(name: 'IdToMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $toMember;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdFromMember", referencedColumnName="id")
-     * })
-     */
+    #[ORM\JoinColumn(name: 'IdFromMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $fromMember;
 
     public function setRelations(string $relations): self
@@ -216,7 +185,7 @@ class Comment
         return $this->id;
     }
 
-    public function setToMember(Member $toMember = null): self
+    public function setToMember(?Member $toMember = null): self
     {
         $this->toMember = $toMember;
 
@@ -228,7 +197,7 @@ class Comment
         return $this->toMember;
     }
 
-    public function setFromMember(Member $fromMember = null): self
+    public function setFromMember(?Member $fromMember = null): self
     {
         $this->fromMember = $fromMember;
 
@@ -274,9 +243,8 @@ class Comment
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');

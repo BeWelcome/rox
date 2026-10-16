@@ -35,13 +35,14 @@ class SearchMembersBasePage extends PageWithActiveSkin
 {
     public function __construct() {
         parent::__construct();
-        $this->purifier = MOD_htmlpure::getAdvancedHtmlPurifier();
+        $this->purifier = (new MOD_htmlpure())->getAdvancedHtmlPurifier();
     }
 
     protected function teaserHeadline() {
         return $this->getWords()->get('FindMembers');
     }
 
+    #[\Override]
     protected function getPageTitle() {
         return $this->getWords()->get('FindMembers') . ' - BeWelcome';
     }
@@ -50,12 +51,14 @@ class SearchMembersBasePage extends PageWithActiveSkin
         return '';
     }
 
+    #[\Override]
     protected function getColumnNames()
     {
         // we don't need the other columns
-        return array('col3');
+        return ['col3'];
     }
 
+    #[\Override]
     protected function getStylesheets() {
         $stylesheets = parent::getStylesheets();
         $stylesheets[] = 'styles/css/minimal/screen/custom/search.css?2';
@@ -65,6 +68,7 @@ class SearchMembersBasePage extends PageWithActiveSkin
         return $stylesheets;
     }
 
+    #[\Override]
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
         $scriptFiles[] = 'search/searchajax.js?1';

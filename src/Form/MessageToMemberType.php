@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Message;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -13,9 +14,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class MessageToMemberType extends AbstractType
 {
     /**
-     * {@inheritdoc}
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('message', CkEditorType::class, [
@@ -43,20 +44,15 @@ class MessageToMemberType extends AbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Message',
+            'data_class' => Message::class,
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
+    #[Override]
+    public function getBlockPrefix(): string
     {
         return 'app_message';
     }

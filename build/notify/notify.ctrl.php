@@ -38,9 +38,9 @@ class NotifyController extends RoxControllerBase
                 return $page;
                 break;
             case 'search':
-                $terms = ((isset($_GET['GroupsSearchInput'])) ? $_GET['GroupsSearchInput'] : '');
-                $resultpage = ((isset($_GET['Page'])) ? $_GET['Page'] : 0);
-                $order = ((isset($_GET['Order'])) ? $_GET['Order'] : 'nameasc');
+                $terms = ($_GET['GroupsSearchInput'] ?? '');
+                $resultpage = ($_GET['Page'] ?? 0);
+                $order = ($_GET['Order'] ?? 'nameasc');
                 $page = new GroupsSearchPage();
                 $page->search_result = $this->_model->findGroups($terms, $resultpage, $order);
                 $page->result_page = $resultpage;

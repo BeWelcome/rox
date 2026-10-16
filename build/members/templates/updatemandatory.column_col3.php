@@ -344,7 +344,7 @@ Boston, MA  02111-1307, USA.
             map = new GMap2(document.getElementById("spaf_map"));
 <?php
     if (isset($vars['latitude']) && isset($vars['longitude']) && $vars['latitude'] && $vars['longitude']) {
-        echo 'map.setCenter(new GLatLng('.htmlentities($vars['latitude'], ENT_COMPAT, 'utf-8').', '.htmlentities($vars['longitude'], ENT_COMPAT, 'utf-8').'), 8);';
+        echo 'map.setCenter(new GLatLng('.htmlentities((string) $vars['latitude'], ENT_COMPAT, 'utf-8').', '.htmlentities((string) $vars['longitude'], ENT_COMPAT, 'utf-8').'), 8);';
         if (isset($vars['geonamename']) && isset($vars['geonamecountry'])) {
             $desc = "'".$vars['geonamename'].", ".$vars['geonamecountry']."'";
             echo 'var marker = new GMarker(new GLatLng('.$vars['latitude'].', '.$vars['longitude'].'), '.$desc.');

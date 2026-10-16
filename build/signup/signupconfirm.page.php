@@ -4,6 +4,7 @@
 class SignupMailConfirmPage extends SignupBasePage
 {
 
+    #[\Override]
     protected function teaserHeadline()
     {
         $words = $this->layoutkit->words;

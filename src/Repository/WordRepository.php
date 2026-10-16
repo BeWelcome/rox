@@ -6,6 +6,7 @@ use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
@@ -123,8 +124,8 @@ class WordRepository extends EntityRepository
             ->where('(t.isArchived = 0 OR t.isArchived IS NULL)')
             ->andWhere('t.translationAllowed = :translationAllowed')
             ->andWhere('t.shortCode = :locale')
-            ->setParameter(':translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
-            ->setParameter(':locale', $locale)
+            ->setParameter('translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setParameter('locale', $locale)
             ->orderBy('t.updated', 'DESC')
             ->setMaxResults(1)
         ;
@@ -138,7 +139,7 @@ class WordRepository extends EntityRepository
         $date = $details->getUpdated();
         try {
             $translator = $details->getAuthor();
-        } catch (\Exception $e) {
+        } catch (Exception) {
             $translator = null;
         }
 
@@ -152,13 +153,13 @@ class WordRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('t')
             ->where('t.shortCode = :locale')
-            ->setParameter(':locale', $locale)
+            ->setParameter('locale', $locale)
             ->orderBy('t.created', 'DESC')
             ->addOrderBy('t.code', 'ASC');
         if (!empty($code)) {
             $qb
                 ->andWhere('t.code LIKE :code')
-                ->setParameter(':code', '%' . $code . '%');
+                ->setParameter('code', '%' . $code . '%');
         }
 
         return $qb;
@@ -169,17 +170,17 @@ class WordRepository extends EntityRepository
         $qb = $this->createQueryBuilder('t')
             ->where('t.shortCode = :locale')
             ->andWhere('(t.isArchived = 0 OR t.isArchived IS NULL)')
-            ->setParameter(':locale', $locale)
+            ->setParameter('locale', $locale)
         ;
         if (null !== $domain) {
             $qb
                 ->andWhere('t.domain = :domain')
-                ->setParameter(':domain', $domain)
+                ->setParameter('domain', $domain)
             ;
         }
         $qb
             ->andWhere('t.translationAllowed = :translationAllowed')
-            ->setParameter(':translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
+            ->setParameter('translationAllowed', TranslationAllowedType::TRANSLATION_ALLOWED)
         ;
 
         return $qb;

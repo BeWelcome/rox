@@ -4,14 +4,12 @@ namespace App\Doctrine;
 
 class WhoSpokeLastType extends EnumType
 {
-    public const MEMBER = 'Member';
-    public const MODERATOR = 'Moderator';
+    public const string MEMBER = 'Member';
+    public const string MODERATOR = 'Moderator';
 
-    /** @var string */
-    protected $name = 'who_spoke_last';
+    protected string $name = 'who_spoke_last';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::MEMBER,
         self::MODERATOR,
     ];

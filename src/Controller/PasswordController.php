@@ -10,18 +10,20 @@ use App\Form\ResetPasswordRequestFormType;
 use App\Model\PasswordModel;
 use App\Repository\MemberRepository;
 use App\Service\Mailer;
+use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ManagerTrait;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use ZxcvbnPhp\Zxcvbn;
 
 class PasswordController extends AbstractController
 {
@@ -29,18 +31,16 @@ class PasswordController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private PasswordModel $passwordModel;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(PasswordModel $passwordModel, EntityManagerInterface $entityManager)
+    public function __construct(private PasswordModel $passwordModel, private EntityManagerInterface $entityManager)
     {
-        $this->passwordModel = $passwordModel;
-        $this->entityManager = $entityManager;
     }
 
     /**
-     * @Route("/resetpassword", name="member_request_reset_password")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     *
+     * \todo try to reduce complexity (low prio as it is just meeting the threshold)
      */
+    #[Route(path: '/resetpassword', name: 'member_request_reset_password')]
     public function requestResetPassword(Request $request, Mailer $mailer): Response
     {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
@@ -60,17 +60,19 @@ class PasswordController extends AbstractController
             try {
                 /** @var Member $member */
                 $member = $memberRepository->loadUserByIdentifier($data['username']);
-            } catch (NonUniqueResultException $e) {
+            } catch (NonUniqueResultException) {
                 $member = null;
             }
             if (null === $member) {
-                $form->addError(new FormError($this->getTranslator()->trans('resetpassworderror')));
-            } else {
-                try {
-                    $token = $this->passwordModel->generatePasswordResetToken($member);
-                } catch (Exception $e) {
-                    $token = null;
-                }
+                $form->addError(new FormError($this->getTranslator()->trans('reset.password.error')));
+            }
+            if (!$this->passwordModel->checkTimeElapsedOnPasswordReset($member)) {
+                $form->addError(new FormError($this->getTranslator()->trans('reset.password.too.fast')));
+            }
+
+            if (0 === $form->getErrors()->count()) {
+                $token = $this->passwordModel->generatePasswordResetToken($member);
+
                 if (null === $token) {
                     $this->addTranslatedFlash('error', 'flash.no.reset.password');
 
@@ -100,15 +102,12 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/resetpassword/{username}/{token}", name="member_reset_password",
-     *     requirements={"token": "[a-z0-9]{64}"})
-     */
+    #[Route(path: '/resetpassword/{username:member}/{token}', name: 'member_reset_password', requirements: ['token' => '[a-z0-9]{64}'])]
     public function resetPassword(
         Request $request,
         Member $member,
         string $token,
-        PasswordModel $passwordModel
+        PasswordModel $passwordModel,
     ): Response {
         // Someone obviously lost their way. No sense in resetting your password if you're currently logged in.
         if ($this->isGranted('ROLE_USER')) {
@@ -153,15 +152,13 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/password/change", name="change_password",
-     *     requirements={"token": "[a-z0-9]{64}"})
-     */
+    #[Route(path: '/members/{username:member}/password/change', name: 'change_password', requirements: ['token' => '[a-z0-9]{64}'])]
     public function changePassword(
         Request $request,
         Member $member,
         ProfileSubmenu $profileSubmenu,
-        PasswordModel $passwordModel
+        PasswordModel $passwordModel,
+        ChangeProfilePictureGlobals $globals,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -189,7 +186,22 @@ class PasswordController extends AbstractController
         return $this->render('profile/change.password.html.twig', [
             'member' => $member,
             'form' => $form->createView(),
+            'globals_js_json' => $globals->getGlobalsJsAsJson($member, $loggedInMember),
             'submenu' => $profileSubmenu->getSubmenu($member, $loggedInMember),
         ]);
+    }
+
+    #[Route(path: 'password/check/', name: 'check_password')]
+    public function checkPassword(Request $request): JsonResponse
+    {
+        $username = $request->get('username');
+        $email = $request->get('email');
+        $password = (string) $request->get('password', ''); // the sweep and a cleared field send none
+        $zxcvbn = new Zxcvbn();
+        $result = $zxcvbn->passwordStrength($password, [$username, $email, 'BeWelcome', 'bewelcome']);
+        $response = new JsonResponse();
+        $response->setData(['score' => $result['score']]);
+
+        return $response;
     }
 }

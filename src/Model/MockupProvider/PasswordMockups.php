@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 class PasswordMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'Reset Password Request' => [
             'type' => 'page',
             'url' => '/resetpassword',
@@ -28,11 +28,8 @@ class PasswordMockups implements MockupProviderInterface
         ],
     ];
 
-    private FormFactoryInterface $formFactory;
-
-    public function __construct(FormFactoryInterface $formFactory)
+    public function __construct(private readonly FormFactoryInterface $formFactory)
     {
-        $this->formFactory = $formFactory;
     }
 
     public function getFeature(): string
@@ -47,24 +44,20 @@ class PasswordMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        switch ($parameters['name']) {
-            case 'Reset Password Email':
-                return [
-                    'sender' => $parameters['admin'],
-                    'receiver' => $parameters['user'],
-                    'token' => '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7',
-                ];
-            case 'Reset Password Request':
-                return [
-                    'form' => $this->formFactory->create(ResetPasswordRequestFormType::class)->createView(),
-                ];
-            case 'Reset Password':
-                return [
-                    'form' => $this->formFactory->create(ResetPasswordFormType::class)->createView(),
-                ];
-            default:
-                return [];
-        }
+        return match ($parameters['name']) {
+            'Reset Password Email' => [
+                'sender' => $parameters['admin'],
+                'receiver' => $parameters['user'],
+                'token' => '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7',
+            ],
+            'Reset Password Request' => [
+                'form' => $this->formFactory->create(ResetPasswordRequestFormType::class)->createView(),
+            ],
+            'Reset Password' => [
+                'form' => $this->formFactory->create(ResetPasswordFormType::class)->createView(),
+            ],
+            default => [],
+        };
     }
 
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array

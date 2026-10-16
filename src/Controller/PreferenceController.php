@@ -12,28 +12,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class PreferenceController extends AbstractController
 {
-    /**
-     * @Route("/mypreferences", name="mypreferences_redirect")
-     */
+    #[Route(path: '/mypreferences', name: 'mypreferences_redirect')]
     public function redirectMyPreferences(): RedirectResponse
     {
         return $this->redirectToRoute('preferences', ['username' => $this->getUser()->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/preferences", name="preferences")
-     */
+    #[Route(path: '/members/{username:member}/preferences', name: 'preferences')]
     public function preferences(
         Request $request,
         Member $member,
         ProfileSubmenu $profileSubmenu,
         PreferenceModel $preferenceModel,
         ChangeProfilePictureGlobals $globals,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         /** Member must be the logged in member to be able to access this page.
          * @var Member $loggedInMember

@@ -10,6 +10,7 @@
 class PageWithGivenRSS extends PageWithHTML 
 {
     
+    #[\Override]
     public function render()
     {
         $this->posts = $this->_model->getPosts();
@@ -34,6 +35,7 @@ class PageWithGivenRSS extends PageWithHTML
     }
     
     
+    #[\Override]
     public function setModel($model) {
         $this->_model = $model;
     }
@@ -48,7 +50,7 @@ class PageWithGivenRSS extends PageWithHTML
 '
     <title>'.$feed_title.'</title>
     <link>'.PVars::getObj('env')->baseuri.$site_link.'</link>
-    <description>'.strip_tags($feed_description).'</description>
+    <description>'.strip_tags((string) $feed_description).'</description>
     <atom:link href="'.PVars::getObj('env')->baseuri.$site_link.'" rel="self" type="application/rss+xml" />  
 '
         ;
@@ -61,14 +63,14 @@ class PageWithGivenRSS extends PageWithHTML
 	 * TODO: source url?
 	 */
     protected function formatFeedItem($title, $message, $pubdate, $link, $author) {
-        $phpdate = strtotime( $pubdate );
+        $phpdate = strtotime( (string) $pubdate );
         $pubdate = date("D, d M Y H:i:s", $phpdate)." GMT";
 
         $rsstitle = $this->ww->RssTitle($title, $author);
         return "
           <item>
-            <title>".strip_tags($rsstitle)."</title>
-            <description>".strip_tags($message)."</description>
+            <title>".strip_tags((string) $rsstitle)."</title>
+            <description>".strip_tags((string) $message)."</description>
             <source url=\"http://www.bewelcome.org/\">BeWelcome</source>
             <pubDate>".$pubdate."</pubDate>
             <category>BeWelcome</category>

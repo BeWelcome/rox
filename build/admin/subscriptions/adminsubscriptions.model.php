@@ -6,7 +6,7 @@
 class AdminSubscriptionsModel extends RoxModelBase {
 
     public function checkManageVarsOk($vars) {
-        $errors = array();
+        $errors = [];
         if (empty($vars['username'])) {
             $errors[] = 'AdminManageSubscriptionsNameEmpty';
         } else {

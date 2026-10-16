@@ -10,9 +10,7 @@ trait TranslatorTrait
     /** @var TranslatorInterface */
     private $translator;
 
-    /**
-     * @Required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setTranslator(TranslatorInterface $translator)
     {
         $this->translator = $translator;

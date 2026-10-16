@@ -72,7 +72,7 @@
                             ?> />
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
-                                data-content="<?= htmlentities($words->get('subline_firstname')) ?>">
+                                data-content="<?= htmlentities((string) $words->get('subline_firstname')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
                         <div class="invalid-feedback"><?= $words->get('SignupErrorFullNameRequired') ?></div>
@@ -103,7 +103,7 @@
                             ?> />
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
-                                data-content="<?= htmlentities($words->get('subline_lastname')) ?>">
+                                data-content="<?= htmlentities((string) $words->get('subline_lastname')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
                         <div class="invalid-feedback"><?= $words->get('SignupErrorFullNameRequired') ?></div>
@@ -133,7 +133,7 @@
                         </select>
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
-                                data-content="<?= htmlentities($words->get('subline_mothertongue')) ?>">
+                                data-content="<?= htmlentities((string) $words->get('subline_mothertongue')) ?>">
                             <i class="fa fa-question"></i>
                         </button>
                         <div class="invalid-feedback" id="mothertongue-invalid"><?= $words->get('signup.error.mothertongue') ?></div>
@@ -155,7 +155,7 @@
                         ?>/>
                         <button type="button" class="input-group-append btn btn-primary" data-trigger="focus" data-container="body"
                                 data-toggle="popover" data-placement="right"
-                                data-content="<?= htmlentities($words->get('signup.help.birthdate')); ?>">
+                                data-content="<?= htmlentities((string) $words->get('signup.help.birthdate')); ?>">
                             <i class="fa fa-question"></i>
                         </button>
                     <?php
@@ -214,7 +214,7 @@
                     </div>
                     <button type="button" class="btn btn-primary float-right" data-trigger="focus" data-container="body"
                             data-toggle="popover" data-placement="right"
-                            data-content="<?= htmlentities($words->get('signup.help.gender')); ?>">
+                            data-content="<?= htmlentities((string) $words->get('signup.help.gender')); ?>">
                         <i class="fa fa-question"></i>
                     </button>
                     <?php if ($genderError) {

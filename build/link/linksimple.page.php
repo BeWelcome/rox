@@ -27,7 +27,7 @@ With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
         ';
     
 	$model = new LinkModel();
-							$listitem = array('fromID' => '10', 'toID' => '11', 'degree' => '1', 'rank' => '1', 'path' => '2');
+							$listitem = ['fromID' => '10', 'toID' => '11', 'degree' => '1', 'rank' => '1', 'path' => '2'];
 						var_dump($listitem);
 	//$model->createLinkList($listitem);
 	$comments = $model->getLinks();
@@ -35,9 +35,9 @@ With tabs in <a href="hellouniverse/tab1">hellouniverse/tab1</a>!
 
 	foreach ($comments as $comment) {
 	echo "From: ".$comment->IdFromMember." To: ".$comment->IdToMember."<br>";
-		$link = array('fromID' => "$comment->IdFromMember", 'toID' => "$comment->IdToMember", 'degree' => '1', 'rank' => '1', 'path' => "'($comment->IdFromMember,$comment->IdToMember)'");
+		$link = ['fromID' => "$comment->IdFromMember", 'toID' => "$comment->IdToMember", 'degree' => '1', 'rank' => '1', 'path' => "'($comment->IdFromMember,$comment->IdToMember)'"];
 		var_dump($link);
-		$model->createLinkList($link);
+		$model->createLinkList();
 	}
 	}
 

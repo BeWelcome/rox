@@ -7,80 +7,64 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PollsRecordOfChoices.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="polls_record_of_choices", indexes={
- *     @ORM\Index(name="polls_record_of_choices_members", columns={"IdMember"}),
- *     @ORM\Index(name="polls_record_of_choices_email", columns={"Email"}),
- *     @ORM\Index(name="polls_record_of_choices_poll", columns={"IdPoll"}),
- *     @ORM\Index(name="polls_record_of_choices_poll_choice", columns={"IdPollChoice"})
- * })
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'polls_record_of_choices')]
+#[ORM\Index(name: 'polls_record_of_choices_members', columns: ['IdMember'])]
+#[ORM\Index(name: 'polls_record_of_choices_email', columns: ['Email'])]
+#[ORM\Index(name: 'polls_record_of_choices_poll', columns: ['IdPoll'])]
+#[ORM\Index(name: 'polls_record_of_choices_poll_choice', columns: ['IdPollChoice'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
 class PollRecordOfChoice
 {
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var PollChoice
-     *
-     * @ORM\ManyToOne(targetEntity="PollChoice")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdPollChoice", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdPollChoice', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \PollChoice::class)]
     private $pollChoice;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Email", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Email', type: 'string', length: 255, nullable: false)]
     private $email;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
      * @var Poll
-     *
-     * @ORM\ManyToOne(targetEntity="Poll")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Poll::class)]
     private $poll;
 
     /**
      * @var Member
-     *
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: \Member::class)]
     private $member;
 
     /**
@@ -192,11 +176,9 @@ class PollRecordOfChoice
     /**
      * Set poll.
      *
-     * @param Poll $poll
-     *
      * @return PollRecordOfChoice
      */
-    public function setPoll(Poll $poll = null)
+    public function setPoll(?Poll $poll = null)
     {
         $this->poll = $poll;
 
@@ -216,11 +198,9 @@ class PollRecordOfChoice
     /**
      * Set member.
      *
-     * @param Member $member
-     *
      * @return PollRecordOfChoice
      */
-    public function setMember(Member $member = null)
+    public function setMember(?Member $member = null)
     {
         $this->member = $member;
 
@@ -239,9 +219,8 @@ class PollRecordOfChoice
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -250,9 +229,8 @@ class PollRecordOfChoice
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

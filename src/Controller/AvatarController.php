@@ -12,62 +12,31 @@ use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 /**
  * Class AvatarController.
  *
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
  */
 class AvatarController extends AbstractController
 {
     private const EXPIRY = 60 * 60 * 24; // One day
-    private const AVATAR_PATH = '../data/user/avatars/';
-    private const EMPTY_AVATAR_PATH = 'images/';
+    private const string AVATAR_PATH = '../data/user/avatars/';
+    private const string EMPTY_AVATAR_PATH = 'images/';
 
-    private const array SIZES = [
-        'xs',
-        '30',
-        '36',
-        '48',
-        '50',
-        '72',
-        '96',
-        '100',
-        '120',
-        '150',
-        '160',
-        '200',
-        '320',
-        '480',
-        '500',
-        'original',
-    ];
-
-    private LoggerInterface $logger;
-    private EntityManagerInterface $entityManager;
-    private TranslatorInterface $translator;
-
-    public function __construct(
-        LoggerInterface $logger,
-        EntityManagerInterface $entityManager,
-        TranslatorInterface $translator
-    ) {
-        $this->logger = $logger;
-        $this->entityManager = $entityManager;
-        $this->translator = $translator;
+    public function __construct(private readonly LoggerInterface $logger, private readonly EntityManagerInterface $entityManager, private readonly TranslatorInterface $translator)
+    {
     }
 
-    /**
-     * @Route("/members/uploadavatar", methods={"POST"})
-     */
+    #[Route(path: '/members/uploadavatar', methods: ['POST'])]
     public function uploadAvatar(Request $request): Response
     {
         $uploadFailedTranslation = $this->translator->trans('profile.picture.upload.failed');
@@ -94,11 +63,7 @@ class AvatarController extends AbstractController
         return new Response($uploadFailedTranslation, Response::HTTP_REQUEST_ENTITY_TOO_LARGE);
     }
 
-    /**
-     * @Route("/members/avatar/{username}/{size}", name="avatar",
-     *     requirements={"size" : "\d+|original" },
-     *     defaults={"size": "48"})
-     */
+    #[Route(path: '/members/avatar/{username:member}/{size}', name: 'avatar', requirements: ['size' => '\d+|original'], defaults: ['size' => '48'])]
     public function showAvatar(Member $member, string $size): BinaryFileResponse
     {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -109,7 +74,6 @@ class AvatarController extends AbstractController
         $isAdministrativeProfile =
             $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
             || $this->isGranted(Member::ROLE_ADMIN_PROFILE);
-
         if (!$isBrowsable && !$isAdministrativeProfile) {
             return $this->emptyAvatar($size);
         }
@@ -117,10 +81,10 @@ class AvatarController extends AbstractController
         if (!$this->avatarImageExists($member, $size)) {
             try {
                 $this->createAvatarImage($member, $size);
-            } catch (InvalidArgumentException $e) {
+            } catch (InvalidArgumentException) {
                 return $this->emptyAvatar($size);
             } catch (Throwable $throwable) {
-                $this->logger->warning(sprintf(
+                $this->logger->warning(\sprintf(
                     'Creating avatar image (size %s) for member %d failed: %s',
                     $size,
                     $member->getId(),
@@ -132,7 +96,7 @@ class AvatarController extends AbstractController
         $filename = $this->getAvatarImageFilename($member, $size);
 
         if (!is_file($filename) || !is_readable($filename)) {
-            $this->logger->warning(sprintf(
+            $this->logger->warning(\sprintf(
                 'Avatar image %s for member %d is missing or not readable, falling back to empty avatar',
                 $filename,
                 $member->getId()
@@ -175,21 +139,12 @@ class AvatarController extends AbstractController
         return true;
     }
 
-    private function removeAvatarFiles($member): void
+    private function removeAvatarFiles($member)
     {
-        $fileSystem = new Filesystem();
-
-        $memberPath = self::AVATAR_PATH . $member->getId();
-        foreach (self::SIZES as $size) {
-            // old format (and original)
-            if (file_exists($memberPath . '_' . $size)) {
-                $fileSystem->remove($memberPath . '_' . $size);
-            }
-
-            // new format
-            if (file_exists($memberPath . '_' . $size . '_' . $size)) {
-                $fileSystem->remove($memberPath . '_' . $size . '_' . $size);
-            }
+        $finder = new Finder();
+        $finder->name($member->getId() . '_*');
+        foreach ($finder->files()->in(self::AVATAR_PATH) as $oldAvatarFile) {
+            unlink($oldAvatarFile->getRealPath());
         }
     }
 

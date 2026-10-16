@@ -7,19 +7,19 @@ use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Exception;
 use Manticoresearch\Client;
-use Manticoresearch\Index;
+use Manticoresearch\Table;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(name: 'manticore:indices:forum', description: 'Creates the manticore indices for the forum search')]
 class ManticoreIndicesForumCommand extends Command
 {
     private const FORUM_INDEX = 'forum_rt';
 
-    protected static $defaultName = 'manticore:indices:forum';
-    protected static $defaultDescription = 'Creates the manticore indices for the forum search';
     private int $chunkSize = 2500;
     private EntityManagerInterface $entityManager;
     private SymfonyStyle $io;
@@ -28,7 +28,7 @@ class ManticoreIndicesForumCommand extends Command
 
     public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
     {
-        parent::__construct(self::$defaultName);
+        parent::__construct();
 
         $this->entityManager = $entityManager;
         $this->manticoreHost = $manticoreHost;
@@ -63,11 +63,11 @@ class ManticoreIndicesForumCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function createForumIndex(): ?Index
+    private function createForumIndex(): ?Table
     {
         $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
 
-        $index = $client->index(self::FORUM_INDEX);
+        $index = $client->table(self::FORUM_INDEX);
         // If the index doesn't exist, drop fails with an error message. So we run it silenced.
         $index->drop(true);
 
@@ -91,7 +91,8 @@ class ManticoreIndicesForumCommand extends Command
                     'charset_table' => 'non_cjk,U+0020->_', // Ignore spaces (turns e.g. Los Angeles into Los_Angeles)
                     'min_prefix_len' => '1',
                     'prefix_fields' => 'name',
-                    'ngram_chars' => 'cjk',
+                    // cont = CJK and Thai: Manticore 7 took Thai out of cjk, so Thai text was not indexed
+                    'ngram_chars' => 'cont',
                     'ngram_len' => '1',
                 ]
             );
@@ -105,7 +106,7 @@ class ManticoreIndicesForumCommand extends Command
         }
     }
 
-    private function addForumDocuments(Index $index, OutputInterface $output)
+    private function addForumDocuments(Table $index, OutputInterface $output)
     {
         /*
           SELECT ft.id AS threadid, sentence as text, IdGroup, \
@@ -123,37 +124,40 @@ class ManticoreIndicesForumCommand extends Command
         $stmt = $this->entityManager
             ->getConnection()
             ->executeQuery(<<<'___SQL'
-            SELECT
-                count(*) as cnt
-            FROM
-                forums_posts fp
-        ___SQL);
+                    SELECT
+                        count(*) as cnt
+                    FROM
+                        forums_posts fp
+                ___SQL);
 
-        $count = ($stmt->fetchNumeric())[0];
+        $count = $stmt->fetchNumeric()[0];
+        if (0 === $count) {
+            // as on develop: no posts, nothing to add (a progress bar without steps throws)
+            return;
+        }
 
         $progressBar = $this->getProgressBar($output, $count);
 
         $firstResult = 0;
         do {
             $query = $this->entityManager->createNativeQuery(<<<___SQL
-                SELECT
-                    fp.id as post_id,
-                    fp.PostDeleted as post_deleted,
-                    fp.PostVisibility as post_visibility,
-                    ft.id AS thread_id,
-                    ft.ThreadDeleted AS thread_deleted,
-                    ft.ThreadVisibility AS thread_visibility,
-                    fp.message as content,
-                    ft.IdGroup AS `group`,
-                    fp.IdWriter as author,
-                    COALESCE(l.shortcode, 'en') as locale
-                FROM
-                    forums_posts fp
-                JOIN forums_threads ft ON fp.threadid = ft.id
-                LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
-                LIMIT {$firstResult}, {$this->chunkSize}
-            ___SQL
-                , $this->getResultSetMappingForForumIndex());
+                    SELECT
+                        fp.id as post_id,
+                        fp.PostDeleted as post_deleted,
+                        fp.PostVisibility as post_visibility,
+                        ft.id AS thread_id,
+                        ft.ThreadDeleted AS thread_deleted,
+                        ft.ThreadVisibility AS thread_visibility,
+                        fp.message as content,
+                        ft.IdGroup AS `group`,
+                        fp.IdWriter as author,
+                        COALESCE(l.shortcode, 'en') as locale
+                    FROM
+                        forums_posts fp
+                    JOIN forums_threads ft ON fp.threadid = ft.id
+                    LEFT JOIN languages l ON fp.IdFirstLanguageUsed = l.id
+                    LIMIT {$firstResult}, {$this->chunkSize}
+                ___SQL, $this->getResultSetMappingForForumIndex());
 
             $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
 
@@ -164,7 +168,7 @@ class ManticoreIndicesForumCommand extends Command
         $this->io->newLine();
     }
 
-    private function addForumDocumentsToIndex(Index $index, NativeQuery $query, ProgressBar $progress): int
+    private function addForumDocumentsToIndex(Table $index, NativeQuery $query, ProgressBar $progress): int
     {
         $forumPosts = $query->getResult();
         $documents = [];
@@ -186,6 +190,11 @@ class ManticoreIndicesForumCommand extends Command
         }
         $count = \count($forumPosts);
         unset($forumPosts);
+
+        if (0 === $count) {
+            // the last page is empty: client 4 sends an empty bulk request, which Manticore answers with ""
+            return 0;
+        }
 
         $index->addDocuments($documents);
         $index->flush();

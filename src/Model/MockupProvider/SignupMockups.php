@@ -3,10 +3,13 @@
 namespace App\Model\MockupProvider;
 
 use App\Entity\Member;
+use App\Form\SignupFormFinalizeType;
+use App\Form\SignupFormType;
+use Symfony\Component\Form\FormFactoryInterface;
 
 class SignupMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'Confirm Email Address' => [
             'type' => 'email',
             'template' => 'emails/signup.html.twig',
@@ -19,17 +22,17 @@ class SignupMockups implements MockupProviderInterface
             'description' => 'Email containing the link to confirm email address with some extra text.',
             'setup' => 'getSignupParameters',
         ],
-        'Finish' => [
+        'Signup' => [
             'type' => 'page',
-            'url' => 'signup/finish',
-            'template' => 'signup/finish.html.twig',
+            'url' => 'signup/',
+            'template' => 'signup/first.step.html.twig',
             'description' => 'Successful signup.',
         ],
-        'Error' => [
+        'Finalize' => [
             'type' => 'page',
-            'url' => 'signup/finish',
-            'template' => 'signup/error.html.twig',
-            'description' => 'Error during signup.',
+            'url' => 'signup/finalize',
+            'template' => 'signup/finalize.html.twig',
+            'description' => 'Successful signup.',
         ],
         'Signup Email Resent' => [
             'type' => 'page',
@@ -37,6 +40,10 @@ class SignupMockups implements MockupProviderInterface
             'description' => 'Email with confirmation links has been resent.',
         ],
     ];
+
+    public function __construct(private readonly FormFactoryInterface $formFactory)
+    {
+    }
 
     public function getFeature(): string
     {
@@ -53,11 +60,16 @@ class SignupMockups implements MockupProviderInterface
         /** @var Member $user */
         $user = $parameters['user'];
 
+        $signupForm = $this->formFactory->create(SignupFormType::class);
+        $finalizeForm = $this->formFactory->create(SignupFormFinalizeType::class);
+
         return [
             'username' => $user->getUsername(),
             'gender' => $user->getGender(),
             'key' => hash('sha256', $user->getUsername()),
             'email_address' => $user->getEmail(),
+            'signup' => $signupForm->createView(),
+            'finalize' => $finalizeForm->createView(),
         ];
     }
 

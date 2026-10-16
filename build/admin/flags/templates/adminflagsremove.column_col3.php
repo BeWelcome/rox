@@ -49,11 +49,11 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminFlagsController
     </div>
     <div class="type-text">
         <label for="scope"><?php echo $this->words->get("AdminFlagsScope") ?></label>
-        <input class="o-input" type="text" id="scope" name="scope" readonly="readonly" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
+        <input class="o-input" type="text" id="scope" name="scope" readonly="readonly" value="<?= htmlentities((string) $this->vars['scope'], ENT_COMPAT, 'utf-8') ?>"/>
     </div>
     <div class="type-text">
         <label for="comment"><?php echo $this->words->get("AdminFlagsComment") ?></label>
-        <textarea class="o-input" id="comment" name="comment" readonly="readonly"><?= htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
+        <textarea class="o-input" id="comment" name="comment" readonly="readonly"><?= htmlentities((string) $this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
     </div>
     <div class="type-button">
         <input type="submit" class="btn btn-primary" id="AdminFlagsRemove" name="AdminFlagsRemove" value="<?php echo $this->words->getSilent("AdminFlagsRemove")?>" /><?php echo $words->flushBuffer(); ?>

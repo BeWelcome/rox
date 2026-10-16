@@ -1,3 +1,100 @@
 signup.no.link:
     - "No link shown or you can't click it? Copy the link below into your browser"
     - Text shown in the signup confirmation email for mail programs that do not support clickable links.
+signup.join:
+    - Join BeWelcome
+    - Button label on the first signup page
+signup.congratulations:
+    - Congratulations
+    - Headline on the signup finalization page (account was created but isn't fully functional yet).
+signup.finalize:
+    - <p>Your account has been created. You can already look around what the site has to offer, but to fully use it you
+      need to provide a few more information and confirm your email address.</p><p>If you do not confirm your email address
+      within the next 7 days the account will be automatically deleted. If you decide to delete your account after looking
+      around the submenu offers a link to the deletion page.</p>
+    - Abstract text on signup finalization page.
+signup.optional:
+    - Optional Settings
+    - Headline on the signup finalize page
+signup.optional.help:
+    - You can change any of the settings below on the preferences page or in your profile later on.
+    - Explanatory text on the finalize signup page.
+signup.label.terms:
+    - '@iagreewithterms'
+help.terms:
+    - You can only proceed if you agree to the terms of use and the privacy policy.
+    - Help text for the terms of use checkbox.
+signup.label.newsletters:
+    - '@signup.receive.newsletters'
+signup.label.local_events:
+    - '@signup.receive.local-info'
+help.trips_notifications:
+    - If you select a duration you will be notified if someone visits your area.
+    - Help text on the signup page.
+signup.error.not.unique:
+    - Unfortunately either username or email are already in use by someone else.
+    - Error message shown on the signup page.
+# Texts of the one-page sign-up and its finalize step (route C, rox#519). Where the legacy sign-up or login has
+# the same text, the key reuses it ('@key'), so its translations come along.
+signup.error.email.blank:
+    - '@signuperrorinvalidemail'
+    - Error on the sign-up page when the e-mail field is empty.
+signup.error.password.blank:
+    - '@loginerrornopassword'
+    - Error when the password field is empty (sign-up and change password).
+signup.error.terms_privacy:
+    - '@help.terms'
+    - Error on the sign-up page when the terms and privacy checkbox is not ticked.
+signup.account.created:
+    - Your account has been created
+    - Headline on the finalize page, shown after the first sign-up step.
+signup.activate:
+    - Activate my account
+    - Button that sends the finalize form at the end of the sign-up.
+error.name:
+    - '@signup.error.name.empty'
+    - Error on the finalize page when the name is empty.
+error.birthdate:
+    - '@signuperrorbirthdate'
+    - Error on the finalize page when the birth date is missing or invalid.
+placeholder.birthdate:
+    - YYYY-MM-DD
+    - Placeholder in the birth date field of the finalize page; the field expects this format.
+    - messages+intl-icu
+    - yes
+error.gender:
+    - It seems you forgot to select a gender. You can hide it on your profile later.
+    - Error on the finalize page when no gender is selected.
+help.location:
+    - Type the place where you live and choose it from the list. Members see the place, not your address.
+    - Help text under the location field of the finalize page.
+accommodation.no:
+    - '@no'
+    - Label for the not hosting accommodation choice (finalize page).
+accommodation.yes:
+    - '@yes'
+    - Label for the hosting accommodation choice (finalize page).
+error.accommodation:
+    - '@signuperrorprovideaccommodation'
+    - Error on the finalize page when neither yes nor no is chosen for hosting.
+hosting.interest.set:
+    - Please set your hosting interest.
+    - Shown next to the hosting interest slider on the finalize page before it is moved.
+error.hosting.interest:
+    - '@signuperrorprovidehostinginterest'
+    - Error on the finalize page when hosting is yes but the interest is still 0.
+member.mail.not.confirmed:
+    - Please confirm your email address with the link we sent you when you signed up.
+    - Notice at the top of every page for a logged-in member whose email address is not confirmed yet.
+profile.switch.locale:
+    - Show this profile in
+    - Label of the language switch on a profile that is written in several languages.
+signup.welcome.subject:
+    - Welcome to BeWelcome, {username}!
+    - Subject of the welcome message every new member gets in the inbox from BeWelcome. {username} is the new member.
+signup.welcome.body:
+    - <p>Hello {username},</p><p>Welcome to BeWelcome! Add a few words about yourself and a picture to your profile, so
+      other members get to know you before you write to them. If you have a question, the FAQ and Safety Information
+      pages are a good place to start, or you can reach us through Contact us.</p><p>Have fun travelling and
+      hosting!</p><p>The BeWelcome team</p>
+    - Body of the welcome message every new member gets in the inbox from BeWelcome. {username} is the new member.

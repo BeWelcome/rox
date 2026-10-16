@@ -48,13 +48,14 @@ class AdminTreasurerEditCreateDonationPage extends AdminTreasurerBasePage
             $m = new Member($donation->IdMember);
             $this->username = $m->Username;
             $this->amount = $donation->Amount;
-            $this->date = date('d.m.Y', strtotime($donation->created));
+            $this->date = date('d.m.Y', strtotime((string) $donation->created));
             $this->comment = $donation->SystemComment;
             $this->countrycode = $this->model->getCountryCodeForGeonameId($donation->IdCountry);
         }
         $this->addLateLoadScriptFile('build/treasurer.js');
     }
     
+    #[\Override]
     public function teaserHeadline()
     {
         $str = "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin/treasurer'>{$this->words->get('AdminTreasurer')}</a> &raquo; ";

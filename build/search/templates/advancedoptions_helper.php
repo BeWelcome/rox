@@ -44,7 +44,7 @@ function getGenderDropDown($vars) {
 }
 
 function getGroupOptionsDropDown($vars) {
-    $groups = array();
+    $groups = [];
     $words = new MOD_words();
     $model = new RoxModelBase();
     $member = $model->getLoggedInMember();
@@ -70,7 +70,7 @@ function getGroupOptionsDropDown($vars) {
 
 function getLanguagesOptionsDropDown($vars) {
     $words = new MOD_words();
-    $languages = array();
+    $languages = [];
     $model = new RoxModelBase();
     $member = $model->getLoggedInMember();
     if ($member) {
@@ -95,7 +95,7 @@ function getLanguagesOptionsDropDown($vars) {
 
 function getAccommodationOptions($vars) {
     $words = new MOD_words();
-    $accommodation = array();
+    $accommodation = [];
     if (isset($vars['search-accommodation']) && is_array($vars['search-accommodation'])) {
         $accommodation = $vars['search-accommodation'];
     }
@@ -122,7 +122,7 @@ function getAccommodationOptions($vars) {
 
 function getTypicalOfferOptions($vars) {
     $words = new MOD_words();
-    $typicalOffers = array();
+    $typicalOffers = [];
     if (isset($vars['search-typical-offer']) && is_array($vars['search-typical-offer'])) {
         $typicalOffers = $vars['search-typical-offer'];
     }

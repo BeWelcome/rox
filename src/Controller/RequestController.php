@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
+use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
@@ -16,42 +17,38 @@ use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
 use App\Utilities\ManagerTrait;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class HostingRequestController.
  *
  * Ignore complexity warning. \todo fix this.
  *
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
  */
 class RequestController extends BaseRequestAndInvitationController
 {
     use ManagerTrait;
+    use RedirectToReferrerTrait;
     use TranslatorTrait;
-
-    private Mailer $mailer;
-    private Logger $logger;
 
     public function __construct(
         ConversationModel $conversationModel,
         HostingRequestModel $requestModel,
         EntityManagerInterface $entityManager,
-        Mailer $mailer,
-        Logger $logger
+        private Mailer $mailer,
+        private Logger $logger,
     ) {
         parent::__construct($requestModel, $entityManager);
 
         $this->conversationModel = $conversationModel;
-        $this->mailer = $mailer;
-        $this->logger = $logger;
     }
 
     /**
@@ -64,9 +61,8 @@ class RequestController extends BaseRequestAndInvitationController
         $current = $conversation[0];
         $request = $current->getRequest();
         $request->setStatus(HostingRequest::REQUEST_DECLINED);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($request);
-        $em->flush();
+        $this->entityManager->persist($request);
+        $this->entityManager->flush();
 
         $guest = $message->getInitiator();
         $host = $message->getReceiver() === $guest ? $message->getSender() : $message->getReceiver();
@@ -98,14 +94,15 @@ class RequestController extends BaseRequestAndInvitationController
     }
 
     /**
-     * @Route("/new/request/{username}", name="hosting_request")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      *
-     * @throws Exception
+     * \todo Reduce complexity (seems all new/ conversations have a problem here)
      */
+    #[Route(path: '/new/request/{username:host}', name: 'hosting_request')]
     public function newHostingRequest(
         Request $request,
         Member $host,
-        AllowContactCheck $allowContactCheck
+        AllowContactCheck $allowContactCheck,
     ): Response {
         /** @var Member $guest */
         $guest = $this->getUser();
@@ -113,6 +110,12 @@ class RequestController extends BaseRequestAndInvitationController
             $this->addTranslatedFlash('notice', 'flash.request.self');
 
             return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $guest->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
 
         if (!$host->isBrowsable()) {
@@ -129,9 +132,8 @@ class RequestController extends BaseRequestAndInvitationController
             )
         ) {
             $this->addTranslatedFlash('error', 'flash.request.limit');
-            $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->redirectToReferrer($request);
         }
 
         if (AccommodationType::NO === $host->getAccommodation()) {
@@ -171,9 +173,8 @@ class RequestController extends BaseRequestAndInvitationController
             $hostingRequest = $this->getMessageFromData($requestForm->getData(), $guest, $host);
             $hostingRequest = $this->conversationModel->formatConversation($hostingRequest);
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($hostingRequest);
-            $em->flush();
+            $this->entityManager->persist($hostingRequest);
+            $this->entityManager->flush();
 
             $this->sendInitialRequestNotification(
                 $host,
@@ -181,7 +182,6 @@ class RequestController extends BaseRequestAndInvitationController
                 $hostingRequest
             );
             $this->addTranslatedFlash('notice', 'flash.request.sent');
-            $this->addFlash('plausible_event', 'Request Sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }
@@ -197,8 +197,8 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $this->addTranslatedFlash('notice', 'flash.request.expired', [
             '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
-                    'username' => $receiver->getUsername(),
-                ]) . '" class="text-primary">',
+                'username' => $receiver->getUsername(),
+            ]) . '" class="text-primary">',
             '%link_end%' => '</a>',
         ]);
     }
@@ -211,7 +211,7 @@ class RequestController extends BaseRequestAndInvitationController
             return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
         }
 
-        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
+        [$thread] = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
 
         // keep all information from current hosting request except the message text
         $hostingRequest = $this->getMessageAndRequestClone($hostingRequest);
@@ -234,7 +234,7 @@ class RequestController extends BaseRequestAndInvitationController
                 $guest,
                 $newRequest,
                 $subject,
-                ($newRequest->getRequest()->getId() !== $realParent->getRequest()->getId())
+                $newRequest->getRequest()->getId() !== $realParent->getRequest()->getId()
             );
             $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
@@ -257,7 +257,7 @@ class RequestController extends BaseRequestAndInvitationController
             return $this->forward(MessageController::class . '::reply', ['message' => $hostingRequest]);
         }
 
-        list($thread) = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
+        [$thread] = $this->conversationModel->getThreadInformationForMessage($hostingRequest);
 
         // keep all information from current hosting request except the message text
         $hostingRequest = $this->getMessageClone($hostingRequest);
@@ -303,7 +303,7 @@ class RequestController extends BaseRequestAndInvitationController
         Member $guest,
         Message $request,
         string $subject,
-        bool $requestChanged
+        bool $requestChanged,
     ): void {
         $this->sendRequestNotification(
             $guest,
@@ -320,7 +320,7 @@ class RequestController extends BaseRequestAndInvitationController
     {
         $subject = $request->getSubject()->getSubject();
 
-        if (false === strpos($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+        if (!str_contains($request->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
             $this->sendRequestNotification($guest, $host, $host, $request, $subject, 'request', false);
         }
     }
@@ -330,7 +330,7 @@ class RequestController extends BaseRequestAndInvitationController
         Member $guest,
         Message $request,
         string $subject,
-        bool $requestChanged
+        bool $requestChanged,
     ): void {
         $this->sendRequestNotification(
             $host,
@@ -347,7 +347,7 @@ class RequestController extends BaseRequestAndInvitationController
         Member $host,
         Member $guest,
         Message $request,
-        string $subject
+        string $subject,
     ): void {
         $this->sendRequestNotification(
             $host,
@@ -363,11 +363,7 @@ class RequestController extends BaseRequestAndInvitationController
     /**
      * The requestChanged parameter triggers a PHPMD warning which is out of place in this case.
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     *
-     * @param mixed $subject
-     * @param mixed $template
-     * @param mixed $requestChanged
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     private function sendRequestNotification(
         Member $sender,
@@ -376,7 +372,7 @@ class RequestController extends BaseRequestAndInvitationController
         Message $request,
         $subject,
         $template,
-        $requestChanged
+        $requestChanged,
     ) {
         // Send mail notification
         $this->mailer->sendMessageNotificationEmail($sender, $receiver, $template, [

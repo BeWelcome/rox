@@ -37,7 +37,7 @@ class Group extends RoxEntityBase
 
     protected $_table_name = 'groups';
 
-    protected $_validations = array('Name', 'Type');
+    protected $_validations = ['Name', 'Type'];
 
     /**
      * overrides the __get method of Component
@@ -47,6 +47,7 @@ class Group extends RoxEntityBase
      * @return mixed
      * @access public
      */
+    #[\Override]
     public function __get($key)
     {
         $result = parent::__get($key);
@@ -72,6 +73,7 @@ class Group extends RoxEntityBase
      * Additionally gets the timestamp of the latest post to the group
      *
      */
+    #[\Override]
     protected function loadEntity(array $data)
     {
         if ($status = parent::loadEntity($data))
@@ -95,6 +97,7 @@ AND t.last_postid = p.id";
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function countAll()
     {
         $sql = <<<SQL
@@ -116,6 +119,7 @@ SQL;
     /**
      * @inheritDoc
      */
+    #[\Override]
     public function findAll($offset = 0, $limit = 0)
     {
         $sql = <<<SQL
@@ -147,7 +151,7 @@ SQL;
      * @access public
      * @todo implement proper group search - this will wait on various db implementations
      */
-    public function findBySearchTerms($terms = array(), $offset = 0, $limit = 10)
+    public function findBySearchTerms($terms = [], $offset = 0, $limit = 10)
     {
         if (empty($terms))
         {
@@ -205,7 +209,7 @@ SQL;
             return false;
         }
 
-        $status = (($status) ? $status : 'In');
+        $status = ($status ?: 'In');
 
         return $this->createEntity('GroupMembership')->getGroupMembers($this, $status, '', $offset, $limit);
     }
@@ -244,7 +248,7 @@ SQL;
     {
         if (!$this->_has_loaded)
         {
-            return array();
+            return [];
         }
 
         return $this->createEntity('GroupMembership')->getGroupMembers($this, 'In', 'IacceptMassMailFromThisGroup = "yes"');
@@ -264,7 +268,7 @@ SQL;
             return 0;
         }
 
-        $status = (($status) ? $status : 'In');
+        $status = ($status ?: 'In');
 
         return $this->createEntity('GroupMembership')->getGroupMembersCount($this);
 
@@ -400,7 +404,7 @@ SQL;
             return false;
         }
 
-        $description = str_replace(array("\r\n", "\r", "\n"), "", nl2br($description));
+        $description = str_replace(["\r\n", "\r", "\n"], "", nl2br($description));
 
         $words = $this->getWords();
         $descriptionId = ((!$this->IdDescription) ? $words->InsertInMTrad($this->dao->escape($description), 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
@@ -534,10 +538,10 @@ SQL;
             $loggedIn = true;
         }
 
-        $group_owners = array();
+        $group_owners = [];
         foreach ($priv_scopes as $priv_scope) {
             $group_owner = $this->createEntity('Member', $priv_scope->IdMember);
-            if (strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $group_owner->Status) !== false) {
+            if (str_contains(MemberStatusType::ACTIVE_WITH_MESSAGES, (string) $group_owner->Status)) {
                 if ($loggedIn) {
                     $group_owners[] = $group_owner;
                 }
@@ -561,7 +565,7 @@ SQL;
             return false;
         }
 
-        return $role->addForMember($member, array('Group' => $this->getPKValue()));
+        return $role->addForMember($member, ['Group' => $this->getPKValue()]);
     }
 
     /**

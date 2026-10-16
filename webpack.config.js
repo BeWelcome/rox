@@ -1,7 +1,5 @@
 let Encore = require('@symfony/webpack-encore');
 
-const { CKEditorTranslationsPlugin } = require( '@ckeditor/ckeditor5-dev-translations' );
-const { styles} = require('@ckeditor/ckeditor5-dev-utils');
 const path = require('path');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -15,17 +13,16 @@ Encore
     .setOutputPath('public/build/')
     // public path used by the web server to access the output path
     .setPublicPath('/build')
-//    .splitEntryChunks()
+    .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
-//    .configureFontRule({
-//        type: 'asset',
-//        maxSize: 8*1024*1024,
-//    })
     .addEntry('bewelcome', './assets/js/bewelcome.js')
     .addEntry('home', './assets/js/home.js')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')
-    .addEntry('signup/signup', './assets/js/signup.js')
+    .addEntry('password/showhide', './assets/js/password/showhide.js')
+    .addEntry('block_highlight', './assets/js/block_highlight.js')
+    .addEntry('password/check', './assets/js/password/check.js')
+    .addEntry('signup/finalize', './assets/js/signup/finalize.js')
     .addEntry('members/editmyprofile', './assets/js/editmyprofile.js')
     .addEntry('landing', './assets/js/landing/landing.js')
     .addEntry('search/loadpicker', './assets/js/search/loadpicker.js')
@@ -56,17 +53,8 @@ Encore
     .addEntry('bsfileselect', './assets/js/bsfileselect.js')
     .addEntry('scrollingtabs', './assets/js/scrollingtabs.js')
     .addEntry('email', './assets/scss/email.scss')
-    .addEntry('password/showhide', './assets/js/password/showhide.js')
-    // CKEditor
-    .addPlugin(new CKEditorTranslationsPlugin({
-        language: 'en',
-        additionalLanguages: 'all',
-        outputDirectory: 'cktranslations',
-        buildAllTranslationsToSeparateFiles: true
-    }))
     .addEntry('roxeditor', './assets/js/roxeditor.js')
     .addEntry('rangeslider', './assets/js/rangeslider.js')
-    .addEntry('block_highlight', './assets/js/block_highlight.js')
     .addEntry('highlight', './assets/js/highlight.js')
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
@@ -97,7 +85,10 @@ Encore
         'TweenLite': 'gsap/src/minified/TweenLite.min.js',
         'TweenMax': 'gsap/src/minified/TweenMax.min.js',
         'TimelineLite': 'gsap/src/minified/TimelineLite.min.js',
-        'TimelineMax': 'gsap/src/minified/TimelineMax.min.js'
+        'TimelineMax': 'gsap/src/minified/TimelineMax.min.js',
+        'ScrollMagic': 'scrollmagic/scrollmagic/minified/ScrollMagic.min.js',
+        'animation.gsap': 'scrollmagic/scrollmagic/minified/plugins/animation.gsap.min.js',
+        'debug.addIndicators': 'scrollmagic/scrollmagic/minified/plugins/debug.addIndicators.min.js'
     })
     .addLoader({
         test: require.resolve('select2'),
@@ -106,32 +97,10 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(true)
     // Use raw-loader for CKEditor 5 SVG files.
-    .addRule({
-        test: /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/,
-        loader: 'raw-loader'
-    })
-
-    // Configure other image loaders to exclude CKEditor 5 SVG files.
-    .configureLoaderRule('images', loader => {
-        loader.exclude = /ckeditor5-[^/\\]+[/\\]theme[/\\]icons[/\\][^/\\]+\.svg$/;
-    })
     .enablePostCssLoader((options) => {
         // new option outlined here https://webpack.js.org/loaders/postcss-loader/
         options.postcssOptions = {
             config: './postcss.config.js',
-        }
-    })
-    // Configure PostCSS loader.
-    .addLoader({
-        test: /ckeditor5-[^/\\]+[/\\]theme[/\\].+\.css$/,
-        loader: 'postcss-loader',
-        options: {
-            postcssOptions: styles.getPostCssConfig( {
-                themeImporter: {
-                    themePath: require.resolve( '@ckeditor/ckeditor5-theme-lark' )
-                },
-                minify: true
-            } )
         }
     })
 ;

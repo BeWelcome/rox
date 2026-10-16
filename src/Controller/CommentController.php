@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
+use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\Member;
 use App\Entity\Preference;
@@ -19,41 +20,41 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.NPathComplexity")
+ *
+ * \todo Fix complexity
+ */
 class CommentController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private ProfileSubmenu $profileSubmenu;
-    private ChangeProfilePictureGlobals $globals;
-
-    public function __construct(ProfileSubmenu $profileSubmenu, ChangeProfilePictureGlobals $globals)
+    public function __construct(private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
     {
-        $this->profileSubmenu = $profileSubmenu;
-        $this->globals = $globals;
     }
 
-    /**
-     * @Route("/members/{to_member}/comment/{from_member}/report", name="report_comment",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     *
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     */
+    #[Route(
+        path: '/members/{to_member}/comment/{from_member}/report',
+        name: 'report_comment',
+        requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])']
+    )]
     public function reportCommentAction(
         Request $request,
-        Member $toMember,
-        Member $fromMember,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
         EntityManagerInterface $entityManager,
-        Mailer $mailer
+        Mailer $mailer,
     ): Response {
         /** @var Member $member */
         $member = $this->getUser();
@@ -79,7 +80,7 @@ class CommentController extends AbstractController
                 str_replace(
                     "\xc2\xa0",
                     ' ',
-                    strip_tags(html_entity_decode($data->feedback, \ENT_HTML5, 'UTF-8'))
+                    strip_tags(html_entity_decode((string) $data->feedback, \ENT_HTML5, 'UTF-8'))
                 )
             );
             if (empty($feedback)) {
@@ -115,21 +116,24 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/comment/add", name="add_comment",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     */
+    #[Route(path: '/members/{username:member}/comment/add', name: 'add_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function addComment(
         Request $request,
         Member $member,
         CommentModel $commentModel,
         Mailer $mailer,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
         if ($loggedInMember === $member) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.comment.not.active');
+
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
@@ -188,7 +192,6 @@ class CommentController extends AbstractController
                         'username' => $member->getUsername(),
                     ]
                 );
-                $this->addFlash('plausible_event', 'Review Written');
 
                 return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
             }
@@ -203,17 +206,15 @@ class CommentController extends AbstractController
     }
 
     /**
-     * @Route("/members/{username}/comment/edit", name="edit_comment",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     *
      * @return Response|RedirectResponse
      */
+    #[Route(path: '/members/{username:member}/comment/edit', name: 'edit_comment', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function editComment(
         Request $request,
         Member $member,
         CommentModel $commentModel,
         Mailer $mailer,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ) {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -231,7 +232,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('add_comment', ['username' => $member->getUsername()]);
         }
 
-        if (CommentQualityType::NEGATIVE === $comment->getQuality() && !$comment->getEditingAllowed()) {
+        if (!$comment->getEditingAllowed()) {
             $this->addTranslatedFlash('notice', 'comment.editing.not.allowed', []);
 
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
@@ -256,12 +257,12 @@ class CommentController extends AbstractController
             $checkForExperience = $commentModel->checkIfNewExperience($originalComment, $comment);
             $newExperience = $form['new_experience']->getData();
             $changedToNegative =
-                (CommentQualityType::NEGATIVE !== $originalComment->getQuality()) &&
-                (CommentQualityType::NEGATIVE === $comment->getQuality())
+                (CommentQualityType::NEGATIVE !== $originalComment->getQuality())
+                && (CommentQualityType::NEGATIVE === $comment->getQuality())
             ;
             $changedToPositive =
-                (CommentQualityType::POSITIVE !== $originalComment->getQuality()) &&
-                (CommentQualityType::POSITIVE === $comment->getQuality())
+                (CommentQualityType::POSITIVE !== $originalComment->getQuality())
+                && (CommentQualityType::POSITIVE === $comment->getQuality())
             ;
             if ($newExperience || $changedToNegative || $changedToPositive) {
                 $comment->setUpdated(new DateTime());
@@ -293,18 +294,12 @@ class CommentController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{from_member}/comment/{to_member}/new", name="comment_new_experience",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     *
-     * @ParamConverter("toMember", class="App\Entity\Member", options={"mapping": {"to_member": "username"}})
-     * @ParamConverter("fromMember", class="App\Entity\Member", options={"mapping": {"from_member": "username"}})
-     */
+    #[Route(path: '/members/{from_member}/comment/{to_member}/new', name: 'comment_new_experience', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function setNewExperienceForComment(
-        Member $fromMember,
-        Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         CommentModel $commentModel,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): RedirectResponse {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -326,14 +321,11 @@ class CommentController extends AbstractController
         return $this->redirectToRoute('profile_comments', ['username' => $fromMember->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/comments", name="profile_comments",
-     *     requirements={"username" = "(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])"}))
-     */
+    #[Route(path: '/members/{username}/comments', name: 'profile_comments', requirements: ['username' => '(?i:[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9])'])]
     public function showCommentsForMember(
-        Member $member,
+        #[MapEntity(mapping: ['username' => 'username'])] Member $member,
         ProfileModel $profileModel,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();

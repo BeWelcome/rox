@@ -17,13 +17,12 @@ phpci: phpcpd phploc phpmd php-code-sniffer phpunit infection behat version
 install:
 	git rev-parse --short HEAD > VERSION
 	test -f docker-compose.override.yml || cp docker-compose.override.yml.dist docker-compose.override.yml
-	curl https://downloads.bewelcome.org/for_developers/rox_test_db/languages.sql.bz2 -o ./docker/db/languages.sql.bz2
-	curl https://downloads.bewelcome.org/for_developers/rox_test_db/words.sql.bz2 -o ./docker/db/words.sql.bz2
-	bunzip2 --force ./docker/db/languages.sql.bz2 ./docker/db/words.sql.bz2
+	bzip2 -ckd docker/languages.sql.bz2 > docker/db/languages.sql
+	bzip2 -ckd docker/words.sql.bz2 > docker/db/words.sql
 ifdef root
-		sudo docker-compose up -d
+		sudo docker compose up -d
 else
-		docker-compose up -d
+		docker compose up -d
 endif
 
 install-geonames:
@@ -34,9 +33,9 @@ install-geonames:
 	unzip docker/db/alternateNames.zip -d docker/db/
 	rm docker/db/*.zip
 ifdef root
-		sudo docker-compose exec php sh -c "mysql bewelcome -u bewelcome -pbewelcome -h db < import.sql"
+		sudo docker compose exec php sh -c "mysql bewelcome -u bewelcome -pbewelcome -h db < import.sql"
 else
-		docker-compose exec php sh -c "mysql bewelcome -u bewelcome -pbewelcome -h db < import.sql"
+		docker compose exec php sh -c "mysql bewelcome -u bewelcome -pbewelcome -h db < import.sql"
 endif
 
 phpcsfix:

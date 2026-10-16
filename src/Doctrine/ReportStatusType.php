@@ -4,15 +4,13 @@ namespace App\Doctrine;
 
 class ReportStatusType extends EnumType
 {
-    public const OPEN = 'Open';
-    public const IN_DISCUSSION = 'OnDiscussion';
-    public const CLOSED = 'Closed';
+    public const string OPEN = 'Open';
+    public const string IN_DISCUSSION = 'OnDiscussion';
+    public const string CLOSED = 'Closed';
 
-    /** @var string */
-    protected $name = 'report_status';
+    protected string $name = 'report_status';
 
-    /** @var array */
-    protected $values = [
+    protected array $values = [
         self::OPEN,
         self::IN_DISCUSSION,
         self::CLOSED,

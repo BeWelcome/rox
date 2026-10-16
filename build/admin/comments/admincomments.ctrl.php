@@ -44,6 +44,7 @@ class AdminCommentsController extends AdminBaseController
         $this->model = new AdminCommentsModel();
     }
 
+    #[\Override]
     public function __destruct() {
         unset($this->model);
     }
@@ -94,7 +95,7 @@ class AdminCommentsController extends AdminBaseController
 
         $this->setFlashNotice("Updated comment of " . $args->post['nameFrom'] .
                 " about " . $args->post['nameTo'] . ".");
-        return $this->router->url('admin_comments_list_single', array('id' => $args->post['id']), false);
+        return $this->router->url('admin_comments_list_single', ['id' => $args->post['id']], false);
     }
     
     /**
@@ -104,7 +105,7 @@ class AdminCommentsController extends AdminBaseController
      */
     public function subset()
     {
-        list($member, $rights) = $this->checkRights('Comments');
+        [$member, $rights] = $this->checkRights('Comments');
         $page = new AdminCommentsPage($this->model);
         $page->setSubset($this->route_vars['subset']);
         $page->comments = $this->model->getSubset($this->route_vars['subset']);
@@ -118,7 +119,7 @@ class AdminCommentsController extends AdminBaseController
      */
     public function from()
     {
-        list($member, $rights) = $this->checkRights('Comments');
+        [$member, $rights] = $this->checkRights('Comments');
         $page = new AdminCommentsPage($this->model);
         $page->setSubset("from");
         $page->comments = $this->model->getFrom($this->route_vars['id']);
@@ -132,7 +133,7 @@ class AdminCommentsController extends AdminBaseController
      */
     public function to()
     {
-        list($member, $rights) = $this->checkRights('Comments');
+        [$member, $rights] = $this->checkRights('Comments');
         $page = new AdminCommentsPage($this->model);
         $page->setSubset("to");
         $page->comments = $this->model->getTo($this->route_vars['id']);
@@ -146,7 +147,7 @@ class AdminCommentsController extends AdminBaseController
      */
     public function single()
     {
-        list($member, $rights) = $this->checkRights('Comments');
+        [$member, $rights] = $this->checkRights('Comments');
         $this->_processGet();
         $page = new AdminCommentsPage($this->model);
         $page->setSubset("single");

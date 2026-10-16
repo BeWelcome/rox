@@ -15,17 +15,17 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program; if not, see <http://www.gnu.org/licenses/> or 
-write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+along with this program; if not, see <http://www.gnu.org/licenses/> or
+write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA.
 */
-    /** 
+    /**
      * @author Tsjoek
      */
 
-    /** 
+    /**
      * words management base page
-     * 
+     *
      * @package Apps
      * @subpackage Admin
      */
@@ -33,19 +33,20 @@ Boston, MA  02111-1307, USA.
 class AdminWordBasePage extends PageWithActiveSkin
 {
     protected $purifier; // instance of html-purifier
-    public $formdata = array(); // data collected from the form
-    
+    public $formdata = []; // data collected from the form
+
     public function __construct($model = false) {
         parent::__construct();
-        $this->purifier = MOD_htmlpure::getSuggestionsHtmlPurifier();
+        $this->purifier = (new MOD_htmlpure())->getSuggestionsHtmlPurifier();
     }
-    
+
     /*
      * default browsertab title
      *
      * @access protected
      * @return string
      */
+    #[\Override]
     protected function getPageTitle() {
         return 'Words management | BeWelcome';
     }
@@ -64,8 +65,9 @@ class AdminWordBasePage extends PageWithActiveSkin
     protected function leftSidebar() {
         include '../build/admin/word/templates/adminword.leftsidebar.php';
     }
-    
-    protected function getStylesheets() 
+
+    #[\Override]
+    protected function getStylesheets()
     {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/adminword.css';
@@ -85,7 +87,7 @@ class AdminWordBasePage extends PageWithActiveSkin
             $tot = '';
             foreach ($this->langarr as $item){
                 if (strlen($tot)>0) {$tot.=', ';}
-                $tot .= trim($this->words->get('lang_'.$item->ShortCode));
+                $tot .= trim((string) $this->words->get('lang_'.$item->ShortCode));
             }
             return $tot;
         }

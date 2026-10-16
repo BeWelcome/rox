@@ -44,6 +44,7 @@ class ActivitiesEditCreatePage extends ActivitiesBasePage
         $this->addLateLoadScriptFile('build/cktranslations/'.$this->getSession()->get('lang', 'en').'.js');
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         if ($this->activity->id == 0) {

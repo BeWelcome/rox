@@ -1,5 +1,5 @@
 <?php
-$userbarText = array();
+$userbarText = [];
 $words = new MOD_words();
 ?>
 <?php

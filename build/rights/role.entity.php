@@ -145,7 +145,7 @@ class Role extends RoxEntityBase
         }
 
         // now create the needed privilege scopes
-        $privscopes = array();
+        $privscopes = [];
         foreach ($privileges as $privilege)
         {
             $scope = $this->createEntity('PrivilegeScope');
@@ -181,7 +181,7 @@ class Role extends RoxEntityBase
      * @return bool
      * @access public
      */
-   public function removeFromMember($member, $scopes = array())
+   public function removeFromMember($member, $scopes = [])
    {
         if (!is_object($member) || !$member->isPKSet() || !$this->isLoaded())
         {
@@ -191,7 +191,7 @@ class Role extends RoxEntityBase
         $privileges = $this->getPrivileges();
         if (!empty($privileges))
         {
-            $priv_ids = array();
+            $priv_ids = [];
             foreach($privileges as $privilege)
             {
                 $priv_ids[] = $privilege->getPKValue();
@@ -246,7 +246,7 @@ class Role extends RoxEntityBase
     {
         if (!is_object($member) || !$member->isPKSet() || !$this->isLoaded() || empty($object_id))
         {
-            return array();
+            return [];
         }
 
         $object_id = $this->dao->escape($object_id);
@@ -254,16 +254,16 @@ class Role extends RoxEntityBase
         $privileges = $this->getPrivileges();
         if (empty($privileges))
         {
-            return array();
+            return [];
         }
-        $priv_ids = array();
+        $priv_ids = [];
         foreach ($privileges as $privilege)
         {
             $priv_ids[] = $privilege->getPKValue();
         }
         $in_string = "'" . implode("', '", $priv_ids) . "'";
         $return = $this->createEntity('PrivilegeScope')->findByWhereMany("IdMember = '{$member->getPKValue()}' AND IdRole = '{$this->getPKValue()}' AND IdPrivilege IN ({$in_string}) AND IdType = '{$object_id}'");
-        return (($return) ? $return : array());
+        return ($return ?: []);
 
     }
 

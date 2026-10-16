@@ -32,6 +32,7 @@ Boston, MA  02111-1307, USA.
 
 class GroupsMyGroupsPage extends GroupsBasePage
 {
+    #[\Override]
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
@@ -43,12 +44,13 @@ class GroupsMyGroupsPage extends GroupsBasePage
         <?php
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         $words = $this->getWords();
-        $items = array();
-        $items[] = array('mygroups', 'groups/mygroups', $words->getSilent('GroupsMyGroups'));
-        $items[] = array('search', 'groups/search', $words->getSilent('GroupsFindGroups'));
+        $items = [];
+        $items[] = ['mygroups', 'groups/mygroups', $words->getSilent('GroupsMyGroups')];
+        $items[] = ['search', 'groups/search', $words->getSilent('GroupsFindGroups')];
 
         $isForumModerator = $this->member->hasOldRight(['ForumModerator' => 10]);
 
@@ -89,6 +91,7 @@ class GroupsMyGroupsPage extends GroupsBasePage
         return $items;
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'mygroups';

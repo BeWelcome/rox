@@ -7,12 +7,11 @@ use App\Model\MemberDataExtractor\ExtractorInterface;
 use App\Utilities\ManagerTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
-use Exception as Exception;
+use Exception;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\WebpackEncoreBundle\Asset\EntrypointLookup;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -25,31 +24,16 @@ class MemberModel
     use ManagerTrait;
     use TranslatorTrait;
 
-    /** @var EntrypointLookup */
-    private $entrypointLookup;
-
-    /** @var Environment */
-    private $environment;
-
     /** @var string */
     private $tempDir;
 
-    /** @var ContainerBagInterface */
-    private $params;
-
-    /** @var iterable|ExtractorInterface[] */
-    private $extractors;
-
     public function __construct(
-        Environment $environment,
-        EntrypointLookupInterface $entrypointLookup,
-        ContainerBagInterface $params,
-        iterable $extractors
+        private Environment $environment,
+        private EntrypointLookupInterface $entrypointLookup,
+        private ContainerBagInterface $params,
+        /** @var iterable|ExtractorInterface[] */
+        private iterable $extractors,
     ) {
-        $this->environment = $environment;
-        $this->entrypointLookup = $entrypointLookup;
-        $this->params = $params;
-        $this->extractors = $extractors;
     }
 
     /**
@@ -95,7 +79,7 @@ class MemberModel
             if (!$file->isDir()) {
                 // Get real and relative path for current file
                 $filePath = $file->getRealPath();
-                $relativePath = substr($filePath, \strlen($dirname));
+                $relativePath = substr((string) $filePath, \strlen($dirname));
 
                 // Add current file to archive
                 $zip->addFile($filePath, $relativePath);
@@ -116,7 +100,7 @@ class MemberModel
 
     private function preparePersonalData(Member $member, string $tempDir)
     {
-        $memoryLimit = ini_get('memory_limit');
+        $memoryLimit = \ini_get('memory_limit');
         ini_set('memory_limit', '512M');
 
         $extracted = [];
@@ -130,10 +114,6 @@ class MemberModel
     }
 
     /**
-     * @param $filename
-     * @param $template
-     * @param $parameters
-     *
      * @throws LoaderError
      * @throws RuntimeError
      * @throws SyntaxError

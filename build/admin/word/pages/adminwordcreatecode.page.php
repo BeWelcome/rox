@@ -37,6 +37,7 @@ class AdminWordCreateCodePage extends AdminWordBasePage
      * @access public
      * @return string
      */
+    #[\Override]
     public function teaserHeadline(){
         $string = 'AdminWord';
         $string .= ' » Create WordCode';

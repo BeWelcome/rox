@@ -37,6 +37,7 @@ class AdminWordFindTranslationsPage extends AdminWordBasePage
      * @access public
      * @return string
      */
+    #[\Override]
     public function teaserHeadline()
     {
         $string = 'AdminWord';

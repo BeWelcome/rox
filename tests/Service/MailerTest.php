@@ -22,7 +22,7 @@ class MailerTest extends TestCase
 
     protected function setUp(): void
     {
-        // Mailer calls getLocale(), which TranslatorInterface only declares from Symfony 6 on.
+        // Mailer also calls setLocale(), so stub the real translator class (TranslatorInterface alone has no setLocale)
         $translator = $this->createStub(Translator::class);
         $translator->method('getLocale')->willReturn('en');
         $translator->method('trans')->willReturnArgument(0);
@@ -136,7 +136,7 @@ class MailerTest extends TestCase
         $em = $this->createStub(EntityManagerInterface::class);
         $em->method('getRepository')->willReturn($repo);
 
-        // Mailer calls getLocale(), which TranslatorInterface only declares from Symfony 6 on.
+        // Mailer also calls setLocale(), so stub the real translator class (TranslatorInterface alone has no setLocale)
         $translator = $this->createStub(Translator::class);
         $translator->method('getLocale')->willReturn('en');
         $translator->method('trans')->willReturnArgument(0);

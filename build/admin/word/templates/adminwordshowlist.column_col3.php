@@ -54,7 +54,7 @@ if (!$this->noScope){
     if ($this->filter == 'short'){
 ?>
 <span id="awlistlimit">This list only contains items created at least 7 days ago and updated at most 6 months ago.</span>
-<a href="admin/word/list/<?= htmlspecialchars($this->type); ?>/long">Remove this limitation</a>
+<a href="admin/word/list/<?= htmlspecialchars((string) $this->type); ?>/long">Remove this limitation</a>
 </p>
 <?php } ?>
 <form method="post" action="" id="awform">
@@ -68,25 +68,25 @@ if (!$this->noScope){
 
 <?php
     foreach ($this->data as $dat){
-        echo '<tr><td class="awlistcode"><p>'.htmlspecialchars($dat->EngCode).'</p>';
+        echo '<tr><td class="awlistcode"><p>'.htmlspecialchars((string) $dat->EngCode).'</p>';
         if ($dat->EngDnt=='yes'){echo '<span class="awdntwarning">Do not translate</span>';}
         if ($this->nav['grep']>0) {
            echo '<a href="bw/admin/admingrep.php?action=grep&submit=find&s2=ww&s1=';
-           echo htmlspecialchars($dat->EngCode) . '&scope=layout/*;*;lib/*">grep</a>';
+           echo htmlspecialchars((string) $dat->EngCode) . '&scope=layout/*;*;lib/*">grep</a>';
         }
 
-        echo '<p class="smallXtext">' . htmlspecialchars($dat->EngDesc) . '</p>';
+        echo '<p class="smallXtext">' . htmlspecialchars((string) $dat->EngDesc) . '</p>';
     
         echo '</td>';
         if ($this->nav['shortcode'] != 'en'){
             echo '<td class="awlisteng">'.$this->purifier->purify($dat->EngSent);
-            echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->EngUpdated)).' '.htmlspecialchars($dat->EngMember).'</p>';
+            echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime((string) $dat->EngUpdated)).' '.htmlspecialchars((string) $dat->EngMember).'</p>';
             echo '</td>';
         }
         if ($dat->missing){
             // missing translation
             echo '<td class="awlisttrmis">';
-            echo '<br /><a class="button" role="button" href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">ADD</a>';
+            echo '<br /><a class="button" role="button" href="/admin/word/edit/'.htmlspecialchars((string) $dat->EngCode).'">ADD</a>';
         } else {
             if ($dat->update){
                 // update needed
@@ -99,9 +99,9 @@ if (!$this->noScope){
             } else {
                 // up-to-date translation
                 echo '<td class="awlisttrok">'.$this->purifier->purify($dat->Sentence);
-                echo '<p><a class="button" role="button" href="/admin/word/edit/'.htmlspecialchars($dat->EngCode).'">edit</a></p>';
+                echo '<p><a class="button" role="button" href="/admin/word/edit/'.htmlspecialchars((string) $dat->EngCode).'">edit</a></p>';
             }
-            echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime($dat->TrUpdated)).' '.htmlspecialchars($dat->TrMember).'</p>';
+            echo '<p class="awlistupdate">Last update '.$layoutbits->ago(strtotime((string) $dat->TrUpdated)).' '.htmlspecialchars((string) $dat->TrMember).'</p>';
         }
         echo '</td></tr>';
         echo "\r\n";

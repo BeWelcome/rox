@@ -25,15 +25,15 @@ if ($this->session->has( 'trData' )){
 <table class="admin" border="0">
   <tr>
     <td class="label"><label for="code">Code:</label> </td>
-    <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="40">
+    <td><input name="EngCode" id="code" value="<?= htmlspecialchars((string) $this->formdata['EngCode']) ?>" size="40">
   </td></tr>
   <tr>
     <td class="label"><label for="code">Description:</label> </td>
-    <td><input name="EngDesc" id="code" value="<?= htmlspecialchars($this->formdata['EngDesc']) ?>" size="40">
+    <td><input name="EngDesc" id="code" value="<?= htmlspecialchars((string) $this->formdata['EngDesc']) ?>" size="40">
   </td></tr>
   <tr>
     <td class="label"><label for="code">Sentence:</label> </td>
-    <td><input name="Sentence" id="code" value="<?= htmlspecialchars($this->formdata['Sentence']) ?>" size="40">
+    <td><input name="Sentence" id="code" value="<?= htmlspecialchars((string) $this->formdata['Sentence']) ?>" size="40">
   </td></tr>
   <tr>
     <td class="label"><label for="lang">Language:</label> </td>
@@ -42,11 +42,11 @@ if ($this->session->has( 'trData' )){
     <select id="lang" name="lang"><option value=""></option>
 <?php
     foreach($this->langarr as $language) {
-        echo '<option value="' . htmlspecialchars($language->ShortCode) . '"';
+        echo '<option value="' . htmlspecialchars((string) $language->ShortCode) . '"';
         if ($this->formdata['lang'] == $language->ShortCode) {
             echo ' selected="selected"';
         }
-        echo '>' . htmlspecialchars(trim($language->EnglishName)) . ' (' . htmlspecialchars($language->ShortCode) . ')</option>';
+        echo '>' . htmlspecialchars(trim((string) $language->EnglishName)) . ' (' . htmlspecialchars((string) $language->ShortCode) . ')</option>';
     }
 ?>
 </select></td></tr>

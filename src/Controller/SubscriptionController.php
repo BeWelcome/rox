@@ -7,20 +7,16 @@ use App\Model\SubscriptionModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class SubscriptionController extends AbstractController
 {
-    /**
-     * @Route( "/unsubscribe/newsletter/{username}/{unsubscribeKey}", name="regular_newsletter_unsubscribe",
-     *     requirements={"unsubscribeKey"="[a-z0-9]{64}"}
-     * )
-     */
+    #[Route(path: '/unsubscribe/newsletter/{username}/{unsubscribeKey}', name: 'regular_newsletter_unsubscribe', requirements: ['unsubscribeKey' => '[a-z0-9]{64}'])]
     public function unsubscribeNewsletter(
         Request $request,
         SubscriptionModel $subscriptionModel,
         string $username,
-        string $unsubscribeKey
+        string $unsubscribeKey,
     ): Response {
         // RFC 8058: mail clients POST the body "List-Unsubscribe=One-Click", so the field's value is "One-Click"
         if ($request->isMethod('POST') && 'One-Click' === $request->request->get('List-Unsubscribe')) {
@@ -42,8 +38,8 @@ class SubscriptionController extends AbstractController
             }
 
             return $this->render('newsletter/unsubscribe_failed.html.twig', [
-                    'username' => $username,
-                ]);
+                'username' => $username,
+            ]);
         }
 
         return $this->render('newsletter/unsubscribe_confirm.html.twig', [
@@ -52,16 +48,12 @@ class SubscriptionController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route( "/unsubscribe/local/{username}/{unsubscribeKey}", name="local_newsletter_unsubscribe",
-     *     requirements={"unsubscribeKey"="[a-z0-9]{64}"}
-     * )
-     */
+    #[Route(path: '/unsubscribe/local/{username}/{unsubscribeKey}', name: 'local_newsletter_unsubscribe', requirements: ['unsubscribeKey' => '[a-z0-9]{64}'])]
     public function unsubscribeLocalEvents(
         Request $request,
         SubscriptionModel $subscriptionModel,
         string $username,
-        string $unsubscribeKey
+        string $unsubscribeKey,
     ): Response {
         $form = $this->createForm(NewsletterUnsubscribeType::class);
         $form->handleRequest($request);
@@ -76,8 +68,8 @@ class SubscriptionController extends AbstractController
             }
 
             return $this->render('newsletter/unsubscribe_local_failed.html.twig', [
-                    'username' => $username,
-                ]);
+                'username' => $username,
+            ]);
         }
 
         return $this->render('newsletter/unsubscribe_local_confirm.html.twig', [

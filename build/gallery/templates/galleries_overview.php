@@ -6,7 +6,7 @@ $Gallery = new GalleryModel;
 if ($galleries) {
     $request = PRequest::get()->request;
     $requestStr = implode('/', $request);
-    $matches = array();
+    $matches = [];
     if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
         $page = $matches[1];
         $requestStr = preg_replace('%/=page(\d+)%', '', $requestStr);
@@ -25,7 +25,7 @@ if ($galleries) {
         $s = $Gallery->getGalleryItems($g->id,1);
         $username = MOD_member::getUserHandle($g->user_id_foreign);
         $this->myself = ($this->loggedInMember && $username == $this->loggedInMember->Username);
-        $num_rows = $s ? $s : 0;
+        $num_rows = $s ?: 0;
         // Only show the galleries with pictures. The belonging user might see them anyway.
     	if ($d || $this->myself) {
     	?>
@@ -35,7 +35,7 @@ if ($galleries) {
                     <img class="mb-3 border-2" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image" style="width:100px; height:100px; margin: auto; object-fit: cover;"/>
                     <span class="alert alert-info p-1" style="position: absolute;"><i class="fa fa-image mr-1"></i><?=$num_rows?></span>
                 </a>
-            <h4 class="mb-0"><a href="gallery/show/sets/<?=$g->id?>"><?= htmlspecialchars($g->title)?></a></h4>
+            <h4 class="mb-0"><a href="gallery/show/sets/<?=$g->id?>"><?= htmlspecialchars((string) $g->title)?></a></h4>
             </div>
         </div>
         <?php

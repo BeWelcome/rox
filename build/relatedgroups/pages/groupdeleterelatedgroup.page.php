@@ -41,6 +41,7 @@ class GroupDeleteRelatedGroupPage extends GroupsSubPage
         require SCRIPT_BASE . "build/relatedgroups/templates/groupdeleterelatedgroup.column_col3.php";
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'relatedgroupsettings';
     }

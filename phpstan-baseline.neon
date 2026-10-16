@@ -1,0 +1,1819 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to private method execute\(\) of class Doctrine\\DBAL\\Statement\.$#'
+			identifier: method.private
+			count: 9
+			path: src/Command/GeonamesUpdateDailyCommand.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Command/SendNotificationsCommand.php
+
+		-
+			message: '#^PHPDoc tag @throws with type Doctrine\\DBAL\\DBALException\|Doctrine\\ORM\\OptimisticLockException\|Doctrine\\ORM\\ORMException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Command/UpdateStatistics.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Form\\FormInterface\<mixed\>\:\:getClickedButton\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/Admin/CommentController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/Admin/CommentController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getLevelForRight\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/Admin/GroupController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getUsername\(\)\.$#'
+			identifier: method.notFound
+			count: 6
+			path: src/Controller/Admin/GroupController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/Admin/GroupController.php
+
+		-
+			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Controller/Admin/GroupController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getUsername\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Controller/Admin/MockupController.php
+
+		-
+			message: '#^Variable \$mockPost might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Controller/Admin/MockupController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getVolunteerRights\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/Admin/TranslationController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/Admin/TranslationController.php
+
+		-
+			message: '#^Variable \$original in PHPDoc tag @var does not match assigned variable \$englishTranslation\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Controller/Admin/TranslationController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Controller/BaseRequestAndInvitationController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/CommentController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/ConversationController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Form\\FormInterface\<mixed\>\:\:getClickedButton\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/ConversationsController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/ConversationsController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/DonationController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/FeedbackController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getUsername\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/GalleryController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Controller/GalleryController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/GroupController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/InvitationController.php
+
+		-
+			message: '#^PHPDoc tag @var with type Symfony\\Component\\Form\\Form is not subtype of native type Symfony\\Component\\Form\\FormInterface\.$#'
+			identifier: varTag.nativeType
+			count: 2
+			path: src/Controller/InvitationController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getUsername\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Controller/MemberController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/MemberController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/MessageController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getUsername\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/NewsletterController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/NoteController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/PasswordController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getUsername\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/PreferenceController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:getUsername\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/ProfileController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/RelationController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/RequestController.php
+
+		-
+			message: '#^PHPDoc tag @var with type Symfony\\Component\\Form\\Form is not subtype of native type Symfony\\Component\\Form\\FormInterface\.$#'
+			identifier: varTag.nativeType
+			count: 2
+			path: src/Controller/RequestController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Form\\FormInterface\:\:isClicked\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/SearchController.php
+
+		-
+			message: '#^Variable \$storedSearchFilter in PHPDoc tag @var does not match assigned variable \$searchOptionsPreference\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Controller/SearchController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/SignupController.php
+
+		-
+			message: '#^Call to method getLanguages\(\) on an unknown class StatsModel\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Controller/StatisticsController.php
+
+		-
+			message: '#^Call to method getLastLoginRankGrouped\(\) on an unknown class StatsModel\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Controller/StatisticsController.php
+
+		-
+			message: '#^Call to method getMembersPerCountry\(\) on an unknown class StatsModel\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Controller/StatisticsController.php
+
+		-
+			message: '#^Call to method getPreferredLanguages\(\) on an unknown class StatsModel\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Controller/StatisticsController.php
+
+		-
+			message: '#^Instantiated class StatsModel not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Controller/StatisticsController.php
+
+		-
+			message: '#^Method EnvironmentExplorer\:\:initializeGlobalState\(\) invoked with 4 parameters, 6 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Controller/StatisticsController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/TripController.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Controller/WikiController.php
+
+		-
+			message: '#^Call to method getFilters\(\) on an unknown class Doctrine\\Common\\Persistence\\ObjectManager\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Doctrine/Filter/Configurator.php
+
+		-
+			message: '#^Call to method getRepository\(\) on an unknown class Doctrine\\Common\\Persistence\\ObjectManager\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Doctrine/Filter/Configurator.php
+
+		-
+			message: '#^Parameter \$em of method App\\Doctrine\\Filter\\Configurator\:\:__construct\(\) has invalid type Doctrine\\Common\\Persistence\\ObjectManager\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Doctrine/Filter/Configurator.php
+
+		-
+			message: '#^Parameter \$reader of method App\\Doctrine\\Filter\\Configurator\:\:__construct\(\) has invalid type Doctrine\\Common\\Annotations\\Reader\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Doctrine/Filter/Configurator.php
+
+		-
+			message: '#^Property App\\Doctrine\\Filter\\Configurator\:\:\$em has unknown class Doctrine\\Common\\Persistence\\ObjectManager as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Doctrine/Filter/Configurator.php
+
+		-
+			message: '#^Property App\\Doctrine\\Filter\\Configurator\:\:\$reader has unknown class Doctrine\\Common\\Annotations\\Reader as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Doctrine/Filter/Configurator.php
+
+		-
+			message: '#^Call to method getClassAnnotation\(\) on an unknown class Doctrine\\Common\\Annotations\\Reader\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Doctrine/Filter/LanguageFilter.php
+
+		-
+			message: '#^Parameter \$reader of method App\\Doctrine\\Filter\\LanguageFilter\:\:setAnnotationReader\(\) has invalid type Doctrine\\Common\\Annotations\\Reader\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Doctrine/Filter/LanguageFilter.php
+
+		-
+			message: '#^Property App\\Doctrine\\Filter\\LanguageFilter\:\:\$reader has unknown class Doctrine\\Common\\Annotations\\Reader as its type\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Doctrine/Filter/LanguageFilter.php
+
+		-
+			message: '#^Access to an undefined property App\\Doctrine\\Hydrator\\LanguageHydrator\:\:\$_stmt\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Doctrine/Hydrator/LanguageHydrator.php
+
+		-
+			message: '#^Property App\\Entity\\ActivityAttendee\:\:\$organizer type mapping mismatch\: database can contain int but property expects bool\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/ActivityAttendee.php
+
+		-
+			message: '#^Property App\\Entity\\ActivityAttendee\:\:\$organizer type mapping mismatch\: property can contain bool but database expects int\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/ActivityAttendee.php
+
+		-
+			message: '#^Attribute class Symfony\\Component\\Serializer\\Annotation\\Groups does not exist\.$#'
+			identifier: attribute.notFound
+			count: 4
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property App\\Entity\\Address\:\:\$location type mapping mismatch\: database can contain App\\Entity\\NewLocation\|null but property expects App\\Entity\\NewLocation\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property App\\Entity\\Address\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Address.php
+
+		-
+			message: '#^Property App\\Entity\\AdminUnit\:\:\$fclass type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AdminUnit.php
+
+		-
+			message: '#^Property App\\Entity\\AdminUnit\:\:\$fcode type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AdminUnit.php
+
+		-
+			message: '#^Property App\\Entity\\AdminUnit\:\:\$moddate type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AdminUnit.php
+
+		-
+			message: '#^Property App\\Entity\\AdminUnit\:\:\$name type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AdminUnit.php
+
+		-
+			message: '#^Property App\\Entity\\AlternateLocation\:\:\$alternatename type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AlternateLocation.php
+
+		-
+			message: '#^Property App\\Entity\\AlternateLocation\:\:\$geonameId type mapping mismatch\: database can contain App\\Entity\\Location\|null but property expects App\\Entity\\Location\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/AlternateLocation.php
+
+		-
+			message: '#^Property App\\Entity\\AlternateLocation\:\:\$iscolloquial type mapping mismatch\: database can contain bool\|null but property expects bool\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AlternateLocation.php
+
+		-
+			message: '#^Property App\\Entity\\AlternateLocation\:\:\$ishistoric type mapping mismatch\: database can contain bool\|null but property expects bool\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AlternateLocation.php
+
+		-
+			message: '#^Property App\\Entity\\AlternateLocation\:\:\$isolanguage type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AlternateLocation.php
+
+		-
+			message: '#^Property App\\Entity\\AlternateLocation\:\:\$ispreferred type mapping mismatch\: database can contain bool\|null but property expects bool\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AlternateLocation.php
+
+		-
+			message: '#^Property App\\Entity\\AlternateLocation\:\:\$isshort type mapping mismatch\: database can contain bool\|null but property expects bool\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/AlternateLocation.php
+
+		-
+			message: '#^Property App\\Entity\\BroadcastMessage\:\:\$enqueuedBy type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/BroadcastMessage.php
+
+		-
+			message: '#^Property App\\Entity\\Comment\:\:\$fromMember type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Comment.php
+
+		-
+			message: '#^Property App\\Entity\\Comment\:\:\$toMember type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Comment.php
+
+		-
+			message: '#^Property App\\Entity\\CommunityNews\:\:\$createdAt type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/CommunityNews.php
+
+		-
+			message: '#^Property App\\Entity\\CommunityNews\:\:\$createdBy type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/CommunityNews.php
+
+		-
+			message: '#^Property App\\Entity\\CommunityNews\:\:\$updatedAt type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/CommunityNews.php
+
+		-
+			message: '#^Property App\\Entity\\CommunityNews\:\:\$updatedBy type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/CommunityNews.php
+
+		-
+			message: '#^Class App\\Entity\\CommunityNews referenced with incorrect case\: App\\Entity\\communityNews\.$#'
+			identifier: class.nameCase
+			count: 1
+			path: src/Entity/CommunityNewsComment.php
+
+		-
+			message: '#^Property App\\Entity\\CommunityNewsComment\:\:\$communityNews type mapping mismatch\: database can contain App\\Entity\\CommunityNews\|null but property expects App\\Entity\\CommunityNews\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/CommunityNewsComment.php
+
+		-
+			message: '#^Attribute class Symfony\\Component\\Serializer\\Annotation\\Groups does not exist\.$#'
+			identifier: attribute.notFound
+			count: 3
+			path: src/Entity/Country.php
+
+		-
+			message: '#^Property App\\Entity\\Country\:\:\$continent type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Country.php
+
+		-
+			message: '#^Property App\\Entity\\Country\:\:\$geonameId type mapping mismatch\: database can contain int\|null but property expects int\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Country.php
+
+		-
+			message: '#^Property App\\Entity\\Country\:\:\$name type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Country.php
+
+		-
+			message: '#^Class App\\Entity\\CryptedField referenced with incorrect case\: App\\Entity\\Cryptedfield\.$#'
+			identifier: class.nameCase
+			count: 7
+			path: src/Entity/CryptedField.php
+
+		-
+			message: '#^Property App\\Entity\\CryptedField\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/CryptedField.php
+
+		-
+			message: '#^Property App\\Entity\\CryptedField\:\:\$temporaryUncryptedBuffer type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/CryptedField.php
+
+		-
+			message: '#^Property App\\Entity\\Donation\:\:\$country type mapping mismatch\: database can contain App\\Entity\\NewLocation\|null but property expects App\\Entity\\NewLocation\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Donation.php
+
+		-
+			message: '#^Property App\\Entity\\Donation\:\:\$donor type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Donation.php
+
+		-
+			message: '#^Property App\\Entity\\Faq\:\:\$category type mapping mismatch\: database can contain App\\Entity\\FaqCategory\|null but property expects App\\Entity\\FaqCategory\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Faq.php
+
+		-
+			message: '#^Property App\\Entity\\Faq\:\:\$updated type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Faq.php
+
+		-
+			message: '#^Property App\\Entity\\FaqCategory\:\:\$updated type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/FaqCategory.php
+
+		-
+			message: '#^Class FeedbackCategory not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/Feedback.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(Member author\)\: Unexpected token "author", expected variable at offset 51 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: src/Entity/Feedback.php
+
+		-
+			message: '#^Property App\\Entity\\Feedback\:\:\$author type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Feedback.php
+
+		-
+			message: '#^Property App\\Entity\\Feedback\:\:\$category type mapping mismatch\: database can contain App\\Entity\\FeedbackCategory\|null but property expects App\\Entity\\FeedbackCategory\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Feedback.php
+
+		-
+			message: '#^Property App\\Entity\\Feedback\:\:\$language type mapping mismatch\: database can contain App\\Entity\\Language\|null but property expects App\\Entity\\Language\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Feedback.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumPost\:\:\$authorid\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumPost\:\:\$hasvotes\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumPost\:\:\$idlocalevent\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumPost\:\:\$idlocalvolmessage\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumPost\:\:\$idpoll\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumPost\:\:\$idwriter\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumPost\:\:\$lastEdittime\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Property App\\Entity\\ForumPost\:\:\$author type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Property App\\Entity\\ForumPost\:\:\$lastEditorid type mapping mismatch\: database can contain int\|null but property expects int\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Property App\\Entity\\ForumPost\:\:\$thread type mapping mismatch\: database can contain App\\Entity\\ForumThread\|null but property expects App\\Entity\\ForumThread\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Property App\\Entity\\ForumPost\:\:\$updated type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/ForumPost.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$adminCode\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$continent\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$countrycode\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$geonameId\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$idgroup\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$tag1\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$tag2\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$tag3\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$tag4\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\ForumThread\:\:\$tag5\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Class ForumPost not found\.$#'
+			identifier: class.notFound
+			count: 3
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Property App\\Entity\\ForumThread\:\:\$expiryDate type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Property App\\Entity\\ForumThread\:\:\$group type mapping mismatch\: database can contain App\\Entity\\Group\|null but property expects App\\Entity\\Group\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/ForumThread.php
+
+		-
+			message: '#^Class GalleryImage not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/Gallery.php
+
+		-
+			message: '#^Property App\\Entity\\Gallery\:\:\$flags type mapping mismatch\: database can contain resource but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Gallery.php
+
+		-
+			message: '#^Property App\\Entity\\Gallery\:\:\$images type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\ArrayCollection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\GalleryImage\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Gallery.php
+
+		-
+			message: '#^Property App\\Entity\\Gallery\:\:\$owner type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Gallery.php
+
+		-
+			message: '#^Class GalleryImage not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/GalleryComment.php
+
+		-
+			message: '#^Property App\\Entity\\GalleryComment\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/GalleryComment.php
+
+		-
+			message: '#^Property App\\Entity\\GalleryImage\:\:\$flags type mapping mismatch\: database can contain resource but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/GalleryImage.php
+
+		-
+			message: '#^Property App\\Entity\\GalleryImage\:\:\$galleries type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\ArrayCollection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\Gallery\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/GalleryImage.php
+
+		-
+			message: '#^Property App\\Entity\\GalleryImage\:\:\$owner type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/GalleryImage.php
+
+		-
+			message: '#^Property App\\Entity\\Group\:\:\$approved type mapping mismatch\: database can contain int\|null but property expects int\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Group.php
+
+		-
+			message: '#^Property App\\Entity\\Group\:\:\$descriptions type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\MemberTranslation\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Group.php
+
+		-
+			message: '#^Property App\\Entity\\Group\:\:\$groupMemberships type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\GroupMembership\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Group.php
+
+		-
+			message: '#^Cannot call method add\(\) on array\<App\\Entity\\MemberTranslation\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Entity/GroupMembership.php
+
+		-
+			message: '#^Cannot call method contains\(\) on array\<App\\Entity\\MemberTranslation\>\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Entity/GroupMembership.php
+
+		-
+			message: '#^Cannot call method remove\(\) on array\<App\\Entity\\MemberTranslation\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Entity/GroupMembership.php
+
+		-
+			message: '#^Class App\\Entity\\Subtrip referenced with incorrect case\: App\\Entity\\SubTrip\.$#'
+			identifier: class.nameCase
+			count: 1
+			path: src/Entity/HostingRequest.php
+
+		-
+			message: '#^Property App\\Entity\\HostingRequest\:\:\$flexible type mapping mismatch\: database can contain bool\|null but property expects bool\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/HostingRequest.php
+
+		-
+			message: '#^Property App\\Entity\\HostingRequest\:\:\$messages type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\Message\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/HostingRequest.php
+
+		-
+			message: '#^Attribute class Symfony\\Component\\Serializer\\Annotation\\Groups does not exist\.$#'
+			identifier: attribute.notFound
+			count: 2
+			path: src/Entity/Language.php
+
+		-
+			message: '#^Class MembersLanguagesLevel not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/Language.php
+
+		-
+			message: '#^Property App\\Entity\\Language\:\:\$levels type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\ArrayCollection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\MembersLanguagesLevel\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Language.php
+
+		-
+			message: '#^Property App\\Entity\\Location\:\:\$country type mapping mismatch\: database can contain App\\Entity\\Country\|null but property expects App\\Entity\\Country\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Location.php
+
+		-
+			message: '#^Property App\\Entity\\Log\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Log.php
+
+		-
+			message: '#^Property App\\Entity\\LoginMessage\:\:\$expires type mapping mismatch\: property can contain DateTime\|null but database expects DateTimeInterface\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/LoginMessage.php
+
+		-
+			message: '#^Attribute class App\\Entity\\Groups does not exist\.$#'
+			identifier: attribute.notFound
+			count: 3
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Property App\\Entity\\Member\:\:\$addresses type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\Address\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Property App\\Entity\\Member\:\:\$fields type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\CryptedField\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Property App\\Entity\\Member\:\:\$groupMemberships type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\GroupMembership\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Property App\\Entity\\Member\:\:\$languageLevels type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\MembersLanguagesLevel\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Property App\\Entity\\Member\:\:\$lastName type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Property App\\Entity\\Member\:\:\$preferences type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\MemberPreference\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Property App\\Entity\\Member\:\:\$relations type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\Relation\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Property App\\Entity\\Member\:\:\$translatedFields type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\MemberTranslation\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Property App\\Entity\\Member\:\:\$volunteerRights type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\RightVolunteer\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Member.php
+
+		-
+			message: '#^Class Preference not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/MemberPreference.php
+
+		-
+			message: '#^Class ForumThread not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/MemberThreadSubscription.php
+
+		-
+			message: '#^Property App\\Entity\\MemberTranslation\:\:\$language type mapping mismatch\: database can contain App\\Entity\\Language\|null but property expects App\\Entity\\Language\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/MemberTranslation.php
+
+		-
+			message: '#^Property App\\Entity\\MemberTranslation\:\:\$owner type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/MemberTranslation.php
+
+		-
+			message: '#^Property App\\Entity\\MemberTranslation\:\:\$updated type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/MemberTranslation.php
+
+		-
+			message: '#^Attribute class Symfony\\Component\\Serializer\\Annotation\\Groups does not exist\.$#'
+			identifier: attribute.notFound
+			count: 2
+			path: src/Entity/MembersLanguagesLevel.php
+
+		-
+			message: '#^Class App\\Entity\\MembersLanguagesLevel referenced with incorrect case\: App\\Entity\\Memberslanguageslevel\.$#'
+			identifier: class.nameCase
+			count: 5
+			path: src/Entity/MembersLanguagesLevel.php
+
+		-
+			message: '#^Property App\\Entity\\MembersLanguagesLevel\:\:\$updated type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/MembersLanguagesLevel.php
+
+		-
+			message: '#^Property App\\Entity\\MembersPhoto\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/MembersPhoto.php
+
+		-
+			message: '#^Attribute class Symfony\\Component\\Serializer\\Annotation\\Groups does not exist\.$#'
+			identifier: attribute.notFound
+			count: 9
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$admin1 type mapping mismatch\: database can contain App\\Entity\\NewLocation\|null but property expects App\\Entity\\NewLocation\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$admin1Id type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$admin2 type mapping mismatch\: database can contain App\\Entity\\NewLocation\|null but property expects App\\Entity\\NewLocation\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$admin2Id type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$admin3 type mapping mismatch\: database can contain App\\Entity\\NewLocation\|null but property expects App\\Entity\\NewLocation\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$admin3Id type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$admin4 type mapping mismatch\: database can contain App\\Entity\\NewLocation\|null but property expects App\\Entity\\NewLocation\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$admin4Id type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$country type mapping mismatch\: database can contain App\\Entity\\NewLocation\|null but property expects App\\Entity\\NewLocation\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$countryId type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$featureClass type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$featureCode type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$latitude type mapping mismatch\: database can contain string\|null but property expects float\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$longitude type mapping mismatch\: database can contain string\|null but property expects float\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$modificationDate type mapping mismatch\: database can contain DateTime\|null but property expects DateTime\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$name type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\NewLocation\:\:\$population type mapping mismatch\: database can contain int\|null but property expects int\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/NewLocation.php
+
+		-
+			message: '#^Property App\\Entity\\Newsletter\:\:\$createdBy type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Newsletter.php
+
+		-
+			message: '#^Property App\\Entity\\Newsletter\:\:\$emailFrom type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Newsletter.php
+
+		-
+			message: '#^Property App\\Entity\\Newsletter\:\:\$type type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Newsletter.php
+
+		-
+			message: '#^Property App\\Entity\\Notification\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Notification.php
+
+		-
+			message: '#^Property App\\Entity\\Notification\:\:\$relMember type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Notification.php
+
+		-
+			message: '#^Property App\\Entity\\Notification\:\:\$translationparams type mapping mismatch\: database can contain string\|null but property expects string\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/Notification.php
+
+		-
+			message: '#^Property App\\Entity\\PasswordReset\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/PasswordReset.php
+
+		-
+			message: '#^Call to an undefined method App\\Entity\\Group\:\:contains\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Call to an undefined method App\\Entity\\Group\:\:removeElement\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Call to an undefined method App\\Entity\\PollChoice\:\:contains\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Call to an undefined method App\\Entity\\PollChoice\:\:removeElement\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Call to an undefined method App\\Entity\\PollContribution\:\:contains\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Call to an undefined method App\\Entity\\PollContribution\:\:removeElement\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Cannot call method contains\(\) on array\<string\>\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Cannot call method removeElement\(\) on array\<string\>\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Property App\\Entity\\Poll\:\:\$choices type mapping mismatch\: database can contain Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\PollChoice\> but property expects App\\Entity\\PollChoice\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Property App\\Entity\\Poll\:\:\$choices type mapping mismatch\: property can contain App\\Entity\\PollChoice but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\PollChoice\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Property App\\Entity\\Poll\:\:\$contributions type mapping mismatch\: database can contain Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\PollContribution\> but property expects App\\Entity\\PollContribution\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Property App\\Entity\\Poll\:\:\$contributions type mapping mismatch\: property can contain App\\Entity\\PollContribution but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\PollContribution\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Property App\\Entity\\Poll\:\:\$creator type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Property App\\Entity\\Poll\:\:\$groupCreator type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Property App\\Entity\\Poll\:\:\$groups type mapping mismatch\: database can contain Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\Group\> but property expects App\\Entity\\Group\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Property App\\Entity\\Poll\:\:\$groups type mapping mismatch\: property can contain App\\Entity\\Group but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\Group\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Poll.php
+
+		-
+			message: '#^Access to an undefined property App\\Entity\\PollChoice\:\:\$choiceText\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Entity/PollChoice.php
+
+		-
+			message: '#^Class Poll not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/PollChoice.php
+
+		-
+			message: '#^Property App\\Entity\\PollChoice\:\:\$poll type mapping mismatch\: database can contain App\\Entity\\Poll\|null but property expects App\\Entity\\Poll\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/PollChoice.php
+
+		-
+			message: '#^Class Poll not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/PollContribution.php
+
+		-
+			message: '#^Property App\\Entity\\PollContribution\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/PollContribution.php
+
+		-
+			message: '#^Property App\\Entity\\PollContribution\:\:\$poll type mapping mismatch\: database can contain App\\Entity\\Poll\|null but property expects App\\Entity\\Poll\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/PollContribution.php
+
+		-
+			message: '#^Class Poll not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/PollRecordOfChoice.php
+
+		-
+			message: '#^Class PollChoice not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Entity/PollRecordOfChoice.php
+
+		-
+			message: '#^Property App\\Entity\\PollRecordOfChoice\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/PollRecordOfChoice.php
+
+		-
+			message: '#^Property App\\Entity\\PollRecordOfChoice\:\:\$poll type mapping mismatch\: database can contain App\\Entity\\Poll\|null but property expects App\\Entity\\Poll\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/PollRecordOfChoice.php
+
+		-
+			message: '#^Property App\\Entity\\PollRecordOfChoice\:\:\$pollChoice type mapping mismatch\: database can contain App\\Entity\\PollChoice\|null but property expects App\\Entity\\PollChoice\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/PollRecordOfChoice.php
+
+		-
+			message: '#^Property App\\Entity\\ProfileNote\:\:\$member type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/ProfileNote.php
+
+		-
+			message: '#^Property App\\Entity\\ProfileNote\:\:\$owner type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/ProfileNote.php
+
+		-
+			message: '#^Property App\\Entity\\Relation\:\:\$owner type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Relation.php
+
+		-
+			message: '#^Property App\\Entity\\Relation\:\:\$receiver type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Relation.php
+
+		-
+			message: '#^PHPDoc tag @return with type App\\Entity\\ForumPost is incompatible with native type int\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Entity/ReportToModerator.php
+
+		-
+			message: '#^PHPDoc tag @return with type App\\Entity\\ForumThread is incompatible with native type int\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: src/Entity/ReportToModerator.php
+
+		-
+			message: '#^Property App\\Entity\\ReportToModerator\:\:\$moderator type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/ReportToModerator.php
+
+		-
+			message: '#^Property App\\Entity\\ReportToModerator\:\:\$post type mapping mismatch\: database can contain int but property expects App\\Entity\\ForumPost\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/ReportToModerator.php
+
+		-
+			message: '#^Property App\\Entity\\ReportToModerator\:\:\$post type mapping mismatch\: property can contain App\\Entity\\ForumPost but database expects int\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/ReportToModerator.php
+
+		-
+			message: '#^Property App\\Entity\\ReportToModerator\:\:\$reporter type mapping mismatch\: database can contain App\\Entity\\Member\|null but property expects App\\Entity\\Member\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/ReportToModerator.php
+
+		-
+			message: '#^Property App\\Entity\\ReportToModerator\:\:\$thread type mapping mismatch\: database can contain int but property expects App\\Entity\\ForumThread\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/ReportToModerator.php
+
+		-
+			message: '#^Property App\\Entity\\ReportToModerator\:\:\$thread type mapping mismatch\: property can contain App\\Entity\\ForumThread but database expects int\.$#'
+			identifier: doctrine.columnType
+			count: 1
+			path: src/Entity/ReportToModerator.php
+
+		-
+			message: '#^Property App\\Entity\\Right\:\:\$rightVolunteers type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\RightVolunteer\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Right.php
+
+		-
+			message: '#^Property App\\Entity\\Subtrip\:\:\$invitations type mapping mismatch\: property can contain Doctrine\\Common\\Collections\\Collection but database expects Doctrine\\Common\\Collections\\Collection&iterable\<App\\Entity\\HostingRequest\>\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Subtrip.php
+
+		-
+			message: '#^Property App\\Entity\\Subtrip\:\:\$trip type mapping mismatch\: property can contain App\\Entity\\Trip\|null but database expects App\\Entity\\Trip\.$#'
+			identifier: doctrine.associationType
+			count: 1
+			path: src/Entity/Subtrip.php
+
+		-
+			message: '#^Call to method getException\(\) on an unknown class Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/EventListener/AccessDeniedRedirectListener.php
+
+		-
+			message: '#^Call to method getRequest\(\) on an unknown class Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/EventListener/AccessDeniedRedirectListener.php
+
+		-
+			message: '#^Call to method setResponse\(\) on an unknown class Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/EventListener/AccessDeniedRedirectListener.php
+
+		-
+			message: '#^Parameter \$event of method App\\EventListener\\AccessDeniedRedirectListener\:\:onKernelException\(\) has invalid type Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/EventListener/AccessDeniedRedirectListener.php
+
+		-
+			message: '#^Call to an undefined method App\\LegacyKernel\\LegacyHttpKernel\:\:getContainer\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/EventListener/LegacyDispatchListener.php
+
+		-
+			message: '#^Call to method getException\(\) on an unknown class Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/EventListener/LegacyDispatchListener.php
+
+		-
+			message: '#^Call to method getRequest\(\) on an unknown class Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent\.$#'
+			identifier: class.notFound
+			count: 3
+			path: src/EventListener/LegacyDispatchListener.php
+
+		-
+			message: '#^Call to method getRequestType\(\) on an unknown class Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/EventListener/LegacyDispatchListener.php
+
+		-
+			message: '#^Call to method setResponse\(\) on an unknown class Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/EventListener/LegacyDispatchListener.php
+
+		-
+			message: '#^Method EnvironmentExplorer\:\:initializeGlobalState\(\) invoked with 4 parameters, 6 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/EventListener/LegacyDispatchListener.php
+
+		-
+			message: '#^Parameter \$event of method App\\EventListener\\LegacyDispatchListener\:\:onKernelException\(\) has invalid type Symfony\\Component\\HttpKernel\\Event\\GetResponseForExceptionEvent\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/EventListener/LegacyDispatchListener.php
+
+		-
+			message: '#^Call to an undefined method Negotiation\\AcceptHeader\:\:getType\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/EventListener/LocaleListener.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Security\\Core\\User\\UserInterface\:\:isBrowsable\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/EventSubscriber/AuthenticationEventSubscriber.php
+
+		-
+			message: '#^Variable \$member in PHPDoc tag @var does not match assigned variable \$token\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/EventSubscriber/AuthenticationEventSubscriber.php
+
+		-
+			message: '#^Access to an undefined property RoxFrontRouter\:\:\$classes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/LegacyKernel/LegacyHttpKernel.php
+
+		-
+			message: '#^Access to an undefined property RoxFrontRouter\:\:\$session_memory\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/LegacyKernel/LegacyHttpKernel.php
+
+		-
+			message: '#^Method Doctrine\\ORM\\EntityManagerInterface\:\:createQueryBuilder\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: src/Model/AboutModel.php
+
+		-
+			message: '#^Variable \$repository in PHPDoc tag @var does not match assigned variable \$communityNewsCommentRepository\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Model/CommunityNewsModel.php
+
+		-
+			message: '#^Access to property \$YearDonation on an unknown class App\\Model\\stdClass\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Model/DonateModel.php
+
+		-
+			message: '#^Access to property \$YearNeededAmount on an unknown class App\\Model\\stdClass\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Model/DonateModel.php
+
+		-
+			message: '#^Access to property \$year on an unknown class App\\Model\\stdClass\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Model/DonateModel.php
+
+		-
+			message: '#^Instantiated class App\\Model\\stdClass not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Model/DonateModel.php
+
+		-
+			message: '#^Variable \$end might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Model/DonateModel.php
+
+		-
+			message: '#^Variable \$start might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Model/DonateModel.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: src/Model/GroupModel.php
+
+		-
+			message: '#^PHPDoc tag @throws with type App\\Model\\DBALException\|App\\Model\\ORMException\|Doctrine\\ORM\\OptimisticLockException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Model/GroupModel.php
+
+		-
+			message: '#^PHPDoc tag @throws with type App\\Model\\ORMException\|Doctrine\\ORM\\OptimisticLockException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Model/GroupModel.php
+
+		-
+			message: '#^Variable \$admins in PHPDoc tag @var does not match assigned variable \$params\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Model/GroupModel.php
+
+		-
+			message: '#^Variable \$groupController in PHPDoc tag @var does not match assigned variable \$privilegeRepository\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Model/GroupModel.php
+
+		-
+			message: '#^Variable \$groupOwner in PHPDoc tag @var does not match assigned variable \$roleRepository\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Model/GroupModel.php
+
+		-
+			message: '#^Variable \$success might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Model/GroupModel.php
+
+		-
+			message: '#^Variable \$attendee in PHPDoc tag @var does not match assigned variable \$i\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Model/MemberDataExtractor/ActivitiesExtractor.php
+
+		-
+			message: '#^Variable \$comments in PHPDoc tag @var does not match assigned variable \$commentsForMember\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Model/MemberDataExtractor/CommentsExtractor.php
+
+		-
+			message: '#^Variable \$groupMemberships in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Model/MemberDataExtractor/GroupInformationExtractor.php
+
+		-
+			message: '#^PHPDoc tag @var with type array\<App\\Entity\\RightVolunteer\> is not subtype of native type Doctrine\\Common\\Collections\\Collection\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: src/Model/MemberDataExtractor/RightsExtractor.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Model/MemberModel.php
+
+		-
+			message: '#^Access to an undefined property App\\Form\\CustomDataClass\\SearchFormRequest\:\:\$inactive\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Model/MockupProvider/HomeAndLoginMockups.php
+
+		-
+			message: '#^Class App\\Form\\CustomDataClass\\SearchFormRequest does not have a constructor and must be instantiated without any parameters\.$#'
+			identifier: new.noConstructor
+			count: 1
+			path: src/Model/MockupProvider/HomeAndLoginMockups.php
+
+		-
+			message: '#^Class App\\Entity\\Donations not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Model/MockupProvider/MyDataMockups.php
+
+		-
+			message: '#^PHPDoc tag @throws with type Doctrine\\DBAL\\DBALException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 6
+			path: src/Model/StatisticsModel.php
+
+		-
+			message: '#^PHPDoc tag @throws with type Doctrine\\DBAL\\DBALException\|Doctrine\\ORM\\OptimisticLockException\|Doctrine\\ORM\\ORMException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Model/StatisticsModel.php
+
+		-
+			message: '#^PHPDoc tag @var with type App\\Entity\\NewLocation is not subtype of native type null\.$#'
+			identifier: varTag.nativeType
+			count: 1
+			path: src/Pagerfanta/SearchAdapter.php
+
+		-
+			message: '#^Class App\\Entity\\Security\\RefreshToken not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/RefreshTokenRepository.php
+
+		-
+			message: '#^Method App\\Repository\\RefreshTokenRepository\:\:findOneByUser\(\) has invalid return type App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/RefreshTokenRepository.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Repository\\RefreshTokenRepository\:\:find\(\) return type contains unknown class App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/RefreshTokenRepository.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Repository\\RefreshTokenRepository\:\:findAll\(\) return type contains unknown class App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/RefreshTokenRepository.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Repository\\RefreshTokenRepository\:\:findBy\(\) return type contains unknown class App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/RefreshTokenRepository.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Repository\\RefreshTokenRepository\:\:findOneBy\(\) return type contains unknown class App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/RefreshTokenRepository.php
+
+		-
+			message: '#^Class App\\Entity\\Session not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/SessionRepository.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Repository\\SessionRepository\:\:find\(\) return type contains unknown class App\\Entity\\Session\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/SessionRepository.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Repository\\SessionRepository\:\:findAll\(\) return type contains unknown class App\\Entity\\Session\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/SessionRepository.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Repository\\SessionRepository\:\:findBy\(\) return type contains unknown class App\\Entity\\Session\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/SessionRepository.php
+
+		-
+			message: '#^PHPDoc tag @method for method App\\Repository\\SessionRepository\:\:findOneBy\(\) return type contains unknown class App\\Entity\\Session\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/SessionRepository.php
+
+		-
+			message: '#^Method App\\Repository\\TripRepository\:\:find\(\) has invalid return type App\\Repository\\Trip\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Repository/TripRepository.php
+
+		-
+			message: '#^Call to method setCreatedAt\(\) on an unknown class App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Security/RefreshToken/DoctrineRefreshTokenStorage.php
+
+		-
+			message: '#^Call to method setExpiresAt\(\) on an unknown class App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 2
+			path: src/Security/RefreshToken/DoctrineRefreshTokenStorage.php
+
+		-
+			message: '#^Call to method setUser\(\) on an unknown class App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Security/RefreshToken/DoctrineRefreshTokenStorage.php
+
+		-
+			message: '#^Class App\\Entity\\Security\\RefreshToken not found\.$#'
+			identifier: class.notFound
+			count: 3
+			path: src/Security/RefreshToken/DoctrineRefreshTokenStorage.php
+
+		-
+			message: '#^Instantiated class App\\Entity\\Security\\RefreshToken not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Security/RefreshToken/DoctrineRefreshTokenStorage.php
+
+		-
+			message: '#^Method App\\Security\\RefreshToken\\DoctrineRefreshTokenStorage\:\:findOneByUser\(\) has invalid return type App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Security/RefreshToken/DoctrineRefreshTokenStorage.php
+
+		-
+			message: '#^PHPDoc tag @var for variable \$refreshTokens contains unknown class App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Security/RefreshToken/DoctrineRefreshTokenStorage.php
+
+		-
+			message: '#^Method App\\Security\\RefreshToken\\RefreshTokenStorageInterface\:\:findOneByUser\(\) has invalid return type App\\Entity\\Security\\RefreshToken\.$#'
+			identifier: class.notFound
+			count: 1
+			path: src/Security/RefreshToken/RefreshTokenStorageInterface.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:setLocale\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: src/Service/Mailer.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$parameters with type mixed is not subtype of native type array\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/Service/Mailer.php
+
+		-
+			message: '#^PHPDoc tag @throws with type HtmlTruncator\\InvalidHtmlException is not subtype of Throwable$#'
+			identifier: throws.notThrowable
+			count: 1
+			path: src/Twig/Extension.php
+
+		-
+			message: '#^Variable \$loginMessagsRepository in PHPDoc tag @var does not match assigned variable \$loginMessageRepository\.$#'
+			identifier: varTag.differentVariable
+			count: 1
+			path: src/Twig/MemberTwigExtension.php
+
+		-
+			message: '#^Unsafe access to private property App\\Utilities\\SessionSingleton\:\:\$instance through static\:\:\.$#'
+			identifier: staticClassAccess.privateProperty
+			count: 5
+			path: src/Utilities/SessionSingleton.php
+
+		-
+			message: '#^Unsafe access to private property App\\Utilities\\TranslatorSingleton\:\:\$instance through static\:\:\.$#'
+			identifier: staticClassAccess.privateProperty
+			count: 6
+			path: src/Utilities/TranslatorSingleton.php
+
+		-
+			message: '#^Call to an undefined method Symfony\\Component\\Mailer\\MailerInterface\:\:expects\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: tests/Service/MailerTest.php

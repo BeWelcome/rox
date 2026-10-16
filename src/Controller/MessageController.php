@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
@@ -11,47 +12,44 @@ use App\Model\ConversationModel;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
-use Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * Class MessageController.
  *
  * Ignore complexity warning. \todo fix this.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
  */
 class MessageController extends AbstractController
 {
+    use RedirectToReferrerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private Mailer $mailer;
-    private ConversationModel $conversationModel;
-    private ConversationThread $conversationThread;
-
     public function __construct(
-        Mailer $mailer,
-        ConversationModel $conversationModel,
-        ConversationThread $conversationThread
+        private readonly Mailer $mailer,
+        private readonly ConversationModel $conversationModel,
+        private readonly ConversationThread $conversationThread,
+        private readonly EntityManagerInterface $entityManager,
     ) {
-        $this->mailer = $mailer;
-        $this->conversationModel = $conversationModel;
-        $this->conversationThread = $conversationThread;
     }
 
     /**
-     * @Route("/new/message/{username}", name="message_new")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      *
-     * @throws Exception
+     * \todo check how to get this reduced.
      */
+    #[Route(path: '/new/message/{username:receiver}', name: 'message_new')]
     public function newMessage(Request $request, Member $receiver, AllowContactCheck $allowContactCheck): Response
     {
         /** @var Member $sender */
@@ -61,6 +59,12 @@ class MessageController extends AbstractController
             $this->addTranslatedFlash('notice', 'flash.message.self');
 
             return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $sender->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
 
         if (!$receiver->isBrowsable()) {
@@ -77,9 +81,8 @@ class MessageController extends AbstractController
             )
         ) {
             $this->addTranslatedFlash('error', 'flash.message.limit');
-            $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->redirectToReferrer($request);
         }
 
         $redirectOnNotAllowed = false;
@@ -114,7 +117,6 @@ class MessageController extends AbstractController
 
             $this->addMessageAndSendNotification($sender, $receiver, null, $subject, $body);
             $this->addTranslatedFlash('notice', 'flash.message.sent');
-            $this->addFlash('plausible_event', 'Message Sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
         }
@@ -147,7 +149,7 @@ class MessageController extends AbstractController
             /** @var Message $data */
             $data = $replyForm->getData();
             $replySubject = $data->getSubject()->getSubject();
-            if ('Re:' !== substr($replySubject, 0, 3)) {
+            if (!str_starts_with($replySubject, 'Re:')) {
                 $replySubject = 'Re: ' . $replySubject;
             }
 
@@ -175,9 +177,9 @@ class MessageController extends AbstractController
         Member $receiver,
         ?Message $parent,
         string $subjectText,
-        string $body
+        string $body,
     ): Message {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->entityManager;
         $message = new Message();
         $message->setMessage($body);
         $message->setStatus('Sent');
@@ -202,7 +204,7 @@ class MessageController extends AbstractController
         $em->persist($message);
         $em->flush();
 
-        if (false === strpos($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
+        if (!str_contains($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
             $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
                 'message' => $message,
                 'subject' => $subjectText,

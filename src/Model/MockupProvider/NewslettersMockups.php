@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 
 class NewslettersMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'Newsletters' => [
             'type' => 'email',
             'with_parameters' => true,
@@ -19,13 +19,8 @@ class NewslettersMockups implements MockupProviderInterface
         ],
     ];
 
-    private FormFactoryInterface $formFactory;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(FormFactoryInterface $formFactory, EntityManagerInterface $entityManager)
+    public function __construct(private readonly FormFactoryInterface $formFactory, private readonly EntityManagerInterface $entityManager)
     {
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
     }
 
     public function getFeature(): string

@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\HostingRequest;
 use App\Form\DataTransformer\DateTransformer;
 use App\Form\DataTransformer\LegTransformer;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -20,21 +21,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HostingRequestType extends AbstractType
 {
-    private DateTransformer $dateTimeTransformer;
-    private LegTransformer $legTransformer;
-
-    public function __construct(
-        DateTransformer $dateTimeTransformer,
-        LegTransformer $legTransformer
-    ) {
-        $this->dateTimeTransformer = $dateTimeTransformer;
-        $this->legTransformer = $legTransformer;
+    public function __construct(private readonly DateTransformer $dateTimeTransformer, private readonly LegTransformer $legTransformer)
+    {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('arrival', HiddenType::class)
@@ -69,10 +60,7 @@ class HostingRequestType extends AbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([
@@ -86,17 +74,12 @@ class HostingRequestType extends AbstractType
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
+    #[Override]
+    public function getBlockPrefix(): string
     {
         return 'request';
     }
 
-    /**
-     * @param mixed $data
-     */
     private function addFieldsForInvitation(FormInterface $form, array $options): void
     {
         if ($options['new']) {

@@ -46,6 +46,7 @@ Updating Tree of links
     /**
      * configure the teaser (the content of the orange bar)
      */
+    #[\Override]
     protected function teaserHeadline() {
         echo 'Update links';
     }
@@ -54,6 +55,7 @@ Updating Tree of links
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
      */
+    #[\Override]
     protected function getPageTitle() {
         return 'Building tree !';
     }

@@ -7,53 +7,37 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Profilesvisits.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="profilesvisits")
- * @ORM\Entity(repositoryClass="App\Repository\ProfileVisitRepository")
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'profilesvisits')]
+#[ORM\Entity(repositoryClass: \App\Repository\ProfileVisitRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ProfileVisit
 {
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
-    /**
-     * @var Member
-     *
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     */
-    private $member;
-
-    /**
-     * @var Member
-     *
-     * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumn(name="IdVisitor", referencedColumnName="id")
-     */
-    private $visitor;
-
-    public function __construct(Member $member, Member $visitor)
-    {
-        $this->member = $member;
-        $this->visitor = $visitor;
+    public function __construct(
+        #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+        #[ORM\Id]
+        #[ORM\ManyToOne(targetEntity: \Member::class)]
+        private Member $member,
+        #[ORM\JoinColumn(name: 'IdVisitor', referencedColumnName: 'id')]
+        #[ORM\Id]
+        #[ORM\ManyToOne(targetEntity: \Member::class)]
+        private Member $visitor,
+    ) {
     }
 
     /**
@@ -160,9 +144,8 @@ class ProfileVisit
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -171,9 +154,8 @@ class ProfileVisit
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

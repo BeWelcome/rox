@@ -139,7 +139,8 @@ class PageWithHTML extends AbstractBasePage
         $this->_stylesheets[] = $file;
     }
 
-    protected function getPageTitle() {
+    protected function getPageTitle()
+    {
         return 'BeWelcome';
     }
 

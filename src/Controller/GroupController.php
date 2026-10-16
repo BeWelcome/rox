@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\GroupType as DoctrineGroupType;
+use App\Doctrine\MemberStatusType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
@@ -18,52 +19,50 @@ use App\Model\WikiModel;
 use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
 use App\Utilities\ManagerTrait;
+use App\Utilities\RedirectToReferrerTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
-use Exception;
+use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Class GroupController.
  *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ *
+ * \todo Move membership handling into own controller.
  */
 class GroupController extends AbstractController
 {
     use ManagerTrait;
+    use RedirectToReferrerTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
     use UniqueFilenameTrait;
 
-    /**
-     * @var GroupModel
-     */
-    private $groupModel;
-
-    public function __construct(GroupModel $groupModel)
+    public function __construct(private GroupModel $groupModel)
     {
-        $this->groupModel = $groupModel;
     }
 
     /**
-     * @Route("/groups/", name="groups_redirect", priority="10")
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/groups/', name: 'groups_redirect', priority: 10)]
     public function redirectToOverviewPage()
     {
         /** @var Member $member */
@@ -76,12 +75,9 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/groups/{groupId}/{path}", name="groups_redirect_path",
-     *     requirements = {"groupId": "\d+", "path":".+"})
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/groups/{groupId}/{path}', name: 'groups_redirect_path', requirements: ['groupId' => '\d+', 'path' => '.+'])]
     public function groupsRedirectPath(Request $request)
     {
         // We only need the request
@@ -89,28 +85,20 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/groups/{groupId}", name="groups_redirect_group",
-     *     requirements = {"groupId": "\d+"})
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/groups/{groupId}', name: 'groups_redirect_group', requirements: ['groupId' => '\d+'])]
     public function groupsRedirect(Request $request)
     {
         return $this->redirectGroup($request);
     }
 
     /**
-     * @Route("/group/{groupId}/join", name="join_group")
-     *
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     *
-     * @return Response
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    public function join(Request $request, Group $group)
+    #[Route(path: '/group/{groupId}/join', name: 'join_group')]
+    public function join(Request $request, #[MapEntity(id: 'groupId')] Group $group): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -175,16 +163,12 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group/{groupId}/acceptjoin/{memberId}", name="group_accept_join")
-     *
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
      */
-    public function approveJoin(Group $group, Member $member)
+    #[Route(path: '/group/{groupId}/acceptjoin/{memberId}', name: 'group_accept_join')]
+    public function approveJoin(#[MapEntity(id: 'groupId')] Group $group, #[MapEntity(id: 'memberId')] Member $member)
     {
         /** @var Member $admin */
         $admin = $this->getUser();
@@ -208,16 +192,12 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group/{groupId}/declinejoin/{memberId}", name="group_decline_join")
-     *
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
      */
-    public function declineJoin(Group $group, Member $member)
+    #[Route(path: '/group/{groupId}/declinejoin/{memberId}', name: 'group_decline_join')]
+    public function declineJoin(#[MapEntity(id: 'groupId')] Group $group, #[MapEntity(id: 'memberId')] Member $member)
     {
         /** @var Member $admin */
         $admin = $this->getUser();
@@ -241,16 +221,12 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group/{groupId}/invite/{memberId}", name="invite_member_to_group")
-     *
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @throws AccessDeniedException
      *
      * @return JsonResponse
      */
-    public function inviteMemberToGroup(Group $group, Member $member)
+    #[Route(path: '/group/{groupId}/invite/{memberId}', name: 'invite_member_to_group')]
+    public function inviteMemberToGroup(#[MapEntity(id: 'groupId')] Group $group, #[MapEntity(id: 'memberId')] Member $member)
     {
         /** @var Member $admin */
         $admin = $this->getUser();
@@ -266,14 +242,10 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group/{groupId}/accept/{memberId}", name="accept_invite_to_group")
-     *
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @return RedirectResponse
      */
-    public function acceptInviteToGroup(Group $group, Member $member)
+    #[Route(path: '/group/{groupId}/accept/{memberId}', name: 'accept_invite_to_group')]
+    public function acceptInviteToGroup(#[MapEntity(id: 'groupId')] Group $group, #[MapEntity(id: 'memberId')] Member $member)
     {
         $success = $this->groupModel->acceptInviteToGroup($group, $member);
 
@@ -288,14 +260,10 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group/{groupId}/decline/{memberId}", name="decline_invite_to_group")
-     *
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @return RedirectResponse
      */
-    public function declineInviteToGroup(Group $group, Member $member)
+    #[Route(path: '/group/{groupId}/decline/{memberId}', name: 'decline_invite_to_group')]
+    public function declineInviteToGroup(#[MapEntity(id: 'groupId')] Group $group, #[MapEntity(id: 'memberId')] Member $member)
     {
         $success = $this->groupModel->declineInviteToGroup($group, $member);
 
@@ -310,14 +278,10 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group/{groupId}/withdraw/{memberId}", name="withdraw_member_invite_to_group")
-     *
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @return RedirectResponse
      */
-    public function withdrawInviteMemberGroup(Request $request, Group $group, Member $member)
+    #[Route(path: '/group/{groupId}/withdraw/{memberId}', name: 'withdraw_member_invite_to_group')]
+    public function withdrawInviteMemberGroup(Request $request, #[MapEntity(id: 'groupId')] Group $group, #[MapEntity(id: 'memberId')] Member $member)
     {
         $success = $this->groupModel->withdrawInviteMemberToGroup($group, $member);
 
@@ -326,22 +290,22 @@ class GroupController extends AbstractController
         } else {
             $this->addTranslatedFlash('error', 'flash.group.invite.withdrawn.error');
         }
-        $referer = $request->headers->get('referer');
 
-        return $this->redirect($referer);
+        return $this->redirectToReferrer($request);
     }
 
-    /**
-     * @Route("/new/group", name="new_group")
-     *
-     * @throws Exception
-     *
-     * @return Response
-     */
-    public function createGroup(Request $request, Logger $logger)
+    #[Route(path: '/new/group', name: 'new_group')]
+    public function createGroup(Request $request, Logger $logger): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.group.not.confirmed');
+
+            return $this->redirectToRoute('groups_mygroups');
+        }
+
         $groupRequest = new GroupRequest();
         $form = $this->createForm(GroupType::class, $groupRequest, [
             'allowInvitationOnly' => $member->getLevelForRight(Member::ROLE_ADMIN_GROUP),
@@ -371,12 +335,8 @@ class GroupController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/new/group/check", name="new_group_check")
-     *
-     * @return JsonResponse
-     */
-    public function ajaxCheckNewGroup(Request $request)
+    #[Route(path: '/new/group/check', name: 'new_group_check')]
+    public function ajaxCheckNewGroup(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $groupName = trim($request->request->get('name'));
 
@@ -385,7 +345,7 @@ class GroupController extends AbstractController
             $parts = explode(' ', $groupName);
 
             /** @var GroupRepository $groupRepository */
-            $groupRepository = $this->getDoctrine()->getRepository(Group::class);
+            $groupRepository = $entityManager->getRepository(Group::class);
             $groups = $groupRepository->findByNameParts($parts);
 
             // Check if there are duplicate groups and provide a list of these
@@ -400,20 +360,15 @@ class GroupController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/group/{id}/wiki", name="group_wiki_page")
-     *
-     * @return Response
-     */
-    public function showGroupWikiPage(Group $group, WikiModel $wikiModel)
+    #[Route(path: '/group/{id}/wiki', name: 'group_wiki_page')]
+    public function showGroupWikiPage(Group $group, WikiModel $wikiModel, EntityManagerInterface $entityManager): Response
     {
         $member = $this->getUser();
 
         $pageName = $wikiModel->getPageName('Group_' . $group->getName());
 
-        $em = $this->getDoctrine();
         /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $em->getRepository(Wiki::class);
+        $wikiRepository = $entityManager->getRepository(Wiki::class);
 
         $wikiPage = $wikiRepository->getPageByName($pageName, 0);
         $historyPagination = null;
@@ -444,10 +399,9 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group/{id}/wiki/create", name="group_wiki_page_create")
-     *
      * @return RedirectResponse
      */
+    #[Route(path: '/group/{id}/wiki/create', name: 'group_wiki_page_create')]
     public function createGroupWikiPage(Group $group, WikiModel $wikiModel)
     {
         $pageName = $wikiModel->getPageName('Group_' . $group->getName());
@@ -463,10 +417,9 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/group/{id}/wiki/edit", name="group_wiki_page_edit")
-     *
      * @return Response
      */
+    #[Route(path: '/group/{id}/wiki/edit', name: 'group_wiki_page_edit')]
     public function editGroupWikiPage(Request $request, Group $group, WikiModel $wikiModel)
     {
         /** @var Member $member */
@@ -558,7 +511,7 @@ class GroupController extends AbstractController
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     private function handleGroupPicture($picture)
     {

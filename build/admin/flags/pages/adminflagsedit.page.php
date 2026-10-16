@@ -8,6 +8,7 @@
 
 class AdminFlagsEditPage extends AdminFlagsBasePage
 {
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();

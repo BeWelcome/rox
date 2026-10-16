@@ -7,7 +7,7 @@ use PDO;
 
 class LanguageHydrator extends AbstractHydrator
 {
-    protected function hydrateAllData()
+    protected function hydrateAllData(): mixed
     {
         $result = [];
         foreach ($this->_stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
@@ -17,10 +17,10 @@ class LanguageHydrator extends AbstractHydrator
         return $result;
     }
 
-    protected function hydrateRowData(array $row, array &$result)
+    protected function hydrateRowData(array $row, array &$result): void
     {
         if (0 === \count($row)) {
-            return false;
+            return;
         }
 
         $keys = array_keys($row);

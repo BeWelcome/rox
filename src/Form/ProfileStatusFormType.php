@@ -9,7 +9,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class ProfileStatusFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Parameter $options not used but signature is given by symfony.
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $memberStatusType = new MemberStatusType();
         $statuses = $memberStatusType->getStatuses();

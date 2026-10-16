@@ -13,9 +13,12 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.StaticAccess")
+ */
 class TripVoterTest extends TestCase
 {
-    public function testTripCreatorCanEditIfNotExpired()
+    public function testTripCreatorCanEditIfNotExpired(): void
     {
         $member = Mockery::mock(Member::class);
         $token = Mockery::mock(TokenInterface::class, [
@@ -32,10 +35,10 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_EDIT]);
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $vote);
     }
 
-    public function testTripCreatorCanNotEditIfExpired()
+    public function testTripCreatorCanNotEditIfExpired(): void
     {
         $member = Mockery::mock(Member::class);
         $token = Mockery::mock(TokenInterface::class, [
@@ -52,10 +55,10 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_EDIT]);
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $vote);
     }
 
-    public function testTripCreatorCanViewIfExpired()
+    public function testTripCreatorCanViewIfExpired(): void
     {
         $member = Mockery::mock(Member::class);
         $token = Mockery::mock(TokenInterface::class, [
@@ -72,10 +75,10 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $vote);
     }
 
-    public function testOnlyTripCreatorCanViewIfExpired()
+    public function testOnlyTripCreatorCanViewIfExpired(): void
     {
         $member = Mockery::mock(Member::class);
         $token = Mockery::mock(TokenInterface::class, [
@@ -93,10 +96,10 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $vote);
     }
 
-    public function testCreatorCanViewCompletelyPrivateTrip()
+    public function testCreatorCanViewCompletelyPrivateTrip(): void
     {
         $creator = Mockery::mock(Member::class);
         $token = Mockery::mock(TokenInterface::class, [
@@ -114,10 +117,10 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
 
-        $this->assertEquals(VoterInterface::ACCESS_GRANTED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_GRANTED, $vote);
     }
 
-    public function testOnlyTripCreatorCanViewCompletelyPrivateTrip()
+    public function testOnlyTripCreatorCanViewCompletelyPrivateTrip(): void
     {
         $member = Mockery::mock(Member::class);
         $token = Mockery::mock(TokenInterface::class, [
@@ -136,6 +139,6 @@ class TripVoterTest extends TestCase
         $tripVoter = new TripVoter();
         $vote = $tripVoter->vote($token, $trip, [TripVoter::TRIP_VIEW]);
 
-        $this->assertEquals(VoterInterface::ACCESS_DENIED, $vote);
+        $this->assertSame(VoterInterface::ACCESS_DENIED, $vote);
     }
 }

@@ -41,6 +41,7 @@ class AdminMassmailEnqueuePage extends AdminMassmailBasePage
         $this->setCurrent('AdminMassMailEnqueue');
     }
 
+    #[\Override]
     public function teaserHeadline() {
         return '<a href="admin">' . $this->words->get('AdminTools') . "</a> "
             . ' &raquo; <a href="admin/massmail">' . $this->words->get('AdminMassMail') . "</a>"

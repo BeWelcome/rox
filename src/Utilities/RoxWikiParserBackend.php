@@ -5,27 +5,15 @@ namespace App\Utilities;
 use App\Entity\Wiki;
 use App\Model\WikiModel;
 use Doctrine\ORM\EntityManagerInterface;
-use Mike42\Wikitext\DefaultParserBackend;
+use Mike42\Wikitext\HtmlRenderer;
 
-class RoxWikiParserBackend extends DefaultParserBackend
+class RoxWikiParserBackend extends HtmlRenderer
 {
-    /**
-     * @var WikiModel
-     */
-    private $wikiModel;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * RoxWikiParserBackend constructor.
-     */
-    public function __construct(WikiModel $wikiModel, EntityManagerInterface $em)
-    {
-        $this->wikiModel = $wikiModel;
-        $this->em = $em;
+    public function __construct(
+        private readonly WikiModel $wikiModel,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+        parent::__construct();
     }
 
     /**
@@ -37,18 +25,16 @@ class RoxWikiParserBackend extends DefaultParserBackend
      * If it is an internal link check if it exists and set flag accordingly.
      *
      * @param array $info
-     *
-     * @return array
      */
-    public function getInternalLinkInfo($info)
+    public function getInternalLinkInfo($info): array
     {
         // if we have an external link just return
-        if (false !== strpos($info['url'], '://')) {
+        if (str_contains((string) $info['url'], '://')) {
             return $info;
         }
 
         $title = $this->wikiModel->getPagename($info['title']);
-        $repository = $this->em->getRepository(Wiki::class);
+        $repository = $this->entityManager->getRepository(Wiki::class);
 
         $wikiPage = $repository->findBy(['pagename' => $title]);
         $info['exists'] = ($wikiPage) ? true : false;
@@ -60,5 +46,15 @@ class RoxWikiParserBackend extends DefaultParserBackend
         }
 
         return $info;
+    }
+
+    /**
+     * Using images not supported in current wiki implementation.
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     */
+    public function getImageInfo($info): array
+    {
+        return [];
     }
 }

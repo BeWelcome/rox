@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -10,9 +11,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 class LogFormType extends AbstractType
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->setMethod('GET')
@@ -33,7 +34,8 @@ class LogFormType extends AbstractType
             ]);
     }
 
-    public function getBlockPrefix()
+    #[Override]
+    public function getBlockPrefix(): string
     {
         return 'log';
     }

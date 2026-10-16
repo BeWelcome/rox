@@ -15,19 +15,9 @@ framework:
     form:            ~
     csrf_protection: ~
     validation:
-        enable_annotations: true
         enabled: true
-    #serializer:      { enable_annotations: true }
     default_locale:  "en"
     trusted_hosts:   ~
-    trusted_proxies: '%env(string:default::SYMFONY_TRUSTED_PROXIES)%'
-    trusted_headers:
-        - x-forwarded-for
-        - x-forwarded-host
-        - x-forwarded-proto
-        - x-forwarded-port
-        - x-forwarded-prefix
-#    error_controller:  Symfony\Bundle\TwigBundle\Controller\ExceptionController::showAction
 
     # Enables session support. Note that the session will ONLY be started if you read or write from it.
     # Remove or comment this section to explicitly disable session support.
@@ -41,7 +31,7 @@ framework:
         cookie_lifetime: 604800 # 7 days
         gc_maxlifetime: 604800  # 7 days
         cookie_samesite: lax
-        gc_probability: null
+        gc_probability: 1 # remove expired sessions now and then, as on main (5fdbc73ad); null never removed them
 
     fragments:       ~
     http_method_override: true
@@ -62,3 +52,10 @@ framework:
 
         # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
         #app: cache.adapter.apcu
+
+when@test:
+    framework:
+        test: true
+        session:
+            storage_factory_id: session.storage.factory.mock_file
+

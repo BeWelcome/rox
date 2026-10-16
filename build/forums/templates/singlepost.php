@@ -30,7 +30,7 @@ JeanYves notes : every display of a forum post content  goes trhu this template
 use App\Utilities\ForumUtilities;
 
 $words = new MOD_words();
-$styles = array('l-forum-single-post--dark', '');
+$styles = ['l-forum-single-post--dark', ''];
 if (!isset($topic)) {
     $topic = new stdClass();
     $topic->WithDetail = false;
@@ -69,7 +69,9 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 for ($jj = 0; (($jj < $max) and ($topic->WithDetail)); $jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                     if (($post->Trad[$jj]->trad_created != $post->Trad[$jj]->trad_updated)) { // If one of the trads have been updated
                         if ($post->Trad[$jj]->IdLanguage == $this->session->get("IdLanguage")) {
-                            echo '<div class="mr-1"><em><i class="fa fa-edit fa-w-16 mr-1" title="edited"></i>' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), ' by ', $post->Trad[$jj]->TranslatorUsername . '</em></div>';
+                            if (null !== $post->Trad[$jj]->trad_updated) {
+                                echo '<div class="mr-1"><em><i class="fa fa-edit fa-w-16 mr-1" title="edited"></i>' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), ' by ', $post->Trad[$jj]->TranslatorUsername . '</em></div>';
+                            }
                         }
                     }
                 }
@@ -121,7 +123,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
 // Todo : the title for translations pops up when the mouse goes on the link but the html inside it is strips, the todo is to popup something which also displays the html result
 
-                        $ssSentence = str_replace("\"", "&quot;", addslashes(strip_tags($Trad->Sentence, "<p><br /><br><strong><ul><li><a><img>")));
+                        $ssSentence = str_replace("\"", "&quot;", addslashes(strip_tags((string) $Trad->Sentence, "<p><br /><br><strong><ul><li><a><img>")));
                         $ssSentence = str_replace("\n", "", $ssSentence); // If we dont remove teh extraline breaks, javascript with on mosover for translation doesn't work
 //                      $ssTitle=addslashes(strip_tags(str_replace("<p>"," ",$Trad->Sentence))) ;
                         if ($jj == 0) {

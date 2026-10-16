@@ -4,7 +4,7 @@ if (empty($vars)) {
     $vars['activity-radius'] = $this->radius;
 }
 $radiusSelect = '<select name="activity-radius" id="activity-radius" class="o-input">';
-$distance = array(
+$distance = [
     0 => '0 km/0 mi',
     5  => '5 km/3 mi',
     10 => '10 km/6 mi',
@@ -12,7 +12,7 @@ $distance = array(
     50 => '50 km/30 mi',
     100 => '100 km/60 mi',
     200 => '200 km/120 mi',
-);
+];
 foreach($distance as $value => $display) :
     $radiusSelect .= '<option value="' . $value . '"';
     if ($value == $vars['activity-radius']) {

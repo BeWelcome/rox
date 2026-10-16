@@ -92,12 +92,14 @@ class LinkShowFriendsPage extends LinkPage
 
 
 
+    #[\Override]
     protected function teaserHeadline()
     {
         echo 'Show Friends';
     }
 
 
+    #[\Override]
     protected function getPageTitle() {
         return 'Friends Links';
     }

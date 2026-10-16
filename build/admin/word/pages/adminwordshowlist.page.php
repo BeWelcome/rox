@@ -37,24 +37,21 @@ class AdminWordShowListPage extends AdminWordBasePage
      * @access public
      * @return string
      */
+    #[\Override]
     public function teaserHeadline()
     {
         $string = 'AdminWord';
         $string .= ' » '.$this->nav['currentLanguage'];
-        switch ($this->type){
-            case 'all' :
-                $string .= ' » All words';
-                break;
-            case 'missing' :
-                $string .= ' » Missing';
-                break;
-            case 'update' :
-                $string .= ' » Update needed';
-                break;
-        }
+        match ($this->type) {
+            'all' => $string .= ' » All words',
+            'missing' => $string .= ' » Missing',
+            'update' => $string .= ' » Update needed',
+            default => $string,
+        };
         return $string;
     }
 
+    #[\Override]
     public function getLateLoadScriptfiles() {
         $scriptFiles = parent::getLateLoadScriptfiles();
         if ($this->type == 'update') {

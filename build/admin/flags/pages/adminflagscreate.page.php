@@ -13,6 +13,7 @@ class AdminFlagsCreatePage extends AdminFlagsBasePage
         $this->setCurrent('AdminFlagsAssign');
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();

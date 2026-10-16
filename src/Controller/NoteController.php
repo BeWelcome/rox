@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\ProfileNote;
 use App\Form\ProfileNoteFilterType;
@@ -10,30 +11,27 @@ use App\Repository\ProfileNoteRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class NoteController extends AbstractController
 {
     use ItemsPerPageTraits;
+    use TranslatedFlashTrait;
+    use TranslatorTrait;
 
-    private EntityManagerInterface $entityManager;
-    private ChangeProfilePictureGlobals $globals;
-
-    public function __construct(EntityManagerInterface $entityManager, ChangeProfilePictureGlobals $globals)
+    public function __construct(private EntityManagerInterface $entityManager, private ChangeProfilePictureGlobals $globals)
     {
-        $this->entityManager = $entityManager;
-        $this->globals = $globals;
     }
 
-    /**
-     * @Route("/members/{username}/note/add", name="add_note")
-     */
+    #[Route(path: '/members/{username:member}/note/add', name: 'add_note')]
     public function add(Request $request, Member $member, ProfileSubmenu $profileSubmenu): Response
     {
         /** @var Member $loggedInMember */
@@ -41,6 +39,12 @@ class NoteController extends AbstractController
 
         if ($member === $loggedInMember) {
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.note.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
         }
 
         /** @var ProfileNoteRepository $noteRepository */
@@ -76,9 +80,7 @@ class NoteController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/note/edit", name="edit_note")
-     */
+    #[Route(path: '/members/{username:member}/note/edit', name: 'edit_note')]
     public function edit(Request $request, Member $member, ProfileSubmenu $profileSubmenu): Response
     {
         /** @var Member $loggedInMember */
@@ -119,9 +121,7 @@ class NoteController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/note/delete", name="delete_note")
-     */
+    #[Route(path: '/members/{username:member}/note/delete', name: 'delete_note')]
     public function delete(Member $member): Response
     {
         /** @var Member $loggedInMember */
@@ -143,9 +143,7 @@ class NoteController extends AbstractController
         return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/notes/{page}", name="notes")
-     */
+    #[Route(path: '/members/{username:member}/notes/{page}', name: 'notes')]
     public function notes(Request $request, Member $member, ProfileSubmenu $profileSubmenu, int $page = 1): Response
     {
         /** @var Member $loggedInMember */

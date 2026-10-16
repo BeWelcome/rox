@@ -214,7 +214,7 @@ class ActivitiesModel extends RoxModelBase
      * @return array with the found problems
      */
     public function checkEditCreateActivityVarsOk($args) {
-        $errors = array();
+        $errors = [];
         $post = $args->post;
         $startdate = $enddate = '';
         if (empty($post['activity-title'])) {
@@ -232,14 +232,14 @@ class ActivitiesModel extends RoxModelBase
             }
         }
         if (!empty($post['activity-address'])) {
-            if (strlen($post['activity-address']) > self::ACTIVITY_ADDRESS_LIMIT) {
+            if (strlen((string) $post['activity-address']) > self::ACTIVITY_ADDRESS_LIMIT) {
                 $errors[] = 'ActivityAddressTooLong###' . self::ACTIVITY_ADDRESS_LIMIT . '###';
             }
         }
         if (empty($post['activity-start-date'])) {
             $errors[] = 'ActivityDateStartEmpty';
         } else {
-            $startdate = strtotime($post['activity-start-date']);
+            $startdate = strtotime((string) $post['activity-start-date']);
             if ($startdate === false) {
                 $errors[] = 'ActivityWrongStartDateFormat';
             }
@@ -247,7 +247,7 @@ class ActivitiesModel extends RoxModelBase
         if (empty($post['activity-end-date'])) {
             $errors[] = 'ActivityDateEndEmpty';
         } else {
-            $enddate = strtotime($post['activity-end-date']);
+            $enddate = strtotime((string) $post['activity-end-date']);
             if ($enddate === false) {
                 $errors[] = 'ActivityWrongEndDateFormat';
             }
@@ -258,7 +258,7 @@ class ActivitiesModel extends RoxModelBase
         if (empty($post['activity-description'])) {
             $errors[] = 'ActivityDescriptionEmpty';
         } else {
-            if (strlen($post['activity-description']) > self::ACTIVITY_DESCRIPTION_LIMIT) {
+            if (strlen((string) $post['activity-description']) > self::ACTIVITY_DESCRIPTION_LIMIT) {
                 $errors[] = 'ActivityDescriptionTooLong###' . self::ACTIVITY_DESCRIPTION_LIMIT . '###';
             }
         }
@@ -266,7 +266,7 @@ class ActivitiesModel extends RoxModelBase
     }
 
     public function checkJoinLeaveActivityVarsOk($args) {
-        $errors = array();
+        $errors = [];
         $post = $args->post;
         $status = 0;
         if (isset($post['activity-status'])) {
@@ -369,9 +369,9 @@ class ActivitiesModel extends RoxModelBase
         $activity->title = $args->post['activity-title'];
         $activity->address = $args->post['activity-address'];
         $activity->locationId = $locationId;
-        $startdate = strtotime($args->post['activity-start-date']);
+        $startdate = strtotime((string) $args->post['activity-start-date']);
         $activity->dateTimeStart = date('Y-m-d H:i:s', $startdate);
-        $enddate = strtotime($args->post['activity-end-date']);
+        $enddate = strtotime((string) $args->post['activity-end-date']);
         $activity->dateTimeEnd = date('Y-m-d H:i:s', $enddate);;
         $activity->description = $args->post['activity-description'];
         $activity->public = isset($args->post['activity-public']);
@@ -400,9 +400,9 @@ class ActivitiesModel extends RoxModelBase
         $activity->title = $args->post['activity-title'];
         $activity->address = $args->post['activity-address'];
         $activity->locationId = $locationId;
-        $startdate = strtotime($args->post['activity-start-date']);
+        $startdate = strtotime((string) $args->post['activity-start-date']);
         $activity->dateTimeStart = date('Y-m-d H:i:s', $startdate);
-        $enddate = strtotime($args->post['activity-end-date']);
+        $enddate = strtotime((string) $args->post['activity-end-date']);
         $activity->dateTimeEnd = date('Y-m-d H:i:s', $enddate);;
         $activity->description = $args->post['activity-description'];
         $activity->public = isset($args->post['activity-public']);
@@ -411,7 +411,7 @@ class ActivitiesModel extends RoxModelBase
     }
 
     public function checkSearchActivitiesVarsOk($args) {
-        $errors = array();
+        $errors = [];
         $post = $args->post;
         if (empty($post['activity-keyword'])) {
             $errors[] = 'ActivitiesKeywordEmpty';

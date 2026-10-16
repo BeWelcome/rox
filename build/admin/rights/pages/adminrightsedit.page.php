@@ -8,6 +8,7 @@
 
 class AdminRightsEditPage extends AdminRightsBasePage
 {
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();

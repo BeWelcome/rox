@@ -31,11 +31,13 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesNotLoggedInPage extends ActivitiesBasePage
 {
+    #[\Override]
     protected function getPageTitle()
     {
         return "Please login to view these pages - BeWelcome";
     }
     
+    #[\Override]
     protected function getSubmenuItems()
     {
 

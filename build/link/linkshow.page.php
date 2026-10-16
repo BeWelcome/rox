@@ -12,12 +12,11 @@
  */
 class LinkShowPage extends LinkPage
 {
-		protected $Data ; // Receives the result as constructor received it (if any)
+		// Receives the result as constructor received it (if any)
 
-    function __construct($selected_tab,$result="")
+    function __construct($selected_tab,protected $Data="")
     {
-				$this->Data=$result ;
-        parent::__construct($selected_tab);
+				parent::__construct($selected_tab);
     }
 
     protected function column_col3()
@@ -112,12 +111,14 @@ class LinkShowPage extends LinkPage
 
 
 
+    #[\Override]
     protected function teaserHeadline()
     {
         echo 'Show Links between members';
     }
 
 
+    #[\Override]
     protected function getPageTitle() {
         return 'Link it';
     }

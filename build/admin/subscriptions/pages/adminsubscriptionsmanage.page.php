@@ -8,13 +8,13 @@
 
 class AdminSubscriptionsManagePage extends AdminBasePage
 {
-    protected $sidebar = array(
+    protected $sidebar = [
         'AdminFlagsAssign' => 'admin/flags/assign',
         'AdminFlagsOverview' => 'admin/flags/overview',
         'AdminFlagsListMembers' => 'admin/flags/list/members',
         'AdminFlagsListFlags' => 'admin/flags/list/flags',
         'AdminFlagsCreate' => 'admin/flags/create',
-    );
+    ];
 
     protected $current = false;
     protected $flags = false;
@@ -25,12 +25,14 @@ class AdminSubscriptionsManagePage extends AdminBasePage
         $member = $this->model->getLoggedInMember();
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
         return $headline . "&raquo; <a href='admin/subscriptions'>{$this->words->get('AdminManageSubscriptions')}</a>";
     }
 
+    #[\Override]
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();
@@ -38,6 +40,7 @@ class AdminSubscriptionsManagePage extends AdminBasePage
         return $stylesheets;
     }
 
+    #[\Override]
     public function getLateLoadScriptFiles()
     {
         $scripts = parent::getLateLoadScriptfiles();

@@ -19,17 +19,14 @@ use Symfony\Component\Validator\Constraints\NotNull;
 
 class SubtripType extends AbstractType
 {
-    private DateTransformer $transformer;
-
-    public function __construct(DateTransformer $transformer)
+    public function __construct(private readonly DateTransformer $transformer)
     {
-        $this->transformer = $transformer;
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('arrival', HiddenType::class, [
@@ -64,9 +61,9 @@ class SubtripType extends AbstractType
                 }
             }
             $form->add('location', SearchLocationType::class, [
-                    'expired' => $expired,
-                    'label' => 'location',
-                ])
+                'expired' => $expired,
+                'label' => 'location',
+            ])
                 ->add('duration', TextType::class, [
                     'required' => false,
                     'mapped' => false,
@@ -90,7 +87,7 @@ class SubtripType extends AbstractType
         });
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Subtrip::class,

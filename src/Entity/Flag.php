@@ -3,53 +3,51 @@
 namespace App\Entity;
 
 use App\Utilities\LifecycleCallbacksTrait;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Flags.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="flags")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'flags')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Flag
 {
     use LifecycleCallbacksTrait;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Name", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Name', type: 'text', length: 255, nullable: false)]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Description", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'Description', type: 'text', length: 65535, nullable: false)]
     private $description;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="Relevance", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'Relevance', type: 'integer', nullable: false)]
     private $relevance;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Flag
      */

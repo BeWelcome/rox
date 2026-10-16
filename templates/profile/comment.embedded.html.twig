@@ -1,0 +1,138 @@
+{% import 'macros.twig' as macros %}
+
+{% set loggedInMember = app.user %}
+<div class="u-border-0 u-border-b-1 u-border-solid u-border-b-gray-40 u-mb-4 last-of-type:u-border-b-0 last:u-mb-0">
+    {% if comment['from'] is defined %}
+        {{ _self.comment(member, loggedInMember, comment['from'], true, language) }}
+    {% else %}
+        {% if member != app.user and comment['to'].toMember == app.user %}
+            <div class="u-flex u-flex-col u-items-start">
+                <a href="{{ url('add_comment', { username: comment['to'].fromMember.Username}) }}"
+                    class="o-button u-mr-24 u-mb-4 u-inline-flex">{{ 'profile.add.comment'|trans({'username': comment['to'].fromMember.Username, 'gender': comment['to'].fromMember.Gender}, "messages", language) }}</a>
+            </div>
+        {% else %}
+            <div class="u-p-8 u-mb-8 u-bg-black-o-10 u-mr-24 u-rounded-8">
+                <p class="text-left">{{ 'profile.no.comment.yet'|trans({'from': comment['to'].toMember.Username, 'to': comment['to'].fromMember.Username}, "messages", language) }}</p>
+            </div>
+        {% endif %}
+    {% endif %}
+    {% if comment['to'] is defined %}
+        {{ _self.comment(member, loggedInMember, comment['to'], false, language) }}
+    {% else %}
+        {% if member == app.user and comment['from'].toMember == app.user %}
+            <div class="u-flex u-flex-col u-items-end">
+                <a href="{{ url('add_comment', { username: comment['from'].fromMember.Username}) }}"
+                    class="o-button u-ml-24 u-mb-4">{{ 'profile.add.comment'|trans({'username': comment['from'].fromMember.Username, 'gender': comment['from'].fromMember.Gender}, "messages", language) }}</a>
+            </div>
+        {% else %}
+            <div class="u-p-8 u-mb-8 u-bg-black-o-10 u-ml-24 u-rounded-8">
+                <p class="text-right">{{ 'profile.no.comment.yet'|trans({'from': comment['from'].toMember.Username, 'to': comment['from'].fromMember.Username}, "messages", language) }}</p>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+
+{% macro comment(member, loggedInMember, comment, from, language) %}
+    {% set show = comment.showCondition(loggedInMember) %}
+    {% set edit = comment.editCondition(loggedInMember) %}
+    {% set quality = comment.quality|lower %}
+    {% set linkedFrom = false %}
+    {% set linkedTo = false %}
+    {% if from %}
+        {% set username = comment.fromMember.Username %}
+        {% set linkedFrom = comment.fromMember.status in ['Active', 'OutOfRemind'] %}
+        {% if linkedFrom %}
+            {% set comment_direction %}{{ 'profile.comment.from'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
+        {% else %}
+            {% set comment_direction %}{{ 'profile.comment.from'|trans({'username': username}) }}{% endset %}
+        {% endif %}
+    {% else %}
+        {% set username = comment.toMember.Username %}
+        {% set linkedTo = comment.toMember.status in ['Active', 'OutOfRemind'] %}
+        {% if linkedTo %}
+            {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': '<a href="' ~ url('members_profile', {username: username}) ~ '">' ~ username ~ '</a>'})|raw }}{% endset %}
+        {% else %}
+            {% set comment_direction %}{{ 'profile.comment.about'|trans({'username': username}) }}{% endset %}
+        {% endif %}
+    {% endif %}
+    {% if not comment.updated is null and comment.created != comment.updated %}
+        {% set comment_date = comment.updated %}
+    {% else %}
+        {% set comment_date = comment.created %}
+    {% endif %}
+    {% if show == 0 %}
+        <div class=" u-bg-black-o-10 u-p-8 {% if from %}u-ml-24{% else %}u-mr-24{% endif %}">
+            <p class="text-center">
+                {{ 'profile.no.comment.yet'|trans({'from': comment.toMember.Username, 'to': comment.fromMember.Username}) }}
+            </p>
+        </div>
+    {% else %}
+        <div class="comment-bg-{{ quality }} u-p-8 u-mb-8 {% if from %}u-mr-24{% else %}u-ml-24{% endif %} u-rounded-8 {% if not linkedTo %}u-p-8{% endif %}">
+            <div class="u-flex u-flex-row {% if not from %}flex-row-reverse{% endif %} u-mb-8">
+                <div class="o-avatar o-avatar--s">
+                    {% if from %}
+                        {{ macros.roundedavatarstack(username, 48, false, linkedFrom) }}
+                    {% else %}
+                        {{ macros.roundedavatarstack(username, 48, false, linkedTo) }}
+                    {% endif %}
+                </div>
+                <div class="u-self-center u-px-8">
+                    <p class="u-m-0 u-leading-16 {% if not from %}text-right{% endif %}">
+                        {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
+                            <span class="commenttitle {{ quality }}">{{ ('commentquality_' ~ quality )|trans }}</span>
+                        {% endif %}
+                        <br><small>{{ comment_direction }}</small>
+                        <br><small><span title="{{ comment_date|format_datetime() }}">{{ comment_date.diffForHumans }}</span></small>
+                    </p>
+                </div>
+                <div class="{% if from %}ml-auto{% else %}mr-auto{% endif%} u-self-center">
+                    {% set wasGuestOrHost = 'hewasmyguest' in comment.relations or 'hehostedme' in comment.relations %}
+                    {% if wasGuestOrHost %}
+                        <i class="fas fa-2x fa-home"></i>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="u-w-full u-my-4 u-flex u-flex-col">
+                {% if (show > 1) %}
+                    <div class="u-flex u-flex-col u-rounded-8 u-p-8 u-bg-black-o-30 u-my-2 u-text-white">
+                        <strong>{{ 'commenthiddenedit'|trans }}</strong>
+                    </div>
+                {% endif %}
+
+                <div class="js-read-more-comment u-mb-2"
+                     data-config='{
+                         {% if from %}"limit": 240, "after": 60,{% else %}"limit": 120, "after": 30,{% endif %}
+                         "more": "{{ 'comment.read.more'|trans({}, "messages", language) }}",
+                         "less": "{{ 'comment.show.less'|trans({}, "messages", language) }}" }'>{{ comment.TextFree|nl2br|purify }}</div>
+
+                <div class="u-flex u-flex-row {% if from %}u-flex-row-reverse{% endif %} u-justify-between">
+                    <div class="u-text-14 u-leading-20 u-self-center">
+                        {% if comment.updated != null and comment.created != comment.updated %}
+                            {{ 'commentlastupdated'|trans({}, "messages", language) }}: <span
+                            title="{{ comment.updated|format_datetime() }}">{{ comment.updated.diffForHumans }}</span>
+                        {% endif %}
+                    </div>
+                    <div>{%- if comment.toMember == loggedInMember %}
+                            <a href="{{ url('report_comment', {'to_member': comment.toMember.Username, 'from_member': comment.fromMember.Username}) }}"
+                               title="{{ 'reportcommentproblem'|trans({}, "messages", language) }}" class="u-text-grey-80"><i
+                                    class="fa fa-flag"></i></a>
+                        {% endif -%}
+                    </div>
+                </div>
+
+                {% if edit or is_granted(constant('\\App\\Entity\\Member::ROLE_ADMIN_COMMENTS')) %}
+                <div class="u-flex u-self-center u-mt-4">
+                    {% if edit %}
+                        <div class="u-px-8"><a class="o-button o-button--s" href="{{ url('edit_comment', { username: comment.toMember.Username}) }}" title="Edit">{{ 'edit'|trans({}, "messages", language) }}</a></div>
+                    {% endif %}
+                    {% if is_granted(constant('\\App\\Entity\\Member::ROLE_ADMIN_COMMENTS')) %}
+                        <div class="u-px-8"><a class="o-button o-button--s" href="{{ url('admin_comment', {
+                                to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}">{{ 'editcomment'|trans({}, "messages", language) }}</a></div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+{% endmacro %}
+

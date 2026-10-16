@@ -10,9 +10,7 @@
 
 2. You can choose to install using A) Docker and Docker Compose or B) Installation step by step of BW-Rox (GNU/Linux) (see below)
 
-## A) Install using Docker and Docker Compose
-
-The docker configuration is still in-progress, and is currently missing the setup of the sphinx search functionality (essential for using all of the search functionality in the app). Until configuration is complete, local installation is recommended. 
+## Install using Docker and Docker Compose
 
 ### Requirements
 
@@ -33,7 +31,7 @@ The docker configuration is still in-progress, and is currently missing the setu
     ```bash
     $ make install root=1
     ```
-    
+
     <details>
     <summary><strong>Troubleshooting</strong></summary>
 

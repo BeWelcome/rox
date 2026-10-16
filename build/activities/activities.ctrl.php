@@ -43,7 +43,7 @@ class ActivitiesController extends RoxControllerBase
         $result = $this->_model->joinLeaveActivity($args->post);
         if ($result) {
             $activity = new Activity($args->post['activity-id']);
-            $this->session->set( 'ActivityStatus', array('ActivityUpdateStatusSuccess', $activity->title) );
+            $this->session->set( 'ActivityStatus', ['ActivityUpdateStatusSuccess', $activity->title] );
             return true;
         } else {
             return false;
@@ -55,15 +55,15 @@ class ActivitiesController extends RoxControllerBase
     {
         $result = $this->_model->cancelUncancelActivity($args->post);
         if (!$result) {
-            $errors = array( 'ActivityCancelUncancelError' );
+            $errors = [ 'ActivityCancelUncancelError' ];
             $mem_redirect->errors = $errors;
             return false;
         }
         $activity = new Activity($args->post['activity-id']);
         if (!$activity->status == 1){
-            $this->session->set( 'ActivityStatus', array('ActivityUnCancelSuccess', $activity->title) );
+            $this->session->set( 'ActivityStatus', ['ActivityUnCancelSuccess', $activity->title] );
         } else {
-            return $this->router->url('activities_show', array('id' => $activity->id), false);
+            return $this->router->url('activities_show', ['id' => $activity->id], false);
         }
         return true;
     }
@@ -131,12 +131,12 @@ class ActivitiesController extends RoxControllerBase
         } else {
             if ($args->post['activity-id'] == 0) {
                 $activity = $this->_model->createActivity($args);
-                $this->session->set( 'ActivityStatus', array('ActivityCreateSuccess', $args->post['activity-title']) );
+                $this->session->set( 'ActivityStatus', ['ActivityCreateSuccess', $args->post['activity-title']] );
             } else {
                 $activity = $this->_model->updateActivity($args);
-                $this->session->set( 'ActivityStatus', array('ActivityUpdateSuccess', $args->post['activity-title']) );
+                $this->session->set( 'ActivityStatus', ['ActivityUpdateSuccess', $args->post['activity-title']] );
             }
-            return $this->router->url('activities_show', array('id' => $activity->id), false);
+            return $this->router->url('activities_show', ['id' => $activity->id], false);
         }
     }
 
@@ -224,7 +224,7 @@ class ActivitiesController extends RoxControllerBase
         $page->activities = $this->_model->getUpcomingOnlineActivities($pageno, self::ACTIVITIES_PER_PAGE);
         $page->pager = $this->getPager('upcoming', $count, $pageno);
 
-        $page->allActivities = $this->_model->getUpcomingOnlineActivities($page->onlineOnly, 0, PVars::getObj('activities')->max_activities_on_map);
+        $page->allActivities = $this->_model->getUpcomingOnlineActivities($page->onlineOnly, 0);
 
         return $page;
     }
@@ -255,7 +255,7 @@ class ActivitiesController extends RoxControllerBase
         ReadWriteObject $mem_redirect, ReadWriteObject $mem_resend)
     {
         $this->_model->setRadius($args);
-        return $this->router->url('activities_near_me', array(), false);
+        return $this->router->url('activities_near_me', [], false);
     }
 
     public function activitiesNearMe() {
@@ -298,9 +298,9 @@ class ActivitiesController extends RoxControllerBase
         $errors = $this->_model->checkSearchActivitiesVarsOk($args);
         if (count($errors) > 0) {
             $this->session->set( 'errors', $errors );
-            return $this->router->url('activities_search', array(), false);
+            return $this->router->url('activities_search', [], false);
         } else {
-            return $this->router->url('activities_search_results', array( "keyword" => $args->post['activity-keyword']), false);
+            return $this->router->url('activities_search_results', [ "keyword" => $args->post['activity-keyword']], false);
         }
     }
 

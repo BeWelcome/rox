@@ -10,14 +10,14 @@
             <div class="o-form-group row mb-2">
                 <label for="Occupation" class="col-md-2 col-form-label"><?= $words->get('ProfileOccupation') ?></label>
                 <div class="col-12 col-md-10"><input class="o-input" name="Occupation"
-                                                     value="<?php echo htmlentities($vars['Occupation'], ENT_COMPAT, 'UTF-8'); ?>"/>
+                                                     value="<?php echo htmlentities((string) $vars['Occupation'], ENT_COMPAT, 'UTF-8'); ?>"/>
                 </div>
             </div>
             <div class="o-form-group row mb-2">
                 <label for="ProfileSummary" class="col-md-2 col-form-label"><?= $words->get('ProfileSummary') ?></label>
 
                 <div class="col-12 col-md-10"><textarea name="ProfileSummary" id="ProfileSummary" class="o-input"
-                                                        rows="6"><?php echo htmlentities($vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
+                                                        rows="6"><?php echo htmlentities((string) $vars['ProfileSummary'], ENT_COMPAT, 'UTF-8'); ?></textarea>
                 </div>
             </div>
         </div>

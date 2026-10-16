@@ -4,9 +4,7 @@ namespace App\Doctrine;
 
 class StatusType extends EnumType
 {
-    /** @var string */
-    protected $name = 'status';
+    protected string $name = 'status';
 
-    /** @var array */
-    protected $values = ['Draft', 'ToCheck', 'ToSend', 'Sent', 'Freeze'];
+    protected array $values = ['Draft', 'ToCheck', 'ToSend', 'Sent', 'Freeze'];
 }

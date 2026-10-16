@@ -2,8 +2,8 @@
 $purifier = (new MOD_htmlpure())->getBasicHtmlPurifier();
 
 function wasGuestOrHost(string $relations) {
-    $hosted = strpos($relations, 'hewasmyguest') !== false;
-    $stayed = strpos($relations, 'hehostedme') !== false;
+    $hosted = str_contains($relations, 'hewasmyguest');
+    $stayed = str_contains($relations, 'hehostedme');
     return $hosted || $stayed;
 }
 ?>
@@ -12,7 +12,7 @@ function wasGuestOrHost(string $relations) {
     <?php
 
     use App\Doctrine\MemberStatusType;
-    use App\Utilities\CommentSorterProfile;
+    use App\Utilities\CommentSorter;
     use Carbon\Carbon;
 
     if (!$this->passedAway){
@@ -55,7 +55,7 @@ function wasGuestOrHost(string $relations) {
     }
 
     if (!empty($comments)) {
-        $comments = (new CommentSorterProfile())->sortComments($comments);
+        $comments = array_slice($comments, -10);
     }
 
     $username = $this->member->Username;
@@ -91,7 +91,7 @@ function wasGuestOrHost(string $relations) {
             <div class="p-2">
 
                 <?php
-                   $tt = array ();
+                   $tt =  [];
                    $commentLoopCount = 0;
                    foreach ($comments as $key => $c) {
 
@@ -178,7 +178,7 @@ function wasGuestOrHost(string $relations) {
                                <div class="w-100 py-2">
                                    <p class="js-read-more-received mb-1">
                                        <?php
-                                       echo nl2br($comment->TextFree);
+                                       echo nl2br((string) $comment->TextFree);
                                        ?>
                                    </p>
                                    <?php if (!$this->passedAway) { ?>
@@ -267,7 +267,7 @@ function wasGuestOrHost(string $relations) {
                                <div class="w-100 py-2">
                                    <p class="js-read-more-written mb-1">
                                        <?php
-                                       echo nl2br($comment->TextFree);
+                                       echo nl2br((string) $comment->TextFree);
                                        ?>
                                    </p>
                                    <?php if ($loggedIn === $comment->UsernameToMember) { ?>
@@ -332,7 +332,7 @@ if (count($relations) > 0) { ?>
                                 $comment = '';
                             }
 
-                            $rel->Comment = $purifier->purify(stripslashes($comment));
+                            $rel->Comment = $purifier->purify(stripslashes((string) $comment));
                             ?>
                             <div class="w-100">
                                 <div class="float-left mr-2">

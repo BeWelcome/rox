@@ -12,7 +12,7 @@ echo $words->flushBuffer();
 
 if ($statement) {
 $requestStr = implode('/', $request);
-$matches = array();
+$matches = [];
 if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
     $page = $matches[1];
     $requestStr = preg_replace('%/=page(\d+)%', '', $requestStr);
@@ -29,7 +29,7 @@ $statement = $p[0];
     foreach ($statement as $d) {
         echo '<div class="col-sm-6 col-lg-4 mb-4">';
         echo '<div class="card">';
-        $title_short = ((strlen($d->title) >= 26) ? substr($d->title,0,25).'...' : $d->title);
+        $title_short = ((strlen((string) $d->title) >= 26) ? substr((string) $d->title,0,25).'...' : $d->title);
         echo '<a href="gallery/img?id='.$d->id.'" class="p-1" id="image_link_'.$d->id.'" data-toggle="lightbox" data-type="image" data-gallery="a" '
             . 'data-title="' . $d->title . '" class="text-center"><img class="img-fluid img-thumbnail mx-auto d-block" src="gallery/thumbimg?id='.$d->id.($thumbsize ? '&t='.$thumbsize : '').'" alt="image"></a>';
         echo '<div class="card-body p-1"><h6 class="card-title text-truncate">';
@@ -39,7 +39,7 @@ $statement = $p[0];
         echo '<a href="gallery/img?id='.$d->id.'" title="'.$d->title.'">'.$title_short.'</a><a href="gallery/img?id='.$d->id.'">
         <i class="fa fa-expand" title="'.$words->getSilent('Preview image').'"></i></a>'.$words->flushBuffer().'</h6></div>';
         echo '<div class="card-text">';
-        echo '<p class="small">'.$layoutbits->ago(strtotime($d->created)).' '.$words->getFormatted('by') .' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>';
+        echo '<p class="small">'.$layoutbits->ago(strtotime((string) $d->created)).' '.$words->getFormatted('by') .' <a href="members/'.$d->user_handle.'">'.$d->user_handle.'</a>';
         echo '<a href="gallery/show/user/'.$d->user_handle.'" title="'.$words->getSilent('galleryUserOthers',$d->user_handle).'"><i class="fa fa-image ml-1"></i></a>'.$words->flushBuffer().'</p>';
         echo '</div>';
         echo '</div>';

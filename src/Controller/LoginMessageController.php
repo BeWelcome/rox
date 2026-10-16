@@ -8,17 +8,11 @@ use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class LoginMessageController extends AbstractController
 {
-    /**
-     * @Route("/loginmessage/acknowledge/{id}",
-     *     name="acknowledge_login_message",
-     *     requirements={"id": "\d+"},
-     *     methods={"POST"}
-     * )
-     */
+    #[Route(path: '/loginmessage/acknowledge/{id}', name: 'acknowledge_login_message', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function acknowledge(LoginMessage $loginMessage, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $member */

@@ -11,7 +11,7 @@ use Pagerfanta\Pagerfanta;
 /**
  * Class MessageModel.
  *
- * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings("PHPMD.StaticAccess")
  * Hide logic in DeleteRequestType
  */
 class CommentModel
@@ -61,7 +61,6 @@ class CommentModel
     }
 
     /**
-     * @param $quality
      * @param int $page
      * @param int $limit
      *
@@ -76,7 +75,6 @@ class CommentModel
     }
 
     /**
-     * @param $action
      * @param int $page
      * @param int $limit
      *

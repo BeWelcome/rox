@@ -42,7 +42,7 @@ services:
 
   manticore:
     container_name: manticore
-    image: manticoresearch/manticore:6.3.8
+    image: manticoresearch/manticore:29.9.0
     restart: always
     ports:
       - 127.0.0.1:9306:9306

@@ -10,7 +10,7 @@ trait TranslatorSingletonTrait
     private $_translator;
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     protected function setTranslatorSingleton()
     {

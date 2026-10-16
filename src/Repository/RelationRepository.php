@@ -24,12 +24,12 @@ class RelationRepository extends EntityRepository
                 ->andWhere(
                     $qb->expr()->eq('r.owner', ':member'),
                 )
-                ->setParameter(':member', $member)
-                ->setParameter(':confirmed', 'Yes')
+                ->setParameter('member', $member)
+                ->setParameter('confirmed', 'Yes')
                 ->orderBy('r.updated', 'ASC')
                 ->getQuery()
                 ->getSingleScalarResult()
-            ;
+        ;
     }
 
     public function findRelationsFor(Member $member)
@@ -45,12 +45,12 @@ class RelationRepository extends EntityRepository
                         $qb->expr()->eq('r.receiver', ':member'),
                     )
             )
-            ->setParameter(':member', $member)
-            ->setParameter(':confirmed', 'Yes')
+            ->setParameter('member', $member)
+            ->setParameter('confirmed', 'Yes')
             ->orderBy('r.updated', 'DESC')
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     public function findRelationBetween(Member $owner, Member $receiver): ?Relation
@@ -60,11 +60,11 @@ class RelationRepository extends EntityRepository
                 ->createQueryBuilder('r')
                 ->where('r.owner = :member')
                 ->andWhere('r.receiver = :receiver')
-                ->setParameter(':member', $owner)
-                ->setParameter(':receiver', $receiver)
+                ->setParameter('member', $owner)
+                ->setParameter('receiver', $receiver)
                 ->getQuery()
                 ->getOneOrNullResult()
-            ;
+        ;
     }
 
     public function findUnconfirmedRelationBetween(Member $owner, Member $receiver): ?Relation
@@ -75,12 +75,12 @@ class RelationRepository extends EntityRepository
                 ->where('r.owner = :member')
                 ->andWhere('r.receiver = :receiver')
                 ->andWhere('r.confirmed = :confirmed')
-                ->setParameter(':member', $owner)
-                ->setParameter(':receiver', $receiver)
-                ->setParameter(':confirmed', 'No')
+                ->setParameter('member', $owner)
+                ->setParameter('receiver', $receiver)
+                ->setParameter('confirmed', 'No')
                 ->getQuery()
                 ->getOneOrNullResult()
-            ;
+        ;
     }
 
     public function getRelations(Member $member, int $page, int $itemsPerPage): Pagerfanta
@@ -90,7 +90,7 @@ class RelationRepository extends EntityRepository
             ->where('r.confirmed = :confirmed')
             ->andWhere('r.owner = :member')
             ->setParameter('member', $member)
-            ->setParameter(':confirmed', 'Yes')
+            ->setParameter('confirmed', 'Yes')
             ->orderBy('m.username', 'ASC')
         ;
 

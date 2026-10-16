@@ -12,7 +12,7 @@ use Mockery;
 
 class GroupMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'group invitation' => [
             'type' => 'email',
             'template' => 'emails/group/invitation.html.twig',
@@ -47,11 +47,8 @@ class GroupMockups implements MockupProviderInterface
         ],
     ];
 
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function getFeature(): string

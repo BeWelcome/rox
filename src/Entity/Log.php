@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -8,56 +9,50 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Logs.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="logs")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'logs')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Log
 {
     /**
-     * @var \App\Entity\Member
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="idMember", referencedColumnName="id")
+     * @var Member
      */
+    #[ORM\JoinColumn(name: 'idMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private $member;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Str", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'Str', type: 'text', length: 65535, nullable: false)]
     private $logMessage;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Type", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Type', type: 'text', length: 255, nullable: false)]
     private $type;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @var DateTime
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
     private $id;
 
     /**
@@ -135,7 +130,7 @@ class Log
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return Log
      */
@@ -168,11 +163,10 @@ class Log
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 }

@@ -47,6 +47,7 @@ class GroupLeavePage extends GroupsBasePage
         <?php
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'leave';
     }

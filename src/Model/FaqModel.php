@@ -30,7 +30,7 @@ class FaqModel
         return $repository->findLatest($page, $limit);
     }
 
-    public function getFaqsForCategory(FaqCategory $faqCategory)
+    public function getFaqsForCategory(FaqCategory $faqCategory): mixed
     {
         $connection = $this->getManager()->getConnection();
         $stmt = $connection->prepare(
@@ -48,8 +48,7 @@ ORDER BY
         );
         $stmt->bindValue(':categoryId', $faqCategory->getId(), ParameterType::INTEGER);
 
-        $stmt->execute();
-        $results = $stmt->fetchAll();
+        $results = $stmt->executeQuery()->fetchAllAssociative();
 
         return $results;
     }

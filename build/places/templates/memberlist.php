@@ -3,12 +3,12 @@ echo '<div class="row mt-3"><div class="col-12"><h2 class="m-0">' . $words->get(
 // $User = new APP_User;
 $words = new MOD_words();
 $layoutbits = new MOD_layoutbits;
-$url = '/places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/';
+$url = '/places/' . htmlspecialchars((string) $this->countryName) . '/' . $this->countryCode . '/';
 if ($this->regionCode) {
-    $url .= htmlspecialchars($this->regionName) . '/' . $this->regionCode . '/';
+    $url .= htmlspecialchars((string) $this->regionName) . '/' . $this->regionCode . '/';
 }
 if ($this->cityCode) {
-    $url .= htmlspecialchars($this->cityName) . '/' . $this->cityCode . '/';
+    $url .= htmlspecialchars((string) $this->cityName) . '/' . $this->cityCode . '/';
 }
 $loginUrlOpen = '<a href="login' . $url . '#login-widget">';
 $loginUrlClose = '</a>';

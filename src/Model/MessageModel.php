@@ -7,7 +7,7 @@ use App\Doctrine\DeleteRequestType;
 /**
  * Class MessageModel.
  *
- * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings("PHPMD.StaticAccess")
  * Hide logic in DeleteRequestType
  */
 class MessageModel

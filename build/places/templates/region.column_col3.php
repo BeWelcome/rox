@@ -15,9 +15,9 @@ foreach ($this->cities as $city) {
         $listcnt = 1;
     }
 
-    echo '<div class="p-1"><a href="places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode
-         . '/' . htmlspecialchars($this->regionName) . '/' . $this->regionCode . '/'
-         . htmlspecialchars($city->city) . '/' . $city->geonameId . '">'. htmlentities($city->city, ENT_COMPAT, 'utf-8') .'</a><span class="small ml-1 badge badge-primary">' . $city->NbMember . '</span>';
+    echo '<div class="p-1"><a href="places/' . htmlspecialchars((string) $this->countryName) . '/' . $this->countryCode
+         . '/' . htmlspecialchars((string) $this->regionName) . '/' . $this->regionCode . '/'
+         . htmlspecialchars((string) $city->city) . '/' . $city->geonameId . '">'. htmlentities((string) $city->city, ENT_COMPAT, 'utf-8') .'</a><span class="small ml-1 badge badge-primary">' . $city->NbMember . '</span>';
     echo '</div>';
 
 }

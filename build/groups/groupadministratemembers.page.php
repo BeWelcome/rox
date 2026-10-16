@@ -32,6 +32,7 @@ Boston, MA  02111-1307, USA.
  */
 class GroupMemberAdministrationPage extends GroupsSubPage
 {
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'admin';
@@ -328,9 +329,9 @@ class GroupMemberAdministrationPage extends GroupsSubPage
     {
         $new_str = '';
 
-        $str_len = strlen($str);
+        $str_len = strlen((string) $str);
         for ($i = 0; $i < $str_len; $i++) {
-            $new_str .= '\\x' . dechex(ord(substr($str, $i, 1)));
+            $new_str .= '\\x' . dechex(ord(substr((string) $str, $i, 1)));
         }
 
         return $new_str;

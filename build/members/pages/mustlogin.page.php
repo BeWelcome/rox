@@ -3,6 +3,7 @@
 
 class MembersMustloginPage extends RoxPageView
 {
+    #[\Override]
     protected function getPageTitle()
     {
         return "Please login to view these pages - BeWelcome";
@@ -18,14 +19,16 @@ class MembersMustloginPage extends RoxPageView
         
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
 
     }
 
+    #[\Override]
     protected function getColumnNames ()
     {
-        return array('col3');
+        return ['col3'];
     }
 
     protected function column_col3()

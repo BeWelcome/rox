@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Preference.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="preferences", uniqueConstraints={@ORM\UniqueConstraint(name="codeName", columns={"codeName"})})
- * @ORM\Entity(readOnly=true)
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'preferences')]
+#[ORM\UniqueConstraint(name: 'codeName', columns: ['codeName'])]
+#[ORM\Entity(readOnly: true)]
 class Preference
 {
     public const MESSAGE_AND_REQUEST_FILTER = 'PreferenceMessageFilter';
@@ -39,67 +43,58 @@ class Preference
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="position", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'position', type: 'integer', nullable: false)]
     private $position;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="codeName", type="string", length=30, nullable=false)
      */
+    #[ORM\Column(name: 'codeName', type: 'string', length: 30, nullable: false)]
     private $codename;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="codeDescription", type="string", length=30, nullable=false)
      */
+    #[ORM\Column(name: 'codeDescription', type: 'string', length: 30, nullable: false)]
     private $codedescription;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Description", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'Description', type: 'text', length: 65535, nullable: false)]
     private $description;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @var DateTime
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="DefaultValue", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'DefaultValue', type: 'text', length: 255, nullable: false)]
     private $defaultValue;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="PossibleValues", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'PossibleValues', type: 'text', length: 255, nullable: false)]
     private $possibleValues;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Status", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'Status', type: 'string', nullable: false)]
     private $status = 'Inactive';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -145,7 +140,7 @@ class Preference
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -220,7 +215,7 @@ class Preference
         return $this;
     }
 
-    public function setCreated(\DateTimeInterface $created): self
+    public function setCreated(DateTimeInterface $created): self
     {
         $this->created = $created;
 

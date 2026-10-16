@@ -6,6 +6,7 @@ use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Word;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,22 +16,20 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Yaml;
 
+#[AsCommand(
+    name: 'translations:add:missing',
+    aliases: [],
+    hidden: false,
+)]
 class TranslationsAddMissingCommand extends Command
 {
-    protected static $defaultName = 'translations:add:missing';
-    protected static $defaultDescription = 'Add a short description for your command';
-
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -40,7 +39,7 @@ class TranslationsAddMissingCommand extends Command
 
         $count = 0;
         foreach ($files as $file) {
-            $io->section(sprintf('Importing missing translations from file: %s', $file));
+            $io->section(\sprintf('Importing missing translations from file: %s', $file));
 
             $memberRepository = $this->entityManager->getRepository(Member::class);
             $admin = $memberRepository->find(1);
@@ -64,21 +63,21 @@ class TranslationsAddMissingCommand extends Command
                 if (null === $translation) {
                     ++$count;
                     if ('@' === $sentence[0]) {
-                        $reusedTranslationId = substr($sentence, 1);
-                        $io->note(sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
+                        $reusedTranslationId = substr((string) $sentence, 1);
+                        $io->note(\sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
                         $connection = $this->entityManager->getConnection();
                         $statement = $connection->prepare('
                             INSERT INTO words (code, domain, ShortCode, Sentence, donottranslate, IdLanguage, Description, IdMember, updated, created, TranslationPriority, isarchived, majorupdate)
                             SELECT :translationId, domain, ShortCode, Sentence, donottranslate, IdLanguage, Description, :admin, updated, created, TranslationPriority, isarchived, majorupdate
                             FROM words
-                            WHERE code = :reusedTranslationId');
-                        $statement->executeQuery([
-                            ':admin' => $admin->getId(),
-                            ':translationId' => $translationId,
-                            ':reusedTranslationId' => $reusedTranslationId,
-                        ]);
+                            WHERE code = :reusedTranslationId
+                        ');
+                        $statement->bindValue(':translationId', $translationId);
+                        $statement->bindValue(':reusedTranslationId', $reusedTranslationId);
+                        $statement->bindValue(':admin', $admin->getId());
+                        $statement->executeQuery();
                     } else {
-                        $io->note(sprintf('Adding %s: %s', $translationId, $sentence));
+                        $io->note(\sprintf('Adding %s: %s', $translationId, $sentence));
 
                         $translation = new Word();
                         $translation->setCode($translationId);

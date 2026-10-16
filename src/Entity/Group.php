@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,130 +12,82 @@ use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectManagerAware;
 
 /**
- * Group.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="groups")
- * @ORM\Entity(repositoryClass="App\Repository\GroupRepository")
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
-class Group implements ObjectManagerAware
+#[ORM\Table(name: 'groups')]
+#[ORM\Entity(repositoryClass: \App\Repository\GroupRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+class Group
 {
-    public const NOT_APPROVED = 0;
-    public const APPROVED = 1;
-    public const DISMISSED = 2;
-    public const IN_DISCUSSION = 3;
-    public const APPROVED_CLOSED = 4;
-    public const DISMISSED_CLOSED = 5;
-    public const IN_DISCUSSION_CLOSED = 6;
+    public const int NOT_APPROVED = 0;
+    public const int APPROVED = 1;
+    public const int DISMISSED = 2;
+    public const int IN_DISCUSSION = 3;
+    public const int APPROVED_CLOSED = 4;
+    public const int DISMISSED_CLOSED = 5;
+    public const int IN_DISCUSSION_CLOSED = 6;
 
-    public const OPEN = [
+    public const array OPEN = [
         self::NOT_APPROVED, self::IN_DISCUSSION,
     ];
 
-    public const HANDLED = [
+    public const array HANDLED = [
         self::APPROVED, self::DISMISSED,
     ];
 
-    public const CLOSED = [
+    public const array CLOSED = [
         self::APPROVED_CLOSED, self::DISMISSED_CLOSED, self::IN_DISCUSSION_CLOSED,
     ];
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Name", type="string", length=40, nullable=false)
-     */
-    private $name;
+    #[ORM\Column(name: 'Name', type: 'string', length: 40, nullable: false)]
+    private string $name;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Type", type="group_type", nullable=false)
-     */
-    private $type = GroupType::PUBLIC;
+    #[ORM\Column(name: 'Type', type: 'group_type', nullable: false)]
+    private string $type = GroupType::PUBLIC;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created;
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
+    private DateTime $created;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="Picture", type="text", length=65535, nullable=false)
-     */
-    private $picture;
+    #[ORM\Column(name: 'Picture', type: 'text', length: 65535, nullable: false)]
+    private string $picture;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="MoreInfo", type="text", length=65535, nullable=false)
-     */
-    private $moreInfo = '';
+    #[ORM\Column(name: 'MoreInfo', type: 'text', length: 65535, nullable: false)]
+    private string $moreInfo = '';
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="IdDescription", type="integer", nullable=false)
-     */
-    private $idDescription = 0;
+    #[ORM\Column(name: 'IdDescription', type: 'integer', nullable: false)]
+    private int $idDescription = 0;
 
-    /** @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="MemberTranslation", fetch="LAZY")
-     * @ORM\JoinTable(name="groups_trads",
-     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="trad_id", referencedColumnName="id", unique=true)}
-     *      )
-     */
-    private $descriptions;
+    #[ORM\JoinTable(name: 'groups_trads')]
+    #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'trad_id', referencedColumnName: 'id', unique: true)]
+    #[ORM\ManyToMany(targetEntity: MemberTranslation::class, fetch: 'LAZY')]
+    private Collection $descriptions;
 
-    /** @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="GroupMembership", mappedBy="group", cascade={"persist", "remove"}, orphanRemoval=TRUE)
-     */
-    private $groupMemberships;
+    #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'group', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $groupMemberships;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="VisiblePosts", type="string", nullable=false)
-     */
-    private $visibleposts = 'yes';
+    #[ORM\Column(name: 'VisiblePosts', type: 'string', nullable: false)]
+    private string $visibleposts = 'yes';
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="approved", type="smallint", nullable = true)
-     */
-    private $approved = self::NOT_APPROVED;
+    #[ORM\Column(name: 'approved', type: 'smallint', nullable: true)]
+    private int $approved = self::NOT_APPROVED;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private int $id;
 
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
+    private ObjectManager $objectManager;
 
     public function __construct()
     {
@@ -142,26 +95,14 @@ class Group implements ObjectManagerAware
         $this->groupMemberships = new ArrayCollection();
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return Group
-     */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -396,6 +337,14 @@ class Group implements ObjectManagerAware
         return \in_array($member, $members, true);
     }
 
+    public function getMembership(Member $member): ?GroupMembership
+    {
+        $criterion = new Criteria();
+        $criterion->where(Criteria::expr()->eq('member', $member));
+
+        return $this->groupMemberships->matching($criterion)->first();
+    }
+
     /**
      * This function returns the actual admins of the group.
      *
@@ -420,7 +369,7 @@ class Group implements ObjectManagerAware
         $admins = [];
         foreach ($privilegeScopes as $privilegeScope) {
             $admin = $privilegeScope->getMember();
-            if (false !== strpos(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
+            if (str_contains(MemberStatusType::ACTIVE_WITH_MESSAGES, $admin->getStatus())) {
                 $admins[] = $admin;
             }
         }
@@ -441,29 +390,24 @@ class Group implements ObjectManagerAware
         );
     }
 
-    public function isPublic()
+    public function isPublic(): bool
     {
         return GroupType::PUBLIC === $this->type;
     }
 
     /**
-     * Injects responsible ObjectManager and the ClassMetadata into this persistent object.
-     *
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     */
-    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
-    {
-        $this->objectManager = $objectManager;
-    }
-
-    /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
-    public function onPrePersist()
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
+    }
+
+    #[ORM\PostLoad]
+    public function onPostLoad(PostLoadEventArgs $eventArgs): void
+    {
+        $this->objectManager = $eventArgs->getObjectManager();
     }
 
     public function getMoreInfo(): ?string

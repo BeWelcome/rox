@@ -10,11 +10,13 @@ class SignupBasePage extends PageWithRoxLayout
 //        $this->addLateLoadScriptFile('build/signup/signup.js');
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         return '';
     }
 
+    #[\Override]
     protected function getPageTitle() {
         $words = $this->getWords();
         return $words->getBuffered('signup') . ' - BeWelcome';
@@ -26,10 +28,11 @@ class SignupBasePage extends PageWithRoxLayout
         echo $words->get('signup');
     }
 
+    #[\Override]
     protected function getColumnNames()
     {
         // we don't need the other columns
-        return array('col3');
+        return ['col3'];
     }
 
     private function _cmpEditLang($a, $b)
@@ -37,6 +40,6 @@ class SignupBasePage extends PageWithRoxLayout
         if ($a == $b) {
             return 0;
         }
-        return (strtolower($a->TranslatedName) < strToLower($b->TranslatedName)) ? -1 : 1;
+        return (strtolower((string) $a->TranslatedName) < strToLower((string) $b->TranslatedName)) ? -1 : 1;
     }
 }

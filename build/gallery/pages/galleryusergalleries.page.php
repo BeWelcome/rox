@@ -10,6 +10,7 @@
 
 class GalleryUserGalleriesPage extends GalleryUserPage
 {
+    #[\Override]
     protected function init()
     {
         parent::init();
@@ -17,16 +18,19 @@ class GalleryUserGalleriesPage extends GalleryUserPage
         $this->addLateLoadScriptFile('build/gallery.js');
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'overview';
     }
 
+    #[\Override]
     protected function breadcrumbs() {
         $words = $this->words;
-        return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst($this->member->Username).'</a></h1>';
+        return '<h1><a href="gallery">'.$words->get('Gallery').'</a> &raquo; <a href="gallery/show/user/'.$this->member->Username.'">'.ucfirst((string) $this->member->Username).'</a></h1>';
     }
 
+    #[\Override]
     public function leftSidebar()
     {
         $galleries = $this->galleries;
@@ -36,6 +40,7 @@ class GalleryUserGalleriesPage extends GalleryUserPage
         // require SCRIPT_BASE . 'build/gallery/templates/userinfo.php';
     }
 
+    #[\Override]
     protected function column_col3() {
         $statement = $this->statement;
         $galleries = $this->galleries;

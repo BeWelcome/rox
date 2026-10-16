@@ -47,7 +47,7 @@ Boston, MA  02111-1307, USA.
       $postAuthor = $post->OwnerUsername;
       if ($postAuthor !== $username && !in_array($postAuthor, $authors)) {
           $authors[] = $postAuthor;
-          echo '<input class="js-mention" type="hidden" value="' . htmlentities($postAuthor) . '">';
+          echo '<input class="js-mention" type="hidden" value="' . htmlentities((string) $postAuthor) . '">';
       }
       require 'singlepost.php';
       $cntx = $cnt;

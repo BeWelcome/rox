@@ -2,6 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
+use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\SubtripOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Activity;
@@ -17,7 +18,6 @@ use App\Entity\Newsletter;
 use App\Entity\Poll;
 use App\Entity\PollChoice;
 use App\Entity\Right;
-use App\Entity\Shout;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
@@ -30,11 +30,11 @@ use Mockery;
  *
  * Rather complicated but understandable. No mess detection needed.
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  */
 class MyDataMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'start page' => [
             'type' => 'template',
             'template' => 'private/index.html.twig',
@@ -97,8 +97,14 @@ class MyDataMockups implements MockupProviderInterface
             'template' => 'private/post.html.twig',
             'description' => 'Shows a single post to groups or forum',
         ],
+        'groups' => [
+            'type' => 'template',
+            'with_parameters' => true,
+            'template' => 'private/groups.html.twig',
+            'description' => 'Shows the groups of the member',
+        ],
     ];
-    private InvitationUtility $invitationUtility;
+    private readonly InvitationUtility $invitationUtility;
 
     public function __construct()
     {
@@ -165,66 +171,35 @@ class MyDataMockups implements MockupProviderInterface
      */
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
-        switch ($feature) {
-            case 'post (thread)':
-            case 'post (group)':
-                return ['deleted' => ['yes' => 'yes', 'no' => 'no']];
-            case 'broadcasts':
-            case 'comments':
-            case 'communitynews':
-            case 'communitynews_comments':
-            case 'donations':
-            case 'gallery':
-            case 'logs':
-            case 'newsletters':
-            case 'pictures':
-            case 'polls_contributed':
-            case 'polls_created':
-            case 'polls_voted':
-            case 'relations':
-            case 'rights':
-            case 'privileges':
-            case 'trips':
-            case 'shouts':
-            case 'subscriptions':
-            case 'translations':
-                return ['count' => ['none' => '0', 'some' => '2']];
-        }
-
-        switch ($locale) {
-            case 'en':
-            case 'de':
-            case 'fr':
-            case 'es':
-            case 'pt':
-            case 'pt-br':
-            case 'gl':
-                return [
+        return match ($feature) {
+            'post (thread)', 'post (group)' => ['deleted' => ['yes' => 'yes', 'no' => 'no']],
+            'broadcasts', 'comments', 'communitynews', 'communitynews_comments', 'donations', 'gallery', 'logs', 'newsletters', 'pictures', 'groups', 'polls_contributed', 'polls_created', 'polls_voted', 'relations', 'rights', 'privileges', 'trips', 'subscriptions', 'translations' => ['count' => ['none' => '0', 'some' => '2']],
+            default => match ($locale) {
+                'en', 'de', 'fr', 'es', 'pt', 'pt-br', 'gl' => [
                     'count' => [
                         'none' => 0,
                         'one' => 1,
                         'some' => 3,
                     ],
-                ];
-            case 'pl':
-                return [
+                ],
+                'pl' => [
                     'count' => [
                         'none' => 0,
                         'one' => 1,
                         'few' => 2,
                         'other' => 5,
                     ],
-                ];
-        }
-
-        return [
-            'count' => [
-                'none' => 0,
-                'one' => 1,
-                'few' => 2,
-                'other' => 5,
-            ],
-        ];
+                ],
+                default => [
+                    'count' => [
+                        'none' => 0,
+                        'one' => 1,
+                        'few' => 2,
+                        'other' => 5,
+                    ],
+                ],
+            },
+        };
     }
 
     private function getExtractedEntities(): array
@@ -248,7 +223,6 @@ class MyDataMockups implements MockupProviderInterface
             'relations',
             'rights',
             'trips',
-            'shouts',
             'subscriptions',
             'translations',
         ];
@@ -333,6 +307,8 @@ class MyDataMockups implements MockupProviderInterface
                 $key = 'hrefs';
                 $mockEntity = 'https://source.unsplash.com/random/300×300';
                 break;
+            case 'groups':
+                return ['groupmemberships' => $this->getGroupMemberships($parameters['count'])];
             case 'logs':
                 $mockEntity = Mockery::mock(Log::class, [
                     'getType' => 'log',
@@ -413,8 +389,6 @@ class MyDataMockups implements MockupProviderInterface
                     'getDescription' => 'Right Description',
                 ]);
                 break;
-            case 'shouts':
-                return $this->getShouts($count);
             case 'subscriptions':
                 return $this->getSubscriptions($count);
             case 'translations':
@@ -456,7 +430,7 @@ class MyDataMockups implements MockupProviderInterface
             'getCountry' => $country,
         ]);
 
-        $leg = Mockery::mock(SubTrip::class, [
+        $leg = Mockery::mock(Subtrip::class, [
             'getId' => 1,
             'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
             'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
@@ -468,13 +442,11 @@ class MyDataMockups implements MockupProviderInterface
         $mockTrip->shouldReceive('addSubtrip')
             ->once()
             ->with($leg)
-            ->andReturn($mockTrip)
-        ;
+            ->andReturn($mockTrip);
         $mockTrip->addSubtrip($leg);
         $mockTrip
             ->shouldReceive('getSubtrips')
-            ->andReturn(new ArrayCollection([$leg]))
-        ;
+            ->andReturn(new ArrayCollection([$leg]));
 
         return $mockTrip;
     }
@@ -654,39 +626,6 @@ class MyDataMockups implements MockupProviderInterface
         ];
     }
 
-    private function getShouts($count): array
-    {
-        if (0 === $count) {
-            return ['shouts' => []];
-        }
-
-        return [
-            'shouts' => [
-                [
-                    'title' => 'Shout Title',
-                    'text' => 'Image',
-                    'table' => Shout::GALLERY_ITEM,
-                    'tableId' => 'Image',
-                ],
-                [
-                    'text' => 'Gallery',
-                    'table' => Shout::GALLERY,
-                    'tableId' => 'Gallery',
-                ],
-                [
-                    'text' => 'Group',
-                    'table' => Shout::GROUP,
-                    'tableId' => 'Group',
-                ],
-                [
-                    'text' => 'Trip',
-                    'table' => Shout::TRIP,
-                    'tableId' => 'Trip',
-                ],
-            ],
-        ];
-    }
-
     private function getSubscriptions($count): array
     {
         if (0 === $count) {
@@ -739,5 +678,41 @@ class MyDataMockups implements MockupProviderInterface
                 ],
             ],
         ];
+    }
+
+    private function getGroupMemberships(int $count): array
+    {
+        $groupMemberships = [];
+        for ($index = 0; $index < $count; ++$index) {
+            // Plain arrays, not Mockery mocks: the template only reads values, and Mockery (a dev
+            // dependency) is not in the prod image, so this preview failed with a 500 (rox#599).
+            $groupMemberships[] = [
+                'group' => [
+                    'name' => 'group #' . ($index + 1),
+                    'id' => ($index + 1),
+                ],
+                'created' => new DateTime(),
+                'updated' => new DateTime(),
+                'status' => GroupMembershipStatusType::CURRENT_MEMBER,
+                'comments' => [
+                    [
+                        'code' => 'mydata.translations.headline',
+                        'Sentence' => 'Translations',
+                        'shortCode' => 'en',
+                        'Language' => ['WordCode' => 'lang_pt'],
+                        'created' => (new DateTime())->format('Y-m-d'),
+                    ],
+                    [
+                        'code' => 'mydata.translations.abstract',
+                        'Sentence' => 'Traducions',
+                        'shortCode' => 'en',
+                        'Language' => ['WordCode' => 'lang_es'],
+                        'created' => (new DateTime())->format('Y-m-d'),
+                    ],
+                ],
+            ];
+        }
+
+        return $groupMemberships;
     }
 }

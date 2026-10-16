@@ -18,7 +18,7 @@ use Mockery;
 class InvitationUtility
 {
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function getThread(Member $host, Member $guest, Subtrip $leg, int $status, int $replies): array
     {
@@ -67,7 +67,7 @@ class InvitationUtility
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function getReply(
         Message $parent,
@@ -75,7 +75,7 @@ class InvitationUtility
         HostingRequest $request,
         Member $guest,
         Member $host,
-        int $number
+        int $number,
     ): Message {
         $reply = Mockery::mock(Message::class, [
             'getId' => 1,
@@ -96,9 +96,7 @@ class InvitationUtility
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     *
-     * @param mixed $host
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function getLeg($host): Subtrip
     {
@@ -113,7 +111,7 @@ class InvitationUtility
         ]);
         $location = new NewLocation();
         $location->setName('Mock');
-        $leg = Mockery::mock(SubTrip::class, [
+        $leg = Mockery::mock(Subtrip::class, [
             'getId' => 1,
             'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
             'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),

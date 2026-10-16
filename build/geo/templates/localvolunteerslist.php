@@ -10,7 +10,7 @@ if (!$volunteers) {
 } else {
     $request = PRequest::get()->request;
     $requestStr = implode('/', $request);
-    $matches = array();
+    $matches = [];
     if (preg_match('%/=page(\d+)%', $requestStr, $matches)) {
         $page = $matches[1];
         $requestStr = preg_replace('%/=page(\d+)%', '', $requestStr);

@@ -9,31 +9,29 @@ use App\Repository\ForumPostRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
+use App\Utilities\RedirectToReferrerTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ForumsController extends AbstractController
 {
     use ItemsPerPageTraits;
+    use RedirectToReferrerTrait;
 
-    private const POSTS_DIFF = 3;
-    private const POSTS_MAX = 10;
-    private const POSTS_MIN = 1;
-    private EntityManagerInterface $entityManager;
+    private const int POSTS_DIFF = 3;
+    private const int POSTS_MAX = 10;
+    private const int POSTS_MIN = 1;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
-    /**
-     * @Route("/forums/more/group", name="forums_more_group_posts")
-     */
+    #[Route(path: '/forums/more/group', name: 'forums_more_group_posts')]
     public function showMoreGroupPostsAction(): RedirectResponse
     {
         /** @var Member $member */
@@ -44,19 +42,16 @@ class ForumsController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_GROUPS_POSTS]);
 
         $memberPreference = $member->getMemberPreference($preference);
-        $value = (int) ($memberPreference->getValue());
+        $value = (int) $memberPreference->getValue();
         $value = min($value + self::POSTS_DIFF, self::POSTS_MAX);
         $memberPreference->setValue($value);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($memberPreference);
-        $em->flush();
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('forums');
     }
 
-    /**
-     * @Route("/forums/less/group", name="forums_less_group_posts")
-     */
+    #[Route(path: '/forums/less/group', name: 'forums_less_group_posts')]
     public function showLessGroupPostsAction(): RedirectResponse
     {
         /** @var Member $member */
@@ -67,19 +62,16 @@ class ForumsController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_GROUPS_POSTS]);
 
         $memberPreference = $member->getMemberPreference($preference);
-        $value = (int) ($memberPreference->getValue());
+        $value = (int) $memberPreference->getValue();
         $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
         $memberPreference->setValue($value);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($memberPreference);
-        $em->flush();
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('forums');
     }
 
-    /**
-     * @Route("/forums/more/agora", name="forums_more_agora_posts")
-     */
+    #[Route(path: '/forums/more/agora', name: 'forums_more_agora_posts')]
     public function showMoreAgoraPostsAction(): RedirectResponse
     {
         /** @var Member $member */
@@ -90,19 +82,16 @@ class ForumsController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_FORUM_POSTS]);
 
         $memberPreference = $member->getMemberPreference($preference);
-        $value = (int) ($memberPreference->getValue());
+        $value = (int) $memberPreference->getValue();
         $value = min($value + self::POSTS_DIFF, self::POSTS_MAX);
         $memberPreference->setValue($value);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($memberPreference);
-        $em->flush();
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('forums');
     }
 
-    /**
-     * @Route("/forums/less/agora", name="forums_less_agora_posts")
-     */
+    #[Route(path: '/forums/less/agora', name: 'forums_less_agora_posts')]
     public function showLessAgoraPostsAction(): RedirectResponse
     {
         /** @var Member $member */
@@ -113,19 +102,16 @@ class ForumsController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::NUMBER_FORUM_POSTS]);
 
         $memberPreference = $member->getMemberPreference($preference);
-        $value = (int) ($memberPreference->getValue());
+        $value = (int) $memberPreference->getValue();
         $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
         $memberPreference->setValue($value);
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($memberPreference);
-        $em->flush();
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
 
         return $this->redirectToRoute('forums');
     }
 
-    /**
-     * @Route("/forums/show/groups/only-mine", name="forums_groups_only_mine")
-     */
+    #[Route(path: '/forums/show/groups/only-mine', name: 'forums_groups_only_mine')]
     public function showOnlyPostsInMyGroups(Request $request): RedirectResponse
     {
         /** @var Member $member */
@@ -137,17 +123,13 @@ class ForumsController extends AbstractController
 
         $memberPreference = $member->getMemberPreference($preference);
         $memberPreference->setValue('Yes');
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($memberPreference);
-        $em->flush();
-        $referrer = $request->headers->get('referer');
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
 
-        return $this->redirect($referrer);
+        return $this->redirectToReferrer($request);
     }
 
-    /**
-     * @Route("/forums/show/groups/all", name="forums_groups_all")
-     */
+    #[Route(path: '/forums/show/groups/all', name: 'forums_groups_all')]
     public function showPostsInAllGroups(Request $request): RedirectResponse
     {
         /** @var Member $member */
@@ -159,21 +141,14 @@ class ForumsController extends AbstractController
 
         $memberPreference = $member->getMemberPreference($preference);
         $memberPreference->setValue('No');
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($memberPreference);
-        $em->flush();
+        $this->entityManager->persist($memberPreference);
+        $this->entityManager->flush();
 
-        $referrer = $request->headers->get('referer');
-
-        return $this->redirect($referrer);
+        return $this->redirectToReferrer($request);
     }
 
-    /**
-     * @Route("/members/{username}/posts/{page}/{search}", name="profile_forum_posts_search")
-     * @Route("/members/{username}/posts/{page}", name="profile_forum_posts",
-     *     requirements={"page"="\d+"}
-     * )
-     */
+    #[Route(path: '/members/{username:member}/posts/{page}/{search}', name: 'profile_forum_posts_search')]
+    #[Route(path: '/members/{username}/posts/{page}', name: 'profile_forum_posts', requirements: ['page' => '\d+'])]
     public function showPostsByMember(
         Request $request,
         ProfileSubmenu $profileSubmenu,
@@ -181,7 +156,7 @@ class ForumsController extends AbstractController
         EntityManagerInterface $entityManager,
         ChangeProfilePictureGlobals $globals,
         int $page = 1,
-        string $search = ''
+        string $search = '',
     ): Response {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();

@@ -16,6 +16,7 @@ class GeoPopupPage extends RoxPageView
     /**
      * content of the middle column - this is the most important part
      */
+    #[\Override]
     protected function body()
     {
         // get the translation module
@@ -54,6 +55,7 @@ class GeoPopupPage extends RoxPageView
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
      */
+    #[\Override]
     protected function getPageTitle() {
         return 'Geo!';
     }

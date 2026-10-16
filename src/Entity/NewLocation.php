@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,41 +12,39 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * NewLocation.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="geo__names", indexes={
- *     @ORM\Index(name="geonames_idx_name", columns={"name"}),
- *     @ORM\Index(name="geonames_idx_latitude", columns={"latitude"}),
- *     @ORM\Index(name="geonames_idx_longitude", columns={"longitude"}),
- *     @ORM\Index(name="geonames_idx_fclass", columns={"feature_class"}),
- *     @ORM\Index(name="geonames_idx_fcode", columns={"feature_code"}),
- *     @ORM\Index(name="geonames_idx_country", columns={"country"}),
- *     @ORM\Index(name="geonames_idx_admin1", columns={"admin1"}),
- *     @ORM\Index(name="geonames_idx_admin2", columns={"admin2"}),
- *     @ORM\Index(name="geonames_idx_admin3", columns={"admin3"}),
- *     @ORM\Index(name="geonames_idx_admin4", columns={"admin4"}),
- *     @ORM\Index(name="geonames_idx_country_id", columns={"country_id"}),
- *     @ORM\Index(name="geonames_idx_admin1_id", columns={"admin_1_id"}),
- *     @ORM\Index(name="geonames_idx_admin2_id", columns={"admin_2_id"}),
- *     @ORM\Index(name="geonames_idx_admin3_id", columns={"admin_3_id"}),
- *     @ORM\Index(name="geonames_idx_admin4_id", columns={"admin_4_id"})
- * })
- * @ORM\Entity(repositoryClass="App\Repository\NewLocationRepository")
- * @Gedmo\TranslationEntity(class="App\Entity\Translation\NewLocationTranslation")
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'geo__names')]
+#[ORM\Index(name: 'geonames_idx_name', columns: ['name'])]
+#[ORM\Index(name: 'geonames_idx_latitude', columns: ['latitude'])]
+#[ORM\Index(name: 'geonames_idx_longitude', columns: ['longitude'])]
+#[ORM\Index(name: 'geonames_idx_fclass', columns: ['feature_class'])]
+#[ORM\Index(name: 'geonames_idx_fcode', columns: ['feature_code'])]
+#[ORM\Index(name: 'geonames_idx_country', columns: ['country'])]
+#[ORM\Index(name: 'geonames_idx_admin1', columns: ['admin1'])]
+#[ORM\Index(name: 'geonames_idx_admin2', columns: ['admin2'])]
+#[ORM\Index(name: 'geonames_idx_admin3', columns: ['admin3'])]
+#[ORM\Index(name: 'geonames_idx_admin4', columns: ['admin4'])]
+#[ORM\Index(name: 'geonames_idx_country_id', columns: ['country_id'])]
+#[ORM\Index(name: 'geonames_idx_admin1_id', columns: ['admin_1_id'])]
+#[ORM\Index(name: 'geonames_idx_admin2_id', columns: ['admin_2_id'])]
+#[ORM\Index(name: 'geonames_idx_admin3_id', columns: ['admin_3_id'])]
+#[ORM\Index(name: 'geonames_idx_admin4_id', columns: ['admin_4_id'])]
+#[ORM\Entity(repositoryClass: \App\Repository\NewLocationRepository::class)]
 class NewLocation implements Translatable
 {
     /**
      * @var string
      *
      * @Gedmo\Translatable
-     * @ORM\Column(name="name", type="string", length=200, nullable=true)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 200, nullable: true)]
+    #[Groups(['Member:Read'])]
     private $name;
 
     /**
@@ -57,127 +56,118 @@ class NewLocation implements Translatable
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="latitude", type="decimal", precision=10, scale=7, nullable=true)
      */
+    #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
+    #[Groups(['Member:Read'])]
     private $latitude;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="longitude", type="decimal", precision=10, scale=7, nullable=true)
      */
+    #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: true)]
+    #[Groups(['Member:Read'])]
     private $longitude;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="feature_class", type="string", length=1, nullable=true)
      */
+    #[ORM\Column(name: 'feature_class', type: 'string', length: 1, nullable: true)]
     private $featureClass;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="feature_code", type="string", length=10, nullable=true)
      */
+    #[ORM\Column(name: 'feature_code', type: 'string', length: 10, nullable: true)]
     private $featureCode;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="country_id", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'country_id', type: 'string', nullable: true)]
+    #[Groups(['Member:Read'])]
     private $countryId;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="admin_1_id", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'admin_1_id', type: 'string', nullable: true)]
+    #[Groups(['Member:Read'])]
     private $admin1Id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="admin_2_id", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'admin_2_id', type: 'string', nullable: true)]
+    #[Groups(['Member:Read'])]
     private $admin2Id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="admin_3_id", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'admin_3_id', type: 'string', nullable: true)]
+    #[Groups(['Member:Read'])]
     private $admin3Id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="admin_4_id", type="string", nullable=true)
      */
+    #[ORM\Column(name: 'admin_4_id', type: 'string', nullable: true)]
+    #[Groups(['Member:Read'])]
     private $admin4Id;
 
     /**
      * @var NewLocation
-     *
-     * @ORM\ManyToOne(targetEntity="NewLocation", fetch="EAGER")
-     * @ORM\JoinColumn(name="country", referencedColumnName="geonameId", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'country', referencedColumnName: 'geonameId', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
+    #[Groups(['Member:Read'])]
     private $country;
 
     /**
      * @var NewLocation
-     *
-     * @ORM\ManyToOne(targetEntity="NewLocation", fetch="EAGER")
-     * @ORM\JoinColumn(name="admin1", referencedColumnName="geonameId", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'admin1', referencedColumnName: 'geonameId', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'EAGER')]
     private $admin1;
 
     /**
      * @var NewLocation
-     *
-     * @ORM\ManyToOne(targetEntity="NewLocation")
-     * @ORM\JoinColumn(name="admin2", referencedColumnName="geonameId", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'admin2', referencedColumnName: 'geonameId', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class)]
     private $admin2;
 
     /**
      * @var NewLocation
-     *
-     * @ORM\ManyToOne(targetEntity="NewLocation")
-     * @ORM\JoinColumn(name="admin3", referencedColumnName="geonameId", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'admin3', referencedColumnName: 'geonameId', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class)]
     private $admin3;
 
     /**
      * @var NewLocation
-     *
-     * @ORM\ManyToOne(targetEntity="NewLocation")
-     * @ORM\JoinColumn(name="admin4", referencedColumnName="geonameId", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'admin4', referencedColumnName: 'geonameId', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: self::class)]
     private $admin4;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="population", type="integer", nullable=true)
      */
+    #[ORM\Column(name: 'population', type: 'integer', nullable: true)]
     private $population;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="moddate", type="date", nullable=true)
      */
+    #[ORM\Column(name: 'moddate', type: 'date', nullable: true)]
     private $modificationDate;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="geonameId", type="integer")
-     * @ORM\Id
      */
+    #[ORM\Column(name: 'geonameId', type: 'integer')]
+    #[ORM\Id]
     private $geonameId;
 
     public function setName(string $name): self
@@ -199,7 +189,7 @@ class NewLocation implements Translatable
         return $this;
     }
 
-    public function getLatitude(): float
+    public function getLatitude(): ?float
     {
         return $this->latitude;
     }
@@ -211,7 +201,7 @@ class NewLocation implements Translatable
         return $this;
     }
 
-    public function getLongitude(): float
+    public function getLongitude(): ?float
     {
         return $this->longitude;
     }

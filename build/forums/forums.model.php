@@ -24,7 +24,7 @@ function cmpForumLang($a, $b)
     if ($a == $b) {
         return 0;
     }
-    return (strtolower($a->Name) < strToLower($b->Name)) ? -1 : 1;
+    return (strtolower((string) $a->Name) < strToLower((string) $b->Name)) ? -1 : 1;
 }
 
 class Forums extends RoxModelBase
@@ -350,20 +350,13 @@ class Forums extends RoxModelBase
                 . ' preference not found in "preferences" table');
         }
 
-        switch ($command) {
-            case "moreagora":
-                $membersmodel->set_preference($member->id, $forumpref->id, min($forumthreads + $step, $MAX_THREADS));
-                break;
-            case "lessagora":
-                $membersmodel->set_preference($member->id, $forumpref->id, max($forumthreads - $step, 1));
-                break;
-            case "moregroups":
-                $membersmodel->set_preference($member->id, $groupspref->id, min($groupsthreads + $step, $MAX_THREADS));
-                break;
-            case "lessgroups":
-                $membersmodel->set_preference($member->id, $groupspref->id, max($groupsthreads - $step, 1));
-                break;
-        }
+        match ($command) {
+            "moreagora" => $membersmodel->set_preference($member->id, $forumpref->id, min($forumthreads + $step, $MAX_THREADS)),
+            "lessagora" => $membersmodel->set_preference($member->id, $forumpref->id, max($forumthreads - $step, 1)),
+            "moregroups" => $membersmodel->set_preference($member->id, $groupspref->id, min($groupsthreads + $step, $MAX_THREADS)),
+            "lessgroups" => $membersmodel->set_preference($member->id, $groupspref->id, max($groupsthreads - $step, 1)),
+            default => false,
+        };
 
         return false;
     }
@@ -816,7 +809,7 @@ WHERE `forums_posts`.`id` = $this->messageId
 UPDATE `forums_threads`
 SET `title` = '%s'
 WHERE `id` = '%d' ",
-            $this->dao->escape(strip_tags($vars['topic_title'])),
+            $this->dao->escape(strip_tags((string) $vars['topic_title'])),
             $threadid
         );
 
@@ -1451,12 +1444,20 @@ WHERE `id` = '$this->threadid'
 
         /** @var PDBStatement_mysqli $statement */
         $statement = $this->dao->prepare("
-            INSERT INTO `forums_posts` (
-                `create_time`, `message`,`IdWriter`,`IdFirstLanguageUsed`,`PostVisibility`)
-            VALUES (NOW(), ?, ?, ?, ?)
+            INSERT INTO `forums_posts`
+                (
+                    `create_time`,
+                    `message`,
+                    `IdWriter`,
+                    `IdFirstLanguageUsed`,
+                     `PostVisibility`,
+                     `PostDeleted`,
+                     `IdContent`,
+                     `edit_count`
+                 )
+            VALUES (NOW(), ?, ?, ?, ?, 'NotDeleted', 0, 0)
             ");
         $text = $this->cleanupText($vars['topic_text']);
-        $userId = $User->getId();
         $memberId = $this->session->get("IdMember");
         $language = $this->GetLanguageChoosen();
         $statement->bindParam(1, $text);
@@ -1478,8 +1479,8 @@ WHERE `id` = '$this->threadid'
         $statement = $this->dao->prepare("
             INSERT INTO `forums_threads` (
                 `title`, `first_postid`, `last_postid`,
-                `IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`)
-            VALUES (?, ?, ?, ?, ?, ?)
+                `IdFirstLanguageUsed`,`IdGroup`,`ThreadVisibility`, `IdTitle`, `replies`, `views`, `stickyvalue`)
+            VALUES (?, ?, ?, ?, ?, ?, 0, 0, 0, 0)
         ");
 
         $title = strip_tags($vars['topic_title']);
@@ -1730,7 +1731,7 @@ LIMIT %d
         if (!$s) {
             throw new PException('Could not retrieve Posts!');
         }
-        $this->topic->posts = array();
+        $this->topic->posts = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $sw = $this->dao->query("select  forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner, members as mTranslator
 			                           where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=" . $row->IdContent . " and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
@@ -1859,7 +1860,7 @@ LIMIT %d
     {
         $member = $this->getLoggedInMember();
         if (!$member) {
-            return array();
+            return [];
         }
         $TResults = new StdClass();
         $query = "
@@ -1884,7 +1885,7 @@ ORDER BY `subscribedtime` DESC
             throw new PException('Could not retrieve members_threads_subscribed sts via searchSubscription !');
         }
 
-        $TResults->TData = array();
+        $TResults->TData = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $TResults->TData[] = $row;
         }
@@ -1905,7 +1906,7 @@ ORDER BY `subscribedtime` DESC
         if (!$s) {
             throw new PException('Could load group memberships');
         }
-        $TResults->Groups = array();
+        $TResults->Groups = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $TResults->Groups[] = $row;
         }
@@ -2134,7 +2135,7 @@ ORDER BY `posttime` DESC",
         if (!$s) {
             throw new PException('Could not retrieve Posts via searchUserposts !');
         }
-        $posts = array();
+        $posts = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $sw = $this->dao->query("select forum_trads.IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,languages.ShortCode,languages.EnglishName,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,languages,members as mOwner,members as mTranslator    where languages.id=forum_trads.IdLanguage and forum_trads.IdTrad=" . $row->IdContent . " and mTranslator.id=IdTranslator  and mOwner.id=IdOwner order by forum_trads.id asc");
             while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
@@ -2163,7 +2164,7 @@ ORDER BY `posttime` DESC",
 
     private $threadid = 0;
     private $page = 1;
-    private $page_array = array();
+    private $page_array = [];
     private $messageId = 0;
     private $TopMode = Forums::CV_TOPMODE_LANDING; // define that we use the landing page for top mode
 
@@ -2424,7 +2425,7 @@ ORDER BY `posttime` DESC",
             return;
         }
 
-        $members = array(); // collects all members that get a notification (to avoid several notifications for the same post)
+        $members = []; // collects all members that get a notification (to avoid several notifications for the same post)
 
         // first we get all open (ToSend) post notifications from the database and build
         // a list of members that don't need another reminder
@@ -2669,7 +2670,7 @@ ORDER BY `posttime` DESC",
         $client = new Client($config);
         $query = new Search($client);
         $query
-            ->setIndex('forum_rt')
+            ->setTable('forum_rt')
             ->limit(1000)
             ->sort(['post_id' => 'DESC'])
         ;
@@ -2833,7 +2834,7 @@ ORDER BY `posttime` DESC",
         $port = PVars::getObj('env')->manticore_port;
         $config = ['host' => $host, 'port' => $port];
         $client = new Client($config);
-        $index = $client->index('forum_rt');
+        $index = $client->table('forum_rt');
         $index->addDocument([
             'post_id' => $postId,
             'post_deleted' => 'NotDeleted',
@@ -2861,7 +2862,7 @@ ORDER BY `posttime` DESC",
         // Find document in index
         $query = new Search($client);
         $query
-            ->setIndex('forum_rt')
+            ->setTable('forum_rt')
             ->filter('post_id', 'equals', $postId)
             ->filter('thread_id', 'equals', $threadId)
         ;
@@ -2873,7 +2874,7 @@ ORDER BY `posttime` DESC",
         $data['content'] = $vars['Sentence'];
 
         // Then replace with new content
-        $index = $client->index('forum_rt');
+        $index = $client->table('forum_rt');
         $index->replaceDocument($data, $hit->getId());
     }
 } // end of class Forums
@@ -2882,7 +2883,7 @@ ORDER BY `posttime` DESC",
 class Topic
 {
     public $topicinfo;
-    public $posts = array();
+    public $posts = [];
 }
 
 class Board implements Iterator
@@ -3103,7 +3104,7 @@ class Board implements Iterator
         return $this->totalThreads;
     }
 
-    private $subboards = array();
+    private $subboards = [];
 
     // Add a subboard
     public function add(Board $board)

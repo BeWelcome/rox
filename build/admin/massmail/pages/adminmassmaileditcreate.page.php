@@ -64,6 +64,7 @@ class AdminMassmailEditCreatePage extends AdminMassmailBasePage
         $this->addStylesheet('build/roxeditor.css');
     }
 
+    #[\Override]
     public function teaserHeadline() {
         if ($this->id == 0) {
             $editcreate = 'create';

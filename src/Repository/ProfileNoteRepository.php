@@ -26,7 +26,7 @@ class ProfileNoteRepository extends EntityRepository
         array $categories = [],
         int $order = 1,
         int $page = 1,
-        int $itemsPerPage = 20
+        int $itemsPerPage = 20,
     ): Pagerfanta {
         $qb = $this->createQueryBuilder('n')
             ->where('n.owner = :member')

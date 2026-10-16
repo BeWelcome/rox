@@ -45,6 +45,7 @@ class GroupDeletePage extends GroupsBasePage
 HTML;
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'admin';
     }

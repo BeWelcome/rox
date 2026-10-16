@@ -32,21 +32,11 @@ Boston, MA  02111-1307, USA.
 
 class AdminLogsPage extends AdminBasePage
 {
+    #[\Override]
     public function teaserHeadline()
     {
  return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; {$this->words->get('AdminLogs')}";
     }
-    
-    /**
-     * determines the output displayed on the page
-     * errors       = php error log
-     * exceptions   = exception log
-     * mysql        = mysql log
-     * apache       = apache error log
-     *
-     * @var string
-     */
-    private $type;
 
     /**
      * name of log file to read from
@@ -69,28 +59,23 @@ class AdminLogsPage extends AdminBasePage
      * @access public
      * @throws Exception
      */
-    public function __construct($type)
+    public function __construct(/**
+     * determines the output displayed on the page
+     * errors       = php error log
+     * exceptions   = exception log
+     * mysql        = mysql log
+     * apache       = apache error log
+     */
+    private $type)
     {
         parent::__construct();
-        $this->type = $type;
-
-        switch (strtolower($type))
-        {
-            case 'php':
-                $this->logfile = '../../logs/php_errors.log';
-                break;
-            case 'exception':
-                $this->logfile = '../../logs/exception.log';
-                break;
-            case 'mysql':
-                $this->logfile = '../../logs/mysql/mysql-slow.log';
-                break;
-            case 'apache':
-                $this->logfile = '../../logs/www.bewelcome.org-error.log';
-                break;
-            default:
-                throw new Exception('Bad type specified for log in AdminLogsPage');
-        }
+        $this->logfile = match (strtolower($this->type)) {
+            'php' => '../../logs/php_errors.log',
+            'exception' => '../../logs/exception.log',
+            'mysql' => '../../logs/mysql/mysql-slow.log',
+            'apache' => '../../logs/www.bewelcome.org-error.log',
+            default => throw new Exception('Bad type specified for log in AdminLogsPage'),
+        };
         $this->logname = basename($this->logfile);
     }
 

@@ -19,8 +19,8 @@
             $listcnt = 1;
         }
 
-        echo '<div class="pb-1"><a href="places/' . htmlspecialchars($this->countryName) . '/' . $this->countryCode . '/'
-            . htmlspecialchars($region['name']) . '/' . $code . '"> ' . htmlspecialchars($region['name']) . '</a><span class="small ml-1 badge badge-primary">' . $region['number'] . '</span></div>';
+        echo '<div class="pb-1"><a href="places/' . htmlspecialchars((string) $this->countryName) . '/' . $this->countryCode . '/'
+            . htmlspecialchars((string) $region['name']) . '/' . $code . '"> ' . htmlspecialchars((string) $region['name']) . '</a><span class="small ml-1 badge badge-primary">' . $region['number'] . '</span></div>';
 
     }
     echo '</div>';

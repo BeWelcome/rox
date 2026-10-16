@@ -1,37 +1,24 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: raymund
- * Date: 07.05.2017
- * Time: 14:30.
- */
-
 namespace App\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
+use Override;
 
 /**
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * @SuppressWarnings("PHPMD.UnusedFormalParameter")
  */
 abstract class SetType extends Type
 {
-    /** @var string */
-    protected $name;
+    protected string $name;
 
-    /** @var array */
-    protected $values = [];
+    protected array $values = [];
 
-    /** @var string */
-    protected $translationPrefix = '';
+    protected string $translationPrefix = '';
 
-    /**
-     * @return string
-     */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         $values = array_map(function ($val) {
             return "'" . $val . "'";
@@ -40,22 +27,14 @@ abstract class SetType extends Type
         return 'SET(' . implode(', ', $values) . ')';
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    #[Override]
+    public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return $value;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    #[Override]
+    public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (null !== $value && !empty($value)) {
             if (\is_array($value)) {
@@ -63,7 +42,7 @@ abstract class SetType extends Type
             }
             if ($value) {
                 // Split given value
-                $values = explode(',', $value);
+                $values = explode(',', (string) $value);
                 $valueCount = \count($values);
 
                 if (\count(array_intersect($values, $this->values)) !== $valueCount) {
@@ -77,18 +56,12 @@ abstract class SetType extends Type
         return $value;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

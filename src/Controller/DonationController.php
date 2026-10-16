@@ -17,20 +17,18 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class DonationController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private const PAYPAL_NONCE = 'paypal_nonce';
+    private const string PAYPAL_NONCE = 'paypal_nonce';
     // Amount of the donation just recorded, for the Plausible revenue event (#540).
-    private const DONATION_ANALYTICS = 'donation_analytics';
+    private const string DONATION_ANALYTICS = 'donation_analytics';
 
-    /**
-     * @Route("/donations", name="donations")
-     */
+    #[Route(path: '/donations', name: 'donations')]
     public function overview(Request $request): Response
     {
         $nanoIdClient = new Client();
@@ -45,9 +43,7 @@ class DonationController extends AbstractController
         return $this->render('donation/overview.html.twig', ['nonce' => $nanoId]);
     }
 
-    /**
-     * @Route("/donation/finish", name="finish_donation", methods={"POST"})
-     */
+    #[Route(path: '/donation/finish', name: 'finish_donation', methods: ['POST'])]
     public function finishDonation(Request $request, DonationModel $donationModel): JsonResponse
     {
         $session = $request->getSession();
@@ -73,9 +69,7 @@ class DonationController extends AbstractController
         return new JsonResponse(['success' => $success]);
     }
 
-    /**
-     * @Route("/donation/complete", name="donation_complete")
-     */
+    #[Route(path: '/donation/complete', name: 'donation_complete')]
     public function donationCompletedSuccessfully(Request $request): RedirectResponse
     {
         $this->addTranslatedFlash('notice', 'donation.thanks');
@@ -93,19 +87,15 @@ class DonationController extends AbstractController
         return $this->redirectToRoute('donations');
     }
 
-    /**
-     * @Route("/donation/error", name="donation_error")
-     */
-    public function donationEndedInError(Request $request): RedirectResponse
+    #[Route(path: '/donation/error', name: 'donation_error')]
+    public function donationEndedInError(): RedirectResponse
     {
         $this->addTranslatedFlash('error', 'donation.error');
 
         return $this->redirectToRoute('donations');
     }
 
-    /**
-     * @Route("/donations/list/{page}", name="donations_list")
-     */
+    #[Route(path: '/donations/list/{page}', name: 'donations_list')]
     public function listDonations(EntityManagerInterface $entityManager, int $page = 1): Response
     {
         /** @var DonationRepository $donationRepository */
@@ -129,17 +119,13 @@ class DonationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/donate", name="donate_redirect")
-     */
+    #[Route(path: '/donate', name: 'donate_redirect')]
     public function redirectDonate(): RedirectResponse
     {
         return $this->redirectToRoute('donations');
     }
 
-    /**
-     * @Route("/donate/list", name="donate_list_redirect")
-     */
+    #[Route(path: '/donate/list', name: 'donate_list_redirect')]
     public function redirectDonateList(): RedirectResponse
     {
         return $this->redirectToRoute('donations_list');

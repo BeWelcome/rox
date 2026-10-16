@@ -81,7 +81,7 @@ class Feedback extends RoxEntityBase
     {
         if (!$this->isLoaded())
         {
-            return array();
+            return [];
         }
         if (!$this->feedback_category)
         {
@@ -90,7 +90,7 @@ SELECT name from feedbackcategories WHERE id = {$this->IdFeedbackCategory}
 SQL
                 )) || !($fetch = $result->fetch(PDB::FETCH_ASSOC)))
             {
-                return array();
+                return [];
             }
             $this->feedback_category = $fetch;
         }

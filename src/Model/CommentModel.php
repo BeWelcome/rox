@@ -11,11 +11,8 @@ use Throwable;
 
 class CommentModel
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     public function getCommentForMemberPair(Member $loggedInMember, Member $member): ?Comment
@@ -26,6 +23,15 @@ class CommentModel
         return $commentRepository->findOneBy(['fromMember' => $loggedInMember, 'toMember' => $member]);
     }
 
+    /**
+     * @infection-ignore-all
+     *
+     * Mutations on this function are meaningless (e.g. 999 instead of 1000).
+     *
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     *
+     *  \todo move check for text difference into function of its own.
+     */
     public function checkIfNewExperience(Comment $original, Comment $updated): bool
     {
         $originalRelations = explode(',', $original->getRelations());
@@ -50,7 +56,7 @@ class CommentModel
         $lenOriginalText = \strlen($originalText);
         $lenUpdatedText = \strlen($updatedText);
         // If relations are unchanged check for changes in text of comment
-        if (0 === strpos($updatedText, $originalText)) {
+        if (str_starts_with($updatedText, $originalText)) {
             // New text starts with old text and new text is longer
             if ($lenUpdatedText > $lenOriginalText) {
                 return true;
@@ -66,10 +72,9 @@ class CommentModel
             while ($iteration < $maxIteration && !$newExperience) {
                 $currentUpdatedText = substr($updatedText, $iteration * 1000, 1000);
                 $currentOriginalText = substr($originalText, $iteration * 1000, 1000);
-                $levenshteinDistance = ($calculator->calculate(
+                $levenshteinDistance = $calculator->calculate(
                     $currentUpdatedText,
                     $currentOriginalText
-                )
                 )['distance'];
 
                 if ($levenshteinDistance >= max(\strlen($currentUpdatedText), \strlen($currentOriginalText)) / 7) {
@@ -77,7 +82,7 @@ class CommentModel
                 }
                 ++$iteration;
             }
-        } catch (Throwable $e) {
+        } catch (Throwable) {
             // ignore exception and just return false (likely consumed too much memory)
             return $newExperience;
         }
@@ -103,9 +108,17 @@ class CommentModel
     public function checkForEmailAddress(Comment $comment): bool
     {
         $commentText = $comment->getTextfree();
-        $count = preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $commentText, $matches);
+        $count = preg_match_all("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $commentText);
 
         return $count > 0;
+    }
+
+    public function checkForPhoneNumber(Comment $comment): bool
+    {
+        $commentText = $comment->getTextfree();
+        $found = preg_match("/([0-9][\. \)-]*){8,}/", $commentText);
+
+        return $found > 0;
     }
 
     private function checkCommentsDuration(Member $member, Comment $comment, array $params): bool
@@ -126,7 +139,7 @@ class CommentModel
                         c.IdFromMember = :memberId
                         AND TIMEDIFF(NOW(), created) < :duration
                 ',
-                [':memberId' => $member->getId(), ':duration' => $duration]
+                ['memberId' => $member->getId(), 'duration' => $duration]
             )
             ->fetchOne()
         ;
@@ -146,7 +159,7 @@ class CommentModel
                             c.IdFromMember = :memberId
                             AND TIMEDIFF(NOW(), created) < :duration
                     ',
-                    [':memberId' => $member->getId(), ':duration' => $duration]
+                    ['memberId' => $member->getId(), 'duration' => $duration]
                 )
                 ->fetchAllAssociative()
             ;
@@ -164,8 +177,8 @@ class CommentModel
         for ($i = 0; $i < $count - 1; ++$i) {
             for ($j = $i + 1; $j < $count; ++$j) {
                 similar_text(
-                    $comments[$i]['TextFree'],
-                    $comments[$j]['TextFree'],
+                    (string) $comments[$i]['TextFree'],
+                    (string) $comments[$j]['TextFree'],
                     $percent
                 );
                 if ($percent > 95) {

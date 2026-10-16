@@ -8,7 +8,7 @@
     <div id="collapse-languages" class="collapse" data-parent="#editProfile" aria-labelledby="heading-languages">
         <div class="card-body">
             <?php
-            $lang_ids = array();
+            $lang_ids = [];
             for ($ii = 0; $ii < count($vars['languages_selected']); $ii++) {
                 $lang_ids[] = $vars['languages_selected'][$ii]->IdLanguage;
             } ?>

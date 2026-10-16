@@ -1,2 +1,7 @@
 white_october_pagerfanta:
   default_view: rox_default
+
+fidry_alice_data_fixtures:
+    default_purge_mode: truncate
+    db_drivers:
+        doctrine_orm: ~

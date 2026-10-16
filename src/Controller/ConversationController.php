@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
@@ -11,11 +12,11 @@ use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * This controller handles all requests regarding single conversations (messages, hosting requests and invitations) like
@@ -26,50 +27,33 @@ class ConversationController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    protected ConversationModel $conversationModel;
-    private EntityManagerInterface $entityManager;
-
     public function __construct(
-        ConversationModel $conversationModel,
-        EntityManagerInterface $entityManager
+        protected ConversationModel $conversationModel,
+        private EntityManagerInterface $entityManager,
     ) {
-        $this->conversationModel = $conversationModel;
-        $this->entityManager = $entityManager;
     }
 
     /**
-     * @Route("/conversation/{id}", name="conversation_view",
-     *     requirements={"id": "\d+"}
-     * )
+     * \todo Check if this flag is needed (and used)).
      *
-     * @IsGranted("CONVERSATION_VIEW", subject="message")
-     *
-     * @param mixed $openReportModal
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
-    public function viewConversation(Request $request, Message $message, $openReportModal = false): Response
+    #[Route(path: '/conversation/{id}', name: 'conversation_view', requirements: ['id' => '\d+'])]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
+    public function viewConversation(Request $request, Message $message, bool $openReportModal = false): Response
     {
         return $this->viewThread($request, $message, false, $openReportModal);
     }
 
-    /**
-     * @Route("/conversation/{id}/deleted", name="conversation_view_with_deleted",
-     *     requirements={"id": "\d+"}
-     * )
-     *
-     * @IsGranted("CONVERSATION_VIEW", subject="message")
-     */
+    #[Route(path: '/conversation/{id}/deleted', name: 'conversation_view_with_deleted', requirements: ['id' => '\d+'])]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function viewConversationWithDeletedMessages(Request $request, Message $message): Response
     {
         return $this->viewThread($request, $message, true, false);
     }
 
-    /**
-     * @Route("/conversation/{id}/reply", name="conversation_reply",
-     *     requirements={"id": "\d+"}
-     * )
-     *
-     * @IsGranted("CONVERSATION_REPLY", subject="message")
-     */
+    #[Route(path: '/conversation/{id}/reply', name: 'conversation_reply', requirements: ['id' => '\d+'])]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function reply(Message $message): Response
     {
         // Always reply to the last item in the thread
@@ -89,6 +73,14 @@ class ConversationController extends AbstractController
         if ($member !== $message->getSender() && $member !== $message->getReceiver()) {
             return $this->redirectToRoute('conversations', ['conversationsType' => 'conversations']);
         }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()) {
+            $receiver = ($message->getReceiver() === $member) ? $message->getSender() : $message->getReceiver();
+            $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+        }
+
         $controllerAndMethod = $this->getControllerAndMethod($message, 'reply');
 
         return $this->forward($controllerAndMethod, [
@@ -96,13 +88,8 @@ class ConversationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/conversation/{id}/delete", name="conversation_delete",
-     *     requirements={"id": "\d+"}
-     * )
-     *
-     * @IsGranted("CONVERSATION_VIEW", subject="message")
-     */
+    #[Route(path: '/conversation/{id}/delete', name: 'conversation_delete', requirements: ['id' => '\d+'])]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function deleteConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -116,13 +103,8 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversations_deleted');
     }
 
-    /**
-     * @Route("/conversation/{id}/purge", name="conversation_purge",
-     *     requirements={"id": "\d+"}
-     * )
-     *
-     * @IsGranted("CONVERSATION_VIEW", subject="message")
-     */
+    #[Route(path: '/conversation/{id}/purge', name: 'conversation_purge', requirements: ['id' => '\d+'])]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function purgeConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -136,13 +118,8 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversations_deleted');
     }
 
-    /**
-     * @Route("/conversation/{id}/recover", name="conversation_recover",
-     *     requirements={"id": "\d+"}
-     * )
-     *
-     * @IsGranted("CONVERSATION_VIEW", subject="message")
-     */
+    #[Route(path: '/conversation/{id}/recover', name: 'conversation_recover', requirements: ['id' => '\d+'])]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function recoverConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -156,21 +133,14 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
     }
 
-    /**
-     * @Route("/conversation/{id}/report", name="conversation_report_spam")
-     */
+    #[Route(path: '/conversation/{id}/report', name: 'conversation_report_spam')]
     public function reportAsSpam(Request $request, Message $message): Response
     {
         return $this->viewThread($request, $message, false, true);
     }
 
-    /**
-     * @Route("/conversation/{id}/decline", name="conversation_decline",
-     *     requirements={"id": "\d+"}
-     * )
-     *
-     * @IsGranted("CONVERSATION_VIEW", subject="message")
-     */
+    #[Route(path: '/conversation/{id}/decline', name: 'conversation_decline', requirements: ['id' => '\d+'])]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
     public function decline(Message $message): Response
     {
         if ($message->isMessage()) {
@@ -184,9 +154,7 @@ class ConversationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/conversation/{id}/nospam", name="conversation_mark_nospam")
-     */
+    #[Route(path: '/conversation/{id}/nospam', name: 'conversation_mark_nospam')]
     public function unmarkAsSpam(Message $message): Response
     {
         /** @var Member $member */
@@ -253,7 +221,7 @@ class ConversationController extends AbstractController
         Request $request,
         Message $message,
         bool $includeDeleted,
-        bool $openReportModal
+        bool $openReportModal,
     ): Response {
         $conversationThread = new ConversationThread($this->entityManager);
         $thread = $conversationThread->getThread($message);
@@ -304,8 +272,8 @@ class ConversationController extends AbstractController
                 $nothingVisible = $nothingVisible && $threadMessage->isPurgedByMember($member);
             } else {
                 $nothingVisible = $nothingVisible && (
-                        $threadMessage->isPurgedByMember($member) || $threadMessage->isDeletedByMember($member)
-                    );
+                    $threadMessage->isPurgedByMember($member) || $threadMessage->isDeletedByMember($member)
+                );
             }
         }
 
@@ -317,7 +285,7 @@ class ConversationController extends AbstractController
         $spam = false;
         foreach ($thread as $threadMessage) {
             if ($threadMessage->getReceiver() === $member) {
-                $spam = $spam || (false !== strpos($threadMessage->getSpamInfo(), SpamInfoType::MEMBER_SAYS_SPAM));
+                $spam = $spam || str_contains((string) $threadMessage->getSpamInfo(), SpamInfoType::MEMBER_SAYS_SPAM);
             }
         }
 

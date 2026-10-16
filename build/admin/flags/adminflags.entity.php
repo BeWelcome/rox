@@ -25,6 +25,7 @@ class Flag extends RoxEntityBase
      * @access protected
      * @return bool
      */
+    #[\Override]
     protected function loadEntity(array $data)
     {
         if ($status = parent::loadEntity($data))

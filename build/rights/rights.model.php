@@ -15,7 +15,7 @@ class RightsModel extends RoxModelBase
      * @access public
      * @return mixed array of objects or false
      */
-    public function getAllRoles()
+    public function getAllRoles(): never
     {
         $role = $this->createEntity('Role');
         $roleprivilege = $this->createEntity('RolePrivilege');
@@ -24,9 +24,9 @@ class RightsModel extends RoxModelBase
         $privilegescope = $this->createEntity('PrivilegeScope');
 
         $role = $this->createEntity('Role')->findByName('GroupOwner');
-        $role->addForMember($this->getLoggedInMember(), array('Group' =>5));
-        $role->addForMember($this->getLoggedInMember(), array('Group' =>6));
-        $role->addForMember($this->getLoggedInMember(), array('Group' =>7));
+        $role->addForMember($this->getLoggedInMember(), ['Group' =>5]);
+        $role->addForMember($this->getLoggedInMember(), ['Group' =>6]);
+        $role->addForMember($this->getLoggedInMember(), ['Group' =>7]);
 
 
         $scopes = $role->getScopesForMemberRole($this->getLoggedInMember(), 6);

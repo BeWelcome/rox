@@ -20,13 +20,13 @@ class MemberRole extends RoxEntityBase
     {
         if (!is_object($role) || !$role->isPKSet())
         {
-            return array();
+            return [];
         }
 
         $role_id = $this->dao->escape($role->getPKValue());
 
         $member_ids = $this->findByWhereMany("IdRole = '{$role_id}'");
-        $members = array();
+        $members = [];
         foreach ($member_ids as $id)
         {
             $members[] = $this->createEntity('Member')->findById($id->IdMember);
@@ -46,13 +46,13 @@ class MemberRole extends RoxEntityBase
     {
         if (!is_object($member) || !$member->isPKSet())
         {
-            return array();
+            return [];
         }
 
         $member_id = $this->dao->escape($member->getPKValue());
 
         $role_ids = $this->findByWhereMany("IdMember = '{$member_id}'");
-        $roles = array();
+        $roles = [];
         foreach ($role_ids as $id)
         {
             $roles[] = $this->createEntity('Role')->findById($id->IdRole);

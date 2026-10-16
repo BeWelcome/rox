@@ -4,35 +4,31 @@ namespace App\Controller;
 
 use App\Form\FeedbackFormType;
 use App\Model\AboutModel;
+use App\Utilities\TranslatedFlashTrait;
+use App\Utilities\TranslatorTrait;
 use Carbon\Carbon;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeedbackController extends AboutBaseController
 {
-    /**
-     * @Route("/about/feedback", name="contactus")
-     * @Route("/contact")
-     * @Route("/contactus")
-     * @Route("/support")
-     *
-     * @return RedirectResponse
-     */
-    public function showAboutFeedback()
-    {
-        return $this->redirectToRoute('feedback');
-    }
+    use TranslatedFlashTrait;
+    use TranslatorTrait;
 
     /**
-     * @Route("/feedback", name="feedback")
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      *
-     * @return Response|RedirectResponse
+     * \todo Fix complexity
      */
-    public function feedback(Request $request, AboutModel $aboutModel, TranslatorInterface $translator)
+    #[Route(path: '/about/feedback', name: 'contactus')]
+    #[Route(path: '/contact')]
+    #[Route(path: '/contactus')]
+    #[Route(path: '/support')]
+    #[Route(path: '/feedback', name: 'feedback')]
+    public function feedback(Request $request, AboutModel $aboutModel, TranslatorInterface $translator): Response
     {
         $noModal = $request->query->get('no', false);
 
@@ -45,7 +41,7 @@ class FeedbackController extends AboutBaseController
         $feedbackQuestion = '';
         if (null !== $username) {
             $feedbackQuestion = $translator->trans('profile.report.text');
-            $feedbackQuestion = sprintf($feedbackQuestion, $username);
+            $feedbackQuestion = \sprintf($feedbackQuestion, $username);
         }
         $form = $this->createForm(
             FeedbackFormType::class,
@@ -72,7 +68,7 @@ class FeedbackController extends AboutBaseController
                 );
             }
 
-            $reply = !($data['no_reply_needed']);
+            $reply = !$data['no_reply_needed'];
             if ($reply && null === $data['FeedbackEmail']) {
                 $form
                     ->addError(
@@ -97,6 +93,8 @@ class FeedbackController extends AboutBaseController
                 $aboutModel->sendFeedbackEmail($data);
                 $aboutModel->addFeedback($data);
 
+                $this->addTranslatedFlash('notice', 'feedback.thank.you');
+
                 return $this->redirectToRoute('feedback_received');
             }
         }
@@ -113,10 +111,9 @@ class FeedbackController extends AboutBaseController
     }
 
     /**
-     * @Route("/feedback/received", name="feedback_received")
-     *
      * @return Response
      */
+    #[Route(path: '/feedback/received', name: 'feedback_received')]
     public function feedbackReceived(Request $request)
     {
         return $this->render('about/feedback.received.html.twig', [

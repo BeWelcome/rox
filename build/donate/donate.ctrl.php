@@ -10,6 +10,7 @@ class DonateController extends PAppController
         $this->_view = new DonateView($this->_model);
     }
 
+    #[\Override]
     public function __destruct()
     {
         unset($this->_model);

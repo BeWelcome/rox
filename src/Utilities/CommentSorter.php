@@ -3,18 +3,17 @@
 namespace App\Utilities;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 
 /**
  * Sorts comment pairs after lowest created as long as updated is null.
  *
  * In case updated has been set (new experience) then the highest updated wins.
- *
- * Works on Comment entities; CommentSorterProfile reads the legacy profile rows.
  */
 class CommentSorter
 {
-    private DateTimeImmutable $early20thCentury;
-    private DateTimeImmutable $farFuture;
+    private readonly DateTimeImmutable $early20thCentury;
+    private readonly DateTimeImmutable $farFuture;
 
     public function __construct()
     {
@@ -27,16 +26,6 @@ class CommentSorter
         usort($comments, [$this, 'commentsCompare']);
 
         return $comments;
-    }
-
-    protected function getCreated($comment)
-    {
-        return $comment->getCreated();
-    }
-
-    protected function getUpdated($comment)
-    {
-        return $comment->getUpdated();
     }
 
     /**
@@ -52,18 +41,20 @@ class CommentSorter
         return (-1) * ($aCriterionDate <=> $bCriterionDate);
     }
 
-    private function getCreatedCriterion($comment)
+    private function getCreatedCriterion(array $comment): DateTimeInterface
     {
-        $createdTo = isset($comment['to']) ? $this->getCreated($comment['to']) : $this->farFuture;
-        $createdFrom = isset($comment['from']) ? $this->getCreated($comment['from']) : $this->farFuture;
+        $createdTo = isset($comment['to']) ? $comment['to']->getCreated() : $this->farFuture;
+        $createdFrom = isset($comment['from']) ? $comment['from']->getCreated() : $this->farFuture;
 
         return min($createdTo, $createdFrom);
     }
 
-    private function getUpdatedCriterion($comment)
+    private function getUpdatedCriterion(array $comment): DateTimeInterface
     {
-        $updatedTo = isset($comment['to']) ? ($this->getUpdated($comment['to']) ?? $this->early20thCentury) : $this->early20thCentury;
-        $updatedFrom = isset($comment['from']) ? ($this->getUpdated($comment['from']) ?? $this->early20thCentury) : $this->early20thCentury;
+        $updatedTo = isset($comment['to'])
+            ? ($comment['to']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
+        $updatedFrom = isset($comment['from'])
+            ? ($comment['from']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
 
         return max($updatedTo, $updatedFrom);
     }

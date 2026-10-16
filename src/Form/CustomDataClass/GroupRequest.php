@@ -9,18 +9,21 @@ class GroupRequest
 {
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     public $name;
 
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     public $description;
 
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     public $type = 'Public';
@@ -29,6 +32,7 @@ class GroupRequest
      * @var File
      *
      * @Assert\NotBlank()
+     *
      * @Assert\Image(
      *     minWidth = 200,
      *     maxWidth = 400,

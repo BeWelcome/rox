@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -7,201 +8,175 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Params.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="params")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'params')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Params
 {
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
+     * @var DateTime
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="IsRealProductionDatabase", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'IsRealProductionDatabase', type: 'string', nullable: false)]
     private $isrealproductiondatabase = 'No';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="recordonline", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'recordonline', type: 'integer', nullable: false)]
     private $recordonline = 0;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="ToggleDonateBar", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'ToggleDonateBar', type: 'integer', nullable: false)]
     private $toggledonatebar = 0;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="neededperyear", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'neededperyear', type: 'integer', nullable: false)]
     private $neededperyear = 1260;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="campaignstartdate", type="date", nullable=false)
+     * @var DateTime
      */
+    #[ORM\Column(name: 'campaignstartdate', type: 'date', nullable: false)]
     private $campaignstartdate = '2012-10-11';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="MailToNotifyWhenNewMemberSignup", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'MailToNotifyWhenNewMemberSignup', type: 'text', length: 65535, nullable: false)]
     private $mailtonotifywhennewmembersignup;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="FeatureForumClosed", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'FeatureForumClosed', type: 'string', nullable: false)]
     private $featureforumclosed = 'No';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="FeatureAjaxChatClosed", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'FeatureAjaxChatClosed', type: 'string', nullable: false)]
     private $featureajaxchatclosed = 'No';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="FeatureSignupClose", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'FeatureSignupClose', type: 'string', nullable: false)]
     private $featuresignupclose = 'No';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="FeatureSearchPageIsClosed", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'FeatureSearchPageIsClosed', type: 'string', nullable: false)]
     private $featuresearchpageisclosed = 'No';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="FeatureQuickSearchIsClosed", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'FeatureQuickSearchIsClosed', type: 'string', nullable: false)]
     private $featurequicksearchisclosed = 'No';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="RssFeedIsClosed", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'RssFeedIsClosed', type: 'string', nullable: false)]
     private $rssfeedisclosed = 'No';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="AjaxChatSpecialAllowedList", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'AjaxChatSpecialAllowedList', type: 'text', length: 65535, nullable: false)]
     private $ajaxchatspecialallowedlist;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="AjaxChatDebuLevel", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'AjaxChatDebuLevel', type: 'integer', nullable: false)]
     private $ajaxchatdebulevel = 0;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ReloadRightsAndFlags", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'ReloadRightsAndFlags', type: 'string', nullable: false)]
     private $reloadrightsandflags = 'No';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="logs_id_midnight", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'logs_id_midnight', type: 'integer', nullable: false)]
     private $logsIdMidnight;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="previous_logs_id_midnight", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'previous_logs_id_midnight', type: 'integer', nullable: false)]
     private $previousLogsIdMidnight;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="memcache", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'memcache', type: 'string', nullable: false)]
     private $memcache = 'False';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="DayLightOffset", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'DayLightOffset', type: 'integer', nullable: false)]
     private $daylightoffset = 0;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="NbCommentsInLastComments", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'NbCommentsInLastComments', type: 'integer', nullable: false)]
     private $nbcommentsinlastcomments = 20;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdCommentOfTheMoment", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdCommentOfTheMoment', type: 'integer', nullable: false)]
     private $idcommentofthemoment = 0;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="MailBotMode", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'MailBotMode', type: 'string', nullable: false)]
     private $mailbotmode = 'Manual';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ToggleStatsForWordsUsage", type="string", nullable=false)
      */
+    #[ORM\Column(name: 'ToggleStatsForWordsUsage', type: 'string', nullable: false)]
     private $togglestatsforwordsusage = 'No';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
      * Set updated.
      *
-     * @param \DateTime $updated
+     * @param DateTime $updated
      *
      * @return Params
      */
@@ -215,7 +190,7 @@ class Params
     /**
      * Get updated.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdated()
     {
@@ -321,7 +296,7 @@ class Params
     /**
      * Set campaignstartdate.
      *
-     * @param \DateTime $campaignstartdate
+     * @param DateTime $campaignstartdate
      *
      * @return Params
      */
@@ -335,7 +310,7 @@ class Params
     /**
      * Get campaignstartdate.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCampaignstartdate()
     {
@@ -786,11 +761,10 @@ class Params
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updated = new \DateTime('now');
+        $this->updated = new DateTime('now');
     }
 }

@@ -22,6 +22,6 @@
     <div>
         <p>{{ comment.TextFree | nl2br }}</p>
         {% set relations = comment.relations | split(',') %}
-        <p class="small font-italic p-0 m-0">{% for relation in relations %}{{ ('Comment_' ~ relation) | trans }}{% endfor %}</p>
+        <p class="small font-italic p-0 m-0">{% for relation in relations %}{{ ('Comment_' ~ relation) | lower | trans }}<br>{% endfor %}</p>
     </div>
 </div>

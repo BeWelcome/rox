@@ -19,9 +19,7 @@ trait MessageTrait
      */
     private $environment;
 
-    /**
-     * @Required
-     */
+    #[\Symfony\Contracts\Service\Attribute\Required]
     public function setTwigEnvironment(Environment $environment)
     {
         $this->environment = $environment;
@@ -32,14 +30,11 @@ trait MessageTrait
         return $this->environment;
     }
 
-    /**
-     * @param mixed ...$params
-     */
     protected function createTemplateMessage(
         Member $sender,
         Member $receiver,
         string $template,
-        ...$params
+        ...$params,
     ) {
         $parameters = array_merge(['sender' => $sender, 'receiver' => $receiver], ...$params);
 

@@ -123,14 +123,16 @@ class GeoAdminPage extends RoxPageView
      * configure the page title (what appears in your browser's title bar)
      * @return string the page title
      */
+    #[\Override]
     protected function getPageTitle() {
         return 'Geo!';
     }
 
+    #[\Override]
     protected function getColumnNames()
     {
         // we don't need the other columns
-        return array('col3');
+        return ['col3'];
     }
 }
 

@@ -7,13 +7,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Manticoresearch\Client;
 use Manticoresearch\Exceptions\ResponseException;
-use Manticoresearch\Index;
+use Manticoresearch\Table;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(name: 'manticore:indices:geonames', description: 'Creates the manticore indices for the location search')]
 class ManticoreIndicesGeonamesCommand extends Command
 {
     private const GEONAMES_INDEX = 'geonames_rt';
@@ -24,8 +26,6 @@ class ManticoreIndicesGeonamesCommand extends Command
     /** Number of documents sent to Manticore in a single bulk request. */
     private const BULK_SIZE = 2000;
 
-    protected static $defaultName = 'manticore:indices:geonames';
-    protected static $defaultDescription = 'Creates the manticore indices for the location search';
     private EntityManagerInterface $entityManager;
     private SymfonyStyle $io;
     private string $manticoreHost;
@@ -39,7 +39,7 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     public function __construct(EntityManagerInterface $entityManager, string $manticoreHost, int $manticorePort)
     {
-        parent::__construct(self::$defaultName);
+        parent::__construct();
 
         $this->entityManager = $entityManager;
         $this->manticoreHost = $manticoreHost;
@@ -82,11 +82,11 @@ class ManticoreIndicesGeonamesCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function createGeonamesIndex(): ?Index
+    private function createGeonamesIndex(): ?Table
     {
         $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
 
-        $index = $client->index(self::GEONAMES_INDEX);
+        $index = $client->table(self::GEONAMES_INDEX);
         // If the index doesn't exist, drop() fails with an error message. So we run it silenced.
         $index->drop(true);
 
@@ -113,7 +113,8 @@ class ManticoreIndicesGeonamesCommand extends Command
                     'charset_table' => 'non_cjk,U+0020->_', // Ignore spaces (turns e.g. Los Angeles into Los_Angeles)
                     'min_prefix_len' => '1',
                     'prefix_fields' => 'name',
-                    'ngram_chars' => 'cjk',
+                    // cont = CJK and Thai: Manticore 7 took Thai out of cjk, so Thai text was not indexed
+                    'ngram_chars' => 'cont',
                     'ngram_len' => '1',
                 ]
             );
@@ -130,12 +131,14 @@ class ManticoreIndicesGeonamesCommand extends Command
     private function optimizeGeonamesIndex(): void
     {
         $this->io->note('Optimizing ' . self::GEONAMES_INDEX . ' index (merging disk chunks before translations phase).');
-        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
+        // sync=1 waits for the merge: on Manticore 29.9 it takes longer than the client's default 300 s
+        // (stage, 2026-10-13: about 10 chunk merges of 35 s to 1 min each).
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort, 'timeout' => 3600]);
         try {
             // raw=true is required for non-SELECT DDL commands via the /sql endpoint.
             // The response for OPTIMIZE cannot be parsed by the PHP client, so suppress empty exceptions.
             $client->sql('OPTIMIZE TABLE ' . self::GEONAMES_INDEX . ' OPTION cutoff=1, sync=1', true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             if ('' !== $e->getMessage()) {
                 throw $e;
             }
@@ -153,15 +156,15 @@ class ManticoreIndicesGeonamesCommand extends Command
     {
         $counts = $this->getConnection()
             ->executeQuery(<<<'___SQL'
-                SELECT
-                    m.IdCity,
-                    COUNT(m.IdCity) AS total
-                FROM
-                    members m
-                WHERE m.status IN ('Active', 'OutOfRemind')
-                GROUP BY
-                    m.IdCity
-            ___SQL)
+                    SELECT
+                        m.IdCity,
+                        COUNT(m.IdCity) AS total
+                    FROM
+                        members m
+                    WHERE m.status IN ('Active', 'OutOfRemind')
+                    GROUP BY
+                        m.IdCity
+                ___SQL)
             ->fetchAllKeyValue();
 
         $memberCounts = [];
@@ -172,7 +175,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         return $memberCounts;
     }
 
-    private function addGeonamesDocuments(Index $index, OutputInterface $output): void
+    private function addGeonamesDocuments(Table $index, OutputInterface $output): void
     {
         $this->io->note('Adding documents to geonames_rt from geo__names table.');
         $this->io->newLine();
@@ -187,26 +190,26 @@ class ManticoreIndicesGeonamesCommand extends Command
         $lastId = 0;
         do {
             $result = $connection->executeQuery(<<<___SQL
-                SELECT
-                    g.geonameId AS geonameid,
-                    g.`name` AS name,
-                    g.feature_class AS feature_class,
-                    g.feature_code AS feature_code,
-                    g.country_id AS country,
-                    g.admin_1_id AS admin1,
-                    g.admin_2_id AS admin2,
-                    g.admin_3_id AS admin3,
-                    g.admin_4_id AS admin4,
-                    '_geo' AS locale,
-                    g.population AS population
-                FROM
-                    geo__names g
-                WHERE
-                    g.geonameId > :lastId
-                ORDER BY
-                    g.geonameId
-                LIMIT {$fetchSize}
-            ___SQL, ['lastId' => $lastId]);
+                    SELECT
+                        g.geonameId AS geonameid,
+                        g.`name` AS name,
+                        g.feature_class AS feature_class,
+                        g.feature_code AS feature_code,
+                        g.country_id AS country,
+                        g.admin_1_id AS admin1,
+                        g.admin_2_id AS admin2,
+                        g.admin_3_id AS admin3,
+                        g.admin_4_id AS admin4,
+                        '_geo' AS locale,
+                        g.population AS population
+                    FROM
+                        geo__names g
+                    WHERE
+                        g.geonameId > :lastId
+                    ORDER BY
+                        g.geonameId
+                    LIMIT {$fetchSize}
+                ___SQL, ['lastId' => $lastId]);
 
             $rowCount = 0;
             foreach ($result->iterateAssociative() as $row) {
@@ -223,7 +226,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         $this->io->newLine();
     }
 
-    private function addAlternateNamesDocuments(Index $index, OutputInterface $output): void
+    private function addAlternateNamesDocuments(Table $index, OutputInterface $output): void
     {
         $this->io->note('Adding documents to geonames_rt from geo__names_translations table.');
         $this->io->newLine();
@@ -240,29 +243,29 @@ class ManticoreIndicesGeonamesCommand extends Command
         $lastId = 0;
         do {
             $result = $connection->executeQuery(<<<___SQL
-                SELECT
-                    gt.id AS translation_id,
-                    g.geonameId AS geonameid,
-                    gt.`content` AS name,
-                    g.feature_class AS feature_class,
-                    g.feature_code AS feature_code,
-                    g.country_id AS country,
-                    g.admin_1_id AS admin1,
-                    g.admin_2_id AS admin2,
-                    g.admin_3_id AS admin3,
-                    g.admin_4_id AS admin4,
-                    gt.`locale` AS locale,
-                    g.population AS population
-                FROM
-                    geo__names_translations gt
-                JOIN
-                    geo__names g ON g.geonameId = gt.foreign_key
-                WHERE
-                    gt.id > :lastId
-                ORDER BY
-                    gt.id
-                LIMIT {$fetchSize}
-            ___SQL, ['lastId' => $lastId]);
+                    SELECT
+                        gt.id AS translation_id,
+                        g.geonameId AS geonameid,
+                        gt.`content` AS name,
+                        g.feature_class AS feature_class,
+                        g.feature_code AS feature_code,
+                        g.country_id AS country,
+                        g.admin_1_id AS admin1,
+                        g.admin_2_id AS admin2,
+                        g.admin_3_id AS admin3,
+                        g.admin_4_id AS admin4,
+                        gt.`locale` AS locale,
+                        g.population AS population
+                    FROM
+                        geo__names_translations gt
+                    JOIN
+                        geo__names g ON g.geonameId = gt.foreign_key
+                    WHERE
+                        gt.id > :lastId
+                    ORDER BY
+                        gt.id
+                    LIMIT {$fetchSize}
+                ___SQL, ['lastId' => $lastId]);
 
             $rowCount = 0;
             foreach ($result->iterateAssociative() as $row) {
@@ -285,8 +288,10 @@ class ManticoreIndicesGeonamesCommand extends Command
      * of the whole data set (rows, documents, bulk payload) in memory at the same time.
      *
      * @param array<string, mixed> $row
+     *
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      */
-    private function addDocument(Index $index, array $row, ProgressBar $progress): void
+    private function addDocument(Table $index, array $row, ProgressBar $progress): void
     {
         $featureClass = (string) $row['feature_class'];
         $featureCode = (string) $row['feature_code'];
@@ -323,7 +328,7 @@ class ManticoreIndicesGeonamesCommand extends Command
         }
     }
 
-    private function sendPendingDocuments(Index $index, ProgressBar $progress): void
+    private function sendPendingDocuments(Table $index, ProgressBar $progress): void
     {
         if ([] === $this->documents) {
             return;

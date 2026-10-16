@@ -10,7 +10,7 @@ use Symfony\Component\Routing\RouteCollection;
 /**
  * Class LegacyLoader.
  *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Ignore warnings as class is only used as a bridge to the old code
  */
 class LegacyLoader extends Loader
@@ -22,14 +22,11 @@ class LegacyLoader extends Loader
     private $loaded = false;
 
     /**
-     * @param mixed  $resource
-     * @param string $type
-     *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      *
      * @return RouteCollection
      */
-    public function load($resource, string $type = null)
+    public function load(mixed $resource, ?string $type = null): mixed
     {
         if (true === $this->loaded) {
             throw new RuntimeException('Do not add the "legacy" loader twice');
@@ -44,7 +41,7 @@ class LegacyLoader extends Loader
         require_once $projectDir . '/routes.php';
 
         // Forum urls
-//        $this->addRouteDirectly('forums', '/forums/page{pageGroups}/page{pageForums}');
+        //        $this->addRouteDirectly('forums', '/forums/page{pageGroups}/page{pageForums}');
         $this->addRouteDirectly('forums', '/forums');
         $this->addRouteDirectly('forums_pages', '/forums/page{groupsPage}/page{bwforumsPage}/');
         $this->addRouteDirectly('forums_new', '/forums/new');
@@ -98,21 +95,8 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('group_user_all', '/members/{username}/groups');
         $this->addRouteDirectly('group_add_related_group', '/groups/{groupId}/selectrelatedgroup');
         $this->addRouteDirectly('group_invite_member', '/groups/{groupId}/invitemembers/search');
-        $this->addRouteDirectly('signup', '/signup');
-        $this->addRouteDirectly('signup_1', '/signup/1');
-        $this->addRouteDirectly('signup_2', '/signup/2');
-        $this->addRouteDirectly('signup_3', '/signup/3');
-        $this->addRouteDirectly('signup_4', '/signup/4');
-        $this->addRouteDirectly('signup_email_check', '/signup/checkemail');
-        $this->addRouteDirectly('signup_handle_check', '/signup/checkhandle');
-        $this->addRouteDirectly('deleteprofile', '/deleteprofile');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');
-        $this->addRouteDirectly('donate', '/donate');
-        $this->addRouteDirectly('donate_list', '/donate/list');
-        $this->addRouteDirectly('donate_cancel', '/donate/cancel');
-        $this->addRouteDirectly('donate_done', '/donate/done');
-        $this->addRouteDirectly('donate_notify', '/donate/notify');
         $this->addRouteDirectly('gallery_show_user', '/gallery/show/user/{username}');
         $this->addRouteDirectly('gallery_show_user_images', '/gallery/show/user/{username}/pictures');
         $this->addRouteDirectly('gallery_show_user_images_pages', '/gallery/show/user/{username}/pictures/=page{pageNo}');
@@ -138,7 +122,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('comment_edit', '/members/{username}/comments/edit');
         $this->addRouteDirectly('mypreferences', '/mypreferences');
         $this->addRouteDirectly('myvisitors', '/myvisitors');
-        //$this->addRouteDirectly('profilecomments', '/about/commentguidelines');
+        // $this->addRouteDirectly('profilecomments', '/about/commentguidelines');
         $this->addRouteDirectly('profile_addtorelations', '/members/{username}/relations/add');
         $this->addRouteDirectly('editmyprofile_finish', '/editmyprofile/finish');
         $this->addRouteDirectly('editmyprofile_language_finish', '/editmyprofile/{language}/finish');
@@ -179,28 +163,22 @@ class LegacyLoader extends Loader
         return $this->routes;
     }
 
-    /**
-     * @param mixed  $resource
-     * @param string $type
-     *
-     * @return bool
-     */
-    public function supports($resource, string $type = null)
+    public function supports(mixed $resource, ?string $type = null): bool
     {
         return 'legacy' === $type;
     }
 
-    private function addRouteDirectly($name, $path)
+    private function addRouteDirectly($name, $path): void
     {
-        $path = preg_replace('^:(.*?):^', '{\1}', $path);
+        $path = preg_replace('^:(.*?):^', '{\1}', (string) $path);
         $this->routes->add($name, new Route($path, [
             '_controller' => 'rox.legacy_controller::showLegacyPage',
         ], [], [], '', [], ['get', 'post']));
     }
 
-    private function addRoute($name, $path, $controller = '', $action = '')
+    private function addRoute($name, $path, $controller = '', $action = ''): void
     {
-        $path = preg_replace('^:(.*?):^', '{\1}', $path);
+        $path = preg_replace('^:(.*?):^', '{\1}', (string) $path);
         $this->routes->add($name, new Route($path, [
             '_controller' => 'rox.legacy_controller::showLegacyPage',
         ], [], [], '', [], ['get', 'post']));

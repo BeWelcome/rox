@@ -14,7 +14,7 @@ use Mockery;
 
 class LandingMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'be visited|none' => [
             'type' => 'template',
             'template' => 'landing/widget/triplegs.html.twig',
@@ -37,14 +37,11 @@ class LandingMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        switch ($parameters['name']) {
-            case 'be visited|none':
-                return $this->getTripsWidgetEmpty();
-            case 'be visited|two legs':
-                return $this->getTripsWidgetTwoLegs($parameters['user']);
-            default:
-                return [];
-        }
+        return match ($parameters['name']) {
+            'be visited|none' => $this->getTripsWidgetEmpty(),
+            'be visited|two legs' => $this->getTripsWidgetTwoLegs($parameters['user']),
+            default => [],
+        };
     }
 
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
@@ -73,7 +70,7 @@ class LandingMockups implements MockupProviderInterface
         ]);
         $location = new NewLocation();
         $location->setName('Mock');
-        $leg1 = Mockery::mock(SubTrip::class, [
+        $leg1 = Mockery::mock(Subtrip::class, [
             'getId' => 1,
             'getArrival' => new Carbon(),
             'getDeparture' => new Carbon(),
@@ -83,7 +80,7 @@ class LandingMockups implements MockupProviderInterface
             'getInvitedBy' => $user,
             'getInvitationBy' => null,
         ]);
-        $leg2 = Mockery::mock(SubTrip::class, [
+        $leg2 = Mockery::mock(Subtrip::class, [
             'getId' => 2,
             'getArrival' => new Carbon(),
             'getDeparture' => new Carbon(),

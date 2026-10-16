@@ -39,15 +39,15 @@ use App\Utilities\ForumUtilities;
 ?>
     <input type="hidden" id="read.more" value="<?php echo $words->get('forum.read.more'); ?>">
     <input type="hidden" id="show.less" value="<?php echo $words->get('forum.show.less'); ?>">
-    <input type="hidden" id="keyword" name="keyword" value="<?php echo htmlspecialchars($keyword) ?>">
+    <input type="hidden" id="keyword" name="keyword" value="<?php echo htmlspecialchars((string) $keyword) ?>">
     <div class="row no-gutters">
         <div class="col-12">
-            <h3><?= $words->get('GroupsSearchDiscussionsGroup', htmlspecialchars($keyword, ENT_QUOTES)); ?></h3>
+            <h3><?= $words->get('GroupsSearchDiscussionsGroup', htmlspecialchars((string) $keyword, ENT_QUOTES)); ?></h3>
         </div>
         <?php $pager->render();
 
         $words = new MOD_words();
-        $styles = array('l-search-post--dark', '');
+        $styles = ['l-search-post--dark', ''];
 
         $cnt = 0;
         foreach ($posts as $post) {
@@ -93,7 +93,7 @@ use App\Utilities\ForumUtilities;
                     <div class="u-flex u-justify-end">
                         <small>
                             <?php
-                                $title = strip_tags($post->title);
+                                $title = strip_tags((string) $post->title);
                                 if (isset($post->IdGroup) && $post->IdGroup != 0) {
                                     echo $words->get('forum.group');
                                     echo '<a href="group/' . $post->IdGroup . '">' . $post->GroupName . "</a> ";

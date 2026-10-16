@@ -53,13 +53,13 @@ $callbackTags = $this->layoutkit->formkit->setPostCallback('AdminRightsControlle
     <div class="col-12 col-md-6">
         <div class="o-form-group">
             <label for="scope" class="mb-0"><?php echo $this->words->get("AdminRightsScope") ?></label>
-            <input type="text" class="o-input" id="scope" name="scope" value="<?= htmlentities($this->vars['scope'], ENT_COMPAT, 'utf-8') ?>">
+            <input type="text" class="o-input" id="scope" name="scope" value="<?= htmlentities((string) $this->vars['scope'], ENT_COMPAT, 'utf-8') ?>">
             <span class="text-muted">Enter the scope. Use ';' as delimiter and &quot; around blocks</span>
         </div>
         <div class="o-form-group">
             <label for="comment" class="mb-0"><?php echo $this->words->get("AdminRightsComment") ?></label>
             <textarea class="o-input" id="comment" name="comment" rows="2" placeholder="Enter a comment, so that others know why the right was assigned."><?=
-            htmlentities($this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
+            htmlentities((string) $this->vars['comment'], ENT_COMPAT, 'utf-8') ?></textarea>
         </div>
     </div>
     <div class="col-12">

@@ -25,10 +25,10 @@ class LinkModel extends RoxModelBase
 		$lastkey = count($branch)-1;
 		$last = $branch[$lastkey];
 		$degree=count($branch)-1;
-		$path = array($first,$last,$degree);
+		$path = [$first,$last,$degree];
 		foreach ($branch as $key => $value) {
 			if ($key >= 1) {
-				array_push($path,(array($value,$directlinks[$branch[$key-1]][$value]['totype'],$directlinks[$branch[$key-1]][$value]['reversetype'])));
+				array_push($path,([$value,$directlinks[$branch[$key-1]][$value]['totype'],$directlinks[$branch[$key-1]][$value]['reversetype']]));
 			}
 		}
 		return($path);
@@ -96,14 +96,14 @@ class LinkModel extends RoxModelBase
 
 		$count = 0;
 		$maxdepth= 3;
-		$branch = array();
+		$branch = [];
 		$oldid = 0;
 
 		foreach ($startids as $key) {
 			echo "<br> ### ". $key ." ####<br>";
-			$matrix = array();
-			$matrix[0] = array($key);
-			$nolist = array($key);
+			$matrix = [];
+			$matrix[0] = [$key];
+			$nolist = [$key];
 
 			$new = 1;
 			$count=0;
@@ -119,7 +119,7 @@ class LinkModel extends RoxModelBase
 					$last = $value[count($value)-1];
 
 					if (array_key_exists($last,$directlinks)) {
-						$added = array();
+						$added = [];
 						foreach($directlinks[$last] as $key1 => $value1) {
 							if (!in_array($key1,$nolist)) {
 								$temparray = $value;
@@ -149,7 +149,7 @@ class LinkModel extends RoxModelBase
 				$lastid = count($value)-1;
 				$degree = count($value)-1;
 				$serpath = "'".serialize($path)."'";
-				$fields = array('fromID' => "$value[0]", 'toID' => "$value[$lastid]", 'degree' => "$degree", 'rank' => 'rank', 'path' => "$serpath"	);
+				$fields = ['fromID' => "$value[0]", 'toID' => "$value[$lastid]", 'degree' => "$degree", 'rank' => 'rank', 'path' => "$serpath"	];
 				$this->writeLinkList($fields);
 			}
 			echo "<br> ".count($matrix). " values written in link list<br>";
@@ -177,12 +177,12 @@ class LinkModel extends RoxModelBase
             "
             SELECT fromID FROM linklist GROUP BY fromID
             ");
-       $e_ids = array();
+       $e_ids = [];
        foreach ($existing_ids as $v) {
 		    $e_ids[] = $v->fromID;
 		}
 		//var_dump($e_ids);
-		$startids = array();
+		$startids = [];
 	    foreach ($directlinks as $key => $value) {
 		    if(!in_array($key,$e_ids)) {
 		        $startids[] = $key;
@@ -274,7 +274,7 @@ class LinkModel extends RoxModelBase
 	        "
 	        SELECT `IdOwner` FROM `specialrelations` WHERE UNIX_TIMESTAMP(`updated`) >= ".$lastupdate->updated."-120"
 	        );
-	    $ids=array();
+	    $ids=[];
 
 	    foreach($comments as $comment) {
 	        $ids[] = $comment->IdFromMember;
@@ -379,7 +379,7 @@ class LinkModel extends RoxModelBase
 	**/
     function getMemberdata($ids)
     {
-		$memberdata=array() ;
+		$memberdata=[] ;
 		if (count($ids)<=0) {
 			return $memberdata ; // Returns nothing if no Id where given
 		}
@@ -477,7 +477,7 @@ class LinkModel extends RoxModelBase
 
 	function getIdsFromPath($path)
 	{
-		$inpath = array($path[0]);
+		$inpath = [$path[0]];
 		for ($i=3; $i<3+$path[2]; $i++) {
 			array_push($inpath, $path[$i][0]);
 		}
@@ -497,12 +497,12 @@ class LinkModel extends RoxModelBase
 
 	function getFriends($from,$degree = 1,$limit = 10)
 	{
-		if (!ctype_digit($from)) {
+		if (!ctype_digit((string) $from)) {
 			$from = $this->getMemberID($from);
 		}
 		$result = $this->dbFriendsID($from,$degree,$limit);
 
-		$friendIDs=array() ; // To initialize because if nothing is found we will have a void variable
+		$friendIDs=[] ; // To initialize because if nothing is found we will have a void variable
 		foreach ($result as $value) {
 			$friendIDs[] = $value->toID;
 		}
@@ -518,12 +518,12 @@ class LinkModel extends RoxModelBase
 	**/
 	function getFriendsFull($from,$degree = 1,$limit = 10)
 	{
-		$friendsData=array() ;
-		if (!ctype_digit($from)) {
+		$friendsData=[] ;
+		if (!ctype_digit((string) $from)) {
 			$from = $this->getMemberID($from);
 		}
 		$result = $this->dbFriendsID($from,$degree,$limit);
-		$friendIDs=array() ; // To initialize because if nothing is found we will have a void variable
+		$friendIDs=[] ; // To initialize because if nothing is found we will have a void variable
 		foreach ($result as $value) {
 			$friendIDs[] = $value->toID;
 		}
@@ -540,10 +540,10 @@ class LinkModel extends RoxModelBase
 	}
 
 	function getLinks($from,$to,$limit = 10) {
-		if (!ctype_digit($from)) {
+		if (!ctype_digit((string) $from)) {
 			$from = $this->getMemberID($from);
 		}
-		if (!ctype_digit($to)) {
+		if (!ctype_digit((string) $to)) {
 			$to = $this->getMemberID($to);
 		}
 		$result = $this->dbLinks($from,$to,$limit);
@@ -563,10 +563,10 @@ class LinkModel extends RoxModelBase
 
 	function getLinksFull($from,$to,$limit = 10)
 	{
-		if (!ctype_digit($from)) {
+		if (!ctype_digit((string) $from)) {
 			$from = $this->getMemberID($from);
 		}
-		if (!ctype_digit($to)) {
+		if (!ctype_digit((string) $to)) {
 			$to = $this->getMemberID($to);
 		}
 		$result = $this->dbLinks($from,$to,$limit);
@@ -576,7 +576,7 @@ class LinkModel extends RoxModelBase
 			$ids[$key] = $this->getIdsFromPath($path[$key]);
 		}
 		if (isset($ids)) {
-			$idlist = array();
+			$idlist = [];
 			foreach ($ids as $value) {
 				foreach ($value as $id) {
 					array_push($idlist,$id);

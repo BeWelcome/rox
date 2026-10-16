@@ -46,6 +46,7 @@ class AdminBasePage extends PageWithActiveSkin
         }
     }
     
+    #[\Override]
     protected function getPageTitle() 
     {
         return 'Volunteer Pages - BeWelcome';
@@ -56,14 +57,16 @@ class AdminBasePage extends PageWithActiveSkin
         return "<a href='admin'>{$this->words->get('AdminTools')}</a>";
     }
     
+    #[\Override]
     protected function getStylesheets() 
     {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/admin.css?2';
        return $stylesheets;
     }
+    #[\Override]
     protected function getColumnNames() {
-        return array('col1', 'col3');
+        return ['col1', 'col3'];
     }
 
 }

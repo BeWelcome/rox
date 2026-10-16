@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,44 +11,40 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * AdminCode.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="geonames_admincodes", indexes={@ORM\Index(name="country_code", columns={"country_code"}), @ORM\Index(name="admin_code", columns={"admin_code"})})
- * @ORM\Entity
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'geonames_admincodes')]
+#[ORM\Index(name: 'country_code', columns: ['country_code'])]
+#[ORM\Index(name: 'admin_code', columns: ['admin_code'])]
+#[ORM\Entity]
 class AdminCode
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="country_code", type="string", length=2, nullable=false)
      */
+    #[ORM\Column(name: 'country_code', type: 'string', length: 2, nullable: false)]
     private $countryCode;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="admin_code", type="string", length=2, nullable=false)
      */
+    #[ORM\Column(name: 'admin_code', type: 'string', length: 2, nullable: false)]
     private $adminCode;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=64, nullable=false)
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 64, nullable: false)]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="code", type="string", length=5)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'code', type: 'string', length: 5)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $code;
 
     /**

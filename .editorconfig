@@ -1,21 +1,10 @@
 # editorconfig.org
 root = true
 
-# PHP should follow the PSR-2 standard (https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-
 [*]
 indent_style = space
-indent_size = 4
-end_of_line = lf
 charset = utf-8
-trim_trailing_whitespace = true
-insert_final_newline = true
-
-[Makefile]
-indent_style = tab
-
-[*.json]
-indent_style = space
+end_of_line = lf
 indent_size = 4
 
 [*.scss]
@@ -26,10 +15,14 @@ indent_size = 2
 
 [docker-compose{,.*}.{yaml,yml}]
 indent_style = space
-indent_size = 2
+insert_final_newline = true
+trim_trailing_whitespace = true
 
 [.github/*/*.yml]
 indent_size = 2
 
-[*.feature]
+[{compose.yaml,compose.*.yaml}]
 indent_size = 2
+
+[*.md]
+trim_trailing_whitespace = false

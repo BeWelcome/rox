@@ -9,7 +9,7 @@ use Mockery;
 
 class CommentMockups implements MockupProviderInterface
 {
-    private const MOCKUPS = [
+    private const array MOCKUPS = [
         'new comment (notification)' => [
             'type' => 'email',
             'template' => 'emails/comment.notification.new.html.twig',

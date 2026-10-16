@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Member;
 use DateTime;
+use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 
@@ -18,20 +19,20 @@ use Doctrine\ORM\Query;
 class TripRepository extends EntityRepository
 {
     /**
-     * @param mixed $id
-     * @param null  $lockMode
-     * @param null  $lockVersion
+     * Loads the legs with a LEFT JOIN, so a trip is found even when a leg's location is missing.
      *
      * @return Trip|null
+     *
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function find($id, $lockMode = null, $lockVersion = null)
+    public function find(mixed $id, LockMode|int|null $lockMode = null, ?int $lockVersion = null): ?object
     {
         return $this->createQueryBuilder('t')
             ->leftJoin('t.subtrips', 's')
             ->leftJoin('s.location', 'l')
             ->addSelect('s', 'l')
             ->where('t.id = :id')
-            ->setParameter(':id', $id)
+            ->setParameter('id', $id)
             ->addOrderBy('s.arrival', 'ASC')
             ->getQuery()
             ->getOneOrNullResult();
@@ -49,8 +50,8 @@ class TripRepository extends EntityRepository
             ->where('t.created <= :now')
             ->andWhere('t.creator = :creator')
             ->andWhere('t.deleted IS NULL')
-            ->setParameter(':now', new DateTime())
-            ->setParameter(':creator', $member)
+            ->setParameter('now', new DateTime())
+            ->setParameter('creator', $member)
             ->orderBy('t.created', 'DESC')
             ->addOrderBy('s.arrival', 'ASC')
             ->getQuery();

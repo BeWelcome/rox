@@ -2,7 +2,7 @@
 # Files in the packages/ subdirectory configure your dependencies.
 
 # Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+# https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
     router.request_context.host: '%env(web_host)%'
     router.request_context.scheme: 'https'
@@ -19,10 +19,9 @@ parameters:
     forum_notification_batch_size: '%env(int:forum_notification_batch_size)%'
     locales: "%env(csv:LOCALES)%"
     document_locales: "%env(DOCUMENT_LOCALES)%"
-    username.pattern: "/[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i"
+    username.pattern: "/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i"
     manticore.host: '%env(MANTICORE_HOST)%'
     manticore.port: '%env(int:MANTICORE_PORT)%'
-    mailer_batch_size: '%env(int:mailer_batch_size)%'
 
 services:
     _defaults:
@@ -38,36 +37,27 @@ services:
             $manticorePort: '%manticore.port%'
             $locales: '%locales%'
             $formLoginAuthenticator: '@security.authenticator.form_login.main'
-            $mailerBatchSize: '%mailer_batch_size%'
+            $usernamePattern: '%username.pattern%'
             # Return-Path for suspension notices (bounces go to a mailbox Znuny does not fetch). Empty = unchanged.
             $suspensionBounceAddress: '%env(default::MAILER_SUSPENSION_BOUNCE_ADDRESS)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    App\Form\DataTransformer\:
-        resource: '../src/Form/DataTransformer/*'
-
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,Migrations,Model/MemberDataExtractor/DoctrineExtractor.php,Twig,Tests,Kernel.php}'
+        exclude:
+            - '../src/DependencyInjection'
+            - '../src/Entity'
+            - '../src/Migrations'
+            - '../src/Model/MemberDataExtractor/DoctrineExtractor.php'
+            - '../src/Twig'
+            - '../src/Kernel.php'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
         resource: '../src/Controller'
         tags: [ 'controller.service_arguments' ]
-
-
-    App\Security\RefreshToken\RefreshTokenStorageInterface: '@App\Security\RefreshToken\DoctrineRefreshTokenStorage'
-
-    App\Security\RefreshToken\JWTTokenManager:
-        decorates: lexik_jwt_authentication.jwt_manager
-        arguments:
-            $decorated: '@App\Security\RefreshToken\JWTTokenManager.inner'
-
-    App\Command\RefreshTokensExpireCommand:
-        arguments:
-            $repository: '@App\Repository\MemberRepository'
 
     App\Command\DataRetentionCommand:
         arguments:
@@ -182,15 +172,6 @@ services:
             $alias: logs
         tags: [ 'app.member_data_extractor' ]
 
-    app.member_data_extractor.shouts:
-        class: App\Model\MemberDataExtractor\DoctrineExtractor
-        factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
-        arguments:
-            $className: 'App\Entity\Shout'
-            $memberRelationName: member
-            $alias: shouts
-        tags: [ 'app.member_data_extractor' ]
-
     app.member_data_extractor.subscriptions_threads:
         class: App\Model\MemberDataExtractor\DoctrineExtractor
         factory: [ '@App\Model\MemberDataExtractor\DoctrineExtractorFactory', 'create' ]
@@ -254,7 +235,7 @@ services:
     app.userprovider:
         public: true
         class: App\Provider\UserProvider
-        arguments: [ '@doctrine.orm.entity_manager' ]
+        # autowired: the constructor takes the MemberRepository (it was given the entity manager)
 
     #    rox.legacy_dispatch_listener:
     #        class: App\EventListener\LegacyDispatchListener
@@ -262,10 +243,10 @@ services:
     #        tags:
     #            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException, priority: 200000 }
 
-    rox.legacy_kernel:
-        class: App\LegacyKernel\LegacyHttpKernel
-        public: true
-        arguments: [ '@twig', '@event_dispatcher', '@controller_resolver', '@request_stack', '@argument_resolver', '@service_container' ]
+#    rox.legacy_kernel:
+#        class: App\LegacyKernel\LegacyHttpKernel
+#        public: true
+#        arguments: [ '@twig', '@service_container', '@request_stack' ]
 
 #    rox.legacy_password_hasher:
 #        public: true
@@ -288,20 +269,18 @@ services:
         class: App\Twig\Extension
         arguments:
             $publicDirectory: '%kernel.project_dir%/public'
-        tags:
-            - { name: 'twig.extension' }
+        tags: [twig.extension]
+
 
     rox.member_twig_extension:
         class: App\Twig\MemberTwigExtension
         public: true
-        arguments: [ '@session', '@router', '@security.helper' ]
-        tags:
-            - { name: twig.extension }
+        arguments: [ '@router', '@security.helper' ]
+        tags: [twig.extension]
 
     # src/Twig is excluded from autowiring above, so every extension is listed here.
     App\Twig\AnalyticsExtension:
-        tags:
-            - { name: twig.extension }
+        tags: [twig.extension]
 
     pagerfanta.bootstrap4.ajax.template:
         public: true
@@ -389,10 +368,6 @@ services:
     \HTMLPurifier:
         alias: rox.html_purifier
 
-    rox.words_extractor:
-        class: App\Utilities\WordsExtractor
-        tags: [ { name: translation.extractor, alias: words } ]
-
     #  rox.activator:
     #    class: App\Activator\RoleActivator
     #    arguments: ["@security.helper"]
@@ -404,8 +379,9 @@ services:
 
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
-            - !service { class: PDO, factory: [ '@database_connection', 'getWrappedConnection' ] }
-            - { lock_mode: LOCK_NONE }
+            # Reuse the Doctrine connection, as on main (DBAL 4: getNativeConnection).
+            - !service { class: PDO, factory: [ '@database_connection', 'getNativeConnection' ] }
+            - { lock_mode: !php/const Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler::LOCK_NONE }
 
     Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~
 
@@ -478,7 +454,6 @@ services:
         class: App\Model\MockupProvider\ProfileMockups
         tags: [ 'app.mockup_provider' ]
 
-#    app.signup.form:
-#        class: App\Form\SignupFormType
-#        arguments:
-#            $usernamePattern: '%username.pattern%'
+    App\Form\DataTransformer\LocationRequestToLocationTransformer: ~
+    App\Form\DataTransformer\DateTransformer: ~
+

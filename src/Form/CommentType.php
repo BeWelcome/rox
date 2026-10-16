@@ -17,14 +17,11 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CommentType extends AbstractType
 {
-    private SetTypeTransformer $setTypeTransformer;
-
-    public function __construct(SetTypeTransformer $setTypeTransformer)
+    public function __construct(private readonly SetTypeTransformer $setTypeTransformer)
     {
-        $this->setTypeTransformer = $setTypeTransformer;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $commentRelationsType = new CommentRelationsType();
         $commentQualityType = new CommentQualityType();
@@ -58,7 +55,7 @@ class CommentType extends AbstractType
                     new NotBlank(),
                 ],
             ])
-            ->add('textfree', TextAreaType::class, [
+            ->add('textfree', TextareaType::class, [
                 'label' => 'label.comment.text',
                 'attr' => [
                     'rows' => 6,
@@ -97,7 +94,7 @@ class CommentType extends AbstractType
         }
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

@@ -4,28 +4,24 @@ namespace App\Entity;
 
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectManagerAware;
 
 /**
- * PollChoice.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="polls_choices", indexes={@ORM\Index(name="IdPoll", columns={"IdPoll"})})
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
-class PollChoice implements ObjectManagerAware
+#[ORM\Table(name: 'polls_choices')]
+#[ORM\Index(name: 'IdPoll', columns: ['IdPoll'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
+class PollChoice
 {
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdChoiceText", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdChoiceText', type: 'integer', nullable: false)]
     private $text;
 
     /**
@@ -37,48 +33,36 @@ class PollChoice implements ObjectManagerAware
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="Counter", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'Counter', type: 'integer', nullable: false)]
     private $counter = '0';
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var Poll
-     *
-     * @ORM\ManyToOne(targetEntity="Poll", inversedBy="choices")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Poll::class, inversedBy: 'choices')]
     private $poll;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
-
-    /**
-     * @var ObjectManager
-     */
-    private $objectManager;
 
     /**
      * Set choice text.
@@ -189,11 +173,9 @@ class PollChoice implements ObjectManagerAware
     /**
      * Set poll.
      *
-     * @param Poll $poll
-     *
      * @return PollChoice
      */
-    public function setPoll(Poll $poll = null)
+    public function setPoll(?Poll $poll = null)
     {
         $this->poll = $poll;
 
@@ -212,9 +194,8 @@ class PollChoice implements ObjectManagerAware
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -223,9 +204,8 @@ class PollChoice implements ObjectManagerAware
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');
@@ -233,12 +213,11 @@ class PollChoice implements ObjectManagerAware
 
     /**
      * Triggered after load from database.
-     *
-     * @ORM\PostLoad
      */
-    public function onPostLoad()
+    #[ORM\PostLoad]
+    public function onPostLoad(PostLoadEventArgs $eventArgs): void
     {
-        $translationRepository = $this->objectManager->getRepository(Translation::class);
+        $translationRepository = $eventArgs->getObjectManager()->getRepository(Translation::class);
         $translatedTexts = $translationRepository->findBy(['idTrad' => $this->text]);
 
         $texts = [];
@@ -247,11 +226,6 @@ class PollChoice implements ObjectManagerAware
             $texts[$text->getLanguage()->getShortCode()] = $text->getSentence();
         }
         $this->texts = $texts;
-    }
-
-    public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
-    {
-        $this->objectManager = $objectManager;
     }
 
     public function getText(): int

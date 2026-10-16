@@ -51,13 +51,13 @@ class RolePrivilege extends RoxEntityBase
     {
         if (!is_object($role) || !$role->isPKSet())
         {
-            return array();
+            return [];
         }
 
         $role_id = $this->dao->escape($role->id);
 
         $priv_ids = $this->findByWhereMany("IdRole = '{$role_id}'");
-        $privileges = array();
+        $privileges = [];
         foreach ($priv_ids as $id)
         {
             $privileges[] = $this->createEntity('Privilege')->findById($id->IdPrivilege);
@@ -78,13 +78,13 @@ class RolePrivilege extends RoxEntityBase
     {
         if (!is_object($privilege) || !$privilege->isPKSet())
         {
-            return array();
+            return [];
         }
 
         $privilege_id = $this->dao->escape($privilege->id);
 
         $role_ids = $this->findByWhereMany("IdPrivilege = '{$privilege_id}'");
-        $roles = array();
+        $roles = [];
         foreach ($role_ids as $id)
         {
             $roles[] = $this->createEntity('Role')->findById($id->IdRole);

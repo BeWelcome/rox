@@ -7,83 +7,69 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PollsContributions.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="polls_contributions",
- *     uniqueConstraints={@ORM\UniqueConstraint(name="polls_contributions_members", columns={"IdMember", "IdPoll"})},
- *     indexes={@ORM\Index(name="polls_contributions_email", columns={"Email"}),
- *     @ORM\Index(name="polls_contributions_Poll", columns={"IdPoll"}),
- *     @ORM\Index(name="IDX_D41FF2B3EA8330B4", columns={"IdMember"})})
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'polls_contributions')]
+#[ORM\Index(name: 'polls_contributions_email', columns: ['Email'])]
+#[ORM\Index(name: 'polls_contributions_Poll', columns: ['IdPoll'])]
+#[ORM\Index(name: 'IDX_D41FF2B3EA8330B4', columns: ['IdMember'])]
+#[ORM\UniqueConstraint(name: 'polls_contributions_members', columns: ['IdMember', 'IdPoll'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
 class PollContribution
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="`Email`", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: '`Email`', type: 'string', length: 255, nullable: false)]
     private $email;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="EmailIsConfirmed", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'EmailIsConfirmed', type: 'string', length: 255, nullable: false)]
     private $emailIsConfirmed = 'No';
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="comment", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'comment', type: 'text', length: 65535, nullable: false)]
     private $comment;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
      * @var Poll
-     *
-     * @ORM\ManyToOne(targetEntity="Poll", inversedBy="contributions", fetch="EAGER")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdPoll", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Poll::class, inversedBy: 'contributions', fetch: 'EAGER')]
     private $poll;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Member::class)]
     private $member;
 
     /**
@@ -219,11 +205,9 @@ class PollContribution
     /**
      * Set idpoll.
      *
-     * @param Poll $poll
-     *
      * @return PollContribution
      */
-    public function setPoll(Poll $poll = null)
+    public function setPoll(?Poll $poll = null)
     {
         $this->poll = $poll;
 
@@ -243,11 +227,9 @@ class PollContribution
     /**
      * Set idmember.
      *
-     * @param Member $member
-     *
      * @return PollContribution
      */
-    public function setMember(Member $member = null)
+    public function setMember(?Member $member = null)
     {
         $this->member = $member;
 
@@ -266,9 +248,8 @@ class PollContribution
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -277,9 +258,8 @@ class PollContribution
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

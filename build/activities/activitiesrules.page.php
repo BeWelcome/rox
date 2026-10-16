@@ -32,6 +32,7 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesRulesPage extends ActivitiesBasePage
 {
+    #[\Override]
     protected function getPageTitle() {
         $words = $this->getWords();
         return $words->getBuffered('Activities') . ' - BeWelcome';

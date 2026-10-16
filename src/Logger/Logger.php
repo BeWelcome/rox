@@ -3,34 +3,23 @@
 namespace App\Logger;
 
 use App\Entity\Log;
+use App\Entity\Member;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class Logger
 {
-    /** @var EntityManager */
-    private $em;
-
-    /** @var Security */
-    private $security;
-
-    public function __construct(EntityManagerInterface $em, Security $security)
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly Security $security)
     {
-        $this->em = $em;
-        $this->security = $security;
     }
 
     /**
-     * @param mixed $msg
-     * @param mixed $type
-     * @param mixed $member
-     *
      * @throws Exception
      */
-    public function write($msg, $type, $member = null)
+    public function write(string $msg, string $type, ?UserInterface $member = null): void
     {
         if (null === $member) {
             // Get member from the security context
@@ -42,8 +31,8 @@ class Logger
             $log->setMember($member);
             $log->setType($type);
             $log->setCreated(new DateTime());
-            $this->em->persist($log);
-            $this->em->flush();
+            $this->entityManager->persist($log);
+            $this->entityManager->flush();
         } catch (Exception $e) {
             throw $e;
         }

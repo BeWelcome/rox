@@ -15,13 +15,17 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Gedmo\Translatable\TranslatableListener;
-use PDO;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ *
+ * \todo Move statistics of different aspects  into different models
+ */
 class StatisticsModel
 {
     use ManagerTrait;
@@ -51,7 +55,7 @@ class StatisticsModel
                     members m
                 WHERE
                     m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
-            ')->fetch();
+            ')->fetchAssociative();
 
             $countries = $connection->executeQuery("
                 SELECT
@@ -60,7 +64,7 @@ class StatisticsModel
                     geonamescountries gc
                     join geonames g on gc.country = g.country
                     join members m on g.geonameId = m.IdCity and m.Status IN ('Active', 'OutOfRemind')
-            ")->fetchAll();
+            ")->fetchAllAssociative();
 
             $languages = $connection->executeQuery('
                 SELECT
@@ -73,7 +77,7 @@ class StatisticsModel
                     l.id = mll.idLanguage
                     AND mll.IdMember = m.Id
                     AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-            ')->fetch();
+            ')->fetchAssociative();
 
             $positiveComments = $connection->executeQuery("
                 SELECT
@@ -85,7 +89,7 @@ class StatisticsModel
                     c.Quality = 'Good'
                     AND IdFromMember = m.Id
                     AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ')
-            ')->fetch();
+            ')->fetchAssociative();
 
             $activities = $connection->executeQuery('
                 SELECT
@@ -94,7 +98,7 @@ class StatisticsModel
                     activities a
                 WHERE
                     a.status = 0
-            ')->fetch();
+            ')->fetchAssociative();
 
             return [
                 'members' => $members['cnt'],
@@ -110,10 +114,8 @@ class StatisticsModel
      * @throws DBALException
      * @throws ORMException
      * @throws OptimisticLockException
-     *
-     * @return int
      */
-    public function updateStatistics(DatePeriod $dates, OutputInterface $output)
+    public function updateStatistics(DatePeriod $dates, OutputInterface $output): int
     {
         $progressBar = null;
         $count = iterator_count($dates);
@@ -163,7 +165,7 @@ class StatisticsModel
             $this->setMessagesSentAndRead($connection, $current, $next, $statistics);
             $this->setRequestsSentAndAccepted($connection, $current, $next, $statistics);
             $this->setLegsCreated($connection, $current, $next, $statistics);
-            $this->setInvititationsSentAndAccepted($connection, $current, $next, $statistics);
+            $this->setInvitationsSentAndAccepted($connection, $current, $next, $statistics);
 
             $em->persist($statistics);
         }
@@ -355,7 +357,7 @@ class StatisticsModel
     }
 
     /**
-     * @SuppressWarnings(PHPMD)
+     * @SuppressWarnings("PHPMD")
      */
     public function getMembersPerLoginData(): array
     {
@@ -426,7 +428,8 @@ class StatisticsModel
         $other = $this->translator->trans('statistics.other', ['count' => \count($resultSet) - $count + 1]);
         $result = \array_slice($resultSet, 0, $count);
         $keys = array_keys($resultSet);
-        for ($i = $count; $i < \count($keys); ++$i) {
+        $keyCount = \count($keys);
+        for ($i = $count; $i < $keyCount; ++$i) {
             if (!isset($result[$other])) {
                 $result[$other] = 0;
             }
@@ -444,7 +447,7 @@ class StatisticsModel
     private function setMemberInfo(Connection $connection, string $current, $statistics): void
     {
         // Active members
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             "
                     SELECT
                       COUNT(*) AS cnt
@@ -455,14 +458,14 @@ class StatisticsModel
                       AND m.created <= :created
                 ",
             [
-                ':created' => $current,
+                'created' => $current,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setActiveMembers($result['cnt']);
+            ->fetchOne();
+        $statistics->setActiveMembers($count);
 
         // Number of member with at least one positive comment
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             "
                     SELECT
                       COUNT(DISTINCT(m.id)) AS cnt
@@ -476,11 +479,11 @@ class StatisticsModel
                       AND c.updated <= :updated
                       ",
             [
-                ':updated' => $current,
+                'updated' => $current,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setMembersWithPositiveComment($result['cnt']);
+            ->fetchOne();
+        $statistics->setMembersWithPositiveComment($count);
     }
 
     /**
@@ -491,7 +494,7 @@ class StatisticsModel
     private function setLoggedInMembers(Connection $connection, string $current, string $next, $statistics): void
     {
         // Number of member who have logged in during the current date
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             "
                         SELECT
                           COUNT(m.id) AS cnt
@@ -503,12 +506,12 @@ class StatisticsModel
                           AND m.LastLogin < :next
                           ",
             [
-                ':current' => $current,
-                ':next' => $next,
+                'current' => $current,
+                'next' => $next,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setMembersWhoLoggedInToday($result['cnt']);
+            ->fetchOne();
+        $statistics->setMembersWhoLoggedInToday($count);
     }
 
     /**
@@ -519,7 +522,7 @@ class StatisticsModel
     private function setMessagesSentAndRead(Connection $connection, string $current, string $next, $statistics): void
     {
         // Number of messages sent from one member to another during the current date
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             '
                     SELECT
                       COUNT(m.id) AS cnt
@@ -531,15 +534,15 @@ class StatisticsModel
                       AND m.request_id IS null
                       ',
             [
-                ':current' => $current,
-                ':next' => $next,
+                'current' => $current,
+                'next' => $next,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setMessagesSent($result['cnt']);
+            ->fetchOne();
+        $statistics->setMessagesSent($count);
 
         // Number of messages read during the current date
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             '
                     SELECT
                       COUNT(m.id) AS cnt
@@ -551,12 +554,12 @@ class StatisticsModel
                       AND m.request_id IS null
                       ',
             [
-                ':current' => $current,
-                ':next' => $next,
+                'current' => $current,
+                'next' => $next,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setMessagesRead($result['cnt']);
+            ->fetchOne();
+        $statistics->setMessagesRead($count);
     }
 
     /**
@@ -568,10 +571,10 @@ class StatisticsModel
         Connection $connection,
         string $current,
         string $next,
-        $statistics
+        $statistics,
     ): void {
         // Number of requests created from one member to another during the current date
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             '
                     SELECT
                       COUNT(r.id) AS cnt
@@ -583,15 +586,15 @@ class StatisticsModel
                       AND r.invite_for_leg IS NULL
                       ',
             [
-                ':current' => $current,
-                ':next' => $next,
+                'current' => $current,
+                'next' => $next,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setRequestsSent($result['cnt']);
+            ->fetchOne();
+        $statistics->setRequestsSent($count);
 
         // Number of requests accepted during the current date
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             '
                     SELECT
                       COUNT(r.id) AS cnt
@@ -604,13 +607,13 @@ class StatisticsModel
                       AND r.invite_for_leg IS NULL
                       ',
             [
-                ':current' => $current,
-                ':next' => $next,
-                ':status' => HostingRequest::REQUEST_ACCEPTED,
+                'current' => $current,
+                'next' => $next,
+                'status' => HostingRequest::REQUEST_ACCEPTED,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setRequestsAccepted($result['cnt']);
+            ->fetchOne();
+        $statistics->setRequestsAccepted($count);
     }
 
     /**
@@ -620,10 +623,10 @@ class StatisticsModel
         Connection $connection,
         string $current,
         string $next,
-        Statistic $statistics
+        Statistic $statistics,
     ): void {
         // Number of requests created from one member to another during the current date
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             '
                     SELECT
                       COUNT(s.id) AS cnt
@@ -636,25 +639,25 @@ class StatisticsModel
                       AND t.created < :next
                       ',
             [
-                ':current' => $current,
-                ':next' => $next,
+                'current' => $current,
+                'next' => $next,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setLegsCreated($result['cnt']);
+            ->fetchOne();
+        $statistics->setLegsCreated($count);
     }
 
     /**
      * @throws DBALException
      */
-    private function setInvititationsSentAndAccepted(
+    private function setInvitationsSentAndAccepted(
         Connection $connection,
         string $current,
         string $next,
-        Statistic $statistics
+        Statistic $statistics,
     ): void {
         // Number of requests created from one member to another during the current date
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             '
                     SELECT
                       COUNT(r.id) AS cnt
@@ -666,15 +669,15 @@ class StatisticsModel
                       AND NOT r.invite_for_leg IS NULL
                       ',
             [
-                ':current' => $current,
-                ':next' => $next,
+                'current' => $current,
+                'next' => $next,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setInvitationsSent($result['cnt']);
+            ->fetchOne();
+        $statistics->setInvitationsSent($count);
 
         // Number of requests accepted during the current date
-        $result = $connection->executeQuery(
+        $count = $connection->executeQuery(
             '
                     SELECT
                       COUNT(r.id) AS cnt
@@ -687,13 +690,13 @@ class StatisticsModel
                       AND NOT r.invite_for_leg IS NULL
                       ',
             [
-                ':current' => $current,
-                ':next' => $next,
-                ':status' => HostingRequest::REQUEST_ACCEPTED,
+                'current' => $current,
+                'next' => $next,
+                'status' => HostingRequest::REQUEST_ACCEPTED,
             ]
         )
-            ->fetch(PDO::FETCH_ASSOC);
-        $statistics->setInvitationsAccepted($result['cnt']);
+            ->fetchOne();
+        $statistics->setInvitationsAccepted($count);
     }
 
     private function prepareDailyData($data): array
@@ -722,8 +725,8 @@ class StatisticsModel
             // turn provided yearweek into a date (first day of the week)
             $preparedData['labels'][] = date(
                 'Y-m-d',
-                strtotime(substr($datum['week'], 0, 4)
-                    . '-W' . substr($datum['week'], 4, 2) . '-1')
+                strtotime(substr((string) $datum['week'], 0, 4)
+                    . '-W' . substr((string) $datum['week'], 4, 2) . '-1')
             );
             $preparedData['numbers'][] = $datum['count'];
         }
@@ -737,15 +740,14 @@ class StatisticsModel
         $qb = $this->entityManager->createQueryBuilder();
         $countriesQuery = $qb
             ->select('c')
-            ->from('App\Entity\NewLocation', 'c', 'c.countryId')
+            ->from(\App\Entity\NewLocation::class, 'c', 'c.countryId')
             ->where($qb->expr()->in('c.countryId ', $countryCodes))
             ->andWhere($qb->expr()->eq('c.featureClass', $qb->expr()->literal('A')))
             ->andWhere($qb->expr()->eq('c.featureCode', $qb->expr()->literal('PCLI')))
-            ->getQuery()
-        ;
+            ->getQuery();
         $countriesQuery->setHint(
             \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
         );
         $countriesQuery->setHint(
             TranslatableListener::HINT_TRANSLATABLE_LOCALE,

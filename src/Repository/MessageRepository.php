@@ -12,7 +12,6 @@ use App\Entity\Member;
 use App\Entity\Message;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -27,7 +26,7 @@ class MessageRepository extends EntityRepository
         $sql = str_replace('SELECT * FROM (', 'SELECT count(*) AS count FROM (', $sql);
 
         $result = $this->getEntityManager()->getConnection()->executeQuery($sql, [
-            ':memberId' => $member->getId(),
+            'memberId' => $member->getId(),
         ]);
 
         $unread = $result->fetchOne();
@@ -39,7 +38,8 @@ class MessageRepository extends EntityRepository
     {
         /** @var Connection $connection */
         $connection = $this->getEntityManager()->getConnection();
-        $count = $connection->fetchOne('SELECT count(*) AS cnt FROM (SELECT `m`.*
+        $count = $connection->fetchOne(
+            'SELECT count(*) AS cnt FROM (SELECT `m`.*
             FROM `messages` m
             WHERE
 				NOT m.subject_id IS NULL
@@ -57,9 +57,12 @@ class MessageRepository extends EntityRepository
             WHERE
 				m.subject_id is null
 				AND	((m.IdReceiver = :loggedIn AND m.IdSender = :member) OR
-						(m.IdReceiver = :member AND m.IdSender = :loggedIn))) AS a', [
-                         'loggedIn' => $loggedInMember->getId(),
-                         'member' => $member->getId(), ]);
+						(m.IdReceiver = :member AND m.IdSender = :loggedIn))) AS a',
+            [
+                'loggedIn' => $loggedInMember->getId(),
+                'member' => $member->getId(),
+            ]
+        );
 
         return $count;
     }
@@ -71,7 +74,7 @@ class MessageRepository extends EntityRepository
         $sql .= ' ORDER BY `m`.`created` DESC LIMIT ' . $limit . ' OFFSET 0';
 
         $query = $this->getEntityManager()->createNativeQuery($sql, new MessageResultSetMapping())
-            ->setParameter(':memberId', $member->getId())
+            ->setParameter('memberId', $member->getId())
         ;
 
         return $query->getResult();
@@ -105,9 +108,6 @@ class MessageRepository extends EntityRepository
 
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
-     *
-     * @param mixed $page
-     * @param mixed $items
      */
     public function findProcessedReportedMessages($page = 1, $items = 10): Pagerfanta
     {
@@ -122,9 +122,6 @@ class MessageRepository extends EntityRepository
 
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
-     *
-     * @param mixed $page
-     * @param mixed $items
      */
     public function findBlockWordsMessages($page = 1, $items = 10): Pagerfanta
     {
@@ -139,9 +136,6 @@ class MessageRepository extends EntityRepository
 
     /**
      * Returns a Pagerfanta object encapsulating the matching paginated processed reported messages.
-     *
-     * @param mixed $page
-     * @param mixed $items
      */
     public function findProcessedBlockWordsMessages($page = 1, $items = 10): Pagerfanta
     {
@@ -154,24 +148,13 @@ class MessageRepository extends EntityRepository
         return $paginator;
     }
 
-    public function getThread(Message $message)
-    {
-        $qb = $this->createNativeNamedQuery('get_thread')
-            ->setHint('partial', Query::HINT_FORCE_PARTIAL_LOAD);
-        $result = $qb->execute([
-            'message_id' => $message->getId(),
-        ]);
-
-        return $result;
-    }
-
     public function findAllMessagesBetween(
         Member $loggedInUser,
         Member $member,
         string $sort,
         string $sortDirection,
         int $page = 1,
-        int $items = 10
+        int $items = 10,
     ): Pagerfanta {
         $paginator = new Pagerfanta(
             new QueryAdapter(
@@ -371,7 +354,7 @@ class MessageRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('m');
         $qb
-            ->join('App:Member', 'mb', Join::WITH, 'm.sender = mb.id')
+            ->join(Member::class, 'mb', Join::WITH, 'm.sender = mb.id')
             ->where('m.status = :status')
             ->setParameter('status', MessageStatusType::CHECK)
             ->andWhere('m.spamInfo LIKE :spamInfo')
@@ -388,7 +371,7 @@ class MessageRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('m');
         $qb
-            ->join('App:Member', 'mb', Join::WITH, 'm.sender = mb.id')
+            ->join(Member::class, 'mb', Join::WITH, 'm.sender = mb.id')
             ->where('m.spamInfo LIKE :spamInfo')
             ->setParameter('spamInfo', '%' . SpamInfoType::SPAM_BLOCKED_WORD . '%')
             ->andWhere(
@@ -409,7 +392,7 @@ class MessageRepository extends EntityRepository
         Member $loggedInUser,
         Member $member,
         string $sort,
-        string $sortDirection
+        string $sortDirection,
     ): QueryBuilder {
         if ('date' === $sort) {
             $sort = 'created';

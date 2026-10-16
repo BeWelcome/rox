@@ -9,26 +9,24 @@ namespace App\Doctrine;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use InvalidArgumentException;
+use Override;
 
 /**
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * @SuppressWarnings("PHPMD.NumberOfChildren")
+ *
+ * EnumType is used everywhere MYSQL enums are used. That are a lot in the original database, so the number of childs is
+ * rather high, but not really a problem as the implementation is in the base class.
+ * @SuppressWarnings("PHPMD.UnusedFormalParameter")
  */
 abstract class EnumType extends Type
 {
-    /** @var string */
-    protected $name;
+    protected string $name;
 
-    /** @var array */
-    protected $values = [];
+    protected array $values = [];
 
-    /** @var string */
-    protected $translationPrefix = '';
+    protected string $translationPrefix = '';
 
-    /**
-     * @return string
-     */
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $column, AbstractPlatform $platform): string
     {
         $values = array_map(function ($val) {
             return "'" . $val . "'";
@@ -37,22 +35,14 @@ abstract class EnumType extends Type
         return 'ENUM(' . implode(', ', $values) . ')';
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    #[Override]
+    public function convertToPHPValue(mixed $value, AbstractPlatform $platform): mixed
     {
         return $value;
     }
 
-    /**
-     * @param mixed $value
-     *
-     * @return mixed
-     */
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    #[Override]
+    public function convertToDatabaseValue(mixed $value, AbstractPlatform $platform): mixed
     {
         if (!\in_array($value, $this->values, true)) {
             throw new InvalidArgumentException("Invalid '" . $this->name . "' value: " . $value . '.');
@@ -61,18 +51,12 @@ abstract class EnumType extends Type
         return $value;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return bool
-     */
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

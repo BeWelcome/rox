@@ -39,7 +39,7 @@ class AnalyticsExtension extends AbstractExtension
                 if (false !== stripos($url, 'utm_')) {
                     return $all;
                 }
-                $separator = false === strpos($url, '?') ? '?' : '&amp;';
+                $separator = !str_contains($url, '?') ? '?' : '&amp;';
 
                 return 'href=' . $quote . $url . $separator . $parameters . $fragment . $quote;
             },

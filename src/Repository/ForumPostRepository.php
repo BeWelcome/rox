@@ -16,10 +16,10 @@ class ForumPostRepository extends EntityRepository
             ->select('count(fp.id)')
             ->getQuery()
             ->getSingleScalarResult()
-            ;
+        ;
     }
 
-    public function getForumPostsByMember(Member $member, string $search, int $page, int $itemsPerPage = 20): PagerFanta
+    public function getForumPostsByMember(Member $member, string $search, int $page, int $itemsPerPage): Pagerfanta
     {
         $queryBuilder = $this->getForumPostsByMemberQueryBuilder($member);
         if (!empty($search)) {

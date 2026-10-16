@@ -15,13 +15,16 @@ class CommunityNewsCommentRequest
 
     /**
      * @var string
+     *
      * @Assert\NotBlank()
+     *
      * @Assert\Length(min="10", max="100")
      */
     public $title;
 
     /**
      * @var string
+     *
      * @Assert\NotBlank()
      */
     public $text;

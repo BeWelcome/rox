@@ -26,7 +26,7 @@ class GeoType extends RoxEntityBase
     {
         if (empty(self::$geo_types))
         {
-            $class = __CLASS__;
+            $class = self::class;
             $me = new $class;
             self::$geo_types = $me->findAll();
             unset($me);

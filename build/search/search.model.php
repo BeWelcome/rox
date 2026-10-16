@@ -36,15 +36,15 @@ use AnthonyMartin\GeoLocation\GeoPoint;
  */
 class SearchModel extends RoxModelBase
 {
-    const ORDER_USERNAME = 2;
-    const ORDER_ACCOM = 6;
-    const ORDER_LOGIN = 8;
-    const ORDER_MEMBERSHIP = 10;
-    const ORDER_COMMENTS = 12;
-    const ORDER_DISTANCE = 14;
+    public const int ORDER_USERNAME = 2;
+    public const int ORDER_ACCOMMODATION = 6;
+    public const int ORDER_LOGIN = 8;
+    public const int ORDER_MEMBERSHIP = 10;
+    public const int ORDER_COMMENTS = 12;
+    public const int ORDER_DISTANCE = 14;
 
-    const DIRECTION_ASCENDING = 1;
-    const DIRECTION_DESCENDING = 2;
+    public const int DIRECTION_ASCENDING = 1;
+    public const int DIRECTION_DESCENDING = 2;
 
     private $statusCondition = "";
     private $maxGuestCondition = "";
@@ -69,25 +69,21 @@ class SearchModel extends RoxModelBase
     private $tables = "";
     private $joins = "";
 
-    private const ORDER_BY = [
+    private const array ORDER_BY = [
         self::ORDER_USERNAME => ['WordCode' => 'SearchOrderUsername', 'Column' => 'm.Username'],
-        self::ORDER_ACCOM => ['WordCode' => 'SearchOrderAccommodation', 'Column' => 'accomodation'],
+        self::ORDER_ACCOMMODATION => ['WordCode' => 'SearchOrderAccommodation', 'Column' => 'accomodation'],
         self::ORDER_DISTANCE => ['WordCode' => 'SearchOrderDistance', 'Column' => 'Distance'],
         self::ORDER_LOGIN => ['WordCode' => 'SearchOrderLogin', 'Column' => 'LastLogin'],
         self::ORDER_MEMBERSHIP => ['WordCode' => 'SearchOrderMembership', 'Column' => 'm.created'],
         self::ORDER_COMMENTS => ['WordCode' => 'SearchOrderComments', 'Column' => 'CommentCount'],
     ];
 
-    private EntityManagerInterface $entityManager;
-
     /**
      * SearchModel constructor.
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
         parent::__construct();
-
-        $this->entityManager = $entityManager;
     }
 
     private function getOrderBy($orderBy, $direction)
@@ -100,7 +96,7 @@ class SearchModel extends RoxModelBase
         }
         $order = self::ORDER_BY[$orderType]['Column'] . $directionType;
         switch ($orderType) {
-            case self::ORDER_ACCOM:
+            case self::ORDER_ACCOMMODATION:
                 $order .= ', (IF(mp.photoCount IS NULL, 0, 1) + IF(m.ProfileSummary != 0, 2, 0)) ASC'
                     . ', hosting_interest ASC, LastLogin ASC, Distance ASC';
                 break;
@@ -161,7 +157,7 @@ WHERE
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-                return (strip_tags($this->ReplaceWithBr($row->Sentence, $ReplaceWithBr), $AllowedTags));
+                return (strip_tags((string) $this->ReplaceWithBr($row->Sentence, $ReplaceWithBr), $AllowedTags));
             }
         }
         // Try default eng
@@ -181,7 +177,7 @@ WHERE
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-                return (strip_tags($this->ReplaceWithBr($row->Sentence, $ReplaceWithBr), $AllowedTags));
+                return (strip_tags((string) $this->ReplaceWithBr($row->Sentence, $ReplaceWithBr), $AllowedTags));
             }
         }
         // Try first language available
@@ -202,7 +198,7 @@ LIMIT 1
             if (isset ($row->Sentence) == "") {
                 //LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
             } else {
-                return (strip_tags($this->ReplaceWithBr($row->Sentence, $ReplaceWithBr), $AllowedTags));
+                return (strip_tags((string) $this->ReplaceWithBr($row->Sentence, $ReplaceWithBr), $AllowedTags));
             }
         }
 
@@ -285,7 +281,7 @@ LIMIT 1
             $result->longne = $boundingBox->getMaxLongitude();
             $result->latsw = $boundingBox->getMinLatitude();
             $result->longsw = $boundingBox->getMinLongitude();
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // If this really happens the map search area will be rather small :)
             $result->latne = $result->longne = $result->latsw = $result->longsw = 0;
         }
@@ -384,7 +380,7 @@ LIMIT 1
         if (isset($vars['search-username']) && (!empty($vars['search-username']))) {
             $username = $vars['search-username'];
             // create LIKE condition from query parameter with wildcards
-            if (strpos($username, "*") !== false) {
+            if (str_contains((string) $username, "*")) {
                 $username = str_replace("*", "%", $username);
             }
             $condition = " AND m.username LIKE '" . $this->dao->escape($username) . "'";
@@ -409,7 +405,7 @@ LIMIT 1
     {
         $condition = "";
         if (isset($vars['search-groups'])) {
-            $groups = array();
+            $groups = [];
             foreach ($vars['search-groups'] as $group) {
                 $groups[] = $group;
             }
@@ -425,7 +421,7 @@ LIMIT 1
     {
         $condition = "";
         if (isset($vars['search-languages'])) {
-            $languages = array();
+            $languages = [];
             foreach ($vars['search-languages'] as $language) {
                 $languages[] = $language;
             }
@@ -442,7 +438,7 @@ LIMIT 1
     {
         $condition = "";
         if (isset($vars['search-accommodation'])) {
-            $accommodations = array();
+            $accommodations = [];
             $accommodation = $vars['search-accommodation'];
             if (is_array($accommodation)) {
                 foreach ($accommodation as $value) {
@@ -483,7 +479,7 @@ LIMIT 1
     {
         $condition = "";
         if (isset($vars['search-typical-offers'])) {
-            $typicalOffers = array();
+            $typicalOffers = [];
             $typicalOffer = $vars['search-typical-offers'];
             if (is_array($typicalOffer)) {
                 foreach ($typicalOffer as $value) {
@@ -556,7 +552,7 @@ LIMIT 1
      */
     private function getDetailsForMembers()
     {
-        $langarr = explode('-', $this->session->get('lang'));
+        $langarr = explode('-', (string) $this->session->get('lang'));
         $commentStatuses = MemberStatusType::MEMBER_COMMENTS;
         $lang = $langarr[0];
         // First get current page and limits
@@ -637,9 +633,9 @@ LIMIT 1
 
         $loggedInMember = $this->getLoggedInMember();
 
-        $members = array();
-        $geonameIds = array();
-        $countryIds = array();
+        $members = [];
+        $geonameIds = [];
+        $countryIds = [];
         $layoutBits = new MOD_layoutbits();
         foreach ($rawMembers as $member) {
             $geonameIds[$member->geonameId] = $member->geonameId;

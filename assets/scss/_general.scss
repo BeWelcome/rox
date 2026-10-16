@@ -1,3 +1,5 @@
+@use "sass:math";
+
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
@@ -247,7 +249,7 @@ a {
   cursor: pointer;
 }
 
-input.noradio{
+input.noradio {
     display:none;
 }
 

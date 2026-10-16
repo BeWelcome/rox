@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,64 +11,58 @@ namespace App\Entity;
 use App\Doctrine\LanguageLevelType;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Memberslanguageslevel.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="memberslanguageslevel", indexes={
- *     @ORM\Index(name="members_languages", columns={"IdMember", "IdLanguage"})
- * })
- * @ORM\Entity
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'memberslanguageslevel')]
+#[ORM\Index(name: 'members_languages', columns: ['IdMember', 'IdLanguage'])]
+#[ORM\Entity]
 class MembersLanguagesLevel
 {
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="languageLevels")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id", nullable=FALSE)
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'languageLevels')]
     protected $member;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=true)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var Language
-     *
-     * @ORM\ManyToOne(targetEntity="Language", inversedBy="levels")
-     * @ORM\JoinColumn(name="IdLanguage", referencedColumnName="id", nullable=FALSE)
      */
+    #[ORM\JoinColumn(name: 'IdLanguage', referencedColumnName: 'id', nullable: false)]
+    #[ORM\ManyToOne(targetEntity: \Language::class, inversedBy: 'levels')]
+    #[Groups(['Member:Read'])]
     private $language;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Level", type="language_level", nullable=false)
      */
+    #[ORM\Column(name: 'Level', type: 'language_level', nullable: false)]
+    #[Groups(['Member:Read'])]
     private $level = LanguageLevelType::BEGINNER;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     public function __construct()

@@ -54,7 +54,7 @@ if ($this->nav['level'] < 10){
 <table class="admin" border="0">
   <tr>
     <td class="label"><label for="code">Code:</label> </td>
-    <td><input name="EngCode" id="code" value="<?= htmlspecialchars($this->formdata['EngCode']) ?>" size="40">
+    <td><input name="EngCode" id="code" value="<?= htmlspecialchars((string) $this->formdata['EngCode']) ?>" size="40">
   </tr>
 
 
@@ -63,7 +63,7 @@ include 'adminword.codevarsform.php';
 ?>
   <tr>
     <td class="label" >English text: </td>
-    <td><textarea name="Sentence" class="long" cols="60"><?= htmlspecialchars($this->formdata['Sentence']) ?></textarea></td>
+    <td><textarea name="Sentence" class="long" cols="60"><?= htmlspecialchars((string) $this->formdata['Sentence']) ?></textarea></td>
   </tr>
 
 <input type=hidden name=changetype value=none>

@@ -12,6 +12,7 @@ class AdminBaseController extends RoxController {
         }
     }
 
+    #[\Override]
     public function __destruct()
     {
         unset($this->_model);
@@ -35,7 +36,7 @@ class AdminBaseController extends RoxController {
             $this->redirectAbsolute($this->router->url('admin_norights'));
             exit(0);
         }
-        return array($member, $rights);
+        return [$member, $rights];
     }
 
     /**

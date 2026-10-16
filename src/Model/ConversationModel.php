@@ -14,22 +14,21 @@ use App\Utilities\ConversationThread;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Normalizer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConversationModel
 {
     private Mailer $mailer;
     private EntityManagerInterface $entityManager;
-    private TranslatorInterface $translator;
     private ConversationThread $conversationThread;
+    private TranslatorInterface $translator;
 
     public function __construct(Mailer $mailer, EntityManagerInterface $entityManager, TranslatorInterface $translator)
     {
-        $this->entityManager = $entityManager;
         $this->mailer = $mailer;
+        $this->entityManager = $entityManager;
+        $this->conversationThread = new ConversationThread($entityManager);
         $this->translator = $translator;
-        $this->conversationThread = new ConversationThread($this->entityManager);
     }
 
     /**
@@ -131,10 +130,6 @@ class ConversationModel
 
     /**
      * Tests if a member has exceeded their limit for sending messages.
-     *
-     * @param mixed $member
-     * @param mixed $perHour
-     * @param mixed $perDay
      */
     public function hasMessageLimitExceeded($member, $perHour, $perDay)
     {
@@ -193,10 +188,6 @@ class ConversationModel
 
     /**
      * Tests if a member has exceeded their limit for sending requests.
-     *
-     * @param mixed $member
-     * @param mixed $perHour
-     * @param mixed $perDay
      */
     public function hasRequestLimitExceeded($member, $perHour, $perDay): bool
     {
@@ -291,17 +282,14 @@ class ConversationModel
 
     public function formatConversation(Message $message): Message
     {
-        $messageText = preg_replace('/[\x{200B}-\x{200D}\x{FEFF}]/u', '', $message->getMessage());
-        $normalized = Normalizer::normalize($messageText, Normalizer::FORM_KC);
-        if (false === $normalized) {
-            $normalized = $messageText;
-        }
-        $found = preg_match("/@|\.at\.|-at-|\(at\)|verif|\.shop|system|support/i", $normalized);
+        $messageText = $message->getMessage();
+        $found = preg_match("/@|\.at\.|-at-|\(at\)|verif/i", $messageText);
 
         if (0 !== $found) {
             $message->setSpamInfo(SpamInfoType::SPAM_BLOCKED_WORD);
             $message->setFolder(InFolderType::SPAM);
             $message->setStatus(MessageStatusType::CHECK);
+            $message->setMessage($messageText);
         }
 
         return $message;
@@ -319,7 +307,7 @@ class ConversationModel
 
             $result = $statement->executeQuery();
             $row = $result->fetchAssociative();
-        } catch (Exception $e) {
+        } catch (Exception) {
             return false;
         }
 

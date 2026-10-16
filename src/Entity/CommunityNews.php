@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -8,87 +9,77 @@
 namespace App\Entity;
 
 use Carbon\Carbon;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * CommunityNews.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="community_news")
- * @ORM\Entity(repositoryClass="App\Repository\CommunityNewsRepository")
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'community_news')]
+#[ORM\Entity(repositoryClass: \App\Repository\CommunityNewsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class CommunityNews
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'title', type: 'string', length: 255, nullable: false)]
     private $title;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="text", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'text', type: 'text', length: 65535, nullable: false)]
     private $text;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="public", type="boolean", nullable=false)
      */
+    #[ORM\Column(name: 'public', type: 'boolean', nullable: false)]
     private $public = false;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=true)
+     * @var DateTime
      */
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
     private $createdAt;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumn(name="created_by", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $createdBy;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
+     * @var DateTime
      */
+    #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: true)]
     private $updatedAt;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="\App\Entity\Member")
-     * @ORM\JoinColumn(name="updated_by", referencedColumnName="id", nullable=true)
      */
+    #[ORM\JoinColumn(name: 'updated_by', referencedColumnName: 'id', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $updatedBy;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
      * One news has many comments.
-     *
-     * @ORM\OneToMany(targetEntity="CommunityNewsComment", mappedBy="communityNews", fetch="EXTRA_LAZY")
-     * @ORM\OrderBy({"created" = "DESC"})
      */
+    #[ORM\OneToMany(targetEntity: CommunityNewsComment::class, mappedBy: 'communityNews', fetch: 'EXTRA_LAZY')]
+    #[ORM\OrderBy(['created' => 'DESC'])]
     private $comments;
 
     public function __construct()
@@ -171,7 +162,7 @@ class CommunityNews
     /**
      * Set createdAt.
      *
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      *
      * @return CommunityNews
      */
@@ -217,7 +208,7 @@ class CommunityNews
     /**
      * Set updatedAt.
      *
-     * @param \DateTime $updatedAt
+     * @param DateTime $updatedAt
      *
      * @return CommunityNews
      */
@@ -282,22 +273,20 @@ class CommunityNews
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new DateTime('now');
     }
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
-        $this->updatedAt = new \DateTime('now');
+        $this->updatedAt = new DateTime('now');
     }
 
     public function addComment(CommunityNewsComment $comment): self

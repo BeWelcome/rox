@@ -15,12 +15,14 @@ class AdminFlagsAssignPage extends AdminFlagsBasePage
         $this->addLateLoadScriptFile('build/member/autocomplete.js');
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
         return $headline . "&raquo; <a href='admin/flags'>{$this->words->get('AdminFlags')}</a>";
     }
 
+    #[\Override]
     protected function getStylesheets()
     {
         $stylesheets = parent::getStylesheets();

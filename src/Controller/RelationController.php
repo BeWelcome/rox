@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\Relation;
 use App\Form\RelationType;
@@ -17,7 +18,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class RelationController extends AbstractController
 {
@@ -25,29 +26,23 @@ class RelationController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    private EntityManagerInterface $entityManager;
-    private ChangeProfilePictureGlobals $globals;
-    private ProfileSubmenu $profileSubmenu;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        ProfileSubmenu $profileSubmenu,
-        ChangeProfilePictureGlobals $globals
-    ) {
-        $this->entityManager = $entityManager;
-        $this->globals = $globals;
-        $this->profileSubmenu = $profileSubmenu;
+    public function __construct(private EntityManagerInterface $entityManager, private ProfileSubmenu $profileSubmenu, private ChangeProfilePictureGlobals $globals)
+    {
     }
 
-    /**
-     * @Route("/members/{username}/relation/add", name="add_relation")
-     */
+    #[Route(path: '/members/{username:member}/relation/add', name: 'add_relation')]
     public function add(Request $request, Member $member, Mailer $mailer): Response
     {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
         if ($member === $loggedInMember) {
             return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getusername()]);
+        }
+
+        if (MemberStatusType::ACCOUNT_ACTIVATED === $loggedInMember->getStatus()) {
+            $this->addTranslatedFlash('notice', 'flash.relation.not.active');
+
+            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
         }
 
         $relation = $this->findRelationBetween($loggedInMember, $member);
@@ -61,15 +56,17 @@ class RelationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Relation $relation */
             $relation = $form->getData();
-            $relation->setOwner($loggedInMember);
-            $relation->setReceiver($member);
+            if (!$this->checkForEmailAddress($relation) && !$this->checkForPhoneNumber($relation)) {
+                $relation->setOwner($loggedInMember);
+                $relation->setReceiver($member);
 
-            $this->entityManager->persist($relation);
-            $this->entityManager->flush();
+                $this->entityManager->persist($relation);
+                $this->entityManager->flush();
 
-            $mailer->sendRelationNotification($relation);
+                $mailer->sendRelationNotification($relation);
 
-            return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
+                return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
+            }
         }
 
         return $this->render('relation/add.html.twig', [
@@ -80,9 +77,7 @@ class RelationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/relation/edit", name="edit_relation")
-     */
+    #[Route(path: '/members/{username:member}/relation/edit', name: 'edit_relation')]
     public function edit(Request $request, Member $member): Response
     {
         /** @var Member $loggedInMember */
@@ -103,7 +98,7 @@ class RelationController extends AbstractController
             $relation = $form->getData();
             $relation->setUpdated(new DateTime());
 
-            $this->entityManager->merge($relation);
+            $this->entityManager->persist($relation); // already managed; merge() is gone in ORM 3
             $this->entityManager->flush();
 
             return $this->redirectToRoute('relations', ['username' => $loggedInMember->getUsername()]);
@@ -117,9 +112,7 @@ class RelationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/members/{username}/relation/delete", name="delete_relation")
-     */
+    #[Route(path: '/members/{username:member}/relation/delete', name: 'delete_relation')]
     public function remove(Member $member, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $loggedInMember */
@@ -144,9 +137,7 @@ class RelationController extends AbstractController
         return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/relation/confirm", name="confirm_relation")
-     */
+    #[Route(path: '/members/{username:member}/relation/confirm', name: 'confirm_relation')]
     public function confirm(Member $member, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $loggedInMember */
@@ -171,9 +162,7 @@ class RelationController extends AbstractController
         return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/relation/dismiss", name="dismiss_relation")
-     */
+    #[Route(path: '/members/{username:member}/relation/dismiss', name: 'dismiss_relation')]
     public function dismiss(Member $member, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $loggedInMember */
@@ -197,9 +186,7 @@ class RelationController extends AbstractController
         return $this->redirectToRoute('relations', ['username' => $member->getUsername()]);
     }
 
-    /**
-     * @Route("/members/{username}/relations/{page}", name="relations")
-     */
+    #[Route(path: '/members/{username:member}/relations/{page}', name: 'relations')]
     public function relations(Member $member, int $page = 1): Response
     {
         /** @var Member $loggedInMember */
@@ -223,5 +210,21 @@ class RelationController extends AbstractController
         $relationRepository = $this->entityManager->getRepository(Relation::class);
 
         return $relationRepository->findRelationBetween($loggedInMember, $member);
+    }
+
+    private function checkForEmailAddress(Relation $relation): bool
+    {
+        $relationText = $relation->getCommentText();
+        $found = preg_match("/[\._a-zA-Z0-9-]+@[\._a-zA-Z0-9-]+/i", $relationText);
+
+        return $found > 0;
+    }
+
+    private function checkForPhoneNumber(Relation $relation): bool
+    {
+        $relationText = $relation->getCommentText();
+        $found = preg_match("/([0-9][\. \)-]*){9,}/", $relationText);
+
+        return $found > 0;
     }
 }

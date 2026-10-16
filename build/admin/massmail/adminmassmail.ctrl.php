@@ -52,7 +52,7 @@ class AdminMassmailController extends AdminBaseController
      *
      */
     public function massmail() {
-        list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILEDIT);
+        [$member, $rights] = $this->checkRights('MassMail');
         $page = new AdminMassmailPage($this->model);
         return $page;
     }
@@ -76,11 +76,11 @@ class AdminMassmailController extends AdminBaseController
         if ($args->post['Id'] == 0) {
             $this->model->createMassmail($args->post['Name'], $args->post['Type'],
                 $args->post['Subject'], $args->post['Body'], $args->post['Description']);
-            $this->session->set( 'AdminMassMailStatus', array( 'Create', $args->post['Name']) );
+            $this->session->set( 'AdminMassMailStatus', [ 'Create', $args->post['Name']] );
         } else {
             $this->model->updateMassmail($args->post['Id'], $args->post['Name'],
                 $args->post['Type'], $args->post['Subject'], $args->post['Body']);
-            $this->session->set(  'AdminMassMailStatus', array( 'Edit', $args->post['Name']) );
+            $this->session->set(  'AdminMassMailStatus', [ 'Edit', $args->post['Name']] );
         }
         return 'admin/massmail/create/finish';
     }
@@ -90,7 +90,7 @@ class AdminMassmailController extends AdminBaseController
      *
      */
     public function massmailCreate() {
-        list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILEDIT);
+        [$member, $rights] = $this->checkRights('MassMail');
         $page = new AdminMassmailEditCreatePage($this->model);
         $page->member = $member;
         return $page;
@@ -101,7 +101,7 @@ class AdminMassmailController extends AdminBaseController
      *
      */
     public function massmailDetails() {
-        list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILEDIT);
+        [$member, $rights] = $this->checkRights('MassMail');
         $id = $this->route_vars['id'];
         $page = new AdminMassmailDetailsPage($this->model, $id);
         $page->member = $member;
@@ -113,7 +113,7 @@ class AdminMassmailController extends AdminBaseController
      *
      */
     public function massmailDetailsMailing() {
-        list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILEDIT);
+        [$member, $rights] = $this->checkRights('MassMail');
         $id = $this->route_vars['id'];
         $type = $this->route_vars['type'];
         $pageno = 1;
@@ -130,7 +130,7 @@ class AdminMassmailController extends AdminBaseController
      *
      */
     public function massmailEdit() {
-        list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILEDIT);
+        [$member, $rights] = $this->checkRights('MassMail');
         $id = $this->route_vars['id'];
         $page = new AdminMassmailEditCreatePage($this->model, $id);
         $page->member = $member;
@@ -142,7 +142,7 @@ class AdminMassmailController extends AdminBaseController
      *
      * @return string json encoded list of admin units
      */
-    public function getAdminUnits() {
+    public function getAdminUnits(): never {
         $countrycode = $this->route_vars['countrycode'];
         $adminunits = $this->model->getAdminUnits($countrycode);
         header('Content-type: application/json');
@@ -155,7 +155,7 @@ class AdminMassmailController extends AdminBaseController
      *
      * @return string json encoded list of places
      */
-    public function getPlaces() {
+    public function getPlaces(): never {
         $countrycode = $this->route_vars['countrycode'];
         $adminunit = $this->route_vars['adminunit'];
         $places = $this->model->getPlaces($countrycode, $adminunit);
@@ -184,8 +184,8 @@ class AdminMassmailController extends AdminBaseController
         }
         $count = $this->model->enqueueMassMail($args->post);
         $massmail = $this->model->getMassMail($args->post['id']);
-        $this->session->set( 'AdminMassMailStatus', array( 'Enqueue', $massmail->Name, $count) );
-        return $this->router->url('admin_massmail', array(), false);
+        $this->session->set( 'AdminMassMailStatus', [ 'Enqueue', $massmail->Name, $count] );
+        return $this->router->url('admin_massmail', [], false);
     }
 
     /**
@@ -193,7 +193,7 @@ class AdminMassmailController extends AdminBaseController
      *
      */
     public function massmailEnqueue() {
-        list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILENQUEUE);
+        [$member, $rights] = $this->checkRights('MassMail');
         $id = $this->route_vars['id'];
         $massmail = $this->model->getMassmail($id);
         $page = new AdminMassmailEnqueuePage($this->model, $massmail);
@@ -208,11 +208,11 @@ class AdminMassmailController extends AdminBaseController
      *
      */
     public function massmailUnqueue() {
-        list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILENQUEUE);
+        [$member, $rights] = $this->checkRights('MassMail');
         $id = $this->route_vars['id'];
         $count = $this->model->unqueueMassMail($id);
         $massmail = $this->model->getMassMail($id);
-        $this->session->set( 'AdminMassMailStatus', array( 'Unqueue', $massmail->Name, $count) );
+        $this->session->set( 'AdminMassMailStatus', [ 'Unqueue', $massmail->Name, $count] );
         $this->redirectAbsolute($this->router->url('admin_massmail'));
     }
 
@@ -221,11 +221,11 @@ class AdminMassmailController extends AdminBaseController
      *
      */
     public function massmailTrigger() {
-        list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILTRIGGER);
+        [$member, $rights] = $this->checkRights('MassMail');
         $id = $this->route_vars['id'];
         $count = $this->model->triggerMassMail($id);
         $massmail = $this->model->getMassMail($id);
-        $this->session->set( 'AdminMassMailStatus', array( 'Trigger', $massmail->Name, $count) );
+        $this->session->set( 'AdminMassMailStatus', [ 'Trigger', $massmail->Name, $count] );
         $this->redirectAbsolute($this->router->url('admin_massmail'));
     }
 
@@ -234,11 +234,11 @@ class AdminMassmailController extends AdminBaseController
      *
      */
     public function massmailUntrigger() {
-        list($member, $rights) = $this->checkRights('MassMail', self::MASSMAILTRIGGER);
+        [$member, $rights] = $this->checkRights('MassMail');
         $id = $this->route_vars['id'];
         $count = $this->model->untriggerMassMail($id);
         $massmail = $this->model->getMassMail($id);
-        $this->session->set( 'AdminMassMailStatus', array( 'Untrigger', $massmail->Name, $count) );
+        $this->session->set( 'AdminMassMailStatus', [ 'Untrigger', $massmail->Name, $count] );
         $this->redirectAbsolute($this->router->url('admin_massmail'));
     }
 }

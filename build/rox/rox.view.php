@@ -28,11 +28,8 @@ Boston, MA  02111-1307, USA.
  * @author Felix van Hove <fvanhove@gmx.de>
  */
 class RoxView extends PAppView {
-    private $_model;
-
-    public function __construct(RoxModelBase $model)
+    public function __construct(private readonly RoxModelBase $_model)
     {
-        $this->_model = $model;
     }
 
     public function passthroughCSS($req)

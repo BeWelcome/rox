@@ -34,6 +34,7 @@ Boston, MA  02111-1307, USA.
 class GroupsOverviewPage extends GroupsBasePage
 {
 
+    #[\Override]
     protected function teaserContent()
     {
         $words = $this->getWords();
@@ -45,6 +46,7 @@ class GroupsOverviewPage extends GroupsBasePage
     }
 
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'overview';

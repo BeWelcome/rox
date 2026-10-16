@@ -67,9 +67,9 @@ class RelatedGroupsModel extends  RoxModelBase
      */
     public function getMyGroups(Group $group)
     {
-        $notrelatedgroups = array();
+        $notrelatedgroups = [];
         if (!$this->session->has( 'IdMember' )) {
-            return array();
+            return [];
         } else {
             $mygroups = $this->getGroupsForMember($this->session->get('IdMember'));
             $relatedgroups = $group->findRelatedGroups($group->getPKValue());

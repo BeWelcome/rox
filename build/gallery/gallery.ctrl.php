@@ -87,7 +87,7 @@ class GalleryController extends RoxControllerBase {
                 break;
 
             case 'uploaded_done':
-                $galleryId = (isset($_GET['id'])) ? $_GET['id'] : false;
+                $galleryId = $_GET['id'] ?? false;
                 $this->ajaxlatestimages($galleryId, true);
                 PPHP::PExit();
                 break;
@@ -106,7 +106,7 @@ class GalleryController extends RoxControllerBase {
                 if (isset($request[2])) {
                     $vars['gallery'] = $this->_model->updateGalleryProcess();
                 }
-                $insertId = isset($vars['gallery']) ? $vars['gallery'] : mysqli_insert_id();
+                $insertId = $vars['gallery'] ?? mysqli_insert_id();
                 $loc_rel = 'gallery/show/sets/'.$insertId;
                 header('Location: ' . PVars::getObj('env')->baseuri . $loc_rel);
                 PVars::getObj('page')->output_done = true;
@@ -133,12 +133,10 @@ class GalleryController extends RoxControllerBase {
                             !$this->imageIsPublic($image)) {
                             $this->redirectToLogin(implode('/', $request));
                         }
-                        switch (isset($request[4]) ? $request[4] : '') {
-                            case 'delete':
-                                return $this->deleteImage($image);
-                            default:
-                                return $this->image($image);
-                        }
+                        return match ($request[4] ?? '') {
+                            'delete' => $this->deleteImage($image),
+                            default => $this->image($image),
+                        };
                         break;
 
                     case 'galleries':
@@ -186,19 +184,12 @@ class GalleryController extends RoxControllerBase {
                                     );
                                 }
                                 if (isset($request[4])
-                                    && (substr(
-                                            $request[4], 0, 5
-                                        ) != '=page')
+                                    && (!str_starts_with($request[4], '=page'))
                                 ) {
-                                    switch ($request[4]) {
-                                    case 'galleries':
-                                    case 'sets':
-                                        return $this->user($userId);
-                                    case 'pictures':
-                                    case 'images':
-                                    default:
-                                        return $this->userimages($userId);
-                                    }
+                                    return match ($request[4]) {
+                                        'galleries', 'sets' => $this->user($userId),
+                                        default => $this->userimages($userId),
+                                    };
                                 }
                                 return $this->user($userId);
                             }
@@ -489,14 +480,14 @@ class GalleryController extends RoxControllerBase {
                         echo $words->get('GalleryCannotBeEmpty');
                     } else {
                         $this->_model->ajaxModImageGallery($type,$id,$str,'');
-                        $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                        $str = mb_convert_encoding(addslashes((string) preg_replace("/\r|\n/s", "",nl2br($str))), 'ISO-8859-1');
                         echo $str;
                     }
                 }
                 if( isset($_GET['text']) ) {
                     $str = htmlentities($_GET['text'], ENT_QUOTES, "UTF-8");
                     $this->_model->ajaxModImageGallery($type, $id,'',$str);
-                    $str = utf8_decode(addslashes(preg_replace("/\r|\n/s", "",nl2br($str))));
+                    $str = mb_convert_encoding(addslashes((string) preg_replace("/\r|\n/s", "",nl2br($str))), 'ISO-8859-1');
                     if ($str === '') {
                         echo $words->get('GalleryAddDescription');
                     } else {
@@ -526,8 +517,8 @@ class GalleryController extends RoxControllerBase {
         //$errors = $this->model->checkCreateGalleryForm($vars);
         // Not a lot to check at this point:
 
-        $errors = array();
-        $desc = (isset($vars['g-description'])) ? $vars['g-description'] : false;
+        $errors = [];
+        $desc = $vars['g-description'] ?? false;
         if (!isset($vars['g-title']) || $vars['g-title'] == "") $errors[] = 'ErrorGalleryNoTitleSet';
 
         if (count($errors) > 0) {
@@ -564,7 +555,7 @@ class GalleryController extends RoxControllerBase {
         }
         else
         {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+        	PPostHandler::setCallback($callbackId, self::class, __FUNCTION__);
             return $callbackId;
         }
     }
@@ -589,7 +580,7 @@ class GalleryController extends RoxControllerBase {
         }
         else
         {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+        	PPostHandler::setCallback($callbackId, self::class, __FUNCTION__);
             return $callbackId;
         }
     }
@@ -631,7 +622,7 @@ class GalleryController extends RoxControllerBase {
         }
         else
         {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+        	PPostHandler::setCallback($callbackId, self::class, __FUNCTION__);
             return $callbackId;
         }
     }
@@ -646,7 +637,7 @@ class GalleryController extends RoxControllerBase {
         }
         else
         {
-        	PPostHandler::setCallback($callbackId, __CLASS__, __FUNCTION__);
+        	PPostHandler::setCallback($callbackId, self::class, __FUNCTION__);
             return $callbackId;
         }
     }

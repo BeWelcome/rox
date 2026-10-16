@@ -2,6 +2,7 @@
 
 namespace App\Form\Extension;
 
+use stdClass;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -12,11 +13,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AutoCompleteExtension extends AbstractTypeExtension
 {
-    private ?TranslatorInterface $translator = null;
-
-    public function __construct(?TranslatorInterface $translator = null)
+    public function __construct(private readonly ?TranslatorInterface $translator = null)
     {
-        $this->translator = $translator;
     }
 
     public static function getExtendedTypes(): iterable
@@ -24,6 +22,11 @@ class AutoCompleteExtension extends AbstractTypeExtension
         return [ChoiceType::class, TextType::class];
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Parameter $options in setNormalizer not used but signature is given by symfony.
+     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         // makes it legal for FileType fields to have an image_property option
@@ -51,6 +54,15 @@ class AutoCompleteExtension extends AbstractTypeExtension
         });
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
+     *
+     * \todo check how to reduce complexity.
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     *
+     * Parameter $options not used but signature is given by symfony.
+     */
     public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         if (!$options['autocomplete']) {
@@ -93,7 +105,7 @@ class AutoCompleteExtension extends AbstractTypeExtension
         if ($options['autocomplete_choices']) {
             $autocompleteChoices = [];
             foreach ($options['autocomplete_choices'] as $choice) {
-                $autocompleteChoice = new \stdClass();
+                $autocompleteChoice = new stdClass();
                 $autocompleteChoice->title = $choice;
                 $autocompleteChoices[] = $autocompleteChoice;
             }

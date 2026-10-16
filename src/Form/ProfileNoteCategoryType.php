@@ -15,14 +15,14 @@ class ProfileNoteCategoryType extends AbstractType
         $builder
             ->add('category', TextType::class, [
                 'label' => 'profile.note.category',
-                    'required' => false,
-                    'choices' => $options['categories'],
-                    'autocomplete' => true,
-                    'allow_options_create' => true,
-                    'max_items' => 1,
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
+                'required' => false,
+                'choices' => $options['categories'],
+                'autocomplete' => true,
+                'allow_options_create' => true,
+                'max_items' => 1,
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ]);
     }
 

@@ -15,23 +15,15 @@ use Symfony\Component\Translation\MessageCatalogue;
  */
 class DatabaseLoader implements LoaderInterface
 {
-    /** @var EntityManagerInterface */
-    private $em;
-
     /** @var array MessageCatalogue */
     private $originals = [];
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private readonly EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
-     *
-     * @param mixed $resource
-     * @param mixed $locale
-     * @param mixed $domain
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
     {
@@ -74,7 +66,7 @@ class DatabaseLoader implements LoaderInterface
                     } else {
                         $translationAllowedRaw = $originals->getMetadata($code, $domain)['translationAllowed'];
                         $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED === $translationAllowedRaw;
-                        if ($translationAllowed || 'broadcast_' === substr($code, 0, 10)) {
+                        if ($translationAllowed || str_starts_with($code, 'broadcast_')) {
                             $catalogue->set($code, $translation->getSentence(), $domain);
                         } else {
                             $catalogue->set($code, $originals->get($code, $domain), $domain);

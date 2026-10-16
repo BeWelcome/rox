@@ -1,10 +1,9 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+
 legacy:
-  resource: .
-  type:     legacy
-
-api_login:
-    path: /api/login
-    methods: ['POST']
-
-api_logout:
-    path: /api/logout
+    resource: .
+    type:     legacy

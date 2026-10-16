@@ -65,7 +65,7 @@
 	    $TagName=$this->words->fTrad($tag->IdName) ;
 	    $TagDescription=$this->words->fTrad($tag->IdDescription) ;
 		
-        $tagcloudlist .=  '<div class="p-1"><a href="forums/t'.$tag->tagid.'-'.rawurlencode($TagName).'" title="'.$TagDescription.'" class="'.$class.'"><i class="fa fa-tag"></i> '.$TagName.'</a></div>';
+        $tagcloudlist .=  '<div class="p-1"><a href="forums/t'.$tag->tagid.'-'.rawurlencode((string) $TagName).'" title="'.$TagDescription.'" class="'.$class.'"><i class="fa fa-tag"></i> '.$TagName.'</a></div>';
 
     }
    	$tagcloudlist = rtrim($tagcloudlist, ': ');

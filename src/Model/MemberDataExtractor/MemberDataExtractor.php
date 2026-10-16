@@ -6,9 +6,6 @@ use App\Entity\Member;
 
 final class MemberDataExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         return $this->writePersonalDataFile(

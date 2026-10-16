@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,197 +11,109 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * Addresses.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="addresses", indexes={
- *     @ORM\Index(name="address_member", columns={"IdMember"}),
- *     @ORM\Index(name="address_city", columns={"IdCity"}),
- *     @ORM\Index(name="CityAndRank", columns={"IdCity", "Rank"})
- * })
- * @ORM\HasLifecycleCallbacks
- * @ORM\Entity
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'addresses')]
+#[ORM\Index(name: 'address_member', columns: ['IdMember'])]
+#[ORM\Index(name: 'address_city', columns: ['IdCity'])]
+#[ORM\Index(name: 'CityAndRank', columns: ['IdCity', 'Rank'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
 class Address
 {
-    /**
-     * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="addresses")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     */
-    private $member;
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'addresses')]
+    private Member $member;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="HouseNumber", type="integer", nullable=false)
-     */
-    private $houseNumber;
+    #[ORM\Column(name: 'HouseNumber', type: 'integer', nullable: false)]
+    #[Groups(['Member:Read'])]
+    private int $houseNumber;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="StreetName", type="integer", nullable=false)
-     */
-    private $streetName;
+    #[ORM\Column(name: 'StreetName', type: 'integer', nullable: false)]
+    #[Groups(['Member:Read'])]
+    private int $streetName;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="Zip", type="integer", nullable=false)
-     */
-    private $zip;
+    #[ORM\Column(name: 'Zip', type: 'integer', nullable: false)]
+    #[Groups(['Member:Read'])]
+    private int $zip;
 
-    /**
-     * @var NewLocation
-     *
-     * @ORM\ManyToOne(targetEntity="NewLocation")
-     * @ORM\JoinColumn(name="IdCity", referencedColumnName="geonameId")
-     */
-    private $location;
+    #[ORM\JoinColumn(name: 'IdCity', referencedColumnName: 'geonameId')]
+    #[ORM\ManyToOne(targetEntity: NewLocation::class)]
+    #[Groups(['Member:Read'])]
+    private NewLocation $location;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="Explanation", type="integer", nullable=false)
-     */
-    private $explanation;
+    private float $latitude;
+    private float $longitude;
 
-    /**
-     * @var bool
-     *
-     * @ORM\Column(name="Rank", type="boolean", nullable=false)
-     */
-    private $rank = '0';
+    #[ORM\Column(name: 'Explanation', type: 'integer', nullable: false)]
+    private int $explanation;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    private $created;
+    #[ORM\Column(name: 'Rank', type: 'integer', nullable: false)]
+    private int $rank = 0;
 
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
-     */
-    private $updated;
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
+    private DateTime $created;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="IdGettingThere", type="integer", nullable=false)
-     */
-    private $gettingThere = '0';
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
+    private DateTime $updated;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Column(name: 'IdGettingThere', type: 'integer', nullable: false)]
+    private int $gettingThere = 0;
 
-    /**
-     * Set member.
-     *
-     * @param Member $idmember
-     * @param mixed  $member
-     *
-     * @return Address
-     */
-    public function setMember($member)
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private int $id;
+
+    public function setMember(Member $member): self
     {
         $this->member = $member;
 
         return $this;
     }
 
-    /**
-     * Get idmember.
-     *
-     * @return Member
-     */
-    public function getMember()
+    public function getMember(): Member
     {
         return $this->member;
     }
 
-    /**
-     * Set housenumber.
-     *
-     * @param int $houseNumber
-     *
-     * @return Address
-     */
-    public function setHouseNumber($houseNumber)
+    public function setHouseNumber(int $houseNumber): self
     {
         $this->houseNumber = $houseNumber;
 
         return $this;
     }
 
-    /**
-     * Get housenumber.
-     *
-     * @return int
-     */
-    public function getHouseNumber()
+    public function getHouseNumber(): int
     {
         return $this->houseNumber;
     }
 
-    /**
-     * Set streetname.
-     *
-     * @param int $streetName
-     *
-     * @return Address
-     */
-    public function setStreetName($streetName)
+    public function setStreetName(int $streetName): self
     {
         $this->streetName = $streetName;
 
         return $this;
     }
 
-    /**
-     * Get streetname.
-     *
-     * @return int
-     */
-    public function getStreetName()
+    public function getStreetName(): int
     {
         return $this->streetName;
     }
 
-    /**
-     * Set zip.
-     *
-     * @param int $zip
-     *
-     * @return Address
-     */
-    public function setZip($zip)
+    public function setZip(int $zip): self
     {
         $this->zip = $zip;
 
         return $this;
     }
 
-    /**
-     * Get zip.
-     *
-     * @return int
-     */
-    public function getZip()
+    public function getZip(): int
     {
         return $this->zip;
     }
@@ -217,141 +130,95 @@ class Address
         return $this->location;
     }
 
-    /**
-     * Set explanation.
-     *
-     * @param int $explanation
-     *
-     * @return Address
-     */
-    public function setExplanation($explanation)
+    public function getLatitude(): float
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(float $latitude): void
+    {
+        $this->latitude = $latitude;
+    }
+
+    public function getLongitude(): float
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(float $longitude): void
+    {
+        $this->longitude = $longitude;
+    }
+
+    public function setExplanation(int $explanation): self
     {
         $this->explanation = $explanation;
 
         return $this;
     }
 
-    /**
-     * Get explanation.
-     *
-     * @return int
-     */
-    public function getExplanation()
+    public function getExplanation(): int
     {
         return $this->explanation;
     }
 
-    /**
-     * Set rank.
-     *
-     * @param bool $rank
-     *
-     * @return Address
-     */
-    public function setRank($rank)
+    public function setRank(int $rank): self
     {
         $this->rank = $rank;
 
         return $this;
     }
 
-    /**
-     * Get rank.
-     *
-     * @return bool
-     */
-    public function getRank()
+    public function getRank(): int
     {
         return $this->rank;
     }
 
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return Address
-     */
-    public function setCreated($created)
+    public function setCreated(DateTime $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    /**
-     * Get created.
-     *
-     * @return Carbon
-     */
-    public function getCreated()
+    public function getCreated(): Carbon
     {
         return Carbon::instance($this->created);
     }
 
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return Address
-     */
-    public function setUpdated($updated)
+    public function setUpdated(DateTime $updated): self
     {
         $this->updated = $updated;
 
         return $this;
     }
 
-    /**
-     * Get updated.
-     *
-     * @return Carbon
-     */
-    public function getUpdated()
+    public function getUpdated(): Carbon
     {
         return Carbon::instance($this->updated);
     }
 
-    /**
-     * Set idgettingthere.
-     *
-     * @param int $gettingThere
-     *
-     * @return Address
-     */
-    public function setGettingThere($gettingThere)
+    public function setGettingThere(int $gettingThere): self
     {
         $this->gettingThere = $gettingThere;
 
         return $this;
     }
 
-    /**
-     * Get idgettingthere.
-     *
-     * @return int
-     */
-    public function getGettingThere()
+    public function getGettingThere(): int
     {
         return $this->gettingThere;
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -360,9 +227,8 @@ class Address
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

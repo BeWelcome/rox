@@ -10,9 +10,9 @@ use Symfony\Component\Form\FormEvents;
 class HostingRequestGuest extends HostingRequestAbstractType
 {
     /**
-     * {@inheritdoc}
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('request', HostingRequestType::class, [

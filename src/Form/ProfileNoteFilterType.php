@@ -12,7 +12,7 @@ class ProfileNoteFilterType extends AbstractType
     public const ORDER_UPDATED = 1;
     public const ORDER_CATEGORY = 2;
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $categories = array_merge(['' => ''], $options['categories']);
 
@@ -38,7 +38,7 @@ class ProfileNoteFilterType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

@@ -4,6 +4,7 @@ class AdminTreasurerBasePage extends AdminBasePage
 {
     protected $campaign = false;
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         $words = $this->getWords();

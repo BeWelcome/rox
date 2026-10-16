@@ -6,7 +6,7 @@ $Gallery = new GalleryModel;
 $Gallery_ctrl = new GalleryController;
 if ($member = $this->model->getLoggedInMember())
 {
-    $callbackId = $Gallery_ctrl->editProcess($image);
+    $callbackId = $Gallery_ctrl->editProcess();
     $vars =& PPostHandler::getVars($callbackId);
     $callbackIdCom = $Gallery_ctrl->commentProcess($image);
     $varsCom =& PPostHandler::getVars($callbackIdCom);
@@ -18,7 +18,7 @@ $canEdit = ($member && $member->Username == $d->user_handle) ? true : false;
 
 if (!isset($vars['errors']))
 {
-    $vars['errors'] = array();
+    $vars['errors'] = [];
 }
 
 echo <<<HTML
@@ -39,8 +39,8 @@ HTML;
     }
     if ($canEdit  || ($GalleryRight > 1))
     {
-        $title = htmlentities($d->title, ENT_COMPAT, 'utf-8');
-        $description = htmlentities($d->description, ENT_COMPAT, 'utf-8');
+        $title = htmlentities((string) $d->title, ENT_COMPAT, 'utf-8');
+        $description = htmlentities((string) $d->description, ENT_COMPAT, 'utf-8');
         echo <<<HTML
     <a href="gallery/img?id={$d->id}" id="g-title-edit" class="button d-none">{$words->getSilent("EditTitle")}</a>
     <a href="gallery/img?id={$d->id}" id="g-text-edit" class="button d-none">{$words->getSilent("EditDescription")}</a>

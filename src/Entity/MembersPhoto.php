@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,71 +12,59 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * MembersPhoto.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="membersphotos", indexes={
- *     @ORM\Index(name="membersphotos_members", columns={"IdMember"})
- * })
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'membersphotos')]
+#[ORM\Index(name: 'membersphotos_members', columns: ['IdMember'])]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class MembersPhoto
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="FilePath", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'FilePath', type: 'text', length: 255, nullable: false)]
     private $filepath;
 
     /**
      * @var Member
-     *
-     * @ORM\OneToOne(targetEntity="Member")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     * })
      */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: \Member::class)]
     private $member;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="SortOrder", type="smallint", nullable=false)
      */
+    #[ORM\Column(name: 'SortOrder', type: 'smallint', nullable: false)]
     private $sortOrder = '0';
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="Comment", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'Comment', type: 'integer', nullable: false)]
     private $comment;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -234,9 +223,8 @@ class MembersPhoto
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -244,9 +232,8 @@ class MembersPhoto
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

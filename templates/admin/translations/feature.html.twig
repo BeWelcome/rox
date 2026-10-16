@@ -21,7 +21,7 @@
         {% endset %}
         {% set new_row = (last_mockup_type != mockup.type) %}
         {% if new_row %}
-            {% if not loop.first %}<hr>{% endif %}<div class="u-grid u-grid-cols-2 u-gap-8">
+            {% if not loop.first %}<hr></div>{% endif %}<div class="u-grid u-grid-cols-2 u-gap-8">
             {% set last_mockup_type = mockup.type %}
         {% endif %}
         {% if mockup.with_parameters is defined and mockup.with_parameters == true %}

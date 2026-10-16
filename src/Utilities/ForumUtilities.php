@@ -17,7 +17,7 @@ class ForumUtilities
         $postContent = preg_replace(
             '/src="http[s]?:\/\/(www|beta)\.bewelcome\.org\//i',
             'src="/',
-            $postContent
+            (string) $postContent
         );
 
         return $postContent;

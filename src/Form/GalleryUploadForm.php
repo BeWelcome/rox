@@ -12,9 +12,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class GalleryUploadForm extends AbstractType
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('albums', TextType::class, [
@@ -38,7 +38,7 @@ class GalleryUploadForm extends AbstractType
             ->getForm();
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'albums' => [],

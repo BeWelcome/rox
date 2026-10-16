@@ -52,7 +52,7 @@ $User = $this->_model->getLoggedInMember();
                 if (isset($list->IdName)) {
                     $TagName=$this->words->fTrad($list->IdName) ;
                     $tag_description=$this->words->fTrad($list->IdDescription) ;
-                    echo '<a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode($TagName).'" title="'.$tag_description.'">'.$TagName.'</a>' ;
+                    echo '<a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode((string) $TagName).'" title="'.$tag_description.'">'.$TagName.'</a>' ;
                 } else {
                     $TagName=$this->words->getFormatted('ForumNoSpecificCategories') ;
                     $tag_description="here goes the unclassfied forums post" ;

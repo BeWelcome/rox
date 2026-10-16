@@ -33,6 +33,7 @@ Boston, MA  02111-1307, USA.
 class GroupMembersPage extends GroupsSubPage
 {
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'members';
     }

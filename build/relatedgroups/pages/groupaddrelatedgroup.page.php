@@ -41,6 +41,7 @@ class GroupAddRelatedGroupPage extends GroupsSubPage
         require SCRIPT_BASE . "build/relatedgroups/templates/groupaddrelatedgroup.column_col3.php";
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem() {
         return 'relatedgroupsettings';
     }

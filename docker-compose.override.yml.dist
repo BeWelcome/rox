@@ -1,21 +1,12 @@
-# Local development overrides — loaded automatically by Docker Compose.
-# Not used by the beta or production stacks.
 services:
-  php:
-    build:
-      target: bewelcome_php_dev
-    volumes:
-      - .:/srv/bewelcome:rw,cached
-      - ./docker/php/conf.d/bewelcome.dev.ini:/usr/local/etc/php/conf.d/bewelcome.ini
-      # if you develop on Linux, you may use a bind-mounted host directory instead
-      # - ./var:/srv/bewelcome/var:rw
-
   web:
     ports:
-      - "80:80"
-    volumes:
-      - ./public:/srv/bewelcome/public:ro
+      - target: 80
+        published: 8080
+        protocol: tcp
 
   mailer:
     ports:
-      - "1080:80"
+      - target: 80
+        published: 1080
+        protocol: tcp

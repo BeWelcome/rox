@@ -36,11 +36,11 @@ Boston, MA  02111-1307, USA.
 
         <?php // display my groups, if there are any
         if (!empty($my_groups)) {
-            echo "<div class='col-12'><h3>" . $words->get('TitleAddRelatedGroupToGroup') . " " . htmlspecialchars($group->Name, ENT_QUOTES) . "</h3></div>" ;
+            echo "<div class='col-12'><h3>" . $words->get('TitleAddRelatedGroupToGroup') . " " . htmlspecialchars((string) $group->Name, ENT_QUOTES) . "</h3></div>" ;
 
             foreach($my_groups as $my_group) :
                 if ($my_group->id != $group->getPKValue()) {
-                    if (strlen($my_group->Picture) > 0) {
+                    if (strlen((string) $my_group->Picture) > 0) {
                         $img_link = "group/thumbimg/{$my_group->getPKValue()}";
                     } else {
                         $img_link = "images/icons/group.png";
@@ -55,7 +55,7 @@ Boston, MA  02111-1307, USA.
                         </div>
                         <div>
                             <h4>
-                                <a href="group/<?php echo $my_group->getPKValue(); ?>"><?php echo htmlspecialchars($my_group->Name, ENT_QUOTES); ?></a>
+                                <a href="group/<?php echo $my_group->getPKValue(); ?>"><?php echo htmlspecialchars((string) $my_group->Name, ENT_QUOTES); ?></a>
                             </h4>
                             <a class="btn btn-outline-primary" role="button" href="group/<?php echo $group->getPKValue(); ?>/addrelatedgroup/<?php echo $my_group->id; ?>"><?php echo $words->get('GroupsAddAsRelatedGroup'); ?></a>
                         </div>

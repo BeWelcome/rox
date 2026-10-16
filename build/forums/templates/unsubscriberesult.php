@@ -34,7 +34,10 @@ Boston, MA  02111-1307, USA.
 	}
 	echo "</p><br />\n" ;
 
-	if ($this->session->has( "IdMember" ) {
-	   echo "<br /><p>",$words->getFormatted("forum_ToSeeYourSubscription"),"</p>" ;
+	if ($this->session->has( "IdMember" )) {
+	   echo "<br /><p>"
+            . $words->getFormatted("forum_ToSeeYourSubscription")
+            . "</p>"
+        ;
 	}
-?>
+

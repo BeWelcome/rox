@@ -42,6 +42,7 @@ class AdminFlagsController extends AdminBaseController
         $this->model = new AdminFlagsModel();
     }
 
+    #[\Override]
     public function __destruct() {
         unset($this->model);
     }
@@ -61,7 +62,7 @@ class AdminFlagsController extends AdminBaseController
         $flag = $Flags[$vars['flagid']];
         $this->setFlashNotice($this->getWords()->get('AdminFlagsFlagAssigned', $vars['username'], $flag->Name));
 
-        return $this->router->url('admin_flags_member', array("username" => $vars['username']), false);
+        return $this->router->url('admin_flags_member', ["username" => $vars['username']], false);
     }
 
     public function assign() {
@@ -73,12 +74,12 @@ class AdminFlagsController extends AdminBaseController
         };
         $page = new AdminFlagsAssignPage();
         $page->member = $member;
-        $page->vars = array(
+        $page->vars = [
             'username' => ($member ? $member->Username : ''),
             'flagid' => 0,
             'level' => 0,
             'scope' => '',
-            'comment' => '');
+            'comment' => ''];
         $page->flags = $this->model->getFlags(true, $member);
         return $page;
     }
@@ -111,9 +112,9 @@ class AdminFlagsController extends AdminBaseController
             $member = $temp->findByUsername($this->route_vars['username']);
         };
         $page = new AdminFlagsListMembersPage();
-        $page->vars = array(
+        $page->vars = [
             'member' => ($member ? $member->id : 0)
-        );
+        ];
         $page->current = 'AdminFlagsListMembers';
         $page->flags = $this->model->getFlags();
         // get list of members (with assigned Flags)
@@ -152,9 +153,9 @@ class AdminFlagsController extends AdminBaseController
         };
         $page = new AdminFlagsListFlagsPage();
         $page->flags = $this->model->getFlags();
-        $page->vars = array(
+        $page->vars = [
             'flagid' => $flagId
-        );
+        ];
         $page->flagsWithMembers = $this->model->getFlagsWithMembers($flagId);
         return $page;
     }
@@ -167,7 +168,7 @@ class AdminFlagsController extends AdminBaseController
         return $page;
     }
 
-    public function tooltip() {
+    public function tooltip(): never {
         $id = $this->args_vars->get['tooltip'];
         header('Content-type: text/html, charset=utf-8');
          $javascript = $this->model->getWords()->get($id);
@@ -217,13 +218,13 @@ class AdminFlagsController extends AdminBaseController
 
         $page = new AdminFlagsEditPage();
         $page->flags = $this->model->getFlags(true);
-        $vars = array(
+        $vars = [
             'username' => $username,
             'flag' => $flagId,
             'level' => $assigned->Level,
             'scope' => $assigned->Scope,
             'comment' => $assigned->Comment
-        );
+        ];
         $page->vars = $vars;
         return $page;
     }
@@ -235,22 +236,13 @@ class AdminFlagsController extends AdminBaseController
         $flags = $this->model->getFlags();
         $flag = $flags[$vars['flagid']];
         $this->setFlashNotice($this->getWords()->get('AdminFlagsFlagRemoved', $vars['username'], $flag->Name ));
-        switch ($vars['redirect']) {
-            case 'members':
-                $url = $this->router->url('admin_flags_members', array(), false);
-                break;
-            case 'member':
-                $url = $this->router->url('admin_flags_member', array("username" => $vars['username']), false);
-                break;
-            case 'Flags':
-                $url = $this->router->url('admin_flags_Flags', array(), false);
-                break;
-            case 'flag':
-                $url = $this->router->url('admin_flags_flag', array("id" => $vars['flag']), false);
-                break;
-            default:
-                $url = $this->router->url('admin_Flags', array(), false);
-        }
+        $url = match ($vars['redirect']) {
+            'members' => $this->router->url('admin_flags_members', [], false),
+            'member' => $this->router->url('admin_flags_member', ["username" => $vars['username']], false),
+            'Flags' => $this->router->url('admin_flags_Flags', [], false),
+            'flag' => $this->router->url('admin_flags_flag', ["id" => $vars['flag']], false),
+            default => $this->router->url('admin_Flags', [], false),
+        };
         $this->model->remove($vars);
         return $url;
     }
@@ -280,27 +272,27 @@ class AdminFlagsController extends AdminBaseController
         $page->flags = $flags;
         $redirectTo = '';
         if (isset($_SERVER['HTTP_REFERER'])) {
-            if (strpos($_SERVER['HTTP_REFERER'], "/list/members") !== false) {
+            if (str_contains((string) $_SERVER['HTTP_REFERER'], "/list/members")) {
                 $redirectTo = 'members';
             }
-            if (strpos($_SERVER['HTTP_REFERER'], "/list/member/") !== false) {
+            if (str_contains((string) $_SERVER['HTTP_REFERER'], "/list/member/")) {
                 $redirectTo = 'member';
             }
-            if (strpos($_SERVER['HTTP_REFERER'], "/list/Flags") !== false) {
+            if (str_contains((string) $_SERVER['HTTP_REFERER'], "/list/Flags")) {
                 $redirectTo = 'Flags';
             }
-            if (strpos($_SERVER['HTTP_REFERER'], "/list/flag/") !== false) {
+            if (str_contains((string) $_SERVER['HTTP_REFERER'], "/list/flag/")) {
                 $redirectTo = 'flag';
             }
         }
-        $vars = array(
+        $vars = [
             'username' => $username,
             'flag' => $flagId,
             'level' => $assigned->Level,
             'scope' => $assigned->Scope,
             'comment' => $assigned->Comment,
             'redirect' => $redirectTo
-        );
+        ];
         $page->vars = $vars;
         return $page;
     }
@@ -317,22 +309,22 @@ class AdminFlagsController extends AdminBaseController
         }
         $this->model->createFlag($vars);
         $this->setFlashNotice($this->getWords()->get('AdminFlagsFlagCreate', $vars['name']));
-        return $this->router->url('admin_flags_overview', array(), false);
+        return $this->router->url('admin_flags_overview', [], false);
     }
 
     public function create()
     {
-        list($loggedInMember, $Rights) = $this->checkRights('Flags');
+        [$loggedInMember, $Rights] = $this->checkRights('Flags');
         // Check if member has create flag if not redirect to overview
-        if ((stripos($Rights['Flags']['Scope'], 'create') === false
-            && stripos($Rights['Flags']['Scope'], 'all') === false)) {
+        if ((stripos((string) $Rights['Flags']['Scope'], 'create') === false
+            && stripos((string) $Rights['Flags']['Scope'], 'all') === false)) {
             $this->redirectAbsolute($this->router->url('admin_flags_overview'));
         }
         $page = new AdminFlagsCreatePage();
-        $vars = array(
+        $vars = [
             'name' => '',
             'description' => ''
-        );
+        ];
         $page->vars = $vars;
         return $page;
     }

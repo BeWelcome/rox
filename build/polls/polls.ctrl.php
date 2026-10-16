@@ -20,34 +20,22 @@ class PollsController extends RoxControllerBase
         $model = new PollsModel();
 
         // look at the request.
-        switch (isset($request[1]) ? $request[1] : false) {
+        switch ($request[1] ?? false) {
             case 'create':
                 $page = new PollsPage("", "create");
                 break;
             case 'list':
-                switch(isset($request[2]) ? $request[2] : false)
-                {
-                    case 'all':
-                        $page = new PollsPage("", "listall", $model->LoadList(""));
-                        break;
-                    case 'closed':
-                        $page = new PollsPage("", "listClosed", $model->LoadList("Closed"));
-                        break;
-                    case 'open':
-                        $page = new PollsPage("", "listOpen", $model->LoadList("Open"));
-                        break;
-                    case 'contributed':
-                        $page = new PollsPage("", "list_contributed", $model->LoadContributed());
-                        break;
-                    case 'new':
-                        $page = new PollsPage("", "listProject", $model->LoadList("Project"));
-                        break;
-                    default:
-                        $page = new PollsPage("", "listall", $model->LoadList(""));
-                }
+                $page = match ($request[2] ?? false) {
+                    'all' => new PollsPage("", "listall", $model->LoadList("")),
+                    'closed' => new PollsPage("", "listClosed", $model->LoadList("Closed")),
+                    'open' => new PollsPage("", "listOpen", $model->LoadList("Open")),
+                    'contributed' => new PollsPage("", "list_contributed", $model->LoadContributed()),
+                    'new' => new PollsPage("", "listProject", $model->LoadList("Project")),
+                    default => new PollsPage("", "listall", $model->LoadList("")),
+                };
                 break;
             case 'cancelvote':
-                $IdPoll = (isset($request[2]) ? $request[2] : false);
+                $IdPoll = ($request[2] ?? false);
                 MOD_log::get()->write("Prepare to contribute cancel vote #" . $IdPoll, "polls");
                 if ($model->CancelVote($IdPoll, "", $this->session->get("IdMember"))) {
                     $page = new PollsPage("", "cancelvote");
@@ -57,7 +45,7 @@ class PollsController extends RoxControllerBase
                 break;
             case 'results':
             case 'seeresults':
-                $IdPoll = (isset($request[2]) ? $request[2] : false);
+                $IdPoll = ($request[2] ?? false);
                 if ($Data = $model->GetPollResults($IdPoll)) {
                     $page = new PollsPage("", "seeresults", $Data);
                 } else {
@@ -65,7 +53,7 @@ class PollsController extends RoxControllerBase
                 }
                 break;
             case 'contribute':
-                $IdPoll = (isset($request[2]) ? $request[2] : false);
+                $IdPoll = ($request[2] ?? false);
                 MOD_log::get()->write("Prepare to contribute to poll #" . $IdPoll, "polls");
                 if ($model->CanUserContribute($IdPoll)) {
                     $Data = $model->PrepareContribute($IdPoll);
@@ -90,7 +78,7 @@ class PollsController extends RoxControllerBase
                 }
                 break;
             case 'update':
-                $IdPoll = (isset($request[2]) ? $request[2] : false);
+                $IdPoll = ($request[2] ?? false);
                 $page = new PollsPage("", "showpoll", $model->LoadPoll($IdPoll));
                 break;
 

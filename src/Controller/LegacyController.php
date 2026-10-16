@@ -3,41 +3,37 @@
 namespace App\Controller;
 
 use App\Entity\Member;
+use App\LegacyKernel\LegacyHttpKernel;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
-use Doctrine\DBAL\Statement;
 use EnvironmentExplorer;
-use PDO;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class LegacyController extends AbstractController
 {
     /**
-     * @throws AccessDeniedException
-     *
-     * @return Response
-     *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function showLegacyPage(
         Request $request,
+        LegacyHttpKernel $legacyHttpKernel,
         TranslatorInterface $translator,
         UrlGeneratorInterface $urlGenerator,
         ParameterBagInterface $params,
-        Security $securityHelper
-    ) {
+        Security $securityHelper,
+    ): Response {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
         /** @var Session $session */
-        $session = $this->get('session');
+        $session = $request->getSession();
         $session->start();
 
         // Make sure the Rox classes find this session and the translator
@@ -55,11 +51,11 @@ class LegacyController extends AbstractController
         );
 
         $pathInfo = $request->getPathInfo();
-        $public = (false === strpos($pathInfo, '/safety')) ||
-            (false === strpos($pathInfo, '/about')) ||
-            (false === strpos($pathInfo, '/signup'));
+        $public = (!str_contains($pathInfo, '/safety'))
+            || (!str_contains($pathInfo, '/about'))
+            || (!str_contains($pathInfo, '/signup'));
         if (!$session->has('IdMember')) {
-            /** @var Member */
+            /** @var Member $member */
             $member = $securityHelper->getUser();
             $rememberMeToken = $securityHelper->getToken();
             if (null === $rememberMeToken && !$public) {
@@ -68,29 +64,13 @@ class LegacyController extends AbstractController
             if (false !== $rememberMeToken) {
                 if (null !== $member) {
                     $session->set('IdMember', $member->getId());
-                    // \todo Status isn't set correctly. Force for now.
                     $session->set('MemberStatus', $member->getStatus());
                     $session->set('Username', $member->getUsername());
-                    $connection = $this->getDoctrine()->getConnection();
-                    /** @var Statement $stmt */
-                    $stmt = $connection->prepare('
-                        SELECT
-                            id
-                        FROM
-                            user
-                        WHERE
-                            handle = :username
-                    ');
-                    $stmt->execute([':username' => $member->getUsername()]);
-                    $id = $stmt->fetch(PDO::FETCH_COLUMN);
-                    $session->set('APP_User_id', $id);
                 }
             }
         }
 
-        $kernel = $this->get('rox.legacy_kernel');
-
-        return $kernel->handle(
+        return $legacyHttpKernel->handle(
             $request
         );
     }

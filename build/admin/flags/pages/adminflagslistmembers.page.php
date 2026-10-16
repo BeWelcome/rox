@@ -13,12 +13,14 @@ class AdminFlagsListMembersPage extends AdminFlagsBasePage
         $this->setCurrent('AdminFlagsListMembers');
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         $headline = parent::teaserHeadline();
         return $headline . "&raquo; <a href='admin/flags/list/members'>{$this->words->get('AdminFlagsListMembers')}</a>";
     }
 
+    #[\Override]
     public function getLateLoadScriptFiles() {
         $scripts = parent::getLateLoadScriptfiles();
 //        $scripts[] = 'adminflagstooltip.js';

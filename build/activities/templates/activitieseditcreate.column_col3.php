@@ -36,7 +36,7 @@ if (empty($vars)) {
             if (!empty($errors)) {
                 $errStr = '<div class="row"><div class="col-12"><div class="alert alert-danger col-12" role="alert">';
                 foreach ($errors as $error) {
-                    $parts = explode("###", $error);
+                    $parts = explode("###", (string) $error);
                     if (count($parts) > 1) {
                         $errStr .= $words->get($parts[0], $parts[1]);
                     } else {

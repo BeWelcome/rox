@@ -3,3 +3,9 @@
 # with a comment: package, fixed version, and when to remove the line.
 # The image refreshes apk packages daily (APK_REFRESH), so a fixed package is
 # picked up on the next day's build.
+
+# CVE-2026-102633: libexpat 2.8.5-r0; the fix (2.9.0-r0) is only in Alpine edge and not yet backported to Alpine 3.24.
+# Only git depends on libexpat in the image (PHP XML uses libxml2), so exposure is minimal.
+# Track: https://pkgs.alpinelinux.org/packages?name=libexpat&branch=v3.24
+# Remove once Alpine 3.24 ships libexpat >= 2.9.0-r0.
+CVE-2026-102633

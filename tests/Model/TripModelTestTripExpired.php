@@ -9,33 +9,31 @@ use InvalidArgumentException;
 
 class TripModelTestTripExpired extends TripModelTestCase
 {
-    public function testTripExpiredThrowsInvalidArgumentWithNoLegs()
+    public function testTripExpiredThrowsInvalidArgumentWithNoLegs(): void
     {
-        $tripModel = $this->getTripModel();
         $trip = new Trip();
 
+        $tripModel = $this->getTripModel();
         $this->expectException(InvalidArgumentException::class);
         $tripModel->hasTripExpired($trip);
     }
 
-    public function testTripExpiredOneLeg()
+    public function testTripExpiredOneLeg(): void
     {
-        $tripModel = $this->getTripModel();
         $leg = new Subtrip();
         $leg->setDeparture(new DateTime('2020-01-01'));
 
         $trip = new Trip();
         $trip->addSubtrip($leg);
 
+        $tripModel = $this->getTripModel();
         $expired = $tripModel->hasTripExpired($trip);
 
         $this->assertTrue($expired);
     }
 
-    public function testTripNotExpiredOneLeg()
+    public function testTripNotExpiredOneLeg(): void
     {
-        $tripModel = $this->getTripModel();
-
         $tomorrow = new DateTime('+1day');
         $leg = new Subtrip();
         $leg->setDeparture($tomorrow);
@@ -43,14 +41,14 @@ class TripModelTestTripExpired extends TripModelTestCase
         $trip = new Trip();
         $trip->addSubtrip($leg);
 
+        $tripModel = $this->getTripModel();
         $expired = $tripModel->hasTripExpired($trip);
 
         $this->assertFalse($expired);
     }
 
-    public function testTripExpiredMultipleLegs()
+    public function testTripExpiredMultipleLegs(): void
     {
-        $tripModel = $this->getTripModel();
         $firstLeg = new Subtrip();
         $firstLeg->setDeparture(new DateTime('2020-01-01'));
         $secondLeg = new Subtrip();
@@ -65,15 +63,14 @@ class TripModelTestTripExpired extends TripModelTestCase
             ->addSubtrip($thirdLeg)
         ;
 
+        $tripModel = $this->getTripModel();
         $expired = $tripModel->hasTripExpired($trip);
 
         $this->assertTrue($expired);
     }
 
-    public function testTripNotExpiredMultipleLegs()
+    public function testTripNotExpiredMultipleLegs(): void
     {
-        $tripModel = $this->getTripModel();
-
         $tomorrow = new DateTime('+1day');
         $theDayAfterTomorrow = new DateTime('+2days');
         $theNextDayAfterTheDayAfterTomorrow = new DateTime('+3days');
@@ -91,15 +88,14 @@ class TripModelTestTripExpired extends TripModelTestCase
             ->addSubtrip($thirdLeg)
         ;
 
+        $tripModel = $this->getTripModel();
         $expired = $tripModel->hasTripExpired($trip);
 
         $this->assertFalse($expired);
     }
 
-    public function testTripNotExpiredMultipleLegsPartlyInThePast()
+    public function testTripNotExpiredMultipleLegsPartlyInThePast(): void
     {
-        $tripModel = $this->getTripModel();
-
         $yesterday = new DateTime('-1day');
         $theDayAfterTomorrow = new DateTime('+2days');
         $theNextDayAfterTheDayAfterTomorrow = new DateTime('+3days');
@@ -117,6 +113,7 @@ class TripModelTestTripExpired extends TripModelTestCase
             ->addSubtrip($thirdLeg)
         ;
 
+        $tripModel = $this->getTripModel();
         $expired = $tripModel->hasTripExpired($trip);
 
         $this->assertFalse($expired);

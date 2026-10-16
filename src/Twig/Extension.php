@@ -8,7 +8,7 @@ use HTMLPurifier_HTML5Config;
 use HtmlTruncator\InvalidHtmlException;
 use HtmlTruncator\Truncator;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
@@ -17,10 +17,14 @@ use Twig\Extension\GlobalsInterface;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
+/**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ *
+ * \todo Move to attributes as soon as getGlobals works in that setup. Alternatively split into runtime and template
+ * and check if we really need two extensions (see MemberExtension).
+ */
 class Extension extends AbstractExtension implements GlobalsInterface
 {
-    protected SessionInterface $session;
-
     protected TranslatorInterface $translator;
 
     private string $publicDirectory;
@@ -30,24 +34,25 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     /** @var false|string[] */
     private $locales;
+    private RequestStack $requestStack;
 
     /**
      * Extension constructor.
      */
     public function __construct(
-        SessionInterface $session,
+        RequestStack $requestStack,
         TranslatorInterface $translator,
         EntrypointLookupInterface $entrypointLookup,
         LoggerInterface $logger,
         array $locales,
-        string $publicDirectory
+        string $publicDirectory,
     ) {
-        $this->session = $session;
         $this->translator = $translator;
         $this->locales = $locales;
         $this->entrypointLookup = $entrypointLookup;
         $this->publicDirectory = $publicDirectory;
         $this->logger = $logger;
+        $this->requestStack = $requestStack;
     }
 
     public function getFunctions(): array
@@ -87,8 +92,37 @@ class Extension extends AbstractExtension implements GlobalsInterface
             ),
             new TwigFunction('encore_entry_css_source', [$this, 'getEncoreEntryCssSource']),
             new TwigFunction('distance', [$this, 'distance']),
+            new TwigFunction('profile_element', [$this, 'profileElement']),
             new TwigFunction('sgn', [$this, 'sgn']),
         ];
+    }
+
+    public function profileElement(array $fields, $locale, string $element): array
+    {
+        $profileElement = [];
+        // If element exists in this language return that.
+        if (isset($fields[$locale]['members.' . $element])) {
+            $profileElement['locale'] = $locale;
+            $translation = $fields[$locale]['members.' . $element];
+            $profileElement['text'] = $translation->getSentence();
+        }
+
+        // Check if element exists in English
+        if (empty($profileElement) && isset($fields['en']['members.' . $element])) {
+            $profileElement['locale'] = 'en';
+            $translation = $fields['en']['members.' . $element];
+            $profileElement['text'] = $translation->getSentence();
+        }
+
+        // Check if element exists in first provided locale
+        $first = array_key_first($fields);
+        if (empty($profileElement) && isset($fields[$first]['members.' . $element])) {
+            $profileElement['locale'] = $first;
+            $translation = $fields[$first]['members.' . $element];
+            $profileElement['text'] = $translation->getSentence();
+        }
+
+        return $profileElement;
     }
 
     public function languageName(string $locale): string
@@ -147,7 +181,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
                     'is_safe' => ['html'],
                 ]
             ),
-         ];
+        ];
     }
 
     /**
@@ -173,15 +207,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
      */
     public function urlUpdate(string $text): string
     {
-        $text = preg_replace(
-            '/src="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
-            'src="/',
-            $text
-        );
-
         return preg_replace(
-            '/href="http[s]?:\/\/[^\/]*?bewelcome\.org\//i',
-            'href="/',
+            '/(src|href)="http[s]?:\/\/(www|beta)\.bewelcome\.org\//i',
+            '$1="/',
             $text
         );
     }
@@ -215,8 +243,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
     }
 
     /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     public function prepareNewsletter(string $text, bool $website = false): string
     {
@@ -297,9 +325,12 @@ class Extension extends AbstractExtension implements GlobalsInterface
     public function getGlobals(): array
     {
         $version = '';
+        $locale = 'en';
         $versionCreated = new Carbon();
 
-        $locale = $this->session->get('locale', 'en');
+        if (null !== $this->requestStack->getCurrentRequest()) {
+            $locale = $this->requestStack->getSession()->get('locale', 'en');
+        }
 
         if (file_exists('../VERSION')) {
             $version = trim(file_get_contents('../VERSION'));

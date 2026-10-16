@@ -1,6 +1,6 @@
 {% import 'macros.twig' as macros %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app.request.locale }}" dir="auto">
 <head>
     <base href="/">
     <meta charset="utf-8">
@@ -30,7 +30,6 @@
     {{ encore_entry_link_tags('bewelcome') }}
     {{ encore_entry_link_tags('tailwind') }}
 
-    {% include '_analytics.html.twig' %}
 </head>
 <body>
     <nav id="main_menu" class="navbar navbar-sticky-top navbar-expand-md navbar-dark bg-primary bordert-1 borderb-1">
@@ -61,12 +60,6 @@
     </main>
     {% include 'footer.html.twig' %}
     {{ encore_entry_script_tags('bewelcome') }}
-    <script type="application/javascript">
-        $(".select2").select2({
-            theme: 'bootstrap4',
-            containerCssClass: 'form-control'
-        });
-    </script>
     {% block javascripts %}{% endblock javascripts %}
 </body>
 </html>

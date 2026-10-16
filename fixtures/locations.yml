@@ -23,6 +23,8 @@ App\Entity\Location:
         country: '@Indonesia'
     Admin1ReferenceLandBerlin:
         geonameId: 2950157
+        latitude: 52.5
+        longitude: 13.41667
         name: 'Land Berlin'
         fclass: A
         fcode: ADM1
@@ -32,6 +34,8 @@ App\Entity\Location:
         country: '@Germany'
     Admin1ReferenceProvinsiPapua:
         geonameId: 1643012
+        latitude: -2.59026
+        longitude: 139.41564
         name: 'Provinsi Papua'
         fclass: A
         fcode: ADM1

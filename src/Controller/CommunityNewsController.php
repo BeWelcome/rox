@@ -7,28 +7,22 @@ use App\Entity\CommunityNewsComment;
 use App\Form\CommunityNewsCommentType;
 use App\Form\CustomDataClass\CommunityNewsCommentRequest;
 use App\Model\CommunityNewsModel;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class CommunityNewsController extends AbstractController
 {
-    /**
-     * @var CommunityNewsModel
-     */
-    private $communityNewsModel;
-
-    public function __construct(CommunityNewsModel $communityNewsModel)
+    public function __construct(private readonly CommunityNewsModel $communityNewsModel)
     {
-        $this->communityNewsModel = $communityNewsModel;
     }
 
     /**
-     * @Route("/communitynews", name="communitynews")
-     *
      * @return Response
      */
+    #[Route(path: '/communitynews', name: 'communitynews')]
     public function listAction(Request $request)
     {
         $page = $request->query->get('page', 1);
@@ -41,14 +35,8 @@ class CommunityNewsController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/communitynews/{id}", name="communitynews_show")
-     *
-     * @throws \Exception
-     *
-     * @return Response
-     */
-    public function showAction(Request $request, CommunityNews $communityNews)
+    #[Route(path: '/communitynews/{id}', name: 'communitynews_show')]
+    public function showAction(Request $request, CommunityNews $communityNews, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_REMEMBERED', null, "Can't access this page");
 
@@ -63,14 +51,13 @@ class CommunityNewsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $em = $this->getDoctrine()->getManager();
             $communityNewsComment = new CommunityNewsComment();
             $communityNewsComment->setCommunityNews($communityNews);
             $communityNewsComment->setTitle($data->title);
             $communityNewsComment->setText($data->text);
             $communityNewsComment->setAuthor($this->getUser());
-            $em->persist($communityNewsComment);
-            $em->flush();
+            $entityManager->persist($communityNewsComment);
+            $entityManager->flush();
 
             return $this->redirectToRoute('communitynews_show', ['id' => $communityNews->getId()]);
         }

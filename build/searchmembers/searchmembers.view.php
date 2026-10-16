@@ -28,12 +28,11 @@ Boston, MA  02111-1307, USA.
  * @author matrixpoint
  */
 class SearchmembersView extends PAppView {
-    
-    private $_model;
+
     public $page ;
-            
-    public function __construct(Searchmembers $model) {
-        $this->_model = $model;
+
+    public function __construct(private readonly Searchmembers $_model)
+    {
     }
 
     public function quicksearch_results($TReturn)
@@ -56,11 +55,11 @@ class SearchmembersView extends PAppView {
     {
     	include 'templates/ajax.php';
     }
-    
+
 
     public function quicksearch_form()
     {
-        $TList=array() ;
+        $TList=[] ;
         $searchtext="" ;
         $mapstyle="mapoff";
         require 'templates/memberlist_quicksearch.php';
@@ -69,13 +68,13 @@ class SearchmembersView extends PAppView {
     public function teaser($mapstyle, $TabSortOrder, $vars = false) {
         require 'templates/teaser.php';
     }
-    
+
     public function search_column_col3($sortorder, $queries, $mapstyle, $varsOnLoad, $varsGet, $TabAccomodation) {
         $google_conf = PVars::getObj('config_google');
         if ($mapstyle == "mapoff") require 'templates/search_nomap.column_col3.php';
         else require 'templates/search.column_col3.php';
     }
-    
+
     public function teaserquicksearch($mapstyle) {
         require 'templates/teaser_quicksearch.php';
     }
@@ -87,7 +86,7 @@ class SearchmembersView extends PAppView {
         require 'templates/memberlist_quicksearch.php';
         }
     }
-    
+
     /* This adds other custom styles to the page*/
     public function customStyles($mapstyle,$quicksearch=0) {
         $out = '<link rel="stylesheet" href="styles/css/minimal/screen/custom/searchmembers.css?1" type="text/css"/>';

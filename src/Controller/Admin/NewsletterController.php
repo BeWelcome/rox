@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsletterController extends AbstractController
@@ -20,9 +20,8 @@ class NewsletterController extends AbstractController
     /**
      * Work around to have newsletter directly translated without the need to save it in the
      * translation module.
-     *
-     * @Route("/admin/massmail/create/finish", name="admin_massmail_finish")
      */
+    #[Route(path: '/admin/massmail/create/finish', name: 'admin_massmail_finish')]
     public function updateTranslations(TranslationModel $translationModel): RedirectResponse
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_MASSMAIL)) {
@@ -37,9 +36,8 @@ class NewsletterController extends AbstractController
     /**
      * Images added to a newsletter need to be publicly accessible; therefore we need a separate upload function.
      * Uploaded images are stored in /public/images/newsletters. Some checks need to be done to ensure that's safe.
-     *
-     * @Route("/newsletter/add/image", name="newsletter_add_image")
      */
+    #[Route(path: '/newsletter/add/image', name: 'newsletter_add_image')]
     public function uploadImageForNewsletter(Request $request, GalleryModel $galleryModel): JsonResponse
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_MASSMAIL)) {

@@ -13,15 +13,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use InvalidArgumentException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-final class DoctrineRefreshTokenStorage implements RefreshTokenStorageInterface
+final readonly class DoctrineRefreshTokenStorage implements RefreshTokenStorageInterface
 {
-    private $registry;
-    private $ttl;
-
-    public function __construct(ManagerRegistry $registry, int $refreshTokenTtl)
+    public function __construct(private ManagerRegistry $registry, private int $ttl)
     {
-        $this->registry = $registry;
-        $this->ttl = $refreshTokenTtl;
     }
 
     public function findOneByUser(UserInterface $user): ?RefreshToken
@@ -43,7 +38,7 @@ final class DoctrineRefreshTokenStorage implements RefreshTokenStorageInterface
 
         $em = $this->getEntityManager();
         $em->persist($refreshToken);
-        $em->flush($refreshToken);
+        $em->flush();
     }
 
     public function expireAll(?UserInterface $user = null): void
@@ -58,7 +53,7 @@ final class DoctrineRefreshTokenStorage implements RefreshTokenStorageInterface
             $em->persist($refreshToken);
         }
 
-        $em->flush($refreshTokens);
+        $em->flush();
     }
 
     private function getEntityManager(): EntityManager

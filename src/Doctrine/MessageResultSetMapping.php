@@ -2,13 +2,14 @@
 
 namespace App\Doctrine;
 
+use App\Entity\Message;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 class MessageResultSetMapping extends ResultSetMapping
 {
     public function __construct()
     {
-        $this->addEntityResult('App:Message', 'm');
+        $this->addEntityResult(Message::class, 'm');
         $this->addFieldResult('m', 'id', 'id');
         $this->addFieldResult('m', 'MessageType', 'messageType');
         $this->addFieldResult('m', 'Message', 'message');
@@ -20,9 +21,9 @@ class MessageResultSetMapping extends ResultSetMapping
         $this->addFieldResult('m', 'SpamInfo', 'spamInfo');
         $this->addFieldResult('m', 'Status', 'status');
         $this->addFieldResult('m', 'InFolder', 'folder');
-        $this->addMetaResult('m', 'IdParent', 'idParent');
-        $this->addMetaResult('m', 'IdReceiver', 'idReceiver');
-        $this->addMetaResult('m', 'IdSender', 'idSender');
+        $this->addMetaResult('m', 'IdParent', 'IdParent');
+        $this->addMetaResult('m', 'IdReceiver', 'IdReceiver');
+        $this->addMetaResult('m', 'IdSender', 'IdSender');
         $this->addMetaResult('m', 'initiator_id', 'initiator_id');
         $this->addMetaResult('m', 'subject_id', 'subject_id');
         $this->addMetaResult('m', 'request_id', 'request_id');

@@ -10,12 +10,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 class ReportSpamType extends AbstractType
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('comment', TextAreaType::class, [
+            ->add('comment', TextareaType::class, [
                 'label' => 'conversation.report.comment',
                 'attr' => [
                     'rows' => 3,

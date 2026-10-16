@@ -71,3 +71,11 @@ App\Entity\FeedbackCategory:
         idvolunteer: '3'
         sortOrder: '9'
         visible: '1'
+  feedbackcategory10:
+        name: 'Comment_issue'
+        description: '<text(30)>'
+        created: '<dateTime()>'
+        emailtonotify: '<email()>'
+        idvolunteer: '3'
+        sortOrder: '10'
+        visible: '1'

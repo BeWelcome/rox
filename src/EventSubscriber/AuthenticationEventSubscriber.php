@@ -16,18 +16,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class AuthenticationEventSubscriber implements EventSubscriberInterface
 {
-    private EntityManagerInterface $entityManager;
-    private ?AuthorizationCheckerInterface $authorizationChecker;
-    private ?TokenStorageInterface $tokenStorage;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        TokenStorageInterface $tokenStorage = null,
-        AuthorizationCheckerInterface $authorizationChecker = null
-    ) {
-        $this->entityManager = $entityManager;
-        $this->authorizationChecker = $authorizationChecker;
-        $this->tokenStorage = $tokenStorage;
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly ?TokenStorageInterface $tokenStorage = null, private readonly ?AuthorizationCheckerInterface $authorizationChecker = null)
+    {
     }
 
     public static function getSubscribedEvents(): array
@@ -66,8 +56,6 @@ class AuthenticationEventSubscriber implements EventSubscriberInterface
                 if (MemberStatusType::CHOICE_INACTIVE !== $status) {
                     $member->setStatus(MemberStatusType::ACTIVE);
                 }
-
-                $member->setRemindersWithOutLogin(0);
 
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();

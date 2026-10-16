@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -7,109 +8,95 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Gallery images.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="gallery_items", indexes={
- *     @ORM\Index(name="gallery_items_file", columns={"file"}),
- *     @ORM\Index(name="gallery_items_user_id_foreign", columns={"user_id_foreign"})
- * })
- * @ORM\Entity(repositoryClass="App\Repository\GalleryImageRepository")
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'gallery_items')]
+#[ORM\Index(name: 'gallery_items_file', columns: ['file'])]
+#[ORM\Index(name: 'gallery_items_user_id_foreign', columns: ['user_id_foreign'])]
+#[ORM\Entity(repositoryClass: \App\Repository\GalleryImageRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class GalleryImage
 {
     /**
      * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="Gallery", mappedBy="images")
      */
+    #[ORM\ManyToMany(targetEntity: \Gallery::class, mappedBy: 'images')]
     private $galleries;
 
     /**
      * @var Member
-     *
-     * @ORM\ManyToOne(targetEntity="Member", fetch="EAGER")
-     * @ORM\JoinColumn(name="user_id_foreign")
      */
+    #[ORM\JoinColumn(name: 'user_id_foreign')]
+    #[ORM\ManyToOne(targetEntity: \Member::class, fetch: 'EAGER')]
     private $owner;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="file", type="string", length=48, nullable=false)
      */
+    #[ORM\Column(name: 'file', type: 'string', length: 48, nullable: false)]
     private $file;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="original", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'original', type: 'string', length: 255, nullable: false)]
     private $original;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="flags", type="blob", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'flags', type: 'blob', length: 65535, nullable: false)]
     private $flags;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="mimetype", type="string", length=75, nullable=false)
      */
+    #[ORM\Column(name: 'mimetype', type: 'string', length: 75, nullable: false)]
     private $mimetype;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="width", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'width', type: 'integer', nullable: false)]
     private $width;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="height", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'height', type: 'integer', nullable: false)]
     private $height;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'title', type: 'string', length: 255, nullable: false)]
     private $title;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
+     * @var DateTime
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="description", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'description', type: 'text', length: 65535, nullable: false)]
     private $description;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     public function __construct()
@@ -312,7 +299,7 @@ class GalleryImage
     /**
      * Set created.
      *
-     * @param \DateTime $created
+     * @param DateTime $created
      *
      * @return GalleryImage
      */
@@ -326,7 +313,7 @@ class GalleryImage
     /**
      * Get created.
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreated()
     {
@@ -369,12 +356,11 @@ class GalleryImage
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
-        $this->created = new \DateTime('now');
+        $this->created = new DateTime('now');
     }
 
     /**

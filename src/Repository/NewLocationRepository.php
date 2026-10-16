@@ -25,7 +25,7 @@ class NewLocationRepository extends EntityRepository
                         $qb->expr()->like('l.featureCode', $qb->expr()->literal('TERR'))
                     )
                 )
-                ->setParameter(':countryId', $countryId)
+                ->setParameter('countryId', $countryId)
                 ->getQuery()
         ;
 

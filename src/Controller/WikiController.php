@@ -9,6 +9,7 @@ use App\Repository\WikiRepository;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,34 +17,37 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class WikiController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+    ) {
+    }
+
     /**
-     * @Route("/wiki", name="wiki_front_page")
-     *
      * @return Response
      */
+    #[Route(path: '/wiki', name: 'wiki_front_page')]
     public function showWikiFrontPage(WikiModel $wikiModel)
     {
         return $this->showWikiPage('WikiFrontPage', $wikiModel, 0);
     }
 
     /**
-     * @Route("/wiki/recent", name="wiki_recent")
-     *
      * @return Response
      */
+    #[Route(path: '/wiki/recent', name: 'wiki_recent')]
     public function showRecentChanges(Request $request)
     {
         $page = $request->get('page', 1);
 
         /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $this->getDoctrine()->getRepository(Wiki::class);
+        $wikiRepository = $this->entityManager->getRepository(Wiki::class);
         $recentChanges = $wikiRepository->getRecentChanges();
         $adapter = new ArrayAdapter($recentChanges);
         $pagerFanta = new Pagerfanta($adapter);
@@ -59,22 +63,16 @@ class WikiController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/wiki/{pageTitle}/{version}", name="wiki_page",
-     *     requirements={"version"="\d+"},
-     *     defaults={"version"=0})
-     *
-     * @param $pageTitle
-     *
-     * @return Response
-     */
-    public function showWikiPage($pageTitle, WikiModel $wikiModel, int $version)
-    {
+    #[Route(path: '/wiki/{pageTitle}/{version}', name: 'wiki_page', requirements: ['version' => '\d+'], defaults: ['version' => 0])]
+    public function showWikiPage(
+        string $pageTitle,
+        WikiModel $wikiModel,
+        int $version,
+    ): Response {
         $pageName = $wikiModel->getPageName($pageTitle);
 
-        $em = $this->getDoctrine();
         /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $em->getRepository(Wiki::class);
+        $wikiRepository = $this->entityManager->getRepository(Wiki::class);
 
         $wikiPage = $wikiRepository->getPageByName($pageName, $version);
 
@@ -86,8 +84,8 @@ class WikiController extends AbstractController
                 return $this->redirectToRoute('wiki_page_create', ['pageTitle' => $pageTitle]);
             }
 
-            // the given version of the wiki page doesn't exist. Just keep going
-            // (show appropriate message in the template)
+        // the given version of the wiki page doesn't exist. Just keep going
+        // (show appropriate message in the template)
         } else {
             $content = $wikiModel->parseWikiMarkup($wikiPage->getContent());
             if (null === $content) {
@@ -126,13 +124,10 @@ class WikiController extends AbstractController
     }
 
     /**
-     * @Route("/wiki/{pageTitle}/edit", name="wiki_page_edit")
-     *
-     * @param $pageTitle
-     *
      * @return Response
      */
-    public function editWikiPage(Request $request, WikiModel $wikiModel, $pageTitle)
+    #[Route(path: '/wiki/{pageTitle}/edit', name: 'wiki_page_edit')]
+    public function editWikiPage(Request $request, WikiModel $wikiModel, string $pageTitle)
     {
         /** @var Wiki $wikiPage */
         $wikiPage = $wikiModel->getPage($pageTitle);
@@ -142,7 +137,7 @@ class WikiController extends AbstractController
         }
 
         $form = $this->createFormBuilder(['wiki_markup' => $wikiPage->getContent()])
-            ->add('wiki_markup', TextAreaType::class)
+            ->add('wiki_markup', TextareaType::class)
             ->add('submit', SubmitType::class, [
                 'label' => 'Update Page',
             ])
@@ -159,9 +154,10 @@ class WikiController extends AbstractController
             $newWikiPage->setVersion($wikiPage->getVersion() + 1);
             $newWikiPage->setAuthor($member->getUsername());
             $newWikiPage->setCreated((new DateTime())->getTimestamp());
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newWikiPage);
-            $em->flush();
+
+            $this->entityManager->persist($newWikiPage);
+            $this->entityManager->flush();
+
             $this->addTranslatedFlash('notice', 'flash.wiki.updated');
 
             return $this->redirectToRoute('wiki_page', [
@@ -180,12 +176,9 @@ class WikiController extends AbstractController
     }
 
     /**
-     * @Route("/wiki/{pageTitle}/create", name="wiki_page_create")
-     *
-     * @param $pageTitle
-     *
      * @return Response
      */
+    #[Route(path: '/wiki/{pageTitle}/create', name: 'wiki_page_create')]
     public function createWikiPage(Request $request, WikiModel $wikiModel, $pageTitle)
     {
         $wikiPage = $wikiModel->getPage($pageTitle);
@@ -195,7 +188,7 @@ class WikiController extends AbstractController
         }
 
         $form = $this->createFormBuilder(['wiki_markup' => ''])
-            ->add('wiki_markup', TextAreaType::class)
+            ->add('wiki_markup', TextareaType::class)
             ->add('submit', SubmitType::class, [
                 'label' => 'Create Page',
             ])

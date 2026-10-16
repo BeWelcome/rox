@@ -40,7 +40,7 @@ class PlacesController extends RoxControllerBase {
         }
         $countryCode = $this->route_vars['countrycode'];
         $page->regions = $this->_model->getAllRegions($countryCode);
-        list($memberCount, $totalMemberCount, $members) = $this->_model->getMembersOfCountry($countryCode, $page->pageNumber);
+        [$memberCount, $totalMemberCount, $members] = $this->_model->getMembersOfCountry($countryCode, $page->pageNumber);
         $page->totalMemberCount = $totalMemberCount;
         $page->memberCount = $memberCount;
         $page->members = $members;
@@ -59,7 +59,7 @@ class PlacesController extends RoxControllerBase {
         $countryCode = $this->route_vars['countrycode'];
         $regionCode = $this->route_vars['regioncode'];
         $page->cities = $this->_model->getAllCities($regionCode, $countryCode);
-        list($memberCount, $totalMemberCount, $members) = $this->_model->getMembersOfRegion($regionCode,$countryCode, $page->pageNumber);
+        [$memberCount, $totalMemberCount, $members] = $this->_model->getMembersOfRegion($regionCode,$countryCode, $page->pageNumber);
         $page->totalMemberCount = $totalMemberCount;
         $page->memberCount = $memberCount;
         $page->members = $members;
@@ -79,7 +79,7 @@ class PlacesController extends RoxControllerBase {
         }
         $cityCode = $this->route_vars['citycode'];
         $cityName = $this->route_vars['cityname'];
-        list($memberCount, $totalMemberCount, $members)  = $this->_model->getMembersOfCity($cityCode, $cityName, $page->pageNumber);
+        [$memberCount, $totalMemberCount, $members]  = $this->_model->getMembersOfCity($cityCode, $cityName, $page->pageNumber);
         $page->totalMemberCount = $totalMemberCount;
         $page->memberCount = $memberCount;
         $page->members = $members;

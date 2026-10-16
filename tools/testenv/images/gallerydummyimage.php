@@ -2,7 +2,7 @@
 class GalleryDummyImage extends DummyImage
 {
     const IMAGE_DIR = '../../../data/gallery';
-    
+
     protected $user; // userid for this galleryimage
 
     /**
@@ -34,9 +34,9 @@ class GalleryDummyImage extends DummyImage
     {
         $thumbData = array();
         $thumbData[''] = array(0,0,0,0,$this->size[0], $this->size[1], $this->size[0], $this->size[1]);
-        $thumbData['thumb']  = $this->getThumbSize(100, 100, '',     $this->size);
-        $thumbData['thumb1'] = $this->getThumbSize(240, 240, 'ratio',$this->size);
-        $thumbData['thumb2'] = $this->getThumbSize(500, 500, 'ratio',$this->size);
+        $thumbData['thumb']  = $this->getThumbSize(100, 100, '', $this->size);
+        $thumbData['thumb1'] = $this->getThumbSize(240, 240, 'ratio', $this->size);
+        $thumbData['thumb2'] = $this->getThumbSize(500, 500, 'ratio', $this->size);
 
         return $this->createFiles($thumbData);
     }
@@ -60,7 +60,7 @@ class GalleryDummyImage extends DummyImage
      **/
     protected function setImageDir()
     {
-        $imgDir = STATIC::IMAGE_DIR . '/user' . $this->user;
+        $imgDir = STATIC::IMAGE_DIR . '/member' . $this->user;
         if (!is_dir($imgDir)) {
             mkdir($imgDir,'0777',true);
         }

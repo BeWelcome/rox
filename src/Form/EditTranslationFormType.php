@@ -19,9 +19,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class EditTranslationFormType extends AbstractType
 {
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('wordCode', TextType::class, [
@@ -68,7 +68,7 @@ class EditTranslationFormType extends AbstractType
                         'label' => 'translation.allow.translation',
                         'required' => false,
                     ])
-                    ->add('description', TextAreaType::class, [
+                    ->add('description', TextareaType::class, [
                         'label' => 'label.admin.translation.description',
                     ])
                     ->add('domain', ChoiceType::class, [
@@ -86,7 +86,7 @@ class EditTranslationFormType extends AbstractType
                 ;
             } else {
                 $form
-                    ->add('description', TextAreaType::class, [
+                    ->add('description', TextareaType::class, [
                         'label' => 'label.admin.translation.description',
                         'disabled' => true,
                     ])
@@ -118,10 +118,7 @@ class EditTranslationFormType extends AbstractType
         });
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'richtext' => false,

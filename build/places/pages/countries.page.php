@@ -33,6 +33,7 @@ Boston, MA  02111-1307, USA.
  */
 class CountriesPage extends PageWithActiveSkin
 {
+    #[\Override]
     protected function getPageTitle() {
         $words = $this->getWords();
         return $words->getBuffered('Countries') . ' - BeWelcome';
@@ -46,12 +47,14 @@ class CountriesPage extends PageWithActiveSkin
         return $words->get('Countries');
     }
 
+    #[\Override]
     protected function getColumnNames()
     {
         // we don't need the other columns
-        return array('col3');
+        return ['col3'];
     }
 
+    #[\Override]
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'styles/css/minimal/screen/custom/places.css?2';

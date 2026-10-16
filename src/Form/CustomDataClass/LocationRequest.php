@@ -11,7 +11,7 @@ class LocationRequest
     public float $latitude;
     public float $longitude;
 
-    public function __construct(NewLocation $location = null)
+    public function __construct(?NewLocation $location = null)
     {
         if (null !== $location) {
             $this->name = $location->getFullName();

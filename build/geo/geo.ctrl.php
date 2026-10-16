@@ -49,6 +49,7 @@ class GeoController extends PAppController {
         $this->_view  = new GeoView($this->_model);
     }
 
+    #[\Override]
     public function __destruct() {
         unset($this->_model);
         unset($this->_view);
@@ -67,7 +68,7 @@ class GeoController extends PAppController {
         if (!isset($request[1])) {
             $request[1] = '';
         }
-        $matches = array();
+        $matches = [];
         switch ($request[1]) {
 
             case 'countries':    // if your URL looks like this: http://[fqdn]/geo/countries
@@ -103,18 +104,11 @@ class GeoController extends PAppController {
                 $type = false;
 
                 //set the features that should be suggested (only cities or mountains and stuff as well) -- to be improved
-                switch ($request[3]) {
-                    case 'blog':
-                        $fcode = $this->fcode_blog;
-                    break;
-
-                    case 'city':
-                        $fcode = $this->fcode_city;
-                    break;
-                    default:
-                        $fcode = $this->fcode_default;
-
-                }
+                $fcode = match ($request[3]) {
+                    'blog' => $this->fcode_blog,
+                    'city' => $this->fcode_city,
+                    default => $this->fcode_default,
+                };
                 $activities = false;
                 if (isset($request[4]) && ($request[4] == 'activities')) {
                     $activities = true;

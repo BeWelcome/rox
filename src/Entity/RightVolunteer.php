@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -10,73 +11,64 @@ namespace App\Entity;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Right;
 
 /**
  * Rightsvolunteers.
  *
- * @ORM\Table(name="rightsvolunteers", uniqueConstraints={@ORM\UniqueConstraint(name="rightsvolunteers_members", columns={"IdMember", "IdRight"})})
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings("PHPMD")
  * Auto generated class do not check mess
  */
+#[ORM\Table(name: 'rightsvolunteers')]
+#[ORM\UniqueConstraint(name: 'rightsvolunteers_members', columns: ['IdMember', 'IdRight'])]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class RightVolunteer
 {
     /**
      * @var int
-     *
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @ORM\Column(type="integer")
      */
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\Column(type: 'integer')]
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Member", inversedBy="volunteerRights")
-     * @ORM\JoinColumn(name="IdMember", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Member::class, inversedBy: 'volunteerRights')]
     private $member;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Right", inversedBy="rightVolunteers")
-     * @ORM\JoinColumn(name="IdRight", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'IdRight', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Right::class, inversedBy: 'rightVolunteers')]
     private $right;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="Level", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'Level', type: 'integer', nullable: false)]
     private $level = '0';
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Scope", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Scope', type: 'text', length: 255, nullable: false)]
     private $scope;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="Comment", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'Comment', type: 'text', length: 65535, nullable: false)]
     private $comment;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="updated", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
     private $updated;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
@@ -95,17 +87,11 @@ class RightVolunteer
         $this->member = $member;
     }
 
-    /**
-     * @return mixed
-     */
     public function getRight()
     {
         return $this->right;
     }
 
-    /**
-     * @param mixed $right
-     */
     public function setRight($right)
     {
         $this->right = $right;
@@ -243,9 +229,8 @@ class RightVolunteer
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');
@@ -253,9 +238,8 @@ class RightVolunteer
 
     /**
      * Triggered on update.
-     *
-     * @ORM\PreUpdate
      */
+    #[ORM\PreUpdate]
     public function onPreUpdate()
     {
         $this->updated = new DateTime('now');

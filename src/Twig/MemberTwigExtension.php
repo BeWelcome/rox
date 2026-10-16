@@ -11,11 +11,8 @@ use App\Repository\CommentRepository;
 use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
 use App\Utilities\ManagerTrait;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Router;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
@@ -101,35 +98,16 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         ],
     ];
 
-    /**
-     * @var Session
-     */
-    protected $session;
+    protected RouterInterface $router;
 
-    /**
-     * @var Router
-     */
-    protected $router;
+    protected Security $security;
 
-    /**
-     * @var Security
-     */
-    protected $security;
+    protected ?Member $member;
 
-    /**
-     * @var Member
-     */
-    protected $member;
-
-    /**
-     * MemberTwigExtension constructor.
-     */
     public function __construct(
-        SessionInterface $session,
         RouterInterface $router,
-        Security $security
+        Security $security,
     ) {
-        $this->session = $session;
         $this->router = $router;
         $this->security = $security;
         $this->member = $this->security->getUser();
@@ -214,8 +192,8 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     {
         $reportedCommentsCount = null;
         if (
-            $this->security->isGranted(Member::ROLE_ADMIN_COMMENTS) ||
-            $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            $this->security->isGranted(Member::ROLE_ADMIN_COMMENTS)
+            || $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             /** @var CommentRepository $commentRepository */
             $commentRepository = $this->getManager()->getRepository(Comment::class);
@@ -229,8 +207,8 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     {
         $reportedMessagesCount = null;
         if (
-            $this->security->isGranted(Member::ROLE_ADMIN_CHECKER) ||
-            $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            $this->security->isGranted(Member::ROLE_ADMIN_CHECKER)
+            || $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->getManager()->getRepository(Message::class);

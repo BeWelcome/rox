@@ -7,18 +7,17 @@ use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
-use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
-use App\Service\Mailer;
 use DateInterval;
 use DateTime;
-use Doctrine\ORM\EntityManager;
-use InvalidArgumentException;
-use Mockery;
+use Generator;
+use PHPMD\Rule\Design\TooManyPublicMethods;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings("PHPMD.StaticAccess")
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  */
 class HostingRequestModelTest extends TestCase
 {
@@ -26,9 +25,8 @@ class HostingRequestModelTest extends TestCase
     private Member $receiver;
     private Message $parent;
     private Subject $subject;
-    private Mailer $mailer;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $this->sender = new Member();
         $this->receiver = new Member();
@@ -37,11 +35,9 @@ class HostingRequestModelTest extends TestCase
         $this->subject->setSubject('subject');
         $this->parent->setReceiver($this->sender);
         $this->parent->setSender($this->receiver);
-        $this->mailer = Mockery::mock(Mailer::class);
-        $this->entityManager = Mockery::mock(EntityManager::class);
     }
 
-    public function testRequestExpiredYesterday()
+    public function testRequestExpiredYesterday(): void
     {
         $arrival = new DateTime('yesterday');
         $departure = (new DateTime('yesterday'))->setTime(23, 59);
@@ -59,7 +55,7 @@ class HostingRequestModelTest extends TestCase
         $this->assertTrue($expired);
     }
 
-    public function testRequestDoesNotExpireToday()
+    public function testRequestDoesNotExpireToday(): void
     {
         $arrival = new DateTime('today');
         $departure = (new DateTime('today'))->setTime(23, 59);
@@ -77,7 +73,7 @@ class HostingRequestModelTest extends TestCase
         $this->assertFalse($expired);
     }
 
-    public function testRequestForTomorrowHasntExpiredYet()
+    public function testRequestForTomorrowHasntExpiredYet(): void
     {
         $arrival = new DateTime('tomorrow');
         $departure = (new DateTime('tomorrow'))->setTime(23, 59);
@@ -95,23 +91,16 @@ class HostingRequestModelTest extends TestCase
         $this->assertFalse($expired);
     }
 
-    public function stateDataProvider(): array
+    public static function stateDataProvider(): Generator
     {
-        return [
-            ['cancel', HostingRequest::REQUEST_CANCELLED],
-            ['accept', HostingRequest::REQUEST_ACCEPTED],
-            ['tentatively', HostingRequest::REQUEST_TENTATIVELY_ACCEPTED],
-            ['decline', HostingRequest::REQUEST_DECLINED],
-        ];
+        yield ['cancel', HostingRequest::REQUEST_CANCELLED];
+        yield ['accept', HostingRequest::REQUEST_ACCEPTED];
+        yield ['tentatively', HostingRequest::REQUEST_TENTATIVELY_ACCEPTED];
+        yield ['decline', HostingRequest::REQUEST_DECLINED];
     }
 
-    /**
-     * @dataProvider stateDataProvider
-     *
-     * @param mixed $clickedButton
-     * @param mixed $expected
-     */
-    public function testGetFinalRequestStateChange($clickedButton, $expected)
+    #[DataProvider('stateDataProvider')]
+    public function testGetFinalRequestStateChange(string $clickedButton, int $expected): void
     {
         $arrival = new DateTime();
         $departure = $arrival->add(new DateInterval('P2D'));
@@ -123,7 +112,13 @@ class HostingRequestModelTest extends TestCase
             1,
             HostingRequest::REQUEST_OPEN
         );
-        $formRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
+        $formRequestMessage = $this->setupRequestMessage(
+            $arrival,
+            $departure,
+            false,
+            1,
+            HostingRequest::REQUEST_OPEN
+        );
 
         $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
@@ -158,13 +153,25 @@ class HostingRequestModelTest extends TestCase
         );
     }
 
-    public function testGetFinalRequestFlexibleChanged()
+    public function testGetFinalRequestFlexibleChanged(): void
     {
         $arrival = new DateTime();
         $departure = (clone $arrival)->add(new DateInterval('P2D'));
 
-        $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
-        $formRequestMessage = $this->setupRequestMessage($arrival, $departure, true, 1, HostingRequest::REQUEST_OPEN);
+        $hostingRequestMessage = $this->setupRequestMessage(
+            $arrival,
+            $departure,
+            false,
+            1,
+            HostingRequest::REQUEST_OPEN
+        );
+        $formRequestMessage = $this->setupRequestMessage(
+            $arrival,
+            $departure,
+            true,
+            1,
+            HostingRequest::REQUEST_OPEN
+        );
 
         $requestModel = new HostingRequestModel();
         $finalRequestMessage = $requestModel->getFinalRequest(
@@ -186,29 +193,19 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
-    public function arrivalDataProvider()
+    public static function arrivalDataProvider(): Generator
     {
-        return [
-            ['2020-10-10', '2019-10-10'],
-            ['2020-10-10', '2020-09-10'],
-            ['2020-10-10', '2019-10-09'],
-            ['2020-10-10', '2021-10-10'],
-            ['2020-10-10', '2020-11-10'],
-            ['2020-10-10', '2010-10-11'],
-        ];
+        yield [new DateTime('2020-10-10'), new DateTime('2019-10-10')];
+        yield [new DateTime('2020-10-10'), new DateTime('2020-09-10')];
+        yield [new DateTime('2020-10-10'), new DateTime('2019-10-09')];
+        yield [new DateTime('2020-10-10'), new DateTime('2021-10-10')];
+        yield [new DateTime('2020-10-10'), new DateTime('2020-11-10')];
+        yield [new DateTime('2020-10-10'), new DateTime('2010-10-11')];
     }
 
-    /**
-     * @dataProvider arrivalDataProvider
-     *
-     * @param mixed $old
-     * @param mixed $new
-     */
-    public function testGetFinalRequestArrivalChanged($old, $new)
+    #[DataProvider('arrivalDataProvider')]
+    public function testGetFinalRequestArrivalChanged(DateTime $arrival, DateTime $departure): void
     {
-        $arrival = new DateTime($old);
-        $departure = new DateTime($new);
-
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, true, 1, HostingRequest::REQUEST_OPEN);
         $formRequestMessage = $this->setupRequestMessage($departure, $departure, true, 1, HostingRequest::REQUEST_OPEN);
 
@@ -231,17 +228,10 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
-    /**
-     * @dataProvider arrivalDataProvider
-     *
-     * @param mixed $old
-     * @param mixed $new
-     */
-    public function testGetFinalRequestDepartureChanged($old, $new)
+    #[DataProvider('arrivalDataProvider')]
+    public function testGetFinalRequestDepartureChanged(DateTime $departure, DateTime $newDeparture): void
     {
         $arrival = new DateTime();
-        $departure = new DateTime($old);
-        $newDeparture = new DateTime($new);
 
         $hostingRequestMessage = $this->setupRequestMessage($arrival, $departure, false, 1, HostingRequest::REQUEST_OPEN);
         $formRequestMessage = $this->setupRequestMessage($arrival, $newDeparture, false, 1, HostingRequest::REQUEST_OPEN);
@@ -265,7 +255,7 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
-    public function testGetFinalRequestArrivalAndDepartureChanged()
+    public function testGetFinalRequestArrivalAndDepartureChanged(): void
     {
         $arrival = new DateTime();
         $departure = (clone $arrival)->add(new DateInterval('P2D'));
@@ -295,7 +285,7 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
-    public function testGetFinalRequestNumberOfTravellersChanged()
+    public function testGetFinalRequestNumberOfTravellersChanged(): void
     {
         $arrival = new DateTime();
         $departure = (clone $arrival)->add(new DateInterval('P2D'));
@@ -322,7 +312,7 @@ class HostingRequestModelTest extends TestCase
         $this->assertEquals($finalRequestMessage->getRequest()->getArrival(), $hostingRequestMessage->getRequest()->getArrival());
     }
 
-    public function testGetFinalRequestMessage()
+    public function testGetFinalRequestMessage(): void
     {
         $arrival = new DateTime();
         $departure = (clone $arrival)->add(new DateInterval('P2D'));
@@ -352,7 +342,7 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
-    public function testGetFinalRequestParent()
+    public function testGetFinalRequestParent(): void
     {
         $arrival = new DateTime();
         $departure = (clone $arrival)->add(new DateInterval('P2D'));
@@ -382,7 +372,7 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
-    public function testGetFinalRequestSubject()
+    public function testGetFinalRequestSubject(): void
     {
         $arrival = new DateTime();
         $departure = (clone $arrival)->add(new DateInterval('P2D'));
@@ -412,20 +402,14 @@ class HostingRequestModelTest extends TestCase
         $this->assertSame($finalRequestMessage->getRequest()->getNumberOfTravellers(), $hostingRequestMessage->getRequest()->getNumberOfTravellers());
     }
 
-    /**
-     * @param $arrival
-     * @param $departure
-     * @param $flexible
-     * @param $numberOfTravellers
-     * @param $state
-     * @param mixed $messageText
-     *
-     * @throws InvalidArgumentException|\Doctrine\DBAL\Exception\InvalidArgumentException
-     *
-     * @return Message
-     */
-    private function setupRequestMessage($arrival, $departure, $flexible, $numberOfTravellers, $state, $messageText = '')
-    {
+    private function setupRequestMessage(
+        DateTime $arrival,
+        DateTime $departure,
+        bool $flexible,
+        int $numberOfTravellers,
+        int $state,
+        string $messageText = '',
+    ): Message {
         $message = new Message();
         $message->setParent($this->parent);
         $message->setSender($this->sender);
@@ -433,7 +417,7 @@ class HostingRequestModelTest extends TestCase
         $message->setMessage($messageText);
         $message->setSubject($this->subject);
 
-        $request = new HostingRequest($this->mailer);
+        $request = new HostingRequest();
         $request->setArrival($arrival);
         $request->setDeparture($departure);
         $request->setFlexible($flexible);

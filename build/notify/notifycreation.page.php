@@ -6,6 +6,7 @@
  */
 class GroupsCreationPage2 extends GroupsBasePage
 {
+    #[\Override]
     protected function teaserContent()
     {
         // &gt; or &raquo; ?
@@ -16,6 +17,7 @@ class GroupsCreationPage2 extends GroupsBasePage
         <?php
     }
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'new';

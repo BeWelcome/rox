@@ -29,10 +29,8 @@ Boston, MA  02111-1307, USA.
  */
 class GeoView extends PAppView {
     
-    private $_model;
-            
-    public function __construct(GeoModel $model) {
-        $this->_model = $model;
+    public function __construct(private readonly GeoModel $_model)
+    {
     }
     
     /**
@@ -142,7 +140,7 @@ class GeoView extends PAppView {
                         . "', '"
                         . $location['zoom']
                         . "', '"
-                        . rawurlencode($location['name'])
+                        . rawurlencode((string) $location['name'])
                         . "', '"
                         . rawurlencode($location['countryName'])
                         . "', '"
@@ -155,7 +153,7 @@ class GeoView extends PAppView {
                         . '<a id="href_' . $location['geonameId'] . '">'
                         . $location['name']
                         . '<br /><img src="images/icons/flags/'
-                        . strtolower($location['countryCode']) . '.png" alt="'
+                        . strtolower((string) $location['countryCode']) . '.png" alt="'
                         . $location['countryName'] . '"> <span class="small">'
                         . $location['countryName'];
                     if (isset($location['adminName1'])) {
@@ -201,7 +199,7 @@ class GeoView extends PAppView {
                     // hide all results above 10
                     $out .= '<li id="li_'.$location['geonameId'].'">'.$location['name'].'<br />';
                             // <input type="radio" name="geolocation" value="'.$location['geonameId'].'//'.$location['name'].'" />';
-                    $out .= '<img src="images/icons/flags/'.strtolower($location['countryCode']).'.png" alt="'.$location['countryName'].'"> <span class="small">'.$location['countryName'];
+                    $out .= '<img src="images/icons/flags/'.strtolower((string) $location['countryCode']).'.png" alt="'.$location['countryName'].'"> <span class="small">'.$location['countryName'];
                     if (isset($location['fcodeName'])) {
                         // $out .= ' ('.$location['fcodeName'].') -'.$location['fclName'];
                     }

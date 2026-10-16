@@ -9,9 +9,6 @@ use Doctrine\ORM\NonUniqueResultException;
 class WikiRepository extends EntityRepository
 {
     /**
-     * @param $pagename
-     * @param mixed $version
-     *
      * @return Wiki|null
      */
     public function getPageByName($pagename, $version)
@@ -19,30 +16,30 @@ class WikiRepository extends EntityRepository
         try {
             $qb = $this->createQueryBuilder('w')
                 ->where('w.pagename = :pagename')
-                ->setParameter(':pagename', $pagename)
+                ->setParameter('pagename', $pagename)
                 ->orderBy('w.version', 'DESC')
                 ->setMaxResults(1);
             if (0 !== $version) {
                 $qb
                     ->andWhere('w.version = :version')
-                    ->setParameter(':version', $version)
+                    ->setParameter('version', $version)
                 ;
             }
             $query = $qb->getQuery();
             $wikiPage = $query->getOneOrNullResult();
-        } catch (NonUniqueResultException $e) {
+        } catch (NonUniqueResultException) {
             $wikiPage = null;
         }
 
         return $wikiPage;
     }
 
-    public function getHistory(Wiki $wikiPage)
+    public function getHistory(Wiki $wikiPage): mixed
     {
         $versions = $this->createQueryBuilder('w')
             ->select(['w.version', 'w.author', 'w.created'])
             ->where('w.pagename = :pagename')
-            ->setParameter(':pagename', $wikiPage->getPagename())
+            ->setParameter('pagename', $wikiPage->getPagename())
             ->orderBy('w.version', 'DESC')
             ->getQuery()
             ->getResult();

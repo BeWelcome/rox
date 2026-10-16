@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Form\CustomDataClass\LocationRequest;
 use App\Form\DataTransformer\LocationRequestToLocationTransformer;
+use Override;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataMapperInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
@@ -16,14 +17,11 @@ use Traversable;
 
 class SearchLocationType extends AbstractType implements DataMapperInterface
 {
-    private LocationRequestToLocationTransformer $transformer;
-
-    public function __construct(LocationRequestToLocationTransformer $transformer)
+    public function __construct(private readonly LocationRequestToLocationTransformer $transformer)
     {
-        $this->transformer = $transformer;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('fullname', TextType::class, [
@@ -106,7 +104,8 @@ class SearchLocationType extends AbstractType implements DataMapperInterface
         ]);
     }
 
-    public function getBlockPrefix()
+    #[Override]
+    public function getBlockPrefix(): string
     {
         return '';
     }

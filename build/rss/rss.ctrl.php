@@ -15,8 +15,7 @@ class RssController extends RoxControllerBase
     {
         // First check if the feature is closed
         if ($this->session->get("Param")->RssFeedIsClosed!='No') {
-            PPHP::PExit(); // To do find a better exit
-            break ;
+            PPHP::PExit(); return;
         } // end of test "if feature is closed"
 
 
@@ -41,7 +40,7 @@ class RssController extends RoxControllerBase
 			MOD_log::get()->write($ss,"rss") ;
 		}
 
-		switch (isset($request[1]) ? $request[1] : false) {
+		switch ($request[1] ?? false) {
 
 
             /**

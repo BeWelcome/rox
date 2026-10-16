@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use AnthonyMartin\GeoLocation\GeoLocation;
+use App\Entity\ActivityAttendee;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Preference;
@@ -42,7 +43,7 @@ class ActivityRepository extends EntityRepository
         return $this->getEntityManager()
             ->createQuery('
                 SELECT a
-                FROM App:Activity a
+                FROM Activity a
                 WHERE a.status <> 1
                 ORDER BY a.id DESC
             ');
@@ -67,14 +68,11 @@ class ActivityRepository extends EntityRepository
         return $paginator;
     }
 
-    /**
-     * @return Query
-     */
-    public function queryProblematicActivities()
+    public function queryProblematicActivities(): Query
     {
         return $this->createQueryBuilder('a')
-            ->join('App:ActivityAttendee', 'aa', Join::WITH, 'aa.activity = a and aa.organizer = 1')
-            ->join('App:Member', 'm', Join::WITH, 'aa.attendee = m')
+            ->join(ActivityAttendee::class, 'aa', Join::WITH, 'aa.activity = a and aa.organizer = 1')
+            ->join(Member::class, 'm', Join::WITH, 'aa.attendee = m')
             ->where("m.status = 'Banned'")
             ->orWhere('DATEDIFF(a.ends, a.starts) > 1')
             ->orderBy('a.id', 'desc')
@@ -84,18 +82,20 @@ class ActivityRepository extends EntityRepository
     /**
      * Get all activities around a given location.
      *
-     * @param int   $limit
-     * @param int   $distance
-     * @param mixed $online
+     * @param int $limit
      *
      * @throws Exception
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
+     * @SuppressWarnings("PHPMD.StaticAccess")
      */
     public function findUpcomingAroundLocation(Member $member, $online, $limit = 5)
     {
+        if (null === $member->getCity()) {
+            return [];
+        }
+
         $qb = $this->getUpcomingAroundLocationQueryBuilder($member, $online);
 
         $query = $qb
@@ -108,11 +108,13 @@ class ActivityRepository extends EntityRepository
 
     /**
      * Get all activities around a given location.
-     *
-     * @param mixed $online
      */
     public function getUpcomingAroundLocationCount(Member $member, $online): int
     {
+        if (null === $member->getCity()) {
+            return 0;
+        }
+
         $qb = $this->getUpcomingAroundLocationQueryBuilder($member, $online);
         $qb
             ->select('count(a.id) AS cnt')
@@ -132,20 +134,16 @@ class ActivityRepository extends EntityRepository
 
         $distance = 20;
         if ($preference) {
-            $distance = (int) ($memberPreference->getValue());
+            $distance = (int) $memberPreference->getValue();
         }
 
         return $distance;
     }
 
     /**
-     * @param mixed $online
-     *
      * @throws Exception
-     *
-     * @return QueryBuilder
      */
-    private function getUpcomingAroundLocationQueryBuilder(Member $member, $online)
+    private function getUpcomingAroundLocationQueryBuilder(Member $member, $online): ?QueryBuilder
     {
         $location = $member->getCity();
         $distance = $this->getActivitiesRadius($member);
@@ -160,7 +158,7 @@ class ActivityRepository extends EntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb
             ->leftJoin(
-                'App:Location',
+                Location::class,
                 'l',
                 Join::WITH,
                 'a.location = l.geonameId '

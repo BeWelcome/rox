@@ -8,8 +8,6 @@ class LocationRepository extends EntityRepository
 {
     /**
      * Gets admin unit 1 for a given admin1 and country.
-     *
-     * @return mixed
      */
     public function findAdminUnit(string $admin1, string $country)
     {
@@ -21,10 +19,10 @@ class LocationRepository extends EntityRepository
                 ->andWhere($qb->expr()->eq('l.country', ':country'))
                 ->andWhere($qb->expr()->eq('l.fclass', ':fclass'))
                 ->andWhere($qb->expr()->eq('l.fcode', ':fcode'))
-                ->setParameter(':admin1', $admin1)
-                ->setParameter(':country', $country)
-                ->setParameter(':fclass', 'A')
-                ->setParameter(':fcode', 'ADM1')
+                ->setParameter('admin1', $admin1)
+                ->setParameter('country', $country)
+                ->setParameter('fclass', 'A')
+                ->setParameter('fcode', 'ADM1')
                 ->getQuery()
         ;
 

@@ -8,13 +8,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ChangeProfilePictureGlobals
 {
-    private UrlGeneratorInterface $urlGenerator;
-    private TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator, UrlGeneratorInterface $urlGenerator)
+    public function __construct(private readonly TranslatorInterface $translator, private readonly UrlGeneratorInterface $urlGenerator)
     {
-        $this->urlGenerator = $urlGenerator;
-        $this->translator = $translator;
     }
 
     public function getGlobalsJsAsJson(Member $member, Member $loggedInMember): string

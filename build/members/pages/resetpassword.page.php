@@ -7,10 +7,11 @@ class ResetPasswordPage extends PageWithActiveSkin
         return "<h1>" . $words->get("ResetPassword") . "</h1>";
     }
 
+    #[\Override]
     protected function getColumnNames()
     {
         // we don't need the other columns
-        return array('col3');
+        return ['col3'];
     }
 }
 ?>

@@ -36,12 +36,13 @@ class AdminTreasurerStartDonationCampaignPage extends AdminTreasurerBasePage
         parent::__construct();
         $this->model = $model;
         $this->member = $model->getLoggedInMember();
-        list($amount, $date) = $this->model->getDonationCampaignValues();
+        [$amount, $date] = $this->model->getDonationCampaignValues();
         $this->amount = $amount;
-        list($year, $month, $day) = preg_split('/[\/.-]/', $date);
+        [$year, $month, $day] = preg_split('/[\/.-]/', (string) $date);
         $this->date = $day . "." . $month . "." . $year;
     }
 
+    #[\Override]
     public function teaserHeadline()
     {
         return "<a href='admin'>{$this->words->get('AdminTools')}</a> &raquo; <a href='admin/treasurer'>{$this->words->get('AdminTreasurer')}</a> &raquo; {$this->words->get('AdminTreasurerStartDonationCampaign')}</a>";

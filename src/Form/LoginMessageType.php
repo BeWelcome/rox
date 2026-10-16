@@ -13,17 +13,14 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class LoginMessageType extends AbstractType
 {
-    private DateTimeTransformer $dateTimeTransformer;
-
-    public function __construct(DateTimeTransformer $dateTimeTransformer)
+    public function __construct(private readonly DateTimeTransformer $dateTimeTransformer)
     {
-        $this->dateTimeTransformer = $dateTimeTransformer;
     }
 
     /**
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('message', CkEditorType::class, [
@@ -50,7 +47,7 @@ class LoginMessageType extends AbstractType
             ->addModelTransformer($this->dateTimeTransformer);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver
             ->setDefaults([

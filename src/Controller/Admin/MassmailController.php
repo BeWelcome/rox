@@ -11,19 +11,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class MassmailController extends AbstractController
 {
-    /**
-     * @Route("/admin/massmail/test/{id}", name="admin_massmail_test",
-     *     requirements={"id"="\d+"})
-     */
+    #[Route(path: '/admin/massmail/test/{id}', name: 'admin_massmail_test', requirements: ['id' => '\d+'])]
     public function testMassmailSending(
         Request $request,
         Newsletter $newsletter,
         EntityManagerInterface $entityManager,
-        Mailer $mailer
+        Mailer $mailer,
     ): Response {
         if (!$this->isGranted(Member::ROLE_ADMIN_MASSMAIL)) {
             throw $this->createAccessDeniedException('You need to have Massmail right to access this.');
@@ -40,7 +37,7 @@ class MassmailController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $members = array_map('trim', explode(',', $data['members']));
+            $members = array_map('trim', explode(',', (string) $data['members']));
 
             /** @var MemberRepository $memberRepository */
             $memberRepository = $entityManager->getRepository(Member::class);

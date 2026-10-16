@@ -3,8 +3,11 @@
 namespace App\Model;
 
 use App\Entity\Activity;
+use App\Entity\ForumPost;
+use App\Entity\ForumThread;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Notification;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Repository\ActivityRepository;
@@ -16,11 +19,8 @@ use Exception;
 
 class LandingModel
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -33,8 +33,6 @@ class LandingModel
      *   'user': 'Member-102',
      *   'time': '10 minutes ago',
      *   'read': true
-     *
-     * @param mixed $limit
      */
     public function getConversations(Member $member, bool $unread, $limit = 5): array
     {
@@ -53,15 +51,13 @@ class LandingModel
      *   'link': Depending on type of notification,
      *   'user': 'Member-102',
      *   'time': '10 minutes ago',.
-     *
-     * @param mixed $limit
      */
     public function getNotifications(Member $member, $limit = 0): array
     {
         $queryBuilder = $this->entityManager->createQueryBuilder();
         $queryBuilder
             ->select('n')
-            ->from('App:Notification', 'n')
+            ->from(Notification::class, 'n')
             ->where('n.member = :member')
             ->setParameter('member', $member)
             ->andWhere('n.checked = 0')
@@ -89,8 +85,8 @@ class LandingModel
 
         $queryBuilder
             ->select('ft')
-            ->from('App:ForumThread', 'ft')
-            ->join('App:ForumPost', 'fp', Expr\Join::WITH, 'ft.lastPost = fp.id')
+            ->from(ForumThread::class, 'ft')
+            ->join(ForumPost::class, 'fp', Expr\Join::WITH, 'ft.lastPost = fp.id')
             ->orderBy('fp.created', 'desc')
         ;
 
@@ -129,8 +125,6 @@ class LandingModel
 
     /**
      * Generates activities (near you) for display on home page.
-     *
-     * @param mixed $online
      *
      * @throws Exception
      *

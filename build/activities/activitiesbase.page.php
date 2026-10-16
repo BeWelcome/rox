@@ -33,11 +33,13 @@ Boston, MA  02111-1307, USA.
  */
 class ActivitiesBasePage extends PageWithActiveSkin
 {
+    #[\Override]
     protected function getPageTitle() {
         $words = $this->getWords();
         return $words->getBuffered('Activities') . ' - BeWelcome';
     }
 
+    #[\Override]
     protected function teaserContent()
     {
         $layoutkit = $this->layoutkit;
@@ -48,39 +50,43 @@ class ActivitiesBasePage extends PageWithActiveSkin
     }
 
 
+    #[\Override]
     protected function getSubmenuItems()
     {
-        $items = array();
+        $items = [];
         $layoutkit = $this->layoutkit;
         $words = $layoutkit->getWords();
-        $items[] = array('myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities'));
-        $items[] = array('upcomingactivities', 'activities/upcoming', $words->getSilent('ActivitiesUpcoming'));
-        $items[] = array('upcomingonlineactivities', 'activities/online', $words->getSilent('ActivitiesUpcomingOnline'));
-        $items[] = array('pastactivities', 'activities/past', $words->getSilent('ActivitiesPastActivities'));
+        $items[] = ['myactivities', 'activities/myactivities', $words->getSilent('ActivitiesMyActivities')];
+        $items[] = ['upcomingactivities', 'activities/upcoming', $words->getSilent('ActivitiesUpcoming')];
+        $items[] = ['upcomingonlineactivities', 'activities/online', $words->getSilent('ActivitiesUpcomingOnline')];
+        $items[] = ['pastactivities', 'activities/past', $words->getSilent('ActivitiesPastActivities')];
         $geo = new Geo($this->member->IdCity);
-        $items[] = array('activitiesnearme', 'activities/nearme', $words->getSilent('ActivitiesActivitiesNear', $geo->name));
+        $items[] = ['activitiesnearme', 'activities/nearme', $words->getSilent('ActivitiesActivitiesNear', $geo->name)];
         if ($this->update) {
-            $items[] = array('createactivities', 'activities/' . $this->activity->id . '/edit', $words->getSilent('ActivitiesEdit'));
+            $items[] = ['createactivities', 'activities/' . $this->activity->id . '/edit', $words->getSilent('ActivitiesEdit')];
         } else {
-            $items[] = array('createactivities', 'activities/create', $words->getSilent('ActivitiesCreate'));
+            $items[] = ['createactivities', 'activities/create', $words->getSilent('ActivitiesCreate')];
         }
-        $items[] = array('rules', 'activities/rules', $words->getSilent('activities.rules'));
+        $items[] = ['rules', 'activities/rules', $words->getSilent('activities.rules')];
 
         return $items;
     }
 
+    #[\Override]
     protected function getColumnNames()
     {
         // we don't need the other columns
-        return array('col3');
+        return ['col3'];
     }
 
+    #[\Override]
     protected function getStylesheets() {
        $stylesheets = parent::getStylesheets();
        $stylesheets[] = 'build/leaflet.css';
        return $stylesheets;
     }
 
+    #[\Override]
     protected function getLateLoadScriptfiles()
     {
         $scriptFiles = parent::getLateLoadScriptfiles();

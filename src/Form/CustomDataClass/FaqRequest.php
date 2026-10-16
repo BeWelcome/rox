@@ -5,13 +5,11 @@ namespace App\Form\CustomDataClass;
 use App\Entity\Faq;
 use App\Entity\FaqCategory;
 use App\Entity\Word;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class FaqRequest
 {
-    public FaqCategory $faqCategory;
-
     /**
      * @Assert\NotBlank()
      */
@@ -29,12 +27,11 @@ class FaqRequest
 
     public bool $active = true;
 
-    public function __construct(FaqCategory $faqCategory)
+    public function __construct(public FaqCategory $faqCategory)
     {
-        $this->faqCategory = $faqCategory;
     }
 
-    public static function fromFaq(EntityManager $em, Faq $faq): self
+    public static function fromFaq(EntityManagerInterface $em, Faq $faq): self
     {
         $faqRequest = new self($faq->getCategory());
         $faqRequest->wordCode = $faq->getQAndA();

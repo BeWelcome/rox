@@ -2,18 +2,14 @@
 
 namespace App\Pagerfanta;
 
-use Doctrine\DBAL\Driver\Connection;
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Pagerfanta\Adapter\AdapterInterface;
-use PDO;
 
 class DoNotTranslateTranslationAdapter implements AdapterInterface
 {
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
-        $this->connection = $connection;
     }
 
     /**
@@ -30,10 +26,10 @@ class DoNotTranslateTranslationAdapter implements AdapterInterface
                 w.shortCode = 'en'
                 AND (w.donottranslate = 'Yes')
         ");
-        $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_OBJ);
+        $result = $statement->executeQuery();
+        $count = $result->fetchOne();
 
-        return $result->cnt;
+        return $count;
     }
 
     /**
@@ -58,8 +54,8 @@ class DoNotTranslateTranslationAdapter implements AdapterInterface
         ");
         $statement->bindValue('limit', $length, ParameterType::INTEGER);
         $statement->bindValue('offset', $offset, ParameterType::INTEGER);
-        $statement->execute();
+        $result = $statement->executeQuery();
 
-        return $statement->fetchAll();
+        return $result->fetchAllAssociative();
     }
 }

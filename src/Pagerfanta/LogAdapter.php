@@ -3,28 +3,18 @@
 namespace App\Pagerfanta;
 
 use App\Entity\Member;
-use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Portability\Connection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Pagerfanta\Adapter\AdapterInterface;
 use PDO;
 
 class LogAdapter implements AdapterInterface
 {
-    /** @var EntityManager */
-    private $em;
-
-    /** @var array */
-    private $types;
-
-    /** @var Member */
-    private $member;
-
-    public function __construct(EntityManager $em, $types = [], Member $member = null)
-    {
-        $this->em = $em;
-        $this->types = $types;
-        $this->member = $member;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly array $types = [],
+        private readonly ?Member $member = null,
+    ) {
     }
 
     /**
@@ -34,11 +24,10 @@ class LogAdapter implements AdapterInterface
     {
         $count = 0;
         try {
-            list($sql, $params, $paramTypes) = $this->getSqlAndParameters(true);
-            $stmt = $this->em->getConnection()->executeQuery($sql, $params, $paramTypes);
-            $row = $stmt->fetchAll(PDO::FETCH_OBJ);
-            $count = ($row[0])->count;
-        } catch (DBALException $e) {
+            [$sql, $params, $paramTypes] = $this->getSqlAndParameters(true);
+            $stmt = $this->entityManager->getConnection()->executeQuery($sql, $params, $paramTypes);
+            $count = $stmt->fetchOne();
+        } catch (Exception) {
             // Return 0
         }
 
@@ -52,11 +41,11 @@ class LogAdapter implements AdapterInterface
     {
         $results = [];
         try {
-            list($sql, $params, $paramTypes) = $this->getSqlAndParameters(false);
+            [$sql, $params, $paramTypes] = $this->getSqlAndParameters(false);
             $sql .= ' ORDER BY `l`.`created` DESC LIMIT ' . $length . ' OFFSET ' . $offset;
-            $stmt = $this->em->getConnection()->executeQuery($sql, $params, $paramTypes);
-            $results = $stmt->fetchAll(PDO::FETCH_OBJ);
-        } catch (DBALException $e) {
+            $stmt = $this->entityManager->getConnection()->executeQuery($sql, $params, $paramTypes);
+            $results = $stmt->fetchAllAssociative();
+        } catch (Exception) {
             // We return an empty array in this case
         }
 
@@ -81,12 +70,11 @@ class LogAdapter implements AdapterInterface
         if (!empty($this->types)) {
             $sql .= ' `type` IN (:types)';
             $params[':types'] = $this->types;
-            $paramTypes[':types'] = Connection::PARAM_STR_ARRAY;
-            if ($this->member) {
+            if (null !== $this->member) {
                 $sql .= ' AND ';
             }
         }
-        if ($this->member) {
+        if (null !== $this->member) {
             $sql .= ' `l`.`IdMember` = :memberId';
             $params[':memberId'] = $this->member->getId();
             $paramTypes[':memberId'] = PDO::PARAM_INT;

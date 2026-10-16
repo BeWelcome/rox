@@ -1,4 +1,5 @@
 <?php
+
 /*
  * @codingStandardsIgnoreFile
  *
@@ -11,73 +12,63 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Feedback category.
+ * Do not check entities with PHPMD.
  *
- * @ORM\Table(name="feedbackcategories")
- * @ORM\Entity
- * @ORM\HasLifecycleCallbacks
- *
- * @SuppressWarnings(PHPMD)
- * Auto generated class do not check mess
+ * @SuppressWarnings("PHPMD")
  */
+#[ORM\Table(name: 'feedbackcategories')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class FeedbackCategory
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="Name", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'Name', type: 'text', length: 255, nullable: false)]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="CategoryDescription", type="text", length=255, nullable=false)
      */
+    #[ORM\Column(name: 'CategoryDescription', type: 'text', length: 255, nullable: false)]
     private $description;
 
     /**
      * @var DateTime
-     *
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private $created;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="EmailToNotify", type="text", length=65535, nullable=false)
      */
+    #[ORM\Column(name: 'EmailToNotify', type: 'text', length: 65535, nullable: false)]
     private $emailtonotify;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="IdVolunteer", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'IdVolunteer', type: 'integer', nullable: false)]
     private $idvolunteer = '0';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="sortOrder", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'sortOrder', type: 'integer', nullable: false)]
     private $sortorder = '0';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="visible", type="integer", nullable=false)
      */
+    #[ORM\Column(name: 'visible', type: 'integer', nullable: false)]
     private $visible = '0';
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**
@@ -260,9 +251,8 @@ class FeedbackCategory
 
     /**
      * Triggered on insert.
-     *
-     * @ORM\PrePersist
      */
+    #[ORM\PrePersist]
     public function onPrePersist()
     {
         $this->created = new DateTime('now');

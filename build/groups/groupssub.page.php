@@ -6,7 +6,7 @@ class GroupsSubPage extends GroupsBasePage
     {
         parent::__construct();
         $this->group = $group;
-        $this->crumbs['groups/' . $group->id] = htmlspecialchars($group->Name, ENT_QUOTES);
+        $this->crumbs['groups/' . $group->id] = htmlspecialchars((string) $group->Name, ENT_QUOTES);
     }
 }
 

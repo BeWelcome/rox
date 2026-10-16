@@ -39,14 +39,11 @@ class ConversationVoter extends Voter
         /** @var Message $message */
         $message = $subject;
 
-        switch ($attribute) {
-            case self::CONVERSATION_VIEW:
-                return $this->canView($message, $member);
-            case self::CONVERSATION_REPLY:
-                return $this->canReply($message, $member);
-        }
-
-        throw new LogicException('This code should not be reached!');
+        return match ($attribute) {
+            self::CONVERSATION_VIEW => $this->canView($message, $member),
+            self::CONVERSATION_REPLY => $this->canReply($message, $member),
+            default => throw new LogicException('This code should not be reached!'),
+        };
     }
 
     private function canView(Message $message, Member $member): bool
@@ -61,7 +58,6 @@ class ConversationVoter extends Voter
 
     private function canReply(Message $message, Member $member): bool
     {
-        // this assumes that the Post object has a `getOwner()` method
         return $member === $message->getReceiver() || $member === $message->getSender();
     }
 }

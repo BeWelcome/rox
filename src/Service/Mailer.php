@@ -18,43 +18,21 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ *
+ * \todo split into different responsibilities instead of clubbing all into the same mailer service.
  */
 class Mailer
 {
-    private const NO_REPLY_EMAIL_ADDRESS = 'noreply@bewelcome.org';
-    private const MESSAGE_EMAIL_ADDRESS = 'message@bewelcome.org';
-    private const GROUP_EMAIL_ADDRESS = 'group@bewelcome.org';
-    private const PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
-    private const SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
-    private const ACCOUNT_FEEDBACK_ADDRESS = 'account@bewelcome.org';
+    private const string NO_REPLY_EMAIL_ADDRESS = 'noreply@bewelcome.org';
+    private const string MESSAGE_EMAIL_ADDRESS = 'message@bewelcome.org';
+    private const string GROUP_EMAIL_ADDRESS = 'group@bewelcome.org';
+    private const string PASSWORD_EMAIL_ADDRESS = 'password@bewelcome.org';
+    private const string SIGNUP_EMAIL_ADDRESS = 'signup@bewelcome.org';
+    private const string ACCOUNT_FEEDBACK_ADDRESS = 'account@bewelcome.org';
 
-    /** @var MailerInterface */
-    private $mailer;
-    /** @var TranslatorInterface */
-    private $translator;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-    private Logger $logger;
-    private UrlGeneratorInterface $urlGenerator;
-    private ?string $suspensionBounceAddress;
-
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        UrlGeneratorInterface $urlGenerator,
-        TranslatorInterface $translator,
-        MailerInterface $mailer,
-        Logger $logger,
-        ?string $suspensionBounceAddress = null
-    ) {
-        $this->entityManager = $entityManager;
-        $this->urlGenerator = $urlGenerator;
-        $this->translator = $translator;
-        $this->mailer = $mailer;
-        $this->logger = $logger;
-        $this->suspensionBounceAddress = $suspensionBounceAddress ?: null;
+    public function __construct(private readonly EntityManagerInterface $entityManager, private readonly UrlGeneratorInterface $urlGenerator, private readonly TranslatorInterface $translator, private readonly MailerInterface $mailer, private readonly Logger $logger, private readonly ?string $suspensionBounceAddress = null)
+    {
     }
 
     public function sendMessageNotificationEmail(Member $sender, Member $receiver, string $template, $parameters): bool
@@ -133,7 +111,7 @@ class Mailer
         $parameters = array_merge($parameters, $this->prepareParametersForNewsletter($newsletter, $receiver));
 
         // Bounces of suspension notices need no support action: send them to a mailbox Znuny does not fetch.
-        $returnPath = Newsletter::SUSPENSION_NOTIFICATION === $newsletter->getType() ? $this->suspensionBounceAddress : null;
+        $returnPath = Newsletter::SUSPENSION_NOTIFICATION === $newsletter->getType() ? ($this->suspensionBounceAddress ?: null) : null;
 
         return $this->sendTemplateEmail(
             $parameters['sender'],
@@ -159,14 +137,11 @@ class Mailer
     /**
      * Sends contact/feedback form submissions to the helpdesk queue.
      * From: is always noreply@bewelcome.org to pass DMARC; the reporter's address goes in Reply-To.
-     *
-     * @param mixed $sender
-     * @param mixed $parameters
      */
     public function sendFeedbackEmail($sender, Address $receiver, $parameters): bool
     {
         $parameters['subject'] = "Your feedback in '"
-            . str_replace('_', ' ', ($parameters['IdCategory'])->getName()) . "'";
+            . str_replace('_', ' ', $parameters['IdCategory']->getName()) . "'";
 
         return $this->sendTemplateEmail(
             self::NO_REPLY_EMAIL_ADDRESS,
@@ -271,20 +246,6 @@ class Mailer
         );
     }
 
-    public function sendMemberLoginReminder(Member $member): bool
-    {
-        return $this->sendTemplateEmail(
-            new Address(self::NO_REPLY_EMAIL_ADDRESS, 'BeWelcome'),
-            new Address($member->getEmail(), $member->getUsername()),
-            'login.reminder',
-            [
-                'subject' => 'email.login.reminder.subject',
-                'receiver' => $member,
-                'countRemind' => $member->getRemindersWithOutLogin(),
-            ]
-        );
-    }
-
     private function sendCommentTemplateEmail(Comment $comment, string $template, array $parameters): bool
     {
         $parameters['sender'] = $comment->getFromMember();
@@ -311,8 +272,6 @@ class Mailer
     /**
      * Used for all notifications except messages and requests notifications to allow recipients to distinguish between
      * those notifications.
-     *
-     * @param mixed $email
      */
     private function getBeWelcomeAddress(Member $sender, $email): Address
     {
@@ -323,6 +282,9 @@ class Mailer
      * @param Member|Address|string $sender
      * @param Member|Address        $receiver
      * @param mixed                 $parameters
+     *
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function sendTemplateEmail($sender, $receiver, string $template, array $parameters, ?string $replyTo = null, array $extraTextHeaders = [], ?string $returnPath = null): bool
     {
@@ -335,7 +297,7 @@ class Mailer
             $parameters['receiver'] = $receiver;
             $receiver = new Address($receiver->getEmail(), $receiver->getUsername());
         } elseif (!$receiver instanceof Address) {
-            $message = sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class);
+            $message = \sprintf('$receiver must be an instance of %s or %s.', Member::class, Address::class);
             throw new InvalidArgumentException($message);
         }
 
@@ -378,7 +340,7 @@ class Mailer
 
         try {
             $this->mailer->send($email);
-        } catch (TransportExceptionInterface $e) {
+        } catch (TransportExceptionInterface) {
             $success = false;
         }
         $this->translator->setLocale($currentLocale);
@@ -389,8 +351,13 @@ class Mailer
     /**
      * Make sure to send the email notification in the preferred language of the user.
      */
-    private function setTranslatorLocale(Member $receiver)
+    private function setTranslatorLocale(Member $receiver): void
     {
+        // make sure Member object is fully loaded
+        if ($receiver instanceof \Doctrine\Persistence\Proxy && !$receiver->__isInitialized()) {
+            $receiver->__load();
+        }
+
         $language = $receiver->getPreferredLanguage();
         $this->translator->setLocale($language->getShortCode());
     }
@@ -450,18 +417,11 @@ class Mailer
 
     private function determineSenderForNewsletter($type): Address
     {
-        switch ($type) {
-            case 'RemindToLog':
-            case 'MailToConfirmReminder':
-            case Newsletter::SUSPENSION_NOTIFICATION:
-                $sender = new Address('reminder@bewelcome.org', 'BeWelcome');
-                break;
-            case Newsletter::TERMS_OF_USE:
-                $sender = new Address('tou@bewelcome.org', 'BeWelcome');
-                break;
-            default:
-                $sender = new Address('newsletter@bewelcome.org', 'BeWelcome');
-        }
+        $sender = match ($type) {
+            'RemindToLog', 'MailToConfirmReminder', Newsletter::SUSPENSION_NOTIFICATION => new Address('reminder@bewelcome.org', 'BeWelcome'),
+            Newsletter::TERMS_OF_USE => new Address('tou@bewelcome.org', 'BeWelcome'),
+            default => new Address('newsletter@bewelcome.org', 'BeWelcome'),
+        };
 
         return $sender;
     }
@@ -474,7 +434,7 @@ class Mailer
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return sprintf('<a href="%s">', $url);
+        return \sprintf('<a href="%s">', $url);
     }
 
     private function getProfileATag(Member $member): string
@@ -485,7 +445,7 @@ class Mailer
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return sprintf('<a href="%s">', $url);
+        return \sprintf('<a href="%s">', $url);
     }
 
     private function getReportProfileATag(Member $member): string
@@ -496,7 +456,7 @@ class Mailer
             UrlGeneratorInterface::ABSOLUTE_URL
         );
 
-        return sprintf('<a href="%s">', $url);
+        return \sprintf('<a href="%s">', $url);
     }
 
     private function getParametersForCommentReminder(Member $guest, Member $host, string $subject, Member $for): array

@@ -5,21 +5,19 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class PoliciesController extends AbstractController
 {
-    private array $documentLocales;
+    private readonly array $documentLocales;
 
     public function __construct(string $locales)
     {
         $this->documentLocales = explode(',', $locales);
     }
 
-    /**
-     * @Route("/terms/{locale}", name="terms_of_use")
-     */
-    public function showTermsOfUse(Request $request, string $locale = null): Response
+    #[Route(path: '/terms/{locale}', name: 'terms_of_use')]
+    public function showTermsOfUse(Request $request, ?string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);
 
@@ -34,10 +32,8 @@ class PoliciesController extends AbstractController
         return $this->render('policies/terms.' . $locale . '.html.twig');
     }
 
-    /**
-     * @Route("/privacy/{locale}", name="privacy_policy")
-     */
-    public function showPrivacyPolicy(Request $request, string $locale = null): Response
+    #[Route(path: '/privacy/{locale}', name: 'privacy_policy')]
+    public function showPrivacyPolicy(Request $request, ?string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);
 
@@ -51,10 +47,8 @@ class PoliciesController extends AbstractController
         return $this->render('policies/privacy.' . $locale . '.html.twig');
     }
 
-    /**
-     * @Route("/datarights/{locale}", name="data_rights")
-     */
-    public function showDataRights(Request $request, string $locale = null): Response
+    #[Route(path: '/datarights/{locale}', name: 'data_rights')]
+    public function showDataRights(Request $request, ?string $locale = null): Response
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);
 
@@ -70,7 +64,7 @@ class PoliciesController extends AbstractController
 
     private function ensureLocaleAllowed(?string $locale, Request $request): string
     {
-        $locale = $locale ?? $request->getLocale();
+        $locale ??= $request->getLocale();
 
         if (!\in_array($locale, $this->documentLocales, true)) {
             $locale = 'en';

@@ -9,9 +9,6 @@ use App\Entity\PollRecordOfChoice;
 
 final class PollsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function extract(Member $member, string $tempDir): string
     {
         $pollsDir = $tempDir . 'polls/';

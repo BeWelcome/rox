@@ -11,11 +11,13 @@
 class GalleryUserPage extends GalleryBasePage
 {
 
+    #[\Override]
     protected function getSubmenuActiveItem()
     {
         return 'overview';
     }
 
+    #[\Override]
     protected function getSubmenuItems()
     {
         $member = $this->member;
@@ -24,19 +26,20 @@ class GalleryUserPage extends GalleryBasePage
         // $wwsilent = $this->wwsilent;
 
         // $ViewForumPosts=$words->get("ViewForumPosts",$member->forums_posts_count()) ;
-        $tt = array();
+        $tt = [];
         if ($this->myself) {
-            $tt[]= array("manage", 'gallery/manage', $ww->GalleryManage, 'manage');
-            $tt[]= array("upload", 'gallery/upload_multiple', $ww->GalleryUpload, 'upload');
+            $tt[]= ["manage", 'gallery/manage', $ww->GalleryManage, 'manage'];
+            $tt[]= ["upload", 'gallery/upload_multiple', $ww->GalleryUpload, 'upload'];
         } else {
-            $tt[]= array('images', 'gallery/show/user/'.$member->Username.'/images'.$this->page.'', $ww->GalleryTitleLatest);
+            $tt[]= ['images', 'gallery/show/user/'.$member->Username.'/images'.$this->page.'', $ww->GalleryTitleLatest];
         }
-        $tt[]= array('overview', 'gallery/show/user/'.$member->Username.'/'.$this->page.'', $ww->GalleryTitleSets);
+        $tt[]= ['overview', 'gallery/show/user/'.$member->Username.'/'.$this->page.'', $ww->GalleryTitleSets];
         echo $words->flushBuffer();
         return($tt) ;
 
     }
 
+    #[\Override]
     protected function submenu() {
         $active_menu_item = $this->getSubmenuActiveItem();
         echo '<div class="col-md-3 offcanvas-collapse mb-2" id="sidebar">';
@@ -82,6 +85,7 @@ class GalleryUserPage extends GalleryBasePage
         */
     }
 
+    #[\Override]
     protected function teaser() {
 
         /*

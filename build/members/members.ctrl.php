@@ -595,7 +595,7 @@ class MembersController extends RoxControllerBase
                 $trad_ids = [];
                 foreach ($fields as $field)
                     $trad_ids[] = $member->$field;
-                $this->model->delete_translation_multiple($trad_ids,$vars['memberid'],$vars['profile_language']);
+                $this->model->delete_translation_multiple($vars['memberid'], $vars['profile_language'], $trad_ids);
                 // Redirect to a nice location like editmyprofile/finish
                 return 'editmyprofile/finish';
             } else {

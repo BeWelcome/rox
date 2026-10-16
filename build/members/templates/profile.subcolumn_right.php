@@ -12,7 +12,7 @@ function wasGuestOrHost(string $relations) {
     <?php
 
     use App\Doctrine\MemberStatusType;
-    use App\Utilities\CommentSorter;
+    use App\Utilities\CommentSorterProfile;
     use Carbon\Carbon;
 
     if (!$this->passedAway){
@@ -55,7 +55,7 @@ function wasGuestOrHost(string $relations) {
     }
 
     if (!empty($comments)) {
-        $comments = array_slice($comments, -10);
+        $comments = (new CommentSorterProfile())->sortComments($comments);
     }
 
     $username = $this->member->Username;

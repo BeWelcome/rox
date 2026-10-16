@@ -29,6 +29,19 @@ class CommentSorter
     }
 
     /**
+     * Comment entities by default; CommentSorterProfile reads the legacy profile page's database rows.
+     */
+    protected function getCreated(object $comment): DateTimeInterface
+    {
+        return $comment->getCreated();
+    }
+
+    protected function getUpdated(object $comment): ?DateTimeInterface
+    {
+        return $comment->getUpdated();
+    }
+
+    /**
      * PHPMD doesn't see the usort call above.
      *
      * @SuppressWarnings("PHPMD.UnusedPrivateMethod")
@@ -43,8 +56,8 @@ class CommentSorter
 
     private function getCreatedCriterion(array $comment): DateTimeInterface
     {
-        $createdTo = isset($comment['to']) ? $comment['to']->getCreated() : $this->farFuture;
-        $createdFrom = isset($comment['from']) ? $comment['from']->getCreated() : $this->farFuture;
+        $createdTo = isset($comment['to']) ? $this->getCreated($comment['to']) : $this->farFuture;
+        $createdFrom = isset($comment['from']) ? $this->getCreated($comment['from']) : $this->farFuture;
 
         return min($createdTo, $createdFrom);
     }
@@ -52,9 +65,9 @@ class CommentSorter
     private function getUpdatedCriterion(array $comment): DateTimeInterface
     {
         $updatedTo = isset($comment['to'])
-            ? ($comment['to']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
+            ? ($this->getUpdated($comment['to']) ?? $this->early20thCentury) : $this->early20thCentury;
         $updatedFrom = isset($comment['from'])
-            ? ($comment['from']->getUpdated() ?? $this->early20thCentury) : $this->early20thCentury;
+            ? ($this->getUpdated($comment['from']) ?? $this->early20thCentury) : $this->early20thCentury;
 
         return max($updatedTo, $updatedFrom);
     }

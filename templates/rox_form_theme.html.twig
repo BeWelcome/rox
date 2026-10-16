@@ -332,8 +332,11 @@
     {%- if errors|length > 0 -%}
         <div class="{% if form is not rootform %}invalid-feedback u-flex u-rounded-4{% else %}alert alert-danger{% endif %}" style="background-color: rgba(255, 255, 255, 0.9);">
             {%- for error in errors -%}
+                {#- The validator translates in the 'validators' domain; BeWelcome's own keys (signup.error.username,
+                    error.name, ...) live in 'messages'. A message still equal to its key was not translated there. -#}
+                {%- set message = error.message == error.messageTemplate ? error.messageTemplate|trans(error.messageParameters, 'messages') : error.message -%}
                 <span class="u-flex u-h-20 u-place-items-center">
-                    <span class="form-error-icon badge badge-danger text-uppercase u-ml-4 u-mr-4">{{ 'Error'|trans({}, 'validators') }}</span> <span class="form-error-message">{{ error.message }}</span>
+                    <span class="form-error-icon badge badge-danger text-uppercase u-ml-4 u-mr-4">{{ 'Error'|trans({}, 'validators') }}</span> <span class="form-error-message">{{ message }}</span>
                 </span>
             {%- endfor -%}
         </div>

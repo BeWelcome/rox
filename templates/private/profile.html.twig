@@ -48,6 +48,8 @@
                 </div>
             </div> {# end of header #}
             <div class="tab-content" id="profileTabContent">
+                {% set phones = member.phoneNumbers %}
+                {% set messengers = member.messengers %}
                 {% set fallback = fields|keys|first %}
                 {% for locale in fields|keys %}
                     <div  class="tab-pane fade {% if loop.first %}show active{% endif %}" role="tabpanel" aria-labelledby="{{ locale }}-tab" id="{{ locale }}">
@@ -187,6 +189,29 @@
                                             member.zip {{ member.city.name }}<br>
                                             {{ member.country.name }}
                                         </dd>
+
+                                        <dt class="h5">{{ 'profilephone'| trans({}, "messages", locale) }}</dt>
+                                        {% for phone in phones|keys %}
+                                            <dd>{{ ('profile' ~ phone)|lower|trans({}, "messages", locale) }}: {{ phones[phone] }}</dd>
+                                        {% else %}
+                                            {{ 'mydata.profile.no.phone' }}
+                                        {% endfor %}
+
+                                        <dt class="h5">{{ 'website'|trans({}, "messages", locale) }}</dt>
+                                        {% for website in (member.webSite ?? '')|split(',')|filter(w => w|trim is not empty) %}
+                                            <dd><a href="{{ website }}">{{ website }}</a></dd>
+                                        {% endfor %}
+                                        <dt class="h5">{{ 'messenger'|trans({}, "messages", locale) }}:</dt>
+                                        {% if messengers.GOOGLE|length %}
+                                            Google: {{ messengers.GOOGLE }}
+                                        {% endif %}
+                                        {% if messengers.SKYPE|length %}
+                                            Skype: {{ messengers.SKYPE }}
+                                        {% endif %}
+                                        {% if messengers.Others|length %}
+                                            Others: {{ messengers.Others }}
+                                        {% endif %}
+                                        <dd>Messenger</dd>
                                     </dl>
                                 </div>
                             </div>

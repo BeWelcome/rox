@@ -1173,6 +1173,40 @@ class Member implements Serializable, UserInterface, PasswordHasherAwareInterfac
         return $this;
     }
 
+    public function getWebsite(): ?string
+    {
+        return $this->website;
+    }
+
+    /**
+     * Phone numbers and messengers live in cryptedfields, as on prod (v3.8.5); "Download my data" lists them.
+     */
+    public function getPhoneNumbers(): array
+    {
+        return [
+            'HomePhoneNumber' => $this->getCryptedField('HomePhoneNumber'),
+            'CellPhoneNumber' => $this->getCryptedField('CellPhoneNumber'),
+            'WorkPhoneNumber' => $this->getCryptedField('WorkPhoneNumber'),
+        ];
+    }
+
+    public function getMessengers(): array
+    {
+        return [
+            'GOOGLE' => $this->getCryptedField('chat_GOOGLE'),
+            'SKYPE' => $this->getCryptedField('chat_SKYPE'),
+            'Others' => $this->getCryptedField('chat_Others'),
+        ];
+    }
+
+    public function getCryptedField(string $fieldName, string $prefix = 'members'): string
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq('tablecolumn', $prefix . '.' . $fieldName));
+        $cryptedField = $this->fields->matching($criteria)->first();
+
+        return false === $cryptedField ? '' : strip_tags((string) $cryptedField->getMemberCryptedValue());
+    }
+
     public function getHomephonenumber(): int
     {
         return $this->homePhoneNumber;

@@ -10,19 +10,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class FaqRequest
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank()]
     public string $wordCode;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank()]
     public string $question;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank()]
     public string $answer;
 
     public bool $active = true;

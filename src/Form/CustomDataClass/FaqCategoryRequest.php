@@ -11,11 +11,9 @@ class FaqCategoryRequest
 {
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     *
-     * @Assert\Length(min="10", max="100")
      */
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 10, max: 100)]
     public $wordCode;
 
     /**

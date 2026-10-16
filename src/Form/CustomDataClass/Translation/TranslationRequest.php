@@ -8,39 +8,32 @@ class TranslationRequest
 {
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank()]
     public $wordCode;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank()]
     public $locale;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank()]
     public $domain;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank()]
     public $englishText;
 
     /**
      * @var string
-     *
-     * @Assert\Length(
-     *     min = 10
-     * )
      */
+    #[Assert\Length(min: 10)]
     public $description;
 
     /**

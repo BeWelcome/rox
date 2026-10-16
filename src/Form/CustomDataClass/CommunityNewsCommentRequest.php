@@ -15,18 +15,15 @@ class CommunityNewsCommentRequest
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
-     *
-     * @Assert\Length(min="10", max="100")
      */
+    #[Assert\NotBlank()]
+    #[Assert\Length(min: 10, max: 100)]
     public $title;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank()]
     public $text;
 
     public static function fromCommunityNewsComment(CommunityNewsComment $communityNewsComment): self

@@ -9,16 +9,14 @@ class GalleryImageEditRequest
 {
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank()]
     public $title;
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank()]
     public $description;
 
     /**

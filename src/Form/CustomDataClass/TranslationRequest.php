@@ -15,9 +15,8 @@ class TranslationRequest extends FormType
 
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank()]
     public $translation;
 
     /**

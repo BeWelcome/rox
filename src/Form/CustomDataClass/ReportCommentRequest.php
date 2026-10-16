@@ -8,8 +8,7 @@ class ReportCommentRequest
 {
     /**
      * @var string
-     *
-     * @Assert\NotBlank()
      */
+    #[Assert\NotBlank()]
     public $feedback;
 }

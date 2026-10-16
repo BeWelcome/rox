@@ -143,7 +143,7 @@ class DataRetentionCommand extends Command
             ->setCellphonenumber(0)
             ->setChangedid(0)
             ->setChatAol($client->generateId())
-            ->setChatGoogle($client->generateId())
+            ->setChatGoogle(0) // an integer column; v3.8.5 stored 0 here as well
             ->setChatIcq($client->generateId())
             ->setChatMsn($client->generateId())
             ->setChatOthers($client->generateId())
@@ -170,8 +170,8 @@ class DataRetentionCommand extends Command
             ->setIlivewith(0)
             ->setInformationtoguest(0)
             ->setLastswitchtoactive($longAgo)
-            ->setLatitude('')
-            ->setLongitude('')
+            ->setLatitude(null)
+            ->setLongitude(null)
             ->setLogcount(0)
             ->setMaxguest(0)
             ->setMaxlenghtofstay(0)
@@ -233,7 +233,9 @@ class DataRetentionCommand extends Command
         $filesystem = new Filesystem();
         $finder = new Finder();
         try {
-            $files = $finder->files()->name($member->getId() . '*')->in($memberPath);
+            // Only this member's files: "<id>" and "<id>_<size>" ("12_xs", "12_150_150", "12_original"), never
+            // another member's whose id starts with the same digits ("120_xs", "1234").
+            $files = $finder->files()->depth(0)->name('/^' . $member->getId() . '(_.*)?$/')->in($memberPath);
 
             foreach ($files as $file) {
                 $filesystem->remove($file);

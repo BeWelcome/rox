@@ -17,6 +17,9 @@ class WordTest extends TestCase
         $this->assertSame('', (new Word())->getSentence());
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     public function testAddFormForANewTranslationStartsEmpty(): void
     {
         $request = EditTranslationRequest::fromTranslations(
@@ -29,6 +32,9 @@ class WordTest extends TestCase
         $this->assertSame('fr', $request->locale);
     }
 
+    /**
+     * @SuppressWarnings("PHPMD.StaticAccess")
+     */
     public function testAddFormForANewBroadcastStartsWithTheEnglishText(): void
     {
         $request = EditTranslationRequest::fromTranslations(

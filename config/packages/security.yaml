@@ -40,6 +40,9 @@ security:
             form_login:
                 login_path: security_login
                 check_path: security_check
+                default_target_path: /
+                use_referer: true
+                enable_csrf: true
 
             logout:
                 path:   /logout
@@ -103,7 +106,3 @@ when@test:
                 cost: 4 # Lowest possible value for bcrypt
                 time_cost: 3 # Lowest possible value for argon
                 memory_cost: 10 # Lowest possible value for argon
-
-                default_target_path: /
-                use_referer: true
-                enable_csrf: true

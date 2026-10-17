@@ -120,10 +120,10 @@
 
                                         <div id="quickinfo" class="float-right text-right">
                                             {% if 'CanHostWeelChair' in member.typicOffer %}
-                                                <img src="images/wheelchairblue.png" alt="{{ 'wheelchair'|trans({}, "messages", locale) }}"
+                                                <img src="{{ asset('images/icons/wheelchairblue.png') }}" alt="{{ 'wheelchair'|trans({}, "messages", locale) }}"
                                                      title="{{ 'canhostwheelchairyes'|trans({}, "messages", locale) }}"/>
                                             {% endif %}
-                                            <img src="images/{{ member.accommodation }}.png" alt="{{ 'accommodation' }}"
+                                            <img src="{{ asset('images/icons/' ~ member.accommodation ~ '.png') }}" alt="{{ 'accommodation' }}"
                                                  title="{{ ('canoffer'~member.accommodation)|trans({}, "messages", locale) }}">
                                         </div>
 

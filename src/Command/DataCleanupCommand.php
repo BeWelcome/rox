@@ -71,6 +71,7 @@ class DataCleanupCommand extends Command
                 sprintf('Number of members to process in this run (default: %d)', $this->mailerBatchSize),
                 null
             )
+            ->setAliases(['data:retention'])
         ;
     }
 

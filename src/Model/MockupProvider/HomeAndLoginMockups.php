@@ -4,14 +4,14 @@ namespace App\Model\MockupProvider;
 
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class HomeAndLoginMockups implements MockupProviderInterface
+class HomeAndLoginMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'home_and_login';
+    protected const array MOCKUPS = [
         'homepage' => [
             'type' => 'page',
             'url' => '/',
@@ -26,33 +26,18 @@ class HomeAndLoginMockups implements MockupProviderInterface
         ],
     ];
 
-    private FormFactoryInterface $formFactory;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(FormFactoryInterface $formFactory, EntityManagerInterface $entityManager)
-    {
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
-    }
-
-    public function getFeature(): string
-    {
-        return 'home_and_login';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+    ) {
     }
 
     public function getMockupVariables(array $parameters): array
     {
         switch ($parameters['name']) {
             case 'homepage':
-                $searchFormRequest = new SearchFormRequest($this->entityManager);
+                $searchFormRequest = new SearchFormRequest();
                 $searchFormRequest->show_map = true;
                 $searchFormRequest->accommodation_neverask = true;
-                $searchFormRequest->inactive = true;
                 $searchFormRequest->distance = 100;
                 $searchForm = $this->formFactory->createNamed('map', SearchFormType::class, $searchFormRequest, [
                     'action' => '/search/map',

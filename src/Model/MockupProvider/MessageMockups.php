@@ -3,27 +3,22 @@
 namespace App\Model\MockupProvider;
 
 use App\Entity\Message;
-use Mockery;
+use ReflectionProperty;
 
-class MessageMockups implements MockupProviderInterface
+class MessageMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'messages';
+
+    protected const array MOCKUPS = [
         'message (email)' => [
             'type' => 'email',
             'template' => 'emails/message.html.twig',
         ],
     ];
 
-    public function getFeature(): string
-    {
-        return 'messages';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
-    }
-
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
         return [];
@@ -31,17 +26,20 @@ class MessageMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        $mockMessage = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Message text',
-        ]);
-        $mockMessage->shouldReceive('getSender')->andReturn($parameters['user']);
-        $mockMessage->shouldReceive('getReceiver')->andReturn($parameters['admin']);
+        $message = (new Message())
+            ->setMessage('Message text')
+            ->setSender($parameters['user'])
+            ->setReceiver($parameters['admin'])
+        ;
+
+        $reflectionProperty = new ReflectionProperty(Message::class, 'id');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($message, 1);
 
         return [
             'sender' => $parameters['user'],
             'receiver' => $parameters['admin'],
-            'message' => $mockMessage,
+            'message' => $message,
         ];
     }
 }

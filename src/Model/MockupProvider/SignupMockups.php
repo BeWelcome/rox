@@ -4,9 +4,11 @@ namespace App\Model\MockupProvider;
 
 use App\Entity\Member;
 
-class SignupMockups implements MockupProviderInterface
+class SignupMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'signups';
+
+    protected const array MOCKUPS = [
         'Confirm Email Address' => [
             'type' => 'email',
             'template' => 'emails/signup.html.twig',
@@ -37,16 +39,6 @@ class SignupMockups implements MockupProviderInterface
             'description' => 'Email with confirmation links has been resent.',
         ],
     ];
-
-    public function getFeature(): string
-    {
-        return 'signups';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
-    }
 
     public function getMockupVariables(array $parameters): array
     {

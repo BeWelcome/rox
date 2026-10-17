@@ -4,9 +4,11 @@ namespace App\Model\MockupProvider;
 
 use App\Entity\Member;
 
-class ErrorMockups implements MockupProviderInterface
+class ErrorMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'errors';
+
+    protected const array MOCKUPS = [
         'error 403' => [
             'type' => 'page',
             'template' => 'bundles/TwigBundle/Exception/error403.html.twig',
@@ -23,16 +25,6 @@ class ErrorMockups implements MockupProviderInterface
             'description' => 'A server problem (something bad happened).',
         ],
     ];
-
-    public function getFeature(): string
-    {
-        return 'errors';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
-    }
 
     public function getMockupVariables(array $parameters): array
     {

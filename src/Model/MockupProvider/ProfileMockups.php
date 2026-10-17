@@ -7,9 +7,11 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ProfileMockups implements MockupProviderInterface
+class ProfileMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'delete_profile';
+
+    protected const array MOCKUPS = [
         'delete profile' => [
             'type' => 'template',
             'template' => 'profile/delete.not.logged.in.html.twig',
@@ -21,23 +23,11 @@ class ProfileMockups implements MockupProviderInterface
             'description' => 'The delete profile page when not logged in',
         ],
     ];
-    private FormFactoryInterface $formFactory;
-    private TranslatorInterface $translator;
 
-    public function __construct(FormFactoryInterface $formFactory, TranslatorInterface $translator)
-    {
-        $this->formFactory = $formFactory;
-        $this->translator = $translator;
-    }
-
-    public function getFeature(): string
-    {
-        return 'delete_profile';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function getMockupVariables(array $parameters): array

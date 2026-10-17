@@ -4,11 +4,12 @@ namespace App\Model\MockupProvider;
 
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
-use Mockery;
 
-class ForumMockups implements MockupProviderInterface
+class ForumMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'forums';
+
+    protected const array MOCKUPS = [
         'forum post (subscribed)' => [
             'type' => 'email',
             'template' => 'emails/notifications.html.twig',
@@ -19,29 +20,18 @@ class ForumMockups implements MockupProviderInterface
         ],
     ];
 
-    public function getFeature(): string
-    {
-        return 'forums';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
-    }
-
     public function getMockupVariables(array $parameters): array
     {
-        $mockThread = Mockery::mock(ForumThread::class, [
-            'getId' => 1,
-            'getGroup' => null,
-            'getTitle' => 'Thread title',
-        ]);
+        $thread = (new ForumThread())
+            ->setId(1)
+            ->setGroup(null)
+            ->setTitle('Thread title')
+        ;
 
-        $mockPost = Mockery::mock(ForumPost::class, [
-            'getId' => 1,
-            'getMessage' => 'Post text',
-            'getThread' => $mockThread,
-        ]);
+        $post = (new ForumPost())
+            ->setMessage('Post text')
+            ->setThread($thread)
+        ;
 
         if ('forum post (subscribed)' === $parameters['name']) {
             $subscription = 123456;
@@ -51,7 +41,7 @@ class ForumMockups implements MockupProviderInterface
 
         return [
             'notification' => [
-                'post' => $mockPost,
+                'post' => $post,
                 'subscription' => $subscription,
             ],
         ];

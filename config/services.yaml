@@ -478,6 +478,10 @@ services:
         class: App\Model\MockupProvider\ProfileMockups
         tags: [ 'app.mockup_provider' ]
 
+    app.mockup_provider.reminder:
+        class: App\Model\MockupProvider\ReminderMockups
+        tags: [ 'app.mockup_provider' ]
+
 #    app.signup.form:
 #        class: App\Form\SignupFormType
 #        arguments:

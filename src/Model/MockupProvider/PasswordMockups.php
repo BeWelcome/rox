@@ -6,9 +6,11 @@ use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use Symfony\Component\Form\FormFactoryInterface;
 
-class PasswordMockups implements MockupProviderInterface
+class PasswordMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'passwords';
+
+    protected const array MOCKUPS = [
         'Reset Password Request' => [
             'type' => 'page',
             'url' => '/resetpassword',
@@ -28,21 +30,9 @@ class PasswordMockups implements MockupProviderInterface
         ],
     ];
 
-    private FormFactoryInterface $formFactory;
-
-    public function __construct(FormFactoryInterface $formFactory)
-    {
-        $this->formFactory = $formFactory;
-    }
-
-    public function getFeature(): string
-    {
-        return 'passwords';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+    ) {
     }
 
     public function getMockupVariables(array $parameters): array

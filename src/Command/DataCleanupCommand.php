@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Throwable;
 
-class DataRetentionCommand extends Command
+class DataCleanupCommand extends Command
 {
     public const int MAX_EXECUTION_TIME_SECONDS = 110;
 
@@ -45,7 +45,7 @@ class DataRetentionCommand extends Command
         '500',
         'original',
     ];
-    protected static $defaultName = 'data:retention';
+    protected static $defaultName = 'data:cleanup';
 
     private Member $bwAdmin;
 
@@ -71,6 +71,7 @@ class DataRetentionCommand extends Command
                 sprintf('Number of members to process in this run (default: %d)', $this->mailerBatchSize),
                 null
             )
+            ->setAliases(['data:retention'])
         ;
     }
 

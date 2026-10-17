@@ -9,7 +9,7 @@ use App\Entity\Activity;
 use App\Entity\BroadcastMessage;
 use App\Entity\Comment;
 use App\Entity\CommunityNews;
-use App\Entity\Donations;
+use App\Entity\Donation;
 use App\Entity\Group;
 use App\Entity\HostingRequest;
 use App\Entity\Location;
@@ -20,7 +20,6 @@ use App\Entity\PollChoice;
 use App\Entity\Right;
 use App\Entity\Shout;
 use App\Entity\Subtrip;
-use App\Entity\Translation;
 use App\Entity\Trip;
 use Carbon\Carbon;
 use DateTime;
@@ -324,7 +323,7 @@ class MyDataMockups extends AbstractMockups
                 ];
                 break;
             case 'donations':
-                $entity = (new Donations())
+                $entity = (new Donation())
                     ->setMoney('€')
                     ->setAmount(100.00)
                     ->setNamegiven('donor')
@@ -346,12 +345,8 @@ class MyDataMockups extends AbstractMockups
                 ;
                 break;
             case 'newsletters':
-                $newsletters = $this->entityManager->getRepository(Newsletter::class)->findAll();
-                $newsletter = reset($newsletters);
-                if (false === $newsletter) {
-                    throw new RuntimeException('No newsletter found');
-                }
-
+                // Leave mockery here for now to ensure that mydata.newsletter.no.title and
+                // mydata.newsletter.no.body can be translated
                 $entity = Mockery::mock(Newsletter::class, [
                     'getTitle' => 'Newsletter Title',
                     'getText' => 'Newsletter text',
@@ -360,7 +355,7 @@ class MyDataMockups extends AbstractMockups
                     'getTranslations' => [
                         [
                             'locale' => 'en',
-                            'author' => $parameters['admin'],
+                            'author' => $parameters['user'],
                             'title' => 'Title - en',
                             'body' => 'Body - en',
                         ],
@@ -371,7 +366,7 @@ class MyDataMockups extends AbstractMockups
                         ],
                         [
                             'locale' => 'de',
-                            'author' => $parameters['admin'],
+                            'author' => $parameters['user'],
                             'body' => 'Body - de',
                         ],
                     ],

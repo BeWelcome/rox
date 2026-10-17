@@ -15,7 +15,7 @@ class NewslettersMockups extends AbstractMockups
             'type' => 'email',
             'with_parameters' => true,
             'template' => 'emails/newsletter.html.twig',
-            'description' => 'Email send to users who signuped for local event notifications',
+            'description' => 'Email send to users who signed up for local event notifications',
             'setup' => 'getNewsletterParameters',
         ],
     ];
@@ -42,6 +42,9 @@ class NewslettersMockups extends AbstractMockups
         ];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
         return [

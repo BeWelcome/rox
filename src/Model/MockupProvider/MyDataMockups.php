@@ -2,6 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
+use App\Doctrine\CommentRelationsType;
 use App\Doctrine\SubtripOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Activity;
@@ -11,6 +12,7 @@ use App\Entity\CommunityNews;
 use App\Entity\Donations;
 use App\Entity\Group;
 use App\Entity\HostingRequest;
+use App\Entity\Language;
 use App\Entity\Location;
 use App\Entity\Log;
 use App\Entity\Newsletter;
@@ -19,22 +21,27 @@ use App\Entity\PollChoice;
 use App\Entity\Right;
 use App\Entity\Shout;
 use App\Entity\Subtrip;
+use App\Entity\Translation;
 use App\Entity\Trip;
 use Carbon\Carbon;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Mockery;
+use Override;
+use RuntimeException;
 
 /**
  * Utility class for the translation interface mockup section.
  *
- * Rather complicated but understandable. No mess detection needed.
- *
+ * Rather complicated but understandable. No mess detection is needed.
  * @SuppressWarnings(PHPMD)
  */
-class MyDataMockups implements MockupProviderInterface
+class MyDataMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'mydata';
+
+    protected const array MOCKUPS = [
         'start page' => [
             'type' => 'template',
             'template' => 'private/index.html.twig',
@@ -98,18 +105,13 @@ class MyDataMockups implements MockupProviderInterface
             'description' => 'Shows a single post to groups or forum',
         ],
     ];
-    private InvitationUtility $invitationUtility;
-
-    public function __construct()
-    {
-        $this->invitationUtility = new InvitationUtility();
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly InvitationUtility $invitationUtility,
+    ) {
     }
 
-    public function getFeature(): string
-    {
-        return 'my_data';
-    }
-
+    #[Override]
     public function getMockups(): array
     {
         $mockups = self::MOCKUPS;
@@ -139,7 +141,7 @@ class MyDataMockups implements MockupProviderInterface
         }
 
         if (isset($parameters['count'])) {
-            return $this->getMockEntities($parameters);
+            return $this->getEntities($parameters);
         }
 
         $extracted = $this->getExtractedEntities();
@@ -188,7 +190,7 @@ class MyDataMockups implements MockupProviderInterface
             case 'shouts':
             case 'subscriptions':
             case 'translations':
-                return ['count' => ['none' => '0', 'some' => '2']];
+                return ['count' => ['none' => '0', 'some' => '3']];
         }
 
         switch ($locale) {
@@ -254,61 +256,63 @@ class MyDataMockups implements MockupProviderInterface
         ];
     }
 
-    private function getMockEntities(array $parameters): array
+    private function getEntities(array $parameters): array
     {
-        $mockEntity = null;
+        $entity = null;
         $key = $parameters['name'];
         $count = $parameters['count'] ?? -1;
         switch ($key) {
             case 'activities':
-                $mockEntity = Mockery::mock(Activity::class, [
-                    'getTitle' => 'Activity Title',
-                    'getDescription' => 'Activity description',
-                ]);
+                $entity = (new Activity())
+                    ->setTitle('Activity Title')
+                    ->setDescription('Activity description')
+                ;
                 break;
             case 'broadcasts':
-                $mockNewsletter = Mockery::mock(Newsletter::class, [
-                    'getTitle' => 'Newsletter Title',
-                    'getText' => 'Newsletter text',
-                    'getTranslations' => ['en', 'de', 'zh-hant'],
-                ]);
-                $mockEntity = Mockery::mock(BroadcastMessage::class, [
-                    'getNewsletter' => $mockNewsletter,
-                    'getTitle' => 'Broadcast Title',
-                    'getDescription' => 'Broadcast description',
-                    'getUpdated' => new Carbon(),
-                ]);
+                // \todo We assume there is a newsletter in the database here: make sure to seed one into
+                // the test database (no problem on prod)
+                $newsletters = $this->entityManager->getRepository(Newsletter::class)->findAll();
+                $newsletter = reset($newsletters);
+                if (false === $newsletter) {
+                    throw new RuntimeException('No newsletter found');
+                }
+
+                $entity = (new BroadcastMessage())
+                    ->setNewsletter($newsletter)
+                    ->setUpdated(new Carbon())
+                ;
                 break;
             case 'comments':
-                $mockComment = Mockery::mock(Comment::class, [
-                    'getToMember' => $parameters['user'],
-                    'getFromMember' => $parameters['admin'],
-                    'getQuality' => 'good',
-                    'getTextWhere' => 'Somewhere over the rainbow',
-                    'getTextFree' => 'I\'m so free',
-                    'getCreated' => new Carbon(),
-                    'getRelations' => '',
-                ]);
-                $mockEntity = [
-                    'to' => $mockComment,
-                    'from' => $mockComment,
+                $comment = (new Comment())
+                    ->setToMember($parameters['user'])
+                    ->setFromMember($parameters['admin'])
+                    ->setQuality('good')
+                    ->setTextWhere('Somewhere over the rainbow')
+                    ->setTextfree('I\'m so free')
+                    ->setCreated(new Carbon())
+                    ->setRelations(CommentRelationsType::ONLINE_COMMUNICATION)
+                ;
+                $entity = [
+                    'to' => $comment,
+                    'from' => $comment,
                 ];
                 break;
             case 'communitynews':
-                $mockEntity = Mockery::mock(CommunityNews::class, [
-                    'getId' => 1,
-                    'getTitle' => 'Community News',
-                    'getText' => 'Community News text',
-                ]);
+                $entity = (new CommunityNews())
+                    ->setTitle('Community News')
+                    ->setText('Community News text')
+                ;
+                $this->setId($entity, 1);
+
                 break;
             case 'communitynews_comments':
                 $key = 'newsAndComments';
-                $news = Mockery::mock(CommunityNews::class, [
-                    'getId' => 1,
-                    'getTitle' => 'Community News',
-                    'getText' => 'Community News text',
-                ]);
-                $mockEntity = [
+                $news = (new CommunityNews())
+                    ->setTitle('Community News')
+                    ->setText('Community News text')
+                ;
+                $this->setId($news, 1);
+                $entity = [
                     'news' => $news,
                     'comments' => [
                         [
@@ -319,29 +323,35 @@ class MyDataMockups implements MockupProviderInterface
                 ];
                 break;
             case 'donations':
-                $mockEntity = Mockery::mock(Donations::class, [
-                    'money' => '€',
-                    'amount' => 100.00,
-                    'namegiven' => 'donor',
-                    'referencepaypal' => 'paypal',
-                    'systemcomment' => 'system comment',
-                    'membercomment' => 'member comment',
-                    'statusprivate' => ($parameters['count'] % 2 === 1),
-                ]);
+                $entity = (new Donations())
+                    ->setMoney('€')
+                    ->setAmount(100.00)
+                    ->setNamegiven('donor')
+                    ->setReferencePaypal('paypal')
+                    ->setSystemComment('system comment')
+                    ->setMemberComment('member comment')
+                    ->setStatusPrivate($parameters['count'] % 2 === 1)
+                ;
                 break;
             case 'gallery':
                 $key = 'hrefs';
-                $mockEntity = 'https://source.unsplash.com/random/300×300';
+                $entity = 'https://source.unsplash.com/random/300×300';
                 break;
             case 'logs':
-                $mockEntity = Mockery::mock(Log::class, [
-                    'getType' => 'log',
-                    'getLogMessage' => 'logged message',
-                    'getCreated' => new Carbon(),
-                ]);
+                $entity = (new Log())
+                    ->setType('log')
+                    ->setLogMessage('logged message')
+                    ->setCreated(new Carbon())
+                ;
                 break;
             case 'newsletters':
-                $mockEntity = Mockery::mock(Newsletter::class, [
+                $newsletters = $this->entityManager->getRepository(Newsletter::class)->findAll();
+                $newsletter = reset($newsletters);
+                if (false === $newsletter) {
+                    throw new RuntimeException('No newsletter found');
+                }
+
+                $entity = Mockery::mock(Newsletter::class, [
                     'getTitle' => 'Newsletter Title',
                     'getText' => 'Newsletter text',
                     'getId' => 1,
@@ -349,7 +359,7 @@ class MyDataMockups implements MockupProviderInterface
                     'getTranslations' => [
                         [
                             'locale' => 'en',
-                            'author' => $parameters['user'],
+                            'author' => $parameters['admin'],
                             'title' => 'Title - en',
                             'body' => 'Body - en',
                         ],
@@ -360,7 +370,7 @@ class MyDataMockups implements MockupProviderInterface
                         ],
                         [
                             'locale' => 'de',
-                            'author' => $parameters['user'],
+                            'author' => $parameters['admin'],
                             'body' => 'Body - de',
                         ],
                     ],
@@ -372,12 +382,12 @@ class MyDataMockups implements MockupProviderInterface
                 break;
             case 'polls_created':
                 $key = 'polls';
-                $mockEntity = $this->getPoll();
+                $entity = $this->getPoll();
                 break;
             case 'polls_contributed':
                 $key = 'contributions';
                 $poll = $this->getPoll();
-                $mockEntity = [
+                $entity = [
                     'poll' => $poll,
                     'comment' => 'comment',
                 ];
@@ -385,7 +395,7 @@ class MyDataMockups implements MockupProviderInterface
             case 'polls_voted':
                 $key = 'votes';
                 $poll = $this->getPoll();
-                $mockEntity = [
+                $entity = [
                     'poll' => $poll,
                     'pollChoice' => [
                         'texts' => ['one', 'two'],
@@ -395,15 +405,15 @@ class MyDataMockups implements MockupProviderInterface
             case 'posts':
                 return $this->postsData($parameters['count']);
             case 'privileges':
-                $mockEntity = $this->getPrivilege();
+                $entity = $this->getPrivilege();
                 break;
             case 'relations':
-                $mockEntity = $this->getSpecialRelation();
+                $entity = $this->getSpecialRelation();
                 break;
             case 'rights':
                 // overwrite key as index is different
                 $key = 'volunteerrights';
-                $mockEntity = Mockery::mock(Right::class, [
+                $entity = Mockery::mock(Right::class, [
                     'right' => [
                         'name' => 'distinct right',
                     ],
@@ -420,13 +430,13 @@ class MyDataMockups implements MockupProviderInterface
             case 'translations':
                 return $this->getTranslations($count);
             case 'trips':
-                $mockEntity = $this->getTrip($parameters['admin']);
+                $entity = $this->getTrip($parameters['admin']);
                 break;
         }
 
         $entities = [];
         for ($i = 0; $i < $parameters['count']; ++$i) {
-            $entities[] = $mockEntity;
+            $entities[] = $entity;
         }
 
         return [
@@ -481,6 +491,10 @@ class MyDataMockups implements MockupProviderInterface
 
     private function getPoll(): Poll
     {
+        $group = (new Group())
+            ->setName('group')
+        ;
+
         return Mockery::mock(Poll::class, [
             'getId' => 1,
             'getTitles' => ['title'],
@@ -488,11 +502,7 @@ class MyDataMockups implements MockupProviderInterface
                 'en' => 'description',
                 'fr' => 'description',
             ],
-            'getGroups' => [
-                Mockery::mock(Group::class, [
-                    'getName' => 'group',
-                ]),
-            ],
+            'getGroups' => $group,
             'getChoices' => [
                 Mockery::mock(PollChoice::class, [
                     'getTexts' => [

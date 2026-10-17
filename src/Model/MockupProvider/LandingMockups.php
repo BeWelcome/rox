@@ -10,11 +10,13 @@ use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
 use DateTime;
-use Mockery;
+use ReflectionProperty;
 
-class LandingMockups implements MockupProviderInterface
+class LandingMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'landing';
+
+    protected const array MOCKUPS = [
         'be visited|none' => [
             'type' => 'template',
             'template' => 'landing/widget/triplegs.html.twig',
@@ -24,16 +26,6 @@ class LandingMockups implements MockupProviderInterface
             'template' => 'landing/widget/triplegs.html.twig',
         ],
     ];
-
-    public function getFeature(): string
-    {
-        return 'landing';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
-    }
 
     public function getMockupVariables(array $parameters): array
     {
@@ -62,37 +54,44 @@ class LandingMockups implements MockupProviderInterface
 
     private function getTripsWidgetTwoLegs(Member $user): array
     {
-        $trip = Mockery::mock(Trip::class, [
-            'getId' => 1,
-            'getCreator' => $user,
-            'getSummary' => 'Mocking Bird',
-            'getDescription' => 'Mocking description',
-            'getCountOfTravellers' => 2,
-            'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new DateTime(),
-        ]);
+        $trip = (new Trip())
+            ->setCreator($user)
+            ->setSummary('Mocking Bird')
+            ->setDescription('Mocking description')
+            ->setCountOfTravellers(2)
+            ->setAdditionalInfo(TripAdditionalInfoType::NONE)
+            ->setCreated(new DateTime())
+        ;
+
+        $reflectionProperty = new ReflectionProperty(Trip::class, 'id');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($trip, 1);
+
         $location = new NewLocation();
         $location->setName('Mock');
-        $leg1 = Mockery::mock(SubTrip::class, [
-            'getId' => 1,
-            'getArrival' => new Carbon(),
-            'getDeparture' => new Carbon(),
-            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
-            'getLocation' => $location,
-            'getTrip' => $trip,
-            'getInvitedBy' => $user,
-            'getInvitationBy' => null,
-        ]);
-        $leg2 = Mockery::mock(SubTrip::class, [
-            'getId' => 2,
-            'getArrival' => new Carbon(),
-            'getDeparture' => new Carbon(),
-            'getOptions' => [SubtripOptionsType::LOOKING_FOR_HOST],
-            'getLocation' => $location,
-            'getTrip' => $trip,
-            'getInvitedBy' => $user,
-            'getInvitationBy' => null,
-        ]);
+
+        $leg1 = (new SubTrip())
+            ->setArrival(Carbon::instance(new DateTime('2021-02-22')))
+            ->setDeparture(Carbon::instance(new DateTime('2021-02-24')))
+            ->setLocation($location)
+            ->setOptions([SubtripOptionsType::MEET_LOCALS])
+            ->setTrip($trip)
+            ->setInvitedBy($user)
+        ;
+
+        $leg2 = (new SubTrip())
+            ->setArrival(Carbon::instance(new DateTime('2021-02-22')))
+            ->setDeparture(Carbon::instance(new DateTime('2021-02-24')))
+            ->setLocation($location)
+            ->setOptions([SubtripOptionsType::MEET_LOCALS])
+            ->setTrip($trip)
+            ->setInvitedBy($user)
+        ;
+
+        $reflectionProperty = new ReflectionProperty(SubTrip::class, 'id');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($leg1, 1);
+        $reflectionProperty->setValue($leg2, 2);
 
         return [
             'legs' => [

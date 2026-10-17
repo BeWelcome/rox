@@ -5,11 +5,12 @@ namespace App\Model\MockupProvider;
 use App\Entity\Newsletter;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Symfony\Component\Form\FormFactoryInterface;
 
-class NewslettersMockups implements MockupProviderInterface
+class NewslettersMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'newsletters';
+
+    protected const array MOCKUPS = [
         'Newsletters' => [
             'type' => 'email',
             'with_parameters' => true,
@@ -19,23 +20,9 @@ class NewslettersMockups implements MockupProviderInterface
         ],
     ];
 
-    private FormFactoryInterface $formFactory;
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(FormFactoryInterface $formFactory, EntityManagerInterface $entityManager)
-    {
-        $this->formFactory = $formFactory;
-        $this->entityManager = $entityManager;
-    }
-
-    public function getFeature(): string
-    {
-        return 'newsletters';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     public function getMockupVariables(array $parameters): array

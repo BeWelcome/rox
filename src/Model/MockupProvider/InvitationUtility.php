@@ -13,44 +13,29 @@ use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
 use DateTime;
-use Mockery;
+use ReflectionProperty;
 
 class InvitationUtility
 {
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
-    public function getThread(Member $host, Member $guest, Subtrip $leg, int $status, int $replies): array
+    public function getThread(Member $host, Member $guest, ?Subtrip $leg, int $status, int $replies): array
     {
-        $subject = Mockery::mock(Subject::class, [
-            'getSubject' => 'Subject',
-        ]);
+        $subject = (new Subject())->setSubject('Subject');
+
         $today = new Carbon();
         $someDaysAhead = new Carbon();
         $someDaysAhead->addDays($replies);
-        $request = Mockery::mock(HostingRequest::class, [
-            'getId' => 1,
-            'getArrival' => $today,
-            'getDeparture' => $someDaysAhead,
-            'getNumberOfTravellers' => 2,
-            'getFlexible' => true,
-            'getStatus' => $status,
-            'getInviteForLeg' => $leg,
-        ]);
-        $request->shouldReceive('getStatus')->andReturn($status);
 
-        $parent = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Initial invitation',
-        ]);
-        $parent->shouldReceive('getSubject')->andReturn($subject);
-        $parent->shouldReceive('getCreated')->andReturn(new Carbon());
-        $parent->shouldReceive('getSender')->andReturn($host);
-        $parent->shouldReceive('getInitiator')->andReturn($host);
-        $parent->shouldReceive('getReceiver')->andReturn($guest);
-        $parent->shouldReceive('getRequest')->andReturn($request);
-        $parent->shouldReceive('isDeletedByMember')->andReturn(false);
-        $parent->shouldReceive('isPurgedByMember')->andReturn(false);
+        $request = (new HostingRequest())
+            ->setArrival($today)
+            ->setDeparture($someDaysAhead)
+            ->setNumberOfTravellers(2)
+            ->setFlexible(true)
+            ->setStatus($status)
+            ->setInviteForLeg($leg)
+        ;
+
+        $parent = $this->getMessage(1, 'Initial invitation', $today, $host, $host, $guest, $request, $subject)
+        ;
 
         $thread = [];
         $thread[] = $parent;
@@ -66,9 +51,6 @@ class InvitationUtility
         return array_reverse($thread);
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     */
     public function getReply(
         Message $parent,
         Subject $subject,
@@ -77,52 +59,83 @@ class InvitationUtility
         Member $host,
         int $number
     ): Message {
-        $reply = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Reply ' . $number,
-            'getParent' => $parent,
-        ]);
+        $reply = (new Message())
+            ->setMessage('Reply ' . $number)
+            ->setSubject($subject)
+            ->setCreated(new Carbon())
+            ->setInitiator($parent->getInitiator())
+            ->setSender($guest)
+            ->setReceiver($host)
+            ->setRequest($request)
+            ->setDeleteRequest('')
+            ->setParent($parent)
+        ;
 
-        $reply->shouldReceive('getSubject')->andReturn($subject);
-        $reply->shouldReceive('getCreated')->andReturn(new Carbon());
-        $reply->shouldReceive('getSender')->andReturn($guest);
-        $reply->shouldReceive('getInitiator')->andReturn($parent->getInitiator());
-        $reply->shouldReceive('getReceiver')->andReturn($host);
-        $reply->shouldReceive('getRequest')->andReturn($request);
-        $reply->shouldReceive('isDeletedByMember')->andReturn(false);
-        $reply->shouldReceive('isPurgedByMember')->andReturn(false);
+        $reflectionProperty = new ReflectionProperty(Message::class, 'id');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($reply, $number);
 
         return $reply;
     }
 
-    /**
-     * @SuppressWarnings(PHPMD.StaticAccess)
-     *
-     * @param mixed $host
-     */
     public function getLeg($host): Subtrip
     {
-        $trip = Mockery::mock(Trip::class, [
-            'getId' => 1,
-            'getCreator' => $host,
-            'getSummary' => 'Mocking Bird',
-            'getDescription' => 'Mocking description',
-            'getCountOfTravellers' => 2,
-            'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new DateTime(),
-        ]);
+        $trip = (new Trip())
+            ->setCreator($host)
+            ->setSummary('Mocking Bird')
+            ->setDescription('Mocking description')
+            ->setCountOfTravellers(2)
+            ->setAdditionalInfo(TripAdditionalInfoType::NONE)
+            ->setCreated(new DateTime())
+        ;
+
+        $reflectionProperty = new ReflectionProperty(Trip::class, 'id');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($trip, 1);
+
         $location = new NewLocation();
         $location->setName('Mock');
-        $leg = Mockery::mock(SubTrip::class, [
-            'getId' => 1,
-            'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
-            'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
-            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
-            'getLocation' => $location,
-            'getTrip' => $trip,
-            'getInvitedBy' => $host,
-        ]);
+
+        $leg = (new SubTrip())
+            ->setArrival(Carbon::instance(new DateTime('2021-02-22')))
+            ->setDeparture(Carbon::instance(new DateTime('2021-02-24')))
+            ->setLocation($location)
+            ->setOptions([SubtripOptionsType::MEET_LOCALS])
+            ->setTrip($trip)
+            ->setInvitedBy($host)
+        ;
+
+        $reflectionProperty = new ReflectionProperty(SubTrip::class, 'id');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($leg, 1);
 
         return $leg;
+    }
+
+    private function getMessage(
+        int $id,
+        string $message,
+        Carbon $today,
+        Member $sender,
+        Member $initiator,
+        Member $receiver,
+        HostingRequest $request,
+        Subject $subject
+    ): Message {
+        $message = (new Message())
+            ->setMessage($message)
+            ->setCreated($today)
+            ->setSender($sender)
+            ->setInitiator($initiator)
+            ->setReceiver($receiver)
+            ->setRequest($request)
+            ->setSubject($subject)
+        ;
+
+        $reflectionProperty = new ReflectionProperty(Message::class, 'id');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($message, $id);
+
+        return $message;
     }
 }

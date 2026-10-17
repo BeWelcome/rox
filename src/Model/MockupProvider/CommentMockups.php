@@ -5,11 +5,12 @@ namespace App\Model\MockupProvider;
 use App\Doctrine\CommentQualityType;
 use App\Entity\Comment;
 use App\Entity\Member;
-use Mockery;
 
-class CommentMockups implements MockupProviderInterface
+class CommentMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'comments';
+
+    protected const array MOCKUPS = [
         'new comment (notification)' => [
             'type' => 'email',
             'template' => 'emails/comment.notification.new.html.twig',
@@ -51,16 +52,6 @@ class CommentMockups implements MockupProviderInterface
         ],
     ];
 
-    public function getFeature(): string
-    {
-        return 'comments';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
-    }
-
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
         return [
@@ -74,20 +65,17 @@ class CommentMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        $receiver = Mockery::mock(Member::class, [
-            'getUsername' => 'Receiver',
-        ]);
-        $sender = Mockery::mock(Member::class, [
-            'getUsername' => 'Sender',
-        ]);
-        $mockComment = Mockery::mock(Comment::class, [
-            'getQuality' => $parameters['quality'] ?? CommentQualityType::NEUTRAL,
-            'getTextWhere' => 'Somewhere over the rainbow',
-            'getTextFree' => 'A comment.',
-        ]);
+        $receiver = (new Member())->setUsername('Receiver');
+        $sender = $parameters['user'];
+
+        $comment = (new Comment())
+            ->setTextWhere('Somewhere over the rainbow')
+            ->setTextFree('A comment.')
+            ->setQuality($parameters['quality'] ?? CommentQualityType::NEUTRAL)
+        ;
 
         return [
-            'comment' => $mockComment,
+            'comment' => $comment,
             'receiver' => $receiver,
             'sender' => $sender,
             'host' => 'host',

@@ -8,11 +8,12 @@ use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery;
 
-class GroupMockups implements MockupProviderInterface
+class GroupMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'groups';
+
+    protected const array MOCKUPS = [
         'group invitation' => [
             'type' => 'email',
             'template' => 'emails/group/invitation.html.twig',
@@ -47,21 +48,9 @@ class GroupMockups implements MockupProviderInterface
         ],
     ];
 
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    public function getFeature(): string
-    {
-        return 'groups';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     public function getMockupVariables(array $parameters): array
@@ -78,17 +67,17 @@ class GroupMockups implements MockupProviderInterface
 
         /** @var Member $user */
         $user = $parameters['user'];
-        $mockThread = Mockery::mock(ForumThread::class, [
-            'getId' => 1,
-            'getGroup' => $group,
-            'getTitle' => 'Thread title',
-        ]);
+        $thread = (new ForumThread())
+            ->setId(1)
+            ->setGroup($group)
+            ->setTitle('Group thread title')
+        ;
 
-        $mockPost = Mockery::mock(ForumPost::class, [
-            'getId' => 1,
-            'getMessage' => 'Post text',
-            'getThread' => $mockThread,
-        ]);
+        $post = (new ForumPost())
+            ->setId(1)
+            ->setMessage('Post text')
+            ->setThread($thread)
+        ;
 
         if ('group post (subscribed)' === $parameters['name']) {
             $subscription = 123456;
@@ -105,7 +94,7 @@ class GroupMockups implements MockupProviderInterface
             'reason' => 'I just want to be a member of something.',
             'username' => $user->getUsername(),
             'notification' => [
-                'post' => $mockPost,
+                'post' => $post,
                 'subscription' => $subscription,
             ],
         ];

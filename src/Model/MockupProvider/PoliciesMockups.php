@@ -2,9 +2,11 @@
 
 namespace App\Model\MockupProvider;
 
-class PoliciesMockups implements MockupProviderInterface
+class PoliciesMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'policies';
+
+    protected const array MOCKUPS = [
         'Terms of Use' => [
             'type' => 'page',
             'url' => 'terms',
@@ -24,16 +26,6 @@ class PoliciesMockups implements MockupProviderInterface
             'description' => 'The data privacy policy. Make sure to translate them fully before asking for publication.',
         ],
     ];
-
-    public function getFeature(): string
-    {
-        return 'policies';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
-    }
 
     public function getMockupVariables(array $parameters): array
     {

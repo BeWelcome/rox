@@ -5,9 +5,11 @@ namespace App\Model\MockupProvider;
 use App\Form\NewsletterUnsubscribeType;
 use Symfony\Component\Form\FormFactoryInterface;
 
-class NewsletterUnsubscribeMockups implements MockupProviderInterface
+class NewsletterUnsubscribeMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'newsletters';
+
+    protected const array MOCKUPS = [
         'Newsletter (terms of use)' => [
             'type' => 'email',
             'template' => 'emails/newsletter.html.twig',
@@ -58,21 +60,9 @@ class NewsletterUnsubscribeMockups implements MockupProviderInterface
         ],
     ];
 
-    private FormFactoryInterface $formFactory;
-
-    public function __construct(FormFactoryInterface $formFactory)
-    {
-        $this->formFactory = $formFactory;
-    }
-
-    public function getFeature(): string
-    {
-        return 'unsubscribe_newsletter';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+    ) {
     }
 
     public function getMockupVariables(array $parameters): array

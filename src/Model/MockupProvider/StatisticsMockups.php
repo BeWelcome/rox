@@ -2,9 +2,11 @@
 
 namespace App\Model\MockupProvider;
 
-class StatisticsMockups implements MockupProviderInterface
+class StatisticsMockups extends AbstractMockups
 {
-    private const MOCKUPS = [
+    protected const string FEATURE = 'statistics';
+
+    protected const array MOCKUPS = [
         'statistics' => [
             'type' => 'page',
             'template' => 'about/statistics.html.twig',
@@ -12,21 +14,17 @@ class StatisticsMockups implements MockupProviderInterface
         ],
     ];
 
-    public function getFeature(): string
-    {
-        return 'statistics';
-    }
-
-    public function getMockups(): array
-    {
-        return self::MOCKUPS;
-    }
-
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function getMockupVariables(array $parameters): array
     {
         return [];
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function getMockupParameter(?string $locale = null, ?string $feature = null): array
     {
         return [];

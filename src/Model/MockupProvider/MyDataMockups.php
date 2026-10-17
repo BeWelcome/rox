@@ -3,8 +3,6 @@
 namespace App\Model\MockupProvider;
 
 use App\Doctrine\CommentRelationsType;
-use App\Doctrine\SubtripOptionsType;
-use App\Doctrine\TripAdditionalInfoType;
 use App\Entity\Activity;
 use App\Entity\BroadcastMessage;
 use App\Entity\Comment;
@@ -12,18 +10,15 @@ use App\Entity\CommunityNews;
 use App\Entity\Donation;
 use App\Entity\Group;
 use App\Entity\HostingRequest;
-use App\Entity\Location;
 use App\Entity\Log;
 use App\Entity\Newsletter;
 use App\Entity\Poll;
 use App\Entity\PollChoice;
 use App\Entity\Right;
 use App\Entity\Shout;
-use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery;
 use Override;

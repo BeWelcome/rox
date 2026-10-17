@@ -12,7 +12,6 @@ use App\Entity\CommunityNews;
 use App\Entity\Donations;
 use App\Entity\Group;
 use App\Entity\HostingRequest;
-use App\Entity\Language;
 use App\Entity\Location;
 use App\Entity\Log;
 use App\Entity\Newsletter;
@@ -35,6 +34,7 @@ use RuntimeException;
  * Utility class for the translation interface mockup section.
  *
  * Rather complicated but understandable. No mess detection is needed.
+ *
  * @SuppressWarnings(PHPMD)
  */
 class MyDataMockups extends AbstractMockups
@@ -105,6 +105,7 @@ class MyDataMockups extends AbstractMockups
             'description' => 'Shows a single post to groups or forum',
         ],
     ];
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly InvitationUtility $invitationUtility,

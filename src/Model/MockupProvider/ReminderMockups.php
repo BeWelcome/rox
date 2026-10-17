@@ -2,7 +2,6 @@
 
 namespace App\Model\MockupProvider;
 
-use App\Model\MockupProvider\AbstractMockups;
 use DateTime;
 
 class ReminderMockups extends AbstractMockups

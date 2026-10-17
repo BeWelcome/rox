@@ -4,13 +4,9 @@ namespace App\Model\MockupProvider;
 
 use App\Entity\HostingRequest;
 use App\Entity\Member;
-use App\Entity\Message;
-use App\Entity\Subject;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Form\ReportSpamType;
-use Carbon\Carbon;
-use ReflectionProperty;
 use Symfony\Component\Form\FormFactoryInterface;
 
 class RequestMockups extends AbstractMockups
@@ -83,6 +79,13 @@ class RequestMockups extends AbstractMockups
             default:
                 return [];
         }
+    }
+
+    public function getThread(Member $host, Member $guest, int $status, int $replies): array
+    {
+        $thread = $this->invitationUtility->getThread($host, $guest, null, $status, $replies);
+
+        return array_reverse($thread);
     }
 
     private function getVariablesForInitialRequest(array $parameters): array
@@ -165,12 +168,5 @@ class RequestMockups extends AbstractMockups
             'is_spam' => false,
             'show_deleted' => false,
         ];
-    }
-
-    public function getThread(Member $host, Member $guest, int $status, int $replies): array
-    {
-        $thread = $this->invitationUtility->getThread($host, $guest, null, $status, $replies);
-
-        return array_reverse($thread);
     }
 }

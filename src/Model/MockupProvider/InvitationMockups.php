@@ -65,8 +65,6 @@ class InvitationMockups extends AbstractMockups
         ],
     ];
 
-
-
     public function __construct(
         private readonly FormFactoryInterface $formFactory,
         private readonly InvitationUtility $invitationUtility,

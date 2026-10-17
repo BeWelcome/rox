@@ -29,7 +29,7 @@ abstract class AbstractMockups implements MockupProviderInterface
 
     protected function setId(object &$entity, int $id): void
     {
-        $objectClass = get_class($entity);
+        $objectClass = \get_class($entity);
         $reflectionProperty = new ReflectionProperty($objectClass, 'id');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($entity, $id);

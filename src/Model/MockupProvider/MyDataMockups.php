@@ -443,46 +443,7 @@ class MyDataMockups extends AbstractMockups
 
     private function getTrip($host): Trip
     {
-        $mockTrip = Mockery::mock(Trip::class, [
-            'getId' => 1,
-            'getCreator' => $host,
-            'getSummary' => 'Mocking Bird',
-            'getDescription' => 'Mocking description',
-            'getCountOfTravellers' => 2,
-            'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new DateTime(),
-        ]);
-        $country = Mockery::mock(Location::class, [
-            'getId' => 1,
-            'getName' => 'Mocking Republic',
-        ]);
-        $location = Mockery::mock(Location::class, [
-            'getId' => 1,
-            'getName' => 'Mock',
-            'getCountry' => $country,
-        ]);
-
-        $leg = Mockery::mock(SubTrip::class, [
-            'getId' => 1,
-            'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
-            'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
-            'getOptions' => [SubtripOptionsType::MEET_LOCALS],
-            'getLocation' => $location,
-            'getTrip' => $mockTrip,
-            'getInvitedBy' => $host,
-        ]);
-        $mockTrip->shouldReceive('addSubtrip')
-            ->once()
-            ->with($leg)
-            ->andReturn($mockTrip)
-        ;
-        $mockTrip->addSubtrip($leg);
-        $mockTrip
-            ->shouldReceive('getSubtrips')
-            ->andReturn(new ArrayCollection([$leg]))
-        ;
-
-        return $mockTrip;
+        return $this->invitationUtility->getLeg($host)->getTrip();
     }
 
     private function getPoll(): Poll
@@ -610,13 +571,11 @@ class MyDataMockups extends AbstractMockups
         $host = $parameters['user'];
         $guest = $parameters['admin'];
 
-        $leg = $this->invitationUtility->getLeg($parameters);
-        $thread = $this->invitationUtility->getThread($host, $guest, $leg, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED, 4);
+        $thread = $this->invitationUtility->getThread($host, $guest, null, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED, 4);
 
         return [
             'message' => $thread[0],
             $parameters['name'] => $thread[0],
-            'leg' => $leg,
             'host' => $host,
             'guest' => $guest,
             'thread' => $thread,

@@ -10,6 +10,9 @@ use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
 use App\Logger\Logger;
 use App\Model\GalleryModel;
+use App\Repository\GalleryImageRepository;
+use App\Utilities\ChangeProfilePictureGlobals;
+use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -198,6 +201,42 @@ class GalleryController extends AbstractController
         ]);
 
         return $response;
+    }
+
+    /**
+     * Pictures of a member, shown inside the profile layout.
+     *
+     * Takes over the legacy page at the same path (the legacy route keeps the name
+     * gallery_show_user_images, so existing links still end up here).
+     */
+    #[Route(path: '/gallery/show/user/{username:member}/pictures', name: 'gallery_member_images')]
+    public function showMemberImages(
+        Member $member,
+        ProfileSubmenu $profileSubmenu,
+        ChangeProfilePictureGlobals $globals,
+    ): Response {
+        if (
+            !($member->isBrowsable()
+                || $this->isGranted(Member::ROLE_ADMIN_ADMIN, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_PROFILE, $member)
+            )
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+
+        /** @var GalleryImageRepository $galleryImageRepository */
+        $galleryImageRepository = $this->entityManager->getRepository(GalleryImage::class);
+
+        return $this->render('gallery/member.images.html.twig', [
+            'member' => $member,
+            'pictures' => $galleryImageRepository->getImagesForMember($member),
+            'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'gallery']),
+        ]);
     }
 
     /**

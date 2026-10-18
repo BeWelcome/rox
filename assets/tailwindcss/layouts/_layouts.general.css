@@ -2533,11 +2533,13 @@ main:has(.p-hero) {
   margin-top: 0 !important;
 }
 
-.p-profile-main .card-body > .card-text > .h5:first-child {
+.p-profile-main .card-body > .card-text > .h5:first-child,
+.p-profile-secondary .card-body > .card-text > .h5:first-child {
   margin-top: 0 !important;
 }
 
-.p-profile-main .h5 {
+.p-profile-main .h5,
+.p-profile-secondary .h5 {
   font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;

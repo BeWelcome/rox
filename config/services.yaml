@@ -278,7 +278,7 @@ services:
     app.userprovider:
         public: true
         class: App\Provider\UserProvider
-        arguments: [ '@doctrine.orm.entity_manager' ]
+        arguments: [ '@App\Repository\MemberRepository' ]
 
     #    rox.legacy_dispatch_listener:
     #        class: App\EventListener\LegacyDispatchListener

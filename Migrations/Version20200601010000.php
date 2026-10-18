@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace DoctrineMigrations;
 
 use App\Doctrine\CommentQualityType;
 use App\Doctrine\CommentRelationsType;
@@ -8,24 +8,19 @@ use App\Doctrine\HostRestrictionsType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\StandardOffersType;
 use App\Entity\Member;
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use RuntimeException;
-use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Contracts\Service\ResetInterface;
-use Throwable;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
 
-#[AsCommand(
-    name: 'migrate:database',
-    description: 'Migrates the existing production database to the new table layout using high-performance pure SQL',
-)]
-class MigrateDatabaseCommand extends Command implements ResetInterface
+use function implode;
+use function mb_substr;
+
+use Override;
+
+use function str_contains;
+use function strip_tags;
+use function urldecode;
+
+final class Version20200601010000 extends AbstractMigration
 {
     private const array MIGRATED_STATUSES = [
         'Active',
@@ -38,116 +33,111 @@ class MigrateDatabaseCommand extends Command implements ResetInterface
         'PassedAway',
     ];
 
-    private SymfonyStyle $io;
-    private readonly Connection $connection;
+    private const int ADDRESS_DECRYPT_BATCH_SIZE = 2000;
 
-    public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-    ) {
-        parent::__construct();
-        $this->connection = $this->entityManager->getConnection();
-        $this->entityManager->getConnection()->getConfiguration()->setMiddlewares([]);
+    #[Override]
+    public function getDescription(): string
+    {
+        return 'Copy member/address/translation/language-level/friend/comment/language/word/forum/photo data '
+            . 'from the legacy tables (members, addresses, cryptedfields, memberstrads, specialrelations, '
+            . 'comments, languages, words, forums_threads, forums_posts, membersphotos) into the tables created '
+            . 'by Version20200601000000. Ports the logic previously run by hand via `bin/console migrate:database` '
+            . '(src/Command/MigrateDatabaseCommand.php), plus the address House Number/Street Name/Zip decryption '
+            . 'that command never performed. No-ops on databases that never had the legacy tables (fresh/CI).';
     }
 
-    public function reset(): void
+    #[Override]
+    public function isTransactional(): bool
     {
-        $this->entityManager->clear();
+        // Several of the source tables hold millions of rows (e.g. memberstrads); running the whole
+        // copy as one transaction would hold a very long-lived transaction/undo log on production.
+        // Each step below commits independently, same as the command this replaces.
+        return false;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    public function up(Schema $schema): void
     {
-        $this->io = new SymfonyStyle($input, $output);
-        $this->io->title('Migrating old profiles via Bulk SQL ETL');
+        if (!$this->tableExists('members')) {
+            $this->write('Legacy `members` table not found - nothing to migrate, skipping.');
+
+            return;
+        }
 
         $statuses = "'" . implode("', '", self::MIGRATED_STATUSES) . "'";
 
+        $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=0');
         try {
-            $this->io->writeln('Disabling foreign key checks and truncating tables...');
-            $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=0;');
-            $this->connection->executeStatement('TRUNCATE `address`; TRUNCATE `member_translations`; TRUNCATE `member_language_level`; TRUNCATE `friend`; TRUNCATE `member`; TRUNCATE `comment`; TRUNCATE `language`; TRUNCATE `word`; TRUNCATE `forum_thread`; TRUNCATE `forum_post`; TRUNCATE `member_photo`;');
-
-            $steps = 13;
-            $progressBar = new ProgressBar($output, $steps);
-            $progressBar->setFormat("<fg=white;bg=green>\n %message% \n</>\n%current%/%max% [%bar%] %percent:3s%%\nElapsed: %elapsed:-10s% Memrory: %memory:20s%");
-            $progressBar->start();
-
-            // 1. Migrate Member Table
-            $progressBar->setMessage('Migrating main `member` table...');
+            $this->write('Migrating `members` -> `member`...');
             $this->migrateMemberTable($statuses);
-            $progressBar->advance();
 
-            // 2. Migrate Address Table
-            $progressBar->setMessage('Migrating `address` table...');
+            $this->write('Migrating `members` -> `address`...');
             $this->migrateAddressTable($statuses);
-            $progressBar->advance();
 
-            // 3. Migrate Base Profile Translations
-            $progressBar->setMessage('Seeding default ProfileLanguage translations...');
+            $this->write('Decrypting legacy House Number/Street Name/Zip into `address`...');
+            $this->decryptLegacyAddressFields($statuses);
+
+            $this->write('Seeding default/derived `ProfileLanguage` translations...');
             $this->migrateBaseTranslations($statuses);
-            $progressBar->advance();
-
-            // 4. Migrate Dynamic Profile Translations (deduced by locale usage)
-            $progressBar->setMessage('Seeding derived ProfileLanguage translations...');
             $this->migrateDerivedTranslations($statuses);
-            $progressBar->advance();
 
-            // 5. Migrate Full Translations
-            $progressBar->setMessage('Migrating full `member_translations`...');
+            $this->write('Migrating `memberstrads` -> `member_translations`...');
             $this->migrateTranslations($statuses);
-            $progressBar->advance();
 
-            // 6. Migrate Language Levels
-            $progressBar->setMessage('Migrating `member_language_level`...');
+            $this->write('Migrating `memberslanguageslevel` -> `member_language_level`...');
             $this->migrateLanguageLevels($statuses);
-            $progressBar->advance();
 
-            // 7. Migrate Friends & Relations
-            $progressBar->setMessage('Migrating `friend` relations...');
+            $this->write('Migrating `specialrelations` -> `friend`...');
             $this->migrateFriends($statuses);
-            $progressBar->advance();
 
-            // 8. Migrate Comments
-            $progressBar->setMessage('Migrating `comments` to `comment` table...');
+            $this->write('Migrating `comments` -> `comment`...');
             $this->migrateComments($statuses);
-            $progressBar->advance();
 
-            // 9. Migrate Languages
-            $progressBar->setMessage('Migrating `languages` to `language` table...');
+            $this->write('Migrating `languages` -> `language`...');
             $this->migrateLanguages();
-            $progressBar->advance();
 
-            // 10. Migrate Words
-            $progressBar->setMessage('Migrating `words` to `word` table...');
+            $this->write('Migrating `words` -> `word`...');
             $this->migrateWords();
-            $progressBar->advance();
 
-            // 11. Migrate Forum Threads
-            $progressBar->setMessage('Migrating `ForumsThreads` to `forum_thread` table...');
+            $this->write('Migrating `forums_threads` -> `forum_thread`...');
             $this->migrateForumThreads();
-            $progressBar->advance();
 
-            // 12. Migrate Forum Posts
-            $progressBar->setMessage('Migrating `ForumsPosts` to `forum_post` table...');
+            $this->write('Migrating `forums_posts` -> `forum_post`...');
             $this->migrateForumPosts();
-            $progressBar->advance();
 
-            // 13. Migrate Member Photos
-            $progressBar->setMessage('Migrating `membersphotos` to `member_photo` table...');
+            $this->write('Migrating `membersphotos` -> `member_photo`...');
             $this->migrateMemberPhotos($statuses);
-            $progressBar->advance();
-
-            $progressBar->finish();
-            $this->io->newLine(2);
-            $this->io->success('Migration completed incredibly fast!');
-        } catch (Throwable $e) {
-            $this->io->error('Migration Failed: ' . $e->getMessage());
-
-            return Command::FAILURE;
         } finally {
-            $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=1;');
+            $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=1');
         }
+    }
 
-        return Command::SUCCESS;
+    #[Override]
+    public function down(Schema $schema): void
+    {
+        $this->addSql('SET FOREIGN_KEY_CHECKS=0');
+        $this->addSql('DELETE FROM member_photo');
+        $this->addSql('DELETE FROM forum_post');
+        $this->addSql('DELETE FROM forum_thread');
+        $this->addSql('DELETE FROM word');
+        $this->addSql('DELETE FROM language');
+        $this->addSql('DELETE FROM comment');
+        $this->addSql('DELETE FROM friend');
+        $this->addSql('DELETE FROM member_language_level');
+        $this->addSql('DELETE FROM member_translations');
+        $this->addSql('DELETE FROM address_translations');
+        $this->addSql('DELETE FROM address');
+        $this->addSql('DELETE FROM member');
+        $this->addSql('SET FOREIGN_KEY_CHECKS=1');
+    }
+
+    private function tableExists(string $tableName): bool
+    {
+        $count = $this->connection->executeQuery(
+            'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?',
+            [$tableName],
+        )->fetchOne();
+
+        return (int) $count > 0;
     }
 
     private function migrateMemberTable(string $statuses): void
@@ -172,7 +162,7 @@ class MigrateDatabaseCommand extends Command implements ResetInterface
                     HouseRules, Hobbies, Books, Movies, Music, Organizations, PastTrips,
                     PlannedTrips
                 )
-                SELECT 
+                SELECT
                     m.id,
                     COALESCE(l.ShortCode, 'en'),
                     m.Username,
@@ -199,15 +189,15 @@ class MigrateDatabaseCommand extends Command implements ResetInterface
                     CASE WHEN m.Accomodation IN ('dependonrequest', 'anytime') THEN 'yes' ELSE 'no' END,
                     IF(m.MaxGuest > 100, 100, m.MaxGuest),
                     m.hosting_interest,
-                    TRIM(LEADING ',' FROM CONCAT_WS(',', 
-                        IF(m.TypicOffer LIKE '%Dinner%', '$dinnerOffer', NULL), 
+                    TRIM(LEADING ',' FROM CONCAT_WS(',',
+                        IF(m.TypicOffer LIKE '%Dinner%', '$dinnerOffer', NULL),
                         IF(m.TypicOffer LIKE '%GuidedTour%', '$guidedTourOffer', NULL)
                     )),
-                    NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-                    CASE m.Restrictions 
+                    NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+                    CASE m.Restrictions
                         WHEN 'NoSmoker' THEN '$noSmoking'
                         WHEN 'NoDrugs' THEN '$noDrugs'
-                        WHEN 'NoAlchool' THEN '$noAlcohol'   
+                        WHEN 'NoAlchool' THEN '$noAlcohol'
                     END,
                     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL
                 FROM members m
@@ -221,22 +211,96 @@ class MigrateDatabaseCommand extends Command implements ResetInterface
 
     private function migrateAddressTable(string $statuses): void
     {
+        // `address` has no unique constraint on member_id (it's a surrogate-keyed OneToMany on
+        // Member), so INSERT IGNORE alone does not make this step idempotent - re-running it would
+        // insert a second address row per member every time. The MigrateDatabaseCommand version of
+        // this query lacked this guard; it's added here since migrations can legitimately be replayed.
         $sql = <<<SQL
                 INSERT IGNORE INTO address (member_id, active, location, latitude, longitude, wheelChairAccessible)
-                SELECT 
-                    m.id, 
-                    1, 
-                    g.geoname_id, 
-                    m.Latitude, 
-                    m.Longitude, 
+                SELECT
+                    m.id,
+                    1,
+                    g.geoname_id,
+                    m.Latitude,
+                    m.Longitude,
                     IF(m.TypicOffer LIKE '%WheelchairAccessible%', 1, 0)
                 FROM members m
                 INNER JOIN geo__names g ON m.IdCity = g.geoname_id
                 WHERE m.Status NOT IN ('AskToLeave', 'TakenOut')
                 AND m.Status IN ($statuses)
+                AND NOT EXISTS (SELECT 1 FROM address ex WHERE ex.member_id = m.id)
             SQL;
 
         $this->connection->executeStatement($sql);
+    }
+
+    /**
+     * `addresses.HouseNumber`/`StreetName`/`Zip` are not plain text on the legacy schema: they are
+     * integer pointers into `cryptedfields` (0 means "not set"). The value stored there is wrapped in
+     * a `<membercrypted>...</membercrypted>` or `<admincrypted>...</admincrypted>` tag and urlencode()'d
+     * - not actual cryptography (see modules/crypt/lib/crypt.lib.php MOD_crypt::GetDeCryptM/GetDeCryptA).
+     * MySQL has no urldecode(), so this step runs in PHP rather than as a plain addSql() statement.
+     */
+    private function decryptLegacyAddressFields(string $statuses): void
+    {
+        $sql = <<<SQL
+                SELECT
+                    a.IdMember AS member_id,
+                    cf_h.MemberCryptedValue AS house_raw,
+                    cf_s.MemberCryptedValue AS street_raw,
+                    cf_z.MemberCryptedValue AS zip_raw
+                FROM addresses a
+                INNER JOIN members m ON m.id = a.IdMember
+                LEFT JOIN cryptedfields cf_h ON cf_h.id = a.HouseNumber AND a.HouseNumber <> 0
+                LEFT JOIN cryptedfields cf_s ON cf_s.id = a.StreetName AND a.StreetName <> 0
+                LEFT JOIN cryptedfields cf_z ON cf_z.id = a.Zip AND a.Zip <> 0
+                WHERE m.Status NOT IN ('AskToLeave', 'TakenOut')
+                AND m.Status IN ($statuses)
+                AND (a.HouseNumber <> 0 OR a.StreetName <> 0 OR a.Zip <> 0)
+            SQL;
+
+        $rows = $this->connection->executeQuery($sql)->iterateAssociative();
+
+        $update = $this->connection->prepare(
+            'UPDATE address SET HouseNumber = ?, StreetName = ?, Zip = ? WHERE member_id = ?',
+        );
+
+        $truncated = 0;
+        $processed = 0;
+        foreach ($rows as $row) {
+            [$house, $houseTruncated] = $this->decodeLegacyCryptedValue($row['house_raw']);
+            [$street, $streetTruncated] = $this->decodeLegacyCryptedValue($row['street_raw']);
+            [$zip, $zipTruncated] = $this->decodeLegacyCryptedValue($row['zip_raw']);
+            $truncated += ($houseTruncated ? 1 : 0) + ($streetTruncated ? 1 : 0) + ($zipTruncated ? 1 : 0);
+
+            $update->bindValue(1, $house);
+            $update->bindValue(2, $street);
+            $update->bindValue(3, $zip);
+            $update->bindValue(4, $row['member_id']);
+            $update->executeStatement();
+
+            if (0 === ++$processed % self::ADDRESS_DECRYPT_BATCH_SIZE) {
+                $this->write("  ...decrypted $processed address rows so far");
+            }
+        }
+
+        $this->write("Decrypted $processed address rows ($truncated value(s) exceeded 255 chars and were truncated).");
+    }
+
+    /** @return array{0: string|null, 1: bool} [decoded value truncated to column length, whether it was truncated] */
+    private function decodeLegacyCryptedValue(?string $value): array
+    {
+        if (null === $value) {
+            return [null, false];
+        }
+
+        $decoded = str_contains($value, '<membercrypted>') || str_contains($value, '<admincrypted>')
+            ? urldecode(strip_tags($value))
+            : $value;
+
+        $truncatedValue = mb_substr($decoded, 0, 255);
+
+        return [$truncatedValue, $truncatedValue !== $decoded];
     }
 
     private function migrateBaseTranslations(string $statuses): void
@@ -244,7 +308,7 @@ class MigrateDatabaseCommand extends Command implements ResetInterface
         $sql = <<<SQL
                 INSERT IGNORE INTO member_translations (object_id, locale, field, content)
                 SELECT id, 'en', 'ProfileLanguage', 'en'
-                FROM members 
+                FROM members
                 WHERE Status IN ($statuses)
             SQL;
 
@@ -270,7 +334,7 @@ class MigrateDatabaseCommand extends Command implements ResetInterface
     {
         $sql = <<<SQL
                 INSERT IGNORE INTO member_translations (object_id, locale, field, content)
-                SELECT mt.IdOwner, l.ShortCode, 
+                SELECT mt.IdOwner, l.ShortCode,
                     CASE REPLACE(mt.TableColumn, 'members.', '')
                         WHEN 'ProfileSummary' THEN 'AboutMe'
                         WHEN 'AdditionalAccomodationInfo' THEN 'AdditionalAccommodationInfo'
@@ -300,8 +364,8 @@ class MigrateDatabaseCommand extends Command implements ResetInterface
 
         $sql = <<<SQL
                 INSERT IGNORE INTO member_language_level (member_id, language, level)
-                SELECT 
-                    mll.IdMember, 
+                SELECT
+                    mll.IdMember,
                     l.ShortCode,
                     CASE mll.Level
                         WHEN 'MotherLanguage' THEN '$motherTongue'
@@ -319,24 +383,14 @@ class MigrateDatabaseCommand extends Command implements ResetInterface
                 HAVING parsed_level != ''
             SQL;
 
-        try {
-            $this->connection->executeStatement($sql);
-        } catch (Exception $e) {
-            // If it fails, let's dump the actual columns to help debug
-            if (str_contains($e->getMessage(), 'Unknown column')) {
-                $columns = $this->connection->executeQuery('SHOW COLUMNS FROM member_language_level')->fetchAllAssociative();
-                $columnNames = array_column($columns, 'Field');
-                throw new RuntimeException('Column error during language level migration. Actual columns in member_language_level: ' . implode(', ', $columnNames) . "\nOriginal error: " . $e->getMessage());
-            }
-            throw $e;
-        }
+        $this->connection->executeStatement($sql);
     }
 
     private function migrateFriends(string $statuses): void
     {
         $sql = <<<SQL
                 INSERT IGNORE INTO friend (created, updated, left_confirmed, left_id, right_id, right_confirmed)
-                SELECT 
+                SELECT
                     sr.created,
                     sr.updated,
                     IF(sr.Confirmed = 'Yes', 1, 0),

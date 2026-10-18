@@ -2271,6 +2271,11 @@ main:has(.p-hero) {
   z-index: 10;
 }
 
+/* An open actions menu (⋯, settings) must cover the language switch */
+.p-hero__body:has(.dropdown-menu.show) {
+  z-index: 11;
+}
+
 .p-lang-switch__toggle {
   display: inline-flex;
   align-items: center;

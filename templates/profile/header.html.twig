@@ -37,7 +37,7 @@
       <i class="fas fa-globe p-lang-pills__globe"></i>
       {% for _l in _langs %}
         {% if _translations[_l]|length > 1 %}
-          <button class="p-lang-pill{% if _l is same as(_active) %} p-lang-pill--active{% endif %}" data-lang="{{ _l }}">{{ _l|upper }}</button>
+          <button class="p-lang-pill{% if _l is same as(_active) %} p-lang-pill--active{% endif %}" data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
         {% endif %}
       {% endfor %}
     </div>

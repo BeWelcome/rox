@@ -616,7 +616,7 @@ main:has(.p-hero) {
 
 .p-hero__meta-item i { font-size: 0.65rem; color: #94a3b8; }
 .p-hero__meta-item--lang { background: #fff; color: #334155; font-weight: 500; }
-.p-hero__meta-item--muted { color: #94a3b8; background: transparent; border-color: transparent; font-size: 0.6875rem; flex-basis: 100%; white-space: normal; }
+.p-hero__meta-item--muted { color: #94a3b8; background: transparent; border: 0; padding-left: 0; padding-right: 0; font-size: 0.6875rem; flex-basis: 100%; white-space: normal; }
 
 /* ── Activity badge shared colors ───────────────────────── */
 .p-hero__activity-badge--active  { background: #dcfce7; color: #16a34a; }

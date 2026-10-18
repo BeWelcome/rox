@@ -3,7 +3,6 @@
 errors.log
 rox_local.ini
 .php-version
-*.cache.ini
 .php_cs.cache
 .php-cs-fixer.cache
 .phpunit.result.cache
@@ -96,3 +95,4 @@ npm-debug.log
 ###> phpstan/phpstan ###
 phpstan.neon
 ###< phpstan/phpstan ###
+develop_bewelcome.code-workspace

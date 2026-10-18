@@ -1,0 +1,39 @@
+App\Entity\Group:
+    group_hiking:
+        Name: 'Hiking Enthusiasts'
+        Type: 'Public'
+        Picture: ''
+        MoreInfo: '<paragraph(2)>'
+        VisiblePosts: 'yes'
+        approved: 1
+    group_language_exchange:
+        Name: 'Language Exchange'
+        Type: 'Public'
+        Picture: ''
+        MoreInfo: '<paragraph(2)>'
+        VisiblePosts: 'yes'
+        approved: 1
+    group_vegan_travelers:
+        Name: 'Vegan Travelers'
+        Type: 'NeedAcceptance'
+        Picture: ''
+        MoreInfo: '<paragraph(2)>'
+        VisiblePosts: 'yes'
+        approved: 1
+
+App\Entity\GroupMembership:
+    membership_hiking_{1..5}:
+        member: '@member_<current()>'
+        group: '@group_hiking'
+        status: 'In'
+        comment: 0
+    membership_language_{1..5}:
+        member: '@member_<current()>'
+        group: '@group_language_exchange'
+        status: 'In'
+        comment: 0
+    membership_vegan_{6..10}:
+        member: '@member_<current()>'
+        group: '@group_vegan_travelers'
+        status: '<randomElement(["In", "WantToBeIn"])>'
+        comment: 0

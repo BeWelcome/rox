@@ -4,3 +4,4 @@ App\Entity\Gallery:
         title: 'Test'
         description: 'Test Album'
         flags: 0
+        images: ['@galleryimage_1', '@galleryimage_2', '@galleryimage_3', '@galleryimage_4']

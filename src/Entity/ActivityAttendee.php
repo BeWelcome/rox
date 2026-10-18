@@ -79,6 +79,32 @@ class ActivityAttendee
     }
 
     /**
+     * Set id.
+     *
+     * Legacy, non-identity column kept alongside the real (activity, attendee) composite primary key.
+     *
+     * @param int $id
+     *
+     * @return ActivityAttendee
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Set attendee.
      *
      * @return ActivityAttendee

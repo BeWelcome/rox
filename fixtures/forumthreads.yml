@@ -1,0 +1,46 @@
+App\Entity\ForumThread:
+    thread_general_1:
+        idTitle: '<numberBetween(1, 999999)>'
+        title: 'Tips for first-time hosts?'
+        firstPost: '@post_general_1_1'
+        lastPost: '@post_general_1_5'
+        language: '@language_en'
+        replies: 4
+        views: '<numberBetween(10, 500)>'
+    thread_general_2:
+        idTitle: '<numberBetween(1, 999999)>'
+        title: 'Best way to introduce yourself in a guest request?'
+        firstPost: '@post_general_2_1'
+        lastPost: '@post_general_2_4'
+        language: '@language_en'
+        replies: 3
+        views: '<numberBetween(10, 500)>'
+    thread_hiking_meetup:
+        idTitle: '<numberBetween(1, 999999)>'
+        title: 'Weekend hiking meetup - who is in?'
+        firstPost: '@post_hiking_1'
+        lastPost: '@post_hiking_5'
+        language: '@language_en'
+        group: '@group_hiking'
+        replies: 4
+        views: '<numberBetween(10, 500)>'
+
+App\Entity\ForumPost:
+    post_general_1_{1..5}:
+        thread: '@thread_general_1'
+        author: '@member_<current()>'
+        language: '@language_en'
+        message: '<paragraph(2)>'
+        created: '<dateTimeBetween("-6 months", "now")>'
+    post_general_2_{1..4}:
+        thread: '@thread_general_2'
+        author: '@member_<current()>'
+        language: '@language_en'
+        message: '<paragraph(2)>'
+        created: '<dateTimeBetween("-3 months", "now")>'
+    post_hiking_{1..5}:
+        thread: '@thread_hiking_meetup'
+        author: '@member_<current()>'
+        language: '@language_en'
+        message: '<paragraph(2)>'
+        created: '<dateTimeBetween("-2 months", "now")>'

@@ -80,7 +80,7 @@ class Group extends RoxEntityBase
         {
             // get latest post timestamp (if any)
             $query = "SELECT UNIX_TIMESTAMP(MAX( p.create_time )) AS ts
-FROM groups AS g, forums_threads AS t, forums_posts AS p
+FROM groups AS g, forum_thread AS t, forum_post AS p
 WHERE g.id = " . $this->id . "
 AND g.id = t.IdGroup
 AND t.last_postid = p.id";

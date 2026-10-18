@@ -381,7 +381,7 @@ class GroupMembership
     /**
      * Sets the comment for the membership.
      */
-    private function setComment($commentId): void
+    public function setComment($commentId): void
     {
         $this->comment = $commentId;
     }

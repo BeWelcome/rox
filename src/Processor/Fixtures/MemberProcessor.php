@@ -95,6 +95,14 @@ final readonly class MemberProcessor implements ProcessorInterface
 
         foreach ($locales as $locale) {
             $object->addTranslation(new MemberTranslation($locale, 'ProfileLanguage', $locale));
+
+            // 'en' is the member's base locale: its field content lives directly on the Member entity's
+            // own columns (and is tracked there by Gedmo), not as a MemberTranslation row. Adding one here
+            // too would duplicate - and can collide with - whatever Gedmo already persisted for that field.
+            if ('en' === $locale) {
+                continue;
+            }
+
             $fields = $this->getRandomFields();
             foreach ($fields as $field) {
                 $text = $this->faker->sentences(random_int(1, 7), true);

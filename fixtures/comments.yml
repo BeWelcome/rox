@@ -1,0 +1,61 @@
+App\Entity\Comment:
+    comment_1:
+        toMember: '@member_1'
+        fromMember: '@member_2'
+        relations: 'hosted_me'
+        quality: 'positive'
+        comment: '<paragraph(2)>'
+    comment_2:
+        toMember: '@member_2'
+        fromMember: '@member_1'
+        relations: 'was_my_guest'
+        quality: 'positive'
+        comment: '<paragraph(2)>'
+    comment_3:
+        toMember: '@member_3'
+        fromMember: '@member_4'
+        relations: 'family'
+        quality: 'positive'
+        comment: '<paragraph(2)>'
+    comment_4:
+        toMember: '@member_4'
+        fromMember: '@member_5'
+        relations: 'close_friend'
+        quality: 'positive'
+        comment: '<paragraph(2)>'
+    comment_5:
+        toMember: '@member_5'
+        fromMember: '@member_6'
+        relations: 'only_once'
+        quality: 'neutral'
+        comment: '<paragraph(2)>'
+    comment_6:
+        toMember: '@member_6'
+        fromMember: '@member_7'
+        relations: 'travelled_Together'
+        quality: 'positive'
+        comment: '<paragraph(2)>'
+    comment_7:
+        toMember: '@member_7'
+        fromMember: '@member_8'
+        relations: 'friends'
+        quality: 'positive'
+        comment: '<paragraph(2)>'
+    comment_8:
+        toMember: '@member_8'
+        fromMember: '@member_9'
+        relations: 'chatted'
+        quality: 'neutral'
+        comment: '<paragraph(2)>'
+    comment_9:
+        toMember: '@member_9'
+        fromMember: '@member_10'
+        relations: 'hosted_me'
+        quality: 'positive'
+        comment: '<paragraph(2)>'
+    comment_10:
+        toMember: '@member_10'
+        fromMember: '@bwadmin'
+        relations: 'only_once'
+        quality: 'negative'
+        comment: '<paragraph(2)>'

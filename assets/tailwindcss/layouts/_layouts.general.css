@@ -540,6 +540,25 @@ main:has(.p-hero) {
   color: #78350f;
 }
 
+/* Number of comments next to the member name, links to the comments page */
+.p-hero__comments-badge,
+.p-hero__comments-badge:hover {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: #3781eb;
+  color: #fff !important;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  text-decoration: none !important;
+  box-shadow: 0 2px 6px rgba(55, 129, 235, 0.25);
+}
+.p-hero__comments-badge:hover { background: #2563c9; }
+.p-hero__comments-badge i { font-size: 0.75rem; }
+
 .p-hero__name {
   font-size: 1.625rem;
   font-weight: 700;
@@ -2801,56 +2820,79 @@ main:has(.p-hero) {
   letter-spacing: 0;
 }
 
-/* Filter tabs: Tout · Positif · Neutre · Négatif */
+/* Filter tabs (segmented control): All · Positive · Neutral · Negative */
 .p-comments-tabs {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  width: fit-content;
+  max-width: 100%;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+  padding: 0.35rem;
+  border-radius: 1rem;
+  background: #f1f5f9;
   overflow-x: auto;
   scrollbar-width: none;
 }
 .p-comments-tabs::-webkit-scrollbar { display: none; }
+/* Small "All N" link on the right of the card title
+   (overrides the orange square icon-button style of card headers) */
+.p-profile-main .card .card-header a.p-comments-all {
+  gap: 0.3rem;
+  width: auto;
+  height: auto;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 999px;
+  background: #fff !important;
+  box-shadow: none !important;
+  color: #1e293b !important;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  text-decoration: none;
+}
+/* Text colors sit on the inner spans: Bootstrap's ".card-header a { color: white !important }"
+   lives in a cascade layer, and a layered !important always beats ours on the link itself. */
+.p-profile-main .card .card-header a.p-comments-all .p-comments-all__label { color: #1e293b; }
+.p-profile-main .card .card-header a.p-comments-all .p-comments-tabs__count { color: #64748b; }
+.p-profile-main .card .card-header a.p-comments-all--active .p-comments-all__label { color: #fff; }
+.p-profile-main .card .card-header a.p-comments-all:hover,
+.p-profile-main .card .card-header a.p-comments-all:focus-visible {
+  background: #f1f5f9 !important;
+  filter: none;
+  color: #0f172a !important;
+}
+.p-profile-main .card .card-header a.p-comments-all--active,
+.p-profile-main .card .card-header a.p-comments-all--active:hover {
+  border-color: #0f172a !important;
+  background: #0f172a !important;
+  color: #fff !important;
+}
+.p-profile-main .card .card-header a.p-comments-all--active .p-comments-tabs__count { color: #cbd5e1; }
 .p-comments-tabs__tab,
 .p-comments-tabs__tab:hover {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
-  gap: 0.45rem;
-  flex-shrink: 0;
-  padding: 0.45rem 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 999px;
-  background: #fff;
-  color: #475569;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.75rem;
+  color: #64748b;
   font-size: 0.875rem;
   font-weight: 600;
+  white-space: nowrap;
   text-decoration: none;
 }
-.p-comments-tabs__tab:hover { background: #f8fafc; color: #1e293b; }
-.p-comments-tabs__tab i { font-size: 0.8rem; }
-.p-comments-tabs__count { color: #94a3b8; font-weight: 600; }
+.p-comments-tabs__tab:hover { color: #1e293b; }
+.p-comments-tabs__count { color: #94a3b8; }
 .p-comments-tabs__tab--active,
 .p-comments-tabs__tab--active:hover {
-  background: #0f172a;
-  border-color: #0f172a;
-  color: #fff;
+  background: #fff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1), 0 1px 2px rgba(15, 23, 42, 0.06);
 }
-.p-comments-tabs__tab--active .p-comments-tabs__count { color: #cbd5e1; }
-.p-comments-tabs__tab--positive i { color: #16a34a; }
-.p-comments-tabs__tab--neutral i  { color: #64748b; }
-.p-comments-tabs__tab--negative i { color: #dc2626; }
-.p-comments-tabs__tab--positive:hover { background: #f0fdf4; border-color: #bbf7d0; color: #15803d; }
-.p-comments-tabs__tab--neutral:hover  { background: #f8fafc; border-color: #cbd5e1; color: #334155; }
-.p-comments-tabs__tab--negative:hover { background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
-.p-comments-tabs__tab--positive.p-comments-tabs__tab--active,
-.p-comments-tabs__tab--positive.p-comments-tabs__tab--active:hover { background: #16a34a; border-color: #16a34a; color: #fff; }
-.p-comments-tabs__tab--neutral.p-comments-tabs__tab--active,
-.p-comments-tabs__tab--neutral.p-comments-tabs__tab--active:hover  { background: #64748b; border-color: #64748b; color: #fff; }
-.p-comments-tabs__tab--negative.p-comments-tabs__tab--active,
-.p-comments-tabs__tab--negative.p-comments-tabs__tab--active:hover { background: #dc2626; border-color: #dc2626; color: #fff; }
-.p-comments-tabs__tab--active i { color: inherit; }
-.p-comments-tabs__tab--positive.p-comments-tabs__tab--active .p-comments-tabs__count,
-.p-comments-tabs__tab--neutral.p-comments-tabs__tab--active .p-comments-tabs__count,
-.p-comments-tabs__tab--negative.p-comments-tabs__tab--active .p-comments-tabs__count { color: rgba(255, 255, 255, 0.8); }
 
 .p-comments-page__guidelines {
   margin: 1rem 0 0;
@@ -2900,42 +2942,93 @@ main:has(.p-hero) {
 .p-comments-more__link:hover { text-decoration: underline; }
 .p-comments-more__link i { font-size: 0.7rem; }
 
-/* One comment (and the answer to it) */
+/* One comment, with the answer nested under it in a thread.
+   Desktop: avatar column on the left, head and body next to it.
+   Mobile: head next to the avatar, body (text, answer) on the full width. */
 .p-comment {
-  padding: 1rem 0;
-  border-top: 1px solid #f1f5f9;
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-areas:
+    "avatar head"
+    ".      body";
+  column-gap: 0.85rem;
+  row-gap: 0.5rem;
+  padding: 0.85rem 0;
 }
-.p-comment:last-of-type { padding-bottom: 0.25rem; }
+.p-comment--answer {
+  grid-template-columns: 40px minmax(0, 1fr);
+  column-gap: 0.7rem;
+  padding: 0;
+}
+.p-comment__avatar { grid-area: avatar; }
+.p-comment__head { grid-area: head; align-self: center; }
+.p-comment__body { grid-area: body; min-width: 0; }
+/* Vertical line from the avatar down to the answer */
+.p-comment--thread::before {
+  content: "";
+  position: absolute;
+  left: 26.5px;
+  top: calc(0.85rem + 64px);
+  bottom: 0.85rem;
+  width: 3px;
+  border-radius: 3px;
+  background: #e2e8f0;
+}
+.p-comment .o-avatar--m,
+.p-comment .o-avatar--m .o-avatar__img-wrapper { width: 56px; height: 56px; }
+.p-comment--answer .o-avatar--s,
+.p-comment--answer .o-avatar--s .o-avatar__img-wrapper { width: 40px; height: 40px; }
+.p-comment__avatar .o-avatar__img-wrapper {
+  background: #e2e8f0;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 4px #e2e8f0;
+}
 .p-comment__head {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin-bottom: 0.6rem;
-}
-.p-comment__avatar { flex-shrink: 0; }
-.p-comment__avatar .o-avatar__img-wrapper { background: #e2e8f0; }
-.p-comment__who { flex: 1; min-width: 0; line-height: 1.3; }
-.p-comment__name { font-size: 1rem; color: #0f172a; overflow-wrap: anywhere; }
-.p-comment__name strong { font-weight: 700; }
-.p-comment__link,
-.p-comment__link:hover { color: #c2410c; font-weight: 700; text-decoration: none; }
-.p-comment__link:hover { text-decoration: underline; }
-.p-comment__username { color: #64748b; }
-.p-comment__date {
-  display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.p-comment__who { flex: 1; min-width: 0; line-height: 1.25; }
+.p-comment__name {
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  white-space: nowrap;
+}
+.p-comment--answer .p-comment__name { font-size: 0.9375rem; }
+.p-comment__me { color: #0f172a; flex-shrink: 0; }
+.p-comment__sep { margin: 0 0.3rem; color: #94a3b8; font-weight: 400; flex-shrink: 0; }
+.p-comment__link,
+.p-comment__link:hover {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #c2410c;
+  font-weight: 700;
+  text-decoration: none;
+}
+.p-comment__link:hover { text-decoration: underline; }
+.p-comment__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.6rem;
+  margin-top: 0.1rem;
   color: #64748b;
   font-size: 0.8125rem;
-  margin-top: 0.1rem;
 }
-.p-comment__date i { font-size: 0.75rem; color: #94a3b8; }
+.p-comment__meta > span { white-space: nowrap; }
+.p-comment__meta i.fa-home { font-size: 0.75rem; color: #94a3b8; }
 .p-comment__badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
   flex-shrink: 0;
-  padding: 0.3rem 0.75rem;
+  padding: 0.25rem 0.7rem;
   border-radius: 999px;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -2946,6 +3039,13 @@ main:has(.p-hero) {
 .p-comment__badge i { font-size: 0.75rem; }
 .p-comment__badge--positive { color: #15803d; background: #dcfce7; }
 .p-comment__badge--negative { color: #b91c1c; background: #fee2e2; }
+.p-comment__report,
+.p-comment__report:hover {
+  flex-shrink: 0;
+  color: #94a3b8;
+  text-decoration: none;
+}
+.p-comment__report:hover { color: #64748b; }
 .p-comment__hidden {
   margin-bottom: 0.5rem;
   padding: 0.4rem 0.65rem;
@@ -2956,62 +3056,103 @@ main:has(.p-hero) {
   font-weight: 600;
 }
 .p-comment__text {
+  padding: 0.75rem 1rem;
+  border-radius: 0.875rem;
+  background: #f8fafc;
   color: #1e293b;
   font-size: 0.9375rem;
   line-height: 1.55;
   overflow-wrap: anywhere;
 }
-.p-comment__foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem 1rem;
-  margin-top: 0.75rem;
-  font-size: 0.8125rem;
-}
-.p-comment__foot--end { justify-content: flex-end; }
-.p-comment__status {
+.p-comment--answer .p-comment__text { padding: 0.55rem 0.85rem; font-size: 0.875rem; }
+/* "read more" / "show less" inside a comment: soft blue pill (same blue as the unread messages badge) */
+.p-comment__text .o-show-more-btn {
   display: inline-flex;
-  align-items: baseline;
-  gap: 0.45rem;
-  color: #64748b;
-}
-.p-comment__status i,
-.p-comment__foot > .p-comment__action i.fa-reply { transform: scaleX(-1); }
-.p-comment__actions {
-  display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-left: auto;
+  margin: 0 0 0 0.35rem;
+  padding: 0.1rem 0.6rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(55, 129, 235, 0.1);
+  color: #3781eb;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  vertical-align: baseline;
+  transition: background 0.15s ease, color 0.15s ease;
 }
+.p-comment__text .o-show-more-btn:hover,
+.p-comment__text .o-show-more-btn:focus-visible {
+  background: #3781eb;
+  color: #fff;
+  outline: none;
+}
+.p-comment__actions { margin-top: 0.6rem; }
 .p-comment__action,
 .p-comment__action:hover {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   color: #c2410c;
+  font-size: 0.8125rem;
   font-weight: 600;
+  white-space: nowrap;
   text-decoration: none;
 }
+.p-comment__actions .p-comment__action { white-space: normal; }
 .p-comment__action:hover { text-decoration: underline; }
-.p-comment__action--muted,
-.p-comment__action--muted:hover { color: #94a3b8; font-weight: 400; }
-.p-comment__answer {
-  margin: 0.85rem 0 0 1.5rem;
-  padding: 0.75rem 0.9rem;
-  border-left: 3px solid #e2e8f0;
-  border-radius: 0 0.5rem 0.5rem 0;
-  background: #f8fafc;
-}
-.p-comment__answer .p-comment__head { gap: 0.6rem; margin-bottom: 0.4rem; }
-.p-comment__answer .p-comment__name { font-size: 0.9rem; }
-.p-comment__answer .p-comment__badge { padding: 0.2rem 0.6rem; font-size: 0.75rem; }
-.p-comment__answer .p-comment__text { font-size: 0.875rem; }
-.p-comment__answer .p-comment__foot { margin-top: 0.5rem; }
+.p-comment__action i { font-size: 0.75rem; }
+.p-comment__action i.fa-reply { transform: scaleX(-1); }
+.p-comment__answer { margin-top: 0.85rem; }
 
 @media (max-width: 576px) {
-  .p-comment__answer { margin-left: 0.5rem; }
+  .p-comment {
+    grid-template-columns: 44px minmax(0, 1fr);
+    grid-template-areas:
+      "avatar head"
+      "body   body";
+    column-gap: 0.65rem;
+  }
+  .p-comment--answer { grid-template-columns: 36px minmax(0, 1fr); column-gap: 0.55rem; }
+  .p-comment .o-avatar--m,
+  .p-comment .o-avatar--m .o-avatar__img-wrapper { width: 44px; height: 44px; }
+  .p-comment--answer .o-avatar--s,
+  .p-comment--answer .o-avatar--s .o-avatar__img-wrapper { width: 36px; height: 36px; }
+  .p-comment__avatar .o-avatar__img-wrapper { box-shadow: 0 0 0 2px #fff, 0 0 0 3px #e2e8f0; }
+  .p-comment__badge { padding: 0.25rem 0.6rem; }
+  /* The answer: a small indent with the thread line on its left */
+  .p-comment--thread::before { content: none; }
+  .p-comments-tabs { width: auto; }
+  .p-comments-tabs__tab { flex: 1 1 0; min-width: 0; padding: 0.5rem 0.6rem; }
+  .p-comment__answer {
+    margin-left: 0.35rem;
+    padding-left: 0.75rem;
+    border-left: 3px solid #e2e8f0;
+  }
+  .p-comment--answer .p-comment__badge-label { display: none; }
+  .p-comment--answer .p-comment__badge { padding: 0.35rem 0.5rem; }
+}
+
+/* Full-width call to action under the list (add / edit my comment) */
+.p-comments-cta { margin-top: 1rem; }
+.p-comments-cta .p-hero__btn {
+  justify-content: center;
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+@media (max-width: 576px) {
+  .p-comment { grid-template-columns: 56px minmax(0, 1fr); column-gap: 0.7rem; }
+  .p-comment .o-avatar--m,
+  .p-comment .o-avatar--m .o-avatar__img-wrapper { width: 56px; height: 56px; }
+  .p-comment__head { min-height: 56px; padding-top: 0.3rem; flex-wrap: wrap; }
+  .p-comment--thread::before { left: 26.5px; top: calc(0.85rem + 64px); }
+  .p-comment--answer { grid-template-columns: 40px minmax(0, 1fr); }
+  .p-comment--answer .o-avatar--s,
+  .p-comment--answer .o-avatar--s .o-avatar__img-wrapper { width: 40px; height: 40px; }
+  .p-comment--answer .p-comment__head { min-height: 40px; }
 }
 
 /* ── Responsive ─────────────────────────────────────────── */

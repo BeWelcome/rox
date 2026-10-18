@@ -13,23 +13,23 @@
 {% block page_content %}
   {% set language = app.request.locale %}
   {% set filters = [
-    {type: 'all', icon: 'list-ul', label: 'landing.button.all'|trans, count: comments_count.total},
     {type: 'positive', icon: 'thumbs-up', label: 'comment.quality.positive'|trans, count: comments_count.positive},
     {type: 'neutral', icon: 'minus', label: 'comment.quality.neutral'|trans, count: comments_count.neutral},
     {type: 'negative', icon: 'thumbs-down', label: 'comment.quality.negative'|trans, count: comments_count.negative},
   ] %}
   <div class="p-comments-page p-profile-main">
     <div class="card">
-      <div class="card-header u:flex u:flex-row u:justify-between">
-        <span>
-          {{ 'profile.comments'|trans }}
-          {% if comments_count.total > 0 %}
-            <span class="p-gallery-footer__count">{{ comments_count.total }}</span>
-          {% endif %}
-        </span>
-        {% if submenu.items is defined and submenu.items.comment is defined %}
-          {% set add_text = submenu.items.comment.key|lower|trans %}
-          <div><a href="{{ submenu.items.comment.url }}"><i class="fas fa-comment" title="{{ add_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ add_text }}</span></a></div>
+      <div class="card-header u:flex u:flex-row u:justify-between u:items-center">
+        {{ 'profile.comments'|trans }}
+        {% if comments_count.total > 0 %}
+          <div>
+          <a href="{{ url('profile_comments', {username: member.username}) }}"
+             class="p-comments-all{% if type == 'all' %} p-comments-all--active{% endif %}"
+             {% if type == 'all' %}aria-current="page"{% endif %}>
+            <span class="p-comments-all__label">{{ 'landing.button.all'|trans }}</span>
+            <span class="p-comments-tabs__count">{{ comments_count.total }}</span>
+          </a>
+          </div>
         {% endif %}
       </div>
       <div class="card-body">
@@ -37,10 +37,9 @@
           <nav class="p-comments-tabs" aria-label="{{ 'profile.comments'|trans }}">
             {% for filter in filters %}
               {% set active = type == filter.type %}
-              <a href="{{ filter.type == 'all' ? url('profile_comments', {username: member.username}) : url('profile_comments', {username: member.username, type: filter.type}) }}"
+              <a href="{{ url('profile_comments', {username: member.username, type: filter.type}) }}"
                  class="p-comments-tabs__tab p-comments-tabs__tab--{{ filter.type }}{% if active %} p-comments-tabs__tab--active{% endif %}"
                  {% if active %}aria-current="page"{% endif %}>
-                <i class="fas fa-{{ filter.icon }}" aria-hidden="true"></i>
                 {{ filter.label }}
                 <span class="p-comments-tabs__count">{{ filter.count }}</span>
               </a>
@@ -65,6 +64,14 @@
             </div>
           {% endif %}
         </div>
+
+        {% if submenu.items is defined and submenu.items.comment is defined %}
+          <div class="p-comments-cta">
+            <a href="{{ submenu.items.comment.url }}" class="p-hero__btn p-hero__btn--secondary">
+              <i class="fas fa-comment" aria-hidden="true"></i> {{ submenu.items.comment.key|lower|trans }}
+            </a>
+          </div>
+        {% endif %}
 
         {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
           <p class="p-comments-page__guidelines">{{ 'commentguidlineslink'|trans|raw }}</p>

@@ -187,23 +187,29 @@
       {# ── Comments (hidden in edit mode: not editable content) ── #}
       {% if not edit %}
       <div class="card">
-        <div class="card-header u:flex u:flex-row u:justify-between">
+        <div class="card-header u:flex u:flex-row u:justify-between u:items-center">
           {{ 'profile.comments'|trans({}, "messages", profile_language) }}
+          {% if comments|length > 0 %}
+            <div>
+            <a href="{{ url('profile_comments', {username: member.username}) }}" class="p-comments-all">
+              <span class="p-comments-all__label">{{ 'landing.button.all'|trans({}, "messages", profile_language) }}</span>
+              <span class="p-comments-tabs__count">{{ comments_count.total }}</span>
+            </a>
+            </div>
+          {% endif %}
         </div>
         <div class="card-body">
           {% if comments|length > 0 %}
             {% set comment_filters = [
-              {type: 'all', icon: 'list-ul', label: 'landing.button.all', count: comments_count.total},
               {type: 'positive', icon: 'thumbs-up', label: 'comment.quality.positive', count: comments_count.positive},
               {type: 'neutral', icon: 'minus', label: 'comment.quality.neutral', count: comments_count.neutral},
               {type: 'negative', icon: 'thumbs-down', label: 'comment.quality.negative', count: comments_count.negative},
             ] %}
             <nav class="p-comments-tabs" aria-label="{{ 'profile.comments'|trans({}, "messages", profile_language) }}">
               {% for filter in comment_filters %}
-                <a href="{{ filter.type == 'all' ? url('profile_comments', {username: member.username}) : url('profile_comments', {username: member.username, type: filter.type}) }}"
+                <a href="{{ url('profile_comments', {username: member.username, type: filter.type}) }}"
                    class="p-comments-tabs__tab p-comments-tabs__tab--{{ filter.type }}">
-                  <i class="fas fa-{{ filter.icon }}" aria-hidden="true"></i>
-                  {{ filter.label|trans({}, "messages", profile_language) }}
+                    {{ filter.label|trans({}, "messages", profile_language) }}
                   <span class="p-comments-tabs__count">{{ filter.count }}</span>
                 </a>
               {% endfor %}
@@ -233,9 +239,9 @@
             </div>
           {% endif %}
           {% if not edit and submenu.items is defined and submenu.items.comment is defined %}
-            <div class="p-accom-cta">
-              <a href="{{ submenu.items.comment.url }}" class="p-hero__btn p-hero__btn--outline">
-                <i class="fas fa-comment"></i> {{ submenu.items.comment.key|lower|trans }}
+            <div class="p-comments-cta">
+              <a href="{{ submenu.items.comment.url }}" class="p-hero__btn p-hero__btn--secondary">
+                <i class="fas fa-comment" aria-hidden="true"></i> {{ submenu.items.comment.key|lower|trans }}
               </a>
             </div>
           {% endif %}

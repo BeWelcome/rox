@@ -114,6 +114,16 @@
                 {% endif %}
               </h1>
             {% endif %}
+            {% set _commentsCount = member_comments_count(member) %}
+            {% if _commentsCount > 0 %}
+              <a href="{{ url('profile_comments', {username: member.username}) }}"
+                 class="p-hero__comments-badge"
+                 title="{{ 'profile.comments'|trans }}">
+                <i class="fas fa-comments" aria-hidden="true"></i>
+                {{ _commentsCount }}
+                <span class="visually-hidden">{{ 'profile.comments'|trans }}</span>
+              </a>
+            {% endif %}
           </div>
         </div>
 

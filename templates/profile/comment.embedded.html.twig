@@ -2,9 +2,8 @@
 
 {#
   One entry of the comment list: the comment received by the profile member
-  ('from') and, below it, the comment they wrote back ('to'). When only one of
-  the two is visible, it becomes the main comment and the footer says that the
-  other one is still missing.
+  ('from') and, nested below it, the comment they wrote back ('to'). When only
+  one of the two is visible, it is shown alone.
 #}
 {% set loggedInMember = app.user %}
 {% set fromVisible = comment['from'] is defined and comment['from'].showCondition(loggedInMember) > 0 %}
@@ -13,41 +12,18 @@
 {% set answer = (fromVisible and toVisible) ? comment['to'] : null %}
 
 {% if main %}
-<article class="p-comment">
-    {{ _self.comment(member, loggedInMember, main, language, false) }}
-
-    {% if answer %}
-        {% set actionsHtml = _self.actions(loggedInMember, main, language) %}{% if actionsHtml|trim is not empty %}<div class="p-comment__foot p-comment__foot--end">{{ actionsHtml }}</div>{% endif %}
-        <div class="p-comment__answer">
-            {{ _self.comment(member, loggedInMember, answer, language, true) }}
-            {% set actionsHtml = _self.actions(loggedInMember, answer, language) %}{% if actionsHtml|trim is not empty %}<div class="p-comment__foot p-comment__foot--end">{{ actionsHtml }}</div>{% endif %}
-        </div>
-    {% else %}
-        {# The answer is missing: the author of the main comment is waiting for one from its recipient. #}
-        {% set waitingFor = main.toMember %}
-        {% set expectedFrom = main.fromMember %}
-        {% set otherComment = fromVisible ? (comment['to'] ?? null) : (comment['from'] ?? null) %}
-        <div class="p-comment__foot">
-            {% if otherComment is null and waitingFor == loggedInMember %}
-                <a class="p-comment__action" href="{{ url('add_comment', { username: expectedFrom.Username }) }}">
-                    <i class="fas fa-reply" aria-hidden="true"></i>
-                    {{ 'profile.add.comment'|trans({'username': expectedFrom.Username, 'gender': expectedFrom.Gender}, "messages", language) }}
-                </a>
-            {% else %}
-                <span class="p-comment__status">
-                    <i class="fas fa-reply" aria-hidden="true"></i>
-                    {{ 'profile.no.comment.yet'|trans({'from': waitingFor.Username, 'to': expectedFrom.Username}, "messages", language) }}
-                </span>
-            {% endif %}
-            {{ _self.actions(loggedInMember, main, language) }}
-        </div>
-    {% endif %}
-</article>
+    {# Only offer to write the answer when it is the logged-in member's turn. #}
+    {% set otherComment = fromVisible ? (comment['to'] ?? null) : (comment['from'] ?? null) %}
+    {% set canAnswer = answer is null and otherComment is null and main.toMember == loggedInMember %}
+    {% set answerHtml = answer ? _self.comment(member, loggedInMember, answer, language, true, null, false) : null %}
+    {{ _self.comment(member, loggedInMember, main, language, false, answerHtml, canAnswer) }}
 {% endif %}
 
-{% macro comment(member, loggedInMember, comment, language, isAnswer) %}
+{% macro comment(member, loggedInMember, comment, language, isAnswer, answerHtml, canAnswer) %}
     {% import 'macros.twig' as macros %}
     {% set show = comment.showCondition(loggedInMember) %}
+    {% set edit = comment.editCondition(loggedInMember) %}
+    {% set isAdmin = is_granted(constant('\\App\\Entity\\Member::ROLE_ADMIN_COMMENTS')) %}
     {% set quality = comment.quality|lower %}
     {% set author = comment.fromMember %}
     {% set linked = author.status in ['Active', 'OutOfRemind'] %}
@@ -55,70 +31,80 @@
     {% set commentDate = (comment.updated is not null and comment.created != comment.updated) ? comment.updated : comment.created %}
     {% set wasGuestOrHost = 'hewasmyguest' in comment.relations or 'hehostedme' in comment.relations %}
 
-    <div class="p-comment__head">
-        <div class="o-avatar {{ isAnswer ? 'o-avatar--xs' : 'o-avatar--s' }} p-comment__avatar">
-            {{ macros.roundedavatarstack(author.Username, isAnswer ? 30 : 48, false, linked) }}
-        </div>
-        <div class="p-comment__who">
-            <div class="p-comment__name">
-                {% if author == loggedInMember %}
-                    <strong>{{ 'me'|trans({}, "messages", language) }}</strong>
-                    <span class="p-comment__username">· {{ author.Username }}</span>
-                {% elseif linked %}
-                    {{ macros.profilelink(author.Username, author.Username, 'p-comment__link') }}
-                {% else %}
-                    <span class="p-comment__link">{{ author.Username }}</span>
-                {% endif %}
-            </div>
-            <div class="p-comment__date">
-                <span title="{{ commentDate|format_datetime() }}">{{ commentDate.diffForHumans }}</span>
-                {% if wasGuestOrHost %}
-                    <i class="fas fa-home" aria-hidden="true"></i>
-                {% endif %}
+    <article class="p-comment{{ isAnswer ? ' p-comment--answer' : '' }}{{ answerHtml ? ' p-comment--thread' : '' }}">
+        <div class="p-comment__avatar">
+            <div class="o-avatar {{ isAnswer ? 'o-avatar--s' : 'o-avatar--m' }}">
+                {{ macros.roundedavatarstack(author.Username, isAnswer ? 48 : 72, false, linked) }}
             </div>
         </div>
-        {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
-            <span class="p-comment__badge p-comment__badge--{{ quality }}">
-                <i class="fas fa-{{ qualityIcons[quality] ?? 'minus' }}" aria-hidden="true"></i>
-                {{ ('comment.quality.' ~ quality)|trans({}, "messages", language) }}
-            </span>
-        {% endif %}
-    </div>
 
-    {% if show > 1 %}
-        <div class="p-comment__hidden">{{ 'commenthiddenedit'|trans({}, "messages", language) }}</div>
-    {% endif %}
-
-    <div class="p-comment__text js-read-more-comment"
-         data-config='{
-             {% if isAnswer %}"limit": 160, "after": 40,{% else %}"limit": 280, "after": 60,{% endif %}
-             "more": "{{ 'comment.read.more'|trans({}, "messages", language) }}",
-             "less": "{{ 'comment.show.less'|trans({}, "messages", language) }}" }'>{{ comment.comment|nl2br|purify }}</div>
-
-{% endmacro %}
-
-{% macro actions(loggedInMember, comment, language) %}
-    {% set edit = comment.editCondition(loggedInMember) %}
-    {% set isAdmin = is_granted(constant('\\App\\Entity\\Member::ROLE_ADMIN_COMMENTS')) %}
-    {% set canReport = comment.toMember == loggedInMember %}
-    {% if edit or isAdmin or canReport %}
-        <div class="p-comment__actions">
-            {% if edit %}
-                <a class="p-comment__action" href="{{ url('edit_comment', { username: comment.toMember.Username }) }}">
-                    <i class="fas fa-pen" aria-hidden="true"></i> {{ 'edit'|trans({}, "messages", language) }}
-                </a>
+        <div class="p-comment__head">
+            <div class="p-comment__who">
+                <div class="p-comment__name">
+                    {% if author == loggedInMember %}
+                        <span class="p-comment__me">{{ 'me'|trans({}, "messages", language) }}</span>
+                        <span class="p-comment__sep">·</span>
+                    {% endif %}
+                    {% if linked %}
+                        {{ macros.profilelink(author.Username, author.Username, 'p-comment__link') }}
+                    {% else %}
+                        <span class="p-comment__link">{{ author.Username }}</span>
+                    {% endif %}
+                </div>
+                <div class="p-comment__meta">
+                    <span title="{{ commentDate|format_datetime() }}">{{ commentDate.diffForHumans }}</span>
+                    {% if wasGuestOrHost %}
+                        <i class="fas fa-home" aria-hidden="true"></i>
+                    {% endif %}
+                    {% if edit %}
+                        <a class="p-comment__action" href="{{ url('edit_comment', { username: comment.toMember.Username }) }}">
+                            <i class="fas fa-pen" aria-hidden="true"></i> {{ 'edit'|trans({}, "messages", language) }}
+                        </a>
+                    {% endif %}
+                    {% if isAdmin %}
+                        <a class="p-comment__action" href="{{ url('admin_comment', { to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}">
+                            <i class="fas fa-edit" aria-hidden="true"></i> {{ 'editcomment'|trans({}, "messages", language) }}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
+                <span class="p-comment__badge p-comment__badge--{{ quality }}" title="{{ ('comment.quality.' ~ quality)|trans({}, "messages", language) }}">
+                    <i class="fas fa-{{ qualityIcons[quality] ?? 'minus' }}" aria-hidden="true"></i>
+                    <span class="p-comment__badge-label">{{ ('comment.quality.' ~ quality)|trans({}, "messages", language) }}</span>
+                </span>
             {% endif %}
-            {% if isAdmin %}
-                <a class="p-comment__action" href="{{ url('admin_comment', { to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}">
-                    <i class="fas fa-edit" aria-hidden="true"></i> {{ 'editcomment'|trans({}, "messages", language) }}
-                </a>
-            {% endif %}
-            {% if canReport %}
-                <a class="p-comment__action p-comment__action--muted" href="{{ url('report_comment', { to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}"
+            {% if comment.toMember == loggedInMember %}
+                <a class="p-comment__report" href="{{ url('report_comment', { to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}"
                    title="{{ 'reportcommentproblem'|trans({}, "messages", language) }}">
-                    <i class="fa fa-flag" aria-hidden="true"></i><span class="visually-hidden">{{ 'reportcommentproblem'|trans({}, "messages", language) }}</span>
+                    <i class="far fa-flag" aria-hidden="true"></i><span class="visually-hidden">{{ 'reportcommentproblem'|trans({}, "messages", language) }}</span>
                 </a>
             {% endif %}
         </div>
-    {% endif %}
+
+        <div class="p-comment__body">
+            {% if show > 1 %}
+                <div class="p-comment__hidden">{{ 'commenthiddenedit'|trans({}, "messages", language) }}</div>
+            {% endif %}
+
+            <div class="p-comment__text js-read-more-comment"
+                 data-config='{
+                     {% if isAnswer %}"limit": 160, "after": 40,{% else %}"limit": 280, "after": 60,{% endif %}
+                     "more": "{{ 'comment.read.more'|trans({}, "messages", language) }}",
+                     "less": "{{ 'comment.show.less'|trans({}, "messages", language) }}" }'>{{ comment.comment|nl2br|purify }}</div>
+
+            {% if canAnswer %}
+                <div class="p-comment__actions">
+                    <a class="p-comment__action" href="{{ url('add_comment', { username: comment.fromMember.Username }) }}">
+                        <i class="fas fa-reply" aria-hidden="true"></i>
+                        {{ 'profile.add.comment'|trans({'username': comment.fromMember.Username, 'gender': comment.fromMember.Gender}, "messages", language) }}
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if answerHtml %}
+                <div class="p-comment__answer">{{ answerHtml }}</div>
+            {% endif %}
+        </div>
+    </article>
 {% endmacro %}

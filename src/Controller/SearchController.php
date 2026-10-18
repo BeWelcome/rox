@@ -183,7 +183,9 @@ class SearchController extends AbstractController
             $searchAdapter = new SearchAdapter($searchFormRequest, $this->entityManager, $member);
             $pager = new Pagerfanta($searchAdapter);
             $pager->setMaxPerPage($searchFormRequest->items > 0 ? $searchFormRequest->items : 20);
-            $pager->setCurrentPage($searchFormRequest->page > 0 ? $searchFormRequest->page : 1);
+            // The page links add ?page= to the search (the page is not a field of the form).
+            $pager->setNormalizeOutOfRangePages(true);
+            $pager->setCurrentPage(max(1, $request->query->getInt('page', 1)));
 
             // Fetch the slice manually for the view to avoid breaking BC in twig immediately
             // Better to update twig to iterate over $pager directly, but keeping it safe for now.
@@ -195,8 +197,8 @@ class SearchController extends AbstractController
             'form' => $search->createView(), // Changed to createView() as good practice for Symfony 8
             'members' => $pager,
             'map_members' => $mapMembers,
-            'routeName' => 'search_members_ajax',
-            'routeParams' => $request->query->all(),
+            'routeName' => 'search_locations',
+            'routeParams' => array_diff_key($request->query->all(), ['page' => true]),
             'searchParams' => $searchFormRequest, // Pass DTO for display logic
         ]);
     }

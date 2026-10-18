@@ -1,0 +1,43 @@
+{# Building blocks of the search page (/search/locations). #}
+
+{# A checkbox of the search form, drawn by hand so it looks the same everywhere. #}
+{% macro check(field) %}
+    <label class="p-search-check" for="{{ field.vars.id }}">
+        <input type="checkbox" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="1"
+               data-default="{{ field.vars.checked ? 1 : 0 }}"{% if field.vars.checked %} checked{% endif %}>
+        <span>{{ field.vars.label|trans }}</span>
+    </label>
+    {% do field.setRendered %}
+{% endmacro %}
+
+{# A single choice field as a plain select (no autocomplete box needed for a short list). #}
+{% macro select(field, class = '', any = false) %}
+    {% set noTranslation = field.vars.choice_translation_domain is same as(false) %}
+    <select id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" class="form-select p-search-select {{ class }}">
+        {% if any %}<option value="">{{ 'any'|trans|capitalize }}</option>{% endif %}
+        {% for choice in field.vars.choices %}
+            <option value="{{ choice.value }}"{% if choice is selectedchoice(field.vars.value) %} selected{% endif %}>
+                {{- noTranslation ? choice.label : choice.label|trans({}, field.vars.choice_translation_domain ?: 'messages') -}}
+            </option>
+        {% endfor %}
+    </select>
+    {% do field.setRendered %}
+{% endmacro %}
+
+{# A labelled field in the Search options panel. widget is HTML drawn by form_widget() or select() above. #}
+{% macro field(field, widget) %}
+    <div class="p-search-options__field">
+        <label class="p-search-options__label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
+        {{ widget|raw }}
+    </div>
+{% endmacro %}
+
+{# The accommodation badge of a member (nothing when they didn't say). #}
+{% macro accommodation(member, class = '') %}
+    {% if member.accommodation in ['yes', 'no'] %}
+        <span class="p-search-badge p-search-badge--{{ member.accommodation }} {{ class }}">
+            <i class="fas fa-house-user" aria-hidden="true"></i>
+            {{ ('search.accommodation.' ~ member.accommodation)|trans }}
+        </span>
+    {% endif %}
+{% endmacro %}

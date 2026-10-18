@@ -19,3 +19,6 @@ search.admin.units:
 search.countries:
     - 'Countries'
     - Section header for the search results of countries found
+search.view.list:
+    - 'List'
+    - Button on the search results (phones) that shows the results as a list instead of the map

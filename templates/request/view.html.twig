@@ -1,11 +1,19 @@
-{% import 'macros.twig' as macros %}
 {% extends 'conversations/view.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('requests') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('requests') }}
+{% endblock javascripts %}
+
 {% block additional %}
-    {% import 'macros.twig' as macros %}
     {% set original = thread | last %}
     {% set request = (thread | first).request %}
     {% set myself = app.user %}
 
-    {% include 'request/header.html.twig'%}
+    {% include 'request/header.html.twig' %}
 {% endblock additional %}

@@ -1,61 +1,99 @@
 {% extends 'base.html.twig' %}
+{% import 'conversations/_inbox.macros.twig' as inbox %}
+{% import 'request/_request.macros.twig' as stay %}
+
+{% set hide_sidebar = true %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('requests') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind')  }}
-    {{ encore_entry_link_tags('requests')  }}
+    {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('requests') }}
 {% endblock stylesheets %}
 
+{% block title %}
+    {{ 'request.write_to'|trans|format(host.shortNameOrUsername) }}
+{% endblock title %}
+
 {% block content %}
-    {% import 'macros.twig' as macros %}
-    {{ macros.new_conversation_header(host, 'request.write_to') }}
+    {% set address = host.activeAddress %}
+    {% set languages %}
+        {%- for level in host.languageLevels -%}
+            {{ ('lang_' ~ level.language.shortCode)|lower|trans }}
+            {%- if level.level == constant('App\\Doctrine\\LanguageLevelType::MOTHER_TONGUE') %} ({{ ('language.level.' ~ level.level)|lower|trans }}){% endif -%}
+            {%- if not loop.last %}, {% endif -%}
+        {%- endfor -%}
+    {% endset %}
+    {% set meta = [] %}
+    {% if address is not same as(false) and address is not null and address.location %}
+        {% set meta = meta|merge([address.location.name ~ (address.location.country ? ', ' ~ address.location.country.name : '')]) %}
+    {% endif %}
+    {% if languages|trim %}
+        {% set meta = meta|merge(['speaks'|trans ~ ' ' ~ languages|trim]) %}
+    {% endif %}
+    {% set profileUrl = path('members_profile', { username: host.username }) %}
+    {% set fields = form.request %}
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
+    <div class="c-inbox c-inbox--thread">
+        {{ inbox.nav(folder, 'column') }}
 
-    <div class="u:grid u:grid-cols-3 u:gap-x-12">
-        <div class="u:col-span-3">
-            {{ form_row(form.subject.subject) }}
-        </div>
-        <div class="u:md:col-span-1 u:col-span-3">
-            <div class="o-form-group">
-                {{ form_label(form.request.duration) }}
-                <div class="input-group date">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-calendar"></i>
-                        </span>
+        <section class="c-inbox__list">
+            <div class="c-inbox-list">
+                {{ inbox.list(conversations, folder, { initiator: initiator, unreadOnly: unreadOnly }) }}
+            </div>
+        </section>
+
+        <section class="c-inbox__pane">
+            {% include 'conversations/_pane_head.html.twig' with {
+                current: null,
+                correspondent: host,
+                subject: 'request.write_to'|trans|format(host.shortNameOrUsername),
+                meta: meta|join(' · '),
+                linked: true,
+                back_url: profileUrl,
+                show_actions: false,
+                is_spam: false,
+                show_deleted: false,
+            } %}
+
+            {{ form_start(form, { attr: { novalidate: 'novalidate', autocomplete: 'off', class: 'c-inbox-new c-request-new' } }) }}
+                <div class="c-inbox-new__body">
+                    {{ form_errors(form) }}
+
+                    <div class="c-request-new__stay">
+                        {{ stay.dates(fields) }}
+                        {{ stay.travellers(fields.numberOfTravellers) }}
+                        <div class="c-request-line">
+                            {{ stay.nights(fields) }}
+                            {{ stay.flexible(fields.flexible) }}
+                        </div>
                     </div>
-                    {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
-                    {{ form_errors(form.request.duration) }}
+                    {% do fields.setRendered %}
+
+                    <div class="p-message-form__field">
+                        <label class="o-label" for="{{ form.subject.subject.vars.id }}">{{ form.subject.subject.vars.label|trans }}</label>
+                        {{ form_widget(form.subject.subject, { attr: form.subject.subject.vars.attr|merge({ class: 'o-input' }) }) }}
+                        {{ form_errors(form.subject.subject) }}
+                    </div>
+
+                    <div class="p-message-form__field c-inbox-compose__editor c-editor-bottom">
+                        <label class="o-label" for="{{ form.message.vars.id }}">{{ form.message.vars.label|trans }}</label>
+                        {{ form_widget(form.message) }}
+                        {{ form_errors(form.message) }}
+                    </div>
+                    {% do form.send.setRendered %}
+
+                    {{ form_rest(form) }}
                 </div>
-            </div>
 
-            {{ form_row(form.request.flexible) }}
-            {{ form_row(form.request.numberOfTravellers) }}
-            {{ form_errors(form.request.numberOfTravellers) }}
-            {{ form_row(form.request.arrival) }}
-            {{ form_row(form.request.departure) }}
-            {% do form.request.setRendered %}
-            {% do form.send.setRendered %}
-        </div>
-
-        <div class="u:md:col-span-2 u:col-span-3">
-            {{ form_label(form.message) }}
-            {{ form_widget(form.message) }}
-            {{ form_errors(form.message) }}
-            <div class="u:flex u:justify-end u:mt-4">
-                <button type="submit" class="o-button u:mt-8">{{ 'label.message.button.send' | trans }}</button>
-            </div>
-        </div>
+                <div class="c-inbox-new__actions">
+                    <button type="submit" name="{{ form.send.vars.full_name }}" class="c-inbox-reply__btn c-inbox-compose__send">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ 'label.message.button.send'|trans }}
+                    </button>
+                </div>
+            {{ form_end(form) }}
+        </section>
     </div>
-
-    <div class="u:grid">
-        <div class="u:col-span-1">
-            {{ form_rest(form) }}
-        </div>
-    </div>
-    {{ form_end(form) }}
-{% endblock %}
+{% endblock content %}

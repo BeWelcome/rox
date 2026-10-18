@@ -6,9 +6,12 @@ use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Form\HostingRequestGuest;
+use App\Form\HostingRequestHost;
 use App\Form\MessageToMemberType;
 use App\Form\ReportSpamType;
 use App\Model\ConversationModel;
+use App\Model\HostingRequestModel;
 use App\Service\InboxFolders;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
@@ -34,6 +37,7 @@ class ConversationController extends AbstractController
         protected ConversationModel $conversationModel,
         private EntityManagerInterface $entityManager,
         private InboxFolders $inboxFolders,
+        private HostingRequestModel $requestModel,
     ) {
     }
 
@@ -265,6 +269,7 @@ class ConversationController extends AbstractController
 
         return $this->render($template, [
             'reply_form' => $this->createInlineReplyForm($current),
+            'request_form' => ($includeDeleted || $spam) ? null : $this->createInlineRequestForm($current, $member),
             'show_deleted' => $includeDeleted,
             'show_report_modal' => $openReportModal,
             'form' => $reportForm->createView(),
@@ -288,6 +293,40 @@ class ConversationController extends AbstractController
         $replyMessage->setSubject($current->getSubject());
 
         return $this->createForm(MessageToMemberType::class, $replyMessage)->createView();
+    }
+
+    /**
+     * Hosting requests are answered right under the thread too: the host picks accept,
+     * maybe or decline, the guest can change the dates or cancel. The form posts to the
+     * reply page, which saves it and comes back here. Expired requests and members who
+     * can't write yet keep the link to the reply page, which explains why.
+     */
+    private function createInlineRequestForm(Message $current, Member $member): ?FormView
+    {
+        if (
+            !$current->isHostingRequest()
+            || ($member !== $current->getSender() && $member !== $current->getReceiver())
+            || MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()
+            || $this->requestModel->hasExpired($current)
+        ) {
+            return null;
+        }
+
+        $reply = new Message();
+        $reply->setSubject($current->getSubject());
+        $reply->setMessage('');
+        $reply->setInitiator($current->getInitiator());
+
+        if ($member === $current->getInitiator()) {
+            // The guest may change the dates: work on a copy so the shown request stays as it is.
+            $reply->setRequest(clone $current->getRequest());
+
+            return $this->createForm(HostingRequestGuest::class, $reply)->createView();
+        }
+
+        $reply->setRequest($current->getRequest());
+
+        return $this->createForm(HostingRequestHost::class, $reply)->createView();
     }
 
     private function checkConversationIsAllDeleted(array $thread, Member $member, bool $includeDeleted): bool

@@ -24,6 +24,29 @@
     {% do field.setRendered %}
 {% endmacro %}
 
+{#
+  A multiple choice field as a group of checkboxes (gender, languages): clearer than a
+  search box for a handful of choices. Nothing is drawn when there is nothing to choose.
+#}
+{% macro checks(field) %}
+    {% set noTranslation = field.vars.choice_translation_domain is same as(false) %}
+    {% if field.vars.choices|length > 0 %}
+        <fieldset class="p-search-options__field">
+            <legend class="p-search-options__label">{{ field.vars.label|trans }}</legend>
+            <div class="p-search-options__choices">
+                {% for choice in field.vars.choices %}
+                    <label class="p-search-check p-search-check--pill">
+                        <input type="checkbox" name="{{ field.vars.full_name }}" value="{{ choice.value }}"
+                               data-default="0"{% if choice is selectedchoice(field.vars.value) %} checked{% endif %}>
+                        <span>{{ (noTranslation ? choice.label : choice.label|trans({}, field.vars.choice_translation_domain ?: 'messages'))|capitalize }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        </fieldset>
+    {% endif %}
+    {% do field.setRendered %}
+{% endmacro %}
+
 {# A labelled field in the Search options panel. widget is HTML drawn by form_widget() or select() above. #}
 {% macro field(field, widget) %}
     <div class="p-search-options__field">

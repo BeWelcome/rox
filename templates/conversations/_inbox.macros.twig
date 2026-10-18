@@ -86,18 +86,26 @@
             </div>
         {% endif %}
         <a class="c-inbox-item__link" href="{{ path(route, params) }}"{% if isActive %} aria-current="true"{% endif %}>
-            <img class="c-inbox-avatar" src="{{ path('avatar', { username: otherMember.username, size: 48 }) }}" alt="" loading="lazy">
+            {% set kindIcon = message.request ? (message.request.inviteForLeg is null ? 'fa-bed' : 'fa-handshake') : null %}
+            {# The request's state colours its badge: green once accepted, red once declined or cancelled. #}
+            {% set requestState = message.request ? ({ 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[message.request.status] ?? 'open') : null %}
+            {% set requestTone = { accepted: 'success', declined: 'danger', cancelled: 'danger' }[requestState] ?? 'pending' %}
+            <span class="c-inbox-item__avatar">
+                <img class="c-inbox-avatar" src="{{ path('avatar', { username: otherMember.username, size: 48 }) }}" alt="" loading="lazy">
+                {% if kindIcon %}<span class="c-inbox-item__kind c-inbox-item__kind--{{ requestTone }}" aria-hidden="true"><i class="fas {{ kindIcon }}"></i></span>{% endif %}
+            </span>
             <div class="c-inbox-item__body">
                 <div class="c-inbox-item__top">
                     <span class="c-inbox-item__name">{{ otherMember.username }}</span>
                     <span class="c-inbox-item__date" title="{{ sent|format_datetime('medium', 'short') }}">{{ when }}</span>
                 </div>
                 {% if message.request %}
-                    <div class="c-inbox-item__badge">
-                        <i class="fas {{ message.request.inviteForLeg is null ? 'fa-bed' : 'fa-handshake' }}" aria-hidden="true"></i>
-                        {{ message.request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}
-                        · {{ message.request.arrival|format_date(pattern='d MMM') }}
-                        {%- if message.request.departure %} – {{ message.request.departure|format_date(pattern='d MMM') }}{% endif %}
+                    <div class="c-inbox-item__badge c-inbox-item__badge--{{ requestTone }}" title="{{ ('request.status.' ~ requestState)|trans }}">
+                        <span><i class="fas {{ kindIcon }}" aria-hidden="true"></i> {{ message.request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}</span>
+                        <span class="c-inbox-item__badge-dates">
+                            {{- message.request.arrival|format_date(pattern='d MMM') }}
+                            {%- if message.request.departure %} – {{ message.request.departure|format_date(pattern='d MMM') }}{% endif -%}
+                        </span>
                     </div>
                 {% endif %}
                 <div class="c-inbox-item__subject">

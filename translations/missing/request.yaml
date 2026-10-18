@@ -12,3 +12,33 @@ please.enter.a.message.text:
 flash.request.declined:
     - 'You declined this request.'
     - Flash shown when clicking the decline without message link in the request form
+request.respond.title:
+    - 'Your response'
+    - Title above the answer of the host under a hosting request (accept, maybe, decline)
+request.respond.choose:
+    - 'Choose a response'
+    - Send button of the host's answer to a hosting request, as long as no answer (accept, maybe, decline) is picked
+request.respond.placeholder:
+    - 'Add a message to your response'
+    - Placeholder of the message field of the host's answer to a hosting request
+request.respond.change:
+    - 'Change dates'
+    - Link under the guest's reply in a hosting request that shows the dates and number of travellers to change them
+request.status.open:
+    - 'Pending'
+    - Short status of a hosting request or invitation on its card above the messages, no answer yet
+request.status.tentatively:
+    - 'Maybe'
+    - Short status of a hosting request or invitation on its card above the messages, answered maybe
+request.status.accepted:
+    - 'Accepted'
+    - Short status of a hosting request or invitation on its card above the messages
+request.status.declined:
+    - 'Declined'
+    - Short status of a hosting request or invitation on its card above the messages
+request.status.cancelled:
+    - 'Cancelled'
+    - Short status of a hosting request or invitation on its card above the messages
+request.respond.toggle:
+    - 'Reply'
+    - Button next to Send in the host's answer to a hosting request; opens or closes the panel with the dates and Accept, Maybe, Decline

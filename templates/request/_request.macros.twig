@@ -1,0 +1,64 @@
+{#
+  Fields of a hosting request (new request, and the reply of the guest or of a host
+  who may suggest other dates). Labels and errors are drawn here, the behaviour
+  (nights count, the travellers buttons) is in assets/js/requests.js.
+#}
+
+{# Arrival and departure as two date fields. The hidden duration field is kept filled for the form. #}
+{% macro dates(fields) %}
+    {% set today = 'now'|date('Y-m-d') %}
+    <div class="c-request-field c-request-field--dates">
+        <label class="o-label" for="{{ fields.arrival.vars.id }}">{{ fields.duration.vars.label|trans }}</label>
+        <div class="c-request-dates js-request-dates">
+            {{ form_widget(fields.arrival, { type: 'date', attr: { class: 'c-request-dates__input js-request-arrival', min: today, required: 'required', 'aria-label': 'request.arrival'|trans } }) }}
+            <i class="fa fa-arrow-right c-request-dates__sep" aria-hidden="true"></i>
+            {{ form_widget(fields.departure, { type: 'date', attr: { class: 'c-request-dates__input js-request-departure', min: today, required: 'required', 'aria-label': 'request.departure'|trans } }) }}
+        </div>
+        {{ form_widget(fields.duration, { type: 'hidden', attr: { class: 'js-request-duration' } }) }}
+        {{ form_errors(fields.duration) }}
+    </div>
+{% endmacro %}
+
+{# "7 nights" under the dates, updated while the dates change. #}
+{% macro nights(fields) %}
+    {% set arrival = fields.arrival.vars.value %}
+    {% set departure = fields.departure.vars.value %}
+    <p class="c-request-nights js-request-nights"
+       data-zero="{{ 'request.night.stay'|trans({ numbernights: 0 }) }}"
+       data-one="{{ 'request.night.stay'|trans({ numbernights: 1 }) }}"
+       data-other="{{ 'request.night.stay'|trans({ numbernights: 99 })|replace({ '99': '{n}' }) }}">
+        {%- if arrival and departure and departure > arrival -%}
+            {{ 'request.night.stay'|trans({ numbernights: date(departure).diff(date(arrival)).days }) }}
+        {%- endif -%}
+    </p>
+{% endmacro %}
+
+{# Number of travellers with a minus and a plus button around it. #}
+{% macro travellers(field) %}
+    <div class="c-request-field c-request-field--travellers">
+        <label class="o-label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
+        <div class="c-request-stepper js-request-stepper">
+            <button type="button" class="c-request-stepper__btn js-request-step" data-step="-1" aria-label="-1">
+                <i class="fas fa-minus" aria-hidden="true"></i>
+            </button>
+            <span class="c-request-stepper__value">
+                <i class="fa fa-users" aria-hidden="true"></i>
+                {{ form_widget(field, { type: 'number', value: field.vars.value ?: 1, attr: { class: 'c-request-stepper__input', min: 1, max: 20, inputmode: 'numeric' } }) }}
+            </span>
+            <button type="button" class="c-request-stepper__btn js-request-step" data-step="1" aria-label="+1">
+                <i class="fas fa-plus" aria-hidden="true"></i>
+            </button>
+        </div>
+        {{ form_errors(field) }}
+    </div>
+{% endmacro %}
+
+{# The "flexible" checkbox drawn as a switch. #}
+{% macro flexible(field) %}
+    <label class="c-request-switch" for="{{ field.vars.id }}">
+        <span class="c-request-switch__label">{{ field.vars.label|trans }}</span>
+        <input type="checkbox" class="c-request-switch__input" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="1"{% if field.vars.checked %} checked{% endif %}>
+        <span class="c-request-switch__track" aria-hidden="true"></span>
+    </label>
+    {% do field.setRendered %}
+{% endmacro %}

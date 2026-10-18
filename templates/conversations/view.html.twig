@@ -51,7 +51,12 @@
 
             {% include 'conversations/_thread.html.twig' %}
 
-            {% if reply_form %}
+            {% if request_form ?? null %}
+                {# Hosting requests: the host answers (or the guest writes back) right here. #}
+                <div class="c-inbox-compose c-inbox-compose--respond">
+                    {% include (current.initiator == myself ? 'request/_respond_guest.html.twig' : 'request/_respond_host.html.twig') with { respond: request_form } %}
+                </div>
+            {% elseif reply_form %}
                 {# Plain messages: answer right here. The text is turned into paragraphs on submit. #}
                 {{ form_start(reply_form, { attr: { class: 'c-inbox-reply js-inbox-reply', novalidate: 'novalidate' } }) }}
                     <textarea class="c-inbox-reply__field js-inbox-reply-text" name="{{ reply_form.message.vars.full_name }}" rows="1"

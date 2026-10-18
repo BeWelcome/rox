@@ -192,7 +192,7 @@ class RequestController extends BaseRequestAndInvitationController
             'guest' => $guest,
             'host' => $host,
             'form' => $requestForm->createView(),
-        ]);
+        ] + $this->inboxFolders->getContext($request, $guest));
     }
 
     protected function addExpiredFlash(Member $receiver): void

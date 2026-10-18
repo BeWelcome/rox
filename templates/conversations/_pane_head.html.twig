@@ -1,7 +1,8 @@
 {#
   Top of the conversation pane: avatar, subject, correspondent and, on the view page,
   the report and delete actions. Expects current, correspondent, subject, linked,
-  is_spam, show_deleted, back_url and show_actions.
+  is_spam, show_deleted, back_url and show_actions. meta (optional) is shown after the
+  username, e.g. where the member lives.
 #}
 <header class="c-inbox-head">
     <a class="c-inbox-head__back{{ show_actions ? '' : ' is-always' }}" href="{{ back_url }}" title="{{ 'back'|trans }}">
@@ -16,6 +17,7 @@
         {% else %}
             <span class="c-inbox-head__name">{{ correspondent.username }}</span>
         {% endif %}
+        {% if meta ?? false %}<span class="c-inbox-head__meta"> · {{ meta }}</span>{% endif %}
     </div>
 
     {% if show_actions %}

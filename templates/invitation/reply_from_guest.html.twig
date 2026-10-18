@@ -45,14 +45,14 @@
 
         <div class="c-inbox-compose__actions">
             {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
-                <div class="btn-group">
+                <div class="btn-group c-inbox-compose__decline">
                     <button type="submit" id="{{ form.decline.vars.id }}" name="{{ form.decline.vars.full_name }}" class="c-inbox-actions__btn c-inbox-actions__btn--outline c-inbox-compose__split">
                         {{ form.decline.vars.label|trans }}
                     </button>
                     <button type="button" class="c-inbox-actions__btn c-inbox-actions__btn--outline c-inbox-compose__split-toggle dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="visually-hidden">{{ 'toggle.dropdown'|trans }}</span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end">
+                    <div class="dropdown-menu dropdown-menu-end c-inbox-compose__menu">
                         <a class="dropdown-item" href="{{ url('conversation_decline', {id: current.id}) }}">{{ 'label.decline.no.message'|trans }}</a>
                     </div>
                 </div>

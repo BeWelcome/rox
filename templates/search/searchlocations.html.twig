@@ -222,10 +222,15 @@
                     {{ search.field(form.min_age, search.select(form.min_age, '', true)) }}
                     {{ search.field(form.max_age, search.select(form.max_age, '', true)) }}
                 </div>
-                {{ search.field(form.gender, form_widget(form.gender)) }}
-                {{ search.field(form.languages, form_widget(form.languages)) }}
+                {{ search.checks(form.gender) }}
+                {# Only the languages the member speaks can be chosen (see SearchController). #}
+                {{ search.checks(form.languages) }}
                 {{ search.field(form.last_active, search.select(form.last_active)) }}
-                {{ search.field(form.groups, form_widget(form.groups)) }}
+                {% if form.groups.vars.choices|length > 0 %}
+                    {{ search.field(form.groups, form_widget(form.groups)) }}
+                {% else %}
+                    {% do form.groups.setRendered %}
+                {% endif %}
                 {{ search.field(form.keywords, form_widget(form.keywords, { attr: { class: 'p-search-input' } })) }}
             </section>
 

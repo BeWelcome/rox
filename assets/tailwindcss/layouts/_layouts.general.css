@@ -1523,6 +1523,26 @@ main:has(.p-hero) {
   transform: none;
 }
 
+/* ── Friendship form (add / edit a friend) ────────────────── */
+.p-friend-form__member {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+.p-friend-form__name,
+.p-friend-form__name:hover { color: #0f172a; font-size: 1.125rem; font-weight: 700; text-decoration: none; }
+.p-friend-form__name:hover { color: #c2410c; }
+.p-friend-form__blurb { margin: 0 auto; max-width: 36rem; text-align: center; color: #475569; }
+.p-edit-subpage__actions .p-friend-form__remove,
+.p-edit-subpage__actions .p-friend-form__remove:hover,
+.p-edit-subpage__actions .p-friend-form__remove:focus-visible {
+  border-color: #dc2626;
+  background: #dc2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.22);
+}
+
 /* ── Comment form (add / edit a comment) ──────────────────── */
 .p-comment-form__note {
   margin-bottom: 1.5rem;
@@ -3218,6 +3238,55 @@ main:has(.p-hero) {
 /* ── Member gallery page (/gallery/show/user/{username}/pictures) ── */
 .p-gallery-page {
   padding-top: 1.5rem;
+}
+
+/* ── Friends page (/members/{username}/friends) ──────────── */
+.p-friends-page { padding-top: 1.5rem; }
+.p-friends-page .card-header .p-gallery-footer__count { margin-left: 0.4rem; letter-spacing: 0; }
+.p-friends-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.p-friends-page__item,
+.p-friends-page__item:hover {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  height: 100%;
+  padding: 1rem 0.5rem 0.85rem;
+  border: 1px solid #f1f5f9;
+  border-radius: 0.875rem;
+  background: #fff;
+  color: #1e293b;
+  text-decoration: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.p-friends-page__item:hover,
+.p-friends-page__item:focus-visible {
+  border-color: #fed7aa;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.07);
+  transform: translateY(-1px);
+}
+.p-friends-page__name {
+  max-width: 100%;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.p-friends-page__item:hover .p-friends-page__name { color: #c2410c; }
+.p-friends-page__pager { display: flex; justify-content: center; margin-top: 1.25rem; }
+
+@media (max-width: 576px) {
+  .p-friends-page__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+  .p-friends-page__item { padding: 0.75rem 0.25rem; }
+  .p-friends-page .o-avatar--m,
+  .p-friends-page .o-avatar--m .o-avatar__img-wrapper { width: 56px; height: 56px; }
 }
 
 .p-gallery-page .card-header .p-gallery-footer__count {

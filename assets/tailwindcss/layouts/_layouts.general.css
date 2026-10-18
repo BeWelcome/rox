@@ -2107,7 +2107,7 @@ main:has(.p-hero) {
   color: #1e293b;
   background: #fff;
   border-bottom: none;
-  padding: 0.9rem 3.5rem 1.15rem 1.25rem;
+  padding: 0.9rem 3.5rem 0.95rem 1.25rem;
   border-radius: 1rem 1rem 0 0;
   position: relative;
 }
@@ -2116,7 +2116,7 @@ main:has(.p-hero) {
   content: '';
   position: absolute;
   left: 1.25rem;
-  bottom: 0.55rem;
+  bottom: 0.4rem;
   width: 2rem;
   height: 3px;
   background: #f37000;
@@ -2124,7 +2124,7 @@ main:has(.p-hero) {
 }
 
 .p-profile-secondary .card-body {
-  padding: 0.75rem 1.25rem 1rem !important;
+  padding: 0.35rem 1.25rem 1rem !important;
   font-size: 0.9375rem;
   color: #334155;
   line-height: 1.6;
@@ -2467,7 +2467,7 @@ main:has(.p-hero) {
   background: #fff;
   color: #1e293b;
   border-bottom: none;
-  padding: 0.9rem 3.5rem 1.15rem 1.25rem !important;
+  padding: 0.9rem 3.5rem 0.95rem 1.25rem !important;
   border-left: none;
   border-radius: 1rem 1rem 0 0;
   position: relative;
@@ -2476,7 +2476,7 @@ main:has(.p-hero) {
   content: '';
   position: absolute;
   left: 1.25rem;
-  bottom: 0.55rem;
+  bottom: 0.4rem;
   width: 2rem;
   height: 3px;
   background: #f37000;
@@ -2516,7 +2516,7 @@ main:has(.p-hero) {
 }
 
 .p-profile-main .card-body {
-  padding: 0.75rem 1.25rem 1rem !important;
+  padding: 0.35rem 1.25rem 1rem !important;
   font-size: 0.9375rem;
   color: #334155;
   line-height: 1.6;

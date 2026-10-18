@@ -33,13 +33,23 @@
   {% if _langCount > 1 %}
     {% set _reqLang = app.request.query.get('language') %}
     {% set _active = _reqLang is not null and _reqLang in _langs ? _reqLang : (locale in _langs ? locale : 'en') %}
-    <div class="p-lang-pills p-lang-pills--overlay">
-      <i class="fas fa-globe p-lang-pills__globe"></i>
-      {% for _l in _langs %}
-        {% if _translations[_l]|length > 1 %}
-          <button class="p-lang-pill{% if _l is same as(_active) %} p-lang-pill--active{% endif %}" data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
-        {% endif %}
-      {% endfor %}
+    <div class="p-lang-switch dropdown">
+      <button type="button" class="p-lang-switch__toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+              aria-label="{{ 'menu.language.toggle'|trans }}">
+        <i class="fas fa-globe" aria-hidden="true"></i>
+        <span class="p-lang-switch__name" data-lang-current-name>{{ language_name(_active) }}</span>
+        <span class="p-lang-switch__code" data-lang-current-code>{{ _active|upper }}</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
+        {% for _l in _langs %}
+          {% if _translations[_l]|length > 1 %}
+            <li>
+              <button type="button" class="dropdown-item p-hero__dropdown-item p-lang-option{% if _l is same as(_active) %} p-lang-option--active{% endif %}"
+                      data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
     </div>
   {% endif %}
   <div class="p-hero__body">
@@ -258,21 +268,29 @@
   {# ── Tab navigation ──────────────────────────────── #}
   {% set activeItem = submenu.active is defined and submenu.active != '' ? submenu.active : 'profile' %}
   <div class="p-hero__tabs-wrap container-lg">
-  <nav class="p-hero__tabs">
-    {% set navItems = ['profile', 'comments', 'friends', 'gallery', 'forum_posts', 'visitors', 'allmessages'] %}
-    {% for key in navItems %}
-      {% if items[key] is defined %}
-        <a href="{{ items[key].url }}"
-           class="p-hero__tab{% if activeItem == key %} p-hero__tab--active{% endif %}">
-          <i class="fas fa-fw fa-{{ items[key].icon }}"></i>
-          {{ items[key].key|lower|trans }}
-          {% if items[key].count is defined and items[key].count > 0 %}
-            <span class="p-hero__tab-count">{{ items[key].count }}</span>
-          {% endif %}
-        </a>
-      {% endif %}
-    {% endfor %}
-  </nav>
+  <div class="p-hero__tabs-scroller" data-tabs-scroller>
+    <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--prev" data-tabs-scroll="-1" tabindex="-1" aria-hidden="true">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <nav class="p-hero__tabs">
+      {% set navItems = ['profile', 'comments', 'friends', 'gallery', 'forum_posts', 'visitors', 'allmessages'] %}
+      {% for key in navItems %}
+        {% if items[key] is defined %}
+          <a href="{{ items[key].url }}"
+             class="p-hero__tab{% if activeItem == key %} p-hero__tab--active{% endif %}">
+            <i class="fas fa-fw fa-{{ items[key].icon }}"></i>
+            {{ items[key].key|lower|trans }}
+            {% if items[key].count is defined and items[key].count > 0 %}
+              <span class="p-hero__tab-count">{{ items[key].count }}</span>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </nav>
+    <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--next" data-tabs-scroll="1" tabindex="-1" aria-hidden="true">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+  </div>
   </div>{# /.p-hero__tabs-wrap #}
 
 </div>

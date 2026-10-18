@@ -939,10 +939,47 @@ main:has(.p-hero) {
   padding: 0 1.5rem;
   overflow-x: auto;
   scrollbar-width: none;
+  scroll-behavior: smooth;
 }
 
 .p-hero__tabs::-webkit-scrollbar {
   display: none;
+}
+
+.p-hero__tabs-scroller {
+  position: relative;
+}
+
+.p-hero__tabs-arrow {
+  position: absolute;
+  top: 1px;
+  bottom: 0;
+  z-index: 2;
+  display: none;
+  align-items: center;
+  width: 2.5rem;
+  padding: 0 0.5rem;
+  border: 0;
+  color: #64748b;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.p-hero__tabs-arrow--prev {
+  left: 0;
+  justify-content: flex-start;
+  background: linear-gradient(to right, #fff 55%, rgba(255, 255, 255, 0));
+}
+
+.p-hero__tabs-arrow--next {
+  right: 0;
+  justify-content: flex-end;
+  background: linear-gradient(to left, #fff 55%, rgba(255, 255, 255, 0));
+}
+
+.p-hero__tabs-scroller.can-scroll-prev .p-hero__tabs-arrow--prev,
+.p-hero__tabs-scroller.can-scroll-next .p-hero__tabs-arrow--next {
+  display: flex;
 }
 
 .p-hero__tab {
@@ -2210,56 +2247,74 @@ main:has(.p-hero) {
 }
 
 /* ── Language switcher ──────────────────────────────────── */
-.p-lang-pills {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
 .p-hero__body-wrap {
   position: relative;
 }
 
-.p-lang-pills--overlay {
+.p-lang-switch {
   position: absolute;
-  top: -38px;
+  top: -42px;
   right: 0;
   z-index: 10;
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(6px);
-  border-radius: 999px;
-  padding: 0.2rem 0.5rem;
 }
 
-.p-lang-pills__globe {
-  font-size: 0.7rem;
-  color: #64748b;
-  margin-right: 0.15rem;
-}
-
-.p-lang-pill {
-  padding: 0.2rem 0.55rem;
-  border-radius: 999px;
-  font-size: 0.6875rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+.p-lang-switch__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.75rem;
   border: 1px solid #e2e8f0;
-  background: #fff;
-  color: #94a3b8;
-  cursor: pointer;
-  transition: all 0.15s ease;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(6px);
+  color: #334155;
+  font-size: 0.8125rem;
+  font-weight: 600;
   line-height: 1.4;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
 }
 
-.p-lang-pill:hover {
+.p-lang-switch__toggle:hover,
+.p-lang-switch__toggle[aria-expanded="true"] {
   border-color: #f37000;
   color: #f37000;
 }
 
-.p-lang-pill--active {
-  background: #f37000;
-  border-color: #f37000;
-  color: #fff;
+.p-lang-switch__toggle .fa-globe {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.p-lang-switch__code {
+  display: none;
+}
+
+.p-lang-option--active,
+.p-lang-option--active:hover {
+  background: #fff7ed;
+  color: #f37000;
+  font-weight: 600;
+}
+
+@media (max-width: 540px) {
+  /* Below the banner, next to the avatar (as in the mobile mock-up) */
+  .p-lang-switch {
+    top: 0.75rem;
+    right: 1rem;
+  }
+
+  .p-lang-switch__toggle {
+    background: #fff;
+  }
+
+  .p-lang-switch__name {
+    display: none;
+  }
+
+  .p-lang-switch__code {
+    display: inline;
+  }
 }
 
 /* ── Sidebar cards ──────────────────────────────────────── */

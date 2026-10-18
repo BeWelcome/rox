@@ -192,20 +192,25 @@
         </div>
         <div class="card-body">
           {% if comments|length > 0 %}
-            <div class="p-comments-counts">
-              <a href="{{ url('profile_comments', {username: member.username, type: 'positive'}) }}" class="p-comments-count p-comments-count--positive">
-                <i class="fas fa-thumbs-up"></i> {{ comments_count.positive }}
-              </a>
-              <a href="{{ url('profile_comments', {username: member.username, type: 'neutral'}) }}" class="p-comments-count p-comments-count--neutral">
-                <i class="fas fa-minus"></i> {{ comments_count.neutral }}
-              </a>
-              <a href="{{ url('profile_comments', {username: member.username, type: 'negative'}) }}" class="p-comments-count p-comments-count--negative">
-                <i class="fas fa-thumbs-down"></i> {{ comments_count.negative }}
-              </a>
-            </div>
+            {% set comment_filters = [
+              {type: 'all', icon: 'list-ul', label: 'landing.button.all', count: comments_count.total},
+              {type: 'positive', icon: 'thumbs-up', label: 'comment.quality.positive', count: comments_count.positive},
+              {type: 'neutral', icon: 'minus', label: 'comment.quality.neutral', count: comments_count.neutral},
+              {type: 'negative', icon: 'thumbs-down', label: 'comment.quality.negative', count: comments_count.negative},
+            ] %}
+            <nav class="p-comments-tabs" aria-label="{{ 'profile.comments'|trans({}, "messages", profile_language) }}">
+              {% for filter in comment_filters %}
+                <a href="{{ filter.type == 'all' ? url('profile_comments', {username: member.username}) : url('profile_comments', {username: member.username, type: filter.type}) }}"
+                   class="p-comments-tabs__tab p-comments-tabs__tab--{{ filter.type }}">
+                  <i class="fas fa-{{ filter.icon }}" aria-hidden="true"></i>
+                  {{ filter.label|trans({}, "messages", profile_language) }}
+                  <span class="p-comments-tabs__count">{{ filter.count }}</span>
+                </a>
+              {% endfor %}
+            </nav>
           {% endif %}
           {% set commentsShown = 0 %}
-          {% for comment in comments|slice(0,10) %}
+          {% for comment in comments %}
             {% set commentToVisible = (comment['to'] is defined) ? (comment['to'].showCondition(app.user) > 0) : false %}
             {% set commentFromVisible = (comment['from'] is defined) ? (comment['from'].showCondition(app.user) > 0) : false %}
             {% if commentToVisible or commentFromVisible %}
@@ -218,10 +223,14 @@
               <p>{{ 'profile.no.comments'|trans({}, 'messages', profile_language) }}</p>
             </div>
           {% endfor %}
-          {% if comments|length != visibleComments %}
-            <a href="{{ url('profile_comments', {username: member.username}) }}" class="btn btn-block btn-sm btn-outline-primary">
-              {{ 'showallcomments'|trans({}, "messages", profile_language) }} <span class="badge text-bg-primary u:rounded-8 u:px-8 u:min-w-20">{{ visibleComments }}</span>
-            </a>
+          {% if has_more_comments|default(false) %}
+            <div class="p-comments-more">
+              <a href="{{ url('profile_comments', {username: member.username}) }}" class="p-comments-more__link">
+                {{ 'showallcomments'|trans({}, "messages", profile_language) }}
+                <span class="p-gallery-footer__count">{{ comments_count.total }}</span>
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+              </a>
+            </div>
           {% endif %}
           {% if not edit and submenu.items is defined and submenu.items.comment is defined %}
             <div class="p-accom-cta">

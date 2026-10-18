@@ -169,6 +169,24 @@ class CommentRepository extends EntityRepository
         return $this->getCommentsAsArray($commentsForMember, $commentsByMember);
     }
 
+    public function getCommentsForMemberCount(Member $member): int
+    {
+        return $this->getCommentsForMemberQueryBuilder($member)
+            ->select('count(c.fromMember)')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
+    public function getCommentsByMemberCount(Member $member): int
+    {
+        return $this->getCommentsByMemberQueryBuilder($member)
+            ->select('count(c.toMember)')
+            ->getQuery()
+            ->getSingleScalarResult()
+        ;
+    }
+
     public function getVisibleCommentsForMemberCount(Member $member): int
     {
         return $this->getCommentsForMemberQueryBuilder($member)

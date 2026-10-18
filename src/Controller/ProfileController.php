@@ -58,6 +58,8 @@ class ProfileController extends AbstractController
 {
     use TranslatedFlashTrait;
 
+    private const int PROFILE_COMMENTS = 10;
+
     public function __construct(
         private readonly ChangeProfilePictureGlobals $globals,
         private readonly ProfileSubmenu $profileSubmenu,
@@ -677,7 +679,14 @@ class ProfileController extends AbstractController
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $commentCounts = $commentRepository->getCommentsCountMemberByQuality($member);
-        $comments = $commentRepository->getLatestCommentsMember($member, 5);
+        // Show up to 10 exchanges; the "show all" link only appears when some are left out.
+        $latestComments = $commentRepository->getLatestCommentsMember($member, self::PROFILE_COMMENTS);
+        $comments = \array_slice($latestComments, 0, self::PROFILE_COMMENTS, true);
+        $receivedShown = \count(array_filter($comments, fn (array $comment) => isset($comment['from'])));
+        $writtenShown = \count(array_filter($comments, fn (array $comment) => isset($comment['to'])));
+        $hasMoreComments = \count($latestComments) > self::PROFILE_COMMENTS
+            || $commentRepository->getCommentsForMemberCount($member) > $receivedShown
+            || $commentRepository->getCommentsByMemberCount($member) > $writtenShown;
         $visibleComments = $commentRepository->getVisibleCommentsForMemberCount($member);
 
         /** @var FriendRepository $friendRepository */
@@ -695,6 +704,7 @@ class ProfileController extends AbstractController
             'comments' => $comments,
             'comments_count' => $commentCounts,
             'visibleComments' => $visibleComments,
+            'has_more_comments' => $hasMoreComments,
             'friends' => $friends,
             'pictures' => $pictures,
             'language' => $language,

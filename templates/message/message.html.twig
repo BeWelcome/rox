@@ -1,11 +1,7 @@
-{% import 'macros.twig' as macros %}
 {% extends 'base.html.twig' %}
+{% import 'conversations/_inbox.macros.twig' as inbox %}
 
-{% block subnav %}
-    {% for filter, menuitem in submenu.items %}
-        <a class="list-group-item list-group-item-action {% if submenu.active == filter %}active{% endif %}" href="{{ path( submenu.route, { filter: filter } ) }}">{{ filter | trans }}</a>
-    {% endfor %}
-{% endblock %}
+{% set hide_sidebar = true %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('message') }}
@@ -15,29 +11,78 @@
     {{ encore_entry_link_tags('tailwind') }}
 {% endblock stylesheets %}
 
+{% block title %}
+    {{ 'message.write_to'|trans|format(receiver.shortNameOrUsername) }}
+{% endblock title %}
+
 {% block content %}
-    {% set myself = app.user %}
+    {% set address = receiver.activeAddress %}
+    {% set languages %}
+        {%- for level in receiver.languageLevels -%}
+            {{ ('lang_' ~ level.language.shortCode)|lower|trans }}{% if not loop.last %}, {% endif %}
+        {%- endfor -%}
+    {% endset %}
+    {% set profileUrl = path('members_profile', { username: receiver.username }) %}
 
-    {{ macros.new_conversation_header(receiver, 'message.write_to') }}
+    <div class="c-inbox c-inbox--thread">
+        {{ inbox.nav(folder, 'column') }}
 
-    <div class="u:grid u:grid-cols-1">
-        <div class="u:mb-4">
-            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-            {{ form_errors(form) }}
-            {{ form_label(form.subject.subject) }}
-            {{ form_widget(form.subject.subject) }}
-            {{ form_errors(form.subject.subject) }}
-            {{ form_label(form.message) }}
-            {{ form_widget(form.message) }}
-            {{ form_errors(form.message) }}
-            {{ form_rest(form) }}
-        </div>
-
-        <div class="u:mb-4">
-            <div class="u:flex u:justify-end">
-                <button type="submit" class="o-button u:mt-8">{{ 'message.send' | trans }}</button>
+        <section class="c-inbox__list">
+            <div class="c-inbox-list">
+                {{ inbox.list(conversations, folder, { initiator: initiator, unreadOnly: unreadOnly }) }}
             </div>
-        </div>
-        {{ form_end(form) }}
+        </section>
+
+        <section class="c-inbox__pane">
+            {% include 'conversations/_pane_head.html.twig' with {
+                current: null,
+                correspondent: receiver,
+                subject: 'message.write_to'|trans|format(receiver.shortNameOrUsername),
+                linked: true,
+                back_url: profileUrl,
+                show_actions: false,
+                is_spam: false,
+                show_deleted: false,
+            } %}
+
+            {{ form_start(form, { attr: { novalidate: 'novalidate', class: 'c-inbox-new' } }) }}
+                <div class="c-inbox-new__body">
+                    {# Who the message goes to #}
+                    <div class="p-message-form__receiver">
+                        <div class="p-message-form__who">
+                            <a class="p-message-form__name" href="{{ profileUrl }}">{{ receiver.shortNameOrUsername }}</a>
+                            {% if address is not same as(false) and address is not null %}
+                                <p class="p-message-form__meta">{{ 'lives.and.speaks'|trans({'city': address.location.name ~ ', ' ~ address.location.country.name|capitalize, 'languages': languages})|raw }}</p>
+                            {% endif %}
+                        </div>
+                        <a class="p-message-form__history" href="{{ path('conversations_with', { username: receiver.username }) }}"
+                           title="{{ 'messages_allmessageswith'|trans|format(receiver.shortNameOrUsername) }}">
+                            <i class="fas fa-mail-bulk" aria-hidden="true"></i>
+                            <span class="visually-hidden">{{ 'messages_allmessageswith'|trans|format(receiver.shortNameOrUsername) }}</span>
+                        </a>
+                    </div>
+
+                    {# Field errors are shown inside each label by rox_form_theme (form_label_errors). #}
+                    {{ form_errors(form) }}
+
+                    <div class="p-message-form__field">
+                        {{ form_label(form.subject.subject, null, { label_attr: { class: 'o-label' } }) }}
+                        {{ form_widget(form.subject.subject, { attr: { class: 'o-input' } }) }}
+                    </div>
+
+                    <div class="p-message-form__field c-inbox-compose__editor">
+                        {{ form_label(form.message, null, { label_attr: { class: 'o-label' } }) }}
+                        {{ form_widget(form.message) }}
+                    </div>
+
+                    {{ form_rest(form) }}
+                </div>
+
+                <div class="c-inbox-new__actions">
+                    <a class="c-inbox-compose__cancel" href="{{ profileUrl }}">{{ 'cancel'|trans }}</a>
+                    <button type="submit" class="c-inbox-reply__btn c-inbox-compose__send">{{ 'message.send'|trans }}</button>
+                </div>
+            {{ form_end(form) }}
+        </section>
     </div>
 {% endblock %}

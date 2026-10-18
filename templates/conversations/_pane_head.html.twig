@@ -1,0 +1,61 @@
+{#
+  Top of the conversation pane: avatar, subject, correspondent and, on the view page,
+  the report and delete actions. Expects current, correspondent, subject, linked,
+  is_spam, show_deleted, back_url and show_actions.
+#}
+<header class="c-inbox-head">
+    <a class="c-inbox-head__back{{ show_actions ? '' : ' is-always' }}" href="{{ back_url }}" title="{{ 'back'|trans }}">
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        <span class="visually-hidden">{{ 'back'|trans }}</span>
+    </a>
+    <img class="c-inbox-avatar c-inbox-avatar--l" src="{{ path('avatar', { username: correspondent.username, size: 72 }) }}" alt="" loading="lazy">
+    <div class="c-inbox-head__who">
+        <h1 class="c-inbox-head__subject">{{ subject|striptags }}</h1>
+        {% if linked %}
+            <a class="c-inbox-head__name" href="{{ path('members_profile', { username: correspondent.username }) }}">{{ correspondent.username }}</a>
+        {% else %}
+            <span class="c-inbox-head__name">{{ correspondent.username }}</span>
+        {% endif %}
+    </div>
+
+    {% if show_actions %}
+    <div class="c-inbox-head__actions">
+        {% if is_spam %}
+            <a class="c-inbox-head__report" href="{{ path('conversation_mark_nospam', { id: current.id }) }}">
+                <i class="far fa-flag" aria-hidden="true"></i><span>{{ 'marknospam'|trans }}</span>
+            </a>
+        {% else %}
+            <button type="button" class="c-inbox-head__report js-modal-trigger" data-micromodal-trigger="report-modal">
+                <i class="far fa-flag" aria-hidden="true"></i><span>{{ 'markspam'|trans }}</span>
+            </button>
+        {% endif %}
+        {% if show_deleted %}
+            <a class="c-inbox-head__icon" href="{{ path('conversation_recover', { id: current.id }) }}" title="{{ 'recover'|trans }}">
+                <i class="fas fa-inbox" aria-hidden="true"></i><span class="visually-hidden">{{ 'recover'|trans }}</span>
+            </a>
+        {% else %}
+            <a class="c-inbox-head__icon" href="{{ path('conversation_delete', { id: current.id }) }}" title="{{ 'delete'|trans }}">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i><span class="visually-hidden">{{ 'delete'|trans }}</span>
+            </a>
+        {% endif %}
+    </div>
+
+    <details class="c-inbox-head__menu">
+        <summary class="c-inbox-head__icon" title="{{ 'edit'|trans }}">
+            <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+        </summary>
+        <div class="c-inbox-head__menu-list">
+            {% if is_spam %}
+                <a href="{{ path('conversation_mark_nospam', { id: current.id }) }}"><i class="far fa-flag fa-fw" aria-hidden="true"></i> {{ 'marknospam'|trans }}</a>
+            {% else %}
+                <button type="button" class="js-modal-trigger" data-micromodal-trigger="report-modal"><i class="far fa-flag fa-fw" aria-hidden="true"></i> {{ 'markspam'|trans }}</button>
+            {% endif %}
+            {% if show_deleted %}
+                <a href="{{ path('conversation_recover', { id: current.id }) }}"><i class="fas fa-inbox fa-fw" aria-hidden="true"></i> {{ 'recover'|trans }}</a>
+            {% else %}
+                <a class="is-danger" href="{{ path('conversation_delete', { id: current.id }) }}"><i class="fas fa-trash-alt fa-fw" aria-hidden="true"></i> {{ 'delete'|trans }}</a>
+            {% endif %}
+        </div>
+    </details>
+    {% endif %}
+</header>

@@ -6,13 +6,16 @@ use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Form\MessageToMemberType;
 use App\Form\ReportSpamType;
 use App\Model\ConversationModel;
+use App\Service\InboxFolders;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,6 +33,7 @@ class ConversationController extends AbstractController
     public function __construct(
         protected ConversationModel $conversationModel,
         private EntityManagerInterface $entityManager,
+        private InboxFolders $inboxFolders,
     ) {
     }
 
@@ -244,6 +248,11 @@ class ConversationController extends AbstractController
 
         $this->conversationModel->markConversationAsRead($member, $thread);
 
+        // A reply written under the conversation is posted to this same page.
+        if ($current->isMessage() && $request->isMethod('POST') && $request->request->has('app_message')) {
+            return $this->forward(self::class . '::reply', ['message' => $current]);
+        }
+
         $reportForm = $this->createForm(ReportSpamType::class);
         $reportForm->handleRequest($request);
         if ($reportForm->isSubmitted() && $reportForm->isValid()) {
@@ -255,13 +264,30 @@ class ConversationController extends AbstractController
         $template = $this->getViewTemplate($message);
 
         return $this->render($template, [
+            'reply_form' => $this->createInlineReplyForm($current),
             'show_deleted' => $includeDeleted,
             'show_report_modal' => $openReportModal,
             'form' => $reportForm->createView(),
             'is_spam' => $spam,
             'current' => $current,
             'thread' => $thread,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $member, $includeDeleted ? 'deleted' : ($spam ? 'spam' : 'conversations')));
+    }
+
+    /**
+     * Plain messages are answered right under the thread (the form posts back to the
+     * conversation page). Requests and invitations keep their own reply page.
+     */
+    private function createInlineReplyForm(Message $current): ?FormView
+    {
+        if (!$current->isMessage()) {
+            return null;
+        }
+
+        $replyMessage = new Message();
+        $replyMessage->setSubject($current->getSubject());
+
+        return $this->createForm(MessageToMemberType::class, $replyMessage)->createView();
     }
 
     private function checkConversationIsAllDeleted(array $thread, Member $member, bool $includeDeleted): bool

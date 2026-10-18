@@ -1,0 +1,57 @@
+{#
+  The messages of a conversation as chat bubbles.
+
+  `thread` is newest first. The container uses flex-direction: column-reverse, so the
+  elements are written newest first and shown oldest first, and the scroll starts at
+  the latest message. That is why a day's date is written after its oldest message.
+#}
+{% set myself = app.user %}
+{% set show_deleted = show_deleted ?? false %}
+{% set visible = []|merge(thread|filter(m => (show_deleted or not m.isDeletedByMember(myself)) and not m.isPurgedByMember(myself))) %}
+{% set newest = thread|first %}
+{% set request = newest.request %}
+{% if request %}
+    {% set currentArrival = request.arrival %}{% set currentDeparture = request.departure %}
+    {% set currentFlexible = request.flexible %}{% set currentTravelers = request.numberOfTravellers %}
+{% endif %}
+{% set requestChanged = false %}
+
+<div id="message_thread" class="c-inbox-thread">
+    {% for message in visible %}
+        {% set own = message.sender == myself %}
+        {% set deleted = message.isDeletedByMember(myself) %}
+        {% set older = visible[loop.index] ?? null %}
+
+        <div class="c-bubble-row{{ own ? ' is-own' : '' }}">
+            <div class="c-bubble{{ own ? ' c-bubble--own' : '' }}{{ deleted ? ' is-deleted' : '' }}">
+                <div class="c-bubble__text">{{ message.message|purify('custom')|url_update }}</div>
+                <time class="c-bubble__time" datetime="{{ message.created|date('c') }}">{{ message.created|format_time('short') }}</time>
+            </div>
+        </div>
+
+        {# Request details that changed with this message (shown above it). #}
+        {% if message.request and request %}
+            {% set r = message.request %}
+            {% if r.arrival != currentArrival or r.departure != currentDeparture or r.flexible != currentFlexible or r.numberOfTravellers != currentTravelers or (loop.last and requestChanged) %}
+                <div class="c-inbox-request">
+                    <div class="c-inbox-request__title">
+                        {{ loop.last ? 'original.request.details'|trans : 'former.request.details'|trans }}
+                    </div>
+                    <div class="c-inbox-request__facts">
+                        <span><i class="fa fa-calendar" aria-hidden="true"></i> {{ r.arrival|format_date('medium') }} – {{ r.departure|format_date('medium') }}</span>
+                        <span><i class="fa fa-users" aria-hidden="true"></i> {{ 'request.number.persons'|trans({ numberpersons: r.numberOfTravellers }) }}</span>
+                        <span><i class="fas fa-sync" aria-hidden="true"></i>
+                            {{ r.flexible ? 'request.flexible.with.arrival.departure'|trans : 'request.not.flexible.with.arrival.departure'|trans }}</span>
+                    </div>
+                </div>
+                {% set currentArrival = r.arrival %}{% set currentDeparture = r.departure %}
+                {% set currentFlexible = r.flexible %}{% set currentTravelers = r.numberOfTravellers %}
+                {% set requestChanged = true %}
+            {% endif %}
+        {% endif %}
+
+        {% if older is null or older.created|date('Y-m-d') != message.created|date('Y-m-d') %}
+            <div class="c-inbox-thread__day"><span>{{ message.created|format_date('long') }}</span></div>
+        {% endif %}
+    {% endfor %}
+</div>

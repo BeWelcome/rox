@@ -11,6 +11,7 @@ use App\Form\MessageToMemberType;
 use App\Model\ConversationModel;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
+use App\Service\InboxFolders;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
@@ -42,6 +43,7 @@ class MessageController extends AbstractController
         private readonly ConversationThread $conversationThread,
         private readonly EntityManagerInterface $entityManager,
         private readonly BrowserNotificationService $browserNotificationService,
+        private readonly InboxFolders $inboxFolders,
     ) {
     }
 
@@ -126,7 +128,7 @@ class MessageController extends AbstractController
         return $this->render('message/message.html.twig', [
             'receiver' => $receiver,
             'form' => $messageForm->createView(),
-        ]);
+        ] + $this->inboxFolders->getContext($request, $sender));
     }
 
     public function reply(Request $request, Message $message): Response
@@ -159,7 +161,7 @@ class MessageController extends AbstractController
             $message = $this->addMessageAndSendNotification($sender, $receiver, $message, $replySubject, $messageText);
             $this->addTranslatedFlash('notice', 'flash.reply.sent');
 
-            return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $message->getId()] + $request->query->all());
         }
 
         return $this->render('message/reply.html.twig', [
@@ -167,7 +169,7 @@ class MessageController extends AbstractController
             'receiver' => $receiver,
             'current' => $message,
             'thread' => $thread,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $sender));
     }
 
     /**

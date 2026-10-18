@@ -65,3 +65,12 @@ conversation.reply.template.not_available.label:
 conversation.reply.template.not_available.body:
     - '<p>Thanks for your message. Unfortunately this will not work for me this time. I hope you find another option.</p>'
     - Body for a conversation reply template
+conversations.select.done:
+    - Done
+    - Button on the conversations list that leaves the selection mode (it replaces "Select")
+conversations.pick:
+    - Pick a conversation to read it.
+    - Shown on the right of the conversations list on large screens when no conversation is open
+conversation.reply.to:
+    - Reply to {username}…
+    - Placeholder of the reply box at the bottom of a conversation

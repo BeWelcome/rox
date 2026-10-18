@@ -1,0 +1,55 @@
+{#
+  Reply pages (/conversation/{id}/reply) for messages, hosting requests and invitations:
+  folders and list on the left, the conversation on the right with the reply form under it.
+  Child templates fill reply_extra (request or invitation details) and reply_form.
+#}
+{% extends 'base.html.twig' %}
+{% import 'conversations/_inbox.macros.twig' as inbox %}
+
+{% set hide_sidebar = true %}
+
+{% block title %}
+    {{ 'conversations' | trans }}
+{% endblock title %}
+
+{% block content %}
+    {% set myself = app.user %}
+    {% set newest = thread|first %}
+    {% set correspondent = (newest.sender == myself) ? newest.receiver : newest.sender %}
+    {% set linked = correspondent.status in ['Active', 'OutOfRemind'] %}
+    {% if newest.subject %}
+        {% set subject = newest.subject.subject %}
+    {% else %}
+        {% set subject = 'conversation.with'|trans({ username: correspondent.username }) %}
+    {% endif %}
+    {% set listParams = (initiator != 2 ? { initiator: initiator } : {})|merge(unreadOnly ? { unread_only: 1 } : {}) %}
+    {% set viewParams = (folder == 'conversations' ? { id: newest.id } : { id: newest.id, folder: folder })|merge(listParams) %}
+    {% set backUrl = path('conversation_view', viewParams) %}
+
+    <div class="c-inbox c-inbox--thread">
+        {{ inbox.nav(folder, 'column') }}
+
+        <section class="c-inbox__list">
+            <div class="c-inbox-list">
+                {{ inbox.list(conversations, folder, { current: newest, initiator: initiator, unreadOnly: unreadOnly, linkBase: app.request.pathInfo }) }}
+            </div>
+        </section>
+
+        <section class="c-inbox__pane">
+            {% include 'conversations/_pane_head.html.twig' with {
+                current: newest, back_url: backUrl, show_actions: false, is_spam: false, show_deleted: false
+            } %}
+
+            {% set extra %}{% block reply_extra %}{% endblock reply_extra %}{% endset %}
+            {% if extra|trim is not empty %}
+                <div class="c-inbox-pane__extra">{{ extra }}</div>
+            {% endif %}
+
+            {% include 'conversations/_thread.html.twig' with { show_deleted: false } %}
+
+            <div class="c-inbox-compose{{ compose_class ?? '' }}">
+                {% block reply_form %}{% endblock reply_form %}
+            </div>
+        </section>
+    </div>
+{% endblock content %}

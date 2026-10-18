@@ -16,6 +16,7 @@ use App\Model\ConversationModel;
 use App\Model\InvitationModel;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
+use App\Service\InboxFolders;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
@@ -46,6 +47,7 @@ class InvitationController extends BaseRequestAndInvitationController
         private Mailer $mailer,
         private Logger $logger,
         private readonly BrowserNotificationService $browserNotificationService,
+        private readonly InboxFolders $inboxFolders,
     ) {
         parent::__construct($invitationModel, $entityManager);
         $this->conversationModel = $conversationModel;
@@ -291,7 +293,7 @@ class InvitationController extends BaseRequestAndInvitationController
             'already_accepted' => $alreadyAccepted,
             'thread' => $thread,
             'leg' => $leg,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $this->getUser()));
     }
 
     public function hostReply(Request $request, Message $invitation, Member $guest, Member $host): Response
@@ -356,7 +358,7 @@ class InvitationController extends BaseRequestAndInvitationController
             'invitation' => $invitation->getRequest(),
             'thread' => $thread,
             'leg' => $leg,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $this->getUser()));
     }
 
     protected function addExpiredFlash(Member $receiver): void

@@ -15,6 +15,7 @@ use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
+use App\Service\InboxFolders;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ConversationThread;
@@ -44,6 +45,7 @@ class RequestController extends BaseRequestAndInvitationController
         private readonly Mailer $mailer,
         private readonly Logger $logger,
         private readonly BrowserNotificationService $browserNotificationService,
+        private readonly InboxFolders $inboxFolders,
     ) {
         parent::__construct($requestModel, $entityManager);
 
@@ -246,7 +248,7 @@ class RequestController extends BaseRequestAndInvitationController
             'host' => $host,
             'form' => $requestForm->createView(),
             'thread' => $thread,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $this->getUser()));
     }
 
     private function hostReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
@@ -295,7 +297,7 @@ class RequestController extends BaseRequestAndInvitationController
             'host' => $host,
             'form' => $requestForm->createView(),
             'thread' => $thread,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $this->getUser()));
     }
 
     private function sendGuestReplyNotification(

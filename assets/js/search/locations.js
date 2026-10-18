@@ -20,8 +20,24 @@ const where = document.querySelector('.js-search-where');
 const locationInput = document.getElementById('search_location');
 const hidden = (name) => document.getElementById('search_location_' + name);
 
+// "Find members" only works once a place has been picked from the list.
+function hasPlace() {
+    return hidden('geoname_id') !== null && hidden('geoname_id').value !== '' && hidden('latitude').value !== '';
+}
+
+function updateFindButtons() {
+    if (!form) {
+        return;
+    }
+    const enabled = hasPlace();
+    form.querySelectorAll('button[type=submit].p-search__find').forEach((button) => {
+        button.disabled = !enabled;
+    });
+}
+
 // Shows "Berlin  Land Berlin, Germany" over the field while it is not being edited.
 function updateWhereDisplay() {
+    updateFindButtons();
     if (!where) {
         return;
     }
@@ -87,6 +103,7 @@ if (where && locationInput) {
     // A new text is a new place: it has to be picked from the list again.
     locationInput.addEventListener('input', () => {
         ['geoname_id', 'latitude', 'longitude', 'admin_unit'].forEach((name) => { hidden(name).value = ''; });
+        updateFindButtons();
     });
     where.querySelector('.js-search-where-back').addEventListener('click', () => {
         locationInput.blur();
@@ -107,6 +124,9 @@ if (where && locationInput) {
  * ------------------------------------------------------------------------ */
 
 function submit() {
+    if (!hasPlace()) {
+        return; // nothing to search yet: the filters are kept for when a place is picked
+    }
     const button = form.querySelector('.js-search-find');
     if (form.requestSubmit) {
         form.requestSubmit(button);
@@ -342,19 +362,8 @@ Map.prototype.addMarkers = function (map) {
                 })
             });
 
-            const popup = document.createElement('a');
-            popup.className = 'p-search-map-popup';
-            popup.href = '/members/' + encodeURIComponent(value.Username);
-            const avatar = document.createElement('img');
-            avatar.src = '/members/avatar/' + encodeURIComponent(value.Username) + '/48';
-            avatar.alt = '';
-            const name = document.createElement('strong');
-            name.textContent = value.Username;
-            const guests = document.createElement('span');
-            guests.innerHTML = '<i class="fas fa-bed" aria-hidden="true"></i> ';
-            guests.appendChild(document.createTextNode(value.MaxGuests));
-            popup.append(avatar, name, guests);
-            marker.bindPopup(popup, {closeButton: false, minWidth: 90, maxWidth: 220});
+            // The popup is drawn by the page (search/_search.macros.twig, map_popup).
+            marker.bindPopup(value.popup, {closeButton: false, minWidth: 220, maxWidth: 280, className: 'p-search-map-bubble'});
 
             markers.addLayer(marker);
         });

@@ -29,10 +29,9 @@
             {% if address and address.location and address.location.latitude is not null %}
                 {% set mapMembers = mapMembers|merge([{
                     Username: result.member.username,
-                    Accommodation: result.member.accommodation,
-                    MaxGuests: result.member.maxGuests,
                     latitude: address.location.latitude,
                     longitude: address.location.longitude,
+                    popup: search.map_popup(result),
                 }]) %}
             {% endif %}
         {% endfor %}

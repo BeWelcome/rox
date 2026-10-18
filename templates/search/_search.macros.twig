@@ -41,3 +41,29 @@
         </span>
     {% endif %}
 {% endmacro %}
+
+{# What the map shows when a member's marker is clicked. #}
+{% macro map_popup(result) %}
+    {% import _self as search %}
+    {% set member = result.member %}
+    {% set displayName = member.name is empty ? member.username : member.name %}
+    {% set address = member.activeAddress %}
+    {% set facts = [] %}
+    {% if member.isAgeVisible %}{% set facts = facts|merge(['searchyearsold'|trans|format(member.age)|striptags]) %}{% endif %}
+    {% if address and address.location %}{% set facts = facts|merge([address.location.name]) %}{% endif %}
+    <div class="p-search-map-popup">
+        <a class="p-search-map-popup__head" href="{{ path('members_profile', { username: member.username }) }}">
+            <img src="{{ path('avatar', { username: member.username, size: 96 }) }}" alt="">
+            <span class="p-search-map-popup__who">
+                <strong>{{ displayName }}</strong>
+                {% if displayName != member.username %}<span class="p-search-map-popup__username">{{ member.username }}</span>{% endif %}
+                {% if facts|length %}<span class="p-search-map-popup__facts">{{ facts|join(' · ') }}</span>{% endif %}
+            </span>
+        </a>
+        <div class="p-search-map-popup__chips">
+            {{ search.accommodation(member) }}
+            <span class="p-search-map-popup__chip" title="{{ 'searchcanhostatleast'|trans }}"><i class="fas fa-bed" aria-hidden="true"></i> {{ member.maxGuests }}</span>
+            <a class="p-search-map-popup__chip" href="{{ path('profile_comments', { username: member.username }) }}"><i class="fas fa-comments" aria-hidden="true"></i> {{ result.commentCount ?? 0 }}</a>
+        </div>
+    </div>
+{% endmacro %}

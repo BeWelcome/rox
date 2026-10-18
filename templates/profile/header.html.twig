@@ -207,14 +207,14 @@
             </div>
           {% endif %}
         {% elseif not app.user is null and member.status != 'PassedAway' %}
+          <a href="{{ url('message_new', {username: member.Username}) }}" class="p-hero__btn p-hero__btn--primary">
+            <i class="fas fa-envelope"></i> {{ 'message.send'|trans }}
+          </a>
           {% if member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
-            <a href="{{ url('hosting_request', {username: member.username}) }}" class="p-hero__btn p-hero__btn--primary">
+            <a href="{{ url('hosting_request', {username: member.username}) }}" class="p-hero__btn p-hero__btn--outlined">
               <i class="fas fa-bed"></i> {{ 'profile.request.hosting'|trans }}
             </a>
           {% endif %}
-          <a href="{{ url('message_new', {username: member.Username}) }}" class="p-hero__btn p-hero__btn--outline">
-            <i class="fas fa-envelope"></i> {{ 'message.send'|trans }}
-          </a>
           {% set hasMore = items.comment is defined or items.friend is defined
             or items.add_note is defined or items.edit_note is defined
             or items.report is defined %}

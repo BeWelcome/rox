@@ -858,6 +858,19 @@ main:has(.p-hero) {
   box-shadow: 0 4px 14px rgba(243, 112, 0, 0.35);
 }
 
+/* Secondary action: white with orange outline (e.g. hosting request) */
+.p-hero__btn--outlined {
+  background: #fff;
+  color: #f37000 !important;
+  box-shadow: inset 0 0 0 1.5px #f37000;
+}
+
+.p-hero__btn--outlined:hover {
+  background: #fff7ed;
+  color: #c25a00 !important;
+  box-shadow: inset 0 0 0 1.5px #c25a00;
+}
+
 .p-hero__btn--secondary {
   background: linear-gradient(135deg, #ff9a2e, #f37000);
   color: #fff !important;

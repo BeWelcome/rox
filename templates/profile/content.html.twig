@@ -374,11 +374,13 @@
             </a>
           </div>
         {% else %}
+        {# Same target as the "Gallery" tab: own gallery management, or the member's pictures #}
+        {% set _galleryUrl = submenu.items.gallery.url ?? url('gallery_show_user_images', {username: member.username}) %}
         <div class="p-gallery-grid">
           {% for picture in pictures|slice(0, 5) %}
             {% set isLast = loop.last and pictures|length > 5 %}
             {% if isLast %}
-              <a href="{{ url('gallery', {username: member.username}) }}"
+              <a href="{{ _galleryUrl }}"
                  class="p-gallery-cell p-gallery-cell--more"
                  style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
                  aria-label="{{ picture.title|e('html_attr') }}">
@@ -399,7 +401,7 @@
         {% endif %}
         {% if pictures|length > 5 %}
           <div class="p-gallery-footer">
-            <a href="{{ url('gallery', {username: member.username}) }}">
+            <a href="{{ _galleryUrl }}">
               {{ 'profile.all.images'|trans({}, "messages", profile_language) }}
               <span class="p-gallery-footer__count">{{ pictures|length }}</span>
             </a>

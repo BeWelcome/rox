@@ -5304,12 +5304,13 @@ main:has(.p-hero) {
   .c-inbox-folders__menu { display: none; }
 }
 
+/* One line of small pills, so they fit even when a conversation is open beside the list. */
 .c-inbox-filters {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0 1rem 0.85rem;
+  gap: 0.35rem;
+  padding: 0 0.75rem 0.85rem;
   overflow-x: auto;
   border-bottom: 1px solid #f1f5f9;
   scrollbar-width: none;
@@ -5320,19 +5321,19 @@ main:has(.p-hero) {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.4rem 0.85rem;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
   border: 1px solid #e2e8f0;
   border-radius: 999px;
   background: #fff;
   color: #334155;
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
 }
 .c-inbox-filters__pill:hover { border-color: #cbd5e1; background: #f8fafc; }
-.c-inbox-filters__dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #475569; }
+.c-inbox-filters__dot { width: 0.4rem; height: 0.4rem; border-radius: 50%; background: #475569; }
 .c-inbox-filters__pill.is-active { border-color: #fdba74; background: #fff7ed; color: #c2410c; }
 .c-inbox-filters__pill.is-active .c-inbox-filters__dot { background: #f37000; }
 
@@ -5918,6 +5919,9 @@ form.c-inbox-reply textarea.c-inbox-reply__field { border-radius: 1.25rem; }
 .c-inbox-respond__text.is-invalid { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12); }
 .c-inbox-respond__editor .c-reply-templates { position: absolute; right: 0.5rem; bottom: 0.45rem; margin: 0; }
 .c-inbox-respond__options[hidden] { display: none; }
+/* The arrow of "Reply": down while the options are open (they fold down), up when folded. */
+.c-inbox-respond__chevron { margin-left: 0.15rem; font-size: 0.7em; transition: transform 0.2s ease; }
+.js-respond-options-toggle[aria-expanded="false"] .c-inbox-respond__chevron { transform: rotate(180deg); }
 .c-inbox-respond__actions { grid-area: send; display: flex; align-items: center; justify-content: flex-end; gap: 0.5rem; }
 .c-inbox-respond__secondary {
   display: inline-flex;

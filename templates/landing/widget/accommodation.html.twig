@@ -7,6 +7,7 @@
 {% set no = constant('App\\Doctrine\\AccommodationType::NO') %}
 {% set hosting = member.Accommodation == yes %}
 <div id="accommodation" class="l-hosting">
+  <div class="l-hosting__inner">
     <div class="l-hosting-toggle">
         <a id="{{ yes }}"
            class="hosting l-hosting-toggle__opt l-hosting-toggle__opt--yes{% if hosting %} l-hosting-toggle__opt--active{% endif %}"
@@ -29,4 +30,5 @@
         <span class="l-hosting-switch__label">{{ 'landing.hosting.switch'|trans }}</span>
         <span class="l-hosting-switch__track" aria-hidden="true"><span class="l-hosting-switch__thumb"></span></span>
     </a>
+  </div>
 </div>

@@ -120,6 +120,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    const helloToggle = document.querySelector('.js-hello-toggle');
+    if (helloToggle) {
+        initHelloToggle(helloToggle.closest('.l-hello'), helloToggle);
+    }
+
     const showOnline = document.getElementById('show_online');
     if (showOnline) {
         showOnline.addEventListener('change', function() {
@@ -305,6 +310,15 @@ var Home = {
                 accommodationDisplay.outerHTML = data.accommodationHtml;
             }
             
+            // Status under the name on phones: "Hosting" in green, or "Not hosting".
+            const status = document.querySelector('.js-hello-status');
+            const hostingSwitch = document.querySelector('#accommodation .l-hosting-switch');
+            if (status && hostingSwitch) {
+                const isOn = hostingSwitch.classList.contains('is-on');
+                status.classList.toggle('is-on', isOn);
+                status.textContent = isOn ? status.dataset.on : status.dataset.off;
+            }
+
             const hostingElements = document.querySelectorAll('.hosting');
             hostingElements.forEach(el => {
                 el.addEventListener('click', Home.setHostingStatus);
@@ -466,4 +480,48 @@ function initMemberSuggest(input, list) {
             open();
         }
     });
+}
+
+/**
+ * Phones: fold the welcome banner panel (hosting switch and counters) or
+ * unfold it; CSS animates it. The choice is kept in localStorage, and read
+ * again by an inline script in the template so the page does not jump on load.
+ */
+function initHelloToggle(banner, button) {
+    const storageKey = 'bw.hello.collapsed';
+
+    const sync = () => {
+        const collapsed = banner.classList.contains('is-collapsed');
+        const label = collapsed ? button.dataset.expand : button.dataset.collapse;
+        button.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        button.setAttribute('aria-label', label);
+        button.title = label;
+    };
+
+    const toggle = () => {
+        const collapsed = banner.classList.toggle('is-collapsed');
+        try {
+            localStorage.setItem(storageKey, collapsed ? '1' : '0');
+        } catch (e) {
+            // Storage blocked: the panel still folds, the choice is just not kept.
+        }
+        sync();
+    };
+
+    sync();
+    button.addEventListener('click', toggle);
+
+    // On phones the whole identity line (avatar, name, city) opens and closes
+    // the panel too; the hosting switch inside it keeps its own action.
+    const phone = window.matchMedia('(max-width: 575.98px)');
+    const identity = banner.querySelector('.js-hello-me');
+    if (identity) {
+        identity.addEventListener('click', (event) => {
+            if (!phone.matches || button.contains(event.target) || event.target.closest('.l-hosting')) {
+                return;
+            }
+            event.preventDefault();
+            toggle();
+        });
+    }
 }

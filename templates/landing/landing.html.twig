@@ -20,8 +20,10 @@
 #}
 {% set homeCity = searchLocation.vars.value.location ?? '' %}
 <div class="l-hello u:my-32">
+	{# On phones the banner folds down to the member line; the choice is kept in the browser. #}
+	<script>try { if (localStorage.getItem('bw.hello.collapsed') === '1') { document.currentScript.parentNode.classList.add('is-collapsed'); } } catch (e) {}</script>
 	<div class="l-hello__top">
-		<div class="l-hello__me">
+		<div class="l-hello__me js-hello-me">
 			{% include 'landing/widget/profilepicturewithaccommodation.html.twig' with { member: app.user } only %}
 
 			<div class="l-hello__info">
@@ -36,6 +38,8 @@
 						{% do searchLocation.updateMap.setRendered %}
 						<div class="d-none invisible">{{ form_rest(searchLocation) }}</div>
 						{{ form_end(searchLocation) }}
+						{% set isHosting = app.user.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
+						<span class="l-hello__status js-hello-status{% if isHosting %} is-on{% endif %}" data-on="{{ 'hosting'|trans|capitalize }}" data-off="{{ 'not hosting'|trans|capitalize }}">{{ isHosting ? 'hosting'|trans|capitalize : 'not hosting'|trans|capitalize }}</span>
 						<a class="l-hello__profile" href="{{ path('members_profile', { username: app.user.Username }) }}"><span class="l-hello__long">{{ 'landing.viewprofile'|trans }}</span><span class="l-hello__short">{{ 'landing.viewprofile.short'|trans }}</span></a>
 					</div>
 					{% include 'landing/widget/accommodation.html.twig' with { member: app.user } only %}
@@ -43,10 +47,15 @@
 					<p class="l-hello__not-setup">{{ 'profile.created'|trans }}</p>
 				{% endif %}
 			</div>
-			<a class="l-hello__edit" href="{{ path('profile_edit', { username: app.user.Username }) }}" title="{{ 'editmyprofile'|trans }}" aria-label="{{ 'editmyprofile'|trans }}"><i class="fas fa-user-pen" aria-hidden="true"></i></a>
+			<button type="button" class="l-hello__toggle js-hello-toggle" aria-expanded="true" aria-controls="hello_stats"
+				data-expand="{{ 'landing.banner.expand'|trans }}" data-collapse="{{ 'landing.banner.collapse'|trans }}"
+				title="{{ 'landing.banner.collapse'|trans }}" aria-label="{{ 'landing.banner.collapse'|trans }}">
+				<i class="fas fa-chevron-up" aria-hidden="true"></i>
+				{% if requestsToAnswerCount %}<span class="l-hello__toggle-badge" aria-hidden="true">{{ requestsToAnswerCount }}</span>{% endif %}
+			</button>
 		</div>
 
-		<div class="l-hello__search js-hello-search" data-mode="place">
+		<div class="l-hello__search js-hello-search" id="hello_search" data-mode="place">
 			<div class="l-hello__search-head">
 				<p class="l-hello__search-title">
 					<span class="js-hello-mode-place">{{ 'landing.whereyougo'|trans }}</span>
@@ -107,7 +116,8 @@
 		</div>
 	</div>
 
-	<div class="l-hello__stats">
+	<div class="l-hello__stats" id="hello_stats">
+		<div class="l-hello__stats-inner">
 		<a class="l-hello__stat{% if requestsToAnswerCount %} l-hello__stat--alert{% endif %}" href="{{ url('conversations', { conversationsType: 'requests' }) }}">
 			<span class="l-hello__stat-icon"><i class="fas fa-bed" aria-hidden="true"></i></span>
 			<span class="l-hello__stat-text"><strong>{{ requestsToAnswerCount }}</strong> <span class="l-hello__long">{{ 'landing.stats.requests'|trans }}</span><span class="l-hello__short">{{ 'landing.stats.requests.short'|trans }}</span></span>
@@ -123,6 +133,12 @@
 			<span class="l-hello__stat-text"><strong>{{ activityCount }}</strong> <span class="l-hello__long">{{ 'landing.stats.activities'|trans }}</span><span class="l-hello__short">{{ 'landing.stats.activities.short'|trans }}</span></span>
 			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>
 		</a>
+		<a class="l-hello__stat l-hello__stat--profile" href="{{ path('members_profile', { username: app.user.Username }) }}">
+			<span class="l-hello__stat-icon"><i class="fas fa-user-pen" aria-hidden="true"></i></span>
+			<span class="l-hello__stat-text"><span class="l-hello__short">{{ 'landing.viewprofile.short'|trans }}</span></span>
+			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>
+		</a>
+		</div>
 	</div>
 </div>
 

@@ -63,3 +63,9 @@ landing.search.member.searching:
 landing.hosting.switch:
     - 'I can host travelers'
     - Label of the hosting switch in the welcome banner of the home page, on small screens
+landing.banner.collapse:
+    - 'Show less'
+    - Button that folds the welcome banner of the home page down to the member line, on small screens
+landing.banner.expand:
+    - 'Show more'
+    - Button that unfolds the welcome banner of the home page (hosting switch, search and counters), on small screens

@@ -142,14 +142,25 @@ class SearchController extends AbstractController
             'language_choices' => $languageChoices,
             'search_options' => $searchOptions,
         ]);
-        // The home page posts its place search ("tiny") and its "my city" link
-        // ("home") under their own names: read them as this search form.
-        foreach (['tiny', 'home'] as $homeFormName) {
-            if (!$request->request->has('search') && $request->request->has($homeFormName)) {
-                $request->request->set('search', $request->request->all($homeFormName));
+        // The home page sends its place search ("tiny") and its "my city" link
+        // ("home") under their own names (as a GET query) with only a few fields:
+        // submit them as this search form, keeping the member's saved options
+        // for the fields they do not carry.
+        $homeData = null;
+        if (!$request->query->has('search') && !$request->request->has('search')) {
+            foreach (['tiny', 'home'] as $homeFormName) {
+                foreach ([$request->query, $request->request] as $parameters) {
+                    if (null === $homeData && $parameters->has($homeFormName)) {
+                        $homeData = $parameters->all($homeFormName);
+                    }
+                }
             }
         }
-        $search->handleRequest($request);
+        if (null !== $homeData) {
+            $search->submit($homeData, false);
+        } else {
+            $search->handleRequest($request);
+        }
 
         $mapMembers = null;
         if ($search->isSubmitted() && $search->isValid()) {

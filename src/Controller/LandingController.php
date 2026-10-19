@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
 use App\Entity\Activity;
+use App\Entity\HostingRequest;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Notification;
@@ -18,6 +19,7 @@ use App\Model\LandingModel;
 use App\Model\TripModel;
 use App\Repository\ActivityRepository;
 use App\Repository\NotificationRepository;
+use App\Repository\RequestRepository;
 use App\Repository\SubtripRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -259,6 +261,7 @@ class LandingController extends AbstractController
             'notificationCount' => $this->getUncheckedNotificationsCount($member),
             'visitorsCount' => $this->getVisitorsCount($tripModel, $member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
+            'requestsToAnswerCount' => $this->getRequestsToAnswerCount($member),
         ]);
 
         return $content;
@@ -270,6 +273,14 @@ class LandingController extends AbstractController
         $notificationRepository = $this->entityManager->getRepository(Notification::class);
 
         return $notificationRepository->getUncheckedNotificationsCount($member);
+    }
+
+    protected function getRequestsToAnswerCount(Member $member): int
+    {
+        /** @var RequestRepository $requestRepository */
+        $requestRepository = $this->entityManager->getRepository(HostingRequest::class);
+
+        return $requestRepository->getRequestsToAnswerCount($member);
     }
 
     protected function getVisitorsCount(TripModel $tripModel, Member $member): int

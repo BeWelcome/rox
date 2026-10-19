@@ -38,4 +38,15 @@ class SearchControllerTest extends WebTestCase
         self::assertCount(1, $crawler->filter('.p-search-options input#search_accommodation_yes'));
         self::assertCount(1, $crawler->filter('.p-search-options select#search_can_host'));
     }
+
+    public function testSearchMembersByExactUsernameRedirectsToTheProfile(): void
+    {
+        $client = static::createClient();
+        $member = static::getContainer()->get(MemberRepository::class)->loadUserByIdentifier('member-2');
+        $client->loginUser($member);
+
+        $client->request('GET', '/search/members', ['username' => 'member-5']);
+
+        $this->assertResponseRedirects('/members/member-5');
+    }
 }

@@ -1,65 +1,61 @@
 {% import 'macros.twig' as macros %}
+{#
+  One trip leg in the visitors list: who is coming, where and when, then the
+  actions (invite, message, hide).
+#}
+{% set creator = leg.trip.creator %}
+{% set invitation = leg.invitationBy(app.user) %}
+<article class="p-trips-leg{% if leg.invitedBy == app.user %} p-trips-leg--invited{% endif %}">
+  <a class="p-trips-leg__avatar" href="{{ path('members_profile', { username: creator.username }) }}">
+    <img src="{{ path('avatar', { username: creator.username, size: 96 }) }}" alt="" width="56" height="56" loading="lazy">
+  </a>
 
-<div class="c-trip-legs__item {% if leg.invitedBy == app.user %}c-trip-legs__item--invited{% endif %}">
-    <div class="c-trip-legs__icons-wrapper">
-        <form method="post" action="{{ path('trip_hide', {id: leg.id}) }}" class="u:inline js-hide-leg">
-            <input type="hidden" name="_token" value="{{ csrf_token('hide_leg') }}">
-            <input type="hidden" name="redirectTo" value="visitors">
-            <button type="submit" class="o-rounded o-rounded--l u:mx-4" aria-label="{{ 'trip.hide'|trans }}" title="{{ 'trip.hide'|trans }}">
-                <i class="fa fa-fw fa-eye-slash"></i>
-            </button>
-        </form>
-        {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
-            <a class="o-rounded o-rounded--l u:mx-4" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}">
-                <i class="fa fa-fw fa-envelope"></i>
-            </a>
+  <div class="p-trips-leg__body">
+    <p class="p-trips-leg__who">{{ macros.profilelink(creator.username, false, 'p-trips-leg__name') }}</p>
+    <a class="p-trips-leg__title" href="{{ path('trip_show', { id: leg.trip.id, _fragment: 'leg' ~ leg.id }) }}">{{ leg.trip.summary }}</a>
+    <p class="p-trips-leg__where">
+      <span><i class="fas fa-location-dot" aria-hidden="true"></i> {{ leg.location.name }}</span>
+      <span><i class="far fa-calendar-alt" aria-hidden="true"></i> {{ leg.arrival|format_date('medium') }}{% if leg.arrival != leg.departure %} – {{ leg.departure|format_date('medium') }}{% endif %}</span>
+    </p>
+    {% if leg.trip.description %}
+      <p class="p-trips-leg__text">{{ leg.trip.description|purify|striptags|truncate(240) }}</p>
+    {% endif %}
+    <p class="p-trips-leg__meta">
+      <span class="p-trips-leg__chip">
+        <i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.count.of.travellers'|trans({ countOfTravellers: leg.trip.countOfTravellers }) }}
+        {% if leg.trip.countOfTravellers > app.user.maxGuests %}
+          <i class="fas fa-exclamation-triangle p-trips-leg__warn" title="{{ 'trip.leg.warning.too.many.travellers'|trans }}"></i>
         {% endif %}
-        {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
-            {% if leg.invitationBy(app.user) %}
-                {% set invitation = leg.invitationBy(app.user) %}
-                {% set username = invitation.messages[0].initiator.Username %}
-                <a class="o-rounded o-rounded--l u:mx-4{% if leg.invitedBy == app.user %} u:bg-green-dark {% endif %}" href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}" aria-label="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}">
-                    <i class="fa fa-fw fa-house-user"></i>
-                </a>
-            {% else %}
-                <a class="o-rounded o-rounded--l u:mx-4" href="{{ path('hosting_invitation', { 'leg': leg.id }) }}" aria-label="{{ 'invite.username' | trans | format(leg.trip.creator.username) }}" title="{{ 'invite.username' | trans | format(leg.trip.creator.username) }}">
-                    <i class="fa fa-fw fa-house-user"></i>
-                </a>
-            {% endif %}
-        {% endif %}
-    </div>
-    <div class="c-trip-legs__text-wrapper">
-        <div class="u:w-full">
-            <a class="u:text-24 u:leading-24 u:font-700 u:text-white u:hover:text-white u:hover:opacity-70 u:ellipsis u:font-display u:block u:mb-4" href="{{ path('trip_show', {'id': leg.trip.id }) }}">{{ leg.trip.summary }}</a>
-        </div>
-        <p class="u:text-white u:font-display u:font-700">{{ leg.location.name }},
-            <span class="u:font-300">{{ leg.arrival|format_date('full') }}
-                {% if leg.arrival != leg.departure %}
-                    –
-                    {{ leg.departure|format_date('full') }}
-                {% endif %}
-            </span>
-        </p>
-        <p class="u:text-white u:font-display u:italic u:my-8">{{ leg.trip.description | purify | truncate(240) }}</p>
-        <div class="u:flex">
-            <div class="c-trip-card__icon-grid u:mr-16">
-                <i class="fa fa-users u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                <p class="u:text-white u:font-display" aria-label="{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}">
-                    <strong>{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}</strong>
-                    {% if leg.trip.countOfTravellers > app.user.maxGuests %}
-                        <i class="fas fa-exclamation-triangle u:text-yellow" title="{{ 'trip.leg.warning.too.many.travellers'|trans }}"></i>
-                    {% endif %}
-                </p>
-            </div>
-            {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
-                <div class="c-trip-card__icon-grid">
-                    <i class="fa fa-info-circle u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                    <p class="u:text-white u:font-display" aria-label="{{ ('trip.additional.info.' ~ leg.trip.additionalInfo)| lower | trans }}">{{ ('trip.additional.info.' ~ leg.trip.additionalInfo)| lower | trans}}</p>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-    <div class="o-avatar o-avatar--white c-trip-legs__o-avatar">
-        {{ macros.roundedavatarstack(leg.trip.creator.username, 96) }}
-    </div>
-</div>
+      </span>
+      {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
+        <span class="p-trips-leg__chip"><i class="fa fa-info-circle" aria-hidden="true"></i> {{ ('trip.additional.info.' ~ leg.trip.additionalInfo)|lower|trans }}</span>
+      {% endif %}
+    </p>
+  </div>
+
+  <div class="p-trips-leg__actions">
+    {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
+      {% if invitation %}
+        <a class="p-trips-btn p-trips-btn--done" href="{{ path('conversation_reply', { id: invitation.messages[0].id }) }}" title="{{ 'invitation.reply'|trans|format(creator.username) }}">
+          <i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}
+        </a>
+      {% else %}
+        <a class="p-trips-btn p-trips-btn--primary" href="{{ path('hosting_invitation', { leg: leg.id }) }}" title="{{ 'invite.username'|trans|format(creator.username) }}">
+          <i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invite'|trans }}
+        </a>
+      {% endif %}
+    {% endif %}
+    {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
+      <a class="p-trips-btn" href="{{ path('message_new', { username: creator.username }) }}" title="{{ 'message.write_to'|trans|format(creator.username) }}">
+        <i class="fa fa-envelope" aria-hidden="true"></i> {{ 'trip.leg.message'|trans }}
+      </a>
+    {% endif %}
+    <form method="post" action="{{ path('trip_hide', { id: leg.id }) }}" class="js-hide-leg">
+      <input type="hidden" name="_token" value="{{ csrf_token('hide_leg') }}">
+      <input type="hidden" name="redirectTo" value="visitors">
+      <button type="submit" class="p-trips-btn p-trips-btn--icon" aria-label="{{ 'trip.hide'|trans }}" title="{{ 'trip.hide'|trans }}">
+        <i class="fa fa-eye-slash" aria-hidden="true"></i>
+      </button>
+    </form>
+  </div>
+</article>

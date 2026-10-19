@@ -1,11 +1,10 @@
-{% block content %}
-<div id="legsdisplay">
-    <div class="c-trip-legs--landing">
-        {% for leg in legs  %}
-            {% include 'trip/landing.html.twig' with {'leg': leg} %}
-        {% else %}
-                {{ 'landing.bevisited.none'|trans }}
-        {% endfor %}
-    </div>
+{#
+  Members travelling near the member, on the home page (loaded into the Visitors tab).
+#}
+<div id="legsdisplay" class="c-home-list">
+    {% for leg in legs %}
+        {% include 'trip/landing.html.twig' with { leg: leg } %}
+    {% else %}
+        <p class="c-home-list__empty">{{ 'landing.bevisited.none'|trans }}</p>
+    {% endfor %}
 </div>
-{% endblock %}

@@ -2,6 +2,36 @@
 {% import 'macros.twig' as macros %}
 
 {% block main %}
+  {% if trips_redesign ?? false %}
+    {#
+      New trips layout: a page head with the trips tabs, then the page content on
+      the light page background. Pages opt in with {% set trips_redesign = true %}.
+    #}
+    <main role="main" class="p-trips">
+      <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000"></div>
+      <header class="p-trips__head">
+        <h1 class="p-trips__title">{% block page_title %}{{ block('title')|trim }}{% endblock %}</h1>
+        {% if submenu is defined %}
+          <nav class="p-trips__tabs" aria-label="{{ 'trip'|trans }}">
+            {% for filter, menuItem in submenu.items %}
+              {% if filter == 'new_trip' %}
+                <a class="p-trips__new{% if submenu.active == filter %} is-active{% endif %}" href="{{ menuItem.url }}"{% if submenu.active == filter %} aria-current="page"{% endif %}><i class="fa fa-plus" aria-hidden="true"></i> {{ menuItem.key|lower|trans }}</a>
+              {% else %}
+                <a class="p-trips__tab{% if submenu.active == filter %} is-active{% endif %}" href="{{ menuItem.url }}"{% if submenu.active == filter %} aria-current="page"{% endif %}>{{ menuItem.key|lower|trans }}</a>
+              {% endif %}
+            {% endfor %}
+          </nav>
+        {% endif %}
+      </header>
+      {% for label, messages in app.flashes %}
+        {% for message in messages %}
+          <div class="alert alert-{{ label }}">{{ message|raw }}</div>
+        {% endfor %}
+      {% endfor %}
+      {{ block('content') }}
+    </main>
+    {{ block('modals') }}
+  {% else %}
     <main role="main"
           class="c-trips">
       <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000"></div>
@@ -46,4 +76,5 @@
       </div>
     </main>
     {% block modals %}{% endblock %}
+  {% endif %}
 {% endblock main %}

@@ -1,6 +1,8 @@
 {% extends 'trips.html.twig' %}
 {% import 'macros.twig' as macros %}
 
+{% set trips_redesign = true %}
+
 {% block title %}
   {{ 'trip.in.area' | trans }}
 {% endblock %}
@@ -15,9 +17,7 @@
       const radius = document.getElementById('trips_radius');
       if (radius) {
         radius.addEventListener('change', function () {
-          setTimeout(function () {
-            document.getElementById('trips').requestSubmit();
-          }, 500);
+          document.getElementById('trips').requestSubmit();
         });
       }
     });
@@ -36,7 +36,7 @@
         headers: {'X-Requested-With': 'XMLHttpRequest'},
       }).then(function (response) {
         if (response.ok) {
-          form.closest('.c-trip-legs__item').remove();
+          form.closest('.p-trips-leg').remove();
         }
       });
     });
@@ -44,41 +44,36 @@
 {% endblock javascripts %}
 
 {% block content %}
-<section>
-  <div class="u:inline-flex u:w-full u:items-center u:justify-between u:mb-24 u:md:mb-16 u:md:h-48 u:flex-col u:md:flex-row">
-      <div class="u:flex u:items-center u:mb-24 u:md:mb-0">
-    {{ form_start(radiusForm, {'attr': {'id': 'trips'}})}}
-    <div class="u:flex u:items-center u:mx-8 u:mb-8">
-      <i class="fa fa-bullseye fa-w-16 u:text-white u:text-24 u:justify-self-center u:self-center u:mr-8"></i>
-      {{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u:text-white u:font-700 u:mr-16 u:mb-0'}}) }}
-      {{ form_widget(radiusForm.radius) }}
-    </div>
-    {{ form_rest(radiusForm)}}
-    {{ form_end(radiusForm)}}
-      </div>
-    {% if legs.haveToPaginate %}
-        {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'visitors' }) }}
+<section class="p-trips__body">
+  <div class="p-trips__toolbar">
+    {{ form_start(radiusForm, { attr: { id: 'trips', class: 'p-trips__radius' } }) }}
+      <i class="fa fa-bullseye" aria-hidden="true"></i>
+      {{ form_label(radiusForm.radius, null, { label_attr: { class: 'p-trips__radius-label' } }) }}
+      {{ form_widget(radiusForm.radius, { attr: { class: 'p-trips__radius-select' } }) }}
+      {{ form_rest(radiusForm) }}
+    {{ form_end(radiusForm) }}
+    {% if legs.nbResults != 0 %}
+      <p class="p-trips__count"><i class="fa fa-users" aria-hidden="true"></i> {{ legs.nbResults }}</p>
     {% endif %}
   </div>
 
-    {% if legs.nbResults != 0 %}
-    {% set myself = app.user %}
-
-      <div class="u:flex u:flex-col u:items-center">
+  {% if legs.nbResults != 0 %}
+    <div class="p-trips__list">
       {% for leg in legs %}
-        {% include 'trip/leg.html.twig' with {'leg': leg} %}
+        {% include 'trip/leg.html.twig' with { leg: leg } %}
       {% endfor %}
-      </div>
+    </div>
 
     {% if legs.haveToPaginate %}
-      <section class="u:pb-72">
-        <div class="u:inline-flex u:w-full u:items-center u:justify-end u:mt-16 u:md:h-48 u:flex-col u:md:flex-row">
-          {{ pagerfanta( legs, 'rounded_pagination', { routeName: 'visitors' }) }}
-        </div>
-      </section>
+      <div class="p-trips__pager">
+        {{ pagerfanta(legs, 'rounded_pagination', { routeName: 'visitors' }) }}
+      </div>
     {% endif %}
   {% else %}
-    <h1 class="u:text-white u:font-display">{{ 'trip.in.area.no'|trans }}</h1>
+    <div class="p-trips__empty">
+      <i class="far fa-map" aria-hidden="true"></i>
+      <p>{{ 'trip.in.area.no'|trans }}</p>
+    </div>
   {% endif %}
 </section>
 {% endblock content %}

@@ -165,3 +165,24 @@ trip.remove.body:
     - "<p>You're about to remove this trip from display.</p>
        <p>Please note this can't be reverted. The trip itself will be hidden for everyone but not deleted as it might have been used for invitations.</p>
       "
+trip.leg.invite:
+    - 'Invite'
+    - Button on a trip leg in the visitors list, opens the form to invite the traveler to stay with you
+trip.leg.invited:
+    - 'Invitation sent'
+    - Button on a trip leg in the visitors list when you already invited the traveler, opens the conversation
+trip.leg.message:
+    - 'Message'
+    - Button on a trip leg in the visitors list, opens a new message to the traveler
+trip.legs.title:
+    - 'Itinerary'
+    - Title of the list of stops in the trip creation and edit form
+trip.leg.add:
+    - 'Add a stop'
+    - Button under the stops of the trip creation and edit form, adds one more stop
+trip.details:
+    - 'Your trip'
+    - Title of the first part of the trip creation and edit form (title, description, travelers)
+trip.leg.options:
+    - 'For this stop'
+    - Label before the options of one stop (private, looking for a host, meet locals) in the trip creation form

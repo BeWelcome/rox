@@ -13,390 +13,323 @@
 
 {% block content %}
 
-<div class="l-landing-welcome u:my-32">
+{#
+  Welcome banner: the member (avatar, name, city, hosting status) on the left, a
+  search on the right that switches between a place and a member, and three
+  counters at the bottom.
+#}
+{% set homeCity = searchLocation.vars.value.location ?? '' %}
+<div class="l-hello u:my-32">
+	<div class="l-hello__top">
+		<div class="l-hello__me">
+			{% include 'landing/widget/profilepicturewithaccommodation.html.twig' with { member: app.user } only %}
 
-	{% include 'landing/widget/profilepicturewithaccommodation.html.twig' with {
-    member: app.user
-    } only %}
+			<div class="l-hello__info">
+				<p class="l-hello__label">{{ 'landing.welcomeback'|trans }}</p>
+				<p class="l-hello__name">{{ macros.profilelink(app.user.Username) }}</p>
+				{% if not app.user.Accommodation is null %}
+					<div class="l-hello__where">
+						{{ form_start(searchLocation, { action: path('search_locations'), attr: { class: 'l-hello__city-form' } }) }}
+						<button type="submit" id="home_updateMap" name="home[updateMap]" class="searchsubmit l-hello__city">
+							<i class="fas fa-location-dot" aria-hidden="true"></i> {{ homeCity }}
+						</button>
+						{% do searchLocation.updateMap.setRendered %}
+						<div class="d-none invisible">{{ form_rest(searchLocation) }}</div>
+						{{ form_end(searchLocation) }}
+						<a class="l-hello__profile" href="{{ path('members_profile', { username: app.user.Username }) }}"><span class="l-hello__long">{{ 'landing.viewprofile'|trans }}</span><span class="l-hello__short">{{ 'landing.viewprofile.short'|trans }}</span></a>
+					</div>
+					{% include 'landing/widget/accommodation.html.twig' with { member: app.user } only %}
+				{% else %}
+					<p class="l-hello__not-setup">{{ 'profile.created'|trans }}</p>
+				{% endif %}
+			</div>
+			<a class="l-hello__edit" href="{{ path('profile_edit', { username: app.user.Username }) }}" title="{{ 'editmyprofile'|trans }}" aria-label="{{ 'editmyprofile'|trans }}"><i class="fas fa-user-pen" aria-hidden="true"></i></a>
+		</div>
 
-	<div class="l-welcome-strip__info">
-		<p class="l-welcome-strip__label">{{ 'landing.welcomeback' | trans }}</p>
-		<div class="l-welcome-strip__name-row">
-			<p class="l-welcome-strip__name">{{ macros.profilelink(app.user.Username) }}</p>
-			{% if not app.user.Accommodation is null %}
-			{{ form_start(searchLocation, { 'action': path('search_locations'), 'attr': {'class': 'l-welcome-strip__city-form'} }) }}
-			<button type="submit" id="home_updateMap" name="home[updateMap]" class="searchsubmit l-welcome-strip__city btn">
-				<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-				{{ searchLocation.vars.value.location }}
-			</button>
-			{% do searchLocation.updateMap.setRendered %}
-			<div class="d-none invisible">{{ form_rest(searchLocation) }}</div>
-			{{ form_end(searchLocation) }}
-			{% endif %}
+		<div class="l-hello__search js-hello-search" data-mode="place">
+			<div class="l-hello__search-head">
+				<p class="l-hello__search-title">
+					<span class="js-hello-mode-place">{{ 'landing.whereyougo'|trans }}</span>
+					<span class="js-hello-mode-member" hidden>{{ 'landing.search.findmember'|trans }}</span>
+				</p>
+				<div class="l-hello__modes" role="radiogroup" aria-label="{{ 'landing.search.submit'|trans }}">
+					<button type="button" class="l-hello__mode active js-hello-mode" data-mode="place" role="radio" aria-checked="true"><i class="fas fa-location-dot" aria-hidden="true"></i> {{ 'landing.search.mode.place'|trans }}</button>
+					<button type="button" class="l-hello__mode js-hello-mode" data-mode="member" role="radio" aria-checked="false"><i class="fas fa-user" aria-hidden="true"></i> {{ 'landing.search.mode.member'|trans }}</button>
+				</div>
+			</div>
+
+			<div class="js-hello-mode-place">
+				{{ form_start(tinySearch, { action: path('search_locations'), attr: { class: 'u:w-full' } }) }}
+				<label for="{{ tinySearch.location.vars.id }}" class="visually-hidden">{{ 'landing.whereyougo'|trans }}</label>
+				<div class="l-hello__bar">
+					<i class="fas fa-location-dot l-hello__bar-icon" aria-hidden="true"></i>
+					<div class="auto-search-wrapper max-height l-hello__field">
+						<input type="text"
+							id="{{ tinySearch.location.vars.id }}"
+							name="{{ tinySearch.location.vars.full_name }}"
+							class="l-hello__input js-location-picker"
+							autocomplete="off"
+							placeholder="{{ 'landing.search.placeholder'|trans }}"
+							{% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
+						>
+					</div>
+					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="l-hello__submit">
+						<span class="l-hello__submit-text">{{ 'landing.search.submit'|trans }}</span> <i class="fas fa-arrow-right l-hello__submit-arrow" aria-hidden="true"></i><i class="fas fa-magnifying-glass l-hello__submit-loupe" aria-hidden="true"></i>
+					</button>
+				</div>
+				<div class="u:block">{{ form_errors(tinySearch.location) }}</div>
+				{% do tinySearch.location.setRendered %}
+				{% do tinySearch.updateMap.setRendered %}
+				<div class="d-none" aria-hidden="true">{{ form_rest(tinySearch) }}</div>
+				{{ form_end(tinySearch) }}
+				<p class="l-hello__hint">{{ 'landing.search.place.hint'|trans }}</p>
+			</div>
+
+			<div class="js-hello-mode-member" hidden>
+				<form action="{{ path('search_members') }}" method="get" class="l-hello__member-form u:w-full">
+					<label for="hello_username" class="visually-hidden">{{ 'landing.search.findmember'|trans }}</label>
+					<div class="l-hello__bar">
+						<i class="fas fa-at l-hello__bar-icon" aria-hidden="true"></i>
+						<div class="l-hello__field">
+							<input type="text" id="hello_username" name="username" class="l-hello__input js-hello-username" autocomplete="off" placeholder="{{ 'landing.search.member.placeholder'|trans }}"
+								role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="hello_username_list">
+						</div>
+						<button type="submit" class="l-hello__submit">
+							<span class="l-hello__submit-text">{{ 'landing.search.submit'|trans }}</span> <i class="fas fa-arrow-right l-hello__submit-arrow" aria-hidden="true"></i><i class="fas fa-magnifying-glass l-hello__submit-loupe" aria-hidden="true"></i>
+						</button>
+					</div>
+					<ul class="l-hello__suggest js-hello-suggest" id="hello_username_list" role="listbox" hidden
+						data-loading="{{ 'landing.search.member.searching'|trans }}"
+						data-empty="{{ 'select.no.results'|trans }}"></ul>
+				</form>
+				<p class="l-hello__hint">{{ 'landing.search.member.hint'|trans }}</p>
+			</div>
 		</div>
-		{% if not app.user.Accommodation is null %}
-		<div class="l-welcome-strip__meta">
-			{% include 'landing/widget/accommodation.html.twig' with { member: app.user } only %}
-		</div>
-		{% else %}
-			<p class="l-welcome-strip__not-setup">{{ 'profile.created'|trans }}</p>
-		{% endif %}
 	</div>
 
-	<div class="l-welcome-strip__search">
-		{{ form_start(tinySearch, { 'action': path('search_locations'), 'attr': {'class': 'u:w-full'} }) }}
-		<label for="{{ tinySearch.location.vars.id }}" class="visually-hidden">{{ 'landing.whereyougo' | trans }}</label>
-		<div class="l-welcome-strip__search-bar">
-			<div class="auto-search-wrapper max-height loupe">
-				<input type="text"
-					id="{{ tinySearch.location.vars.id }}"
-					name="{{ tinySearch.location.vars.full_name }}"
-					class="l-welcome-strip__search-input js-location-picker"
-					autocomplete="off"
-					placeholder="{{ 'landing.whereyougo' | trans }}"
-					aria-label="{{ 'landing.whereyougo' | trans }}"
-					{% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
-				>
-			</div>
-			<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="l-welcome-strip__search-btn">
-				{{ 'go'|trans }}
-				<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
-			</button>
-		</div>
-		<div class="u:block">{{ form_errors(tinySearch.location) }}</div>
-		{% do tinySearch.location.setRendered %}
-		{% do tinySearch.updateMap.setRendered %}
-		<div class="d-none" aria-hidden="true">{{ form_rest(tinySearch) }}</div>
-		{{ form_end(tinySearch) }}
+	<div class="l-hello__stats">
+		<a class="l-hello__stat{% if requestsToAnswerCount %} l-hello__stat--alert{% endif %}" href="{{ url('conversations', { conversationsType: 'requests' }) }}">
+			<span class="l-hello__stat-icon"><i class="fas fa-bed" aria-hidden="true"></i></span>
+			<span class="l-hello__stat-text"><strong>{{ requestsToAnswerCount }}</strong> <span class="l-hello__long">{{ 'landing.stats.requests'|trans }}</span><span class="l-hello__short">{{ 'landing.stats.requests.short'|trans }}</span></span>
+			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>
+		</a>
+		<a class="l-hello__stat" href="{{ url('visitors') }}">
+			<span class="l-hello__stat-icon"><i class="fas fa-suitcase" aria-hidden="true"></i></span>
+			<span class="l-hello__stat-text"><strong>{{ visitorsCount }}</strong> <span class="l-hello__long">{% if homeCity %}{{ 'landing.stats.travelers'|trans({ city: homeCity }) }}{% else %}{{ 'landing.stats.travelers.area'|trans }}{% endif %}</span><span class="l-hello__short">{{ 'landing.stats.travelers.short'|trans }}</span></span>
+			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>
+		</a>
+		<a class="l-hello__stat l-hello__stat--activities" href="/activities">
+			<span class="l-hello__stat-icon"><i class="fas fa-calendar-days" aria-hidden="true"></i></span>
+			<span class="l-hello__stat-text"><strong>{{ activityCount }}</strong> <span class="l-hello__long">{{ 'landing.stats.activities'|trans }}</span><span class="l-hello__short">{{ 'landing.stats.activities.short'|trans }}</span></span>
+			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>
+		</a>
 	</div>
 </div>
 
-<div class="u:flex u:flex-wrap u:md:grid u:md:grid-cols-2 u:gap-24 u:pb-24">
+{#
+  The two main blocks: messages and visitors, then forum, activities and notifications.
+  Each is a card with its tabs on top; the lists are loaded by landing.js.
+  The filter pills keep the "active" class landing.js reads when it reloads a list.
+#}
+{% set loading %}
+    <p class="c-home-list__loading"><i class="fa fa-spinner fa-pulse" aria-hidden="true"></i></p>
+{% endset %}
+<div class="c-home-blocks">
 
-	{# conversations box #}
-	<div class="u:w-full u:flex u:flex-col">
-
-        <ul class="nav nav-tabs landing-dashboard-tabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" aria-controls="conversations" href="#conversations" role="tab"
-                   data-bs-toggle="tab">{{ 'landing.tab.messagesreceived' | trans }}
-                    {% if conversationCount %}
-                        <span
-                            class="badge text-bg-primary u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center">{{ conversationCount }}</span>
-                    {% endif %}
+    {# messages and visitors #}
+    <section class="c-home-card">
+        <ul class="nav c-home-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link c-home-tabs__link active" aria-controls="conversations" href="#conversations" role="tab" data-bs-toggle="tab">
+                    {{ 'landing.tab.messagesreceived'|trans }}
+                    {% if conversationCount %}<span class="c-home-tabs__count">{{ conversationCount }}</span>{% endif %}
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" aria-controls="visitors" href="#visitors" role="tab"
-                   data-bs-toggle="tab">{{ 'landing.tab.visitors' | trans }}
-                    {% if visitorsCount %}
-                        <span class="badge text-bg-primary u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center">{{ visitorsCount }}</span>
-                    {% endif %}
+            <li class="nav-item" role="presentation">
+                <a class="nav-link c-home-tabs__link" aria-controls="visitors" href="#visitors" role="tab" data-bs-toggle="tab">
+                    {{ 'landing.tab.visitors'|trans }}
+                    {% if visitorsCount %}<span class="c-home-tabs__count">{{ visitorsCount }}</span>{% endif %}
                 </a>
             </li>
         </ul>
 
-        <div class="o-card o-card--tabbed landing-dashboard-card tab-content u:p-16 u:bg-white">
-
-			{# conversations #}
-			<div role="tabpanel" class="o-tab tab-pane u:h-full active" id="conversations">
-				{# all / unread conversations toggle #}
-				<div class="u:flex u:flex-col u:h-full">
-					<div class="u:flex u:items-center u:mb-16" data-bs-toggle="buttons" role="radiogroup">
-						<label class="o-button o-button--outline btn o-button--full u:me-8{% if messageFilter == 'All' %} active{% endif %}" id="all" role="radio">
-                <input type="radio" name="options" autocomplete="off"
-                     {% if messageFilter == 'All' %}checked{% endif %}
-                     hidden>{{ 'landing.button.all' | trans }}
-						</label>
-              <label
-                   class="o-button btn o-button--outline o-button--full{% if messageFilter == 'Unread' %} active{% endif %}"
-                   id="unread" role="radio">
-                <input type="radio" name="options" autocomplete="off"
-                     {% if messageFilter == 'Unread' %}checked{% endif %}
-                     hidden>{{ 'landing.button.unread' | trans }}
-						</label>
-					</div>
-
-					{# received messages #}
-					<div id="conversationsdisplay" class="c-dashboard">
-						<div class="u:flex u:h-full u:items-center u:justify-center">
-							<p class="u:text-center u:my-24 u:font-300 u:font-display">
-								<i class="fa u:me-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-								{{ 'dashboard.load.conversations' | trans }}
-							</p>
-						</div>
-					</div>
-
-					{# message buttons #}
-					<div class="u:mt-auto u:mb-16 u:flex u:justify-center">
-						<a href="{{ url( 'conversations', { 'conversationsType': 'conversations' } ) }}" class="u:mt-16 o-button btn">
-                            <i class="fa u:me-8 fa-envelope"></i>{{ 'landing.conversations' | trans }}
-                        </a>
-					</div>
-				</div>
-			</div>
-
-			{# visitors #}
-			<div role="tabpanel" class="o-tab tab-pane u:h-full" id="visitors">
-				<div id="visitorsdisplay">
-                    <div class="u:flex u:items-center u:mb-8 u:w-full">
-                        {{ form_start(radiusForm, {'attr': {'class': 'u:w-full'}})}}
-                        <div class="u:flex u:items-center u:mb-8 u:w-full">
-                            <i class="fa fa-fw fa-bullseye u:text-16 u:text-gray-50 u:me-4"></i>
-                            {{ form_label(radiusForm.radius, null, {'label_attr': {'class': 'u:mb-0 u:me-16'}}) }}
-                            {{ form_widget(radiusForm.radius, {'attr': {'class': 'u:w-full'}}) }}
-                        </div>
-                        {{ form_rest(radiusForm)}}
-                        {{ form_end(radiusForm)}}
-                    </div>
-                    <div id="legsdisplay" class="c-dashboard">
-                        <div class="u:flex u:h-full u:items-center u:justify-center">
-                            <p class="u:text-center u:my-24 u:font-300 u:font-display">
-                                <i class="fa u:me-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-                                {{ 'bevisited.load.legs' | trans }}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="u:flex u:flex-col u:mt-auto u:space-y-8">
-                        <a href="{{ url('visitors') }}" class="o-button o-button--full btn u:mt-16"><i
-                            class="far fa-map u:me-8"></i> {{ 'landing.bevisited.alltrips' | trans }}</a>
-                    </div>
+        <div class="tab-content c-home-card__content">
+            <div role="tabpanel" class="tab-pane c-home-pane active" id="conversations">
+                <div class="c-home-pane__filters" role="radiogroup" aria-label="{{ 'landing.tab.messagesreceived'|trans }}">
+                    <button type="button" class="c-home-pill js-home-filter{% if messageFilter != 'Unread' %} active{% endif %}" id="all" role="radio" aria-checked="{{ messageFilter != 'Unread' ? 'true' : 'false' }}" data-group="messages">{{ 'landing.button.all'|trans }}</button>
+                    <button type="button" class="c-home-pill js-home-filter{% if messageFilter == 'Unread' %} active{% endif %}" id="unread" role="radio" aria-checked="{{ messageFilter == 'Unread' ? 'true' : 'false' }}" data-group="messages">{{ 'landing.button.unread'|trans }}</button>
+                </div>
+                <div id="conversationsdisplay" class="c-home-list">{{ loading }}</div>
+                <div class="c-home-pane__footer">
+                    <a class="c-home-link" href="{{ url('conversations', { conversationsType: 'conversations' }) }}">{{ 'landing.conversations'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </div>
-		</div>
-	</div>
 
-	{# community box #}
-	<div class="u:w-full u:flex u:flex-col">
-
-		<ul class="nav nav-tabs landing-dashboard-tabs" role="tablist">
-			<li class="nav-item">
-          <a href="#threads" class="nav-link active" aria-controls="threads" role="tab"
-             data-bs-toggle="tab">{{ 'landing.tab.forum' | trans }}</a>
-			</li>
-            <li class="nav-item">
-                <a href="#activities" class="nav-link" aria-controls="activities" role="tab"
-                   data-bs-toggle="tab">{{ 'landing.tab.activities' | trans }}{% if activityCount %} <span
-                        class="badge text-bg-primary u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center">{{ activityCount }}</span>{% endif %}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" aria-controls="notifications" href="#notifications" role="tab"
-                   data-bs-toggle="tab">{{ 'landing.tab.notifications' | trans }}{% if notificationCount %} <span
-                        class="badge text-bg-primary u:rounded-8 u:min-w-20 u:px-8 u:h-20 u:inline-flex u:items-center u:justify-center">{{ notificationCount }}</span>{% endif %}</a>
-            </li>
-		</ul>
-
-		<div class="o-card o-card--tabbed landing-dashboard-card tab-content u:p-16">
-			{# forum discussions #}
-			<div role="tabpanel" class="o-tab tab-pane u:h-full active" id="threads">
-
-				{# display settings #}
-				<div class="u:flex u:flex-col u:h-full">
-            <div class="u:flex u:items-center u:mb-16" data-bs-toggle="buttons"  role="radiogroup">
-              <label
-                class="o-button btn o-button--outline o-button--full u:me-8{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} active{% endif %}"
-                id="groupsButton">
-                <input type="checkbox"
-                     autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %} checked{% endif %}
-                     hidden>{{ 'landing.button.groups' | trans | capitalize }}
-						</label>
-              <label
-                class="o-button btn o-button--outline o-button--full{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} active{% endif %}"
-                id="forumButton">
-                <input type="checkbox"
-                     autocomplete="off"{% if forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %} checked{% endif %}
-                     hidden>{{ 'landing.button.forum' | trans | capitalize }}
-						</label>
-					</div>
-
-					{# forums threads #}
-					<div id="threadsdisplay" class="c-dashboard">
-						<div class="u:flex u:h-full u:items-center u:justify-center">
-							<p class="u:text-center u:my-24 u:font-300 u:font-display">
-								<i class="fa u:me-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-								{{ 'dashboard.load.threads' | trans }}
-							</p>
-						</div>
-					</div>
-
-					<div class="u:flex u:flex-col u:sm:flex-row u:justify-between u:mt-auto u:py-16 u:space-y-8 u:sm:space-y-0" role="group" aria-label="...">
-              <a href="/forums" class="o-button o-button--full btn"><i
-                  class="fa u:me-8 fa-comments me-1"></i>{{ 'landing.button.discussions' | trans }}</a>
-              <a href="/groups/mygroups" class="o-button o-button--full btn u:mx-0 u:sm:mx-8"><i
-                  class="fa u:me-8 fa-users me-1"></i>{{ 'landing.button.mygroups' | trans }}</a>
-              <a href="/forums/subscriptions" class="o-button o-button--full btn"><i
-                  class="fa u:me-8 fa-check-square me-1"></i>{{ 'landing.button.subscriptions' | trans }}</a>
-					</div>
-				</div>
-
-			</div>
-
-			{# load activities #}
-			<div role="tabpanel" class="o-tab tab-pane u:h-full" id="activities">
-				<div class="u:flex u:items-center u:mb-16" role="group">
-					<a href="/activities/create" class="o-button btn u:me-16">
-						<i class="fa u:me-8 fa-calendar-plus"></i>
-						{{ 'landing.activities.create' | trans }}
-                    </a>
-                    <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input" id="show_online"
-                        name="show_online" {% if onlineActivities %}checked{% endif %}>
-                        <label class="custom-control-label u:font-display u:font-300 u:leading-24"
-                        for="show_online">{{ 'landing.activities.show.online'|trans }}</label>
-					</div>
-				</div>
-				<div id="activitiesdisplay" class="c-dashboard">
-					<div class="u:flex u:h-full u:items-center u:justify-center">
-						<p class="u:text-center u:my-24 u:font-300 u:font-display">
-							<i class="fa u:me-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-							{{ 'dashboard.load.activities' | trans }}
-						</p>
-					</div>
-                </div>
-                <div class="u:mt-auto u:mb-16 u:flex u:items-center" role="group">
-                    <a href="/activities" class="o-button btn o-button o-button--full u:me-8 u:mt-16">
-                        <i class="fa u:me-8 fa-map"></i>
-                        {{ 'landing.activities.allactivities' | trans }}</a>
-                    <a href="/activities/myactivities" class="o-button btn o-button--full u:mt-16">
-                        <i class="fa u:me-8 fa-calendar"></i>
-                        {{ 'landing.activities.myactivities' | trans }}</a>
-                </div>
-			</div>
-
-            {# notifications #}
-            <div role="tabpanel" class="o-tab tab-pane u:h-full p-2" id="notifications">
-                <div id="notificationsdisplay" class="c-dashboard">
-                    <div class="u:flex u:h-full u:items-center u:justify-center">
-                        <p class="u:text-center u:my-24 u:font-300 u:font-display">
-                            <i class="fa u:me-8 fa-4x fa-pulse fa-spinner my-3"></i><br>
-                            {{ 'dashboard.load.notifications' | trans }}
-                        </p>
-                    </div>
+            <div role="tabpanel" class="tab-pane c-home-pane" id="visitors">
+                {{ form_start(radiusForm, { attr: { class: 'c-home-pane__radius' } }) }}
+                    <i class="fa fa-bullseye" aria-hidden="true"></i>
+                    {{ form_label(radiusForm.radius, null, { label_attr: { class: 'c-home-pane__radius-label' } }) }}
+                    {{ form_widget(radiusForm.radius, { attr: { class: 'c-home-pane__radius-select' } }) }}
+                    {{ form_rest(radiusForm) }}
+                {{ form_end(radiusForm) }}
+                <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
+                <div class="c-home-pane__footer">
+                    <a class="c-home-link" href="{{ url('visitors') }}"><i class="far fa-map" aria-hidden="true"></i> {{ 'landing.bevisited.alltrips'|trans }}</a>
                 </div>
             </div>
-		</div>
-	</div>
+        </div>
+    </section>
+
+    {# forum, activities and notifications #}
+    <section class="c-home-card">
+        <ul class="nav c-home-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link c-home-tabs__link active" aria-controls="threads" href="#threads" role="tab" data-bs-toggle="tab">{{ 'landing.tab.forum'|trans }}</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link c-home-tabs__link" aria-controls="activities" href="#activities" role="tab" data-bs-toggle="tab">
+                    {{ 'landing.tab.activities'|trans }}
+                    {% if activityCount %}<span class="c-home-tabs__count">{{ activityCount }}</span>{% endif %}
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link c-home-tabs__link" aria-controls="notifications" href="#notifications" role="tab" data-bs-toggle="tab">
+                    {{ 'landing.tab.notifications'|trans }}
+                    {% if notificationCount %}<span class="c-home-tabs__count">{{ notificationCount }}</span>{% endif %}
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content c-home-card__content">
+            <div role="tabpanel" class="tab-pane c-home-pane active" id="threads">
+                {% set showGroups = forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %}
+                {% set showForums = forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %}
+                <div class="c-home-pane__filters" role="group" aria-label="{{ 'landing.tab.forum'|trans }}">
+                    <button type="button" class="c-home-pill js-home-filter{% if showGroups %} active{% endif %}" id="groupsButton" aria-pressed="{{ showGroups ? 'true' : 'false' }}">{{ 'landing.button.groups'|trans|capitalize }}</button>
+                    <button type="button" class="c-home-pill js-home-filter{% if showForums %} active{% endif %}" id="forumButton" aria-pressed="{{ showForums ? 'true' : 'false' }}">{{ 'landing.button.forum'|trans|capitalize }}</button>
+                </div>
+                <div id="threadsdisplay" class="c-home-list">{{ loading }}</div>
+                <div class="c-home-pane__footer">
+                    <a class="c-home-link" href="/forums"><i class="fas fa-comments" aria-hidden="true"></i> {{ 'landing.button.discussions'|trans }}</a>
+                    <a class="c-home-link" href="/groups/mygroups"><i class="fas fa-users" aria-hidden="true"></i> {{ 'landing.button.mygroups'|trans }}</a>
+                    <a class="c-home-link" href="/forums/subscriptions"><i class="fas fa-check-square" aria-hidden="true"></i> {{ 'landing.button.subscriptions'|trans }}</a>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane c-home-pane" id="activities">
+                <div class="c-home-pane__filters">
+                    <label class="c-home-switch">
+                        <input type="checkbox" id="show_online" name="show_online"{% if onlineActivities %} checked{% endif %}>
+                        <span class="c-home-switch__track" aria-hidden="true"></span>
+                        {{ 'landing.activities.show.online'|trans }}
+                    </label>
+                    <a class="c-home-pill c-home-pill--action" href="/activities/create"><i class="fa fa-calendar-plus" aria-hidden="true"></i> {{ 'landing.activities.create'|trans }}</a>
+                </div>
+                <div id="activitiesdisplay" class="c-home-list">{{ loading }}</div>
+                <div class="c-home-pane__footer">
+                    <a class="c-home-link" href="/activities"><i class="fa fa-map" aria-hidden="true"></i> {{ 'landing.activities.allactivities'|trans }}</a>
+                    <a class="c-home-link" href="/activities/myactivities"><i class="fa fa-calendar" aria-hidden="true"></i> {{ 'landing.activities.myactivities'|trans }}</a>
+                </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane c-home-pane" id="notifications">
+                <div id="notificationsdisplay" class="c-home-list">{{ loading }}</div>
+            </div>
+        </div>
+    </section>
 </div>
 
-{# 3 columns #}
-<div class="u:flex u:flex-wrap u:md:grid u:md:grid-cols-2 u:gap-24 u:pb-24">
-
-	<div class="u:w-full">
-		<div class="o-card u:mb-24">
-        <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span
-            class="homesubt">{{ 'landing.beinvolved.donate' | trans }}</span></h4>
-
-        <p class="u:font-display u:text-center u:mb-16 u:font-300 u:text-18">{{ 'landing.beinvolved.goalfor' | trans }} {{ campaign.year }}
-          - {{ campaign.year + 1 }}:
-          <strong>€{{ campaign.yearNeeded }}</strong></p>
-
-			{% if campaign.yearDonated < campaign.yearNeeded %}
-				<div class="progress">
-            <div class="progress-bar" role="progressbar"
-               style="width: {{ (campaign.yearDonated / campaign.yearNeeded) * 100 }}%;"
-               aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0"
-               aria-valuemax="{{ campaign.yearNeeded }}"></div>
-				</div>
-			{% else %}
-				<div class="progress">
-            <div class="progress-bar" role="progressbar"
-               style="width: {{ (campaign.yearNeeded / campaign.yearDonated) * 100 }}%"
-               aria-valuenow="campaign.yearNeeded" aria-valuemin="0" aria-valuemax="campaign.yearDonated"
-               title="{{ 'donation.needed'|trans }}"></div>
-            <div class="progress-bar bg-success" role="progressbar"
-               style="width: {{ ((campaign.yearDonated - campaign.yearNeeded) / campaign.yearDonated) * 100 }}%"
-               aria-valuenow="((campaign.yearDonated - campaign.yearNeeded) / campaign.yearDonated)"
-               aria-valuemin="0" aria-valuemax="100" title="{{ 'donation.additional'|trans }}"></div>
-				</div>
-			{% endif %}
-
-			<p class="u:font-display u:text-center u:mt-16 u:text-18">
-				{{ '€ ' ~ campaign.yearDonated ~ '' }}
-          <span class="u:ms-8">{{ 'dashboard.donation.received' | trans }}</span></p>
-			{% if campaign.yearDonated >= campaign.yearNeeded %}
-				<p class="u:font-display u:font-300 u:my-16 u:text-center">{{ 'donation.thank.you'|trans({'amount':'€' ~ campaign.yearNeeded})|raw }}</p>
-			{% endif %}
-        <a href="{{ url('donations') }}"
-            class="btn o-button {% if campaign.yearDonated < campaign.yearNeeded %}o-button--full{% else %}o-button--outline{% endif %} u:my-16"><i
-              class="fa u:me-8 fa-euro-sign"></i> {{ 'landing.beinvolved.pleasedonate' | trans }}</a>
-
-		</div>
-
-		<div class="o-card u:mb-24">
-        <h4 class="homehfour">{{ 'landing.beinvolved.title' | trans }}<br/><span
-            class="homesubt">{{ 'landing.beinvolved.volunteer' | trans }}</span></h4>
-
-			<p class="u:font-display u:font-300">{{ 'landing.beinvolved.intro' | trans }}</p>
-        <p class="u:font-display u:font-300"><a href="{{ url('getactive') }}" class="o-button btn o-button u:mt-16"><i
-              class="fa u:me-8 fa-wrench"></i> {{ 'landing.beinvolved.helpbewelcome' | trans }}</a></p>
-		</div>
-
-		<div class="o-card">
-        <h4 class="homehfour">{{ 'landing.beinformed.title' | trans }}<br/><span
-            class="homesubt">{{ 'landing.beinformed.subtitle' | trans }}</span></h4>
-        <a href="{{ url('about') }}"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-question me-2"></i>{{ 'landing.beinformed.about' | trans }}</a>
-        <a href="{{ url('about_faq') }}"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-question me-2"></i>{{ 'landing.beinformed.faq' | trans }}</a>
-        <a href="{{ url('safety') }}"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-user-shield me-2"></i>{{ 'landing.beinformed.safety' | trans }}</a>
-			<a href="{{ url('newsletters') }}" class="o-button btn o-button
-          text-truncate u:mb-8"><i
-            class="far fa-newspaper me-2"></i>{{ 'newsletters' | trans }}</a>
-        <a href="https://www.bevolunteer.org/" target="_blank"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-bullseye me-2"></i>{{ 'landing.beinformed.bevolunteer' | trans }}</a>
-        <a href="https://www.bevolunteer.org/reports/annual-reports/" target="_blank"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-book me-2"></i>{{ 'landing.beinformed.annualreport' | trans }}</a>
-        <a href="https://www.bevolunteer.org/reports/financial-reports/" target="_blank"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-money-bill-wave-alt me-2"></i>{{ 'landing.beinformed.finances' | trans }}</a>
-        <a href="{{ url('terms_of_use') }}"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-book me-2"></i>{{ 'landing.beinformed.termsofuse' | trans }}</a>
-        <a href="{{ url('privacy_policy') }}"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-book me-2"></i>{{ 'landing.beinformed.privacypolicy' | trans }}</a>
-        <a href="{{ url('data_rights') }}"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-book me-2"></i>{{ 'landing.beinformed.datarights' | trans }}</a>
-        <a href="{{ url('about_credits') }}"
-           class="o-button btn o-button text-truncate u:mb-8"><i
-            class="fa u:me-8 fa-book me-2"></i>{{ 'credits.title' | trans }}</a>
-		</div>
-	</div>
-
-	<div class="u:w-full">
-		<div class="o-card u:h-full">
-        <h4 class="homehfour">{{ 'landing.bwnews.title' | trans }}<br/><span
-            class="homesubt">{{ 'landing.bwnews.subtitle' | trans }}</span></h4>
-        {% for news in communityNews %}
-
-			<h5>
-				<a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a>
-			</h5>
-			<div class="community-news-wrapper u:font-display u:font-300 u:mb-8">{{ news.text | truncate(200) | raw }}</div>
-
-			<div class="u:flex u:flex-row u:justify-between">
-				<small>{{ news.createdAt.diffForHumans }}</small>
-                {% set commentsCount = news.comments | length %}
-                <small>{{ 'bewelcome_news.nrcomments'|trans({'%commentsCount%': commentsCount}) }}</small>
-			</div>
-            <a href="{{ url('communitynews_show', { id: news.id} ) }}"
-               class="o-button u:my-16"><i class="fas fa-angle-double-right u:me-8"></i>{{ 'label.read.more' | trans }}
-            </a>
-            {% if not loop.last %}
-            <div class="u:mb-16">&nbsp;</div>
+{# Be involved: donate, volunteer, and the transparency links #}
+{% set goalReached = campaign.yearDonated >= campaign.yearNeeded %}
+<section class="c-home-section">
+    <h2 class="c-home-section__title">{{ 'landing.beinvolved.title'|trans }}</h2>
+    <div class="c-home-involved">
+        <div class="c-home-box">
+            <div class="c-home-box__head">
+                <h3 class="c-home-box__title">{{ 'landing.beinvolved.donate'|trans }}</h3>
+                <p class="c-home-box__aside">{{ 'landing.beinvolved.goalfor'|trans }} {{ campaign.year }} - {{ campaign.year + 1 }}: <strong>€{{ campaign.yearNeeded }}</strong></p>
+            </div>
+            {% if goalReached %}
+                {% set goalShare = campaign.yearDonated > 0 ? (campaign.yearNeeded / campaign.yearDonated) * 100 : 100 %}
+                <div class="c-home-progress" role="progressbar" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}">
+                    <span class="c-home-progress__bar" style="width: {{ goalShare }}%;" title="{{ 'donation.needed'|trans }}"></span>
+                    <span class="c-home-progress__bar c-home-progress__bar--extra" style="width: {{ 100 - goalShare }}%;" title="{{ 'donation.additional'|trans }}"></span>
+                </div>
+            {% else %}
+                <div class="c-home-progress" role="progressbar" aria-valuenow="{{ campaign.yearDonated }}" aria-valuemin="0" aria-valuemax="{{ campaign.yearNeeded }}">
+                    <span class="c-home-progress__bar" style="width: {{ campaign.yearNeeded > 0 ? (campaign.yearDonated / campaign.yearNeeded) * 100 : 0 }}%;"></span>
+                </div>
             {% endif %}
-        {% endfor %}
-            <a href="{{ url('communitynews') }}" class="o-button btn u:mt-16"><i
-            class="far fa-newspaper u:me-8"></i> {{ 'landing.bwnews.allnews' | trans }}</a>
-		</div>
-	</div>
+            <p class="c-home-box__amount{% if goalReached %} is-reached{% endif %}"><strong>€ {{ campaign.yearDonated }}</strong> {{ 'dashboard.donation.received'|trans }}</p>
+            {% if goalReached %}
+                <div class="c-home-box__text">{{ 'donation.thank.you'|trans({ amount: '€' ~ campaign.yearNeeded })|raw }}</div>
+            {% endif %}
+            <a class="c-home-button{% if goalReached %} c-home-button--outline{% endif %}" href="{{ url('donations') }}"><i class="fa fa-euro-sign" aria-hidden="true"></i> {{ 'landing.beinvolved.pleasedonate'|trans }}</a>
+        </div>
 
-</div>
+        <div class="c-home-box">
+            <div class="c-home-box__head">
+                <h3 class="c-home-box__title">{{ 'landing.beinvolved.volunteer'|trans }}</h3>
+            </div>
+            <p class="c-home-box__text">{{ 'landing.beinvolved.intro'|trans }}</p>
+            <a class="c-home-button c-home-button--outline" href="{{ url('getactive') }}"><i class="fa fa-wrench" aria-hidden="true"></i> {{ 'landing.beinvolved.helpbewelcome'|trans }}</a>
+        </div>
+
+        <div class="c-home-box">
+            <div class="c-home-box__head">
+                <h3 class="c-home-box__title">{{ 'landing.beinformed.title'|trans }} · {{ 'landing.beinformed.subtitle'|trans }}</h3>
+            </div>
+            {% set infoLinks = [
+                { url: url('about'), icon: 'fa fa-question-circle', label: 'landing.beinformed.about'|trans },
+                { url: url('about_faq'), icon: 'fas fa-comments', label: 'landing.beinformed.faq'|trans },
+                { url: url('safety'), icon: 'fa fa-user-shield', label: 'landing.beinformed.safety'|trans },
+                { url: url('newsletters'), icon: 'far fa-newspaper', label: 'newsletters'|trans },
+            ] %}
+            {% set moreLinks = [
+                { url: 'https://www.bevolunteer.org/', icon: 'fa fa-bullseye', label: 'landing.beinformed.bevolunteer'|trans, external: true },
+                { url: 'https://www.bevolunteer.org/reports/annual-reports/', icon: 'fa fa-book', label: 'landing.beinformed.annualreport'|trans, external: true },
+                { url: 'https://www.bevolunteer.org/reports/financial-reports/', icon: 'fa fa-money-bill-wave-alt', label: 'landing.beinformed.finances'|trans, external: true },
+                { url: url('terms_of_use'), icon: 'fa fa-book', label: 'landing.beinformed.termsofuse'|trans },
+                { url: url('privacy_policy'), icon: 'fa fa-book', label: 'landing.beinformed.privacypolicy'|trans },
+                { url: url('data_rights'), icon: 'fa fa-book', label: 'landing.beinformed.datarights'|trans },
+                { url: url('about_credits'), icon: 'fa fa-book', label: 'credits.title'|trans },
+            ] %}
+            <ul class="c-home-links">
+                {% for link in infoLinks %}
+                    <li><a class="c-home-links__item" href="{{ link.url }}"><i class="{{ link.icon }}" aria-hidden="true"></i><span>{{ link.label }}</span><i class="fa fa-chevron-right c-home-links__chevron" aria-hidden="true"></i></a></li>
+                {% endfor %}
+            </ul>
+            {# The other links stay one click away so the three boxes keep the same height. #}
+            <details class="c-home-links__more">
+                <summary>{{ 'more'|trans|capitalize }}</summary>
+                <ul class="c-home-links">
+                    {% for link in moreLinks %}
+                        <li><a class="c-home-links__item" href="{{ link.url }}"{% if link.external ?? false %} target="_blank" rel="noopener"{% endif %}><i class="{{ link.icon }}" aria-hidden="true"></i><span>{{ link.label }}</span><i class="fa fa-chevron-right c-home-links__chevron" aria-hidden="true"></i></a></li>
+                    {% endfor %}
+                </ul>
+            </details>
+        </div>
+    </div>
+</section>
+
+{# Community news #}
+<section class="c-home-section">
+    <div class="c-home-section__head">
+        <h2 class="c-home-section__title">{{ 'landing.bwnews.title'|trans }} <span class="c-home-section__subtitle">{{ 'landing.bwnews.subtitle'|trans }}</span></h2>
+        <a class="c-home-link" href="{{ url('communitynews') }}"><i class="far fa-newspaper" aria-hidden="true"></i> {{ 'landing.bwnews.allnews'|trans }}</a>
+    </div>
+    <div class="c-home-news">
+        {% for news in communityNews %}
+            <article class="c-home-box c-home-news__item">
+                <h3 class="c-home-news__title"><a href="{{ url('communitynews_show', { id: news.id }) }}">{{ news.title }}</a></h3>
+                <p class="c-home-news__text">{{ news.text|striptags|truncate(110) }}</p>
+                <div class="c-home-news__meta">
+                    <span>{{ news.createdAt.diffForHumans }}</span>
+                    <span><i class="far fa-comment" aria-hidden="true"></i> {{ 'bewelcome_news.nrcomments'|trans({ '%commentsCount%': news.comments|length }) }}</span>
+                </div>
+                <a class="c-home-link" href="{{ url('communitynews_show', { id: news.id }) }}">{{ 'label.read.more'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+        {% endfor %}
+    </div>
+</section>
 {% endblock content %}

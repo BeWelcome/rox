@@ -47,7 +47,7 @@ class SearchController extends AbstractController
             $user = $memberRepository->loadUserByIdentifier($username);
 
             if ($user) {
-                return $this->redirectToRoute('member_profile', ['username' => $user->getUsername()]);
+                return $this->redirectToRoute('members_profile', ['username' => $user->getUsername()]);
             }
 
             // If not found, try a wildcard search
@@ -55,7 +55,7 @@ class SearchController extends AbstractController
             $activeTab = 1;
 
             if (1 === \count($members)) {
-                return $this->redirectToRoute('member_profile', ['username' => $members[0]->getUsername()]);
+                return $this->redirectToRoute('members_profile', ['username' => $members[0]->getUsername()]);
             }
         }
 

@@ -69,3 +69,9 @@ landing.banner.collapse:
 landing.banner.expand:
     - 'Show more'
     - Button that unfolds the welcome banner of the home page (hosting switch, search and counters), on small screens
+landing.beinformed.previous:
+    - 'Previous links'
+    - Button that shows the previous page of links in the "Be informed" box of the home page
+landing.beinformed.next:
+    - 'Next links'
+    - Button that shows the next page of links in the "Be informed" box of the home page

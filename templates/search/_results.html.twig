@@ -61,9 +61,13 @@
                 <p class="p-search-card__occupation"><strong>{{ 'occupation'|trans|capitalize }}:</strong> {{ occupation }}</p>
             {% endif %}
 
+            {# The last activity is hidden when it is unknown or kept private (active in the last 7 days). #}
+            {% set lastActive = member.lastActive|privacy %}
             <div class="p-search-card__dates">
-                <span>{{ 'search.last.login'|trans }} <strong>{{ member.lastActive|privacy }}</strong></span>
-                <span class="p-search-card__dot" aria-hidden="true">·</span>
+                {% if lastActive and lastActive != 'lastloginprivacy'|trans %}
+                    <span>{{ 'search.last.login'|trans }} <strong>{{ lastActive }}</strong></span>
+                    <span class="p-search-card__dot" aria-hidden="true">·</span>
+                {% endif %}
                 <span>{{ 'search.member.since'|trans }} <strong>{{ member.created|privacy }}</strong></span>
             </div>
         </article>

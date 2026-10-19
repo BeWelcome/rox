@@ -11,6 +11,16 @@ function onChange(element, result) {
     locationGeonameId.value = result.id;
     locationLatitude.value = result.latitude;
     locationLongitude.value = result.longitude;
+    const locationAdminUnit = document.getElementById('tiny_location_admin_unit');
+    if (locationAdminUnit) {
+        locationAdminUnit.value = result.isAdminUnit;
+    }
+
+    // Picking a place opens the search by location for it straight away.
+    const form = element.form;
+    if (form) {
+        form.requestSubmit(document.getElementById('tiny_updateMap') || undefined);
+    }
 }
 
 initializeSingleAutoComplete("/suggest/locations/all", 'js-location-picker', onChange);
@@ -119,6 +129,8 @@ document.addEventListener('DOMContentLoaded', function() {
             initMemberSuggest(username, list);
         }
     }
+
+    document.querySelectorAll('.js-home-slider').forEach(initHomeSlider);
 
     const helloToggle = document.querySelector('.js-hello-toggle');
     if (helloToggle) {
@@ -524,4 +536,45 @@ function initHelloToggle(banner, button) {
             toggle();
         });
     }
+}
+
+/**
+ * "Be informed" box: pages of links scrolled sideways. The buttons move one
+ * page; a swipe works too (scroll snap). Buttons and dots follow the scroll.
+ */
+function initHomeSlider(slider) {
+    const track = slider.querySelector('.js-home-slider-track');
+    const prev = slider.querySelector('.js-home-slider-prev');
+    const next = slider.querySelector('.js-home-slider-next');
+    const dots = slider.querySelectorAll('.c-home-slider__dot');
+    if (!track || !prev || !next) {
+        return;
+    }
+    const pages = track.children.length;
+
+    const current = () => Math.round(track.scrollLeft / Math.max(track.clientWidth, 1));
+    const update = () => {
+        const page = current();
+        prev.disabled = page <= 0;
+        next.disabled = page >= pages - 1;
+        dots.forEach((dot, index) => dot.classList.toggle('is-active', index === page));
+    };
+    const go = (step) => {
+        const page = Math.min(Math.max(current() + step, 0), pages - 1);
+        track.scrollTo({ left: page * track.clientWidth });
+    };
+
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    let frame = null;
+    track.addEventListener('scroll', () => {
+        if (frame === null) {
+            frame = requestAnimationFrame(() => {
+                frame = null;
+                update();
+            });
+        }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
 }

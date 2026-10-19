@@ -7084,7 +7084,8 @@ legend.p-search-options__label { float: none; width: auto; padding: 0; }
    Home page: the two main blocks (messages and visitors; forum, activities
    and notifications). A white card with its tabs on top and light lists.
    ========================================================================== */
-.c-home-blocks { display: grid; gap: 1.5rem; padding-bottom: 1.5rem; }
+/* Home page spacing: one gap between all blocks, 1.5rem (1rem on phones), above the banner, between the cards and before each section title */
+.c-home-blocks { display: grid; gap: 1.5rem; }
 @media (min-width: 768px) {
   .c-home-blocks { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
 }
@@ -7318,10 +7319,10 @@ a.c-home-item:hover .c-home-item__title,
 }
 
 /* Home page: Be involved (donate, volunteer, transparency links) and community news */
-.c-home-section { margin-top: 1rem; padding: 2.5rem 0 1.5rem; border-top: 1px solid #e2e8f0; }
-.c-home-section__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 1.25rem; }
+.c-home-section { margin-top: 1.5rem; }
+.c-home-section__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.5rem 1rem; margin-bottom: 1rem; }
 .c-home-section__head .c-home-section__title { margin: 0; }
-.c-home-section__title { margin: 0 0 1.25rem; color: #0f172a; font-size: 1.875rem; font-weight: 700; line-height: 1.2; }
+.c-home-section__title { margin: 0 0 1rem; color: #0f172a; font-size: 1.875rem; font-weight: 700; line-height: 1.2; }
 .c-home-section__subtitle { margin-left: 0.25rem; color: #64748b; font-size: 1.125rem; font-weight: 600; }
 
 .c-home-involved,
@@ -7403,6 +7404,45 @@ a.c-home-item:hover .c-home-item__title,
 .c-home-links__more summary { color: #c2410c; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
 .c-home-links__more[open] summary { margin-bottom: 0.5rem; }
 
+/* "Be informed" links: pages of four links side by side, scrolled with the
+   previous / next buttons of the head (or a swipe), one page at a time. */
+.c-home-slider__head { flex-wrap: nowrap; align-items: center; }
+.c-home-slider__head .c-home-box__title { min-width: 0; }
+.c-home-slider__nav { display: flex; flex-shrink: 0; gap: 0.4rem; }
+.c-home-slider__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  background: #fff;
+  color: #334155;
+  font-size: 0.75rem;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.c-home-slider__btn:hover:not(:disabled) { border-color: #ea7a2e; background: #fff7ed; color: #c2410c; }
+.c-home-slider__btn:disabled { color: #cbd5e1; cursor: default; }
+.c-home-slider__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.c-home-slider__track::-webkit-scrollbar { display: none; }
+.c-home-slider__track:focus { outline: none; }
+.c-home-slider__page { flex: 0 0 100%; min-width: 0; scroll-snap-align: start; }
+.c-home-slider__dots { display: flex; justify-content: center; gap: 0.35rem; margin-top: auto; }
+.c-home-slider__dot { width: 0.4rem; height: 0.4rem; border-radius: 999px; background: #e2e8f0; transition: width 0.2s, background 0.2s; }
+.c-home-slider__dot.is-active { width: 1.1rem; background: #ea7a2e; }
+@media (prefers-reduced-motion: reduce) {
+  .c-home-slider__track { scroll-behavior: auto; }
+}
+
 .c-home-news__item { gap: 0.75rem; }
 .c-home-news__title { margin: 0; font-size: 1.125rem; font-weight: 700; line-height: 1.3; }
 .c-home-news__title a { color: #0f172a; text-decoration: none; }
@@ -7412,16 +7452,20 @@ a.c-home-item:hover .c-home-item__title,
 .c-home-news__meta i, .c-home-news__meta svg { margin-right: 0.15rem; }
 
 @media (max-width: 575.98px) {
-  .c-home-section { padding-top: 1.75rem; }
+  .c-home-section { margin-top: 1rem; }
+  body main:has(.l-hello) { padding-bottom: 1rem; }
+  .c-home-involved,
+  .c-home-news { gap: 1rem; }
   .c-home-section__title { font-size: 1.5rem; }
   .c-home-box { padding: 1.25rem; }
 }
 
 /* Home page: welcome banner. The member and the search on top, three counters below. */
 /* Same space above the banner as below it: the page margin on main would add to it. */
-main:has(.l-hello) { margin-top: 0 !important; }
+main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom: 1.5rem; }
 .l-hello {
   position: relative;
+  margin: 1.5rem 0;
   border: 1px solid #eef0f3;
   border-radius: 1.5rem;
   background: #fff;
@@ -7556,7 +7600,7 @@ main:has(.l-hello) { margin-top: 0 !important; }
 @media (max-width: 575.98px) {
   /* Same 1rem above the banner, between the blocks and at the bottom */
   .l-hello { margin: 1rem 0 !important; border-radius: 1.25rem; }
-  .c-home-blocks { gap: 1rem; padding-bottom: 1rem; }
+  .c-home-blocks { gap: 1rem; }
   .l-hello__stats { border-radius: 0 0 1.25rem 1.25rem; }
   .l-hello__long { display: none; }
   .l-hello__short { display: inline; }
@@ -7869,6 +7913,59 @@ main:has(.l-hello) { margin-top: 0 !important; }
   .p-trips-stop__fields .p-trips-field--dates { grid-column: 1; grid-row: 2; }
   .p-trips-stop__remove { grid-column: 2; grid-row: 1; }
   .p-trips-form__actions .p-trips-btn { width: 100%; }
+}
+
+/* Place suggestions under the "Where are you going?" field: a floating card
+   aligned with the search bar, a small map, the place in bold and its region
+   and country below. Picking one opens the search by location (landing.js). */
+.l-hello .l-hello__field .auto-results-wrapper.auto-is-active {
+  top: calc(100% + 0.65rem);
+  right: 0;
+  left: calc(-2.65rem - 1px);
+  z-index: 30;
+  width: auto;
+  margin: 0;
+  padding: 0.35rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06);
+}
+.l-hello .l-hello__field .auto-results-wrapper ul { max-height: 22rem; margin: 0; padding: 0; overflow-y: auto; border: 0; }
+.l-hello .l-hello__field .auto-results-wrapper li { margin: 0; padding: 0.45rem 0.55rem; border: 0; border-radius: 0.75rem; cursor: pointer; }
+.l-hello .l-hello__field .auto-results-wrapper li + li { border-top: 0; }
+.l-hello .l-hello__field .auto-results-wrapper li > div { flex-direction: row-reverse; justify-content: flex-end; gap: 0.8rem; }
+.l-hello .l-hello__field .auto-results-wrapper li > div > div:first-child { min-width: 0; }
+.l-hello .l-hello__field .auto-results-wrapper .auto-selected,
+.l-hello .l-hello__field .auto-results-wrapper li:hover { background: #fff7ed; }
+.l-hello .l-hello__field .auto-results-wrapper li.suggest-group {
+  padding: 0.7rem 0.55rem 0.25rem;
+  border-radius: 0;
+  background: none;
+  color: #94a3b8;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: default;
+  pointer-events: none;
+}
+.l-hello .l-hello__field .suggest-map { flex-shrink: 0; width: 3rem; height: 3rem; overflow: hidden; border-radius: 0.65rem; background: #f1f5f9; }
+.l-hello .l-hello__field .suggest-map .leaflet-control-attribution,
+.l-hello .l-hello__field .suggest-map .leaflet-control-container { display: none; }
+.l-hello .l-hello__field .suggest-name { overflow: hidden; color: #0f172a; font-size: 0.9375rem; font-weight: 600; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+.l-hello .l-hello__field .suggest-country { overflow: hidden; color: #64748b; font-size: 0.8125rem; line-height: 1.3; text-overflow: ellipsis; white-space: nowrap; }
+.l-hello .l-hello__field .auto-results-wrapper .auto-selected .suggest-name,
+.l-hello .l-hello__field .auto-results-wrapper li:hover .suggest-name { color: #c2410c; }
+/* Clear button: a small grey circle instead of the big cross */
+.l-hello .l-hello__field .auto-clear { top: 50%; right: 0.2rem; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #f1f5f9; transform: translateY(-50%); }
+.l-hello .l-hello__field .auto-clear:hover { background: #e2e8f0; }
+.l-hello .l-hello__field .auto-clear:before { width: 12px; height: 12px; line-height: 1; }
+.l-hello .l-hello__field .auto-clear.hidden { display: none; }
+.l-hello .l-hello__field .auto-is-loading:after { right: 0.6rem; }
+.l-hello .l-hello__field input { padding-right: 2.25rem !important; }
+@media (max-width: 575.98px) {
+  .l-hello .l-hello__field .auto-results-wrapper.auto-is-active { right: -3.45rem; left: calc(-1.1rem - 1px); }
 }
 
 /* Member suggestions under the "Find a member" field */

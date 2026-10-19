@@ -19,7 +19,7 @@
   counters at the bottom.
 #}
 {% set homeCity = searchLocation.vars.value.location ?? '' %}
-<div class="l-hello u:my-32">
+<div class="l-hello">
 	{# On phones the banner folds down to the member line; the choice is kept in the browser. #}
 	<script>try { if (localStorage.getItem('bw.hello.collapsed') === '1') { document.currentScript.parentNode.classList.add('is-collapsed'); } } catch (e) {}</script>
 	<div class="l-hello__top">
@@ -291,17 +291,23 @@
             <a class="c-home-button c-home-button--outline" href="{{ url('getactive') }}"><i class="fa fa-wrench" aria-hidden="true"></i> {{ 'landing.beinvolved.helpbewelcome'|trans }}</a>
         </div>
 
-        <div class="c-home-box">
-            <div class="c-home-box__head">
+        {#
+          The information links as a slider of pages of four links, with previous and
+          next buttons in the head, so the three boxes keep the same height.
+        #}
+        <div class="c-home-box c-home-slider js-home-slider">
+            <div class="c-home-box__head c-home-slider__head">
                 <h3 class="c-home-box__title">{{ 'landing.beinformed.title'|trans }} · {{ 'landing.beinformed.subtitle'|trans }}</h3>
+                <div class="c-home-slider__nav">
+                    <button type="button" class="c-home-slider__btn js-home-slider-prev" aria-controls="home_info_links" aria-label="{{ 'landing.beinformed.previous'|trans }}" title="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                    <button type="button" class="c-home-slider__btn js-home-slider-next" aria-controls="home_info_links" aria-label="{{ 'landing.beinformed.next'|trans }}" title="{{ 'landing.beinformed.next'|trans }}"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                </div>
             </div>
             {% set infoLinks = [
                 { url: url('about'), icon: 'fa fa-question-circle', label: 'landing.beinformed.about'|trans },
                 { url: url('about_faq'), icon: 'fas fa-comments', label: 'landing.beinformed.faq'|trans },
                 { url: url('safety'), icon: 'fa fa-user-shield', label: 'landing.beinformed.safety'|trans },
                 { url: url('newsletters'), icon: 'far fa-newspaper', label: 'newsletters'|trans },
-            ] %}
-            {% set moreLinks = [
                 { url: 'https://www.bevolunteer.org/', icon: 'fa fa-bullseye', label: 'landing.beinformed.bevolunteer'|trans, external: true },
                 { url: 'https://www.bevolunteer.org/reports/annual-reports/', icon: 'fa fa-book', label: 'landing.beinformed.annualreport'|trans, external: true },
                 { url: 'https://www.bevolunteer.org/reports/financial-reports/', icon: 'fa fa-money-bill-wave-alt', label: 'landing.beinformed.finances'|trans, external: true },
@@ -310,20 +316,18 @@
                 { url: url('data_rights'), icon: 'fa fa-book', label: 'landing.beinformed.datarights'|trans },
                 { url: url('about_credits'), icon: 'fa fa-book', label: 'credits.title'|trans },
             ] %}
-            <ul class="c-home-links">
-                {% for link in infoLinks %}
-                    <li><a class="c-home-links__item" href="{{ link.url }}"><i class="{{ link.icon }}" aria-hidden="true"></i><span>{{ link.label }}</span><i class="fa fa-chevron-right c-home-links__chevron" aria-hidden="true"></i></a></li>
+            <div class="c-home-slider__track js-home-slider-track" id="home_info_links" tabindex="-1">
+                {% for page in infoLinks|batch(4) %}
+                    <ul class="c-home-links c-home-slider__page">
+                        {% for link in page %}
+                            <li><a class="c-home-links__item" href="{{ link.url }}"{% if link.external ?? false %} target="_blank" rel="noopener"{% endif %}><i class="{{ link.icon }}" aria-hidden="true"></i><span>{{ link.label }}</span><i class="fa fa-chevron-right c-home-links__chevron" aria-hidden="true"></i></a></li>
+                        {% endfor %}
+                    </ul>
                 {% endfor %}
-            </ul>
-            {# The other links stay one click away so the three boxes keep the same height. #}
-            <details class="c-home-links__more">
-                <summary>{{ 'more'|trans|capitalize }}</summary>
-                <ul class="c-home-links">
-                    {% for link in moreLinks %}
-                        <li><a class="c-home-links__item" href="{{ link.url }}"{% if link.external ?? false %} target="_blank" rel="noopener"{% endif %}><i class="{{ link.icon }}" aria-hidden="true"></i><span>{{ link.label }}</span><i class="fa fa-chevron-right c-home-links__chevron" aria-hidden="true"></i></a></li>
-                    {% endfor %}
-                </ul>
-            </details>
+            </div>
+            <div class="c-home-slider__dots" aria-hidden="true">
+                {% for page in infoLinks|batch(4) %}<span class="c-home-slider__dot{% if loop.first %} is-active{% endif %}"></span>{% endfor %}
+            </div>
         </div>
     </div>
 </section>

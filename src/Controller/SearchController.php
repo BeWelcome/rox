@@ -142,6 +142,13 @@ class SearchController extends AbstractController
             'language_choices' => $languageChoices,
             'search_options' => $searchOptions,
         ]);
+        // The home page posts its place search ("tiny") and its "my city" link
+        // ("home") under their own names: read them as this search form.
+        foreach (['tiny', 'home'] as $homeFormName) {
+            if (!$request->request->has('search') && $request->request->has($homeFormName)) {
+                $request->request->set('search', $request->request->all($homeFormName));
+            }
+        }
         $search->handleRequest($request);
 
         $mapMembers = null;

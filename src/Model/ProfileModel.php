@@ -203,6 +203,8 @@ readonly class ProfileModel
             if (null === $fieldTranslation) {
                 $fieldTranslation = new MemberTranslation($language, $field, $fieldContent);
             }
+            // The lookup ignores case, so fix a row stored as "aboutMe" while we're at it.
+            $fieldTranslation->setField($field);
             $fieldTranslation->setContent($fieldContent);
 
             $member->addTranslation($fieldTranslation);

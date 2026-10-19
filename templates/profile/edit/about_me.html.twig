@@ -7,6 +7,7 @@
 
 {% block subpage_body %}
   {{ form_start(form) }}
+  {{ form_errors(form) }}
 
   {% set username = member.username %}
   {% set translations = member.translations %}

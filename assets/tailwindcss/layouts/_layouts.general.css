@@ -6630,17 +6630,20 @@ body.has-search-overlay { overflow: hidden; }
 .p-search-card__name::after { content: ""; position: absolute; inset: 0; }
 .p-search-card__meta { margin-top: 0.15rem; overflow: hidden; color: #64748b; font-size: 0.9375rem; text-overflow: ellipsis; white-space: nowrap; }
 .p-search-card__meta:empty { display: none; }
-.p-search-card__stats { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 1rem; margin-top: 0.3rem; color: #334155; font-size: 0.9375rem; }
+.p-search-card__stats { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.75rem; margin-top: 0.3rem; font-size: 0.9375rem; }
 .p-search-card__host { font-weight: 700; }
 .p-search-card__host--yes { color: #2f8a4a; }
 .p-search-card__host--no { color: #64748b; }
-.p-search-card__chip { display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
-.p-search-card__chip i, .p-search-card__chip svg { color: #94a3b8; }
 .p-search-card__messages { position: relative; z-index: 1; color: #64748b; }
 .p-search-card__messages:hover { color: #c2410c; }
 .p-search-card .p-search-card__since { margin: 0.3rem 0 0; color: #94a3b8; font-size: 0.875rem; }
-.p-search-card__go { flex-shrink: 0; color: #cbd5e1; font-size: 0.85rem; }
-.p-search-card:hover .p-search-card__go { color: #ea7a2e; }
+/* Beds and comments: a small grey pill at the top right; comments turn orange when there are some */
+.p-search-card__counts { display: inline-flex; flex-shrink: 0; align-items: center; align-self: flex-start; margin-top: 0.15rem; padding: 0.35rem 0.8rem; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.875rem; font-weight: 700; }
+.p-search-card__count { display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
+.p-search-card__count + .p-search-card__count { margin-left: 0.6rem; padding-left: 0.6rem; border-left: 1px solid #cbd5e1; }
+.p-search-card__count i, .p-search-card__count svg { color: #94a3b8; }
+.p-search-card__count--comments.has-comments { color: #c2410c; }
+.p-search-card__count--comments.has-comments i, .p-search-card__count--comments.has-comments svg { color: #ea7a2e; }
 
 .p-search-badge {
   display: inline-flex;
@@ -6994,7 +6997,8 @@ legend.p-search-options__label { float: none; width: auto; padding: 0; }
   .p-search-card__avatar img { width: 4.5rem; height: 4.5rem; }
   .p-search-card__name { font-size: 1.05rem; }
   .p-search-card__meta, .p-search-card__stats { font-size: 0.875rem; }
-  .p-search-card__stats { gap: 0.2rem 0.8rem; }
+  .p-search-card__counts { padding: 0.3rem 0.65rem; font-size: 0.8125rem; }
+  .p-search-card__count + .p-search-card__count { margin-left: 0.5rem; padding-left: 0.5rem; }
   .p-search-card .p-search-card__since { font-size: 0.8125rem; }
 
   /* Search options as a sheet from the bottom */

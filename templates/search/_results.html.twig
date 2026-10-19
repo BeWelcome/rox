@@ -1,6 +1,7 @@
 {#
   Search results: one row per member (photo, name, facts, hosting, beds,
   comments and membership length); the whole row opens the profile.
+  Beds and comments sit in a small pill on the right.
 #}
 <div class="p-search-results__cards">
     {% for result in members.currentPageResults %}
@@ -29,23 +30,19 @@
                     {{- facts|join(' · ') -}}
                 </div>
 
-                <div class="p-search-card__stats">
-                    {% if member.accommodation in ['yes', 'no'] %}
-                        <span class="p-search-card__host p-search-card__host--{{ member.accommodation }}">{{ ('search.accommodation.' ~ member.accommodation)|trans|trim('.') }}</span>
-                    {% endif %}
-                    <span class="p-search-card__chip" title="{{ 'searchcanhostatleast'|trans }}">
-                        <i class="fas fa-bed" aria-hidden="true"></i> {{ member.maxGuests }}
-                    </span>
-                    <span class="p-search-card__chip" title="{{ 'searchcommentsinfo'|trans|format(result.commentCount ?? 0)|striptags }}">
-                        <i class="far fa-comment" aria-hidden="true"></i> {{ result.commentCount ?? 0 }}
-                    </span>
-                    {% if result.messageCount %}
-                        <a class="p-search-card__messages" href="{{ path('conversations_with', { username: member.username }) }}"
-                           title="{{ 'messages_allmessageswith'|trans|format(member.username)|striptags }}">
-                            <i class="fas fa-mail-bulk" aria-hidden="true"></i>
-                        </a>
-                    {% endif %}
-                </div>
+                {% if member.accommodation in ['yes', 'no'] or result.messageCount %}
+                    <div class="p-search-card__stats">
+                        {% if member.accommodation in ['yes', 'no'] %}
+                            <span class="p-search-card__host p-search-card__host--{{ member.accommodation }}">{{ ('search.accommodation.' ~ member.accommodation)|trans|trim('.') }}</span>
+                        {% endif %}
+                        {% if result.messageCount %}
+                            <a class="p-search-card__messages" href="{{ path('conversations_with', { username: member.username }) }}"
+                               title="{{ 'messages_allmessageswith'|trans|format(member.username)|striptags }}">
+                                <i class="fas fa-mail-bulk" aria-hidden="true"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                {% endif %}
 
                 {# The last activity is left out when it is unknown or kept private (active in the last 7 days). #}
                 {% set lastActive = member.lastActive|privacy %}
@@ -59,7 +56,15 @@
                 {% endif %}
             </div>
 
-            <i class="fas fa-chevron-right p-search-card__go" aria-hidden="true"></i>
+            {% set commentCount = result.commentCount ?? 0 %}
+            <div class="p-search-card__counts">
+                <span class="p-search-card__count" title="{{ 'searchcanhostatleast'|trans }}">
+                    <i class="fas fa-bed" aria-hidden="true"></i> {{ member.maxGuests }}
+                </span>
+                <span class="p-search-card__count p-search-card__count--comments{% if commentCount %} has-comments{% endif %}" title="{{ 'searchcommentsinfo'|trans|format(commentCount)|striptags }}">
+                    <i class="fas fa-comment" aria-hidden="true"></i> {{ commentCount }}
+                </span>
+            </div>
         </article>
     {% endfor %}
 </div>

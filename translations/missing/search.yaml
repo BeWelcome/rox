@@ -4,6 +4,15 @@ search.last.login:
 search.member.since:
     - 'Member since:'
     - Text shown in the search results followed by the member since date
+search.member.for:
+    - 'Member for {duration}'
+    - Shown in each search result, e.g. "Member for 2 years". Keep {duration} intact.
+search.members.found:
+    - '{count, plural, one {# member found} other {# members found}}'
+    - Above the search results when they fit on one page, e.g. "5 members found". Copy/paste the English version and translate only the words.
+search.members.found.range:
+    - '{first}–{last} of {count, plural, one {# member} other {# members}}'
+    - Above the search results when there are several pages, e.g. "21–40 of 87 members". Copy/paste the English version and translate only the words.
 search.reset.options:
     - 'Reset Options'
     - Label on the button to reset the search options to default values

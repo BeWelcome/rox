@@ -132,7 +132,11 @@
             {% if hasResults %}
                 <div class="p-search-results__head">
                     <h1 class="p-search-results__count">
-                        {{ 'search.members.showing'|trans({ '%first%': pager.currentPageOffsetStart, '%last%': pager.currentPageOffsetEnd, '%count%': pager.nbResults }) }}
+                        {%- if pager.haveToPaginate -%}
+                            {{ 'search.members.found.range'|trans({ first: pager.currentPageOffsetStart, last: pager.currentPageOffsetEnd, count: pager.nbResults }) }}
+                        {%- else -%}
+                            {{ 'search.members.found'|trans({ count: pager.nbResults }) }}
+                        {%- endif -%}
                     </h1>
                     <div class="p-search-results__view" role="group">
                         <button type="button" class="p-search-results__view-btn is-active js-search-view" data-view="list">

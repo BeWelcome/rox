@@ -7588,6 +7588,14 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .l-hello__stat-text { flex: 1; min-width: 0; font-size: 0.9375rem; line-height: 1.35; }
 .l-hello__stat-text strong { color: #0f172a; font-size: 1.05rem; font-weight: 700; }
 .l-hello__stat-go { flex-shrink: 0; color: #ea7a2e; font-size: 0.8rem; }
+/* Create a public trip: the highlighted call to action of the banner */
+.l-hello__stat.l-hello__stat--trip { border-left-color: transparent; background: #ea7a2e; color: #fff; }
+.l-hello__stat.l-hello__stat--trip:hover { background: #d9661a; color: #fff; }
+.l-hello__stat--trip .l-hello__stat-icon { background: rgba(255, 255, 255, 0.2); color: #fff; }
+.l-hello__stat--trip .l-hello__long { display: flex; flex-direction: column; gap: 0.1rem; }
+.l-hello__trip-title { color: #fff; font-size: 1.05rem; font-weight: 700; }
+.l-hello__trip-hint { color: rgba(255, 255, 255, 0.85); font-size: 0.8125rem; }
+.l-hello__stat--trip .l-hello__stat-go { color: #fff; }
 
 @media (max-width: 991.98px) {
   .l-hello__top { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; padding: 1.5rem; }
@@ -7641,7 +7649,6 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   /* three small cards in a row: icon and number on top, label below */
   /* two cards only: the activities counter is left out on small screens */
   .l-hello__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; padding: 0.6rem; border-top: 0; }
-  .l-hello__stat--activities { display: none !important; }
   .l-hello__stat,
   .l-hello__stat + .l-hello__stat {
     display: grid;
@@ -8085,7 +8092,6 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .l-hosting-switch,
 .l-hello__toggle,
 .l-hello__status,
-.l-hello__stat--profile,
 .l-hello__submit-loupe { display: none !important; }
 
 @media (max-width: 575.98px) {
@@ -8158,7 +8164,6 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   .l-hello__status.is-on::after { background: #3fa45b; }
 
   /* "My profile" row at the bottom of the counters */
-  .l-hello__stat--profile { display: flex !important; }
   .l-hello__me .l-hosting,
   .l-hello__not-setup { grid-column: 1 / -1; justify-self: stretch; margin-top: 0.9rem; }
   .l-hello__me .l-hosting-toggle { display: none; }
@@ -8249,7 +8254,12 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   }
   .l-hello__stat--alert .l-hello__stat-text strong { background: #ea7a2e; color: #fff; }
   .l-hello__stat-go { display: inline-block !important; order: 3; color: #cbd5e1; font-size: 0.75rem; }
-  .l-hello__stat--profile .l-hello__stat-go { margin-left: auto; }
+  .l-hello__stat.l-hello__stat--trip { background: #fff3e6; }
+  .l-hello__stat.l-hello__stat--trip:hover { background: #fde6d2; }
+  .l-hello__stat--trip .l-hello__long { display: none; }
+  .l-hello__stat--trip .l-hello__stat-icon { background: none; color: #c2410c; }
+  .l-hello__stat--trip .l-hello__stat-text .l-hello__short { color: #c2410c; font-weight: 700; }
+  .l-hello__stat--trip .l-hello__stat-go { margin-left: auto; color: #ea7a2e; }
 }
 @media (max-width: 575.98px) and (prefers-reduced-motion: reduce) {
   .l-hello__me .l-hosting, .l-hello__stats, .l-hello__toggle svg, .l-hello__toggle i { transition: none !important; }

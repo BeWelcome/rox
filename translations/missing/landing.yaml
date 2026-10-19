@@ -45,6 +45,15 @@ landing.stats.travelers.area:
 landing.stats.activities:
     - 'upcoming activities'
     - Shown after a number in the welcome banner of the home page, e.g. "3 upcoming activities"
+landing.stats.trip:
+    - 'Plan a public trip'
+    - Highlighted link in the welcome banner of the home page that opens the form to create a trip
+landing.stats.trip.hint:
+    - 'Let hosts know you are coming'
+    - Small line under "Plan a public trip" in the welcome banner of the home page
+landing.stats.trip.short:
+    - 'Create a public trip'
+    - Highlighted link to create a trip in the welcome banner of the home page, on small screens
 landing.viewprofile.short:
     - 'My profile'
     - Short link to the member's own profile in the welcome banner of the home page, on small screens

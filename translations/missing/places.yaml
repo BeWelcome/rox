@@ -1,0 +1,57 @@
+places.explore.title:
+    - 'Explore by country'
+    - Title of the block of the home page that lists the countries where members live
+places.explore.subtitle:
+    - 'Where BeWelcome members live. Pick a country to find hosts.'
+    - Under the title "Explore by country" on the home page
+places.explore.search:
+    - 'Find a country...'
+    - Placeholder of the field to find a country in the "Explore by country" block of the home page
+places.explore.summary:
+    - '{count, plural, one {# country} other {# countries}} in {continent}'
+    - Under the list of countries of the home page, e.g. "22 countries in Africa". Copy/paste the English version and translate only the words, keep {continent}.
+places.explore.nomatch:
+    - 'No country matches your search.'
+    - Shown in the "Explore by country" block of the home page when no country matches the text typed
+places.continent.af:
+    - 'Africa'
+    - Tab of the "Explore by country" block of the home page
+places.continent.am:
+    - 'America'
+    - Tab of the "Explore by country" block of the home page (North, Central and South America)
+places.continent.ea:
+    - 'Eurasia'
+    - Tab of the "Explore by country" block of the home page (Europe and Asia)
+places.continent.oc:
+    - 'Oceania'
+    - Tab of the "Explore by country" block of the home page
+places.continent.an:
+    - 'Antarctica'
+    - Tab of the "Explore by country" block of the home page
+places.members.word:
+    - '{count, plural, one {member} other {members}}'
+    - After a number of members of a country, e.g. "1,711 members" (the number is shown separately). Copy/paste the English version and translate only the words.
+places.country.members:
+    - '{count, plural, one {# member} other {# members}}'
+    - Under the name of the country on a country page, e.g. "12,705 members". Copy/paste the English version and translate only the words.
+places.country.regions:
+    - '{count, plural, one {# region} other {# regions}}'
+    - Under the name of the country on a country page, after the number of members, e.g. "19 regions". Copy/paste the English version and translate only the words.
+places.country.search:
+    - 'Search hosts in {place}'
+    - Button on a country page that opens the member search for the country (or the region chosen), e.g. "Search hosts in Spain". Keep {place}.
+places.country.regions.title:
+    - 'Regions'
+    - Title above the list of regions on a country page
+places.country.all:
+    - 'All'
+    - First choice of the list of regions on a country page, to see the members of the whole country
+places.country.members.title:
+    - 'Members'
+    - Title above the members of a country page
+places.country.back:
+    - 'Back to the countries'
+    - Label (for screen readers) of the back arrow of a country page
+places.country.empty:
+    - 'No member lives here yet.'
+    - Shown on a country page when no member lives in the country or region chosen

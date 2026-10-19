@@ -116,7 +116,22 @@ class SearchAdapter implements AdapterInterface
         /** @var MemberRepository $memberRepository */
         $memberRepository = $this->entityManager->getRepository(Member::class);
 
-        if ($this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude) {
+        $adminUnit = $this->getAdminUnit();
+        if (null !== $adminUnit) {
+            // A country or a region: everybody living in it, whatever the distance.
+            if (!\in_array('a', $qb->getAllAliases(), true)) {
+                $qb->join('m.addresses', 'a', 'WITH', 'a.active = 1');
+            }
+            if (!\in_array('l', $qb->getAllAliases(), true)) {
+                $qb->join('a.location', 'l');
+            }
+            $qb->andWhere('l.countryId = :admin_country')
+                ->setParameter('admin_country', $adminUnit->getCountryId());
+            if ('ADM1' === $adminUnit->getFeatureCode()) {
+                $qb->andWhere('l.admin1Id = :admin_region')
+                    ->setParameter('admin_region', $adminUnit->getAdmin1Id());
+            }
+        } elseif ($this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude) {
             // 1. Calculate the bounding box
             $center = new GeoPoint($this->searchRequest->location_latitude, $this->searchRequest->location_longitude);
             $boundingBox = $center->boundingBox($this->searchRequest->distance, 'km');
@@ -158,6 +173,25 @@ class SearchAdapter implements AdapterInterface
         }
 
         $memberRepository->applySearchFilters($qb, $this->searchRequest);
+    }
+
+    /**
+     * The country or first-level region picked as search place, if that is what was picked.
+     */
+    private function getAdminUnit(): ?Location
+    {
+        $geonameId = $this->searchRequest->location_geoname_id ?? null;
+        if (empty($this->searchRequest->location_admin_unit ?? false) || empty($geonameId)) {
+            return null;
+        }
+
+        $location = $this->entityManager->getRepository(Location::class)->find((int) $geonameId);
+        if (null === $location) {
+            return null;
+        }
+        $featureCode = (string) $location->getFeatureCode();
+
+        return str_starts_with($featureCode, 'PCL') || 'ADM1' === $featureCode ? $location : null;
     }
 
     private function applySorting(QueryBuilder $qb): void

@@ -16,6 +16,7 @@ use App\Form\TripRadiusType;
 use App\Model\CommunityNewsModel;
 use App\Model\DonateModel;
 use App\Model\LandingModel;
+use App\Model\PlacesModel;
 use App\Model\TripModel;
 use App\Repository\ActivityRepository;
 use App\Repository\NotificationRepository;
@@ -208,6 +209,8 @@ class LandingController extends AbstractController
         EntityManagerInterface $entityManager,
         DonateModel $donateModel,
         TripModel $tripModel,
+        PlacesModel $placesModel,
+        Request $request,
         FormFactoryInterface $formFactory,
     ): Response {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -255,6 +258,7 @@ class LandingController extends AbstractController
             ],
             'radiusForm' => $radiusForm->createView(),
             'communityNews' => $latestNews,
+            'countries' => $placesModel->getCountriesByContinent($request->getLocale()),
             'messageFilter' => $messageFilter,
             'forumFilter' => $forumFilter,
             'onlineActivities' => $onlineActivities,

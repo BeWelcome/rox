@@ -1,0 +1,67 @@
+{#
+  "Explore by country": where members live, one tab per continent, the countries
+  sorted by number of members, a field to find any country. A country opens its
+  own page (places/country.html.twig). The paging and the search are in
+  assets/js/landing/countries.js.
+#}
+{% set address = app.user.activeAddress %}
+{% set myCountry = address and address.location ? address.location.countryId : null %}
+{% set activeContinent = countries|keys|first %}
+{% for continent, list in countries %}
+    {% for country in list %}{% if country.code == myCountry %}{% set activeContinent = continent %}{% endif %}{% endfor %}
+{% endfor %}
+
+<section class="c-home-section c-places-explore js-places-explore" id="countries">
+    <div class="c-places-explore__card">
+        <div class="c-places-explore__head">
+            <div>
+                <h2 class="c-places-explore__title">{{ 'places.explore.title'|trans }}</h2>
+                <p class="c-places-explore__subtitle">{{ 'places.explore.subtitle'|trans }}</p>
+            </div>
+            <label class="c-places-explore__search">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <input type="search" class="js-places-search" placeholder="{{ 'places.explore.search'|trans }}" aria-label="{{ 'places.explore.search'|trans }}" autocomplete="off">
+            </label>
+        </div>
+
+        <div class="c-places-explore__tabs" role="tablist">
+            {% for continent, list in countries %}
+                {% set name = ('places.continent.' ~ continent|lower)|trans %}
+                <button type="button" role="tab" class="c-places-explore__tab js-places-tab{% if continent == activeContinent %} is-active{% endif %}"
+                        aria-selected="{{ continent == activeContinent ? 'true' : 'false' }}"
+                        data-continent="{{ continent }}"
+                        data-summary="{{ 'places.explore.summary'|trans({ count: list|length, continent: name }) }}">
+                    {{ name }} <span class="c-places-explore__tab-count">{{ list|reduce((sum, country) => sum + country.count, 0)|number_format }}</span>
+                </button>
+            {% endfor %}
+        </div>
+
+        <ul class="c-places-explore__grid js-places-grid">
+            {% for continent, list in countries %}
+                {% set most = (list|first).count %}
+                {% for country in list %}
+                    <li class="c-places-explore__item js-places-item" data-continent="{{ continent }}" data-name="{{ country.name|lower }} {{ country.slug|lower }}"{% if continent != activeContinent or loop.index > 8 %} hidden{% endif %}>
+                        <a class="c-places-country" href="{{ path('places_country', { countryname: country.slug, countrycode: country.code }) }}">
+                            <span class="o-flag o-flag--{{ country.code }} c-places-country__flag" aria-hidden="true"></span>
+                            <span class="c-places-country__name">{{ country.name }}</span>
+                            <span class="c-places-country__bar" aria-hidden="true"><span style="width: {{ max(2, (country.count / most * 100)|round(1)) }}%"></span></span>
+                            <span class="c-places-country__count"><strong>{{ country.count|number_format }}</strong> <span class="c-places-country__word">{{ 'places.members.word'|trans({ count: country.count }) }}</span></span>
+                            <i class="fas fa-chevron-right c-places-country__go" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+        <p class="c-places-explore__empty js-places-empty" hidden>{{ 'places.explore.nomatch'|trans }}</p>
+
+        <div class="c-places-explore__foot">
+            <span class="c-places-explore__summary js-places-summary"></span>
+            <div class="c-places-explore__pager js-places-pager">
+                <span class="c-places-explore__dots js-places-dots" aria-hidden="true"></span>
+                <span class="c-places-explore__page js-places-page"></span>
+                <button type="button" class="c-places-explore__nav js-places-prev" aria-label="{{ 'landing.beinformed.previous'|trans }}"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                <button type="button" class="c-places-explore__nav js-places-next" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,102 @@
+{#
+  The page of one country, opened from "Explore by country" on the home page:
+  its regions (a filter) and its members, hosts first.
+#}
+{% extends 'base.html.twig' %}
+
+{% set hide_sidebar = true %}
+{% set place = active_region ? active_region.name : country.name %}
+
+{# Previous / next page of the members, kept in the address so it can be shared #}
+{% macro pager(country, active_region, page, pages, modifier) %}
+    {% if pages > 1 %}
+        {% set route = { countryname: country.slug, countrycode: country.code } %}
+        {% if active_region %}{% set route = route|merge({ region: active_region.code }) %}{% endif %}
+        <nav class="c-place__pager c-place__pager--{{ modifier }}" aria-label="{{ 'places.country.members.title'|trans }}">
+            <span class="c-place__pager-label">{{ page }} / {{ pages }}</span>
+            {% if page > 1 %}
+                <a class="c-place__pager-btn" href="{{ path('places_country', route|merge(page > 2 ? { page: page - 1 } : {})) }}" rel="prev" aria-label="{{ 'landing.beinformed.previous'|trans }}"><i class="fas fa-chevron-left" aria-hidden="true"></i></a>
+            {% else %}
+                <span class="c-place__pager-btn is-disabled" aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
+            {% endif %}
+            {% if page < pages %}
+                <a class="c-place__pager-btn" href="{{ path('places_country', route|merge({ page: page + 1 })) }}" rel="next" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+            {% else %}
+                <span class="c-place__pager-btn is-disabled" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% endmacro %}
+
+{% block title %}{{ place }}{% endblock %}
+
+{% block content %}
+    {% import _self as places %}
+
+    <section class="c-place">
+        <div class="c-place__card">
+            <header class="c-place__head">
+                <a class="c-place__back" href="{{ path('landingpage') }}#countries" aria-label="{{ 'places.country.back'|trans }}"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
+                <span class="o-flag o-flag--{{ country.code }} c-place__flag" aria-hidden="true"></span>
+                <div class="c-place__heading">
+                    <h1 class="c-place__name">{{ country.name }}</h1>
+                    <p class="c-place__facts">
+                        {{- 'places.country.members'|trans({ count: country_total }) -}}
+                        {%- if regions|length %} · {{ 'places.country.regions'|trans({ count: regions|length }) }}{% endif -%}
+                    </p>
+                </div>
+                <a class="c-place__search" href="{{ path('search_locations', search_query) }}">
+                    <i class="fas fa-search" aria-hidden="true"></i> {{ 'places.country.search'|trans({ place: place }) }}
+                </a>
+            </header>
+
+            {% if regions|length > 1 %}
+                <h2 class="c-place__title">{{ 'places.country.regions.title'|trans }}</h2>
+                <div class="c-place__regions">
+                    <a class="c-place__region{% if not active_region %} is-active{% endif %}" href="{{ path('places_country', { countryname: country.slug, countrycode: country.code }) }}"{% if not active_region %} aria-current="page"{% endif %}>
+                        {{ 'places.country.all'|trans }} <span class="c-place__region-count">{{ country_total|number_format }}</span>
+                    </a>
+                    {% for region in regions %}
+                        {% set current = active_region and active_region.code == region.code %}
+                        <a class="c-place__region{% if current %} is-active{% endif %}" href="{{ path('places_country', { countryname: country.slug, countrycode: country.code, region: region.code }) }}"{% if current %} aria-current="page"{% endif %}>
+                            {{ region.name }} <span class="c-place__region-count">{{ region.count|number_format }}</span>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <div class="c-place__members-head">
+                <h2 class="c-place__title">
+                    {{ 'places.country.members.title'|trans }}
+                    {% if active_region %}<span class="c-place__title-place">· {{ active_region.name }}</span>{% endif %}
+                </h2>
+                {{ places.pager(country, active_region, page, pages, 'top') }}
+            </div>
+
+            {% if members is empty %}
+                <p class="c-place__empty">{{ 'places.country.empty'|trans }}</p>
+            {% else %}
+                <ul class="c-place__members">
+                    {% for member in members %}
+                        {% set address = member.activeAddress %}
+                        {% set facts = [] %}
+                        {% if member.isAgeVisible and member.age %}{% set facts = facts|merge(['searchyearsold'|trans|format(member.age)|striptags]) %}{% endif %}
+                        {% if address and address.location %}{% set facts = facts|merge([address.location.name]) %}{% endif %}
+                        <li>
+                            <a class="c-place-member" href="{{ path('members_profile', { username: member.username }) }}">
+                                <img class="c-place-member__avatar" src="{{ path('avatar', { username: member.username, size: 96 }) }}" alt="" loading="lazy">
+                                <span class="c-place-member__body">
+                                    <span class="c-place-member__name">{{ member.username }}</span>
+                                    {% if facts|length %}
+                                        <span class="c-place-member__meta"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ facts|join(' · ') }}</span>
+                                    {% endif %}
+                                </span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {{ places.pager(country, active_region, page, pages, 'bottom') }}
+            {% endif %}
+        </div>
+    </section>
+{% endblock content %}

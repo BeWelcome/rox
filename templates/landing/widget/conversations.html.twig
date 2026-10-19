@@ -3,7 +3,7 @@
   A hosting request or invitation shows its kind and dates instead of a subject,
   coloured by the request's state like in the inbox.
 #}
-<div id="conversationsdisplay" class="c-home-list">
+<div id="conversationsdisplay" class="c-home-list"{% if messages is empty %} data-empty{% endif %}>
     {% for message in messages %}
         {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
         {% set request = message.request %}

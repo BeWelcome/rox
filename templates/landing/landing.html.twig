@@ -250,6 +250,10 @@
     </section>
 </div>
 
+{% if countries is not empty %}
+    {% include 'landing/_countries.html.twig' %}
+{% endif %}
+
 {# Be involved: donate, volunteer, and the transparency links #}
 {% set goalReached = campaign.yearDonated >= campaign.yearNeeded %}
 <section class="c-home-section">

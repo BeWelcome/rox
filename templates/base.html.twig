@@ -39,7 +39,7 @@
 <body>
 {% set sidebar = (submenu is defined) %}
 {% include 'menu.html.twig' %}
-<div id="toasts" class="position-fixed end-0 p-3" style="z-index:1100;top:72px">
+<div id="toasts" class="bw-toasts">
   {% for label, messages in app.flashes %}
     {% for message in messages %}
       {% if label == 'success' %}{% set toastClass = 'bw-toast--success' %}{% set icon = 'fa-check-circle' %}

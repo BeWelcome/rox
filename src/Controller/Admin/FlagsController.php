@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -335,7 +336,11 @@ class FlagsController extends AbstractController
 
     private function getFilterId(Request $request, string $name): ?int
     {
-        $id = $request->query->filter($name, null, \FILTER_VALIDATE_INT, ['flags' => \FILTER_NULL_ON_FAILURE]);
+        try {
+            $id = $request->query->getInt($name);
+        } catch (BadRequestException) {
+            return null;
+        }
 
         return $id > 0 ? $id : null;
     }

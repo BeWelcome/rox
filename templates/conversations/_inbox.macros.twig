@@ -143,6 +143,11 @@
     {% if options.unreadOnly %}{% set filterParams = filterParams|merge({ unread_only: 1 }) %}{% endif %}
 
     <div class="c-inbox-list__head">
+        {# On mobile the site header is hidden on the inbox, so this leads back to the home page. #}
+        <a class="c-inbox-list__back" href="{{ path('landingpage') }}" title="{{ 'back'|trans }}">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            <span class="visually-hidden">{{ 'back'|trans }}</span>
+        </a>
         {# Below 992px the title opens the folder list; on desktop the folders are in the left column. #}
         <details class="c-inbox-folders">
             <summary class="c-inbox-list__title">

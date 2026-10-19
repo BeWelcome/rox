@@ -256,7 +256,7 @@
 
 {# Be involved: donate, volunteer, and the transparency links #}
 {% set goalReached = campaign.yearDonated >= campaign.yearNeeded %}
-<section class="c-home-section">
+<section class="c-home-section c-home-section--divided">
     <h2 class="c-home-section__title">{{ 'landing.beinvolved.title'|trans }}</h2>
     <div class="c-home-involved">
         <div class="c-home-box">
@@ -332,7 +332,7 @@
 </section>
 
 {# Community news #}
-<section class="c-home-section">
+<section class="c-home-section c-home-section--divided">
     <div class="c-home-section__head">
         <h2 class="c-home-section__title">{{ 'landing.bwnews.title'|trans }} <span class="c-home-section__subtitle">{{ 'landing.bwnews.subtitle'|trans }}</span></h2>
         <a class="c-home-link" href="{{ url('communitynews') }}"><i class="far fa-newspaper" aria-hidden="true"></i> {{ 'landing.bwnews.allnews'|trans }}</a>

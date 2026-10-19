@@ -371,6 +371,21 @@ final class AdminFlagsControllerTest extends WebTestCase
         ));
     }
 
+    public function testEmptyFlagFilterIsIgnored(): void
+    {
+        $client = static::createClient();
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
+        $this->login($client, 'bwadmin', $entityManager);
+
+        $client->request('GET', '/admin/flags/list/members', ['member' => 'member-empty', 'flag' => '']);
+        self::assertResponseIsSuccessful();
+
+        $client->request('GET', '/admin/flags/list/flags', ['flag' => 'abc', 'history' => '0']);
+        self::assertResponseIsSuccessful();
+    }
+
     public function testFlagRouteNamesAndProfileAdminLinkRemainValid(): void
     {
         $client = static::createClient();

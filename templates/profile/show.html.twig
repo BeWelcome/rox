@@ -28,7 +28,7 @@
   {% set language_levels = member.languageLevels %}
   {% set countLanguages = 0 %}
   {% for profile_language in profile_languages %}
-    {% if translated_fields[profile_language]|length > 1 %}
+    {% if translated_fields[profile_language]|length > 0 %}
       {% set countLanguages = countLanguages + 1 %}
     {% endif %}
   {% endfor %}

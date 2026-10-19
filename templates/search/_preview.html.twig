@@ -1,0 +1,130 @@
+{#
+  A short view of a member, loaded into the preview panel of the search results
+  (see search/locations.js): their pictures, who they are, hosting, comments,
+  languages and the start of "about me", the main actions and the full profile.
+#}
+{% set displayName = member.name is empty ? member.username : member.name %}
+{% set address = member.activeAddress %}
+{% set translations = member.translations %}
+{# "About me" in the reader's language, else in the first language the member wrote it in
+   (the list of languages always starts with an empty "en"). #}
+{% set aboutMe = translations[app.request.locale]['AboutMe'] ?? '' %}
+{% if aboutMe is empty %}
+    {% for texts in translations %}{% if aboutMe is empty and texts['AboutMe'] is defined %}{% set aboutMe = texts['AboutMe'] %}{% endif %}{% endfor %}
+{% endif %}
+{% set aboutMe = aboutMe|replace({'<br />': '\n', '<br>': '\n', '</p>': '\n'})|striptags|trim %}
+{% set profileUrl = path('members_profile', { username: member.username }) %}
+{% set facts = [] %}
+{% if member.isAgeVisible %}{% set facts = facts|merge(['searchyearsold'|trans|format(member.age)|striptags]) %}{% endif %}
+{% if member.isGenderVisible %}{% set facts = facts|merge([member.gender|trans]) %}{% endif %}
+{% set languages = [] %}
+{% for level, levelLanguages in member.levelLanguages %}
+    {% for language in levelLanguages %}{% set languages = languages|merge([('lang_' ~ language.ShortCode)|lower|trans]) %}{% endfor %}
+{% endfor %}
+{% set lastActive = member.lastActive|privacy %}
+{% set showLastActive = lastActive and lastActive != 'lastloginprivacy'|trans %}
+
+{# The member's own pictures fill the top of the panel (swipe or arrows); the profile picture sits next to the name #}
+{% set galleryUrl = url('gallery_show_user_images', { username: member.username }) %}
+{% if pictures|length %}
+    {% set shown = pictures|slice(0, 8) %}
+    <div class="p-search-preview__photos js-preview-photos">
+        <div class="p-search-preview__track js-preview-photos-track">
+            {% for picture in shown %}
+                <a class="p-search-preview__slide" href="{{ galleryUrl }}">
+                    <img src="{{ url('gallery_image', { id: picture.id }) }}" alt="{{ picture.title|e('html_attr') }}"{% if not loop.first %} loading="lazy"{% endif %}>
+                </a>
+            {% endfor %}
+        </div>
+        {% if shown|length > 1 %}
+            <button type="button" class="p-search-preview__nav p-search-preview__nav--prev js-preview-photos-prev" aria-label="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+            <button type="button" class="p-search-preview__nav p-search-preview__nav--next js-preview-photos-next" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+            <span class="p-search-preview__counter js-preview-photos-counter" data-total="{{ pictures|length }}">1 / {{ pictures|length }}</span>
+        {% endif %}
+    </div>
+{% endif %}
+
+<div class="p-search-preview__content">
+    <div class="p-search-preview__who">
+        <img class="p-search-preview__avatar" src="{{ path('avatar', { username: member.username, size: 192 }) }}" alt="">
+        <div>
+            <h2 class="p-search-preview__name" id="search-preview-title">{{ displayName }}</h2>
+            {% if displayName != member.username %}<p class="p-search-preview__username">{{ member.username }}</p>{% endif %}
+        </div>
+    </div>
+
+    {% if facts|length or (address and address.location) %}
+        <p class="p-search-preview__facts">
+            {{- facts|join(' · ') -}}
+            {%- if facts|length and address and address.location %} · {% endif -%}
+            {%- if address and address.location -%}
+                {{ address.location.name }}{% if address.location.country %}, {{ address.location.country.name }}{% endif %}
+            {%- endif -%}
+        </p>
+    {% endif %}
+
+    <div class="p-search-preview__hosting">
+        {% if member.accommodation in ['yes', 'no'] %}
+            <span class="p-search-card__host p-search-card__host--{{ member.accommodation }}">{{ ('search.accommodation.' ~ member.accommodation)|trans|trim('.') }}</span>
+        {% endif %}
+        <span class="p-search-preview__beds" title="{{ 'searchcanhostatleast'|trans }}"><i class="fas fa-bed" aria-hidden="true"></i> {{ member.maxGuests }}</span>
+    </div>
+
+    <p class="p-search-preview__since">
+        {{- 'search.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) -}}
+        {%- if showLastActive %} · {{ 'search.last.login'|trans }} {{ lastActive }}{% endif -%}
+    </p>
+
+    {# Comments: what other members say matters most, so they get their own block #}
+    {% set commentsTotal = comments_count.total ?? 0 %}
+    <a class="p-search-preview__comments{% if commentsTotal %} has-comments{% endif %}" href="{{ path('profile_comments', { username: member.username }) }}">
+        <span class="p-search-preview__comments-icon"><i class="fas fa-comment" aria-hidden="true"></i></span>
+        <span class="p-search-preview__comments-text">
+            {% if commentsTotal %}
+                <strong>{{ commentsTotal }}</strong> {{ 'search.preview.comments'|trans({ count: commentsTotal }) }}
+                <span class="p-search-preview__comments-split">
+                    <span title="{{ 'comment.quality.positive'|trans|striptags }}"><i class="fas fa-thumbs-up" aria-hidden="true"></i> {{ comments_count.positive }}</span>
+                    <span title="{{ 'comment.quality.neutral'|trans|striptags }}"><i class="fas fa-minus" aria-hidden="true"></i> {{ comments_count.neutral }}</span>
+                    <span title="{{ 'comment.quality.negative'|trans|striptags }}"><i class="fas fa-thumbs-down" aria-hidden="true"></i> {{ comments_count.negative }}</span>
+                </span>
+            {% else %}
+                {{ 'profile.no.comments'|trans|striptags }}
+            {% endif %}
+        </span>
+        {% if commentsTotal %}<i class="fas fa-chevron-right p-search-preview__comments-go" aria-hidden="true"></i>{% endif %}
+    </a>
+
+    {% if app.user != member and member.status != 'PassedAway' %}
+        <div class="p-search-preview__actions">
+            {% if member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
+                <a class="p-search-preview__btn p-search-preview__btn--primary" href="{{ url('hosting_request', { username: member.username }) }}">
+                    <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
+                </a>
+            {% endif %}
+            <a class="p-search-preview__btn" href="{{ url('message_new', { username: member.username }) }}">
+                <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
+            </a>
+        </div>
+    {% endif %}
+
+    {% if aboutMe %}
+        <section class="p-search-preview__section">
+            <h3>{{ 'profile.about.me'|trans }}</h3>
+            <p class="p-search-preview__about">{{ aboutMe|truncate(900)|nl2br }}</p>
+        </section>
+    {% endif %}
+
+    {% if languages|length %}
+        <section class="p-search-preview__section">
+            <h3>{{ 'languages.spoken'|trans|striptags }}</h3>
+            <p>{{ languages|join(', ') }}</p>
+        </section>
+    {% endif %}
+
+</div>
+
+<div class="p-search-preview__foot">
+    <a class="p-search-preview__full" href="{{ profileUrl }}">
+        {{ 'search.preview.full'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i>
+    </a>
+</div>

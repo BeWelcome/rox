@@ -192,6 +192,19 @@
         </div>
     </div>
 
+    {# Member preview: opened from a result, drawer on large screens, sheet from the bottom on phones #}
+    <div class="p-search-preview__backdrop js-search-preview-close" hidden></div>
+    <aside class="p-search-preview js-search-preview" aria-labelledby="search-preview-title" aria-hidden="true"
+           data-error="{{ 'search.preview.error'|trans }}">
+        <div class="p-search-preview__bar">
+            <span class="p-search-preview__grip" aria-hidden="true"></span>
+            <button type="button" class="p-search-preview__close js-search-preview-close" aria-label="{{ 'close'|trans }}">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="p-search-preview__body js-search-preview-body"></div>
+    </aside>
+
     {# Search options: side panel on large screens, sheet from the bottom on phones #}
     <div class="p-search-options__backdrop js-search-options-close" hidden></div>
     <aside class="p-search-options js-search-options" aria-labelledby="search-options-title" aria-hidden="true">

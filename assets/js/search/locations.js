@@ -426,4 +426,172 @@ if (form) {
     });
 }
 
+/* ---------------------------------------------------------------------------
+ * Member preview: a click on a result opens a short profile over the results
+ * (drawer on large screens, sheet on phones) instead of leaving the page.
+ * The browser's back button closes it. Ctrl/Cmd/middle click still opens
+ * the full profile in a new tab.
+ * ------------------------------------------------------------------------ */
+
+const preview = document.querySelector('.js-search-preview');
+const previewBody = preview ? preview.querySelector('.js-search-preview-body') : null;
+const previewBackdrop = document.querySelector('.p-search-preview__backdrop');
+let previewRequest = null;
+let previewOpenedHere = false;
+
+function showPreview() {
+    preview.classList.add('is-open');
+    preview.setAttribute('aria-hidden', 'false');
+    previewBackdrop.hidden = false;
+    // Phones only: on large screens the results stay usable next to the drawer.
+    document.body.classList.toggle('has-search-overlay', phone.matches);
+}
+
+function hidePreview() {
+    preview.classList.remove('is-open');
+    preview.setAttribute('aria-hidden', 'true');
+    previewBackdrop.hidden = true;
+    document.body.classList.remove('has-search-overlay');
+    document.querySelectorAll('.p-search-card.is-previewed').forEach((card) => card.classList.remove('is-previewed'));
+}
+
+// The member's pictures at the top of the preview: swipe, or the arrows, with a "2 / 5" counter.
+function initPreviewPhotos(root) {
+    const photos = root.querySelector('.js-preview-photos');
+    if (!photos) {
+        return;
+    }
+    const track = photos.querySelector('.js-preview-photos-track');
+    const prev = photos.querySelector('.js-preview-photos-prev');
+    const next = photos.querySelector('.js-preview-photos-next');
+    const counter = photos.querySelector('.js-preview-photos-counter');
+    if (!prev || !next) {
+        return;
+    }
+    const slides = track.children.length;
+    const current = () => Math.round(track.scrollLeft / track.clientWidth);
+    const update = () => {
+        const index = current();
+        prev.disabled = index <= 0;
+        next.disabled = index >= slides - 1;
+        if (counter) {
+            counter.textContent = (index + 1) + ' / ' + counter.dataset.total;
+        }
+    };
+    const go = (step) => track.scrollTo({left: (current() + step) * track.clientWidth, behavior: 'smooth'});
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    track.addEventListener('scroll', () => window.requestAnimationFrame(update), {passive: true});
+    update();
+}
+
+function loadPreview(url, card) {
+    document.querySelectorAll('.p-search-card.is-previewed').forEach((other) => other.classList.remove('is-previewed'));
+    if (card) {
+        card.classList.add('is-previewed');
+    }
+    if (previewRequest) {
+        previewRequest.abort();
+    }
+    previewRequest = new AbortController();
+    previewBody.innerHTML = '<div class="p-search-preview__loading" aria-hidden="true"></div>';
+    preview.querySelector('.p-search-preview__body').scrollTop = 0;
+    showPreview();
+
+    fetch(url, {headers: {'X-Requested-With': 'XMLHttpRequest'}, signal: previewRequest.signal})
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(response.statusText);
+            }
+            return response.text();
+        })
+        .then((html) => {
+            previewBody.innerHTML = html;
+            initPreviewPhotos(previewBody);
+        })
+        .catch((error) => {
+            if (error.name !== 'AbortError') {
+                previewBody.innerHTML = '<p class="p-search-preview__error"></p>';
+                previewBody.firstChild.textContent = preview.dataset.error;
+            }
+        });
+}
+
+// Closing goes back in the history when the preview added an entry to it.
+function closePreview() {
+    if (!preview.classList.contains('is-open')) {
+        return;
+    }
+    if (previewOpenedHere && history.state && history.state.searchPreview) {
+        history.back();
+    } else {
+        hidePreview();
+    }
+}
+
+if (preview) {
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest('.js-search-preview-open');
+        if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+            return;
+        }
+        event.preventDefault();
+        const state = {searchPreview: link.dataset.preview};
+        if (history.state && history.state.searchPreview) {
+            history.replaceState(state, '');
+        } else {
+            history.pushState(state, '');
+            previewOpenedHere = true;
+        }
+        loadPreview(link.dataset.preview, link.closest('.p-search-card'));
+    });
+
+    window.addEventListener('popstate', (event) => {
+        if (event.state && event.state.searchPreview) {
+            loadPreview(event.state.searchPreview, null);
+        } else {
+            hidePreview();
+        }
+    });
+
+    document.querySelectorAll('.js-search-preview-close').forEach((button) => button.addEventListener('click', closePreview));
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closePreview();
+        }
+    });
+
+    // Phones: drag the sheet down by its top bar to close it.
+    const bar = preview.querySelector('.p-search-preview__bar');
+    let startY = null;
+    bar.addEventListener('touchstart', (event) => {
+        startY = event.touches[0].clientY;
+    }, {passive: true});
+    bar.addEventListener('touchmove', (event) => {
+        if (startY === null) {
+            return;
+        }
+        const offset = Math.max(0, event.touches[0].clientY - startY);
+        preview.style.transform = offset ? 'translateY(' + offset + 'px)' : '';
+        preview.style.transition = 'none';
+    }, {passive: true});
+    bar.addEventListener('touchend', (event) => {
+        if (startY === null) {
+            return;
+        }
+        const offset = event.changedTouches[0].clientY - startY;
+        startY = null;
+        preview.style.transform = '';
+        preview.style.transition = '';
+        if (offset > 80) {
+            closePreview();
+        }
+    });
+
+    // Reloading the page on a preview entry opens it again.
+    if (history.state && history.state.searchPreview) {
+        loadPreview(history.state.searchPreview, null);
+    }
+}
+
 initializeTomSelects();

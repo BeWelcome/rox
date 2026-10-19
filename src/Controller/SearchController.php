@@ -4,12 +4,16 @@ namespace App\Controller;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\GroupMembershipStatusType;
+use App\Entity\Comment;
+use App\Entity\GalleryImage;
 use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
+use App\Repository\CommentRepository;
+use App\Repository\GalleryImageRepository;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
@@ -218,6 +222,35 @@ class SearchController extends AbstractController
             'routeName' => 'search_locations',
             'routeParams' => array_diff_key($request->query->all(), ['page' => true]),
             'searchParams' => $searchFormRequest, // Pass DTO for display logic
+        ]);
+    }
+
+    /**
+     * A short view of a member, shown over the search results (a drawer on
+     * large screens, a sheet on phones) so the results stay where they are.
+     */
+    #[Route(path: '/search/members/{username:member}/preview', name: 'search_member_preview', methods: ['GET'])]
+    public function memberPreview(Member $member): Response
+    {
+        if (
+            !($member->isBrowsable()
+                || $this->isGranted(Member::ROLE_ADMIN_ADMIN, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_PROFILE, $member)
+            )
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $this->entityManager->getRepository(Comment::class);
+        /** @var GalleryImageRepository $galleryImageRepository */
+        $galleryImageRepository = $this->entityManager->getRepository(GalleryImage::class);
+
+        return $this->render('search/_preview.html.twig', [
+            'member' => $member,
+            'comments_count' => $commentRepository->getCommentsCountMemberByQuality($member),
+            'pictures' => $galleryImageRepository->getImagesForMember($member),
         ]);
     }
 

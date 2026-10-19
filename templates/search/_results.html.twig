@@ -8,6 +8,13 @@
         {% set member = result.member %}
         {% set displayName = member.name is empty ? member.username : member.name %}
         {% set address = member.activeAddress %}
+        {# "About me" in the reader's language, else the first language it was written in (the list always starts with an empty "en"). #}
+        {% set translations = member.translations %}
+        {% set aboutMe = translations[app.request.locale]['AboutMe'] ?? '' %}
+        {% if aboutMe is empty %}
+            {% for texts in translations %}{% if aboutMe is empty and texts['AboutMe'] is defined %}{% set aboutMe = texts['AboutMe'] %}{% endif %}{% endfor %}
+        {% endif %}
+        {% set aboutMe = aboutMe|replace({'<br />': ' ', '<br>': ' ', '</p>': ' '})|striptags|trim %}
         {% set profileUrl = path('members_profile', { username: member.username }) %}
 
         <article class="p-search-card">
@@ -16,7 +23,7 @@
             </a>
 
             <div class="p-search-card__body">
-                <a class="p-search-card__name" href="{{ profileUrl }}">{{ displayName }}</a>
+                <a class="p-search-card__name js-search-preview-open" href="{{ profileUrl }}" data-preview="{{ path('search_member_preview', { username: member.username }) }}">{{ displayName }}</a>
 
                 <div class="p-search-card__meta">
                     {%- set facts = [] -%}
@@ -42,6 +49,10 @@
                             </a>
                         {% endif %}
                     </div>
+                {% endif %}
+
+                {% if aboutMe %}
+                    <p class="p-search-card__about">{{ aboutMe|truncate(300) }}</p>
                 {% endif %}
 
                 {# The last activity is left out when it is unknown or kept private (active in the last 7 days). #}

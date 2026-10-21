@@ -4,9 +4,6 @@ search.last.login:
 search.member.since:
     - 'Member since:'
     - Text shown in the search results followed by the member since date
-search.member.for:
-    - 'Member for {duration}'
-    - Shown in each search result, e.g. "Member for 2 years". Keep {duration} intact.
 search.member.duration:
     - 'Member {duration}'
     - Shown in each search result after the last login, e.g. "Member 8 years" (how long ago the member signed up). Keep {duration} intact.

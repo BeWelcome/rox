@@ -97,10 +97,10 @@
             <div class="c-inbox-item__body">
                 <div class="c-inbox-item__top">
                     <span class="c-inbox-item__name">{{ otherMember.username }}</span>
-                    <span class="c-inbox-item__date" title="{{ sent|format_datetime('medium', 'short') }}">{{ when }}</span>
+                    <span class="c-inbox-item__date">{{ when }}</span>
                 </div>
                 {% if message.request %}
-                    <div class="c-inbox-item__badge c-inbox-item__badge--{{ requestTone }}" title="{{ ('request.status.' ~ requestState)|trans }}">
+                    <div class="c-inbox-item__badge c-inbox-item__badge--{{ requestTone }}">
                         <span><i class="fas {{ kindIcon }}" aria-hidden="true"></i> {{ message.request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}</span>
                         <span class="c-inbox-item__badge-dates">
                             {{- message.request.arrival|format_date(pattern='d MMM') }}
@@ -144,7 +144,7 @@
 
     <div class="c-inbox-list__head">
         {# On mobile the site header is hidden on the inbox, so this leads back to the home page. #}
-        <a class="c-inbox-list__back" href="{{ path('landingpage') }}" title="{{ 'back'|trans }}">
+        <a class="c-inbox-list__back" href="{{ path('landingpage') }}">
             <i class="fas fa-chevron-left" aria-hidden="true"></i>
             <span class="visually-hidden">{{ 'back'|trans }}</span>
         </a>
@@ -158,7 +158,7 @@
         </details>
         {% if form and conversations.nbResults > 0 %}
             <button type="button" class="c-inbox-list__select js-inbox-select" aria-pressed="false"
-                    title="{{ 'select'|trans }}" aria-label="{{ 'select'|trans }}"
+                    aria-label="{{ 'select'|trans }}"
                     data-label-select="{{ 'select'|trans }}" data-label-done="{{ 'conversations.select.done'|trans }}">
                 <i class="fas fa-list-ul c-inbox-list__select-on" aria-hidden="true"></i>
                 <i class="fas fa-times c-inbox-list__select-off" aria-hidden="true"></i>

@@ -15,6 +15,7 @@ import '@fortawesome/fontawesome-free/js/all.js';
 import './collapsemenu.js';
 import './member-menu-dropdown.js';
 import './tom-select.js';
+import './confirm.js';
 
 window.bootstrap = bootstrap;
 

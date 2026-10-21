@@ -37,8 +37,8 @@
         {% endif %}
     </div>
     {% if status.key %}
-        {# Short status on the right; the full sentence for this side shows on hover. #}
-        <span class="c-inbox-trip__status" title="{{ ('invitation.' ~ side ~ '.' ~ status.key)|trans|striptags|trim }}">
+        {# Short status on the right. #}
+        <span class="c-inbox-trip__status">
             <i class="{{ status.icon }}" aria-hidden="true"></i>
             {{ ('request.status.' ~ status.key)|trans }}
         </span>

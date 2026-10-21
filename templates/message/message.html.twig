@@ -55,8 +55,7 @@
                                 <p class="p-message-form__meta">{{ 'lives.and.speaks'|trans({'city': address.location.name ~ ', ' ~ address.location.country.name|capitalize, 'languages': languages})|raw }}</p>
                             {% endif %}
                         </div>
-                        <a class="p-message-form__history" href="{{ path('conversations_with', { username: receiver.username }) }}"
-                           title="{{ 'messages_allmessageswith'|trans|format(receiver.shortNameOrUsername) }}">
+                        <a class="p-message-form__history" href="{{ path('conversations_with', { username: receiver.username }) }}">
                             <i class="fas fa-mail-bulk" aria-hidden="true"></i>
                             <span class="visually-hidden">{{ 'messages_allmessageswith'|trans|format(receiver.shortNameOrUsername) }}</span>
                         </a>

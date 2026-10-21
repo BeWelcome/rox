@@ -5867,6 +5867,53 @@ form.c-inbox-reply textarea.c-inbox-reply__field { border-radius: 1.25rem; }
   gap: 0 1rem;
 }
 .c-inbox-respond__stay[hidden] { display: none; }
+/* The guest's "Change dates": a small card with a title and a close button. */
+.c-inbox-respond__stay--card {
+  gap: 0.75rem 1rem;
+  padding: 0.85rem 1rem 0.6rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+.c-inbox-respond__stay-head { display: flex; grid-column: 1 / -1; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: -0.25rem; }
+.c-inbox-respond__stay-title { display: flex; align-items: center; gap: 0.5rem; margin: 0; color: #0f172a; font-size: 0.875rem; font-weight: 700; }
+.c-inbox-respond__stay-title i,
+.c-inbox-respond__stay-title svg { color: #f37000; }
+.c-inbox-respond__stay-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+.c-inbox-respond__stay-close:hover { background: #e2e8f0; color: #0f172a; }
+.c-inbox-respond__stay--card .c-request-field .o-label { margin-bottom: 0.35rem; color: #64748b; font-size: 0.6875rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.c-inbox-respond__stay--card .c-request-dates,
+.c-inbox-respond__stay--card .c-request-stepper { min-height: 2.75rem; border-radius: 0.75rem; background: #f8fafc; }
+.c-inbox-respond__stay--card .c-request-dates:focus-within,
+.c-inbox-respond__stay--card .c-request-stepper:focus-within { background: #fff; }
+.c-inbox-respond__stay--card .c-request-dates__input { font-size: 0.875rem; font-weight: 600; }
+.c-inbox-respond__stay--card .c-request-stepper__btn { width: 2.1rem; height: 2.1rem; background: #fff; box-shadow: 0 0 0 1px #e2e8f0; }
+.c-inbox-respond__stay--card .c-request-stepper__btn:hover { background: #fff4ea; color: #c2410c; box-shadow: 0 0 0 1px #fbc08a; }
+.c-inbox-respond__stay--card .c-request-line { margin: 0; padding-top: 0.6rem; border-top: 1px solid #f1f5f9; }
+.c-inbox-respond__stay--card .c-request-nights:not(:empty) {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: #fff4ea;
+  color: #c2410c;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
 .c-inbox-respond__stay--grid > .c-request-line,
 .c-request-new__stay > .c-request-line { grid-column: 1 / -1; }
 .c-inbox-respond__choices { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; margin-bottom: 0.6rem; }
@@ -5943,6 +5990,16 @@ form.c-inbox-reply textarea.c-inbox-reply__field { border-radius: 1.25rem; }
 .c-inbox-respond__secondary i { color: #64748b; }
 /* The host's answer keeps Templates in the button row, the text field stays clean. */
 .c-inbox-respond__editor--plain .c-inbox-respond__text { padding-bottom: 0.5rem; }
+/* Same field as the reply to a plain message: one line that grows with the text. */
+.c-inbox-respond .c-inbox-respond__editor--plain .c-inbox-respond__text {
+  min-height: 0;
+  padding: 0.6rem 1rem;
+  border-radius: 1.25rem;
+  background: #f8fafc;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+}
+.c-inbox-respond .c-inbox-respond__editor--plain .c-inbox-respond__text:focus { border-color: #fdba74; background: #fff; }
 .c-inbox-respond__actions .c-reply-templates { margin: 0; }
 .c-inbox-respond__actions .c-reply-templates .btn-group { width: 100%; }
 .c-inbox-respond__actions .c-reply-templates .o-button {
@@ -6194,6 +6251,24 @@ form.c-inbox-reply textarea.c-inbox-reply__field { border-radius: 1.25rem; }
   .c-inbox-respond__actions .c-reply-templates__label,
   .c-inbox-respond__actions .c-reply-templates .dropdown-toggle::after { display: none; }
   .c-inbox-respond__editor--plain .c-inbox-respond__text { min-height: 4.5rem; border-radius: 1rem; }
+  /* Send is a round icon; the guest's Cancel request joins the same row, before it. */
+  .c-inbox-respond .c-inbox-respond__actions .c-inbox-respond__send { flex: 0 0 auto; width: 2.75rem; height: 2.75rem; padding: 0; border-radius: 999px; }
+  .c-inbox-respond__actions .c-inbox-respond__send-label { display: none; }
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.4rem; }
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) > .c-inbox-respond__editor { flex: 1 0 100%; }
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) > .c-inbox-respond__more,
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) > .c-inbox-respond__actions { display: contents; }
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) .c-reply-templates { order: 1; flex: 0 0 auto; }
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) .c-inbox-respond__secondary { order: 2; flex: 1 1 auto; min-height: 2.75rem; padding: 0 0.7rem; gap: 0.35rem; font-size: 0.875rem; white-space: nowrap; }
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) .c-inbox-respond__secondary--danger { order: 3; }
+  /* Change dates becomes a round icon like Templates (its label shows on hover); Cancel
+     request keeps its text but stays small, so it doesn't read as the main action.
+     Send stays on the right. */
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) .c-inbox-respond__secondary--dates { flex: 0 0 auto; width: 2.75rem; padding: 0; }
+  .c-inbox-respond__secondary--dates .c-inbox-respond__secondary-label { display: none; }
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) .c-inbox-respond__secondary--danger { flex: 0 1 auto; min-height: 2.25rem; padding: 0 0.75rem; font-size: 0.8125rem; }
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) .c-inbox-respond__send { margin-left: auto; }
+  .c-inbox-respond__compose--actions:has(.c-inbox-respond__secondary--danger) .c-inbox-respond__send { order: 4; }
   .c-inbox-respond__stay--grid,
   .c-request-new__stay { grid-template-columns: minmax(0, 1fr); }
 
@@ -6392,7 +6467,7 @@ form.c-inbox-reply textarea.c-inbox-reply__field { border-radius: 1.25rem; }
   .c-inbox-thread { padding: 0.75rem; }
   .c-bubble { max-width: 85%; }
   .c-inbox-reply { padding: 0.6rem 0.75rem; }
-  .c-inbox-reply__btn { width: 2.6rem; height: 2.6rem; padding: 0; }
+  .c-inbox-reply__btn { width: 2.75rem; height: 2.75rem; padding: 0; }
   .c-inbox-reply__label { display: none; }
 }
 

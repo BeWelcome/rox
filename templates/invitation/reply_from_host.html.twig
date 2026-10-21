@@ -36,7 +36,8 @@
 
         <div class="c-inbox-compose__actions">
             {{ form_widget(form.cancel, {'attr': {'class': 'c-inbox-actions__btn c-inbox-actions__btn--outline',
-                'onclick': 'return confirm(\'' ~ ('invitation.confirm.cancel'|trans|e('js')) ~ '\');'}}) }}
+                'data-confirm': 'invitation.confirm.cancel'|trans,
+                'data-confirm-close': 'modal.close'|trans}}) }}
             {{ form_widget(form.update, {'attr': {'class': 'c-inbox-reply__btn c-inbox-compose__send'}, 'label': label}) }}
         </div>
         {{ form_rest(form) }}

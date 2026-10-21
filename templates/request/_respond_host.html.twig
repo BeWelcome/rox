@@ -80,7 +80,7 @@
     <div class="c-inbox-respond__compose c-inbox-respond__compose--actions">
         {# A plain text field (turned into paragraphs on send) instead of the rich editor: it takes less room. #}
         <div class="c-inbox-respond__editor c-inbox-respond__editor--plain">
-            <textarea class="c-inbox-respond__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="3"
+            <textarea class="c-inbox-respond__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="1"
                       placeholder="{{ 'request.respond.placeholder'|trans }}" aria-label="{{ respond.message.vars.label|trans }}">
                 {{- respond.message.vars.value|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim -}}
             </textarea>
@@ -98,7 +98,7 @@
             <button type="button" class="c-inbox-respond__secondary{{ awaitingAnswer ? ' c-inbox-respond__secondary--awaiting' : '' }} js-respond-options-toggle"
                     aria-controls="{{ respond.vars.id }}_options" aria-expanded="{{ optionsOpen ? 'true' : 'false' }}">
                 <i class="fa fa-calendar" aria-hidden="true"></i> {{ 'request.respond.toggle'|trans }}
-                {% if awaitingAnswer %}<span class="c-inbox-respond__dot" title="{{ 'request.status.open'|trans }}"></span>{% endif %}
+                {% if awaitingAnswer %}<span class="c-inbox-respond__dot" aria-hidden="true"></span>{% endif %}
                 <i class="fas fa-chevron-down c-inbox-respond__chevron" aria-hidden="true"></i>
             </button>
             <button type="submit" id="{{ respond.update.vars.id }}" name="{{ respond.update.vars.full_name }}"

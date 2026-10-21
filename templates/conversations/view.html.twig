@@ -66,7 +66,7 @@
                     {% do reply_form.subject.setRendered %}
                     {{ form_rest(reply_form) }}
                     <button type="submit" class="c-inbox-reply__btn">
-                        <i class="fas fa-reply" aria-hidden="true"></i>
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
                         <span class="c-inbox-reply__label">{{ 'message.button.reply'|trans }}</span>
                     </button>
                 {{ form_end(reply_form) }}
@@ -74,7 +74,7 @@
             <a class="c-inbox-reply" href="{{ path('conversation_reply', (folder == 'conversations' ? { id: current.id } : { id: current.id, folder: folder })|merge(listParams)) }}">
                 <span class="c-inbox-reply__field">{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}</span>
                 <span class="c-inbox-reply__btn">
-                    <i class="fas fa-reply" aria-hidden="true"></i>
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
                     <span class="c-inbox-reply__label">{{ 'message.button.reply'|trans }}</span>
                 </span>
             </a>

@@ -214,10 +214,15 @@ document.querySelectorAll('.js-respond').forEach((form) => {
     const toggle = form.querySelector('.js-respond-stay-toggle');
     const stay = form.querySelector('.js-respond-stay');
     if (toggle && stay) {
-        toggle.addEventListener('click', () => {
-            stay.hidden = !stay.hidden;
-            toggle.setAttribute('aria-expanded', stay.hidden ? 'false' : 'true');
-        });
+        const show = (open) => {
+            stay.hidden = !open;
+            toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        };
+        toggle.addEventListener('click', () => show(stay.hidden));
+        const close = stay.querySelector('.js-respond-stay-close');
+        if (close) {
+            close.addEventListener('click', () => { show(false); toggle.focus(); });
+        }
     }
 });
 

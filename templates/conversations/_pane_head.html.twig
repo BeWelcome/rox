@@ -5,7 +5,7 @@
   username, e.g. where the member lives.
 #}
 <header class="c-inbox-head">
-    <a class="c-inbox-head__back{{ show_actions ? '' : ' is-always' }}" href="{{ back_url }}" title="{{ 'back'|trans }}">
+    <a class="c-inbox-head__back{{ show_actions ? '' : ' is-always' }}" href="{{ back_url }}">
         <i class="fas fa-chevron-left" aria-hidden="true"></i>
         <span class="visually-hidden">{{ 'back'|trans }}</span>
     </a>
@@ -32,18 +32,18 @@
             </button>
         {% endif %}
         {% if show_deleted %}
-            <a class="c-inbox-head__icon" href="{{ path('conversation_recover', { id: current.id }) }}" title="{{ 'recover'|trans }}">
+            <a class="c-inbox-head__icon" href="{{ path('conversation_recover', { id: current.id }) }}">
                 <i class="fas fa-inbox" aria-hidden="true"></i><span class="visually-hidden">{{ 'recover'|trans }}</span>
             </a>
         {% else %}
-            <a class="c-inbox-head__icon" href="{{ path('conversation_delete', { id: current.id }) }}" title="{{ 'delete'|trans }}">
+            <a class="c-inbox-head__icon" href="{{ path('conversation_delete', { id: current.id }) }}">
                 <i class="fas fa-trash-alt" aria-hidden="true"></i><span class="visually-hidden">{{ 'delete'|trans }}</span>
             </a>
         {% endif %}
     </div>
 
     <details class="c-inbox-head__menu">
-        <summary class="c-inbox-head__icon" title="{{ 'edit'|trans }}">
+        <summary class="c-inbox-head__icon" aria-label="{{ 'edit'|trans }}">
             <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
         </summary>
         <div class="c-inbox-head__menu-list">

@@ -35,10 +35,10 @@
 
   {% if countLanguages >= 1 %}
     {% for profile_language in profile_languages %}
-      {% include 'profile/content.html.twig' with {profile_language: profile_language, translated_fields: translated_fields, active_locale: active_locale, edit: false} %}
+      {% include 'profile/show.content.html.twig' with {profile_language: profile_language, translated_fields: translated_fields, active_locale: active_locale} %}
     {% endfor %}
   {% else %}
-    {% include 'profile/content.html.twig' with {profile_language: locale, translated_fields: translated_fields, active_locale: locale, edit: false} %}
+    {% include 'profile/show.content.html.twig' with {profile_language: locale, translated_fields: translated_fields, active_locale: locale} %}
   {% endif %}
 {% endblock page_content %}
 

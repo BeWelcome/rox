@@ -1,3 +1,9 @@
+{#
+  Top of every profile page: the map as a banner, the photo with the hosting badge, name,
+  gender, username, place, occupation and last login; the actions; three tiles (hosting,
+  comments, languages) and the tabs. On phones the actions stick to the bottom of the screen
+  and the tabs to the top.
+#}
 {% if member.translations[locale] is defined %}
   {% set memberfields = member.translations[locale] %}
 {% elseif member.translations['en'] is defined %}
@@ -13,190 +19,143 @@
 {% set lastActivity = (member.lastActive == null) ? member.created : member.lastActive %}
 {% set occupation = memberfields.Occupation ?? '' %}
 {% set showAge = member.isAgeVisible and member.Age != 0 %}
+{% set passedAway = member.status == 'PassedAway' %}
+{% set hosting = not passedAway and member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
+{% set items = submenu.items ?? {} %}
+{% set canContact = not own and not app.user is null and not passedAway %}
+{% set canRequest = canContact and member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
 
-<div class="p-hero">
+<div class="p-pro">
 
-  {# ── Banner: map if address exists, gradient fallback ── #}
+  {# ── Banner: the map of where the member lives, or a plain gradient ── #}
   {% if not address is same as(false) %}
     <input type="hidden" id="latitude" value="{{ address.latitude }}">
     <input type="hidden" id="longitude" value="{{ address.longitude }}">
   {% endif %}
   <div {% if not address is same as(false) %}id="location-map"{% endif %}
-       class="p-hero__banner{% if address is same as(false) %} p-hero__banner--fallback{% endif %}">
-  </div>
+       class="p-pro__banner{% if address is same as(false) %} p-pro__banner--fallback{% endif %}"></div>
+
   {% set _translations = member.translations %}
   {% set _langs = _translations|keys %}
   {% set _langCount = 0 %}
   {% for _l in _langs %}{% if _translations[_l]|length > 1 %}{% set _langCount = _langCount + 1 %}{% endif %}{% endfor %}
-  {# ── Body (below banner) ─────────────────────────────── #}
-  <div class="p-hero__body-wrap container-lg">
-  {% if _langCount > 1 %}
-    {% set _reqLang = app.request.query.get('language') %}
-    {% set _active = _reqLang is not null and _reqLang in _langs ? _reqLang : (locale in _langs ? locale : 'en') %}
-    <div class="p-lang-switch dropdown">
-      <button type="button" class="p-lang-switch__toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-              aria-label="{{ 'menu.language.toggle'|trans }}">
-        <i class="fas fa-globe" aria-hidden="true"></i>
-        <span class="p-lang-switch__name" data-lang-current-name>{{ language_name(_active) }}</span>
-        <span class="p-lang-switch__code" data-lang-current-code>{{ _active|upper }}</span>
-      </button>
-      <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
-        {% for _l in _langs %}
-          {% if _translations[_l]|length > 1 %}
-            <li>
-              <button type="button" class="dropdown-item p-hero__dropdown-item p-lang-option{% if _l is same as(_active) %} p-lang-option--active{% endif %}"
-                      data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
-            </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-    </div>
-  {% endif %}
-  <div class="p-hero__body">
 
-    {# ── Avatar col ──────────────────────────────────── #}
-    <div class="p-hero__avatar-col">
-      <div class="p-hero__avatar-frame">
-        <div class="p-hero__avatar-wrap">
-          {% if use_lightbox is defined %}
-            <a class="js-profile-picture"
-               href="{{ url('avatar', {username: member.Username, size: 'original'}) }}"
-               data-toggle="lightbox"
-               data-type="image"
-               data-size="fullscreen"
-               data-caption="{{ 'profile.picture.title'|trans|e('html_attr') }}">
-              <img class="p-hero__avatar-img js-profile-picture"
-                   src="{{ url('avatar', {username: member.Username, size: 320}) }}"
-                   alt="{{ 'profile.picture.title'|trans }}">
-            </a>
-          {% else %}
-            <img class="p-hero__avatar-img"
-                 src="{{ url('avatar', {username: member.Username, size: 320}) }}"
-                 alt="{{ member.Username }}">
-          {% endif %}
-        </div>
-        {% if member.status != 'PassedAway' and member.Accommodation is not null %}
-          {% set _isHosting = member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
-          {% set _accommodationLabel = _isHosting ? 'hosting'|trans : 'not.hosting'|trans %}
-          <span class="p-hero__accommodation-badge p-hero__accommodation-badge--{{ _isHosting ? 'yes' : 'no' }}"
-                aria-label="{{ _accommodationLabel }}"
-                data-bs-toggle="tooltip"
-                data-bs-placement="right"
-                title="{{ _accommodationLabel }}">
-            <i class="fas fa-{{ _isHosting ? 'house-user' : 'house' }}" aria-hidden="true"></i>
-          </span>
-        {% endif %}
-      </div>
-    </div>
-
-    {# ── Info ────────────────────────────────────────── #}
-    <div class="p-hero__info">
-
-      {# Top row: name only #}
-      <div class="p-hero__top-row">
-        <div class="p-hero__identity">
-          <div class="p-hero__name-row">
-            {% if member.visibleName != '' %}
-              <h1 class="p-hero__name">{{ member.visibleName }}</h1>
-              <span class="p-hero__username">
-                {% if member.status == 'PassedAway' %}
-                  {{ 'profileinmemoriam'|format(member.Username) }}
-                {% else %}
-                  @{{ member.Username }}
-                {% endif %}
-              </span>
-            {% else %}
-              <h1 class="p-hero__name">
-                {% if member.status == 'PassedAway' %}
-                  {{ 'profileinmemoriam'|format(member.Username) }}
-                {% else %}
-                  {{ member.Username }}
-                {% endif %}
-              </h1>
+  <div class="p-pro__wrap container-lg">
+    {% if _langCount > 1 %}
+      {% set _reqLang = app.request.query.get('language') %}
+      {% set _active = _reqLang is not null and _reqLang in _langs ? _reqLang : (locale in _langs ? locale : 'en') %}
+      <div class="p-lang-switch dropdown">
+        <button type="button" class="p-lang-switch__toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                aria-label="{{ 'menu.language.toggle'|trans }}">
+          <i class="fas fa-globe" aria-hidden="true"></i>
+          <span class="p-lang-switch__name" data-lang-current-name>{{ language_name(_active) }}</span>
+          <span class="p-lang-switch__code" data-lang-current-code>{{ _active|upper }}</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
+          {% for _l in _langs %}
+            {% if _translations[_l]|length > 1 %}
+              <li>
+                <button type="button" class="dropdown-item p-hero__dropdown-item p-lang-option{% if _l is same as(_active) %} p-lang-option--active{% endif %}"
+                        data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
+              </li>
             {% endif %}
-            {% set _commentsCount = member_comments_count(member) %}
-            {% if _commentsCount > 0 %}
-              <a href="{{ url('profile_comments', {username: member.username}) }}"
-                 class="p-hero__comments-badge"
-                 title="{{ 'profile.comments'|trans }}">
-                <i class="fas fa-comments" aria-hidden="true"></i>
-                {{ _commentsCount }}
-                <span class="visually-hidden">{{ 'profile.comments'|trans }}</span>
-              </a>
-            {% endif %}
-          </div>
-        </div>
-
-        </div>
-
-      {# Location + occupation #}
-      {% if not address is same as(false) %}
-        {% set location = address.location %}
-        {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
-        {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
-        <p class="p-hero__location">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-          <a href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>{% if not location.admin1 is null %},
-          <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId, region: location.admin1id}) }}">{{ location.admin1.name }}</a>{% endif %},
-          <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
-        </p>
-      {% else %}
-        <p class="p-hero__location--empty">{{ 'profile.no.city.yet'|trans }}</p>
-      {% endif %}
-
-      {% if occupation != '' %}
-        <p class="p-hero__occupation">{{ occupation|purify }}</p>
-      {% endif %}
-
-      {# Meta row: hosting · age · gender · languages · joined #}
-      <div class="p-hero__meta">
-        {% if showAge or member.isGenderVisible %}
-          <span class="p-hero__meta-item">
-            {% if showAge %}
-              {{ 'profile.age'|trans }} {{ member.age }}
-            {% endif %}
-            {% if showAge and member.isGenderVisible %}·{% endif %}
-            {% if member.isGenderVisible %}
-              {% if member.gender == constant('App\\Doctrine\\GenderType::FEMALE') %}
-                <i class="fas fa-venus p-hero__stat-icon--female"></i>
-              {% elseif member.gender == constant('App\\Doctrine\\GenderType::MALE') %}
-                <i class="fas fa-mars p-hero__stat-icon--male"></i>
-              {% else %}
-                <i class="fas fa-transgender p-hero__stat-icon--other"></i>
-              {% endif %}
-              {{ member.gender|trans }}
-            {% endif %}
-          </span>
-        {% endif %}
-        {% if member.levelLanguages|length > 0 %}
-          {% for level, langs in member.levelLanguages %}
-            {% for lang in langs %}
-              <span class="p-hero__meta-item p-hero__meta-item--lang">{{ ('lang_' ~ lang.ShortCode)|lower|trans }}</span>
-            {% endfor %}
           {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <div class="p-pro__head">
+
+      {# ── Photo with the hosting badge ── #}
+      <div class="p-pro__avatar">
+        {% if use_lightbox is defined %}
+          <a class="p-pro__avatar-link js-profile-picture"
+             href="{{ url('avatar', {username: member.Username, size: 'original'}) }}"
+             data-toggle="lightbox"
+             data-type="image"
+             data-size="fullscreen"
+             data-caption="{{ 'profile.picture.title'|trans|e('html_attr') }}">
+            <img class="p-pro__avatar-img js-profile-picture"
+                 src="{{ url('avatar', {username: member.Username, size: 320}) }}"
+                 alt="{{ 'profile.picture.title'|trans }}">
+          </a>
+        {% else %}
+          <img class="p-pro__avatar-img"
+               src="{{ url('avatar', {username: member.Username, size: 320}) }}"
+               alt="{{ member.Username }}">
         {% endif %}
-        <span class="p-hero__meta-item p-hero__meta-item--muted">
-          <i class="fas fa-circle
-            {% if lastActivity.diffInDays <= 7 %} p-hero__stat-icon--active
-            {% elseif lastActivity.diffInDays <= 30 %} p-hero__stat-icon--recent
-            {% else %} p-hero__stat-icon--inactive{% endif %}" style="font-size:0.45rem;vertical-align:middle"></i>
-          {{ 'profile.last.activity'|trans }}
-          {% if lastActivity.diffInDays <= 7 %}{{ 'last.activity.privacy'|trans }}
-          {% else %}{{ lastActivity.diffForHumans }}{% endif %}
-          {% if admin %} ({{ lastActivity|format_datetime() }}){% endif %}
-          &nbsp;·&nbsp;
-          {{ 'profile.joined'|trans }}
-          {% if member.created.diffInDays <= 7 %}{{ 'last.activity.privacy'|trans }}{% else %}{{ member.created.diffForHumans }}{% endif %}
-          {% if admin %} ({{ member.created|format_datetime() }}){% endif %}
-        </span>
+        {% if hosting %}
+          <span class="p-pro__host p-pro__host--{{ hosting }}">
+            <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
+            <span class="visually-hidden">{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</span>
+          </span>
+        {% endif %}
       </div>
 
-      {# Actions #}
-      {% set items = submenu.items ?? {} %}
-      <div class="p-hero__actions">
+      {# ── Who: name, gender, username, place, occupation, last login ── #}
+      <div class="p-pro__info">
+        <div class="p-pro__name-row">
+          <h1 class="p-pro__name">
+            {%- if passedAway -%}
+              {{ 'profileinmemoriam'|format(member.visibleName != '' ? member.visibleName : member.Username) }}
+            {%- else -%}
+              {{ member.visibleName != '' ? member.visibleName : member.Username }}
+            {%- endif -%}
+          </h1>
+          {% set gender = member.isGenderVisible and member.gender in ['female', 'male', 'other'] ? member.gender : null %}
+          {% if gender or showAge %}
+            <span class="p-search-card__who p-search-card__who--{{ gender ?: 'none' }} p-pro__who">
+              {%- if gender -%}
+                <i class="fas {{ { female: 'fa-venus', male: 'fa-mars', other: 'fa-genderless' }[gender] }}" aria-hidden="true"></i>
+                <span>{{ gender|trans }}</span>
+              {%- endif -%}
+              {%- if gender and showAge %}<span aria-hidden="true">·</span>{% endif -%}
+              {%- if showAge %}<span>{{ member.age }}</span>{% endif -%}
+            </span>
+          {% endif %}
+          {% if member.visibleName != '' %}<span class="p-pro__username">@{{ member.Username }}</span>{% endif %}
+        </div>
+
+        {% if not address is same as(false) %}
+          {% set location = address.location %}
+          {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
+          {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
+          <p class="p-pro__place">
+            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+            <a class="p-pro__city" href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>
+            {%- if not location.admin1 is null -%}
+              <span class="p-pro__region">, <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId, region: location.admin1id}) }}">{{ location.admin1.name }}</a></span>
+            {%- endif -%}
+            , <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
+          </p>
+        {% else %}
+          <p class="p-pro__place p-pro__place--empty">{{ 'profile.no.city.yet'|trans }}</p>
+        {% endif %}
+
+        {% if occupation != '' %}
+          <p class="p-pro__occupation">{{ occupation|purify }}</p>
+        {% endif %}
+
+        <p class="p-pro__activity">
+          <span class="p-pro__online{% if lastActivity.diffInDays <= 7 %} is-active{% elseif lastActivity.diffInDays <= 30 %} is-recent{% endif %}" aria-hidden="true"></span>
+          <span>
+            {{ 'profile.last.activity'|trans }}
+            {% if lastActivity.diffInDays <= 7 %}{{ 'last.activity.privacy'|trans }}{% else %}{{ lastActivity.diffForHumans }}{% endif %}
+            {%- if admin %} ({{ lastActivity|format_datetime() }}){% endif -%}
+          </span>
+          <span class="p-pro__dot" aria-hidden="true">·</span>
+          <span>
+            {{ 'search.member.duration'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}
+            {%- if admin %} ({{ member.created|format_datetime() }}){% endif -%}
+          </span>
+        </p>
+      </div>
+
+      {# ── Actions: message and request stay (stuck to the bottom on phones), more ── #}
+      <div class="p-pro__actions">
         {% if own %}
           <a href="{{ url('profile_edit', {username: member.username}) }}" class="p-hero__btn p-hero__btn--secondary">
-            <i class="fas fa-pen"></i> {{ 'profile.edit'|trans }}
+            <i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.edit'|trans }}
           </a>
           {% set _accountItems = [] %}
           {% for _k in ['edit_account', 'preferences', 'mydata', 'mynotes'] %}
@@ -204,56 +163,56 @@
           {% endfor %}
           {% if _accountItems|length > 0 %}
             <div class="dropdown">
-              <button class="p-hero__btn p-hero__btn--icon dropdown-toggle-no-arrow" data-bs-toggle="dropdown" aria-expanded="false" title="{{ 'my.account'|trans }}">
-                <i class="fas fa-cog"></i>
+              <button class="p-hero__btn p-hero__btn--icon dropdown-toggle-no-arrow" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'my.account'|trans }}">
+                <i class="fas fa-cog" aria-hidden="true"></i>
               </button>
               <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
                 {% for _k in _accountItems %}
                   <li><a class="dropdown-item p-hero__dropdown-item" href="{{ items[_k].url }}">
-                    <i class="fas fa-fw fa-{{ items[_k].icon }}"></i> {{ items[_k].key|lower|trans }}
+                    <i class="fas fa-fw fa-{{ items[_k].icon }}" aria-hidden="true"></i> {{ items[_k].key|lower|trans }}
                   </a></li>
                 {% endfor %}
               </ul>
             </div>
           {% endif %}
-        {% elseif not app.user is null and member.status != 'PassedAway' %}
-          <a href="{{ url('message_new', {username: member.Username}) }}" class="p-hero__btn p-hero__btn--primary">
-            <i class="fas fa-envelope"></i> {{ 'message.send'|trans }}
+        {% elseif canContact %}
+          <a href="{{ url('message_new', {username: member.Username}) }}" class="p-hero__btn p-pro__btn p-pro__btn--message">
+            <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
           </a>
-          {% if member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
-            <a href="{{ url('hosting_request', {username: member.username}) }}" class="p-hero__btn p-hero__btn--outlined">
-              <i class="fas fa-bed"></i> {{ 'profile.request.hosting'|trans }}
+          {% if canRequest %}
+            <a href="{{ url('hosting_request', {username: member.username}) }}" class="p-hero__btn p-pro__btn p-pro__btn--request">
+              <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
             </a>
           {% endif %}
           {% set hasMore = items.comment is defined or items.friend is defined
             or items.add_note is defined or items.edit_note is defined
             or items.report is defined %}
           {% if hasMore %}
-            <div class="dropdown">
-              <button class="p-hero__btn p-hero__btn--icon dropdown-toggle-no-arrow" data-bs-toggle="dropdown" aria-expanded="false" title="More actions">
-                <i class="fas fa-ellipsis-h"></i>
+            <div class="dropdown p-pro__more">
+              <button class="p-hero__btn p-hero__btn--icon dropdown-toggle-no-arrow" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">
+                <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
               </button>
               <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
                 {% if items.comment is defined %}
                   <li><a class="dropdown-item p-hero__dropdown-item" href="{{ items.comment.url }}">
-                    <i class="fas fa-fw fa-comment"></i> {{ items.comment.key|lower|trans }}
+                    <i class="fas fa-fw fa-comment" aria-hidden="true"></i> {{ items.comment.key|lower|trans }}
                   </a></li>
                 {% endif %}
                 {% if items.friend is defined %}
                   <li><a class="dropdown-item p-hero__dropdown-item" href="{{ items.friend.url }}">
-                    <i class="fas fa-fw fa-handshake"></i> {{ items.friend.key|lower|trans }}
+                    <i class="fas fa-fw fa-handshake" aria-hidden="true"></i> {{ items.friend.key|lower|trans }}
                   </a></li>
                 {% endif %}
                 {% if items.add_note is defined or items.edit_note is defined %}
                   {% set noteItem = items.edit_note is defined ? items.edit_note : items.add_note %}
                   <li><a class="dropdown-item p-hero__dropdown-item" href="{{ noteItem.url }}">
-                    <i class="fas fa-fw fa-pencil-alt"></i> {{ noteItem.key|lower|trans }}
+                    <i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i> {{ noteItem.key|lower|trans }}
                   </a></li>
                 {% endif %}
                 {% if items.report is defined %}
                   <li><hr class="dropdown-divider"></li>
                   <li><a class="dropdown-item p-hero__dropdown-item p-hero__dropdown-item--danger" href="{{ items.report.url }}">
-                    <i class="fas fa-fw fa-flag"></i> {{ items.report.key|lower|trans }}
+                    <i class="fas fa-fw fa-flag" aria-hidden="true"></i> {{ items.report.key|lower|trans }}
                   </a></li>
                 {% endif %}
               </ul>
@@ -269,38 +228,97 @@
           </div>
         {% endif %}
       </div>
+    </div>
 
+    {# ── Hosting · comments · languages ── #}
+    {% set _commentsTotal = comments_count.total ?? member_comments_count(member) %}
+    <div class="p-pro__tiles">
+      {% if hosting %}
+        <div class="p-pro__tile p-pro__tile--host-{{ hosting }}">
+          <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }} p-pro__tile-icon" aria-hidden="true"></i>
+          <span class="p-pro__tile-text">
+            <strong>{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</strong>
+            <span class="p-pro__tile-sub">{{ (hosting == 'yes' ? 'profile.hosting.accepts' : 'profile.hosting.not.now')|trans }}</span>
+          </span>
+        </div>
+      {% endif %}
+
+      {% if _commentsTotal > 0 %}
+        <a class="p-pro__tile p-pro__tile--comments" href="{{ url('profile_comments', {username: member.username}) }}">
+          <span class="p-pro__tile-square" aria-hidden="true"><i class="fas fa-comment"></i></span>
+          <strong class="p-pro__tile-text">{{ _commentsTotal }} {{ 'search.preview.comments'|trans({ count: _commentsTotal }) }}</strong>
+          {% if comments_count is defined %}
+            <span class="p-pro__pills">
+              {% if comments_count.positive %}<span class="p-pro__pill is-positive"><i class="fas fa-thumbs-up" aria-hidden="true"></i> {{ comments_count.positive }}<span class="visually-hidden"> {{ 'comment.quality.positive'|trans|striptags }}</span></span>{% endif %}
+              {% if comments_count.neutral %}<span class="p-pro__pill"><i class="fas fa-minus" aria-hidden="true"></i> {{ comments_count.neutral }}<span class="visually-hidden"> {{ 'comment.quality.neutral'|trans|striptags }}</span></span>{% endif %}
+              {% if comments_count.negative %}<span class="p-pro__pill is-negative"><i class="fas fa-thumbs-down" aria-hidden="true"></i> {{ comments_count.negative }}<span class="visually-hidden"> {{ 'comment.quality.negative'|trans|striptags }}</span></span>{% endif %}
+            </span>
+          {% endif %}
+          <i class="fas fa-chevron-right p-pro__tile-go" aria-hidden="true"></i>
+        </a>
+      {% else %}
+        <div class="p-pro__tile p-pro__tile--comments is-empty">
+          <span class="p-pro__tile-square" aria-hidden="true"><i class="fas fa-comment"></i></span>
+          <span class="p-pro__tile-text">{{ 'profile.no.comments'|trans|striptags }}</span>
+        </div>
+      {% endif %}
+
+      {% if member.levelLanguages|length > 0 %}
+        <div class="p-pro__tile p-pro__tile--languages">
+          <i class="fas fa-language p-pro__tile-icon" aria-hidden="true"></i>
+          <ul class="p-pro__langs" aria-label="{{ 'languages.spoken'|trans|striptags }}">
+            {% for level, langs in member.levelLanguages %}
+              {% for lang in langs %}
+                <li>{{ ('lang_' ~ lang.ShortCode)|lower|trans }} <span class="p-pro__lang-level">{{ ('language.level.' ~ level)|lower|trans }}</span></li>
+              {% endfor %}
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+  </div>{# /.p-pro__wrap #}
+
+</div>{# /.p-pro #}
+
+{# ── Tabs: outside the header block so that on phones they stay stuck to the top all the way down ── #}
+  {% set activeItem = submenu.active is defined and submenu.active != '' ? submenu.active : 'profile' %}
+  <div class="p-pro__tabs-wrap">
+    <div class="container-lg">
+      <div class="p-hero__tabs-scroller" data-tabs-scroller>
+        <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--prev" data-tabs-scroll="-1" tabindex="-1" aria-hidden="true">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <nav class="p-hero__tabs">
+          {% for key in ['profile', 'comments', 'friends', 'gallery', 'forum_posts', 'visitors'] %}
+            {% if items[key] is defined %}
+              <a href="{{ items[key].url }}"
+                 class="p-hero__tab{% if activeItem == key %} p-hero__tab--active{% endif %}">
+                <i class="fas fa-fw fa-{{ items[key].icon }}" aria-hidden="true"></i>
+                {{ items[key].key|lower|trans }}
+                {% if items[key].count is defined and items[key].count > 0 %}
+                  <span class="p-hero__tab-count">{{ items[key].count }}</span>
+                {% endif %}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </nav>
+        <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--next" data-tabs-scroll="1" tabindex="-1" aria-hidden="true">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
     </div>
   </div>
 
-  </div>{# /.p-hero__body-wrap #}
-
-  {# ── Tab navigation ──────────────────────────────── #}
-  {% set activeItem = submenu.active is defined and submenu.active != '' ? submenu.active : 'profile' %}
-  <div class="p-hero__tabs-wrap container-lg">
-  <div class="p-hero__tabs-scroller" data-tabs-scroller>
-    <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--prev" data-tabs-scroll="-1" tabindex="-1" aria-hidden="true">
-      <i class="fas fa-chevron-left"></i>
-    </button>
-    <nav class="p-hero__tabs">
-      {% set navItems = ['profile', 'comments', 'friends', 'gallery', 'forum_posts', 'visitors', 'allmessages'] %}
-      {% for key in navItems %}
-        {% if items[key] is defined %}
-          <a href="{{ items[key].url }}"
-             class="p-hero__tab{% if activeItem == key %} p-hero__tab--active{% endif %}">
-            <i class="fas fa-fw fa-{{ items[key].icon }}"></i>
-            {{ items[key].key|lower|trans }}
-            {% if items[key].count is defined and items[key].count > 0 %}
-              <span class="p-hero__tab-count">{{ items[key].count }}</span>
-            {% endif %}
-          </a>
-        {% endif %}
-      {% endfor %}
-    </nav>
-    <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--next" data-tabs-scroll="1" tabindex="-1" aria-hidden="true">
-      <i class="fas fa-chevron-right"></i>
-    </button>
-  </div>
-  </div>{# /.p-hero__tabs-wrap #}
-
-</div>
+  {# ── Phones: message and request stay stuck to the bottom of the screen ── #}
+  {% if canContact %}
+    <div class="p-pro__bottom-bar">
+      <a href="{{ url('message_new', {username: member.Username}) }}" class="p-pro__btn p-pro__btn--message">
+        <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
+      </a>
+      {% if canRequest %}
+        <a href="{{ url('hosting_request', {username: member.username}) }}" class="p-pro__btn p-pro__btn--request">
+          <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}

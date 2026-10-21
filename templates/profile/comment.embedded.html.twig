@@ -41,25 +41,19 @@
         <div class="p-comment__head">
             <div class="p-comment__who">
                 <div class="p-comment__name">
-                    {% if author == loggedInMember %}
-                        <span class="p-comment__me">{{ 'me'|trans({}, "messages", language) }}</span>
-                        <span class="p-comment__sep">·</span>
-                    {% endif %}
                     {% if linked %}
                         {{ macros.profilelink(author.Username, author.Username, 'p-comment__link') }}
                     {% else %}
                         <span class="p-comment__link">{{ author.Username }}</span>
+                    {% endif %}
+                    {% if author == loggedInMember %}
+                        <span class="p-comment__you">{{ 'profile.comment.you'|trans({}, "messages", language) }}</span>
                     {% endif %}
                 </div>
                 <div class="p-comment__meta">
                     <span title="{{ commentDate|format_datetime() }}">{{ commentDate.diffForHumans }}</span>
                     {% if wasGuestOrHost %}
                         <i class="fas fa-home" aria-hidden="true"></i>
-                    {% endif %}
-                    {% if edit %}
-                        <a class="p-comment__action" href="{{ url('edit_comment', { username: comment.toMember.Username }) }}">
-                            <i class="fas fa-pen" aria-hidden="true"></i> {{ 'edit'|trans({}, "messages", language) }}
-                        </a>
                     {% endif %}
                     {% if isAdmin %}
                         <a class="p-comment__action" href="{{ url('admin_comment', { to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}">
@@ -92,6 +86,14 @@
                      {% if isAnswer %}"limit": 160, "after": 40,{% else %}"limit": 280, "after": 60,{% endif %}
                      "more": "{{ 'comment.read.more'|trans({}, "messages", language) }}",
                      "less": "{{ 'comment.show.less'|trans({}, "messages", language) }}" }'>{{ comment.comment|nl2br|purify }}</div>
+
+            {% if edit %}
+                <div class="p-comment__actions">
+                    <a class="p-comment__edit" href="{{ url('edit_comment', { username: comment.toMember.Username }) }}">
+                        <i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.comment.edit.mine'|trans({}, "messages", language) }}
+                    </a>
+                </div>
+            {% endif %}
 
             {% if canAnswer %}
                 <div class="p-comment__actions">

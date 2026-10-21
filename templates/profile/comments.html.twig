@@ -65,7 +65,8 @@
           {% endif %}
         </div>
 
-        {% if submenu.items is defined and submenu.items.comment is defined %}
+        {# Only "add a comment": an own comment already has its small edit button. #}
+        {% if submenu.items is defined and submenu.items.comment is defined and submenu.items.comment.key != 'EditComments' %}
           <div class="p-comments-cta">
             <a href="{{ submenu.items.comment.url }}" class="p-hero__btn p-hero__btn--secondary">
               <i class="fas fa-comment" aria-hidden="true"></i> {{ submenu.items.comment.key|lower|trans }}

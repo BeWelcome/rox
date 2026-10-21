@@ -18,3 +18,31 @@ if (langSwitch) {
         });
     });
 }
+
+// Phones: "About me" is cut after a few lines; "Read more" shows the whole text.
+const aboutUpdates = [];
+document.querySelectorAll('.js-pro-about').forEach(about => {
+    const more = about.parentElement.querySelector('.js-pro-about-more');
+    if (!more) {
+        return;
+    }
+    const update = () => {
+        if (!about.classList.contains('is-open')) {
+            more.hidden = about.scrollHeight <= about.clientHeight + 1;
+        }
+    };
+    more.addEventListener('click', () => {
+        about.classList.add('is-open');
+        more.hidden = true;
+    });
+    aboutUpdates.push(update);
+    update();
+});
+const updateAbout = () => aboutUpdates.forEach(update => update());
+window.addEventListener('resize', updateAbout);
+// Another profile language shown: its text is measured once visible.
+document.addEventListener('click', event => {
+    if (event.target.closest('.p-lang-option')) {
+        window.requestAnimationFrame(updateAbout);
+    }
+});

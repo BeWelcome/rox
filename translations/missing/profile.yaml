@@ -409,3 +409,24 @@ profile.avatar.picture:
 profile.edit.section.empty:
     - 'Nothing added yet. Click the edit button to add content.'
     - Hint shown on the profile edit page when a subsection has no content yet.
+profile.hosting.accepts:
+    - 'Accepts guests'
+    - Under "Yes, be welcome" in the hosting tile at the top of a profile
+profile.hosting.not.now:
+    - 'Not hosting now'
+    - Under "No, sorry" in the hosting tile at the top of a profile
+profile.accessibility:
+    - 'Accessibility'
+    - Label of the accessibility tile in the accommodation block of a profile (e.g. "Wheelchair")
+profile.read.more:
+    - 'Read more'
+    - Link under the shortened "About me" text of a profile on phones
+profile.comment.you:
+    - 'You'
+    - Small badge next to the author name of a comment written by the member viewing the profile
+profile.comment.edit.mine:
+    - 'Edit my comment'
+    - Small button under a comment written by the member viewing the profile
+profile.max.guests.short:
+    - 'Max guests'
+    - Short label of the tile with the maximum number of guests in the accommodation block of a profile

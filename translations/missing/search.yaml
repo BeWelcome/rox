@@ -7,6 +7,9 @@ search.member.since:
 search.member.for:
     - 'Member for {duration}'
     - Shown in each search result, e.g. "Member for 2 years". Keep {duration} intact.
+search.member.duration:
+    - 'Member {duration}'
+    - Shown in each search result after the last login, e.g. "Member 8 years" (how long ago the member signed up). Keep {duration} intact.
 search.members.found:
     - '{count, plural, one {# member found} other {# members found}}'
     - Above the search results when they fit on one page, e.g. "5 members found". Copy/paste the English version and translate only the words.

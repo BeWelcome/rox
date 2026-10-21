@@ -21,6 +21,15 @@
     {% set locationFull = form.location_fullname.vars.value %}
     {% set locationRest = locationFull starts with (locationName ~ ', ') ? locationFull|slice(locationName|length + 2) : '' %}
 
+    {# Number of filters in use, shown on the options button: ticked boxes, keywords, groups, languages, gender. #}
+    {% set activeFilters = 0 %}
+    {% for name in ['accommodation_yes', 'accommodation_no', 'offers_dinner', 'offers_tour', 'accessible', 'has_profile_picture', 'has_about_me', 'no_smoking', 'no_alcohol', 'no_drugs', 'has_comments'] %}
+        {% if form[name] is defined and form[name].vars.checked %}{% set activeFilters = activeFilters + 1 %}{% endif %}
+    {% endfor %}
+    {% for name in ['keywords', 'groups', 'languages', 'gender'] %}
+        {% if form[name] is defined and form[name].vars.value is not empty %}{% set activeFilters = activeFilters + 1 %}{% endif %}
+    {% endfor %}
+
     {# The members of this page, for the markers of the map. #}
     {% set mapMembers = [] %}
     {% if hasResults %}
@@ -78,10 +87,18 @@
                 <span>{{ 'search.find.members'|trans }}</span>
             </button>
 
-            <button type="button" class="p-search__options-btn js-search-options-open" aria-label="{{ 'search.show.advanced'|trans }}"
-                    title="{{ 'search.show.advanced'|trans }}">
-                <i class="fas fa-filter" aria-hidden="true"></i>
+            <button type="button" class="p-search__options-btn js-search-options-open" aria-label="{{ 'search.show.advanced'|trans }}">
+                <i class="fas fa-sliders" aria-hidden="true"></i>
+                {% if activeFilters %}<span class="p-search__options-count">{{ activeFilters }}</span>{% endif %}
             </button>
+
+            <label class="p-search__map-switch" for="{{ form.show_map.vars.id }}">
+                <span>{{ form.show_map.vars.label|trans }}</span>
+                <input type="checkbox" role="switch" class="show_map js-search-map-switch" id="{{ form.show_map.vars.id }}"
+                       name="{{ form.show_map.vars.full_name }}" value="1"{% if showMap %} checked{% endif %}>
+                <span class="p-search__switch" aria-hidden="true"></span>
+            </label>
+            {% do form.show_map.setRendered %}
         </div>
 
         {% if form.vars.errors|length > 0 %}
@@ -95,8 +112,9 @@
         {# Quick filters: they tick the same boxes as the panel and search right away. #}
         <div class="p-search__quick">
             <button type="button" class="p-search__options-pill js-search-options-open">
-                <i class="fas fa-filter" aria-hidden="true"></i>
+                <i class="fas fa-sliders" aria-hidden="true"></i>
                 <span>{{ 'search.show.advanced'|trans }}</span>
+                {% if activeFilters %}<span class="p-search__options-count">{{ activeFilters }}</span>{% endif %}
             </button>
             <span class="p-search__divider" aria-hidden="true"></span>
             <div class="p-search__pills">
@@ -108,18 +126,12 @@
                 ] %}
                     <button type="button" class="p-search-pill js-search-pill{{ item.field.vars.checked ? ' is-active' : '' }}"
                             data-target="{{ item.field.vars.id }}" aria-pressed="{{ item.field.vars.checked ? 'true' : 'false' }}">
-                        {% if item.icon %}<i class="{{ item.icon }}" aria-hidden="true"></i>{% endif %}
+                        {% if item.icon %}<i class="{{ item.icon }} p-search-pill__icon" aria-hidden="true"></i>{% endif %}
                         {{ item.field.vars.label|trans }}
+                        <i class="fas fa-times p-search-pill__off" aria-hidden="true"></i>
                     </button>
                 {% endfor %}
             </div>
-            <label class="p-search__map-switch" for="{{ form.show_map.vars.id }}">
-                <span>{{ form.show_map.vars.label|trans }}</span>
-                <input type="checkbox" role="switch" class="show_map js-search-map-switch" id="{{ form.show_map.vars.id }}"
-                       name="{{ form.show_map.vars.full_name }}" value="1"{% if showMap %} checked{% endif %}>
-                <span class="p-search__switch" aria-hidden="true"></span>
-            </label>
-            {% do form.show_map.setRendered %}
             {# The old "show options" switch: kept so the preference is not lost. #}
             {% if form.show_options.vars.checked %}<input type="hidden" name="{{ form.show_options.vars.full_name }}" value="1">{% endif %}
             {% do form.show_options.setRendered %}
@@ -135,15 +147,15 @@
                         {%- if pager.haveToPaginate -%}
                             {{ 'search.members.found.range'|trans({ first: pager.currentPageOffsetStart, last: pager.currentPageOffsetEnd, count: pager.nbResults }) }}
                         {%- else -%}
-                            {{ 'search.members.found'|trans({ count: pager.nbResults }) }}
+                            <strong>{{ pager.nbResults|number_format }}</strong> {{ 'places.members.word'|trans({ count: pager.nbResults }) }}
                         {%- endif -%}
                     </h1>
                     <div class="p-search-results__view" role="group">
                         <button type="button" class="p-search-results__view-btn is-active js-search-view" data-view="list">
-                            <i class="fas fa-list-ul" aria-hidden="true"></i> {{ 'search.view.list'|trans }}
+                            <i class="fas fa-list-ul" aria-hidden="true"></i> <span class="p-search-results__view-label">{{ 'search.view.list'|trans }}</span>
                         </button>
                         <button type="button" class="p-search-results__view-btn js-search-view" data-view="map">
-                            <i class="fas fa-map" aria-hidden="true"></i> {{ 'map'|trans }}
+                            <i class="fas fa-map" aria-hidden="true"></i> <span class="p-search-results__view-label">{{ 'map'|trans }}</span>
                         </button>
                     </div>
                     <div class="p-search-results__order">
@@ -155,9 +167,8 @@
                                data-descending="{{ constant('App\\Repository\\MemberRepository::DIRECTION_DESCENDING') }}">
                         {% do form.direction.setRendered %}
                         <button type="button" class="p-search-results__direction js-search-direction-toggle"
-                                title="{{ (descending ? 'search.direction.descending' : 'search.direction.ascending')|trans }}"
                                 aria-label="{{ form.direction.vars.label|trans }}: {{ (descending ? 'search.direction.descending' : 'search.direction.ascending')|trans }}">
-                            <i class="fas {{ descending ? 'fa-arrow-down' : 'fa-arrow-up' }}" aria-hidden="true"></i>
+                            <i class="fas {{ descending ? 'fa-arrow-down-wide-short' : 'fa-arrow-up-short-wide' }}" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>

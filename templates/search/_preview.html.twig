@@ -88,7 +88,7 @@
         <span>{{ 'search.member.duration'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}</span>
     </p>
 
-    {# Hosting and comments side by side #}
+    {# Hosting, then the comments with their split #}
     {% set commentsTotal = comments_count.total ?? 0 %}
     <div class="p-search-preview__tiles">
         {% if hosting %}
@@ -98,22 +98,20 @@
             </div>
         {% endif %}
         {% if commentsTotal %}
-            <a class="p-search-preview__tile p-search-preview__tile--comments" href="{{ path('profile_comments', { username: member.username }) }}" target="_blank" rel="noopener">
-                <strong class="p-search-preview__comments-count">{{ commentsTotal }}</strong>
-                <span class="p-search-preview__comments-text">
-                    <span class="p-search-preview__comments-word">{{ 'search.preview.comments'|trans({ count: commentsTotal }) }}</span>
-                    <span class="p-search-preview__comments-split">
-                        {% if comments_count.positive %}<span class="is-positive"><i class="fas fa-thumbs-up" aria-hidden="true"></i> {{ comments_count.positive }}<span class="visually-hidden"> {{ 'comment.quality.positive'|trans|striptags }}</span></span>{% endif %}
-                        {% if comments_count.neutral %}<span><i class="fas fa-minus" aria-hidden="true"></i> {{ comments_count.neutral }}<span class="visually-hidden"> {{ 'comment.quality.neutral'|trans|striptags }}</span></span>{% endif %}
-                        {% if comments_count.negative %}<span class="is-negative"><i class="fas fa-thumbs-down" aria-hidden="true"></i> {{ comments_count.negative }}<span class="visually-hidden"> {{ 'comment.quality.negative'|trans|striptags }}</span></span>{% endif %}
-                    </span>
+            <a class="p-search-preview__comments has-comments" href="{{ path('profile_comments', { username: member.username }) }}" target="_blank" rel="noopener">
+                <span class="p-search-preview__comments-icon"><i class="fas fa-comment" aria-hidden="true"></i></span>
+                <span class="p-search-preview__comments-text">{{ commentsTotal }} {{ 'search.preview.comments'|trans({ count: commentsTotal }) }}</span>
+                <span class="p-search-preview__comments-split">
+                    {% if comments_count.positive %}<span class="is-positive"><i class="fas fa-thumbs-up" aria-hidden="true"></i> {{ comments_count.positive }}<span class="visually-hidden"> {{ 'comment.quality.positive'|trans|striptags }}</span></span>{% endif %}
+                    {% if comments_count.neutral %}<span class="is-neutral"><i class="fas fa-minus" aria-hidden="true"></i> {{ comments_count.neutral }}<span class="visually-hidden"> {{ 'comment.quality.neutral'|trans|striptags }}</span></span>{% endif %}
+                    {% if comments_count.negative %}<span class="is-negative"><i class="fas fa-thumbs-down" aria-hidden="true"></i> {{ comments_count.negative }}<span class="visually-hidden"> {{ 'comment.quality.negative'|trans|striptags }}</span></span>{% endif %}
                 </span>
                 <i class="fas fa-chevron-right p-search-preview__comments-go" aria-hidden="true"></i>
             </a>
         {% else %}
-            <div class="p-search-preview__tile p-search-preview__tile--no-comments">
-                <i class="fas fa-comment" aria-hidden="true"></i>
-                <span>{{ 'profile.no.comments'|trans|striptags }}</span>
+            <div class="p-search-preview__comments">
+                <span class="p-search-preview__comments-icon"><i class="fas fa-comment" aria-hidden="true"></i></span>
+                <span class="p-search-preview__comments-text">{{ 'profile.no.comments'|trans|striptags }}</span>
             </div>
         {% endif %}
     </div>

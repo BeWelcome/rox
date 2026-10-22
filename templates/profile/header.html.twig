@@ -1,5 +1,5 @@
 {#
-  Top of every profile page: the map as a banner, the photo with the hosting badge, name,
+  Top of every profile page: the photo with the hosting badge, name,
   gender, username, place, occupation and last login; the actions; three tiles (hosting,
   comments, languages) and the tabs. On phones the actions stick to the bottom of the screen
   and the tabs to the top.
@@ -26,14 +26,6 @@
 {% set canRequest = canContact and member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
 
 <div class="p-pro">
-
-  {# ── Banner: the map of where the member lives, or a plain gradient ── #}
-  {% if not address is same as(false) %}
-    <input type="hidden" id="latitude" value="{{ address.latitude }}">
-    <input type="hidden" id="longitude" value="{{ address.longitude }}">
-  {% endif %}
-  <div {% if not address is same as(false) %}id="location-map"{% endif %}
-       class="p-pro__banner{% if address is same as(false) %} p-pro__banner--fallback{% endif %}"></div>
 
   {% set _translations = member.translations %}
   {% set _langs = _translations|keys %}

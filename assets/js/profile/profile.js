@@ -62,3 +62,37 @@ locationMaps.forEach( locationMap => {
     }).addTo(map)
 })
 
+
+// "Where I live" block: a grey map of the approximate area, a circle and a dot.
+// One block per profile language and only one is shown, so a map is built the first
+// time its block is visible (after a click on the language switch for the others).
+const whereMaps = () => document.querySelectorAll('.js-pro-where-map:not(.is-ready)').forEach(element => {
+    if (element.offsetParent === null) {
+        return;
+    }
+    element.classList.add('is-ready');
+    const center = [parseFloat(element.dataset.lat), parseFloat(element.dataset.lng)];
+    const map = L.map(element, {
+        zoomControl: false,
+        boxZoom: false,
+        dragging: false,
+        scrollWheelZoom: false,
+        touchZoom: false,
+        doubleClickZoom: false,
+        keyboard: false,
+        attributionControl: false,
+    }).setView(center, 12);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        subdomains: ['a', 'b', 'c']
+    }).addTo(map);
+    L.circle(center, {radius: 2000, color: '#ea7a2e', weight: 1.5, fillColor: '#f37000', fillOpacity: 0.18}).addTo(map);
+    L.circleMarker(center, {radius: 6, color: '#fff', weight: 3, fillColor: '#ea7a2e', fillOpacity: 1}).addTo(map);
+});
+
+whereMaps();
+document.addEventListener('click', event => {
+    if (event.target.closest('.p-lang-option')) {
+        setTimeout(whereMaps, 0);
+    }
+});

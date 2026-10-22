@@ -430,3 +430,12 @@ profile.comment.edit.mine:
 profile.max.guests.short:
     - 'Max guests'
     - Short label of the tile with the maximum number of guests in the accommodation block of a profile
+profile.where.i.live:
+    - 'Where I live'
+    - Title of the profile block with a small map of the area where the member lives
+profile.open.map:
+    - 'Open map'
+    - Link of the "Where I live" profile block that opens a bigger map in a new tab
+profile.approximate.area:
+    - 'approximate area'
+    - Note under the small map of a profile, after the region and country, saying the map only shows the area

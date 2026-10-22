@@ -8966,14 +8966,12 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
    ═══════════════════════════════════════════════════════════════════════════ */
 main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro { position: relative; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
-.p-pro__banner { position: relative; z-index: 1; height: 175px; }
-.p-pro__banner .leaflet-tile-pane { filter: grayscale(1) brightness(1.1) contrast(0.85); }
-.p-pro__banner--fallback { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); }
-.p-pro__wrap { position: relative; z-index: 2; }
+.p-pro__wrap { position: relative; z-index: 2; padding-top: 2rem; }
+.p-pro .p-lang-switch { top: 6.5rem; right: calc(var(--bs-gutter-x, 1.5rem) * 0.5); }
 .p-pro__head { display: flex; align-items: flex-start; gap: 1.5rem; }
 
 /* Photo with the hosting badge */
-.p-pro__avatar { position: relative; flex-shrink: 0; width: 150px; height: 150px; margin-top: -70px; }
+.p-pro__avatar { position: relative; flex-shrink: 0; width: 150px; height: 150px; }
 .p-pro__avatar-link { display: block; }
 .p-pro__avatar-img { display: block; width: 150px; height: 150px; border: 5px solid #fff; border-radius: 50%; object-fit: cover; background: #f1f5f9; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15); }
 .p-pro__host { position: absolute; right: 4px; bottom: 6px; display: inline-flex; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; border: 3px solid #fff; border-radius: 999px; color: #fff; font-size: 1rem; }
@@ -9145,17 +9143,28 @@ a.p-pro-filter__item:hover { background: #fff; }
 .p-pro-friend__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .p-pro__bottom-bar { display: none; }
 
+/* Where I live: grey map with the approximate area */
+.p-pro-where__map { height: 165px; overflow: hidden; border-radius: 0.8rem; background: #f1f5f9; }
+.p-pro-where__map .leaflet-tile-pane { filter: grayscale(1) brightness(1.05) contrast(0.85); }
+.p-pro-card .p-pro-where__city { margin: 0.75rem 0 0; color: #0f172a; font-size: 0.9375rem; font-weight: 700; }
+.p-pro-card .p-pro-where__area { margin: 0.1rem 0 0; color: #64748b; font-size: 0.8125rem; }
+
+/* One column: the cards in one list, "Where I live" right after the accommodation */
 @media (max-width: 991.98px) {
-  .p-pro-layout { grid-template-columns: minmax(0, 1fr); }
+  .p-pro-layout { display: flex; flex-direction: column; align-items: stretch; }
+  .p-pro-layout__main,
+  .p-pro-layout__side { display: contents; }
+  .p-pro-layout__side > .p-pro-card { order: 3; }
+  .p-pro-layout__main > .p-pro-card--comments { order: 2; }
+  .p-pro-layout__side > .p-pro-card--where { order: 1; }
 }
 
 @media (max-width: 767.98px) {
   /* Header: photo under the banner with the "more" button on its right, then who they are */
-  .p-pro__banner { height: 120px; }
+  .p-pro__wrap { padding-top: 1rem; }
   .p-pro__head { flex-wrap: wrap; gap: 0; }
   .p-pro__avatar,
   .p-pro__avatar-img { width: 112px; height: 112px; }
-  .p-pro__avatar { margin-top: -56px; }
   .p-pro__avatar-img { border-width: 4px; }
   .p-pro__host { right: 0; bottom: 4px; width: 2.2rem; height: 2.2rem; font-size: 0.85rem; }
   .p-pro__actions { flex: 1; order: 0; padding-top: 0.75rem; }
@@ -9163,7 +9172,7 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro__actions > .p-pro__btn { display: none; }
   .p-pro .p-pro__name { font-size: 1.6rem; }
   .p-pro__place .p-pro__region { display: none; }
-  .p-lang-switch { top: auto; bottom: calc(100% + 0.6rem); }
+  .p-pro .p-lang-switch { top: 4.6rem; right: calc(var(--bs-gutter-x, 1.5rem) * 0.5); bottom: auto; }
 
   /* Tiles one under the other; languages as plain chips */
   .p-pro__tiles { grid-auto-flow: row; gap: 0.6rem; padding: 1rem 0; }

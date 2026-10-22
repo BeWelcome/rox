@@ -123,7 +123,7 @@
       </section>
 
       {# ── Comments: filter by quality (greyed when empty), the latest ones ── #}
-      <section class="p-pro-card">
+      <section class="p-pro-card p-pro-card--comments">
         <div class="p-pro-card__head">
           <h2 class="p-pro-card__title">
             {{ 'profile.comments'|trans({}, 'messages', profile_language) }}
@@ -184,6 +184,29 @@
     </div>
 
     <aside class="p-pro-layout__side">
+
+      {# ── Where I live: a small map of the approximate area (rounded coordinates) ── #}
+      {% if not address is same as(false) and address.latitude and address.longitude %}
+        {% set _loc = address.location %}
+        {% set _lat = address.latitude|round(2) %}
+        {% set _lng = address.longitude|round(2) %}
+        <section class="p-pro-card p-pro-card--where">
+          <div class="p-pro-card__head">
+            <h2 class="p-pro-card__title">{{ 'profile.where.i.live'|trans({}, 'messages', profile_language) }}</h2>
+            <a class="p-pro-card__link" href="https://www.openstreetmap.org/?mlat={{ _lat }}&amp;mlon={{ _lng }}#map=13/{{ _lat }}/{{ _lng }}"
+               target="_blank" rel="noopener">{{ 'profile.open.map'|trans({}, 'messages', profile_language) }}</a>
+          </div>
+          <div class="p-pro-where__map js-pro-where-map" data-lat="{{ _lat }}" data-lng="{{ _lng }}"
+               aria-label="{{ 'profile.location'|trans({}, 'messages', profile_language) }}"></div>
+          {% if _loc %}
+            <p class="p-pro-where__city">{{ _loc.name }}</p>
+            <p class="p-pro-where__area">
+              {%- if _loc.admin1 is not null %}{{ _loc.admin1.name }}, {% endif -%}
+              {{ _loc.country.name }} · {{ 'profile.approximate.area'|trans({}, 'messages', profile_language) }}
+            </p>
+          {% endif %}
+        </section>
+      {% endif %}
 
       {# ── Interests, one icon each ── #}
       {% if interests|length > 0 %}

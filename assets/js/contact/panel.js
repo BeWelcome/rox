@@ -68,7 +68,8 @@ export function createContactPanel(panel, {from, onBack}) {
         } catch (error) {
             return;
         }
-        if (location.href !== 'about:blank' && !location.pathname.startsWith('/new/')) {
+        // A page made for the panel keeps ?embed=1; any other one opens in the window
+        if (location.href !== 'about:blank' && !new URLSearchParams(location.search).has('embed')) {
             window.location.href = location.href;
         }
     });

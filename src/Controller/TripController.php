@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Doctrine\LegOptionsType;
 use App\Doctrine\MemberStatusType;
 use App\Dto\LegDto;
 use App\Dto\TripDto;
@@ -187,6 +188,32 @@ class TripController extends AbstractController
         $newTrip = $this->tripModel->copyTrip($trip);
 
         return $this->redirectToRoute('trip_edit', ['id' => $newTrip->getId()]);
+    }
+
+    /**
+     * One leg of a trip in the side panel of the home page (Visitors, ?embed=1): the trip
+     * as the traveller wrote it, then Invite / Send a message, which open their form in
+     * the same panel. Outside the panel it goes to the trip page.
+     */
+    #[Route(path: '/trip/leg/{id}/panel', name: 'trip_leg_panel', requirements: ['id' => '\d+'])]
+    public function legPanel(Request $request, Subtrip $leg): Response
+    {
+        $trip = $leg->getTrip();
+        $this->denyAccessUnlessGranted('TRIP_VIEW', $trip);
+
+        /** @var Member $member */
+        $member = $this->getUser();
+        if (\in_array(LegOptionsType::PRIVATE, $leg->getOptions(), true) && $trip->getCreator() !== $member) {
+            throw $this->createNotFoundException();
+        }
+
+        if (!$request->query->getBoolean('embed')) {
+            return $this->redirectToRoute('trip_show', ['id' => $trip->getId(), '_fragment' => 'leg' . $leg->getId()]);
+        }
+
+        return $this->render('trip/leg_panel.html.twig', [
+            'leg' => $leg,
+        ]);
     }
 
     #[Route(path: '/trip/leg/{id}/hide', name: 'trip_hide', requirements: ['id' => '\d+'], methods: ['POST'])]

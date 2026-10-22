@@ -3,7 +3,8 @@
   arrow, the member's photo with a house when they host, and what is being written.
   The back arrow asks the page around the frame to go back
   (contact/panel.js); "bw-contact-ready" tells it the frame has its own head.
-  member: who the message or request goes to. kind: 'message', 'request' or 'invitation'.
+  member: who the message or request goes to. kind: 'message', 'request', 'invitation' or 'trip'. A ?back= path (from the trip
+  in the panel) makes the back arrow go back to it instead of closing the panel.
 #}
 {% set _hosting = member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
 <header class="c-contact-head">
@@ -18,7 +19,7 @@
     </span>
     <div class="c-contact-head__who">
         <p class="c-contact-head__kind">
-            <i class="fas {{ { request: 'fa-bed', invitation: 'fa-house-user' }[kind] ?? 'fa-envelope' }}" aria-hidden="true"></i>
+            <i class="fas {{ { request: 'fa-bed', invitation: 'fa-house-user', trip: 'fa-suitcase' }[kind] ?? 'fa-envelope' }}" aria-hidden="true"></i>
             {{ ('contact.head.' ~ kind)|trans }}
         </p>
         <p class="c-contact-head__name">{{ member.shortNameOrUsername }}</p>
@@ -30,8 +31,11 @@
         if (parentWindow) {
             parentWindow.postMessage({ type: 'bw-contact-ready' }, window.location.origin);
         }
+        var back = new URLSearchParams(window.location.search).get('back');
         document.querySelector('.js-contact-back').addEventListener('click', function () {
-            if (parentWindow) {
+            if (back && back.charAt(0) === '/' && back.charAt(1) !== '/') {
+                window.location.replace(back);
+            } else if (parentWindow) {
                 parentWindow.postMessage({ type: 'bw-contact-back' }, window.location.origin);
             } else {
                 window.location.href = '{{ path('members_profile', { username: member.username }) }}';

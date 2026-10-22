@@ -1,22 +1,30 @@
 {#
   One trip leg near the member, in the Visitors tab of the home page: where and when,
-  who travels, the start of the trip's text, and the actions (hide, write, invite).
+  who travels and the start of the trip's text. The row opens the trip in the side panel,
+  where the member can invite or write; the eye hides the trip.
 #}
 {% import 'macros.twig' as macros %}
 {% set creator = leg.trip.creator.username %}
-<div class="c-home-item c-dashboard__item">
+{% set invited = leg.invitationBy(app.user) %}
+<div class="c-home-item c-dashboard__item c-home-item--leg">
+    {# The whole row opens the trip in the side panel (trip/leg_panel.html.twig) #}
+    <a class="c-home-item__cover js-contact-open" href="{{ path('trip_leg_panel', { id: leg.id }) }}" data-title="{{ leg.location.name }}">
+        <span class="visually-hidden">{{ leg.location.name }}</span>
+    </a>
     <img class="c-home-item__avatar" src="{{ path('avatar', { username: creator, size: 48 }) }}" alt="" loading="lazy">
     <div class="c-home-item__body">
         <span class="c-home-item__top">
-            <a class="c-home-item__title c-home-item__title--link" href="{{ url('trip_show', { id: leg.trip.id, _fragment: 'leg' ~ leg.id }) }}">{{ leg.location.name }}</a>
+            <span class="c-home-item__title">{{ leg.location.name }}</span>
+            {% if invited %}
+                <span class="c-home-item__tag c-home-item__tag--done"><i class="fa fa-check" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}</span>
+            {% elseif constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
+                <span class="c-home-item__tag"><i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.option.looking.for.host'|trans }}</span>
+            {% endif %}
         </span>
         <p class="c-home-item__meta">
             <i class="far fa-calendar" aria-hidden="true"></i>
             {{ leg.arrival|format_date('medium') }}{% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('medium') }}{% endif %}
             · <i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.count.of.travellers'|trans({ countOfTravellers: leg.trip.countOfTravellers }) }}
-            {%- if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo %}
-                · {{ ('trip.additional.info.' ~ leg.trip.additionalInfo)|lower|trans }}
-            {%- endif %}
         </p>
         {% set _excerpt = [leg.trip.summary|striptags|trim, leg.trip.description|striptags|trim]|filter(t => t)|join(' · ') %}
         {% if _excerpt %}
@@ -32,22 +40,6 @@
                 <i class="fa fa-fw fa-eye-slash" aria-hidden="true"></i>
             </button>
         </form>
-        {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
-            <a class="c-home-item__action js-contact-open" href="{{ path('message_new', { username: creator }) }}" data-title="{{ 'message.write_to'|trans|format(leg.trip.creator.shortNameOrUsername)|striptags }}" aria-label="{{ 'message.write_to'|trans|format(creator) }}" title="{{ 'message.write_to'|trans|format(creator) }}">
-                <i class="fa fa-fw fa-envelope" aria-hidden="true"></i>
-            </a>
-        {% endif %}
-        {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
-            {% if leg.invitationBy(app.user) %}
-                {% set invitation = leg.invitationBy(app.user) %}
-                <a class="c-home-item__action{% if leg.invitedBy == app.user %} is-done{% endif %}" href="{{ path('conversation_reply', { id: invitation.messages[0].id }) }}" aria-label="{{ 'invitation.reply'|trans|format(creator) }}" title="{{ 'invitation.reply'|trans|format(creator) }}">
-                    <i class="fa fa-fw fa-house-user" aria-hidden="true"></i>
-                </a>
-            {% else %}
-                <a class="c-home-item__action c-home-item__action--primary js-contact-open" href="{{ path('hosting_invitation', { leg: leg.id }) }}" data-title="{{ 'invite.username'|trans|format(leg.trip.creator.shortNameOrUsername)|striptags }}">
-                    <i class="fa fa-fw fa-house-user" aria-hidden="true"></i>
-                </a>
-            {% endif %}
-        {% endif %}
+        <span class="c-home-item__chevron" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
     </div>
 </div>

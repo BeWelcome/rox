@@ -164,3 +164,9 @@ contact.invitation.subject.placeholder:
 contact.trip.see:
     - 'See the whole trip'
     - Link under the trip shown in the invitation side panel; opens the trip page
+contact.head.trip:
+    - 'Trip of'
+    - Small label above the traveller's name at the top of the side panel showing one of their trips (home page, Visitors)
+contact.trip.profile:
+    - "See {username}'s profile"
+    - Link under the trip shown in the side panel of the home page (Visitors); opens the traveller's profile

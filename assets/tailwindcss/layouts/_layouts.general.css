@@ -9442,3 +9442,30 @@ body.is-embedded { background: #fff; }
 .c-contact .c-contact-trip__link { display: inline-flex; align-items: center; gap: 0.35rem; color: #c2410c; font-size: 0.8125rem; font-weight: 700; text-decoration: none; }
 .c-contact-trip__link:hover { text-decoration: underline; }
 .c-contact-trip__link i, .c-contact-trip__link svg { font-size: 0.7rem; }
+/* Visitors: the whole row opens the trip in the side panel; the eye and the author link stay clickable */
+.c-home-item.c-home-item--leg { position: relative; margin: 0 -0.75rem; padding-right: 0.75rem; padding-left: 0.75rem; border-radius: 0.9rem; cursor: pointer; transition: background 0.15s ease; }
+.c-home-item.c-home-item--leg:hover { background: #fff7ed; }
+.c-home-item--leg .c-home-item__cover { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.c-home-item--leg .c-home-item__cover:focus-visible { outline: 2px solid #f37000; outline-offset: 2px; }
+.c-home-item--leg .c-home-item__author, .c-home-item--leg .c-home-item__actions form { position: relative; z-index: 2; }
+.c-home-item--leg .c-home-item__top { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 0.25rem 0.5rem; }
+.c-home-item__tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: #fff1e6; color: #c2410c; font-size: 0.6875rem; font-weight: 700; white-space: nowrap; }
+.c-home-item__tag i, .c-home-item__tag svg { font-size: 0.625rem; }
+.c-home-item__tag--done { background: #dcfce7; color: #15803d; }
+.c-home-item__chevron { display: inline-flex; align-items: center; justify-content: center; width: 1.5rem; color: #cbd5e1; font-size: 0.8rem; }
+.c-home-item--leg:hover .c-home-item__chevron { color: #ea7a2e; }
+/* The trip in the side panel, and Invite / Send a message under it */
+.c-contact .c-contact-trip--full { gap: 0.6rem; padding: 1.1rem; }
+.c-contact .c-contact-trip--full .c-contact-trip__title { font-size: 1.2rem; }
+.c-contact .c-contact-trip--full .c-contact-trip__text { max-height: none; font-size: 0.9375rem; }
+.c-contact .c-contact-trip__chips { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0.15rem 0 0; }
+.c-contact-trip__chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.25rem 0.65rem; border: 1px solid #fde1c8; border-radius: 999px; background: #fff; color: #9a3412; font-size: 0.75rem; font-weight: 600; }
+.c-contact-trip__chip i, .c-contact-trip__chip svg { font-size: 0.7rem; }
+.c-contact .c-contact-trip__links { display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem; margin: 0.2rem 0 0; }
+.c-contact__foot--actions { display: flex; flex-direction: column; gap: 0.6rem; }
+.c-contact a.c-contact__send { text-decoration: none; }
+.c-contact a.c-contact__send:hover { color: #fff; }
+.c-contact .c-contact__send--secondary { border: 1px solid #e2e8f0; background: #fff; color: #334155; box-shadow: none; }
+.c-contact a.c-contact__send--secondary:hover { border-color: #fbc08a; background: #fff4ea; color: #c2410c; }
+.c-contact .c-contact__send--done { background: #16a34a; box-shadow: 0 6px 16px rgba(22, 163, 74, 0.22); }
+.c-contact a.c-contact__send--done:hover { background: #15803d; }

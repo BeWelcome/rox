@@ -14,7 +14,8 @@
         <div class="c-contact__body">
             {{ form_errors(form) }}
 
-            {# The trip, as the traveller wrote it #}
+            {# The trip, as the traveller wrote it (already shown when coming from the trip in the panel) #}
+            {% if not app.request.query.get('back') %}
             <section class="c-contact-trip">
                 <p class="c-contact-trip__where">
                     <i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ leg.location.name }}
@@ -29,6 +30,7 @@
                 {% endif %}
                 <a class="c-contact-trip__link" href="{{ path('trip_show', { id: leg.trip.id, _fragment: 'leg' ~ leg.id }) }}" target="_top">{{ 'contact.trip.see'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </section>
+            {% endif %}
 
             <div class="c-contact-stay">
                 <div class="c-contact-stay__row c-contact-stay__row--dates">

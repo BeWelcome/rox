@@ -35,8 +35,9 @@
 
             <div class="c-contact-tripview__map">
                 <div id="map" class="o-map c-contact-map" data-controls="none" aria-label="{{ 'trip.legs.title'|trans }}"></div>
-                <button type="button" class="c-contact-tripview__back js-contact-back" aria-label="{{ 'back'|trans }}">
-                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                {# Phones: closes the panel (the head with its back arrow is under the map) #}
+                <button type="button" class="c-contact-tripview__close js-trip-close" aria-label="{{ 'close'|trans }}">
+                    <i class="fas fa-times" aria-hidden="true"></i>
                 </button>
                 {% if stops|length > 0 %}
                     <span class="c-contact-tripview__route">
@@ -137,6 +138,15 @@
     </div>
 
     <script>
+        // The X on the map closes the side panel (contact/panel.js)
+        document.querySelector('.js-trip-close').addEventListener('click', function () {
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'bw-contact-close' }, window.location.origin);
+            } else {
+                window.location.href = '{{ path('trip_show', { id: trip.id }) }}';
+            }
+        });
+
         // The trip's text is cut after a few lines; Read more shows the rest
         (function () {
             var text = document.querySelector('.js-trip-text');

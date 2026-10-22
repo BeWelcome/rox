@@ -491,7 +491,7 @@ function hidePreview() {
     document.querySelectorAll('.p-search-card.is-previewed').forEach((card) => card.classList.remove('is-previewed'));
 }
 
-// The member's pictures at the top of the preview: swipe, or the arrows, with a "2 / 5" counter.
+// The member's pictures in the preview: swipe, or the arrows, with a "2 / 5" counter.
 function initPreviewPhotos(root) {
     const photos = root.querySelector('.js-preview-photos');
     if (!photos) {

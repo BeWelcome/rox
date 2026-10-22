@@ -1,7 +1,7 @@
 {#
   A short view of a member, loaded into the preview panel of the search results
-  (see search/locations.js): their pictures, who they are, hosting, comments,
-  languages and the start of "about me", the main actions and the full profile.
+  (see search/locations.js): their profile picture, who they are, hosting,
+  comments, the start of "about me", their pictures and languages, the main actions and the full profile.
 #}
 {% set displayName = member.name is empty ? member.username : member.name %}
 {% set translations = member.translations %}
@@ -28,38 +28,14 @@
 {# The privacy filter hides logins of the last 7 days; show nothing then. #}
 {% set lastActive = member.lastActive and member.lastActive.diffInDays() > 7 ? member.lastActive|privacy : null %}
 
-{# The member's own pictures fill the top of the panel (swipe or arrows); the profile picture overlaps them.
+{# The profile picture fills the top of the panel, in its original size so that it stays sharp.
    Nothing here links to the profile except the button at the bottom. #}
-{% if pictures|length %}
-    {% set shown = pictures|slice(0, 8) %}
-    <div class="p-search-preview__photos js-preview-photos">
-        <div class="p-search-preview__track js-preview-photos-track">
-            {% for picture in shown %}
-                <div class="p-search-preview__slide">
-                    <img src="{{ url('gallery_image', { id: picture.id }) }}" alt="{{ picture.title|e('html_attr') }}"{% if not loop.first %} loading="lazy"{% endif %}>
-                </div>
-            {% endfor %}
-        </div>
-        {% if shown|length > 1 %}
-            <span class="p-search-preview__counter"><i class="fas fa-images" aria-hidden="true"></i> <span class="js-preview-photos-counter" data-total="{{ shown|length }}">1 / {{ shown|length }}</span></span>
-            <span class="p-search-preview__navs">
-                <button type="button" class="p-search-preview__nav p-search-preview__nav--prev js-preview-photos-prev" aria-label="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
-                <button type="button" class="p-search-preview__nav p-search-preview__nav--next js-preview-photos-next" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
-            </span>
-        {% endif %}
-    </div>
-{% endif %}
+<div class="p-search-preview__hero">
+    <img src="{{ path('avatar', { username: member.username, size: 'original' }) }}" alt="">
+</div>
 
 <div class="p-search-preview__content">
     <div class="p-search-preview__who">
-        <span class="p-search-preview__picture">
-            <img class="p-search-preview__avatar" src="{{ path('avatar', { username: member.username, size: 192 }) }}" alt="">
-            {% if hosting %}
-                <span class="p-search-preview__host p-search-preview__host--{{ hosting }}" aria-hidden="true">
-                    <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}"></i>
-                </span>
-            {% endif %}
-        </span>
         <div class="p-search-preview__names">
             <p class="p-search-preview__title">
                 <span class="p-search-preview__name" id="search-preview-title">{{ displayName }}</span>
@@ -135,6 +111,30 @@
         <section class="p-search-preview__section">
             <h3>{{ 'profile.about.me'|trans }}</h3>
             <p class="p-search-preview__about">{{ aboutMe|truncate(900)|nl2br }}</p>
+        </section>
+    {% endif %}
+
+    {# The member's own pictures (swipe or arrows) #}
+    {% if pictures|length %}
+        {% set shown = pictures|slice(0, 8) %}
+        <section class="p-search-preview__section">
+            <h3>{{ 'profile.menu.images'|trans|striptags }}</h3>
+            <div class="p-search-preview__photos js-preview-photos">
+                <div class="p-search-preview__track js-preview-photos-track">
+                    {% for picture in shown %}
+                        <div class="p-search-preview__slide">
+                            <img src="{{ url('gallery_image', { id: picture.id }) }}" alt="{{ picture.title|e('html_attr') }}" loading="lazy">
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if shown|length > 1 %}
+                    <span class="p-search-preview__counter"><i class="fas fa-images" aria-hidden="true"></i> <span class="js-preview-photos-counter" data-total="{{ shown|length }}">1 / {{ shown|length }}</span></span>
+                    <span class="p-search-preview__navs">
+                        <button type="button" class="p-search-preview__nav p-search-preview__nav--prev js-preview-photos-prev" aria-label="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                        <button type="button" class="p-search-preview__nav p-search-preview__nav--next js-preview-photos-next" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                    </span>
+                {% endif %}
+            </div>
         </section>
     {% endif %}
 

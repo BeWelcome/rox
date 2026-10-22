@@ -10028,3 +10028,9 @@ body.is-embedded { background: #fff; }
 }
 .p-search-where .suggest-map.suggest-flag { width: 3rem; height: 3rem; }
 .suggest-flag .suggest-flag__img { width: 1.75rem; height: 1.75rem; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08); }
+
+/* Search preview: the profile picture large at the top, the member's pictures further down */
+.p-search-preview__hero { aspect-ratio: 4 / 3; background: #f1f5f9; }
+.p-search-preview__hero img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.p-search-preview__section .p-search-preview__photos { overflow: hidden; border-radius: 1rem; }
+.p-search-preview__section .p-search-preview__navs { bottom: 0.9rem; }

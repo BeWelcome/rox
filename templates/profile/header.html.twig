@@ -296,8 +296,11 @@
           <i class="fas fa-chevron-left"></i>
         </button>
         <nav class="p-hero__tabs">
-          {% for key in ['profile', 'comments', 'friends', 'gallery', 'forum_posts', 'visitors'] %}
-            {% if items[key] is defined %}
+          {# Gallery third: photos matter. On someone else's profile an empty tab is hidden
+             (unless it is the page being shown); the owner keeps them all, to add content. #}
+          {% for key in ['profile', 'comments', 'gallery', 'friends', 'forum_posts', 'visitors'] %}
+            {% set _empty = items[key] is defined and items[key].count is defined and items[key].count == 0 %}
+            {% if items[key] is defined and not (_empty and not own and activeItem != key) %}
               <a href="{{ items[key].url }}"
                  class="p-hero__tab{% if activeItem == key %} p-hero__tab--active{% endif %}">
                 <i class="fas fa-fw fa-{{ items[key].icon }}" aria-hidden="true"></i>

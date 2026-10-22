@@ -9599,3 +9599,7 @@ body.is-embedded { background: #fff; }
   .c-contact .c-contact__foot--row .c-contact__send--side { width: 3.1rem; padding: 0; }
   .c-contact__foot--row .c-contact__send--side .c-contact__send-label { display: none; }
 }
+
+/* Home search by place: picking a suggestion starts the search, so its button is not shown */
+.l-hello .l-hello__submit.l-hello__submit--hidden { display: none; }
+.l-hello__bar:has(.l-hello__submit--hidden) { min-height: 3.65rem; padding-right: 1.1rem; }

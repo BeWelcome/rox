@@ -81,7 +81,8 @@
 							{% if tinySearch.location.vars.value %}value="{{ tinySearch.location.vars.value }}"{% endif %}
 						>
 					</div>
-					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="l-hello__submit">
+					{# Picking a place starts the search (landing.js), so no visible button; it stays for Enter #}
+					<button type="submit" id="tiny_updateMap" name="{{ tinySearch.updateMap.vars.name }}" class="l-hello__submit l-hello__submit--hidden" tabindex="-1" aria-hidden="true">
 						<span class="l-hello__submit-text">{{ 'landing.search.submit'|trans }}</span> <i class="fas fa-arrow-right l-hello__submit-arrow" aria-hidden="true"></i><i class="fas fa-magnifying-glass l-hello__submit-loupe" aria-hidden="true"></i>
 					</button>
 				</div>

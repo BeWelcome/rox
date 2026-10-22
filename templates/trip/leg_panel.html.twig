@@ -13,6 +13,7 @@
 {% set meetLocals = constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
 {% set invitation = lookingForHost ? leg.invitationBy(myself) : null %}
 {% set back = app.request.requestUri %}
+{% set from = app.request.query.get('from') ?: 'home' %}
 
 {% block title %}{{ trip.summary }}{% endblock title %}
 
@@ -99,13 +100,13 @@
                             <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}
                         </a>
                     {% else %}
-                        <a class="c-contact__send" href="{{ path('hosting_invitation', { leg: leg.id, embed: 1, from: 'home', back: back }) }}">
+                        <a class="c-contact__send" href="{{ path('hosting_invitation', { leg: leg.id, embed: 1, from: from, back: back }) }}">
                             <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invite'|trans }}
                         </a>
                     {% endif %}
                 {% endif %}
                 {% if meetLocals %}
-                    <a class="c-contact__send{% if lookingForHost %} c-contact__send--secondary{% endif %}" href="{{ path('message_new', { username: traveller.username, embed: 1, from: 'home', back: back }) }}">
+                    <a class="c-contact__send{% if lookingForHost %} c-contact__send--secondary{% endif %}" href="{{ path('message_new', { username: traveller.username, embed: 1, from: from, back: back }) }}">
                         <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'trip.leg.message'|trans }}
                     </a>
                 {% endif %}

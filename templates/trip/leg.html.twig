@@ -1,18 +1,23 @@
 {% import 'macros.twig' as macros %}
 {#
   One trip leg in the visitors list: who is coming, where and when, then the
-  actions (invite, message, hide).
+  actions (invite, message, hide). The card opens the whole trip in the side panel;
+  Invite and Message open their form in it.
 #}
 {% set creator = leg.trip.creator %}
 {% set invitation = leg.invitationBy(app.user) %}
-<article class="p-trips-leg{% if leg.invitedBy == app.user %} p-trips-leg--invited{% endif %}">
+<article class="p-trips-leg p-trips-leg--panel{% if leg.invitedBy == app.user %} p-trips-leg--invited{% endif %}">
+  {# The whole card opens the trip in the side panel (trip/leg_panel.html.twig) #}
+  <a class="p-trips-leg__cover js-contact-open" href="{{ path('trip_leg_panel', { id: leg.id }) }}" data-title="{{ leg.trip.summary ?: leg.location.name }}">
+    <span class="visually-hidden">{{ leg.trip.summary ?: leg.location.name }}</span>
+  </a>
   <a class="p-trips-leg__avatar" href="{{ path('members_profile', { username: creator.username }) }}">
     <img src="{{ path('avatar', { username: creator.username, size: 96 }) }}" alt="" width="56" height="56" loading="lazy">
   </a>
 
   <div class="p-trips-leg__body">
     <p class="p-trips-leg__who">{{ macros.profilelink(creator.username, false, 'p-trips-leg__name') }}</p>
-    <a class="p-trips-leg__title" href="{{ path('trip_show', { id: leg.trip.id, _fragment: 'leg' ~ leg.id }) }}">{{ leg.trip.summary }}</a>
+    <p class="p-trips-leg__title">{{ leg.trip.summary }}</p>
     <p class="p-trips-leg__where">
       <span><i class="fas fa-location-dot" aria-hidden="true"></i> {{ leg.location.name }}</span>
       <span><i class="far fa-calendar-alt" aria-hidden="true"></i> {{ leg.arrival|format_date('medium') }}{% if leg.arrival != leg.departure %} – {{ leg.departure|format_date('medium') }}{% endif %}</span>
@@ -40,13 +45,13 @@
           <i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}
         </a>
       {% else %}
-        <a class="p-trips-btn p-trips-btn--primary" href="{{ path('hosting_invitation', { leg: leg.id }) }}" title="{{ 'invite.username'|trans|format(creator.username) }}">
+        <a class="p-trips-btn p-trips-btn--primary js-contact-open" href="{{ path('hosting_invitation', { leg: leg.id }) }}" data-title="{{ 'trip.leg.invite'|trans }}" title="{{ 'invite.username'|trans|format(creator.username) }}">
           <i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invite'|trans }}
         </a>
       {% endif %}
     {% endif %}
     {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
-      <a class="p-trips-btn" href="{{ path('message_new', { username: creator.username }) }}" title="{{ 'message.write_to'|trans|format(creator.username) }}">
+      <a class="p-trips-btn js-contact-open" href="{{ path('message_new', { username: creator.username }) }}" data-title="{{ 'message.write_to'|trans|format(creator.shortNameOrUsername)|striptags }}" title="{{ 'message.write_to'|trans|format(creator.username) }}">
         <i class="fa fa-envelope" aria-hidden="true"></i> {{ 'trip.leg.message'|trans }}
       </a>
     {% endif %}

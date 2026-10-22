@@ -10,6 +10,10 @@ import 'leaflet/dist/leaflet.css';
 
 require('leaflet-polylinedecorator');
 import {initializeMultipleAutoCompletes} from './suggest/locations';
+import {initContactDrawer} from './contact/drawer';
+
+// Visitors page: a trip, the invitation or the message open in a side panel
+initContactDrawer();
 
 function onChange(element, result) {
     const fullName = element;

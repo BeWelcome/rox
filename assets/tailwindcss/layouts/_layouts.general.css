@@ -9484,3 +9484,10 @@ body.is-embedded { background: #fff; }
 .c-contact-stops__dates i, .c-contact-stops__dates svg { margin-right: 0.2rem; color: #94a3b8; font-size: 0.75rem; }
 .c-contact .c-contact-stops__options { display: flex; flex-wrap: wrap; gap: 0.15rem 0.75rem; margin: 0.25rem 0 0; color: #9a3412; font-size: 0.75rem; font-weight: 600; }
 .c-contact-stops__options i, .c-contact-stops__options svg { margin-right: 0.15rem; font-size: 0.7rem; }
+/* Visitors page: the whole card opens the trip in the side panel; links and buttons stay clickable */
+.p-trips-leg.p-trips-leg--panel { position: relative; cursor: pointer; transition: box-shadow 0.15s ease, border-color 0.15s ease; }
+.p-trips-leg--panel:hover { border-color: #fbc08a; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); }
+.p-trips-leg--panel .p-trips-leg__cover { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
+.p-trips-leg--panel .p-trips-leg__cover:focus-visible { outline: 2px solid #f37000; outline-offset: 2px; }
+.p-trips-leg--panel .p-trips-leg__avatar, .p-trips-leg--panel .p-trips-leg__name, .p-trips-leg--panel .p-trips-leg__actions > * { position: relative; z-index: 2; }
+.p-trips-leg--panel .p-trips-leg__title { margin: 0; }

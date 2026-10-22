@@ -9,9 +9,11 @@
 
 {% block stylesheets %}
   {{ encore_entry_link_tags('tailwind') }}
+  {{ encore_entry_link_tags('trips') }}
 {% endblock stylesheets %}
 
 {% block javascripts %}
+  {{ encore_entry_script_tags('trips') }}
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const radius = document.getElementById('trips_radius');
@@ -76,4 +78,7 @@
     </div>
   {% endif %}
 </section>
+
+{# A trip, the invitation or the message open in a side panel #}
+{% include 'conversations/_contact_drawer.html.twig' with { from: 'visitors' } %}
 {% endblock content %}

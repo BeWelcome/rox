@@ -3,13 +3,15 @@ import {createContactPanel, onContactLinkClick} from './panel';
 /*
  * The side panel of templates/conversations/_contact_drawer.html.twig: links with
  * js-contact-open (write a message, request a stay, invite) open their form in it.
- * from: "profile" or "home", tells the confirmation which way back to offer.
+ * from: "profile", "home" or "visitors" (or the drawer's data-from), tells the
+ * confirmation which way back to offer.
  */
 export function initContactDrawer(from) {
     const contactDrawer = document.querySelector('.js-contact-drawer');
     if (!contactDrawer) {
         return;
     }
+    from = from || contactDrawer.dataset.from || 'home';
     const backdrop = document.querySelector('.js-contact-drawer-close');
     const closeDrawer = () => {
         contactDrawer.classList.remove('is-open');

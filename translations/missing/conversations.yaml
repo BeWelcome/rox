@@ -173,3 +173,6 @@ contact.trip.profile:
 contact.trip.near.you:
     - 'Near you'
     - Tag on the stop of a trip that is near the member, in the side panel of the home page (Visitors)
+contact.sent.back.visitors:
+    - 'Back to the visitors'
+    - Button of the confirmation shown on the visitors page after sending a message or invitation from the side panel; closes the panel

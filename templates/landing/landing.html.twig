@@ -40,7 +40,6 @@
 						{{ form_end(searchLocation) }}
 						{% set isHosting = app.user.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
 						<span class="l-hello__status js-hello-status{% if isHosting %} is-on{% endif %}" data-on="{{ 'hosting'|trans|capitalize }}" data-off="{{ 'not hosting'|trans|capitalize }}">{{ isHosting ? 'hosting'|trans|capitalize : 'not hosting'|trans|capitalize }}</span>
-						<a class="l-hello__profile" href="{{ path('members_profile', { username: app.user.Username }) }}"><span class="l-hello__long">{{ 'landing.viewprofile'|trans }}</span><span class="l-hello__short">{{ 'landing.viewprofile.short'|trans }}</span></a>
 					</div>
 					{% include 'landing/widget/accommodation.html.twig' with { member: app.user } only %}
 				{% else %}

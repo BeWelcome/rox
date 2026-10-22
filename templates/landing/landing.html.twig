@@ -138,7 +138,7 @@
 </div>
 
 {#
-  The two main blocks: messages and visitors, then forum, activities and notifications.
+  The two main blocks: messages and visitors, then forum and activities.
   Each is a card with its tabs on top; the lists are loaded by landing.js.
   The filter pills keep the "active" class landing.js reads when it reloads a list.
 #}
@@ -198,7 +198,7 @@
         </div>
     </section>
 
-    {# forum, activities and notifications #}
+    {# forum and activities #}
     <section class="c-home-card">
         <ul class="nav c-home-tabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -208,12 +208,6 @@
                 <a class="nav-link c-home-tabs__link" aria-controls="activities" href="#activities" role="tab" data-bs-toggle="tab">
                     {{ 'landing.tab.activities'|trans }}
                     {% if activityCount %}<span class="c-home-tabs__count">{{ activityCount }}</span>{% endif %}
-                </a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link c-home-tabs__link" aria-controls="notifications" href="#notifications" role="tab" data-bs-toggle="tab">
-                    {{ 'landing.tab.notifications'|trans }}
-                    {% if notificationCount %}<span class="c-home-tabs__count">{{ notificationCount }}</span>{% endif %}
                 </a>
             </li>
         </ul>
@@ -248,10 +242,6 @@
                     <a class="c-home-link" href="/activities"><i class="fa fa-map" aria-hidden="true"></i> {{ 'landing.activities.allactivities'|trans }}</a>
                     <a class="c-home-link" href="/activities/myactivities"><i class="fa fa-calendar" aria-hidden="true"></i> {{ 'landing.activities.myactivities'|trans }}</a>
                 </div>
-            </div>
-
-            <div role="tabpanel" class="tab-pane c-home-pane" id="notifications">
-                <div id="notificationsdisplay" class="c-home-list">{{ loading }}</div>
             </div>
         </div>
     </section>

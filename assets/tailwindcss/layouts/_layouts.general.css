@@ -9862,7 +9862,7 @@ body.is-embedded { background: #fff; }
   .c-inbox-folder.is-active { background: #fff; color: #c2410c; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
 }
 @media (min-width: 1200px) {
-  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) { grid-template-columns: 205px minmax(300px, 340px) minmax(0, 1fr); }
+  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) { grid-template-columns: 205px minmax(320px, 372px) minmax(0, 1fr); }
 }
 
 @media (min-width: 768px) {

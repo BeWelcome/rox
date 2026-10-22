@@ -9682,3 +9682,5 @@ body.is-embedded { background: #fff; }
   .c-stay-card { padding: 0.9rem 1rem 0.75rem; }
   .c-stay-card__date strong { font-size: 1.35rem; }
 }
+.c-stay-card .c-stay-card__warning { display: flex; align-items: flex-start; gap: 0.5rem; margin: 0.75rem 0 0; padding: 0.55rem 0.8rem; border-radius: 0.8rem; background: #fef2f2; color: #b91c1c; font-size: 0.8125rem; }
+.c-stay-card__warning i, .c-stay-card__warning svg { flex-shrink: 0; margin-top: 0.15rem; }

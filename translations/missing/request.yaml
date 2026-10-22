@@ -111,3 +111,6 @@ request.card.flexible:
 request.card.not.flexible:
     - 'Not flexible'
     - On the card about a hosting request, when the guest's dates are fixed
+invitation.card.title:
+    - 'Invitation'
+    - Top of the card about an invitation to stay, above the messages

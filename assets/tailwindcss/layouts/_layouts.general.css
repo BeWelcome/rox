@@ -10090,3 +10090,6 @@ body.is-embedded { background: #fff; }
 .c-contact--thread .c-bubble:not(.c-bubble--own) { background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
 .c-contact--thread .c-inbox-thread__day span { background: #e4e4e7; color: #52525b; font-weight: 600; }
 .c-contact__foot--reply { padding: 0.6rem 0.75rem; }
+/* The other member's face next to their messages, as in the inbox on a computer */
+.c-contact--thread .c-bubble-row:not(.is-own) { align-items: flex-end; gap: 0.5rem; }
+.c-contact--thread .c-bubble__avatar { display: block; flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; object-fit: cover; background: #e4e4e7; }

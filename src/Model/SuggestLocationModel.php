@@ -90,6 +90,7 @@ class SuggestLocationModel
                     'name' => $name,
                     'latitude' => $locationEntity->getLatitude(),
                     'longitude' => $locationEntity->getLongitude(),
+                    'countryCode' => $locationEntity->getCountryId(),
                 ];
             }
         }

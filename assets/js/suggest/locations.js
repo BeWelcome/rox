@@ -1,5 +1,4 @@
 import Autocomplete from '@tomickigrzegorz/autocomplete';
-const L = require('leaflet');
 
 export function initializeSingleAutoComplete(url, cssClass = "js-location-picker", onChange = function(){}) {
     const locationSuggests = document.getElementsByClassName(cssClass);
@@ -43,16 +42,6 @@ class LocationSuggest {
                         });
                 });
             },
-            onOpened: ({results}) => {
-                initializeSuggestionMaps();
-                return results;
-            },
-            onReset: () => {
-                destroySuggestionMaps();
-            },
-            onClose: () => {
-                destroySuggestionMaps();
-            },
             onResults: ({ currentValue, matches, template, classGroup }) => {
                 if (matches === 0) {
                     return template;
@@ -87,8 +76,7 @@ class LocationSuggest {
                                         </div>
                                     </div>
                                     <div>
-                                        <div id="suggest-map-${el.id}" class="suggest-map"></div>
-                                        <input type="hidden" id="latitude-${el.id}" value="${el.latitude}"><input type="hidden" id="longitude-${el.id}" value="${el.longitude}">
+                                        <div class="suggest-map suggest-flag" aria-hidden="true">${countryFlag(el.countryCode)}</div>
                                     </div>
                                 </div>
                             </li>
@@ -100,7 +88,6 @@ class LocationSuggest {
             // the results with the up/down cursors
             insertToInput: true,
             onSubmit: ({element, object}) => {
-                destroySuggestionMaps();
                 element.value = object.name.replaceAll("#", ", ");
                 this.onChange(element, object);
             },
@@ -111,34 +98,11 @@ class LocationSuggest {
     }
 }
 
-function initializeSuggestionMaps() {
-        const maps= document.querySelectorAll('[id^="suggest-map-"]');
-
-        maps.forEach(initializeMap);
-
-        function initializeMap(value) {
-            const geonameId = value.id.replace('suggest-map-', '');
-            const latitude = document.getElementById('latitude-' + geonameId).value;
-            const longitude = document.getElementById('longitude-' + geonameId).value;
-            const map = L.map(value.id, {
-                zoomControl: false,
-                boxZoom: false
-            }).setView([latitude, longitude], 10);
-
-            map.attributionControl.setPrefix(false);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                subdomains: ['a', 'b', 'c']
-            }).addTo(map);
-        }
+// The country's flag as an emoji (two regional indicator letters), or a pin when there is no country.
+function countryFlag(code) {
+    if (!code || !/^[A-Za-z]{2}$/.test(code)) {
+        return '<i class="fas fa-map-marker-alt"></i>';
     }
 
-    function destroySuggestionMaps() {
-        const maps = document.querySelectorAll('[id^="suggest-map-"]');
-
-        maps.forEach(destroyMap);
-
-        function destroyMap(value) {
-            let map = document.getElementById(value.id);
-            map.remove();
-        }
-    }
+    return String.fromCodePoint(...[...code.toUpperCase()].map((letter) => 0x1F1A5 + letter.charCodeAt(0)));
+}

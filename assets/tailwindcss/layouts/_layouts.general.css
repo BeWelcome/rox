@@ -10013,3 +10013,17 @@ body.is-embedded { background: #fff; }
 
 /* Search map: a calm grey base map, like the profile one, so that the members stand out */
 .p-search__map-canvas .leaflet-tile-pane { filter: grayscale(1) brightness(1.08) contrast(0.8); }
+
+/* Location suggestions: the country's flag instead of a small map */
+.suggest-map.suggest-flag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #f1f5f9;
+  border-radius: 0.65rem;
+  color: #94a3b8;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+.p-search-where .suggest-map.suggest-flag { width: 3rem; height: 3rem; }

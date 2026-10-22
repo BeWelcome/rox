@@ -396,7 +396,7 @@ class Location implements Translatable
         return $this->getName() . $nameOfAdmin1 . (('' === $nameOfCountry) ? '' : ', ' . $this->getCountry()->getName());
     }
 
-    public function getCountryId(): string
+    public function getCountryId(): ?string
     {
         return $this->countryId;
     }

@@ -43,6 +43,7 @@
         {% else %}
             <li><i class="fas fa-lock" aria-hidden="true"></i> {{ 'request.card.not.flexible'|trans }}</li>
         {% endif %}
-        {% if sameYear %}<li class="c-stay-card__year">{{ request.arrival|date('Y') }}</li>{% endif %}
+        {% include 'request/_card_cancel.html.twig' with { stay: request, place: 'facts', confirm: 'request.confirm.cancel' } %}
     </ul>
+    {% include 'request/_card_cancel.html.twig' with { stay: request, place: 'side', confirm: 'request.confirm.cancel' } %}
 </section>

@@ -12,7 +12,7 @@
 {% set declined = current.request.status == constant(S ~ 'REQUEST_DECLINED') %}
 {% set host = current.sender == app.user ? current.receiver : current.sender %}
 
-{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { class: 'c-inbox-respond c-inbox-respond--guest c-decide js-respond', novalidate: 'novalidate', autocomplete: 'off' } }) }}
+{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { id: 'js-respond-form', class: 'c-inbox-respond c-inbox-respond--guest c-decide js-respond', novalidate: 'novalidate', autocomplete: 'off' } }) }}
     {{ form_errors(respond) }}
 
     {% if declined %}
@@ -54,12 +54,7 @@
             <button type="button" class="c-decide__round js-respond-stay-toggle" aria-expanded="{{ showStay ? 'true' : 'false' }}" aria-label="{{ 'request.respond.change'|trans }}" title="{{ 'request.respond.change'|trans }}">
                 <i class="fa fa-calendar" aria-hidden="true"></i>
             </button>
-            {% if current.request.status != constant(S ~ 'REQUEST_CANCELLED') %}
-                <button type="submit" id="{{ respond.cancel.vars.id }}" name="{{ respond.cancel.vars.full_name }}" class="c-decide__cancel"
-                        data-confirm="{{ 'request.confirm.cancel'|trans }}" data-confirm-ok="{{ respond.cancel.vars.label|trans }}" data-confirm-close="{{ 'modal.close'|trans }}">
-                    <i class="fa fa-times" aria-hidden="true"></i> <span class="c-decide__cancel-label">{{ respond.cancel.vars.label|trans }}</span>
-                </button>
-            {% endif %}
+            {# Cancel: in the stay card above (request/_card_cancel.html.twig) #}
         {% endif %}
         <button type="submit" id="{{ respond.update.vars.id }}" name="{{ respond.update.vars.full_name }}" class="c-decide__send">
             <i class="fas fa-paper-plane" aria-hidden="true"></i>

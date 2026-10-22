@@ -9995,3 +9995,15 @@ body.is-embedded { background: #fff; }
 .c-inbox-item__state--success { background: #dcfce7; color: #15803d; }
 .c-inbox-item__state--danger { background: #fee2e2; color: #b91c1c; }
 .c-inbox-item__kind--maybe { background: #d97706; }
+
+/* "Cancel request / invitation" in the stay card: at the end of the facts row on phones,
+   on the right of the strip on a computer */
+.c-stay-card .c-stay-card__action--facts { margin-left: auto; }
+.c-stay-card__action--side { display: none; }
+.c-stay-card__cancel { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.75rem; border: 1px solid #fecaca; border-radius: 999px; background: #fff; color: #b91c1c; font-size: 0.8125rem; font-weight: 700; white-space: nowrap; cursor: pointer; }
+.c-stay-card__cancel:hover { border-color: #fca5a5; background: #fef2f2; }
+.c-stay-card__cancel i, .c-stay-card__cancel svg { margin: 0; color: inherit; font-size: 0.7rem; }
+@container inbox-pane (min-width: 640px) {
+  .c-stay-card .c-stay-card__action--facts { display: none; }
+  .c-stay-card .c-stay-card__action--side { display: block; margin-left: auto; }
+}

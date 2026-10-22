@@ -10,7 +10,7 @@
 {% set guest = current.sender == app.user ? current.receiver : current.sender %}
 {% set guestName = guest.shortNameOrUsername ?? guest.username %}
 
-{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { class: 'c-inbox-respond c-inbox-respond--guest c-decide js-respond', novalidate: 'novalidate', autocomplete: 'off' } }) }}
+{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { id: 'js-respond-form', class: 'c-inbox-respond c-inbox-respond--guest c-decide js-respond', novalidate: 'novalidate', autocomplete: 'off' } }) }}
     {{ form_errors(respond) }}
 
     {% if declined %}
@@ -31,12 +31,7 @@
 
     <div class="c-decide__foot">
         {% include 'conversations/_reply_templates.html.twig' with { editor_id: respond.message.vars.id, menu_up: true } only %}
-        {% if not declined %}
-            <button type="submit" id="{{ respond.cancel.vars.id }}" name="{{ respond.cancel.vars.full_name }}" class="c-decide__cancel"
-                    data-confirm="{{ 'invitation.confirm.cancel'|trans }}" data-confirm-ok="{{ respond.cancel.vars.label|trans }}" data-confirm-close="{{ 'modal.close'|trans }}">
-                <i class="fa fa-times" aria-hidden="true"></i> <span class="c-decide__cancel-label">{{ respond.cancel.vars.label|trans }}</span>
-            </button>
-        {% endif %}
+        {# Cancel: in the stay card above (request/_card_cancel.html.twig) #}
         <button type="submit" id="{{ respond.update.vars.id }}" name="{{ respond.update.vars.full_name }}" class="c-decide__send">
             <i class="fas fa-paper-plane" aria-hidden="true"></i>
             <span>{{ 'label.message.button.send'|trans }}</span>

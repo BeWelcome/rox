@@ -7035,6 +7035,8 @@ body.has-search-overlay { overflow: hidden; }
 .p-search-contact .p-search-contact__title { overflow: hidden; margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.05rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 .p-search-contact__frame { flex: 1; width: 100%; min-height: 0; border: 0; }
 .p-search-contact.is-sent .p-search-contact__head { display: none; }
+/* On the profile page the drawer itself slides in: the form inside does not slide again */
+.p-contact-drawer .p-search-contact { transform: none; transition: none; }
 .p-search-preview__bar { position: absolute; top: 0; right: 0; left: 0; z-index: 1; display: flex; justify-content: flex-end; padding: 0.75rem; pointer-events: none; }
 .p-search-preview__grip { display: none; }
 .p-search-preview__close {

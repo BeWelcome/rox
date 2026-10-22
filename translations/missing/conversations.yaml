@@ -92,3 +92,6 @@ contact.sent.back:
 contact.sent.conversation:
     - 'See the conversation'
     - Link of the confirmation shown in the search preview after sending a message or request; opens the conversation
+contact.sent.back.profile:
+    - 'Back to the profile'
+    - Button of the confirmation shown on a profile page after sending a message or request from the side panel; closes the panel

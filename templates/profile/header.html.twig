@@ -195,11 +195,13 @@
             </div>
           {% endif %}
         {% elseif canContact %}
-          <a href="{{ url('message_new', {username: member.Username}) }}" class="p-hero__btn p-pro__btn p-pro__btn--message">
+          <a href="{{ url('message_new', {username: member.Username}) }}" class="js-contact-open p-hero__btn p-pro__btn p-pro__btn--message"
+            data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
             <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
           </a>
           {% if canRequest %}
-            <a href="{{ url('hosting_request', {username: member.username}) }}" class="p-hero__btn p-pro__btn p-pro__btn--request">
+            <a href="{{ url('hosting_request', {username: member.username}) }}" class="js-contact-open p-hero__btn p-pro__btn p-pro__btn--request"
+            data-title="{{ 'request.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
               <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
             </a>
           {% endif %}
@@ -299,13 +301,31 @@
   {# ── Phones: message and request stay stuck to the bottom of the screen ── #}
   {% if canContact %}
     <div class="p-pro__bottom-bar">
-      <a href="{{ url('message_new', {username: member.Username}) }}" class="p-pro__btn p-pro__btn--message">
+      <a href="{{ url('message_new', {username: member.Username}) }}" class="js-contact-open p-pro__btn p-pro__btn--message"
+            data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
         <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
       </a>
       {% if canRequest %}
-        <a href="{{ url('hosting_request', {username: member.username}) }}" class="p-pro__btn p-pro__btn--request">
+        <a href="{{ url('hosting_request', {username: member.username}) }}" class="js-contact-open p-pro__btn p-pro__btn--request"
+            data-title="{{ 'request.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
           <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
         </a>
       {% endif %}
     </div>
   {% endif %}
+
+{# ── Message or stay request in a side panel (bottom sheet on phones), without leaving the profile ── #}
+{% if canContact %}
+  <div class="p-search-preview__backdrop js-contact-drawer-close" hidden></div>
+  <aside class="p-search-preview p-contact-drawer js-contact-drawer" aria-hidden="true">
+    <div class="p-search-contact js-search-contact" hidden>
+      <div class="p-search-contact__head">
+        <button type="button" class="p-search-contact__back js-search-contact-back" aria-label="{{ 'back'|trans }}">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        </button>
+        <h2 class="p-search-contact__title js-search-contact-title"></h2>
+      </div>
+      <iframe class="p-search-contact__frame js-search-contact-frame" title="" src="about:blank"></iframe>
+    </div>
+  </aside>
+{% endif %}

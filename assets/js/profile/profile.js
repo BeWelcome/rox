@@ -1,4 +1,5 @@
 import { Toast } from 'bootstrap';
+import {createContactPanel, onContactLinkClick} from '../contact/panel';
 document.querySelectorAll('.p-toast[data-bs-autohide="true"]').forEach(el => new Toast(el).show());
 
 // Profile tabs: horizontal slider with arrows when the tabs don't fit (mobile)
@@ -96,3 +97,31 @@ document.addEventListener('click', event => {
         setTimeout(whereMaps, 0);
     }
 });
+
+// Send / Request stay: the form in a side panel (bottom sheet on phones), see contact/panel.js
+const contactDrawer = document.querySelector('.js-contact-drawer');
+if (contactDrawer) {
+    const backdrop = document.querySelector('.js-contact-drawer-close');
+    const closeDrawer = () => {
+        contactDrawer.classList.remove('is-open');
+        contactDrawer.setAttribute('aria-hidden', 'true');
+        backdrop.hidden = true;
+        contact.close(false);
+    };
+    const contact = createContactPanel(contactDrawer.querySelector('.js-search-contact'), {
+        from: 'profile',
+        onBack: closeDrawer,
+    });
+    onContactLinkClick('.js-contact-open', (link) => {
+        contact.open(link);
+        contactDrawer.classList.add('is-open');
+        contactDrawer.setAttribute('aria-hidden', 'false');
+        backdrop.hidden = false;
+    });
+    backdrop.addEventListener('click', closeDrawer);
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && contactDrawer.classList.contains('is-open')) {
+            closeDrawer();
+        }
+    });
+}

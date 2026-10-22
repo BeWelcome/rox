@@ -1,5 +1,6 @@
 import {initializeSingleAutoComplete} from '../suggest/locations';
 import {initializeTomSelects} from '../tom-select';
+import {createContactPanel, onContactLinkClick} from '../contact/panel';
 
 import L from 'leaflet';
 import 'leaflet.fullscreen';
@@ -486,88 +487,25 @@ function initPreviewPhotos(root) {
     update();
 }
 
-/*
- * Message or stay request from the preview: the form page (?embed=1, without menu and
- * footer) slides over the preview in a frame. Once sent, the frame shows a short
- * confirmation and posts "bw-contact-sent". If the form page sends the member somewhere
- * else instead (not allowed to write, limit reached...), that page opens in the window.
- */
-const contact = preview ? preview.querySelector('.js-search-contact') : null;
-const contactFrame = contact ? contact.querySelector('.js-search-contact-frame') : null;
-let contactSent = false;
+// Message or stay request written in the preview (see contact/panel.js)
+const contactPanel = preview ? preview.querySelector('.js-search-contact') : null;
+const contact = contactPanel ? createContactPanel(contactPanel, {
+    from: 'search',
+    onBack: (source) => (source === 'done' ? closePreview() : contact.close(false)),
+}) : null;
 
 function contactIsOpen() {
-    return contact !== null && contact.classList.contains('is-open');
-}
-
-function openContact(link) {
-    const url = new URL(link.href, window.location.href);
-    url.searchParams.set('embed', '1');
-    contactSent = false;
-    contact.classList.remove('is-sent');
-    contact.querySelector('.js-search-contact-title').textContent = link.dataset.title || link.textContent.trim();
-    contactFrame.title = link.dataset.title || '';
-    contactFrame.src = url.toString();
-    contact.hidden = false;
-    // Next frame, so that the slide is animated
-    requestAnimationFrame(() => requestAnimationFrame(() => contact.classList.add('is-open')));
+    return contact !== null && contact.isOpen();
 }
 
 function closeContact(now) {
-    if (!contact || contact.hidden) {
-        return;
-    }
-    contact.classList.remove('is-open');
-    const reset = () => {
-        if (!contact.classList.contains('is-open')) {
-            contact.hidden = true;
-            contactFrame.src = 'about:blank';
-        }
-    };
-    if (now) {
-        reset();
-    } else {
-        setTimeout(reset, 250);
+    if (contact) {
+        contact.close(now);
     }
 }
 
 if (contact) {
-    document.addEventListener('click', (event) => {
-        const link = event.target.closest('.js-search-contact-open');
-        if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
-            return;
-        }
-        event.preventDefault();
-        openContact(link);
-    });
-    contact.querySelectorAll('.js-search-contact-back').forEach((button) => button.addEventListener('click', () => closeContact(false)));
-
-    contactFrame.addEventListener('load', () => {
-        let location = null;
-        try {
-            location = contactFrame.contentWindow.location;
-        } catch (error) {
-            return;
-        }
-        if (location.href === 'about:blank' || contactSent) {
-            return;
-        }
-        if (!location.pathname.startsWith('/new/')) {
-            window.location.href = location.href;
-        }
-    });
-
-    window.addEventListener('message', (event) => {
-        if (event.origin !== window.location.origin || !event.data) {
-            return;
-        }
-        if (event.data.type === 'bw-contact-sent') {
-            contactSent = true;
-            contact.classList.add('is-sent');
-        } else if (event.data.type === 'bw-contact-close') {
-            closePreview();
-        }
-    });
+    onContactLinkClick('.js-search-contact-open', (link) => contact.open(link));
 }
 
 function loadPreview(url, card) {

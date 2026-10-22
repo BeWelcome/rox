@@ -9684,3 +9684,45 @@ body.is-embedded { background: #fff; }
 }
 .c-stay-card .c-stay-card__warning { display: flex; align-items: flex-start; gap: 0.5rem; margin: 0.75rem 0 0; padding: 0.55rem 0.8rem; border-radius: 0.8rem; background: #fef2f2; color: #b91c1c; font-size: 0.8125rem; }
 .c-stay-card__warning i, .c-stay-card__warning svg { flex-shrink: 0; margin-top: 0.15rem; }
+
+/* Hosting request or invitation: the card and the messages lie on a light grey, the
+   messages in white; sizes as in the mockup (smaller than the first version) */
+.c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra,
+.c-inbox__pane:has(.c-stay-card) .c-inbox-thread { background: #f4f4f5; }
+.c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra { padding: 0.9rem 0.9rem 0; }
+.c-inbox__pane:has(.c-stay-card) .c-inbox-thread { padding: 0.75rem 0.9rem 1rem; }
+.c-inbox__pane:has(.c-stay-card) .c-bubble:not(.c-bubble--own) { background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
+.c-inbox__pane:has(.c-stay-card) .c-inbox-thread__day span { background: #e4e4e7; color: #52525b; font-weight: 600; }
+.c-inbox__pane:has(.c-stay-card) .c-inbox-compose--respond:has(.c-decide) { margin: 0; background: #fff; box-shadow: 0 -6px 18px rgba(15, 23, 42, 0.06); }
+.c-inbox__pane:has(.c-stay-card) .c-inbox-compose--respond { border-top: 0; background-color: #fff; }
+
+.c-stay-card { padding: 0.85rem 1rem 0.75rem; border-radius: 1rem; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.07); }
+.c-stay-card .c-stay-card__kind { gap: 0.4rem; font-size: 0.8125rem; }
+.c-stay-card__status { gap: 0.35rem; padding: 0.2rem 0.65rem; font-size: 0.8125rem; }
+.c-stay-card__dates { gap: 0.5rem; margin-top: 0.7rem; padding-bottom: 0.7rem; }
+.c-stay-card__label { font-size: 0.75rem; }
+.c-stay-card__date strong { font-size: 1.35rem; }
+.c-stay-card__nights { gap: 0.35rem; padding: 0.25rem 0.65rem; font-size: 0.8125rem; }
+.c-stay-card .c-stay-card__facts { gap: 0.3rem 1rem; margin-top: 0.6rem; font-size: 0.875rem; }
+
+.c-inbox-compose--respond:has(.c-decide) { padding: 1rem 1.1rem 1.1rem; border-radius: 1.25rem 1.25rem 0 0; }
+.c-decide .c-decide__title { font-size: 1.1rem; }
+.c-decide .c-decide__hint { margin: 0.15rem 0 0.75rem; font-size: 0.8125rem; }
+.c-decide__choices { gap: 0.5rem; }
+.c-decide__choice { gap: 0.4rem; padding: 0.75rem 0.4rem 0.65rem; border-width: 1px; border-radius: 0.9rem; font-size: 0.9375rem; }
+.c-decide__icon { width: 2.1rem; height: 2.1rem; font-size: 0.875rem; }
+.c-decide__later { margin-top: 0.65rem; padding: 0.35rem; font-size: 0.875rem; }
+.c-decide__picked { padding: 0.3rem 0.75rem; font-size: 0.875rem; }
+.c-decide__change { font-size: 0.875rem; }
+.c-decide .c-decide__text { min-height: 5.5rem; padding: 0.7rem 0.9rem; font-size: 0.875rem; }
+.c-decide__send { height: 2.75rem; font-size: 0.9375rem; }
+.c-decide__foot .c-reply-templates .o-button { width: 2.75rem; height: 2.75rem; }
+@media (max-width: 575.98px) {
+  .c-stay-card__date strong { font-size: 1.25rem; }
+  .c-decide__choice { padding: 0.7rem 0.25rem 0.6rem; font-size: 0.875rem; }
+}
+/* On a computer the pane is wide: the card and the answer keep a phone-like size */
+@media (min-width: 768px) {
+  .c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra > .c-stay-card { max-width: 34rem; }
+  .c-decide { max-width: 34rem; }
+}

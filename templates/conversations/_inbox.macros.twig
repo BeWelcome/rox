@@ -93,9 +93,17 @@
             {# The request's state colours its badge: green once accepted, red once declined or cancelled. #}
             {% set requestState = message.request ? ({ 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[message.request.status] ?? 'open') : null %}
             {% set requestTone = { accepted: 'success', declined: 'danger', cancelled: 'danger' }[requestState] ?? 'pending' %}
+            {# Where the request stands, with the decision's icon (on the avatar) #}
+            {% set states = {
+                open: { icon: 'fas fa-clock', tone: 'pending' },
+                tentatively: { icon: 'fa fa-question', tone: 'maybe' },
+                accepted: { icon: 'fa fa-check', tone: 'success' },
+                declined: { icon: 'fa fa-times', tone: 'danger' },
+                cancelled: { icon: 'fa fa-times', tone: 'danger' },
+            } %}
             <span class="c-inbox-item__avatar">
                 <img class="c-inbox-avatar" src="{{ path('avatar', { username: otherMember.username, size: 48 }) }}" alt="" loading="lazy">
-                {% if kindIcon %}<span class="c-inbox-item__kind c-inbox-item__kind--{{ requestTone }}" aria-hidden="true"><i class="fas {{ kindIcon }}"></i></span>{% endif %}
+                {% if kindIcon %}<span class="c-inbox-item__kind c-inbox-item__kind--{{ states[requestState].tone }}" title="{{ ('request.status.' ~ requestState)|trans }}"><i class="{{ states[requestState].icon }}" aria-hidden="true"></i><span class="visually-hidden">{{ ('request.status.' ~ requestState)|trans }}</span></span>{% endif %}
             </span>
             <div class="c-inbox-item__body">
                 <div class="c-inbox-item__top">
@@ -103,14 +111,6 @@
                     <span class="c-inbox-item__date">{{ when }}</span>
                 </div>
                 {% if message.request %}
-                    {# The kind and dates, then where the request stands, with the decision's icon #}
-                    {% set states = {
-                        open: { icon: 'fas fa-clock', tone: 'pending' },
-                        tentatively: { icon: 'fa fa-question', tone: 'maybe' },
-                        accepted: { icon: 'fa fa-check', tone: 'success' },
-                        declined: { icon: 'fa fa-times', tone: 'danger' },
-                        cancelled: { icon: 'fa fa-times', tone: 'danger' },
-                    } %}
                     <div class="c-inbox-item__tags">
                         <div class="c-inbox-item__badge">
                             <span><i class="fas {{ kindIcon }}" aria-hidden="true"></i> {{ message.request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}</span>
@@ -119,9 +119,6 @@
                                 {%- if message.request.departure %} – {{ message.request.departure|format_date(pattern='d MMM') }}{% endif -%}
                             </span>
                         </div>
-                        <span class="c-inbox-item__state c-inbox-item__state--{{ states[requestState].tone }}">
-                            <i class="{{ states[requestState].icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ requestState)|trans }}
-                        </span>
                     </div>
                 {% endif %}
                 <div class="c-inbox-item__subject">

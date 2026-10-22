@@ -9994,3 +9994,4 @@ body.is-embedded { background: #fff; }
 .c-inbox-item__state--maybe { background: #fef3c7; color: #b45309; }
 .c-inbox-item__state--success { background: #dcfce7; color: #15803d; }
 .c-inbox-item__state--danger { background: #fee2e2; color: #b91c1c; }
+.c-inbox-item__kind--maybe { background: #d97706; }

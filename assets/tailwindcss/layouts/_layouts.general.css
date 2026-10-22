@@ -3164,6 +3164,14 @@ main:has(.p-hero) {
 .p-comment__action i { font-size: 0.75rem; }
 .p-comment__action i.fa-reply { transform: scaleX(-1); }
 .p-comment__answer { margin-top: 0.85rem; }
+.p-comment__fold { margin-top: 0.6rem; }
+.p-comment__fold > summary { cursor: pointer; list-style: none; }
+.p-comment__fold > summary::-webkit-details-marker { display: none; }
+.p-comment__fold .p-comment__fold-hide,
+.p-comment__fold[open] .p-comment__fold-show { display: none; }
+.p-comment__fold[open] .p-comment__fold-hide { display: inline; }
+/* The thread line only shows when the answer is open */
+.p-comment--thread:has(> .p-comment__body > .p-comment__fold:not([open]))::before { content: none; }
 
 @media (max-width: 576px) {
   .p-comment {

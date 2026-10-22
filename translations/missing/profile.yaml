@@ -448,3 +448,9 @@ profile.active.month:
 profile.member.for:
     - 'Member for {duration}'
     - 'At the top of a profile: how long the person has been a member, e.g. "Member for 2 years"'
+profile.comment.show.answer:
+    - "See {username}'s answer"
+    - Link under a comment on the comments page of a profile that opens the answer the member wrote back
+profile.comment.hide.answer:
+    - 'Hide the answer'
+    - Link that folds the answer under a comment again

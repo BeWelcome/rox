@@ -106,7 +106,15 @@
             {% endif %}
 
             {% if answerHtml %}
-                <div class="p-comment__answer">{{ answerHtml }}</div>
+                {# The answer stays folded: a small link opens it #}
+                <details class="p-comment__fold">
+                    <summary class="p-comment__action">
+                        <i class="fas fa-reply" aria-hidden="true"></i>
+                        <span class="p-comment__fold-show">{{ 'profile.comment.show.answer'|trans({ username: comment.toMember.Username }, "messages", language) }}</span>
+                        <span class="p-comment__fold-hide">{{ 'profile.comment.hide.answer'|trans({}, "messages", language) }}</span>
+                    </summary>
+                    <div class="p-comment__answer">{{ answerHtml }}</div>
+                </details>
             {% endif %}
         </div>
     </article>

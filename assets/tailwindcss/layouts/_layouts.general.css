@@ -9756,14 +9756,25 @@ body.is-embedded { background: #fff; }
     flex-direction: column;
     flex: 1 1 auto;
     min-height: 0;
-    max-width: 1680px;
+    max-width: none;
+    padding: 0;
   }
+  /* Edge to edge, right under the header and down to the bottom: no card */
   body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) {
     flex: 1 1 auto;
     height: auto;
     min-height: 30rem;
-    margin: 1rem 0;
+    margin: 0;
   }
+  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) .c-inbox__list,
+  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) .c-inbox__pane {
+    border-top: 0;
+    border-bottom: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) .c-inbox__pane { border-right: 0; }
+  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) .c-inbox__nav { padding: 1.25rem 1rem; }
 }
 @media (min-width: 1200px) {
   body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) {

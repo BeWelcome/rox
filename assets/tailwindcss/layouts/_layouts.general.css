@@ -9723,6 +9723,6 @@ body.is-embedded { background: #fff; }
 }
 /* On a computer the pane is wide: the card and the answer keep a phone-like size */
 @media (min-width: 768px) {
-  .c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra > .c-stay-card { max-width: 34rem; }
-  .c-decide { max-width: 34rem; }
+  .c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra > .c-stay-card { max-width: 34rem; margin-right: auto; margin-left: auto; }
+  .c-decide { max-width: 34rem; margin-right: auto; margin-left: auto; }
 }

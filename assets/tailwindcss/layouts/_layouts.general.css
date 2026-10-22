@@ -9809,11 +9809,18 @@ body.is-embedded { background: #fff; }
   .c-decide__round { width: 2.4rem; height: 2.4rem; }
   .c-decide__cancel { height: 2.4rem; padding: 0 0.85rem; font-size: 0.8125rem; }
 }
-/* The request card stays on top while the messages scroll under it: the messages fade
-   out just below the card, so a white bubble never runs into the white card */
-.c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra { padding-bottom: 0.25rem; }
-.c-inbox__pane:has(.c-stay-card) .c-inbox-thread {
-  padding-top: 1rem;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 1.5rem);
-  mask-image: linear-gradient(to bottom, transparent 0, #000 1.5rem);
+/* The request card stays on top while the messages scroll under it: a grey fade just
+   below the card (same grey as the background, no white band), so a white bubble
+   melts away before it reaches the white card */
+.c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra { position: relative; z-index: 1; padding-bottom: 0.25rem; }
+.c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 1.5rem;
+  background: linear-gradient(to bottom, #f4f4f5, rgba(244, 244, 245, 0));
+  pointer-events: none;
 }
+.c-inbox__pane:has(.c-stay-card) .c-inbox-thread { padding-top: 1rem; }

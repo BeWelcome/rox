@@ -9011,11 +9011,26 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro__place--empty { color: #94a3b8; }
 .p-pro__occupation { color: #334155; }
 .p-pro .p-pro__activity { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.75rem; margin: 0.6rem 0 0; color: #64748b; font-size: 0.8125rem; }
-.p-pro__status { display: inline-flex; align-items: center; gap: 0.4rem; }
-.p-pro__status.is-active,
-.p-pro__status.is-recent { padding: 0.2rem 0.6rem; border-radius: 999px; font-weight: 600; }
-.p-pro__status.is-active { background: #e3f7e8; color: #2f7a43; }
-.p-pro__status.is-recent { background: #fef3c7; color: #92400e; }
+.p-pro__status { display: inline-flex; align-items: center; gap: 0.4rem; color: #475569; }
+/* Hosting as a pill, before the activity */
+.p-pro__hosting { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.9rem; border-radius: 999px; font-size: 0.9375rem; font-weight: 700; }
+.p-pro__hosting--yes { background: #e3f7e8; color: #2f7a43; }
+.p-pro__hosting--no { background: #f1f5f9; color: #64748b; }
+.p-pro__hosting i,
+.p-pro__hosting svg { font-size: 0.875rem; }
+/* Languages and membership length; the latter gets its own line on phones */
+.p-pro .p-pro__meta--facts { margin-top: 0.45rem; }
+.p-pro .p-pro__since-line { display: none; margin: 0.6rem 0 0; color: #64748b; font-size: 0.8125rem; }
+.p-pro__head { padding-bottom: 1.5rem; }
+/* References tab: one coloured pill per quality */
+.p-hero__tab-count i,
+.p-hero__tab-count svg { font-size: 0.65rem; }
+.p-hero__tab-count--positive,
+.p-hero__tab--active .p-hero__tab-count--positive { display: inline-flex; align-items: center; gap: 0.25rem; background: #e3f7e8; color: #2f7a43; }
+.p-hero__tab-count--neutral,
+.p-hero__tab--active .p-hero__tab-count--neutral { display: inline-flex; align-items: center; gap: 0.25rem; background: #f1f5f9; color: #64748b; }
+.p-hero__tab-count--negative,
+.p-hero__tab--active .p-hero__tab-count--negative { display: inline-flex; align-items: center; gap: 0.25rem; background: #fee2e2; color: #b91c1c; }
 .p-pro__online { display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 999px; background: #cbd5e1; }
 .p-pro__status.is-active .p-pro__online { background: #4cbb6c; }
 .p-pro__status.is-recent .p-pro__online { background: #f5b942; }
@@ -9215,6 +9230,11 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro__tabs-wrap { position: sticky; top: var(--bw-topbar-offset, 64px); z-index: 20; }
   .p-pro__tabs-wrap .p-hero__tab i,
   .p-pro__tabs-wrap .p-hero__tab svg { display: none; }
+  .p-pro__tabs-wrap .p-hero__tab .p-hero__tab-count i,
+  .p-pro__tabs-wrap .p-hero__tab .p-hero__tab-count svg { display: inline-block; }
+  .p-pro .p-pro__since { display: none; }
+  .p-pro .p-pro__since-line { display: block; }
+  .p-pro__head { padding-bottom: 1rem; }
   .p-pro__tabs-wrap .p-hero__tab:first-child { padding-left: 0.25rem; }
 
   /* Sections across the whole width, split by a grey band */

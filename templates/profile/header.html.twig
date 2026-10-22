@@ -138,7 +138,31 @@
           {% endif %}
         </p>
 
+        {% set _since %}
+          {{- 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) -}}
+          {%- if admin %} ({{ member.created|format_datetime() }}){% endif -%}
+        {% endset %}
+        {% set _spoken = [] %}
+        {% for level, langs in member.levelLanguages %}
+          {% for lang in langs %}{% set _spoken = _spoken|merge([('lang_' ~ lang.ShortCode)|lower|trans]) %}{% endfor %}
+        {% endfor %}
+        <p class="p-pro__meta p-pro__meta--facts">
+          {% if _spoken|length > 0 %}
+            <span class="p-pro__meta-item p-pro__languages">
+              <i class="fas fa-language" aria-hidden="true"></i>
+              <span class="visually-hidden">{{ 'languages.spoken'|trans|striptags }}:</span> {{ _spoken|join(', ') }}
+            </span>
+          {% endif %}
+          <span class="p-pro__meta-item p-pro__since">{{ _since }}</span>
+        </p>
+
         <p class="p-pro__activity">
+          {% if hosting %}
+            <span class="p-pro__hosting p-pro__hosting--{{ hosting }}">
+              <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
+              {{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}
+            </span>
+          {% endif %}
           {% set _days = lastActivity.diffInDays %}
           <span class="p-pro__status{% if _days <= 7 %} is-active{% elseif _days <= 30 %} is-recent{% endif %}">
             <span class="p-pro__online" aria-hidden="true"></span>
@@ -151,11 +175,9 @@
             {% endif %}
             {%- if admin %} ({{ lastActivity|format_datetime() }}){% endif -%}
           </span>
-          <span>
-            {{ 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}
-            {%- if admin %} ({{ member.created|format_datetime() }}){% endif -%}
-          </span>
         </p>
+        {# Phones: the membership length on its own line at the end #}
+        <p class="p-pro__since-line">{{ _since }}</p>
       </div>
 
       {# ── Actions: message and request stay (stuck to the bottom on phones), more ── #}
@@ -237,52 +259,6 @@
       </div>
     </div>
 
-    {# ── Hosting · comments · languages ── #}
-    {% set _commentsTotal = comments_count.total ?? member_comments_count(member) %}
-    <div class="p-pro__tiles">
-      {% if hosting %}
-        <div class="p-pro__tile p-pro__tile--host-{{ hosting }}">
-          <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }} p-pro__tile-icon" aria-hidden="true"></i>
-          <span class="p-pro__tile-text">
-            <strong>{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</strong>
-            <span class="p-pro__tile-sub">{{ (hosting == 'yes' ? 'profile.hosting.accepts' : 'profile.hosting.not.now')|trans }}</span>
-          </span>
-        </div>
-      {% endif %}
-
-      {% if _commentsTotal > 0 %}
-        <a class="p-pro__tile p-pro__tile--comments" href="{{ url('profile_comments', {username: member.username}) }}">
-          <span class="p-pro__tile-square" aria-hidden="true"><i class="fas fa-comment"></i></span>
-          <strong class="p-pro__tile-text">{{ _commentsTotal }} {{ 'search.preview.comments'|trans({ count: _commentsTotal }) }}</strong>
-          {% if comments_count is defined %}
-            <span class="p-pro__pills">
-              {% if comments_count.positive %}<span class="p-pro__pill is-positive"><i class="fas fa-thumbs-up" aria-hidden="true"></i> {{ comments_count.positive }}<span class="visually-hidden"> {{ 'comment.quality.positive'|trans|striptags }}</span></span>{% endif %}
-              {% if comments_count.neutral %}<span class="p-pro__pill"><i class="fas fa-minus" aria-hidden="true"></i> {{ comments_count.neutral }}<span class="visually-hidden"> {{ 'comment.quality.neutral'|trans|striptags }}</span></span>{% endif %}
-              {% if comments_count.negative %}<span class="p-pro__pill is-negative"><i class="fas fa-thumbs-down" aria-hidden="true"></i> {{ comments_count.negative }}<span class="visually-hidden"> {{ 'comment.quality.negative'|trans|striptags }}</span></span>{% endif %}
-            </span>
-          {% endif %}
-          <i class="fas fa-chevron-right p-pro__tile-go" aria-hidden="true"></i>
-        </a>
-      {% else %}
-        <div class="p-pro__tile p-pro__tile--comments is-empty">
-          <span class="p-pro__tile-square" aria-hidden="true"><i class="fas fa-comment"></i></span>
-          <span class="p-pro__tile-text">{{ 'profile.no.comments'|trans|striptags }}</span>
-        </div>
-      {% endif %}
-
-      {% if member.levelLanguages|length > 0 %}
-        <div class="p-pro__tile p-pro__tile--languages">
-          <i class="fas fa-language p-pro__tile-icon" aria-hidden="true"></i>
-          <ul class="p-pro__langs" aria-label="{{ 'languages.spoken'|trans|striptags }}">
-            {% for level, langs in member.levelLanguages %}
-              {% for lang in langs %}
-                <li>{{ ('lang_' ~ lang.ShortCode)|lower|trans }} <span class="p-pro__lang-level">{{ ('language.level.' ~ level)|lower|trans }}</span></li>
-              {% endfor %}
-            {% endfor %}
-          </ul>
-        </div>
-      {% endif %}
-    </div>
   </div>{# /.p-pro__wrap #}
 
 </div>{# /.p-pro #}
@@ -305,7 +281,18 @@
                  class="p-hero__tab{% if activeItem == key %} p-hero__tab--active{% endif %}">
                 <i class="fas fa-fw fa-{{ items[key].icon }}" aria-hidden="true"></i>
                 {{ items[key].key|lower|trans }}
-                {% if items[key].count is defined and items[key].count > 0 %}
+                {% if key == 'comments' and items[key].count > 0 %}
+                  {# References: one pill per quality, coloured, only the non-zero ones #}
+                  {% set _byQuality = comments_count ?? member_comments_by_quality(member) %}
+                  {% for _q, _icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
+                    {% if _byQuality[_q] ?? 0 %}
+                      <span class="p-hero__tab-count p-hero__tab-count--{{ _q }}">
+                        <i class="fas fa-{{ _icon }}" aria-hidden="true"></i> {{ _byQuality[_q] }}
+                        <span class="visually-hidden">{{ ('comment.quality.' ~ _q)|trans|striptags }}</span>
+                      </span>
+                    {% endif %}
+                  {% endfor %}
+                {% elseif items[key].count is defined and items[key].count > 0 %}
                   <span class="p-hero__tab-count">{{ items[key].count }}</span>
                 {% endif %}
               </a>

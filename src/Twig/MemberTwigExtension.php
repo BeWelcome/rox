@@ -140,6 +140,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
     {
         return [
             new TwigFunction('member_comments_count', $this->getMemberCommentsCount(...)),
+            new TwigFunction('member_comments_by_quality', $this->getMemberCommentsByQuality(...)),
         ];
     }
 
@@ -152,6 +153,17 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $commentRepository = $this->entityManager->getRepository(Comment::class);
 
         return $commentRepository->getVisibleCommentsForMemberCount($member);
+    }
+
+    /**
+     * Comments the member received, counted by quality (positive, neutral, negative, total).
+     */
+    public function getMemberCommentsByQuality(Member $member): array
+    {
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $this->entityManager->getRepository(Comment::class);
+
+        return $commentRepository->getCommentsCountMemberByQuality($member);
     }
 
     public function getName()

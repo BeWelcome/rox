@@ -301,6 +301,7 @@ if (form && searchTop && 'ResizeObserver' in window) {
 function Map() {
     this.map = undefined;
     this.mapBox = document.getElementById('map-box');
+    this.placeMarker = null;
 }
 
 Map.prototype.showMap = function () {
@@ -335,15 +336,15 @@ Map.prototype.showMap = function () {
     }).addTo(this.map);
     this.markerClusterGroup = this.addMarkers(this.map);
 
+    this.centerMap();
     if (this.markerClusterGroup.getLayers().length > 0) {
-        if ('1' === hidden('admin_unit').value) {
-            // A region: show all its members.
-            this.map.fitBounds(this.markerClusterGroup.getBounds(), {padding: [40, 40]});
-        } else {
-            this.centerMap();
+        // Frame the members found (and the searched place), not the whole search area,
+        // without going closer than a district when they are all at one spot.
+        const bounds = this.markerClusterGroup.getBounds();
+        if (this.placeMarker && '1' !== hidden('admin_unit').value) {
+            bounds.extend(this.placeMarker.getLatLng());
         }
-    } else {
-        this.centerMap();
+        this.map.fitBounds(bounds, {padding: [48, 48], maxZoom: 13});
     }
 
     // Zooming or moving the map only changes the view; it doesn't search again.
@@ -361,7 +362,7 @@ Map.prototype.centerMap = function () {
     const minLongitude = document.getElementById('min_longitude').value;
     const maxLongitude = document.getElementById('max_longitude').value;
 
-    L.marker([latitude, longitude], {
+    this.placeMarker = L.marker([latitude, longitude], {
         icon: L.divIcon({className: 'p-search-map-place', iconSize: [16, 16]}),
         draggable: false,
         interactive: false

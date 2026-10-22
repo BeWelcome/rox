@@ -9984,3 +9984,13 @@ body.is-embedded { background: #fff; }
 .c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__send .js-decide-send { display: none; }
 .c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__change { display: inline-flex; grid-area: change; align-items: center; justify-self: center; gap: 0.4rem; color: #475569; font-size: 0.8125rem; }
 .c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__change:hover { color: #0f172a; }
+
+/* Conversation list: a request or invitation shows where it stands next to its badge */
+.c-inbox-item__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin: 0.2rem 0 0.1rem; }
+.c-inbox-item__tags .c-inbox-item__badge { margin: 0; }
+.c-inbox-item__state { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.6875rem; font-weight: 700; line-height: 1.4; white-space: nowrap; }
+.c-inbox-item__state i, .c-inbox-item__state svg { font-size: 0.6rem; }
+.c-inbox-item__state--pending,
+.c-inbox-item__state--maybe { background: #fef3c7; color: #b45309; }
+.c-inbox-item__state--success { background: #dcfce7; color: #15803d; }
+.c-inbox-item__state--danger { background: #fee2e2; color: #b91c1c; }

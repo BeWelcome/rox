@@ -103,11 +103,24 @@
                     <span class="c-inbox-item__date">{{ when }}</span>
                 </div>
                 {% if message.request %}
-                    <div class="c-inbox-item__badge c-inbox-item__badge--{{ requestTone }}">
-                        <span><i class="fas {{ kindIcon }}" aria-hidden="true"></i> {{ message.request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}</span>
-                        <span class="c-inbox-item__badge-dates">
-                            {{- message.request.arrival|format_date(pattern='d MMM') }}
-                            {%- if message.request.departure %} – {{ message.request.departure|format_date(pattern='d MMM') }}{% endif -%}
+                    {# The kind and dates, then where the request stands, with the decision's icon #}
+                    {% set states = {
+                        open: { icon: 'fas fa-clock', tone: 'pending' },
+                        tentatively: { icon: 'fa fa-question', tone: 'maybe' },
+                        accepted: { icon: 'fa fa-check', tone: 'success' },
+                        declined: { icon: 'fa fa-times', tone: 'danger' },
+                        cancelled: { icon: 'fa fa-times', tone: 'danger' },
+                    } %}
+                    <div class="c-inbox-item__tags">
+                        <div class="c-inbox-item__badge">
+                            <span><i class="fas {{ kindIcon }}" aria-hidden="true"></i> {{ message.request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}</span>
+                            <span class="c-inbox-item__badge-dates">
+                                {{- message.request.arrival|format_date(pattern='d MMM') }}
+                                {%- if message.request.departure %} – {{ message.request.departure|format_date(pattern='d MMM') }}{% endif -%}
+                            </span>
+                        </div>
+                        <span class="c-inbox-item__state c-inbox-item__state--{{ states[requestState].tone }}">
+                            <i class="{{ states[requestState].icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ requestState)|trans }}
                         </span>
                     </div>
                 {% endif %}

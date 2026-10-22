@@ -66,6 +66,8 @@ export function createContactPanel(panel, {from, onBack}) {
         let location = null;
         try {
             location = frame.contentWindow.location;
+            // A page the browser refused to show here can't be read: show what it shows
+            location.href;
         } catch (error) {
             panel.classList.add('is-loaded');
             return;

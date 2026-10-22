@@ -74,3 +74,21 @@ conversations.pick:
 conversation.reply.to:
     - Reply to {username}…
     - Placeholder of the reply box at the bottom of a conversation
+contact.sent.message.title:
+    - 'Your message is on its way'
+    - Title of the confirmation shown in the search preview once a message has been sent
+contact.sent.message.text:
+    - '{username} gets it in their messages and by email. Their answer will show up in your messages.'
+    - Text under the title of the confirmation once a message has been sent from the search preview
+contact.sent.request.title:
+    - 'Your request has been sent'
+    - Title of the confirmation shown in the search preview once a stay request has been sent
+contact.sent.request.text:
+    - '{username} gets it in their messages and by email. You will be told as soon as they answer.'
+    - Text under the title of the confirmation once a stay request has been sent from the search preview
+contact.sent.back:
+    - 'Back to the search'
+    - Button of the confirmation shown in the search preview after sending a message or request; closes the panel
+contact.sent.conversation:
+    - 'See the conversation'
+    - Link of the confirmation shown in the search preview after sending a message or request; opens the conversation

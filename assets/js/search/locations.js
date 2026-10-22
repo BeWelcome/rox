@@ -504,6 +504,7 @@ function openContact(link) {
     const url = new URL(link.href, window.location.href);
     url.searchParams.set('embed', '1');
     contactSent = false;
+    contact.classList.remove('is-sent');
     contact.querySelector('.js-search-contact-title').textContent = link.dataset.title || link.textContent.trim();
     contactFrame.title = link.dataset.title || '';
     contactFrame.src = url.toString();
@@ -557,8 +558,14 @@ if (contact) {
     });
 
     window.addEventListener('message', (event) => {
-        if (event.origin === window.location.origin && event.data && event.data.type === 'bw-contact-sent') {
+        if (event.origin !== window.location.origin || !event.data) {
+            return;
+        }
+        if (event.data.type === 'bw-contact-sent') {
             contactSent = true;
+            contact.classList.add('is-sent');
+        } else if (event.data.type === 'bw-contact-close') {
+            closePreview();
         }
     });
 }

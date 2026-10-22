@@ -1,21 +1,53 @@
 {% extends 'base.html.twig' %}
 {#
-  Shown in the search preview's frame once a message or a stay request is sent:
-  a short confirmation; the preview listens for the "bw-contact-sent" message.
+  Shown in the search preview's frame once a message or a stay request is sent: it fills
+  the panel with a short animation (the paper plane flies off, a check is drawn), a title
+  and two ways on. It tells the preview with "bw-contact-sent"; "Back to the search" sends
+  "bw-contact-close" so the preview closes the panel.
 #}
-{% block title %}{{ ('flash.' ~ kind ~ '.sent')|trans|striptags }}{% endblock title %}
+{% set name = member.shortNameOrUsername %}
+{% block title %}{{ ('contact.sent.' ~ kind ~ '.title')|trans }}{% endblock title %}
 
 {% block content %}
-    <div class="c-embed-sent" role="status">
-        <span class="c-embed-sent__icon" aria-hidden="true"><i class="fas fa-circle-check"></i></span>
-        <p class="c-embed-sent__text">{{ ('flash.' ~ kind ~ '.sent')|trans|raw }}</p>
-        <a class="c-embed-sent__link" href="{{ path('conversations_with', { username: member.username }) }}" target="_top">
-            {{ 'messages_allmessageswith'|trans|format(member.shortNameOrUsername) }}
-        </a>
+    <div class="c-embed-sent c-embed-sent--{{ kind }}" role="status">
+        <div class="c-embed-sent__scene" aria-hidden="true">
+            <span class="c-embed-sent__ring"></span>
+            <span class="c-embed-sent__ring c-embed-sent__ring--late"></span>
+            <span class="c-embed-sent__plane"><i class="fas {{ kind == 'request' ? 'fa-bed' : 'fa-paper-plane' }}"></i></span>
+            <svg class="c-embed-sent__check" viewBox="0 0 64 64">
+                <circle class="c-embed-sent__disc" cx="32" cy="32" r="30"></circle>
+                <path class="c-embed-sent__tick" d="M19 33.5l9 9 17-19"></path>
+            </svg>
+            {% for i in 1..10 %}<span class="c-embed-sent__spark c-embed-sent__spark--{{ i }}"></span>{% endfor %}
+        </div>
+
+        <h1 class="c-embed-sent__title">{{ ('contact.sent.' ~ kind ~ '.title')|trans }}</h1>
+        <p class="c-embed-sent__text">
+            {{ ('contact.sent.' ~ kind ~ '.text')|trans({ username: name }) }}
+        </p>
+
+        <div class="c-embed-sent__actions">
+            <button type="button" class="c-embed-sent__btn c-embed-sent__btn--primary js-embed-sent-close">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'contact.sent.back'|trans }}
+            </button>
+            <a class="c-embed-sent__btn" href="{{ path('conversations_with', { username: member.username }) }}" target="_top">
+                <i class="fas fa-comments" aria-hidden="true"></i> {{ 'contact.sent.conversation'|trans }}
+            </a>
+        </div>
     </div>
     <script>
-        if (window.parent !== window) {
-            window.parent.postMessage({ type: 'bw-contact-sent', kind: '{{ kind }}' }, window.location.origin);
-        }
+        (function () {
+            var parentWindow = window.parent !== window ? window.parent : null;
+            if (parentWindow) {
+                parentWindow.postMessage({ type: 'bw-contact-sent', kind: '{{ kind }}' }, window.location.origin);
+            }
+            document.querySelector('.js-embed-sent-close').addEventListener('click', function () {
+                if (parentWindow) {
+                    parentWindow.postMessage({ type: 'bw-contact-close' }, window.location.origin);
+                } else {
+                    window.location.href = '{{ path('members_profile', { username: member.username }) }}';
+                }
+            });
+        })();
     </script>
 {% endblock content %}

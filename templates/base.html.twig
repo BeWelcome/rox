@@ -38,7 +38,9 @@
 </head>
 {# ?embed=1: the page alone, without menu and footer, to be shown in a frame (search preview) #}
 {% set embedded = app.request.query.getBoolean('embed') %}
-<body{% if embedded %} class="is-embedded"{% endif %}>
+{# inbox_page (messages, requests, invitations): the inbox fills the window, no footer #}
+{% set inbox_page = inbox_page ?? false %}
+<body{% if embedded or inbox_page %} class="{{ embedded ? 'is-embedded' }}{{ embedded and inbox_page ? ' ' }}{{ inbox_page ? 'is-inbox' }}"{% endif %}>
 {% set sidebar = (submenu is defined) %}
 {% if not embedded %}{% include 'menu.html.twig' %}{% endif %}
 <div id="toasts" class="bw-toasts">
@@ -162,7 +164,7 @@
     </div>
   </main>
 {% endblock main %}
-{% if not embedded %}{% include 'footer.html.twig' %}{% endif %}
+{% if not embedded and not inbox_page %}{% include 'footer.html.twig' %}{% endif %}
 {{ encore_entry_script_tags('bewelcome') }}
 {{ encore_entry_script_tags('updatecounters') }}
 {% if sidebar %}

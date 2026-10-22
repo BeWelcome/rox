@@ -9738,3 +9738,19 @@ body.is-embedded { background: #fff; }
   .c-decide__cancel { width: 2.75rem; padding: 0; justify-content: center; }
   .c-decide__cancel-label { display: none; }
 }
+
+/* Inbox pages (messages, requests, invitations): no footer, the inbox fills the window.
+   Desktop: wider page and the full height under the header. */
+@media (min-width: 768px) {
+  body.is-inbox:not(.is-embedded) main > .container-lg { max-width: 1680px; }
+  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) {
+    height: calc(100dvh - var(--bw-topbar-offset, 64px) - 2rem);
+    min-height: 30rem;
+    margin: 1rem 0;
+  }
+}
+@media (min-width: 1200px) {
+  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) {
+    grid-template-columns: 220px minmax(320px, 400px) minmax(0, 1fr);
+  }
+}

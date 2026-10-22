@@ -4,6 +4,7 @@
   Child templates fill reply_extra (request or invitation details) and reply_form.
 #}
 {% extends 'base.html.twig' %}
+{% set inbox_page = true %}
 {% import 'conversations/_inbox.macros.twig' as inbox %}
 
 {% set hide_sidebar = true %}

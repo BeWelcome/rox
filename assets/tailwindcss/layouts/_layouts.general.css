@@ -9793,3 +9793,19 @@ body.is-embedded { background: #fff; }
 @media (min-width: 768px) {
   .c-inbox-compose > form.c-decide { margin-right: auto; margin-left: auto; }
 }
+/* Computer: a compact answer area, so the messages keep most of the height.
+   The choices sit in one row (icon next to the word), the text field is shorter. */
+@media (min-width: 768px) {
+  .c-inbox-compose--respond:has(.c-decide) { padding: 0.75rem 1rem 0.85rem; }
+  .c-decide .c-decide__title { font-size: 1rem; }
+  .c-decide .c-decide__hint { margin: 0.1rem 0 0.55rem; font-size: 0.75rem; }
+  .c-decide__choices { gap: 0.5rem; }
+  .c-decide__choice { flex-direction: row; justify-content: center; gap: 0.5rem; padding: 0.45rem 0.5rem; border-radius: 999px; font-size: 0.875rem; }
+  .c-decide__icon { width: 1.6rem; height: 1.6rem; font-size: 0.75rem; }
+  .c-decide__later { margin-top: 0.4rem; padding: 0.2rem; font-size: 0.8125rem; }
+  .c-decide .c-decide__text { min-height: 3.25rem; padding: 0.55rem 0.8rem; }
+  .c-decide__send { height: 2.4rem; font-size: 0.875rem; }
+  .c-decide__foot .c-reply-templates .o-button,
+  .c-decide__round { width: 2.4rem; height: 2.4rem; }
+  .c-decide__cancel { height: 2.4rem; padding: 0 0.85rem; font-size: 0.8125rem; }
+}

@@ -9726,3 +9726,15 @@ body.is-embedded { background: #fff; }
   .c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra > .c-stay-card { max-width: 34rem; margin-right: auto; margin-left: auto; }
   .c-decide { max-width: 34rem; margin-right: auto; margin-left: auto; }
 }
+/* The guest's side: round dates button and "Cancel request" next to Send */
+.c-decide__round { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #334155; cursor: pointer; }
+.c-decide__round:hover, .c-decide__round[aria-expanded="true"] { border-color: #fbc08a; background: #fff4ea; color: #c2410c; }
+.c-decide__cancel { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.4rem; height: 2.75rem; padding: 0 1rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #b91c1c; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.c-decide__cancel:hover { border-color: #fca5a5; background: #fef2f2; }
+.c-inbox-respond--guest .c-decide__top { margin-bottom: 0.35rem; }
+.c-inbox-respond--guest .c-decide__hint { margin-top: 0; }
+.c-inbox-respond--guest .c-inbox-respond__stay { margin-bottom: 0.75rem; }
+@media (max-width: 575.98px) {
+  .c-decide__cancel { width: 2.75rem; padding: 0; justify-content: center; }
+  .c-decide__cancel-label { display: none; }
+}

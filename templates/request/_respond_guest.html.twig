@@ -1,15 +1,26 @@
 {#
   The guest's answer in a hosting request, under the messages: a message to the host,
   and on demand other dates or the number of travellers. "Cancel request" cancels it.
+  Styled like the host's answer (c-decide). Once the host declined, only the message
+  is left, under "Declined" and a line saying the host can't host this time.
   Expects respond (HostingRequestGuest form view) and current (the newest message).
 #}
 {% import 'request/_request.macros.twig' as stay %}
 {% set S = 'App\\Entity\\HostingRequest::' %}
 {% set fields = respond.request %}
 {% set showStay = fields.duration.vars.errors|length > 0 or fields.numberOfTravellers.vars.errors|length > 0 %}
+{% set declined = current.request.status == constant(S ~ 'REQUEST_DECLINED') %}
+{% set host = current.sender == app.user ? current.receiver : current.sender %}
 
-{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { class: 'c-inbox-respond c-inbox-respond--guest js-respond', novalidate: 'novalidate', autocomplete: 'off' } }) }}
+{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { class: 'c-inbox-respond c-inbox-respond--guest c-decide js-respond', novalidate: 'novalidate', autocomplete: 'off' } }) }}
     {{ form_errors(respond) }}
+
+    {% if declined %}
+        <div class="c-decide__top">
+            <span class="c-decide__picked c-decide__picked--decline"><i class="fa fa-times" aria-hidden="true"></i> {{ 'request.status.declined'|trans }}</span>
+        </div>
+        <p class="c-decide__hint">{{ 'request.guest.declined'|trans({ username: host.shortNameOrUsername ?? host.username }) }}</p>
+    {% endif %}
 
     <div class="c-inbox-respond__stay c-inbox-respond__stay--grid c-inbox-respond__stay--card js-respond-stay"{% if not showStay %} hidden{% endif %}>
         <div class="c-inbox-respond__stay-head">
@@ -30,33 +41,30 @@
     {% if respond.message.vars.errors|length > 0 %}
         <div class="c-inbox-compose__error">{{ form_errors(respond.message) }}</div>
     {% endif %}
-    <div class="c-inbox-respond__compose c-inbox-respond__compose--actions">
-        {# A plain text field (turned into paragraphs on send) instead of the rich editor: it takes less room. #}
-        <div class="c-inbox-respond__editor c-inbox-respond__editor--plain">
-            <textarea class="c-inbox-respond__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="1"
-                      placeholder="{{ respond.message.vars.attr.placeholder|default('')|trans }}" aria-label="{{ respond.message.vars.label|trans }}">
-                {{- respond.message.vars.value|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim -}}
-            </textarea>
-        </div>
-        {% do respond.message.setRendered %}
-        <div class="c-inbox-respond__more">
+    {# A plain text field (turned into paragraphs on send) instead of the rich editor: it takes less room. #}
+    <textarea class="c-decide__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="2"
+              placeholder="{{ declined ? 'request.decide.placeholder.reply'|trans({ username: host.shortNameOrUsername ?? host.username }) : respond.message.vars.attr.placeholder|default('')|trans }}" aria-label="{{ respond.message.vars.label|trans }}">
+        {{- respond.message.vars.value|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim -}}
+    </textarea>
+    {% do respond.message.setRendered %}
+
+    <div class="c-decide__foot">
+        {% include 'conversations/_reply_templates.html.twig' with { editor_id: respond.message.vars.id, menu_up: true } only %}
+        {% if not declined %}
+            <button type="button" class="c-decide__round js-respond-stay-toggle" aria-expanded="{{ showStay ? 'true' : 'false' }}" aria-label="{{ 'request.respond.change'|trans }}" title="{{ 'request.respond.change'|trans }}">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+            </button>
             {% if current.request.status != constant(S ~ 'REQUEST_CANCELLED') %}
-                <button type="submit" id="{{ respond.cancel.vars.id }}" name="{{ respond.cancel.vars.full_name }}" class="c-inbox-respond__secondary c-inbox-respond__secondary--danger"
+                <button type="submit" id="{{ respond.cancel.vars.id }}" name="{{ respond.cancel.vars.full_name }}" class="c-decide__cancel"
                         data-confirm="{{ 'request.confirm.cancel'|trans }}" data-confirm-ok="{{ respond.cancel.vars.label|trans }}" data-confirm-close="{{ 'modal.close'|trans }}">
-                    <i class="fa fa-times" aria-hidden="true"></i> <span class="c-inbox-respond__secondary-label">{{ respond.cancel.vars.label|trans }}</span>
+                    <i class="fa fa-times" aria-hidden="true"></i> <span class="c-decide__cancel-label">{{ respond.cancel.vars.label|trans }}</span>
                 </button>
             {% endif %}
-        </div>
-        <div class="c-inbox-respond__actions">
-            {% include 'conversations/_reply_templates.html.twig' with { editor_id: respond.message.vars.id, menu_up: true } only %}
-            <button type="button" class="c-inbox-respond__secondary c-inbox-respond__secondary--dates js-respond-stay-toggle" aria-expanded="{{ showStay ? 'true' : 'false' }}" aria-label="{{ 'request.respond.change'|trans }}">
-                <i class="fa fa-calendar" aria-hidden="true"></i> <span class="c-inbox-respond__secondary-label">{{ 'request.respond.change'|trans }}</span>
-            </button>
-            <button type="submit" id="{{ respond.update.vars.id }}" name="{{ respond.update.vars.full_name }}" class="c-inbox-reply__btn c-inbox-respond__send">
-                <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                <span class="c-inbox-respond__send-label">{{ 'label.message.button.send'|trans }}</span>
-            </button>
-        </div>
+        {% endif %}
+        <button type="submit" id="{{ respond.update.vars.id }}" name="{{ respond.update.vars.full_name }}" class="c-decide__send">
+            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+            <span>{{ 'label.message.button.send'|trans }}</span>
+        </button>
     </div>
     {% do respond.cancel.setRendered %}
     {% do respond.update.setRendered %}

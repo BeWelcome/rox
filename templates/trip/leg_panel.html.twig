@@ -86,7 +86,6 @@
                     {% endfor %}
                 </ol>
                 <p class="c-contact-trip__links">
-                    <a class="c-contact-trip__link" href="{{ path('trip_show', { id: trip.id, _fragment: 'leg' ~ leg.id }) }}" target="_top">{{ 'contact.trip.see'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                     <a class="c-contact-trip__link" href="{{ path('members_profile', { username: traveller.username }) }}" target="_top">{{ 'contact.trip.profile'|trans({ username: traveller.shortNameOrUsername }) }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </p>
             </section>

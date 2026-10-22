@@ -9890,11 +9890,12 @@ body.is-embedded { background: #fff; }
   body:not(.is-embedded) .c-inbox__pane .c-inbox-head__name:hover { color: #c2410c; }
   body:not(.is-embedded) .c-inbox__pane .c-inbox-head__meta { order: 3; }
 
-  /* The other member's face at the foot of their message */
-  .c-inbox__pane .c-bubble-row:not(.is-own) { align-items: flex-end; gap: 0.6rem; }
-  .c-inbox__pane .c-bubble__avatar { display: block; flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; object-fit: cover; background: #e4e4e7; }
   .c-inbox__pane .c-bubble { font-size: 0.875rem; }
 }
+
+/* The other member's face at the foot of their message (phones and computers) */
+.c-inbox__pane .c-bubble-row:not(.is-own) { align-items: flex-end; gap: 0.5rem; }
+.c-inbox__pane .c-bubble__avatar { display: block; flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; object-fit: cover; background: #e4e4e7; }
 
 /* A wide conversation pane: the request as one strip under the head */
 @container inbox-pane (min-width: 640px) {

@@ -93,3 +93,21 @@ request.decide.send.maybe:
 request.decide.send.decline:
     - 'Send decline'
     - Send button when the host declines a hosting request
+request.card.title:
+    - 'Hosting request'
+    - Top of the card about a hosting request, above the messages
+request.card.arrival:
+    - 'Arrival'
+    - Above the arrival date on the card about a hosting request, followed by the day of the week
+request.card.departure:
+    - 'Departure'
+    - Above the departure date on the card about a hosting request, followed by the day of the week
+request.card.persons:
+    - '{count, plural, one {# person} other {# people}}'
+    - How many travellers, on the card about a hosting request
+request.card.flexible:
+    - 'Flexible dates'
+    - On the card about a hosting request, when the guest's dates are flexible
+request.card.not.flexible:
+    - 'Not flexible'
+    - On the card about a hosting request, when the guest's dates are fixed

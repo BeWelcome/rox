@@ -1,49 +1,48 @@
 {#
-  What the hosting request is about, above the messages: the dates and where the
-  request stands, then the nights, the people and whether the dates are flexible.
+  What the hosting request is about, above the messages, as a card: "Hosting request"
+  and where it stands, arrival and departure with the nights between, then the people,
+  whether the dates are flexible and the year.
   The guest and the host read a different status text. Expects request, original
   (first message of the thread) and myself.
 #}
 {% set S = 'App\\Entity\\HostingRequest::' %}
 {% set side = original.Initiator.Username == myself.Username ? 'guest' : 'host' %}
 {% set statuses = {
-    (constant(S ~ 'REQUEST_OPEN')): { key: 'open', tone: 'pending', icon: 'fas fa-exclamation-circle' },
-    (constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED')): { key: 'tentatively', tone: 'pending', icon: 'fa fa-question' },
+    (constant(S ~ 'REQUEST_OPEN')): { key: 'open', tone: 'pending', icon: 'fas fa-clock' },
+    (constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED')): { key: 'tentatively', tone: 'maybe', icon: 'fa fa-question' },
     (constant(S ~ 'REQUEST_ACCEPTED')): { key: 'accepted', tone: 'success', icon: 'far fa-handshake' },
     (constant(S ~ 'REQUEST_DECLINED')): { key: 'declined', tone: 'danger', icon: 'fa fa-times' },
     (constant(S ~ 'REQUEST_CANCELLED')): { key: 'cancelled', tone: 'danger', icon: 'fa fa-times' },
 } %}
 {% set status = statuses[request.status] ?? { key: null, tone: 'pending', icon: '' } %}
-{% set nights = date(request.departure).diff(date(request.arrival)).days %}
+{% set nights = date(request.departure|date('Y-m-d')).diff(date(request.arrival|date('Y-m-d'))).days %}
 {% set sameYear = request.arrival|date('Y') == request.departure|date('Y') %}
 
-<section class="c-inbox-trip c-inbox-trip--{{ status.tone }}">
-    <span class="c-inbox-trip__icon" aria-hidden="true"><i class="fas fa-bed"></i></span>
-    <div class="c-inbox-trip__body">
-        <div class="c-inbox-trip__top">
-            <p class="c-inbox-trip__dates">
-                <span class="c-inbox-trip__day">{{ request.arrival|format_date(pattern='EEE') }}</span>
-                {{ request.arrival|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}
-                <span class="c-inbox-trip__sep" aria-hidden="true">→</span>
-                <span class="c-inbox-trip__day">{{ request.departure|format_date(pattern='EEE') }}</span>
-                {{ request.departure|format_date(pattern='d MMM y') }}
-            </p>
-        </div>
-        <ul class="c-inbox-trip__facts">
-            <li><i class="fa fa-moon" aria-hidden="true"></i> {{ 'request.night.stay'|trans({ numbernights: nights }) }}</li>
-            <li><i class="fa fa-users" aria-hidden="true"></i> {{ 'request.number.persons'|trans({ numberpersons: request.numberOfTravellers }) }}</li>
-            {% if request.flexible %}
-                <li><i class="fas fa-sync" aria-hidden="true"></i> {{ 'label.flexible'|trans }}</li>
-            {% else %}
-                <li><i class="fas fa-lock" aria-hidden="true"></i> {{ 'request.not.flexible.with.arrival.departure'|trans }}</li>
-            {% endif %}
-        </ul>
+<section class="c-stay-card c-stay-card--{{ status.tone }}">
+    <div class="c-stay-card__top">
+        <p class="c-stay-card__kind"><i class="fas fa-bed" aria-hidden="true"></i> {{ 'request.card.title'|trans }}</p>
+        {% if status.key %}
+            <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ status.key)|trans }}</span>
+        {% endif %}
     </div>
-    {% if status.key %}
-        {# Short status on the right. #}
-        <span class="c-inbox-trip__status">
-            <i class="{{ status.icon }}" aria-hidden="true"></i>
-            {{ ('request.status.' ~ status.key)|trans }}
-        </span>
-    {% endif %}
+    <div class="c-stay-card__dates">
+        <p class="c-stay-card__date">
+            <span class="c-stay-card__label">{{ 'request.card.arrival'|trans }} · {{ request.arrival|format_date(pattern='EEE') }}</span>
+            <strong>{{ request.arrival|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}</strong>
+        </p>
+        <span class="c-stay-card__nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>
+        <p class="c-stay-card__date c-stay-card__date--end">
+            <span class="c-stay-card__label">{{ 'request.card.departure'|trans }} · {{ request.departure|format_date(pattern='EEE') }}</span>
+            <strong>{{ request.departure|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}</strong>
+        </p>
+    </div>
+    <ul class="c-stay-card__facts">
+        <li><i class="fa fa-users" aria-hidden="true"></i> {{ 'request.card.persons'|trans({ count: request.numberOfTravellers }) }}</li>
+        {% if request.flexible %}
+            <li><i class="fas fa-sync" aria-hidden="true"></i> {{ 'request.card.flexible'|trans }}</li>
+        {% else %}
+            <li><i class="fas fa-lock" aria-hidden="true"></i> {{ 'request.card.not.flexible'|trans }}</li>
+        {% endif %}
+        {% if sameYear %}<li class="c-stay-card__year">{{ request.arrival|date('Y') }}</li>{% endif %}
+    </ul>
 </section>

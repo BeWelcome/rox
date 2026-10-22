@@ -9658,3 +9658,27 @@ body.is-embedded { background: #fff; }
   .c-inbox-compose--respond:has(.c-decide) { margin: 0; padding: 1rem; }
   .c-decide__choice { padding: 0.85rem 0.25rem 0.75rem; font-size: 0.9375rem; }
 }
+
+/* The card about a hosting request, above the messages (request/header.html.twig) */
+.c-stay-card { --stay-tone: #b45309; --stay-tone-bg: #fef3c7; padding: 1rem 1.25rem 0.85rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06); }
+.c-stay-card--maybe { --stay-tone: #b45309; --stay-tone-bg: #fef3c7; }
+.c-stay-card--success { --stay-tone: #15803d; --stay-tone-bg: #dcfce7; }
+.c-stay-card--danger { --stay-tone: #b91c1c; --stay-tone-bg: #fee2e2; }
+.c-stay-card__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.c-stay-card .c-stay-card__kind { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0; color: #c2410c; font-size: 0.9375rem; font-weight: 700; }
+.c-stay-card__status { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.8rem; border-radius: 999px; background: var(--stay-tone-bg); color: var(--stay-tone); font-size: 0.875rem; font-weight: 700; white-space: nowrap; }
+.c-stay-card__dates { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 0.75rem; margin-top: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px solid #f1f5f9; }
+.c-stay-card .c-stay-card__date { display: flex; flex-direction: column; margin: 0; }
+.c-stay-card__date--end { align-items: flex-end; text-align: right; }
+.c-stay-card__label { color: #64748b; font-size: 0.8125rem; font-weight: 600; }
+.c-stay-card__date strong { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.6rem; font-weight: 700; line-height: 1.15; white-space: nowrap; }
+.c-stay-card__nights { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.8rem; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.875rem; font-weight: 700; white-space: nowrap; }
+.c-stay-card__nights i, .c-stay-card__nights svg { color: #64748b; font-size: 0.75rem; }
+.c-stay-card .c-stay-card__facts { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 1.25rem; margin: 0.75rem 0 0; padding: 0; color: #334155; font-size: 0.9375rem; list-style: none; }
+.c-stay-card__facts i, .c-stay-card__facts svg { margin-right: 0.35rem; color: #94a3b8; }
+.c-stay-card__facts .c-stay-card__year { margin-left: auto; color: #94a3b8; }
+.c-inbox-pane__extra > .c-stay-card { margin-bottom: 0 !important; border-radius: 1.25rem; background: #fff; }
+@media (max-width: 575.98px) {
+  .c-stay-card { padding: 0.9rem 1rem 0.75rem; }
+  .c-stay-card__date strong { font-size: 1.35rem; }
+}

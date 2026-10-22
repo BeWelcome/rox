@@ -117,26 +117,26 @@
         </section>
     {% endif %}
 
-    {# The member's own pictures (swipe or arrows) #}
+    {# The member's own pictures as a mosaic; the last tile says how many more there are.
+       A click opens the pictures large (search/locations.js). #}
     {% if pictures|length %}
-        {% set shown = pictures|slice(0, 8) %}
+        {% set shown = pictures|slice(0, 6) %}
+        {% set more = pictures|length - shown|length %}
+        {% set images = [] %}
+        {% for picture in pictures|slice(0, 40) %}
+            {% set images = images|merge([{ src: url('gallery_image', { id: picture.id }), title: picture.title }]) %}
+        {% endfor %}
         <section class="p-search-preview__section">
             <h3>{{ 'profile.menu.images'|trans|striptags }}</h3>
-            <div class="p-search-preview__photos js-preview-photos">
-                <div class="p-search-preview__track js-preview-photos-track">
-                    {% for picture in shown %}
-                        <div class="p-search-preview__slide">
-                            <img src="{{ url('gallery_image', { id: picture.id }) }}" alt="{{ picture.title|e('html_attr') }}" loading="lazy">
-                        </div>
-                    {% endfor %}
-                </div>
-                {% if shown|length > 1 %}
-                    <span class="p-search-preview__counter"><i class="fas fa-images" aria-hidden="true"></i> <span class="js-preview-photos-counter" data-total="{{ shown|length }}">1 / {{ shown|length }}</span></span>
-                    <span class="p-search-preview__navs">
-                        <button type="button" class="p-search-preview__nav p-search-preview__nav--prev js-preview-photos-prev" aria-label="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
-                        <button type="button" class="p-search-preview__nav p-search-preview__nav--next js-preview-photos-next" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
-                    </span>
-                {% endif %}
+            <div class="p-search-preview__mosaic js-preview-gallery" data-images="{{ images|json_encode|e('html_attr') }}"
+                 data-label-close="{{ 'close'|trans|striptags }}" data-label-previous="{{ 'landing.beinformed.previous'|trans|striptags }}" data-label-next="{{ 'landing.beinformed.next'|trans|striptags }}">
+                {% for picture in shown %}
+                    <button type="button" class="p-search-preview__shot js-preview-gallery-open" data-index="{{ loop.index0 }}"
+                            style="background-image: url('{{ url('gallery_thumbnail', { id: picture.id, t: 2 }) }}')"
+                            aria-label="{{ picture.title ?: 'profile.menu.images'|trans|striptags }}">
+                        {% if loop.last and more > 0 %}<span class="p-search-preview__more">+{{ more }}</span>{% endif %}
+                    </button>
+                {% endfor %}
             </div>
         </section>
     {% endif %}

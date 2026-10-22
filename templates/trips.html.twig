@@ -10,13 +10,17 @@
     <main role="main" class="p-trips">
       <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000"></div>
       <header class="p-trips__head">
-        <h1 class="p-trips__title">{% block page_title %}{{ block('title')|trim }}{% endblock %}</h1>
+        <div class="p-trips__top">
+          <h1 class="p-trips__title">{% block page_title %}{{ block('title')|trim }}{% endblock %}</h1>
+          {% if submenu is defined and submenu.items.new_trip is defined and submenu.active != 'new_trip' %}
+            <a class="p-trips__new" href="{{ submenu.items.new_trip.url }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ submenu.items.new_trip.key|lower|trans }}</a>
+          {% endif %}
+        </div>
+        {# My trips and Visitors as tabs; Create is the button next to the title #}
         {% if submenu is defined %}
           <nav class="p-trips__tabs" aria-label="{{ 'trip'|trans }}">
             {% for filter, menuItem in submenu.items %}
-              {% if filter == 'new_trip' %}
-                <a class="p-trips__new{% if submenu.active == filter %} is-active{% endif %}" href="{{ menuItem.url }}"{% if submenu.active == filter %} aria-current="page"{% endif %}><i class="fa fa-plus" aria-hidden="true"></i> {{ menuItem.key|lower|trans }}</a>
-              {% else %}
+              {% if filter != 'new_trip' %}
                 <a class="p-trips__tab{% if submenu.active == filter %} is-active{% endif %}" href="{{ menuItem.url }}"{% if submenu.active == filter %} aria-current="page"{% endif %}>{{ menuItem.key|lower|trans }}</a>
               {% endif %}
             {% endfor %}

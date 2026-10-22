@@ -3,13 +3,16 @@
   Shown in the search preview's frame once a message or a stay request is sent: it fills
   the panel with a short animation (the paper plane flies off, a check is drawn), a title
   and two ways on. It tells the preview with "bw-contact-sent"; "Back to the search" (or
-  "Back to the profile", ?from=profile) sends "bw-contact-close" so the page closes the panel.
+  "Back to the profile", ?from=profile) and the X send "bw-contact-close" so the page closes the panel.
 #}
 {% set name = member.shortNameOrUsername %}
 {% block title %}{{ ('contact.sent.' ~ kind ~ '.title')|trans }}{% endblock title %}
 
 {% block content %}
     <div class="c-embed-sent c-embed-sent--{{ kind }}" role="status">
+        <button type="button" class="c-embed-sent__close js-embed-sent-close" aria-label="{{ 'close'|trans }}">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
         <div class="c-embed-sent__scene" aria-hidden="true">
             <span class="c-embed-sent__ring"></span>
             <span class="c-embed-sent__ring c-embed-sent__ring--late"></span>
@@ -41,12 +44,14 @@
             if (parentWindow) {
                 parentWindow.postMessage({ type: 'bw-contact-sent', kind: '{{ kind }}' }, window.location.origin);
             }
-            document.querySelector('.js-embed-sent-close').addEventListener('click', function () {
-                if (parentWindow) {
-                    parentWindow.postMessage({ type: 'bw-contact-close' }, window.location.origin);
-                } else {
-                    window.location.href = '{{ path('members_profile', { username: member.username }) }}';
-                }
+            document.querySelectorAll('.js-embed-sent-close').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    if (parentWindow) {
+                        parentWindow.postMessage({ type: 'bw-contact-close' }, window.location.origin);
+                    } else {
+                        window.location.href = '{{ path('members_profile', { username: member.username }) }}';
+                    }
+                });
             });
         })();
     </script>

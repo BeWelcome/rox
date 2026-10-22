@@ -15,6 +15,15 @@ export function createContactPanel(panel, {from, onBack}) {
     const frame = panel.querySelector('.js-search-contact-frame');
     const title = panel.querySelector('.js-search-contact-title');
 
+    // Without adding entries to the window's history (the back button stays on the page)
+    function load(url) {
+        try {
+            frame.contentWindow.location.replace(url);
+        } catch (error) {
+            frame.src = url;
+        }
+    }
+
     function isOpen() {
         return panel.classList.contains('is-open');
     }
@@ -26,7 +35,7 @@ export function createContactPanel(panel, {from, onBack}) {
         panel.classList.remove('is-sent', 'is-ready');
         title.textContent = link.dataset.title || link.textContent.trim();
         frame.title = link.dataset.title || '';
-        frame.src = url.toString();
+        load(url.toString());
         panel.hidden = false;
         // Next frame, so that the slide is animated
         requestAnimationFrame(() => requestAnimationFrame(() => panel.classList.add('is-open')));
@@ -40,7 +49,7 @@ export function createContactPanel(panel, {from, onBack}) {
         const reset = () => {
             if (!isOpen()) {
                 panel.hidden = true;
-                frame.src = 'about:blank';
+                load('about:blank');
             }
         };
         if (now) {

@@ -9423,3 +9423,7 @@ body.is-embedded { background: #fff; }
 .c-contact-blocked__text a { color: #c2410c; font-weight: 600; }
 .c-contact .c-contact-blocked__back { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; padding: 0.7rem 1.4rem; border: 0; border-radius: 999px; background: #ea7a2e; color: #fff; font-size: 0.9375rem; font-weight: 700; }
 .c-contact .c-contact-blocked__back:hover { background: #d9661a; }
+/* The X at the top right of the sent confirmation: closes the panel */
+.c-embed-sent { position: relative; }
+.c-embed-sent .c-embed-sent__close { position: absolute; top: 1rem; right: 1rem; display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; padding: 0; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.2); color: #fff; font-size: 1rem; transition: background 0.15s ease; }
+.c-embed-sent .c-embed-sent__close:hover { background: rgba(255, 255, 255, 0.32); }

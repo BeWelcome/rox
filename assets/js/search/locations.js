@@ -491,8 +491,18 @@ function initPreviewPhotos(root) {
 const contactPanel = preview ? preview.querySelector('.js-search-contact') : null;
 const contact = contactPanel ? createContactPanel(contactPanel, {
     from: 'search',
-    onBack: (source) => (source === 'done' ? closePreview() : contact.close(false)),
+    onBack: (source) => (source === 'done' ? closeAfterSent() : contact.close(false)),
 }) : null;
+
+// After sending, close everything at once. Not with history.back(): the form sent in the
+// frame added its own entries to the history, going back would only show the form again.
+function closeAfterSent() {
+    hidePreview();
+    if (previewOpenedHere && history.state && history.state.searchPreview) {
+        history.replaceState(null, '');
+        previewOpenedHere = false;
+    }
+}
 
 function contactIsOpen() {
     return contact !== null && contact.isOpen();

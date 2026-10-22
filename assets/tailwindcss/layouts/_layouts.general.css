@@ -9781,3 +9781,15 @@ body.is-embedded { background: #fff; }
     grid-template-columns: 220px minmax(320px, 400px) minmax(0, 1fr);
   }
 }
+
+/* Every conversation: messages on the light grey, the other's bubbles in white,
+   ours in a clearer orange tint with darker time so they read well on the grey */
+.c-inbox__pane .c-inbox-thread { background: #f4f4f5; }
+.c-inbox__pane .c-bubble:not(.c-bubble--own) { background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
+.c-inbox__pane .c-inbox-thread__day span { background: #e4e4e7; color: #52525b; font-weight: 600; }
+.c-bubble--own { background: #fcd9bd; color: #1c1917; }
+.c-bubble--own .c-bubble__time { color: #9a5a2e; }
+/* The answer form stays centred on a computer (".c-inbox-compose > form" set margin 0) */
+@media (min-width: 768px) {
+  .c-inbox-compose > form.c-decide { margin-right: auto; margin-left: auto; }
+}

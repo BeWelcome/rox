@@ -50,9 +50,11 @@
             } %}
             {% endif %}
 
-            {{ form_start(form, { attr: { novalidate: 'novalidate', class: 'c-inbox-new' } }) }}
+            {# In the search preview's frame it takes the stay request's look (c-request-new, toolbar under the text) #}
+            {{ form_start(form, { attr: { novalidate: 'novalidate', class: 'c-inbox-new' ~ (embedded ? ' c-request-new' : '') } }) }}
                 <div class="c-inbox-new__body">
                     {# Who the message goes to #}
+                    {% if not embedded %}
                     <div class="p-message-form__receiver">
                         <div class="p-message-form__who">
                             <a class="p-message-form__name" href="{{ profileUrl }}">{{ receiver.shortNameOrUsername }}</a>
@@ -65,6 +67,7 @@
                             <span class="visually-hidden">{{ 'messages_allmessageswith'|trans|format(receiver.shortNameOrUsername) }}</span>
                         </a>
                     </div>
+                    {% endif %}
 
                     {# Field errors are shown inside each label by rox_form_theme (form_label_errors). #}
                     {{ form_errors(form) }}
@@ -74,7 +77,7 @@
                         {{ form_widget(form.subject.subject, { attr: { class: 'o-input' } }) }}
                     </div>
 
-                    <div class="p-message-form__field c-inbox-compose__editor">
+                    <div class="p-message-form__field c-inbox-compose__editor{% if embedded %} c-editor-bottom{% endif %}">
                         {{ form_label(form.message, null, { label_attr: { class: 'o-label' } }) }}
                         {{ form_widget(form.message) }}
                     </div>
@@ -83,8 +86,10 @@
                 </div>
 
                 <div class="c-inbox-new__actions">
-                    <a class="c-inbox-compose__cancel" href="{{ profileUrl }}">{{ 'cancel'|trans }}</a>
-                    <button type="submit" class="c-inbox-reply__btn c-inbox-compose__send">{{ 'message.send'|trans }}</button>
+                    {% if not embedded %}<a class="c-inbox-compose__cancel" href="{{ profileUrl }}">{{ 'cancel'|trans }}</a>{% endif %}
+                    <button type="submit" class="c-inbox-reply__btn c-inbox-compose__send">
+                        {%- if embedded %}<i class="fas fa-paper-plane" aria-hidden="true"></i> {% endif %}{{ 'message.send'|trans -}}
+                    </button>
                 </div>
             {{ form_end(form) }}
         </section>

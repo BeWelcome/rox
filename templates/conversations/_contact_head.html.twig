@@ -3,7 +3,7 @@
   arrow, the member's photo with a house when they host, and what is being written.
   The back arrow asks the page around the frame to go back
   (contact/panel.js); "bw-contact-ready" tells it the frame has its own head.
-  member: who the message or request goes to. kind: 'message' or 'request'.
+  member: who the message or request goes to. kind: 'message', 'request' or 'invitation'.
 #}
 {% set _hosting = member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
 <header class="c-contact-head">
@@ -18,7 +18,7 @@
     </span>
     <div class="c-contact-head__who">
         <p class="c-contact-head__kind">
-            <i class="fas {{ kind == 'request' ? 'fa-bed' : 'fa-envelope' }}" aria-hidden="true"></i>
+            <i class="fas {{ { request: 'fa-bed', invitation: 'fa-house-user' }[kind] ?? 'fa-envelope' }}" aria-hidden="true"></i>
             {{ ('contact.head.' ~ kind)|trans }}
         </p>
         <p class="c-contact-head__name">{{ member.shortNameOrUsername }}</p>

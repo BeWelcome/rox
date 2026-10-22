@@ -9430,3 +9430,15 @@ body.is-embedded { background: #fff; }
 /* Visitors tab: the start of the trip's text, two lines at most */
 .c-home-item .c-home-item__excerpt { display: -webkit-box; margin: 0.2rem 0 0.1rem; overflow: hidden; color: #334155; font-size: 0.8125rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow-wrap: anywhere; }
 .c-home-item__excerpt + .c-home-item__meta { color: #94a3b8; }
+/* Invitation side panel: the trip, as the traveller wrote it */
+.c-contact .c-contact-trip { display: flex; flex-direction: column; gap: 0.4rem; padding: 0.9rem 1rem; border-radius: 1rem; background: #fff8f1; }
+.c-contact .c-contact-trip__where { display: flex; flex-wrap: wrap; align-items: center; gap: 0.15rem 0.4rem; margin: 0; color: #64748b; font-size: 0.8125rem; }
+.c-contact-trip__where > i, .c-contact-trip__where > svg { color: #ea7a2e; }
+.c-contact-trip__where i, .c-contact-trip__where svg { font-size: 0.75rem; }
+.c-contact .c-contact-trip__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.05rem; font-weight: 700; }
+.c-contact .c-contact-trip__text { max-height: 9rem; overflow-y: auto; color: #334155; font-size: 0.875rem; line-height: 1.55; overflow-wrap: anywhere; }
+.c-contact-trip__text p { margin: 0 0 0.5rem; }
+.c-contact-trip__text p:last-child { margin-bottom: 0; }
+.c-contact .c-contact-trip__link { display: inline-flex; align-items: center; gap: 0.35rem; color: #c2410c; font-size: 0.8125rem; font-weight: 700; text-decoration: none; }
+.c-contact-trip__link:hover { text-decoration: underline; }
+.c-contact-trip__link i, .c-contact-trip__link svg { font-size: 0.7rem; }

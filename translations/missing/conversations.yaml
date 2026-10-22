@@ -140,3 +140,27 @@ contact.blocked.request.title:
 contact.blocked.back:
     - 'Back to the preview'
     - Button in the search preview's side panel when a message or stay request can't be written; goes back to the member's preview
+contact.head.invitation:
+    - 'Invite to stay'
+    - Small label above the traveller's name at the top of the side panel used to invite them (home page, Visitors)
+contact.blocked.invitation.title:
+    - "You can't send an invitation right now"
+    - Title in the side panel when the member can't invite a traveller (limit reached, no about me...)
+contact.sent.invitation.title:
+    - 'Invitation sent!'
+    - Title of the confirmation shown in the side panel once an invitation to stay has been sent
+contact.sent.invitation.text:
+    - '{username} gets it in their messages and by email. You will be told as soon as they answer.'
+    - Text under the title of the confirmation once an invitation to stay has been sent from the side panel
+contact.sent.back.home:
+    - 'Back to the home page'
+    - Button of the confirmation shown on the home page after sending a message or invitation from the side panel; closes the panel
+contact.send.invitation:
+    - 'Send invitation'
+    - Button at the bottom of the side panel used to invite a traveller to stay
+contact.invitation.subject.placeholder:
+    - 'e.g. Welcome to {city}'
+    - Placeholder of the subject field of an invitation written from the side panel; {city} is where the traveller goes
+contact.trip.see:
+    - 'See the whole trip'
+    - Link under the trip shown in the invitation side panel; opens the trip page

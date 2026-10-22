@@ -33,7 +33,7 @@
             </button>
         </form>
         {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
-            <a class="c-home-item__action" href="{{ path('message_new', { username: creator }) }}" aria-label="{{ 'message.write_to'|trans|format(creator) }}" title="{{ 'message.write_to'|trans|format(creator) }}">
+            <a class="c-home-item__action js-contact-open" href="{{ path('message_new', { username: creator }) }}" data-title="{{ 'message.write_to'|trans|format(leg.trip.creator.shortNameOrUsername)|striptags }}" aria-label="{{ 'message.write_to'|trans|format(creator) }}" title="{{ 'message.write_to'|trans|format(creator) }}">
                 <i class="fa fa-fw fa-envelope" aria-hidden="true"></i>
             </a>
         {% endif %}
@@ -44,7 +44,7 @@
                     <i class="fa fa-fw fa-house-user" aria-hidden="true"></i>
                 </a>
             {% else %}
-                <a class="c-home-item__action c-home-item__action--primary" href="{{ path('hosting_invitation', { leg: leg.id }) }}">
+                <a class="c-home-item__action c-home-item__action--primary js-contact-open" href="{{ path('hosting_invitation', { leg: leg.id }) }}" data-title="{{ 'invite.username'|trans|format(leg.trip.creator.shortNameOrUsername)|striptags }}">
                     <i class="fa fa-fw fa-house-user" aria-hidden="true"></i>
                 </a>
             {% endif %}

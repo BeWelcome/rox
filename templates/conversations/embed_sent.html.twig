@@ -16,7 +16,7 @@
         <div class="c-embed-sent__scene" aria-hidden="true">
             <span class="c-embed-sent__ring"></span>
             <span class="c-embed-sent__ring c-embed-sent__ring--late"></span>
-            <span class="c-embed-sent__plane"><i class="fas {{ kind == 'request' ? 'fa-bed' : 'fa-paper-plane' }}"></i></span>
+            <span class="c-embed-sent__plane"><i class="fas {{ { request: 'fa-bed', invitation: 'fa-house-user' }[kind] ?? 'fa-paper-plane' }}"></i></span>
             <svg class="c-embed-sent__check" viewBox="0 0 64 64">
                 <circle class="c-embed-sent__disc" cx="32" cy="32" r="30"></circle>
                 <path class="c-embed-sent__tick" d="M19 33.5l9 9 17-19"></path>
@@ -31,7 +31,7 @@
 
         <div class="c-embed-sent__actions">
             <button type="button" class="c-embed-sent__btn c-embed-sent__btn--primary js-embed-sent-close">
-                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ (app.request.query.get('from') == 'profile' ? 'contact.sent.back.profile' : 'contact.sent.back')|trans }}
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ ({ profile: 'contact.sent.back.profile', home: 'contact.sent.back.home' }[app.request.query.get('from')] ?? 'contact.sent.back')|trans }}
             </button>
             <a class="c-embed-sent__btn" href="{{ conversation is defined and conversation.id ? path('conversation_view', { id: conversation.id }) : path('conversations_with', { username: member.username }) }}" target="_top">
                 <i class="fas fa-comments" aria-hidden="true"></i> {{ 'contact.sent.conversation'|trans }}

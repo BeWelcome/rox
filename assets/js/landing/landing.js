@@ -1,5 +1,9 @@
 import {initializeSingleAutoComplete} from '../suggest/locations';
 import './countries';
+import {initContactDrawer} from '../contact/drawer';
+
+// Visitors: write to a traveller or invite them in a side panel, without leaving the page
+initContactDrawer('home');
 
 function onChange(element, result) {
     const locationFullName = document.getElementById('tiny_location_fullname');

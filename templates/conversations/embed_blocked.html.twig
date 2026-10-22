@@ -17,7 +17,7 @@
                 <p class="c-contact-blocked__text">{{ message|raw }}</p>
             {% endfor %}
             <button type="button" class="c-contact-blocked__back js-contact-back-alt">
-                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ (app.request.query.get('from') == 'profile' ? 'contact.sent.back.profile' : 'contact.blocked.back')|trans }}
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ ({ profile: 'contact.sent.back.profile', home: 'contact.sent.back.home' }[app.request.query.get('from')] ?? 'contact.blocked.back')|trans }}
             </button>
         </div>
     </div>

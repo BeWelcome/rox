@@ -19,6 +19,7 @@ use App\Service\BrowserNotificationService;
 use App\Service\InboxFolders;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
+use App\Utilities\ContactPanelTrait;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -36,6 +37,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class InvitationController extends BaseRequestAndInvitationController
 {
     use TranslatedFlashTrait;
+    use ContactPanelTrait;
     use TranslatorTrait;
 
     private InvitationModel $invitationModel;
@@ -73,13 +75,13 @@ class InvitationController extends BaseRequestAndInvitationController
         if ($host === $guest) {
             $this->addTranslatedFlash('notice', 'flash.request.invitation.self');
 
-            return $this->redirectToRoute('homepage');
+            return $this->notAllowedInPanel($request, $guest, 'invitation', $this->redirectToRoute('homepage'));
         }
 
         if (MemberStatusType::ACCOUNT_ACTIVATED === $host->getStatus()) {
             $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
 
-            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+            return $this->notAllowedInPanel($request, $guest, 'invitation', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
         }
 
         if (!$guest->isBrowsable()) {
@@ -96,7 +98,7 @@ class InvitationController extends BaseRequestAndInvitationController
             $this->addTranslatedFlash('error', 'flash.request.limit');
             $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->notAllowedInPanel($request, $guest, 'invitation', $this->redirect($referrer));
         }
 
         $redirectOnNotAllowed = false;
@@ -127,7 +129,7 @@ class InvitationController extends BaseRequestAndInvitationController
         }
 
         if ($redirectOnNotAllowed) {
-            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
+            return $this->notAllowedInPanel($request, $guest, 'invitation', $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]));
         }
 
         $hostingRequest = new HostingRequest();
@@ -161,6 +163,15 @@ class InvitationController extends BaseRequestAndInvitationController
                 false,
                 null
             );
+
+            // Sent from the side panel (in a frame): a short "sent" page instead of the profile.
+            if ($request->query->getBoolean('embed')) {
+                return $this->render('conversations/embed_sent.html.twig', [
+                    'kind' => 'invitation',
+                    'member' => $guest,
+                    'conversation' => $invitation,
+                ]);
+            }
 
             $this->addTranslatedFlash('notice', 'flash.request.invitation.sent');
 

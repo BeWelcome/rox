@@ -1,0 +1,17 @@
+{#
+  Side panel (bottom sheet on phones) to write a message, a stay request or an invitation
+  without leaving the page: the links with js-contact-open open their page in it (see
+  assets/js/contact/drawer.js). Used on the profile and on the home page (Visitors).
+#}
+<div class="p-search-preview__backdrop js-contact-drawer-close" hidden></div>
+<aside class="p-search-preview p-contact-drawer js-contact-drawer" aria-hidden="true">
+  <div class="p-search-contact js-search-contact" hidden>
+    <div class="p-search-contact__head">
+      <button type="button" class="p-search-contact__back js-search-contact-back" aria-label="{{ 'back'|trans }}">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+      </button>
+      <h2 class="p-search-contact__title js-search-contact-title"></h2>
+    </div>
+    <iframe class="p-search-contact__frame js-search-contact-frame" title="" src="about:blank"></iframe>
+  </div>
+</aside>

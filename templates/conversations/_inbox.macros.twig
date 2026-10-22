@@ -35,6 +35,8 @@
         spam: { key: 'conversations.spam', icon: 'fas fa-flag' },
         deleted: { key: 'conversations.deleted', icon: 'fas fa-trash' },
     } %}
+    {# Unread conversations show as a count next to their folder, in the column and in the drop-down #}
+    {% set unreadCounts = inbox_unread_counts() %}
     {% if variant == 'menu' %}
         <nav class="c-inbox-folders__menu" aria-label="{{ 'messages'|trans }}">
             {% for folder, item in folders %}
@@ -42,12 +44,11 @@
                    {% if folder == active %}aria-current="page"{% endif %}>
                     <i class="{{ item.icon }} fa-fw" aria-hidden="true"></i>
                     <span>{{ item.key|trans }}</span>
+                    {% if (unreadCounts[folder] ?? 0) > 0 %}<span class="c-inbox-folder__count">{{ unreadCounts[folder] }}</span>{% endif %}
                 </a>
             {% endfor %}
         </nav>
     {% else %}
-        {# Unread conversations show as a count next to their folder #}
-        {% set unreadCounts = inbox_unread_counts() %}
         <nav class="c-inbox__nav" aria-label="{{ 'messages'|trans }}">
             <h1 class="c-inbox__nav-title">{{ 'messages'|trans }}</h1>
             {% for folder, item in folders %}

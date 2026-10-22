@@ -9524,23 +9524,12 @@ body.is-embedded { background: #fff; }
 .c-home-item__tag.c-home-item__tag--plain { background: #eef2f7; color: #475569; font-weight: 600; }
 .c-home-item__tag--plain i, .c-home-item__tag--plain svg { color: #94a3b8; }
 .c-home-item__short { display: none; }
-.c-home-item--leg .c-home-item__actions { position: relative; z-index: 2; align-self: center; }
-.c-home-item__hide { display: inline-flex; align-items: center; justify-content: center; width: 2.4rem; height: 2.4rem; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #94a3b8; font-size: 0.95rem; cursor: pointer; }
-.c-home-item__hide:hover { background: rgba(15, 23, 42, 0.06); color: #475569; }
-/* What is left of a hidden trip: Undo shows it again */
-.c-home-undo { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0.35rem 0; padding: 0.75rem 1rem; border: 1px dashed #e2e8f0; border-radius: 0.9rem; color: #64748b; font-size: 0.875rem; }
-.c-home-undo__text { display: inline-flex; align-items: center; gap: 0.5rem; }
-.c-home-undo__text i, .c-home-undo__text svg { color: #94a3b8; }
-.c-home-undo__button { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.5rem; border: 0; border-radius: 999px; background: none; color: #c2410c; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
-.c-home-undo__button:hover { background: #fff4ea; }
 @media (max-width: 575.98px) {
   .c-home-radius__text { display: none; }
   .c-home-item--leg .c-home-item__avatar { width: 3.25rem; height: 3.25rem; }
   .c-home-item__when i, .c-home-item__when svg { display: none; }
   .c-home-item__long { display: none; }
   .c-home-item__short { display: inline; }
-  .c-home-item--leg .c-home-item__tags { padding-right: 2.75rem; }
-  .c-home-item--leg .c-home-item__actions { position: absolute; right: 0.6rem; bottom: 0.8rem; }
 }
 /* Visitors page: the card whose trip is in the side panel */
 .p-trips-leg.p-trips-leg--panel.is-active { border-color: #fbc08a; background: #fffaf5; }

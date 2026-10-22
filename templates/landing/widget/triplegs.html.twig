@@ -1,7 +1,7 @@
 {#
   Members travelling near the member, on the home page (loaded into the Visitors tab).
 #}
-<div id="legsdisplay" class="c-home-list" data-hidden="{{ 'landing.visitors.hidden'|trans }}" data-undo="{{ 'landing.visitors.undo'|trans }}">
+<div id="legsdisplay" class="c-home-list">
     {% for leg in legs %}
         {% include 'trip/landing.html.twig' with { leg: leg } %}
     {% else %}

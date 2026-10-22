@@ -2,7 +2,7 @@
   One trip leg near the member, in the Visitors tab of the home page: the traveller and
   the dates, the trip's title and the start of its text, then tags (looking for a host or
   already invited, the place, the other stops). The row opens the trip in the side panel,
-  where the member can invite or write; the eye hides the trip (landing.js leaves an Undo).
+  where the member can invite or write.
 #}
 {% set traveller = leg.trip.creator %}
 {% set invited = leg.invitationBy(app.user) %}
@@ -47,14 +47,5 @@
                 <span class="c-home-item__tag c-home-item__tag--plain"><i class="fas fa-route" aria-hidden="true"></i> {{ 'landing.visitors.more.stops'|trans({ count: otherStops }) }}</span>
             {% endif %}
         </p>
-    </div>
-    <div class="c-home-item__actions">
-        <form method="post" action="{{ path('trip_hide', { id: leg.id }) }}" class="js-hide-leg" data-unhide="{{ path('trip_unhide', { id: leg.id }) }}">
-            <input type="hidden" name="_token" value="{{ csrf_token('hide_leg') }}">
-            <input type="hidden" name="redirectTo" value="homepage">
-            <button type="submit" class="c-home-item__hide" aria-label="{{ 'trip.hide'|trans }}" title="{{ 'trip.hide'|trans }}">
-                <i class="fa fa-eye-slash" aria-hidden="true"></i>
-            </button>
-        </form>
     </div>
 </div>

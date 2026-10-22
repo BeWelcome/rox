@@ -195,9 +195,3 @@ landing.visitors.host:
 landing.visitors.more.stops:
     - '{count, plural, one {+# stop} other {+# stops}}'
     - Tag on a trip of the Visitors list of the home page; how many other stops the trip has
-landing.visitors.hidden:
-    - 'Trip hidden'
-    - Line left in the Visitors list of the home page after hiding a trip, before the Undo button
-landing.visitors.undo:
-    - 'Undo'
-    - Button after hiding a trip in the Visitors list of the home page; shows the trip again

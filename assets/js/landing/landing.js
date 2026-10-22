@@ -174,60 +174,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-document.addEventListener('submit', function(event) {
-    const form = event.target.closest('.js-hide-leg');
-    if (!form) {
-        return;
-    }
-
-    event.preventDefault();
-
-    fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-        }
-    }).then(function(response) {
-        if (response.ok) {
-            leaveUndo(form);
-        }
-    });
-});
-
-// A hidden trip leaves a line with "Undo", which shows it again (trip/landing.html.twig)
-function leaveUndo(form) {
-    const row = form.closest('.c-dashboard__item');
-    const list = document.getElementById('legsdisplay');
-    if (!form.dataset.unhide || !list) {
-        row.remove();
-        return;
-    }
-    const undo = document.createElement('div');
-    undo.className = 'c-home-undo';
-    undo.innerHTML = '<span class="c-home-undo__text"><i class="fa fa-eye-slash" aria-hidden="true"></i> </span>'
-        + '<button type="button" class="c-home-undo__button"><i class="fas fa-undo" aria-hidden="true"></i> </button>';
-    undo.querySelector('.c-home-undo__text').append(list.dataset.hidden || '');
-    undo.querySelector('.c-home-undo__button').append(list.dataset.undo || '');
-    row.replaceWith(undo);
-    undo.querySelector('button').addEventListener('click', function () {
-        undo.querySelector('button').disabled = true;
-        fetch(form.dataset.unhide, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        }).then(function(response) {
-            if (response.ok) {
-                undo.replaceWith(row);
-            } else {
-                undo.querySelector('button').disabled = false;
-            }
-        });
-    });
-}
-
 var Home = {
     onTabChange: function (e) {
         switch(e.target.getAttribute('aria-controls')) {

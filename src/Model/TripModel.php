@@ -197,17 +197,6 @@ class TripModel
         }
     }
 
-    public function markLegAsVisible(Member $member, Subtrip $leg): void
-    {
-        $repository = $this->entityManager->getRepository(MemberLegHidden::class);
-        $hidden = $repository->findOneBy(['member' => $member, 'leg' => $leg]);
-
-        if (null !== $hidden) {
-            $this->entityManager->remove($hidden);
-            $this->entityManager->flush();
-        }
-    }
-
     public function notifyHostsAboutTrip(Trip $trip): void
     {
         foreach ($trip->getLegs() as $leg) {

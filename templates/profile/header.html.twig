@@ -197,7 +197,7 @@
             </div>
           {% endif %}
         {% elseif canContact %}
-          <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="{{ existingConversation ? 'p-hero__btn p-pro__btn p-pro__btn--message' : 'js-contact-open p-hero__btn p-pro__btn p-pro__btn--message' }}"
+          <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-hero__btn p-pro__btn p-pro__btn--message"
             data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
             <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
           </a>
@@ -303,7 +303,7 @@
   {# ── Phones: message and request stay stuck to the bottom of the screen ── #}
   {% if canContact %}
     <div class="p-pro__bottom-bar">
-      <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="{{ existingConversation ? 'p-pro__btn p-pro__btn--message' : 'js-contact-open p-pro__btn p-pro__btn--message' }}"
+      <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-pro__btn p-pro__btn--message"
             data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
         <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
       </a>

@@ -33,6 +33,11 @@
 
     {% set listParams = (initiator != 2 ? { initiator: initiator } : {})|merge(unreadOnly ? { unread_only: 1 } : {}) %}
 
+    {% if app.request.query.getBoolean('embed') and reply_form %}
+        {# The "contact a member" side panel (profile "Send" when a conversation already exists) #}
+        {% include 'conversations/_embed_thread.html.twig' %}
+    {% else %}
+
     <div class="c-inbox c-inbox--thread">
         {{ inbox.nav(folder, 'column') }}
 
@@ -89,4 +94,5 @@
     </div>
 
     {% include 'conversations/report.html.twig' with { 'message': thread|first, 'myself': app.user } %}
+    {% endif %}
 {% endblock content %}

@@ -10084,3 +10084,7 @@ body.is-embedded { background: #fff; }
 .p-photo-viewer__nav--prev { left: 0.75rem; }
 .p-photo-viewer__nav--next { right: 0.75rem; }
 .p-photo-viewer__counter { position: absolute; top: 1.4rem; left: 50%; color: #fff; font-size: 0.875rem; font-weight: 700; transform: translateX(-50%); }
+
+/* Side panel: a conversation already started (profile "Send"), messages on grey, reply at the bottom */
+.c-contact--thread .c-inbox-thread { background: #f4f4f5; }
+.c-contact__foot--reply { padding: 0.6rem 0.75rem; }

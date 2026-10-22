@@ -197,3 +197,6 @@ conversations.filter.all:
 conversation.report.short:
     - 'Report'
     - Short label of the button at the top of a conversation that reports it to BeWelcome
+contact.head.conversation:
+    - 'Conversation with'
+    - Small label above the member's name at the top of the side panel showing a conversation already started with them (profile)

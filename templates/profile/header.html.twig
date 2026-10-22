@@ -84,7 +84,18 @@
         {% endif %}
       </div>
 
-      {# ── Who: name, gender, username, place, occupation, last login ── #}
+      {# ── Who: name and username; place, occupation, gender; activity and membership ── #}
+      {% set gender = member.isGenderVisible and member.gender in ['female', 'male', 'other'] ? member.gender : null %}
+      {% if gender or showAge %}
+        {% set _who %}
+          {%- if gender -%}
+            <i class="fas {{ { female: 'fa-venus', male: 'fa-mars', other: 'fa-genderless' }[gender] }}" aria-hidden="true"></i>
+            <span>{{ gender|trans }}</span>
+          {%- endif -%}
+          {%- if gender and showAge %}<span aria-hidden="true">·</span>{% endif -%}
+          {%- if showAge %}<span>{{ member.age }}</span>{% endif -%}
+        {% endset %}
+      {% endif %}
       <div class="p-pro__info">
         <div class="p-pro__name-row">
           <h1 class="p-pro__name">
@@ -94,50 +105,54 @@
               {{ member.visibleName != '' ? member.visibleName : member.Username }}
             {%- endif -%}
           </h1>
-          {% set gender = member.isGenderVisible and member.gender in ['female', 'male', 'other'] ? member.gender : null %}
-          {% if gender or showAge %}
-            <span class="p-search-card__who p-search-card__who--{{ gender ?: 'none' }} p-pro__who">
-              {%- if gender -%}
-                <i class="fas {{ { female: 'fa-venus', male: 'fa-mars', other: 'fa-genderless' }[gender] }}" aria-hidden="true"></i>
-                <span>{{ gender|trans }}</span>
-              {%- endif -%}
-              {%- if gender and showAge %}<span aria-hidden="true">·</span>{% endif -%}
-              {%- if showAge %}<span>{{ member.age }}</span>{% endif -%}
-            </span>
-          {% endif %}
           {% if member.visibleName != '' %}<span class="p-pro__username">@{{ member.Username }}</span>{% endif %}
+          {# On phones the gender sits next to the name, on wider screens at the end of the next line #}
+          {% if _who is defined %}
+            <span class="p-search-card__who p-search-card__who--{{ gender ?: 'none' }} p-pro__who p-pro__who--name">{{ _who }}</span>
+          {% endif %}
         </div>
 
-        {% if not address is same as(false) %}
-          {% set location = address.location %}
-          {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
-          {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
-          <p class="p-pro__place">
-            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
-            <a class="p-pro__city" href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>
-            {%- if not location.admin1 is null -%}
-              <span class="p-pro__region">, <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId, region: location.admin1id}) }}">{{ location.admin1.name }}</a></span>
-            {%- endif -%}
-            , <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
-          </p>
-        {% else %}
-          <p class="p-pro__place p-pro__place--empty">{{ 'profile.no.city.yet'|trans }}</p>
-        {% endif %}
-
-        {% if occupation != '' %}
-          <p class="p-pro__occupation">{{ occupation|purify }}</p>
-        {% endif %}
+        <p class="p-pro__meta">
+          {% if not address is same as(false) %}
+            {% set location = address.location %}
+            {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
+            {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
+            <span class="p-pro__meta-item p-pro__place">
+              <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+              <a class="p-pro__city" href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>,
+              <a class="p-pro__country" href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
+            </span>
+          {% else %}
+            <span class="p-pro__meta-item p-pro__place p-pro__place--empty">{{ 'profile.no.city.yet'|trans }}</span>
+          {% endif %}
+          {% if occupation != '' %}
+            <span class="p-pro__meta-item p-pro__occupation">
+              <i class="fas fa-briefcase" aria-hidden="true"></i>
+              <span class="visually-hidden">{{ 'profile.occupation'|trans }}:</span> {{ occupation|purify }}
+            </span>
+          {% endif %}
+          {% if _who is defined %}
+            <span class="p-pro__meta-item p-pro__meta-item--who">
+              <span class="p-search-card__who p-search-card__who--{{ gender ?: 'none' }} p-pro__who">{{ _who }}</span>
+            </span>
+          {% endif %}
+        </p>
 
         <p class="p-pro__activity">
-          <span class="p-pro__online{% if lastActivity.diffInDays <= 7 %} is-active{% elseif lastActivity.diffInDays <= 30 %} is-recent{% endif %}" aria-hidden="true"></span>
-          <span>
-            {{ 'profile.last.activity'|trans }}
-            {% if lastActivity.diffInDays <= 7 %}{{ 'last.activity.privacy'|trans }}{% else %}{{ lastActivity.diffForHumans }}{% endif %}
+          {% set _days = lastActivity.diffInDays %}
+          <span class="p-pro__status{% if _days <= 7 %} is-active{% elseif _days <= 30 %} is-recent{% endif %}">
+            <span class="p-pro__online" aria-hidden="true"></span>
+            {% if _days <= 7 %}
+              {{ 'profile.active.week'|trans }}
+            {% elseif _days <= 30 %}
+              {{ 'profile.active.month'|trans }}
+            {% else %}
+              {{ 'profile.last.activity'|trans }} {{ lastActivity.diffForHumans }}
+            {% endif %}
             {%- if admin %} ({{ lastActivity|format_datetime() }}){% endif -%}
           </span>
-          <span class="p-pro__dot" aria-hidden="true">·</span>
           <span>
-            {{ 'search.member.duration'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}
+            {{ 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}
             {%- if admin %} ({{ member.created|format_datetime() }}){% endif -%}
           </span>
         </p>

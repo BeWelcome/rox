@@ -439,3 +439,12 @@ profile.open.map:
 profile.approximate.area:
     - 'approximate area'
     - Note under the small map of a profile, after the region and country, saying the map only shows the area
+profile.active.week:
+    - 'Active this week'
+    - Green label at the top of a profile when the member logged in during the last 7 days
+profile.active.month:
+    - 'Active this month'
+    - Label at the top of a profile when the member logged in during the last 30 days
+profile.member.for:
+    - 'Member for {duration}'
+    - 'At the top of a profile: how long the person has been a member, e.g. "Member for 2 years"'

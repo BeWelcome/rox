@@ -9489,5 +9489,11 @@ body.is-embedded { background: #fff; }
 .p-trips-leg--panel:hover { border-color: #fbc08a; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); }
 .p-trips-leg--panel .p-trips-leg__cover { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
 .p-trips-leg--panel .p-trips-leg__cover:focus-visible { outline: 2px solid #f37000; outline-offset: 2px; }
-.p-trips-leg--panel .p-trips-leg__avatar, .p-trips-leg--panel .p-trips-leg__name, .p-trips-leg--panel .p-trips-leg__actions > * { position: relative; z-index: 2; }
+.p-trips-leg--panel .p-trips-leg__avatar, .p-trips-leg--panel .p-trips-leg__name { position: relative; z-index: 2; }
+.p-trips-leg__side { display: flex; align-items: center; gap: 0.75rem; align-self: center; }
+.p-trips-leg__chevron { color: #94a3b8; font-size: 0.875rem; }
+.p-trips-leg--panel:hover .p-trips-leg__chevron { color: #f37000; }
+@media (max-width: 640px) {
+  .p-trips-leg__side { grid-column: 2; align-self: start; }
+}
 .p-trips-leg--panel .p-trips-leg__title { margin: 0; }

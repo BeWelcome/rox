@@ -1,8 +1,8 @@
 {% import 'macros.twig' as macros %}
 {#
-  One trip leg in the visitors list: who is coming, where and when, then the
-  actions (invite, message, hide). The card opens the whole trip in the side panel;
-  Invite and Message open their form in it.
+  One trip leg in the visitors list: who is coming, where and when, and whether
+  they look for a host or were already invited. The whole card opens the trip in
+  the side panel, where Invite and Send a message are.
 #}
 {% set creator = leg.trip.creator %}
 {% set invitation = leg.invitationBy(app.user) %}
@@ -38,29 +38,13 @@
     </p>
   </div>
 
-  <div class="p-trips-leg__actions">
-    {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
-      {% if invitation %}
-        <a class="p-trips-btn p-trips-btn--done" href="{{ path('conversation_reply', { id: invitation.messages[0].id }) }}" title="{{ 'invitation.reply'|trans|format(creator.username) }}">
-          <i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}
-        </a>
-      {% else %}
-        <a class="p-trips-btn p-trips-btn--primary js-contact-open" href="{{ path('hosting_invitation', { leg: leg.id }) }}" data-title="{{ 'trip.leg.invite'|trans }}" title="{{ 'invite.username'|trans|format(creator.username) }}">
-          <i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invite'|trans }}
-        </a>
-      {% endif %}
+  {# Right side: where things stand, and a chevron; the actions are in the side panel #}
+  <div class="p-trips-leg__side">
+    {% if invitation %}
+      <span class="c-home-item__tag c-home-item__tag--done"><i class="fa fa-check" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}</span>
+    {% elseif constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
+      <span class="c-home-item__tag"><i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.option.looking.for.host'|trans }}</span>
     {% endif %}
-    {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
-      <a class="p-trips-btn js-contact-open" href="{{ path('message_new', { username: creator.username }) }}" data-title="{{ 'message.write_to'|trans|format(creator.shortNameOrUsername)|striptags }}" title="{{ 'message.write_to'|trans|format(creator.username) }}">
-        <i class="fa fa-envelope" aria-hidden="true"></i> {{ 'trip.leg.message'|trans }}
-      </a>
-    {% endif %}
-    <form method="post" action="{{ path('trip_hide', { id: leg.id }) }}" class="js-hide-leg">
-      <input type="hidden" name="_token" value="{{ csrf_token('hide_leg') }}">
-      <input type="hidden" name="redirectTo" value="visitors">
-      <button type="submit" class="p-trips-btn p-trips-btn--icon" aria-label="{{ 'trip.hide'|trans }}" title="{{ 'trip.hide'|trans }}">
-        <i class="fa fa-eye-slash" aria-hidden="true"></i>
-      </button>
-    </form>
+    <span class="p-trips-leg__chevron" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
   </div>
 </article>

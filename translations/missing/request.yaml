@@ -48,3 +48,48 @@ request.hosts.up.to:
 request.flexible.hint:
     - 'A few days earlier or later is fine'
     - Under "My dates are flexible" in the stay request side panel
+request.decide.title:
+    - 'Can you host {username}?'
+    - Title of the host's answer to a new hosting request, above Accept, Maybe and Decline
+request.decide.title.again:
+    - 'Change your answer to {username}?'
+    - Title above the other answers (Accept, Maybe, Decline) once the host has already answered a hosting request
+request.decide.hint:
+    - 'Choose an answer, then add a message.'
+    - Under the title of the host's answer to a hosting request
+request.decide.accept:
+    - 'Accept'
+    - Big button of the host's answer to a hosting request
+request.decide.maybe:
+    - 'Maybe'
+    - Big button of the host's answer to a hosting request
+request.decide.decline:
+    - 'Decline'
+    - Big button of the host's answer to a hosting request
+request.decide.later:
+    - 'Just reply, answer later'
+    - Link under Accept, Maybe and Decline; writes a message without answering the hosting request yet
+request.decide.change:
+    - 'Change'
+    - Link next to the picked answer (Accept, Maybe, Decline) above the message; goes back to the choice
+request.decide.placeholder.accept:
+    - 'Say hi and tell {username} how to reach your place...'
+    - Placeholder of the message when the host accepts a hosting request
+request.decide.placeholder.maybe:
+    - 'Tell {username} what you need to know before saying yes...'
+    - Placeholder of the message when the host answers maybe to a hosting request
+request.decide.placeholder.decline:
+    - "Tell {username} why you can't host this time..."
+    - Placeholder of the message when the host declines a hosting request
+request.decide.placeholder.reply:
+    - 'Write to {username}...'
+    - Placeholder of the message when the host only replies to a hosting request, without answering it
+request.decide.send.accept:
+    - 'Send acceptance'
+    - Send button when the host accepts a hosting request
+request.decide.send.maybe:
+    - 'Send answer'
+    - Send button when the host answers maybe to a hosting request
+request.decide.send.decline:
+    - 'Send decline'
+    - Send button when the host declines a hosting request

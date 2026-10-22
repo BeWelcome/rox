@@ -113,47 +113,73 @@ document.querySelectorAll('.js-request-stepper').forEach((stepper) => {
     refresh();
 });
 
-// The host's answer: Send posts a plain message unless Accept, Maybe or Decline is
-// picked in the options, then it submits as that button. "Decline without message"
-// shows up once Decline is picked.
+// The host's answer, in two steps (request/_respond_host.html.twig): pick Accept,
+// Maybe, Decline or "Just reply", then write the message. Send submits as the picked
+// button; "Change" goes back to the choice. The dates (flexible guest) show for Accept
+// and Maybe; "Decline without message" for Decline.
 document.querySelectorAll('.js-respond').forEach((form) => {
     const send = form.querySelector('.js-respond-send');
     const declineLink = form.querySelector('.js-respond-decline-link');
-    const choices = form.querySelectorAll('.js-respond-choice');
+    const steps = form.querySelectorAll('.js-decide-step');
+    const write = form.querySelector('.js-decide-step[data-step="write"]');
+    const stayDates = form.querySelector('.js-decide-stay');
+    const message = form.querySelector('.js-respond-text');
 
-    const pick = () => {
-        const picked = form.querySelector('.js-respond-choice:checked');
-        if (send && send.dataset.button) {
-            send.name = picked ? picked.dataset.button : send.dataset.button;
+    const show = (step) => steps.forEach((element) => { element.hidden = element.dataset.step !== step; });
+    const resetStay = () => {
+        if (!stayDates) {
+            return;
+        }
+        stayDates.querySelectorAll('input').forEach((input) => {
+            if (input.type === 'radio' || input.type === 'checkbox') {
+                input.checked = input.defaultChecked;
+            } else {
+                input.value = input.defaultValue;
+            }
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+    };
+    const choose = (choice, button) => {
+        if (write) {
+            write.dataset.choice = choice;
+        }
+        form.querySelectorAll('.js-decide-picked, .js-decide-send').forEach((element) => {
+            element.hidden = element.dataset.choice !== choice;
+        });
+        if (send && (button || send.dataset.button)) {
+            send.name = button || send.dataset.button;
         }
         if (declineLink) {
-            declineLink.hidden = !(picked && picked.value === 'decline');
+            declineLink.hidden = choice !== 'decline';
+        }
+        if (stayDates) {
+            const withDates = choice === 'accept' || choice === 'maybe';
+            if (!withDates) {
+                resetStay();
+            }
+            stayDates.hidden = !withDates;
+        }
+        if (message) {
+            message.placeholder = message.dataset['placeholder' + choice.charAt(0).toUpperCase() + choice.slice(1)] || message.placeholder;
         }
     };
-    choices.forEach((choice) => choice.addEventListener('change', pick));
-    pick();
 
-    // "Update" opens or closes the options. Closing them drops what was changed there,
-    // so Send goes back to a plain message.
-    const optionsToggle = form.querySelector('.js-respond-options-toggle');
-    const options = form.querySelector('.js-respond-options');
-    if (optionsToggle && options) {
-        optionsToggle.addEventListener('click', () => {
-            options.hidden = !options.hidden;
-            optionsToggle.setAttribute('aria-expanded', options.hidden ? 'false' : 'true');
-            if (options.hidden) {
-                options.querySelectorAll('input').forEach((input) => {
-                    if (input.type === 'radio' || input.type === 'checkbox') {
-                        input.checked = input.defaultChecked;
-                    } else {
-                        input.value = input.defaultValue;
-                    }
-                    input.dispatchEvent(new Event('input', { bubbles: true }));
-                    input.dispatchEvent(new Event('change', { bubbles: true }));
-                });
-                pick();
+    form.querySelectorAll('.js-decide-pick').forEach((pick) => {
+        pick.addEventListener('click', () => {
+            choose(pick.dataset.choice, pick.dataset.button);
+            show('write');
+            if (message) {
+                message.focus();
             }
         });
+    });
+    const change = form.querySelector('.js-decide-change');
+    if (change) {
+        change.addEventListener('click', () => show('decide'));
+    }
+    if (write) {
+        choose(write.dataset.choice);
     }
 
     // The message is a plain text field: it grows with the text, the reply templates

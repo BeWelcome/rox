@@ -30,16 +30,18 @@
         {% if form[name] is defined and form[name].vars.value is not empty %}{% set activeFilters = activeFilters + 1 %}{% endif %}
     {% endfor %}
 
-    {# The members of this page, for the markers of the map. #}
+    {# The members of this page, for the markers of the map: where each one set their home on
+       their profile, rounded to about 1 km as on the profile page, else the centre of their city. #}
     {% set mapMembers = [] %}
     {% if hasResults %}
         {% for result in pager.currentPageResults %}
             {% set address = result.member.activeAddress %}
-            {% if address and address.location and address.location.latitude is not null %}
+            {% set ownPoint = address and address.latitude is not null and address.longitude is not null %}
+            {% if ownPoint or (address and address.location and address.location.latitude is not null) %}
                 {% set mapMembers = mapMembers|merge([{
                     Username: result.member.username,
-                    latitude: address.location.latitude,
-                    longitude: address.location.longitude,
+                    latitude: ownPoint ? address.latitude|round(2) : address.location.latitude,
+                    longitude: ownPoint ? address.longitude|round(2) : address.location.longitude,
                     popup: search.map_popup(result),
                 }]) %}
             {% endif %}

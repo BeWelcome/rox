@@ -46,7 +46,7 @@
             {% endfor %}
         </nav>
     {% else %}
-        {# Unread requests and invitations show as a count next to their folder #}
+        {# Unread conversations show as a count next to their folder #}
         {% set unreadCounts = inbox_unread_counts() %}
         <nav class="c-inbox__nav" aria-label="{{ 'messages'|trans }}">
             <h1 class="c-inbox__nav-title">{{ 'messages'|trans }}</h1>

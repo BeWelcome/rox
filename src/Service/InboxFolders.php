@@ -75,8 +75,8 @@ class InboxFolders
     }
 
     /**
-     * Unread conversations in the requests and invitations folders of the logged-in
-     * member, for the folder menu (Twig: inbox_unread_counts()).
+     * Unread conversations per folder (all, messages, requests, invitations) of the
+     * logged-in member, for the folder menu (Twig: inbox_unread_counts()).
      *
      * @return array<string, int>
      */
@@ -89,6 +89,8 @@ class InboxFolders
         }
 
         return [
+            'conversations' => (new ConversationsAdapter($this->entityManager, $member, 2, true))->getNbResults(),
+            'messages' => (new MessagesAdapter($this->entityManager, $member, 2, true))->getNbResults(),
             'requests' => (new RequestsAdapter($this->entityManager, $member, 2, true))->getNbResults(),
             'invitations' => (new InvitationsAdapter($this->entityManager, $member, 2, true))->getNbResults(),
         ];

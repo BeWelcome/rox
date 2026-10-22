@@ -7777,6 +7777,7 @@ a.c-home-item:hover .c-home-item__title,
 .c-home-item__action.is-done { border-color: #16a34a; background: #16a34a; color: #fff; }
 
 .c-home-pane__footer { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; padding-top: 0.6rem; }
+.c-home-pane__footer--end { justify-content: flex-end; }
 .c-home-link,
 .c-home-link:hover { display: inline-flex; align-items: center; gap: 0.45rem; color: #c2410c; font-size: 0.9375rem; font-weight: 700; text-decoration: none; }
 .c-home-link:hover { color: #9a3412; }

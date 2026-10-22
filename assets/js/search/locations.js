@@ -328,9 +328,11 @@ Map.prototype.showMap = function () {
         }
     });
     L.control.zoom({position: 'topright'}).addTo(this.map);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',
-        subdomains: ['a', 'b', 'c']
+    // A light, plain base map (CARTO Positron) so that the members stand out.
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
     }).addTo(this.map);
     this.markerClusterGroup = this.addMarkers(this.map);
 

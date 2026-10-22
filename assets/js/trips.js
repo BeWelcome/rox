@@ -129,8 +129,8 @@ document.addEventListener('DOMContentLoaded', function () {
         let locationsArray = [];
 
         const tripIcon = L.icon({
-            iconUrl: '../images/marker.png',
-            iconRetinaUrl: "../images/marker-2x.png",
+            iconUrl: '/images/marker.png',
+            iconRetinaUrl: "/images/marker-2x.png",
             iconSize: [25, 41],
             iconAnchor: [12, 41],
             popupAnchor: [1, -34],
@@ -159,10 +159,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // if not own trip add circle with search radius of current member
-        if (trip.own === false) {
+        if (trip.own === false && typeof memberInfo !== 'undefined' && memberInfo.latitude !== null) {
             const ownIcon = L.icon({
-                iconUrl: '../images/trip_marker.png',
-                iconRetinaUrl: "../images/trip_marker-2x.png",
+                iconUrl: '/images/trip_marker.png',
+                iconRetinaUrl: "/images/trip_marker-2x.png",
                 iconSize: [25, 41],
                 iconAnchor: [12, 41],
                 popupAnchor: [1, -34],

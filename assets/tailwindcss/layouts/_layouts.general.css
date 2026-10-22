@@ -9469,3 +9469,18 @@ body.is-embedded { background: #fff; }
 .c-contact a.c-contact__send--secondary:hover { border-color: #fbc08a; background: #fff4ea; color: #c2410c; }
 .c-contact .c-contact__send--done { background: #16a34a; box-shadow: 0 6px 16px rgba(22, 163, 74, 0.22); }
 .c-contact a.c-contact__send--done:hover { background: #15803d; }
+/* The trip in the side panel: map and stops */
+.c-contact .c-contact-map { flex-shrink: 0; width: 100%; height: 13rem; margin: 0; overflow: hidden; border-radius: 1rem; background: #f1f5f9; }
+.c-contact .c-contact-stops { display: flex; flex-direction: column; gap: 0.6rem; }
+.c-contact .c-contact-stops__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.c-contact-stops__item { position: relative; display: flex; gap: 0.75rem; padding: 0.55rem 0.6rem 0.65rem; border-radius: 0.8rem; }
+.c-contact-stops__item:not(:last-child)::before { position: absolute; top: 2.3rem; bottom: -0.4rem; left: 1.35rem; width: 2px; background: #e2e8f0; content: ""; }
+.c-contact-stops__item.is-current { background: #fff4ea; }
+.c-contact-stops__num { position: relative; z-index: 1; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: #e2e8f0; color: #475569; font-size: 0.75rem; font-weight: 700; }
+.c-contact-stops__item.is-current .c-contact-stops__num { background: #ea7a2e; color: #fff; }
+.c-contact-stops__body { min-width: 0; }
+.c-contact .c-contact-stops__place { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; margin: 0; color: #0f172a; font-size: 0.9375rem; font-weight: 700; }
+.c-contact .c-contact-stops__dates { margin: 0.1rem 0 0; color: #64748b; font-size: 0.8125rem; }
+.c-contact-stops__dates i, .c-contact-stops__dates svg { margin-right: 0.2rem; color: #94a3b8; font-size: 0.75rem; }
+.c-contact .c-contact-stops__options { display: flex; flex-wrap: wrap; gap: 0.15rem 0.75rem; margin: 0.25rem 0 0; color: #9a3412; font-size: 0.75rem; font-weight: 600; }
+.c-contact-stops__options i, .c-contact-stops__options svg { margin-right: 0.15rem; font-size: 0.7rem; }

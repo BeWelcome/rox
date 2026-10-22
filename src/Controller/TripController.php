@@ -191,9 +191,9 @@ class TripController extends AbstractController
     }
 
     /**
-     * One leg of a trip in the side panel of the home page (Visitors, ?embed=1): the trip
-     * as the traveller wrote it, then Invite / Send a message, which open their form in
-     * the same panel. Outside the panel it goes to the trip page.
+     * One leg of a trip in the side panel of the home page (Visitors, ?embed=1): the whole
+     * trip as the traveller wrote it, its map and stops, then Invite / Send a message for
+     * this leg, which open their form in the same panel. Outside the panel it goes to the trip page.
      */
     #[Route(path: '/trip/leg/{id}/panel', name: 'trip_leg_panel', requirements: ['id' => '\d+'])]
     public function legPanel(Request $request, Subtrip $leg): Response
@@ -213,6 +213,8 @@ class TripController extends AbstractController
 
         return $this->render('trip/leg_panel.html.twig', [
             'leg' => $leg,
+            'trip' => $trip,
+            'searchRadius' => $this->tripModel->getTripsRadius($member),
         ]);
     }
 

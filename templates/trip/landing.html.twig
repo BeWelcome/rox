@@ -1,6 +1,6 @@
 {#
   One trip leg near the member, in the Visitors tab of the home page: where and when,
-  who travels, and the actions (hide, write, invite).
+  who travels, the start of the trip's text, and the actions (hide, write, invite).
 #}
 {% import 'macros.twig' as macros %}
 {% set creator = leg.trip.creator.username %}
@@ -18,6 +18,10 @@
                 · {{ ('trip.additional.info.' ~ leg.trip.additionalInfo)|lower|trans }}
             {%- endif %}
         </p>
+        {% set _excerpt = [leg.trip.summary|striptags|trim, leg.trip.description|striptags|trim]|filter(t => t)|join(' · ') %}
+        {% if _excerpt %}
+            <p class="c-home-item__excerpt">{{ _excerpt }}</p>
+        {% endif %}
         <p class="c-home-item__meta">{{ 'trip.posted.by'|trans({ username: macros.profilelink(creator, false, 'c-home-item__author') })|raw }}</p>
     </div>
     <div class="c-home-item__actions">

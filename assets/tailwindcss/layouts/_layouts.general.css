@@ -9427,3 +9427,6 @@ body.is-embedded { background: #fff; }
 .c-embed-sent { position: relative; }
 .c-embed-sent .c-embed-sent__close { position: absolute; top: 1rem; right: 1rem; display: inline-flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; padding: 0; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.2); color: #fff; font-size: 1rem; transition: background 0.15s ease; }
 .c-embed-sent .c-embed-sent__close:hover { background: rgba(255, 255, 255, 0.32); }
+/* Visitors tab: the start of the trip's text, two lines at most */
+.c-home-item .c-home-item__excerpt { display: -webkit-box; margin: 0.2rem 0 0.1rem; overflow: hidden; color: #334155; font-size: 0.8125rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow-wrap: anywhere; }
+.c-home-item__excerpt + .c-home-item__meta { color: #94a3b8; }

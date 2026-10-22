@@ -2,7 +2,10 @@
 
 namespace App\Service;
 
+use App\Doctrine\DeleteRequestType;
+use App\Doctrine\InFolderType;
 use App\Entity\Member;
+use App\Entity\Message;
 use App\Pagerfanta\ConversationsAdapter;
 use App\Pagerfanta\DeletedAdapter;
 use App\Pagerfanta\InvitationsAdapter;
@@ -94,6 +97,39 @@ class InboxFolders
             'requests' => (new RequestsAdapter($this->entityManager, $member, 2, true))->getNbResults(),
             'invitations' => (new InvitationsAdapter($this->entityManager, $member, 2, true))->getNbResults(),
         ];
+    }
+
+    /**
+     * The latest message of a plain conversation (not a request or invitation) between the
+     * logged-in member and $other that is still in the inbox, or null when there is none
+     * (Twig: conversation_with(member), for the "Send" button of a profile).
+     */
+    #[AsTwigFunction('conversation_with')]
+    public function getConversationWith(Member $other): ?Message
+    {
+        $member = $this->security->getUser();
+        if (!$member instanceof Member || $member === $other) {
+            return null;
+        }
+
+        return $this->entityManager->createQueryBuilder()
+            ->select('m')
+            ->from(Message::class, 'm')
+            ->where('m.request IS NULL')
+            ->andWhere('(m.sender = :member AND m.receiver = :other AND m.deleteRequest NOT LIKE :senderDeleted AND m.deleteRequest NOT LIKE :senderPurged)'
+                . ' OR (m.receiver = :member AND m.sender = :other AND m.deleteRequest NOT LIKE :receiverDeleted AND m.deleteRequest NOT LIKE :receiverPurged)')
+            ->andWhere('m.initiator = :member OR m.folder <> :spam')
+            ->setParameter('member', $member)
+            ->setParameter('other', $other)
+            ->setParameter('senderDeleted', '%' . DeleteRequestType::SENDER_DELETED . '%')
+            ->setParameter('senderPurged', '%' . DeleteRequestType::SENDER_PURGED . '%')
+            ->setParameter('receiverDeleted', '%' . DeleteRequestType::RECEIVER_DELETED . '%')
+            ->setParameter('receiverPurged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
+            ->setParameter('spam', InFolderType::SPAM)
+            ->orderBy('m.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     /**

@@ -15,6 +15,13 @@
     {% set currentFlexible = request.flexible %}{% set currentTravelers = request.numberOfTravellers %}
 {% endif %}
 {% set requestChanged = false %}
+{#
+  The answer (accepted, maybe, declined) shows as a pill on the host's newest message,
+  a cancellation on the guest's newest message: messages don't keep the status they set.
+#}
+{% set answers = { 8: { key: 'accepted', icon: 'fa fa-check', tone: 'success' }, 4: { key: 'tentatively', icon: 'fa fa-question', tone: 'maybe' }, 2: { key: 'declined', icon: 'fa fa-times', tone: 'danger' }, 1: { key: 'cancelled', icon: 'fa fa-times', tone: 'danger' } } %}
+{% set answer = request ? (answers[request.status] ?? null) : null %}
+{% set answerShown = false %}
 
 <div id="message_thread" class="c-inbox-thread">
     {% for message in visible %}
@@ -25,9 +32,19 @@
         <div class="c-bubble-row{{ own ? ' is-own' : '' }}">
             {# The other member's face next to their messages (shown on a computer) #}
             {% if not own %}<img class="c-bubble__avatar" src="{{ path('avatar', { username: message.sender.username, size: 48 }) }}" alt="" loading="lazy">{% endif %}
+            {% set byGuest = message.sender == message.initiator %}
+            {% set withAnswer = answer and not answerShown and (answer.key == 'cancelled' ? byGuest : not byGuest) %}
+            {% if withAnswer %}{% set answerShown = true %}{% endif %}
+            {% set read = message.firstRead is not null and message.firstRead != '0000-00-00 00:00.00' %}
             <div class="c-bubble{{ own ? ' c-bubble--own' : '' }}{{ deleted ? ' is-deleted' : '' }}">
+                {% if withAnswer %}
+                    <span class="c-bubble__answer c-bubble__answer--{{ answer.tone }}"><i class="{{ answer.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ answer.key)|trans }}</span>
+                {% endif %}
                 <div class="c-bubble__text">{{ message.message|purify('custom')|url_update }}</div>
-                <time class="c-bubble__time" datetime="{{ message.created|date('c') }}">{{ message.created|format_time('short') }}</time>
+                <time class="c-bubble__time" datetime="{{ message.created|date('c') }}">
+                    {{- message.created|format_time('short') -}}
+                    {%- if own %} · <i class="fas {{ read ? 'fa-check-double' : 'fa-check' }}" aria-hidden="true"></i>{% endif -%}
+                </time>
             </div>
         </div>
 

@@ -32,7 +32,7 @@
 {# The decision first while the request waits for an answer (and the form has no error) #}
 {% set decideFirst = awaitingAnswer and respond.vars.valid and choices|length > 0 %}
 
-{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { class: 'c-inbox-respond c-decide js-respond', novalidate: 'novalidate', autocomplete: 'off' } }) }}
+{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { class: 'c-inbox-respond c-decide js-respond' ~ (awaitingAnswer ? '' : ' c-decide--answered'), novalidate: 'novalidate', autocomplete: 'off' } }) }}
     {{ form_errors(respond) }}
 
     {# 1. Decide #}
@@ -67,7 +67,13 @@
                 </span>
             {% endfor %}
             {% if choices|length %}
-                <button type="button" class="c-decide__change js-decide-change">{{ 'request.decide.change'|trans }}</button>
+                <button type="button" class="c-decide__change js-decide-change">
+                    {%- if awaitingAnswer -%}
+                        {{ 'request.decide.change'|trans }}
+                    {%- else -%}
+                        <i class="fas fa-undo" aria-hidden="true"></i> {{ 'request.decide.change.answer'|trans }}
+                    {%- endif -%}
+                </button>
             {% endif %}
         </div>
 
@@ -93,7 +99,7 @@
             <div class="c-inbox-compose__error">{{ form_errors(respond.message) }}</div>
         {% endif %}
         {# A plain text field (turned into paragraphs on send) instead of the rich editor: it takes less room. #}
-        <textarea class="c-decide__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="3"
+        <textarea class="c-decide__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="{{ awaitingAnswer ? 3 : 1 }}"
                   aria-label="{{ respond.message.vars.label|trans }}"
                   placeholder="{{ 'request.decide.placeholder.reply'|trans({ username: guestName }) }}"
                   data-placeholder-accept="{{ 'request.decide.placeholder.accept'|trans({ username: guestName }) }}"

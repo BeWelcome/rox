@@ -9787,8 +9787,10 @@ body.is-embedded { background: #fff; }
 .c-inbox__pane .c-inbox-thread { background: #f4f4f5; }
 .c-inbox__pane .c-bubble:not(.c-bubble--own) { background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
 .c-inbox__pane .c-inbox-thread__day span { background: #e4e4e7; color: #52525b; font-weight: 600; }
-.c-bubble--own { background: #fcd9bd; color: #1c1917; }
-.c-bubble--own .c-bubble__time { color: #9a5a2e; }
+/* Our messages in the site's orange with white text */
+.c-bubble--own { background: #e8772e; color: #fff; }
+.c-bubble--own a, .c-bubble--own a:hover { color: #fff; text-decoration: underline; }
+.c-bubble--own .c-bubble__time { color: rgba(255, 255, 255, 0.85); }
 /* The answer form stays centred on a computer (".c-inbox-compose > form" set margin 0) */
 @media (min-width: 768px) {
   .c-inbox-compose > form.c-decide { margin-right: auto; margin-left: auto; }
@@ -9946,3 +9948,42 @@ body.is-embedded { background: #fff; }
   .c-decide__step[data-step="decide"] .c-decide__later i,
   .c-decide__step[data-step="decide"] .c-decide__later svg { display: none; }
 }
+
+/* The answer to a request as a pill at the top of the message that gave it */
+.c-bubble__answer { display: inline-flex; align-items: center; gap: 0.3rem; margin: 0.1rem 0 0.4rem; padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+.c-bubble__answer i, .c-bubble__answer svg { font-size: 0.65rem; }
+.c-bubble__answer--success { background: #dcfce7; color: #15803d; }
+.c-bubble__answer--maybe { background: #fef3c7; color: #b45309; }
+.c-bubble__answer--danger { background: #fee2e2; color: #b91c1c; }
+.c-bubble--own .c-bubble__answer { background: rgba(255, 255, 255, 0.22); color: #fff; }
+.c-bubble__time i, .c-bubble__time svg { font-size: 0.65rem; }
+
+/* Once the host has answered: a one-line message field with a round send button, and
+   "Change my answer" under it (shows Accept, Maybe and Decline again) */
+.c-decide--answered .c-decide__write[data-choice="reply"]:not([hidden]) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "text send" "change change";
+  align-items: end;
+  gap: 0.6rem;
+}
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__top,
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__foot { display: contents; }
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__picked,
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-reply-templates { display: none; }
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-inbox-compose__error { grid-column: 1 / -1; }
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__text {
+  grid-area: text;
+  min-height: 2.75rem;
+  margin: 0;
+  padding: 0.65rem 1.1rem;
+  border: 1px solid transparent;
+  border-radius: 1.4rem;
+  background: #f4f4f5;
+  resize: none;
+}
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__text:focus { border-color: #fdba74; background: #fff; }
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__send { grid-area: send; width: 2.75rem; height: 2.75rem; padding: 0; border-radius: 50%; }
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__send .js-decide-send { display: none; }
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__change { display: inline-flex; grid-area: change; align-items: center; justify-self: center; gap: 0.4rem; color: #475569; font-size: 0.8125rem; }
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-decide__change:hover { color: #0f172a; }

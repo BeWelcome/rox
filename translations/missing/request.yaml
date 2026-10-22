@@ -117,3 +117,6 @@ invitation.card.title:
 request.guest.declined:
     - "{username} can't host you this time. You can still write to them."
     - Under "Declined" above the message field, for the guest whose hosting request was declined
+request.decide.change.answer:
+    - 'Change my answer'
+    - Link under the message field once the host has answered a request; shows Accept, Maybe and Decline again

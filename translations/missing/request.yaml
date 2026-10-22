@@ -120,3 +120,18 @@ request.guest.declined:
 request.decide.change.answer:
     - 'Change my answer'
     - Link under the message field once the host has answered a request; shows Accept, Maybe and Decline again
+invitation.decide.title:
+    - "Accept {username}'s invitation?"
+    - Title of the invited member's answer to an invitation, above Accept, Maybe and Decline
+invitation.decide.title.again:
+    - 'Change your answer to {username}?'
+    - Title above the other answers (Accept, Maybe, Decline) once the invited member has already answered an invitation
+invitation.decide.placeholder.accept:
+    - 'Thank {username} and say when you will arrive...'
+    - Placeholder of the message when the invited member accepts an invitation
+invitation.decide.placeholder.maybe:
+    - 'Tell {username} what you need to know before saying yes...'
+    - Placeholder of the message when the invited member answers maybe to an invitation
+invitation.decide.placeholder.decline:
+    - "Tell {username} why you can't come this time..."
+    - Placeholder of the message when the invited member declines an invitation

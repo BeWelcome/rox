@@ -170,7 +170,6 @@ class MessageController extends AbstractController
 
             $messageText = $data->getMessage();
             $message = $this->addMessageAndSendNotification($sender, $receiver, $message, $replySubject, $messageText);
-            $this->addTranslatedFlash('notice', 'flash.reply.sent');
 
             return $this->redirectToRoute('conversation_view', ['id' => $message->getId()] + $request->query->all());
         }

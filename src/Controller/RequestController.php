@@ -249,7 +249,6 @@ class RequestController extends BaseRequestAndInvitationController
                 $subject,
                 $newRequest->getRequest()->getId() !== $realParent->getRequest()->getId()
             );
-            $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }
@@ -298,7 +297,6 @@ class RequestController extends BaseRequestAndInvitationController
                 $this->logger->write('Regular decline', 'Request');
             }
 
-            $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }

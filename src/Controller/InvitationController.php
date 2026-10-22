@@ -291,7 +291,6 @@ class InvitationController extends BaseRequestAndInvitationController
                 $requestUpdated,
                 $leg
             );
-            $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('conversation_view', ['id' => $finalInvitation->getId()]);
         }
@@ -357,7 +356,6 @@ class InvitationController extends BaseRequestAndInvitationController
                 false,
                 $leg
             );
-            $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('conversation_view', ['id' => $invitation->getId()]);
         }

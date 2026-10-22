@@ -9363,6 +9363,10 @@ body.is-embedded { background: #fff; }
 
 /* "Contact a member" side panel (?embed=1): message or stay request with the member on top */
 .p-search-contact.is-ready .p-search-contact__head { display: none; }
+/* While the page loads in the panel: a spinner, not the frame nor the panel's own head */
+.p-search-contact:not(.is-loaded) .p-search-contact__head { display: none; }
+.p-search-contact:not(.is-loaded) .p-search-contact__frame { visibility: hidden; }
+.p-search-contact:not(.is-loaded)::after { position: absolute; top: 50%; left: 50%; width: 2rem; height: 2rem; margin: -1rem 0 0 -1rem; border: 3px solid #fde6d2; border-top-color: #ea7a2e; border-radius: 50%; animation: p-search-preview-spin 0.8s linear infinite; content: ""; }
 @media (min-width: 768px) { .p-contact-drawer { width: min(460px, 100%); } }
 .c-contact { display: flex; flex-direction: column; height: 100vh; background: #fff; color: #0f172a; }
 .c-contact-head { display: flex; flex-shrink: 0; align-items: center; gap: 0.75rem; padding: 1.1rem 1.25rem 0.6rem; }

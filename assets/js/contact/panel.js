@@ -32,7 +32,8 @@ export function createContactPanel(panel, {from, onBack}) {
         const url = new URL(link.href, window.location.href);
         url.searchParams.set('embed', '1');
         url.searchParams.set('from', from);
-        panel.classList.remove('is-sent', 'is-ready');
+        // Loading: a spinner instead of the frame and its head, until the page is loaded
+        panel.classList.remove('is-sent', 'is-ready', 'is-loaded');
         title.textContent = link.dataset.title || link.textContent.trim();
         frame.title = link.dataset.title || '';
         load(url.toString());
@@ -66,12 +67,18 @@ export function createContactPanel(panel, {from, onBack}) {
         try {
             location = frame.contentWindow.location;
         } catch (error) {
+            panel.classList.add('is-loaded');
+            return;
+        }
+        if (location.href === 'about:blank') {
             return;
         }
         // A page made for the panel keeps ?embed=1; any other one opens in the window
-        if (location.href !== 'about:blank' && !new URLSearchParams(location.search).has('embed')) {
+        if (!new URLSearchParams(location.search).has('embed')) {
             window.location.href = location.href;
+            return;
         }
+        panel.classList.add('is-loaded');
     });
 
     window.addEventListener('message', (event) => {

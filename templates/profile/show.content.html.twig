@@ -154,7 +154,7 @@
         </div>
 
         {% for comment in comments %}
-          {% include 'profile/comment.embedded.html.twig' with { comment: comment, language: profile_language } %}
+          {% include 'profile/comment.embedded.html.twig' with { comment: comment, language: profile_language, hide_answer: true } %}
         {% else %}
           <div class="p-no-comments">
             <i class="fas fa-comment-slash" aria-hidden="true"></i>

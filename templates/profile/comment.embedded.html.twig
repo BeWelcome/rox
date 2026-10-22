@@ -3,7 +3,8 @@
 {#
   One entry of the comment list: the comment received by the profile member
   ('from') and, nested below it, the comment they wrote back ('to'). When only
-  one of the two is visible, it is shown alone.
+  one of the two is visible, it is shown alone. With hide_answer (the profile page's
+  latest comments) the answer is left out; the comments page shows it.
 #}
 {% set loggedInMember = app.user %}
 {% set fromVisible = comment['from'] is defined and comment['from'].showCondition(loggedInMember) > 0 %}
@@ -15,7 +16,7 @@
     {# Only offer to write the answer when it is the logged-in member's turn. #}
     {% set otherComment = fromVisible ? (comment['to'] ?? null) : (comment['from'] ?? null) %}
     {% set canAnswer = answer is null and otherComment is null and main.toMember == loggedInMember %}
-    {% set answerHtml = answer ? _self.comment(member, loggedInMember, answer, language, true, null, false) : null %}
+    {% set answerHtml = answer and not (hide_answer ?? false) ? _self.comment(member, loggedInMember, answer, language, true, null, false) : null %}
     {{ _self.comment(member, loggedInMember, main, language, false, answerHtml, canAnswer) }}
 {% endif %}
 

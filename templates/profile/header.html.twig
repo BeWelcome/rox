@@ -142,17 +142,7 @@
           {{- 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) -}}
           {%- if admin %} ({{ member.created|format_datetime() }}){% endif -%}
         {% endset %}
-        {% set _spoken = [] %}
-        {% for level, langs in member.levelLanguages %}
-          {% for lang in langs %}{% set _spoken = _spoken|merge([('lang_' ~ lang.ShortCode)|lower|trans]) %}{% endfor %}
-        {% endfor %}
         <p class="p-pro__meta p-pro__meta--facts">
-          {% if _spoken|length > 0 %}
-            <span class="p-pro__meta-item p-pro__languages">
-              <i class="fas fa-language" aria-hidden="true"></i>
-              <span class="visually-hidden">{{ 'languages.spoken'|trans|striptags }}:</span> {{ _spoken|join(', ') }}
-            </span>
-          {% endif %}
           <span class="p-pro__meta-item p-pro__since">{{ _since }}</span>
         </p>
 

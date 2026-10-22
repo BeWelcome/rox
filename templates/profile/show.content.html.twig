@@ -40,7 +40,8 @@
     <div class="p-pro-layout__main">
 
       {# ── About me, and what the member can offer their hosts ── #}
-      {% if aboutMe|length > 0 or offerHosts|length > 0 %}
+      {% set spokenLanguages = member.levelLanguages %}
+      {% if aboutMe|length > 0 or offerHosts|length > 0 or spokenLanguages|length > 0 %}
         <section class="p-pro-card">
           <h2 class="p-pro-card__title">{{ 'profile.about.me'|trans({}, 'messages', profile_language)|raw }}</h2>
           {% if aboutMe|length > 0 %}
@@ -54,6 +55,21 @@
                 <p class="p-pro-offer__label">{{ 'profile.offer.hosts'|trans({}, 'messages', profile_language)|raw }}</p>
                 <div class="p-pro-offer__text">{{ offerHosts|purify }}</div>
               </div>
+            </div>
+          {% endif %}
+          {% if spokenLanguages|length > 0 %}
+            <div class="p-pro-spoken">
+              <h3 class="p-pro-spoken__label">
+                <i class="fas fa-language" aria-hidden="true"></i>
+                {{ 'languages.spoken'|trans({}, 'messages', profile_language)|striptags }}
+              </h3>
+              <ul class="p-pro__langs">
+                {% for level, langs in spokenLanguages %}
+                  {% for lang in langs %}
+                    <li>{{ ('lang_' ~ lang.ShortCode)|lower|trans({}, 'messages', profile_language) }} <span class="p-pro__lang-level">{{ ('language.level.' ~ level)|lower|trans({}, 'messages', profile_language) }}</span></li>
+                  {% endfor %}
+                {% endfor %}
+              </ul>
             </div>
           {% endif %}
         </section>

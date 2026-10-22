@@ -50,9 +50,8 @@
         <div class="p-comments-page__list">
           {% set shown = 0 %}
           {% for comment in comments %}
-            {% set commentToVisible = (comment['to'] is defined) ? (comment['to'].showCondition(app.user) > 0) : false %}
             {% set commentFromVisible = (comment['from'] is defined) ? (comment['from'].showCondition(app.user) > 0) : false %}
-            {% if commentToVisible or commentFromVisible %}
+            {% if commentFromVisible %}
               {% set shown = shown + 1 %}
               {% include 'profile/comment.embedded.html.twig' with { comment: comment, language: language } %}
             {% endif %}

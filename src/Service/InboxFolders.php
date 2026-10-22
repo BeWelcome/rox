@@ -12,7 +12,9 @@ use App\Pagerfanta\SpamAdapter;
 use App\Utilities\ItemsPerPageTraits;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
+use Twig\Attribute\AsTwigFunction;
 
 /**
  * The folder list shown next to an open conversation (view and reply pages).
@@ -23,8 +25,10 @@ class InboxFolders
 
     private const array FOLDERS = ['conversations', 'messages', 'requests', 'invitations', 'spam', 'deleted'];
 
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Security $security,
+    ) {
     }
 
     /**
@@ -68,6 +72,26 @@ class InboxFolders
         $conversations->setCurrentPage(1);
 
         return $conversations;
+    }
+
+    /**
+     * Unread conversations in the requests and invitations folders of the logged-in
+     * member, for the folder menu (Twig: inbox_unread_counts()).
+     *
+     * @return array<string, int>
+     */
+    #[AsTwigFunction('inbox_unread_counts')]
+    public function getUnreadCounts(): array
+    {
+        $member = $this->security->getUser();
+        if (!$member instanceof Member) {
+            return [];
+        }
+
+        return [
+            'requests' => (new RequestsAdapter($this->entityManager, $member, 2, true))->getNbResults(),
+            'invitations' => (new InvitationsAdapter($this->entityManager, $member, 2, true))->getNbResults(),
+        ];
     }
 
     /**

@@ -27,8 +27,8 @@
                 <i class="far fa-flag" aria-hidden="true"></i><span>{{ 'marknospam'|trans }}</span>
             </a>
         {% else %}
-            <button type="button" class="c-inbox-head__report js-modal-trigger" data-micromodal-trigger="report-modal">
-                <i class="far fa-flag" aria-hidden="true"></i><span>{{ 'markspam'|trans }}</span>
+            <button type="button" class="c-inbox-head__report js-modal-trigger" data-micromodal-trigger="report-modal" title="{{ 'markspam'|trans }}">
+                <i class="far fa-flag" aria-hidden="true"></i><span>{{ 'conversation.report.short'|trans }}</span>
             </button>
         {% endif %}
         {% if show_deleted %}

@@ -28,12 +28,12 @@
     <div class="c-stay-card__dates">
         <p class="c-stay-card__date">
             <span class="c-stay-card__label">{{ 'request.card.arrival'|trans }} · {{ invitation.arrival|format_date(pattern='EEE') }}</span>
-            <strong>{{ invitation.arrival|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}</strong>
+            <strong>{{ invitation.arrival|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}{% if sameYear %}<span class="c-stay-card__y"> {{ invitation.arrival|date('Y') }}</span>{% endif %}</strong>
         </p>
-        <span class="c-stay-card__nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>
+        <span class="c-stay-card__nights"><i class="fas fa-moon c-stay-card__moon" aria-hidden="true"></i><i class="fas fa-arrow-right c-stay-card__arrow" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>
         <p class="c-stay-card__date c-stay-card__date--end">
             <span class="c-stay-card__label">{{ 'request.card.departure'|trans }} · {{ invitation.departure|format_date(pattern='EEE') }}</span>
-            <strong>{{ invitation.departure|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}</strong>
+            <strong>{{ invitation.departure|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}{% if sameYear %}<span class="c-stay-card__y"> {{ invitation.departure|date('Y') }}</span>{% endif %}</strong>
         </p>
     </div>
     <ul class="c-stay-card__facts">

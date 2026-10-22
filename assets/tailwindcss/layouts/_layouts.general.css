@@ -9824,3 +9824,125 @@ body.is-embedded { background: #fff; }
   pointer-events: none;
 }
 .c-inbox__pane:has(.c-stay-card) .c-inbox-thread { padding-top: 1rem; }
+
+/* ===== Inbox on a computer, as in the desktop mockup =====
+   Folders on light grey (count of unread requests and invitations), a compact white
+   list, an orange head over the conversation, the request as a strip under the head,
+   the other member's face next to their messages and the answer on one line. */
+.c-bubble__avatar,
+.c-stay-card__y,
+.c-stay-card .c-stay-card__arrow { display: none; }
+.c-inbox-folder__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  margin-left: auto;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: #f37000;
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+.c-inbox-filters__pill--all.is-active,
+.c-inbox-filters__pill--all.is-active:hover { border-color: #0f172a; background: #0f172a; color: #fff; }
+.c-inbox__pane { container: inbox-pane / inline-size; }
+
+@media (min-width: 992px) {
+  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) .c-inbox__nav { gap: 0.2rem; padding: 1.5rem 0.75rem; background: #f4f4f5; }
+  .c-inbox__nav-title { margin: 0 0.75rem 1rem; font-size: 1.5rem; }
+  .c-inbox-folder,
+  .c-inbox-folder:hover,
+  .c-inbox-folder:focus-visible { padding: 0.55rem 0.75rem; font-size: 0.875rem; }
+  .c-inbox-folder:hover { background: rgba(255, 255, 255, 0.6); }
+  .c-inbox-folder.is-active { background: #fff; color: #c2410c; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
+}
+@media (min-width: 1200px) {
+  body.is-inbox:not(.is-embedded) .c-inbox:not(.c-inbox--embedded) { grid-template-columns: 205px minmax(300px, 340px) minmax(0, 1fr); }
+}
+
+@media (min-width: 768px) {
+  /* The list: smaller type, the open conversation as a rounded tinted card */
+  body.is-inbox:not(.is-embedded) .c-inbox__list { border-top: 0; border-bottom: 0; }
+  .c-inbox__list .c-inbox-list__head { padding: 1.25rem 1rem 0.6rem; }
+  .c-inbox__list .c-inbox-filters { gap: 0.3rem; padding: 0 0.85rem 0.75rem; border-bottom: 0; }
+  .c-inbox__list .c-inbox-item { margin: 0 0.5rem 0.15rem; border-bottom: 0; border-left: 0; border-radius: 0.75rem; }
+  .c-inbox__list .c-inbox-item.is-active { background: #fff4ea; }
+  .c-inbox__list .c-inbox-item__link,
+  .c-inbox__list .c-inbox-item__link:hover,
+  .c-inbox__list .c-inbox-item__link:focus-visible { gap: 0.7rem; padding: 0.7rem 0.6rem; }
+  .c-inbox__list .c-inbox-item__name { font-size: 0.875rem; }
+  .c-inbox__list .c-inbox-item__subject { font-size: 0.8125rem; }
+  .c-inbox__list .c-inbox-item__preview { font-size: 0.75rem; }
+  .c-inbox__list .c-inbox-item__date { font-size: 0.6875rem; }
+
+  /* The head of the conversation in the site's orange: name first, subject under it */
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head { padding: 0.75rem 1.25rem; border-bottom: 0; background: var(--bs-primary, #f37000); color: #fff; }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head .c-inbox-avatar { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85); }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__who { display: flex; flex-direction: column; }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__subject { order: 2; color: rgba(255, 255, 255, 0.9); font-family: inherit; font-size: 0.8125rem; font-weight: 500; }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__name,
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__name:hover { order: 1; color: #fff; font-size: 1rem; font-weight: 700; }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__meta { order: 3; color: rgba(255, 255, 255, 0.8); }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__report,
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__icon { border-color: transparent; background: rgba(255, 255, 255, 0.2); color: #fff; }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__report:hover,
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__icon:hover { border-color: transparent; background: rgba(255, 255, 255, 0.32); color: #fff; }
+
+  /* The other member's face at the foot of their message */
+  .c-inbox__pane .c-bubble-row:not(.is-own) { align-items: flex-end; gap: 0.6rem; }
+  .c-inbox__pane .c-bubble__avatar { display: block; flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; object-fit: cover; background: #e4e4e7; }
+  .c-inbox__pane .c-bubble { font-size: 0.875rem; }
+}
+
+/* A wide conversation pane: the request as one strip under the head */
+@container inbox-pane (min-width: 640px) {
+  .c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra { padding: 0; background: #fff; border-bottom: 1px solid #e4e4e7; }
+  .c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra::after { top: calc(100% + 1px); }
+  .c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra > .c-stay-card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 1.5rem;
+    max-width: none;
+    margin: 0;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .c-stay-card__top { flex-direction: column; align-items: flex-start; gap: 0.35rem; }
+  .c-stay-card .c-stay-card__kind { font-size: 0.75rem; }
+  .c-stay-card__status { padding: 0.2rem 0.6rem; font-size: 0.75rem; }
+  .c-stay-card__dates { display: flex; align-items: center; gap: 1rem; margin: 0; padding: 0 1.5rem; border-bottom: 0; border-left: 1px solid #e4e4e7; border-right: 1px solid #e4e4e7; }
+  .c-stay-card__date--end { align-items: flex-start; text-align: left; }
+  .c-stay-card__label { font-size: 0.6875rem; }
+  .c-stay-card__date strong { font-size: 1.25rem; }
+  .c-stay-card__y { display: inline; }
+  .c-stay-card .c-stay-card__moon { display: none; }
+  .c-stay-card .c-stay-card__arrow { display: inline-block; }
+  .c-stay-card__nights { padding: 0.2rem 0.6rem; font-size: 0.75rem; }
+  .c-stay-card .c-stay-card__facts { flex-direction: column; align-items: flex-start; gap: 0.25rem; margin: 0; font-size: 0.8125rem; }
+  .c-stay-card__facts .c-stay-card__year { display: none; }
+  .c-stay-card .c-stay-card__warning { flex-basis: 100%; margin: 0; }
+
+  /* The answer: the question on the left, the three choices on the right */
+  .c-inbox-compose--respond:has(.c-decide) { padding: 0.85rem 1.25rem; border-radius: 0; box-shadow: 0 -1px 0 #e4e4e7; }
+  .c-inbox-compose > form.c-decide,
+  .c-decide { max-width: none; }
+  .c-decide__step[data-step="decide"]:not([hidden]) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "title choices" "hint choices" "later choices";
+    align-items: center;
+    column-gap: 1.5rem;
+  }
+  .c-decide__step[data-step="decide"] .c-decide__title { grid-area: title; margin: 0; font-size: 1rem; }
+  .c-decide__step[data-step="decide"] .c-decide__hint { grid-area: hint; margin: 0.1rem 0 0.15rem; }
+  .c-decide__step[data-step="decide"] .c-decide__choices { display: flex; grid-area: choices; gap: 0.6rem; }
+  .c-decide__step[data-step="decide"] .c-decide__choice { justify-content: flex-start; gap: 0.6rem; min-width: 7rem; padding: 0.4rem 1rem 0.4rem 0.45rem; }
+  .c-decide__step[data-step="decide"] .c-decide__later { grid-area: later; justify-self: start; width: auto; margin: 0; padding: 0; border: 0; background: none; color: #c2410c; font-weight: 700; }
+  .c-decide__step[data-step="decide"] .c-decide__later i,
+  .c-decide__step[data-step="decide"] .c-decide__later svg { display: none; }
+}

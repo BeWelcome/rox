@@ -191,3 +191,9 @@ contact.trip.read.more:
 contact.trip.read.less:
     - 'Show less'
     - Link under the whole text of a trip in the side panel; cuts it again
+conversations.filter.all:
+    - 'All'
+    - Filter in the conversation list that removes the other filters (unread, started by me, started by others)
+conversation.report.short:
+    - 'Report'
+    - Short label of the button at the top of a conversation that reports it to BeWelcome

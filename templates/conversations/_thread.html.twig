@@ -23,6 +23,8 @@
         {% set older = visible[loop.index] ?? null %}
 
         <div class="c-bubble-row{{ own ? ' is-own' : '' }}">
+            {# The other member's face next to their messages (shown on a computer) #}
+            {% if not own %}<img class="c-bubble__avatar" src="{{ path('avatar', { username: message.sender.username, size: 48 }) }}" alt="" loading="lazy">{% endif %}
             <div class="c-bubble{{ own ? ' c-bubble--own' : '' }}{{ deleted ? ' is-deleted' : '' }}">
                 <div class="c-bubble__text">{{ message.message|purify('custom')|url_update }}</div>
                 <time class="c-bubble__time" datetime="{{ message.created|date('c') }}">{{ message.created|format_time('short') }}</time>

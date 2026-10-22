@@ -46,6 +46,8 @@
             {% endfor %}
         </nav>
     {% else %}
+        {# Unread requests and invitations show as a count next to their folder #}
+        {% set unreadCounts = inbox_unread_counts() %}
         <nav class="c-inbox__nav" aria-label="{{ 'messages'|trans }}">
             <h1 class="c-inbox__nav-title">{{ 'messages'|trans }}</h1>
             {% for folder, item in folders %}
@@ -53,6 +55,7 @@
                    {% if folder == active %}aria-current="page"{% endif %}>
                     <i class="{{ item.icon }} fa-fw" aria-hidden="true"></i>
                     <span>{{ item.key|trans }}</span>
+                    {% if (unreadCounts[folder] ?? 0) > 0 %}<span class="c-inbox-folder__count">{{ unreadCounts[folder] }}</span>{% endif %}
                 </a>
             {% endfor %}
         </nav>
@@ -170,7 +173,9 @@
         {% set meParams = initiator == 1 ? filterParams|filter((v, k) => k != 'initiator') : filterParams|merge({ initiator: 1 }) %}
         {% set otherParams = initiator == 3 ? filterParams|filter((v, k) => k != 'initiator') : filterParams|merge({ initiator: 3 }) %}
         {% set unreadParams = options.unreadOnly ? filterParams|filter((v, k) => k != 'unread_only') : filterParams|merge({ unread_only: 1 }) %}
+        {% set allActive = initiator == 2 and not options.unreadOnly %}
         <div class="c-inbox-filters">
+            <a class="c-inbox-filters__pill c-inbox-filters__pill--all{{ allActive ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, {}, options.linkBase) }}"{% if allActive %} aria-current="true"{% endif %}>{{ 'conversations.filter.all'|trans }}</a>
             <a class="c-inbox-filters__pill{{ options.unreadOnly ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, unreadParams, options.linkBase) }}"{% if options.unreadOnly %} aria-current="true"{% endif %}>
                 <span class="c-inbox-filters__dot" aria-hidden="true"></span>{{ 'conversations.unread'|trans }}
             </a>

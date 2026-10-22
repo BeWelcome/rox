@@ -119,6 +119,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if (mapElement) {
         // data-controls="none" (the trip in the side panel): no zoom or fullscreen buttons
         const withControls = mapElement.dataset.controls !== 'none';
+        // In the side panel the route keeps a margin: the route name lies on the bottom,
+        // the close button on the top and, on phones, the panel's head over the bottom edge
+        const tall = mapElement.offsetHeight > 200;
+        const fitOptions = withControls ? {} : {
+            paddingTopLeft: tall ? [40, 70] : [24, 24],
+            paddingBottomRight: tall ? [70, 100] : [24, 56],
+        };
         var map = L.map('map', {
             center: [0, 0],
             zoom: 0,
@@ -187,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let group = new L.featureGroup(circlesArray);
         if (circlesArray.length > 1) {
-            map.fitBounds(group.getBounds());
+            map.fitBounds(group.getBounds(), fitOptions);
         } else if (allData.length > 0) {
             map.setView([parseFloat(allData[0][1]), parseFloat(allData[0][2])], 12);
         }

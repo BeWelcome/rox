@@ -18,6 +18,7 @@ use App\Service\BrowserNotificationService;
 use App\Service\InboxFolders;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
+use App\Utilities\ContactPanelTrait;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,6 +37,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class RequestController extends BaseRequestAndInvitationController
 {
+    use ContactPanelTrait;
     use TranslatorTrait;
 
     public function __construct(
@@ -110,19 +112,19 @@ class RequestController extends BaseRequestAndInvitationController
         if ($guest === $host) {
             $this->addTranslatedFlash('notice', 'flash.request.self');
 
-            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
         }
 
         if (MemberStatusType::ACCOUNT_ACTIVATED === $guest->getStatus()) {
             $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
 
-            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]));
         }
 
         if (!$host->isBrowsable()) {
             $this->addTranslatedFlash('note', 'flash.member.invalid');
 
-            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
         }
 
         if (
@@ -135,13 +137,13 @@ class RequestController extends BaseRequestAndInvitationController
             $this->addTranslatedFlash('error', 'flash.request.limit');
             $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirect($referrer));
         }
 
         if (AccommodationType::NO === $host->getAccommodation()) {
             $this->addTranslatedFlash('notice', 'request.not.hosting');
 
-            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]));
         }
 
         $redirectOnNotAllowed = false;
@@ -164,7 +166,7 @@ class RequestController extends BaseRequestAndInvitationController
         }
 
         if ($redirectOnNotAllowed) {
-            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
         }
 
         $requestForm = $this->createForm(HostingRequestGuest::class, null);

@@ -9415,3 +9415,11 @@ body.is-embedded { background: #fff; }
 .c-contact-stay__count:focus { outline: none; }
 .c-contact-stay__flexible { cursor: pointer; }
 .c-contact-stay__flexible .c-request-switch__track { flex-shrink: 0; }
+/* The panel when the message or request can't be written (limit reached...) */
+.c-contact-blocked { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; padding: 2rem 1.75rem 3rem; text-align: center; }
+.c-contact-blocked__icon { display: inline-flex; align-items: center; justify-content: center; width: 4rem; height: 4rem; margin-bottom: 0.25rem; border-radius: 50%; background: #fff4e5; color: #ea7a2e; font-size: 1.75rem; }
+.c-contact .c-contact-blocked__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.3rem; font-weight: 700; }
+.c-contact .c-contact-blocked__text { max-width: 22rem; margin: 0; color: #475569; font-size: 0.9375rem; line-height: 1.55; }
+.c-contact-blocked__text a { color: #c2410c; font-weight: 600; }
+.c-contact .c-contact-blocked__back { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 0.75rem; padding: 0.7rem 1.4rem; border: 0; border-radius: 999px; background: #ea7a2e; color: #fff; font-size: 0.9375rem; font-weight: 700; }
+.c-contact .c-contact-blocked__back:hover { background: #d9661a; }

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+{#
+  Shown in the "contact a member" side panel (?embed=1) when the message or stay request
+  can't be written (limit reached, no about me or photo yet...): why, and a way back.
+  messages: the texts the full site would show as flash messages.
+#}
+{% block title %}{{ ('contact.blocked.' ~ kind ~ '.title')|trans }}{% endblock title %}
+
+{% block content %}
+    <div class="c-contact">
+        {% include 'conversations/_contact_head.html.twig' with { member: member, kind: kind } %}
+
+        <div class="c-contact-blocked" role="alert">
+            <span class="c-contact-blocked__icon" aria-hidden="true"><i class="fas fa-exclamation-circle"></i></span>
+            <h1 class="c-contact-blocked__title">{{ ('contact.blocked.' ~ kind ~ '.title')|trans }}</h1>
+            {% for message in messages %}
+                <p class="c-contact-blocked__text">{{ message|raw }}</p>
+            {% endfor %}
+            <button type="button" class="c-contact-blocked__back js-contact-back-alt">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ (app.request.query.get('from') == 'profile' ? 'contact.sent.back.profile' : 'contact.blocked.back')|trans }}
+            </button>
+        </div>
+    </div>
+    <script>
+        document.querySelector('.js-contact-back-alt').addEventListener('click', function () {
+            document.querySelector('.js-contact-back').click();
+        });
+    </script>
+{% endblock content %}

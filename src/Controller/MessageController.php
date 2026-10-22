@@ -14,6 +14,7 @@ use App\Service\BrowserNotificationService;
 use App\Service\InboxFolders;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
+use App\Utilities\ContactPanelTrait;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -35,6 +36,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class MessageController extends AbstractController
 {
     use TranslatedFlashTrait;
+    use ContactPanelTrait;
     use TranslatorTrait;
 
     public function __construct(
@@ -61,19 +63,19 @@ class MessageController extends AbstractController
         if ($sender === $receiver) {
             $this->addTranslatedFlash('notice', 'flash.message.self');
 
-            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]));
         }
 
         if (MemberStatusType::ACCOUNT_ACTIVATED === $sender->getStatus()) {
             $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
 
-            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]));
         }
 
         if (!$receiver->isBrowsable()) {
             $this->addTranslatedFlash('error', 'flash.member.invalid');
 
-            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]));
         }
 
         if (
@@ -86,7 +88,7 @@ class MessageController extends AbstractController
             $this->addTranslatedFlash('error', 'flash.message.limit');
             $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirect($referrer));
         }
 
         $redirectOnNotAllowed = false;
@@ -109,7 +111,7 @@ class MessageController extends AbstractController
         }
 
         if ($redirectOnNotAllowed) {
-            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]));
         }
 
         $messageForm = $this->createForm(MessageToMemberType::class);

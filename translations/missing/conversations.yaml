@@ -131,3 +131,12 @@ contact.dates:
 contact.travellers:
     - 'Travellers'
     - Label of the number of travellers in the stay request side panel
+contact.blocked.message.title:
+    - "You can't send a message right now"
+    - Title in the side panel (search preview, profile) when the member can't write a message (limit reached, no about me...)
+contact.blocked.request.title:
+    - "You can't send a stay request right now"
+    - Title in the side panel (search preview, profile) when the member can't send a stay request (limit reached, no about me...)
+contact.blocked.back:
+    - 'Back to the preview'
+    - Button in the search preview's side panel when a message or stay request can't be written; goes back to the member's preview

@@ -1,15 +1,27 @@
 {#
   The latest messages received, on the home page (loaded into the Messages tab).
-  A hosting request or invitation shows its kind and dates instead of a subject,
-  coloured by the request's state like in the inbox.
+  A hosting request or invitation shows its kind and dates instead of a subject, and
+  where it stands as an icon on the avatar, like in the inbox.
 #}
 <div id="conversationsdisplay" class="c-home-list"{% if messages is empty %} data-empty{% endif %}>
     {% for message in messages %}
         {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
         {% set request = message.request %}
+        {# Where a request or invitation stands, with the decision's icon on the avatar (as in the inbox list) #}
+        {% set states = {
+            open: { icon: 'fas fa-clock', tone: 'pending' },
+            tentatively: { icon: 'fa fa-question', tone: 'maybe' },
+            accepted: { icon: 'fa fa-check', tone: 'success' },
+            declined: { icon: 'fa fa-times', tone: 'danger' },
+            cancelled: { icon: 'fa fa-times', tone: 'danger' },
+        } %}
+        {% set requestState = request ? ({ 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[request.status] ?? 'open') : null %}
         <a class="c-home-item{% if unread %} is-unread{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}">
             {% if message.sender %}
-                <img class="c-home-item__avatar" src="{{ path('avatar', { username: message.sender.username, size: 48 }) }}" alt="" loading="lazy">
+                <span class="c-home-item__avatar-wrap">
+                    <img class="c-home-item__avatar" src="{{ path('avatar', { username: message.sender.username, size: 48 }) }}" alt="" loading="lazy">
+                    {% if request %}<span class="c-inbox-item__kind c-inbox-item__kind--{{ states[requestState].tone }}" title="{{ ('request.status.' ~ requestState)|trans }}"><i class="{{ states[requestState].icon }}" aria-hidden="true"></i><span class="visually-hidden">{{ ('request.status.' ~ requestState)|trans }}</span></span>{% endif %}
+                </span>
             {% else %}
                 <span class="c-home-item__avatar c-home-item__avatar--icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
             {% endif %}
@@ -20,9 +32,7 @@
                 </span>
                 {% if request %}
                     {% set kindIcon = request.inviteForLeg is null ? 'fa-bed' : 'fa-handshake' %}
-                    {% set requestState = { 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[request.status] ?? 'open' %}
-                    {% set requestTone = { accepted: 'success', declined: 'danger', cancelled: 'danger' }[requestState] ?? 'pending' %}
-                    <span class="c-inbox-item__badge c-inbox-item__badge--{{ requestTone }} c-home-item__badge" title="{{ ('request.status.' ~ requestState)|trans }}">
+                    <span class="c-inbox-item__badge c-home-item__badge">
                         <span><i class="fas {{ kindIcon }}" aria-hidden="true"></i> {{ request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}</span>
                         <span class="c-inbox-item__badge-dates">
                             {{- request.arrival|format_date(pattern='MMM d') }}

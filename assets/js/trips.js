@@ -117,11 +117,14 @@ document.addEventListener('click', function(event) {
 document.addEventListener('DOMContentLoaded', function () {
     const mapElement = document.getElementById('map');
     if (mapElement) {
+        // data-controls="none" (the trip in the side panel): no zoom or fullscreen buttons
+        const withControls = mapElement.dataset.controls !== 'none';
         var map = L.map('map', {
             center: [0, 0],
             zoom: 0,
             zoomSnap: 0.1,
-            fullscreenControl: true,
+            zoomControl: withControls,
+            fullscreenControl: withControls,
             fullscreenControlOptions: {
                 position: 'topleft'
             }

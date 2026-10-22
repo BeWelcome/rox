@@ -34,7 +34,7 @@
             {% include 'conversations/_contact_head.html.twig' with { member: traveller, kind: 'trip' } %}
 
             <div class="c-contact-tripview__map">
-                <div id="map" class="o-map c-contact-map" aria-label="{{ 'trip.legs.title'|trans }}"></div>
+                <div id="map" class="o-map c-contact-map" data-controls="none" aria-label="{{ 'trip.legs.title'|trans }}"></div>
                 <button type="button" class="c-contact-tripview__back js-contact-back" aria-label="{{ 'back'|trans }}">
                     <i class="fas fa-arrow-left" aria-hidden="true"></i>
                 </button>

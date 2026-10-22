@@ -679,14 +679,14 @@ class ProfileController extends AbstractController
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $commentCounts = $commentRepository->getCommentsCountMemberByQuality($member);
-        // Show up to 10 exchanges; the "show all" link only appears when some are left out.
-        $latestComments = $commentRepository->getLatestCommentsMember($member, self::PROFILE_COMMENTS);
+        // Show the 10 latest comments the member received (the ones they wrote are on the
+        // other members' profiles); the "show all" link only appears when some are left out.
+        $latestComments = array_filter(
+            $commentRepository->getLatestCommentsMember($member, self::PROFILE_COMMENTS),
+            fn (array $comment) => isset($comment['from'])
+        );
         $comments = \array_slice($latestComments, 0, self::PROFILE_COMMENTS, true);
-        $receivedShown = \count(array_filter($comments, fn (array $comment) => isset($comment['from'])));
-        $writtenShown = \count(array_filter($comments, fn (array $comment) => isset($comment['to'])));
-        $hasMoreComments = \count($latestComments) > self::PROFILE_COMMENTS
-            || $commentRepository->getCommentsForMemberCount($member) > $receivedShown
-            || $commentRepository->getCommentsByMemberCount($member) > $writtenShown;
+        $hasMoreComments = $commentRepository->getCommentsForMemberCount($member) > \count($comments);
         $visibleComments = $commentRepository->getVisibleCommentsForMemberCount($member);
 
         /** @var FriendRepository $friendRepository */

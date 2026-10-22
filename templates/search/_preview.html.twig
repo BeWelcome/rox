@@ -119,11 +119,13 @@
     {% if app.user != member and member.status != 'PassedAway' %}
         <div class="p-search-preview__actions">
             {% if member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
-                <a class="p-search-preview__btn p-search-preview__btn--primary" href="{{ url('hosting_request', { username: member.username }) }}">
+                <a class="p-search-preview__btn p-search-preview__btn--primary js-search-contact-open" href="{{ url('hosting_request', { username: member.username }) }}"
+                   data-title="{{ 'request.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
                     <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
                 </a>
             {% endif %}
-            <a class="p-search-preview__btn" href="{{ url('message_new', { username: member.username }) }}">
+            <a class="p-search-preview__btn js-search-contact-open" href="{{ url('message_new', { username: member.username }) }}"
+               data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
                 <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
             </a>
         </div>

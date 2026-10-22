@@ -214,6 +214,16 @@
             </button>
         </div>
         <div class="p-search-preview__body js-search-preview-body"></div>
+        {# Message or stay request written without leaving the search: slides over the preview #}
+        <div class="p-search-contact js-search-contact" hidden>
+            <div class="p-search-contact__head">
+                <button type="button" class="p-search-contact__back js-search-contact-back" aria-label="{{ 'back'|trans }}">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                </button>
+                <h2 class="p-search-contact__title js-search-contact-title"></h2>
+            </div>
+            <iframe class="p-search-contact__frame js-search-contact-frame" title="" src="about:blank"></iframe>
+        </div>
     </aside>
 
     {# Search options: side panel on large screens, sheet from the bottom on phones #}

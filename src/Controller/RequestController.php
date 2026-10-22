@@ -183,6 +183,14 @@ class RequestController extends BaseRequestAndInvitationController
                 $guest,
                 $hostingRequest
             );
+            // Sent from the search preview (in a frame): a short "sent" page instead of the profile.
+            if ($request->query->getBoolean('embed')) {
+                return $this->render('conversations/embed_sent.html.twig', [
+                    'kind' => 'request',
+                    'member' => $host,
+                ]);
+            }
+
             $this->addTranslatedFlash('notice', 'flash.request.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);

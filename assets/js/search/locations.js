@@ -448,6 +448,7 @@ function showPreview() {
 }
 
 function hidePreview() {
+    closeContact(true);
     preview.classList.remove('is-open');
     preview.setAttribute('aria-hidden', 'true');
     previewBackdrop.hidden = true;
@@ -485,6 +486,83 @@ function initPreviewPhotos(root) {
     update();
 }
 
+/*
+ * Message or stay request from the preview: the form page (?embed=1, without menu and
+ * footer) slides over the preview in a frame. Once sent, the frame shows a short
+ * confirmation and posts "bw-contact-sent". If the form page sends the member somewhere
+ * else instead (not allowed to write, limit reached...), that page opens in the window.
+ */
+const contact = preview ? preview.querySelector('.js-search-contact') : null;
+const contactFrame = contact ? contact.querySelector('.js-search-contact-frame') : null;
+let contactSent = false;
+
+function contactIsOpen() {
+    return contact !== null && contact.classList.contains('is-open');
+}
+
+function openContact(link) {
+    const url = new URL(link.href, window.location.href);
+    url.searchParams.set('embed', '1');
+    contactSent = false;
+    contact.querySelector('.js-search-contact-title').textContent = link.dataset.title || link.textContent.trim();
+    contactFrame.title = link.dataset.title || '';
+    contactFrame.src = url.toString();
+    contact.hidden = false;
+    // Next frame, so that the slide is animated
+    requestAnimationFrame(() => requestAnimationFrame(() => contact.classList.add('is-open')));
+}
+
+function closeContact(now) {
+    if (!contact || contact.hidden) {
+        return;
+    }
+    contact.classList.remove('is-open');
+    const reset = () => {
+        if (!contact.classList.contains('is-open')) {
+            contact.hidden = true;
+            contactFrame.src = 'about:blank';
+        }
+    };
+    if (now) {
+        reset();
+    } else {
+        setTimeout(reset, 250);
+    }
+}
+
+if (contact) {
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest('.js-search-contact-open');
+        if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+            return;
+        }
+        event.preventDefault();
+        openContact(link);
+    });
+    contact.querySelectorAll('.js-search-contact-back').forEach((button) => button.addEventListener('click', () => closeContact(false)));
+
+    contactFrame.addEventListener('load', () => {
+        let location = null;
+        try {
+            location = contactFrame.contentWindow.location;
+        } catch (error) {
+            return;
+        }
+        if (location.href === 'about:blank' || contactSent) {
+            return;
+        }
+        if (!location.pathname.startsWith('/new/')) {
+            window.location.href = location.href;
+        }
+    });
+
+    window.addEventListener('message', (event) => {
+        if (event.origin === window.location.origin && event.data && event.data.type === 'bw-contact-sent') {
+            contactSent = true;
+        }
+    });
+}
+
 function loadPreview(url, card) {
     document.querySelectorAll('.p-search-card.is-previewed').forEach((other) => other.classList.remove('is-previewed'));
     if (card) {
@@ -494,6 +572,7 @@ function loadPreview(url, card) {
         previewRequest.abort();
     }
     previewRequest = new AbortController();
+    closeContact(true);
     previewBody.innerHTML = '<div class="p-search-preview__loading" aria-hidden="true"></div>';
     preview.querySelector('.p-search-preview__body').scrollTop = 0;
     showPreview();
@@ -557,7 +636,11 @@ if (preview) {
     document.querySelectorAll('.js-search-preview-close').forEach((button) => button.addEventListener('click', closePreview));
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
-            closePreview();
+            if (contactIsOpen()) {
+                closeContact(false);
+            } else {
+                closePreview();
+            }
         }
     });
 

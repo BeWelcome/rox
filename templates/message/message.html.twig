@@ -24,7 +24,9 @@
     {% endset %}
     {% set profileUrl = path('members_profile', { username: receiver.username }) %}
 
-    <div class="c-inbox c-inbox--thread">
+    {% set embedded = app.request.query.getBoolean('embed') %}
+    <div class="c-inbox c-inbox--thread{% if embedded %} c-inbox--embedded{% endif %}">
+        {% if not embedded %}
         {{ inbox.nav(folder, 'column') }}
 
         <section class="c-inbox__list">
@@ -32,8 +34,10 @@
                 {{ inbox.list(conversations, folder, { initiator: initiator, unreadOnly: unreadOnly }) }}
             </div>
         </section>
+        {% endif %}
 
         <section class="c-inbox__pane">
+            {% if not embedded %}
             {% include 'conversations/_pane_head.html.twig' with {
                 current: null,
                 correspondent: receiver,
@@ -44,6 +48,7 @@
                 is_spam: false,
                 show_deleted: false,
             } %}
+            {% endif %}
 
             {{ form_start(form, { attr: { novalidate: 'novalidate', class: 'c-inbox-new' } }) }}
                 <div class="c-inbox-new__body">

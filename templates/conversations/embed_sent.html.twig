@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{#
+  Shown in the search preview's frame once a message or a stay request is sent:
+  a short confirmation; the preview listens for the "bw-contact-sent" message.
+#}
+{% block title %}{{ ('flash.' ~ kind ~ '.sent')|trans|striptags }}{% endblock title %}
+
+{% block content %}
+    <div class="c-embed-sent" role="status">
+        <span class="c-embed-sent__icon" aria-hidden="true"><i class="fas fa-circle-check"></i></span>
+        <p class="c-embed-sent__text">{{ ('flash.' ~ kind ~ '.sent')|trans|raw }}</p>
+        <a class="c-embed-sent__link" href="{{ path('conversations_with', { username: member.username }) }}" target="_top">
+            {{ 'messages_allmessageswith'|trans|format(member.shortNameOrUsername) }}
+        </a>
+    </div>
+    <script>
+        if (window.parent !== window) {
+            window.parent.postMessage({ type: 'bw-contact-sent', kind: '{{ kind }}' }, window.location.origin);
+        }
+    </script>
+{% endblock content %}

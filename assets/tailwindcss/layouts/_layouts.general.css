@@ -3164,13 +3164,17 @@ main:has(.p-hero) {
 .p-comment__action i { font-size: 0.75rem; }
 .p-comment__action i.fa-reply { transform: scaleX(-1); }
 .p-comment__answer { margin-top: 0.85rem; }
-.p-comment__fold { margin-top: 0.6rem; }
-.p-comment__fold > summary { cursor: pointer; list-style: none; }
+.p-comment__fold { margin-top: 0.7rem; }
 .p-comment__fold > summary::-webkit-details-marker { display: none; }
-.p-comment__fold .p-comment__fold-hide,
-.p-comment__fold[open] .p-comment__fold-show { display: none; }
-.p-comment__fold[open] .p-comment__fold-hide { display: inline; }
-/* The thread line only shows when the answer is open */
+.p-comment__fold-toggle { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.35rem 0.8rem; border-radius: 999px; background: #f1f5f9; color: #475569; font-size: 0.8125rem; font-weight: 600; list-style: none; cursor: pointer; user-select: none; transition: background-color 0.15s ease, color 0.15s ease; }
+.p-comment__fold-toggle:hover { background: #e2e8f0; color: #0f172a; }
+.p-comment__fold[open] > .p-comment__fold-toggle { background: #fff1e6; color: #c2410c; }
+.p-comment__fold-toggle > i,
+.p-comment__fold-toggle > svg { width: auto; font-size: 0.7rem; }
+.p-comment__fold-toggle > .fa-reply,
+.p-comment__fold-toggle > svg.fa-reply { transform: scaleX(-1); }
+.p-comment__fold-chevron { transition: transform 0.15s ease; }
+.p-comment__fold[open] .p-comment__fold-chevron { transform: rotate(180deg); }
 .p-comment--thread:has(> .p-comment__body > .p-comment__fold:not([open]))::before { content: none; }
 
 @media (max-width: 576px) {

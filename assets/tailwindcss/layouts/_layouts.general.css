@@ -9880,18 +9880,15 @@ body.is-embedded { background: #fff; }
   .c-inbox__list .c-inbox-item__preview { font-size: 0.75rem; }
   .c-inbox__list .c-inbox-item__date { font-size: 0.6875rem; }
 
-  /* The head of the conversation in the site's orange: name first, subject under it */
-  body:not(.is-embedded) .c-inbox__pane .c-inbox-head { padding: 0.75rem 1.25rem; border-bottom: 0; background: var(--bs-primary, #f37000); color: #fff; }
-  body:not(.is-embedded) .c-inbox__pane .c-inbox-head .c-inbox-avatar { box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85); }
+  /* The head of the conversation: white (the site header above is already orange),
+     name first and the subject under it */
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head { padding: 0.75rem 1.25rem; border-bottom: 1px solid #e4e4e7; background: #fff; }
   body:not(.is-embedded) .c-inbox__pane .c-inbox-head__who { display: flex; flex-direction: column; }
-  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__subject { order: 2; color: rgba(255, 255, 255, 0.9); font-family: inherit; font-size: 0.8125rem; font-weight: 500; }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__subject { order: 2; color: #64748b; font-family: inherit; font-size: 0.8125rem; font-weight: 500; }
   body:not(.is-embedded) .c-inbox__pane .c-inbox-head__name,
-  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__name:hover { order: 1; color: #fff; font-size: 1rem; font-weight: 700; }
-  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__meta { order: 3; color: rgba(255, 255, 255, 0.8); }
-  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__report,
-  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__icon { border-color: transparent; background: rgba(255, 255, 255, 0.2); color: #fff; }
-  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__report:hover,
-  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__icon:hover { border-color: transparent; background: rgba(255, 255, 255, 0.32); color: #fff; }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__name:hover { order: 1; color: #0f172a; font-size: 1rem; font-weight: 700; }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__name:hover { color: #c2410c; }
+  body:not(.is-embedded) .c-inbox__pane .c-inbox-head__meta { order: 3; }
 
   /* The other member's face at the foot of their message */
   .c-inbox__pane .c-bubble-row:not(.is-own) { align-items: flex-end; gap: 0.6rem; }

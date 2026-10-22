@@ -10027,3 +10027,4 @@ body.is-embedded { background: #fff; }
   line-height: 1;
 }
 .p-search-where .suggest-map.suggest-flag { width: 3rem; height: 3rem; }
+.suggest-flag .suggest-flag__img { width: 1.75rem; height: 1.75rem; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08); }

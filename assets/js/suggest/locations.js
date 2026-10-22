@@ -98,11 +98,11 @@ class LocationSuggest {
     }
 }
 
-// The country's flag as an emoji (two regional indicator letters), or a pin when there is no country.
+// The country's round flag (circle-flags, as in "Explore by country"), or a pin when there is no country.
 function countryFlag(code) {
     if (!code || !/^[A-Za-z]{2}$/.test(code)) {
         return '<i class="fas fa-map-marker-alt"></i>';
     }
 
-    return String.fromCodePoint(...[...code.toUpperCase()].map((letter) => 0x1F1A5 + letter.charCodeAt(0)));
+    return '<span class="o-flag o-flag--' + code.toUpperCase() + ' suggest-flag__img"></span>';
 }

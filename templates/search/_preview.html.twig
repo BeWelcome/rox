@@ -1,6 +1,6 @@
 {#
   A short view of a member, loaded into the preview panel of the search results
-  (see search/locations.js): their profile picture, who they are, hosting,
+  (see search/locations.js): who they are with their profile picture, hosting,
   comments, the start of "about me", their pictures and languages, the main actions and the full profile.
 #}
 {% set displayName = member.name is empty ? member.username : member.name %}
@@ -28,14 +28,17 @@
 {# The privacy filter hides logins of the last 7 days; show nothing then. #}
 {% set lastActive = member.lastActive and member.lastActive.diffInDays() > 7 ? member.lastActive|privacy : null %}
 
-{# The profile picture fills the top of the panel, in its original size so that it stays sharp.
-   Nothing here links to the profile except the button at the bottom. #}
-<div class="p-search-preview__hero">
-    <img src="{{ path('avatar', { username: member.username, size: 'original' }) }}" alt="">
-</div>
-
+{# Nothing here links to the profile except the button at the bottom. #}
 <div class="p-search-preview__content">
     <div class="p-search-preview__who">
+        <span class="p-search-preview__picture">
+            <img class="p-search-preview__avatar" src="{{ path('avatar', { username: member.username, size: 192 }) }}" alt="">
+            {% if hosting %}
+                <span class="p-search-preview__host p-search-preview__host--{{ hosting }}" aria-hidden="true">
+                    <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}"></i>
+                </span>
+            {% endif %}
+        </span>
         <div class="p-search-preview__names">
             <p class="p-search-preview__title">
                 <span class="p-search-preview__name" id="search-preview-title">{{ displayName }}</span>

@@ -121,12 +121,13 @@ class MessageController extends AbstractController
             $subject = $messageForm->get('subject')->get('subject')->getData();
             $body = $messageForm->get('message')->getData();
 
-            $this->addMessageAndSendNotification($sender, $receiver, null, $subject, $body);
+            $message = $this->addMessageAndSendNotification($sender, $receiver, null, $subject, $body);
             // Sent from the search preview (in a frame): a short "sent" page instead of the profile.
             if ($request->query->getBoolean('embed')) {
                 return $this->render('conversations/embed_sent.html.twig', [
                     'kind' => 'message',
                     'member' => $receiver,
+                    'conversation' => $message,
                 ]);
             }
 

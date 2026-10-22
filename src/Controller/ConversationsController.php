@@ -60,7 +60,7 @@ class ConversationsController extends AbstractController
     /**
      * @throws InvalidArgumentException
      */
-    #[Route(path: '/conversations/with/{username:member}', name: 'conversations_with')]
+    #[Route(path: '/conversations/with/{username:other}', name: 'conversations_with')]
     public function allConversationsWithMember(
         Request $request,
         Member $other,

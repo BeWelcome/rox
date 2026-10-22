@@ -33,7 +33,7 @@
             <button type="button" class="c-embed-sent__btn c-embed-sent__btn--primary js-embed-sent-close">
                 <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ (app.request.query.get('from') == 'profile' ? 'contact.sent.back.profile' : 'contact.sent.back')|trans }}
             </button>
-            <a class="c-embed-sent__btn" href="{{ path('conversations_with', { username: member.username }) }}" target="_top">
+            <a class="c-embed-sent__btn" href="{{ conversation is defined and conversation.id ? path('conversation_view', { id: conversation.id }) : path('conversations_with', { username: member.username }) }}" target="_top">
                 <i class="fas fa-comments" aria-hidden="true"></i> {{ 'contact.sent.conversation'|trans }}
             </a>
         </div>

@@ -190,6 +190,7 @@ class RequestController extends BaseRequestAndInvitationController
                 return $this->render('conversations/embed_sent.html.twig', [
                     'kind' => 'request',
                     'member' => $host,
+                    'conversation' => $hostingRequest,
                 ]);
             }
 

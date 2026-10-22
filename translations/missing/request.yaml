@@ -42,3 +42,9 @@ request.status.cancelled:
 request.respond.toggle:
     - 'Reply'
     - Button next to Send in the host's answer to a hosting request; opens or closes the panel with the dates and Accept, Maybe, Decline
+request.hosts.up.to:
+    - '{username} hosts up to {count}'
+    - Under "Travellers" in the stay request side panel; {count} is how many guests the host takes at most
+request.flexible.hint:
+    - 'A few days earlier or later is fine'
+    - Under "My dates are flexible" in the stay request side panel

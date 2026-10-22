@@ -95,3 +95,39 @@ contact.sent.conversation:
 contact.sent.back.profile:
     - 'Back to the profile'
     - Button of the confirmation shown on a profile page after sending a message or request from the side panel; closes the panel
+contact.head.message:
+    - 'Write a message to'
+    - Small label above the member's name at the top of the side panel used to write a message (search preview, profile)
+contact.head.request:
+    - 'Request a stay with'
+    - Small label above the member's name at the top of the side panel used to send a stay request (search preview, profile)
+contact.subject.placeholder:
+    - 'e.g. Question about {city}'
+    - Placeholder of the subject field when writing a message from the side panel; {city} is where the member lives
+contact.request.subject.placeholder:
+    - 'e.g. Visiting {city}'
+    - Placeholder of the subject field of a stay request written from the side panel; {city} is where the host lives
+contact.message.placeholder:
+    - 'Introduce yourself and tell {username} why you are writing.'
+    - Placeholder of the message field when writing a message from the side panel
+contact.safety:
+    - "For your safety, don't share phone numbers, email or social media in a first message."
+    - Note under the message field of the side panel used to write a message or a stay request
+contact.send.message:
+    - 'Send message'
+    - Button at the bottom of the side panel used to write a message
+contact.send.request:
+    - 'Send request'
+    - Button at the bottom of the side panel used to send a stay request
+contact.send.hint.message:
+    - 'Add a subject and a message to send'
+    - Shown under the greyed Send button of the message side panel until the subject and the message are filled
+contact.send.hint.request:
+    - 'Add your dates, a subject and a message to send'
+    - Shown under the greyed Send button of the stay request side panel until the dates, the subject and the message are filled
+contact.dates:
+    - 'Dates'
+    - Label of the arrival and departure dates in the stay request side panel
+contact.travellers:
+    - 'Travellers'
+    - Label of the number of travellers in the stay request side panel

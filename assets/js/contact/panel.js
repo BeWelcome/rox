@@ -2,7 +2,9 @@
  * Message or stay request written in a side panel (search preview, profile page): the
  * form page (?embed=1, without menu and footer) slides in a frame. Once sent, the frame
  * shows a confirmation and posts "bw-contact-sent"; its "back" button posts
- * "bw-contact-close". If the form page sends the member somewhere else instead (not
+ * "bw-contact-close". The form page has its own head: it posts "bw-contact-ready" once
+ * loaded and "bw-contact-back" from its back arrow.
+ * If the form page sends the member somewhere else instead (not
  * allowed to write, limit reached...), that page opens in the window.
  *
  * panel: the .js-search-contact element. from: "search" or "profile", tells the
@@ -21,7 +23,7 @@ export function createContactPanel(panel, {from, onBack}) {
         const url = new URL(link.href, window.location.href);
         url.searchParams.set('embed', '1');
         url.searchParams.set('from', from);
-        panel.classList.remove('is-sent');
+        panel.classList.remove('is-sent', 'is-ready');
         title.textContent = link.dataset.title || link.textContent.trim();
         frame.title = link.dataset.title || '';
         frame.src = url.toString();
@@ -66,7 +68,12 @@ export function createContactPanel(panel, {from, onBack}) {
         if (event.origin !== window.location.origin || !event.data || event.source !== frame.contentWindow) {
             return;
         }
-        if (event.data.type === 'bw-contact-sent') {
+        if (event.data.type === 'bw-contact-ready') {
+            // The form page has its own head (back arrow, member): hide the panel's one
+            panel.classList.add('is-ready');
+        } else if (event.data.type === 'bw-contact-back') {
+            onBack('arrow');
+        } else if (event.data.type === 'bw-contact-sent') {
             panel.classList.add('is-sent');
         } else if (event.data.type === 'bw-contact-close') {
             onBack('done');

@@ -1,0 +1,49 @@
+{#
+  Top of the "contact a member" side panel (message or stay request, ?embed=1): back
+  arrow, the member's photo with a house when they host, what is being written and
+  where they live. The back arrow asks the page around the frame to go back
+  (contact/panel.js); "bw-contact-ready" tells it the frame has its own head.
+  member: who the message or request goes to. kind: 'message' or 'request'.
+#}
+{% set _address = member.activeAddress %}
+{% set _city = _address is not same as(false) and _address is not null and _address.location ? _address.location.name : null %}
+{% set _hosting = member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
+<header class="c-contact-head">
+    <button type="button" class="c-contact-head__back js-contact-back" aria-label="{{ 'back'|trans }}">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+    </button>
+    <span class="c-contact-head__photo">
+        <img src="{{ path('avatar', { username: member.username, size: 96 }) }}" alt="">
+        {% if _hosting == 'yes' %}
+            <span class="c-contact-head__badge"><i class="fas fa-home" aria-hidden="true"></i></span>
+        {% endif %}
+    </span>
+    <div class="c-contact-head__who">
+        <p class="c-contact-head__kind">
+            <i class="fas {{ kind == 'request' ? 'fa-bed' : 'fa-envelope' }}" aria-hidden="true"></i>
+            {{ ('contact.head.' ~ kind)|trans }}
+        </p>
+        <p class="c-contact-head__name">{{ member.shortNameOrUsername }}</p>
+        {% if _city or _hosting %}
+            <p class="c-contact-head__meta">
+                {% if _city %}<span><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ _city }}</span>{% endif %}
+                {% if _hosting %}<span class="c-contact-head__hosting c-contact-head__hosting--{{ _hosting }}">{{ ('search.accommodation.' ~ _hosting)|trans|trim('.') }}</span>{% endif %}
+            </p>
+        {% endif %}
+    </div>
+</header>
+<script>
+    (function () {
+        var parentWindow = window.parent !== window ? window.parent : null;
+        if (parentWindow) {
+            parentWindow.postMessage({ type: 'bw-contact-ready' }, window.location.origin);
+        }
+        document.querySelector('.js-contact-back').addEventListener('click', function () {
+            if (parentWindow) {
+                parentWindow.postMessage({ type: 'bw-contact-back' }, window.location.origin);
+            } else {
+                window.location.href = '{{ path('members_profile', { username: member.username }) }}';
+            }
+        });
+    })();
+</script>

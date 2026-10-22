@@ -25,6 +25,10 @@
     {% set profileUrl = path('members_profile', { username: receiver.username }) %}
 
     {% set embedded = app.request.query.getBoolean('embed') %}
+    {% if embedded %}
+        {# The "contact a member" side panel (search preview, profile) #}
+        {% include 'message/_embed_form.html.twig' %}
+    {% else %}
     <div class="c-inbox c-inbox--thread{% if embedded %} c-inbox--embedded{% endif %}">
         {% if not embedded %}
         {{ inbox.nav(folder, 'column') }}
@@ -97,4 +101,5 @@
             {{ form_end(form) }}
         </section>
     </div>
+    {% endif %}
 {% endblock %}

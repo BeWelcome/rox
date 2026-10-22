@@ -55,7 +55,12 @@
             {% if request_form ?? null %}
                 {# Hosting requests: the host answers (or the guest writes back) right here. #}
                 <div class="c-inbox-compose c-inbox-compose--respond">
-                    {% include (current.initiator == myself ? 'request/_respond_guest.html.twig' : 'request/_respond_host.html.twig') with { respond: request_form } %}
+                    {% if current.request.inviteForLeg %}
+                        {# Invitations: the invited member decides like a host, the member who invited writes or cancels #}
+                        {% include (current.initiator == myself ? 'invitation/_respond_inviter.html.twig' : 'request/_respond_host.html.twig') with { respond: request_form } %}
+                    {% else %}
+                        {% include (current.initiator == myself ? 'request/_respond_guest.html.twig' : 'request/_respond_host.html.twig') with { respond: request_form } %}
+                    {% endif %}
                 </div>
             {% elseif reply_form %}
                 {# Plain messages: answer right here. The text is turned into paragraphs on submit. #}

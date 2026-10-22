@@ -1,0 +1,48 @@
+{#
+  The answer of the member who invited, under the messages of an invitation: a message
+  to the invited member, and "Cancel invitation". Styled like the guest's answer in a
+  hosting request (c-decide). Once the invited member declined, only the message is left,
+  under "Declined".
+  Expects respond (InvitationHost form view) and current (the newest message).
+#}
+{% set S = 'App\\Entity\\HostingRequest::' %}
+{% set declined = current.request.status == constant(S ~ 'REQUEST_DECLINED') %}
+{% set guest = current.sender == app.user ? current.receiver : current.sender %}
+{% set guestName = guest.shortNameOrUsername ?? guest.username %}
+
+{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { class: 'c-inbox-respond c-inbox-respond--guest c-decide js-respond', novalidate: 'novalidate', autocomplete: 'off' } }) }}
+    {{ form_errors(respond) }}
+
+    {% if declined %}
+        <div class="c-decide__top">
+            <span class="c-decide__picked c-decide__picked--decline"><i class="fa fa-times" aria-hidden="true"></i> {{ 'request.status.declined'|trans }}</span>
+        </div>
+    {% endif %}
+
+    {% if respond.message.vars.errors|length > 0 %}
+        <div class="c-inbox-compose__error">{{ form_errors(respond.message) }}</div>
+    {% endif %}
+    {# A plain text field (turned into paragraphs on send) instead of the rich editor: it takes less room. #}
+    <textarea class="c-decide__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="2"
+              placeholder="{{ 'request.decide.placeholder.reply'|trans({ username: guestName }) }}" aria-label="{{ respond.message.vars.label|trans }}">
+        {{- respond.message.vars.value|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim -}}
+    </textarea>
+    {% do respond.message.setRendered %}
+
+    <div class="c-decide__foot">
+        {% include 'conversations/_reply_templates.html.twig' with { editor_id: respond.message.vars.id, menu_up: true } only %}
+        {% if not declined %}
+            <button type="submit" id="{{ respond.cancel.vars.id }}" name="{{ respond.cancel.vars.full_name }}" class="c-decide__cancel"
+                    data-confirm="{{ 'invitation.confirm.cancel'|trans }}" data-confirm-ok="{{ respond.cancel.vars.label|trans }}" data-confirm-close="{{ 'modal.close'|trans }}">
+                <i class="fa fa-times" aria-hidden="true"></i> <span class="c-decide__cancel-label">{{ respond.cancel.vars.label|trans }}</span>
+            </button>
+        {% endif %}
+        <button type="submit" id="{{ respond.update.vars.id }}" name="{{ respond.update.vars.full_name }}" class="c-decide__send">
+            <i class="fas fa-paper-plane" aria-hidden="true"></i>
+            <span>{{ 'label.message.button.send'|trans }}</span>
+        </button>
+    </div>
+    {% do respond.cancel.setRendered %}
+    {% do respond.update.setRendered %}
+    {{ form_rest(respond) }}
+{{ form_end(respond) }}

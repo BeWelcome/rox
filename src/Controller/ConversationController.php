@@ -10,6 +10,7 @@ use App\Entity\Message;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Form\InvitationGuest;
+use App\Form\InvitationHost;
 use App\Form\MessageToMemberType;
 use App\Form\ReportSpamType;
 use App\Model\ConversationModel;
@@ -336,17 +337,17 @@ class ConversationController extends AbstractController
     }
 
     /**
-     * The invited member answers an invitation right under the thread, like a host answers
-     * a hosting request: accept, maybe or decline, then a message. The form posts to the
-     * reply page (InvitationController::guestReply). The member who invited keeps the link
-     * to the reply page.
+     * Invitations are answered right under the thread too. The invited member answers like
+     * a host answers a hosting request: accept, maybe or decline, then a message
+     * (InvitationController::guestReply). The member who invited writes a message or
+     * cancels the invitation (InvitationController::hostReply). Both forms post to the
+     * reply page, which saves them and comes back here.
      */
     private function createInlineInvitationForm(Message $current, Member $member): ?FormView
     {
         $invitation = $current->getRequest();
         if (
-            $member === $current->getInitiator()
-            || ($member !== $current->getSender() && $member !== $current->getReceiver())
+            ($member !== $current->getSender() && $member !== $current->getReceiver())
             || MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()
             || HostingRequest::REQUEST_CANCELLED === $invitation->getStatus()
             || null === $invitation->getInviteForLeg()
@@ -360,6 +361,10 @@ class ConversationController extends AbstractController
         $reply->setMessage('');
         $reply->setInitiator($current->getInitiator());
         $reply->setRequest($invitation);
+
+        if ($member === $current->getInitiator()) {
+            return $this->createForm(InvitationHost::class, $reply)->createView();
+        }
 
         return $this->createForm(InvitationGuest::class, $reply, [
             'already_accepted' => null !== $invitation->getInviteForLeg()->getInvitedBy(),

@@ -9372,10 +9372,6 @@ body.is-embedded { background: #fff; }
 .c-contact-head__who p { margin: 0; }
 .c-contact-head .c-contact-head__kind { display: flex; align-items: center; gap: 0.35rem; color: #c2410c; font-size: 0.75rem; font-weight: 700; }
 .c-contact-head .c-contact-head__name { overflow: hidden; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.25rem; font-weight: 700; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
-.c-contact-head .c-contact-head__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.15rem 0.45rem; color: #64748b; font-size: 0.8125rem; }
-.c-contact-head__meta > span + span::before { content: "\00B7"; margin-right: 0.45rem; color: #cbd5e1; font-weight: 400; }
-.c-contact-head__meta i, .c-contact-head__meta svg { color: #94a3b8; font-size: 0.75rem; }
-.c-contact-head__hosting--yes { color: #2e7d32; font-weight: 700; }
 .c-contact__form { display: flex; flex: 1; flex-direction: column; min-height: 0; margin: 0; }
 .c-contact__body { display: flex; flex: 1; flex-direction: column; gap: 1rem; min-height: 0; padding: 0.9rem 1.25rem 1.1rem; overflow-y: auto; }
 .c-contact__body > * { margin: 0; }

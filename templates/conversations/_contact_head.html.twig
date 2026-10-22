@@ -1,12 +1,10 @@
 {#
   Top of the "contact a member" side panel (message or stay request, ?embed=1): back
-  arrow, the member's photo with a house when they host, what is being written and
-  where they live. The back arrow asks the page around the frame to go back
+  arrow, the member's photo with a house when they host, and what is being written.
+  The back arrow asks the page around the frame to go back
   (contact/panel.js); "bw-contact-ready" tells it the frame has its own head.
   member: who the message or request goes to. kind: 'message' or 'request'.
 #}
-{% set _address = member.activeAddress %}
-{% set _city = _address is not same as(false) and _address is not null and _address.location ? _address.location.name : null %}
 {% set _hosting = member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
 <header class="c-contact-head">
     <button type="button" class="c-contact-head__back js-contact-back" aria-label="{{ 'back'|trans }}">
@@ -24,12 +22,6 @@
             {{ ('contact.head.' ~ kind)|trans }}
         </p>
         <p class="c-contact-head__name">{{ member.shortNameOrUsername }}</p>
-        {% if _city or _hosting %}
-            <p class="c-contact-head__meta">
-                {% if _city %}<span><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ _city }}</span>{% endif %}
-                {% if _hosting %}<span class="c-contact-head__hosting c-contact-head__hosting--{{ _hosting }}">{{ ('search.accommodation.' ~ _hosting)|trans|trim('.') }}</span>{% endif %}
-            </p>
-        {% endif %}
     </div>
 </header>
 <script>

@@ -243,7 +243,7 @@ if (panel) {
         }
     });
 
-    // Back to the default options; the search runs when "Find members" is pressed.
+    // Back to the default options, then the panel closes and the search runs again.
     panel.querySelector('.js-search-options-reset').addEventListener('click', () => {
         panel.querySelectorAll('input[type=checkbox]').forEach((box) => {
             box.checked = box.name.endsWith('[accommodation_yes]') || box.name.endsWith('[accommodation_no]');
@@ -262,6 +262,8 @@ if (panel) {
         });
         panel.querySelectorAll('input[type=text]').forEach((input) => { input.value = ''; });
         syncPills();
+        closeOptions();
+        submit();
     });
 }
 

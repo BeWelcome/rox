@@ -3,7 +3,7 @@ const L = require('leaflet');
 
 export function initializeSingleAutoComplete(url, cssClass = "js-location-picker", onChange = function(){}) {
     const locationSuggests = document.getElementsByClassName(cssClass);
-    new LocationSuggest(locationSuggests.item(0), url, onChange);
+    return new LocationSuggest(locationSuggests.item(0), url, onChange);
 }
 
 export function initializeMultipleAutoCompletes(url, cssClass = "js-location-picker", onChange = function(){}) {

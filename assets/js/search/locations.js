@@ -61,6 +61,7 @@ function onChange(element, result) {
     hidden('geoname_id').value = result.id;
     hidden('latitude').value = result.latitude;
     hidden('longitude').value = result.longitude;
+    placePicked = true;
     updateWhereDisplay();
 
     // On phones picking a place is the search: go straight to the results.
@@ -70,7 +71,7 @@ function onChange(element, result) {
     }
 }
 
-initializeSingleAutoComplete('/suggest/locations/all', 'js-location-picker', onChange);
+const locationSuggest = initializeSingleAutoComplete('/suggest/locations/all', 'js-location-picker', onChange);
 
 function openWhere() {
     if (phone.matches) {
@@ -92,14 +93,43 @@ function closeWhere() {
     updateWhereDisplay();
 }
 
+// A click in the field to change the place: it starts empty, without the old suggestions.
+// Leaving it without picking a new place puts the place of the search back.
+const PLACE_FIELDS = ['fullname', 'name', 'geoname_id', 'latitude', 'longitude', 'admin_unit'];
+let placePicked = false;
+let placeBefore = null;
+
 if (where && locationInput) {
     locationInput.addEventListener('focus', () => {
         where.classList.add('is-editing');
         openWhere();
+        placePicked = false;
+        placeBefore = null;
+        if (hasPlace()) {
+            placeBefore = {};
+            PLACE_FIELDS.forEach((name) => { placeBefore[name] = hidden(name).value; });
+            if (locationSuggest && locationSuggest.autoComplete) {
+                locationSuggest.autoComplete.reset();
+            } else {
+                locationInput.value = '';
+            }
+        }
     });
     locationInput.addEventListener('blur', () => {
-        where.classList.remove('is-editing');
-        updateWhereDisplay();
+        // Later, so that a click on a suggestion is taken first
+        setTimeout(() => {
+            if (document.activeElement === locationInput) {
+                return;
+            }
+            if (!placePicked && placeBefore && !hasPlace()) {
+                PLACE_FIELDS.forEach((name) => { hidden(name).value = placeBefore[name]; });
+            }
+            if (!placePicked && placeBefore) {
+                locationInput.value = placeBefore.fullname;
+            }
+            where.classList.remove('is-editing');
+            updateWhereDisplay();
+        }, 200);
     });
     // A new text is a new place: it has to be picked from the list again.
     locationInput.addEventListener('input', () => {

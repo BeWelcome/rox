@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import Litepicker from 'litepicker';
 import {disableButtonOnSubmit} from './submit_button_disable';
+import {initPlainTextFields} from './contact/plain_text';
 
 import '../scss/_daterangepicker.scss';
 
@@ -227,3 +228,5 @@ document.querySelectorAll('.js-respond').forEach((form) => {
 });
 
 disableButtonOnSubmit();
+
+initPlainTextFields();

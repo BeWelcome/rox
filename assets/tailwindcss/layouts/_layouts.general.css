@@ -9297,9 +9297,8 @@ body.is-embedded { background: #fff; }
 .c-inbox--embedded .c-request-line { padding-top: 0.6rem; border-top: 1px solid #eef0f3; }
 .c-inbox--embedded .c-request-new .p-message-form__field .o-input { padding: 0.75rem 0.9rem; border-radius: 0.8rem; background: #f8fafc; font-size: 0.9375rem; }
 .c-inbox--embedded .c-request-new .p-message-form__field .o-input:focus { background: #fff; }
-.c-inbox--embedded .c-editor-bottom .ck.ck-editor { border-radius: 0.8rem; background: #f8fafc; }
-.c-inbox--embedded .c-editor-bottom .ck.ck-editor:focus-within { background: #fff; }
-.c-inbox--embedded .c-request-new .c-editor-bottom.c-inbox-compose__editor .ck.ck-editor__main > .ck-editor__editable { min-height: 13rem; background: transparent; font-size: 0.9375rem; }
+.c-inbox--embedded .p-message-form__field .c-plain-message.o-input { min-height: 13rem; background: #f8fafc; }
+.c-inbox--embedded .p-message-form__field .c-plain-message.o-input:focus { background: #fff; }
 .c-inbox--embedded .c-inbox-new__actions { padding: 0.85rem 1.25rem 1rem; border-top: 1px solid #eef0f3; background: #fff; }
 .c-inbox--embedded .c-inbox-compose__send,
 .c-inbox--embedded .c-request-new .c-inbox-compose__send { display: inline-flex; align-items: center; justify-content: center; gap: 0.55rem; width: 100%; height: 3rem; padding: 0 1.25rem; border-radius: 999px; font-size: 1rem; font-weight: 700; box-shadow: 0 6px 16px rgba(243, 112, 0, 0.25); }
@@ -9352,3 +9351,9 @@ body.is-embedded { background: #fff; }
   .c-embed-sent__plane, .c-embed-sent__ring, .c-embed-sent__spark { display: none; }
   .c-embed-sent__tick { stroke-dashoffset: 0; }
 }
+
+/* New message and stay request: a plain text box that grows with the text */
+.c-plain-message,
+.c-request-new .p-message-form__field .c-plain-message { display: block; width: 100%; height: auto; min-height: 11rem; max-height: 70vh; padding: 0.8rem 0.9rem; border: 1px solid #e2e8f0; border-radius: 0.8rem; background: #fff; color: #0f172a; font-size: 0.9375rem; line-height: 1.55; resize: none; overflow-y: auto; }
+.c-plain-message::placeholder { color: #94a3b8; }
+.c-plain-message:focus { outline: none; border-color: #f37000; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.12); }

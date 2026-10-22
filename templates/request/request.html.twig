@@ -83,9 +83,12 @@
                         {{ form_errors(form.subject.subject) }}
                     </div>
 
-                    <div class="p-message-form__field c-inbox-compose__editor c-editor-bottom">
+                    {# A plain text box: the text is sent as paragraphs (contact/plain_text.js) #}
+                    <div class="p-message-form__field c-plain-message-field">
                         <label class="o-label" for="{{ form.message.vars.id }}">{{ form.message.vars.label|trans }}</label>
-                        {{ form_widget(form.message) }}
+                        <textarea class="o-input c-plain-message js-plain-message" id="{{ form.message.vars.id }}" name="{{ form.message.vars.full_name }}" rows="7"
+                                  placeholder="{{ (form.message.vars.attr.placeholder ?? '')|trans }}" data-html="{{ form.message.vars.value }}"></textarea>
+                        {% do form.message.setRendered %}
                         {{ form_errors(form.message) }}
                     </div>
                     {% do form.send.setRendered %}

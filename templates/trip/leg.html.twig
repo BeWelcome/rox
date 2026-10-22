@@ -6,7 +6,7 @@
 #}
 {% set creator = leg.trip.creator %}
 {% set invitation = leg.invitationBy(app.user) %}
-<article class="p-trips-leg p-trips-leg--panel{% if leg.invitedBy == app.user %} p-trips-leg--invited{% endif %}">
+<article class="p-trips-leg p-trips-leg--panel js-contact-row{% if leg.invitedBy == app.user %} p-trips-leg--invited{% endif %}">
   {# The whole card opens the trip in the side panel (trip/leg_panel.html.twig) #}
   <a class="p-trips-leg__cover js-contact-open" href="{{ path('trip_leg_panel', { id: leg.id }) }}" data-title="{{ leg.trip.summary ?: leg.location.name }}">
     <span class="visually-hidden">{{ leg.trip.summary ?: leg.location.name }}</span>

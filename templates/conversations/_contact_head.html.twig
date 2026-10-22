@@ -32,7 +32,11 @@
             parentWindow.postMessage({ type: 'bw-contact-ready' }, window.location.origin);
         }
         var back = new URLSearchParams(window.location.search).get('back');
-        document.querySelector('.js-contact-back').addEventListener('click', function () {
+        // Every back arrow of the page (the trip in the panel has a second one on its map)
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.js-contact-back')) {
+                return;
+            }
             if (back && back.charAt(0) === '/' && back.charAt(1) !== '/') {
                 window.location.replace(back);
             } else if (parentWindow) {

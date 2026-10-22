@@ -177,12 +177,19 @@
             </div>
 
             <div role="tabpanel" class="tab-pane c-home-pane" id="visitors">
-                {{ form_start(radiusForm, { attr: { class: 'c-home-pane__radius' } }) }}
-                    <i class="fa fa-bullseye" aria-hidden="true"></i>
-                    {{ form_label(radiusForm.radius, null, { label_attr: { class: 'c-home-pane__radius-label' } }) }}
-                    {{ form_widget(radiusForm.radius, { attr: { class: 'c-home-pane__radius-select' } }) }}
-                    {{ form_rest(radiusForm) }}
-                {{ form_end(radiusForm) }}
+                {# How far to look: a few quick choices (landing.js reloads the list) #}
+                {% set _radius = radiusForm.radius.vars.value|default('') %}
+                <div class="c-home-radius js-trips-radius" role="group" aria-label="{{ 'trips.radius'|trans }}">
+                    <span class="c-home-radius__label"><i class="fa fa-bullseye" aria-hidden="true"></i> <span class="c-home-radius__text">{{ 'landing.visitors.within'|trans }}</span></span>
+                    <span class="c-home-radius__options">
+                        {% for choice in radiusForm.radius.vars.choices %}
+                            {% if choice.value in ['20', '50', '100'] or choice.value == _radius ~ '' %}
+                                <button type="button" class="c-home-radius__option{% if choice.value == _radius ~ '' %} is-active{% endif %}" data-radius="{{ choice.value }}" aria-pressed="{{ choice.value == _radius ~ '' ? 'true' : 'false' }}">{{ choice.label|trans }}</button>
+                            {% endif %}
+                        {% endfor %}
+                    </span>
+                    <input type="hidden" id="trips_radius" value="{{ _radius }}">
+                </div>
                 <div id="legsdisplay" class="c-home-list">{{ loading }}</div>
                 <div class="c-home-pane__footer">
                     <a class="c-home-link" href="{{ url('visitors') }}"><i class="far fa-map" aria-hidden="true"></i> {{ 'landing.bevisited.alltrips'|trans }}</a>

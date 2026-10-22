@@ -186,3 +186,18 @@ trip.details:
 trip.leg.options:
     - 'For this stop'
     - Label before the options of one stop (private, looking for a host, meet locals) in the trip creation form
+landing.visitors.within:
+    - 'Within'
+    - Label before the distance choices (20 km, 50 km, 100 km) above the Visitors list of the home page
+landing.visitors.host:
+    - 'Host'
+    - Short tag on a trip of the Visitors list of the home page, on phones, when the traveller looks for a host
+landing.visitors.more.stops:
+    - '{count, plural, one {+# stop} other {+# stops}}'
+    - Tag on a trip of the Visitors list of the home page; how many other stops the trip has
+landing.visitors.hidden:
+    - 'Trip hidden'
+    - Line left in the Visitors list of the home page after hiding a trip, before the Undo button
+landing.visitors.undo:
+    - 'Undo'
+    - Button after hiding a trip in the Visitors list of the home page; shows the trip again

@@ -176,3 +176,18 @@ contact.trip.near.you:
 contact.sent.back.visitors:
     - 'Back to the visitors'
     - Button of the confirmation shown on the visitors page after sending a message or invitation from the side panel; closes the panel
+contact.trip.invite:
+    - 'Invite to stay'
+    - Button at the bottom of the side panel showing a trip (home page, Visitors); opens the invitation form
+contact.trip.stops:
+    - '{count, plural, one {# stop} other {# stops}}'
+    - Next to the "Itinerary" title in the side panel showing a trip; how many stops
+contact.trip.nights:
+    - '{count, plural, one {# night} other {# nights}}'
+    - Length of one stop of a trip in the side panel showing a trip
+contact.trip.read.more:
+    - 'Read more'
+    - Link under the cut text of a trip in the side panel; shows the whole text
+contact.trip.read.less:
+    - 'Show less'
+    - Link under the whole text of a trip in the side panel; cuts it again

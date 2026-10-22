@@ -234,6 +234,24 @@ class TripController extends AbstractController
     }
 
     /**
+     * Shows a hidden leg again (the "Undo" after hiding it on the home page).
+     */
+    #[Route(path: '/trip/leg/{id}/unhide', name: 'trip_unhide', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[IsCsrfTokenValid('hide_leg')]
+    public function unhideLeg(Request $request, Subtrip $leg): RedirectResponse
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+        $this->tripModel->markLegAsVisible($member, $leg);
+
+        if ('homepage' === $request->request->get('redirectTo')) {
+            return $this->redirectToRoute('homepage', ['_fragment' => 'visitors']);
+        }
+
+        return $this->redirectToRoute('visitors');
+    }
+
+    /**
      * Show all trip legs that are in the vicinity of a member.
      */
     #[Route(path: '/visitors/{page}', name: 'visitors', requirements: ['page' => '\d+'])]

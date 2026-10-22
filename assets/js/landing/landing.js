@@ -155,6 +155,23 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(Home.updateTripLegs, 500);
         });
     }
+
+    // Visitors: the distance is a few quick choices that set the hidden #trips_radius
+    document.querySelectorAll('.js-trips-radius').forEach(function (group) {
+        const input = group.querySelector('#trips_radius');
+        group.addEventListener('click', function (event) {
+            const option = event.target.closest('[data-radius]');
+            if (!option || option.dataset.radius === input.value) {
+                return;
+            }
+            group.querySelectorAll('[data-radius]').forEach(function (other) {
+                other.classList.toggle('is-active', other === option);
+                other.setAttribute('aria-pressed', other === option ? 'true' : 'false');
+            });
+            input.value = option.dataset.radius;
+            input.dispatchEvent(new Event('change'));
+        });
+    });
 });
 
 document.addEventListener('submit', function(event) {
@@ -173,10 +190,43 @@ document.addEventListener('submit', function(event) {
         }
     }).then(function(response) {
         if (response.ok) {
-            form.closest('.c-dashboard__item').remove();
+            leaveUndo(form);
         }
     });
 });
+
+// A hidden trip leaves a line with "Undo", which shows it again (trip/landing.html.twig)
+function leaveUndo(form) {
+    const row = form.closest('.c-dashboard__item');
+    const list = document.getElementById('legsdisplay');
+    if (!form.dataset.unhide || !list) {
+        row.remove();
+        return;
+    }
+    const undo = document.createElement('div');
+    undo.className = 'c-home-undo';
+    undo.innerHTML = '<span class="c-home-undo__text"><i class="fa fa-eye-slash" aria-hidden="true"></i> </span>'
+        + '<button type="button" class="c-home-undo__button"><i class="fas fa-undo" aria-hidden="true"></i> </button>';
+    undo.querySelector('.c-home-undo__text').append(list.dataset.hidden || '');
+    undo.querySelector('.c-home-undo__button').append(list.dataset.undo || '');
+    row.replaceWith(undo);
+    undo.querySelector('button').addEventListener('click', function () {
+        undo.querySelector('button').disabled = true;
+        fetch(form.dataset.unhide, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).then(function(response) {
+            if (response.ok) {
+                undo.replaceWith(row);
+            } else {
+                undo.querySelector('button').disabled = false;
+            }
+        });
+    });
+}
 
 var Home = {
     onTabChange: function (e) {

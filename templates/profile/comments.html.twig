@@ -13,40 +13,39 @@
 {% block page_content %}
   {% set language = app.request.locale %}
   {% set filters = [
+    {type: 'all', icon: null, label: 'landing.button.all'|trans, count: comments_count.total},
     {type: 'positive', icon: 'thumbs-up', label: 'comment.quality.positive'|trans, count: comments_count.positive},
     {type: 'neutral', icon: 'minus', label: 'comment.quality.neutral'|trans, count: comments_count.neutral},
     {type: 'negative', icon: 'thumbs-down', label: 'comment.quality.negative'|trans, count: comments_count.negative},
   ] %}
   <div class="p-comments-page p-profile-main">
     <div class="card">
-      <div class="card-header u:flex u:flex-row u:justify-between u:items-center">
-        {{ 'profile.comments'|trans }}
+      {# The same filter as the comments of the profile: all, positive, neutral, negative (greyed when empty) #}
+      <div class="card-header p-pro-card__head p-comments-page__head">
+        <h2 class="p-pro-card__title p-comments-page__title">
+          {{ 'profile.comments'|trans }}
+          {% if comments_count.total %}<span class="p-pro-card__count">{{ comments_count.total }}</span>{% endif %}
+        </h2>
         {% if comments_count.total > 0 %}
-          <div>
-          <a href="{{ url('profile_comments', {username: member.username}) }}"
-             class="p-comments-all{% if type == 'all' %} p-comments-all--active{% endif %}"
-             {% if type == 'all' %}aria-current="page"{% endif %}>
-            <span class="p-comments-all__label">{{ 'landing.button.all'|trans }}</span>
-            <span class="p-comments-tabs__count">{{ comments_count.total }}</span>
-          </a>
-          </div>
-        {% endif %}
-      </div>
-      <div class="card-body">
-        {% if comments_count.total > 0 %}
-          <nav class="p-comments-tabs" aria-label="{{ 'profile.comments'|trans }}">
+          <nav class="p-pro-filter" aria-label="{{ 'profile.comments'|trans }}">
             {% for filter in filters %}
               {% set active = type == filter.type %}
-              <a href="{{ url('profile_comments', {username: member.username, type: filter.type}) }}"
-                 class="p-comments-tabs__tab p-comments-tabs__tab--{{ filter.type }}{% if active %} p-comments-tabs__tab--active{% endif %}"
-                 {% if active %}aria-current="page"{% endif %}>
-                {{ filter.label }}
-                <span class="p-comments-tabs__count">{{ filter.count }}</span>
-              </a>
+              {% set filterUrl = filter.type == 'all' ? url('profile_comments', {username: member.username}) : url('profile_comments', {username: member.username, type: filter.type}) %}
+              {% set classes = 'p-pro-filter__item' ~ (filter.type != 'all' ? ' p-pro-filter__item--' ~ filter.type : '') ~ (active ? ' is-active' : '') %}
+              {% if filter.count > 0 %}
+                <a href="{{ filterUrl }}" class="{{ classes }}"{% if active %} aria-current="page"{% endif %}>
+              {% else %}
+                <span class="{{ classes }} is-empty">
+              {% endif %}
+                {% if filter.icon %}<i class="fas fa-{{ filter.icon }}" aria-hidden="true"></i>{% endif %}
+                {{ filter.label|striptags }}
+                <span class="p-pro-filter__count">{{ filter.count }}</span>
+              {% if filter.count > 0 %}</a>{% else %}</span>{% endif %}
             {% endfor %}
           </nav>
         {% endif %}
-
+      </div>
+      <div class="card-body">
         <div class="p-comments-page__list">
           {% set shown = 0 %}
           {% for comment in comments %}

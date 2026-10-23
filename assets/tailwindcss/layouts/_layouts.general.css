@@ -10142,3 +10142,8 @@ body.is-embedded { background: #fff; }
 .c-embed-sent .c-embed-sent__subject { overflow: hidden; color: #fff; font-size: 1.0625rem; font-weight: 700; line-height: 1.3; white-space: nowrap; text-overflow: ellipsis; }
 .c-embed-sent__stay { color: rgba(255, 255, 255, 0.95); font-size: 0.9375rem; font-weight: 600; }
 .c-embed-sent__stay i, .c-embed-sent__stay svg { margin-right: 0.3rem; }
+
+/* Comments page: the profile's comment filter, the chosen one in white */
+.p-pro-filter__item.is-active { background: #fff; color: #0f172a; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08); }
+.p-comments-page .p-comments-page__head { margin-bottom: 0; padding: 1rem 1.25rem; border-bottom: 1px solid #eef2f6; background: #fff; }
+.p-comments-page .p-comments-page__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.15rem; font-weight: 700; line-height: 1.3; }

@@ -9060,6 +9060,8 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro__btn--request:hover { border-color: #d9661a; background: #d9661a; }
 .p-pro__actions .p-hero__btn--icon { width: 2.6rem; height: 2.6rem; justify-content: center; padding: 0; border-radius: 999px; background: #fff; }
 .p-pro__head:has(.dropdown-menu.show) { position: relative; z-index: 11; }
+/* An open menu of the head (more, language) goes over the tabs below */
+.p-pro__wrap:has(.dropdown-menu.show) { z-index: 25; }
 
 /* Tiles: hosting, comments, languages */
 .p-pro__tiles { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; gap: 0.75rem; padding: 1.25rem 0 1.1rem; }

@@ -30,7 +30,7 @@
                         <i class="fas fa-arrow-right c-contact-stay__sep" aria-hidden="true"></i>
                         {{ form_widget(fields.departure, { type: 'date', attr: { class: 'c-contact-stay__date js-request-departure js-contact-required', min: today, required: 'required', 'aria-label': 'request.departure'|trans } }) }}
                     </div>
-                    {# A calendar to pick the stay in two taps: the arrival, then the departure (requests.js) #}
+                    {# The calendar opened by the dates: the arrival, then the departure (requests.js) #}
                     <div class="c-contact-stay__calendar js-request-calendar"></div>
                     {{ form_widget(fields.duration, { type: 'hidden', attr: { class: 'js-request-duration' } }) }}
                     {{ form_errors(fields.duration) }}

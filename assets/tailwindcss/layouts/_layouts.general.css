@@ -10097,6 +10097,11 @@ body.is-embedded { background: #fff; }
 
 /* Stay request in the side panel: the calendar under the dates (Litepicker, inline) */
 .c-contact-stay__calendar { display: flex; justify-content: center; margin-top: 0.75rem; }
+.c-contact-stay__calendar[hidden] { display: none; }
+.c-contact .c-contact-stay__pick { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; text-align: left; cursor: pointer; }
+.c-contact .c-contact-stay__pick[aria-expanded="true"] { border-color: #f37000; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.12); }
+.c-contact-stay__pick.is-empty .c-contact-stay__pick-text { color: #94a3b8; }
+.c-contact-stay__pick i, .c-contact-stay__pick svg { flex-shrink: 0; color: #64748b; }
 .c-contact-stay__calendar .litepicker { --litepicker-day-width: 2.6rem; --litepicker-button-prev-month-color-hover: #f37000; --litepicker-button-next-month-color-hover: #f37000; --litepicker-day-color-hover: #f37000; --litepicker-is-today-color: #f37000; font-family: inherit; font-size: 0.875rem; }
 .c-contact-stay__calendar .litepicker .container__months { border-radius: 0.9rem; box-shadow: none; border: 1px solid #e2e8f0; }
 .c-contact-stay__calendar .litepicker .container__months .month-item { padding: 0.5rem 0.25rem 0.25rem; }

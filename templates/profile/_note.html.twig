@@ -1,0 +1,36 @@
+{#
+  My private note about the member, as a yellow sticky note (only I see it). Shown at the top
+  of the right column, and on phones and tablets under the head (where: 'side' or 'top').
+  It opens in the side panel (note/note.form.html.twig). No note yet: a dashed block to add one.
+#}
+{% set _noteItems = submenu.items ?? [] %}
+{% set _noteTitle = 'profile.note.about'|trans({'username': member.username})|striptags %}
+{% if note is defined and note %}
+  <section class="p-pro-note p-pro-note--{{ where }}">
+    <div class="p-pro-note__head">
+      <h2 class="p-pro-note__title"><span class="p-pro-note__mark" aria-hidden="true"></span> {{ 'profile.note.mine'|trans }}</h2>
+      <span class="p-pro-note__private"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'profile.note.only.you.short'|trans }}</span>
+    </div>
+    <div class="p-pro-note__text">{{ note.comment|purify }}</div>
+    <div class="p-pro-note__foot">
+      {% if note.category %}<span class="p-pro-note__category">{{ note.category }}</span>{% endif %}
+      {% set _noteDate = note.updated ?: note.created %}
+      {% if _noteDate %}<span class="p-pro-note__date">{{ _noteDate|format_date('medium') }}</span>{% endif %}
+      <a class="p-pro-note__edit-link js-contact-open" href="{{ path('edit_note', {username: member.username}) }}" data-title="{{ _noteTitle }}">
+        <i class="fas fa-pen" aria-hidden="true"></i> {{ 'note.edit'|trans }}
+      </a>
+    </div>
+    <a class="p-pro-note__edit js-contact-open" href="{{ path('edit_note', {username: member.username}) }}" data-title="{{ _noteTitle }}">
+      <i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.note.edit'|trans }}
+    </a>
+  </section>
+{% elseif _noteItems.add_note is defined %}
+  <a class="p-pro-note-add p-pro-note--{{ where }} js-contact-open" href="{{ _noteItems.add_note.url }}" data-title="{{ _noteTitle }}">
+    <span class="p-pro-note-add__icon" aria-hidden="true"><span class="p-pro-note__mark"></span></span>
+    <span class="p-pro-note-add__text">
+      <strong>{{ 'profile.note.private'|trans }}</strong>
+      <span>{{ 'profile.note.add.hint'|trans }}</span>
+    </span>
+    <i class="fas fa-plus p-pro-note-add__plus" aria-hidden="true"></i>
+  </a>
+{% endif %}

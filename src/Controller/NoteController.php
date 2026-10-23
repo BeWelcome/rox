@@ -69,7 +69,7 @@ class NoteController extends AbstractController
             $this->entityManager->persist($note);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
+            return $this->redirectAfterSave($request, $loggedInMember, $member);
         }
 
         return $this->render('note/add.html.twig', [
@@ -110,7 +110,7 @@ class NoteController extends AbstractController
             $this->entityManager->persist($note);
             $this->entityManager->flush();
 
-            return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
+            return $this->redirectAfterSave($request, $loggedInMember, $member);
         }
 
         return $this->render('note/edit.html.twig', [
@@ -122,7 +122,7 @@ class NoteController extends AbstractController
     }
 
     #[Route(path: '/members/{username:member}/note/delete', name: 'delete_note')]
-    public function delete(Member $member): Response
+    public function delete(Request $request, Member $member): Response
     {
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
@@ -139,6 +139,19 @@ class NoteController extends AbstractController
 
         $this->entityManager->remove($note);
         $this->entityManager->flush();
+
+        return $this->redirectAfterSave($request, $loggedInMember, $member);
+    }
+
+    /**
+     * From the side panel of the profile (?embed=1): back to the profile, which shows the
+     * note in its own block. From the full page: the list of notes, as before.
+     */
+    private function redirectAfterSave(Request $request, Member $loggedInMember, Member $member): Response
+    {
+        if ($request->query->getBoolean('embed')) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
 
         return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
     }

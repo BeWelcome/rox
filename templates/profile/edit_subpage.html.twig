@@ -12,12 +12,15 @@
   the section (drawer_eyebrow) and what is edited (drawer_title), a close button, then
   a line on what it is for (drawer_intro). The form's save button goes to the bottom of
   the panel, next to "Cancel". With "track" in drawer_options, Save stays pale until
-  something is changed, and while a choice marked data-ped-required is empty.
+  something is changed, and while a choice marked data-ped-required is empty. drawer_avatar
+  (a picture next to the title) and "noclose" in drawer_options (no close button) are
+  for the panels about another member, such as the private note.
 #}
 {% block drawer_eyebrow %}<i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.edit'|trans }}{% endblock %}
 {% block drawer_title %}{{ block('subpage_title') }}{% endblock %}
 {% block drawer_intro %}{% endblock %}
 {% block drawer_options %}{% endblock %}
+{% block drawer_avatar %}{% endblock %}
 
 {% block content %}
   {% set embedded = app.request.query.getBoolean('embed') %}
@@ -33,13 +36,17 @@
         <button type="button" class="p-ped-head__btn js-ped-close" aria-label="{{ 'back'|trans }}">
           <i class="fas fa-arrow-left" aria-hidden="true"></i>
         </button>
+        {% set avatar = block('drawer_avatar')|trim %}
+        {% if avatar %}<span class="p-ped-head__avatar">{{ avatar|raw }}</span>{% endif %}
         <div class="p-ped-head__text">
           <p class="p-ped-head__eyebrow">{{ block('drawer_eyebrow') }}</p>
           <h1 class="p-ped-head__title">{{ block('drawer_title') }}</h1>
         </div>
+        {% if 'noclose' not in block('drawer_options') %}
         <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
           <i class="fas fa-times" aria-hidden="true"></i>
         </button>
+        {% endif %}
       </header>
       {% set intro = block('drawer_intro')|trim %}
       {% if intro %}<p class="p-ped-intro">{{ intro|raw }}</p>{% endif %}

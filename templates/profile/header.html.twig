@@ -243,7 +243,7 @@
                 {% endif %}
                 {% if items.add_note is defined or items.edit_note is defined %}
                   {% set noteItem = items.edit_note is defined ? items.edit_note : items.add_note %}
-                  <li><a class="dropdown-item p-hero__dropdown-item" href="{{ noteItem.url }}">
+                  <li><a class="dropdown-item p-hero__dropdown-item js-contact-open" href="{{ noteItem.url }}" data-title="{{ 'profile.note.about'|trans({'username': member.username})|striptags }}">
                     <i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i> {{ noteItem.key|lower|trans }}
                   </a></li>
                 {% endif %}

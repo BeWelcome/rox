@@ -17,23 +17,21 @@
         <h1 class="p-pe-head__name">{{ member.username }}</h1>
         <div class="p-pe-head__langs">
           <span class="p-pe-head__langs-label">{{ 'profile.edit.written.in'|trans }}</span>
-          {% for profile_language in profile_languages %}
-            {% set active = profile_language is same as(active_locale) %}
-            <button type="button" class="p-pe-head__lang{% if active %} p-edit-header__lang-tab--active{% endif %}"
-                    data-edit-language="{{ profile_language }}" aria-pressed="{{ active ? 'true' : 'false' }}">
-              {{ ('lang_' ~ profile_language)|lower|trans({}, 'messages', profile_language) }}
-            </button>
-            {% if profile_language != 'en' %}
-              {# Shown next to the language on screen only: deletes that translation (after a confirmation) #}
-              {% set delete_text = 'profile.edit.delete.translation'|trans({language: ('lang_' ~ profile_language)|lower|trans}) %}
-              <button type="button" class="p-pe-head__lang-delete" data-delete-language="{{ profile_language }}" title="{{ delete_text }}" aria-label="{{ delete_text }}">
-                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+          {# One pill per language (the one shown in black), then "+" to add one. A language is
+             deleted from its own page, at the bottom (profile/edit.content.html.twig). #}
+          <div class="p-pe-head__lang-tabs">
+            {% for profile_language in profile_languages %}
+              {% set active = profile_language is same as(active_locale) %}
+              <button type="button" class="p-pe-head__lang{% if active %} p-edit-header__lang-tab--active{% endif %}"
+                      data-edit-language="{{ profile_language }}" aria-pressed="{{ active ? 'true' : 'false' }}">
+                {{ ('lang_' ~ profile_language)|lower|trans({}, 'messages', profile_language) }}
               </button>
-            {% endif %}
-          {% endfor %}
-          <a href="{{ url('profile_add_language', {username: member.username}) }}" class="p-pe-head__lang p-pe-head__lang--add js-contact-open" data-title="{{ 'profile.edit.add.translation'|trans }}">
-            <i class="fas fa-plus" aria-hidden="true"></i> {{ 'profile.edit.add.translation'|trans }}
-          </a>
+            {% endfor %}
+            <a href="{{ url('profile_add_language', {username: member.username}) }}" class="p-pe-head__lang-add js-contact-open"
+               data-title="{{ 'profile.edit.add.translation'|trans }}" title="{{ 'profile.edit.add.translation'|trans }}">
+              <i class="fas fa-plus" aria-hidden="true"></i><span class="visually-hidden">{{ 'profile.edit.add.translation'|trans }}</span>
+            </a>
+          </div>
         </div>
       </div>
 

@@ -769,3 +769,12 @@ profile.edit.hosting.ask:
 profile.admin.status:
     - 'Member status'
     - Profile page, admins only, label of the list to change the status of the member
+profile.language.delete.modal:
+    - 'Delete the {language} version?'
+    - Edit profile page, title of the window that asks before deleting a language of the profile. Keep the {language} tag.
+profile.language.delete.blurb:
+    - 'Everything written in {language} on your profile will be deleted. This cannot be undone.'
+    - Edit profile page, text of the window that asks before deleting a language of the profile. Keep the {language} tag.
+profile.language.delete.confirm:
+    - 'Delete'
+    - Edit profile page, button of the window that deletes a language of the profile

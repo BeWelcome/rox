@@ -15,6 +15,7 @@ use App\Entity\GalleryImage;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Preference;
+use App\Entity\ProfileNote;
 use App\Entity\ProfileVisit;
 use App\Form\AboutMeFormType;
 use App\Form\AccommodationFormType;
@@ -29,6 +30,7 @@ use App\Model\ProfileModel;
 use App\Repository\CommentRepository;
 use App\Repository\FriendRepository;
 use App\Repository\GalleryImageRepository;
+use App\Repository\ProfileNoteRepository;
 use App\Repository\ProfileVisitRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
@@ -697,6 +699,11 @@ class ProfileController extends AbstractController
         $galleryRepository = $this->entityManager->getRepository(GalleryImage::class);
         $pictures = $galleryRepository->getLatestImagesFor($member);
 
+        // The private note of the member looking at the profile, shown in its own block
+        /** @var ProfileNoteRepository $noteRepository */
+        $noteRepository = $this->entityManager->getRepository(ProfileNote::class);
+        $note = $member === $loggedInMember ? null : $noteRepository->getNoteForMemberPair($loggedInMember, $member);
+
         $template = $editMode ? 'profile/edit.html.twig' : 'profile/show.html.twig';
 
         $params = [
@@ -707,6 +714,7 @@ class ProfileController extends AbstractController
             'has_more_comments' => $hasMoreComments,
             'friends' => $friends,
             'pictures' => $pictures,
+            'note' => $note,
             'language' => $language,
             'status_form' => $this->profileModel->getStatusForm($loggedInMember, $member),
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),

@@ -23,8 +23,15 @@ let marker = L.marker([locationLatitude.value, locationLongitude.value], {
 marker.bindPopup(labelText);
 marker.on('dragend', dragend);
 const map = L.map('map');
-marker.addTo(map);
-map.setView([locationLatitude.value, locationLongitude.value], 12);
+// No location yet: the whole world, without a marker, until a place is picked
+const hasLocation = locationLatitude.value !== '' && locationLongitude.value !== ''
+    && !(parseFloat(locationLatitude.value) === 0 && parseFloat(locationLongitude.value) === 0);
+if (hasLocation) {
+    marker.addTo(map);
+    map.setView([locationLatitude.value, locationLongitude.value], 12);
+} else {
+    map.setView([30, 10], 2);
+}
 
 // callback when a selection is done from the list of possible results
 const addMarkerAndMoveToNewLocation = function(element, result) {

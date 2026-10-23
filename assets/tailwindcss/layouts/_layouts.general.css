@@ -10202,6 +10202,23 @@ body.is-embedded { background: #fff; }
   .p-pro-note-add { margin: 0 0.6rem; }
 }
 
+/* Profile, admins: their tools for the member, a dark block of the right column */
+.p-pro-admin-tools { padding: 1.1rem 0.75rem 0.6rem; border-radius: 1rem; background: #0f172a; color: #e2e8f0; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.2); }
+.p-pro-admin-tools .p-pro-admin-tools__title { display: flex; align-items: center; gap: 0.45rem; margin: 0 0.6rem 0.6rem; color: #f8fafc; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+.p-pro-admin-tools__title i,
+.p-pro-admin-tools__title svg { color: #fbbf24; font-size: 0.85rem; }
+.p-pro-admin-tools__list { margin: 0; padding: 0; list-style: none; }
+.p-pro-admin-tools__link,
+.p-pro-admin-tools__link:hover { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0.6rem; border-radius: 0.65rem; color: #e2e8f0; font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+.p-pro-admin-tools__link:hover { background: rgba(255, 255, 255, 0.07); color: #fff; }
+.p-pro-admin-tools__icon { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 1.9rem; height: 1.9rem; border-radius: 0.5rem; background: rgba(255, 255, 255, 0.08); color: #cbd5e1; font-size: 0.75rem; }
+.p-pro-admin-tools__label { flex: 1 1 auto; min-width: 0; }
+.p-pro-admin-tools__go { color: #64748b; font-size: 0.65rem; }
+.p-pro-admin-tools__link:hover .p-pro-admin-tools__go { color: #cbd5e1; }
+@media (max-width: 767.98px) {
+  .p-pro-admin-tools { border-radius: 0; }
+}
+
 /* Account not finished: a strip across the page under the menu (base.html.twig) */
 .setup-banner.setup-banner--strip { display: block; margin: 0; padding: 0; border: 0; border-bottom: 1px solid #dbe6f6; border-radius: 0; background: #eef4fd; }
 .setup-banner--strip .setup-banner__inner { display: flex; align-items: center; gap: 1rem; padding-top: 0.6rem; padding-bottom: 0.6rem; }

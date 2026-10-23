@@ -230,6 +230,9 @@
       {# ── My private note about this member (only I see it) ── #}
       {% include 'profile/_note.html.twig' with {where: 'side'} %}
 
+      {# ── Admins: their tools for this member ── #}
+      {% include 'profile/_admin_tools.html.twig' with {where: 'side'} %}
+
       {# ── Where I live: a small map of the approximate area (rounded coordinates) ── #}
       {% if not address is same as(false) and address.latitude and address.longitude %}
         {% set _loc = address.location %}

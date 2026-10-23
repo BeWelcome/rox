@@ -3,6 +3,7 @@ import Litepicker from 'litepicker';
 import {disableButtonOnSubmit} from './submit_button_disable';
 import {initPlainTextFields} from './contact/plain_text';
 import {initContactSendState} from './contact/send_state';
+import {initStayDates} from './contact/stay_dates';
 
 import '../scss/_daterangepicker.scss';
 
@@ -86,86 +87,14 @@ document.querySelectorAll('.js-request-dates').forEach((dates) => {
     departure.addEventListener('change', update);
     update();
 
-    // Side panel: the two dates are buttons that open a calendar under them. A first tap
-    // picks the arrival, a second one the departure, and the calendar closes.
-    const calendar = form.querySelector('.js-request-calendar');
-    if (calendar) {
-        const lang = document.documentElement.lang || 'en';
-        const label = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
-        const makeButton = (input) => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'c-contact-stay__date c-contact-stay__pick';
-            button.setAttribute('aria-expanded', 'false');
-            button.innerHTML = '<span class="c-contact-stay__pick-text"></span><i class="fa fa-calendar" aria-hidden="true"></i>';
-            input.after(button);
-            input.hidden = true;
-            return button;
-        };
-        const buttons = [makeButton(arrival), makeButton(departure)];
-        const showDates = () => {
-            [arrival, departure].forEach((input, index) => {
-                const text = buttons[index].querySelector('.c-contact-stay__pick-text');
-                const day = parseDay(input.value);
-                text.textContent = day ? label.format(day) : (input.getAttribute('aria-label') || '');
-                buttons[index].classList.toggle('is-empty', !day);
-            });
-        };
-        const toggle = (open) => {
-            calendar.hidden = !open;
-            buttons.forEach((button) => button.setAttribute('aria-expanded', open ? 'true' : 'false'));
-        };
-
-        let syncing = false;
-        const picker = new Litepicker({
-            element: calendar,
-            inlineMode: true,
-            singleMode: false,
-            minDate: arrival.min || dayjs().format('YYYY-MM-DD'),
-            minDays: 2,
-            numberOfMonths: 1,
-            numberOfColumns: 1,
-            lang,
-            showTooltip: false,
-            setup: (instance) => {
-                instance.on('selected', (start, end) => {
-                    if (syncing) {
-                        return;
-                    }
-                    arrival.value = start ? start.format('YYYY-MM-DD') : '';
-                    departure.value = end ? end.format('YYYY-MM-DD') : '';
-                    arrival.dispatchEvent(new Event('change', { bubbles: true }));
-                    departure.dispatchEvent(new Event('change', { bubbles: true }));
-                    toggle(false);
-                });
-            },
+    // Side panel: the calendar and its shortcuts in place of the two date fields
+    const stayDates = form.querySelector('.js-stay-dates');
+    if (stayDates) {
+        initStayDates(stayDates, {
+            arrival,
+            departure,
+            hide: [dates, form.querySelector('.c-contact-stay__top')].filter(Boolean),
         });
-        const showFields = () => {
-            if (arrival.value && departure.value) {
-                syncing = true;
-                picker.setDateRange(arrival.value, departure.value);
-                syncing = false;
-            }
-            showDates();
-        };
-        arrival.addEventListener('change', showFields);
-        departure.addEventListener('change', showFields);
-        buttons.forEach((button) => button.addEventListener('click', () => toggle(calendar.hidden)));
-        // A tap elsewhere, or Escape, closes it. The path is read as it was at the tap:
-        // the calendar redraws its days on a tap, which takes the tapped day out of it.
-        document.addEventListener('click', (event) => {
-            const path = event.composedPath();
-            if (!calendar.hidden && !path.includes(calendar) && !buttons.some((button) => path.includes(button))) {
-                toggle(false);
-            }
-        });
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && !calendar.hidden) {
-                toggle(false);
-            }
-        });
-        toggle(false);
-        showFields();
     }
 });
 

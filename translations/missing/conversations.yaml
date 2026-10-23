@@ -128,6 +128,33 @@ contact.send.hint.request:
 contact.dates:
     - 'Dates'
     - Label of the arrival and departure dates in the stay request side panel
+contact.dates.arrival:
+    - 'Arrival'
+    - Label of the arrival date box in the stay request side panel
+contact.dates.departure:
+    - 'Departure'
+    - Label of the departure date box in the stay request side panel
+contact.dates.select:
+    - 'Select'
+    - Shown in a date box of the stay request side panel while that date isn't picked yet
+contact.dates.tap.arrival:
+    - 'Tap your arrival day'
+    - Under the calendar of the stay request side panel, before the arrival is picked
+contact.dates.tap.departure:
+    - 'Tap your departure day, or stay for'
+    - Under the calendar of the stay request side panel once the arrival is picked, followed by shortcuts (1 night, 2 nights, 3 nights, 1 week)
+contact.dates.week:
+    - '1 week'
+    - Shortcut under the calendar of the stay request side panel, for a stay of 7 nights
+contact.dates.change:
+    - 'Change'
+    - Link on the picked dates of the stay request side panel, opens the calendar again
+contact.dates.previous:
+    - 'Previous month'
+    - Hidden label of the left arrow of the calendar in the stay request side panel
+contact.dates.next:
+    - 'Next month'
+    - Hidden label of the right arrow of the calendar in the stay request side panel
 contact.travellers:
     - 'Travellers'
     - Label of the number of travellers in the stay request side panel

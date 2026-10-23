@@ -30,8 +30,15 @@
                         <i class="fas fa-arrow-right c-contact-stay__sep" aria-hidden="true"></i>
                         {{ form_widget(fields.departure, { type: 'date', attr: { class: 'c-contact-stay__date js-request-departure js-contact-required', min: today, required: 'required', 'aria-label': 'request.departure'|trans } }) }}
                     </div>
-                    {# The calendar opened by the dates: the arrival, then the departure (requests.js) #}
-                    <div class="c-contact-stay__calendar js-request-calendar"></div>
+                    {# The calendar and its shortcuts, in place of the two fields above (contact/stay_dates.js) #}
+                    <div class="c-stay-dates js-stay-dates"
+                         data-arrival="{{ 'contact.dates.arrival'|trans }}" data-departure="{{ 'contact.dates.departure'|trans }}"
+                         data-select="{{ 'contact.dates.select'|trans }}" data-change="{{ 'contact.dates.change'|trans }}"
+                         data-tap-arrival="{{ 'contact.dates.tap.arrival'|trans }}" data-tap-departure="{{ 'contact.dates.tap.departure'|trans }}"
+                         data-week="{{ 'contact.dates.week'|trans }}"
+                         data-previous="{{ 'contact.dates.previous'|trans }}" data-next="{{ 'contact.dates.next'|trans }}"
+                         data-one="{{ 'request.night.stay'|trans({ numbernights: 1 }) }}"
+                         data-other="{{ 'request.night.stay'|trans({ numbernights: 99 })|replace({ '99': '{n}' }) }}"></div>
                     {{ form_widget(fields.duration, { type: 'hidden', attr: { class: 'js-request-duration' } }) }}
                     {{ form_errors(fields.duration) }}
                     {{ form_errors(fields.arrival) }}

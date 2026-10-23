@@ -170,6 +170,21 @@
         </p>
         {# Phones: the membership length on its own line at the end #}
         <p class="p-pro__since-line">{{ _since }}</p>
+        {# Admins: the member's status, changed from a small bar under the facts #}
+        {% if not own and status_form is defined and not status_form is null %}
+          {{ form_start(status_form, {attr: {class: 'p-pro-admin'}}) }}
+            <label class="p-pro-admin__label" for="{{ status_form.status.vars.id }}">
+              <i class="fas fa-user-shield" aria-hidden="true"></i> {{ 'profile.admin.status'|trans }}
+            </label>
+            <span class="p-pro-admin__select">
+              {{ form_widget(status_form.status, {attr: {class: 'p-pro-admin__field'}}) }}
+              <i class="fas fa-chevron-down" aria-hidden="true"></i>
+            </span>
+            <button type="submit" class="p-pro-admin__save">
+              <i class="fas fa-check" aria-hidden="true"></i> {{ 'submit'|trans }}
+            </button>
+          {{ form_end(status_form) }}
+        {% endif %}
       </div>
 
       {# ── Actions: message and request stay (stuck to the bottom on phones), more ── #}
@@ -241,14 +256,6 @@
               </ul>
             </div>
           {% endif %}
-        {% endif %}
-        {% if not own and status_form is defined and not status_form is null %}
-          <div class="p-hero__status-form">
-            {{ form_start(status_form) }}
-            {{ form_widget(status_form.status) }}
-            <button type="submit" class="p-hero__btn p-hero__btn--secondary">{{ 'submit'|trans }}</button>
-            {{ form_end(status_form) }}
-          </div>
         {% endif %}
       </div>
     </div>

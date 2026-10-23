@@ -766,3 +766,6 @@ profile.edit.required:
 profile.edit.hosting.ask:
     - 'First say if you can host, just above: then you can fill in the details below.'
     - Edit profile page, shown under "Can you host?" when a hosting detail is clicked before answering it
+profile.admin.status:
+    - 'Member status'
+    - Profile page, admins only, label of the list to change the status of the member

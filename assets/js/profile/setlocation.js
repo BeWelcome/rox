@@ -10,11 +10,13 @@ const locationLongitude = document.getElementById('set_location_longitude');
 const originalLatitude = document.getElementById('original_latitude');
 const originalLongitude = document.getElementById('original_longitude');
 
-const myIcon = L.icon({
-    iconUrl: 'images/icons/marker_drop.png',
-    iconSize: [29, 24],
-    iconAnchor: [9, 21],
-    popupAnchor: [0, -14]
+// An orange pin, dragged to where one lives (the tip is the point)
+const myIcon = L.divIcon({
+    className: 'p-location-pin',
+    html: '<span class="p-location-pin__shadow"></span><span class="p-location-pin__shape"></span>',
+    iconSize: [48, 56],
+    iconAnchor: [24, 52],
+    popupAnchor: [0, -50]
 });
 let marker = L.marker([locationLatitude.value, locationLongitude.value], {
     icon: myIcon,
@@ -23,15 +25,16 @@ let marker = L.marker([locationLatitude.value, locationLongitude.value], {
 marker.bindPopup(labelText);
 marker.on('dragend', dragend);
 const map = L.map('map');
-// No location yet: the whole world, without a marker, until a place is picked
+// No location yet: Europe, with the pin in the middle, until a place is picked
 const hasLocation = locationLatitude.value !== '' && locationLongitude.value !== ''
     && !(parseFloat(locationLatitude.value) === 0 && parseFloat(locationLongitude.value) === 0);
 if (hasLocation) {
-    marker.addTo(map);
     map.setView([locationLatitude.value, locationLongitude.value], 12);
 } else {
-    map.setView([30, 10], 2);
+    map.setView([50, 10], 4);
+    marker.setLatLng(map.getCenter());
 }
+marker.addTo(map);
 
 // callback when a selection is done from the list of possible results
 const addMarkerAndMoveToNewLocation = function(element, result) {
@@ -55,6 +58,10 @@ const addMarkerAndMoveToNewLocation = function(element, result) {
 
 // Dragging the marker around on the map changes the stored lat, long
 function dragend(e) {
+    const hint = document.querySelector('.js-location-hint');
+    if (hint) {
+        hint.classList.add('is-done');
+    }
     const originalLatLng = L.latLng(originalLatitude.value, originalLongitude.value);
     locationLatitude.value = e.target._latlng.lat;
     locationLongitude.value = e.target._latlng.lng;

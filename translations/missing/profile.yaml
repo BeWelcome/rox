@@ -451,3 +451,6 @@ profile.member.for:
 profile.comment.answer.toggle:
     - "{username}'s answer"
     - Small button under a comment on the comments page of a profile that opens or folds the answer the member wrote back
+profile.setlocation.drag:
+    - 'Pick your town above, then drag the pin to where you live'
+    - Hint over the map of the "set location" page, the orange pin can be moved with the mouse or a finger

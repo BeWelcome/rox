@@ -47,7 +47,11 @@
     <input type="hidden" id="original_longitude" value="{{ address ? address.longitude : '' }}">
 
     <input type="hidden" id="marker_label_text" value="{{ 'profile.setlocation.marker'|trans }}">
-    <div class="p-location-map" id="map">
+    <div class="p-location-map-wrap">
+        <div class="p-location-map" id="map"></div>
+        <p class="p-location-hint js-location-hint">
+            <i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ 'profile.setlocation.drag'|trans }}
+        </p>
     </div>
 
     <div class="p-edit-subpage__actions">

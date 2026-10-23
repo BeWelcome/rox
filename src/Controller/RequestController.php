@@ -21,6 +21,7 @@ use App\Utilities\AllowContactCheck;
 use App\Utilities\ContactPanelTrait;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,6 +40,8 @@ class RequestController extends BaseRequestAndInvitationController
 {
     use ContactPanelTrait;
     use TranslatorTrait;
+
+    private const string LAST_STAY_DATES = 'last_stay_dates';
 
     public function __construct(
         ConversationModel $conversationModel,
@@ -170,6 +173,7 @@ class RequestController extends BaseRequestAndInvitationController
         }
 
         $requestForm = $this->createForm(HostingRequestGuest::class, null);
+        $this->prefillLastStayDates($request, $requestForm);
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
@@ -179,6 +183,8 @@ class RequestController extends BaseRequestAndInvitationController
 
             $this->entityManager->persist($hostingRequest);
             $this->entityManager->flush();
+
+            $this->rememberLastStayDates($request, $hostingRequest);
 
             $this->sendInitialRequestNotification(
                 $host,
@@ -204,6 +210,47 @@ class RequestController extends BaseRequestAndInvitationController
             'host' => $host,
             'form' => $requestForm->createView(),
         ] + $this->inboxFolders->getContext($request, $guest));
+    }
+
+    /**
+     * The dates of the last stay request sent today, so that the next request (to another
+     * host, same trip) starts with them. Kept in the session until the end of the day.
+     */
+    private function rememberLastStayDates(Request $request, Message $hostingRequest): void
+    {
+        $stay = $hostingRequest->getRequest();
+        if (null === $stay || null === $stay->getArrival() || null === $stay->getDeparture()) {
+            return;
+        }
+
+        $request->getSession()->set(self::LAST_STAY_DATES, [
+            'day' => date('Y-m-d'),
+            'arrival' => $stay->getArrival()->format('Y-m-d'),
+            'departure' => $stay->getDeparture()->format('Y-m-d'),
+        ]);
+    }
+
+    private function prefillLastStayDates(Request $request, Form $requestForm): void
+    {
+        if (!$request->hasSession()) {
+            return;
+        }
+
+        $dates = $request->getSession()->get(self::LAST_STAY_DATES);
+        $today = date('Y-m-d');
+        if (!\is_array($dates) || ($dates['day'] ?? null) !== $today || ($dates['arrival'] ?? '') < $today) {
+            return;
+        }
+
+        $arrival = DateTime::createFromFormat('!Y-m-d', $dates['arrival']);
+        $departure = DateTime::createFromFormat('!Y-m-d', $dates['departure'] ?? '');
+        if (false === $arrival || false === $departure || $departure <= $arrival) {
+            return;
+        }
+
+        $stay = $requestForm->get('request');
+        $stay->get('arrival')->setData($arrival);
+        $stay->get('departure')->setData($departure);
     }
 
     protected function addExpiredFlash(Member $receiver): void

@@ -60,6 +60,18 @@ export function createContactPanel(panel, {from, onBack}) {
         }
     }
 
+    // The panel's page sends elsewhere (EmbedFrameListener, "bw-embed-leave"): that page
+    // opens in the window. On the edit page a saved section sends back to the profile:
+    // the edit page is loaded again instead, with what was just saved.
+    function leave(href) {
+        const url = new URL(href, window.location.href);
+        if (from === 'edit' && !/\/edit(\/|$)/.test(url.pathname)) {
+            window.location.reload();
+        } else {
+            window.location.href = url.toString();
+        }
+    }
+
     panel.querySelectorAll('.js-search-contact-back').forEach((button) => button.addEventListener('click', () => onBack('arrow')));
 
     frame.addEventListener('load', () => {
@@ -77,7 +89,7 @@ export function createContactPanel(panel, {from, onBack}) {
         }
         // A page made for the panel keeps ?embed=1; any other one opens in the window
         if (!new URLSearchParams(location.search).has('embed')) {
-            window.location.href = location.href;
+            leave(location.href);
             return;
         }
         panel.classList.add('is-loaded');
@@ -96,6 +108,8 @@ export function createContactPanel(panel, {from, onBack}) {
             panel.classList.add('is-sent');
         } else if (event.data.type === 'bw-contact-close') {
             onBack('done');
+        } else if (event.data.type === 'bw-embed-leave' && typeof event.data.url === 'string') {
+            leave(event.data.url);
         }
     });
 

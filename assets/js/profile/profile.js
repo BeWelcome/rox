@@ -4,7 +4,7 @@ import {addPositronLayer} from '../map/positron';
 
 // Send / Request stay: the form in a side panel (bottom sheet on phones).
 // First in the file, so that an error in the code below cannot leave the buttons dead.
-initContactDrawer('profile');
+initContactDrawer(document.querySelector('.js-contact-drawer')?.dataset.from || 'profile');
 
 document.querySelectorAll('.p-toast[data-bs-autohide="true"]').forEach(el => new Toast(el).show());
 

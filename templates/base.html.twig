@@ -63,7 +63,7 @@
     {% set contentBlock %}
       {% set loggedInMember = app.user %}
       {% if not loggedInMember is null %}
-        {% if not hide_finish_setup is defined %}
+        {% if not hide_finish_setup is defined and not embedded %}
           {% if loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::MAIL_CONFIRMED') or
             loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::AWAITING_MAIL_CONFIRMATION') %}
             {% set deletionDate = app.user.created|date_modify("+7 days")|format_date('long') %}

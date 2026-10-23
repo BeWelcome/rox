@@ -5,6 +5,8 @@
   {{ 'profile.travel.experience'|trans({}, 'messages', language)|raw }} · {{ ('lang_' ~ language)|lower|trans({}, 'messages', language) }}
 {%- endblock %}
 
+{% block drawer_options %}track{% endblock %}
+
 {% block subpage_body %}
   {{ form_start(form) }}
 

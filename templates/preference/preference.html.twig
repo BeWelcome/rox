@@ -5,6 +5,8 @@
   {{ encore_entry_script_tags('profile/preference') }}
 {% endblock javascripts %}
 
+{% block drawer_eyebrow %}<i class="fas fa-cog" aria-hidden="true"></i> {{ 'profile.edit.settings'|trans }}{% endblock %}
+
 {% block subpage_title -%}
   {{ 'profile.preferences'|trans }}
 {%- endblock %}

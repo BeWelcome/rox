@@ -5,15 +5,36 @@
   {{ 'profile.about.me'|trans({}, 'messages', language)|raw }} · {{ ('lang_' ~ language)|lower|trans({}, 'messages', language) }}
 {%- endblock %}
 
+{# One row of the edit page (?field=...): its title and what it is for #}
+{% set drawer_fields = { about: 'profile.about.me', occupation: 'profile.occupation', offerhosts: 'profile.offer.hosts' } %}
+{% block drawer_eyebrow %}<i class="fas fa-user" aria-hidden="true"></i> {{ 'profile.about.me'|trans({}, 'messages', language)|striptags }}{% endblock %}
+{% block drawer_title -%}
+  {% set field = app.request.query.get('field') %}
+  {{ field in drawer_fields|keys ? drawer_fields[field]|trans({}, 'messages', language)|striptags : 'profile.about.me'|trans({}, 'messages', language)|striptags }}
+{%- endblock %}
+{% block drawer_intro -%}
+  {% set field = app.request.query.get('field') %}
+  {{ field in drawer_fields|keys ? ('profile.edit.intro.' ~ field)|trans : '' }}
+{%- endblock %}
+{% block drawer_options %}track{% endblock %}
+
 {% block subpage_body %}
   {{ form_start(form) }}
   {{ form_errors(form) }}
 
+  {# ?field=...: only that part shows, the others stay in the form, hidden (see accommodation) #}
+  {% set only = app.request.query.get('field') %}
   {% set username = member.username %}
   {% set translations = member.translations %}
+  <div class="p-ped-part{{ only ? ' p-ped-single' }}" data-placeholder="{{ 'profile.edit.placeholder.about'|trans }}"{{ only and only != 'about' ? ' hidden' }}>
   {{ macros.field_translation(form.about_me, locale, language, 'AboutMe', username, translations) }}
+  </div>
+  <div class="p-ped-part{{ only ? ' p-ped-single' }}" data-placeholder="{{ 'profile.edit.placeholder.occupation'|trans }}"{{ only and only != 'occupation' ? ' hidden' }}>
   {{ macros.field_translation(form.occupation, locale, language, 'Occupation', username, translations) }}
+  </div>
+  <div class="p-ped-part{{ only ? ' p-ped-single' }}" data-placeholder="{{ 'profile.edit.placeholder.offerhosts'|trans }}"{{ only and only != 'offerhosts' ? ' hidden' }}>
   {{ macros.field_translation(form.offer_hosts, locale, language, 'OfferHosts', username, translations) }}
+  </div>
 
   <div class="p-edit-subpage__actions">
     <input type="submit" class="o-button" value="{{ 'save'|trans({}, 'messages', language) }}">

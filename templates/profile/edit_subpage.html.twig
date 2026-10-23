@@ -7,8 +7,43 @@
   {{ ' · ' ~ 'profile.edit'|trans }}
 {% endblock %}
 
+{#
+  In the side panel of the edit page (?embed=1), the drawer has its own head: back arrow,
+  the section (drawer_eyebrow) and what is edited (drawer_title), a close button, then
+  a line on what it is for (drawer_intro). The form's save button goes to the bottom of
+  the panel, next to "Cancel". With "track" in drawer_options, Save stays pale until
+  something is changed.
+#}
+{% block drawer_eyebrow %}<i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.edit'|trans }}{% endblock %}
+{% block drawer_title %}{{ block('subpage_title') }}{% endblock %}
+{% block drawer_intro %}{% endblock %}
+{% block drawer_options %}{% endblock %}
+
 {% block content %}
-  <section class="p-edit-subpage">
+  {% set embedded = app.request.query.getBoolean('embed') %}
+  <section class="p-edit-subpage{{ embedded ? ' p-edit-subpage--embed p-ped' }}"
+    {%- if embedded %}
+      data-track="{{ 'track' in block('drawer_options') ? '1' : '0' }}"
+      data-cancel="{{ 'cancel'|trans }}"
+      data-optional="{{ 'profile.edit.optional'|trans }}"
+      data-selected="{{ 'profile.edit.selected'|trans({n: '{n}'}) }}"
+    {%- endif %}>
+    {% if embedded %}
+      <header class="p-ped-head">
+        <button type="button" class="p-ped-head__btn js-ped-close" aria-label="{{ 'back'|trans }}">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        </button>
+        <div class="p-ped-head__text">
+          <p class="p-ped-head__eyebrow">{{ block('drawer_eyebrow') }}</p>
+          <h1 class="p-ped-head__title">{{ block('drawer_title') }}</h1>
+        </div>
+        <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </header>
+      {% set intro = block('drawer_intro')|trim %}
+      {% if intro %}<p class="p-ped-intro">{{ intro|raw }}</p>{% endif %}
+    {% else %}
     <header class="p-edit-subpage__header">
       <a href="{{ url('profile_edit', {username: member.username}) }}"
          class="p-edit-subpage__back"
@@ -20,9 +55,151 @@
         <h1 class="p-edit-subpage__title">{{ block('subpage_title') }}</h1>
       </div>
     </header>
+    {% endif %}
 
     <div class="p-edit-subpage__card">
       {% block subpage_body %}{% endblock %}
     </div>
   </section>
+
+  {% if embedded %}
+  <script>
+    (function () {
+      var page = document.querySelector('.p-ped');
+      var parentWindow = window.parent !== window ? window.parent : null;
+      // The panel's own head is hidden: this page has its own
+      if (parentWindow) {
+        parentWindow.postMessage({ type: 'bw-contact-ready' }, window.location.origin);
+      }
+      var close = function () {
+        if (parentWindow) {
+          parentWindow.postMessage({ type: 'bw-contact-back' }, window.location.origin);
+        } else {
+          window.location.href = '{{ path('profile_edit', {username: member.username}) }}';
+        }
+      };
+      document.addEventListener('click', function (event) {
+        if (event.target.closest('.js-ped-close')) {
+          event.preventDefault();
+          close();
+        }
+      });
+
+      var visible = function (element) { return !element.closest('[hidden]'); };
+
+      // Labels of the text fields: "Optional" on the right; a counter under each one
+      page.querySelectorAll('.o-field-translation').forEach(function (group) {
+        var label = group.querySelector('.o-field-translation__label');
+        var field = group.querySelector('textarea');
+        var holder = group.closest('[data-placeholder]');
+        if (label && holder && holder.dataset.label) {
+          label.textContent = holder.dataset.label;
+        }
+        if (label && !label.parentNode.classList.contains('p-ped-label')) {
+          var row = document.createElement('div');
+          row.className = 'p-ped-label';
+          label.parentNode.insertBefore(row, label);
+          row.appendChild(label);
+          var optional = document.createElement('span');
+          optional.className = 'p-ped-label__optional';
+          optional.textContent = page.dataset.optional;
+          row.appendChild(optional);
+        }
+        if (field) {
+          if (holder && holder.dataset.placeholder && !field.placeholder) {
+            field.placeholder = holder.dataset.placeholder;
+          }
+          var box = document.createElement('div');
+          box.className = 'p-ped-text';
+          field.parentNode.insertBefore(box, field);
+          box.appendChild(field);
+          var count = document.createElement('span');
+          count.className = 'p-ped-text__count';
+          box.appendChild(count);
+          var update = function () {
+            var length = field.value.length;
+            count.textContent = length + ' / 600';
+            count.classList.toggle('is-over', length > 600);
+          };
+          field.addEventListener('input', update);
+          update();
+        }
+      });
+
+      // Choices (restrictions, offers): "1 selected" next to the title
+      page.querySelectorAll('.p-pill-group').forEach(function (group) {
+        var title = group.querySelector('.p-pill-group__label');
+        if (!title) {
+          return;
+        }
+        var row = document.createElement('div');
+        row.className = 'p-ped-label';
+        title.parentNode.insertBefore(row, title);
+        row.appendChild(title);
+        var selected = document.createElement('span');
+        selected.className = 'p-ped-label__optional';
+        row.appendChild(selected);
+        var update = function () {
+          var count = group.querySelectorAll('input:checked').length;
+          selected.textContent = count ? page.dataset.selected.replace('{n}', count) : page.dataset.optional;
+        };
+        group.addEventListener('change', update);
+        update();
+      });
+
+      // Save at the bottom of the panel, with "Cancel"
+      var actions = page.querySelector('.p-edit-subpage__actions');
+      var submit = actions ? actions.querySelector('input[type="submit"], button[type="submit"]') : null;
+      if (submit) {
+        actions.classList.add('p-ped-foot');
+        if (submit.tagName === 'INPUT') {
+          var button = document.createElement('button');
+          button.type = 'submit';
+          button.className = submit.className;
+          if (submit.name) { button.name = submit.name; }
+          button.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> ';
+          button.appendChild(document.createTextNode(submit.value));
+          submit.parentNode.replaceChild(button, submit);
+          submit = button;
+        }
+        submit.classList.add('p-ped-foot__save');
+        var cancel = document.createElement('button');
+        cancel.type = 'button';
+        cancel.className = 'p-ped-foot__cancel js-ped-close';
+        cancel.textContent = page.dataset.cancel;
+        actions.insertBefore(cancel, submit);
+        document.body.classList.add('has-ped-foot');
+
+        if (page.dataset.track === '1') {
+          var form = submit.form;
+          submit.disabled = true;
+          var changed = function () { submit.disabled = false; };
+          form.addEventListener('input', changed);
+          form.addEventListener('change', changed);
+        }
+      }
+
+      // After a save that failed: the first error in view (the form theme hides field errors
+      // unless the field is marked invalid). A field the browser refuses: shown too.
+      var firstError = page.querySelector('.invalid-feedback, .alert-danger');
+      if (firstError) {
+        firstError.scrollIntoView({ block: 'center' });
+      }
+      page.querySelectorAll('form').forEach(function (form) {
+        form.addEventListener('invalid', function (event) {
+          var field = event.target.closest('.p-account-section, .o-field-translation, .p-pill-group') || event.target;
+          field.classList.add('has-ped-error');
+          field.scrollIntoView({ block: 'center' });
+        }, true);
+      });
+
+      // The field the drawer is for: ready to type in
+      var first = Array.prototype.find.call(page.querySelectorAll('textarea'), visible);
+      if (!firstError && first && !Array.prototype.some.call(page.querySelectorAll('.p-pill-group'), visible)) {
+        first.focus({ preventScroll: true });
+        first.setSelectionRange(first.value.length, first.value.length);
+      }
+    })();
+  </script>
+  {% endif %}
 {% endblock content %}

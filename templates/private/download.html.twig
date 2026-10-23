@@ -2,6 +2,8 @@
 
 {% block redirect %}<meta http-equiv="refresh" content="1; URL='{{ url }}'">{% endblock %}
 
+{% block drawer_eyebrow %}<i class="fas fa-cog" aria-hidden="true"></i> {{ 'profile.edit.settings'|trans }}{% endblock %}
+
 {% block subpage_title -%}
   {{ 'mydata.headline.download'|trans }}
 {%- endblock %}

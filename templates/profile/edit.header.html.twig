@@ -1,65 +1,71 @@
-<header class="p-edit-header">
-    <div class="p-edit-header__top">
-        <a href="{{ url('profile_edit_avatar', {username: member.username}) }}"
-           class="p-edit-header__avatar"
-           title="{{ 'profile.change.avatar'|trans }}">
-            <img src="{{ url('avatar', {username: member.username, size: 160}) }}" alt="{{ member.username }}">
-            <span class="p-edit-header__avatar-overlay" aria-hidden="true">
-                <i class="fas fa-camera"></i>
-            </span>
+{#
+  Head of the edit page: the picture (to change it), the name, the languages the profile
+  is written in (one shown at a time, see profile/edit.js), "View my profile"
+  and the settings (account, preferences, my data), which open in the side panel.
+#}
+<header class="p-pe-head">
+  <div class="p-pe-head__wrap container-lg">
+    <div class="p-pe-head__top">
+      <a href="{{ url('profile_edit_avatar', {username: member.username}) }}" class="p-pe-head__avatar js-contact-open" data-title="{{ 'profile.change.avatar'|trans|striptags }}" title="{{ 'profile.change.avatar'|trans }}">
+        <img src="{{ url('avatar', {username: member.username, size: 160}) }}" alt="{{ member.username }}">
+        <span class="p-pe-head__camera" aria-hidden="true"><i class="fas fa-camera"></i></span>
+        <span class="visually-hidden">{{ 'profile.change.avatar'|trans }}</span>
+      </a>
+
+      <div class="p-pe-head__identity">
+        <p class="p-pe-head__eyebrow"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.edit.editing'|trans }}</p>
+        <h1 class="p-pe-head__name">{{ member.username }}</h1>
+        <div class="p-pe-head__langs">
+          <span class="p-pe-head__langs-label">{{ 'profile.edit.written.in'|trans }}</span>
+          {% for profile_language in profile_languages %}
+            {% set active = profile_language is same as(active_locale) %}
+            <button type="button" class="p-pe-head__lang{% if active %} p-edit-header__lang-tab--active{% endif %}"
+                    data-edit-language="{{ profile_language }}" aria-pressed="{{ active ? 'true' : 'false' }}">
+              {{ ('lang_' ~ profile_language)|lower|trans({}, 'messages', profile_language) }}
+            </button>
+            {% if profile_language != 'en' %}
+              {# Shown next to the language on screen only: deletes that translation (after a confirmation) #}
+              {% set delete_text = 'profile.edit.delete.translation'|trans({language: ('lang_' ~ profile_language)|lower|trans}) %}
+              <button type="button" class="p-pe-head__lang-delete" data-delete-language="{{ profile_language }}" title="{{ delete_text }}" aria-label="{{ delete_text }}">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+              </button>
+            {% endif %}
+          {% endfor %}
+          <a href="{{ url('profile_add_language', {username: member.username}) }}" class="p-pe-head__lang p-pe-head__lang--add js-contact-open" data-title="{{ 'profile.edit.add.translation'|trans }}">
+            <i class="fas fa-plus" aria-hidden="true"></i> {{ 'profile.edit.add.translation'|trans }}
+          </a>
+        </div>
+      </div>
+
+      <div class="p-pe-head__actions">
+        <a href="{{ url('members_profile', {username: member.username}) }}" class="p-pe-head__btn">
+          <i class="fas fa-eye" aria-hidden="true"></i> <span>{{ 'profile.edit.view'|trans }}</span>
         </a>
-
-        <div class="p-edit-header__identity">
-            <p class="p-edit-header__eyebrow">{{ 'profile.edit'|trans }}</p>
-            <h1 class="p-edit-header__name">{{ member.username }}</h1>
-        </div>
-
-        <div class="p-edit-header__actions">
-            <a href="{{ url('profile_edit_avatar', {username: member.username}) }}"
-               class="p-edit-header__btn p-edit-header__btn--primary">
-                <i class="fas fa-camera"></i>
-                <span>{{ 'profile.change.avatar'|trans }}</span>
-            </a>
-            <a href="{{ url('account_edit', {username: member.username}) }}"
-               class="p-edit-header__btn p-edit-header__btn--secondary">
-                <i class="fas fa-cog"></i>
-                <span>{{ 'account.edit'|trans }}</span>
-            </a>
-        </div>
-    </div>
-
-    <div class="p-edit-header__langs">
-        <div class="p-edit-header__lang-tabs" role="tablist">
-            {% for profile_language in profile_languages %}
-                {% set active = profile_language is same as(active_locale) %}
-                <button type="button"
-                        role="tab"
-                        class="p-edit-header__lang-tab{% if active %} p-edit-header__lang-tab--active{% endif %}"
-                        data-edit-language="{{ profile_language }}"
-                        aria-selected="{{ active ? 'true' : 'false' }}">
-                    {{ ('lang_' ~ profile_language)|lower|trans({}, 'messages', profile_language) }}
-                </button>
+        {# Settings: the account, the preferences and my data, each in the side panel #}
+        <div class="p-pe-settings js-pe-settings">
+          <button type="button" class="p-pe-head__btn p-pe-head__btn--icon js-pe-settings-open" aria-haspopup="menu" aria-expanded="false" title="{{ 'profile.edit.settings'|trans }}">
+            <i class="fas fa-cog" aria-hidden="true"></i><span class="visually-hidden">{{ 'profile.edit.settings'|trans }}</span>
+          </button>
+          <div class="p-pe-settings__menu js-pe-settings-menu" role="menu" hidden>
+            <p class="p-pe-settings__title">{{ 'profile.edit.settings'|trans }}</p>
+            {% for item in [
+              {route: 'account_edit', icon: 'user-circle', title: 'profile.edit.settings.account', hint: 'profile.edit.settings.account.hint'},
+              {route: 'preferences', icon: 'sliders', title: 'profile.edit.settings.preferences', hint: 'profile.edit.settings.preferences.hint'},
+              {route: 'profile_personal_data', icon: 'database', title: 'profile.edit.settings.data', hint: 'profile.edit.settings.data.hint'},
+            ] %}
+              <a href="{{ url(item.route, {username: member.username}) }}" class="p-pe-settings__item js-contact-open" role="menuitem" data-title="{{ item.title|trans }}">
+                <span class="p-pe-settings__icon"><i class="fas fa-{{ item.icon }}" aria-hidden="true"></i></span>
+                <span class="p-pe-settings__text">
+                  <strong>{{ item.title|trans }}</strong>
+                  <span>{{ item.hint|trans }}</span>
+                </span>
+                <i class="fas fa-chevron-right p-pe-settings__go" aria-hidden="true"></i>
+              </a>
             {% endfor %}
+          </div>
         </div>
-        <a href="{{ url('profile_add_language', {username: member.username}) }}"
-           class="p-edit-header__add-lang">
-            <i class="fas fa-plus"></i>
-            <span>{{ 'profile.add.language'|trans }}</span>
-        </a>
+      </div>
     </div>
 
-    <div class="p-edit-header__quicklinks">
-        <a href="{{ url('members_profile', {username: member.username}) }}" class="p-edit-header__quicklink">
-            <i class="fas fa-eye"></i>
-            <span>{{ 'profile.menu.profile'|trans }}</span>
-        </a>
-        <a href="{{ url('preferences', {username: member.username}) }}" class="p-edit-header__quicklink">
-            <i class="fas fa-cogs"></i>
-            <span>{{ 'profile.menu.preferences'|trans }}</span>
-        </a>
-        <a href="{{ url('profile_personal_data', {username: member.username}) }}" class="p-edit-header__quicklink">
-            <i class="fas fa-database"></i>
-            <span>{{ 'profile.menu.my.data'|trans }}</span>
-        </a>
-    </div>
+  </div>
 </header>

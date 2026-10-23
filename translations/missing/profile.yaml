@@ -454,3 +454,303 @@ profile.comment.answer.toggle:
 profile.setlocation.drag:
     - 'Pick your town above, then drag the pin to where you live'
     - Hint over the map of the "set location" page, the orange pin can be moved with the mouse or a finger
+profile.edit.editing:
+    - 'Editing your profile'
+    - Small line above the name on the page where members edit their profile
+profile.edit.written.in:
+    - 'Profile written in'
+    - Edit profile page, before the languages the profile is written in
+profile.edit.add.translation:
+    - 'Add a translation'
+    - Edit profile page, button to write the profile in one more language
+profile.edit.view:
+    - 'View my profile'
+    - Edit profile page, button to see the profile as others see it
+profile.edit.tab.profile:
+    - 'Profile'
+    - Edit profile page, first tab (the profile itself)
+profile.edit.tab.preferences:
+    - 'My preferences'
+    - Edit profile page, tab to the preferences page
+profile.edit.tab.data:
+    - 'My personal data'
+    - Edit profile page, tab to the personal data page
+profile.edit.for.setup:
+    - 'For setup'
+    - Edit profile page, small badge on a section that must be filled to finish setting up the account
+profile.edit.hint.about.me:
+    - 'Who you are, what you love, why you travel'
+    - Edit profile page, under "About me" while it is empty
+profile.edit.hint.occupation:
+    - 'What you do'
+    - Edit profile page, under "Occupation" while it is empty
+profile.edit.hint.offer.hosts:
+    - 'Cooking, a language, a hand...'
+    - Edit profile page, under "I can offer my hosts" while it is empty
+profile.edit.accommodation.title:
+    - 'Accommodation'
+    - Edit profile page, title of the hosting section
+profile.edit.updated:
+    - 'Updated {date}'
+    - Edit profile page, when the profile was last changed, e.g. "Updated 10/23/26"
+profile.edit.can.host:
+    - 'Can you host?'
+    - Edit profile page, above the hosting choices
+profile.edit.host.yes:
+    - 'Yes, be welcome'
+    - "Edit profile page, hosting choice: the member can host"
+profile.edit.host.no:
+    - 'No, sorry'
+    - "Edit profile page, hosting choice: the member can not host"
+profile.edit.location:
+    - 'Location'
+    - Edit profile page, tile with the town the member lives in
+profile.edit.set.location:
+    - 'Set your location'
+    - Edit profile page, location tile while no town is set
+profile.edit.max.guests:
+    - 'Max guests'
+    - Edit profile page, tile with the number of guests the member can host
+profile.edit.hosting.interest:
+    - 'Hosting interest'
+    - Edit profile page, tile with how much the member wants to host
+profile.edit.hint.length.of.stay:
+    - 'How long guests can stay'
+    - Edit profile page, under "Maximum length of stay" while it is empty
+profile.edit.hint.i.live.with:
+    - 'Roommates, partner, pets'
+    - Edit profile page, under "I live with" while it is empty
+profile.edit.hint.please.bring:
+    - 'Sleeping bag, towel...'
+    - Edit profile page, under "Please bring" while it is empty
+profile.edit.hint.house.rules:
+    - 'Smoking, quiet hours, keys'
+    - Edit profile page, under "House rules" while it is empty
+profile.edit.more.about.me:
+    - 'More about me'
+    - Edit profile page, title of the section with interests, travels and friends
+profile.edit.interests.title:
+    - 'My interests'
+    - Edit profile page, row to edit hobbies, books, music, films
+profile.edit.hint.interests:
+    - 'Hobbies, books, music, films'
+    - Edit profile page, under "My interests" while it is empty
+profile.edit.travels:
+    - 'Travel experiences'
+    - Edit profile page, row to edit past and planned trips
+profile.edit.hint.travels:
+    - 'Past and planned trips'
+    - Edit profile page, under "Travel experiences" while it is empty
+profile.edit.friends:
+    - 'Family and friends'
+    - Edit profile page, row to the list of family and friends
+profile.edit.hint.friends:
+    - 'People you know on BeWelcome'
+    - Edit profile page, under "Family and friends" while the list is empty
+profile.edit.spoken.languages:
+    - 'Spoken languages'
+    - Edit profile page, title of the languages the member speaks
+profile.edit.add.spoken.language:
+    - 'Add a language'
+    - Edit profile page, button to add a language the member speaks
+profile.edit.change.languages:
+    - 'Change languages'
+    - Edit profile page, button to change the languages the member speaks
+profile.edit.gallery:
+    - 'Gallery'
+    - Edit profile page, title of the photos section
+profile.edit.upload.photos:
+    - 'Upload photos'
+    - Edit profile page, button to add photos
+profile.edit.hint.upload:
+    - 'Your place, your city, you'
+    - Edit profile page, under "Upload photos"
+profile.edit.hint.where.you.sleep:
+    - 'Sofa, guest room, floor...'
+    - Edit profile page, under "Where you sleep" while it is empty
+profile.edit.hint.offer.guests:
+    - 'A guided tour, a meal, a ride...'
+    - Edit profile page, under "I can offer my guests" while it is empty
+profile.edit.hint.getting.there:
+    - 'Bus, train, parking'
+    - Edit profile page, under "Getting there" while it is empty
+profile.edit.hint.additional.info:
+    - 'Anything else guests should know'
+    - Edit profile page, under "Additional information for guests" while it is empty
+profile.edit.optional:
+    - 'Optional'
+    - Edit profile side panel, next to the title of a field that may stay empty
+profile.edit.selected:
+    - '{n} selected'
+    - Edit profile side panel, next to a list of choices, e.g. "1 selected". Keep {n}
+profile.edit.other.rules:
+    - 'Other rules'
+    - Edit profile side panel "House rules", title of the free text under the restrictions
+profile.edit.other.offers:
+    - 'Anything else you offer'
+    - Edit profile side panel "I can offer my guests", title of the free text under the choices
+profile.edit.intro.accommodation:
+    - 'What guests should know about staying at your place.'
+    - Edit profile side panel, line under the title "Accommodation"
+profile.edit.intro.length:
+    - 'Say how many nights guests can usually stay.'
+    - Edit profile side panel, line under the title "Maximum length of stay"
+profile.edit.intro.ilivewith:
+    - 'Tell guests who they will meet at your place.'
+    - Edit profile side panel, line under the title "I live with"
+profile.edit.intro.bring:
+    - 'What guests should pack before they come.'
+    - Edit profile side panel, line under the title "Please bring"
+profile.edit.intro.sleep:
+    - 'Where guests will sleep at your place.'
+    - Edit profile side panel, line under the title "Where you sleep"
+profile.edit.intro.offers:
+    - 'What you are happy to share with your guests.'
+    - Edit profile side panel, line under the title "I can offer my guests"
+profile.edit.intro.rules:
+    - 'Let guests know what to expect at your place. This shows on your profile, under Accommodation.'
+    - Edit profile side panel, line under the title "House rules"
+profile.edit.intro.there:
+    - 'Help guests find their way to you.'
+    - Edit profile side panel, line under the title "Getting there"
+profile.edit.intro.info:
+    - 'Anything else guests should know before they come.'
+    - Edit profile side panel, line under the title "Additional information for guests"
+profile.edit.intro.about:
+    - 'Who you are, what you love, why you travel. This is the first thing members read.'
+    - Edit profile side panel, line under the title "About me"
+profile.edit.intro.occupation:
+    - 'What you do for a living or with your days.'
+    - Edit profile side panel, line under the title "Occupation"
+profile.edit.intro.offerhosts:
+    - 'What you can share with the members who host you.'
+    - Edit profile side panel, line under the title "I can offer my hosts"
+profile.edit.placeholder.length:
+    - 'e.g. 2 or 3 nights, a week at most...'
+    - Edit profile side panel, example in the empty "Maximum length of stay" field
+profile.edit.placeholder.ilivewith:
+    - 'e.g. My partner and our cat...'
+    - Edit profile side panel, example in the empty "I live with" field
+profile.edit.placeholder.bring:
+    - 'e.g. A sleeping bag, a towel...'
+    - Edit profile side panel, example in the empty "Please bring" field
+profile.edit.placeholder.sleep:
+    - 'e.g. A sofa bed in the living room...'
+    - Edit profile side panel, example in the empty "Where you sleep" field
+profile.edit.placeholder.offers:
+    - 'e.g. A bike to borrow, tips on the best bars...'
+    - Edit profile side panel, example in the empty free text of "I can offer my guests"
+profile.edit.placeholder.rules:
+    - 'e.g. Quiet after 10pm, shoes off inside, keys under the plant...'
+    - Edit profile side panel, example in the empty free text of "House rules"
+profile.edit.placeholder.there:
+    - 'e.g. Bus 42 from the station, stop "Market"...'
+    - Edit profile side panel, example in the empty "Getting there" field
+profile.edit.placeholder.info:
+    - 'e.g. I work late on weekdays...'
+    - Edit profile side panel, example in the empty "Additional information" field
+profile.edit.placeholder.about:
+    - 'e.g. I love cooking for friends, hiking and meeting people from everywhere...'
+    - Edit profile side panel, example in the empty "About me" field
+profile.edit.placeholder.occupation:
+    - 'e.g. Teacher, student, retired...'
+    - Edit profile side panel, example in the empty "Occupation" field
+profile.edit.placeholder.offerhosts:
+    - 'e.g. Cooking a meal, teaching a language, a hand in the garden...'
+    - Edit profile side panel, example in the empty "I can offer my hosts" field
+profile.edit.interest.question:
+    - 'How keen are you to host?'
+    - Edit profile page, title of the small window to pick the hosting interest
+profile.edit.done:
+    - 'Done'
+    - Edit profile page, button that saves the hosting interest and closes its window
+profile.edit.settings:
+    - 'Settings'
+    - Edit profile page, the cog button and its menu (account, preferences, my data)
+profile.edit.settings.account:
+    - 'Account'
+    - Edit profile page, settings menu item to the account page
+profile.edit.settings.account.hint:
+    - 'Name, username, birth date, gender, email'
+    - Edit profile page, settings menu, under "Account"
+profile.edit.settings.preferences:
+    - 'Preferences'
+    - Edit profile page, settings menu item to the preferences page
+profile.edit.settings.preferences.hint:
+    - 'Site language, notifications and more'
+    - Edit profile page, settings menu, under "Preferences"
+profile.edit.settings.data:
+    - 'My data'
+    - Edit profile page, settings menu item to the page to download one's personal data
+profile.edit.settings.data.hint:
+    - 'Download everything BeWelcome keeps about you'
+    - Edit profile page, settings menu, under "My data"
+profile.edit.account.name:
+    - 'Name'
+    - Edit profile page, account block, the member's full name
+profile.edit.account.birthdate:
+    - 'Birth date'
+    - Edit profile page, account block
+profile.edit.account.gender:
+    - 'Gender'
+    - Edit profile page, account block
+profile.edit.account.email:
+    - 'Email'
+    - Edit profile page, account block
+profile.edit.account.shown:
+    - 'Shown on your profile'
+    - Edit profile page, account block, tooltip of the eye next to a line other members can see
+profile.edit.account.hidden:
+    - 'Not shown on your profile'
+    - Edit profile page, account block, tooltip of the crossed eye next to a line other members can't see
+profile.edit.account.edit:
+    - 'Edit account'
+    - Edit profile page, account block, button that opens the account form in the side panel
+profile.edit.intro.languages:
+    - 'The languages you speak, so travellers know how you can talk together.'
+    - Edit profile side panel "Spoken languages", line under the title
+profile.edit.language.remove:
+    - 'Remove this language'
+    - Edit profile side panel "Spoken languages", the cross on a language
+profile.edit.level.beginner:
+    - 'Basic'
+    - Edit profile side panel "Spoken languages", short name of the lowest level, on a small button
+profile.edit.level.intermediate:
+    - 'Inter.'
+    - Edit profile side panel "Spoken languages", short name of the intermediate level, on a small button (keep it very short)
+profile.edit.level.fluent:
+    - 'Fluent'
+    - Edit profile side panel "Spoken languages", short name of the fluent level, on a small button
+profile.edit.level.expert:
+    - 'Expert'
+    - Edit profile side panel "Spoken languages", short name of the expert level, on a small button
+profile.edit.level.mother.tongue:
+    - 'Native'
+    - Edit profile side panel "Spoken languages", short name of "mother tongue", on a small button
+profile.edit.avatar.drag:
+    - 'Drag to reposition'
+    - Profile picture panel, over the photo, it can be moved with the mouse or a finger
+profile.edit.avatar.rotate:
+    - 'Rotate'
+    - Profile picture panel, button that turns the photo a quarter turn
+profile.edit.avatar.from.gallery:
+    - 'From your gallery'
+    - Profile picture panel, title over the member's photos to pick one
+profile.edit.avatar.choose:
+    - 'Choose another'
+    - Profile picture panel, button to pick a photo file
+profile.edit.avatar.save:
+    - 'Save photo'
+    - Profile picture panel, button that saves the profile picture
+profile.edit.account.tap.eye:
+    - 'Tap the eye to choose what members see'
+    - Edit profile page, account block, next to the title
+profile.edit.account.age:
+    - '{age} years old'
+    - Edit profile page, account block, after the birth date. Keep {age}
+profile.edit.account.private:
+    - 'Never shown to other members'
+    - Edit profile page, account block, tooltip of the lock next to the email
+profile.edit.delete.translation:
+    - 'Delete the {language} version of your profile'
+    - Edit profile page, tooltip of the bin next to a profile language, e.g. "Delete the French version of your profile". Keep {language}

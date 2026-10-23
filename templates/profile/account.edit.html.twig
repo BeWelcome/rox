@@ -10,6 +10,8 @@
   {{ encore_entry_link_tags('profile/account') }}
 {% endblock %}
 
+{% block drawer_eyebrow %}<i class="fas fa-cog" aria-hidden="true"></i> {{ 'profile.edit.settings'|trans }}{% endblock %}
+
 {% block subpage_title -%}
   {{ 'account.edit'|trans }}
 {%- endblock %}

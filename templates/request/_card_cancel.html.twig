@@ -1,0 +1,23 @@
+{#
+  "Cancel request" / "Cancel invitation" in the stay card (request/header.html.twig,
+  invitation/header.html.twig), for the member who may cancel: the guest of a hosting
+  request, the member who sent an invitation. The button submits the answer form under
+  the thread (form="js-respond-form"), whose cancel button it stands for.
+  Drawn twice: in the facts row on phones (place 'facts'), on the right of the strip on a
+  computer (place 'side'); CSS shows one.
+#}
+{% set rf = request_form ?? null %}
+{% set S = 'App\\Entity\\HostingRequest::' %}
+{% if rf and rf.cancel is defined and stay.status not in [constant(S ~ 'REQUEST_CANCELLED'), constant(S ~ 'REQUEST_DECLINED')] %}
+    {% set button %}
+        <button type="submit" form="js-respond-form" name="{{ rf.cancel.vars.full_name }}" class="c-stay-card__cancel"
+                data-confirm="{{ confirm|trans }}" data-confirm-ok="{{ rf.cancel.vars.label|trans }}" data-confirm-close="{{ 'modal.close'|trans }}">
+            <i class="fa fa-times" aria-hidden="true"></i> {{ rf.cancel.vars.label|trans }}
+        </button>
+    {% endset %}
+    {% if place == 'facts' %}
+        <li class="c-stay-card__action c-stay-card__action--facts">{{ button }}</li>
+    {% else %}
+        <div class="c-stay-card__action c-stay-card__action--side">{{ button }}</div>
+    {% endif %}
+{% endif %}

@@ -1,49 +1,51 @@
-{% import 'macros.twig' as macros %}
-
-<div class="c-dashboard__item c-dashboard__item--trip">
-    <div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u:mr-16 u:min-w-0">{{ macros.roundedavatarstack(leg.trip.creator.username, 72, false) }}</div>
-    <div class="u:flex u:flex-col u:h-full u:justify-center u:px-8 u:w-min-0 u:overflow-hidden">
-        <p class="u:font-display"><a href="{{ url('trip_show', {id: leg.trip.id, _fragment: 'leg' ~ leg.id}) }}"><strong>{{ leg.location.name }}</strong>,</a>
-            {{ leg.arrival|format_date('medium') }}
-                {% if leg.arrival != leg.departure %}
-                    -
-                    {{ leg.departure|format_date('medium') }}
-                {% endif %}
-        <span class="d-none d-sm-block">
-            <i class="fa fa-users u:text-16 u:justify-self-center u:self-center"></i>
-            {{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : leg.trip.countOfTravellers}) }}
-            {%- if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != leg.trip.additionalInfo -%}
-                   , <i class="fa fa-info-circle u:text-16 u:justify-self-center u:self-center"></i>
-                    {{ ('trip.additional.info.' ~ leg.trip.additionalInfo)| lower | trans}}
-            {% endif %}</span>
-        </p>
-        <p class="u:font-300 u:text-14">{{ 'trip.posted.by'|trans({username: macros.profilelink(leg.trip.creator.username)})|raw }}</p>
-    </div>
-    <div class="c-dashboard__trip-actions">
-        <form method="post" action="{{ path('trip_hide', {id: leg.id}) }}" class="js-hide-leg">
-            <input type="hidden" name="_token" value="{{ csrf_token('hide_leg') }}">
-            <input type="hidden" name="redirectTo" value="homepage">
-            <button type="submit" class="o-rounded" aria-label="{{ 'trip.hide'|trans }}" title="{{ 'trip.hide'|trans }}">
-                <i class="fa fa-fw fa-eye-slash"></i>
-            </button>
-        </form>
-        {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
-            <a class="o-rounded" href="{{ path('message_new', { 'username': leg.trip.creator.username }) }}" aria-label="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(leg.trip.creator.username) }}">
-                <i class="fa fa-fw fa-envelope"></i>
-            </a>
+{#
+  One trip leg near the member, in the Visitors tab of the home page: the traveller and
+  the dates, the trip's title and the start of its text, then tags (looking for a host or
+  already invited, the place, the other stops). The row opens the trip in the side panel,
+  where the member can invite or write.
+#}
+{% set traveller = leg.trip.creator %}
+{% set invited = leg.invitationBy(app.user) %}
+{% set lookingForHost = constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
+{% set otherStops = leg.trip.legs|filter(stop => stop.id != leg.id and constant('App\\Doctrine\\LegOptionsType::PRIVATE') not in stop.options)|length %}
+{% set sameDay = leg.arrival|date('Y-m-d') == leg.departure|date('Y-m-d') %}
+{% set sameMonth = leg.arrival|date('Y-m') == leg.departure|date('Y-m') %}
+<div class="c-home-item c-dashboard__item c-home-item--leg js-contact-row">
+    {# The whole row opens the trip in the side panel (trip/leg_panel.html.twig) #}
+    <a class="c-home-item__cover js-contact-open" href="{{ path('trip_leg_panel', { id: leg.id }) }}" data-title="{{ leg.trip.summary ?: leg.location.name }}">
+        <span class="visually-hidden">{{ leg.trip.summary ?: leg.location.name }}</span>
+    </a>
+    <img class="c-home-item__avatar" src="{{ path('avatar', { username: traveller.username, size: 96 }) }}" alt="" loading="lazy">
+    <div class="c-home-item__body">
+        <span class="c-home-item__top">
+            <span class="c-home-item__name">{{ traveller.shortNameOrUsername }}</span>
+            <span class="c-home-item__when">
+                <i class="far fa-calendar" aria-hidden="true"></i>
+                {{ leg.arrival|format_date(pattern='MMM d') }}
+                {%- if not sameDay %} – {{ leg.departure|format_date(pattern=sameMonth ? 'd' : 'MMM d') }}{% endif %}
+            </span>
+        </span>
+        {% if leg.trip.summary %}
+            <span class="c-home-item__title">{{ leg.trip.summary }}</span>
         {% endif %}
-        {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
-            {% if leg.invitationBy(app.user) %}
-                {% set invitation = leg.invitationBy(app.user) %}
-                {% set username = invitation.messages[0].initiator.Username %}
-                <a class="o-rounded{% if leg.invitedBy == app.user %} u:bg-green-dark {% endif %}" href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}" aria-label="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(leg.trip.creator.username) }}">
-                    <i class="fa fa-fw fa-house-user"></i>
-                </a>
-            {% else %}
-                <a class="o-rounded" href="{{ path('hosting_invitation', { 'leg': leg.id }) }}">
-                    <i class="fa fa-fw fa-house-user"></i>
-                </a>
+        {% set _excerpt = leg.trip.description|striptags|trim %}
+        {% if _excerpt %}
+            <p class="c-home-item__excerpt">{{ _excerpt }}</p>
+        {% endif %}
+        <p class="c-home-item__tags">
+            {% if invited %}
+                <span class="c-home-item__tag c-home-item__tag--done"><i class="fa fa-check" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}</span>
+            {% elseif lookingForHost %}
+                <span class="c-home-item__tag">
+                    <i class="fa fa-house-user" aria-hidden="true"></i>
+                    <span class="c-home-item__long">{{ 'trip.option.looking.for.host'|trans }}</span>
+                    <span class="c-home-item__short">{{ 'landing.visitors.host'|trans }}</span>
+                </span>
             {% endif %}
-        {% endif %}
+            <span class="c-home-item__tag c-home-item__tag--plain"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ leg.location.name }}</span>
+            {% if otherStops > 0 %}
+                <span class="c-home-item__tag c-home-item__tag--plain"><i class="fas fa-route" aria-hidden="true"></i> {{ 'landing.visitors.more.stops'|trans({ count: otherStops }) }}</span>
+            {% endif %}
+        </p>
     </div>
 </div>

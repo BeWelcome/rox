@@ -8,9 +8,11 @@ use App\Entity\Member;
 use App\Entity\UploadedImage;
 use App\Form\CustomDataClass\GalleryImageEditRequest;
 use App\Form\GalleryEditImageFormType;
-use App\Form\GalleryUploadForm;
 use App\Logger\Logger;
 use App\Model\GalleryModel;
+use App\Repository\GalleryImageRepository;
+use App\Utilities\ChangeProfilePictureGlobals;
+use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -202,42 +204,48 @@ class GalleryController extends AbstractController
     }
 
     /**
+     * Pictures of a member, shown inside the profile layout.
+     *
+     * Takes over the legacy page at the same path (the legacy route keeps the name
+     * gallery_show_user_images, so existing links still end up here).
+     */
+    #[Route(path: '/gallery/show/user/{username:member}/pictures', name: 'gallery_member_images')]
+    public function showMemberImages(
+        Member $member,
+        ProfileSubmenu $profileSubmenu,
+        ChangeProfilePictureGlobals $globals,
+    ): Response {
+        if (
+            !($member->isBrowsable()
+                || $this->isGranted(Member::ROLE_ADMIN_ADMIN, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_PROFILE, $member)
+            )
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+
+        /** @var GalleryImageRepository $galleryImageRepository */
+        $galleryImageRepository = $this->entityManager->getRepository(GalleryImage::class);
+
+        return $this->render('gallery/member.images.html.twig', [
+            'member' => $member,
+            'pictures' => $galleryImageRepository->getImagesForMember($member),
+            'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'gallery']),
+        ]);
+    }
+
+    /**
      * @return Response
      */
     #[Route(path: '/gallery/upload_multiple', name: 'gallery_upload_multiple')]
-    public function uploadImagesToGallery(Request $request)
+    public function uploadImagesToGallery(): Response
     {
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $galleryRepository = $this->entityManager->getRepository(Gallery::class);
-        $galleries = $galleryRepository->findBy(['owner' => $member]);
-
-        $albumTitles = [];
-        if ($galleries) {
-            $albumTitles[0] = '';
-            foreach ($galleries as $gallery) {
-                $albumTitles[$gallery->getId()] = $gallery->getTitle();
-            }
-        }
-        $uploadImageForm = $this->createForm(GalleryUploadForm::class, null, ['albums' => $albumTitles]);
-        $uploadImageForm->handleRequest($request);
-        if ($uploadImageForm->isSubmitted() && $uploadImageForm->isValid()) {
-            // if this is called someone tries to hack the system as the Javascript on the upload page
-            // takes care of uploading the files so we return a 403 error
-            return new Response(403);
-        }
-
-        return $this->render('gallery/upload.image.html.twig', [
-            'form' => $uploadImageForm->createView(),
-            'submenu' => [
-                'active' => 'upload',
-                'items' => $this->getSubmenuItems(),
-            ],
-            'constraints' => [
-                'size' => $this->getMaxUploadSizeInMegaBytes(),
-            ],
-        ]);
+        return $this->redirectToRoute('gallery_manage', [], 301);
     }
 
     /**
@@ -355,30 +363,4 @@ class GalleryController extends AbstractController
         return $response;
     }
 
-    private function getSubmenuItems(): array
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-        $submenuItems = [
-            'manage' => [
-                'key' => 'GalleryManage',
-                'url' => $this->generateUrl('gallery_manage'),
-            ],
-            'upload' => [
-                'key' => 'GalleryUpload',
-                'url' => $this->generateUrl('gallery_upload_multiple'),
-            ],
-            'albums' => [
-                'key' => 'GalleryTitleSets',
-                'url' => $this->generateUrl('gallery_show_user_albums', ['username' => $member->getUsername()]),
-            ],
-        ];
-
-        return $submenuItems;
-    }
-
-    private function getMaxUploadSizeInMegaBytes()
-    {
-        return UploadedFile::getMaxFilesize() / 1024 / 1024;
-    }
 }

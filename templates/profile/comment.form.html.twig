@@ -1,56 +1,101 @@
 {% extends 'base.html.twig' %}
+
+{% set hide_sidebar = true %}
+
 {% block title %}
-    {{ 'profile.add.comment.title'|trans({'username': member.username}) }}
+  {{ 'profile.add.comment.title'|trans({'username': member.username}) }}
 {% endblock title %}
 
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('profile/comment_form') }}
+{% endblock javascripts %}
+
 {% block content %}
-    <h1>{{ 'profile.add.comment'|trans({'username': member.username, 'gender': member.gender}) }}</h1>
+  <section class="p-edit-subpage p-comment-form">
+    <header class="p-edit-subpage__header">
+      <a href="{{ url('members_profile', {username: member.username}) }}"
+         class="p-edit-subpage__back"
+         aria-label="{{ 'profile.back'|trans }}">
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+      </a>
+      <div class="p-edit-subpage__heading">
+        <p class="p-edit-subpage__eyebrow">@{{ member.username }}</p>
+        <h1 class="p-edit-subpage__title">{{ 'profile.add.comment'|trans({'username': member.username, 'gender': member.gender}) }}</h1>
+      </div>
+    </header>
 
-    {{ form_start(form) }}
-    <div class="row">
-        <div class="col-12 col-md-6 mb-3">
-            <h5 class="mt-4">{{ 'comment.host.guest.title'|trans|capitalize }}</h5>
-            {{ form_row(form.relations) }}
-        </div>
-        <div class="col-12 col-md-6 mb-3">
-            <h5 class="mt-4">{{ 'comment.quality.title'|trans|capitalize }}</h5>
-            {{ form_row(form.quality) }}
-            <p>{{ 'comment.not.public'|trans|raw }}</p>
-        </div>
-        <div class="col-12 mb-3">
-            <h5 class="mt-4">{{ 'comment.text.title'|trans|capitalize }}</h5>
-            {{ form_row(form.comment) }}
+    <div class="p-edit-subpage__card">
+      <div class="p-comment-form__note">{{ 'followcommentguidelines'|trans|raw }}</div>
 
-            <div class="modal micromodal-slide" id="experiences" aria-hidden="true">
-                <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-                    <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
-                        <header id="modal-header" class="modal__header">
-                            <h2 class="modal__title">
-                                {{ 'comment.new.experience.title'|trans|capitalize }}
-                            </h2>
-                            <button class="modal__close" aria-label="{{ 'modal.close'|trans }}" data-micromodal-close></button>
-                        </header>
-                        <div id="modal-content-content" class="modal-content-content">
-                            <div id="modal-content" class="modal__content">
-                                {{ 'comment.new.experience.text'|trans|raw }}
-                            </div>
-                            <footer id="modal-footer" class="modal__footer u:flex u:flex-row u:justify-between">
-                                <a href="{{ url('profile_comments', {'username': app.user.username}) }}" class="o-button" data-bs-dismiss="modal">{{ 'comment.new.experience.no'|trans|capitalize }}</a>
-                                <a href="{{ url('comment_new_experience', {'from_member': app.user.username, 'to_member': member.username }) }}" class="o-button" data-bs-dismiss="modal">{{ 'comment.new.experience.yes'|trans|capitalize }}</a>
-                            </footer>
-                        </div>
-                    </div>
-                </div>
+      {{ form_start(form, {attr: {'data-comment-form': '', novalidate: 'novalidate'}}) }}
+      {{ form_errors(form) }}
+
+      <div class="p-pill-group">
+        <span class="p-pill-group__label">{{ 'comment.host.guest.title'|trans|capitalize }}</span>
+        <div class="p-pill-group__options">
+          {% for child in form.relations.children %}
+            <div class="p-pill-option">
+              <input type="checkbox" class="p-pill-option__input"
+                     id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
+                     value="{{ child.vars.value }}"
+                     {% if child.vars.checked %}checked="checked"{% endif %}>
+              <label class="p-pill-option__label" for="{{ child.vars.id }}">{{ child.vars.label|trans(child.vars.label_translation_parameters) }}</label>
             </div>
-
+            {% do child.setRendered %}
+          {% endfor %}
         </div>
+        {{ form_errors(form.relations) }}
+        {% do form.relations.setRendered %}
+      </div>
 
-    </div>
-    <div class="alert alert-info">{{ 'followcommentguidelines'|trans|raw }}</div>
+      <div class="p-comment-form__field">
+        <label class="o-label" for="{{ form.quality.vars.id }}">{{ 'comment.quality.title'|trans|capitalize }}</label>
+        {{ form_widget(form.quality, {attr: {class: 'o-input p-comment-form__select'}}) }}
+        {{ form_errors(form.quality) }}
+        <p class="p-comment-form__hint">{{ 'comment.not.public'|trans|raw }}</p>
+      </div>
 
-    <div class="u:flex u:justify-between">
-        <a class="o-button" href="{{ url('members_profile', { username: member.username}) }}">{{ 'cancel'|trans }}</a>
-        <button type="submit" class="o-button js-submit" disabled>{{ 'save'|trans }}</button>
+      <div class="p-comment-form__field">
+        <label class="o-label" for="{{ form.comment.vars.id }}">{{ 'comment.text.title'|trans|capitalize }}</label>
+        {{ form_widget(form.comment, {attr: {class: 'o-input'}}) }}
+        {{ form_errors(form.comment) }}
+      </div>
+
+      {% if form.guidelines is defined %}
+        <div class="p-comment-form__check">
+          {{ form_row(form.guidelines) }}
+        </div>
+      {% endif %}
+      {% if form.new_experience is defined %}
+        <div class="p-comment-form__check">
+          {{ form_row(form.new_experience) }}
+        </div>
+      {% endif %}
+
+      <div class="p-edit-subpage__actions p-edit-subpage__actions--split">
+        <a class="p-comment-form__cancel" href="{{ url('members_profile', {username: member.username}) }}">{{ 'cancel'|trans }}</a>
+        <button type="submit" class="o-button js-submit" disabled>{{ buttonLabel|trans }}</button>
+      </div>
+      {{ form_end(form) }}
     </div>
-    {{ form_end(form) }}
-{% endblock %}
+  </section>
+
+  <div class="modal micromodal-slide" id="experiences" aria-hidden="true"{% if check_experience is defined and check_experience %} data-open-on-load{% endif %}>
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+      <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="experiences-title">
+        <header class="modal__header">
+          <h2 class="modal__title" id="experiences-title">{{ 'comment.new.experience.title'|trans|capitalize }}</h2>
+          <button class="modal__close" aria-label="{{ 'modal.close'|trans }}" data-micromodal-close></button>
+        </header>
+        <div class="modal__content">
+          {{ 'comment.new.experience.text'|trans|raw }}
+        </div>
+        <footer class="modal__footer u:flex u:flex-row u:justify-between">
+          <a href="{{ url('profile_comments', {'username': app.user.username}) }}" class="o-button">{{ 'comment.new.experience.no'|trans|capitalize }}</a>
+          <a href="{{ url('comment_new_experience', {'from_member': app.user.username, 'to_member': member.username }) }}" class="o-button">{{ 'comment.new.experience.yes'|trans|capitalize }}</a>
+        </footer>
+      </div>
+    </div>
+  </div>
+{% endblock content %}

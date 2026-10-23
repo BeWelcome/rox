@@ -1,0 +1,44 @@
+{#
+  New message in the "contact a member" side panel (?embed=1, search preview and profile).
+  Send stays greyed until the subject and the message are filled (contact/send_state.js).
+#}
+{% set _address = receiver.activeAddress %}
+{% set _city = _address is not same as(false) and _address is not null and _address.location ? _address.location.name : null %}
+<div class="c-contact">
+    {% include 'conversations/_contact_head.html.twig' with { member: receiver, kind: 'message' } %}
+
+    {{ form_start(form, { attr: { novalidate: 'novalidate', class: 'c-contact__form js-contact-form' } }) }}
+        <div class="c-contact__body">
+            {{ form_errors(form) }}
+
+            <div class="c-contact__field">
+                <label class="c-contact__label" for="{{ form.subject.subject.vars.id }}">{{ form.subject.subject.vars.label|trans }}</label>
+                {{ form_widget(form.subject.subject, { attr: { class: 'c-contact__input js-contact-required', placeholder: _city ? 'contact.subject.placeholder'|trans({ city: _city }) : (form.subject.subject.vars.attr.placeholder ?? '')|trans } }) }}
+                {{ form_errors(form.subject.subject) }}
+            </div>
+
+            {# A plain text box: the text is sent as paragraphs (contact/plain_text.js) #}
+            <div class="c-contact__field c-contact__field--grow">
+                <label class="c-contact__label" for="{{ form.message.vars.id }}">{{ form.message.vars.label|trans }}</label>
+                <textarea class="c-contact__input c-contact__text js-plain-message js-contact-required" id="{{ form.message.vars.id }}" name="{{ form.message.vars.full_name }}" rows="9"
+                          placeholder="{{ 'contact.message.placeholder'|trans({ username: receiver.shortNameOrUsername }) }}" data-html="{{ form.message.vars.value }}"></textarea>
+                {% do form.message.setRendered %}
+                {{ form_errors(form.message) }}
+            </div>
+
+            <p class="c-contact__safety">
+                <i class="fas fa-user-shield" aria-hidden="true"></i>
+                {{ 'contact.safety'|trans }}
+            </p>
+
+            {{ form_rest(form) }}
+        </div>
+
+        <div class="c-contact__foot">
+            <button type="submit" class="c-contact__send js-contact-send">
+                <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ 'contact.send.message'|trans }}
+            </button>
+            <p class="c-contact__hint js-contact-hint">{{ 'contact.send.hint.message'|trans }}</p>
+        </div>
+    {{ form_end(form) }}
+</div>

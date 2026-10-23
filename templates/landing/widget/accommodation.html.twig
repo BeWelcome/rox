@@ -1,10 +1,34 @@
-<div id="accommodation" class="btn-group u:mr-4">
-    <button type="button" class="o-button o-button--br-16 dropdown-toggle u:font-700 u:capitalize {% if member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}u:bg-hosting{% else %}u:bg-bewelcome{% endif %}" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        {%  if member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}{{ 'hosting' | trans }}{% endif %}
-        {%  if member.Accommodation == constant('App\\Doctrine\\AccommodationType::NO') %}{{ 'not hosting' | trans }}{% endif %}
-    </button>
-    <div class="dropdown-menu hoststatusdropdown">
-        <a id="{{ constant('App\\Doctrine\\AccommodationType::YES') }}" class="hosting dropdown-item u:font-700 u:capitalize" href="#">{{ 'dashboard.hosting.yes' | trans }}</a>
-        <a id="{{ constant('App\\Doctrine\\AccommodationType::NO') }}" class="hosting dropdown-item u:font-700 u:capitalize" href="#">{{ 'dashboard.hosting.no' | trans }}</a>
+{#
+  Hosting status of the member on the home page, re-rendered by landing.js after
+  each change. Two options side by side on larger screens, one switch on phones.
+  Every .hosting link sends its data-accommodation (or id) to /widget/accommodation.
+#}
+{% set yes = constant('App\\Doctrine\\AccommodationType::YES') %}
+{% set no = constant('App\\Doctrine\\AccommodationType::NO') %}
+{% set hosting = member.Accommodation == yes %}
+<div id="accommodation" class="l-hosting">
+  <div class="l-hosting__inner">
+    <div class="l-hosting-toggle">
+        <a id="{{ yes }}"
+           class="hosting l-hosting-toggle__opt l-hosting-toggle__opt--yes{% if hosting %} l-hosting-toggle__opt--active{% endif %}"
+           href="#" title="{{ 'dashboard.hosting.yes'|trans }}">
+            <i class="fas fa-house-user"></i>
+            <span>{{ 'hosting'|trans }}</span>
+        </a>
+        <a id="{{ no }}"
+           class="hosting l-hosting-toggle__opt l-hosting-toggle__opt--no{% if member.Accommodation == no %} l-hosting-toggle__opt--active{% endif %}"
+           href="#" title="{{ 'dashboard.hosting.no'|trans }}">
+            <i class="fas fa-house"></i>
+            <span>{{ 'not hosting'|trans }}</span>
+        </a>
     </div>
+    <a class="hosting l-hosting-switch{% if hosting %} is-on{% endif %}" href="#" role="switch"
+       aria-checked="{{ hosting ? 'true' : 'false' }}"
+       data-accommodation="{{ hosting ? no : yes }}"
+       title="{{ hosting ? 'dashboard.hosting.yes'|trans : 'dashboard.hosting.no'|trans }}">
+        <span class="l-hosting-switch__icon" aria-hidden="true"><i class="fas fa-house-circle-check"></i></span>
+        <span class="l-hosting-switch__label">{{ 'landing.hosting.switch'|trans }}</span>
+        <span class="l-hosting-switch__track" aria-hidden="true"><span class="l-hosting-switch__thumb"></span></span>
+    </a>
+  </div>
 </div>

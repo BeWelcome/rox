@@ -13,38 +13,47 @@
 {% endblock stylesheets %}
 
 {% block page_content %}
-
   <input type="hidden" id="read.more" value="{{ 'comment.read.more'|trans }}">
   <input type="hidden" id="show.less" value="{{ 'comment.show.less'|trans }}">
-<div class="card">
-  <div class="card-header u:flex u:flex-row u:justify-between">
-    {{ 'profile.friends'|trans }}
-  </div>
-  <div class="card-body p-2">
-    <div class="card-text m-0">
-    {% if friends.haveToPaginate %}
-      {{ pagerfanta(friends, 'rounded_pagination_end') }}
-    {% endif %}
-
-    <div class="u:grid u:grid-cols-3 u:md:grid-cols-6 u:gap-8">
-    {% for friend in friends %}
-         {% set other = friend.left == member ? friend.right : friend.left %}
-        <div class="u:flex u:flex-col u:items-center">
-          <div class="o-avatar o-avatar--s u:me-4">
-            {{ macros.roundedavatarstack(other.username, 48, false) }}
+  <div class="p-friends-page p-profile-main">
+    <div class="card">
+      <div class="card-header u:flex u:flex-row u:justify-between">
+        <span>
+          {{ 'profile.friends'|trans }}
+          {% if friends.nbResults > 0 %}
+            <span class="p-gallery-footer__count">{{ friends.nbResults }}</span>
+          {% endif %}
+        </span>
+      </div>
+      <div class="card-body">
+        {% if friends.nbResults == 0 %}
+          <div class="p-no-comments">
+            <i class="fas fa-user-friends" aria-hidden="true"></i>
+            <p>{{ 'profile.no.friends'|trans }}</p>
           </div>
-          <a href="{{ url('members_profile', {username: other.username}) }}"
-             class="u:text-[.875em] u:text-center"
-             style="word-break: break-all;">{{ other.username }}</a>
-        </div>
-    {% else %}
-      {{ 'profile.no.friends'|trans }}
-    {% endfor %}
-    </div>
-    {% if friends.haveToPaginate %}
-      {{ pagerfanta(friends, 'rounded_pagination_end') }}
-    {% endif %}
+        {% else %}
+          <ul class="p-friends-page__grid">
+            {% for friend in friends %}
+              {% set other = friend.left == member ? friend.right : friend.left %}
+              <li>
+                <a class="p-friends-page__item" href="{{ url('members_profile', {username: other.username}) }}">
+                  <span class="o-avatar o-avatar--m">
+                    <span class="o-avatar__img-wrapper o-avatar--shadow-s">
+                      <img class="o-avatar__img" src="{{ path('avatar', {username: other.username, size: 72}) }}" alt="" loading="lazy">
+                    </span>
+                  </span>
+                  <span class="p-friends-page__name">{{ other.username }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+          {% if friends.haveToPaginate %}
+            <div class="p-friends-page__pager">
+              {{ pagerfanta(friends, 'rounded_pagination_end') }}
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
     </div>
   </div>
-</div>
 {% endblock page_content %}

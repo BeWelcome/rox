@@ -1,52 +1,44 @@
 {% import 'macros.twig' as macros %}
-<div id="threadsdisplay" class="c-dashboard">
-
-    {# 5 most recent forum messages #}
+{#
+  The latest forum and group threads, on the home page (loaded into the Forum tab).
+  The title opens the thread, the time of the last post jumps to that post.
+#}
+<div id="threadsdisplay" class="c-home-list">
     {% for thread in threads %}
-        <div class="c-dashboard__item">
-            <div class="o-avatar o-avatar--m o-avatar--noname  o-avatar--shadow-s u:mr-16  u:min-w-0">{{ macros.roundedavatarstack(thread.firstPost.author.Username, 72, false) }}</div>
-            <div class="u:flex u:flex-col u:h-full u:justify-center u:px-8 u:w-min-0 u:overflow-hidden">
-                <p class="u:ellipsis">
+        {% set page = 1 %}
+        {% set lastpost = '' %}
+        {% if ascending %}
+            {% set lastpost = 'post' ~ thread.lastpost.id %}
+            {% set page = thread.replies // constant('\\Forums::CV_POSTS_PER_PAGE') + 1 %}
+        {% endif %}
+        {% if thread.group %}
+            {% set threadUrl = url('group_forum_thread', { thread: thread.id, group_id: thread.group.id }) %}
+            {% set lastUrl = page == 1
+                ? url('group_forum_thread', { thread: thread.id, group_id: thread.group.id, _fragment: lastpost })
+                : url('group_forum_thread_pages', { thread: thread.id, group_id: thread.group.id, page_id: page, _fragment: lastpost }) %}
+        {% else %}
+            {% set threadUrl = url('forum_thread', { threadId: thread.id }) %}
+            {% set lastUrl = page == 1
+                ? url('forum_thread', { threadId: thread.id, _fragment: lastpost })
+                : url('forum_thread_pages', { threadId: thread.id, pageId: page, _fragment: lastpost }) %}
+        {% endif %}
+        <div class="c-home-item">
+            <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
+            <div class="c-home-item__body">
+                <a class="c-home-item__title c-home-item__title--link" href="{{ threadUrl }}">{{ thread.title|striptags }}</a>
+                <p class="c-home-item__meta">
+                    <i class="fas fa-users" aria-hidden="true"></i>
                     {% if thread.group %}
-                        <a href="{{ url('group_forum_thread', {'thread': thread.id, 'group_id': thread.group.id}) }}">
+                        <a href="{{ url('group_start', { group_id: thread.group.id }) }}">{{ thread.group.name }}</a>
                     {% else %}
-                        <a href="{{ url('forum_thread', {'threadId': thread.id}) }}">
-                    {% endif %}
-                    {{ thread.title|striptags }}</a>
-                </p>
-                <p class="u:ellipsis u:font-300 u:text-14">in
-                    {%- if thread.group %}
-                        <a href="{{ url('group_start', {'group_id': thread.group.id}) }}">{{ thread.group.name }}</a>
-                    {% else %}
-                        <a href="{{ url('bwforum') }}">{{ 'dashboard.bwforum' | trans }}</a>
+                        <a href="{{ url('bwforum') }}">{{ 'dashboard.bwforum'|trans }}</a>
                     {% endif %}
                 </p>
-                <p class="u:ellipsis u:font-300 u:text-14">
-                    {{ 'thread.lastpostby' | trans }} {{ macros.profilelink(thread.lastpost.author.Username) }} <span title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</span>
+                <p class="c-home-item__meta">
+                    {{ 'thread.lastpostby'|trans }}
+                    <a class="c-home-item__author" href="{{ url('members_profile', { username: thread.lastpost.author.username }) }}">{{ thread.lastpost.author.username }}</a>
+                    · <a class="c-home-item__when" href="{{ lastUrl }}" title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</a>
                 </p>
-            </div>
-            {% set page = 1 %}
-            {% if ascending %}
-                {% set lastpost = 'post' ~ thread.lastpost.id %}
-                {% set page = thread.replies // constant('\\Forums::CV_POSTS_PER_PAGE') + 1 %}
-            {% else %}
-                {% set lastpost = '' %}
-            {% endif %}
-            <div class="u:ml-auto u:shrink-0">
-                {% if thread.group %}
-                    {% if page == 1 %}
-                        <a href="{{ url('group_forum_thread', {'thread': thread.id, 'group_id': thread.group.id,  '_fragment': lastpost})  }}">
-                    {% else %}
-                        <a href="{{ url('group_forum_thread_pages', {'thread': thread.id, 'group_id': thread.group.id, 'page_id': page, '_fragment': lastpost})  }}">
-                    {% endif %}
-                {% else %}
-                    {% if page == 1 %}
-                        <a href="{{ url('forum_thread', {'threadId': thread.id, '_fragment': lastpost}) }}">
-                    {% else %}
-                         <a href="{{ url('forum_thread_pages', {'threadId': thread.id, 'pageId': page, '_fragment': lastpost}) }}">
-                    {% endif %}
-                {% endif %}
-                <i class="fa fa-chevron-right"></i></a>
             </div>
         </div>
     {% endfor %}

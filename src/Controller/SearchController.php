@@ -4,12 +4,16 @@ namespace App\Controller;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\GroupMembershipStatusType;
+use App\Entity\Comment;
+use App\Entity\GalleryImage;
 use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
+use App\Repository\CommentRepository;
+use App\Repository\GalleryImageRepository;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
@@ -26,6 +30,9 @@ use TypeError;
  */
 class SearchController extends AbstractController
 {
+    /** At most this many members on the map of a search (the list stays paged) */
+    private const int MAP_MEMBERS = 2000;
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
@@ -47,7 +54,7 @@ class SearchController extends AbstractController
             $user = $memberRepository->loadUserByIdentifier($username);
 
             if ($user) {
-                return $this->redirectToRoute('member_profile', ['username' => $user->getUsername()]);
+                return $this->redirectToRoute('members_profile', ['username' => $user->getUsername()]);
             }
 
             // If not found, try a wildcard search
@@ -55,7 +62,7 @@ class SearchController extends AbstractController
             $activeTab = 1;
 
             if (1 === \count($members)) {
-                return $this->redirectToRoute('member_profile', ['username' => $members[0]->getUsername()]);
+                return $this->redirectToRoute('members_profile', ['username' => $members[0]->getUsername()]);
             }
         }
 
@@ -142,7 +149,25 @@ class SearchController extends AbstractController
             'language_choices' => $languageChoices,
             'search_options' => $searchOptions,
         ]);
-        $search->handleRequest($request);
+        // The home page sends its place search ("tiny") and its "my city" link
+        // ("home") under their own names (as a GET query) with only a few fields:
+        // submit them as this search form, keeping the member's saved options
+        // for the fields they do not carry.
+        $homeData = null;
+        if (!$request->query->has('search') && !$request->request->has('search')) {
+            foreach (['tiny', 'home'] as $homeFormName) {
+                foreach ([$request->query, $request->request] as $parameters) {
+                    if (null === $homeData && $parameters->has($homeFormName)) {
+                        $homeData = $parameters->all($homeFormName);
+                    }
+                }
+            }
+        }
+        if (null !== $homeData) {
+            $search->submit($homeData, false);
+        } else {
+            $search->handleRequest($request);
+        }
 
         $mapMembers = null;
         if ($search->isSubmitted() && $search->isValid()) {
@@ -183,11 +208,12 @@ class SearchController extends AbstractController
             $searchAdapter = new SearchAdapter($searchFormRequest, $this->entityManager, $member);
             $pager = new Pagerfanta($searchAdapter);
             $pager->setMaxPerPage($searchFormRequest->items > 0 ? $searchFormRequest->items : 20);
-            $pager->setCurrentPage($searchFormRequest->page > 0 ? $searchFormRequest->page : 1);
+            // The page links add ?page= to the search (the page is not a field of the form).
+            $pager->setNormalizeOutOfRangePages(true);
+            $pager->setCurrentPage(max(1, $request->query->getInt('page', 1)));
 
-            // Fetch the slice manually for the view to avoid breaking BC in twig immediately
-            // Better to update twig to iterate over $pager directly, but keeping it safe for now.
-            // $mapMembers = $searchAdapter->getMapResults();
+            // The map shows every member found (not only this page), up to MAP_MEMBERS
+            $mapMembers = $searchAdapter->getMapPoints(self::MAP_MEMBERS);
         }
 
         return $this->render('search/searchlocations.html.twig', [
@@ -195,9 +221,38 @@ class SearchController extends AbstractController
             'form' => $search->createView(), // Changed to createView() as good practice for Symfony 8
             'members' => $pager,
             'map_members' => $mapMembers,
-            'routeName' => 'search_members_ajax',
-            'routeParams' => $request->query->all(),
+            'routeName' => 'search_locations',
+            'routeParams' => array_diff_key($request->query->all(), ['page' => true]),
             'searchParams' => $searchFormRequest, // Pass DTO for display logic
+        ]);
+    }
+
+    /**
+     * A short view of a member, shown over the search results (a drawer on
+     * large screens, a sheet on phones) so the results stay where they are.
+     */
+    #[Route(path: '/search/members/{username:member}/preview', name: 'search_member_preview', methods: ['GET'])]
+    public function memberPreview(Member $member): Response
+    {
+        if (
+            !($member->isBrowsable()
+                || $this->isGranted(Member::ROLE_ADMIN_ADMIN, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM, $member)
+                || $this->isGranted(Member::ROLE_ADMIN_PROFILE, $member)
+            )
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $this->entityManager->getRepository(Comment::class);
+        /** @var GalleryImageRepository $galleryImageRepository */
+        $galleryImageRepository = $this->entityManager->getRepository(GalleryImage::class);
+
+        return $this->render('search/_preview.html.twig', [
+            'member' => $member,
+            'comments_count' => $commentRepository->getCommentsCountMemberByQuality($member),
+            'pictures' => $galleryImageRepository->getImagesForMember($member),
         ]);
     }
 

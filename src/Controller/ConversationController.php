@@ -4,15 +4,24 @@ namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\SpamInfoType;
+use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Form\HostingRequestGuest;
+use App\Form\HostingRequestHost;
+use App\Form\InvitationGuest;
+use App\Form\InvitationHost;
+use App\Form\MessageToMemberType;
 use App\Form\ReportSpamType;
 use App\Model\ConversationModel;
+use App\Model\HostingRequestModel;
+use App\Service\InboxFolders;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,6 +39,8 @@ class ConversationController extends AbstractController
     public function __construct(
         protected ConversationModel $conversationModel,
         private EntityManagerInterface $entityManager,
+        private InboxFolders $inboxFolders,
+        private HostingRequestModel $requestModel,
     ) {
     }
 
@@ -244,6 +255,11 @@ class ConversationController extends AbstractController
 
         $this->conversationModel->markConversationAsRead($member, $thread);
 
+        // A reply written under the conversation is posted to this same page.
+        if ($current->isMessage() && $request->isMethod('POST') && $request->request->has('app_message')) {
+            return $this->forward(self::class . '::reply', ['message' => $current]);
+        }
+
         $reportForm = $this->createForm(ReportSpamType::class);
         $reportForm->handleRequest($request);
         if ($reportForm->isSubmitted() && $reportForm->isValid()) {
@@ -255,13 +271,104 @@ class ConversationController extends AbstractController
         $template = $this->getViewTemplate($message);
 
         return $this->render($template, [
+            'reply_form' => $this->createInlineReplyForm($current),
+            'request_form' => ($includeDeleted || $spam) ? null : $this->createInlineRequestForm($current, $member),
             'show_deleted' => $includeDeleted,
             'show_report_modal' => $openReportModal,
             'form' => $reportForm->createView(),
             'is_spam' => $spam,
             'current' => $current,
             'thread' => $thread,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $member, $includeDeleted ? 'deleted' : ($spam ? 'spam' : 'conversations')));
+    }
+
+    /**
+     * Plain messages are answered right under the thread (the form posts back to the
+     * conversation page). Requests and invitations keep their own reply page.
+     */
+    private function createInlineReplyForm(Message $current): ?FormView
+    {
+        if (!$current->isMessage()) {
+            return null;
+        }
+
+        $replyMessage = new Message();
+        $replyMessage->setSubject($current->getSubject());
+
+        return $this->createForm(MessageToMemberType::class, $replyMessage)->createView();
+    }
+
+    /**
+     * Hosting requests are answered right under the thread too: the host picks accept,
+     * maybe or decline, the guest can change the dates or cancel. The form posts to the
+     * reply page, which saves it and comes back here. Expired requests and members who
+     * can't write yet keep the link to the reply page, which explains why.
+     */
+    private function createInlineRequestForm(Message $current, Member $member): ?FormView
+    {
+        if ($current->isInvitation()) {
+            return $this->createInlineInvitationForm($current, $member);
+        }
+
+        if (
+            !$current->isHostingRequest()
+            || ($member !== $current->getSender() && $member !== $current->getReceiver())
+            || MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()
+            || $this->requestModel->hasExpired($current)
+        ) {
+            return null;
+        }
+
+        $reply = new Message();
+        $reply->setSubject($current->getSubject());
+        $reply->setMessage('');
+        $reply->setInitiator($current->getInitiator());
+
+        if ($member === $current->getInitiator()) {
+            // The guest may change the dates: work on a copy so the shown request stays as it is.
+            $reply->setRequest(clone $current->getRequest());
+
+            return $this->createForm(HostingRequestGuest::class, $reply)->createView();
+        }
+
+        $reply->setRequest($current->getRequest());
+
+        return $this->createForm(HostingRequestHost::class, $reply)->createView();
+    }
+
+    /**
+     * Invitations are answered right under the thread too. The invited member answers like
+     * a host answers a hosting request: accept, maybe or decline, then a message
+     * (InvitationController::guestReply). The member who invited writes a message or
+     * cancels the invitation (InvitationController::hostReply). Both forms post to the
+     * reply page, which saves them and comes back here.
+     */
+    private function createInlineInvitationForm(Message $current, Member $member): ?FormView
+    {
+        $invitation = $current->getRequest();
+        if (
+            ($member !== $current->getSender() && $member !== $current->getReceiver())
+            || MemberStatusType::ACCOUNT_ACTIVATED === $member->getStatus()
+            || HostingRequest::REQUEST_CANCELLED === $invitation->getStatus()
+            || null === $invitation->getInviteForLeg()
+            || $this->requestModel->hasExpired($current)
+        ) {
+            return null;
+        }
+
+        $reply = new Message();
+        $reply->setSubject($current->getSubject());
+        $reply->setMessage('');
+        $reply->setInitiator($current->getInitiator());
+        $reply->setRequest($invitation);
+
+        if ($member === $current->getInitiator()) {
+            return $this->createForm(InvitationHost::class, $reply)->createView();
+        }
+
+        return $this->createForm(InvitationGuest::class, $reply, [
+            'already_accepted' => null !== $invitation->getInviteForLeg()->getInvitedBy(),
+        ])->createView();
     }
 
     private function checkConversationIsAllDeleted(array $thread, Member $member, bool $includeDeleted): bool

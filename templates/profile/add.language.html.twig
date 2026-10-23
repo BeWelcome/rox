@@ -1,24 +1,29 @@
-{% extends 'profile/profile.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'profile/edit_subpage.html.twig' %}
 
-{% block page_content %}
-  <div class="u:w-full">
-    <div class="card">
-      <div class="card-header u:flex u:flex-row u:justify-between">
-        {{ 'profile.languages'|trans|raw }}
-      </div>
-      <div class="card-block p-2">
-        <div class="card-text m-0">
-          {{ form_start(form) }}
-          {{ form_errors(form) }}
-          {{ form_row(form.language) }}
-          <div class="u:flex u:justify-between u:my-8">
-            <input type="submit" class="o-button" value="{{ 'profile.update'|trans }}">
-          </div>
-          {{ form_rest(form) }}
-          {{ form_end(form) }}
-        </div>
-      </div>
+{% block subpage_title -%}
+  Add language
+{%- endblock %}
+
+{% block subpage_body %}
+  {{ form_start(form, {attr: {class: 'p-language-form'}}) }}
+  {{ form_errors(form) }}
+
+  <div class="p-language-panel">
+    <div class="p-language-panel__icon" aria-hidden="true">
+      <i class="fas fa-language"></i>
+    </div>
+    <div class="p-language-panel__content">
+      {{ form_label(form.language, null, {label_attr: {class: 'p-language-form__label'}}) }}
+      {{ form_widget(form.language) }}
+      {{ form_help(form.language) }}
+      {{ form_errors(form.language) }}
     </div>
   </div>
-{% endblock page_content %}
+
+  <div class="p-edit-subpage__actions">
+    <input type="submit" class="o-button" value="{{ 'save'|trans }}">
+  </div>
+
+  {{ form_rest(form) }}
+  {{ form_end(form) }}
+{% endblock subpage_body %}

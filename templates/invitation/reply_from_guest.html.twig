@@ -1,7 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'conversations/reply_layout.html.twig' %}
+
+{% set compose_class = ' c-inbox-compose--large' %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('requests') }}"
+    {{ encore_entry_script_tags('requests') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
@@ -9,61 +11,61 @@
     {{ encore_entry_link_tags('requests')  }}
 {% endblock stylesheets %}
 
-{% block content %}
-    {% import 'macros.twig' as macros %}
-
+{% block reply_extra %}
     {% set original = thread | last %}
     {% set current = thread | first %}
     {% set request = current.request %}
     {% set invitation = current.request %}
-    {% set receiver =  original.receiver %}
-    {% set myself =  app.user %}
-
-    {{ macros.messageheader_no_buttons(thread) }}
-
+    {% set receiver = original.receiver %}
+    {% set myself = app.user %}
     {% include 'invitation/trip.summary.html.twig' with {'open': false} %}
-
     {% include 'invitation/header.html.twig' %}
+{% endblock reply_extra %}
+
+{% block reply_form %}
+    {% set current = thread | first %}
+    {% set request = current.request %}
 
     {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
-    <div class="row">
-        <div class="col-12 mb-2">
-            {{ form_label(form.message) }}
+        {{ form_errors(form) }}
+        {% if form.message.vars.errors|length > 0 %}
+            <div class="c-inbox-compose__error">{{ form_errors(form.message) }}</div>
+        {% endif %}
+        <div class="c-inbox-compose__editor">
             {{ form_widget(form.message) }}
-            {{ form_errors(form.message) }}
         </div>
-        <div class="col-12 u:flex u:justify-end mb-2">
+        {% do form.message.setRendered %}
+
+        <div class="c-inbox-compose__fields">
             {{ form_row(form.request.arrival) }}
             {{ form_row(form.request.departure) }}
             {{ form_row(form.request.numberOfTravellers) }}
             {{ form_row(form.request.inviteForLeg) }}
-            {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button mb-2'}}) }}
+        </div>
+
+        <div class="c-inbox-compose__actions">
             {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
-            <div class="btn-group u:ml-4">
-                <div class="btn-group u:ml-4">
-                    <button type="submit" id="{{ form.decline.vars.id }}" name="{{ form.decline.vars.full_name }}" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
+                <div class="btn-group c-inbox-compose__decline">
+                    <button type="submit" id="{{ form.decline.vars.id }}" name="{{ form.decline.vars.full_name }}" class="c-inbox-actions__btn c-inbox-actions__btn--outline c-inbox-compose__split">
                         {{ form.decline.vars.label|trans }}
                     </button>
-                    <button type="button" class="o-button--s md:o-button dropdown-toggle dropdown-toggle-split o-button--cut-left md:o-button--cut-left" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="c-inbox-actions__btn c-inbox-actions__btn--outline c-inbox-compose__split-toggle dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="visually-hidden">{{ 'toggle.dropdown'|trans }}</span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-end">
+                    <div class="dropdown-menu dropdown-menu-end c-inbox-compose__menu">
                         <a class="dropdown-item" href="{{ url('conversation_decline', {id: current.id}) }}">{{ 'label.decline.no.message'|trans }}</a>
                     </div>
                 </div>
-            </div>
             {% endif %}
             {% do form.decline.setRendered %}
-
+            {{ form_widget(form.update, {'attr': {'class': 'c-inbox-actions__btn c-inbox-actions__btn--outline'}}) }}
             {% if form.tentatively is defined %}
-                {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button ml-1 mb-2'}}) }}
+                {{ form_widget(form.tentatively, {'attr': {'class': 'c-inbox-actions__btn c-inbox-actions__btn--outline'}}) }}
             {% endif %}
             {% if form.accept is defined %}
-                {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button ml-1 mb-2'}}) }}
+                {{ form_widget(form.accept, {'attr': {'class': 'c-inbox-reply__btn c-inbox-compose__send'}}) }}
             {% endif %}
         </div>
-    </div>
-    {{ form_rest(form) }}
+        {{ form_rest(form) }}
     {{ form_end(form) }}
-    {% include 'message/thread.html.twig' with {'show_deleted': false} %}
-{% endblock %}
+{% endblock reply_form %}

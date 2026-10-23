@@ -23,6 +23,7 @@ class AccountEditFormType extends AbstractType
             ->add('name', TextType::class, [
                 'label' => 'label.name',
                 'attr' => [
+                    'class' => 'o-input',
                     'placeholder' => 'placeholder.name',
                 ],
                 'help' => 'help.name',
@@ -38,6 +39,7 @@ class AccountEditFormType extends AbstractType
             ->add('short_name', TextType::class, [
                 'label' => 'label.shortname',
                 'attr' => [
+                    'class' => 'o-input',
                     'placeholder' => 'placeholder.shortname',
                 ],
                 'help' => 'help.shortname',
@@ -84,6 +86,9 @@ class AccountEditFormType extends AbstractType
             ])
             ->add('email', EmailType::class, [
                 'label' => 'label.email.change',
+                'attr' => [
+                    'class' => 'o-input',
+                ],
                 'help' => 'help.email.change',
                 'required' => false,
                 'constraints' => [

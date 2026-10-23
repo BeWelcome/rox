@@ -8,7 +8,12 @@
     <div id="footer_content" class="stickyfooter">
         <div class="stickyfooter__main">
         <div class="container-fluid stickyfooter-container">
-            <div class="row align-items-lg-start stickyfooter__columns">
+            {# Below 768px the links are folded behind this button (footer.js) #}
+            <button type="button" class="stickyfooter__toggle js-footer-toggle" aria-expanded="false" aria-controls="footer_links">
+                <span>{{ 'footer.links.toggle'|trans }}</span>
+                <i class="fas fa-chevron-down stickyfooter__toggle-icon" aria-hidden="true"></i>
+            </button>
+            <div id="footer_links" class="row align-items-lg-start stickyfooter__columns">
                         {% if app.user %}
                         <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
                             <h2 class="stickyfooter__heading">

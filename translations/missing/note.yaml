@@ -43,3 +43,60 @@ profile.note.updated:
 profile.note.order:
     - 'Order by'
     - Label in the filter form
+profile.note.private:
+    - 'Private note'
+    - Profile page, title of the block with the note you took about the member, and head of its side panel
+profile.note.add.hint:
+    - 'Keep a note about this member, only you can see it.'
+    - Profile page, block to add a private note about the member when there is none yet
+profile.note.delete:
+    - 'Delete the note'
+    - Side panel to edit a private note, link to delete it
+profile.note.mine:
+    - 'My note'
+    - Profile page, title of the yellow block with the private note you took about the member
+profile.note.only.you.short:
+    - 'Only you'
+    - Profile page, small badge on your private note about the member, only you can see it
+profile.note.edit:
+    - 'Edit note'
+    - Profile page, button under your private note about the member, opens it in the side panel
+profile.note.about.eyebrow:
+    - 'Private note about'
+    - Side panel of a private note, small line above the name of the member the note is about
+profile.note.never.told:
+    - 'Only you can see this note. {name} is never told.'
+    - Side panel of a private note, under its head. Keep the {name} tag, the first name of the member the note is about.
+profile.note.categories.hint:
+    - 'to find your notes later'
+    - Side panel of a private note, next to the label of the category field
+profile.note.your.categories:
+    - 'Your categories'
+    - Side panel of a private note, before the categories you already used, one click puts one in the field
+profile.note.category.add:
+    - 'Add…'
+    - Side panel of a private note, placeholder of the category field
+profile.note.save:
+    - 'Save changes'
+    - Side panel of a private note, button to save the changes of a note
+profile.note.save.new:
+    - 'Save note'
+    - Side panel of a private note, button to save a new note
+profile.note.read.more:
+    - 'Read more'
+    - Profile page, link under a long private note, opens it in full in the side panel
+profile.note.read.less:
+    - 'Show less'
+    - My notes page, link under a note shown in full, cuts it again
+profile.notes.mine:
+    - 'My notes'
+    - My notes page, title above the notes you took about other members
+profile.notes.only.you:
+    - 'Only you can see your notes'
+    - My notes page, line under the title
+profile.notes.search:
+    - 'Search a member or a note'
+    - My notes page, placeholder of the search field (a username or words of a note)
+profile.notes.none.found:
+    - 'No note matches.'
+    - My notes page, shown when the search or the category finds no note

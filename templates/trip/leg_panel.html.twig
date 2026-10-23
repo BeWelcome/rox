@@ -1,0 +1,179 @@
+{% extends 'base.html.twig' %}
+{#
+  One leg of a trip in the side panel (home page and visitors page, ?embed=1): the map
+  first with the way from the first stop to the last (drawn by trips.js from the .js-data
+  inputs and the trip / memberInfo objects, like the trip page), the trip as the traveller
+  wrote it (cut, with Read more), then its stops as a timeline with this leg marked "Near
+  you". At the bottom Invite to stay and Message for this leg: they open their form in the
+  same panel, and its back arrow comes back here (?back=).
+  On phones the map takes the top edge, with the back arrow on it.
+#}
+{% set traveller = trip.creator %}
+{% set myself = app.user %}
+{% set address = myself.activeAddress %}
+{% set lookingForHost = constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
+{% set meetLocals = constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
+{% set invitation = lookingForHost ? leg.invitationBy(myself) : null %}
+{% set back = app.request.requestUri %}
+{% set from = app.request.query.get('from') ?: 'home' %}
+
+{% block title %}{{ trip.summary }}{% endblock title %}
+
+{% block stylesheets %}
+    {{ encore_entry_link_tags('trips') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('trips') }}
+{% endblock javascripts %}
+
+{% block content %}
+    {% set stops = trip.legs|filter(stop => constant('App\\Doctrine\\LegOptionsType::PRIVATE') not in stop.options)|merge([]) %}
+    <div class="c-contact c-contact--trip">
+        <div class="c-contact__body c-contact-tripview">
+            {% include 'conversations/_contact_head.html.twig' with { member: traveller, kind: 'trip' } %}
+
+            <div class="c-contact-tripview__map">
+                <div id="map" class="o-map c-contact-map" data-controls="none" aria-label="{{ 'trip.legs.title'|trans }}"></div>
+                {# Phones: closes the panel (the head with its back arrow is under the map) #}
+                <button type="button" class="c-contact-tripview__close js-trip-close" aria-label="{{ 'close'|trans }}">
+                    <i class="fas fa-times" aria-hidden="true"></i>
+                </button>
+                {% if stops|length > 0 %}
+                    <span class="c-contact-tripview__route">
+                        <i class="fas fa-route" aria-hidden="true"></i>
+                        {{ (stops|first).location.name }}{% if stops|length > 1 %} → {{ (stops|last).location.name }}{% endif %}
+                    </span>
+                {% endif %}
+            </div>
+
+            <section class="c-contact-trip c-contact-trip--full">
+                {% if trip.summary %}
+                    <h2 class="c-contact-trip__title">{{ trip.summary }}</h2>
+                {% endif %}
+                <p class="c-contact-trip__chips">
+                    <span class="c-contact-trip__chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) }}</span>
+                    {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != trip.additionalInfo %}
+                        <span class="c-contact-trip__chip"><i class="fa fa-info-circle" aria-hidden="true"></i> {{ ('trip.additional.info.' ~ trip.additionalInfo)|lower|trans }}</span>
+                    {% endif %}
+                </p>
+                {% if trip.description %}
+                    <div class="c-contact-trip__text is-clamped js-trip-text">{{ trip.description|nl2br }}</div>
+                    <button type="button" class="c-contact-trip__more js-trip-more" data-less="{{ 'contact.trip.read.less'|trans }}" hidden>{{ 'contact.trip.read.more'|trans }}</button>
+                {% endif %}
+            </section>
+
+            <section class="c-contact-stops">
+                <h3 class="c-contact-stops__title">{{ 'trip.legs.title'|trans }} <span>· {{ 'contact.trip.stops'|trans({ count: stops|length }) }}</span></h3>
+                <ol class="c-contact-stops__list">
+                    {% set lastLongitude = stops|length > 0 ? (stops|first).location.longitude : 0 %}
+                    {% for stop in stops %}
+                        {% set isThis = stop.id == leg.id %}
+                        {% set sameDay = stop.arrival|date('Y-m-d') == stop.departure|date('Y-m-d') %}
+                        {% set sameYear = stop.arrival|date('Y') == stop.departure|date('Y') %}
+                        {% set nights = date(stop.departure|date('Y-m-d')).diff(date(stop.arrival|date('Y-m-d'))).days %}
+                        <li class="c-contact-stops__item{% if isThis %} is-current{% endif %}">
+                            <span class="c-contact-stops__num">{{ loop.index }}</span>
+                            <div class="c-contact-stops__card">
+                                <p class="c-contact-stops__place">
+                                    <strong>{{ stop.location.name }}</strong>
+                                    {% if stop.location.country %}<span class="c-contact-stops__country">{{ stop.location.country.name }}</span>{% endif %}
+                                    {% if isThis %}<span class="c-contact-stops__near"><i class="fas fa-crosshairs" aria-hidden="true"></i> {{ 'contact.trip.near.you'|trans }}</span>{% endif %}
+                                </p>
+                                <p class="c-contact-stops__dates">
+                                    <i class="far fa-calendar" aria-hidden="true"></i>
+                                    {% if sameDay %}
+                                        {{ stop.arrival|format_date(pattern='MMM d, y') }}
+                                    {% else %}
+                                        {{ stop.arrival|format_date(pattern=sameYear ? 'MMM d' : 'MMM d, y') }} – {{ stop.departure|format_date(pattern='MMM d, y') }}
+                                    {% endif %}
+                                    {% if nights > 0 %}<span class="c-contact-stops__sep" aria-hidden="true">·</span> {{ 'contact.trip.nights'|trans({ count: nights }) }}{% endif %}
+                                </p>
+                                {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in stop.options or constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in stop.options %}
+                                    <p class="c-contact-stops__options">
+                                        {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in stop.options %}<span class="c-contact-stops__option"><i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.option.looking.for.host'|trans }}</span>{% endif %}
+                                        {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in stop.options %}<span class="c-contact-stops__option"><i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.option.meet.locals'|trans }}</span>{% endif %}
+                                    </p>
+                                {% endif %}
+                            </div>
+                            {# The map: name, latitude, longitude (kept on one side of the date line), country, dates #}
+                            {% set calculatedLongitude = stop.location.longitude %}
+                            {% if lastLongitude != stop.location.longitude and sgn(lastLongitude) != sgn(stop.location.longitude) and (lastLongitude|abs > 170 or stop.location.longitude|abs > 170) %}
+                                {% set calculatedLongitude = stop.location.longitude + 360.0 %}
+                            {% endif %}
+                            <input type="hidden" class="js-data"
+                                   value="{{ stop.location.name }},{{ stop.location.latitude }},{{ calculatedLongitude }},{{ stop.location.country ? stop.location.country.name : '' }},{{ stop.arrival|format_date('short') }}{% if stop.arrival != stop.departure %} - {{ stop.departure|format_date('short') }}{% endif %}">
+                        </li>
+                    {% endfor %}
+                </ol>
+            </section>
+
+            <a class="c-contact-tripview__profile" href="{{ path('members_profile', { username: traveller.username }) }}" target="_top">
+                <img src="{{ path('avatar', { username: traveller.username, size: 96 }) }}" alt="">
+                <span>{{ 'contact.trip.profile'|trans({ username: traveller.shortNameOrUsername }) }}</span>
+                <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </a>
+        </div>
+
+        {% if lookingForHost or meetLocals %}
+            <div class="c-contact__foot c-contact__foot--row">
+                {% if lookingForHost %}
+                    {% if invitation %}
+                        <a class="c-contact__send c-contact__send--done" href="{{ path('conversation_reply', { id: invitation.messages[0].id }) }}" target="_top">
+                            <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}
+                        </a>
+                    {% else %}
+                        <a class="c-contact__send" href="{{ path('hosting_invitation', { leg: leg.id, embed: 1, from: from, back: back }) }}">
+                            <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'contact.trip.invite'|trans }}
+                        </a>
+                    {% endif %}
+                {% endif %}
+                {% if meetLocals %}
+                    <a class="c-contact__send{% if lookingForHost %} c-contact__send--secondary c-contact__send--side{% endif %}" href="{{ path('message_new', { username: traveller.username, embed: 1, from: from, back: back }) }}" aria-label="{{ 'trip.leg.message'|trans }}">
+                        <i class="fas fa-envelope" aria-hidden="true"></i> <span class="c-contact__send-label">{{ 'trip.leg.message'|trans }}</span>
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // The X on the map closes the side panel (contact/panel.js)
+        document.querySelector('.js-trip-close').addEventListener('click', function () {
+            if (window.parent !== window) {
+                window.parent.postMessage({ type: 'bw-contact-close' }, window.location.origin);
+            } else {
+                window.location.href = '{{ path('trip_show', { id: trip.id }) }}';
+            }
+        });
+
+        // The trip's text is cut after a few lines; Read more shows the rest
+        (function () {
+            var text = document.querySelector('.js-trip-text');
+            var more = document.querySelector('.js-trip-more');
+            if (!text || !more) {
+                return;
+            }
+            if (text.scrollHeight > text.clientHeight + 2) {
+                more.hidden = false;
+            }
+            var label = more.textContent;
+            more.addEventListener('click', function () {
+                var open = text.classList.toggle('is-clamped') === false;
+                more.textContent = open ? more.dataset.less : label;
+            });
+        })();
+    </script>
+
+    <script type="text/javascript">
+        let trip = {
+            own: false,
+            radius: {{ trip.invitationRadius * 1000 }},
+        }
+        let memberInfo = {
+            latitude: {{ address ? address.latitude : 'null' }},
+            longitude: {{ address ? address.longitude : 'null' }},
+            searchRadius: {{ searchRadius }},
+        }
+    </script>
+{% endblock content %}

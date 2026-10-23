@@ -3,6 +3,7 @@
 namespace App\Pagerfanta;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
+use App\Doctrine\CommentQualityType;
 use App\Dto\MemberSearchResult;
 use App\Entity\Location;
 use App\Entity\Member;
@@ -92,17 +93,27 @@ class SearchAdapter implements AdapterInterface
                 ->from('App\Entity\Comment', 'commentCountTable')
                 ->where('commentCountTable.toMember = m.id');
 
+            // The comments by quality too, for the positive / neutral / negative pill of the card
+            $qualityCount = fn (string $quality): string => $this->entityManager->createQueryBuilder()
+                ->select('COUNT(cq' . $quality . '.id)')
+                ->from('App\Entity\Comment', 'cq' . $quality)
+                ->where('cq' . $quality . '.toMember = m.id AND cq' . $quality . ".quality = '" . $quality . "'")
+                ->getDQL();
+
             $qb->select(
                 \sprintf(
-                    'NEW %s(m, (%s), (%s), (%s))',
+                    'NEW %s(m, (%s), (%s), (%s), (%s), (%s), (%s))',
                     MemberSearchResult::class,
                     $senderCountQueryBuilder->getDQL(),
                     $receiverCountQueryBuilder->getDQL(),
-                    $commentCountQueryBuilder->getDQL()
+                    $commentCountQueryBuilder->getDQL(),
+                    $qualityCount(CommentQualityType::POSITIVE),
+                    $qualityCount(CommentQualityType::NEUTRAL),
+                    $qualityCount(CommentQualityType::NEGATIVE)
                 )
             )->setParameter('currentUserId', $this->currentUser->getId());
         } else {
-            $qb->select(\sprintf('NEW %s(m, 0, 0, 0)', MemberSearchResult::class));
+            $qb->select(\sprintf('NEW %s(m, 0, 0, 0, 0, 0, 0)', MemberSearchResult::class));
         }
 
         // Re-apply sorting to the second query to ensure the order is preserved
@@ -111,12 +122,89 @@ class SearchAdapter implements AdapterInterface
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Every member found (up to $limit), for the markers of the map: the username and where
+     * they live, their own point rounded to about 1 km as on the profile, else the centre of
+     * their town. Much lighter than a page of results: two small queries, no entities.
+     *
+     * @return array<int, array{username: string, latitude: float, longitude: float}>
+     */
+    public function getMapPoints(int $limit): array
+    {
+        $isDistanceSearch = $this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude;
+
+        $idQb = $this->entityManager->createQueryBuilder();
+        $idQb->select('DISTINCT m.id');
+        if ($isDistanceSearch) {
+            $idQb->from(Location::class, 'l')
+                ->join('App\Entity\Address', 'a', 'WITH', 'a.location = l.geonameId AND a.active = 1')
+                ->join('a.member', 'm');
+        } else {
+            $idQb->from(Member::class, 'm');
+        }
+        $this->applySearchFilters($idQb);
+        $idQb->setMaxResults($limit);
+
+        $memberIds = array_column($idQb->getQuery()->getScalarResult(), 'id');
+        if (empty($memberIds)) {
+            return [];
+        }
+
+        $rows = $this->entityManager->createQueryBuilder()
+            ->select('m.username, a.latitude AS ownLatitude, a.longitude AS ownLongitude, l.latitude AS townLatitude, l.longitude AS townLongitude')
+            ->from(Member::class, 'm')
+            ->join('m.addresses', 'a', 'WITH', 'a.active = 1')
+            ->leftJoin('a.location', 'l')
+            ->where('m.id IN (:memberIds)')
+            ->setParameter('memberIds', $memberIds)
+            ->getQuery()
+            ->getArrayResult();
+
+        $points = [];
+        foreach ($rows as $row) {
+            if (isset($points[$row['username']])) {
+                continue;
+            }
+            if (null !== $row['ownLatitude'] && null !== $row['ownLongitude']) {
+                $latitude = round((float) $row['ownLatitude'], 2);
+                $longitude = round((float) $row['ownLongitude'], 2);
+            } elseif (null !== $row['townLatitude'] && null !== $row['townLongitude']) {
+                $latitude = (float) $row['townLatitude'];
+                $longitude = (float) $row['townLongitude'];
+            } else {
+                continue;
+            }
+            $points[$row['username']] = [
+                'username' => $row['username'],
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+            ];
+        }
+
+        return array_values($points);
+    }
+
     private function applySearchFilters(QueryBuilder $qb): void
     {
         /** @var MemberRepository $memberRepository */
         $memberRepository = $this->entityManager->getRepository(Member::class);
 
-        if ($this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude) {
+        $adminUnit = $this->getAdminUnit();
+        if (null !== $adminUnit) {
+            // A country or a region: everybody living in it, whatever the distance.
+            if (!\in_array('a', $qb->getAllAliases(), true)) {
+                $qb->join('m.addresses', 'a', 'WITH', 'a.active = 1');
+            }
+            if (!\in_array('l', $qb->getAllAliases(), true)) {
+                $qb->join('a.location', 'l');
+            }
+            $qb->andWhere('l.countryId = :admin_country')
+                ->setParameter('admin_country', $adminUnit->getCountryId());
+            if ('ADM1' === $adminUnit->getFeatureCode()) {
+                $qb->andWhere('l.admin1Id = :admin_region')
+                    ->setParameter('admin_region', $adminUnit->getAdmin1Id());
+            }
+        } elseif ($this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude) {
             // 1. Calculate the bounding box
             $center = new GeoPoint($this->searchRequest->location_latitude, $this->searchRequest->location_longitude);
             $boundingBox = $center->boundingBox($this->searchRequest->distance, 'km');
@@ -152,6 +240,25 @@ class SearchAdapter implements AdapterInterface
         }
 
         $memberRepository->applySearchFilters($qb, $this->searchRequest);
+    }
+
+    /**
+     * The country or first-level region picked as search place, if that is what was picked.
+     */
+    private function getAdminUnit(): ?Location
+    {
+        $geonameId = $this->searchRequest->location_geoname_id ?? null;
+        if (empty($this->searchRequest->location_admin_unit ?? false) || empty($geonameId)) {
+            return null;
+        }
+
+        $location = $this->entityManager->getRepository(Location::class)->find((int) $geonameId);
+        if (null === $location) {
+            return null;
+        }
+        $featureCode = (string) $location->getFeatureCode();
+
+        return str_starts_with($featureCode, 'PCL') || 'ADM1' === $featureCode ? $location : null;
     }
 
     private function applySorting(QueryBuilder $qb): void

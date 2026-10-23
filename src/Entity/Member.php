@@ -1359,7 +1359,8 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
                 if (!isset($this->translationsIndexedByLocale[$locale])) {
                     $this->translationsIndexedByLocale[$locale] = [];
                 }
-                $field = $translation->getField();
+                // Some rows were stored with a lowercase first letter ("aboutMe"); templates use "AboutMe".
+                $field = ucfirst($translation->getField());
                 $this->translationsIndexedByLocale[$locale][$field] = $translation->getContent();
             }
         }

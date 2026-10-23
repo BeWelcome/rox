@@ -256,6 +256,54 @@ footer {
       }
     }
 
+    /* Below 768px: only a "links" button, the columns open under it */
+    .stickyfooter__toggle {
+      display: none;
+    }
+
+    @include media-breakpoint-down(md) {
+      .stickyfooter__main {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
+
+      .stickyfooter__toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0.5rem 0;
+        font-size: 0.875rem;
+        font-weight: 700;
+        letter-spacing: 0.045em;
+        text-transform: uppercase;
+        color: #fff;
+        background: none;
+        border: 0;
+      }
+
+      .stickyfooter__toggle-icon {
+        transition: transform 0.2s ease;
+      }
+
+      .stickyfooter__columns {
+        display: none;
+        padding-top: 1rem;
+      }
+
+      .stickyfooter__main.is-open {
+        padding-bottom: 1.5rem;
+
+        .stickyfooter__toggle-icon {
+          transform: rotate(180deg);
+        }
+
+        .stickyfooter__columns {
+          display: flex;
+        }
+      }
+    }
+
     .stickyfooter__columns > [class*='col-'] {
       display: flex;
       flex-direction: column;

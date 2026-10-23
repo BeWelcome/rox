@@ -1,38 +1,43 @@
-{% extends 'profile/profile.html.twig' %}
+{% extends 'profile/edit_subpage.html.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% block javascripts %}
-  {{ parent() }}
-  {{ encore_entry_script_tags('roxeditor') }}
-{% endblock %}
+{% block subpage_title -%}
+  {{ 'profile.about.me'|trans({}, 'messages', language)|raw }} · {{ ('lang_' ~ language)|lower|trans({}, 'messages', language) }}
+{%- endblock %}
 
-{% block stylesheets %}
-  {{ parent() }}
-  {{ encore_entry_link_tags('roxeditor') }}
-{% endblock %}
+{# One row of the edit page (?field=...): its title and what it is for #}
+{% set drawer_fields = { about: 'profile.about.me', occupation: 'profile.occupation', offerhosts: 'profile.offer.hosts' } %}
+{% block drawer_eyebrow %}<i class="fas fa-user" aria-hidden="true"></i> {{ 'profile.about.me'|trans({}, 'messages', language)|striptags }}{% endblock %}
+{% block drawer_title -%}
+  {% set field = app.request.query.get('field') %}
+  {{ field in drawer_fields|keys ? drawer_fields[field]|trans({}, 'messages', language)|striptags : 'profile.about.me'|trans({}, 'messages', language)|striptags }}
+{%- endblock %}
+{% block drawer_intro -%}
+  {% set field = app.request.query.get('field') %}
+  {{ field in drawer_fields|keys ? ('profile.edit.intro.' ~ field)|trans : '' }}
+{%- endblock %}
+{% block drawer_options %}track{% endblock %}
 
-{% block page_content %}
-  <div class="u:w-full">
-    <div class="card">
-      <div class="card-header u:flex u:flex-row u:justify-between">
-        {{ 'profile.about.me'|trans({}, "messages", language)|raw }} - {{ ('lang_' ~ language)|lower|trans({}, "messages", language) }}
-      </div>
-      <div class="card-block p-2">
-        <div class="card-text m-0">
-          {{ form_start(form) }}
+{% block subpage_body %}
+  {{ form_start(form) }}
+  {{ form_errors(form) }}
 
-          {% set username = member.username %}
-          {% set translations = member.translations %}
-          {{ macros.field_translation(form.about_me, locale, language, 'AboutMe', username, translations) }}
-          {{ macros.field_translation(form.occupation, locale, language, 'Occupation', username, translations) }}
-          {{ macros.field_translation(form.offer_hosts, locale, language, 'OfferHosts', username, translations) }}
-
-          <div class="u:flex u:justify-end u:my-8">
-            <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>
-          </div>
-          {{ form_end(form) }}
-        </div>
-      </div>
-    </div>
+  {# ?field=...: only that part shows, the others stay in the form, hidden (see accommodation) #}
+  {% set only = app.request.query.get('field') %}
+  {% set username = member.username %}
+  {% set translations = member.translations %}
+  <div class="p-ped-part{{ only ? ' p-ped-single' }}" data-placeholder="{{ 'profile.edit.placeholder.about'|trans }}"{{ only and only != 'about' ? ' hidden' }}>
+  {{ macros.field_translation(form.about_me, locale, language, 'AboutMe', username, translations) }}
   </div>
-{% endblock page_content %}
+  <div class="p-ped-part{{ only ? ' p-ped-single' }}" data-placeholder="{{ 'profile.edit.placeholder.occupation'|trans }}"{{ only and only != 'occupation' ? ' hidden' }}>
+  {{ macros.field_translation(form.occupation, locale, language, 'Occupation', username, translations) }}
+  </div>
+  <div class="p-ped-part{{ only ? ' p-ped-single' }}" data-placeholder="{{ 'profile.edit.placeholder.offerhosts'|trans }}"{{ only and only != 'offerhosts' ? ' hidden' }}>
+  {{ macros.field_translation(form.offer_hosts, locale, language, 'OfferHosts', username, translations) }}
+  </div>
+
+  <div class="p-edit-subpage__actions">
+    <input type="submit" class="o-button" value="{{ 'save'|trans({}, 'messages', language) }}">
+  </div>
+  {{ form_end(form) }}
+{% endblock subpage_body %}

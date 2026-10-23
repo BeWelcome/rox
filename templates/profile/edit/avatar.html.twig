@@ -1,11 +1,8 @@
-{% extends 'profile/profile.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'profile/edit_subpage.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
   {{ encore_entry_script_tags('avatar') }}
-  <script type="application/javascript">
-  </script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -13,34 +10,53 @@
   {{ encore_entry_link_tags('avatar') }}
 {% endblock %}
 
-{% block page_content %}
-  <div class="u:w-full">
-    <div class="card">
-      <div class="card-header u:flex u:flex-row u:justify-between">
-        {{ 'profile.avatar.picture'|trans|raw }}
-      </div>
-      <div class="card-block p-2">
-        <div class="card-text m-0">
-          <div class="u:flex u:flex-col">
-            <div class="u:w-full u:nd:min-w-500 u:max-w-500 u:aspect-square u:mx-auto u:mb-50">
-              <input id="member" name="member" type="hidden" value="{{ member.username }}">
-              <div id="avatar_container" class="u:w-full u:h-full"></div>
-            </div>
-            <div class="u:flex u:flex-row u:h-100 u:w-full u:overflow-x-auto">
-              {% for picture in pictures %}
-                <img class="img-thumbnail u:mr-20" loading="lazy" data-image-id="{{ picture.id }}" src="gallery/thumbimg?id={{ picture.id }}" alt="{{ picture.title }}">
-              {% endfor %}
-            </div>
-            <div class="u:flex u:justify-between u:my-8">
-              <div class="u:relative">
-                <button id="avatar-new" class="o-button">{{ 'profile.avatar.new'|trans }}</button>
-                <input id="avatar-file" class="u:absolute u:top-0 u:left-0 u:w-full u:h-full u:opacity-0" type="file" accept="image/*">
-              </div>
-              <button id="avatar-update" class="o-button">{{ 'profile.avatar.update'|trans }}</button>
-            </div>
-          </div>
+{% block subpage_title -%}
+  {{ 'profile.avatar.picture'|trans|raw }}
+{%- endblock %}
+
+{#
+  The profile picture: the photo in a round frame to drag and zoom, a rotate button, the
+  photos of the gallery to pick from, then "Choose another" (a file) and "Save photo"
+  (profile/avatar.js).
+#}
+{% block subpage_body %}
+  <div class="p-avatar-edit">
+    <input id="member" name="member" type="hidden" value="{{ member.username }}">
+    <div class="p-avatar-edit__stage">
+      <div id="avatar_container" class="p-avatar-edit__crop"></div>
+      <span class="p-avatar-edit__hint"><i class="fas fa-crosshairs" aria-hidden="true"></i> {{ 'profile.edit.avatar.drag'|trans }}</span>
+    </div>
+
+    <div class="p-avatar-edit__tools">
+      <i class="fas fa-minus p-avatar-edit__zoom-icon" aria-hidden="true"></i>
+      <div class="p-avatar-edit__zoom js-avatar-zoom"></div>
+      <i class="fas fa-plus p-avatar-edit__zoom-icon" aria-hidden="true"></i>
+      <button type="button" id="avatar-rotate" class="p-avatar-edit__rotate" aria-label="{{ 'profile.edit.avatar.rotate'|trans }}" title="{{ 'profile.edit.avatar.rotate'|trans }}">
+        <i class="fas fa-sync" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    {% if pictures|length > 0 %}
+      <div class="p-avatar-edit__gallery">
+        <p class="p-avatar-edit__gallery-title">{{ 'profile.edit.avatar.from.gallery'|trans }}</p>
+        <div class="p-avatar-edit__shots">
+          {% for picture in pictures %}
+            <button type="button" class="p-avatar-edit__shot" data-image-id="{{ picture.id }}" title="{{ picture.title }}">
+              <img loading="lazy" src="gallery/thumbimg?id={{ picture.id }}" alt="{{ picture.title }}">
+            </button>
+          {% endfor %}
         </div>
       </div>
+    {% endif %}
+
+    <div class="p-avatar-edit__actions p-ped-foot">
+      <label class="p-ped-foot__cancel p-avatar-edit__choose">
+        <i class="fas fa-images" aria-hidden="true"></i> {{ 'profile.edit.avatar.choose'|trans }}
+        <input id="avatar-file" class="p-avatar-edit__file" type="file" accept="image/*">
+      </label>
+      <button type="button" id="avatar-update" class="o-button p-ped-foot__save">
+        <i class="fas fa-check" aria-hidden="true"></i> {{ 'profile.edit.avatar.save'|trans }}
+      </button>
     </div>
   </div>
-{% endblock page_content %}
+{% endblock subpage_body %}

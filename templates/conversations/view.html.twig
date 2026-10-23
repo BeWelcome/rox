@@ -1,4 +1,8 @@
 {% extends 'base.html.twig' %}
+{% set inbox_page = true %}
+{% import 'conversations/_inbox.macros.twig' as inbox %}
+
+{% set hide_sidebar = true %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('tailwind') }}
@@ -6,6 +10,7 @@
 
 {% block javascripts %}
     {{ encore_entry_script_tags('micromodal') }}
+    {{ encore_entry_script_tags('conversations') }}
     {% if show_report_modal %}
         {{ encore_entry_script_tags('report') }}
     {% endif %}
@@ -16,12 +21,78 @@
 {% endblock title %}
 
 {% block content %}
-    {% import 'macros.twig' as macros %}
-    {{ macros.messageheader(thread, {show_deleted: show_deleted, is_spam:is_spam} ) }}
+    {% set myself = app.user %}
+    {% set current = thread|first %}
+    {% set correspondent = (current.sender == myself) ? current.receiver : current.sender %}
+    {% set linked = correspondent.status in ['Active', 'OutOfRemind'] %}
+    {% if current.subject %}
+        {% set subject = current.subject.subject %}
+    {% else %}
+        {% set subject = 'conversation.with'|trans({ username: correspondent.username }) %}
+    {% endif %}
 
-    {% block additional %}{% endblock additional %}
+    {% set listParams = (initiator != 2 ? { initiator: initiator } : {})|merge(unreadOnly ? { unread_only: 1 } : {}) %}
 
-    {% include 'message/thread.html.twig' %}
+    {% if app.request.query.getBoolean('embed') and reply_form %}
+        {# The "contact a member" side panel (profile "Send" when a conversation already exists) #}
+        {% include 'conversations/_embed_thread.html.twig' %}
+    {% else %}
 
-    {% include 'conversations/report.html.twig' with {'message': thread|first, 'myself': app.user} %}
+    <div class="c-inbox c-inbox--thread">
+        {{ inbox.nav(folder, 'column') }}
+
+        <section class="c-inbox__list">
+            <div class="c-inbox-list">
+                {{ inbox.list(conversations, folder, { current: current, initiator: initiator, unreadOnly: unreadOnly, linkBase: app.request.pathInfo }) }}
+            </div>
+        </section>
+
+        <section class="c-inbox__pane">
+            {% include 'conversations/_pane_head.html.twig' with { back_url: inbox.folder_url(folder, listParams), show_actions: true } %}
+
+            {% set additional %}{% block additional %}{% endblock additional %}{% endset %}
+            {% if additional|trim is not empty %}
+                <div class="c-inbox-pane__extra">{{ additional }}</div>
+            {% endif %}
+
+            {% include 'conversations/_thread.html.twig' %}
+
+            {% if request_form ?? null %}
+                {# Hosting requests: the host answers (or the guest writes back) right here. #}
+                <div class="c-inbox-compose c-inbox-compose--respond">
+                    {% if current.request.inviteForLeg %}
+                        {# Invitations: the invited member decides like a host, the member who invited writes or cancels #}
+                        {% include (current.initiator == myself ? 'invitation/_respond_inviter.html.twig' : 'request/_respond_host.html.twig') with { respond: request_form } %}
+                    {% else %}
+                        {% include (current.initiator == myself ? 'request/_respond_guest.html.twig' : 'request/_respond_host.html.twig') with { respond: request_form } %}
+                    {% endif %}
+                </div>
+            {% elseif reply_form %}
+                {# Plain messages: answer right here. The text is turned into paragraphs on submit. #}
+                {{ form_start(reply_form, { attr: { class: 'c-inbox-reply js-inbox-reply', novalidate: 'novalidate' } }) }}
+                    <textarea class="c-inbox-reply__field js-inbox-reply-text" name="{{ reply_form.message.vars.full_name }}" rows="1"
+                              placeholder="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}"
+                              aria-label="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}" required></textarea>
+                    {% do reply_form.message.setRendered %}
+                    {% do reply_form.subject.setRendered %}
+                    {{ form_rest(reply_form) }}
+                    <button type="submit" class="c-inbox-reply__btn">
+                        <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                        <span class="c-inbox-reply__label">{{ 'message.button.reply'|trans }}</span>
+                    </button>
+                {{ form_end(reply_form) }}
+            {% else %}
+            <a class="c-inbox-reply" href="{{ path('conversation_reply', (folder == 'conversations' ? { id: current.id } : { id: current.id, folder: folder })|merge(listParams)) }}">
+                <span class="c-inbox-reply__field">{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}</span>
+                <span class="c-inbox-reply__btn">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                    <span class="c-inbox-reply__label">{{ 'message.button.reply'|trans }}</span>
+                </span>
+            </a>
+            {% endif %}
+        </section>
+    </div>
+
+    {% include 'conversations/report.html.twig' with { 'message': thread|first, 'myself': app.user } %}
+    {% endif %}
 {% endblock content %}

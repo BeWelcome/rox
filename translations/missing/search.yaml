@@ -4,6 +4,24 @@ search.last.login:
 search.member.since:
     - 'Member since:'
     - Text shown in the search results followed by the member since date
+search.member.duration:
+    - 'Member {duration}'
+    - Shown in each search result after the last login, e.g. "Member 8 years" (how long ago the member signed up). Keep {duration} intact.
+search.members.found:
+    - '{count, plural, one {# member found} other {# members found}}'
+    - Above the search results when they fit on one page, e.g. "5 members found". Copy/paste the English version and translate only the words.
+search.members.found.range:
+    - '{first}–{last} of {count, plural, one {# member} other {# members}}'
+    - Above the search results when there are several pages, e.g. "21–40 of 87 members". Copy/paste the English version and translate only the words.
+search.preview.full:
+    - 'See the full profile'
+    - Link at the bottom of the member preview opened from the search results
+search.preview.error:
+    - 'This profile could not be loaded.'
+    - Shown in the member preview of the search results when loading fails
+search.preview.comments:
+    - '{count, plural, one {comment} other {comments}}'
+    - After the number of comments in the member preview of the search results, e.g. "12 comments". Copy/paste the English version and translate only the words.
 search.reset.options:
     - 'Reset Options'
     - Label on the button to reset the search options to default values
@@ -19,3 +37,6 @@ search.admin.units:
 search.countries:
     - 'Countries'
     - Section header for the search results of countries found
+search.view.list:
+    - 'List'
+    - Button on the search results (phones) that shows the results as a list instead of the map

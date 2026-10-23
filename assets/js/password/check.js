@@ -1,7 +1,10 @@
-const passwordField = document.querySelector('.js-password-input');
+// The fields of the form that holds the strength meter: the login form of the top bar has
+// a password field too (.js-password-input), and comes first in the page.
 const passwordStrength = document.querySelector('.js-password-strength');
-const username = document.querySelector('.js-username');
-const email = document.querySelector('.js-email-address');
+const scope = (passwordStrength && passwordStrength.closest('form')) || document;
+const passwordField = scope.querySelector('.js-password-input');
+const username = scope.querySelector('.js-username') || document.querySelector('.js-username');
+const email = scope.querySelector('.js-email-address') || document.querySelector('.js-email-address');
 
 function resetBackgroundColor() {
     for (let i = 0; i < 5; i++) {
@@ -19,8 +22,8 @@ async function getPasswordScore() {
     // Send to server to calculate score
     // Change colors
     const formData = new FormData();
-    formData.append('username', username.value);
-    formData.append('email', email.value);
+    formData.append('username', username ? username.value : '');
+    formData.append('email', email ? email.value : '');
     formData.append('password', passwordField.value);
 
     let score = 0;
@@ -56,17 +59,18 @@ async function getPasswordScore() {
 
 let timeout;
 
-passwordField.addEventListener('keyup', () => {
-    clearTimeout(timeout);
-    if (passwordField.value == '') {
-        for (let i = 0; i < 5; i++) {
+if (passwordField && passwordStrength) {
+    // "input" also catches a pasted or filled in password, not only keys
+    passwordField.addEventListener('input', () => {
+        clearTimeout(timeout);
+        if (passwordField.value == '') {
             resetBackgroundColor();
+        } else {
+            timeout = setTimeout(() => { getPasswordScore(); }, 500);
         }
-    } else {
-        timeout = setTimeout(() => { getPasswordScore(); }, 500);
-    }
-});
+    });
 
-if (passwordField.value != '') {
-    g
+    if (passwordField.value != '') {
+        getPasswordScore();
+    }
 }

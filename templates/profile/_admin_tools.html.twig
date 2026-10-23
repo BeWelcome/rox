@@ -1,0 +1,32 @@
+{#
+  Volunteers with admin rights: their tools for this member (ProfileSubmenu::addVolunteerEntries),
+  in a dark block of the right column. Each link shows only with the matching right.
+#}
+{% set _adminItems = submenu.items ?? [] %}
+{% set _adminTools = [
+  {key: 'adminedit', icon: 'pen'},
+  {key: 'personaldate', icon: 'database'},
+  {key: 'adminrights', icon: 'user-shield'},
+  {key: 'adminflags', icon: 'flag'},
+  {key: 'adminlogs', icon: 'list'},
+]|filter(tool => _adminItems[tool.key] is defined) %}
+{% if _adminTools|length > 0 %}
+  <section class="p-pro-admin-tools" aria-labelledby="admin-tools-{{ where }}">
+    <h2 class="p-pro-admin-tools__title" id="admin-tools-{{ where }}">
+      <i class="fas fa-user-shield" aria-hidden="true"></i> Admin
+    </h2>
+    <ul class="p-pro-admin-tools__list">
+      {% for tool in _adminTools %}
+        {% set _item = _adminItems[tool.key] %}
+        {% set _url = _item.url starts with '/' or _item.url starts with 'http' ? _item.url : '/' ~ _item.url %}
+        <li>
+          <a class="p-pro-admin-tools__link" href="{{ _url }}">
+            <span class="p-pro-admin-tools__icon" aria-hidden="true"><i class="fas fa-{{ tool.icon }}"></i></span>
+            <span class="p-pro-admin-tools__label">{{ _item.key|trans }}</span>
+            <i class="fas fa-chevron-right p-pro-admin-tools__go" aria-hidden="true"></i>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+{% endif %}

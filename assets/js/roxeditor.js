@@ -245,8 +245,24 @@ sourceElements.forEach( (element) => {
 })
 
 
+// CKEditor's autosave keeps a pending action for 2 seconds after each keystroke and
+// asks the browser to warn before leaving while one is pending. When the member sends
+// the form (or cancels it on purpose) that warning makes no sense, so skip it.
+let leavingOnPurpose = false;
+window.addEventListener('beforeunload', (event) => {
+    if (leavingOnPurpose) {
+        event.stopImmediatePropagation();
+    }
+}, { capture: true });
+
 function registerSubmitHandler( form ) {
+    form.addEventListener('click', (event) => {
+        if (event.target.closest('a[href]')) {
+            leavingOnPurpose = true;
+        }
+    });
     form.addEventListener('submit', function() {
+        leavingOnPurpose = true;
         // Remove data from localeStorage.
         for (const editor of editors.values()) {
             const element = editor.sourceElement

@@ -5,3 +5,82 @@ trip.posted.by:
     - 'posted by {username}'
     - shows who posted the trip as part of the item on the landing page. Make sure to keep the {username} part intact.
 
+landing.search.placeholder:
+    - 'Search a city, a region...'
+    - Placeholder of the search field in the welcome banner of the home page, under "Where are you going?"
+
+landing.viewprofile:
+    - 'View my profile'
+    - Link to the member's own profile, next to their city in the welcome banner of the home page
+landing.search.mode.place:
+    - 'Place'
+    - Switch in the welcome banner of the home page to search around a place
+landing.search.mode.member:
+    - 'Member'
+    - Switch in the welcome banner of the home page to search a member by username
+landing.search.findmember:
+    - 'Find a member'
+    - Title of the member search in the welcome banner of the home page
+landing.search.member.placeholder:
+    - 'Type a username...'
+    - Placeholder of the member search field in the welcome banner of the home page
+landing.search.place.hint:
+    - 'Find hosts, travelers and activities around a place.'
+    - Hint under the place search field in the welcome banner of the home page
+landing.search.member.hint:
+    - 'Start typing and pick a match from the list.'
+    - Hint under the member search field in the welcome banner of the home page
+landing.search.submit:
+    - 'Search'
+    - Button of the search field in the welcome banner of the home page
+landing.stats.requests:
+    - 'stay requests to answer'
+    - Shown after a number in the welcome banner of the home page, e.g. "4 stay requests to answer"
+landing.stats.travelers:
+    - 'travelers coming to {city}'
+    - Shown after a number in the welcome banner of the home page, e.g. "5 travelers coming to Barcelona". Keep {city} intact.
+landing.stats.travelers.area:
+    - 'travelers coming to your area'
+    - Shown after a number in the welcome banner of the home page when the member has no city set
+landing.stats.activities:
+    - 'upcoming activities'
+    - Shown after a number in the welcome banner of the home page, e.g. "3 upcoming activities"
+landing.stats.trip:
+    - 'Plan a public trip'
+    - Highlighted link in the welcome banner of the home page that opens the form to create a trip
+landing.stats.trip.hint:
+    - 'Let hosts know you are coming'
+    - Small line under "Plan a public trip" in the welcome banner of the home page
+landing.stats.trip.short:
+    - 'Create a public trip'
+    - Highlighted link to create a trip in the welcome banner of the home page, on small screens
+landing.viewprofile.short:
+    - 'My profile'
+    - Short link to the member's own profile in the welcome banner of the home page, on small screens
+landing.stats.requests.short:
+    - 'requests to answer'
+    - Short label under a number in the welcome banner of the home page, on small screens
+landing.stats.travelers.short:
+    - 'travelers coming'
+    - Short label under a number in the welcome banner of the home page, on small screens
+landing.stats.activities.short:
+    - 'activities'
+    - Short label under a number in the welcome banner of the home page, on small screens
+landing.search.member.searching:
+    - 'Searching...'
+    - Shown with a loader in the member suggestions of the welcome banner of the home page while the search runs
+landing.hosting.switch:
+    - 'I can host travelers'
+    - Label of the hosting switch in the welcome banner of the home page, on small screens
+landing.banner.collapse:
+    - 'Show less'
+    - Button that folds the welcome banner of the home page down to the member line, on small screens
+landing.banner.expand:
+    - 'Show more'
+    - Button that unfolds the welcome banner of the home page (hosting switch, search and counters), on small screens
+landing.beinformed.previous:
+    - 'Previous links'
+    - Button that shows the previous page of links in the "Be informed" box of the home page
+landing.beinformed.next:
+    - 'Next links'
+    - Button that shows the next page of links in the "Be informed" box of the home page

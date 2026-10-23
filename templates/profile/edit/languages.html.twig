@@ -1,11 +1,8 @@
-{% extends 'profile/profile.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'profile/edit_subpage.html.twig' %}
 
 {% block javascripts %}
   {{ parent() }}
   {{ encore_entry_script_tags('profile/edit_languages') }}
-  <script type="application/javascript">
-  </script>
 {% endblock %}
 
 {% block stylesheets %}
@@ -13,72 +10,110 @@
   {{ encore_entry_link_tags('profile/edit_languages') }}
 {% endblock %}
 
-{% macro widget_prototype(widget) %}
-  {% set form = widget %}
-  {% set name = widget.vars.full_name %}
-  {% set currentLanguage = name %}
-  <div class="u:grid u:md:grid-cols-2 u:items-bottom u:gap-8" id="{{ currentLanguage }}">
-    <div class="form-group u:grid u:auto-rows-min">
-      {{ form_label(form.language) }}
-      {{ form_widget(form.language) }}
-      {{ form_errors(form.language) }}
+{#
+  The languages the member speaks: one card per language with its level on five steps
+  (Basic... Native), a search to add one and a few common ones to add in one click
+  (profile/edit_languages.js). Same form as before: each card sends its language
+  (hidden) and its level.
+#}
+{% set levels = [
+  {value: 'beginner', short: 'profile.edit.level.beginner'},
+  {value: 'intermediate', short: 'profile.edit.level.intermediate'},
+  {value: 'fluent', short: 'profile.edit.level.fluent'},
+  {value: 'expert', short: 'profile.edit.level.expert'},
+  {value: 'mother.tongue', short: 'profile.edit.level.mother.tongue'},
+] %}
+
+{% macro card(row, levels, name, nativeName) %}
+  {% set id = row.vars.full_name %}
+  {% set current = row.level.vars.value %}
+  <div class="p-lang-card js-lang-card" id="{{ id }}" data-language="{{ row.language.vars.value }}">
+    <input type="hidden" name="{{ row.language.vars.full_name }}" value="{{ row.language.vars.value }}">
+    {% do row.language.setRendered %}
+    <div class="p-lang-card__head">
+      <strong class="p-lang-card__name js-lang-card-name">{{ name }}</strong>
+      {% if nativeName and nativeName != name %}<span class="p-lang-card__native">{{ nativeName }}</span>{% endif %}
+      <span class="p-lang-card__level js-lang-card-level"></span>
+      <button type="button" class="p-lang-card__remove js-lang-remove" aria-label="{{ 'profile.edit.language.remove'|trans }}">
+        <i class="fas fa-times" aria-hidden="true"></i>
+      </button>
     </div>
-    {# force error display #}
-    <div class="form-group u:grid u:auto-rows-min {% if form.level.vars.errors|length != 0 %}is-invalid{% endif %}">
-      {{ form_label(form.level) }}
-      <div class="u:grid u:grid-cols-[auto_min-content] u:gap-8">
-        {{ form_widget(form.level) }}
-        <button type="button" class="o-button u:self-end js-delete-language"
-                data-collection-holder-class="collection-languages"
-                data-related="{{ currentLanguage }}"><i class="fa fa-fw fa-trash" aria-label="{{ 'language.delete'|trans }}"></i><span class="sr-only">{{ 'language.delete'|trans }}</span></button></div>
-      {{ form_errors(form.level) }}
+    <div class="p-lang-card__levels" role="radiogroup" aria-label="{{ 'label.language.level'|trans|striptags }}">
+      {% for level in levels %}
+        <label class="p-lang-level" style="--step: {{ loop.index }}">
+          <input type="radio" class="p-lang-level__input" name="{{ row.level.vars.full_name }}" value="{{ level.value }}"
+                 data-label="{{ ('language.level.' ~ level.value)|trans|striptags }}"{{ current == level.value ? ' checked' }}>
+          <span class="p-lang-level__text">{{ level.short|trans }}</span>
+        </label>
+      {% endfor %}
     </div>
+    {% do row.level.setRendered %}
+    {{ form_errors(row.language) }}
+    {{ form_errors(row.level) }}
   </div>
 {% endmacro %}
 
-{% block page_content %}
-  <div class="u:w-full">
-    <div class="card">
-      <div class="card-header u:flex u:flex-row u:justify-between">
-        {{ 'profile.languages'|trans|raw }}
-      </div>
-      <div class="card-block p-2">
-        <div class="card-text m-0">
-          {{ form_start(form) }}
-          {{ form_errors(form) }}
-          <div class="collection-languages"
-               data-index="{{ form.language_levels|length > 0 ? form.language_levels|last.vars.name + 1 : 0 }}"
-               data-prototype="{{ _self.widget_prototype(form.language_levels.vars.prototype)|e('html_attr') }}">
-            {% for language_level in form.language_levels %}
-              {% set currentLanguage = language_level.vars.full_name %}
-              <div class="u:grid u:md:grid-cols-2 u:items-bottom u:gap-8" id="{{ currentLanguage }}">
-                <div class="form-group u:grid u:auto-rows-min">
-                  {{ form_label(language_level.language) }}
-                  {{ form_widget(language_level.language) }}
-                  {{ form_errors(language_level.language) }}
-                </div>
-                  {# force error display #}
-                  <div class="form-group u:grid u:auto-rows-min {% if language_level.level.vars.errors|length != 0 %}is-invalid{% endif %}">
-                    {{ form_label(language_level.level) }}
-                    <div class="u:grid u:grid-cols-[auto_min-content] u:gap-8">
-                    {{ form_widget(language_level.level) }}
-                    <button type="button" class="o-button u:self-end js-delete-language"
-                          data-collection-holder-class="collection-languages"
-                            data-related="{{ currentLanguage }}"><i class="fa fa-fw fa-trash" aria-label="{{ 'language.delete'|trans }}"></i><span class="sr-only">{{ 'language.delete'|trans }}</span></button></div>
-                    {{ form_errors(language_level.level) }}
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-          <div class="u:flex u:justify-between u:my-8">
-            <button type="button" class="o-button js-add-language"
-                    data-collection-holder-class="collection-languages"><i class="fa fa-fw fa-add" aria-label="{{ 'language.add'|trans }}"></i><span class="sr-only">{{ 'language.add'|trans }}</span></button></button>
-            <input type="submit" class="o-button" value="{{ 'profile.update'|trans }}">
-          </div>
-          {{ form_rest(form) }}
-          {{ form_end(form) }}
-        </div>
-      </div>
+{% block subpage_title -%}
+  {{ 'profile.languages'|trans|raw }}
+{%- endblock %}
+{% block drawer_title %}{{ 'profile.edit.spoken.languages'|trans }}{% endblock %}
+{% block drawer_intro %}{{ 'profile.edit.intro.languages'|trans }}{% endblock %}
+{% block drawer_options %}track{% endblock %}
+
+{% block subpage_body %}
+  {% set prototype = form.language_levels.vars.prototype %}
+  {# All the languages one can pick (spoken, then signed: groups of the form) #}
+  {% set choices = [] %}
+  {% for group in prototype.language.vars.choices %}
+    {% for choice in (group.choices is defined ? group.choices : [group]) %}
+      {% set choices = choices|merge([{code: choice.value, name: choice.label}]) %}
+    {% endfor %}
+  {% endfor %}
+  {% set common = ['en', 'fr', 'es', 'de', 'it', 'pt'] %}
+
+  {{ form_start(form, {attr: {class: 'p-language-form js-lang-form'}}) }}
+  {{ form_errors(form) }}
+  {# One language must be at "Native" (the mother tongue): said here while none is, and Save
+     stays pale with the same words (data-ped-required, edit_subpage). The box is ticked by
+     edit_languages.js once a card is at Native; it is not sent. #}
+  <div class="p-lang-native-hint js-lang-native-hint" data-ped-required="{{ 'profile.edit.languages.native.needed'|trans }}">
+    <input type="checkbox" class="js-lang-native-flag" hidden tabindex="-1" aria-hidden="true">
+    <i class="fas fa-info-circle" aria-hidden="true"></i>
+    <span>{{ 'profile.edit.languages.native.hint'|trans }}</span>
+  </div>
+  <div class="p-lang-list collection-languages js-lang-list"
+       data-index="{{ form.language_levels|length > 0 ? form.language_levels|last.vars.name + 1 : 0 }}"
+       data-prototype="{{ _self.card(prototype, levels, '__language__', '')|e('html_attr') }}">
+    {% for language_level in form.language_levels %}
+      {% set code = language_level.language.vars.value %}
+      {% set name = (choices|filter(choice => choice.code == code)|first).name ?? code %}
+      {{ _self.card(language_level, levels, name, ('lang_' ~ code)|lower|trans({}, 'messages', code)) }}
+    {% endfor %}
+  </div>
+  {% do form.language_levels.setRendered %}
+
+  <div class="p-lang-add js-lang-add" data-languages="{{ choices|json_encode }}">
+    <div class="p-lang-add__field">
+      <i class="fas fa-plus" aria-hidden="true"></i>
+      <input type="text" class="p-lang-add__input js-lang-search" placeholder="{{ 'profile.edit.add.spoken.language'|trans }}"
+             autocomplete="off" aria-label="{{ 'profile.edit.add.spoken.language'|trans }}">
+    </div>
+    <ul class="p-lang-add__results js-lang-results" role="listbox" hidden></ul>
+    <div class="p-lang-add__common">
+      {% for code in common %}
+        {% set choice = choices|filter(choice => choice.code == code)|first %}
+        {% if choice %}
+          <button type="button" class="p-lang-add__chip js-lang-common" data-code="{{ choice.code }}">
+            <i class="fas fa-plus" aria-hidden="true"></i> {{ choice.name }}
+          </button>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
-{% endblock page_content %}
+
+  <div class="p-edit-subpage__actions">
+    <input type="submit" class="o-button" value="{{ 'save'|trans }}">
+  </div>
+  {{ form_rest(form) }}
+  {{ form_end(form) }}
+{% endblock subpage_body %}

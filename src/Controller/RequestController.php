@@ -15,10 +15,13 @@ use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
+use App\Service\InboxFolders;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
+use App\Utilities\ContactPanelTrait;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatorTrait;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +38,10 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class RequestController extends BaseRequestAndInvitationController
 {
+    use ContactPanelTrait;
     use TranslatorTrait;
+
+    private const string LAST_STAY_DATES = 'last_stay_dates';
 
     public function __construct(
         ConversationModel $conversationModel,
@@ -44,6 +50,7 @@ class RequestController extends BaseRequestAndInvitationController
         private readonly Mailer $mailer,
         private readonly Logger $logger,
         private readonly BrowserNotificationService $browserNotificationService,
+        private readonly InboxFolders $inboxFolders,
     ) {
         parent::__construct($requestModel, $entityManager);
 
@@ -108,19 +115,19 @@ class RequestController extends BaseRequestAndInvitationController
         if ($guest === $host) {
             $this->addTranslatedFlash('notice', 'flash.request.self');
 
-            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
         }
 
         if (MemberStatusType::ACCOUNT_ACTIVATED === $guest->getStatus()) {
             $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
 
-            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]));
         }
 
         if (!$host->isBrowsable()) {
             $this->addTranslatedFlash('note', 'flash.member.invalid');
 
-            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
         }
 
         if (
@@ -133,13 +140,13 @@ class RequestController extends BaseRequestAndInvitationController
             $this->addTranslatedFlash('error', 'flash.request.limit');
             $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirect($referrer));
         }
 
         if (AccommodationType::NO === $host->getAccommodation()) {
             $this->addTranslatedFlash('notice', 'request.not.hosting');
 
-            return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]));
         }
 
         $redirectOnNotAllowed = false;
@@ -162,10 +169,11 @@ class RequestController extends BaseRequestAndInvitationController
         }
 
         if ($redirectOnNotAllowed) {
-            return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
         }
 
         $requestForm = $this->createForm(HostingRequestGuest::class, null);
+        $this->prefillLastStayDates($request, $requestForm);
         $requestForm->handleRequest($request);
 
         if ($requestForm->isSubmitted() && $requestForm->isValid()) {
@@ -176,11 +184,22 @@ class RequestController extends BaseRequestAndInvitationController
             $this->entityManager->persist($hostingRequest);
             $this->entityManager->flush();
 
+            $this->rememberLastStayDates($request, $hostingRequest);
+
             $this->sendInitialRequestNotification(
                 $host,
                 $guest,
                 $hostingRequest
             );
+            // Sent from the search preview (in a frame): a short "sent" page instead of the profile.
+            if ($request->query->getBoolean('embed')) {
+                return $this->render('conversations/embed_sent.html.twig', [
+                    'kind' => 'request',
+                    'member' => $host,
+                    'conversation' => $hostingRequest,
+                ]);
+            }
+
             $this->addTranslatedFlash('notice', 'flash.request.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
@@ -190,7 +209,48 @@ class RequestController extends BaseRequestAndInvitationController
             'guest' => $guest,
             'host' => $host,
             'form' => $requestForm->createView(),
+        ] + $this->inboxFolders->getContext($request, $guest));
+    }
+
+    /**
+     * The dates of the last stay request sent today, so that the next request (to another
+     * host, same trip) starts with them. Kept in the session until the end of the day.
+     */
+    private function rememberLastStayDates(Request $request, Message $hostingRequest): void
+    {
+        $stay = $hostingRequest->getRequest();
+        if (null === $stay || null === $stay->getArrival() || null === $stay->getDeparture()) {
+            return;
+        }
+
+        $request->getSession()->set(self::LAST_STAY_DATES, [
+            'day' => date('Y-m-d'),
+            'arrival' => $stay->getArrival()->format('Y-m-d'),
+            'departure' => $stay->getDeparture()->format('Y-m-d'),
         ]);
+    }
+
+    private function prefillLastStayDates(Request $request, Form $requestForm): void
+    {
+        if (!$request->hasSession()) {
+            return;
+        }
+
+        $dates = $request->getSession()->get(self::LAST_STAY_DATES);
+        $today = date('Y-m-d');
+        if (!\is_array($dates) || ($dates['day'] ?? null) !== $today || ($dates['arrival'] ?? '') < $today) {
+            return;
+        }
+
+        $arrival = DateTime::createFromFormat('!Y-m-d', $dates['arrival']);
+        $departure = DateTime::createFromFormat('!Y-m-d', $dates['departure'] ?? '');
+        if (false === $arrival || false === $departure || $departure <= $arrival) {
+            return;
+        }
+
+        $stay = $requestForm->get('request');
+        $stay->get('arrival')->setData($arrival);
+        $stay->get('departure')->setData($departure);
     }
 
     protected function addExpiredFlash(Member $receiver): void
@@ -236,7 +296,6 @@ class RequestController extends BaseRequestAndInvitationController
                 $subject,
                 $newRequest->getRequest()->getId() !== $realParent->getRequest()->getId()
             );
-            $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }
@@ -246,7 +305,7 @@ class RequestController extends BaseRequestAndInvitationController
             'host' => $host,
             'form' => $requestForm->createView(),
             'thread' => $thread,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $this->getUser()));
     }
 
     private function hostReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
@@ -285,7 +344,6 @@ class RequestController extends BaseRequestAndInvitationController
                 $this->logger->write('Regular decline', 'Request');
             }
 
-            $this->addTranslatedFlash('notice', 'flash.notification.updated');
 
             return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }
@@ -295,7 +353,7 @@ class RequestController extends BaseRequestAndInvitationController
             'host' => $host,
             'form' => $requestForm->createView(),
             'thread' => $thread,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $this->getUser()));
     }
 
     private function sendGuestReplyNotification(

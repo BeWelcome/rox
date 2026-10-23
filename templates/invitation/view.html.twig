@@ -1,6 +1,17 @@
 {% import 'macros.twig' as macros %}
 {% extends 'conversations/view.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('requests') }}
+{% endblock stylesheets %}
+
+{# The answer under the thread (Accept, Maybe, Decline, the message) needs requests.js #}
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('requests') }}
+{% endblock javascripts %}
+
 {% block additional %}
     {% set original = thread | last %}{% set invitation = (thread | first).request %}
     {% set myself = app.user %}

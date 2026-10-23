@@ -12,7 +12,7 @@
   the section (drawer_eyebrow) and what is edited (drawer_title), a close button, then
   a line on what it is for (drawer_intro). The form's save button goes to the bottom of
   the panel, next to "Cancel". With "track" in drawer_options, Save stays pale until
-  something is changed.
+  something is changed, and while a choice marked data-ped-required is empty.
 #}
 {% block drawer_eyebrow %}<i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.edit'|trans }}{% endblock %}
 {% block drawer_title %}{{ block('subpage_title') }}{% endblock %}
@@ -173,7 +173,23 @@
         if (page.dataset.track === '1') {
           var form = submit.form;
           submit.disabled = true;
-          var changed = function () { submit.disabled = false; };
+          // ...and while a choice marked data-ped-required has nothing picked: that choice is
+          // then outlined and Save says what is missing (data-ped-required holds the words)
+          var saveContent = submit.innerHTML;
+          var changed = function () {
+            var missing = Array.prototype.filter.call(form.querySelectorAll('[data-ped-required]'), function (group) {
+              return group.querySelector('input:checked') === null;
+            });
+            form.querySelectorAll('[data-ped-required]').forEach(function (group) {
+              (group.closest('.p-ped-hosting') || group).classList.toggle('is-needed', missing.indexOf(group) !== -1);
+            });
+            submit.disabled = missing.length > 0;
+            if (missing.length > 0 && missing[0].dataset.pedRequired) {
+              submit.textContent = missing[0].dataset.pedRequired;
+            } else {
+              submit.innerHTML = saveContent;
+            }
+          };
           form.addEventListener('input', changed);
           form.addEventListener('change', changed);
         }

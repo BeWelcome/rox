@@ -5,88 +5,286 @@
 {% endblock %}
 
 {% block stylesheets %}
+    {{ encore_entry_link_tags('leaflet') }}
     {{ encore_entry_link_tags('signup/finalize') }}
 {% endblock stylesheets %}
 
+{#
+  Finish the account (the link of the confirmation email): the same look as the edit page
+  (cards, fields of its side panel, "Can you host?", the hosting interest steps, the
+  languages and the map of "Set location"), the same form as before
+  (signup/finalize.js).
+#}
+{% macro label(field, optional = false) %}
+  <label class="p-sf-field__label" for="{{ field.vars.id }}">
+    <span>{{ field.vars.label|trans }}</span>
+    {% if optional %}<span class="p-sf-field__optional">{{ 'profile.edit.optional'|trans }}</span>{% endif %}
+  </label>
+{% endmacro %}
+
+{% macro help(field) %}
+  {% if field.vars.help %}<small class="p-sf-field__help" id="{{ field.vars.id }}_help">{{ field.vars.help|trans|striptags }}</small>{% endif %}
+{% endmacro %}
+
+{% macro input(field, icon, attr = {}) %}
+  <div class="p-sf-input{{ field.vars.valid ? '' : ' is-invalid' }}">
+    <i class="fas fa-{{ icon }} p-sf-input__icon" aria-hidden="true"></i>
+    <input type="text" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="{{ field.vars.value }}"
+           class="p-sf-input__control{{ attr.class is defined ? ' ' ~ attr.class }}" autocomplete="off"
+           placeholder="{{ (field.vars.attr.placeholder ?? '')|trans|striptags }}"
+           {% if field.vars.help %}aria-describedby="{{ field.vars.id }}_help"{% endif %}>
+  </div>
+  {% do field.setRendered %}
+{% endmacro %}
 {% block content %}
-<div class="signup-finalize">
-<div class="signup-finalize__inner">
+{% import _self as sf %}
+{% set interestKeys = ['not_set', 'very_low', 'low', 'lower', 'low_to_medium', 'medium', 'medium_to_high', 'high', 'higher', 'very_high', 'cant_wait'] %}
+<div class="p-pe p-sf">
+  <header class="p-pe-head">
+    <div class="p-pe-head__wrap container-lg">
+      <div class="p-pe-head__top">
+        <span class="p-pe-head__avatar">
+          <img src="{{ url('avatar', {username: member.username, size: 160}) }}" alt="{{ member.username }}">
+        </span>
+        <div class="p-pe-head__identity">
+          <p class="p-pe-head__eyebrow"><i class="fas fa-check" aria-hidden="true"></i> {{ 'signup.finalize.eyebrow'|trans }}</p>
+          <h1 class="p-pe-head__name">{{ 'members.finalize.account'|trans }}</h1>
+          <p class="p-sf-head__blurb">{{ 'members.finalize.account.blurb'|trans|striptags }}</p>
+        </div>
+      </div>
+    </div>
+  </header>
 
-<h1 class="signup-finalize__heading">{{ 'members.finalize.account'|trans }}</h1>
-    <p class="signup-finalize__subheading">{{ 'members.finalize.account.blurb'|trans|striptags }}</p>
-    {{ form_start(finalize, { 'attr': { autocomplete: 'off', class: 'u:mt-8' } }) }}
-    <section class="signup-finalize__section">
-        <h2 class="signup-finalize__section-title">{{ 'profile'|trans }}</h2>
-        {{ form_row(finalize.registration_key) }}
-        {{ form_row(finalize.name) }}
-        {{ form_row(finalize.short_name) }}
-        {{ form_row(finalize.mother_tongue) }}
-        {{ form_row(finalize.birthdate) }}
-        <div class="o-form-group signup-finalize__gender">
-        <div class="u:col-span-3"><label>{{ 'label.gender'|trans }}</label></div>
-        <div class="u:col-span-3">{{ form_errors(finalize.gender) }}</div>
-        <div class="u:col-span-3">
-            <small id="{{ finalize.gender.vars.id }}_help" class="form-text text-muted">{{ finalize.gender.vars.help|trans }}</small>
+  <div class="p-pe__body p-sf__body container-lg">
+    {{ form_start(finalize, {attr: {autocomplete: 'off', class: 'p-sf-form', novalidate: 'novalidate'}}) }}
+    {{ form_errors(finalize) }}
+
+    {# ── About you ── #}
+    <section class="p-pe-card">
+      <h2 class="p-pe-card__title">{{ 'signup.finalize.about'|trans }}</h2>
+
+      {% if 'hidden' in finalize.registration_key.vars.block_prefixes %}
+        {{ form_widget(finalize.registration_key) }}
+      {% else %}
+        <div class="p-sf-field">
+          {{ sf.label(finalize.registration_key, true) }}
+          {{ sf.input(finalize.registration_key, 'gift') }}
+          {{ form_errors(finalize.registration_key) }}
+          {{ sf.help(finalize.registration_key) }}
         </div>
-        <div class="o-radio-button">
-            <input type="radio" id="{{ finalize.gender.children[0].vars.id }}" name="{{ finalize.gender.children[0].vars.full_name }}"
-                   class="o-radio-button__input" value="{{ finalize.gender.children[0].vars.value}}"
-                   {% if finalize.gender.vars.value == finalize.gender.children[0].vars.value %}checked="checked"{% endif %}
-            >
-            <label for="{{ finalize.gender.children[0].vars.id}}">{{ finalize.gender.children[0].vars.value}}</label>
+      {% endif %}
+
+      <div class="p-sf-grid">
+        <div class="p-sf-field">
+          {{ sf.label(finalize.name) }}
+          {{ sf.input(finalize.name, 'user') }}
+          {{ form_errors(finalize.name) }}
+          {{ sf.help(finalize.name) }}
         </div>
-        <div class="o-radio-button">
-            <input type="radio"  id="{{ finalize.gender.children[1].vars.id}}" name="{{ finalize.gender.children[1].vars.full_name }}"
-                   class="o-radio-button__input" value="{{ finalize.gender.children[1].vars.value}}"
-                   {% if finalize.gender.vars.value == finalize.gender.children[1].vars.value %}checked="checked"{% endif %}
-            >
-            <label for="{{ finalize.gender.children[1].vars.id}}">{{ finalize.gender.children[1].vars.value}}</label>
+        <div class="p-sf-field">
+          {{ sf.label(finalize.short_name, true) }}
+          {{ sf.input(finalize.short_name, 'user') }}
+          {{ form_errors(finalize.short_name) }}
+          {{ sf.help(finalize.short_name) }}
         </div>
-        <div class="o-radio-button">
-            <input type="radio"  id="{{ finalize.gender.children[2].vars.id}}" name="{{ finalize.gender.children[2].vars.full_name }}"
-                   class="o-radio-button__input" value="{{ finalize.gender.children[2].vars.value}}"
-                   {% if finalize.gender.vars.value == finalize.gender.children[2].vars.value %}checked="checked"{% endif %}
-            >
-            <label for="{{ finalize.gender.children[2].vars.id}}">{{ finalize.gender.children[2].vars.value}}</label>
-        </div>
-        </div>
-    </section>
-    {% do finalize.gender.setRendered %}
-    <section class="signup-finalize__section">
-        <h2 class="signup-finalize__section-title">{{ 'profile.location'|trans }}</h2>
-        <div class="o-form-group">
-            <label for="{{ finalize.location.fullname.vars.id}}">{{ finalize.location.vars.label}}</label>
-            {{ form_errors(finalize.location.fullname) }}
-            <div class="auto-search-wrapper max-height loupe">
-                <input type="text" id="{{ finalize.location.fullname.vars.id}}" name="{{ finalize.location.fullname.vars.full_name }}"
-                       class="o-input js-location-picker{% if finalize.location.fullname.vars.errors|length > 0 %} is-invalid{% endif %}" autocomplete="off"
-                       placeholder="{{ 'trip.leg.location'|trans }}"
-                       aria-label="{{ 'trip.leg.location'|trans }}"
-                       {% if finalize.location.fullname.vars.value %}value="{{ finalize.location.fullname.vars.value }}"{% endif %}
-                >
+      </div>
+
+      <div class="p-sf-field">
+        {{ sf.label(finalize.birthdate) }}
+        {{ sf.input(finalize.birthdate, 'calendar', {class: 'js-datepicker'}) }}
+        {{ form_errors(finalize.birthdate) }}
+        {{ sf.help(finalize.birthdate) }}
+      </div>
+
+      {# Gender: pills with their sign, as in the account block of the edit page #}
+      <div class="p-sf-field{{ finalize.gender.vars.valid ? '' : ' is-invalid' }}">
+        <span class="p-sf-field__label"><span>{{ 'label.gender'|trans }}</span></span>
+        <div class="p-sf-pills" role="radiogroup" aria-label="{{ 'label.gender'|trans }}">
+          {% for child in finalize.gender|filter(item => item.vars.value in ['male', 'female', 'other']) %}
+            <div class="p-pill-option">
+              <input type="radio" class="p-pill-option__input" id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
+                     value="{{ child.vars.value }}"{{ child.vars.checked ? ' checked' }}>
+              <label class="p-pill-option__label" for="{{ child.vars.id }}">
+                <span class="p-pill-option__icon p-sf-gender--{{ child.vars.value }}"><i class="fas fa-{{ {male: 'mars', female: 'venus'}[child.vars.value] ?? 'genderless' }}" aria-hidden="true"></i></span>
+                {{ child.vars.label|trans }}
+              </label>
             </div>
-            {{ form_help(finalize.location) }}
-            {% do finalize.location.setRendered %}
+          {% endfor %}
         </div>
+        {% do finalize.gender.setRendered %}
+        {{ form_errors(finalize.gender) }}
+        {{ sf.help(finalize.gender) }}
+      </div>
 
-        {{ form_widget(finalize.location.geoname_id) }}
-        {{ form_widget(finalize.location.latitude) }}
-        {{ form_widget(finalize.location.longitude) }}
-
-        {% include 'profile/accommodation_widget.html.twig' with {form: finalize} %}
+      {#
+        Mother tongue(s): chips with a cross, a search and a few common languages to add
+        one, as in "Spoken languages". They fill the hidden list of the form.
+      #}
+      {% set tongue = finalize.mother_tongue %}
+      {% set choices = [] %}
+      {% for group in tongue.vars.choices %}
+        {% for choice in (group.choices is defined ? group.choices : [group]) %}
+          {% set choices = choices|merge([{code: choice.value, name: choice.label}]) %}
+        {% endfor %}
+      {% endfor %}
+      {% set picked = tongue.vars.value is iterable ? tongue.vars.value : [] %}
+      <div class="p-sf-field js-sf-tongues{{ tongue.vars.valid ? '' : ' is-invalid' }}" data-languages="{{ choices|json_encode }}"
+           data-remove="{{ 'profile.edit.language.remove'|trans }}">
+        <label class="p-sf-field__label" for="{{ tongue.vars.id }}_search"><span>{{ tongue.vars.label|trans }}</span></label>
+        <select id="{{ tongue.vars.id }}" name="{{ tongue.vars.full_name }}" multiple hidden class="js-sf-tongues-select">
+          {% for choice in choices %}
+            <option value="{{ choice.code }}"{{ choice.code in picked ? ' selected' }}>{{ choice.name }}</option>
+          {% endfor %}
+        </select>
+        {% do tongue.setRendered %}
+        <div class="p-sf-chips js-sf-tongues-chips"></div>
+        <div class="p-lang-add">
+          <div class="p-lang-add__field">
+            <i class="fas fa-plus" aria-hidden="true"></i>
+            <input type="text" id="{{ tongue.vars.id }}_search" class="p-lang-add__input js-lang-search" autocomplete="off"
+                   placeholder="{{ 'profile.edit.add.spoken.language'|trans }}">
+          </div>
+          <ul class="p-lang-add__results js-lang-results" role="listbox" hidden></ul>
+          <div class="p-lang-add__common">
+            {% for code in ['en', 'fr', 'es', 'de', 'it', 'pt'] %}
+              {% set choice = choices|filter(choice => choice.code == code)|first %}
+              {% if choice %}
+                <button type="button" class="p-lang-add__chip js-lang-common" data-code="{{ choice.code }}">
+                  <i class="fas fa-plus" aria-hidden="true"></i> {{ choice.name }}
+                </button>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {{ form_errors(tongue) }}
+        {{ sf.help(tongue) }}
+      </div>
     </section>
 
-    <section class="signup-finalize__section">
-        <h2 class="signup-finalize__section-title">{{ 'signup.optional'|trans }}</h2>
-        {{ form_row(finalize.newsletters) }}
-        {{ form_row(finalize.local_events) }}
-        {{ form_row(finalize.trips_notifications) }}
+    {# ── Where you live, and hosting ── #}
+    {% set location = finalize.location %}
+    <section class="p-pe-card">
+      <h2 class="p-pe-card__title">{{ 'signup.finalize.home'|trans }}</h2>
+
+      <div class="p-sf-field">
+        <label class="p-sf-field__label" for="{{ location.fullname.vars.id }}"><span>{{ location.vars.label|trans }}</span></label>
+        <div class="auto-search-wrapper max-height p-location-search">
+          <i class="fas fa-search p-location-search__icon" aria-hidden="true"></i>
+          <input type="text" id="{{ location.fullname.vars.id }}" name="{{ location.fullname.vars.full_name }}"
+                 class="o-input js-location-picker" autocomplete="off"
+                 placeholder="{{ 'trip.leg.location'|trans }}" aria-label="{{ 'trip.leg.location'|trans }}"
+                 value="{{ location.fullname.vars.value }}">
+        </div>
+        {{ form_errors(location.fullname) }}
+        {{ sf.help(location) }}
+      </div>
+      {% do location.fullname.setRendered %}
+      {{ form_widget(location.geoname_id) }}
+      {{ form_widget(location.latitude) }}
+      {{ form_widget(location.longitude) }}
+      {% do location.setRendered %}
+
+      <input type="hidden" id="marker_label_text" value="{{ 'profile.setlocation.marker'|trans }}">
+      <div class="p-location-map-wrap p-sf-map">
+        <div class="p-location-map" id="map"></div>
+        <p class="p-location-hint js-location-hint" data-picked="{{ 'profile.setlocation.drag'|trans }}">
+          <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+          <span class="js-location-hint-text">{{ 'signup.finalize.map.search'|trans }}</span>
+        </p>
+      </div>
+
+      {# Can you host? Then how keen (10 steps, as in the window of the edit page) #}
+      {% set accommodation = finalize.accommodation %}
+      {% set hosting = accommodation.vars.value ?: 'no' %}
+      <div class="p-sf-field p-sf-field--host{{ accommodation.vars.valid ? '' : ' is-invalid' }}">
+        <span class="p-sf-field__label"><span>{{ 'profile.edit.can.host'|trans }}</span></span>
+        <div class="p-pe-host p-sf-host" role="radiogroup" aria-label="{{ 'profile.edit.can.host'|trans }}">
+          {# Not required, so the form adds an empty "none" choice: left out #}
+          {% for value in ['yes', 'no'] %}
+            {% set child = accommodation|filter(item => item.vars.value == value)|first %}
+            {% set yes = value == 'yes' %}
+            <label class="p-pe-host__option p-pe-host__option--{{ yes ? 'yes' : 'no' }}{{ hosting == child.vars.value ? ' is-active' }}">
+              <input type="radio" class="p-sf-host__input js-sf-host" name="{{ child.vars.full_name }}" value="{{ child.vars.value }}"{{ hosting == child.vars.value ? ' checked' }}>
+              <i class="fas fa-{{ yes ? 'house-user' : 'times' }}" aria-hidden="true"></i> {{ ('profile.edit.host.' ~ (yes ? 'yes' : 'no'))|trans }}
+            </label>
+          {% endfor %}
+        </div>
+        {% do accommodation.setRendered %}
+        {{ form_errors(accommodation) }}
+      </div>
+
+      {% set interest = finalize.hosting_interest.vars.value|default(5) %}
+      <div class="p-sf-interest js-sf-interest{{ finalize.hosting_interest.vars.valid ? '' : ' is-invalid' }}"{{ hosting == 'yes' ? '' : ' hidden' }}
+           data-names="{{ interestKeys|map(key => ('hosting_interest.' ~ key)|trans)|json_encode }}">
+        <input type="hidden" class="js-sf-interest-value" name="{{ finalize.hosting_interest.vars.full_name }}" value="{{ interest }}">
+        {% do finalize.hosting_interest.setRendered %}
+        <div class="p-pe-interest-pop__head">
+          <p class="p-sf-interest__question">{{ 'profile.edit.interest.question'|trans }}</p>
+        </div>
+        <div class="p-pe-interest-pop__now">
+          <strong class="p-pe-interest-pop__name js-sf-interest-name">{{ ('hosting_interest.' ~ interestKeys[interest] ?? 'not_set')|trans }}</strong>
+          <span class="p-pe-interest-pop__score js-sf-interest-score">{{ interest }} / 10</span>
+        </div>
+        <div class="p-pe-interest-pop__steps" role="radiogroup" aria-label="{{ 'profile.edit.hosting.interest'|trans }}">
+          {% for step in 1..10 %}
+            <button type="button" class="p-pe-interest-pop__step js-sf-interest-step{{ step <= interest ? ' is-on' }}{{ step == interest ? ' is-picked' }}"
+                    data-value="{{ step }}" style="--step: {{ step }}" role="radio" aria-checked="{{ step == interest ? 'true' : 'false' }}"
+                    aria-label="{{ ('hosting_interest.' ~ interestKeys[step])|trans }}"></button>
+          {% endfor %}
+        </div>
+        <div class="p-pe-interest-pop__scale" aria-hidden="true">
+          <span>{{ 'hosting_interest.very_low'|trans }}</span>
+          <span>{{ 'hosting_interest.medium'|trans }}</span>
+          <span>{{ 'hosting_interest.cant_wait'|trans }}</span>
+        </div>
+        {{ form_errors(finalize.hosting_interest) }}
+      </div>
     </section>
-    <div class="signup-finalize__actions">
-        <input type="submit" class="o-button signup-layout__submit" value="{{ 'signup.activate'|trans }}">
+
+    {# ── Optional settings: switches and a list, as on the preferences page ── #}
+    <section class="p-pe-card">
+      <h2 class="p-pe-card__title">{{ 'signup.optional'|trans }}</h2>
+      <p class="p-sf-card__intro">{{ 'signup.optional.help'|trans }}</p>
+      <div class="p-sf-settings">
+        {% for field in [finalize.newsletters, finalize.local_events] %}
+          <label class="p-preference-card p-sf-setting" for="{{ field.vars.id }}">
+            <span class="p-preference-card__copy">
+              <span class="p-preference-card__title">{{ field.vars.label|trans|striptags }}</span>
+            </span>
+            <span class="p-preference-card__control">
+              <span class="p-preference-toggle">
+                <input type="checkbox" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="1"
+                       class="p-preference-toggle__input"{{ field.vars.checked ? ' checked' }}>
+                <span class="p-preference-toggle__track" aria-hidden="true"><span class="p-preference-toggle__thumb"></span></span>
+              </span>
+            </span>
+          </label>
+          {% do field.setRendered %}
+        {% endfor %}
+
+        {% set trips = finalize.trips_notifications %}
+        <div class="p-preference-card p-sf-setting">
+          <div class="p-preference-card__copy">
+            <label class="p-preference-card__title" for="{{ trips.vars.id }}">{{ trips.vars.label|trans }}</label>
+            {% if trips.vars.help %}<span class="p-preference-card__help">{{ trips.vars.help|trans }}</span>{% endif %}
+          </div>
+          <div class="p-preference-card__control">
+            <select id="{{ trips.vars.id }}" name="{{ trips.vars.full_name }}" class="p-preference-select">
+              {% for choice in trips.vars.choices %}
+                <option value="{{ choice.value }}"{{ choice.value == trips.vars.value ? ' selected' }}>{{ choice.label|trans }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% do trips.setRendered %}
+        </div>
+      </div>
+    </section>
+
+    <div class="p-sf-actions">
+      <button type="submit" class="p-sf-actions__submit"><i class="fas fa-check" aria-hidden="true"></i> {{ 'signup.activate'|trans }}</button>
     </div>
 
     {{ form_end(finalize) }}
-</div>
+  </div>
 </div>
 {% endblock content %}

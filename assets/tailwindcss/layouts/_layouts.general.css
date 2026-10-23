@@ -10530,3 +10530,116 @@ svg.p-pe-account__eye-on, svg.p-pe-account__eye-off { display: none; }
 .p-pe-head__lang-delete { display: inline-flex; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; margin-left: -0.15rem; padding: 0; border: 1px solid #fecaca; border-radius: 999px; background: #fff; color: #b91c1c; font-size: 0.7rem; cursor: pointer; }
 .p-pe-head__lang-delete:hover { background: #fef2f2; }
 .p-pe-head__lang:not(.p-edit-header__lang-tab--active) + .p-pe-head__lang-delete { display: none; }
+
+/* ── Finish the account (signup/finalize.html.twig): the look of the edit page ── */
+.p-sf .p-pe-head__name { white-space: normal; }
+.p-sf .p-sf-head__blurb { max-width: 44rem; margin: 0.45rem 0 0; color: #475569; font-size: 0.95rem; line-height: 1.5; }
+.p-sf__body, .p-sf .p-pe-head__wrap { max-width: 52rem; }
+.p-sf-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.p-sf .p-sf-card__intro { margin: -0.5rem 0 1rem; color: #64748b; font-size: 0.875rem; line-height: 1.5; }
+
+.p-sf-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1rem; }
+.p-sf-field { margin-bottom: 1.25rem; }
+.p-sf-field:last-child { margin-bottom: 0; }
+.p-sf .p-sf-field__label { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin: 0 0 0.5rem; color: #0f172a; font-size: 0.95rem; font-weight: 700; }
+.p-sf-field__optional { flex-shrink: 0; color: #94a3b8; font-size: 0.8125rem; font-weight: 500; }
+.p-sf .p-sf-field__help { display: block; margin-top: 0.45rem; color: #64748b; font-size: 0.8125rem; line-height: 1.45; }
+
+/* Text fields: as in the side panel (light grey, orange when typing) */
+.p-sf-input { position: relative; }
+.p-sf-input__icon { position: absolute; top: 50%; left: 1rem; z-index: 1; color: #94a3b8; font-size: 0.85rem; transform: translateY(-50%); pointer-events: none; }
+.p-sf .p-sf-input__control { display: block; width: 100%; height: 3rem; padding: 0 1rem 0 2.6rem; border: 1px solid #e2e8f0; border-radius: 0.9rem; background: #f8fafc; color: #0f172a; font-size: 0.95rem; box-shadow: none; }
+.p-sf .p-sf-input__control::placeholder { color: #94a3b8; }
+.p-sf .p-sf-input__control:hover { border-color: #cbd5e1; }
+.p-sf .p-sf-input__control:focus { border-color: #f6a364; background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.12); }
+.p-sf-input:focus-within .p-sf-input__icon { color: #e8772e; }
+.p-sf-input.is-invalid .p-sf-input__control { border-color: #fca5a5; background: #fff; }
+
+/* Gender: pills with their sign */
+.p-sf-pills { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.p-sf .p-pill-option__label { gap: 0.55rem; min-height: 2.9rem; padding: 0.4rem 1.1rem 0.4rem 0.45rem; border: 1px solid #e2e8f0; background: #fff; color: #334155; font-size: 0.95rem; }
+.p-sf .p-pill-option__label:hover { border-color: #cbd5e1; background: #fff; }
+.p-sf .p-pill-option__input:checked + .p-pill-option__label { border-color: #f37000; background: #fff7ed; box-shadow: none; color: #9a3412; }
+.p-sf .p-pill-option__input:checked + .p-pill-option__label .p-pill-option__icon { background: #f37000; color: #fff; }
+.p-sf-gender--male { color: #3730a3; }
+.p-sf-gender--female { color: #9d174d; }
+
+/* Mother tongues: the chips picked, above the search */
+.p-sf-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.75rem; }
+.p-sf-chips[hidden] { display: none; }
+.p-sf-chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.35rem 0.3rem 0.85rem; border-radius: 999px; background: #0f172a; color: #fff; font-size: 0.875rem; font-weight: 600; }
+.p-sf-chip__remove { display: inline-flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; padding: 0; border: 0; border-radius: 999px; background: rgba(255, 255, 255, 0.15); color: #fff; font-size: 0.65rem; cursor: pointer; }
+.p-sf-chip__remove:hover { background: rgba(255, 255, 255, 0.3); }
+
+/* The town: the search of "Set location", then its map with the pin */
+.p-sf .p-location-search .o-input { height: 3rem; border-radius: 0.9rem; background: #f8fafc; }
+.p-sf .p-location-search .o-input:focus { background: #fff; }
+.p-sf-map { margin-bottom: 1.5rem; }
+.p-sf .p-sf-map .p-location-map { height: 16rem; }
+
+/* Can you host? and how keen (the steps of the window of the edit page, in the page) */
+.p-sf .p-sf-host { margin-bottom: 0; }
+.p-sf-host .p-pe-host__option { position: relative; margin: 0; }
+.p-sf-host__input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.p-sf-host .p-pe-host__option:focus-within { outline: 2px solid rgba(243, 112, 0, 0.35); outline-offset: 2px; }
+.p-sf-interest { margin-top: 1rem; padding: 1.1rem 1.15rem 1rem; border: 1px solid #eef2f6; border-radius: 1rem; background: #fff; }
+.p-sf-interest[hidden] { display: none; }
+.p-sf .p-sf-interest__question { margin: 0; color: #0f172a; font-size: 1rem; font-weight: 700; }
+
+/* Optional settings */
+.p-sf-settings { display: flex; flex-direction: column; gap: 0.6rem; }
+label.p-sf-setting { margin: 0; cursor: pointer; }
+.p-sf-setting .p-preference-card__title { display: block; }
+label.p-preference-card__title { margin: 0; }
+.p-sf-setting .p-preference-card__control { min-width: 0; }
+.p-sf-setting .p-preference-select { min-width: 13rem; }
+
+/* Send */
+.p-sf-actions { display: flex; justify-content: flex-end; }
+.p-sf .p-sf-actions__submit { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-width: 16rem; padding: 0.9rem 2rem; border: 0; border-radius: 999px; background: #f37000; color: #fff; font-size: 1rem; font-weight: 700; box-shadow: 0 6px 16px rgba(243, 112, 0, 0.25); cursor: pointer; }
+.p-sf .p-sf-actions__submit:hover { background: #d9661c; }
+
+/* Errors: always shown, in red */
+.p-sf .invalid-feedback { display: flex !important; flex-wrap: wrap; gap: 0.25rem; margin-top: 0.45rem; padding: 0.45rem 0.65rem; border-radius: 0.6rem; background: #fef2f2 !important; color: #b91c1c; font-size: 0.85rem; }
+.p-sf .invalid-feedback > span { height: auto; }
+.p-sf .alert-danger { margin: 0; border: 1px solid #fecaca; border-radius: 0.9rem; background: #fef2f2 !important; color: #b91c1c; }
+.p-sf .is-invalid .p-pe-host__option:not(.is-active), .p-sf .is-invalid > .p-sf-pills .p-pill-option__label { border-color: #fca5a5; }
+
+@media (max-width: 767.98px) {
+  .p-sf .p-pe-head__top { flex-wrap: nowrap; align-items: flex-start; }
+  .p-sf .p-pe-head__avatar { width: 4rem; height: 4rem; }
+  .p-sf .p-pe-head .p-pe-head__name { font-size: 1.5rem; }
+  .p-sf .p-sf-head__blurb { font-size: 0.875rem; }
+  .p-sf-grid { grid-template-columns: minmax(0, 1fr); }
+  .p-sf-pills { flex-direction: column; }
+  .p-sf .p-pill-option__label { justify-content: flex-start; width: 100%; min-height: 3.2rem; border-radius: 0.9rem; }
+  .p-sf .p-sf-map .p-location-map { height: 13rem; }
+  .p-sf-setting .p-preference-select { min-width: 0; }
+  .p-sf-actions { position: sticky; bottom: 0; z-index: 5; margin: 0 -0.75rem; padding: 0.75rem; background: linear-gradient(to top, #f4f4f5 70%, rgba(244, 244, 245, 0)); }
+  .p-sf .p-sf-actions__submit { width: 100%; min-width: 0; }
+}
+.p-sf-grid .p-sf-field:last-child { margin-bottom: 1.25rem; }
+@media (max-width: 720px) {
+  label.p-sf-setting { grid-template-columns: minmax(0, 1fr) auto; align-items: center; }
+  label.p-sf-setting .p-preference-card__control { width: auto; }
+  .p-sf .p-sf-host .p-pe-host__option { height: auto; min-height: 2.9rem; padding: 0.5rem 0.6rem; font-size: 0.85rem; line-height: 1.2; text-align: center; }
+}
+.p-sf .form-error-icon { display: none; }
+
+/* Side panel of an accommodation field, "Can you host?" not answered yet: asked first */
+.p-ped-hosting { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #fde3cc; border-radius: 1rem; background: #fff7ed; }
+.p-ped .p-ped-hosting__hint { margin: -0.25rem 0 0.75rem; color: #9a3412; font-size: 0.85rem; line-height: 1.45; }
+.p-ped-hosting .p-pe-host { margin-bottom: 0; }
+.p-sf-host .p-pe-host__option--yes:has(input:checked) { border-color: #4caf50; background: #e8f5e9; color: #2e7d32; }
+.p-sf-host .p-pe-host__option--no:has(input:checked) { border-color: #f1a7a7; background: #fef2f2; color: #b91c1c; }
+.p-ped-hosting__badge { flex-shrink: 0; padding: 0.15rem 0.6rem; border-radius: 999px; background: #fff; color: #c2410c; font-size: 0.75rem; font-weight: 700; }
+.p-ped-hosting { transition: border-color 0.15s ease, box-shadow 0.15s ease; }
+.p-ped-hosting.is-needed { border-color: #f37000; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.15); }
+.p-ped-hosting.is-needed .p-ped-hosting__badge { background: #f37000; color: #fff; }
+
+/* Edit page: a hosting detail clicked before "Can you host?" is answered */
+.p-pe-host-ask { display: flex; align-items: center; gap: 0.5rem; margin: -0.4rem 0 1rem; padding: 0.6rem 0.85rem; border-radius: 0.75rem; background: #fff7ed; color: #9a3412; font-size: 0.875rem; font-weight: 600; line-height: 1.4; }
+.p-pe-host-ask[hidden] { display: none; }
+.p-pe-host-ask i, .p-pe-host-ask svg { flex-shrink: 0; color: #e8772e; }
+.p-pe-host.is-needed .p-pe-host__option { border-color: #f37000; animation: p-pe-host-nudge 0.45s ease; }
+@keyframes p-pe-host-nudge { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }

@@ -755,7 +755,7 @@ class ProfileController extends AbstractController
                 'offers' => $member->getStandardOffers(),
                 'restrictions' => $member->getRestrictions(),
                 'offer_guests' => $translations[$language]['OfferGuests'] ?? '',
-                'additional_info' => $translations[$language]['AdditionalInfo'] ?? '',
+                'additional_info' => $translations[$language]['AdditionalAccommodationInfo'] ?? $translations[$language]['AdditionalInfo'] ?? '',
                 'transport' => $translations[$language]['PublicTransport'] ?? '',
                 'house_rules' => $translations[$language]['HouseRules'] ?? $translations[$language]['Restrictions'] ?? '',
                 'wheelchair_accessible' => $wheelchairAccessible,

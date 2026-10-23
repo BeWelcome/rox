@@ -19,7 +19,7 @@
 {% set whereYouSleep = profileTranslation['WhereYouSleep'] ?? '' %}
 {% set standardOffers = member.StandardOffers %}
 {% set offerGuests = profileTranslation['OfferGuests'] ?? '' %}
-{% set additionalInfo = profileTranslation['AdditionalAccommodationInfo'] ?? '' %}
+{% set additionalInfo = profileTranslation['AdditionalAccommodationInfo'] ?? profileTranslation['AdditionalInfo'] ?? '' %}
 {% set gettingThere = profileTranslation['GettingThere'] ?? '' %}
 {% set restrictions = member.Restrictions %}
 {% set houseRules = profileTranslation['HouseRules'] ?? '' %}

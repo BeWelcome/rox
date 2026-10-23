@@ -754,3 +754,15 @@ profile.edit.account.private:
 profile.edit.delete.translation:
     - 'Delete the {language} version of your profile'
     - Edit profile page, tooltip of the bin next to a profile language, e.g. "Delete the French version of your profile". Keep {language}
+profile.edit.hosting.first:
+    - 'You have not said yet if you can host. Answer it to save the text below.'
+    - Edit profile side panel of an accommodation field, when "Can you host?" was never answered (account not finished yet)
+profile.edit.hosting.answer:
+    - 'Answer "Can you host?" to save'
+    - Edit profile side panel, on the Save button while "Can you host?" is not answered
+profile.edit.required:
+    - 'Required'
+    - Edit profile side panel, next to the title of a choice that must be made to save
+profile.edit.hosting.ask:
+    - 'First say if you can host, just above: then you can fill in the details below.'
+    - Edit profile page, shown under "Can you host?" when a hosting detail is clicked before answering it

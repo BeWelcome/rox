@@ -111,7 +111,8 @@
       {# ── Accommodation ── #}
       {% set accommodationUrl = url('profile_edit_section', {username: member.username, language: profile_language, section: 'accommodation'}) ~ '?field=' %}
       {% set hosting = member.accommodation %}
-      <section class="p-pe-card js-pe-accommodation" data-accommodation="{{ hosting }}">
+      {# Guests and hosting interest only count once "Yes" is picked: greyed out until then #}
+      <section class="p-pe-card js-pe-accommodation{{ hosting != 'yes' ? ' is-not-hosting' }}" data-accommodation="{{ hosting }}">
         <div class="p-pe-card__head">
           <h2 class="p-pe-card__title">{{ 'profile.edit.accommodation.title'|trans }}</h2>
           {% if member.updated %}
@@ -128,6 +129,9 @@
             <i class="fas fa-times" aria-hidden="true"></i> {{ 'profile.edit.host.no'|trans }}
           </button>
         </div>
+        <p class="p-pe-host-ask js-pe-host-ask" role="alert" hidden>
+          <i class="fas fa-info-circle" aria-hidden="true"></i> {{ 'profile.edit.hosting.ask'|trans }}
+        </p>
 
         <div class="p-pe-tiles">
           <a href="{{ url('profile_set_location', {username: member.username}) }}" class="p-pe-tile p-pe-tile--location js-contact-open{{ hasAddress ? ' is-filled' : ' is-todo' }}"
@@ -209,7 +213,7 @@
           {{ edit.row('profile.offer.guests'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.offer.guests'|trans, offersText, accommodationUrl ~ 'offers', { icon: 'gift' }) }}
           {{ edit.row('profile.house.rules'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.house.rules'|trans, rulesText, accommodationUrl ~ 'rules', { icon: 'list-ul' }) }}
           {{ edit.row('profile.getting.there'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.getting.there'|trans, t['GettingThere'] ?? '', accommodationUrl ~ 'there', { icon: 'route' }) }}
-          {{ edit.row('profile.additional.information.for.guests'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.additional.info'|trans, t['AdditionalAccommodationInfo'] ?? '', accommodationUrl ~ 'info', { icon: 'info-circle' }) }}
+          {{ edit.row('profile.additional.information.for.guests'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.additional.info'|trans, t['AdditionalAccommodationInfo'] ?? t['AdditionalInfo'] ?? '', accommodationUrl ~ 'info', { icon: 'info-circle' }) }}
         </div>
       </section>
 

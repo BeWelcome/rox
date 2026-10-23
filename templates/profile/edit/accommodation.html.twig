@@ -46,8 +46,39 @@
   #}
   {% set only = app.request.query.get('field') %}
   {% set embedded = app.request.query.getBoolean('embed') %}
+  {#
+    "Can you host?" not answered yet (an account not finished): the form can't be saved
+    without it, so it is asked here first, above the field.
+  #}
+  {% set needsHosting = (embedded or only) and form.accommodation.vars.value not in ['yes', 'no'] %}
+  {% if needsHosting %}
+    <div class="p-ped-hosting{{ form.accommodation.vars.valid ? '' : ' has-ped-error' }}">
+      <div class="p-ped-label">
+        <span class="o-field-translation__label">{{ 'profile.edit.can.host'|trans }}</span>
+        <span class="p-ped-hosting__badge">{{ 'profile.edit.required'|trans }}</span>
+      </div>
+      <p class="p-ped-hosting__hint">{{ 'profile.edit.hosting.first'|trans }}</p>
+      <div class="p-pe-host p-sf-host" data-ped-required="{{ 'profile.edit.hosting.answer'|trans }}" role="radiogroup" aria-label="{{ 'profile.edit.can.host'|trans }}">
+        {% for value in ['yes', 'no'] %}
+          {% set child = form.accommodation|filter(item => item.vars.value == value)|first %}
+          <label class="p-pe-host__option p-pe-host__option--{{ value }}">
+            <input type="radio" class="p-sf-host__input" name="{{ child.vars.full_name }}" value="{{ value }}"{{ child.vars.checked ? ' checked' }} required>
+            <i class="fas fa-{{ value == 'yes' ? 'house-user' : 'times' }}" aria-hidden="true"></i> {{ ('profile.edit.host.' ~ value)|trans }}
+          </label>
+        {% endfor %}
+      </div>
+      {{ form_errors(form.accommodation) }}
+    </div>
+    {% do form.accommodation.setRendered %}
+  {% endif %}
   <div{{ embedded or only ? ' hidden' }}>
-    {% include 'profile/accommodation_widget.html.twig' %}
+    {% if needsHosting %}
+      {# Not picked: stays empty #}
+      <input type="hidden" name="{{ form.hosting_interest.vars.full_name }}" value="">
+      {% do form.hosting_interest.setRendered %}
+    {% else %}
+      {% include 'profile/accommodation_widget.html.twig' %}
+    {% endif %}
     {{ form_row(form.max_guests) }}
   </div>
 

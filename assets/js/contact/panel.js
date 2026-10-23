@@ -61,12 +61,15 @@ export function createContactPanel(panel, {from, onBack}) {
     }
 
     // The panel's page sends elsewhere (EmbedFrameListener, "bw-embed-leave"): that page
-    // opens in the window. On the edit page a saved section sends back to the profile:
-    // the edit page is loaded again instead, with what was just saved.
+    // opens in the window. On the edit page a saved section sends back to the profile or
+    // to the edit page: the edit page is shown again instead, with what was just saved.
+    // The edit page itself redraws in place (profile/edit.js, "bw-edit-saved").
     function leave(href) {
         const url = new URL(href, window.location.href);
-        if (from === 'edit' && !/\/edit(\/|$)/.test(url.pathname)) {
-            window.location.reload();
+        if (from === 'edit') {
+            const target = /\/edit(\/|$)/.test(url.pathname) ? url.toString() : window.location.href;
+            onBack('done');
+            window.dispatchEvent(new CustomEvent('bw-edit-saved', { detail: { url: target } }));
         } else {
             window.location.href = url.toString();
         }

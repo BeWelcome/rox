@@ -27,15 +27,27 @@ class ProfileNoteRepository extends EntityRepository
         int $order = 1,
         int $page = 1,
         int $itemsPerPage = 20,
+        ?string $search = null,
     ): Pagerfanta {
         $qb = $this->createQueryBuilder('n')
             ->where('n.owner = :member')
             ->setParameter('member', $member)
         ;
 
+        // A word to find in the member's username or in the note
+        $search = trim((string) $search);
+        if ('' !== $search) {
+            $qb
+                ->join('n.member', 'noted')
+                ->andWhere('noted.username LIKE :search OR n.comment LIKE :search')
+                ->setParameter('search', '%' . addcslashes($search, '%_') . '%')
+            ;
+        }
+
         if (!empty($categories)) {
             $qb
-                ->andWhere($qb->expr()->in('n.category', $categories))
+                ->andWhere('n.category IN (:categories)')
+                ->setParameter('categories', $categories)
             ;
         }
 
@@ -70,6 +82,32 @@ class ProfileNoteRepository extends EntityRepository
         ;
 
         return array_combine($categories, $categories);
+    }
+
+    /**
+     * The categories of the member's notes with the number of notes in each, by name.
+     *
+     * @return array<string, int>
+     */
+    public function getCategoryCounts(Member $member): array
+    {
+        $rows = $this->createQueryBuilder('n')
+            ->select('n.category AS category, COUNT(n.id) AS total')
+            ->where('n.owner = :member')
+            ->andWhere("n.category IS NOT NULL AND n.category <> ''")
+            ->setParameter('member', $member)
+            ->groupBy('n.category')
+            ->orderBy('n.category', 'ASC')
+            ->getQuery()
+            ->getArrayResult()
+        ;
+
+        $counts = [];
+        foreach ($rows as $row) {
+            $counts[$row['category']] = (int) $row['total'];
+        }
+
+        return $counts;
     }
 
     public function getNoteForMemberPair(Member $loggedInMember, Member $member): ?ProfileNote

@@ -41,7 +41,7 @@
     <div class="p-edit-subpage__actions">
         {% if editing %}
             {% set deleteText = 'profile.note.delete'|trans %}
-            <a class="p-note-form__delete" href="{{ path('delete_note', {username: member.username, embed: 1}) }}"
+            <a class="p-note-form__delete" href="{{ path('delete_note', {username: member.username, embed: 1, back: app.request.query.get('back')}) }}"
                title="{{ deleteText }}" aria-label="{{ deleteText }}"
                onclick="return confirm({{ 'profile.notes.delete'|trans|striptags|json_encode|e('html_attr') }});">
                 <i class="fas fa-trash-alt" aria-hidden="true"></i>

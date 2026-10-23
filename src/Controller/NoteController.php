@@ -178,6 +178,10 @@ class NoteController extends AbstractController
      */
     private function redirectAfterSave(Request $request, Member $loggedInMember, Member $member): Response
     {
+        // Opened from my notes: back to the list (the panel then reloads the page)
+        if ('notes' === $request->query->get('back')) {
+            return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
+        }
         if ($request->query->getBoolean('embed')) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
@@ -185,6 +189,10 @@ class NoteController extends AbstractController
         return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
     }
 
+    /**
+     * My notes: one pill per category (with its count) to filter, a search on the member's
+     * username or the note, then the notes as cards (edit in the side panel, delete).
+     */
     #[Route(path: '/members/{username:member}/notes/{page}', name: 'notes')]
     public function notes(Request $request, Member $member, ProfileSubmenu $profileSubmenu, int $page = 1): Response
     {
@@ -194,36 +202,32 @@ class NoteController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        $order = ProfileNoteFilterType::ORDER_UPDATED;
-        $categories = [];
         /** @var ProfileNoteRepository $noteRepository */
         $noteRepository = $this->entityManager->getRepository(ProfileNote::class);
-        $selectableCategories = $noteRepository->getCategories($loggedInMember);
+        $categoryCounts = $noteRepository->getCategoryCounts($loggedInMember);
 
-        $filterForm = $this->createForm(
-            ProfileNoteFilterType::class,
-            [
-                'choices' => $categories,
-                'order' => $order,
-            ],
-            [
-                'categories' => $selectableCategories,
-            ]
-        );
-        $filterForm->handleRequest($request);
-
-        if ($filterForm->isSubmitted() && $filterForm->isValid()) {
-            $data = $filterForm->getData();
-            $categories = $data['categories'];
-            $order = (int) $data['order'];
+        $category = (string) $request->query->get('category', '');
+        if (!isset($categoryCounts[$category])) {
+            $category = '';
         }
-        $notes = $noteRepository->getProfileNotes($member, $categories, $order, $page, $this->getItemsPerPage($member));
+        $search = trim((string) $request->query->get('q', ''));
+
+        $notes = $noteRepository->getProfileNotes(
+            $member,
+            '' === $category ? [] : [$category],
+            ProfileNoteFilterType::ORDER_UPDATED,
+            $page,
+            $this->getItemsPerPage($member),
+            $search
+        );
 
         return $this->render('note/notes.html.twig', [
             'member' => $member,
-            'form' => $filterForm->createView(),
             'notes' => $notes,
-            'filtered' => !empty($categories),
+            'notes_total' => $noteRepository->getProfileNotesCount($loggedInMember),
+            'category_counts' => $categoryCounts,
+            'category' => $category,
+            'search' => $search,
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
             'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'notes']),
         ]);

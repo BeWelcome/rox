@@ -85,3 +85,18 @@ profile.note.save.new:
 profile.note.read.more:
     - 'Read more'
     - Profile page, link under a long private note, opens it in full in the side panel
+profile.note.read.less:
+    - 'Show less'
+    - My notes page, link under a note shown in full, cuts it again
+profile.notes.mine:
+    - 'My notes'
+    - My notes page, title above the notes you took about other members
+profile.notes.only.you:
+    - 'Only you can see your notes'
+    - My notes page, line under the title
+profile.notes.search:
+    - 'Search a member or a note'
+    - My notes page, placeholder of the search field (a username or words of a note)
+profile.notes.none.found:
+    - 'No note matches.'
+    - My notes page, shown when the search or the category finds no note

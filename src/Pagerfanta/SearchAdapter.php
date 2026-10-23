@@ -3,6 +3,7 @@
 namespace App\Pagerfanta;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
+use App\Doctrine\CommentQualityType;
 use App\Dto\MemberSearchResult;
 use App\Entity\Location;
 use App\Entity\Member;
@@ -92,17 +93,27 @@ class SearchAdapter implements AdapterInterface
                 ->from('App\Entity\Comment', 'commentCountTable')
                 ->where('commentCountTable.toMember = m.id');
 
+            // The comments by quality too, for the positive / neutral / negative pill of the card
+            $qualityCount = fn (string $quality): string => $this->entityManager->createQueryBuilder()
+                ->select('COUNT(cq' . $quality . '.id)')
+                ->from('App\Entity\Comment', 'cq' . $quality)
+                ->where('cq' . $quality . '.toMember = m.id AND cq' . $quality . ".quality = '" . $quality . "'")
+                ->getDQL();
+
             $qb->select(
                 \sprintf(
-                    'NEW %s(m, (%s), (%s), (%s))',
+                    'NEW %s(m, (%s), (%s), (%s), (%s), (%s), (%s))',
                     MemberSearchResult::class,
                     $senderCountQueryBuilder->getDQL(),
                     $receiverCountQueryBuilder->getDQL(),
-                    $commentCountQueryBuilder->getDQL()
+                    $commentCountQueryBuilder->getDQL(),
+                    $qualityCount(CommentQualityType::POSITIVE),
+                    $qualityCount(CommentQualityType::NEUTRAL),
+                    $qualityCount(CommentQualityType::NEGATIVE)
                 )
             )->setParameter('currentUserId', $this->currentUser->getId());
         } else {
-            $qb->select(\sprintf('NEW %s(m, 0, 0, 0)', MemberSearchResult::class));
+            $qb->select(\sprintf('NEW %s(m, 0, 0, 0, 0, 0, 0)', MemberSearchResult::class));
         }
 
         // Re-apply sorting to the second query to ensure the order is preserved

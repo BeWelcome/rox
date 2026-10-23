@@ -1,9 +1,9 @@
 {#
   My private note about the member, as a yellow sticky note (only I see it). Shown at the top
   of the right column, and on phones and tablets under the head (where: 'side' or 'top').
-  It opens in the side panel (note/note.form.html.twig). No note yet: a dashed block to add one.
+  It opens in the side panel (note/note.form.html.twig). No note yet: nothing here, it is
+  added from the "…" menu of the head.
 #}
-{% set _noteItems = submenu.items ?? [] %}
 {% set _noteTitle = 'profile.note.about'|trans({'username': member.username})|striptags %}
 {% if note is defined and note %}
   <section class="p-pro-note p-pro-note--{{ where }}">
@@ -24,13 +24,4 @@
       <i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.note.edit'|trans }}
     </a>
   </section>
-{% elseif _noteItems.add_note is defined %}
-  <a class="p-pro-note-add p-pro-note--{{ where }} js-contact-open" href="{{ _noteItems.add_note.url }}" data-title="{{ _noteTitle }}">
-    <span class="p-pro-note-add__icon" aria-hidden="true"><span class="p-pro-note__mark"></span></span>
-    <span class="p-pro-note-add__text">
-      <strong>{{ 'profile.note.private'|trans }}</strong>
-      <span>{{ 'profile.note.add.hint'|trans }}</span>
-    </span>
-    <i class="fas fa-plus p-pro-note-add__plus" aria-hidden="true"></i>
-  </a>
 {% endif %}

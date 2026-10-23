@@ -31,7 +31,7 @@
             {% for filter in filters %}
               {% set active = type == filter.type %}
               {% set filterUrl = filter.type == 'all' ? url('profile_comments', {username: member.username}) : url('profile_comments', {username: member.username, type: filter.type}) %}
-              {% set classes = 'p-pro-filter__item' ~ (filter.type != 'all' ? ' p-pro-filter__item--' ~ filter.type : '') ~ (active ? ' is-active' : '') %}
+              {% set classes = 'p-pro-filter__item' ~ (filter.type != 'all' ? ' p-pro-filter__item--' ~ filter.type : ' is-all') ~ (active ? ' is-active' : '') %}
               {% if filter.count > 0 %}
                 <a href="{{ filterUrl }}" class="{{ classes }}"{% if active %} aria-current="page"{% endif %}>
               {% else %}

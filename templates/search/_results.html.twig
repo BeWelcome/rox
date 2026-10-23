@@ -74,8 +74,22 @@
             </div>
 
             {# Comments: a small pill at the top right on phones, a line at the bottom on larger screens. #}
-            <span class="p-search-card__comments-pill{% if commentCount %} has-comments{% endif %}">
-                <i class="{{ commentCount ? 'fas' : 'far' }} fa-comment" aria-hidden="true"></i> {{ commentCount }}
+            {# With comments: the count of each quality (only the non-zero ones), as on the profile tab. #}
+            {% set byQuality = { positive: result.positiveCount ?? 0, neutral: result.neutralCount ?? 0, negative: result.negativeCount ?? 0 } %}
+            {% set hasQualities = commentCount and (byQuality.positive + byQuality.neutral + byQuality.negative) > 0 %}
+            <span class="p-search-card__comments-pill{% if commentCount %} has-comments{% endif %}{% if hasQualities %} has-qualities{% endif %}">
+                {% if hasQualities %}
+                    {% for quality, icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
+                        {% if byQuality[quality] %}
+                            <span class="p-search-card__quality p-search-card__quality--{{ quality }}">
+                                <i class="fas fa-{{ icon }}" aria-hidden="true"></i> {{ byQuality[quality] }}
+                                <span class="visually-hidden">{{ ('comment.quality.' ~ quality)|trans|striptags }}</span>
+                            </span>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <i class="fas fa-comments" aria-hidden="true"></i> {{ commentCount }}
+                {% endif %}
                 <span class="visually-hidden">{{ 'search.preview.comments'|trans({ count: commentCount }) }}</span>
             </span>
 

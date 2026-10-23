@@ -76,22 +76,21 @@
                 <span>{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</span>
             </div>
         {% endif %}
-        {% if commentsTotal %}
-            <div class="p-search-preview__comments has-comments">
-                <span class="p-search-preview__comments-icon"><i class="fas fa-comment" aria-hidden="true"></i></span>
-                <span class="p-search-preview__comments-text">{{ commentsTotal }} {{ 'search.preview.comments'|trans({ count: commentsTotal }) }}</span>
-                <span class="p-search-preview__comments-split">
-                    {% if comments_count.positive %}<span class="is-positive"><i class="fas fa-thumbs-up" aria-hidden="true"></i> {{ comments_count.positive }}<span class="visually-hidden"> {{ 'comment.quality.positive'|trans|striptags }}</span></span>{% endif %}
-                    {% if comments_count.neutral %}<span class="is-neutral"><i class="fas fa-minus" aria-hidden="true"></i> {{ comments_count.neutral }}<span class="visually-hidden"> {{ 'comment.quality.neutral'|trans|striptags }}</span></span>{% endif %}
-                    {% if comments_count.negative %}<span class="is-negative"><i class="fas fa-thumbs-down" aria-hidden="true"></i> {{ comments_count.negative }}<span class="visually-hidden"> {{ 'comment.quality.negative'|trans|striptags }}</span></span>{% endif %}
-                </span>
-            </div>
-        {% else %}
-            <div class="p-search-preview__comments">
-                <span class="p-search-preview__comments-icon"><i class="fas fa-comment" aria-hidden="true"></i></span>
-                <span class="p-search-preview__comments-text">{{ 'profile.no.comments'|trans|striptags }}</span>
-            </div>
-        {% endif %}
+        {# The comments: the count of each quality, as on the cards of the list #}
+        <div class="p-search-preview__quality{% if commentsTotal %} has-comments{% endif %}">
+            {% for quality, icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
+                {% if comments_count[quality] ?? 0 %}
+                    <span class="p-search-card__quality p-search-card__quality--{{ quality }}">
+                        <i class="fas fa-{{ icon }}" aria-hidden="true"></i> {{ comments_count[quality] }}
+                        <span class="visually-hidden">{{ ('comment.quality.' ~ quality)|trans|striptags }}</span>
+                    </span>
+                {% endif %}
+            {% endfor %}
+            {% if not commentsTotal %}
+                <span class="p-search-preview__quality-none"><i class="fas fa-comments" aria-hidden="true"></i> 0</span>
+            {% endif %}
+            <span class="visually-hidden">{{ commentsTotal }} {{ 'search.preview.comments'|trans({ count: commentsTotal }) }}</span>
+        </div>
     </div>
 
     {% if app.user != member and member.status != 'PassedAway' %}

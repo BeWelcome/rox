@@ -407,12 +407,10 @@ Map.prototype.focusMember = function (username) {
         if (element) {
             element.classList.add('is-focused');
         }
-        const box = this.map.getContainer().getBoundingClientRect();
-        const drawer = document.querySelector('.js-search-preview.is-open');
-        // The drawer may still be sliding in: its width, not where it is now
-        const covered = drawer && !phone.matches ? Math.max(0, box.right - (window.innerWidth - drawer.offsetWidth)) : 0;
+        // In the middle of the map, whatever the drawer covers
+        const size = this.map.getSize();
         const point = this.map.latLngToContainerPoint(marker.getLatLng());
-        this.map.panBy([point.x - (box.width - covered) / 2, point.y - box.height / 2]);
+        this.map.panBy([point.x - size.x / 2, point.y - size.y / 2]);
     });
 };
 

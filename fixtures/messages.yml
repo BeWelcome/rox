@@ -1,0 +1,309 @@
+# Messages, hosting requests and invitations.
+#
+# Read messages have a firstRead date, unread ones have firstRead null.
+# Spam messages live in the 'Spam' folder:
+#   - SpamSayMember + ToCheck: reported by the receiver, waiting in the checker queue
+#   - SpamBlkWord + ToCheck:   caught by the blocked word filter
+#   - SpamSayChecker + Checked: confirmed by a checker
+# Requests are messages with a HostingRequest. Invitations are requests whose
+# HostingRequest points to a trip leg (inviteForLeg), sent by the host to the traveller.
+#
+# created is the date the message was sent. App\Processor\Fixtures\MessageProcessor writes it
+# back after loading, because Message::onPrePersist sets it to now.
+
+App\Entity\Subject:
+    subject_conversation_1:
+        subject: 'Hello from Berlin'
+    subject_conversation_2:
+        subject: '<sentence(4)>'
+    subject_conversation_3:
+        subject: '<sentence(4)>'
+    subject_conversation_4:
+        subject: '<sentence(4)>'
+    subject_conversation_5:
+        subject: 'Meeting up next weekend?'
+    subject_spam_1:
+        subject: 'You won a free trip!!!'
+    subject_spam_2:
+        subject: 'Cheap watches'
+    subject_spam_3:
+        subject: 'Investment opportunity'
+    subject_request_open:
+        subject: 'Can I stay with you?'
+    subject_request_accepted:
+        subject: 'Request for a couch'
+    subject_request_declined:
+        subject: 'Hosting request'
+    subject_request_tentative:
+        subject: 'Two nights in your city'
+    subject_request_cancelled:
+        subject: 'Visit in spring'
+    subject_invitation_open:
+        subject: 'Welcome to Berlin'
+    subject_invitation_accepted:
+        subject: 'You can stay with me'
+    subject_invitation_declined:
+        subject: 'Invitation to Jayapura'
+
+App\Entity\HostingRequest:
+    request_open:
+        arrival: <dateTimeBetween('+5 days', '+5 days')>
+        departure: <dateTimeBetween('+8 days', '+8 days')>
+        flexible: true
+        numberOfTravellers: 1
+        status: 0
+    request_accepted:
+        arrival: <dateTimeBetween('+12 days', '+12 days')>
+        departure: <dateTimeBetween('+15 days', '+15 days')>
+        flexible: false
+        numberOfTravellers: 2
+        status: 8
+    request_declined:
+        arrival: <dateTimeBetween('+3 days', '+3 days')>
+        departure: <dateTimeBetween('+4 days', '+4 days')>
+        flexible: false
+        numberOfTravellers: 1
+        status: 2
+    request_tentative:
+        arrival: <dateTimeBetween('+20 days', '+20 days')>
+        departure: <dateTimeBetween('+22 days', '+22 days')>
+        flexible: true
+        numberOfTravellers: 3
+        status: 4
+    request_cancelled:
+        arrival: <dateTimeBetween('+40 days', '+40 days')>
+        departure: <dateTimeBetween('+45 days', '+45 days')>
+        flexible: false
+        numberOfTravellers: 1
+        status: 1
+    invitation_open:
+        arrival: <dateTimeBetween('+10 days', '+10 days')>
+        departure: <dateTimeBetween('+14 days', '+14 days')>
+        numberOfTravellers: 2
+        status: 0
+        inviteForLeg: '@leg_member_2_berlin'
+    invitation_accepted:
+        arrival: <dateTimeBetween('+30 days', '+30 days')>
+        departure: <dateTimeBetween('+37 days', '+37 days')>
+        numberOfTravellers: 1
+        status: 8
+        inviteForLeg: '@leg_member_3_berlin'
+    invitation_declined:
+        arrival: <dateTimeBetween('+20 days', '+20 days')>
+        departure: <dateTimeBetween('+27 days', '+27 days')>
+        numberOfTravellers: 2
+        status: 2
+        inviteForLeg: '@leg_member_2_jayapura'
+
+App\Entity\Message:
+    message_base (template):
+        message: '<paragraph(2)>'
+        status: 'Sent'
+        folder: 'Normal'
+        spamInfo: 'NotSpam'
+        deleteRequest: ''
+        checkerComment: null
+
+    # Conversation between member-1 and member-2, last reply unread
+    message_conversation_1_1 (extends message_base):
+        sender: '@member_1'
+        receiver: '@member_2'
+        initiator: '@member_1'
+        subject: '@subject_conversation_1'
+        created: <dateTimeBetween('-12 days', '-12 days')>
+        firstRead: <dateTimeBetween('-11 days', '-11 days')>
+    message_conversation_1_2 (extends message_base):
+        sender: '@member_2'
+        receiver: '@member_1'
+        initiator: '@member_1'
+        parent: '@message_conversation_1_1'
+        subject: '@subject_conversation_1'
+        created: <dateTimeBetween('-11 days', '-11 days')>
+        firstRead: <dateTimeBetween('-10 days', '-10 days')>
+    message_conversation_1_3 (extends message_base):
+        sender: '@member_1'
+        receiver: '@member_2'
+        initiator: '@member_1'
+        parent: '@message_conversation_1_2'
+        subject: '@subject_conversation_1'
+        created: <dateTimeBetween('-2 days', '-2 days')>
+        firstRead: null
+
+    # Single messages
+    message_conversation_2 (extends message_base):
+        sender: '@member_3'
+        receiver: '@member_1'
+        initiator: '@member_3'
+        subject: '@subject_conversation_2'
+        created: <dateTimeBetween('-1 days', '-1 days')>
+        firstRead: null
+    message_conversation_3 (extends message_base):
+        sender: '@member_6'
+        receiver: '@member_1'
+        initiator: '@member_6'
+        subject: '@subject_conversation_3'
+        created: <dateTimeBetween('-20 days', '-20 days')>
+        firstRead: <dateTimeBetween('-19 days', '-19 days')>
+    message_conversation_4 (extends message_base):
+        sender: '@member_4'
+        receiver: '@member_2'
+        initiator: '@member_4'
+        subject: '@subject_conversation_4'
+        created: <dateTimeBetween('-3 days', '-3 days')>
+        firstRead: null
+    message_conversation_5 (extends message_base):
+        sender: '@member_5'
+        receiver: '@member_6'
+        initiator: '@member_5'
+        subject: '@subject_conversation_5'
+        created: <dateTimeBetween('-15 days', '-15 days')>
+        firstRead: <dateTimeBetween('-14 days', '-14 days')>
+
+    # Spam
+    message_spam_member (extends message_base):
+        sender: '@member_7'
+        receiver: '@member_1'
+        initiator: '@member_7'
+        subject: '@subject_spam_1'
+        message: 'Click this link to claim your prize: http://example.com/prize'
+        folder: 'Spam'
+        status: 'ToCheck'
+        spamInfo: 'SpamSayMember'
+        created: <dateTimeBetween('-6 days', '-6 days')>
+        firstRead: <dateTimeBetween('-5 days', '-5 days')>
+    message_spam_blocked_word (extends message_base):
+        sender: '@member_8'
+        receiver: '@member_2'
+        initiator: '@member_8'
+        subject: '@subject_spam_2'
+        message: 'Buy cheap watches now!'
+        folder: 'Spam'
+        status: 'ToCheck'
+        spamInfo: 'SpamBlkWord'
+        created: <dateTimeBetween('-4 days', '-4 days')>
+        firstRead: null
+    message_spam_checker (extends message_base):
+        sender: '@member_9'
+        receiver: '@member_3'
+        initiator: '@member_9'
+        subject: '@subject_spam_3'
+        message: 'Send me money and I will double it.'
+        folder: 'Spam'
+        status: 'Checked'
+        spamInfo: 'SpamSayChecker'
+        checkerComment: 'Confirmed spam.'
+        created: <dateTimeBetween('-8 days', '-8 days')>
+        firstRead: null
+
+    # Hosting requests (guest -> host)
+    message_request_open (extends message_base):
+        sender: '@member_2'
+        receiver: '@member_1'
+        initiator: '@member_2'
+        subject: '@subject_request_open'
+        request: '@request_open'
+        created: <dateTimeBetween('-1 days', '-1 days')>
+        firstRead: null
+    message_request_accepted (extends message_base):
+        sender: '@member_3'
+        receiver: '@member_1'
+        initiator: '@member_3'
+        subject: '@subject_request_accepted'
+        request: '@request_accepted'
+        created: <dateTimeBetween('-9 days', '-9 days')>
+        firstRead: <dateTimeBetween('-8 days', '-8 days')>
+    message_request_accepted_reply (extends message_base):
+        sender: '@member_1'
+        receiver: '@member_3'
+        initiator: '@member_3'
+        parent: '@message_request_accepted'
+        subject: '@subject_request_accepted'
+        request: '@request_accepted'
+        created: <dateTimeBetween('-8 days', '-8 days')>
+        firstRead: <dateTimeBetween('-7 days', '-7 days')>
+    message_request_declined (extends message_base):
+        sender: '@member_4'
+        receiver: '@member_5'
+        initiator: '@member_4'
+        subject: '@subject_request_declined'
+        request: '@request_declined'
+        created: <dateTimeBetween('-14 days', '-14 days')>
+        firstRead: <dateTimeBetween('-13 days', '-13 days')>
+    message_request_declined_reply (extends message_base):
+        sender: '@member_5'
+        receiver: '@member_4'
+        initiator: '@member_4'
+        parent: '@message_request_declined'
+        subject: '@subject_request_declined'
+        request: '@request_declined'
+        created: <dateTimeBetween('-13 days', '-13 days')>
+        firstRead: <dateTimeBetween('-12 days', '-12 days')>
+    message_request_tentative (extends message_base):
+        sender: '@member_6'
+        receiver: '@member_2'
+        initiator: '@member_6'
+        subject: '@subject_request_tentative'
+        request: '@request_tentative'
+        created: <dateTimeBetween('-5 days', '-5 days')>
+        firstRead: <dateTimeBetween('-4 days', '-4 days')>
+    message_request_tentative_reply (extends message_base):
+        sender: '@member_2'
+        receiver: '@member_6'
+        initiator: '@member_6'
+        parent: '@message_request_tentative'
+        subject: '@subject_request_tentative'
+        request: '@request_tentative'
+        created: <dateTimeBetween('-4 days', '-4 days')>
+        firstRead: null
+    message_request_cancelled (extends message_base):
+        sender: '@member_7'
+        receiver: '@member_3'
+        initiator: '@member_7'
+        subject: '@subject_request_cancelled'
+        request: '@request_cancelled'
+        created: <dateTimeBetween('-25 days', '-25 days')>
+        firstRead: <dateTimeBetween('-24 days', '-24 days')>
+
+    # Invitations (host -> traveller, for a trip leg)
+    message_invitation_open (extends message_base):
+        sender: '@member_1'
+        receiver: '@member_2'
+        initiator: '@member_1'
+        subject: '@subject_invitation_open'
+        request: '@invitation_open'
+        created: <dateTimeBetween('-2 days', '-2 days')>
+        firstRead: null
+    message_invitation_accepted (extends message_base):
+        sender: '@member_4'
+        receiver: '@member_3'
+        initiator: '@member_4'
+        subject: '@subject_invitation_accepted'
+        request: '@invitation_accepted'
+        created: <dateTimeBetween('-7 days', '-7 days')>
+        firstRead: <dateTimeBetween('-6 days', '-6 days')>
+    message_invitation_accepted_reply (extends message_base):
+        sender: '@member_3'
+        receiver: '@member_4'
+        initiator: '@member_4'
+        parent: '@message_invitation_accepted'
+        subject: '@subject_invitation_accepted'
+        request: '@invitation_accepted'
+        created: <dateTimeBetween('-6 days', '-6 days')>
+        firstRead: null
+    message_invitation_declined (extends message_base):
+        sender: '@member_5'
+        receiver: '@member_2'
+        initiator: '@member_5'
+        subject: '@subject_invitation_declined'
+        request: '@invitation_declined'
+        created: <dateTimeBetween('-10 days', '-10 days')>
+        firstRead: <dateTimeBetween('-9 days', '-9 days')>
+    message_invitation_declined_reply (extends message_base):
+        sender: '@member_2'
+        receiver: '@member_5'
+        initiator: '@member_5'
+        parent: '@message_invitation_declined'
+        subject: '@subject_invitation_declined'
+        request: '@invitation_declined'
+        created: <dateTimeBetween('-9 days', '-9 days')>
+        firstRead: <dateTimeBetween('-8 days', '-8 days')>

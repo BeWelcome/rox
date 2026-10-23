@@ -1,0 +1,36 @@
+App\Entity\Trip:
+    trip_member_2:
+        summary: 'Exploring Berlin and Papua'
+        description: '<paragraph(2)>'
+        countOfTravellers: 2
+        invitationRadius: 20
+        additionalInfo: 'couple'
+        creator: '@member_2'
+    trip_member_3:
+        summary: 'A week in Berlin'
+        description: '<paragraph(2)>'
+        countOfTravellers: 1
+        invitationRadius: 50
+        additionalInfo: 'single'
+        creator: '@member_3'
+
+App\Entity\Subtrip:
+    leg_member_2_berlin:
+        trip: '@trip_member_2'
+        location: '@NewBerlin'
+        arrival: <dateTimeBetween('+10 days', '+10 days')>
+        departure: <dateTimeBetween('+14 days', '+14 days')>
+        options: ['LookingForHosts']
+    leg_member_2_jayapura:
+        trip: '@trip_member_2'
+        location: '@NewJayapura'
+        arrival: <dateTimeBetween('+20 days', '+20 days')>
+        departure: <dateTimeBetween('+27 days', '+27 days')>
+        options: ['LookingForHosts', 'MeetLocals']
+    leg_member_3_berlin:
+        trip: '@trip_member_3'
+        location: '@NewBerlin'
+        arrival: <dateTimeBetween('+30 days', '+30 days')>
+        departure: <dateTimeBetween('+37 days', '+37 days')>
+        options: ['LookingForHosts']
+        invitedBy: '@member_4'

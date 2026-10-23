@@ -20,8 +20,20 @@ if (form) {
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
 
+    // One language at "Native" (the mother tongue) is needed: the hidden box of the hint is
+    // ticked once a card is at Native, so the side panel's Save waits for it
+    const nativeFlag = form.querySelector('.js-lang-native-flag');
+    const checkNative = () => {
+        if (nativeFlag) {
+            nativeFlag.checked = form.querySelector('.p-lang-level__input[value="mother.tongue"]:checked') !== null;
+        }
+    };
+
     // The form changed (Save of the side panel stays pale until then)
-    const changed = () => form.dispatchEvent(new Event('change', { bubbles: true }));
+    const changed = () => {
+        checkNative();
+        form.dispatchEvent(new Event('change', { bubbles: true }));
+    };
 
     const added = () => new Set(Array.from(list.querySelectorAll('.js-lang-card')).map((card) => card.dataset.language));
 
@@ -69,6 +81,7 @@ if (form) {
         const card = event.target.closest('.js-lang-card');
         if (card) {
             showLevel(card);
+            checkNative();
         }
     });
     list.addEventListener('click', (event) => {
@@ -147,4 +160,5 @@ if (form) {
 
     list.querySelectorAll('.js-lang-card').forEach(showLevel);
     refreshShortcuts();
+    checkNative();
 }

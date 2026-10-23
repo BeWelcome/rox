@@ -778,3 +778,9 @@ profile.language.delete.blurb:
 profile.language.delete.confirm:
     - 'Delete'
     - Edit profile page, button of the window that deletes a language of the profile
+profile.edit.languages.native.hint:
+    - 'Set at least one language to Native, your mother tongue. Then you can add the others.'
+    - Side panel of the spoken languages, shown while no language is at the Native level
+profile.edit.languages.native.needed:
+    - 'Pick your mother tongue'
+    - Side panel of the spoken languages, text of the pale Save button while no language is at Native

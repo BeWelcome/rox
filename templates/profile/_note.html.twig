@@ -11,7 +11,8 @@
       <h2 class="p-pro-note__title"><span class="p-pro-note__mark" aria-hidden="true"></span> {{ 'profile.note.mine'|trans }}</h2>
       <span class="p-pro-note__private"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'profile.note.only.you.short'|trans }}</span>
     </div>
-    <div class="p-pro-note__text">{{ note.comment|purify }}</div>
+    <div class="p-pro-note__text js-note-clamp">{{ note.comment|purify }}</div>
+    <a class="p-pro-note__more js-note-more js-contact-open" href="{{ path('view_note', {username: member.username}) }}" data-title="{{ _noteTitle }}" hidden>{{ 'profile.note.read.more'|trans }}</a>
     <div class="p-pro-note__foot">
       {% if note.category %}<span class="p-pro-note__category">{{ note.category }}</span>{% endif %}
       {% set _noteDate = note.updated ?: note.created %}
@@ -20,8 +21,16 @@
         <i class="fas fa-pen" aria-hidden="true"></i> {{ 'note.edit'|trans }}
       </a>
     </div>
-    <a class="p-pro-note__edit js-contact-open" href="{{ path('edit_note', {username: member.username}) }}" data-title="{{ _noteTitle }}">
-      <i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.note.edit'|trans }}
-    </a>
   </section>
+  {# A long note (or one with pictures) is cut: "Read more" opens it in full in the side panel #}
+  <script>
+    document.querySelectorAll('.p-pro-note--{{ where }} .js-note-clamp').forEach(function (text) {
+      var more = text.parentNode.querySelector('.js-note-more');
+      var check = function () { more.hidden = text.scrollHeight <= text.clientHeight + 4; };
+      text.querySelectorAll('img').forEach(function (img) { img.addEventListener('load', check); });
+      check();
+      window.addEventListener('load', check);
+      window.addEventListener('resize', check);
+    });
+  </script>
 {% endif %}

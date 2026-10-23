@@ -80,6 +80,35 @@ class NoteController extends AbstractController
         ]);
     }
 
+    /**
+     * My note about the member, in full (side panel of the profile, ?embed=1), with a button
+     * to edit it. Without the panel, the profile (where the note is shown).
+     */
+    #[Route(path: '/members/{username:member}/note', name: 'view_note', priority: 11)]
+    public function view(Request $request, Member $member): Response
+    {
+        /** @var Member $loggedInMember */
+        $loggedInMember = $this->getUser();
+        if ($member === $loggedInMember) {
+            return $this->redirectToRoute('members_profile', ['username' => $loggedInMember->getUsername()]);
+        }
+
+        /** @var ProfileNoteRepository $noteRepository */
+        $noteRepository = $this->entityManager->getRepository(ProfileNote::class);
+        $note = $noteRepository->getNoteForMemberPair($loggedInMember, $member);
+        if (null === $note) {
+            return $this->redirectToRoute('add_note', ['username' => $member->getUsername()] + ($request->query->getBoolean('embed') ? ['embed' => 1] : []));
+        }
+        if (!$request->query->getBoolean('embed')) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
+        return $this->render('note/view.html.twig', [
+            'note' => $note,
+            'member' => $member,
+        ]);
+    }
+
     #[Route(path: '/members/{username:member}/note/edit', name: 'edit_note')]
     public function edit(Request $request, Member $member, ProfileSubmenu $profileSubmenu): Response
     {

@@ -82,3 +82,6 @@ profile.note.save:
 profile.note.save.new:
     - 'Save note'
     - Side panel of a private note, button to save a new note
+profile.note.read.more:
+    - 'Read more'
+    - Profile page, link under a long private note, opens it in full in the side panel

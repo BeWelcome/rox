@@ -10949,3 +10949,26 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-quality-pill__item--positive { background: #e3f7e8; color: #2f7a43; }
 .p-quality-pill__item--neutral { background: #f1f5f9; color: #64748b; }
 .p-quality-pill__item--negative { background: #fee2e2; color: #b91c1c; }
+
+/* Private note: pictures inside the note, a long note cut with "Read more", the foot on one line */
+.p-pro-note__text img { max-width: 100%; height: auto; border-radius: 0.5rem; }
+.p-pro-note__text.js-note-clamp { position: relative; max-height: 14rem; overflow: hidden; }
+.p-pro-note__text.js-note-clamp::after { content: ''; position: absolute; right: 0; bottom: 0; left: 0; height: 3rem; background: linear-gradient(rgba(255, 251, 234, 0), #fffbea); pointer-events: none; }
+.p-pro-note__more,
+.p-pro-note__more:hover { display: inline-block; margin-top: 0.4rem; color: #6b4410; font-size: 0.875rem; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+/* The note in full, in the side panel */
+.p-note-view { padding: 1.1rem 1.25rem; border-radius: 0.35rem 1.25rem 0.35rem 0.35rem; background: #fffbea; }
+.p-pro-note__more[hidden] { display: none; }
+.p-pro-note__foot { flex-wrap: nowrap; }
+.p-pro-note__category { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.p-pro-note__date { white-space: nowrap; }
+.p-pro-note__edit-link,
+.p-pro-note__edit-link:hover { display: inline-flex; flex-shrink: 0; margin-left: 0.75rem; padding: 0.3rem 0.75rem; border: 1px solid #efdca6; border-radius: 999px; background: #fff; white-space: nowrap; }
+.p-pro-note__edit-link:hover { border-color: #d6a532; }
+.p-pro-note__date + .p-pro-note__edit-link { margin-left: 0.75rem; }
+.p-pro-note__foot > :first-child.p-pro-note__date,
+.p-pro-note__foot > .p-pro-note__date { margin-left: auto; }
+.p-pro-note__foot:not(:has(.p-pro-note__date)) .p-pro-note__edit-link { margin-left: auto; }
+@media (max-width: 767.98px) {
+  .p-pro-note__foot .p-pro-note__date { display: inline; }
+}

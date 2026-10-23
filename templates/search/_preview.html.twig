@@ -102,7 +102,9 @@
                     <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
                 </a>
             {% endif %}
-            <a class="p-search-preview__btn js-search-contact-open" href="{{ url('message_new', { username: member.username }) }}"
+            {# An existing conversation opens in the panel instead of a new message #}
+            {% set existingConversation = app.user ? conversation_with(member) : null %}
+            <a class="p-search-preview__btn js-search-contact-open" href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', { username: member.username }) }}"
                data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
                 <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
             </a>

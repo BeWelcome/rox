@@ -66,6 +66,7 @@ class LocationSuggest {
                         return `
                             ${group}
                             <li>
+                                <span class="visually-hidden">${escapeText([parts[0]].concat(parts.slice(1)).join(', '))}</span>
                                 <div class="u:flex u:flex-row u:justify-between align-items-center">
                                     <div>
                                         <div class="suggest-name">
@@ -96,6 +97,12 @@ class LocationSuggest {
                 template(`<li>No results found: "${currentValue}"</li>`),
         });
     }
+}
+
+// The text put in the field while going through the results with the arrows: the
+// autocomplete takes the first element of the result ("Berlin, Land Berlin, Germany").
+function escapeText(text) {
+    return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 // The country's round flag (circle-flags, as in "Explore by country"), or a pin when there is no country.

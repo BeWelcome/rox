@@ -184,7 +184,7 @@
                   <span class="p-pro-filter__item{{ filter.type ? ' p-pro-filter__item--' ~ filter.type : ' is-all' }} is-empty">
                 {% endif %}
                   {% if filter.icon %}<i class="fas fa-{{ filter.icon }}" aria-hidden="true"></i>{% endif %}
-                  {{ filter.label|trans({}, 'messages', profile_language)|striptags }}
+                  <span class="p-pro-filter__label">{{ filter.label|trans({}, 'messages', profile_language)|striptags }}</span>
                   <span class="p-pro-filter__count">{{ filter.count }}</span>
                 {% if filter.count > 0 %}</a>{% else %}</span>{% endif %}
               {% endfor %}

@@ -30,8 +30,9 @@
         {% if form[name] is defined and form[name].vars.value is not empty %}{% set activeFilters = activeFilters + 1 %}{% endif %}
     {% endfor %}
 
-    {# The members of this page, for the markers of the map: where each one set their home on
-       their profile, rounded to about 1 km as on the profile page, else the centre of their city. #}
+    {# The members of this page, for the map when the list of all members found (map_members)
+       is missing: where each one set their home on their profile, rounded to about 1 km as on
+       the profile page, else the centre of their city. A marker opens the member's preview. #}
     {% set mapMembers = [] %}
     {% if hasResults %}
         {% for result in pager.currentPageResults %}
@@ -42,7 +43,6 @@
                     Username: result.member.username,
                     latitude: ownPoint ? address.latitude|round(2) : address.location.latitude,
                     longitude: ownPoint ? address.longitude|round(2) : address.location.longitude,
-                    popup: search.map_popup(result),
                 }]) %}
             {% endif %}
         {% endfor %}
@@ -206,7 +206,7 @@
     </div>
 
     {# Member preview: opened from a result, drawer on large screens, sheet from the bottom on phones #}
-    <div class="p-search-preview__backdrop js-search-preview-close" hidden></div>
+    <div class="p-search-preview__backdrop js-search-preview-backdrop" hidden></div>
     <aside class="p-search-preview js-search-preview" aria-labelledby="search-preview-title" aria-hidden="true"
            data-error="{{ 'search.preview.error'|trans }}">
         <div class="p-search-preview__bar">
@@ -309,5 +309,7 @@
 
     <script>
         var mapMembers = {{ (mapMembers|length ? mapMembers : null)|json_encode|raw }};
+        // Every member found (SearchAdapter::getMapPoints)
+        var mapAllMembers = {{ (map_members ?? null)|json_encode|raw }};
     </script>
 {% endblock content %}

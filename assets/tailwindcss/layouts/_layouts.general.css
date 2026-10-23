@@ -6588,6 +6588,11 @@ body.has-search-overlay { overflow: hidden; }
 .p-search-where .auto-clear:hover { background: #e2e8f0; }
 .p-search-where .auto-clear:before { width: 14px; height: 14px; line-height: 1; }
 .p-search-where .auto-clear.hidden { display: none; }
+/* Big screens: the cross in the middle of the field's height, next to the text */
+@media (min-width: 768px) {
+  .p-search-where .auto-clear { top: 50%; bottom: auto; width: 1.75rem; height: 1.75rem; transform: translateY(-50%); }
+  .p-search-where .auto-clear:before { width: 12px; height: 12px; }
+}
 .p-search-where .auto-is-loading:after { right: 0.4rem; }
 
 /* Suggestions */
@@ -6979,6 +6984,8 @@ body.has-search-overlay { overflow: hidden; }
   background: #fff;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
 }
+/* The member picked in the list */
+.p-search-map-member.is-focused img { width: 44px; height: 44px; margin: -4px; border-color: #0f172a; box-shadow: 0 0 0 4px rgba(243, 112, 0, 0.35), 0 6px 16px rgba(15, 23, 42, 0.3); }
 .p-search-map-place { border: 3px solid #fff; border-radius: 50%; background: #0f172a; box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.15); }
 /* Popup of a member on the map */
 .p-search-map-bubble .leaflet-popup-content-wrapper { padding: 0; border-radius: 1rem; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18); }
@@ -7009,7 +7016,10 @@ body.has-search-overlay { overflow: hidden; }
 
 /* Member preview: a drawer over the map on large screens, a sheet from the bottom on phones */
 .p-search-card.is-previewed { background: #fff3e6; }
-.p-search-preview__backdrop { display: none; }
+/* Shades the page behind the preview; a click on it closes the preview (search/locations.js) */
+.p-search-preview__backdrop { position: fixed; inset: 0; z-index: 2040; display: block; background: rgba(15, 23, 42, 0.3); animation: p-search-backdrop-in 0.2s ease; }
+.p-search-preview__backdrop[hidden] { display: none; }
+@keyframes p-search-backdrop-in { from { opacity: 0; } }
 .p-search-preview {
   position: fixed;
   top: 0;

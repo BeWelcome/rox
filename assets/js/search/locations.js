@@ -142,13 +142,26 @@ if (where && locationInput) {
         locationInput.blur();
         closeWhere();
     });
-    // The clear button of the suggestion box empties the hidden fields too.
+    // The cross only empties the field to type another place: the search stays as it is
+    // (leaving the field without picking a place puts the place back, see "blur" above).
+    // Caught before the suggestion box's own handler, which would forget the place.
     where.addEventListener('click', (event) => {
-        if (event.target.closest('.auto-clear')) {
-            ['fullname', 'name', 'geoname_id', 'latitude', 'longitude', 'admin_unit'].forEach((name) => { hidden(name).value = ''; });
-            updateWhereDisplay();
+        if (!event.target.closest('.auto-clear')) {
+            return;
         }
-    });
+        event.preventDefault();
+        event.stopPropagation();
+        if (document.activeElement === locationInput) {
+            if (locationSuggest && locationSuggest.autoComplete) {
+                locationSuggest.autoComplete.reset();
+            } else {
+                locationInput.value = '';
+            }
+            locationInput.focus();
+        } else {
+            locationInput.focus();
+        }
+    }, true);
     updateWhereDisplay();
 }
 
@@ -361,11 +374,12 @@ Map.prototype.centerMap = function () {
     const minLongitude = document.getElementById('min_longitude').value;
     const maxLongitude = document.getElementById('max_longitude').value;
 
+    // The searched place: not drawn (only the members are), but kept in the framing below
     this.placeMarker = L.marker([latitude, longitude], {
         icon: L.divIcon({className: 'p-search-map-place', iconSize: [16, 16]}),
         draggable: false,
         interactive: false
-    }).addTo(this.map);
+    });
 
     if (minLatitude !== '' && maxLatitude !== '') {
         const bounds = L.latLngBounds(L.latLng(minLatitude, minLongitude), L.latLng(maxLatitude, maxLongitude));
@@ -375,7 +389,46 @@ Map.prototype.centerMap = function () {
     }
 };
 
+// A member picked in the list: the map shows their marker (out of its cluster), marked,
+// in the middle of the part of the map that the preview drawer leaves free.
+Map.prototype.focusMember = function (username) {
+    this.unfocusMember();
+    const marker = this.memberMarkers ? this.memberMarkers[username] : null;
+    if (!this.map || !marker || this.map.getContainer().offsetParent === null) {
+        return;
+    }
+    this.focused = marker;
+    marker.setZIndexOffset(1000);
+    this.markerClusterGroup.zoomToShowLayer(marker, () => {
+        if (this.focused !== marker) {
+            return;
+        }
+        const element = marker.getElement();
+        if (element) {
+            element.classList.add('is-focused');
+        }
+        const box = this.map.getContainer().getBoundingClientRect();
+        const drawer = document.querySelector('.js-search-preview.is-open');
+        // The drawer may still be sliding in: its width, not where it is now
+        const covered = drawer && !phone.matches ? Math.max(0, box.right - (window.innerWidth - drawer.offsetWidth)) : 0;
+        const point = this.map.latLngToContainerPoint(marker.getLatLng());
+        this.map.panBy([point.x - (box.width - covered) / 2, point.y - box.height / 2]);
+    });
+};
+
+Map.prototype.unfocusMember = function () {
+    if (this.focused) {
+        const element = this.focused.getElement();
+        if (element) {
+            element.classList.remove('is-focused');
+        }
+        this.focused.setZIndexOffset(0);
+        this.focused = null;
+    }
+};
+
 Map.prototype.addMarkers = function (map) {
+    this.memberMarkers = {};
     const markers = L.markerClusterGroup({
         showCoverageOnHover: false,
         iconCreateFunction: (cluster) => L.divIcon({
@@ -385,23 +438,29 @@ Map.prototype.addMarkers = function (map) {
         })
     });
 
-    if (typeof mapMembers !== 'undefined' && mapMembers !== null) {
-        mapMembers.forEach((value) => {
-            const marker = L.marker([value.latitude, value.longitude], {
-                icon: L.divIcon({
-                    iconSize: [36, 36],
-                    iconAnchor: [18, 18],
-                    className: 'p-search-map-member',
-                    html: '<img src="/members/avatar/' + encodeURIComponent(value.Username) + '/48" alt="">'
-                })
-            });
-
-            // The popup is drawn by the page (search/_search.macros.twig, map_popup).
-            marker.bindPopup(value.popup, {closeButton: false, minWidth: 220, maxWidth: 280, className: 'p-search-map-bubble'});
-
-            markers.addLayer(marker);
-        });
+    // Every member found (or, without that list, the members of this page): a click on the
+    // marker opens the member's preview, as from the list.
+    let points = [];
+    if (typeof mapAllMembers !== 'undefined' && mapAllMembers !== null) {
+        points = mapAllMembers;
+    } else if (typeof mapMembers !== 'undefined' && mapMembers !== null) {
+        points = mapMembers.map((value) => ({username: value.Username, latitude: value.latitude, longitude: value.longitude}));
     }
+    points.forEach((value) => {
+        const name = encodeURIComponent(value.username);
+        const marker = L.marker([value.latitude, value.longitude], {
+            title: value.username,
+            icon: L.divIcon({
+                iconSize: [36, 36],
+                iconAnchor: [18, 18],
+                className: 'p-search-map-member',
+                html: '<img src="/members/avatar/' + name + '/48" alt="" loading="lazy">'
+            })
+        });
+        marker.on('click', () => openPreviewUrl('/search/members/' + name + '/preview', null));
+        markers.addLayer(marker);
+        this.memberMarkers[value.username] = marker;
+    });
 
     map.addLayer(markers);
 
@@ -483,6 +542,7 @@ function showPreview() {
 
 function hidePreview() {
     closeContact(true);
+    map.unfocusMember();
     preview.classList.remove('is-open');
     preview.setAttribute('aria-hidden', 'true');
     previewBackdrop.hidden = true;
@@ -649,6 +709,22 @@ function loadPreview(url, card) {
         });
 }
 
+// Opens a member's preview, with an entry in the history (the back button closes it)
+function openPreviewUrl(url, card) {
+    if (!preview) {
+        window.location.href = url.replace(/\/search\/members\/([^/]+)\/preview$/, '/members/$1');
+        return;
+    }
+    const state = {searchPreview: url};
+    if (history.state && history.state.searchPreview) {
+        history.replaceState(state, '');
+    } else {
+        history.pushState(state, '');
+        previewOpenedHere = true;
+    }
+    loadPreview(url, card);
+}
+
 // Closing goes back in the history when the preview added an entry to it.
 function closePreview() {
     if (!preview.classList.contains('is-open')) {
@@ -668,14 +744,13 @@ if (preview) {
             return;
         }
         event.preventDefault();
-        const state = {searchPreview: link.dataset.preview};
-        if (history.state && history.state.searchPreview) {
-            history.replaceState(state, '');
-        } else {
-            history.pushState(state, '');
-            previewOpenedHere = true;
+        const card = link.closest('.p-search-card');
+        openPreviewUrl(link.dataset.preview, card);
+        // From the list: the map shows that member
+        const username = card ? decodeURIComponent((link.dataset.preview.match(/\/search\/members\/([^/]+)\/preview/) || [])[1] || '') : '';
+        if (username) {
+            map.focusMember(username);
         }
-        loadPreview(link.dataset.preview, link.closest('.p-search-card'));
     });
 
     window.addEventListener('popstate', (event) => {
@@ -687,6 +762,19 @@ if (preview) {
     });
 
     document.querySelectorAll('.js-search-preview-close').forEach((button) => button.addEventListener('click', closePreview));
+    // A click on the shaded page closes the preview; on another member (a card of the list
+    // or a marker of the map), that member's preview is shown instead.
+    previewBackdrop.addEventListener('click', (event) => {
+        previewBackdrop.hidden = true;
+        const under = document.elementFromPoint(event.clientX, event.clientY);
+        previewBackdrop.hidden = false;
+        const other = under ? under.closest('.js-search-preview-open, .p-search-map-member') : null;
+        if (other) {
+            other.click();
+        } else {
+            closePreview();
+        }
+    });
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             if (contactIsOpen()) {

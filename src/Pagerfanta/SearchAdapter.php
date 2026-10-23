@@ -111,6 +111,68 @@ class SearchAdapter implements AdapterInterface
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * Every member found (up to $limit), for the markers of the map: the username and where
+     * they live, their own point rounded to about 1 km as on the profile, else the centre of
+     * their town. Much lighter than a page of results: two small queries, no entities.
+     *
+     * @return array<int, array{username: string, latitude: float, longitude: float}>
+     */
+    public function getMapPoints(int $limit): array
+    {
+        $isDistanceSearch = $this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude;
+
+        $idQb = $this->entityManager->createQueryBuilder();
+        $idQb->select('DISTINCT m.id');
+        if ($isDistanceSearch) {
+            $idQb->from(Location::class, 'l')
+                ->join('App\Entity\Address', 'a', 'WITH', 'a.location = l.geonameId AND a.active = 1')
+                ->join('a.member', 'm');
+        } else {
+            $idQb->from(Member::class, 'm');
+        }
+        $this->applySearchFilters($idQb);
+        $idQb->setMaxResults($limit);
+
+        $memberIds = array_column($idQb->getQuery()->getScalarResult(), 'id');
+        if (empty($memberIds)) {
+            return [];
+        }
+
+        $rows = $this->entityManager->createQueryBuilder()
+            ->select('m.username, a.latitude AS ownLatitude, a.longitude AS ownLongitude, l.latitude AS townLatitude, l.longitude AS townLongitude')
+            ->from(Member::class, 'm')
+            ->join('m.addresses', 'a', 'WITH', 'a.active = 1')
+            ->leftJoin('a.location', 'l')
+            ->where('m.id IN (:memberIds)')
+            ->setParameter('memberIds', $memberIds)
+            ->getQuery()
+            ->getArrayResult();
+
+        $points = [];
+        foreach ($rows as $row) {
+            if (isset($points[$row['username']])) {
+                continue;
+            }
+            if (null !== $row['ownLatitude'] && null !== $row['ownLongitude']) {
+                $latitude = round((float) $row['ownLatitude'], 2);
+                $longitude = round((float) $row['ownLongitude'], 2);
+            } elseif (null !== $row['townLatitude'] && null !== $row['townLongitude']) {
+                $latitude = (float) $row['townLatitude'];
+                $longitude = (float) $row['townLongitude'];
+            } else {
+                continue;
+            }
+            $points[$row['username']] = [
+                'username' => $row['username'],
+                'latitude' => $latitude,
+                'longitude' => $longitude,
+            ];
+        }
+
+        return array_values($points);
+    }
+
     private function applySearchFilters(QueryBuilder $qb): void
     {
         /** @var MemberRepository $memberRepository */

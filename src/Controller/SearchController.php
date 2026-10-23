@@ -30,6 +30,9 @@ use TypeError;
  */
 class SearchController extends AbstractController
 {
+    /** At most this many members on the map of a search (the list stays paged) */
+    private const int MAP_MEMBERS = 2000;
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
@@ -209,9 +212,8 @@ class SearchController extends AbstractController
             $pager->setNormalizeOutOfRangePages(true);
             $pager->setCurrentPage(max(1, $request->query->getInt('page', 1)));
 
-            // Fetch the slice manually for the view to avoid breaking BC in twig immediately
-            // Better to update twig to iterate over $pager directly, but keeping it safe for now.
-            // $mapMembers = $searchAdapter->getMapResults();
+            // The map shows every member found (not only this page), up to MAP_MEMBERS
+            $mapMembers = $searchAdapter->getMapPoints(self::MAP_MEMBERS);
         }
 
         return $this->render('search/searchlocations.html.twig', [

@@ -1,6 +1,7 @@
 import {initializeSingleAutoComplete} from '../suggest/locations';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
+import {addPositronLayer} from '../map/positron';
 
 const labelText = document.getElementById('marker_label_text').value;
 const locationGeonameId = document.getElementById('set_location_geoname_id');
@@ -54,10 +55,7 @@ function dragend(e) {
 
 initializeSingleAutoComplete("/suggest/locations/places/exact", 'js-location-picker', addMarkerAndMoveToNewLocation);
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>',
-    subdomains: ['a', 'b', 'c']
-}).addTo(map);
+addPositronLayer(map);
 
 L.control.scale().addTo(map);
 

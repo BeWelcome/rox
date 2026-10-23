@@ -9198,7 +9198,6 @@ a.p-pro-filter__item:hover { background: #fff; }
 
 /* Where I live: grey map with the approximate area */
 .p-pro-where__map { height: 165px; overflow: hidden; border-radius: 0.8rem; background: #f1f5f9; }
-.p-pro-where__map .leaflet-tile-pane { filter: grayscale(1) brightness(1.05) contrast(0.85); }
 .p-pro-card .p-pro-where__city { margin: 0.75rem 0 0; color: #0f172a; font-size: 0.9375rem; font-weight: 700; }
 .p-pro-card .p-pro-where__area { margin: 0.1rem 0 0; color: #64748b; font-size: 0.8125rem; }
 

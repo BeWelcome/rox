@@ -1,5 +1,6 @@
 import { Toast } from 'bootstrap';
 import {initContactDrawer} from '../contact/drawer';
+import {addPositronLayer} from '../map/positron';
 
 // Send / Request stay: the form in a side panel (bottom sheet on phones).
 // First in the file, so that an error in the code below cannot leave the buttons dead.
@@ -63,13 +64,11 @@ locationMaps.forEach( locationMap => {
 
     L.marker(new L.LatLng(latitude, longitude), {icon: markerIcon}).addTo(map)
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        subdomains: ['a', 'b', 'c']
-    }).addTo(map)
+    addPositronLayer(map)
 })
 
 
-// "Where I live" block: a grey map of the approximate area, a circle and a dot.
+// "Where I live" block: a light map of the approximate area, a circle and a dot.
 // One block per profile language and only one is shown, so a map is built the first
 // time its block is visible (after a click on the language switch for the others).
 const whereMaps = () => document.querySelectorAll('.js-pro-where-map:not(.is-ready)').forEach(element => {
@@ -89,9 +88,7 @@ const whereMaps = () => document.querySelectorAll('.js-pro-where-map:not(.is-rea
         attributionControl: false,
     }).setView(center, 12);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        subdomains: ['a', 'b', 'c']
-    }).addTo(map);
+    addPositronLayer(map);
     L.circle(center, {radius: 2000, color: '#ea7a2e', weight: 1.5, fillColor: '#f37000', fillOpacity: 0.18}).addTo(map);
     L.circleMarker(center, {radius: 6, color: '#fff', weight: 3, fillColor: '#ea7a2e', fillOpacity: 1}).addTo(map);
 });

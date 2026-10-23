@@ -9,8 +9,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet/dist/leaflet.css';
-import 'maplibre-gl/dist/maplibre-gl.css';
-import '@maplibre/maplibre-gl-leaflet';
+import {addPositronLayer} from '../map/positron';
 
 const form = document.querySelector('.js-search-form');
 const phone = window.matchMedia('(max-width: 767.98px)');
@@ -331,12 +330,8 @@ Map.prototype.showMap = function () {
         }
     });
     L.control.zoom({position: 'topright'}).addTo(this.map);
-    // A light and plain base map (OpenFreeMap "Positron", free and without a key), so that
-    // the members stand out. It is drawn by MapLibre inside the Leaflet map.
-    L.maplibreGL({
-        style: 'https://tiles.openfreemap.org/styles/positron',
-        attribution: '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> &copy; <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a> Data from <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
-    }).addTo(this.map);
+    // A light and plain base map, so that the members stand out
+    addPositronLayer(this.map);
     this.markerClusterGroup = this.addMarkers(this.map);
 
     this.centerMap();

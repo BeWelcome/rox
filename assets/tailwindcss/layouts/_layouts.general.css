@@ -10012,9 +10012,6 @@ body.is-embedded { background: #fff; }
 /* Home Messages tab: the request's status icon on the avatar, as in the inbox list */
 .c-home-item__avatar-wrap { position: relative; flex-shrink: 0; align-self: flex-start; line-height: 0; }
 
-/* Search map: a calm grey base map, like the profile one, so that the members stand out */
-.p-search__map-canvas .leaflet-tile-pane { filter: grayscale(1) brightness(1.08) contrast(0.8); }
-
 /* Location suggestions: the country's flag instead of a small map */
 .suggest-map.suggest-flag {
   display: flex;

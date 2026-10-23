@@ -85,6 +85,46 @@ document.querySelectorAll('.js-request-dates').forEach((dates) => {
     arrival.addEventListener('change', update);
     departure.addEventListener('change', update);
     update();
+
+    // Side panel: a calendar always open under the dates. A first tap picks the arrival,
+    // a second one the departure; the date fields above follow (and can still be typed).
+    const calendar = form.querySelector('.js-request-calendar');
+    if (calendar) {
+        let syncing = false;
+        const picker = new Litepicker({
+            element: calendar,
+            inlineMode: true,
+            singleMode: false,
+            allowRepick: true,
+            minDate: arrival.min || dayjs().format('YYYY-MM-DD'),
+            minDays: 2,
+            numberOfMonths: 1,
+            numberOfColumns: 1,
+            lang: document.documentElement.lang || 'en',
+            showTooltip: false,
+            setup: (instance) => {
+                instance.on('selected', (start, end) => {
+                    if (syncing) {
+                        return;
+                    }
+                    arrival.value = start ? start.format('YYYY-MM-DD') : '';
+                    departure.value = end ? end.format('YYYY-MM-DD') : '';
+                    arrival.dispatchEvent(new Event('change', { bubbles: true }));
+                    departure.dispatchEvent(new Event('change', { bubbles: true }));
+                });
+            },
+        });
+        const showFields = () => {
+            if (arrival.value && departure.value) {
+                syncing = true;
+                picker.setDateRange(arrival.value, departure.value);
+                syncing = false;
+            }
+        };
+        arrival.addEventListener('change', showFields);
+        departure.addEventListener('change', showFields);
+        showFields();
+    }
 });
 
 // Number of travellers: the minus and plus buttons, kept between min and max.

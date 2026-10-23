@@ -10094,3 +10094,15 @@ body.is-embedded { background: #fff; }
 /* The other member's face next to their messages, as in the inbox on a computer */
 .c-contact--thread .c-bubble-row:not(.is-own) { align-items: flex-end; gap: 0.5rem; }
 .c-contact--thread .c-bubble__avatar { display: block; flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; object-fit: cover; background: #e4e4e7; }
+
+/* Stay request in the side panel: the calendar under the dates (Litepicker, inline) */
+.c-contact-stay__calendar { display: flex; justify-content: center; margin-top: 0.75rem; }
+.c-contact-stay__calendar .litepicker { --litepicker-day-width: 2.6rem; --litepicker-button-prev-month-color-hover: #f37000; --litepicker-button-next-month-color-hover: #f37000; --litepicker-day-color-hover: #f37000; --litepicker-is-today-color: #f37000; font-family: inherit; font-size: 0.875rem; }
+.c-contact-stay__calendar .litepicker .container__months { border-radius: 0.9rem; box-shadow: none; border: 1px solid #e2e8f0; }
+.c-contact-stay__calendar .litepicker .container__months .month-item { padding: 0.5rem 0.25rem 0.25rem; }
+.c-contact-stay__calendar .litepicker .container__months .month-item-header { font-weight: 700; color: #0f172a; }
+.c-contact-stay__calendar .litepicker .container__days .day-item { height: 2.4rem; display: flex; align-items: center; justify-content: center; border-radius: 0.6rem; }
+.c-contact-stay__calendar .litepicker .container__days .day-item.is-in-range { border-radius: 0; background: #ffedd5; }
+.c-contact-stay__calendar .litepicker .container__days .day-item.is-start-date { border-radius: 0.6rem 0 0 0.6rem; }
+.c-contact-stay__calendar .litepicker .container__days .day-item.is-end-date { border-radius: 0 0.6rem 0.6rem 0; }
+.c-contact-stay__calendar .litepicker .container__days .day-item.is-start-date.is-end-date { border-radius: 0.6rem; }

@@ -44,24 +44,12 @@
                 </ul>
             </li>
             {% endif %}
-            <li class="nav-item dropdown">
-                <a id="search_menu_toggle" href="#search_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
-                   data-target="search_menu" data-bs-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
+            {# Search: straight to the search page #}
+            <li class="nav-item">
+                <a id="search_menu_toggle" href="{{ url('search_locations') }}" class="nav-link topbar-icon-dropdown"
                    aria-label="{{ 'findmembers' | trans }}">
                     <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-search"></i></span>
                 </a>
-                <ul id="search_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
-                    <li class="member-menu__toolbar member-menu__toolbar--with-title d-flex d-xl-none">
-                        <h6 class="member-menu__toolbar-title mb-0">{{ 'findmembers' | trans }}</h6>
-                        <button type="button" class="member-menu__close" aria-label="{{ 'close' | trans }}">
-                            <span class="member-menu__close-icon" aria-hidden="true">&times;</span>
-                        </button>
-                    </li>
-                    <li><a href="{{ url( 'search_locations' ) }}" class="dropdown-item text-left">{{ 'search.locations' | trans }}</a></li>
-                    <li><a href="{{ path('search_members') }}" class="dropdown-item text-left">{{ 'search.members' | trans }}</a></li>
-                    <li><a href="{{ url('places') }}" class="dropdown-item text-left">{{ 'browsecountries' | trans }}</a></li>
-                    <li><a href="{{ url('visitors') }}" class="dropdown-item text-left">{{ 'menu.visitors' | trans }}</a></li>
-                </ul>
             </li>
             <li class="nav-item dropdown">
                 <a id="community_menu_toggle" href="#community_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"

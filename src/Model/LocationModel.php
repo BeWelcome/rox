@@ -28,10 +28,14 @@ class LocationModel
             ->entityManager
             ->getRepository(Location::class)
             ->createQueryBuilder('l')
-            ->where('l.latitude < ' . $coordinates[1]->getLatitudeInDegrees())
-            ->andWhere('l.latitude > ' . $coordinates[0]->getLatitudeInDegrees())
-            ->andWhere('l.longitude < ' . $coordinates[1]->getLongitudeInDegrees())
-            ->andWhere('l.longitude < ' . $coordinates[0]->getLongitudeInDegrees())
+            ->where('MBRContains(ST_Envelope(ST_GeomFromText(:boundingBox, 0)), l.coordinates) = 1')
+            ->setParameter('boundingBox', \sprintf(
+                'LINESTRING(%F %F, %F %F)',
+                $coordinates[0]->getLongitudeInDegrees(),
+                $coordinates[0]->getLatitudeInDegrees(),
+                $coordinates[1]->getLongitudeInDegrees(),
+                $coordinates[1]->getLatitudeInDegrees()
+            ))
             ->getQuery()
             ->getResult();
     }

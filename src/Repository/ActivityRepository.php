@@ -165,12 +165,15 @@ class ActivityRepository extends EntityRepository
                 'l',
                 Join::WITH,
                 'a.location = l.geonameId '
-                . 'AND l.latitude BETWEEN :lat_e AND :lat_w AND l.longitude BETWEEN :long_s AND :long_n'
+                . 'AND MBRContains(ST_Envelope(ST_GeomFromText(:boundingBox, 0)), l.coordinates) = 1'
             )
-            ->setParameter('lat_e', $coordinates[0]->getLatitudeInDegrees())
-            ->setParameter('lat_w', $coordinates[1]->getLatitudeInDegrees())
-            ->setParameter('long_s', $coordinates[0]->getLongitudeInDegrees())
-            ->setParameter('long_n', $coordinates[1]->getLongitudeInDegrees())
+            ->setParameter('boundingBox', \sprintf(
+                'LINESTRING(%F %F, %F %F)',
+                $coordinates[0]->getLongitudeInDegrees(),
+                $coordinates[0]->getLatitudeInDegrees(),
+                $coordinates[1]->getLongitudeInDegrees(),
+                $coordinates[1]->getLatitudeInDegrees()
+            ))
             ->where('(a.ends >= :now AND a.ends <= :three_months) OR (a.starts >= :now AND a.starts <= :three_months)')
             ->setParameter('now', new DateTime())
             ->setParameter('three_months', new DateTime()->modify('+3 months'))

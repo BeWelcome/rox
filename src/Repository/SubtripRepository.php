@@ -173,14 +173,8 @@ class SubtripRepository extends EntityRepository
             );
 
             $qb
-                ->andWhere('hostLocation.latitude BETWEEN :minLat AND :maxLat')
-                ->andWhere('hostLocation.longitude BETWEEN :minLng AND :maxLng')
                 ->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:lineString, 0)), hostLocation.coordinates) = 1')
                 ->andWhere('ST_Distance_Sphere(hostLocation.coordinates, ST_GeomFromText(:centerPoint, 0)) <= :invitationRadiusMeters')
-                ->setParameter('minLat', $boundingBox->getMinLatitude())
-                ->setParameter('maxLat', $boundingBox->getMaxLatitude())
-                ->setParameter('minLng', $boundingBox->getMinLongitude())
-                ->setParameter('maxLng', $boundingBox->getMaxLongitude())
                 ->setParameter('lineString', $lineString)
                 ->setParameter('invitationRadiusMeters', $trip->getInvitationRadius() * 1000)
             ;
@@ -219,10 +213,10 @@ class SubtripRepository extends EntityRepository
             ->andWhere('t.creator <> :member')
             ->andWhere($qb->expr()->isNull('t.deleted'))
             ->andWhere($qb->expr()->isNull('hiddenLeg.id'))
-            ->andWhere('GeoDistance(:latitude, :longitude, l.latitude, l.longitude) <= :distance')
+            ->andWhere('GeoDistance(:latitude, :longitude, ST_Y(l.coordinates), ST_X(l.coordinates)) <= :distance')
             ->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->lte('GeoDistance(:latitude, :longitude, l.latitude, l.longitude)', 't.invitationRadius'),
+                    $qb->expr()->lte('GeoDistance(:latitude, :longitude, ST_Y(l.coordinates), ST_X(l.coordinates))', 't.invitationRadius'),
                     $qb->expr()->eq('s.location', ':location')
                 )
             )

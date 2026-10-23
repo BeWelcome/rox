@@ -137,14 +137,8 @@ class SearchAdapter implements AdapterInterface
                 $qb->join('a.location', 'l');
             }
 
-            $qb->andWhere('l.latitude BETWEEN :minLat AND :maxLat')
-                ->andWhere('l.longitude BETWEEN :minLng AND :maxLng')
-                ->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:lineString, 0)), l.coordinates) = 1')
+            $qb->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:lineString, 0)), l.coordinates) = 1')
                 ->andWhere('ST_Distance_Sphere(l.coordinates, ST_GeomFromText(:centerPoint, 0)) <= :distanceInMeters')
-                ->setParameter('minLat', $minLat)
-                ->setParameter('maxLat', $maxLat)
-                ->setParameter('minLng', $minLng)
-                ->setParameter('maxLng', $maxLng)
                 ->setParameter('lineString', $lineString)
                 ->setParameter('centerPoint', \sprintf('POINT(%F %F)', $this->searchRequest->location_longitude, $this->searchRequest->location_latitude))
                 ->setParameter('distanceInMeters', $this->searchRequest->distance * 1000); // ST_Distance_Sphere uses meters

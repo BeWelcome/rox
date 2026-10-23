@@ -101,6 +101,8 @@ doctrine:
             numeric_functions:
                 ST_Distance_Sphere: LongitudeOne\Spatial\ORM\Query\AST\Functions\MariaDB\SpDistanceSphere
                 geodistance: App\Doctrine\Functions\GeoDistance
+                ST_X: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StX
+                ST_Y: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StY
             string_functions:
                 ST_GeomFromText: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromText
                 ST_Envelope: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StEnvelope

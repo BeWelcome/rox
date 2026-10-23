@@ -328,8 +328,7 @@ LIMIT 1
             // TODO: search around the date line!
 
             // now fetch all location from geonames which are in that given rectangle
-            $condition .= "AND g.latitude BETWEEN {$latsw} AND {$latne}"
-                . "AND g.longitude BETWEEN {$longsw} AND {$longne}";
+            $condition .= " AND MBRContains(ST_Envelope(ST_GeomFromText('LINESTRING({$longsw} {$latsw}, {$longne} {$latne})', 0)), g.coordinates) = 1";
         } else {
             $condition .= " AND m.IdCity = {$vars['location-geoname-id']}";
         }
@@ -583,8 +582,8 @@ LIMIT 1
                 IF(mp.photoCount IS NULL, 0, 1) AS HasProfilePhoto,
                 g.geonameId,
                 g.country,
-                g.latitude,
-                g.longitude,
+                ST_Y(g.coordinates) AS latitude,
+                ST_X(g.coordinates) AS longitude,
                 {$this->distanceExpression},
                 IF(c.IdToMember IS NULL, 0, c.commentCount) AS CommentCount
             FROM
@@ -833,8 +832,8 @@ LIMIT 1
     private function getDistanceExpression($vars): string
     {
         return
-            "((g.latitude - {$vars['location-latitude']}) * (g.latitude - {$vars['location-latitude']}) + "
-            . "(g.longitude - {$vars['location-longitude']}) * (g.longitude - {$vars['location-longitude']}))"
+            "((ST_Y(g.coordinates) - {$vars['location-latitude']}) * (ST_Y(g.coordinates) - {$vars['location-latitude']}) + "
+            . "(ST_X(g.coordinates) - {$vars['location-longitude']}) * (ST_X(g.coordinates) - {$vars['location-longitude']}))"
             . " AS Distance"
         ;
     }

@@ -195,3 +195,6 @@ landing.visitors.host:
 landing.visitors.more.stops:
     - '{count, plural, one {+# stop} other {+# stops}}'
     - Tag on a trip of the Visitors list of the home page; how many other stops the trip has
+trip.over:
+    - 'Over'
+    - My trips page, small tag on a trip whose dates are past

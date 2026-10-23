@@ -11044,3 +11044,48 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-lang-native-hint i,
 .p-lang-native-hint svg { flex: 0 0 auto; width: 2.25rem; height: 2.25rem; padding: 0.5rem; border-radius: 999px; background: #f37000; color: #fff; font-size: 1.25rem; }
 .p-lang-native-hint:has(.js-lang-native-flag:checked) { display: none; }
+
+/* Trips pages (My trips, Visitors): the layout of the profile lists (My notes): a wider
+   page, the title in Signika, white cards without border and with a soft shadow */
+.p-trips { width: 100%; max-width: 1100px; margin-top: 1.75rem; }
+.p-trips .p-trips__title { font-family: var(--font-signika, "Signika", sans-serif); font-size: 2rem; line-height: 1.2; }
+.p-trips__head { margin-bottom: 1.5rem; }
+.p-trips__list { gap: 1rem; }
+.p-trips-leg,
+.p-trips-trip { border: 0; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
+.p-trips-leg { padding: 1.4rem 1.5rem; }
+.p-trips-leg--invited { box-shadow: inset 0 0 0 1.5px #bbf7d0, 0 6px 18px rgba(15, 23, 42, 0.04); }
+.p-trips-leg__avatar img { width: 4rem; height: 4rem; }
+.p-trips__empty { border: 0; border-radius: 1.25rem; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
+
+/* My trips: a card per trip */
+.p-trips-trip { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.4rem 1.5rem; }
+.p-trips-trip.is-over { opacity: 0.75; }
+.p-trips-trip__icon { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 4rem; height: 4rem; border-radius: 999px; background: #fff1e6; color: #ea7a2e; font-size: 1.35rem; }
+.p-trips-trip__body { flex: 1 1 auto; min-width: 0; }
+.p-trips .p-trips-trip__head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; margin: 0 0 0.35rem; }
+.p-trips .p-trips-trip__title,
+.p-trips .p-trips-trip__title:hover { min-width: 0; overflow: hidden; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.2rem; font-weight: 700; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
+.p-trips .p-trips-trip__title:hover { color: #c2410c; }
+.p-trips-trip__over { padding: 0.15rem 0.6rem; border-radius: 999px; background: #f1f5f9; color: #64748b; font-size: 0.75rem; font-weight: 700; }
+.p-trips .p-trips-trip__dates { display: flex; align-items: center; gap: 0.45rem; margin: 0 0 0.35rem; color: #334155; font-size: 0.9375rem; font-weight: 600; }
+.p-trips-trip__dates i,
+.p-trips-trip__dates svg { color: #ea7a2e; }
+.p-trips .p-trips-trip__legs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.5rem; margin: 0; color: #475569; font-size: 0.9375rem; }
+.p-trips-trip__leg { display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
+.p-trips-trip__leg i,
+.p-trips-trip__leg svg { color: #94a3b8; font-size: 0.8rem; }
+.p-trips-trip__arrow { color: #cbd5e1; font-size: 0.65rem; }
+.p-trips-trip__actions { display: flex; flex: 0 0 auto; gap: 0.5rem; }
+@media (max-width: 767.98px) {
+  .p-trips .p-trips__title { font-size: 1.6rem; }
+  .p-trips-leg,
+  .p-trips-trip { padding: 1.1rem 1rem; }
+  .p-trips-leg__avatar img { width: 3rem; height: 3rem; }
+  .p-trips-trip { position: relative; gap: 0.9rem; }
+  .p-trips-trip__icon { width: 3rem; height: 3rem; font-size: 1.1rem; }
+  .p-trips .p-trips-trip__head { padding-right: 5.25rem; }
+  .p-trips-trip__actions { position: absolute; top: 0.85rem; right: 0.85rem; gap: 0.35rem; }
+  .p-trips-trip__actions .p-notes-card__action,
+  .p-trips-trip__actions .p-notes-card__action:hover { width: 2.25rem; height: 2.25rem; }
+}

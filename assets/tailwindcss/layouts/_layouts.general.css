@@ -10202,6 +10202,24 @@ body.is-embedded { background: #fff; }
   .p-pro-note-add { margin: 0 0.6rem; }
 }
 
+/* A select as a button and a menu (assets/js/pretty-select.js) */
+.p-select { position: relative; display: inline-flex; }
+.p-search__radius .p-select,
+.p-search-options__radius .p-select { display: flex; width: 100%; }
+.p-select .p-select__native { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; pointer-events: none; }
+.p-select .p-select__button { display: flex; align-items: center; width: 100%; text-align: left; white-space: nowrap; }
+.p-select__text { overflow: hidden; text-overflow: ellipsis; }
+.p-select.is-open .p-select__button { border-color: #f37000; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.12); }
+.p-select__menu { position: absolute; top: calc(100% + 0.4rem); left: 0; z-index: 1200; min-width: 100%; max-height: 18rem; margin: 0; padding: 0.35rem; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06); list-style: none; }
+.p-select.opens-up .p-select__menu { top: auto; bottom: calc(100% + 0.4rem); }
+.p-select__option { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 0.65rem; color: #0f172a; font-size: 0.875rem; font-weight: 600; white-space: nowrap; cursor: pointer; }
+.p-select__option.is-active { background: #f8fafc; }
+.p-select__option.is-picked { background: #fff4eb; color: #c2410c; }
+.p-select__option i,
+.p-select__option svg { visibility: hidden; color: #ea7a2e; font-size: 0.75rem; }
+.p-select__option.is-picked i,
+.p-select__option.is-picked svg { visibility: visible; }
+
 /* Profile, admins: their tools for the member, a dark block of the right column */
 .p-pro-admin-tools { padding: 1.1rem 0.75rem 0.6rem; border-radius: 1rem; background: #0f172a; color: #e2e8f0; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.2); }
 .p-pro-admin-tools .p-pro-admin-tools__title { display: flex; align-items: center; gap: 0.45rem; margin: 0 0.6rem 0.6rem; color: #f8fafc; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }

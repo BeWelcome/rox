@@ -1,6 +1,7 @@
 import {initializeSingleAutoComplete} from '../suggest/locations';
 import {initializeTomSelects} from '../tom-select';
 import {createContactPanel, onContactLinkClick} from '../contact/panel';
+import {prettySelect} from '../pretty-select';
 
 import L from 'leaflet';
 import 'leaflet.fullscreen';
@@ -730,3 +731,6 @@ if (preview) {
 }
 
 initializeTomSelects();
+
+// The radius and the sort: a menu in the site's look instead of the browser's list
+document.querySelectorAll('.p-search .p-search-select--radius, .p-search .p-search-select--small').forEach(prettySelect);

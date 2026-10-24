@@ -11494,3 +11494,39 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
   .p-trips-trip__actions .p-notes-card__action,
   .p-trips-trip__actions .p-notes-card__action:hover { width: 2.25rem; height: 2.25rem; }
 }
+
+/* Answer forms of requests and invitations: one line with the "^" menu (templates, Change
+   dates), the message and Send (conversations/_compose_tools.html.twig). The message is one
+   line on a computer, two on phones, and grows with the text (requests.js). */
+.c-decide__foot--inline { align-items: center; gap: 0.5rem; }
+/* Guest and inviter: the line opens the form, no gap above it (the dates card has its own) */
+.c-inbox-respond--guest .c-decide__foot--inline { margin-top: 0; }
+.c-decide .c-decide__foot--inline .c-decide__text { flex: 1 1 auto; width: auto; min-width: 0; min-height: 2.75rem; padding: 0.6rem 1rem; border-radius: 1.4rem; }
+.c-decide__foot--inline .c-decide__send { flex: 0 0 auto; height: 2.75rem; margin-left: 0; }
+.c-compose-tools { flex-shrink: 0; }
+.c-compose-tools__toggle { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #475569; cursor: pointer; }
+.c-compose-tools__toggle:hover,
+.c-compose-tools__toggle[aria-expanded="true"] { border-color: #fdba74; background: #fff7ed; color: #c2410c; }
+.c-compose-tools__toggle i, .c-compose-tools__toggle svg { font-size: 0.85rem; transition: transform 0.15s ease; }
+.c-compose-tools__toggle[aria-expanded="true"] i, .c-compose-tools__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.c-compose-tools__menu { min-width: 15rem; padding: 0.4rem; border: 0; border-radius: 1rem; background: #fff; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16), 0 0 0 1px #e2e8f0; }
+.c-compose-tools__header { display: flex; align-items: center; gap: 0.45rem; padding: 0.5rem 0.65rem 0.3rem; color: #64748b; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.c-compose-tools__item { display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.65rem; border-radius: 0.65rem; color: #0f172a; font-size: 0.9rem; white-space: normal; }
+.c-compose-tools__item i, .c-compose-tools__item svg { flex-shrink: 0; width: 1rem; color: #94a3b8; font-size: 0.85rem; }
+.c-compose-tools__item:hover, .c-compose-tools__item:focus { background: #fff7ed; color: #9a3412; }
+.c-compose-tools__item:hover i, .c-compose-tools__item:hover svg { color: #ea7a2e; }
+.c-compose-tools__menu .dropdown-divider { margin: 0.3rem 0.25rem; border-color: #f1f5f9; }
+/* Phones: two lines for the message, Send as a round button (its colour still says what it sends) */
+@media (max-width: 575.98px) {
+  .c-decide .c-decide__foot--inline .c-decide__text { min-height: 4.1rem; }
+  .c-decide__foot--inline .c-decide__send { width: 2.75rem; padding: 0; border-radius: 50%; }
+  .c-decide__foot--inline .c-decide__send > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .c-decide__foot--inline .c-decide__send { position: relative; }
+  .c-inbox-compose--respond:has(.c-decide__foot--inline) { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+}
+/* Host who already answered: the same line, "Change my answer" under it */
+.c-decide--answered .c-decide__write[data-choice="reply"]:not([hidden]) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-areas: "tools text send" "change change change";
+}
+.c-decide--answered .c-decide__write[data-choice="reply"] .c-compose-tools { grid-area: tools; }

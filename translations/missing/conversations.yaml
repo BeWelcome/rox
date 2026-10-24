@@ -227,3 +227,6 @@ conversation.report.short:
 contact.head.conversation:
     - 'Conversation with'
     - Small label above the member's name at the top of the side panel showing a conversation already started with them (profile)
+conversation.compose.tools:
+    - 'Templates and more'
+    - Tooltip of the round arrow button left of the message field in a conversation, it opens the reply templates (and Change dates)

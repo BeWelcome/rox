@@ -1,8 +1,9 @@
 {#
-  Top of every profile page: the photo with the hosting badge, name,
-  gender, username, place, occupation and last login; the actions; three tiles (hosting,
-  comments, languages) and the tabs. On phones the actions stick to the bottom of the screen
-  and the tabs to the top.
+  Top of every profile page: the photo, name, username, place and last activity; the actions
+  and the language switch on the right; then what members trust (hosting, comments) on one
+  line, and the tabs. Occupation, gender, age and membership length are in a card on the
+  profile tab (profile/_facts.html.twig). On phones the actions stick to the bottom of the
+  screen and the tabs to the top.
 #}
 {% if member.translations[locale] is defined %}
   {% set memberfields = member.translations[locale] %}
@@ -17,8 +18,6 @@
   or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_ADMIN')) %}
 {% set address = member.activeAddress %}
 {% set lastActivity = (member.lastActive == null) ? member.created : member.lastActive %}
-{% set occupation = memberfields.Occupation ?? '' %}
-{% set showAge = member.isAgeVisible and member.Age != 0 %}
 {% set passedAway = member.status == 'PassedAway' %}
 {% set hosting = not passedAway and member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
 {% set items = submenu.items ?? {} %}
@@ -40,28 +39,6 @@
   {% for _l in _langs %}{% if _translations[_l]|length > 1 %}{% set _langCount = _langCount + 1 %}{% endif %}{% endfor %}
 
   <div class="p-pro__wrap container-lg">
-    {% if _langCount > 1 %}
-      {% set _reqLang = app.request.query.get('language') %}
-      {% set _active = _reqLang is not null and _reqLang in _langs ? _reqLang : (locale in _langs ? locale : 'en') %}
-      <div class="p-lang-switch dropdown">
-        <button type="button" class="p-lang-switch__toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
-                aria-label="{{ 'menu.language.toggle'|trans }}">
-          <i class="fas fa-globe" aria-hidden="true"></i>
-          <span class="p-lang-switch__name" data-lang-current-name>{{ language_name(_active) }}</span>
-          <span class="p-lang-switch__code" data-lang-current-code>{{ _active|upper }}</span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
-          {% for _l in _langs %}
-            {% if _translations[_l]|length > 1 %}
-              <li>
-                <button type="button" class="dropdown-item p-hero__dropdown-item p-lang-option{% if _l is same as(_active) %} p-lang-option--active{% endif %}"
-                        data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
-              </li>
-            {% endif %}
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
 
     <div class="p-pro__head">
       {% if compactHead %}
@@ -97,18 +74,7 @@
         {% endif %}
       </div>
 
-      {# ── Who: name and username; place, occupation, gender; activity and membership ── #}
-      {% set gender = member.isGenderVisible and member.gender in ['female', 'male', 'other'] ? member.gender : null %}
-      {% if gender or showAge %}
-        {% set _who %}
-          {%- if gender -%}
-            <i class="fas {{ { female: 'fa-venus', male: 'fa-mars', other: 'fa-genderless' }[gender] }}" aria-hidden="true"></i>
-            <span>{{ gender|trans }}</span>
-          {%- endif -%}
-          {%- if gender and showAge %}<span aria-hidden="true">·</span>{% endif -%}
-          {%- if showAge %}<span>{{ member.age }}</span>{% endif -%}
-        {% endset %}
-      {% endif %}
+      {# ── Who: name and username, place, last activity ── #}
       <div class="p-pro__info">
         <div class="p-pro__name-row">
           <h1 class="p-pro__name">
@@ -119,10 +85,6 @@
             {%- endif -%}
           </h1>
           {% if member.visibleName != '' %}<span class="p-pro__username">@{{ member.Username }}</span>{% endif %}
-          {# On phones the gender sits next to the name, on wider screens at the end of the next line #}
-          {% if _who is defined %}
-            <span class="p-search-card__who p-search-card__who--{{ gender ?: 'none' }} p-pro__who p-pro__who--name">{{ _who }}</span>
-          {% endif %}
         </div>
 
         <p class="p-pro__meta">
@@ -131,42 +93,16 @@
             {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
             {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
             <span class="p-pro__meta-item p-pro__place">
-              <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
               <a class="p-pro__city" href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>,
               <a class="p-pro__country" href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
             </span>
           {% else %}
             <span class="p-pro__meta-item p-pro__place p-pro__place--empty">{{ 'profile.no.city.yet'|trans }}</span>
           {% endif %}
-          {% if occupation != '' %}
-            <span class="p-pro__meta-item p-pro__occupation">
-              <i class="fas fa-briefcase" aria-hidden="true"></i>
-              <span class="visually-hidden">{{ 'profile.occupation'|trans }}:</span> {{ occupation|purify }}
-            </span>
-          {% endif %}
-          {% if _who is defined %}
-            <span class="p-pro__meta-item p-pro__meta-item--who">
-              <span class="p-search-card__who p-search-card__who--{{ gender ?: 'none' }} p-pro__who">{{ _who }}</span>
-            </span>
-          {% endif %}
         </p>
 
-        {% set _since %}
-          {{- 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) -}}
-          {%- if admin %} ({{ member.created|format_datetime() }}){% endif -%}
-        {% endset %}
-        <p class="p-pro__meta p-pro__meta--facts">
-          <span class="p-pro__meta-item p-pro__since">{{ _since }}</span>
-        </p>
-
+        {% set _days = lastActivity.diffInDays %}
         <p class="p-pro__activity">
-          {% if hosting %}
-            <span class="p-pro__hosting p-pro__hosting--{{ hosting }}">
-              <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
-              {{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}
-            </span>
-          {% endif %}
-          {% set _days = lastActivity.diffInDays %}
           <span class="p-pro__status{% if _days <= 7 %} is-active{% elseif _days <= 30 %} is-recent{% endif %}">
             <span class="p-pro__online" aria-hidden="true"></span>
             {% if _days <= 7 %}
@@ -178,46 +114,14 @@
             {% endif %}
             {%- if admin %} ({{ lastActivity|format_datetime() }}){% endif -%}
           </span>
-          {# References: one coloured count per quality (only the non-zero ones), to the comments #}
-          {% set _byQuality = comments_count ?? member_comments_by_quality(member) %}
-          {% if (_byQuality.positive ?? 0) + (_byQuality.neutral ?? 0) + (_byQuality.negative ?? 0) > 0 %}
-            <span class="p-pro__activity-break" aria-hidden="true"></span>
-            <a class="p-quality-pill" href="{{ url('profile_comments', {username: member.username}) }}">
-              {% for _q, _icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
-                {% if _byQuality[_q] ?? 0 %}
-                  <span class="p-quality-pill__item p-quality-pill__item--{{ _q }}">
-                    <i class="fas fa-{{ _icon }}" aria-hidden="true"></i> {{ _byQuality[_q] }}
-                    <span class="visually-hidden">{{ ('comment.quality.' ~ _q)|trans|striptags }}</span>
-                  </span>
-                {% endif %}
-              {% endfor %}
-            </a>
-          {% endif %}
-          {# Phones: the membership length on the second line, after the comments #}
-          <span class="p-pro__since-line">{{ _since }}</span>
         </p>
-        {# Admins: the member's status, changed from a small bar under the facts #}
-        {% if not own and status_form is defined and not status_form is null %}
-          {{ form_start(status_form, {attr: {class: 'p-pro-admin'}}) }}
-            <label class="p-pro-admin__label" for="{{ status_form.status.vars.id }}">
-              <i class="fas fa-user-shield" aria-hidden="true"></i> {{ 'profile.admin.status'|trans }}
-            </label>
-            <span class="p-pro-admin__select">
-              {{ form_widget(status_form.status, {attr: {class: 'p-pro-admin__field'}}) }}
-              <i class="fas fa-chevron-down" aria-hidden="true"></i>
-            </span>
-            <button type="submit" class="p-pro-admin__save">
-              <i class="fas fa-check" aria-hidden="true"></i> {{ 'submit'|trans }}
-            </button>
-          {{ form_end(status_form) }}
-        {% endif %}
       </div>
 
-      {# ── Actions: message and request stay (stuck to the bottom on phones), more ── #}
+      {# ── Actions: message and request stay (stuck to the bottom on phones), more, language ── #}
       <div class="p-pro__actions">
         {% if own %}
-          <a href="{{ url('profile_edit', {username: member.username}) }}" class="p-hero__btn p-hero__btn--secondary">
-            <i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.edit'|trans }}
+          <a href="{{ url('profile_edit', {username: member.username}) }}" class="p-hero__btn p-hero__btn--secondary p-pro__edit">
+            <i class="fas fa-pen" aria-hidden="true"></i> <span class="p-pro__edit-text">{{ 'profile.edit'|trans }}</span>
           </a>
           {% set _accountItems = [] %}
           {% for _k in ['edit_account', 'preferences', 'mydata', 'mynotes'] %}
@@ -283,7 +187,71 @@
             </div>
           {% endif %}
         {% endif %}
+        {# The profile's languages: one shown at a time #}
+        {% if _langCount > 1 %}
+          {% set _reqLang = app.request.query.get('language') %}
+          {% set _active = _reqLang is not null and _reqLang in _langs ? _reqLang : (locale in _langs ? locale : 'en') %}
+          <div class="p-lang-switch dropdown">
+            <button type="button" class="p-lang-switch__toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                    aria-label="{{ 'menu.language.toggle'|trans }}">
+              <i class="fas fa-globe p-lang-switch__globe" aria-hidden="true"></i>
+              <span class="p-lang-switch__name" data-lang-current-name>{{ language_name(_active) }}</span>
+              <span class="p-lang-switch__code" data-lang-current-code>{{ _active|upper }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
+              {% for _l in _langs %}
+                {% if _translations[_l]|length > 1 %}
+                  <li>
+                    <button type="button" class="dropdown-item p-hero__dropdown-item p-lang-option{% if _l is same as(_active) %} p-lang-option--active{% endif %}"
+                            data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
       </div>
+
+      {# ── What members trust: hosting on the left, the comments by quality on the right ── #}
+      {% set _byQuality = comments_count ?? member_comments_by_quality(member) %}
+      {% set _hasComments = (_byQuality.positive ?? 0) + (_byQuality.neutral ?? 0) + (_byQuality.negative ?? 0) > 0 %}
+      {% if hosting or _hasComments %}
+        <div class="p-pro__trust">
+          {% if hosting %}
+            <span class="p-pro__hosting p-pro__hosting--{{ hosting }}">
+              <i class="fas {{ hosting == 'yes' ? 'fa-home' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
+              {{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}
+            </span>
+          {% endif %}
+          {% if _hasComments %}
+            <a class="p-quality-pill" href="{{ url('profile_comments', {username: member.username}) }}">
+              {% for _q, _icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
+                {% if _byQuality[_q] ?? 0 %}
+                  <span class="p-quality-pill__item p-quality-pill__item--{{ _q }}">
+                    <i class="fas fa-{{ _icon }}" aria-hidden="true"></i> {{ _byQuality[_q] }}
+                    <span class="visually-hidden">{{ ('comment.quality.' ~ _q)|trans|striptags }}</span>
+                  </span>
+                {% endif %}
+              {% endfor %}
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+      {# Admins: the member's status, changed from a small bar under the head #}
+      {% if not own and status_form is defined and not status_form is null %}
+        {{ form_start(status_form, {attr: {class: 'p-pro-admin'}}) }}
+          <label class="p-pro-admin__label" for="{{ status_form.status.vars.id }}">
+            <i class="fas fa-user-shield" aria-hidden="true"></i> {{ 'profile.admin.status'|trans }}
+          </label>
+          <span class="p-pro-admin__select">
+            {{ form_widget(status_form.status, {attr: {class: 'p-pro-admin__field'}}) }}
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+          </span>
+          <button type="submit" class="p-pro-admin__save">
+            <i class="fas fa-check" aria-hidden="true"></i> {{ 'submit'|trans }}
+          </button>
+        {{ form_end(status_form) }}
+      {% endif %}
     </div>
 
   </div>{# /.p-pro__wrap #}

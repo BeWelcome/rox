@@ -9109,8 +9109,18 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro { position: relative; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06); }
 .p-pro__wrap { position: relative; z-index: 2; padding-top: 2rem; }
-.p-pro .p-lang-switch { top: 6.5rem; right: calc(var(--bs-gutter-x, 1.5rem) * 0.5); }
-.p-pro__head { display: flex; align-items: flex-start; gap: 1.5rem; }
+.p-pro__head { display: grid; grid-template-areas: "avatar info actions" "avatar trust trust" "admin admin admin"; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto 1fr auto; align-items: start; column-gap: 1.5rem; }
+.p-pro__avatar { grid-area: avatar; }
+.p-pro__info { grid-area: info; }
+.p-pro__actions { grid-area: actions; }
+.p-pro__head > .p-pro-admin { grid-area: admin; }
+/* What members trust, on one line: hosting on the left, the comments by quality on the right */
+.p-pro__trust { display: flex; flex-wrap: wrap; grid-area: trust; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin-top: 1rem; }
+.p-pro__trust .p-quality-pill { gap: 0.4rem; }
+.p-pro__trust .p-quality-pill__item { padding: 0.3rem 0.75rem; }
+/* The language switch under the actions, on the right */
+.p-pro .p-lang-switch { position: relative; top: auto; right: auto; z-index: auto; display: flex; flex-basis: 100%; justify-content: flex-end; }
+.p-pro .p-lang-switch__toggle { min-height: 2.25rem; padding: 0.3rem 0.85rem; background: #fff; }
 
 /* Photo with the hosting badge */
 .p-pro__avatar { position: relative; flex-shrink: 0; width: 150px; height: 150px; }
@@ -9119,11 +9129,13 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro__host { position: absolute; right: 4px; bottom: 6px; display: inline-flex; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; border: 3px solid #fff; border-radius: 999px; color: #fff; font-size: 1rem; }
 .p-pro__host--yes { background: #3fa75a; }
 .p-pro__host--no { background: #94a3b8; }
+/* The hosting is in the line under the head; the badge stays only on the small head of the other tabs */
+.p-pro:not(.p-pro--compact) .p-pro__host { display: none; }
 
 /* Name, gender, username; place, occupation, last login */
-.p-pro__info { flex: 1; min-width: 0; padding-top: 1rem; }
+.p-pro__info { min-width: 0; padding-top: 1.5rem; }
 .p-pro__name-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.65rem; }
-.p-pro .p-pro__name { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.9rem; font-weight: 700; line-height: 1.15; }
+.p-pro .p-pro__name { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.1rem; font-weight: 700; line-height: 1.15; }
 .p-pro__who { font-size: 0.8125rem; }
 .p-pro__who--name { display: none; }
 .p-pro__username { color: #94a3b8; font-size: 0.9375rem; }
@@ -9133,15 +9145,16 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro__meta-item > i,
 .p-pro__meta-item > svg { color: #94a3b8; font-size: 0.8125rem; }
 .p-pro__place a,
-.p-pro__place a:hover { color: #64748b; text-decoration: none; }
+.p-pro__place a:hover { color: #334155; text-decoration: none; }
 .p-pro__place a:hover { text-decoration: underline; }
 .p-pro__place .p-pro__city { color: #0f172a; font-weight: 700; }
 .p-pro__place--empty { color: #94a3b8; }
 .p-pro__occupation { color: #334155; }
-.p-pro .p-pro__activity { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.75rem; margin: 0.6rem 0 0; color: #64748b; font-size: 0.8125rem; }
+.p-pro .p-pro__activity { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.75rem; margin: 0.35rem 0 0; color: #64748b; font-size: 0.9375rem; }
+.p-pro .p-pro__meta { color: #334155; font-size: 1rem; }
 .p-pro__status { display: inline-flex; align-items: center; gap: 0.4rem; color: #475569; }
 /* Hosting as a pill, before the activity */
-.p-pro__hosting { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.9rem; border-radius: 999px; font-size: 0.9375rem; font-weight: 700; }
+.p-pro__hosting { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.1rem; border-radius: 999px; font-size: 1rem; font-weight: 700; }
 .p-pro__hosting--yes { background: #e3f7e8; color: #2f7a43; }
 .p-pro__hosting--no { background: #f1f5f9; color: #64748b; }
 .p-pro__hosting i,
@@ -9166,7 +9179,7 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro__dot { color: #cbd5e1; }
 
 /* Actions: message (white), request stay (orange), more */
-.p-pro__actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.5rem; padding-top: 1.25rem; }
+.p-pro__actions { display: flex; flex-wrap: wrap; align-items: center; align-content: flex-start; justify-content: flex-end; gap: 0.6rem 0.5rem; padding-top: 1.5rem; }
 .p-pro__btn,
 .p-pro__btn:hover { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.6rem; padding: 0.5rem 1.15rem; border-radius: 999px; font-size: 0.875rem; font-weight: 700; text-decoration: none !important; white-space: nowrap; }
 .p-pro__btn--message,
@@ -9217,6 +9230,18 @@ a.p-pro__tile--comments:hover { border-color: #e2e8f0; background: #f8fafc; }
 .p-pro__tabs-wrap .p-hero__tabs { padding: 0; border-top: 0; }
 .p-pro__tabs-wrap .p-hero__tab { gap: 0.45rem; padding: 0.85rem 0.9rem; font-size: 0.875rem; font-weight: 600; }
 .p-pro__tabs-wrap .p-hero__tab:first-child { padding-left: 0; }
+
+/* Facts card, first on the profile tab: label on the left, value on the right */
+.p-pro-card.p-pro-facts { padding-top: 0.4rem; padding-bottom: 1rem; }
+.p-pro-facts__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid #eef0f3; }
+.p-pro-facts__label { flex-shrink: 0; color: #64748b; font-size: 0.9375rem; }
+.p-pro-facts__value { min-width: 0; color: #0f172a; font-size: 0.9375rem; font-weight: 700; text-align: right; overflow-wrap: anywhere; }
+.p-pro-facts__value p { display: inline; margin: 0; }
+.p-pro-facts .p-pro-facts__since { display: flex; align-items: center; gap: 0.45rem; margin: 0.85rem 0 0; color: #94a3b8; font-size: 0.875rem; }
+.p-pro-facts__since i,
+.p-pro-facts__since svg { font-size: 0.8rem; }
+.p-pro-facts__row:has(+ .p-pro-facts__since) { border-bottom: 0; }
+.p-pro-facts .p-pro-facts__row:has(+ .p-pro-facts__since) + .p-pro-facts__since { margin-top: 0.1rem; }
 
 /* Two columns of white cards */
 .p-pro-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); align-items: start; gap: 1.25rem; padding: 1.25rem 0 2.5rem; }
@@ -9336,18 +9361,30 @@ a.p-pro-filter__item:hover { background: #fff; }
 @media (max-width: 767.98px) {
   /* Header: photo under the banner with the "more" button on its right, then who they are */
   .p-pro__wrap { padding-top: 1rem; }
-  .p-pro__head { flex-wrap: wrap; gap: 0; }
+  /* Photo, who they are and the actions on a row; what members trust on the next one */
+  .p-pro__head { grid-template-areas: "avatar info actions" "trust trust trust" "admin admin admin"; grid-template-rows: auto; align-items: center; column-gap: 0.9rem; }
   .p-pro__avatar,
-  .p-pro__avatar-img { width: 112px; height: 112px; }
-  .p-pro__avatar-img { border-width: 4px; }
+  .p-pro__avatar-img { width: 104px; height: 104px; }
+  .p-pro__avatar-img { border-width: 0; box-shadow: none; }
   .p-pro__host { right: 0; bottom: 4px; width: 2.2rem; height: 2.2rem; font-size: 0.85rem; }
-  .p-pro__actions { flex: 1; order: 0; padding-top: 0.75rem; }
-  .p-pro__info { flex-basis: 100%; order: 1; padding-top: 0.6rem; }
+  .p-pro__info { padding-top: 0; }
+  .p-pro__actions { flex-direction: column; flex-wrap: nowrap; align-items: flex-end; align-self: start; gap: 0.75rem; padding-top: 0; }
   .p-pro__actions > .p-pro__btn { display: none; }
-  .p-pro .p-pro__name { font-size: 1.6rem; }
-  .p-pro__who--name { display: inline-flex; }
-  .p-pro__meta-item--who { display: none; }
-  .p-pro .p-lang-switch { top: 4.6rem; right: calc(var(--bs-gutter-x, 1.5rem) * 0.5); bottom: auto; }
+  .p-pro__actions .p-hero__btn--icon { width: 2.25rem; height: 2.25rem; border: 0; background: transparent; color: #334155; }
+  /* Own profile: edit as a round button */
+  .p-pro__actions .p-pro__edit { width: 2.4rem; height: 2.4rem; padding: 0; border-radius: 999px; }
+  .p-pro__edit-text { display: none; }
+  .p-pro__actions:has(.p-pro__edit) { flex-direction: row; flex-wrap: wrap; width: 5.4rem; }
+  .p-pro .p-pro__name { font-size: 1.85rem; }
+  .p-pro__username { font-size: 0.875rem; }
+  .p-pro .p-pro__meta { margin-top: 0.3rem; font-size: 0.9375rem; }
+  .p-pro .p-pro__activity { margin-top: 0.2rem; font-size: 0.875rem; }
+  .p-pro .p-lang-switch { flex-basis: auto; }
+  .p-pro__globe, .p-pro .p-lang-switch__globe { display: none; }
+  .p-pro .p-lang-switch__name { display: none; }
+  .p-pro .p-lang-switch__code { display: inline; }
+  .p-pro__trust { margin-top: 1rem; }
+  .p-pro__hosting { padding: 0.45rem 1rem; font-size: 0.9375rem; }
 
   /* Tiles one under the other; languages as plain chips */
   .p-pro__tiles { grid-auto-flow: row; gap: 0.6rem; padding: 1rem 0; }
@@ -9369,11 +9406,7 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro__tabs-wrap .p-hero__tab svg { display: none; }
   .p-pro__tabs-wrap .p-hero__tab .p-hero__tab-count i,
   .p-pro__tabs-wrap .p-hero__tab .p-hero__tab-count svg { display: inline-block; }
-  .p-pro .p-pro__since { display: none; }
-  .p-pro .p-pro__since-line { display: inline; }
-  /* The hosting and activity on a line, the comments and the membership length on the next */
-  .p-pro__activity-break { display: block; flex-basis: 100%; height: 0; }
-  .p-pro__head { padding-bottom: 1rem; }
+  .p-pro__head { padding-bottom: 1.1rem; }
   .p-pro__tabs-wrap .p-hero__tab:first-child { padding-left: 0.25rem; }
 
   /* Sections across the whole width, split by a grey band */
@@ -9429,7 +9462,7 @@ a.p-pro-filter__item:hover { background: #fff; }
   body:has(.p-pro--compact) .p-pro__tabs-wrap { top: 64px; }
   .p-pro.p-pro--compact { position: sticky; top: 0; z-index: 25; background: #f37000; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12); }
   .p-pro--compact .p-pro__wrap { padding-top: 0; padding-right: 0.75rem; padding-left: 0.5rem; }
-  .p-pro--compact .p-pro__head { flex-wrap: nowrap; align-items: center; gap: 0.6rem; height: 64px; padding-bottom: 0; }
+  .p-pro--compact .p-pro__head { display: flex; flex-wrap: nowrap; align-items: center; gap: 0.6rem; height: 64px; padding-bottom: 0; }
   .p-pro--compact .p-pro__back,
   .p-pro--compact .p-pro__back:hover { display: inline-flex; flex-shrink: 0; align-items: center; padding: 0.5rem 0.25rem; color: #fff; font-size: 1.125rem; text-decoration: none; }
   .p-pro--compact .p-pro__avatar,
@@ -9444,10 +9477,11 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro--compact .p-pro__meta,
   .p-pro--compact .p-pro__activity,
   .p-pro--compact .p-pro__tiles,
+  .p-pro--compact .p-pro__trust,
   .p-pro--compact .p-pro-admin,
   .p-pro--compact .p-lang-switch,
   .p-pro--compact .p-pro__actions > :not(.dropdown) { display: none; }
-  .p-pro--compact .p-pro__actions { flex: none; padding-top: 0; }
+  .p-pro--compact .p-pro__actions { flex: none; flex-direction: row; padding-top: 0; }
   .p-pro--compact .p-pro__actions .p-hero__btn--icon { border-color: rgba(255, 255, 255, 0.7); background: transparent; color: #fff; }
 }
 
@@ -9489,7 +9523,7 @@ a.p-pro-filter__item:hover { background: #fff; }
   body:has(.p-pro--compact) .p-comments-cta .p-hero__btn { width: 100%; min-height: 3.1rem; border: 0; border-radius: 999px; background: #f37000; color: #fff; font-size: 1rem; font-weight: 700; box-shadow: 0 6px 18px rgba(243, 112, 0, 0.3); }
   body:has(.p-pro--compact) .p-comments-cta .p-comments-cta__icon { display: none; }
   body:has(.p-pro--compact) .p-comments-cta .p-comments-cta__icon--phone { display: inline-block; }
-  body:has(.p-comments-cta) .p-pro__bottom-bar { display: none; }
+  body:has(.p-pro--compact):has(.p-comments-cta) .p-pro__bottom-bar { display: none; }
   body:has(.p-pro--compact):has(.p-comments-cta) { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
 
   /* Gallery: the albums with their latest picture, then the pictures edge to edge, three across */

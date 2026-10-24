@@ -787,3 +787,15 @@ profile.edit.languages.native.needed:
 profile.all.images:
     - 'See all'
     - Link at the top right of the gallery block of a profile, to the gallery tab; the number of pictures follows it
+profile.facts.occupation:
+    - 'Occupation'
+    - Label in the facts card at the top of the profile tab
+profile.facts.gender:
+    - 'Gender'
+    - Label in the facts card at the top of the profile tab
+profile.facts.age:
+    - 'Age'
+    - Label in the facts card at the top of the profile tab
+profile.facts.gender.age:
+    - 'Gender · age'
+    - Label in the facts card at the top of the profile tab when both are shown

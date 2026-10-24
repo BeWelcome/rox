@@ -27,3 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.show();
     });
 });
+// A country page (places/country.html.twig): a click on a member opens their preview in a drawer,
+// as on the search. Loaded only there.
+if (document.querySelector('.js-places-preview')) {
+    import('./search/preview').then(({initMemberPreview}) => initMemberPreview());
+}

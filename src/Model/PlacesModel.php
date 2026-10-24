@@ -262,6 +262,38 @@ class PlacesModel
     }
 
     /**
+     * The comments the members received, counted by quality, for the pills of their cards.
+     *
+     * @param list<Member> $members
+     *
+     * @return array<int, array{positive: int, neutral: int, negative: int}>
+     */
+    public function getCommentCounts(array $members): array
+    {
+        $counts = [];
+        foreach ($members as $member) {
+            $counts[$member->getId()] = ['positive' => 0, 'neutral' => 0, 'negative' => 0];
+        }
+        if ([] === $counts) {
+            return [];
+        }
+
+        $rows = $this->connection()->executeQuery('
+            SELECT c.to_member_id AS member, c.quality, COUNT(*) AS cnt
+            FROM comment c
+            WHERE c.to_member_id IN (:ids)
+            GROUP BY c.to_member_id, c.quality
+        ', ['ids' => array_keys($counts)], ['ids' => ArrayParameterType::INTEGER])->fetchAllAssociative();
+        foreach ($rows as $row) {
+            if (isset($counts[$row['member']][$row['quality']])) {
+                $counts[$row['member']][$row['quality']] = (int) $row['cnt'];
+            }
+        }
+
+        return $counts;
+    }
+
+    /**
      * @return array{string, array<string, mixed>, array<string, ArrayParameterType>}
      */
     private function membersQuery(string $countryCode, ?string $regionCode): array

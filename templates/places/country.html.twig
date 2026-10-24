@@ -79,18 +79,39 @@
                 <ul class="c-place__members">
                     {% for member in members %}
                         {% set address = member.activeAddress %}
-                        {% set facts = [] %}
-                        {% if member.isAgeVisible and member.age %}{% set facts = facts|merge(['searchyearsold'|trans|format(member.age)|striptags]) %}{% endif %}
-                        {% if address and address.location %}{% set facts = facts|merge([address.location.name]) %}{% endif %}
                         <li>
-                            <a class="c-place-member" href="{{ path('members_profile', { username: member.username }) }}">
-                                <img class="c-place-member__avatar" src="{{ path('avatar', { username: member.username, size: 96 }) }}" alt="" loading="lazy">
+                            {% set hosting = member.accommodation in ['yes', 'no'] ? member.accommodation : 'unknown' %}
+                            {% set hostingLabel = hosting == 'unknown' ? 'places.member.hosting.unknown'|trans : ('search.accommodation.' ~ hosting)|trans|trim('.') %}
+                            {% set qualities = comment_counts[member.id] ?? {} %}
+                            {% set facts = [] %}
+                            {% if member.isAgeVisible and member.age %}{% set facts = facts|merge(['searchyearsold'|trans|format(member.age)|striptags]) %}{% endif %}
+                            {% if address and address.location %}{% set facts = facts|merge([address.location.name]) %}{% endif %}
+                            <a class="c-place-member js-search-preview-open" href="{{ path('members_profile', { username: member.username }) }}" data-preview="{{ path('search_member_preview', { username: member.username }) }}">
+                                <span class="c-place-member__picture c-place-member__picture--{{ hosting }}">
+                                    <img class="c-place-member__avatar" src="{{ path('avatar', { username: member.username, size: 200 }) }}" alt="" loading="lazy">
+                                    <span class="c-place-member__host" title="{{ hostingLabel }}">
+                                        <i class="fas {{ hosting == 'yes' ? 'fa-home' : (hosting == 'no' ? 'fa-times' : 'fa-question') }}" aria-hidden="true"></i>
+                                        <span class="visually-hidden">{{ hostingLabel }}</span>
+                                    </span>
+                                </span>
                                 <span class="c-place-member__body">
                                     <span class="c-place-member__name">{{ member.username }}</span>
-                                    {% if facts|length %}
-                                        <span class="c-place-member__meta"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ facts|join(' · ') }}</span>
-                                    {% endif %}
+                                    {% if facts|length %}<span class="c-place-member__meta">{{ facts|join(' · ') }}</span>{% endif %}
                                 </span>
+                                {% if (qualities.positive ?? 0) + (qualities.neutral ?? 0) + (qualities.negative ?? 0) > 0 %}
+                                    <span class="p-quality-pill c-place-member__qualities">
+                                        {% for _q, _icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
+                                            {% if qualities[_q] ?? 0 %}
+                                                <span class="p-quality-pill__item p-quality-pill__item--{{ _q }}">
+                                                    <i class="fas fa-{{ _icon }}" aria-hidden="true"></i> {{ qualities[_q] }}
+                                                    <span class="visually-hidden">{{ ('comment.quality.' ~ _q)|trans|striptags }}</span>
+                                                </span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                {% else %}
+                                    <span class="c-place-member__new">{{ 'places.member.no.comments'|trans }}</span>
+                                {% endif %}
                             </a>
                         </li>
                     {% endfor %}
@@ -99,4 +120,8 @@
             {% endif %}
         </div>
     </section>
+
+    {# A click on a member opens their preview in a drawer, as on the search (search/preview.js, loaded by bewelcome.js) #}
+    <div class="js-places-preview" hidden></div>
+    {{ include('search/_preview_drawer.html.twig') }}
 {% endblock content %}

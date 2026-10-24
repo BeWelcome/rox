@@ -55,3 +55,9 @@ places.country.back:
 places.country.empty:
     - 'No member lives here yet.'
     - Shown on a country page when no member lives in the country or region chosen
+places.member.hosting.unknown:
+    - 'Has not said yet whether they host'
+    - Hidden label of the question mark on the picture of a member who did not say if they host, on a country page
+places.member.no.comments:
+    - 'New member'
+    - Shown on a member of a country page instead of the comment counts when nobody has left a comment yet

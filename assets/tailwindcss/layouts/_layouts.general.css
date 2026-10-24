@@ -8045,24 +8045,41 @@ a.c-place__pager-btn:hover { border-color: #cbd5e1; background: #f8fafc; color: 
 .c-place__members { display: grid; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
 @media (min-width: 640px) { .c-place__members { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 992px) { .c-place__members { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* A member: a compact card, the picture ringed by the hosting colour with its badge on the left;
+   name, age and town, then the comments by quality (or "New member"). Phones: rows, comments on the right */
 .c-place-member {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 0.9rem;
+  column-gap: 0.85rem;
+  row-gap: 0.3rem;
   height: 100%;
-  padding: 0.9rem 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid #eef0f3;
   border-radius: 0.9rem;
-  background: #f8fafc;
+  background: #fff;
   color: #0f172a;
   text-decoration: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.c-place-member:hover { background: #fff7ed; color: #0f172a; text-decoration: none; }
-.c-place-member__avatar { flex: none; width: 4.5rem; height: 4.5rem; border-radius: 999px; object-fit: cover; }
-.c-place-member__body { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
-.c-place-member__name { overflow: hidden; font-size: 1.05rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.c-place-member:hover { border-color: #e2e8f0; box-shadow: 0 6px 18px rgba(15, 23, 42, 0.07); color: #0f172a; text-decoration: none; }
+.c-place-member__picture { position: relative; grid-row: span 2; display: inline-flex; padding: 3px; border: 2.5px solid #cbd5e1; border-radius: 999px; }
+.c-place-member__picture--yes { border-color: #3fa75a; }
+.c-place-member__picture--unknown { border-color: #f0a030; }
+.c-place-member__avatar { display: block; width: 3.9rem; height: 3.9rem; border-radius: 999px; object-fit: cover; background: #f1f5f9; }
+.c-place-member__host { position: absolute; right: -0.3rem; bottom: -0.25rem; display: inline-flex; align-items: center; justify-content: center; width: 1.6rem; height: 1.6rem; border: 2px solid #fff; border-radius: 999px; background: #94a3b8; color: #fff; }
+.c-place-member__picture--yes .c-place-member__host { background: #3fa75a; }
+.c-place-member__picture--unknown .c-place-member__host { background: #f0a030; }
+.c-place-member__host i,
+.c-place-member__host svg { font-size: 0.65rem; }
+.c-place-member__body { display: flex; flex-direction: column; gap: 0.05rem; min-width: 0; align-self: end; }
+.c-place-member__name { overflow: hidden; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.05rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
 .c-place-member__meta { overflow: hidden; color: #64748b; font-size: 0.875rem; text-overflow: ellipsis; white-space: nowrap; }
-.c-place-member__meta i,
-.c-place-member__meta svg { color: #f37000; }
+.c-place-member__qualities,
+.c-place-member__new { align-self: start; }
+.c-place-member__qualities { flex-wrap: wrap; }
+.c-place-member__qualities .p-quality-pill__item { padding: 0.1rem 0.55rem; font-size: 0.8125rem; }
+.c-place-member__new { color: #94a3b8; font-size: 0.875rem; font-weight: 600; line-height: 1.7; }
 .c-place__empty { color: #64748b; }
 
 @media (max-width: 639.98px) {
@@ -8076,9 +8093,13 @@ a.c-place__pager-btn:hover { border-color: #cbd5e1; background: #f8fafc; color: 
   .c-place__pager--top { display: none; }
   .c-place__pager--bottom { display: flex; }
   .c-place__members { gap: 0; }
-  .c-place-member { padding: 0.75rem 0; border-bottom: 1px solid #f1f5f9; border-radius: 0; background: transparent; }
+  .c-place-member { grid-template-columns: auto minmax(0, 1fr) auto; padding: 0.75rem 0; border: 0; border-bottom: 1px solid #f1f5f9; border-radius: 0; background: transparent; }
+  .c-place-member:hover { box-shadow: none; }
   .c-place__members li:last-child .c-place-member { border-bottom: 0; }
-  .c-place-member__avatar { width: 3.75rem; height: 3.75rem; }
+  .c-place-member__picture { grid-row: auto; }
+  .c-place-member__body { align-self: center; }
+  .c-place-member__qualities { align-self: center; flex-wrap: nowrap; }
+  .c-place-member__new { display: none; }
 }
 
 .c-home-involved,

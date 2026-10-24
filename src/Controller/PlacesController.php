@@ -78,6 +78,7 @@ class PlacesController extends AbstractController
             'active_region' => $activeRegion,
             'members' => $result['members'],
             'members_total' => $result['total'],
+            'comment_counts' => $this->placesModel->getCommentCounts($result['members']),
             'page' => max(1, $page),
             'pages' => $pages,
             'search_query' => ['tiny' => [

@@ -1,9 +1,10 @@
 {% import 'macros.twig' as macros %}
 {#
-  The latest forum and group threads, on the home page (loaded into the Forum tab).
+  The latest threads on the home page: the forum in the Forum tab, the member's groups
+  in the My groups tab (displayId and tab say which).
   The title opens the thread, the time of the last post jumps to that post.
 #}
-<div id="threadsdisplay" class="c-home-list">
+<div id="{{ displayId ?? 'threadsdisplay' }}" class="c-home-list">
     {% for thread in threads %}
         {% set page = 1 %}
         {% set lastpost = '' %}
@@ -26,20 +27,26 @@
             <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
             <div class="c-home-item__body">
                 <a class="c-home-item__title c-home-item__title--link" href="{{ threadUrl }}">{{ thread.title|striptags }}</a>
-                <p class="c-home-item__meta">
-                    <i class="fas fa-users" aria-hidden="true"></i>
-                    {% if thread.group %}
+                {# the group's name; forum threads all belong to the one BeWelcome forum, so nothing #}
+                {% if thread.group %}
+                    <p class="c-home-item__meta">
+                        <i class="fas fa-users" aria-hidden="true"></i>
                         <a href="{{ url('group_start', { group_id: thread.group.id }) }}">{{ thread.group.name }}</a>
-                    {% else %}
-                        <a href="{{ url('bwforum') }}">{{ 'dashboard.bwforum'|trans }}</a>
-                    {% endif %}
-                </p>
+                    </p>
+                {% endif %}
                 <p class="c-home-item__meta">
                     {{ 'thread.lastpostby'|trans }}
                     <a class="c-home-item__author" href="{{ url('members_profile', { username: thread.lastpost.author.username }) }}">{{ thread.lastpost.author.username }}</a>
                     · <a class="c-home-item__when" href="{{ lastUrl }}" title="{{ thread.lastpost.updated.toDateTimeString }}">{{ thread.lastpost.updated.diffForHumans }}</a>
                 </p>
             </div>
+            {% set replies = thread.replies|default(0) %}
+            <a class="c-home-item__replies{% if replies > 0 %} has-replies{% endif %}" href="{{ lastUrl }}" title="{{ 'landing.thread.replies'|trans({ count: replies }) }}">
+                <i class="far fa-comment" aria-hidden="true"></i>
+                <span>{{ replies }}</span>
+            </a>
         </div>
+    {% else %}
+        <p class="c-home-list__empty">{{ (tab ?? '') == 'groups' ? 'landing.groups.empty'|trans : 'landing.threads.empty'|trans }}</p>
     {% endfor %}
 </div>

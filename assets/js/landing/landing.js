@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     Home.updateMessages();
-    Home.updateThreads();
+    Home.updateGroups();
     Home.updateTripLegs();
 
     const tabElements = document.querySelectorAll('a[data-bs-toggle="tab"]');
@@ -48,8 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.bootstrap.Tab.getOrCreateInstance(tabFromHash).show();
     }
 
-    // Filter pills: All / Unread pick one, Groups / Forum switch on and off.
-    // The lists are reloaded with the pills that carry the "active" class.
+    // Filter pills of the messages: All / Unread pick one, and the list is reloaded.
     document.querySelectorAll('.js-home-filter').forEach(function(pill) {
         pill.addEventListener('click', function() {
             if (pill.dataset.group === 'messages') {
@@ -58,10 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     other.setAttribute('aria-checked', other === pill ? 'true' : 'false');
                 });
                 Home.updateMessages();
-            } else {
-                pill.classList.toggle('active');
-                pill.setAttribute('aria-pressed', pill.classList.contains('active') ? 'true' : 'false');
-                Home.updateThreads();
             }
         });
     });
@@ -77,27 +72,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (unreadRadio) {
         unreadRadio.addEventListener('change', function() {
             setTimeout(Home.updateMessages, 500);
-        });
-    }
-
-    const groupsButton = document.getElementById('groupsButton');
-    if (groupsButton) {
-        groupsButton.addEventListener('change', function() {
-            setTimeout(Home.updateThreads, 500);
-        });
-    }
-
-    const forumButton = document.getElementById('forumButton');
-    if (forumButton) {
-        forumButton.addEventListener('change', function() {
-            setTimeout(Home.updateThreads, 500);
-        });
-    }
-
-    const followingButton = document.getElementById('followingButton');
-    if (followingButton) {
-        followingButton.addEventListener('change', function() {
-            setTimeout(Home.updateThreads, 500);
         });
     }
 
@@ -186,6 +160,9 @@ var Home = {
             case 'threads':
                 return Home.updateThreads();
 
+            case 'groups':
+                return Home.updateGroups();
+
             case 'activities':
                 return Home.updateActivities();
         }
@@ -243,27 +220,18 @@ var Home = {
                 });
             });
     },
+    // The Forum tab (forum threads) and the My groups tab (threads of the member's groups).
     updateThreads: function () {
-        // Get parameters
-        const groupsButton = document.getElementById('groupsButton');
-        const groups = groupsButton && groupsButton.classList.contains('active') ? 1 : 0;
-        
-        const forumButton = document.getElementById('forumButton');
-        const forum = forumButton && forumButton.classList.contains('active') ? 1 : 0;
-        
-        const followingEl = document.getElementById('following');
-        const following = followingEl && followingEl.classList.contains('active') ? 1 : 0;
-
-        const params = new URLSearchParams({
-            groups: groups,
-            forum: forum,
-            following: following
-        });
-
-        fetch('/widget/threads?' + params.toString())
+        Home.loadThreads('forum', 'threadsdisplay');
+    },
+    updateGroups: function () {
+        Home.loadThreads('groups', 'groupsdisplay');
+    },
+    loadThreads: function (tab, displayId) {
+        fetch('/widget/threads?' + new URLSearchParams({ tab: tab }).toString())
             .then(response => response.text())
             .then(threads => {
-                const display = document.getElementById('threadsdisplay');
+                const display = document.getElementById(displayId);
                 if (display) {
                     display.outerHTML = threads;
                 }

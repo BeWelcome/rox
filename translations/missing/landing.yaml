@@ -84,3 +84,18 @@ landing.beinformed.previous:
 landing.beinformed.next:
     - 'Next links'
     - Button that shows the next page of links in the "Be informed" box of the home page
+landing.tab.today:
+    - 'Threads with a new post today'
+    - Tooltip of the count next to the Forum and My groups tabs on the home page
+landing.threads.empty:
+    - 'No discussions yet.'
+    - Shown in the Forum tab of the home page when there is no thread to show
+landing.groups.empty:
+    - 'No discussions in your groups yet.'
+    - Shown in the My groups tab of the home page when the member's groups have no thread
+landing.see.all:
+    - 'See all'
+    - Button under the Forum, My groups and Activities lists on the home page, opens the full list
+landing.thread.replies:
+    - '{count} replies'
+    - Tooltip of the replies count on the right of a forum or group thread on the home page. Keep {count} intact.

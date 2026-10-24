@@ -7834,6 +7834,26 @@ a.c-home-item:hover .c-home-item__title,
 .c-home-item__dot { display: inline-block; width: 0.55rem; height: 0.55rem; margin-left: 0.4rem; border-radius: 50%; background: #f37000; vertical-align: 0.05rem; }
 .c-home-item__meta { margin: 0; color: #64748b; font-size: 0.8125rem; }
 .c-home-item__meta + .c-home-item__meta { color: #94a3b8; }
+/* Forum and My groups: the number of replies on the right, orange when there is at least one */
+.c-home-item__replies,
+.c-home-item__replies:hover {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 0.35rem;
+  align-self: center;
+  min-width: 3rem;
+  justify-content: center;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  background: #f1f5f9;
+  color: #94a3b8;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.c-home-item__replies.has-replies { background: #fff7ed; color: #c2410c; box-shadow: inset 0 0 0 1px #fed7aa; }
+.c-home-item__replies.has-replies:hover { background: #ffedd5; color: #9a3412; }
 .c-home-item__meta i, .c-home-item__meta svg { margin-right: 0.15rem; color: #94a3b8; font-size: 0.75rem; }
 .c-home-item__meta a { color: inherit; text-decoration: none; }
 .c-home-item__meta a:hover { color: #c2410c; }
@@ -7883,6 +7903,32 @@ a.c-home-item:hover .c-home-item__title,
 .c-home-link,
 .c-home-link:hover { display: inline-flex; align-items: center; gap: 0.45rem; color: #c2410c; font-size: 0.9375rem; font-weight: 700; text-decoration: none; }
 .c-home-link:hover { color: #9a3412; }
+
+/* Forum, My groups and Activities: the links under the list as buttons ("See all" last) */
+.c-home-pane__footer--buttons { gap: 0.6rem; margin-top: 0.4rem; padding-top: 1rem; border-top: 1px solid #f1f5f9; }
+.c-home-seeall,
+.c-home-seeall:hover {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 1rem;
+  border: 1px solid #fed7aa;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #c2410c;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.c-home-seeall:hover { border-color: #fdba74; background: #ffedd5; color: #9a3412; }
+.c-home-seeall i, .c-home-seeall svg { font-size: 0.85em; }
+.c-home-seeall--light,
+.c-home-seeall--light:hover { border-color: #e2e8f0; background: #fff; color: #334155; }
+.c-home-seeall--light:hover { border-color: #cbd5e1; background: #f8fafc; color: #0f172a; }
 
 @media (max-width: 575.98px) {
   .c-home-tabs { gap: 1.25rem; padding: 0 1.1rem; }

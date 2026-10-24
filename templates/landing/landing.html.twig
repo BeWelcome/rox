@@ -202,7 +202,16 @@
     <section class="c-home-card">
         <ul class="nav c-home-tabs" role="tablist">
             <li class="nav-item" role="presentation">
-                <a class="nav-link c-home-tabs__link active" aria-controls="threads" href="#threads" role="tab" data-bs-toggle="tab">{{ 'landing.tab.forum'|trans }}</a>
+                <a class="nav-link c-home-tabs__link active" aria-controls="groups" href="#groups" role="tab" data-bs-toggle="tab">
+                    {{ 'landing.button.mygroups'|trans }}
+                    {% if groupsTodayCount %}<span class="c-home-tabs__count" title="{{ 'landing.tab.today'|trans }}">{{ groupsTodayCount }}</span>{% endif %}
+                </a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link c-home-tabs__link" aria-controls="threads" href="#threads" role="tab" data-bs-toggle="tab">
+                    {{ 'landing.tab.forum'|trans }}
+                    {% if forumTodayCount %}<span class="c-home-tabs__count" title="{{ 'landing.tab.today'|trans }}">{{ forumTodayCount }}</span>{% endif %}
+                </a>
             </li>
             <li class="nav-item" role="presentation">
                 <a class="nav-link c-home-tabs__link" aria-controls="activities" href="#activities" role="tab" data-bs-toggle="tab">
@@ -213,18 +222,17 @@
         </ul>
 
         <div class="tab-content c-home-card__content">
-            <div role="tabpanel" class="tab-pane c-home-pane active" id="threads">
-                {% set showGroups = forumFilter == 'GroupsAndForums' or forumFilter == 'Groups' %}
-                {% set showForums = forumFilter == 'GroupsAndForums' or forumFilter == 'Forums' %}
-                <div class="c-home-pane__filters" role="group" aria-label="{{ 'landing.tab.forum'|trans }}">
-                    <button type="button" class="c-home-pill js-home-filter{% if showGroups %} active{% endif %}" id="groupsButton" aria-pressed="{{ showGroups ? 'true' : 'false' }}">{{ 'landing.button.groups'|trans|capitalize }}</button>
-                    <button type="button" class="c-home-pill js-home-filter{% if showForums %} active{% endif %}" id="forumButton" aria-pressed="{{ showForums ? 'true' : 'false' }}">{{ 'landing.button.forum'|trans|capitalize }}</button>
+            <div role="tabpanel" class="tab-pane c-home-pane active" id="groups">
+                <div id="groupsdisplay" class="c-home-list">{{ loading }}</div>
+                <div class="c-home-pane__footer c-home-pane__footer--buttons">
+                    <a class="c-home-seeall" href="/groups/mygroups">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
+            </div>
+
+            <div role="tabpanel" class="tab-pane c-home-pane" id="threads">
                 <div id="threadsdisplay" class="c-home-list">{{ loading }}</div>
-                <div class="c-home-pane__footer">
-                    <a class="c-home-link" href="/forums"><i class="fas fa-comments" aria-hidden="true"></i> {{ 'landing.button.discussions'|trans }}</a>
-                    <a class="c-home-link" href="/groups/mygroups"><i class="fas fa-users" aria-hidden="true"></i> {{ 'landing.button.mygroups'|trans }}</a>
-                    <a class="c-home-link" href="/forums/subscriptions"><i class="fas fa-check-square" aria-hidden="true"></i> {{ 'landing.button.subscriptions'|trans }}</a>
+                <div class="c-home-pane__footer c-home-pane__footer--buttons">
+                    <a class="c-home-seeall" href="/forums">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </div>
 
@@ -238,9 +246,9 @@
                     <a class="c-home-pill c-home-pill--action" href="/activities/create"><i class="fa fa-calendar-plus" aria-hidden="true"></i> {{ 'landing.activities.create'|trans }}</a>
                 </div>
                 <div id="activitiesdisplay" class="c-home-list">{{ loading }}</div>
-                <div class="c-home-pane__footer">
-                    <a class="c-home-link" href="/activities"><i class="fa fa-map" aria-hidden="true"></i> {{ 'landing.activities.allactivities'|trans }}</a>
-                    <a class="c-home-link" href="/activities/myactivities"><i class="fa fa-calendar" aria-hidden="true"></i> {{ 'landing.activities.myactivities'|trans }}</a>
+                <div class="c-home-pane__footer c-home-pane__footer--buttons">
+                    <a class="c-home-seeall c-home-seeall--light" href="/activities/myactivities"><i class="fa fa-calendar" aria-hidden="true"></i> {{ 'landing.activities.myactivities'|trans }}</a>
+                    <a class="c-home-seeall" href="/activities">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </div>
         </div>

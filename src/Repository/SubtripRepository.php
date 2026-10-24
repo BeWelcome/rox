@@ -231,6 +231,23 @@ class SubtripRepository extends EntityRepository
             ->addSelect('t')
         ;
 
+        // Bounding-box prefilter on the spatial index of geo__names.coordinates, so the
+        // haversine GeoDistance only runs on legs that can be in range instead of on every leg.
+        // Without an address latitude/longitude are null and GeoDistance already matches nothing.
+        if (null !== $latitude && null !== $longitude) {
+            $boundingBox = new GeoPoint((float) $latitude, (float) $longitude)->boundingBox($distance, 'km');
+            $qb
+                ->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:areaLineString, 0)), l.coordinates) = 1')
+                ->setParameter('areaLineString', \sprintf(
+                    'LINESTRING(%F %F, %F %F)',
+                    $boundingBox->getMinLongitude(),
+                    $boundingBox->getMinLatitude(),
+                    $boundingBox->getMaxLongitude(),
+                    $boundingBox->getMaxLatitude()
+                ))
+            ;
+        }
+
         return $qb;
     }
 }

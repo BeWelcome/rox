@@ -15,6 +15,8 @@ use Gedmo\Translatable\Query\TreeWalker\TranslationWalker;
 use Gedmo\Translatable\TranslatableListener;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -27,75 +29,81 @@ class StatisticsModel
     public function __construct(
         private readonly TranslatorInterface $translator,
         private readonly EntityManagerInterface $entityManager,
+        private readonly CacheInterface $cache,
     ) {
     }
 
     public function getStatisticsHomepage(): array
     {
-        $connection = $this->entityManager->getConnection();
+        // Five full-table counts; the numbers don't need to be live.
+        return $this->cache->get('homepage_statistics', function (ItemInterface $item): array {
+            $item->expiresAfter(3600);
 
-        $members = $connection->executeQuery('
-            SELECT
-                COUNT(*) AS cnt
-            FROM
-                member m
-            WHERE
-                m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
-        ')->fetchOne();
+            $connection = $this->entityManager->getConnection();
 
-        $countries = $connection->executeQuery("
-            SELECT
-                COUNT(DISTINCT g.country_id) AS cnt
-            FROM
-                member m,
-			    address a
-            JOIN geo__names g ON a.location = g.geoname_id 
-			WHERE m.id = a.member_id and m.Status IN ('Active', 'OutOfRemind')
-        ")->fetchOne();
+            $members = $connection->executeQuery('
+                SELECT
+                    COUNT(*) AS cnt
+                FROM
+                    member m
+                WHERE
+                    m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
+            ')->fetchOne();
 
-        $languages = $connection->executeQuery('
-            SELECT
-                COUNT(DISTINCT l.shortCode) AS cnt
-            FROM
-                language l,
-                member_language_level mll,
-                member m
-            WHERE
-                l.ShortCode = mll.language
-                AND mll.member_id = m.Id
-                AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
-        ')->fetchOne();
+            $countries = $connection->executeQuery("
+                SELECT
+                    COUNT(DISTINCT g.country_id) AS cnt
+                FROM
+                    member m,
+    			    address a
+                JOIN geo__names g ON a.location = g.geoname_id 
+    			WHERE m.id = a.member_id and m.Status IN ('Active', 'OutOfRemind')
+            ")->fetchOne();
 
-        $positiveComments = $connection->executeQuery("
-            SELECT
-                COUNT(c.id) AS cnt
-            FROM
-                comments c,
-                member m
-            WHERE
-                c.Quality = 'Good'
-                AND IdFromMember = m.Id
-                AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ')
-        ')->fetchOne();
+            $languages = $connection->executeQuery('
+                SELECT
+                    COUNT(DISTINCT l.shortCode) AS cnt
+                FROM
+                    language l,
+                    member_language_level mll,
+                    member m
+                WHERE
+                    l.ShortCode = mll.language
+                    AND mll.member_id = m.Id
+                    AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
+            ')->fetchOne();
 
-        $activities = $connection->executeQuery('
-            SELECT
-                COUNT(a.id)
-            FROM
-                activities a
-            WHERE
-                a.status = 0
-        ')->fetchOne();
+            $positiveComments = $connection->executeQuery("
+                SELECT
+                    COUNT(c.id) AS cnt
+                FROM
+                    comments c,
+                    member m
+                WHERE
+                    c.Quality = 'Good'
+                    AND IdFromMember = m.Id
+                    AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ')
+            ')->fetchOne();
 
-        $stats = [
-            'members' => $members,
-            'countries' => $countries,
-            'languages' => $languages,
-            'comments' => $positiveComments,
-            'activities' => $activities,
-        ];
+            $activities = $connection->executeQuery('
+                SELECT
+                    COUNT(a.id)
+                FROM
+                    activities a
+                WHERE
+                    a.status = 0
+            ')->fetchOne();
 
-        return $stats;
+            $stats = [
+                'members' => $members,
+                'countries' => $countries,
+                'languages' => $languages,
+                'comments' => $positiveComments,
+                'activities' => $activities,
+            ];
+
+            return $stats;
+        });
     }
 
     public function updateStatistics(DatePeriod $dates, OutputInterface $output): int

@@ -438,132 +438,68 @@ class MOD_words
 
 
     /**
-     * looks up a word keycode in the DB, and returns an object of type LookedUpWord.
-     * If a translation in the intended language is not found, it uses the English version.
-     * If no English definition exists, the keycode itself is used.
+     * looks up a word keycode, and returns an object of type LookedUpWord.
+     * The translations come from the Symfony translator (its catalogues are built from the word
+     * table by App\TranslationLoader\DatabaseLoader, which also falls back to English for
+     * missing or outdated translations). If there is no translation, the keycode itself is used.
      *
-     * @param unknown_type $code the key code for the db lookup
+     * @param unknown_type $code the key code for the lookup
      * @return LookedUpWord information that is created from the word lookup
      */
-    private function _lookup($code, $args, $lang = false, $get_raw = false)    {
-        if($lang == false) {
+    private function _lookup($code, $args, $lang = false, $get_raw = false)
+    {
+        if ($lang === false) {
             $lang = $this->_lang;
         }
 
-        $row = $this->_lookup_row($code, $lang);
-        // select the English wordcode only if not archived
-        $row_en = $this->_lookup_row($code, 'en');
-        $R = MOD_right::get();
+        $trans = $this->_translator->trans(strtolower($code), [], null, $lang);
 
-        // for normal people no translation stuff
-        if(!$row_en) {
-            // if English doesn't exist, show code
+        if ($trans === strtolower($code)) {
             $lookup_result = $code;
-        } elseif (!$row || $row->updated < $row_en->majorupdate) {
-            // if no translation or translation is outdated, show English
-            $lookup_result = $this->_modified_sentence_from_row($row_en, $args, $get_raw);
         } else {
-            // if up-to-date translation present, show translation
-            $lookup_result = $this->_modified_sentence_from_row($row, $args, $get_raw);
+            $lookup_result = $this->_modified_sentence($trans, $args, $get_raw);
         }
 
-        if ($this->_offerTranslationLink) {
-            // make sure translation shows up in new translation interface
-            $trans = $this->_translator->trans(strtolower($code));
-        }
         return new LookedUpWord($code, $lang, $lookup_result);
     }
 
-
-
     /**
-     * Reads the (modified) translation sentence from a row in the database.
+     * Reads the (modified) translation sentence.
      * Modifications (if $get_raw is false):
      *  - stripslashes
-     *  - n12br
+     *  - nl2br
      *
-     * @param dbrow $row
-     * @param array $args
+     * @param string  $sentence
+     * @param array   $args
      * @param boolean $get_raw true for raw string, false for modified string
-     * @return string modified sentence from db
+     * @return string modified sentence
      */
-    private function _modified_sentence_from_row($row, $args, $get_raw = false)
+    private function _modified_sentence($sentence, $args, $get_raw = false)
     {
-        $row_sentence = $row->Sentence;
         if ($get_raw) {
-            $lookup_string = $row_sentence;
+            $lookup_string = $sentence;
         } else {
-            $lookup_string = nl2br(stripslashes($row_sentence));
-        }
-        while (!$res = @vsprintf($lookup_string, $args)) {
-            // if not enough arguments given, fill up with dummy arguments
-            $args[] = ' -x- ';
-        }
-        return $res;
-    }
-
-
-    /**
-     * find out if a translation is obsolete - which depends on the timestamps of last update.
-     *
-     * @param dbrow $row
-     * @param dbrow $row_en
-     * @return boolean comparison of the word update timestamps.
-     */
-    private function _is_obsolete($row, $row_en)
-    {
-        if($row_en && $row) {
-            return ($row->updated) < ($row_en->updated);
-        } else {
-            // English definition is missing
-            return true;
-        }
-    }
-
-
-
-    /**
-     * looks up only one row in the database
-     *
-     * Looks up (localized) texts in BW words table according to provided
-     * language.
-     *
-     * @see wwinlang in /lib/lang.php
-     * @param   string  $code keyword for finding text, not allowed to be empty
-     * @param   string  $lang 2-letter code for language
-     * @return dbrow an object representing one row in the database (?)
-     */
-    private function _lookup_row($code, $lang, $extraWhere = '')
-    {
-        if (is_numeric($code)) {
-            $query =
-                "SELECT SQL_CACHE `code`,`Sentence`, `donottranslate`, `updated`, majorupdate ".
-                "FROM `word` ".
-                "WHERE `id`=" . $this->_dao->escape($code)
-            ;
-        } else {
-        	// TODO: store translation quality in database!
-            $query =
-                '
-SELECT SQL_CACHE code, Sentence, donottranslate, updated, majorupdate
-FROM word
-WHERE code = "' . $this->_dao->escape(strtolower($code)) . '" AND ShortCode = "' . $this->_dao->escape($lang) .'"'. $extraWhere;
+            $lookup_string = nl2br(stripslashes($sentence));
         }
 
-        $q = $this->_dao->query($query);
-        $row = $q->fetch(PDB::FETCH_OBJ);
-		// update the statistic about the use of this word only if the option ToggleStatsForWordsUsage is active
-		if (($this->session->has('Param'))
-		&& ($this->session->get('Param')->ToggleStatsForWordsUsage=="Yes")
-		&& (isset($row->code))) {
-			$query ="CALL IncWordUse('".$row->code."')" ;
-			$s=$this->_dao->query($query);
-            if (!$s) {
-                throw new PException('Failed to IncWordUse for code ['.$row->code.']');
+        // pad the args array with ' -x- ' so that vsprintf doesn't fail
+        $args = array_pad($args, 10, ' -x- ');
+        $translation =  $lookup_string;
+
+        try {
+            $translation = vsprintf($lookup_string, $args);
+        } catch (ValueError) {
+            // A stray % in the translation string tripped vsprintf try to fix by replacing
+            // every % that does not start a valid conversion with an escaped version %%, then retry.
+            $escaped = preg_replace('/%(?!%|(?:\d+\$)?[-+ 0]*(?:\'.)?\d*(?:\.\d+)?[bcdeEfFgGosuxX])/', '%%', $lookup_string);
+            try {
+                $translation = vsprintf($escaped, $args);
+            } catch (ValueError) {
+                // do nothing here $translation is returned as is.
             }
-		}
+        }
 
-        return $row;
+        return $translation;
     }
 
     /**

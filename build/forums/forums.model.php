@@ -2621,7 +2621,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
             $separatedGroupIds = implode(',', $groups);
             $offset = ($currentPage - 1) * $items;
             $query = "
-                SELECT SQL_CALC_FOUND_ROWS
+                SELECT
                     `forum_post`.`id`,
                     `member`.`Username`,
                     `forum_post`.`message`,
@@ -2923,6 +2923,7 @@ class Board implements Iterator {
 		}
 		$row = $s->fetch(PDB::FETCH_OBJ);
 		$this->numberOfThreads = $row->number;
+		$this->totalThreads = $this->numberOfThreads;
 
 		if ($page == 0) {
 		    $from = 0;
@@ -2930,7 +2931,7 @@ class Board implements Iterator {
 		    $from = $this->THREADS_PER_PAGE * ($page - 1);
         }
 
-		$query = "SELECT SQL_CALC_FOUND_ROWS `forum_thread`.`id`,
+		$query = "SELECT `forum_thread`.`id`,
 		 		  `forum_thread`.`id` as IdThread, `forum_thread`.`title`,
 				  `forum_thread`.`IdTitle`,
 				  `forum_thread`.`IdGroup`,
@@ -2968,13 +2969,6 @@ class Board implements Iterator {
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
             $this->threads[] = $row;
         }
-
-		$sFounRow = $this->dao->query("SELECT FOUND_ROWS() AS `found_rows`");
-		if (!$sFounRow) {
-			throw new PException('Could not retrieve number of rows!');
-		}
-        $rowFounRow = $sFounRow->fetch(PDB::FETCH_OBJ);
-        $this->totalThreads = $rowFounRow->found_rows;
 
     } // end of initThreads
 

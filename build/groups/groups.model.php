@@ -967,7 +967,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             }
 
             $query = "
-                SELECT SQL_CALC_FOUND_ROWS
+                SELECT
                     `forum_post`.`id`,
                     `member`.`Username`,
                     `forum_post`.`message`,

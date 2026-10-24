@@ -11048,17 +11048,17 @@ button.p-pe-account__seen.is-shown:hover { background: #bbf7d0; }
 svg.p-pe-account__eye-on, svg.p-pe-account__eye-off { display: none; }
 .p-pe-account__seen.is-shown svg.p-pe-account__eye-on, .p-pe-account__seen:not(.is-shown) svg.p-pe-account__eye-off { display: inline-block; }
 
-/* Phones: one line each, the label on the left, a round pencil */
+/* Phones: two lines each, the label small above the value, a round pencil */
 @media (max-width: 767.98px) {
   .p-pe-account-title__hint { display: none; }
-  .p-pe-account-edit { width: 2.75rem; padding: 0; }
+  .p-pe-card__head .p-pe-account-edit { flex: none; width: 2.75rem; margin-left: auto; padding: 0; }
   .p-pe-account-edit span { display: none; }
   .p-pe-account { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .p-pe-account__item { gap: 0.6rem; padding: 0.85rem 0; border-radius: 0; background: none; }
   .p-pe-account__item + .p-pe-account__item { border-top: 1px solid #f1f5f9; }
   .p-pe-account__icon { width: 1.25rem; height: auto; background: none; color: #94a3b8; }
-  .p-pe-account__text { flex-direction: row; align-items: baseline; gap: 0.75rem; }
-  .p-pe-account__label { flex-shrink: 0; width: 5.5rem; font-size: 0.875rem; }
+  .p-pe-account__text { flex-direction: column; gap: 0.1rem; }
+  .p-pe-account__label { font-size: 0.75rem; }
   .p-pe-account__value { min-width: 0; font-size: 0.95rem; }
   .p-pe-account__pill { padding: 0; background: none; color: inherit; font-size: inherit; }
   .p-pe-account__pill i, .p-pe-account__pill svg { display: none; }

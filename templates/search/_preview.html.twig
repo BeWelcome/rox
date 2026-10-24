@@ -25,19 +25,18 @@
 {% for level, levelLanguages in member.levelLanguages %}
     {% for language in levelLanguages %}{% set languages = languages|merge([('lang_' ~ language.ShortCode)|lower|trans]) %}{% endfor %}
 {% endfor %}
-{# The privacy filter hides logins of the last 7 days; show nothing then. #}
-{% set lastActive = member.lastActive and member.lastActive.diffInDays() > 7 ? member.lastActive|privacy : null %}
+{# Last activity as on the profile: this week, this month, or "Last activity 3 months ago"
+   (the sign-up date when the member never logged in). #}
+{% set _activity = member.lastActive ?: member.created %}
+{% set activityDays = _activity ? _activity.diffInDays() : null %}
+{% set lastActive = _activity ? (activityDays <= 7 ? 'profile.active.week'|trans : (activityDays <= 30 ? 'profile.active.month'|trans : _activity.diffForHumans)) : null %}
 
 {# Nothing here links to the profile except the button at the bottom. #}
 <div class="p-search-preview__content">
     <div class="p-search-preview__who">
-        <span class="p-search-preview__picture">
+        {# Hosting as a ring around the picture: green when the member hosts, grey when not #}
+        <span class="p-search-preview__picture{% if hosting %} p-search-preview__picture--{{ hosting }}{% endif %}">
             <img class="p-search-preview__avatar" src="{{ path('avatar', { username: member.username, size: 192 }) }}" alt="">
-            {% if hosting %}
-                <span class="p-search-preview__host p-search-preview__host--{{ hosting }}" aria-hidden="true">
-                    <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}"></i>
-                </span>
-            {% endif %}
         </span>
         <div class="p-search-preview__names">
             <p class="p-search-preview__title">
@@ -60,8 +59,8 @@
 
     <p class="p-search-preview__activity">
         {%- if lastActive -%}
-            <span class="p-search-card__online{{ member.lastActive.diffInDays() <= 30 ? ' is-recent' : '' }}" aria-hidden="true"></span>
-            <span>{{ 'search.last.login'|trans|trim(': ') }} {{ lastActive }}</span>
+            <span class="p-search-card__online{{ activityDays <= 30 ? ' is-recent' : '' }}" aria-hidden="true"></span>
+            <span>{% if activityDays > 30 %}{{ 'profile.last.activity'|trans|trim(': ') }} {% endif %}{{ lastActive }}</span>
             <span class="p-search-card__dot" aria-hidden="true">·</span>
         {%- endif -%}
         <span>{{ 'search.member.duration'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}</span>

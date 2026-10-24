@@ -151,7 +151,7 @@ class SearchAdapter implements AdapterInterface
         }
 
         $rows = $this->entityManager->createQueryBuilder()
-            ->select('m.username, a.latitude AS ownLatitude, a.longitude AS ownLongitude, l.latitude AS townLatitude, l.longitude AS townLongitude')
+            ->select('m.username, m.accommodation, a.latitude AS ownLatitude, a.longitude AS ownLongitude, l.latitude AS townLatitude, l.longitude AS townLongitude')
             ->from(Member::class, 'm')
             ->join('m.addresses', 'a', 'WITH', 'a.active = 1')
             ->leftJoin('a.location', 'l')
@@ -178,6 +178,8 @@ class SearchAdapter implements AdapterInterface
                 'username' => $row['username'],
                 'latitude' => $latitude,
                 'longitude' => $longitude,
+                // yes / no: the ring around the picture on the map
+                'hosting' => \in_array($row['accommodation'], ['yes', 'no'], true) ? $row['accommodation'] : null,
             ];
         }
 

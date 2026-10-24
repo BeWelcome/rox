@@ -451,7 +451,8 @@ Map.prototype.addMarkers = function (map) {
             icon: L.divIcon({
                 iconSize: [36, 36],
                 iconAnchor: [18, 18],
-                className: 'p-search-map-member',
+                // a green ring when the member hosts, a grey one when not
+                className: 'p-search-map-member' + (value.hosting ? ' p-search-map-member--' + value.hosting : ''),
                 html: '<img src="/members/avatar/' + name + '/48" alt="" loading="lazy">'
             })
         });

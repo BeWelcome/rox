@@ -11530,3 +11530,11 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
   grid-template-areas: "tools text send" "change change change";
 }
 .c-decide--answered .c-decide__write[data-choice="reply"] .c-compose-tools { grid-area: tools; }
+
+/* Search: hosting as a ring around the picture (card and map), green yes, grey no */
+.p-search-card__avatar--yes img { box-shadow: 0 0 0 3px #fff, 0 0 0 6px #3fa75a; }
+.p-search-card__avatar--no img { box-shadow: 0 0 0 3px #fff, 0 0 0 6px #cbd5e1; }
+.p-search-map-member--yes img { border-color: #3fa75a; border-width: 3px; }
+.p-search-map-member--no img { border-color: #94a3b8; border-width: 3px; }
+.p-search-preview .p-search-preview__picture--yes .p-search-preview__avatar { border: 3px solid #fff; box-shadow: 0 0 0 3px #3fa75a, 0 2px 8px rgba(15, 23, 42, 0.12); }
+.p-search-preview .p-search-preview__picture--no .p-search-preview__avatar { border: 3px solid #fff; box-shadow: 0 0 0 3px #cbd5e1, 0 2px 8px rgba(15, 23, 42, 0.12); }

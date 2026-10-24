@@ -24,18 +24,16 @@
         {% set profileUrl = path('members_profile', { username: member.username }) %}
         {% set hosting = member.accommodation in ['yes', 'no'] ? member.accommodation : null %}
         {% set commentCount = result.commentCount ?? 0 %}
-        {# The last login is left out when it is unknown or kept private. #}
-        {# The privacy filter hides logins of the last 7 days; show nothing then. #}
-        {% set lastActive = member.lastActive and member.lastActive.diffInDays() > 7 ? member.lastActive|privacy : null %}
+        {# Last activity as on the profile: this week, this month, or "Last activity 3 months ago"
+           (the sign-up date when the member never logged in). #}
+        {% set _activity = member.lastActive ?: member.created %}
+        {% set activityDays = _activity ? _activity.diffInDays() : null %}
+        {% set lastActive = _activity ? (activityDays <= 7 ? 'profile.active.week'|trans : (activityDays <= 30 ? 'profile.active.month'|trans : _activity.diffForHumans)) : null %}
 
         <article class="p-search-card">
-            <a class="p-search-card__avatar" href="{{ profileUrl }}" tabindex="-1" aria-hidden="true">
+            {# Hosting as a ring around the picture: green when the member hosts, grey when not #}
+            <a class="p-search-card__avatar{% if hosting %} p-search-card__avatar--{{ hosting }}{% endif %}" href="{{ profileUrl }}" tabindex="-1" aria-hidden="true">
                 <img src="{{ path('avatar', { username: member.username, size: 192 }) }}" alt="" loading="lazy">
-                {% if hosting %}
-                    <span class="p-search-card__host p-search-card__host--{{ hosting }}">
-                        <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}"></i>
-                    </span>
-                {% endif %}
             </a>
 
             <div class="p-search-card__head">
@@ -104,10 +102,9 @@
                 <span class="p-search-card__activity{{ lastActive ? '' : ' is-since-only' }}">
                     <i class="far fa-clock" aria-hidden="true"></i>
                     {%- if lastActive %}
-                        {# On phones a dot (green when active in the last week) stands for "Last login". #}
-                        {% set recent = member.lastActive.diffInDays() <= 30 %}
-                        <span class="p-search-card__online{{ recent ? ' is-recent' : '' }}" aria-hidden="true"></span>
-                        <span><span class="p-search-card__login-label">{{ 'search.last.login'|trans|trim(': ') }}</span> <strong>{{ lastActive }}</strong></span>
+                        {# A dot, green when active in the last month #}
+                        <span class="p-search-card__online{{ activityDays <= 30 ? ' is-recent' : '' }}" aria-hidden="true"></span>
+                        <span>{% if activityDays > 30 %}<span class="p-search-card__login-label">{{ 'profile.last.activity'|trans|trim(': ') }}</span> {% endif %}<strong>{{ lastActive }}</strong></span>
                     {%- endif -%}
                     {%- if member.created -%}
                         {%- if lastActive %}<span class="p-search-card__dot p-search-card__since-dot" aria-hidden="true">·</span>{% endif -%}

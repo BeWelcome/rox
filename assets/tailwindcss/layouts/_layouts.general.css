@@ -8705,6 +8705,43 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .p-trips-field--icon > i, .p-trips-field--icon > svg { position: absolute; top: 50%; left: 0.9rem; z-index: 1; color: #ea7a2e; transform: translateY(-50%); pointer-events: none; }
 .p-trips .p-trips-field--icon .p-trips-input,
 .p-trips .p-trips-field--icon .auto-search-wrapper input.p-trips-input { padding-left: 2.4rem; }
+
+/* Place suggestions under a stop: a floating card like on the search page (flag, name, region) */
+.p-trips .auto-search-wrapper .auto-expanded { border-radius: 0.75rem; }
+.p-trips .auto-clear { right: 0.4rem; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #f1f5f9; }
+.p-trips .auto-clear:hover { background: #e2e8f0; }
+.p-trips .auto-clear:before { width: 12px; height: 12px; line-height: 1; }
+.p-trips .auto-clear.hidden { display: none; }
+.p-trips .auto-results-wrapper.auto-is-active {
+  top: calc(100% + 0.4rem);
+  left: 0;
+  right: 0;
+  width: auto;
+  margin: 0;
+  padding: 0.4rem;
+  border: 0;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16), 0 0 0 1px #e2e8f0;
+}
+.p-trips .auto-results-wrapper ul { max-height: 360px; }
+.p-trips .auto-results-wrapper li { padding: 0.55rem 0.65rem; border-radius: 0.75rem; }
+.p-trips .auto-results-wrapper li > div { flex-direction: row-reverse; justify-content: flex-end; gap: 0.9rem; }
+.p-trips .auto-results-wrapper .auto-selected,
+.p-trips .auto-results-wrapper li:hover { background: #fff7ed; }
+.p-trips .auto-results-wrapper li.suggest-group {
+  padding: 0.75rem 0.65rem 0.3rem;
+  background: none;
+  color: #64748b;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+.p-trips .suggest-map.suggest-flag { flex-shrink: 0; width: 2.75rem; height: 2.75rem; }
+.p-trips .suggest-name { color: #0f172a; font-weight: 600; }
+.p-trips .suggest-country { color: #64748b; font-size: 0.8125rem; }
 .p-trips-form__actions { display: flex; justify-content: flex-end; }
 .p-trips .form-error-message,
 .p-trips .invalid-feedback { display: block; color: #dc2626; font-size: 0.8125rem; }

@@ -12,11 +12,18 @@
           {% endif %}
         </span>
         {%- if own -%}
-          {% set edit_text = 'profile.edit.images'|trans %}
-          <div><a href="{{ url('gallery_manage') }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+          <a class="p-gallery-manage-btn" href="{{ url('gallery_manage') }}">
+            <i class="fas fa-edit" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'profile.edit.images'|trans }}</span>
+          </a>
         {%- endif -%}
       </div>
       <div class="card-body">
+        {# Phones: the head above is hidden, the button to manage the gallery comes first #}
+        {% if own and pictures|length > 0 %}
+          <a class="p-gallery-manage-btn p-gallery-manage-btn--phone" href="{{ url('gallery_manage') }}">
+            <i class="fas fa-edit" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'profile.edit.images'|trans }}</span>
+          </a>
+        {% endif %}
         {# Albums: "All" then one pill per album with its number of pictures, only when there are albums #}
         {% if albums|length > 0 %}
           {% set allCount = pictures_total ?? pictures|length %}

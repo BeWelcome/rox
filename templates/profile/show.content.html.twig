@@ -54,28 +54,37 @@
             <div class="p-pro-about js-pro-about">{{ aboutMe|purify|nl2br }}</div>
             <button type="button" class="p-pro-about__more js-pro-about-more" hidden>{{ 'profile.read.more'|trans({}, 'messages', profile_language) }}</button>
           {% endif %}
-          {% if offerHosts|length > 0 %}
-            <div class="p-pro-offer">
-              <i class="fas fa-gift p-pro-offer__icon" aria-hidden="true"></i>
-              <div>
-                <p class="p-pro-offer__label">{{ 'profile.offer.hosts'|trans({}, 'messages', profile_language)|raw }}</p>
-                <div class="p-pro-offer__text">{{ offerHosts|purify }}</div>
-              </div>
-            </div>
-          {% endif %}
-          {% if spokenLanguages|length > 0 %}
-            <div class="p-pro-spoken">
-              <h3 class="p-pro-spoken__label">
-                <i class="fas fa-language" aria-hidden="true"></i>
-                {{ 'languages.spoken'|trans({}, 'messages', profile_language)|striptags }}
-              </h3>
-              <ul class="p-pro__langs">
-                {% for level, langs in spokenLanguages %}
-                  {% for lang in langs %}
-                    <li>{{ ('lang_' ~ lang.ShortCode)|lower|trans({}, 'messages', profile_language) }} <span class="p-pro__lang-level">{{ ('language.level.' ~ level)|lower|trans({}, 'messages', profile_language) }}</span></li>
-                  {% endfor %}
-                {% endfor %}
-              </ul>
+          {# What they offer their hosts and the languages they speak: two columns under a line #}
+          {% if offerHosts|length > 0 or spokenLanguages|length > 0 %}
+            <div class="p-pro-about__extra{% if aboutMe|length == 0 %} p-pro-about__extra--alone{% endif %}">
+              {% if offerHosts|length > 0 %}
+                <div class="p-pro-offer">
+                  <h3 class="p-pro-about__label">
+                    <i class="fas fa-gift" aria-hidden="true"></i>
+                    {{ 'profile.offer.hosts'|trans({}, 'messages', profile_language)|striptags }}
+                  </h3>
+                  <div class="p-pro-offer__text">{{ offerHosts|purify }}</div>
+                </div>
+              {% endif %}
+              {% if spokenLanguages|length > 0 %}
+                <div class="p-pro-spoken">
+                  <h3 class="p-pro-about__label">
+                    <i class="fas fa-language" aria-hidden="true"></i>
+                    {{ 'languages.spoken'|trans({}, 'messages', profile_language)|striptags }}
+                  </h3>
+                  <ul class="p-pro-spoken__list">
+                    {% for level, langs in spokenLanguages %}
+                      {% for lang in langs %}
+                        <li class="p-pro-spoken__item">
+                          <span class="p-pro-spoken__code" aria-hidden="true">{{ lang.ShortCode|upper|slice(0, 2) }}</span>
+                          <span class="p-pro-spoken__name">{{ ('lang_' ~ lang.ShortCode)|lower|trans({}, 'messages', profile_language) }}</span>
+                          <span class="p-pro-spoken__level">{{ ('language.level.' ~ level)|lower|trans({}, 'messages', profile_language) }}</span>
+                        </li>
+                      {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
             </div>
           {% endif %}
         </section>
@@ -127,7 +136,16 @@
             <div class="p-pro-stat">
               <i class="fas fa-star p-pro-stat__icon p-pro-stat__icon--star" aria-hidden="true"></i>
               <span class="p-pro-stat__label">{{ 'profile.hosting_interest'|trans({}, 'messages', profile_language)|striptags|trim(' :') }}</span>
-              <strong class="p-pro-stat__value">{{ macros.hostingInterest(member.hostingInterest, profile_language) }}</strong>
+              {# On 10 steps, filled up to the interest (the words stay for screen readers) #}
+              {% set interest = member.hostingInterest|default(0) %}
+              {% if interest > 0 %}
+                <span class="p-pro-interest" aria-hidden="true">
+                  {% for step in 1..10 %}<span class="p-pro-interest__seg{{ step <= interest ? ' is-on' }}" style="--step: {{ step }}"></span>{% endfor %}
+                </span>
+                <span class="visually-hidden">{{ macros.hostingInterest(interest, profile_language) }}</span>
+              {% else %}
+                <strong class="p-pro-stat__value">{{ macros.hostingInterest(interest, profile_language) }}</strong>
+              {% endif %}
             </div>
             {% if wheelchair %}
               <div class="p-pro-stat p-pro-stat--access">

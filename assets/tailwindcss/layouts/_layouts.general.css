@@ -9123,8 +9123,8 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro .p-pro__line .p-pro__activity { margin: 0; }
 .p-pro .p-pro__line .p-pro__activity::before { content: "•"; margin: 0 0.85rem; color: #cbd5e1; font-size: 0.75rem; }
 /* Occupation, gender and age, membership length: a line at the bottom of the head */
-.p-pro__facts { display: flex; grid-area: facts; align-items: center; margin-top: 2rem; padding: 1.1rem 0 1.25rem; border-top: 1px solid #eef0f3; }
-.p-pro__facts .p-pro-facts__row { display: flex; flex-direction: column; gap: 0.2rem; margin-right: 2.5rem; padding-right: 2.5rem; border-right: 1px solid #eef0f3; }
+.p-pro__facts { display: flex; grid-area: facts; align-items: center; margin-top: 0.9rem; padding: 0.8rem 0 1.75rem; border-top: 1px solid #eef0f3; }
+.p-pro__facts .p-pro-facts__row { display: flex; flex-direction: column; gap: 0.2rem; margin-right: 2.5rem; padding: 0 2.5rem 0 0; border-right: 1px solid #eef0f3; border-bottom: 0; }
 .p-pro__facts .p-pro-facts__row:has(+ .p-pro-facts__since) { margin-right: 0; padding-right: 0; border-right: 0; }
 .p-pro__facts .p-pro-facts__label { color: #94a3b8; font-size: 0.875rem; }
 .p-pro__facts .p-pro-facts__value { color: #0f172a; font-size: 1.0625rem; font-weight: 600; }
@@ -9256,6 +9256,14 @@ a.p-pro__tile--comments:hover { border-color: #e2e8f0; background: #f8fafc; }
 .p-pro__tabs-wrap .p-hero__tab { gap: 0.45rem; padding: 0.85rem 0.9rem; font-size: 0.875rem; font-weight: 600; }
 .p-pro__tabs-wrap .p-hero__tab:first-child { padding-left: 0; }
 
+/* Hosting interest on the profile: 10 bars, filled up to the interest */
+.p-pro-stat > .p-pro-interest { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 3px; width: 100%; max-width: 12rem; margin-top: 0.6rem; }
+.p-pro-interest > .p-pro-interest__seg { display: block; width: auto; min-width: 0; height: 0.4rem; border-radius: 999px; background: #e5e7eb; }
+.p-pro-interest > .p-pro-interest__seg:first-child { border-radius: 999px 2px 2px 999px; }
+.p-pro-interest > .p-pro-interest__seg:not(:first-child):not(:last-child) { border-radius: 2px; }
+.p-pro-interest > .p-pro-interest__seg:last-child { border-radius: 2px 999px 999px 2px; }
+.p-pro-interest__seg.is-on { background: color-mix(in srgb, #d4844c calc(var(--step) * 10%), #f4bf80); }
+
 /* Facts card, first on the profile tab: label on the left, value on the right */
 .p-pro-card.p-pro-facts { padding-top: 0.4rem; padding-bottom: 1rem; }
 .p-pro-facts__row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid #eef0f3; }
@@ -9284,17 +9292,23 @@ a.p-pro__tile--comments:hover { border-color: #e2e8f0; background: #f8fafc; }
 .p-pro-card .p-pro-card__empty { margin: 0; color: #64748b; font-size: 0.9375rem; }
 
 /* About me, and what the member offers their hosts */
-.p-pro-about { color: #334155; font-size: 0.9375rem; line-height: 1.65; overflow-wrap: anywhere; }
+.p-pro-about { max-width: 46rem; color: #334155; font-size: 1.0625rem; line-height: 1.75; overflow-wrap: anywhere; }
 .p-pro-about__more { margin-top: 0.5rem; padding: 0; border: 0; background: none; color: #c2410c; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
 .p-pro-about__more[hidden] { display: none; }
-.p-pro-spoken { margin-top: 1.1rem; }
-.p-pro-card .p-pro-spoken__label { display: flex; align-items: center; gap: 0.4rem; margin: 0 0 0.5rem; color: #0f172a; font-family: inherit; font-size: 0.8125rem; font-weight: 700; }
-.p-pro-spoken__label i,
-.p-pro-spoken__label svg { color: #64748b; }
-.p-pro-offer { display: flex; gap: 0.75rem; margin-top: 1.1rem; padding: 0.85rem 1rem; border-radius: 0.8rem; background: #fff8f1; }
-.p-pro-offer__icon { margin-top: 0.15rem; color: #ea7a2e; }
-.p-pro-card .p-pro-offer__label { margin: 0; color: #c2410c; font-size: 0.8125rem; font-weight: 700; }
-.p-pro-offer__text { color: #334155; font-size: 0.875rem; }
+/* Under the text, after a line: what they offer their hosts, and the languages they speak */
+.p-pro-about__extra { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem 2rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #eef0f3; }
+.p-pro-about__extra--alone { margin-top: 0; padding-top: 0; border-top: 0; }
+.p-pro-card .p-pro-about__label { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem; color: #94a3b8; font-family: inherit; font-size: 0.9375rem; font-weight: 700; line-height: 1.3; }
+.p-pro-about__label i,
+.p-pro-about__label svg { color: #ea7a2e; font-size: 0.9rem; }
+.p-pro-offer__text { color: #0f172a; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
+.p-pro-offer__text p { margin: 0 0 0.5rem; }
+.p-pro-offer__text p:last-child { margin-bottom: 0; }
+.p-pro-spoken__list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
+.p-pro-spoken__item { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.3rem 1rem 0.3rem 0.3rem; border-radius: 999px; background: #f6f7f9; }
+.p-pro-spoken__code { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 2.05rem; height: 2.05rem; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #334155; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; }
+.p-pro-spoken__name { color: #0f172a; font-size: 1rem; font-weight: 600; }
+.p-pro-spoken__level { color: #64748b; font-size: 0.875rem; }
 
 /* Accommodation: three tiles, then the details */
 .p-pro-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
@@ -9450,6 +9464,13 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro-card__head { align-items: flex-start; }
   .p-pro-filter { flex-wrap: nowrap; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
   .p-pro-about { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
+  .p-pro-about { font-size: 1rem; line-height: 1.65; }
+  .p-pro-about__extra { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; margin-top: 1.25rem; padding-top: 1.25rem; }
+  .p-pro-spoken__list { gap: 0.5rem; }
+  .p-pro-spoken__item { gap: 0.5rem; padding-right: 0.85rem; }
+  .p-pro-spoken__code { width: 1.85rem; height: 1.85rem; }
+  .p-pro-spoken__name { font-size: 0.9375rem; }
+  .p-pro-spoken__level { font-size: 0.8125rem; }
   .p-pro-about.is-open { display: block; }
   .p-pro-stats { gap: 0.45rem; }
   .p-pro-stat { padding: 0.7rem; }
@@ -9480,9 +9501,21 @@ a.p-pro-filter__item:hover { background: #fff; }
 .p-gallery-albums__item.is-active i,
 .p-gallery-albums__item.is-active svg { color: #fff; }
 .p-gallery-albums__item.is-active span { background: #f37000; color: #fff; }
+/* Own gallery: a button to manage it (in the card head; first in the page on phones) */
+.p-profile-main .card-header a.p-gallery-manage-btn,
+.p-gallery-manage-btn,
+.p-gallery-manage-btn:hover { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; width: auto; height: auto; min-height: 2.4rem; padding: 0.45rem 1.1rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; box-shadow: none; color: #0f172a !important; font-size: 0.875rem; font-weight: 700; letter-spacing: 0; line-height: 1.2; text-decoration: none; text-transform: none; white-space: nowrap; }
+.p-profile-main .card-header a.p-gallery-manage-btn:hover,
+.p-gallery-manage-btn:hover { border-color: #cbd5e1; background: #f8fafc; }
+.p-profile-main .p-gallery-manage-btn i,
+.p-profile-main .p-gallery-manage-btn svg { color: #f37000 !important; font-size: 0.85rem; }
+.p-gallery-manage-btn--phone { display: none; }
+/* Bootstrap's ".card-header a { color: white !important }": the text color sits on the label */
+.p-gallery-manage-btn .p-gallery-manage-btn__label { color: #0f172a; }
 @media (max-width: 767.98px) {
   .p-gallery-albums { flex-wrap: nowrap; margin-right: -1rem; padding-right: 1rem; overflow-x: auto; scrollbar-width: none; }
   .p-gallery-albums::-webkit-scrollbar { display: none; }
+  body:has(.p-pro--compact) .p-gallery-manage-btn--phone { display: flex; width: calc(100% - 2rem); min-height: 2.9rem; margin: 0.9rem 1rem; font-size: 0.9375rem; }
 }
 
 /* Profile on phones, on the other tabs (comments, gallery...): the head is one orange bar of the
@@ -9514,7 +9547,8 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro--compact .p-lang-switch,
   .p-pro--compact .p-pro__actions > :not(.dropdown) { display: none; }
   .p-pro--compact .p-pro__actions { flex: none; flex-direction: row; padding-top: 0; }
-  .p-pro--compact .p-pro__actions .p-hero__btn--icon { border-color: rgba(255, 255, 255, 0.7); background: transparent; color: #fff; }
+  .p-pro--compact .p-pro__actions .p-hero__btn--icon,
+  .p-pro--compact .p-pro__actions .p-hero__btn--icon:hover { border: 0; background: transparent; color: #fff !important; }
 }
 
 /* Comments and gallery of a profile: on phones (compact head) no white boxes or repeated titles,

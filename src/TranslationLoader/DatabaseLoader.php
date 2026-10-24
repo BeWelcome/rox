@@ -4,8 +4,12 @@ namespace App\TranslationLoader;
 
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
+use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
@@ -19,8 +23,14 @@ class DatabaseLoader implements LoaderInterface
     /** @var array MessageCatalogue */
     private $originals = [];
 
-    public function __construct(private readonly EntityManagerInterface $em)
-    {
+    private bool $databaseUnavailable = false;
+
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        #[Autowire('%kernel.debug%')]
+        private readonly bool $debug = false,
+        private readonly LoggerInterface $logger = new NullLogger(),
+    ) {
     }
 
     /**
@@ -37,12 +47,31 @@ class DatabaseLoader implements LoaderInterface
 
     private function getTranslationsForLocale($locale, $domain)
     {
+        if ($this->databaseUnavailable) {
+            return [];
+        }
+
         try {
             return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
         } catch (TableNotFoundException) {
             // Fresh database without a schema yet (e.g. the first bin/console call that is
             // about to create it builds the cache and warms the translations). Fall back to
             // the file based translations; the next cache:clear picks up the database ones.
+            return [];
+        } catch (ConnectionException $exception) {
+            // Since symfony/ux-translator 3.6 building the container loads all catalogues
+            // while var/translations doesn't exist yet (fresh checkout, CI), so tools like
+            // lint:yaml would need a database. Allow that in debug (dev, test) only: a prod
+            // cache must not be built without the database translations.
+            if (!$this->debug) {
+                throw $exception;
+            }
+            $this->databaseUnavailable = true;
+            $this->logger->warning(
+                'Database not reachable, translations are loaded from files only. Run cache:clear once the database is up.',
+                ['exception' => $exception],
+            );
+
             return [];
         }
     }

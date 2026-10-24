@@ -89,10 +89,7 @@
                             <a class="c-place-member js-search-preview-open" href="{{ path('members_profile', { username: member.username }) }}" data-preview="{{ path('search_member_preview', { username: member.username }) }}">
                                 <span class="c-place-member__picture c-place-member__picture--{{ hosting }}">
                                     <img class="c-place-member__avatar" src="{{ path('avatar', { username: member.username, size: 200 }) }}" alt="" loading="lazy">
-                                    <span class="c-place-member__host" title="{{ hostingLabel }}">
-                                        <i class="fas {{ hosting == 'yes' ? 'fa-home' : (hosting == 'no' ? 'fa-times' : 'fa-question') }}" aria-hidden="true"></i>
-                                        <span class="visually-hidden">{{ hostingLabel }}</span>
-                                    </span>
+                                    <span class="visually-hidden">{{ hostingLabel }}</span>
                                 </span>
                                 <span class="c-place-member__body">
                                     <span class="c-place-member__name">{{ member.username }}</span>

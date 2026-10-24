@@ -1,0 +1,4 @@
+#!/bin/sh
+# Runs the fast CI checks (make check) before a push. Skip once with: git push --no-verify
+# Git passes the pushed refs on stdin; phpcs would lint that instead of src/.
+exec "$(dirname "$0")/run-in-php.sh" make check < /dev/null

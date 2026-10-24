@@ -113,7 +113,9 @@
     {% if aboutMe %}
         <section class="p-search-preview__section">
             <h3>{{ 'profile.about.me'|trans }}</h3>
-            <p class="p-search-preview__about">{{ aboutMe|truncate(900)|nl2br }}</p>
+            {# Cut after a few lines; "Read more" shows the rest (search/preview.js) #}
+            <p class="p-search-preview__about js-preview-about">{{ aboutMe|truncate(4000)|nl2br }}</p>
+            <button type="button" class="p-search-preview__about-more js-preview-about-more" hidden>{{ 'profile.read.more'|trans }}</button>
         </section>
     {% endif %}
 

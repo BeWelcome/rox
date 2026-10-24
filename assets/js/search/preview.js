@@ -177,6 +177,7 @@ function loadPreview(url, card) {
         .then((html) => {
             previewBody.innerHTML = html;
             initPreviewPhotos(previewBody);
+            initPreviewAbout(previewBody);
         })
         .catch((error) => {
             if (error.name !== 'AbortError') {
@@ -184,6 +185,26 @@ function loadPreview(url, card) {
                 previewBody.firstChild.textContent = preview.dataset.error;
             }
         });
+}
+
+// "About me" is cut after a few lines: "Read more" shows it whole, only when it is cut
+function initPreviewAbout(root) {
+    const about = root.querySelector('.js-preview-about');
+    const more = root.querySelector('.js-preview-about-more');
+    if (!about || !more) {
+        return;
+    }
+    // The drawer may still be sliding in: measure once it is laid out
+    requestAnimationFrame(() => {
+        const cut = about.scrollHeight > about.clientHeight + 1;
+        more.hidden = !cut;
+        about.classList.toggle('is-cut', cut);
+    });
+    more.addEventListener('click', () => {
+        about.classList.add('is-open');
+        about.classList.remove('is-cut');
+        more.hidden = true;
+    });
 }
 
 // Opens a member's preview, with an entry in the history (the back button closes it)

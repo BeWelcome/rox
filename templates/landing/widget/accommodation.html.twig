@@ -11,21 +11,20 @@
     <div class="l-hosting-toggle">
         <a id="{{ yes }}"
            class="hosting l-hosting-toggle__opt l-hosting-toggle__opt--yes{% if hosting %} l-hosting-toggle__opt--active{% endif %}"
-           href="#" title="{{ 'dashboard.hosting.yes'|trans }}">
+           href="#">
             <i class="fas fa-house-user"></i>
             <span>{{ 'hosting'|trans }}</span>
         </a>
         <a id="{{ no }}"
            class="hosting l-hosting-toggle__opt l-hosting-toggle__opt--no{% if member.Accommodation == no %} l-hosting-toggle__opt--active{% endif %}"
-           href="#" title="{{ 'dashboard.hosting.no'|trans }}">
+           href="#">
             <i class="fas fa-house"></i>
             <span>{{ 'not hosting'|trans }}</span>
         </a>
     </div>
     <a class="hosting l-hosting-switch{% if hosting %} is-on{% endif %}" href="#" role="switch"
        aria-checked="{{ hosting ? 'true' : 'false' }}"
-       data-accommodation="{{ hosting ? no : yes }}"
-       title="{{ hosting ? 'dashboard.hosting.yes'|trans : 'dashboard.hosting.no'|trans }}">
+       data-accommodation="{{ hosting ? no : yes }}">
         <span class="l-hosting-switch__icon" aria-hidden="true"><i class="fas fa-house-circle-check"></i></span>
         <span class="l-hosting-switch__label">{{ 'landing.hosting.switch'|trans }}</span>
         <span class="l-hosting-switch__track" aria-hidden="true"><span class="l-hosting-switch__thumb"></span></span>

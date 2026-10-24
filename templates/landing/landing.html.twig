@@ -48,7 +48,7 @@
 			</div>
 			<button type="button" class="l-hello__toggle js-hello-toggle" aria-expanded="true" aria-controls="hello_stats"
 				data-expand="{{ 'landing.banner.expand'|trans }}" data-collapse="{{ 'landing.banner.collapse'|trans }}"
-				title="{{ 'landing.banner.collapse'|trans }}" aria-label="{{ 'landing.banner.collapse'|trans }}">
+				aria-label="{{ 'landing.banner.collapse'|trans }}">
 				<i class="fas fa-chevron-up" aria-hidden="true"></i>
 				{% if requestsToAnswerCount %}<span class="l-hello__toggle-badge" aria-hidden="true">{{ requestsToAnswerCount }}</span>{% endif %}
 			</button>
@@ -295,8 +295,8 @@
             <div class="c-home-box__head c-home-slider__head">
                 <h3 class="c-home-box__title">{{ 'landing.beinformed.title'|trans }} · {{ 'landing.beinformed.subtitle'|trans }}</h3>
                 <div class="c-home-slider__nav">
-                    <button type="button" class="c-home-slider__btn js-home-slider-prev" aria-controls="home_info_links" aria-label="{{ 'landing.beinformed.previous'|trans }}" title="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
-                    <button type="button" class="c-home-slider__btn js-home-slider-next" aria-controls="home_info_links" aria-label="{{ 'landing.beinformed.next'|trans }}" title="{{ 'landing.beinformed.next'|trans }}"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                    <button type="button" class="c-home-slider__btn js-home-slider-prev" aria-controls="home_info_links" aria-label="{{ 'landing.beinformed.previous'|trans }}" disabled><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+                    <button type="button" class="c-home-slider__btn js-home-slider-next" aria-controls="home_info_links" aria-label="{{ 'landing.beinformed.next'|trans }}"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
                 </div>
             </div>
             {% set infoLinks = [

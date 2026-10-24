@@ -12,7 +12,7 @@
         <div class="c-home-item">
             <img class="c-home-item__avatar" src="{{ path('avatar', { username: notification.relMember.username, size: 48 }) }}" alt="" loading="lazy">
             <div class="c-home-item__body">
-                <a class="c-home-item__text c-home-item__text--strong" href="{{ notification.link }}" title="{{ notificationText|striptags }}">{{ notificationText }}</a>
+                <a class="c-home-item__text c-home-item__text--strong" href="{{ notification.link }}">{{ notificationText }}</a>
                 <p class="c-home-item__meta" title="{{ notification.created|format_date('medium') }}">{{ notification.created.diffForHumans }}</p>
             </div>
             <a class="c-home-item__dismiss notify" id="notify-{{ notification.id }}" href="#" aria-label="{{ 'close'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></a>

@@ -8,7 +8,7 @@
         <span>
           {{ 'profile.menu.images'|trans }}
           {% if pictures|length > 0 %}
-            <span class="p-gallery-footer__count">{{ pictures|length }}</span>
+            <span class="p-gallery-footer__count">{{ pictures_total ?? pictures|length }}</span>
           {% endif %}
         </span>
         {%- if own -%}
@@ -17,6 +17,23 @@
         {%- endif -%}
       </div>
       <div class="card-body">
+        {# Albums: "All" then one pill per album with its number of pictures, only when there are albums #}
+        {% if albums|length > 0 %}
+          {% set allCount = pictures_total ?? pictures|length %}
+          <nav class="p-gallery-albums" aria-label="{{ 'profile.menu.images'|trans }}">
+            <a class="p-gallery-albums__item{% if not active_album %} is-active{% endif %}" href="{{ path('gallery_member_images', { username: member.username }) }}"{% if not active_album %} aria-current="page"{% endif %}>
+              {{ 'landing.button.all'|trans|striptags }} <span>{{ allCount }}</span>
+            </a>
+            {% for album in albums %}
+              {% set current = active_album and active_album.id == album.id %}
+              <a class="p-gallery-albums__item{% if current %} is-active{% endif %}" href="{{ path('gallery_member_images', { username: member.username, album: album.id }) }}"{% if current %} aria-current="page"{% endif %}>
+                <i class="fas fa-folder" aria-hidden="true"></i>
+                <img class="p-gallery-albums__cover" src="{{ path('gallery_thumbnail', { id: album.cover, t: 2 }) }}" alt="" loading="lazy">
+                {{ album.title }} <span>{{ album.count }}</span>
+              </a>
+            {% endfor %}
+          </nav>
+        {% endif %}
         {% if pictures|length == 0 %}
           {% if own %}
             <div class="p-gallery-empty">
@@ -41,6 +58,8 @@
                      data-type="image"
                      data-caption="{{ picture.title|e('html_attr') }}"
                      aria-label="{{ picture.title|e('html_attr') }}"></a>
+                  {# Phones: the title over the bottom of the picture #}
+                  {% if picture.title is not empty %}<span class="p-gallery-page__caption" aria-hidden="true">{{ picture.title }}</span>{% endif %}
                 </div>
                 {% if picture.title is not empty %}
                   <span class="p-gallery-page__title" title="{{ picture.title|e('html_attr') }}">{{ picture.title }}</span>

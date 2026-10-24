@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -214,6 +215,7 @@ class GalleryController extends AbstractController
         Member $member,
         ProfileSubmenu $profileSubmenu,
         ChangeProfilePictureGlobals $globals,
+        #[MapQueryParameter] ?int $album = null,
     ): Response {
         if (
             !($member->isBrowsable()
@@ -231,9 +233,23 @@ class GalleryController extends AbstractController
         /** @var GalleryImageRepository $galleryImageRepository */
         $galleryImageRepository = $this->entityManager->getRepository(GalleryImage::class);
 
+        // Albums: a filter above the pictures, ?album= shows only the pictures of one of them
+        $albums = $galleryImageRepository->getAlbumsForMember($member);
+        $activeAlbum = null;
+        foreach ($albums as $candidate) {
+            if ($candidate['id'] === $album) {
+                $activeAlbum = $candidate;
+            }
+        }
+
         return $this->render('gallery/member.images.html.twig', [
             'member' => $member,
-            'pictures' => $galleryImageRepository->getImagesForMember($member),
+            'pictures' => null !== $activeAlbum
+                ? $galleryImageRepository->getImagesForMemberInAlbum($member, $activeAlbum['id'])
+                : $galleryImageRepository->getImagesForMember($member),
+            'pictures_total' => null !== $activeAlbum ? count($galleryImageRepository->getImagesForMember($member)) : null,
+            'albums' => $albums,
+            'active_album' => $activeAlbum,
             'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'gallery']),
         ]);

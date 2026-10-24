@@ -27,7 +27,12 @@
 {% set existingConversation = canContact ? conversation_with(member) : null %}
 {% set canRequest = canContact and member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
 
-<div class="p-pro">
+{% set activeItem = submenu.active is defined and submenu.active != '' ? submenu.active : 'profile' %}
+{# Phones, on the other tabs (comments, gallery...): the head shrinks to one orange bar in place of
+   the site header (back to the profile, small photo, name, the "more" menu), the tab content comes first #}
+{% set compactHead = activeItem in ['comments', 'gallery', 'friends', 'forum_posts', 'visitors'] and items.profile is defined %}
+
+<div class="p-pro{% if compactHead %} p-pro--compact{% endif %}">
 
   {% set _translations = member.translations %}
   {% set _langs = _translations|keys %}
@@ -59,6 +64,12 @@
     {% endif %}
 
     <div class="p-pro__head">
+      {% if compactHead %}
+        <a class="p-pro__back" href="{{ items.profile.url }}">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          <span class="visually-hidden">{{ items.profile.key|lower|trans }}</span>
+        </a>
+      {% endif %}
 
       {# ── Photo with the hosting badge ── #}
       <div class="p-pro__avatar">
@@ -280,7 +291,6 @@
 </div>{# /.p-pro #}
 
 {# ── Tabs: outside the header block so that on phones they stay stuck to the top all the way down ── #}
-  {% set activeItem = submenu.active is defined and submenu.active != '' ? submenu.active : 'profile' %}
   <div class="p-pro__tabs-wrap">
     <div class="container-lg">
       <div class="p-hero__tabs-scroller" data-tabs-scroller>
@@ -297,9 +307,7 @@
                  class="p-hero__tab{% if activeItem == key %} p-hero__tab--active{% endif %}">
                 <i class="fas fa-fw fa-{{ items[key].icon }}" aria-hidden="true"></i>
                 {{ items[key].key|lower|trans }}
-                {% if key == 'comments' %}
-                  {# Comments: their counts are in the head (.p-quality-pill), not on the tab #}
-                {% elseif items[key].count is defined and items[key].count > 0 %}
+                {% if items[key].count is defined and items[key].count > 0 %}
                   <span class="p-hero__tab-count">{{ items[key].count }}</span>
                 {% endif %}
               </a>

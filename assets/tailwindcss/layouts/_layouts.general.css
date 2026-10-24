@@ -3001,6 +3001,12 @@ main:has(.p-hero) {
 }
 .p-comments-more__link:hover { text-decoration: underline; }
 .p-comments-more__link i { font-size: 0.7rem; }
+.p-comments-more__btn,
+.p-comments-more__btn:hover { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 1.1rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+.p-comments-more__btn:hover { border-color: #cbd5e1; background: #f8fafc; }
+.p-comments-more__count { padding: 0.05rem 0.5rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.8rem; font-weight: 700; }
+.p-comments-more__btn i,
+.p-comments-more__btn svg { color: #94a3b8; font-size: 0.7rem; }
 
 /* One comment, with the answer nested under it in a thread.
    Desktop: avatar column on the left, head and body next to it.
@@ -6495,6 +6501,8 @@ main:has(.p-search) > .container-lg { max-width: none; padding: 0; }
 body:has(.p-search),
 body:has(.p-search) main { background: #f4f4f5; }
 body.has-search-overlay { overflow: hidden; }
+/* No site footer under the search (list and map fill the page) */
+body:has(.p-search) footer:has(#footer_content) { display: none; }
 
 .p-search { --p-search-gutter: clamp(1rem, 4vw, 3.25rem); margin: 0; color: #0f172a; }
 
@@ -9250,7 +9258,8 @@ a.p-pro-filter__item:hover { background: #fff; }
 .p-pro-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
 .p-pro-gallery__item { aspect-ratio: 1; border-radius: 0.7rem; background: #f1f5f9 center / cover no-repeat; box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06); }
 .p-pro-gallery--wide { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-@media (max-width: 575.98px) { .p-pro-gallery--wide { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+/* Phones: the four latest pictures on one row */
+@media (max-width: 575.98px) { .p-pro-gallery--wide { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.35rem; } .p-pro-gallery--wide .p-pro-gallery__item { border-radius: 0.5rem; } }
 .p-pro-friends { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem 0.5rem; }
 .p-pro-friend,
 .p-pro-friend:hover { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; color: #334155; font-size: 0.75rem; font-weight: 600; text-decoration: none; }
@@ -9338,6 +9347,117 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro__bottom-bar .p-pro__btn { flex: 1; min-height: 2.9rem; font-size: 0.9375rem; }
   .p-pro__bottom-bar .p-pro__btn--request { flex-grow: 1.3; }
   body:has(.p-pro__bottom-bar) { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+  /* No site footer under a profile on phones */
+  body:has(.p-pro) footer:has(#footer_content) { display: none; }
+}
+
+/* Gallery of a member: one pill per album above the pictures (swiped sideways on phones) */
+.p-gallery-albums { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.25rem; }
+.p-gallery-albums__item,
+.p-gallery-albums__item:hover { display: inline-flex; flex: none; align-items: center; gap: 0.45rem; padding: 0.45rem 0.95rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.9375rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.p-gallery-albums__item:hover { border-color: #cbd5e1; background: #f8fafc; }
+.p-gallery-albums__item i,
+.p-gallery-albums__item svg { color: #f37000; font-size: 0.85rem; }
+.p-gallery-albums__item span { padding: 0.05rem 0.5rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.8rem; font-weight: 700; }
+.p-gallery-albums__item.is-active,
+.p-gallery-albums__item.is-active:hover { border-color: #0f172a; background: #0f172a; color: #fff; }
+.p-gallery-albums__item.is-active i,
+.p-gallery-albums__item.is-active svg { color: #fff; }
+.p-gallery-albums__item.is-active span { background: #f37000; color: #fff; }
+@media (max-width: 767.98px) {
+  .p-gallery-albums { flex-wrap: nowrap; margin-right: -1rem; padding-right: 1rem; overflow-x: auto; scrollbar-width: none; }
+  .p-gallery-albums::-webkit-scrollbar { display: none; }
+}
+
+/* Profile on phones, on the other tabs (comments, gallery...): the head is one orange bar of the
+   site header's height in its place (back to the profile, small photo, name, "more"), the tabs under it */
+.p-pro__back { display: none; }
+@media (max-width: 767.98px) {
+  body:has(.p-pro--compact) #main_menu { display: none; }
+  body:has(.p-pro--compact) main { margin-top: 0; padding-top: 0; }
+  body:has(.p-pro--compact) .p-pro__tabs-wrap { top: 64px; }
+  .p-pro.p-pro--compact { position: sticky; top: 0; z-index: 25; background: #f37000; box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12); }
+  .p-pro--compact .p-pro__wrap { padding-top: 0; padding-right: 0.75rem; padding-left: 0.5rem; }
+  .p-pro--compact .p-pro__head { flex-wrap: nowrap; align-items: center; gap: 0.6rem; height: 64px; padding-bottom: 0; }
+  .p-pro--compact .p-pro__back,
+  .p-pro--compact .p-pro__back:hover { display: inline-flex; flex-shrink: 0; align-items: center; padding: 0.5rem 0.25rem; color: #fff; font-size: 1.125rem; text-decoration: none; }
+  .p-pro--compact .p-pro__avatar,
+  .p-pro--compact .p-pro__avatar-img { width: 2.6rem; height: 2.6rem; }
+  .p-pro--compact .p-pro__avatar-img { border-width: 2px; box-shadow: none; }
+  .p-pro--compact .p-pro__host { right: -0.3rem; bottom: -0.2rem; width: 1.3rem; height: 1.3rem; border-width: 2px; font-size: 0.55rem; }
+  .p-pro--compact .p-pro__info { flex: 1; flex-basis: auto; order: 0; min-width: 0; padding-top: 0; }
+  .p-pro--compact .p-pro__name-row { flex-wrap: nowrap; }
+  .p-pro--compact .p-pro__name { overflow: hidden; color: #fff; font-size: 1.25rem; text-overflow: ellipsis; white-space: nowrap; }
+  .p-pro--compact .p-pro__username,
+  .p-pro--compact .p-pro__who,
+  .p-pro--compact .p-pro__meta,
+  .p-pro--compact .p-pro__activity,
+  .p-pro--compact .p-pro__tiles,
+  .p-pro--compact .p-pro-admin,
+  .p-pro--compact .p-lang-switch,
+  .p-pro--compact .p-pro__actions > :not(.dropdown) { display: none; }
+  .p-pro--compact .p-pro__actions { flex: none; padding-top: 0; }
+  .p-pro--compact .p-pro__actions .p-hero__btn--icon { border-color: rgba(255, 255, 255, 0.7); background: transparent; color: #fff; }
+}
+
+/* Comments and gallery of a profile: on phones (compact head) no white boxes or repeated titles,
+   the content across the whole width on a white page */
+.p-gallery-albums__cover,
+.p-gallery-page__caption,
+.p-comments-cta__icon--phone { display: none; }
+@media (max-width: 767.98px) {
+  body:has(.p-pro--compact),
+  body:has(.p-pro--compact) main { background: #fff; }
+  body:has(.p-pro--compact) .p-gallery-page,
+  body:has(.p-pro--compact) .p-comments-page { margin: 0 calc(-0.5 * var(--bs-gutter-x, 1.5rem)); padding-top: 0; }
+  body:has(.p-pro--compact) .p-gallery-page .card,
+  body:has(.p-pro--compact) .p-comments-page .card { margin: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  body:has(.p-pro--compact) .p-gallery-page .card-header,
+  body:has(.p-pro--compact) .p-comments-page .p-comments-page__title { display: none; }
+
+  /* Comments: the same filter as on large screens, a bit tighter; plain comments split by lines */
+  body:has(.p-pro--compact) .p-comments-page .p-comments-page__head { padding: 0.75rem 1rem; border-radius: 0; }
+  body:has(.p-pro--compact) .p-comments-page .p-pro-filter { display: inline-flex; width: auto; max-width: 100%; padding: 0.15rem; }
+  body:has(.p-pro--compact) .p-comments-page .p-pro-filter__item,
+  body:has(.p-pro--compact) .p-comments-page .p-pro-filter__item:hover { flex: none; padding: 0.25rem 0.65rem; font-size: 0.75rem; }
+  body:has(.p-pro--compact) .p-comments-page .card-body { padding: 0 1rem 1rem !important; }
+  body:has(.p-pro--compact) .p-comments-page .p-comment:not(.p-comment--answer) { padding: 1rem 0; border-bottom: 1px solid #eef0f3; }
+  body:has(.p-pro--compact) .p-comments-page .p-comment__avatar .o-avatar__img-wrapper { box-shadow: none; }
+  body:has(.p-pro--compact) .p-comments-page .p-comment__link,
+  body:has(.p-pro--compact) .p-comments-page .p-comment__link:hover { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); }
+  body:has(.p-pro--compact) .p-comments-page .p-comment__meta { color: #94a3b8; }
+  body:has(.p-pro--compact) .p-comments-page .p-comment__text { padding: 0; background: transparent; }
+  body:has(.p-pro--compact) .p-comments-page .p-comment__fold-toggle,
+  body:has(.p-pro--compact) .p-comments-page .p-comment__fold[open] > .p-comment__fold-toggle { padding: 0.2rem 0; background: transparent; }
+  body:has(.p-pro--compact) .p-comments-page .p-comments-page__guidelines { display: flex; align-items: baseline; gap: 0.5rem; margin: 0; padding-top: 1rem; border-top: 0; }
+  body:has(.p-pro--compact) .p-comments-page .p-comments-page__guidelines i,
+  body:has(.p-pro--compact) .p-comments-page .p-comments-page__guidelines svg { flex: none; color: #94a3b8; }
+  body:has(.p-pro--compact) .p-comments-page .p-comments-page__guidelines a { color: #c2410c; font-weight: 600; }
+  /* Add a comment: a big button stuck to the bottom, in place of Send and Request */
+  body:has(.p-pro--compact) .p-comments-cta { position: fixed; right: 0; bottom: 0; left: 0; z-index: 1031; margin: 0; padding: 0.7rem 1rem calc(0.7rem + env(safe-area-inset-bottom)); background: linear-gradient(rgba(255, 255, 255, 0), #fff 35%); }
+  body:has(.p-pro--compact) .p-comments-cta .p-hero__btn { width: 100%; min-height: 3.1rem; border: 0; border-radius: 999px; background: #f37000; color: #fff; font-size: 1rem; font-weight: 700; box-shadow: 0 6px 18px rgba(243, 112, 0, 0.3); }
+  body:has(.p-pro--compact) .p-comments-cta .p-comments-cta__icon { display: none; }
+  body:has(.p-pro--compact) .p-comments-cta .p-comments-cta__icon--phone { display: inline-block; }
+  body:has(.p-comments-cta) .p-pro__bottom-bar { display: none; }
+  body:has(.p-pro--compact):has(.p-comments-cta) { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+
+  /* Gallery: the albums with their latest picture, then the pictures edge to edge, three across */
+  body:has(.p-pro--compact) .p-gallery-page .card-body { padding: 0 !important; }
+  body:has(.p-pro--compact) .p-gallery-albums { margin: 0; padding: 0.85rem 1rem; }
+  body:has(.p-pro--compact) .p-gallery-albums__item,
+  body:has(.p-pro--compact) .p-gallery-albums__item:hover { gap: 0.5rem; padding: 0.3rem 0.85rem 0.3rem 0.3rem; font-size: 0.875rem; }
+  body:has(.p-pro--compact) .p-gallery-albums__item:first-child { padding-left: 0.95rem; }
+  body:has(.p-pro--compact) .p-gallery-albums__item i,
+  body:has(.p-pro--compact) .p-gallery-albums__item svg { display: none; }
+  body:has(.p-pro--compact) .p-gallery-albums__cover { display: block; width: 1.9rem; height: 1.9rem; border-radius: 0.45rem; object-fit: cover; background: #f1f5f9; }
+  body:has(.p-pro--compact) .p-gallery-albums__item span { padding: 0; background: transparent; color: #94a3b8; }
+  body:has(.p-pro--compact) .p-gallery-albums__item.is-active span { background: transparent; color: #94a3b8; }
+  body:has(.p-pro--compact) .p-gallery-page__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; }
+  body:has(.p-pro--compact) .p-gallery-page__frame { position: relative; border-radius: 0; }
+  body:has(.p-pro--compact) .p-gallery-page__title { display: none; }
+  body:has(.p-pro--compact) .p-gallery-page__caption { position: absolute; right: 0; bottom: 0; left: 0; display: block; padding: 1.25rem 0.5rem 0.4rem; overflow: hidden; background: linear-gradient(rgba(15, 23, 42, 0), rgba(15, 23, 42, 0.6)); color: #fff; font-size: 0.75rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; pointer-events: none; }
+  body:has(.p-pro--compact) .p-gallery-empty,
+  body:has(.p-pro--compact) .p-gallery-page .p-profile-empty-hint { padding: 1rem; }
 }
 
 /* ═══ Pages shown in a frame (?embed=1): no menu or footer, the form fills the frame ═══ */

@@ -784,3 +784,6 @@ profile.edit.languages.native.hint:
 profile.edit.languages.native.needed:
     - 'Pick your mother tongue'
     - Side panel of the spoken languages, text of the pale Save button while no language is at Native
+profile.all.images:
+    - 'See all'
+    - Link at the top right of the gallery block of a profile, to the gallery tab; the number of pictures follows it

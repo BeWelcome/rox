@@ -164,35 +164,12 @@
         {% endif %}
       </section>
 
-      {# ── Comments: filter by quality (greyed when empty), the latest ones ── #}
+      {# ── Comments: the latest ones; the counts are in the profile head, the total on Show all ── #}
       <section class="p-pro-card p-pro-card--comments">
         <div class="p-pro-card__head">
           <h2 class="p-pro-card__title">
             {{ 'profile.comments'|trans({}, 'messages', profile_language) }}
-            {% if comments_count.total %}<span class="p-pro-card__count">{{ comments_count.total }}</span>{% endif %}
           </h2>
-          {% if comments|length > 0 %}
-            {% set comment_filters = [
-              {type: null, icon: null, label: 'landing.button.all', count: comments_count.total},
-              {type: 'positive', icon: 'thumbs-up', label: 'comment.quality.positive', count: comments_count.positive},
-              {type: 'neutral', icon: 'minus', label: 'comment.quality.neutral', count: comments_count.neutral},
-              {type: 'negative', icon: 'thumbs-down', label: 'comment.quality.negative', count: comments_count.negative},
-            ] %}
-            <nav class="p-pro-filter" aria-label="{{ 'profile.comments'|trans({}, 'messages', profile_language) }}">
-              {% for filter in comment_filters %}
-                {% set filterUrl = filter.type ? url('profile_comments', {username: member.username, type: filter.type}) : url('profile_comments', {username: member.username}) %}
-                {% if filter.count > 0 %}
-                  <a href="{{ filterUrl }}" class="p-pro-filter__item{{ filter.type ? ' p-pro-filter__item--' ~ filter.type : ' is-all' }}">
-                {% else %}
-                  <span class="p-pro-filter__item{{ filter.type ? ' p-pro-filter__item--' ~ filter.type : ' is-all' }} is-empty">
-                {% endif %}
-                  {% if filter.icon %}<i class="fas fa-{{ filter.icon }}" aria-hidden="true"></i>{% endif %}
-                  <span class="p-pro-filter__label">{{ filter.label|trans({}, 'messages', profile_language)|striptags }}</span>
-                  <span class="p-pro-filter__count">{{ filter.count }}</span>
-                {% if filter.count > 0 %}</a>{% else %}</span>{% endif %}
-              {% endfor %}
-            </nav>
-          {% endif %}
         </div>
 
         {% for comment in comments %}
@@ -206,9 +183,10 @@
 
         {% if has_more_comments|default(false) %}
           <div class="p-comments-more">
-            <a href="{{ url('profile_comments', {username: member.username}) }}" class="p-comments-more__link">
+            {# A secondary button with the total, so it shows there are more comments than the latest ones #}
+            <a href="{{ url('profile_comments', {username: member.username}) }}" class="p-comments-more__btn">
               {{ 'showallcomments'|trans({}, 'messages', profile_language) }}
-              <span class="p-gallery-footer__count">{{ comments_count.total }}</span>
+              <span class="p-comments-more__count">{{ comments_count.total }}</span>
               <i class="fas fa-chevron-right" aria-hidden="true"></i>
             </a>
           </div>

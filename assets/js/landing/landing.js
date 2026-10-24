@@ -515,7 +515,8 @@ function initHelloToggle(banner, button) {
         const label = collapsed ? button.dataset.expand : button.dataset.collapse;
         button.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
         button.setAttribute('aria-label', label);
-        button.title = label;
+        // No title: phones show it as a box on tap
+        button.removeAttribute('title');
     };
 
     const toggle = () => {

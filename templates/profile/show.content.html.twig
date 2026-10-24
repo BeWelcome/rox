@@ -63,7 +63,7 @@
                     <i class="fas fa-gift" aria-hidden="true"></i>
                     {{ 'profile.offer.hosts'|trans({}, 'messages', profile_language)|striptags }}
                   </h3>
-                  <div class="p-pro-offer__text">{{ offerHosts|purify }}</div>
+                  <div class="p-pro-offer__text">{{ offerHosts|purify|nl2br }}</div>
                 </div>
               {% endif %}
               {% if spokenLanguages|length > 0 %}
@@ -139,8 +139,8 @@
               {# On 10 steps, filled up to the interest (the words stay for screen readers) #}
               {% set interest = member.hostingInterest|default(0) %}
               {% if interest > 0 %}
-                <span class="p-pro-interest" aria-hidden="true">
-                  {% for step in 1..10 %}<span class="p-pro-interest__seg{{ step <= interest ? ' is-on' }}" style="--step: {{ step }}"></span>{% endfor %}
+                <span class="p-pro-hostbar" aria-hidden="true">
+                  {% for step in 1..10 %}<span class="p-pro-hostbar__seg{{ step <= interest ? ' is-on' }}" style="--step: {{ step }}"></span>{% endfor %}
                 </span>
                 <span class="visually-hidden">{{ macros.hostingInterest(interest, profile_language) }}</span>
               {% else %}
@@ -162,7 +162,7 @@
         {% for field in guestFields|filter(field => field.text|length > 0) %}
           <div class="p-pro-field">
             <h3 class="p-pro-field__label">{{ field.label|trans({}, 'messages', profile_language)|raw }}</h3>
-            <div class="p-pro-field__text">{{ field.text|purify }}</div>
+            <div class="p-pro-field__text">{{ field.text|purify|nl2br }}</div>
           </div>
         {% endfor %}
         {% if standardOffers|length > 0 or offerGuests|length > 0 %}
@@ -170,7 +170,7 @@
             <h3 class="p-pro-field__label">{{ 'profile.offer.guests'|trans({}, 'messages', profile_language)|raw }}</h3>
             <div class="p-pro-field__text">
               {% for offer in standardOffers %}{{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, 'messages', profile_language) }}<br>{% endfor %}
-              {% if offerGuests|length > 0 %}{{ offerGuests|purify }}{% endif %}
+              {% if offerGuests|length > 0 %}{{ offerGuests|purify|nl2br }}{% endif %}
             </div>
           </div>
         {% endif %}
@@ -179,7 +179,7 @@
             <h3 class="p-pro-field__label">{{ 'profile.house.rules'|trans({}, 'messages', profile_language)|raw }}</h3>
             <div class="p-pro-field__text">
               {% for restriction in restrictions %}{{ ('restriction_' ~ restriction)|lower|trans({}, 'messages', profile_language) }}<br>{% endfor %}
-              {% if houseRules|length > 0 %}{{ houseRules|purify }}{% endif %}
+              {% if houseRules|length > 0 %}{{ houseRules|purify|nl2br }}{% endif %}
             </div>
           </div>
         {% endif %}
@@ -265,7 +265,7 @@
                 <span class="p-pro-interest__icon" aria-hidden="true"><i class="fas {{ field.icon }}"></i></span>
                 <span>
                   <span class="p-pro-interest__label">{{ field.label|trans({}, 'messages', profile_language) }}</span>
-                  <span class="p-pro-interest__text">{{ field.text|purify }}</span>
+                  <span class="p-pro-interest__text">{{ field.text|purify|nl2br }}</span>
                 </span>
               </li>
             {% endfor %}
@@ -280,13 +280,13 @@
           {% if pastTrips|length > 0 %}
             <div class="p-pro-trip">
               <h3 class="p-pro-trip__label">{{ 'profile.past.trips'|trans({}, 'messages', profile_language)|raw }}</h3>
-              <div class="p-pro-trip__text">{{ pastTrips|purify }}</div>
+              <div class="p-pro-trip__text">{{ pastTrips|purify|nl2br }}</div>
             </div>
           {% endif %}
           {% if plannedTrips|length > 0 %}
             <div class="p-pro-trip p-pro-trip--planned">
               <h3 class="p-pro-trip__label">{{ 'profile.planned.trips'|trans({}, 'messages', profile_language)|raw }}</h3>
-              <div class="p-pro-trip__text">{{ plannedTrips|purify }}</div>
+              <div class="p-pro-trip__text">{{ plannedTrips|purify|nl2br }}</div>
             </div>
           {% endif %}
         </section>

@@ -9257,12 +9257,12 @@ a.p-pro__tile--comments:hover { border-color: #e2e8f0; background: #f8fafc; }
 .p-pro__tabs-wrap .p-hero__tab:first-child { padding-left: 0; }
 
 /* Hosting interest on the profile: 10 bars, filled up to the interest */
-.p-pro-stat > .p-pro-interest { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 3px; width: 100%; max-width: 12rem; margin-top: 0.6rem; }
-.p-pro-interest > .p-pro-interest__seg { display: block; width: auto; min-width: 0; height: 0.4rem; border-radius: 999px; background: #e5e7eb; }
-.p-pro-interest > .p-pro-interest__seg:first-child { border-radius: 999px 2px 2px 999px; }
-.p-pro-interest > .p-pro-interest__seg:not(:first-child):not(:last-child) { border-radius: 2px; }
-.p-pro-interest > .p-pro-interest__seg:last-child { border-radius: 2px 999px 999px 2px; }
-.p-pro-interest__seg.is-on { background: color-mix(in srgb, #d4844c calc(var(--step) * 10%), #f4bf80); }
+.p-pro-stat > .p-pro-hostbar { display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 3px; width: 100%; max-width: 12rem; margin-top: 0.6rem; }
+.p-pro-hostbar > .p-pro-hostbar__seg { display: block; width: auto; min-width: 0; height: 0.4rem; border-radius: 999px; background: #e5e7eb; }
+.p-pro-hostbar > .p-pro-hostbar__seg:first-child { border-radius: 999px 2px 2px 999px; }
+.p-pro-hostbar > .p-pro-hostbar__seg:not(:first-child):not(:last-child) { border-radius: 2px; }
+.p-pro-hostbar > .p-pro-hostbar__seg:last-child { border-radius: 2px 999px 999px 2px; }
+.p-pro-hostbar__seg.is-on { background: color-mix(in srgb, #d4844c calc(var(--step) * 10%), #f4bf80); }
 
 /* Facts card, first on the profile tab: label on the left, value on the right */
 .p-pro-card.p-pro-facts { padding-top: 0.4rem; padding-bottom: 1rem; }
@@ -9387,13 +9387,13 @@ a.p-pro-filter__item:hover { background: #fff; }
 .p-pro-card .p-pro-where__city { margin: 0.75rem 0 0; color: #0f172a; font-size: 0.9375rem; font-weight: 700; }
 .p-pro-card .p-pro-where__area { margin: 0.1rem 0 0; color: #64748b; font-size: 0.8125rem; }
 
-/* One column: the cards in one list, "Where I live" right after the accommodation */
+/* One column: the cards in one list, "Where I live" right after the accommodation, the comments (the longest) last */
 @media (max-width: 991.98px) {
   .p-pro-layout { display: flex; flex-direction: column; align-items: stretch; }
   .p-pro-layout__main,
   .p-pro-layout__side { display: contents; }
   .p-pro-layout__side > .p-pro-card { order: 3; }
-  .p-pro-layout__main > .p-pro-card--comments { order: 2; }
+  .p-pro-layout__main > .p-pro-card--comments { order: 4; }
   .p-pro-layout__side > .p-pro-card--where { order: 1; }
 }
 

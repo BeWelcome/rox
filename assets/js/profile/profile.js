@@ -89,7 +89,7 @@ const whereMaps = () => document.querySelectorAll('.js-pro-where-map:not(.is-rea
     }).setView(center, 12);
 
     addPositronLayer(map);
-    L.circle(center, {radius: 2000, color: '#ea7a2e', weight: 1.5, fillColor: '#f37000', fillOpacity: 0.18}).addTo(map);
+    L.circle(center, {radius: 1000, color: '#ea7a2e', weight: 1.5, fillColor: '#f37000', fillOpacity: 0.18}).addTo(map);
     L.circleMarker(center, {radius: 6, color: '#fff', weight: 3, fillColor: '#ea7a2e', fillOpacity: 1}).addTo(map);
 });
 

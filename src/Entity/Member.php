@@ -590,7 +590,7 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
 
     public function showGender(): self
     {
-        $this->hideAttribute = ($this->hideAttribute ^ self::GENDER_HIDDEN);
+        $this->hideAttribute = ($this->hideAttribute & ~self::GENDER_HIDDEN);
 
         return $this;
     }
@@ -624,7 +624,7 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
 
     public function showAge(): self
     {
-        $this->hideAttribute = ($this->hideAttribute ^ self::AGE_HIDDEN);
+        $this->hideAttribute = ($this->hideAttribute & ~self::AGE_HIDDEN);
 
         return $this;
     }
@@ -638,7 +638,7 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
 
     public function showName(): self
     {
-        $this->hideAttribute = ($this->hideAttribute ^ self::NAME_HIDDEN);
+        $this->hideAttribute = ($this->hideAttribute & ~self::NAME_HIDDEN);
 
         return $this;
     }

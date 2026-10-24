@@ -10,7 +10,12 @@
     <main role="main" class="p-trips">
       <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000"></div>
       <header class="p-trips__head">
+        {# Phones: an orange bar in place of the site header (as in the inbox): back, the title, Create #}
         <div class="p-trips__top">
+          <a class="p-trips__back" href="{{ path('landingpage') }}">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            <span class="visually-hidden">{{ 'back'|trans }}</span>
+          </a>
           <h1 class="p-trips__title">{% block page_title %}{{ block('title')|trim }}{% endblock %}</h1>
           {% if submenu is defined and submenu.items.new_trip is defined and submenu.active != 'new_trip' %}
             <a class="p-trips__new" href="{{ submenu.items.new_trip.url }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ submenu.items.new_trip.key|lower|trans }}</a>

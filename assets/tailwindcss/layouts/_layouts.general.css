@@ -11098,6 +11098,29 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-trips-trip__leg svg { color: #94a3b8; font-size: 0.8rem; }
 .p-trips-trip__arrow { color: #cbd5e1; font-size: 0.65rem; }
 .p-trips-trip__actions { display: flex; flex: 0 0 auto; gap: 0.5rem; }
+/* Trips pages on phones: no site header, an orange bar of the same height instead
+   (back to the home page, the title, Create), as in the inbox */
+.p-trips__back { display: none; }
+@media (max-width: 767.98px) {
+  body:has(.p-trips__head) { --bw-topbar-offset: 0px; }
+  body:has(.p-trips__head) #main_menu { display: none; }
+  main.p-trips { margin-top: 0; }
+  .p-trips .p-trips__top {
+    justify-content: flex-start;
+    gap: 0.5rem;
+    height: 64px;
+    margin: 0 -1rem;
+    padding: 0 0.75rem;
+    background: #f37000;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.12);
+  }
+  .p-trips__back,
+  .p-trips__back:hover { display: inline-flex; flex-shrink: 0; align-items: center; padding: 0.5rem 0.25rem; color: #fff; font-size: 1.125rem; text-decoration: none; }
+  .p-trips .p-trips__top .p-trips__title { flex: 1; min-width: 0; overflow: hidden; color: #fff; font-size: 1.375rem; text-overflow: ellipsis; white-space: nowrap; }
+  .p-trips .p-trips__new,
+  .p-trips .p-trips__new:hover { flex-shrink: 0; padding: 0.45rem 0.9rem; border: 1px solid rgba(255, 255, 255, 0.7); background: transparent; color: #fff; box-shadow: none; }
+}
+
 @media (max-width: 767.98px) {
   .p-trips .p-trips__title { font-size: 1.6rem; }
   .p-trips-leg,

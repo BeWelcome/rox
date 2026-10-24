@@ -8729,7 +8729,7 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .l-hello .l-hello__field .auto-is-loading:after { right: 0.6rem; }
 .l-hello .l-hello__field input { padding-right: 2.25rem !important; }
 @media (max-width: 575.98px) {
-  .l-hello .l-hello__field .auto-results-wrapper.auto-is-active { right: -3.45rem; left: calc(-1.1rem - 1px); }
+  .l-hello .l-hello__field .auto-results-wrapper.auto-is-active { right: 0; left: calc(-1.1rem - 1px); }
 }
 
 /* Member suggestions under the "Find a member" field */

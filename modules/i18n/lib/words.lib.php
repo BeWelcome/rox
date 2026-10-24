@@ -658,71 +658,76 @@ WHERE
      * @return string translated according to the best language find
      */
     public function mInTrad($IdTrad,$IdLanguage=0,$ReplaceWithBr=false) {
+        if (empty($IdTrad)) {
+            return ""; // in case there is nothing, return an empty string
+        }
+        if (!is_numeric($IdTrad)) { // Logging anomalie things to detect database problem if any
+            $sBug = "it look like you are using MOD_WORD::mInTrad with and allready translated word [" . $IdTrad . "], a member_translations.id is expected and it should be numeric !";
+            MOD_log::get()->write($sBug, "Bug");
+            die($sBug);
+        }
 
-	 		$AllowedTags = "<b><i><br><br/><p><u>"; // This define the tags wich are not stripped inside a membertrad
-			if (empty($IdTrad)) {
-			   return (""); // in case there is nothing, return an empty string
-			}
-			else  {
-			   if (!is_numeric($IdTrad)) { // Logging anomalie things to detect database problem if any
-					$sBug="it look like you are using MOD_WORD::mInTrad with and allready translated word [".$IdTrad."], a memberstrads.IdTrad is expected and it should be numeric !" ;
-					MOD_log::get()->write($sBug,"Bug");
-					die ($sBug) ;
-			   }
-			}
-
-			// Try default chosen language
-        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`='".$IdLanguage."' ORDER BY updated DESC" ;
-			$q = $this->_dao->query($query);
-			$row = $q->fetch(PDB::FETCH_OBJ);
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
-				}
-				else {
-                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-				}
-			}
-			// Try default en
-        	$query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0 ORDER BY updated DESC" ;
-			$q = $this->_dao->query($query);
-			$row = $q->fetch(PDB::FETCH_OBJ);
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					MOD_log::get()->write("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
-				} else {
-                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-				}
-			}
-			// Try first language available
-            $query ="SELECT SQL_CACHE `Sentence` FROM `memberstrads` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
-			$q = $this->_dao->query($query);
-			$row = $q->fetch(PDB::FETCH_OBJ);
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					MOD_log::get()->write("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
-				} else {
-                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-				}
-			}
-			MOD_log::get()->write("mInTrad Anomaly : no entry found for IdTrad=#".$IdTrad, "Bug");
-			return (""); // If really nothing was found, return an empty string
+        // memberstrads is gone: group descriptions and membership comments are stored as single
+        // rows in member_translations and the legacy columns (groups.IdDescription,
+        // membersgroups.comment) hold that row's id. There is one row per id, so the preferred
+        // language can't be applied any more.
+        $query = "SELECT `content` FROM `member_translations` WHERE `id` = " . (int) $IdTrad;
+        $q = $this->_dao->query($query);
+        $row = $q ? $q->fetch(PDB::FETCH_OBJ) : false;
+        if ($row && isset($row->content)) {
+            return $this->ReplaceWithBr($row->content, $ReplaceWithBr);
+        }
+        MOD_log::get()->write("mInTrad Anomaly : no entry found for member_translations.id=#" . $IdTrad, "Bug");
+        return ""; // If really nothing was found, return an empty string
 	 } // end of mInTrad
 
     /**
-     * @param $IdTrad the id of a memberstrads.IdTrad record to retrieve
+     * @param $IdTrad the id of a member_translations record to retrieve
      * @param $ReplaceWithBr allows
      * @return string translated according to the best language find
      */
     public function mTrad($IdTrad,$ReplaceWithBr=false) {
-		if ($this->session->has( 'IdLanguage' )) {
-	 	   	$IdLanguage= $this->session->get( 'IdLanguage');
-		}
-		else {
-	 		$IdLanguage=0 ; // by default language 0
-		}
-		return ($this->mInTrad($IdTrad,$IdLanguage,$ReplaceWithBr)) ;
+		return ($this->mInTrad($IdTrad, $this->languageShortCode(), $ReplaceWithBr)) ;
 	 } // end of mTrad
+
+    /**
+     * Resolves a language given in one of the legacy forms to a ShortCode that exists in the
+     * `language` table: a ShortCode, a numeric id of the old `languages` table, or 0, -1, '' or
+     * null for "the current member's language". Falls back to English.
+     *
+     * The translations table references languages by ShortCode only (IdLanguage is gone).
+     */
+    public function languageShortCode($language = null): string
+    {
+        static $known = [];
+
+        $candidates = [];
+        if (is_string($language) && '' !== $language && !is_numeric($language)) {
+            $candidates[] = $language;
+        } elseif (is_numeric($language) && (int) $language > 0) {
+            $q = $this->_dao->query("SELECT `ShortCode` FROM `languages` WHERE `id` = " . (int) $language);
+            $row = $q ? $q->fetch(PDB::FETCH_OBJ) : false;
+            if ($row && !empty($row->ShortCode)) {
+                $candidates[] = $row->ShortCode;
+            }
+        }
+        if ($this->session->has('lang')) {
+            $candidates[] = (string) $this->session->get('lang');
+        }
+        $candidates[] = 'en';
+
+        foreach ($candidates as $shortCode) {
+            if (!isset($known[$shortCode])) {
+                $q = $this->_dao->query("SELECT `ShortCode` FROM `language` WHERE `ShortCode` = '" . $this->_dao->escape($shortCode) . "'");
+                $known[$shortCode] = (bool) ($q && $q->fetch(PDB::FETCH_OBJ));
+            }
+            if ($known[$shortCode]) {
+                return $shortCode;
+            }
+        }
+
+        return 'en';
+    }
 
     /**
 	 * @param integer $IdTrad the id of a translations.IdTrad record to retrieve
@@ -730,14 +735,20 @@ WHERE
      * @param boolean $ReplaceWithBr allows
 	 * @return string translated according to the best language find
 	 */
-    public function fTrad($IdTrad,$IdForceLanguage=-1, $ReplaceWithBr=false) {
+    /**
+     * @param string|null $Fallback text to use when there is no translation for $IdTrad. Forum
+     *                              threads and posts keep their text in forum_thread.title and
+     *                              forum_post.message; translations are optional.
+     */
+    public function fTrad($IdTrad,$IdForceLanguage=-1, $ReplaceWithBr=false, $Fallback=null) {
 			global $fTradIdLastUsedLanguage ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 			$fTradIdLastUsedLanguage=-1 ; // Horrible way of returning a variable you forget when you designed the method (jyh)
 																					// Will receive the choosen language
 
 	 		$AllowedTags = "<b><i><br><br/><p><img><ul><li><strong><a>"; // This define the tags wich are not stripped inside a translations
 			if (empty($IdTrad)) {
-			   return (""); // in case there is nothing, return and empty string
+			   // in case there is nothing, return the fallback or an empty string
+			   return (null === $Fallback ? "" : $this->ReplaceWithBr((string) $Fallback, $ReplaceWithBr));
 			}
 			else  {
 			   if (!is_numeric($IdTrad)) {
@@ -745,53 +756,31 @@ WHERE
 			   }
 			}
 
-			if ($IdForceLanguage<=0) {
-				if ($this->session->has( 'IdLanguage' )) {
-					$IdLanguage= $this->session->get( 'IdLanguage' );
-				}
-				else {
-					$IdLanguage=0 ; // by default language 0
-				}
-			}
-			else {
-				$IdLanguage=$IdForceLanguage ;
-			}
-			// Try default language
-        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `translations` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`='".$IdLanguage."'";
-			$q = $this->_dao->query($query);
-			$row = $q->fetch(PDB::FETCH_OBJ);
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					MOD_log::get()->write("Blank Sentence for language " . $IdLanguage . " with translations.IdTrad=" . $IdTrad, "Bug");
-				}
-				else {
-					$fTradIdLastUsedLanguage=$row->IdLanguage ;
-                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-				}
-			}
-			// Try default eng
-        	$query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `translations` WHERE `IdTrad`=".$IdTrad." and `IdLanguage`=0" ;
-			$q = $this->_dao->query($query);
-			$row = $q->fetch(PDB::FETCH_OBJ);
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					MOD_log::get()->write("Blank Sentence for language 1 (eng) with translations.IdTrad=" . $IdTrad, "Bug");
-				} else {
-					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
+			$IdTrad = (int) $IdTrad;
+			// translations references languages by ShortCode (IdLanguage is gone);
+			// $fTradIdLastUsedLanguage therefore receives a ShortCode as well.
+			$forced = (empty($IdForceLanguage) || (is_numeric($IdForceLanguage) && $IdForceLanguage <= 0)) ? null : $IdForceLanguage;
+			$language = $this->_dao->escape($this->languageShortCode($forced));
+			$queries = [
+				// preferred language, then English, then the first language available
+				"SELECT SQL_CACHE `Sentence`,`ShortCode` FROM `translations` WHERE `IdTrad`=" . $IdTrad . " AND `ShortCode`='" . $language . "'",
+				"SELECT SQL_CACHE `Sentence`,`ShortCode` FROM `translations` WHERE `IdTrad`=" . $IdTrad . " AND `ShortCode`='en'",
+				"SELECT SQL_CACHE `Sentence`,`ShortCode` FROM `translations` WHERE `IdTrad`=" . $IdTrad . " ORDER BY id ASC LIMIT 1",
+			];
+			foreach ($queries as $query) {
+				$q = $this->_dao->query($query);
+				$row = $q ? $q->fetch(PDB::FETCH_OBJ) : false;
+				if ($row && isset($row->Sentence)) {
+					if ('' === $row->Sentence) {
+						MOD_log::get()->write("Blank Sentence for language " . $row->ShortCode . " with translations.IdTrad=" . $IdTrad, "Bug");
+					} else {
+						$fTradIdLastUsedLanguage = $row->ShortCode;
+						return ($this->ReplaceWithBr($row->Sentence, $ReplaceWithBr));
+					}
 				}
 			}
-			// Try first language available
-            $query ="SELECT SQL_CACHE `Sentence`,`IdLanguage` FROM `translations` WHERE `IdTrad`=".$IdTrad."  order by id asc limit 1" ;
-			$q = $this->_dao->query($query);
-			$row = $q->fetch(PDB::FETCH_OBJ);
-			if (isset ($row->Sentence)) {
-				if (isset ($row->Sentence) == "") {
-					MOD_log::get()->write("Blank Sentence (any language) translations.IdTrad=" . $IdTrad, "Bug");
-				} else {
-					 $fTradIdLastUsedLanguage=$row->IdLanguage ;
-                    return ($this->ReplaceWithBr($row->Sentence,$ReplaceWithBr));
-				}
+			if (null !== $Fallback) {
+				return $this->ReplaceWithBr((string) $Fallback, $ReplaceWithBr);
 			}
 			$strerror="fTrad Anomaly : no entry found for IdTrad=#".$IdTrad ;
 			MOD_log::get()->write($strerror, "Bug");
@@ -863,70 +852,48 @@ WHERE
         else
             $IdLanguage = $_IdLanguage;
 
-        $IdOwner = $IdMember;
-        $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
-        if (strpos($ss,"\\'")!==false) {
-            $Sentence=$ss ;
-            $page="" ;
-            if (isset($_SERVER["PHP_SELF"])) {
-                $page=$_SERVER["PHP_SELF"] ;
-            }
-            MOD_log::get()->write("in module word->InsertInMTrad, for IdTrad=".$IdTrad. " The sentence is already escaped with a quote page [".$page."]", "Bug");
-        }
-        elseif (strpos($ss,'\\"')!==false) {
-            $Sentence=$ss ;
-            $page="" ;
-            if (isset($_SERVER["PHP_SELF"])) {
-                $page=$_SERVER["PHP_SELF"] ;
-            }
-            MOD_log::get()->write("in module word->InsertInMTrad, for IdTrad=".$IdTrad. " The sentence is already escaped with a double quote page [".$page."]", "Bug");
-        }
-        else {
-            $Sentence = $this->_dao->escape($ss);
+        if (strpos($ss,"\\'")!==false || strpos($ss,'\\"')!==false) {
+            $page = $_SERVER["PHP_SELF"] ?? "";
+            MOD_log::get()->write("in module word->InsertInMTrad, for IdTrad=".$IdTrad. " The sentence is already escaped page [".$page."]", "Bug");
+            $ss = stripslashes($ss);
         }
 
-        $str = "LOCK TABLES memberstrads WRITE";
-        $s = $this->_dao->query($str);
-        // \todo: Check result?
-        if ($IdTrad <=0) {
-            // Compute a new IdTrad
-            $s = $this->_dao->query("Select max(IdTrad) as maxi, min(IdTrad) as mini from memberstrads");
-            if (!$s) {
-                // Unlock table before throwing exception!
-                $this->_dao>query("UNLOCK TABLES");
-                throw new PException('Failed in InsertInMTrad searching Next max IdTrad');
-            }
-            $rr=$s->fetch(PDB::FETCH_OBJ) ;
-            if (isset ($rr->maxi)) {
-                // get
-                $IdTrad = max(abs($rr->mini), $rr->maxi) + 1;
-            } else {
-                $IdTrad = 1;
-            }
-        }
-
-        $str = "insert into memberstrads(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created,Type) ";
-        $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now(),'Member')";
+        // memberstrads is gone. Like App\Model\GroupModel, store the text as one member_translations
+        // row without a member (object_id NULL) and hand out its id as the "IdTrad".
+        $locale = $this->_dao->escape($this->languageShortCode(-1 == $_IdLanguage ? $this->_langWrite : $_IdLanguage));
+        $field = $this->_dao->escape($this->memberTranslationField($TableColumn));
+        $str = "INSERT INTO member_translations (object_id, locale, field, content) "
+            . "VALUES (NULL, '" . $locale . "', '" . $field . "', '" . $this->_dao->escape($ss) . "')";
         $s = $this->_dao->query($str);
         if (!$s) {
-            // Unlock table before throwing exception!
-            $this->_dao>query("UNLOCK TABLES");
-            throw new PException('Failed in InsertInMTrad inserting in membertrads');
+            throw new PException('Failed in InsertInMTrad inserting in member_translations');
         }
-        // unlock membertrads table, the other table can be updated without lock.
-        $this->_dao->query("UNLOCK TABLES");
+        $IdTrad = $s->insertId();
 
         // update the IdTrad in the original table (if the TableColumn was given properly and the IdRecord too)
-        if (!empty($TableColumn) and !empty($Idrecord)) {
-             $table=explode(".",$TableColumn) ;
-             $str="update ".$table[0]." set ".$TableColumn."=".$IdTrad." where ".$table[0].".id=".$IdRecord ;
+        if (!empty($TableColumn) and !empty($IdRecord)) {
+            [$table, $column] = explode(".", $TableColumn) + [1 => ''];
+            $str = "UPDATE `" . $table . "` SET `" . $column . "` = " . (int) $IdTrad . " WHERE id = " . (int) $IdRecord;
             $s = $this->_dao->query($str);
             if (!$s) {
-                throw new PException('Failed in InsertInMTrad updating table column [%s]');
+                throw new PException('Failed in InsertInMTrad updating table column ' . $TableColumn);
             }
         }
         return ($IdTrad);
     } // end of InsertInMTrad
+
+    /**
+     * member_translations.field for texts that used to live in memberstrads (same names as
+     * App\Model\GroupModel uses).
+     */
+    private function memberTranslationField($TableColumn): string
+    {
+        return match (strtolower((string) $TableColumn)) {
+            'groups.iddescription' => 'GroupDescription',
+            'membersgroups.comment' => 'GroupMembership',
+            default => substr((string) $TableColumn, 0, 32),
+        };
+    }
 
 
     /**
@@ -952,41 +919,30 @@ WHERE
             $ss=str_replace("\\'","'",$ss) ;
         }
         $ss=str_replace("\r\n","\n",$ss) ;
-        $ss = $this->_dao->escape($ss) ; // jy : I think we came here with an already escaped string.
-        // judging from the exception logs this is NOT TRUE. Instead we now have a massive sql injection exploit vector
 
         if ($IdOwner == 0) {
             $IdMember = $this->session->get('IdMember');
         } else {
             $IdMember = $IdOwner;
         }
-        //  echo "in ReplaceInMTrad \$ss=[".$ss."] \$IdTrad=",$IdTrad," \$IdOwner=",$IdMember,"<br />";
-        if (isset($this->_langWrite)) {
-            $IdLanguage=$this->_langWrite;
-        } else {
-            $IdLanguage=0 ; // by default language 0
-        }
-        if ($IdTrad == 0) {
+        if (empty($IdTrad)) {
             return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
         }
-        $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
-        $str = "select * from memberstrads where IdTrad=" . $IdTrad . " and IdOwner=" . $IdMember . " and IdLanguage=" . $IdLanguage;
-        $s = $this->_dao->query($str);
+
+        // $IdTrad is the id of a member_translations row (see InsertInMTrad)
+        $s = $this->_dao->query("SELECT id, content FROM member_translations WHERE id = " . (int) $IdTrad);
         if (!$s) {
             throw new PException('Failed in ReplaceInMTrad retrieving IdTrad='.$IdTrad);
         }
-        $rr=$s->fetch(PDB::FETCH_OBJ) ;
-        if (!isset ($rr->id)) {
-            return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember, $IdLanguage, $IdTrad)); // just insert a new record in memberstrads in this new language
-        } else {
-            if ($ss != $this->_dao->escape($rr->Sentence)) { // Update only if sentence has changed
-                $this->MakeRevision($rr->id, "memberstrads"); // create revision
-                $str = "update memberstrads set TableColumn='".$TableColumn."',IdRecord=".$IdRecord.",IdTranslator=" . $IdTranslator . ",Sentence='" . $ss . "' where id=" . $rr->id;
-    //			echo "\$str=".$str."<br />\n";
-                $s = $this->_dao->query($str);
-                if (!$s) {
-                    throw new PException('Failed in ReplaceInMTrad updating Sentence for IdTrad=#'.$IdTrad);
-                }
+        $rr = $s->fetch(PDB::FETCH_OBJ);
+        if (!isset($rr->id)) {
+            return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // the row is gone, create a new one
+        }
+        if ($ss !== (string) $rr->content) { // Update only if sentence has changed
+            $str = "UPDATE member_translations SET content = '" . $this->_dao->escape($ss) . "' WHERE id = " . (int) $rr->id;
+            $s = $this->_dao->query($str);
+            if (!$s) {
+                throw new PException('Failed in ReplaceInMTrad updating Sentence for IdTrad=#'.$IdTrad);
             }
         }
         return ($IdTrad);
@@ -1025,12 +981,13 @@ WHERE
             $IdMember = $_IdMember;
         }
 
-        if ($_IdLanguage == -1) {
-            $IdLanguage = $DefLanguage;
+        if ($_IdLanguage === -1 || $_IdLanguage === '-1') {
+            $ShortCode = $DefLanguage;
         }
         else {
-            $IdLanguage = $_IdLanguage;
+            $ShortCode = $this->languageShortCode($_IdLanguage);
         }
+        $ShortCode = $this->_dao->escape($ShortCode);
 
         if ($IdTrad <=0) { // if a new IdTrad is needed
 			if ($ss=="") { // No need to insert an empty record in translations
@@ -1052,8 +1009,8 @@ WHERE
         $IdOwner = $IdMember;
         $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
         $Sentence = $ss;
-        $str = "insert into translations(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created,Type) ";
-        $str .= "Values('".$TableColumn."',".$IdRecord.",". $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now(),'Member')";
+        $str = "insert into translations(TableColumn,IdRecord,ShortCode,IdOwner,IdTrad,IdTranslator,Sentence,created,Type) ";
+        $str .= "Values('".$TableColumn."',".(int) $IdRecord.",'". $ShortCode . "'," . (int) $IdOwner . "," . (int) $IdTrad . "," . (int) $IdTranslator . ",\"" . $Sentence . "\",now(),'Member')";
         $s = $this->_dao->query($str);
         if (!$s) {
             throw new PException('Failed in InsertInFTrad for inserting in translations!');
@@ -1079,14 +1036,9 @@ WHERE
     * it return the language choosen if any
     */
     function GetLanguageChoosen() {
-        $DefLanguage=0 ;
-       if ($this->session->has( 'IdLanguage' )) {
-           $DefLanguage= $this->session->get( 'IdLanguage' );
-        }
-        if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
-           $DefLanguage=$_POST['IdLanguage'] ;
-        }
-        return($DefLanguage) ;
+        // A language posted with the form (ShortCode, or a legacy numeric id/0 for "default")
+        // wins over the current member's language. Returns a ShortCode.
+        return $this->languageShortCode($_POST['IdLanguage'] ?? null);
     } // end of GetLanguageChoosen
 
 
@@ -1119,9 +1071,9 @@ WHERE
             return ($this->InsertInFTrad($ss,$TableColumn,$IdRecord, $IdMember,$DefLanguage)); // Create a full new translation
         }
         $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
-        $s = $this->_dao->query("SELECT * FROM translations WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . $DefLanguage." /* in forum->ReplaceInFTrad */");
+        $s = $this->_dao->query("SELECT * FROM translations WHERE IdTrad=" . (int) $IdTrad . " AND ShortCode='" . $this->_dao->escape($DefLanguage) . "' /* in forum->ReplaceInFTrad */");
         if (!$s) {
-           throw new PException('Failed in ReplaceInFTrad searching previous IdTrad=#'.$IdTrad.' for IdLanguage='.$DefLanguage);
+           throw new PException('Failed in ReplaceInFTrad searching previous IdTrad=#'.$IdTrad.' for language='.$DefLanguage);
         }
         $rr=$s->fetch(PDB::FETCH_OBJ) ;
         if (!isset ($rr->id)) {

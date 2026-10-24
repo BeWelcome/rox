@@ -43,21 +43,16 @@ class ManticoreIndicesGeonamesCommand extends Command
         $this->io->newLine();
 
         $index = $this->createGeonamesIndex();
-        if (null !== $index) {
-            $this->addGeonamesDocuments($index, $output);
-
-            $this->addAlternateNamesDocuments($index, $output);
-
-            $this->io->newLine();
-            $this->io->note('Created ' . self::GEONAMES_INDEX . '.');
-        } else {
-            $this->io->note(
-                'Skipped creation of ' . self::GEONAMES_INDEX . ' index. ' .
-                'Try using manticore:indices:update --geonames instead'
-            );
-
-            return Command::INVALID;
+        if (null === $index) {
+            return Command::FAILURE;
         }
+
+        $this->addGeonamesDocuments($index, $output);
+
+        $this->addAlternateNamesDocuments($index, $output);
+
+        $this->io->newLine();
+        $this->io->note('Created ' . self::GEONAMES_INDEX . '.');
 
         $this->io->success('Created Manticore index.');
 
@@ -67,9 +62,16 @@ class ManticoreIndicesGeonamesCommand extends Command
     private function createGeonamesIndex(): ?Table
     {
         $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
-        $index = $client->table('geonames_rt');
+        $index = $client->table(self::GEONAMES_INDEX);
 
         try {
+            // Rebuild from scratch: an existing index would otherwise get every location a second time
+            $existing = $client->sql("SHOW TABLES LIKE '" . self::GEONAMES_INDEX . "'", true);
+            if (!empty($existing)) {
+                $index->drop();
+                $this->io->note('Dropped existing ' . self::GEONAMES_INDEX . ' index.');
+            }
+
             $index->create(
                 [
                     'geoname_id' => ['type' => 'integer'],
@@ -97,10 +99,9 @@ class ManticoreIndicesGeonamesCommand extends Command
                 ]
             );
         } catch (Exception $e) {
-            // $index = null;
+            $this->io->error('Could not create index ' . self::GEONAMES_INDEX . ': ' . $e->getMessage());
 
-            $this->io->error($e->getMessage());
-            $this->io->error('Index ' . self::GEONAMES_INDEX . ' already exists or another problem occurred.');
+            return null;
         }
 
         return $index;

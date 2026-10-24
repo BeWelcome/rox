@@ -96,7 +96,7 @@ if ($User) {
                 echo "[ModOnly] " ;
             }
             echo "<a href=\"",$url,"\">" ;
-            echo $words->fTrad($thread->IdTitle);
+            echo $words->fTrad($thread->IdTitle, -1, false, $thread->title ?? '');
             ?>
             <br>
             <span class="small gray"><?php

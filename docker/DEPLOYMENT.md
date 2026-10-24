@@ -1,34 +1,40 @@
 # Docker deployment
 
-## Production image (`bewelcome_php`)
+## Production images (`bewelcome_php` + `bewelcome_nginx`)
 
-The default `docker-compose.yml` builds the **`bewelcome_php`** stage. That image is self-contained:
+The app runs as two containers built from the same `Dockerfile`:
 
-- **PHP dependencies** — `composer install --no-dev` during `docker build` (`vendor/` in the image).
-- **Frontend assets** — `bun encore production` during `docker build` (`public/build/entrypoints.json` and hashed assets in the image).
-- **No bind mount** — the app runs from baked-in `/srv/bewelcome`; no host `vendor/` or `public/build/` required.
+- **`bewelcome_php`**: PHP-FPM. `composer install --no-dev` and `bun encore production`
+  run during `docker build`, so `vendor/` and `public/build/` are in the image and
+  nothing is bind-mounted in production.
+- **`bewelcome_nginx`**: Nginx (`docker/nginx/conf.d/default.conf`). It serves the
+  static files from `public/` (copied from the PHP stage) and passes PHP requests
+  to `php:9000`.
 
-Rebuild and redeploy after PHP or frontend changes:
-
-```bash
-docker compose build app
-docker compose up -d
-```
-
-Verify assets are present in a built image:
+CI builds and pushes both images (see the "Production image & deployment" section
+in the [README](../README.md)). To build them locally:
 
 ```bash
-docker build --target bewelcome_php -t bewelcome/app .
-docker run --rm --entrypoint sh bewelcome/app -c 'test -f public/build/entrypoints.json'
+docker build --target bewelcome_php -t bewelcome/php .
+docker build --target bewelcome_nginx -t bewelcome/nginx .
+docker run --rm --entrypoint sh bewelcome/php -c 'test -f public/build/entrypoints.json'
 ```
 
 `public/build/` stays gitignored; production must not rely on committing compiled assets.
 
+On start in `prod`, the PHP entrypoint clears the cache, runs Doctrine migrations,
+adds missing translations and warms the cache.
+
 ## Local development
 
-Copy `docker-compose.override.yml.dist` to `docker-compose.override.yml` (see `make install`). That override:
+Copy `docker-compose.override.yml.dist` to `docker-compose.override.yml` (see `make install`).
+That override:
 
-- Builds **`bewelcome_php_dev`**
-- Bind-mounts the repository into `/srv/bewelcome`
+- builds **`bewelcome_php_dev`** (adds Xdebug, git and the MySQL client),
+- bind-mounts the repository into `/srv/bewelcome`,
+- publishes the app on http://localhost (port 80) and Mailpit on http://localhost:1080.
 
-The entrypoint runs `bun encore dev` when `APP_ENV` is not `prod`, so asset changes on the host are compiled inside the container during development.
+On start, the entrypoint installs Composer and bun dependencies, recreates the
+database, imports `docker/db/word.sql` (translations), and runs `bun encore dev`.
+
+Xdebug is installed but off. Set `XDEBUG_MODE=debug` on the `php` service to enable it.

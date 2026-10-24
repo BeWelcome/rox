@@ -89,7 +89,7 @@ class GroupMembership extends RoxEntityBase
             return [];
         }
 
-        $sql = "SELECT COUNT(*) AS count FROM members AS m, " . $this->getTableName()
+        $sql = "SELECT COUNT(*) AS count FROM member AS m, " . $this->getTableName()
             . " AS mg WHERE mg.IdGroup = " . $group_id . " AND mg.Status = 'In' "
             . " AND mg.IdMember = m.id AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")";
 
@@ -118,10 +118,6 @@ class GroupMembership extends RoxEntityBase
             return [];
         }
 
-        $notLoggedIn = true;
-        if ($this->session->has( "IdMember" )) {
-            $notLoggedIn = false;
-        }
         $where_clause = "IdGroup = '{$group_id}'" . (($status = $this->dao->escape($status)) ? " AND Status = '{$status}'" : '');
         if (isset($where) && strlen($where))
         {
@@ -159,12 +155,10 @@ class GroupMembership extends RoxEntityBase
         $sql = "
             SELECT
                 m.*,
-                IF(m.LastLogin >= CURDATE() - INTERVAL 1 week, (CURDATE() - INTERVAL FLOOR(RAND() * 100) MINUTE), m.LastLogin) as covertracks
-                FROM members AS m, {$this->getTableName()} AS mg";
-        $sql .= " WHERE m.Status IN ( " . MemberStatusType::ACTIVE_ALL . ") AND m.id IN ('" . implode("','", $members) . "') AND mg.IdMember = m.id AND mg.IdGroup = {$group_id}";
-        if ($notLoggedIn) {
-            $sql .= " AND mp.IdMember=m.id";
-        }
+                IF(m.LastActive >= CURDATE() - INTERVAL 1 week, (CURDATE() - INTERVAL FLOOR(RAND() * 100) MINUTE), m.LastActive) as covertracks
+                FROM member AS m, {$this->getTableName()} AS mg";
+        // (the old public profile restriction for visitors joined a table that no longer exists)
+        $sql .= " WHERE m.Status IN ( " . MemberStatusType::ACTIVE_ALL . ") AND m.id IN ('" . implode("','", array_map('intval', $members)) . "') AND mg.IdMember = m.id AND mg.IdGroup = " . (int) $group_id;
         $sql .= " ORDER BY {$orderby}{$limit_clause}{$offset_clause}";
         return $this->createEntity('Member')->findBySQLMany($sql);
     }
@@ -259,7 +253,12 @@ class GroupMembership extends RoxEntityBase
             $this->Status = $this->dao->escape($status);
             $this->IdGroup = $group_id;
             $this->IdMember = $member_id;
-            $this->created = date('Y-m-d H:i:s');
+            // membersgroups has no defaults for these any more
+            $this->created = $this->updated = date('Y-m-d H:i:s');
+            $this->comment = $this->comment ?: 0;
+            $this->IacceptMassMailFromThisGroup = $this->IacceptMassMailFromThisGroup ?: 'no';
+            $this->CanSendGroupMessage = $this->CanSendGroupMessage ?: 'yes';
+            $this->notificationsEnabled = $this->notificationsEnabled ?: 0;
 
             return $this->insert();
         }
@@ -305,11 +304,12 @@ class GroupMembership extends RoxEntityBase
         if ($comment)
         {
             $words = $this->getWords();
-            $comment_id = ((!$this->Comment) ? $words->InsertInMTrad($this->dao->escape($comment), 'membersgroups.Comment', $this->getPKValue()) : $words->ReplaceInMTrad($this->dao->escape($comment), 'membersgroups.Comment', $this->getPKValue(), $this->Comment));
+            // membersgroups.comment holds the id of a member_translations row
+            $comment_id = ((!$this->comment) ? $words->InsertInMTrad($comment, 'membersgroups.Comment', $this->getPKValue()) : $words->ReplaceInMTrad($comment, 'membersgroups.Comment', $this->getPKValue(), $this->comment));
 
-            if ($comment_id != $this->Comment)
+            if ($comment_id != $this->comment)
             {
-                $this->Comment = $comment_id;
+                $this->comment = $comment_id;
             }
         }
         $this->IacceptMassMailFromThisGroup = $acceptgroupmail;

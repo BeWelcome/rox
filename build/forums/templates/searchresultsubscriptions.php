@@ -102,7 +102,7 @@ if (count($TResults->TData) > 0) { ?>
         echo '<tr><th scope="row">';
         echo '<a href="forums/subscriptions/unsubscribe/thread/' . $data->IdSubscribe . '/' . $data->UnSubscribeKey . '" class="btn btn-danger"><i class="fa fa-times" aria-hidden="true" title="' . $words->get('SubscriptionTitleUnscribeDiscussion') . '"></i></a>';
         echo '</th>';
-        echo '<td class="align-middle"><a href="forums/s' . $data->IdThread . ' ">' . $words->fTrad($data->IdTitle) . '</a><br>';
+        echo '<td class="align-middle"><a href="forums/s' . $data->IdThread . ' ">' . $words->fTrad($data->IdTitle, -1, false, $data->title ?? '') . '</a><br>';
         echo '<span class="small">' . $data->subscribedtime . '</span></td>';
 
         echo '<td class="align-middle"><div class="btn-group" role="group" aria-label="' . $words->get('AriaLabelToggleSubscriptionOnOff') . '">';

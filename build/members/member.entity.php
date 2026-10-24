@@ -874,14 +874,29 @@ FROM
      */
     protected function get_address() {
         if ($this->Status != 'AskToLeave') {
-            $id = $this->id;
+            // address and geo__names replaced addresses and geonames: names (localised through
+            // geo__names_translations) are looked up directly, house number/street/zip are plain text.
+            $id = (int) $this->id;
+            $locale = $this->dao->escape((string) ($this->lang ?: $this->session->get('lang', 'en')));
             $query = "
             SELECT
-                SQL_CACHE a.*
+                a.location AS IdCity, a.HouseNumber, a.StreetName, a.Zip,
+                COALESCE(ct.content, city.name) AS CityName,
+                COALESCE(rt.content, region.name) AS RegionName,
+                city.admin_1_id AS RegionCode,
+                COALESCE(nt.content, country.name) AS CountryName,
+                city.country_id AS CountryCode
             FROM
-                addresses AS a
+                address AS a
+            LEFT JOIN geo__names AS city ON city.geoname_id = a.location
+            LEFT JOIN geo__names AS region ON region.geoname_id = city.admin1
+            LEFT JOIN geo__names AS country ON country.geoname_id = city.country
+            LEFT JOIN geo__names_translations AS ct ON ct.object_id = city.geoname_id AND ct.locale = '{$locale}' AND ct.field = 'name'
+            LEFT JOIN geo__names_translations AS rt ON rt.object_id = region.geoname_id AND rt.locale = '{$locale}' AND rt.field = 'name'
+            LEFT JOIN geo__names_translations AS nt ON nt.object_id = country.geoname_id AND nt.locale = '{$locale}' AND nt.field = 'name'
             WHERE
-                a.IdMember = $id
+                a.member_id = {$id}
+            ORDER BY a.active DESC
             LIMIT
                 1
             ";
@@ -890,31 +905,16 @@ FROM
             // Check if address was found
             if ($rows != null && sizeof($rows) > 0) {
                 $addressRow = $rows[0];
-                $city = $this->createEntity('Geo')->findById($addressRow->IdCity);
-                if ($city) {
-                    // Set city name
-                    $cityName = $city->getName($this->lang);
+                if (null !== $addressRow->CityName) {
+                    $cityName = $addressRow->CityName;
                     if ($cityName == '') {
                         $cityName = 'Error: City name not set';
                     }
-
-                    // Set region name
-                    $region = $city->getParent();
-                    if ($region) {
-                        $regionName = $region->getName($this->lang);
-                        $regionCode = $region->admin1;
-                    } else {
-                        // Suppress display in template
-                        $regionName = '';
-                        $regionCode = '';
-                    }
-
-                    // Set country name and code
-                    $country = $city->getCountry();
-                    if ($country) {
-                        $countryName = $country->getName($this->lang);
-                        $countryCode = $country->country;
-                    }
+                    // Region and country names are suppressed in templates when empty
+                    $regionName = (string) $addressRow->RegionName;
+                    $regionCode = null === $addressRow->RegionName ? '' : (string) $addressRow->RegionCode;
+                    $countryName = (string) $addressRow->CountryName;
+                    $countryCode = (string) $addressRow->CountryCode;
 
                     // Set remaining address fields
                     $idCity = $addressRow->IdCity;
@@ -1104,7 +1104,8 @@ ORDER BY members.Username ASC
         $preferences = $this->get_preferences(false);
         foreach ($preferences as $preference) {
             if ($preference->codeName == $name) {
-                $value = $preference->Value;
+                // preferences the member never set come back with Value NULL
+                $value = $preference->Value ?? $default;
                 break;
             }
         }

@@ -57,7 +57,7 @@ Boston, MA  02111-1307, USA.
                         echo "[ModOnly]" ;
                     }
                     echo "<a href=\"",$url,"\">" ;
-                    echo $words->fTrad($thread->IdTitle);
+                    echo $words->fTrad($thread->IdTitle, -1, false, $thread->title ?? '');
                     ?></a>
                     <br />
                 </td>

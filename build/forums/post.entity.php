@@ -7,7 +7,7 @@
 class Post extends RoxEntityBase
 {
 
-    protected $_table_name = 'forums_posts';
+    protected $_table_name = 'forum_post';
 
 
     public function __construct($post_id = false)

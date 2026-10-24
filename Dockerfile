@@ -1,11 +1,29 @@
 # the different stages of this Dockerfile are meant to be built into separate images
+# https://docs.docker.com/develop/develop-images/multistage-build/#stop-at-a-specific-build-stage
+# https://docs.docker.com/compose/compose-file/#target
+
+
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.4
-ARG FRANKENPHP_VERSION=1.11
+ARG PHP_VERSION=8.4.27
+ARG NGINX_VERSION=1.30.4
+ARG BUN_VERSION=1.4.4
 
 
-# Shared PHP/FrankenPHP runtime base.
-FROM dunglas/frankenphp:${FRANKENPHP_VERSION}-php${PHP_VERSION}-alpine AS bewelcome_php_base
+# bun binary, copied into the "php" stage below
+FROM oven/bun:${BUN_VERSION}-alpine AS bewelcome_bun
+
+
+# "php" stage
+FROM php:${PHP_VERSION}-fpm-alpine3.24 AS bewelcome_php
+
+# persistent / runtime deps
+# Upgrade all base packages to pick up security patches (CVE fixes in OS packages).
+# The CI builds use a layer cache, so without a changing value here this layer
+# (and every apk package) would stay at the version of the first cached build,
+# and Trivy fails on CVEs that Alpine has long fixed. The workflows pass the
+# build date, so the packages are refreshed at most once a day.
+ARG APK_REFRESH=unset
+RUN echo "apk refresh: ${APK_REFRESH}" && apk update && apk upgrade --no-cache
 
 RUN apk add --no-cache \
 		acl \
@@ -13,14 +31,26 @@ RUN apk add --no-cache \
 		libjpeg-turbo \
 		libpng \
 		fcgi \
+		file \
 		gettext \
 	;
 
+ARG APCU_VERSION=5.1.28
 RUN set -eux; \
-	install-php-extensions \
-		apcu \
-		curl \
-		gmp \
+	apk add --no-cache --virtual .build-deps \
+		$PHPIZE_DEPS \
+		freetype-dev \
+		icu-dev \
+		libjpeg-turbo-dev \
+		libpng-dev \
+		libxslt-dev \
+		libzip-dev \
+		zlib-dev \
+	; \
+	\
+	docker-php-ext-configure zip; \
+	docker-php-ext-configure gd --with-freetype --with-jpeg=/usr/include/ --enable-gd; \
+	docker-php-ext-install -j$(nproc) \
 		intl \
 		gd \
 		mysqli \
@@ -28,27 +58,65 @@ RUN set -eux; \
 		pdo_mysql \
 		xsl \
 		zip \
-		exif \
+        exif \
+	; \
+	pecl install \
+		apcu-${APCU_VERSION} \
+	; \
+	pecl clear-cache; \
+	docker-php-ext-enable \
+		apcu \
 		opcache \
-	;
+	; \
+	\
+	runDeps="$( \
+		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local/lib/php/extensions \
+			| tr ',' '\n' \
+			| sort -u \
+			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+	)"; \
+	apk add --no-cache --virtual .phpexts-rundeps $runDeps; \
+	\
+	apk del .build-deps
 
+# bun builds the front-end assets; on Alpine it needs libstdc++ and libgcc
+RUN apk add --no-cache libgcc libstdc++
+COPY --from=bewelcome_bun /usr/local/bin/bun /usr/local/bin/bun
+
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN export PATH="/usr/local/bin:$PATH"
+
+RUN ln -s $PHP_INI_DIR/php.ini-production $PHP_INI_DIR/php.ini
 COPY docker/php/conf.d/bewelcome.prod.ini $PHP_INI_DIR/conf.d/bewelcome.ini
+COPY docker/php/fpm/z-workers.conf /usr/local/etc/php-fpm.d/z-workers.conf
 
 RUN set -eux; \
-	ln -sf "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"; \
-	sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" "$PHP_INI_DIR/php.ini"
+	{ \
+		echo '[www]'; \
+		echo 'ping.path = /ping'; \
+	} | tee /usr/local/etc/php-fpm.d/docker-healthcheck.conf
+
+# https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
+ENV COMPOSER_ALLOW_SUPERUSER=1
+# install Symfony Flex globally to speed up download of Composer packages (parallelized prefetching)
+RUN set -eux; \
+    composer global config --no-plugins allow-plugins.symfony/flex true; \
+    composer global require "symfony/flex" --prefer-dist --no-progress --classmap-authoritative; \
+    composer clear-cache
+ENV PATH="${PATH}:/root/.composer/vendor/bin"
 
 WORKDIR /srv/bewelcome
 
+# build for production
+ARG APP_ENV=prod
+ARG APP_VERSION=unknown
+ARG APP_VERSION_TIMESTAMP=
 
-# Source snapshot reused by build and development stages.
-FROM bewelcome_php_base AS bewelcome_source
-
+# copy only specifically what we need for production
 COPY assets assets/
 COPY bin bin/
 COPY build build/
 COPY config config/
-COPY docker docker/
 COPY lib lib/
 COPY Migrations Migrations/
 COPY Mike42 Mike42/
@@ -62,143 +130,90 @@ COPY tools tools/
 COPY translations translations/
 COPY routes.php ./
 COPY rox_docker.ini /srv/bewelcome/rox_local.ini
+
+# prevent the reinstallation of vendors at every changes in the source code
 COPY composer.json composer.lock symfony.lock ./
-COPY package.json bun.lock webpack.config.mjs postcss.config.js tailwind.config.js tsconfig.json ./
-COPY .env ./
-
-
-# Build PHP dependencies and optimized autoload outside the final runtime.
-FROM bewelcome_php_base AS bewelcome_vendor_deps
-
 RUN set -eux; \
-	apk add --no-cache curl; \
-	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-COPY composer.json composer.lock symfony.lock ./
-
-RUN set -eux; \
-	COMPOSER_ALLOW_SUPERUSER=1 composer install --prefer-dist --no-dev --no-scripts --no-progress --no-autoloader; \
+	composer install --prefer-dist --no-dev --no-scripts --no-progress --no-suggest; \
 	composer clear-cache
 
-FROM bewelcome_vendor_deps AS bewelcome_vendor
+# prevent the reinstallation of node_modules at every changes in the source code
+COPY package.json bun.lock webpack.config.mjs postcss.config.js tailwind.config.js tsconfig.json ./
+# assets/js/translator.js imports var/translations, which the cache warmup only
+# writes at runtime; a stub lets encore compile during the image build.
+RUN set -eux; \
+	bun i --frozen-lockfile; \
+	mkdir -p var/translations; \
+	printf '%s\n' \
+		'// auto-generated stub for image build' \
+		'export const localeFallbacks = {"en":"en"};' \
+		'export const messages = {};' \
+		> var/translations/index.js; \
+	bun encore production --mode=production; \
+	rm -rf node_modules var/translations /root/.bun/install/cache
 
-COPY --from=bewelcome_source /srv/bewelcome ./
+# do not use .env files in production
+COPY .env ./
+RUN composer dump-env prod; \
+	rm .env
 
 RUN set -eux; \
-	COMPOSER_ALLOW_SUPERUSER=1 composer dump-autoload --classmap-authoritative --no-dev; \
-	COMPOSER_ALLOW_SUPERUSER=1 composer dump-env prod; \
-	composer clear-cache; \
-	rm -rf /root/.composer /root/.cache/composer
-
-
-# Build frontend assets outside the final runtime.
-FROM bewelcome_php_base AS bewelcome_bun
-
-RUN set -eux; \
-	apk add --no-cache bash curl git openssh-client unzip; \
-	curl -fsSL https://bun.sh/install -o bun-install.sh; \
-	bash bun-install.sh; \
-	ln -s /root/.bun/bin/bun /usr/local/bin/bun; \
-	rm bun-install.sh
-
-FROM bewelcome_bun AS bewelcome_assets
-
-COPY package.json bun.lock ./
-COPY --from=bewelcome_vendor_deps /srv/bewelcome/vendor vendor/
-
-RUN set -eux; \
-	bun i --frozen-lockfile
-
-COPY --from=bewelcome_source /srv/bewelcome ./
-
-# Stub var/translations so encore can compile (entrypoint cache warmup fills real translations at runtime).
-RUN mkdir -p var/translations && printf '%s\n' \
-	'// auto-generated stub for image build' \
-	'export const localeFallbacks = {"en":"en"};' \
-	'export const messages = {};' \
-	> var/translations/index.js
-
-RUN set -eux; \
-	bun encore production --mode=production
-
-
-# Self-contained production image.
-FROM bewelcome_php_base AS bewelcome_php
-
-ARG APP_VERSION=unknown
-ARG APP_VERSION_TIMESTAMP=
-
-ENV APP_ENV=prod
-
-COPY --from=bewelcome_source /srv/bewelcome/bin bin/
-COPY --from=bewelcome_source /srv/bewelcome/build build/
-COPY --from=bewelcome_source /srv/bewelcome/config config/
-COPY --from=bewelcome_source /srv/bewelcome/lib lib/
-COPY --from=bewelcome_source /srv/bewelcome/Migrations Migrations/
-COPY --from=bewelcome_source /srv/bewelcome/Mike42 Mike42/
-COPY --from=bewelcome_source /srv/bewelcome/modules modules/
-COPY --from=bewelcome_source /srv/bewelcome/pthacks pthacks/
-COPY --from=bewelcome_source /srv/bewelcome/public public/
-COPY --from=bewelcome_source /srv/bewelcome/roxlauncher roxlauncher/
-COPY --from=bewelcome_source /srv/bewelcome/src src/
-COPY --from=bewelcome_source /srv/bewelcome/templates templates/
-COPY --from=bewelcome_source /srv/bewelcome/tools tools/
-COPY --from=bewelcome_source /srv/bewelcome/translations translations/
-COPY --from=bewelcome_source /srv/bewelcome/routes.php ./
-COPY --from=bewelcome_source /srv/bewelcome/rox_local.ini ./
-COPY --from=bewelcome_source /srv/bewelcome/composer.json ./
-COPY --from=bewelcome_vendor /srv/bewelcome/vendor vendor/
-COPY --from=bewelcome_vendor /srv/bewelcome/.env.local.php ./
-COPY --from=bewelcome_assets /srv/bewelcome/public/build public/build/
-COPY --from=bewelcome_assets /srv/bewelcome/public/main.js /srv/bewelcome/public/service-worker.js public/
+	mkdir -p var/cache var/log; \
+	composer dump-autoload --classmap-authoritative --no-dev; \
+	chmod +x bin/console; sync
 
 RUN set -eux; \
 	printf '%s\n' "$APP_VERSION" > VERSION; \
-	if [ -n "$APP_VERSION_TIMESTAMP" ]; then php -r 'touch("VERSION", (int) $argv[1]);' "$APP_VERSION_TIMESTAMP"; fi; \
-	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images public/bundles /config /data; \
-	find public -name '*.map' -type f -delete; \
-	chown -R www-data:www-data var data upload public/bundles /config /data; \
-	chmod +x bin/console; \
-	apk upgrade --no-cache; \
-	sync
+	if [ -n "$APP_VERSION_TIMESTAMP" ]; then php -r 'touch("VERSION", (int) $argv[1]);' "$APP_VERSION_TIMESTAMP"; fi
 VOLUME /srv/bewelcome/var
 VOLUME /srv/bewelcome/data
 
-COPY docker/frankenphp/Caddyfile /etc/caddy/Caddyfile
+COPY docker/php/docker-healthcheck.sh /usr/local/bin/docker-healthcheck
+RUN chmod +x /usr/local/bin/docker-healthcheck
+
+HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["docker-healthcheck"]
+
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint
 
-USER www-data
-
-HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["frankenphp", "php-cli", "-r", "echo 1;"]
-
 ENTRYPOINT ["docker-entrypoint"]
-CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
+CMD ["php-fpm"]
 
 
-# Local development image. The repository is bind-mounted over /srv/bewelcome.
-FROM bewelcome_source AS bewelcome_php_dev
+# "nginx" stage
+# depends on the "php" stage above
+FROM nginx:${NGINX_VERSION}-alpine AS bewelcome_nginx
 
-ENV APP_ENV=dev
-ENV COMPOSER_ALLOW_SUPERUSER=1
+COPY docker/nginx/conf.d/default.conf /etc/nginx/conf.d/default.conf
 
+WORKDIR /srv/bewelcome/public
+
+COPY --from=bewelcome_php /srv/bewelcome/public ./
+
+
+# "php" dev stage
+# depends on the "php" stage above
+FROM bewelcome_php AS bewelcome_php_dev
+
+# build for production
+ARG NODE_ENV=production
+
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+
+# git and openssh-client are only needed in development (docker-entrypoint writes VERSION from
+# git outside prod; .git is not in the image). Keeping them out of the runtime image also keeps
+# out libexpat, which only git depends on.
 RUN set -eux; \
-	apk add --no-cache bash curl git make mariadb-client openssh-client python3 unzip; \
-	curl -fsSL https://bun.sh/install -o bun-install.sh; \
-	bash bun-install.sh; \
-	ln -s /root/.bun/bin/bun /usr/local/bin/bun; \
-	rm bun-install.sh; \
-	curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
-	chmod a+w "$PHP_INI_DIR"; \
-	mkdir -p vendor var/cache var/log; \
-	chmod -R a+w vendor; \
-	chmod -R 777 var
+	apk add --no-cache \
+		git \
+		openssh-client \
+		make \
+		mysql-client \
+		libstdc++ \
+		gcompat \
+		bash \
+		nodejs \
+		procps; \
+	install-php-extensions xdebug
 
-COPY docker/frankenphp/Caddyfile /etc/caddy/Caddyfile
-COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
-RUN chmod +x /usr/local/bin/docker-entrypoint
-
-HEALTHCHECK --interval=10s --timeout=3s --retries=3 CMD ["frankenphp", "php-cli", "-r", "echo 1;"]
-
-ENTRYPOINT ["docker-entrypoint"]
-CMD ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile"]
+COPY docker/php/conf.d/bewelcome.xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini

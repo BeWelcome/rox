@@ -7,7 +7,7 @@
 class Thread extends RoxEntityBase
 {
 
-    protected $_table_name = 'forums_threads';
+    protected $_table_name = 'forum_thread';
 
 
     public function __construct($thread_id = false)

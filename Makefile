@@ -85,7 +85,7 @@ php-code-sniffer:
 	"./vendor/bin/phpcs"  --colors --warning-severity=Error
 
 phpunit:
-	"./bin/phpunit" --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --exclude-group=integration
+	XDEBUG_MODE=coverage "./bin/phpunit" --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --exclude-group=integration
 
 int-test:
 	"./bin/phpunit" --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --group=integration

@@ -4,6 +4,7 @@ namespace App\TranslationLoader;
 
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
 use Symfony\Component\Translation\MessageCatalogue;
@@ -36,7 +37,14 @@ class DatabaseLoader implements LoaderInterface
 
     private function getTranslationsForLocale($locale, $domain)
     {
-        return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
+        try {
+            return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
+        } catch (TableNotFoundException) {
+            // Fresh database without a schema yet (e.g. the first bin/console call that is
+            // about to create it builds the cache and warms the translations). Fall back to
+            // the file based translations; the next cache:clear picks up the database ones.
+            return [];
+        }
     }
 
     private function loadTranslationsForLocale($locale, $domain): MessageCatalogue

@@ -9371,10 +9371,8 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro__actions { flex-direction: column; flex-wrap: nowrap; align-items: flex-end; align-self: start; gap: 0.75rem; padding-top: 0; }
   .p-pro__actions > .p-pro__btn { display: none; }
   .p-pro__actions .p-hero__btn--icon { width: 2.25rem; height: 2.25rem; border: 0; background: transparent; color: #334155; }
-  /* Own profile: edit as a round button */
-  .p-pro__actions .p-pro__edit { width: 2.4rem; height: 2.4rem; padding: 0; border-radius: 999px; }
-  .p-pro__edit-text { display: none; }
-  .p-pro__actions:has(.p-pro__edit) { flex-direction: row; flex-wrap: wrap; width: 5.4rem; }
+  /* Own profile: no edit button in the head */
+  .p-pro__actions .p-pro__edit { display: none; }
   .p-pro .p-pro__name { font-size: 1.85rem; }
   .p-pro__username { font-size: 0.875rem; }
   .p-pro .p-pro__meta { margin-top: 0.3rem; font-size: 0.9375rem; }

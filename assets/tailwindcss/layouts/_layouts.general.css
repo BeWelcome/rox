@@ -9158,7 +9158,7 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 .p-pro:not(.p-pro--compact) .p-pro__host { display: none; }
 
 /* Name, gender, username; place, occupation, last login */
-.p-pro__info { min-width: 0; padding-top: 1.5rem; }
+.p-pro__info { min-width: 0; padding-top: 0.6rem; }
 .p-pro__name-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.65rem; }
 .p-pro .p-pro__name { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.1rem; font-weight: 700; line-height: 1.15; }
 .p-pro__who { font-size: 0.8125rem; }

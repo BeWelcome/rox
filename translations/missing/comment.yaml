@@ -101,3 +101,63 @@ comment.quality.neutral:
 comment.quality.negative:
     - '@-commentquality_bad'
 
+comment.form.new:
+    - 'New comment'
+    - Small title above the member name on the form to write a comment
+comment.form.editing:
+    - 'Edit my comment'
+    - Small title above the member name on the form to edit your comment
+comment.form.relations:
+    - 'How do you know {name}?'
+    - Title of the choices of how you know the member, on the comment form
+comment.form.relations.needed:
+    - 'Pick how you know them'
+    - Save button text on the comment form while no relation is picked
+comment.form.quality:
+    - 'How was your experience with {name}?'
+    - Title of the positive, neutral or negative choice on the comment form
+comment.form.quality.needed:
+    - 'Pick how it went'
+    - Save button text on the comment form while no experience is picked
+comment.form.negative.hint:
+    - 'A negative comment is checked by the Safety Team, and you can no longer edit it afterwards.'
+    - Note under the experience choice on the comment form when negative is picked
+comment.form.text:
+    - 'Your comment'
+    - Title of the text field on the comment form
+comment.form.text.placeholder:
+    - 'Tell other members about your time with {name}...'
+    - Placeholder of the text field on the comment form
+comment.form.text.needed:
+    - 'Write your comment'
+    - Save button text on the comment form while the text is empty
+comment.form.guidelines.needed:
+    - 'Confirm the guidelines'
+    - Save button text on the comment form while the guidelines box is not ticked
+confirmationcommentguidelines:
+    - 'I have read the comment guidelines and my comment follows them'
+    - Box to tick on the comment form the first time you write a comment
+profile.comment.relation.was_my_guest:
+    - 'Was my guest'
+    - How you know the member, on the comment form
+profile.comment.relation.hosted_me:
+    - 'Hosted me'
+    - How you know the member, on the comment form
+profile.comment.relation.only_once:
+    - 'We met once'
+    - How you know the member, on the comment form
+profile.comment.relation.family:
+    - 'Family'
+    - How you know the member, on the comment form
+profile.comment.relation.close_friend:
+    - 'Close friend'
+    - How you know the member, on the comment form
+profile.comment.relation.travelled_together:
+    - 'Travelled together'
+    - How you know the member, on the comment form
+profile.comment.relation.friends:
+    - 'Friends'
+    - How you know the member, on the comment form
+profile.comment.relation.chatted:
+    - 'Chatted online'
+    - How you know the member, on the comment form

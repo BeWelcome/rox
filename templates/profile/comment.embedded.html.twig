@@ -90,7 +90,7 @@
 
             {% if edit %}
                 <div class="p-comment__actions">
-                    <a class="p-comment__edit" href="{{ url('edit_comment', { username: comment.toMember.Username }) }}">
+                    <a class="p-comment__edit js-contact-open" href="{{ url('edit_comment', { username: comment.toMember.Username }) }}" data-title="{{ 'profile.comment.edit.mine'|trans|striptags }}">
                         <i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.comment.edit.mine'|trans({}, "messages", language) }}
                     </a>
                 </div>

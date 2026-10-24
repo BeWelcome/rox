@@ -1,23 +1,30 @@
 import MicroModal from 'micromodal';
 
-// Enable the submit button only once every required field is filled in.
+// Save stays pale while something is missing, and says what (data-cform-required holds
+// the words): how you know them, how it went, the text, the guidelines.
 const form = document.querySelector('[data-comment-form]');
 
 if (form) {
     const submit = form.querySelector('.js-submit');
-    const quality = form.querySelector('[name$="[quality]"]');
-    const relations = form.querySelectorAll('[name$="[relations][]"]');
-    const comment = form.querySelector('[name$="[comment]"]');
-    const guidelines = form.querySelector('[name$="[guidelines]"]');
+    const saveContent = submit.innerHTML;
+    const groups = Array.from(form.querySelectorAll('[data-cform-required]'));
 
-    const isComplete = () =>
-        quality !== null && quality.value !== ''
-        && Array.from(relations).some(relation => relation.checked)
-        && comment !== null && comment.value.trim() !== ''
-        && (guidelines === null || guidelines.checked);
+    const isFilled = (group) => {
+        const text = group.querySelector('textarea');
+        if (text) {
+            return text.value.trim() !== '';
+        }
+        return group.querySelector('input:checked') !== null;
+    };
 
     const update = () => {
-        submit.disabled = !isComplete();
+        const missing = groups.filter(group => !isFilled(group));
+        submit.disabled = missing.length > 0;
+        if (missing.length > 0) {
+            submit.textContent = missing[0].dataset.cformRequired;
+        } else {
+            submit.innerHTML = saveContent;
+        }
     };
 
     form.addEventListener('input', update);

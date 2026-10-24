@@ -1659,6 +1659,57 @@ main:has(.p-hero) {
   background: #fff7ed;
 }
 
+/* The form itself (profile/comment.form.html.twig), on its page and in the side panel */
+.p-cform { color: #0f172a; }
+.p-cform__guide { display: flex; align-items: flex-start; gap: 0.55rem; margin: 0 0 1.5rem; padding: 0.7rem 0.95rem; border-radius: 0.75rem; background: #f8fafc; color: #475569; font-size: 0.875rem; line-height: 1.5; }
+.p-cform__guide i, .p-cform__guide svg { flex: 0 0 auto; margin-top: 0.2rem; color: #94a3b8; }
+.p-cform__guide a { color: #c25a00; font-weight: 600; }
+.p-cform .p-cform__group { min-width: 0; margin: 0 0 1.6rem; padding: 0; border: 0; }
+.p-cform .p-cform__label { display: block; float: none; width: auto; margin: 0 0 0.65rem; padding: 0; color: #0f172a; font-size: 0.95rem; font-weight: 700; line-height: 1.3; }
+
+.p-cform__relations { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+.p-cform__relation { position: relative; }
+.p-cform__relation-input, .p-cform__quality-input { position: absolute; width: 1px; height: 1px; margin: 0; opacity: 0; pointer-events: none; }
+.p-cform__relation-label { display: flex; align-items: center; gap: 0.6rem; height: 100%; min-height: 3rem; margin: 0; padding: 0.45rem 0.75rem 0.45rem 0.45rem; border: 1px solid #e2e8f0; border-radius: 0.85rem; background: #fff; color: #334155; font-size: 0.9rem; font-weight: 600; line-height: 1.25; cursor: pointer; user-select: none; transition: border-color 0.15s ease, background-color 0.15s ease; }
+.p-cform__relation-label:hover { border-color: #cbd5e1; }
+.p-cform__relation-label i, .p-cform__relation-label svg { flex: 0 0 auto; box-sizing: content-box; width: 0.9rem; height: 0.9rem; padding: 0.55rem; border-radius: 50%; background: #f1f5f9; color: #64748b; }
+.p-cform__relation-input:checked + .p-cform__relation-label { border-color: #f37000; background: #fff7ed; color: #9a3412; }
+.p-cform__relation-input:checked + .p-cform__relation-label i,
+.p-cform__relation-input:checked + .p-cform__relation-label svg { background: #f37000; color: #fff; }
+.p-cform__relation-input:focus-visible + .p-cform__relation-label,
+.p-cform__quality-input:focus-visible + .p-cform__quality-label { outline: 2px solid rgba(243, 112, 0, 0.35); outline-offset: 2px; }
+
+.p-cform__qualities { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+.p-cform__quality { position: relative; --q: #64748b; --q-soft: #f1f5f9; --q-text: #334155; }
+.p-cform__quality--positive { --q: #16a34a; --q-soft: #f0fdf4; --q-text: #166534; }
+.p-cform__quality--negative { --q: #dc2626; --q-soft: #fef2f2; --q-text: #991b1b; }
+.p-cform__quality-label { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; height: 100%; margin: 0; padding: 0.9rem 0.5rem 0.8rem; border: 1px solid #e2e8f0; border-radius: 0.9rem; background: #fff; color: #334155; font-size: 0.9rem; font-weight: 700; line-height: 1.2; text-align: center; cursor: pointer; user-select: none; transition: border-color 0.15s ease, background-color 0.15s ease; }
+.p-cform__quality-label:hover { border-color: #cbd5e1; }
+.p-cform__quality-label i, .p-cform__quality-label svg { box-sizing: content-box; width: 1.05rem; height: 1.05rem; padding: 0.65rem; border-radius: 50%; background: var(--q-soft); color: var(--q); }
+.p-cform__quality-input:checked + .p-cform__quality-label { border-color: var(--q); background: var(--q-soft); color: var(--q-text); }
+.p-cform__quality-input:checked + .p-cform__quality-label i,
+.p-cform__quality-input:checked + .p-cform__quality-label svg { background: var(--q); color: #fff; }
+.p-cform__negative { display: none; align-items: flex-start; gap: 0.5rem; margin: 0.65rem 0 0; padding: 0.65rem 0.9rem; border-radius: 0.75rem; background: #fef2f2; color: #991b1b; font-size: 0.85rem; line-height: 1.45; }
+.p-cform__negative i, .p-cform__negative svg { flex: 0 0 auto; margin-top: 0.15rem; }
+.p-cform__group:has(.p-cform__quality--negative .p-cform__quality-input:checked) .p-cform__negative { display: flex; }
+
+.p-cform .p-cform__text { display: block; width: 100%; min-height: 11rem; padding: 0.85rem 1rem; border: 1px solid #e2e8f0; border-radius: 0.9rem; background: #f8fafc; color: #0f172a; font-size: 0.95rem; line-height: 1.55; resize: vertical; }
+.p-cform .p-cform__text::placeholder { color: #94a3b8; }
+.p-cform .p-cform__text:focus { border-color: #f6a364; background: #fff; outline: none; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.12); }
+
+.p-cform__check { display: flex; align-items: flex-start; gap: 0.65rem; margin: 0 0 1rem; color: #334155; font-size: 0.9rem; line-height: 1.45; }
+.p-cform__check input { flex: 0 0 auto; width: 1.15rem; height: 1.15rem; margin: 0.1rem 0 0; accent-color: #f37000; cursor: pointer; }
+.p-cform__check label { margin: 0; cursor: pointer; }
+.p-cform__check a { color: #c25a00; font-weight: 600; }
+.p-cform .p-edit-subpage__actions { margin-top: 1.5rem; }
+.p-cform .js-submit { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+.p-cform .js-submit:disabled { background: #f6c3a0; border-color: #f6c3a0; opacity: 1; cursor: default; }
+
+@media (max-width: 480px) {
+  .p-cform__relation-label { font-size: 0.85rem; }
+  .p-cform__quality-label { padding: 0.75rem 0.35rem 0.7rem; font-size: 0.85rem; }
+}
+
 @media (max-width: 640px) {
   .p-edit-subpage { margin: 1rem auto; padding: 0 0.75rem; }
   .p-edit-subpage__card { padding: 1.1rem; }

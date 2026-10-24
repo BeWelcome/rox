@@ -1,85 +1,124 @@
-{% extends 'base.html.twig' %}
+{#
+  Add or edit a comment about a member. On the profile it opens in the side panel
+  (?embed=1): the member's picture and name on top, then how you know them, how it went,
+  the text and the save button at the bottom. Without the panel (a link in an email) it
+  is the same form on its own page. Save stays pale while something is missing, and
+  says what (assets/js/profile/comment_form.js).
+#}
+{% extends 'profile/edit_subpage.html.twig' %}
 
-{% set hide_sidebar = true %}
+{% set editing = buttonLabel == 'comment.edit' %}
+{% set name = member.shortNameOrUsername %}
 
-{% block title %}
-  {{ 'profile.add.comment.title'|trans({'username': member.username}) }}
-{% endblock title %}
+{% block title %}{{ (editing ? 'comment.form.editing' : 'comment.form.new')|trans }} · {{ member.username }}{% endblock %}
+{% block subpage_title %}{{ member.visibleName ?: member.username }}{% endblock %}
+{% block subpage_back %}{{ url('members_profile', {username: member.username}) }}{% endblock %}
+{% block subpage_eyebrow %}{{ (editing ? 'comment.form.editing' : 'comment.form.new')|trans }}{% endblock %}
+{% block drawer_eyebrow %}<i class="fas fa-comment" aria-hidden="true"></i> {{ (editing ? 'comment.form.editing' : 'comment.form.new')|trans }}{% endblock %}
+{% block drawer_options %}noclose{% endblock %}
+{% block drawer_avatar %}<img src="{{ url('avatar', {username: member.username, size: 100}) }}" alt="">{% endblock %}
 
 {% block javascripts %}
   {{ parent() }}
   {{ encore_entry_script_tags('profile/comment_form') }}
 {% endblock javascripts %}
 
-{% block content %}
-  <section class="p-edit-subpage p-comment-form">
-    <header class="p-edit-subpage__header">
-      <a href="{{ url('members_profile', {username: member.username}) }}"
-         class="p-edit-subpage__back"
-         aria-label="{{ 'profile.back'|trans }}">
-        <i class="fas fa-chevron-left" aria-hidden="true"></i>
-      </a>
-      <div class="p-edit-subpage__heading">
-        <p class="p-edit-subpage__eyebrow">@{{ member.username }}</p>
-        <h1 class="p-edit-subpage__title">{{ 'profile.add.comment'|trans({'username': member.username, 'gender': member.gender}) }}</h1>
-      </div>
-    </header>
+{% block subpage_body %}
+  {% set embedded = app.request.query.getBoolean('embed') %}
+  {% set relationIcons = {
+    was_my_guest: 'fa-home', hosted_me: 'fa-house-user', only_once: 'fa-handshake', family: 'fa-users',
+    close_friend: 'fa-heart', travelled_together: 'fa-route', friends: 'fa-user-friends', chatted: 'fa-comments'
+  } %}
+  {% set qualityIcons = {positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down'} %}
 
-    <div class="p-edit-subpage__card">
-      <div class="p-comment-form__note">{{ 'followcommentguidelines'|trans|raw }}</div>
+  {{ form_start(form, {attr: {'data-comment-form': '', novalidate: 'novalidate', class: 'p-cform'}}) }}
+  {{ form_errors(form) }}
 
-      {{ form_start(form, {attr: {'data-comment-form': '', novalidate: 'novalidate'}}) }}
-      {{ form_errors(form) }}
+  <p class="p-cform__guide">
+    <i class="fas fa-info-circle" aria-hidden="true"></i>
+    <span>{{ 'followcommentguidelines'|trans|raw }}</span>
+  </p>
 
-      <div class="p-pill-group">
-        <span class="p-pill-group__label">{{ 'comment.host.guest.title'|trans|capitalize }}</span>
-        <div class="p-pill-group__options">
-          {% for child in form.relations.children %}
-            <div class="p-pill-option">
-              <input type="checkbox" class="p-pill-option__input"
-                     id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
-                     value="{{ child.vars.value }}"
-                     {% if child.vars.checked %}checked="checked"{% endif %}>
-              <label class="p-pill-option__label" for="{{ child.vars.id }}">{{ child.vars.label|trans(child.vars.label_translation_parameters) }}</label>
-            </div>
-            {% do child.setRendered %}
-          {% endfor %}
+  <fieldset class="p-cform__group p-pill-group" data-cform-required="{{ 'comment.form.relations.needed'|trans }}">
+    <legend class="p-cform__label">{{ 'comment.form.relations'|trans({name: name}) }}</legend>
+    <div class="p-cform__relations">
+      {% for child in form.relations.children %}
+        {% set icon = relationIcons[child.vars.value|lower] ?? 'fa-user-friends' %}
+        <div class="p-cform__relation">
+          <input type="checkbox" class="p-cform__relation-input"
+                 id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
+                 value="{{ child.vars.value }}"
+                 {% if child.vars.checked %}checked="checked"{% endif %}>
+          <label class="p-cform__relation-label" for="{{ child.vars.id }}">
+            <i class="fas {{ icon }}" aria-hidden="true"></i>
+            <span>{{ child.vars.label|trans(child.vars.label_translation_parameters) }}</span>
+          </label>
         </div>
-        {{ form_errors(form.relations) }}
-        {% do form.relations.setRendered %}
-      </div>
-
-      <div class="p-comment-form__field">
-        <label class="o-label" for="{{ form.quality.vars.id }}">{{ 'comment.quality.title'|trans|capitalize }}</label>
-        {{ form_widget(form.quality, {attr: {class: 'o-input p-comment-form__select'}}) }}
-        {{ form_errors(form.quality) }}
-        <p class="p-comment-form__hint">{{ 'comment.not.public'|trans|raw }}</p>
-      </div>
-
-      <div class="p-comment-form__field">
-        <label class="o-label" for="{{ form.comment.vars.id }}">{{ 'comment.text.title'|trans|capitalize }}</label>
-        {{ form_widget(form.comment, {attr: {class: 'o-input'}}) }}
-        {{ form_errors(form.comment) }}
-      </div>
-
-      {% if form.guidelines is defined %}
-        <div class="p-comment-form__check">
-          {{ form_row(form.guidelines) }}
-        </div>
-      {% endif %}
-      {% if form.new_experience is defined %}
-        <div class="p-comment-form__check">
-          {{ form_row(form.new_experience) }}
-        </div>
-      {% endif %}
-
-      <div class="p-edit-subpage__actions p-edit-subpage__actions--split">
-        <a class="p-comment-form__cancel" href="{{ url('members_profile', {username: member.username}) }}">{{ 'cancel'|trans }}</a>
-        <button type="submit" class="o-button js-submit" disabled>{{ buttonLabel|trans }}</button>
-      </div>
-      {{ form_end(form) }}
+        {% do child.setRendered %}
+      {% endfor %}
     </div>
-  </section>
+    {{ form_errors(form.relations) }}
+    {% do form.relations.setRendered %}
+  </fieldset>
+
+  <fieldset class="p-cform__group" data-cform-required="{{ 'comment.form.quality.needed'|trans }}">
+    <legend class="p-cform__label">{{ 'comment.form.quality'|trans({name: name}) }}</legend>
+    <div class="p-cform__qualities">
+      {% for choice in form.quality.vars.choices|filter(choice => choice.value != '') %}
+        {% set type = choice.value|lower %}
+        <div class="p-cform__quality p-cform__quality--{{ type }}">
+          <input type="radio" class="p-cform__quality-input"
+                 id="{{ form.quality.vars.id }}_{{ type }}" name="{{ form.quality.vars.full_name }}"
+                 value="{{ choice.value }}"
+                 {% if choice.value == form.quality.vars.value %}checked="checked"{% endif %}>
+          <label class="p-cform__quality-label" for="{{ form.quality.vars.id }}_{{ type }}">
+            <i class="fas fa-{{ qualityIcons[type] ?? 'minus' }}" aria-hidden="true"></i>
+            <span>{{ choice.label|trans }}</span>
+          </label>
+        </div>
+      {% endfor %}
+    </div>
+    <p class="p-cform__negative">
+      <i class="fas fa-info-circle" aria-hidden="true"></i>
+      <span>{{ 'comment.form.negative.hint'|trans }}</span>
+    </p>
+    {{ form_errors(form.quality) }}
+    {% do form.quality.setRendered %}
+  </fieldset>
+
+  <div class="p-cform__group" data-cform-required="{{ 'comment.form.text.needed'|trans }}">
+    <label class="p-cform__label" for="{{ form.comment.vars.id }}">{{ 'comment.form.text'|trans }}</label>
+    {{ form_widget(form.comment, {attr: {class: 'p-cform__text', rows: 7, placeholder: 'comment.form.text.placeholder'|trans({name: name})}}) }}
+    {{ form_errors(form.comment) }}
+  </div>
+
+  {% if form.guidelines is defined %}
+    <div class="p-cform__check" data-cform-required="{{ 'comment.form.guidelines.needed'|trans }}">
+      <input type="checkbox" id="{{ form.guidelines.vars.id }}" name="{{ form.guidelines.vars.full_name }}" value="1"
+             {% if form.guidelines.vars.checked %}checked="checked"{% endif %}>
+      <label for="{{ form.guidelines.vars.id }}">{{ 'confirmationcommentguidelines'|trans|raw }}</label>
+      {% do form.guidelines.setRendered %}
+    </div>
+    {{ form_errors(form.guidelines) }}
+  {% endif %}
+  {% if form.new_experience is defined %}
+    <div class="p-cform__check">
+      <input type="checkbox" id="{{ form.new_experience.vars.id }}" name="{{ form.new_experience.vars.full_name }}" value="1"
+             {% if form.new_experience.vars.checked %}checked="checked"{% endif %}>
+      <label for="{{ form.new_experience.vars.id }}">{{ 'comment.new.experience'|trans }}</label>
+      {% do form.new_experience.setRendered %}
+    </div>
+  {% endif %}
+
+  <div class="p-edit-subpage__actions{{ embedded ? '' : ' p-edit-subpage__actions--split' }}">
+    {% if not embedded %}
+      <a class="p-comment-form__cancel" href="{{ url('members_profile', {username: member.username}) }}">{{ 'cancel'|trans }}</a>
+    {% endif %}
+    <button type="submit" class="o-button js-submit">
+      <i class="fas fa-check" aria-hidden="true"></i> {{ buttonLabel|trans }}
+    </button>
+  </div>
+  {{ form_end(form) }}
 
   <div class="modal micromodal-slide" id="experiences" aria-hidden="true"{% if check_experience is defined and check_experience %} data-open-on-load{% endif %}>
     <div class="modal__overlay" tabindex="-1" data-micromodal-close>
@@ -92,10 +131,10 @@
           {{ 'comment.new.experience.text'|trans|raw }}
         </div>
         <footer class="modal__footer u:flex u:flex-row u:justify-between">
-          <a href="{{ url('profile_comments', {'username': app.user.username}) }}" class="o-button">{{ 'comment.new.experience.no'|trans|capitalize }}</a>
+          <a href="{{ url('profile_comments', {'username': member.username}) }}" class="o-button">{{ 'comment.new.experience.no'|trans|capitalize }}</a>
           <a href="{{ url('comment_new_experience', {'from_member': app.user.username, 'to_member': member.username }) }}" class="o-button">{{ 'comment.new.experience.yes'|trans|capitalize }}</a>
         </footer>
       </div>
     </div>
   </div>
-{% endblock content %}
+{% endblock subpage_body %}

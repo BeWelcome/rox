@@ -258,7 +258,7 @@
               </button>
               <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
                 {% if items.comment is defined %}
-                  <li><a class="dropdown-item p-hero__dropdown-item" href="{{ items.comment.url }}">
+                  <li><a class="dropdown-item p-hero__dropdown-item js-contact-open" href="{{ items.comment.url }}" data-title="{{ items.comment.key|lower|trans|striptags }}">
                     <i class="fas fa-fw fa-comment" aria-hidden="true"></i> {{ items.comment.key|lower|trans }}
                   </a></li>
                 {% endif %}

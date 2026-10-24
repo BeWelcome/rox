@@ -52,13 +52,13 @@
       {% if intro %}<p class="p-ped-intro">{{ intro|raw }}</p>{% endif %}
     {% else %}
     <header class="p-edit-subpage__header">
-      <a href="{{ url('profile_edit', {username: member.username}) }}"
+      <a href="{% block subpage_back %}{{ url('profile_edit', {username: member.username}) }}{% endblock %}"
          class="p-edit-subpage__back"
          aria-label="{{ 'profile.back'|trans }}">
         <i class="fas fa-chevron-left" aria-hidden="true"></i>
       </a>
       <div class="p-edit-subpage__heading">
-        <p class="p-edit-subpage__eyebrow">{{ 'profile.edit'|trans }}</p>
+        <p class="p-edit-subpage__eyebrow">{% block subpage_eyebrow %}{{ 'profile.edit'|trans }}{% endblock %}</p>
         <h1 class="p-edit-subpage__title">{{ block('subpage_title') }}</h1>
       </div>
     </header>

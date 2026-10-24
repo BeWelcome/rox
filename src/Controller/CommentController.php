@@ -150,7 +150,11 @@ class CommentController extends AbstractController
         $comment = $commentModel->getCommentForMemberPair($loggedInMember, $member);
 
         if (null !== $comment) {
-            return $this->redirectToRoute('edit_comment', ['username' => $member->getUsername()]);
+            // In the profile's side panel (?embed=1) the edit form opens there too
+            return $this->redirectToRoute('edit_comment', array_filter([
+                'username' => $member->getUsername(),
+                'embed' => $request->query->getBoolean('embed') ? 1 : null,
+            ]));
         }
 
         $preferenceRepository = $entityManager->getRepository(Preference::class);
@@ -293,6 +297,11 @@ class CommentController extends AbstractController
 
             if ($newExperience || $changedToNegative || $changedToPositive) {
                 return $this->redirectToRoute('profile_comments', ['username' => $loggedInMember->getUsername()]);
+            }
+
+            // Saved, and nothing to ask about a new experience: back to the comments
+            if (!$checkForExperience) {
+                return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
             }
         }
 

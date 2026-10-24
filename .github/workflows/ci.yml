@@ -284,23 +284,8 @@ jobs:
       - name: Install project dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
-      - name: Install MariaDB
-        uses: getong/mariadb-action@v1.11
-        with:
-          mysql database: 'bewelcome'
-          mysql user: 'bewelcome'
-          mysql password: 'bewelcome'
-
-      # Building the cache loads the translations from the database (App\TranslationLoader\DatabaseLoader)
-      - name: Create database
-        run: bin/console test:database:create --env=dev
-        env:
-          DB_HOST: 127.0.0.1
-
       - name: Run Linter
         run: make yaml-lint
-        env:
-          DB_HOST: 127.0.0.1
 
   doctrine-schema-validator:
     name: Validate Doctrine schema
@@ -329,23 +314,8 @@ jobs:
       - name: Install project dependencies
         run: composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 
-      - name: Install MariaDB
-        uses: getong/mariadb-action@v1.11
-        with:
-          mysql database: 'bewelcome'
-          mysql user: 'bewelcome'
-          mysql password: 'bewelcome'
-
-      # Building the cache loads the translations from the database (App\TranslationLoader\DatabaseLoader)
-      - name: Create database
-        run: bin/console test:database:create --env=dev
-        env:
-          DB_HOST: 127.0.0.1
-
       - name: Validate Doctrine schema
         run: make doctrine
-        env:
-          DB_HOST: 127.0.0.1
 
   security:
     name: Security checks

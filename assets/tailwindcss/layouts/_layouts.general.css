@@ -9456,9 +9456,9 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro__tabs-wrap .p-hero__tab:first-child { padding-left: 0.25rem; }
 
   /* Sections across the whole width, split by a grey band */
-  .p-pro-layout { gap: 0.6rem; padding: 0.6rem 0 0; }
+  .p-pro-layout { gap: 0.4rem; padding: 0.4rem 0 0; }
   .p-pro-layout__main,
-  .p-pro-layout__side { gap: 0.6rem; }
+  .p-pro-layout__side { gap: 0.4rem; }
   .p-pro-layout { margin: 0 calc(var(--bs-gutter-x, 1.5rem) * -0.5); }
   .p-pro-card { padding: 1.25rem 1rem; border-radius: 0; box-shadow: none; }
   .p-pro-card__head { align-items: flex-start; }

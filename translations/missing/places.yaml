@@ -61,3 +61,6 @@ places.member.hosting.unknown:
 places.member.no.comments:
     - 'New member'
     - Shown on a member of a country page instead of the comment counts when nobody has left a comment yet
+places.member.age:
+    - '{age, plural, one {# year} other {# years}}'
+    - Age of a member on a country page, before their town, e.g. "23 years". Copy/paste the English version and translate only the words.

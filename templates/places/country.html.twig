@@ -84,7 +84,7 @@
                             {% set hostingLabel = hosting == 'unknown' ? 'places.member.hosting.unknown'|trans : ('search.accommodation.' ~ hosting)|trans|trim('.') %}
                             {% set qualities = comment_counts[member.id] ?? {} %}
                             {% set facts = [] %}
-                            {% if member.isAgeVisible and member.age %}{% set facts = facts|merge(['searchyearsold'|trans|format(member.age)|striptags]) %}{% endif %}
+                            {% if member.isAgeVisible and member.age %}{% set facts = facts|merge(['places.member.age'|trans({ age: member.age })]) %}{% endif %}
                             {% if address and address.location %}{% set facts = facts|merge([address.location.name]) %}{% endif %}
                             <a class="c-place-member js-search-preview-open" href="{{ path('members_profile', { username: member.username }) }}" data-preview="{{ path('search_member_preview', { username: member.username }) }}">
                                 <span class="c-place-member__picture c-place-member__picture--{{ hosting }}">

@@ -1,28 +1,32 @@
 {#
-  The facts about the member, first card of the profile tab: occupation, gender and age,
-  then how long they have been a member. What builds trust (hosting, comments, activity)
-  is in the head above (profile/header.html.twig).
+  The facts about the member: occupation, gender and age, then how long they have been a
+  member. What builds trust (hosting, comments, activity) is in the head above.
+  variant 'head': a line at the bottom of the head (large screens, profile/header.html.twig);
+  otherwise the first card of the profile tab (phones, profile/show.content.html.twig).
 #}
-{% set _occupation = profileTranslation['Occupation'] ?? '' %}
+{% set _head = (variant ?? 'card') == 'head' %}
+{% set _language = _head ? null : profile_language %}
+{% set _occupation = _head ? (memberfields.Occupation ?? '') : (profileTranslation['Occupation'] ?? '') %}
 {% set _gender = member.isGenderVisible and member.gender in ['female', 'male', 'other'] ? member.gender : null %}
 {% set _age = member.isAgeVisible and member.Age != 0 ? member.age : null %}
 {% set _admin = is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_SAFETYTEAM'))
   or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_PROFILE'))
   or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_ADMIN')) %}
-<section class="p-pro-card p-pro-facts">
+{% set _class = _head ? 'p-pro__facts' : 'p-pro-card p-pro-facts' %}
+<section class="{{ _class }}">
   {% if _occupation|length > 0 %}
     <div class="p-pro-facts__row">
-      <span class="p-pro-facts__label">{{ 'profile.facts.occupation'|trans({}, 'messages', profile_language) }}</span>
+      <span class="p-pro-facts__label">{{ 'profile.facts.occupation'|trans({}, 'messages', _language) }}</span>
       <span class="p-pro-facts__value">{{ _occupation|purify }}</span>
     </div>
   {% endif %}
   {% if _gender or _age %}
     <div class="p-pro-facts__row">
       <span class="p-pro-facts__label">
-        {{- (_gender and _age ? 'profile.facts.gender.age' : (_gender ? 'profile.facts.gender' : 'profile.facts.age'))|trans({}, 'messages', profile_language) -}}
+        {{- (_gender and _age ? 'profile.facts.gender.age' : (_gender ? 'profile.facts.gender' : 'profile.facts.age'))|trans({}, 'messages', _language) -}}
       </span>
       <span class="p-pro-facts__value">
-        {%- if _gender %}{{ _gender|trans({}, 'messages', profile_language) }}{% endif -%}
+        {%- if _gender %}{{ _gender|trans({}, 'messages', _language) }}{% endif -%}
         {%- if _gender and _age %} · {% endif -%}
         {%- if _age %}{{ _age }}{% endif -%}
       </span>
@@ -30,7 +34,7 @@
   {% endif %}
   <p class="p-pro-facts__since">
     <i class="far fa-calendar" aria-hidden="true"></i>
-    {{ 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }, 'messages', profile_language) -}}
+    {{ 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }, 'messages', _language) -}}
     {%- if _admin %} ({{ member.created|format_datetime() }}){% endif %}
   </p>
 </section>

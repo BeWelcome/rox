@@ -87,6 +87,8 @@
           {% if member.visibleName != '' %}<span class="p-pro__username">@{{ member.Username }}</span>{% endif %}
         </div>
 
+        {# Place and activity: one line on large screens, two on phones #}
+        <div class="p-pro__line">
         <p class="p-pro__meta">
           {% if not address is same as(false) %}
             {% set location = address.location %}
@@ -115,6 +117,7 @@
             {%- if admin %} ({{ lastActivity|format_datetime() }}){% endif -%}
           </span>
         </p>
+        </div>
       </div>
 
       {# ── Actions: message and request stay (stuck to the bottom on phones), more, language ── #}
@@ -195,6 +198,7 @@
             <button type="button" class="p-lang-switch__toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
                     aria-label="{{ 'menu.language.toggle'|trans }}">
               <i class="fas fa-globe p-lang-switch__globe" aria-hidden="true"></i>
+              <span class="p-lang-switch__prefix">{{ 'profile.in.language'|trans }}</span>
               <span class="p-lang-switch__name" data-lang-current-name>{{ language_name(_active) }}</span>
               <span class="p-lang-switch__code" data-lang-current-code>{{ _active|upper }}</span>
             </button>
@@ -237,6 +241,9 @@
           {% endif %}
         </div>
       {% endif %}
+      {# Large screens: occupation, gender, age and membership length, a line at the bottom of the head #}
+      {% include 'profile/_facts.html.twig' with {variant: 'head'} %}
+
       {# Admins: the member's status, changed from a small bar under the head #}
       {% if not own and status_form is defined and not status_form is null %}
         {{ form_start(status_form, {attr: {class: 'p-pro-admin'}}) }}

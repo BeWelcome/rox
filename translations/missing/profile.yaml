@@ -799,3 +799,6 @@ profile.facts.age:
 profile.facts.gender.age:
     - 'Gender · age'
     - Label in the facts card at the top of the profile tab when both are shown
+profile.in.language:
+    - 'Profile in'
+    - Words before the language name in the language switch of a profile, such as Profile in English

@@ -22,7 +22,7 @@ You like the idea? Development is only one way to contribute! Find out how to [g
 
 ## Get your Rox development enviroment :computer:
 
-1. :balloon: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github.
+1. :balloon: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github. The quickest way is the devcontainer: open the repository in VS Code (or a GitHub Codespace) and choose "Reopen in Container". A terminal shows the setup progress; the first start takes a few minutes.
 2. :mag: Pick a [good starter issue](https://github.com/BeWelcome/rox/labels/good%20starter%20issue)
 3. :sparkles: Create a [pull request](https://opensource.guide/how-to-contribute/#opening-a-pull-request) and `@mention` the people from the issue to review
 4. :sun_with_face: Fix the remaining things during review
@@ -133,10 +133,20 @@ GHCR push itself uses the built-in `GITHUB_TOKEN` (`permissions: packages: write
 * [PSR-1](http://www.php-fig.org/psr/psr-1/)
 * [PSR-2](http://www.php-fig.org/psr/psr-2/)
 
-To ensure coding standards are followed run ```make``` everytime before you commit. Fixing coding standard issues can be achieved with
+## Before you push
 
-```bash
-make phpcsfix
-```
+CI runs the same Makefile targets you can run locally, inside the devcontainer or the php container
+(`docker compose exec php make check`):
 
-twice in a row.
+| Command | What it runs | Time |
+|---|---|---|
+| `make check` | php-cs-fixer, phpcs, PHPStan, phpcpd, YAML lint, Doctrine schema | about 20 seconds |
+| `make test` | PHPUnit with coverage, Infection, then the integration tests (need the `bewelcome_test` database) | about 30 seconds |
+| `make security` | `composer audit`, `bun run audit` | seconds |
+| `make phpci` | all of the above and phploc, like CI | about a minute |
+
+Style problems are fixed with `make phpcsfix` (run it twice in a row).
+
+Git hooks do most of this for you. The devcontainer turns them on; elsewhere run `make hooks` once.
+On commit, staged PHP files in `src/` are fixed with php-cs-fixer and checked with phpcs. On push, `make check` runs.
+Skip a hook once with `--no-verify`.

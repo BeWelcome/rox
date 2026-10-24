@@ -8,12 +8,20 @@ fi
 
 ENTRYPOINT_SETUP_RAN=false
 
+# Setup progress, for docker/php/setup-progress.sh (the devcontainer shows it in a terminal) and docker compose logs.
+SETUP_STATUS=/tmp/bewelcome-setup.status
+setup_step() {
+	echo "==> setup: $1"
+	echo "$(date +%s) $1" >> "$SETUP_STATUS"
+}
+
 if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-production"
 	if [ "$APP_ENV" != 'prod' ]; then
 		PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-development"
 	fi
 	ln -sf "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
+	: > "$SETUP_STATUS"
 
 	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images
 #	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
@@ -34,6 +42,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	fi
 
 	if [ "$APP_ENV" != 'prod' ]; then
+		setup_step "Installing JavaScript and PHP dependencies (bun, composer)"
 		bun i --frozen-lockfile
 		composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 	fi
@@ -49,7 +58,7 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	database_user="${database_user:-${DB_USER:-bewelcome}}"
 	database_password="${database_password:-${DB_PASSWORD:-bewelcome}}"
 
-	echo "Waiting for db to be ready..."
+	setup_step "Waiting for the database"
 	db_wait_seconds=0
 	db_wait_max="${BEWELCOME_DB_READY_MAX_WAIT_SECONDS:-300}"
 
@@ -64,7 +73,9 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	done
 
 	if [ "$APP_ENV" != 'prod' ]; then
+		setup_step "Creating the development database and importing seed data"
 		if ! bin/console test:database:create --drop --force --no-interaction; then
+			setup_step "WARNING: database creation failed, see docker compose logs php"
 			echo "=========================================================" >&2
 			echo " ERROR: Database creation failed!" >&2
 			echo " Skipping SQL imports to avoid swallowing real errors." >&2
@@ -81,11 +92,12 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	# Run Doctrine migrations in prod. Clear the cache first so a stale compiled
 	# container from a previous image (var/ volume) can't crash the migration.
 	if [ "$APP_ENV" = 'prod' ] && ls Migrations/*.php > /dev/null 2>&1; then
+		setup_step "Running database migrations"
 		bin/console cache:clear
 		bin/console doctrine:migrations:migrate --no-interaction
 	fi
 
-    # Import missing translations
+	setup_step "Importing missing translations and warming up the cache"
 	bin/console translations:add:missing
 	
 	# WarmUp translations now database is up to date
@@ -104,9 +116,11 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	fi
 
 	if [ "$APP_ENV" != 'prod' ]; then
+		setup_step "Building the frontend assets (bun encore dev)"
 		bun encore dev --mode=development
 	fi
 
+	setup_step "ready"
 	ENTRYPOINT_SETUP_RAN=true
 fi
 

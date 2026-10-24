@@ -7,6 +7,8 @@
     "service": "php",
     "workspaceFolder": "/srv/bewelcome",
     "overrideCommand": false,
+    "postCreateCommand": "git config --global --add safe.directory /srv/bewelcome && make hooks",
+    "postAttachCommand": "sh docker/php/setup-progress.sh",
     "forwardPorts": ["web:80", "mailer:80", "manticore:9306", "manticore:9308"],
     "portsAttributes": {
         "web:80": {
@@ -47,6 +49,7 @@
                 "bradlc.vscode-tailwindcss",
                 "dbaeumer.vscode-eslint",
                 "esbenp.prettier-vscode",
+                "junstyle.php-cs-fixer",
                 "mikestead.dotenv",
                 "ms-azuretools.vscode-docker",
                 "GitHub.vscode-pull-request-github"
@@ -56,8 +59,14 @@
                 "editor.formatOnSave": true,
                 "editor.defaultFormatter": "esbenp.prettier-vscode",
                 "[php]": {
-                    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+                    "editor.defaultFormatter": "junstyle.php-cs-fixer"
                 },
+                "intelephense.format.enable": false,
+                "php-cs-fixer.executablePath": "/srv/bewelcome/vendor/bin/php-cs-fixer",
+                "php-cs-fixer.config": ".php-cs-fixer.dist.php",
+                "php-cs-fixer.allowRisky": true,
+                "php-cs-fixer.ignorePHPVersion": true,
+                "php-cs-fixer.exclude": ["**", "!/srv/bewelcome/src/**"],
                 "intelephense.environment.phpVersion": "8.4.0",
                 "intelephense.files.maxSize": 5000000
             }

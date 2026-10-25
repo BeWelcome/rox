@@ -2,12 +2,15 @@
 
 namespace App\Tests\Model;
 
+use App\Doctrine\MemberStatusType;
 use App\Model\StatisticsModel;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StatisticsModelTest extends TestCase
@@ -17,8 +20,17 @@ class StatisticsModelTest extends TestCase
         $result = $this->createStub(Result::class);
         $result->method('fetchOne')->willReturn(42);
 
+        $queries = [];
         $connection = $this->createMock(Connection::class);
-        $connection->expects($this->exactly(5))->method('executeQuery')->willReturn($result);
+        $connection
+            ->expects($this->exactly(5))
+            ->method('executeQuery')
+            ->willReturnCallback(static function (string $sql) use (&$queries, $result): Result {
+                $queries[] = preg_replace('/\s+/', ' ', $sql);
+
+                return $result;
+            })
+        ;
 
         $entityManager = $this->createStub(EntityManagerInterface::class);
         $entityManager->method('getConnection')->willReturn($connection);
@@ -38,5 +50,37 @@ class StatisticsModelTest extends TestCase
         ];
         $this->assertSame($expected, $model->getStatisticsHomepage());
         $this->assertSame($expected, $model->getStatisticsHomepage());
+
+        // members, languages and comments only count active members
+        $activeOnly = '.status IN (' . MemberStatusType::ACTIVE_ALL . ') ';
+        $this->assertCount(5, $queries);
+        foreach ([0, 2, 3] as $index) {
+            $this->assertStringContainsStringIgnoringCase($activeOnly, $queries[$index]);
+        }
+    }
+
+    public function testHomepageStatisticsAreCachedForAnHour(): void
+    {
+        $result = $this->createStub(Result::class);
+        $result->method('fetchOne')->willReturn(1);
+        $connection = $this->createStub(Connection::class);
+        $connection->method('executeQuery')->willReturn($result);
+        $entityManager = $this->createStub(EntityManagerInterface::class);
+        $entityManager->method('getConnection')->willReturn($connection);
+
+        $item = $this->createMock(ItemInterface::class);
+        $item->expects($this->once())->method('expiresAfter')->with(3600)->willReturnSelf();
+
+        $cache = $this->createMock(CacheInterface::class);
+        $cache
+            ->expects($this->once())
+            ->method('get')
+            ->with('homepage_statistics')
+            ->willReturnCallback(static fn (string $key, callable $callback): mixed => $callback($item))
+        ;
+
+        $model = new StatisticsModel($this->createStub(TranslatorInterface::class), $entityManager, $cache);
+
+        $this->assertSame(1, $model->getStatisticsHomepage()['members']);
     }
 }

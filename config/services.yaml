@@ -408,7 +408,8 @@ services:
 
     Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
         arguments:
-            - '%env(DATABASE_URL)%'
+            # reuse Doctrine's connection, so sessions use the same runtime credentials
+            - !service { class: PDO, factory: ['@database_connection', 'getNativeConnection'] }
             - { lock_mode: !php/const Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler::LOCK_NONE }
 
     Symfony\Bridge\Doctrine\Security\RememberMe\DoctrineTokenProvider: ~

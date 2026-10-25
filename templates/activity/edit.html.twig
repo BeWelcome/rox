@@ -1,0 +1,90 @@
+{% extends 'activity/base.html.twig' %}
+
+{#
+  Create and edit an activity: what (title, description), when (start and end) and where (place with
+  the location autocomplete, address, online). activities/edit_create.js fills the hidden place fields.
+#}
+
+{% block title %}
+  {{ activity ? 'activitiesedit'|trans : 'activitiescreate'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ encore_entry_link_tags('activities') }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('activities') }}
+{% endblock %}
+
+{% macro field(field, extra_class = '') %}
+  <div class="p-activities-field">
+    {{ form_label(field, null, { label_attr: { class: 'p-activities-label' } }) }}
+    {{ form_widget(field, { attr: field.vars.attr|merge({ class: ('p-activities-input p-activities-input--box ' ~ extra_class)|trim }) }) }}
+    {{ form_errors(field) }}
+  </div>
+{% endmacro %}
+
+{% block content %}
+  {% form_theme form 'activity/_form_theme.html.twig' %}
+  {{ form_start(form, { attr: { autocomplete: 'off', class: 'p-activities-form', novalidate: 'novalidate' } }) }}
+    <section class="p-activities-panel">
+      <h2 class="p-activities-panel__title">{{ 'activitiesdetails'|trans }}</h2>
+      {{ _self.field(form.title) }}
+      <div class="p-activities-field">
+        {{ form_label(form.description, null, { label_attr: { class: 'p-activities-label' } }) }}
+        {{ form_widget(form.description) }}
+        {{ form_errors(form.description) }}
+      </div>
+    </section>
+
+    <section class="p-activities-panel">
+      <h2 class="p-activities-panel__title">{{ 'activities.when'|trans }}</h2>
+      <div class="p-activities-form__row">
+        {{ _self.field(form.starts) }}
+        {{ _self.field(form.ends) }}
+      </div>
+    </section>
+
+    <section class="p-activities-panel">
+      <h2 class="p-activities-panel__title">{{ 'activities.where'|trans }}</h2>
+      <div class="p-activities-field">
+        <label class="p-activities-label" for="{{ form.location.fullname.vars.id }}">{{ 'activitylocation'|trans }}</label>
+        <div class="p-activities-field--icon">
+          <i class="fas fa-location-dot" aria-hidden="true"></i>
+          <div class="auto-search-wrapper max-height">
+            <input type="text" id="{{ form.location.fullname.vars.id }}" name="{{ form.location.fullname.vars.full_name }}"
+                   class="p-activities-input p-activities-input--box js-location-picker" autocomplete="off"
+                   placeholder="{{ 'activitieslocationsearch'|trans|trim('*') }}"
+                   {% if form.location.fullname.vars.value %}value="{{ form.location.fullname.vars.value }}"{% endif %}>
+          </div>
+        </div>
+        {{ form_errors(form.location) }}{{ form_errors(form.location.fullname) }}{{ form_errors(form.location.geoname_id) }}
+        {{ form_widget(form.location.name) }} {{ form_widget(form.location.geoname_id) }}
+        {{ form_widget(form.location.latitude) }} {{ form_widget(form.location.longitude) }}
+        {% do form.location.fullname.setRendered() %}
+        {% do form.location.setRendered() %}
+      </div>
+      {{ _self.field(form.address) }}
+      <label class="p-activities-option" for="{{ form.online.vars.id }}">
+        <input type="checkbox" id="{{ form.online.vars.id }}" name="{{ form.online.vars.full_name }}" value="1"{% if form.online.vars.checked %} checked{% endif %}>
+        <span>{{ 'activityonline'|trans }}</span>
+      </label>
+      {{ form_errors(form.online) }}
+      {% do form.online.setRendered() %}
+      <p class="p-activities-muted">{{ 'activities.online.help'|trans }}</p>
+    </section>
+
+    {{ form_errors(form) }}
+    <div class="p-activities-form__actions">
+      {% if activity %}
+        <a class="p-activities-btn" href="{{ path('activities_show', { id: activity.id }) }}">{{ 'cancel'|trans }}</a>
+      {% endif %}
+      <button class="p-activities-btn p-activities-btn--primary p-activities-btn--l" type="submit">
+        {{ activity ? 'activity.update'|trans : 'activitiescreate'|trans }}
+      </button>
+    </div>
+  {{ form_end(form) }}
+{% endblock content %}

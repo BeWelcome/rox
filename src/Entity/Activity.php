@@ -25,6 +25,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ActivityRepository::class)]
 class Activity
 {
+    public const int STATUS_ACTIVE = 0;
+    public const int STATUS_CANCELLED = 1;
+
     #[ORM\JoinColumn(name: 'creator', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private Member $createdBy;
@@ -118,7 +121,7 @@ class Activity
         return $this->location;
     }
 
-    public function setAddress(string $address): self
+    public function setAddress(?string $address): self
     {
         $this->address = $address;
 
@@ -237,6 +240,39 @@ class Activity
         $this->attendees->add($attendee);
 
         return $this;
+    }
+
+    public function isCancelled(): bool
+    {
+        return self::STATUS_CANCELLED === $this->status;
+    }
+
+    public function isOnline(): bool
+    {
+        return 1 === $this->online;
+    }
+
+    public function isOver(): bool
+    {
+        return $this->ends < new DateTime();
+    }
+
+    public function getAttendeeFor(Member $member): ?ActivityAttendee
+    {
+        foreach ($this->attendees as $attendee) {
+            if ($attendee->getAttendee() === $member) {
+                return $attendee;
+            }
+        }
+
+        return null;
+    }
+
+    public function isOrganizer(Member $member): bool
+    {
+        $attendee = $this->getAttendeeFor($member);
+
+        return null !== $attendee && 1 === (int) $attendee->getOrganizer();
     }
 
     public function removeAttendee(ActivityAttendee $attendee): void

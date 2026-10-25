@@ -1,82 +1,92 @@
-{% import 'macros.twig' as macros %}
-{% import ':activity:subitems.twig' as subnavitems %}
-{% extends 'base.html.twig' %}
+{% extends 'activity/base.html.twig' %}
+{% import 'activity/_macros.html.twig' as activity_macros %}
+
+{#
+  The activity lists (near me, mine, upcoming, online, past, search): the radius or the search
+  form, a map of the listed activities that have a place, one card per activity, the pager.
+#}
 
 {% block title %}
-    {{ 'activities.allactivities' | trans }}
+  {{ submenu.items[tab].key|trans }}
 {% endblock %}
 
-{% block subnav %}
-    <div><ul class="nav nav-pills">
-        {% for label, subitem in subitems %}
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path( subitem.route ) }}">{{ label | trans }}</a>
-            </li>
-        {% endfor %}
-        </ul>
-    </div>
+{% block stylesheets %}
+  {{ parent() }}
+  {{ encore_entry_link_tags('activities_map') }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('activities_map') }}
 {% endblock %}
 
 {% block content %}
-<h1>{{ 'activities' | trans }}</h1>
-    <div class="float-end">{{ pagerfanta( activities, 'rox_default', { routeName: 'activity' }) }}</div>
-    <div class="row">
-        <div class="col-12">
-            <table class="table" id="activitylist" style="table-layout: fixed;">
-                <tbody>
-                {% for activity in activities %}
-                    <tr>
-                        <td class="p-t-0 date verticalmiddle">
-                            <div class="calendar calendar-icon-{{ activity.starts.month }}">
-                                <div class="calendar-day">{{ activity.starts.day }}</div>
-                                <div class="calendar-year mt-1">{{ activity.starts.year }}</div>
-                            </div>
-                        </td>
-                        <td class="verticalmiddle title text-truncate p-t-0">
-                            <p class="h4 ma-0 text-truncate"><a href="{{ path('activity_show', {id: activity.id }) }}">{{ activity.title }}</a></p>
-                            <small>{{ activity.starts.toDateString }}{% if activity.starts != activity.ends %}
-                                 - {{ activity.ends.toDateString }}{% endif %}</small></td>
+  {% set member = app.user %}
+  <section class="p-activities__body">
+    {% if tab == 'activitiesnearme' %}
+      {% form_theme radiusForm 'activity/_form_theme.html.twig' %}
+      <div class="p-activities__toolbar">
+        <p class="p-activities__lead">
+          {% if place %}
+            <i class="fas fa-location-dot" aria-hidden="true"></i> {{ 'activities.near.place'|trans({ place: place }) }}
+          {% endif %}
+        </p>
+        {{ form_start(radiusForm, { attr: { class: 'p-activities-inline-form' } }) }}
+          {{ form_label(radiusForm.radius, null, { label_attr: { class: 'p-activities-label' } }) }}
+          {{ form_widget(radiusForm.radius, { attr: { class: 'p-activities-select', onchange: 'this.form.requestSubmit()' } }) }}
+          <noscript><button class="p-activities-btn" type="submit">{{ 'activity.update'|trans }}</button></noscript>
+        {{ form_end(radiusForm) }}
+      </div>
+    {% elseif tab == 'search' %}
+      {% form_theme searchForm 'activity/_form_theme.html.twig' %}
+      {{ form_start(searchForm, { attr: { class: 'p-activities-search', role: 'search' } }) }}
+        <i class="fas fa-search p-activities-search__icon" aria-hidden="true"></i>
+        {{ form_widget(searchForm.keyword, { attr: {
+          class: 'p-activities-input p-activities-search__input',
+          placeholder: 'activities.search.placeholder'|trans,
+          'aria-label': 'activities.search.placeholder'|trans,
+        } }) }}
+        <button class="p-activities-btn p-activities-btn--primary" type="submit">{{ 'activitiessearchbutton'|trans }}</button>
+      {{ form_end(searchForm) }}
+      {{ form_errors(searchForm.keyword) }}
+    {% endif %}
 
-                        <td class="verticalmiddle">
-                            <div class="d-inline-block"><i class="fa fa-3x fa-map-marker-alt"></i></div>
-                            <div class="ps-1 d-inline-block">{{ activity.location.name }}<br>{{ activity.location.country.name }}</div>
-                        </td>
+    {% if activities is not null and activities.nbResults > 0 %}
+      <p class="p-activities__count"><i class="far fa-calendar-check" aria-hidden="true"></i> {{ 'activities.count'|trans({ count: activities.nbResults }) }}</p>
 
-                        <td class="verticalmiddle">
-                            <div class="d-inline-block"><i class="fa fa-3x fa-users"></i></div>
-                            <div class="ll-1 d-inline-block">
-                                <small>
-                                    {% if activity.attendeesYes.count != 0 %}{{ activity.attendeesYes.count }}&nbsp;{{ 'activitiesnumbattendeesyes' | trans }}{% endif %} <br>
-                                    {% if activity.attendeesMaybe.count != 0 %}{{ activity.attendeesMaybe.count }}&nbsp;{{ 'activitiesnumbattendeesmaybe' | trans }}{% endif %}<br>
-                                </small>
-                            </div>
-                        </td>
-                        <td class="organiser">
-                            <div class="float-end text-center">
-                                {{ macros.avatar( activity.organizers[0].attendee.Username, 50, true) }}
-                            </div>
-                        </td>
-                        <td class="verticalmiddle">
-                            {%  if activity.status == 0 %}
-                                {% set future = (date() < activity.ends) %}
-                                {% if app.user.id in activity.organizerIds %}
-                                <a href="{{ path( 'activity_edit', { id: activity.id } ) }}">
-                                    <i class="fa fa-3x fa-edit"></i>
-                                {% endif %}
-                            {% else %}
-                                <i class="fa fa-close"></i>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr><td>
-                    {{ 'activities.nonefound' | trans }}
-                        </td></tr>
-                {% endfor %}
-                </tbody>
-            </table>
+      <div class="p-activities-map js-activities-map" hidden>
+        <div id="activity-map" class="p-activities-map__map"></div>
+        {{ activity_macros.map_data(activities) }}
+      </div>
+
+      <div class="p-activities__list">
+        {% for activity in activities %}
+          {{ activity_macros.card(activity, member) }}
+        {% endfor %}
+      </div>
+
+      {% if activities.haveToPaginate %}
+        <div class="p-activities__pager">
+          {{ pagerfanta(activities, 'rounded_pagination', { routeName: pagerRoute, routeParams: pagerParams }) }}
         </div>
-    </div>
-    <div class="float-end">{{ pagerfanta( activities, 'rox_default', { routeName: 'activity' }) }}</div>
-
+      {% endif %}
+    {% elseif activities is not null or tab != 'search' %}
+      <div class="p-activities__empty">
+        <i class="far fa-calendar" aria-hidden="true"></i>
+        <p>
+          {%- if tab == 'activitiesnearme' -%}
+            {{ place ? 'activities.empty.near'|trans({ radius: radius }) : 'activities.empty.no.address'|trans }}
+          {%- elseif tab == 'myactivities' -%}{{ 'activitiesnomyactivities'|trans }}
+          {%- elseif tab == 'upcomingactivities' -%}{{ 'activitiesnoupcoming'|trans }}
+          {%- elseif tab == 'upcomingonlineactivities' -%}{{ 'activitiesnoupcomingonline'|trans }}
+          {%- elseif tab == 'pastactivities' -%}{{ 'activities.empty.past'|trans }}
+          {%- else -%}{{ 'activitiessearchnoresults'|trans }}
+          {%- endif -%}
+        </p>
+        {% if tab != 'pastactivities' %}
+          <a class="p-activities-btn p-activities-btn--primary" href="{{ path('activities_create') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'activitiescreate'|trans }}</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </section>
 {% endblock content %}

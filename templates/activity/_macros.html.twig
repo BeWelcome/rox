@@ -1,0 +1,83 @@
+{#
+  One activity in a list: a date badge, the title, when and where, how many attend and the member's own
+  answer. Mirrors the trip cards of the redesigned trips pages (p-trips-trip).
+#}
+{% macro card(activity, member) %}
+  {% set attendee = activity.attendeeFor(member) %}
+  {% set sameDay = activity.starts|date('Y-m-d') == activity.ends|date('Y-m-d') %}
+  <article class="p-activities-card{% if activity.cancelled %} is-cancelled{% elseif activity.over %} is-over{% endif %}">
+    <span class="p-activities-card__date" aria-hidden="true">
+      <span class="p-activities-card__month">{{ activity.starts|format_date(pattern='MMM') }}</span>
+      <span class="p-activities-card__day">{{ activity.starts|format_date(pattern='d') }}</span>
+    </span>
+    <div class="p-activities-card__body">
+      <p class="p-activities-card__head">
+        <a class="p-activities-card__title" href="{{ path('activities_show', { id: activity.id }) }}">{{ activity.title }}</a>
+        {% if activity.cancelled %}
+          <span class="p-activities-badge p-activities-badge--cancelled">{{ 'activitycancelled'|trans }}</span>
+        {% elseif activity.over %}
+          <span class="p-activities-badge">{{ 'activities.over'|trans }}</span>
+        {% endif %}
+      </p>
+      <p class="p-activities-card__when">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        {{ activity.starts|format_datetime('medium', 'short') }}
+        – {{ sameDay ? activity.ends|format_time('short') : activity.ends|format_datetime('medium', 'short') }}
+      </p>
+      <p class="p-activities-card__meta">
+        {% if activity.online %}
+          <span class="p-activities-chip"><i class="fas fa-video" aria-hidden="true"></i> {{ 'activityonline'|trans }}</span>
+        {% endif %}
+        <span class="p-activities-chip">
+          <i class="fas fa-location-dot" aria-hidden="true"></i> {{ activity.location.name }}
+          {% if activity.location.country %}<i class="o-flag o-flag--{{ activity.location.country.countryId }}" title="{{ activity.location.country.name }}"></i>{% endif %}
+        </span>
+        <span class="p-activities-chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'activities.count.yes'|trans({ count: activity.attendeesYes|length }) }}</span>
+        {% if attendee and not activity.cancelled %}
+          {% if activity.organizer(member) %}
+            <span class="p-activities-chip p-activities-chip--own"><i class="fa fa-star" aria-hidden="true"></i> {{ 'activities.you.organize'|trans }}</span>
+          {% else %}
+            <span class="p-activities-chip p-activities-chip--own"><i class="fa fa-check" aria-hidden="true"></i> {{ _self.answer(attendee.status) }}</span>
+          {% endif %}
+        {% endif %}
+      </p>
+      {% set excerpt = activity.description|purify|striptags|trim %}
+      {% if excerpt %}
+        <p class="p-activities-card__text">{{ excerpt|truncate(200) }}</p>
+      {% endif %}
+    </div>
+    {% if is_granted('ACTIVITY_EDIT', activity) %}
+      <div class="p-activities-card__actions">
+        <a class="p-activities-btn p-activities-btn--icon" href="{{ path('activities_edit', { id: activity.id }) }}" aria-label="{{ 'activitiesedit'|trans }}" title="{{ 'activitiesedit'|trans }}">
+          <i class="fas fa-pen" aria-hidden="true"></i>
+        </a>
+      </div>
+    {% endif %}
+  </article>
+{% endmacro %}
+
+{# The member's answer as a short text #}
+{% macro answer(status) %}
+  {%- if status == constant('App\\Entity\\ActivityAttendee::ATTENDS_YES') -%}{{ 'activityyesiattend'|trans }}
+  {%- elseif status == constant('App\\Entity\\ActivityAttendee::ATTENDS_MAYBE') -%}{{ 'activityimightattend'|trans }}
+  {%- elseif status == constant('App\\Entity\\ActivityAttendee::ATTENDS_NO') -%}{{ 'activitysorrycantjoinyou'|trans }}
+  {%- else -%}{{ 'activitycancelled'|trans }}{%- endif -%}
+{% endmacro %}
+
+{#
+  Markers for the map (assets/js/activities/map.js): one per activity with a place, as data attributes.
+  Online activities have a place too (the organizer's), so they are left out.
+#}
+{% macro map_data(activities) %}
+  {% for activity in activities %}
+    {% if not activity.online and activity.location.latitude is not null %}
+      <span class="js-activity-marker" hidden
+            data-title="{{ activity.title }}"
+            data-url="{{ path('activities_show', { id: activity.id }) }}"
+            data-when="{{ activity.starts|format_datetime('medium', 'short') }}"
+            data-place="{{ activity.location.name }}"
+            data-latitude="{{ activity.location.latitude }}"
+            data-longitude="{{ activity.location.longitude }}"></span>
+    {% endif %}
+  {% endfor %}
+{% endmacro %}

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{#
+  Layout of the activities pages, in the design of the redesigned trips pages (PR #413): a page head
+  with the title, Create next to it and the activities tabs underneath, then white cards on the light
+  page background. The pages fill the content and modals blocks.
+#}
+
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('micromodal') }}
+{% endblock %}
+
+{% block main %}
+  <main role="main" class="p-activities">
+    <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000"></div>
+    <header class="p-activities__head">
+      <div class="p-activities__top">
+        <a class="p-activities__back" href="{{ path('landingpage') }}">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          <span class="visually-hidden">{{ 'back'|trans }}</span>
+        </a>
+        <h1 class="p-activities__title">{% block page_title %}{{ block('title')|trim }}{% endblock %}</h1>
+        {% if submenu.active != 'createactivities' %}
+          <a class="p-activities-btn p-activities-btn--primary" href="{{ submenu.items.createactivities.url }}">
+            <i class="fa fa-plus" aria-hidden="true"></i> {{ submenu.items.createactivities.key|trans }}
+          </a>
+        {% endif %}
+      </div>
+      <nav class="p-activities__tabs" aria-label="{{ 'activities'|trans }}">
+        {% for name, item in submenu.items %}
+          {% if name != 'createactivities' %}
+            <a class="p-activities__tab{% if submenu.active == name %} is-active{% endif %}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>{{ item.key|trans }}</a>
+          {% endif %}
+        {% endfor %}
+      </nav>
+    </header>
+
+    {% for label, messages in app.flashes %}
+      {% for message in messages %}
+        <div class="p-activities-flash p-activities-flash--{{ label }}" role="status">{{ message }}</div>
+      {% endfor %}
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+  </main>
+  {% block modals %}{% endblock %}
+{% endblock main %}

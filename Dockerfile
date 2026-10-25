@@ -141,6 +141,9 @@ RUN set -eux; \
 COPY package.json bun.lock webpack.config.mjs postcss.config.js tailwind.config.js tsconfig.json ./
 # assets/js/translator.js imports var/translations, which the cache warmup only
 # writes at runtime; a stub lets encore compile during the image build.
+# Keep the (emptied) directory: while it is missing, ux-translator >= 3.6 warms the translations
+# from the database as soon as the container is built, which loads Doctrine metadata before
+# DoctrineMetadataCacheWarmer runs and fails the prod cache:clear.
 RUN set -eux; \
 	bun i --frozen-lockfile; \
 	mkdir -p var/translations; \
@@ -150,7 +153,7 @@ RUN set -eux; \
 		'export const messages = {};' \
 		> var/translations/index.js; \
 	bun encore production --mode=production; \
-	rm -rf node_modules var/translations /root/.bun/install/cache
+	rm -rf node_modules var/translations/* /root/.bun/install/cache
 
 # do not use .env files in production
 COPY .env ./

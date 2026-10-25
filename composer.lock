@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6c80ddf88571621ced2471ae7155fe2c",
+    "content-hash": "9500a4416f703e45ce753f44a810d283",
     "packages": [
         {
             "name": "amphp/amp",
@@ -13426,16 +13426,16 @@
         },
         {
             "name": "symfony/ux-translator",
-            "version": "v3.6.0",
+            "version": "v3.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-translator.git",
-                "reference": "19aaeb0f082ce277b0bde5cc3f414e5a66ac08bd"
+                "reference": "238b7ae000c124dc9bf593212eb7bc20aa505956"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-translator/zipball/19aaeb0f082ce277b0bde5cc3f414e5a66ac08bd",
-                "reference": "19aaeb0f082ce277b0bde5cc3f414e5a66ac08bd",
+                "url": "https://api.github.com/repos/symfony/ux-translator/zipball/238b7ae000c124dc9bf593212eb7bc20aa505956",
+                "reference": "238b7ae000c124dc9bf593212eb7bc20aa505956",
                 "shasum": ""
             },
             "require": {
@@ -13484,7 +13484,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-translator/tree/v3.6.0"
+                "source": "https://github.com/symfony/ux-translator/tree/v3.5.1"
             },
             "funding": [
                 {
@@ -13504,7 +13504,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-10-13T08:04:44+00:00"
+            "time": "2026-09-19T11:40:16+00:00"
         },
         {
             "name": "symfony/validator",

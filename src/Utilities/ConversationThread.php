@@ -12,53 +12,31 @@ class ConversationThread
     {
     }
 
+    /**
+     * Returns the message, the messages it replies to and all replies to it, newest first.
+     */
     public function getThread(Message $conversation): array
     {
-        $connection = $this->entityManager->getConnection();
-        $stmt = $connection->prepare('
-            SELECT
-                id
-            FROM
-            (SELECT
-                    id, parent, IF(ancestry, @cl:=@cl + 1, level + @cl) AS level
-                FROM
-                (SELECT
-                    TRUE AS ancestry, _id AS id, parent, level
-                FROM
-                (SELECT
-                    @r AS _id,
-                        (SELECT
-                                @r:=Idparent
-                            FROM
-                                messages
-                            WHERE
-                                id = _id) AS parent,
-                        @l:=@l + 1 AS level
-                FROM
-                (SELECT @r:=:message_id, @l:=0, @cl:=0) vars, messages h
-                WHERE
-                    @r <> 0
-                ORDER BY level DESC) qi UNION ALL SELECT
-                    FALSE, hi.id, Idparent, level
-                FROM
-                (SELECT
-                    HIERARCHY_CONNECT_BY_PARENT_EQ_PRIOR_ID(id) AS id,
-                        @level AS level
-                FROM
-                (SELECT @start_with:=:message_id, @id:=@start_with, @level:=0) vars, messages
-                WHERE
-                    @id IS NOT NULL) ho
-                JOIN messages hi ON hi.id = ho.id) q) q2
-            ORDER BY level
-        ');
-        $stmt->bindValue('message_id', $conversation->getId());
-        $result = $stmt->executeQuery();
-        $ids = $result->fetchAllNumeric();
-        $ids = array_map(
-            static function ($value) {
-                return $value[0];
-            },
-            $ids
+        // Walks up the parents and down the replies. UNION (not UNION ALL) stops at a message
+        // that was already visited, so a broken parent chain that loops can't recurse forever.
+        $ids = $this->entityManager->getConnection()->fetchFirstColumn(
+            '
+                WITH RECURSIVE
+                    ancestors (id, parent) AS (
+                        SELECT id, IdParent FROM messages WHERE id = :message_id
+                        UNION
+                        SELECT m.id, m.IdParent FROM messages m JOIN ancestors a ON m.id = a.parent
+                    ),
+                    replies (id) AS (
+                        SELECT id FROM messages WHERE id = :message_id
+                        UNION
+                        SELECT m.id FROM messages m JOIN replies r ON m.IdParent = r.id
+                    )
+                SELECT id FROM ancestors
+                UNION
+                SELECT id FROM replies
+            ',
+            ['message_id' => $conversation->getId()]
         );
 
         /** @var MessageRepository $repository */

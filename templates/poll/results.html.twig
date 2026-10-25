@@ -1,0 +1,47 @@
+{% extends 'poll/base.html.twig' %}
+{% import 'poll/_macros.html.twig' as poll_macros %}
+
+{# Results of a poll: votes and share of the voters per choice, then the voters' comments. #}
+
+{% block title %}
+  {{ poll.title ?: ('poll.untitled'|trans) }}
+{% endblock %}
+
+{% block content %}
+  <section class="p-polls-panel">
+    <h2 class="p-polls-panel__title">{{ 'poll_results'|trans }} {{ poll_macros.status(poll) }}</h2>
+    <p class="p-polls-muted">{{ 'polls.voters'|trans({ count: results.voters }) }}</p>
+    <ol class="p-poll-results">
+      {% for result in results.choices %}
+        <li class="p-poll-results__item">
+          <div class="p-poll-results__line">
+            <span class="p-poll-results__text">{{ result.choice.text }}</span>
+            <span class="p-poll-results__votes">{{ 'polls.votes'|trans({ count: result.votes }) }} · {{ result.percent }} %</span>
+          </div>
+          <div class="p-poll-results__bar" aria-hidden="true"><span style="width: {{ min(result.percent, 100) }}%"></span></div>
+        </li>
+      {% endfor %}
+    </ol>
+    {% if poll.multipleChoice %}
+      <p class="p-polls-muted">{{ 'polls.results.multiple'|trans }}</p>
+    {% endif %}
+  </section>
+
+  {% if results.comments|length > 0 %}
+    <section class="p-polls-panel">
+      <h2 class="p-polls-panel__title">{{ 'polls_commentspeoplehavemade'|trans }}</h2>
+      <ul class="p-poll-comments">
+        {% for vote in results.comments %}
+          <li class="p-poll-comments__item">
+            {% if vote.member %}<strong>{{ vote.member.username }}</strong>{% endif %}
+            <p>{{ vote.comment }}</p>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+
+  <div class="p-polls-form__actions">
+    <a class="p-polls-btn" href="{{ path('polls_contribute', { pollId: poll.id }) }}">{{ 'polls.back.to.poll'|trans }}</a>
+  </div>
+{% endblock content %}

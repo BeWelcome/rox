@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{#
+  Layout of the polls pages, in the design of the redesigned trips pages (PR #413): a page head with
+  the title, Create next to it and the polls tabs underneath, then white cards.
+#}
+
+{% block stylesheets %}
+  {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
+{% block main %}
+  <main role="main" class="p-polls">
+    <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000"></div>
+    <header class="p-polls__head">
+      <div class="p-polls__top">
+        <a class="p-polls__back" href="{{ path('polls') }}">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          <span class="visually-hidden">{{ 'back'|trans }}</span>
+        </a>
+        <h1 class="p-polls__title">{% block page_title %}{{ block('title')|trim }}{% endblock %}</h1>
+        {% if submenu.active != 'create' %}
+          <a class="p-polls-btn p-polls-btn--primary" href="{{ submenu.items.create.url }}">
+            <i class="fa fa-plus" aria-hidden="true"></i> {{ submenu.items.create.key|trans }}
+          </a>
+        {% endif %}
+      </div>
+      <nav class="p-polls__tabs" aria-label="{{ 'polls'|trans }}">
+        {% for name, item in submenu.items %}
+          {% if name != 'create' %}
+            <a class="p-polls__tab{% if submenu.active == name %} is-active{% endif %}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>{{ item.key|trans }}</a>
+          {% endif %}
+        {% endfor %}
+      </nav>
+    </header>
+
+    {% for label, messages in app.flashes %}
+      {% for message in messages %}
+        <div class="p-polls-flash p-polls-flash--{{ label }}" role="status">{{ message }}</div>
+      {% endfor %}
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+  </main>
+{% endblock main %}

@@ -1,0 +1,90 @@
+{% extends 'poll/base.html.twig' %}
+{% import 'poll/_macros.html.twig' as poll_macros %}
+
+{#
+  A poll: what it is about, then the vote form while the member can vote, or what happened to the
+  member's vote (taken back, results).
+#}
+
+{% block title %}
+  {{ poll.title ?: ('poll.untitled'|trans) }}
+{% endblock %}
+
+{% block content %}
+  <section class="p-polls-panel p-poll-hero">
+    <p class="p-polls-card__meta">
+      {{ poll_macros.status(poll) }}
+      {% if poll.creator %}<span class="p-polls-chip"><i class="fa fa-user" aria-hidden="true"></i> {{ poll.creator.username }}</span>{% endif %}
+      <span class="p-polls-chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'polls.voters'|trans({ count: poll.votes|length }) }}</span>
+      {% if not poll.draft and poll.endsAt %}
+        <span class="p-polls-chip"><i class="far fa-calendar" aria-hidden="true"></i>
+          {{ (poll.closed ? 'polls.ended.on' : 'polls.ends.on')|trans({ date: poll.endsAt|format_datetime('medium', 'short') }) }}</span>
+      {% endif %}
+      {% for group in poll.groups %}
+        <span class="p-polls-chip"><i class="fa fa-people-group" aria-hidden="true"></i> {{ group.name }}</span>
+      {% endfor %}
+    </p>
+    <div class="p-poll-hero__text">{{ poll.description|purify }}</div>
+    <div class="p-poll-hero__actions">
+      {% if is_granted('POLL_EDIT', poll) %}
+        <a class="p-polls-btn" href="{{ path('polls_update', { pollId: poll.id }) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'polls_adminlink'|trans }}</a>
+      {% endif %}
+      {% if is_granted('POLL_RESULTS', poll) %}
+        <a class="p-polls-btn" href="{{ path('polls_view_results', { pollId: poll.id }) }}"><i class="fas fa-chart-simple" aria-hidden="true"></i> {{ 'polls_seeresults'|trans }}</a>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if voteForm %}
+    {% form_theme voteForm 'poll/_form_theme.html.twig' %}
+    <section class="p-polls-panel">
+      <h2 class="p-polls-panel__title">{{ 'polls_choice'|trans }}</h2>
+      <p class="p-polls-muted">{{ (poll.anonymous ? 'pols_isanonymexplanation' : 'pols_isnotanonymexplanation')|trans }}</p>
+      {{ form_start(voteForm, { attr: { class: 'p-poll-vote' } }) }}
+        <div class="p-poll-vote__choices" role="{{ poll.multipleChoice ? 'group' : 'radiogroup' }}" aria-label="{{ 'polls_choice'|trans }}">
+          {% for choice in voteForm.choices %}
+            <label class="p-poll-vote__choice" for="{{ choice.vars.id }}">
+              <input type="{{ poll.multipleChoice ? 'checkbox' : 'radio' }}" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}"{% if choice.vars.checked %} checked{% endif %}>
+              <span>{{ choice.vars.label }}</span>
+            </label>
+            {% do choice.setRendered %}
+          {% endfor %}
+        </div>
+        {{ form_errors(voteForm.choices) }}
+        {% if voteForm.comment is defined %}
+          <div class="p-polls-field">
+            {{ form_label(voteForm.comment, null, { label_attr: { class: 'p-polls-label' } }) }}
+            {{ form_widget(voteForm.comment, { attr: { class: 'p-polls-input p-polls-input--box', rows: 3 } }) }}
+            {{ form_errors(voteForm.comment) }}
+          </div>
+        {% endif %}
+        <button class="p-polls-btn p-polls-btn--primary p-polls-btn--l" type="submit">{{ 'polls_vote'|trans }}</button>
+      {{ form_end(voteForm) }}
+    </section>
+  {% elseif hasVoted %}
+    <section class="p-polls-panel">
+      <p class="p-polls-done"><i class="fa fa-check" aria-hidden="true"></i> {{ 'polls_youhavealreadyvoted'|trans }}</p>
+      {% if is_granted('POLL_CANCEL_VOTE', poll) %}
+        <form method="post" action="{{ path('polls_cancelvote', { pollId: poll.id }) }}">
+          <input type="hidden" name="_token" value="{{ csrf_token('poll_cancel_vote') }}">
+          <button class="p-polls-btn" type="submit"><i class="fas fa-rotate-left" aria-hidden="true"></i> {{ 'polls_remove_vote'|trans }}</button>
+        </form>
+      {% endif %}
+    </section>
+  {% elseif poll.open %}
+    <section class="p-polls-panel">
+      <p class="p-polls-muted">{{ 'polls.cannot.vote'|trans }}</p>
+    </section>
+  {% endif %}
+
+  {% if not voteForm and poll.choices|length > 0 %}
+    <section class="p-polls-panel">
+      <h2 class="p-polls-panel__title">{{ 'polls_choice'|trans }}</h2>
+      <ul class="p-poll-choices">
+        {% for choice in poll.choices %}
+          <li>{{ choice.text }}</li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endif %}
+{% endblock content %}

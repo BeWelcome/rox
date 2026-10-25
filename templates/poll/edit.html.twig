@@ -1,0 +1,110 @@
+{% extends 'poll/base.html.twig' %}
+
+{#
+  Create a poll, or edit it: the question and settings, then (when editing) the choices.
+  Choices can change while nobody has voted.
+#}
+
+{% block title %}
+  {{ poll ? 'poll.edit'|trans : 'polls_createlink'|trans }}
+{% endblock %}
+
+{% macro field(field) %}
+  <div class="p-polls-field">
+    {{ form_label(field, null, { label_attr: { class: 'p-polls-label' } }) }}
+    {{ form_widget(field, { attr: field.vars.attr|merge({ class: 'p-polls-input p-polls-input--box' }) }) }}
+    {{ form_errors(field) }}
+  </div>
+{% endmacro %}
+
+{% macro option(field) %}
+  <label class="p-polls-option" for="{{ field.vars.id }}">
+    <input type="checkbox" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="1"{% if field.vars.checked %} checked{% endif %}>
+    <span>{{ field.vars.label|trans }}</span>
+  </label>
+  {% do field.setRendered() %}
+{% endmacro %}
+
+{% block content %}
+  {% form_theme form 'poll/_form_theme.html.twig' %}
+  {{ form_start(form, { attr: { class: 'p-polls-form', novalidate: 'novalidate' } }) }}
+    <section class="p-polls-panel">
+      <h2 class="p-polls-panel__title">{{ 'poll.question'|trans }}</h2>
+      {{ _self.field(form.title) }}
+      <div class="p-polls-field">
+        {{ form_label(form.description, null, { label_attr: { class: 'p-polls-label' } }) }}
+        {{ form_widget(form.description) }}
+        {{ form_errors(form.description) }}
+      </div>
+      {% if form.groups is defined %}
+        <fieldset class="p-polls-field">
+          <legend class="p-polls-label">{{ 'poll.groups'|trans }}</legend>
+          <div class="p-polls-options">
+            {% for group in form.groups %}
+              <label class="p-polls-option" for="{{ group.vars.id }}">
+                <input type="checkbox" id="{{ group.vars.id }}" name="{{ group.vars.full_name }}" value="{{ group.vars.value }}"{% if group.vars.checked %} checked{% endif %}>
+                <span>{{ group.vars.label }}</span>
+              </label>
+              {% do group.setRendered %}
+            {% else %}
+              <p class="p-polls-muted">{{ 'poll.groups.none'|trans }}</p>
+            {% endfor %}
+          </div>
+          <p class="p-polls-muted">{{ 'poll.groups.help'|trans }}</p>
+          {% do form.groups.setRendered %}
+        </fieldset>
+      {% elseif poll and poll.groups|length > 0 %}
+        <p class="p-polls-muted">{{ 'poll.groups'|trans }}: {% for group in poll.groups %}{{ group.name }}{% if not loop.last %}, {% endif %}{% endfor %}</p>
+      {% endif %}
+    </section>
+
+    <section class="p-polls-panel">
+      <h2 class="p-polls-panel__title">{{ 'poll.settings'|trans }}</h2>
+      <div class="p-polls-form__row">
+        {% if form.status is defined %}{{ _self.field(form.status) }}{% endif %}
+        {{ _self.field(form.typeOfChoice) }}
+        {{ _self.field(form.ended) }}
+        {{ _self.field(form.resultsVisibility) }}
+      </div>
+      <div class="p-polls-options">
+        {{ _self.option(form.anonymous) }}
+        {{ _self.option(form.allowComment) }}
+        {{ _self.option(form.canChangeVote) }}
+      </div>
+    </section>
+
+    {{ form_errors(form) }}
+    <div class="p-polls-form__actions">
+      {% if poll %}
+        <a class="p-polls-btn" href="{{ path('polls_contribute', { pollId: poll.id }) }}">{{ 'poll.show'|trans }}</a>
+      {% endif %}
+      <button class="p-polls-btn p-polls-btn--primary p-polls-btn--l" type="submit">{{ poll ? 'poll.save'|trans : 'polls_createlink'|trans }}</button>
+    </div>
+  {{ form_end(form) }}
+
+  {% if poll %}
+    <section class="p-polls-panel" id="choices">
+      <h2 class="p-polls-panel__title">{{ 'polls_choice'|trans }}</h2>
+      {% if poll.choices|length < 2 %}
+        <p class="p-polls-muted">{{ 'poll.choices.help'|trans }}</p>
+      {% endif %}
+      <ul class="p-poll-edit-choices">
+        {% for choice in poll.choices %}
+          {% set choiceForm = choiceForms[choice.id] %}
+          {% form_theme choiceForm 'poll/_form_theme.html.twig' %}
+          <li>
+            {{ form_start(choiceForm, { attr: { class: 'p-poll-edit-choices__form' } }) }}
+              {{ form_widget(choiceForm.text, { attr: { class: 'p-polls-input p-polls-input--box', 'aria-label': 'polls_choice'|trans } }) }}
+              <button class="p-polls-btn" type="submit">{{ 'poll.save'|trans }}</button>
+            {{ form_end(choiceForm) }}
+          </li>
+        {% endfor %}
+      </ul>
+      {% form_theme newChoiceForm 'poll/_form_theme.html.twig' %}
+      {{ form_start(newChoiceForm, { attr: { class: 'p-poll-edit-choices__form' } }) }}
+        {{ form_widget(newChoiceForm.text, { attr: { class: 'p-polls-input p-polls-input--box', placeholder: 'poll.choice.new'|trans, 'aria-label': 'poll.choice.new'|trans } }) }}
+        <button class="p-polls-btn p-polls-btn--primary" type="submit"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'poll.choice.add'|trans }}</button>
+      {{ form_end(newChoiceForm) }}
+    </section>
+  {% endif %}
+{% endblock content %}

@@ -1,0 +1,153 @@
+polls.drafts:
+  - 'Drafts'
+  - 'Polls tab: polls that are not open yet (only their creator and poll admins see them)'
+polls.all:
+  - 'All polls'
+  - 'Polls tab: every poll the member may see'
+polls.count:
+  - '{count, plural, one {# poll} other {# polls}}'
+  - 'Number of polls above a poll list'
+polls.voters:
+  - '{count, plural, =0 {Nobody voted yet} one {# voter} other {# voters}}'
+  - 'Number of members who voted in a poll'
+polls.votes:
+  - '{count, plural, one {# vote} other {# votes}}'
+  - 'Poll results: votes for one choice'
+polls.ends.on:
+  - 'Ends on {date}'
+  - 'Poll: when an open poll ends. {date} is the date'
+polls.ended.on:
+  - 'Ended on {date}'
+  - 'Poll: when a closed poll ended. {date} is the date'
+polls.cannot.vote:
+  - 'You can''t vote in this poll.'
+  - 'Poll page: an open poll the member can''t vote in (for example limited to other groups)'
+polls.results.multiple:
+  - 'Voters could pick several choices, so the shares add up to more than 100 %.'
+  - 'Poll results: note for polls with several choices'
+polls.back.to.poll:
+  - 'Back to the poll'
+  - 'Poll results: link back to the poll'
+poll.untitled:
+  - 'Poll without title'
+  - 'Shown instead of the title of a poll that has none'
+poll.edit:
+  - 'Edit poll'
+  - 'Title of the page to edit a poll'
+poll.show:
+  - 'Show poll'
+  - 'Edit poll page: link to the poll'
+poll.save:
+  - 'Save'
+  - 'Edit poll page: save button'
+poll.question:
+  - 'Question'
+  - 'Create or edit poll: heading of title and description'
+poll.description:
+  - 'Description'
+  - 'Create or edit poll: label of the description'
+poll.settings:
+  - 'Settings'
+  - 'Create or edit poll: heading of the settings'
+poll.groups:
+  - 'Only for members of'
+  - 'Create poll: label of the groups whose members may vote'
+poll.groups.help:
+  - 'Leave all unticked for a poll open to every member. The groups can''t be changed later.'
+  - 'Create poll: help under the groups'
+poll.groups.none:
+  - 'You are not a member of any group.'
+  - 'Create poll: the member has no groups to limit the poll to'
+poll.type.of.choice:
+  - 'Members can pick'
+  - 'Create or edit poll: label of single or several choices'
+poll.choice.single:
+  - 'One choice'
+  - 'Create or edit poll: members pick one choice'
+poll.choice.multiple:
+  - 'Several choices'
+  - 'Create or edit poll: members pick several choices'
+poll.ends:
+  - 'Ends on'
+  - 'Create or edit poll: label of the end date and time'
+poll.results.visibility:
+  - 'Results'
+  - 'Create or edit poll: label of who sees the results when'
+poll.results.after.vote:
+  - 'Visible after voting, and to everyone once closed'
+  - 'Create or edit poll: results visible after voting'
+poll.results.visible:
+  - 'Always visible'
+  - 'Create or edit poll: results visible to everyone'
+poll.results.hidden:
+  - 'Not visible (poll admins only)'
+  - 'Create or edit poll: results only for poll admins'
+poll.anonymous:
+  - 'Anonymous (choices are not recorded per member)'
+  - 'Create or edit poll: anonymous poll'
+poll.allow.comment:
+  - 'Voters can add a comment'
+  - 'Create or edit poll: comments allowed'
+poll.can.change.vote:
+  - 'Voters can take their vote back (not for anonymous polls)'
+  - 'Create or edit poll: votes can be taken back'
+poll.status.draft:
+  - 'Draft'
+  - 'Poll status: not open yet'
+poll.status.open:
+  - 'Open'
+  - 'Poll status: members can vote'
+poll.status.closed:
+  - 'Closed'
+  - 'Poll status: ended'
+poll.choices.help:
+  - 'Add at least two choices before you open the poll.'
+  - 'Edit poll page: help above the choices'
+poll.choice.new:
+  - 'New choice'
+  - 'Edit poll page: placeholder of the field for a new choice'
+poll.choice.add:
+  - 'Add choice'
+  - 'Edit poll page: button that adds a choice'
+poll.choice.added:
+  - 'The choice was added.'
+  - 'Message after a choice was added to a poll'
+poll.choice.updated:
+  - 'The choice was saved.'
+  - 'Message after a poll choice was changed'
+poll.choice.not.saved:
+  - 'The choice could not be saved. Choices can only change while nobody has voted.'
+  - 'Message when a poll choice could not be added or changed'
+poll.created:
+  - 'The poll was created. Add the choices, then open it.'
+  - 'Message after a poll was created'
+poll.updated:
+  - 'The poll was saved.'
+  - 'Message after a poll was edited'
+poll.title.empty:
+  - 'Please give the poll a title.'
+  - 'Poll form: the title is empty'
+  - validators
+poll.title.too.long:
+  - 'The title can have at most 255 characters.'
+  - 'Poll form: the title is too long'
+  - validators
+poll.description.empty:
+  - 'Please describe what the poll is about.'
+  - 'Poll form: the description is empty'
+  - validators
+poll.end.empty:
+  - 'Please give the end date and time.'
+  - 'Poll form: the end is empty'
+  - validators
+poll.choice.empty:
+  - 'Please enter the choice.'
+  - 'Poll choice form: the text is empty'
+  - validators
+poll.open.needs.choices:
+  - 'A poll needs at least two choices before it can be opened.'
+  - 'Edit poll: someone tried to open a poll with fewer than two choices'
+  - validators
+mydata.polls.vote.anonymous:
+  - 'The poll is anonymous, so your choices were not recorded.'
+  - 'Personal data export: a vote in an anonymous poll, whose choices are not kept'

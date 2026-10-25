@@ -17,7 +17,7 @@
                 <div class="card-body">
                     {% include 'private/poll.html.twig' with {'poll':vote.poll} %}
                     <p><strong>{{ 'mydata.polls.vote'|trans }}</strong><br>
-                    {{ (vote.pollChoice.texts|first) }}</p>
+                    {% for choice in vote.choices %}{{ choice.texts|first }}{% if not loop.last %}, {% endif %}{% else %}{{ 'mydata.polls.vote.anonymous'|trans }}{% endfor %}</p>
                 </div>
                 <div class="card-footer text-right">
                     <a class="btn btn-primary" href="{{ url('polls_view_results', {'pollId': vote.poll.id}) }}">{{ 'showdetails'|trans }}</a>

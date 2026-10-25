@@ -1,0 +1,868 @@
+<?php
+
+namespace App\Entity;
+
+use Carbon\Carbon;
+use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Event\PostLoadEventArgs;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Legacy: the poll data as the old polls pages stored it. The polls pages use App\Entity\Poll;
+ * Version20261026100000 copies this data there. Do not check entities with PHPMD.
+ *
+ * @SuppressWarnings("PHPMD")
+ */
+#[ORM\Table(name: 'polls')]
+#[ORM\Index(name: 'IdCreator', columns: ['IdCreator'])]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity]
+class Polls
+{
+    /**
+     * @var Member
+     */
+    #[ORM\JoinColumn(name: 'IdGroupCreator', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
+    private $groupCreator;
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'Status', type: 'string', nullable: false)]
+    private $status = 'Project';
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'ResultsVisibility', type: 'string', nullable: false)]
+    private $resultsvisibility = 'VisibleAfterVisit';
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'Type', type: 'string', nullable: false)]
+    private $type = 'MemberPoll';
+
+    /**
+     * @var DateTime
+     */
+    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
+    private $updated;
+
+    /**
+     * @var DateTime
+     */
+    #[ORM\Column(name: 'Started', type: 'datetime', nullable: false)]
+    private $started;
+
+    /**
+     * @var DateTime
+     */
+    #[ORM\Column(name: 'Ended', type: 'datetime', nullable: false)]
+    private $ended;
+
+    /**
+     * @var DateTime
+     */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
+    private $created;
+
+    /**
+     * @var PollsChoice
+     */
+    #[ORM\JoinTable(name: 'polls_choice')]
+    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
+    #[ORM\OneToMany(targetEntity: PollsChoice::class, mappedBy: 'poll')]
+    private $choices;
+
+    /**
+     * @var PollsContribution
+     */
+    #[ORM\JoinTable(name: 'polls_contributions')]
+    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
+    #[ORM\OneToMany(targetEntity: PollsContribution::class, mappedBy: 'poll')]
+    private $contributions;
+
+    /**
+     * @var int
+     */
+    #[ORM\Column(name: 'title', type: 'integer', nullable: false)]
+    private $title;
+
+    /**
+     * @var string[]
+     *
+     * Collects all translated titles of the poll
+     */
+    private $titles;
+
+    /**
+     * @var Group
+     */
+    #[ORM\JoinTable(name: 'polls_list_allowed_groups')]
+    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
+    #[ORM\InverseJoinColumn(name: 'IdGroup', referencedColumnName: 'id')]
+    #[ORM\ManyToMany(targetEntity: Group::class, fetch: 'EAGER')]
+    private $groups;
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'ForMembersOnly', type: 'string', nullable: false)]
+    private $formembersonly = 'Yes';
+
+    /**
+     * @var int
+     */
+    #[ORM\Column(name: 'IdLocationsList', type: 'integer', nullable: false)]
+    private $idlocationslist = '0';
+
+    /**
+     * @var int
+     */
+    #[ORM\Column(name: 'IdGroupsList', type: 'integer', nullable: false)]
+    private $idgroupslist = '0';
+
+    /**
+     * @var int
+     */
+    #[ORM\Column(name: 'IdCountriesList', type: 'integer', nullable: false)]
+    private $idcountrieslist = '0';
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'OpenToSubGroups', type: 'string', nullable: false)]
+    private $opentosubgroups = 'Yes';
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'TypeOfChoice', type: 'string', nullable: false)]
+    private $typeofchoice;
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'CanChangeVote', type: 'string', nullable: false)]
+    private $canchangevote = 'No';
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'AllowComment', type: 'string', nullable: false)]
+    private $allowcomment = 'No';
+
+    /**
+     * @var int
+     */
+    #[ORM\Column(name: 'Description', type: 'integer', nullable: false)]
+    private $description;
+
+    /**
+     * @var string[]
+     */
+    private $descriptions;
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'WhereToRestrictMember', type: 'text', length: 65535, nullable: false)]
+    private $wheretorestrictmember;
+
+    /**
+     * @var string
+     */
+    #[ORM\Column(name: 'Anonym', type: 'string', nullable: false)]
+    private $anonym = 'Yes';
+
+    /**
+     * @var Member
+     */
+    #[ORM\JoinColumn(name: 'IdCreator', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
+    private $creator;
+
+    /**
+     * @var int
+     */
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    private $id;
+
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+        $this->choices = new ArrayCollection();
+        $this->contributions = new ArrayCollection();
+    }
+
+    /**
+     * Set group creator.
+     *
+     * @param Member $groupCreator
+     *
+     * @return Polls
+     */
+    public function setGroupCreator($groupCreator)
+    {
+        $this->groupCreator = $groupCreator;
+
+        return $this;
+    }
+
+    /**
+     * Get group creator.
+     *
+     * @return Member
+     */
+    public function getGroupCreator()
+    {
+        return $this->groupCreator;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param string $status
+     *
+     * @return Polls
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status.
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set resultsvisibility.
+     *
+     * @param string $resultsvisibility
+     *
+     * @return Polls
+     */
+    public function setResultsvisibility($resultsvisibility)
+    {
+        $this->resultsvisibility = $resultsvisibility;
+
+        return $this;
+    }
+
+    /**
+     * Get resultsvisibility.
+     *
+     * @return string
+     */
+    public function getResultsvisibility()
+    {
+        return $this->resultsvisibility;
+    }
+
+    /**
+     * Set type.
+     *
+     * @param string $type
+     *
+     * @return Polls
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set updated.
+     *
+     * @param DateTime $updated
+     *
+     * @return Polls
+     */
+    public function setUpdated($updated)
+    {
+        $this->updated = $updated;
+
+        return $this;
+    }
+
+    /**
+     * Get updated.
+     *
+     * @return Carbon
+     */
+    public function getUpdated()
+    {
+        return Carbon::instance($this->updated);
+    }
+
+    /**
+     * Set started.
+     *
+     * @param DateTime $started
+     *
+     * @return Polls
+     */
+    public function setStarted($started)
+    {
+        $this->started = $started;
+
+        return $this;
+    }
+
+    /**
+     * Get started.
+     *
+     * @return Carbon
+     */
+    public function getStarted()
+    {
+        return Carbon::instance($this->started);
+    }
+
+    /**
+     * Set ended.
+     *
+     * @param DateTime $ended
+     *
+     * @return Polls
+     */
+    public function setEnded($ended)
+    {
+        $this->ended = $ended;
+
+        return $this;
+    }
+
+    /**
+     * Get ended.
+     *
+     * @return Carbon
+     */
+    public function getEnded()
+    {
+        return Carbon::instance($this->ended);
+    }
+
+    /**
+     * Set created.
+     *
+     * @param DateTime $created
+     *
+     * @return Polls
+     */
+    public function setCreated($created)
+    {
+        $this->created = $created;
+
+        return $this;
+    }
+
+    /**
+     * Get created.
+     *
+     * @return Carbon
+     */
+    public function getCreated()
+    {
+        return Carbon::instance($this->created);
+    }
+
+    /**
+     * Get Choices.
+     *
+     * @return ArrayCollection
+     */
+    public function getChoices()
+    {
+        return $this->choices;
+    }
+
+    /**
+     * Get Contributions.
+     *
+     * @return ArrayCollection
+     */
+    public function getContributions()
+    {
+        return $this->contributions;
+    }
+
+    /**
+     * Get titles (translated).
+     *
+     * @return array
+     */
+    public function getTitles()
+    {
+        return $this->titles;
+    }
+
+    /**
+     * Get descriptions (translated).
+     *
+     * @return array
+     */
+    public function getDescriptions()
+    {
+        return $this->descriptions;
+    }
+
+    /**
+     * Get groups.
+     *
+     * @return ArrayCollection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    /**
+     * Set formembersonly.
+     *
+     * @param string $formembersonly
+     *
+     * @return Polls
+     */
+    public function setFormembersonly($formembersonly)
+    {
+        $this->formembersonly = $formembersonly;
+
+        return $this;
+    }
+
+    /**
+     * Get formembersonly.
+     *
+     * @return string
+     */
+    public function getFormembersonly()
+    {
+        return $this->formembersonly;
+    }
+
+    /**
+     * Set idlocationslist.
+     *
+     * @param int $idlocationslist
+     *
+     * @return Polls
+     */
+    public function setIdlocationslist($idlocationslist)
+    {
+        $this->idlocationslist = $idlocationslist;
+
+        return $this;
+    }
+
+    /**
+     * Get idlocationslist.
+     *
+     * @return int
+     */
+    public function getIdlocationslist()
+    {
+        return $this->idlocationslist;
+    }
+
+    /**
+     * Set idgroupslist.
+     *
+     * @param int $idgroupslist
+     *
+     * @return Polls
+     */
+    public function setIdgroupslist($idgroupslist)
+    {
+        $this->idgroupslist = $idgroupslist;
+
+        return $this;
+    }
+
+    /**
+     * Get idgroupslist.
+     *
+     * @return int
+     */
+    public function getIdgroupslist()
+    {
+        return $this->idgroupslist;
+    }
+
+    /**
+     * Set idcountrieslist.
+     *
+     * @param int $idcountrieslist
+     *
+     * @return Polls
+     */
+    public function setIdcountrieslist($idcountrieslist)
+    {
+        $this->idcountrieslist = $idcountrieslist;
+
+        return $this;
+    }
+
+    /**
+     * Get idcountrieslist.
+     *
+     * @return int
+     */
+    public function getIdcountrieslist()
+    {
+        return $this->idcountrieslist;
+    }
+
+    /**
+     * Set opentosubgroups.
+     *
+     * @param string $opentosubgroups
+     *
+     * @return Polls
+     */
+    public function setOpentosubgroups($opentosubgroups)
+    {
+        $this->opentosubgroups = $opentosubgroups;
+
+        return $this;
+    }
+
+    /**
+     * Get opentosubgroups.
+     *
+     * @return string
+     */
+    public function getOpentosubgroups()
+    {
+        return $this->opentosubgroups;
+    }
+
+    /**
+     * Set typeofchoice.
+     *
+     * @param string $typeofchoice
+     *
+     * @return Polls
+     */
+    public function setTypeofchoice($typeofchoice)
+    {
+        $this->typeofchoice = $typeofchoice;
+
+        return $this;
+    }
+
+    /**
+     * Get typeofchoice.
+     *
+     * @return string
+     */
+    public function getTypeofchoice()
+    {
+        return $this->typeofchoice;
+    }
+
+    /**
+     * Set canchangevote.
+     *
+     * @param string $canchangevote
+     *
+     * @return Polls
+     */
+    public function setCanchangevote($canchangevote)
+    {
+        $this->canchangevote = $canchangevote;
+
+        return $this;
+    }
+
+    /**
+     * Get canchangevote.
+     *
+     * @return string
+     */
+    public function getCanchangevote()
+    {
+        return $this->canchangevote;
+    }
+
+    /**
+     * Set allowcomment.
+     *
+     * @param string $allowcomment
+     *
+     * @return Polls
+     */
+    public function setAllowComment($allowcomment)
+    {
+        $this->allowcomment = $allowcomment;
+
+        return $this;
+    }
+
+    /**
+     * Get comments allowed?
+     *
+     * @return string
+     */
+    public function getAllowComment()
+    {
+        return $this->allowcomment;
+    }
+
+    /**
+     * Set description.
+     *
+     * @param int $description
+     *
+     * @return Polls
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description.
+     *
+     * @return int
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set wheretorestrictmember.
+     *
+     * @param string $wheretorestrictmember
+     *
+     * @return Polls
+     */
+    public function setWheretorestrictmember($wheretorestrictmember)
+    {
+        $this->wheretorestrictmember = $wheretorestrictmember;
+
+        return $this;
+    }
+
+    /**
+     * Get wheretorestrictmember.
+     *
+     * @return string
+     */
+    public function getWheretorestrictmember()
+    {
+        return $this->wheretorestrictmember;
+    }
+
+    /**
+     * Set anonym.
+     *
+     * @param string $anonym
+     *
+     * @return Polls
+     */
+    public function setAnonym($anonym)
+    {
+        $this->anonym = $anonym;
+
+        return $this;
+    }
+
+    /**
+     * Get anonym.
+     *
+     * @return string
+     */
+    public function getAnonym()
+    {
+        return $this->anonym;
+    }
+
+    /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set creator.
+     *
+     * @return Polls
+     */
+    public function setCreator(Member $creator)
+    {
+        $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * Get creator.
+     *
+     * @return Member
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * Triggered on insert.
+     */
+    #[ORM\PrePersist]
+    public function onPrePersist(): void
+    {
+        $this->created = new DateTime('now');
+        $this->updated = new DateTime('now');
+    }
+
+    /**
+     * Triggered on update.
+     */
+    #[ORM\PreUpdate]
+    public function onPreUpdate(): void
+    {
+        $this->updated = new DateTime('now');
+    }
+
+    /**
+     * Triggered after load from database.
+     */
+    #[ORM\PostLoad]
+    public function onPostLoad(PostLoadEventArgs $eventArgs): void
+    {
+        $translationRepository = $eventArgs->getObjectManager()->getRepository(Translation::class);
+        $translatedTitles = $translationRepository->findBy(['idTrad' => $this->title]);
+
+        $titles = [];
+        /** @var Translation $title */
+        foreach ($translatedTitles as $title) {
+            $titles[$title->getLanguage()->getShortCode()] = $title->getSentence();
+        }
+        $this->titles = $titles;
+
+        $translatedDescriptions = $translationRepository->findBy(['idTrad' => $this->description]);
+
+        // Index by language.
+        $descriptions = [];
+        /** @var Translation $description */
+        foreach ($translatedDescriptions as $description) {
+            $descriptions[$description->getLanguage()->getShortCode()] = $description->getSentence();
+        }
+        $this->descriptions = $descriptions;
+    }
+
+    public function addChoice(PollsChoice $choice): self
+    {
+        if (!$this->choices->contains($choice)) {
+            $this->choices[] = $choice;
+            $choice->setPoll($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChoice(PollsChoice $choice): self
+    {
+        if ($this->choices->contains($choice)) {
+            $this->choices->removeElement($choice);
+            // set the owning side to null (unless already changed)
+            if ($choice->getPoll() === $this) {
+                $choice->setPoll(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addContribution(PollsContribution $contribution): self
+    {
+        if (!$this->contributions->contains($contribution)) {
+            $this->contributions[] = $contribution;
+            $contribution->setPoll($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContribution(PollsContribution $contribution): self
+    {
+        if ($this->contributions->contains($contribution)) {
+            $this->contributions->removeElement($contribution);
+            // set the owning side to null (unless already changed)
+            if ($contribution->getPoll() === $this) {
+                $contribution->setPoll(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function addTitle(Translation $title): self
+    {
+        if (!$this->titles->contains($title)) {
+            $this->titles[] = $title;
+        }
+
+        return $this;
+    }
+
+    public function removeTitle(Translation $title): self
+    {
+        if ($this->titles->contains($title)) {
+            $this->titles->removeElement($title);
+        }
+
+        return $this;
+    }
+
+    public function addGroup(Group $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(Group $group): self
+    {
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
+        }
+
+        return $this;
+    }
+}

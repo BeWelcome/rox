@@ -1,11 +1,183 @@
-{% extends '@base/base.html.twig' %}
+{% extends 'activity/base.html.twig' %}
+{% import 'macros.twig' as macros %}
+{% import 'activity/_macros.html.twig' as activity_macros %}
+
+{#
+  One activity: what, when and where with the organizer actions (top card), the description and the
+  member's answer side by side with who attends, then the map of the place.
+#}
 
 {% block title %}
-    {{ 'activity' | trans }}
+  {{ activity.title }}
+{% endblock %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ encore_entry_link_tags('activities_map') }}
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('activities_map') }}
 {% endblock %}
 
 {% block content %}
+  {% set member = app.user %}
+  {% set sameDay = activity.starts|date('Y-m-d') == activity.ends|date('Y-m-d') %}
 
-    <div>This is a test</div>
+  {% if activity.cancelled %}
+    <div class="p-activities-flash p-activities-flash--error" role="status">
+      <i class="fas fa-ban" aria-hidden="true"></i> {{ 'activityhasbeencancelled'|trans }}
+    </div>
+  {% endif %}
 
+  <section class="p-activities-panel p-activity-hero">
+    <span class="p-activities-card__date p-activity-hero__date" aria-hidden="true">
+      <span class="p-activities-card__month">{{ activity.starts|format_date(pattern='MMM') }}</span>
+      <span class="p-activities-card__day">{{ activity.starts|format_date(pattern='d') }}</span>
+    </span>
+    <div class="p-activity-hero__body">
+      <p class="p-activity-hero__when">
+        <i class="far fa-clock" aria-hidden="true"></i>
+        {{ activity.starts|format_datetime('full', 'short') }}
+        – {{ sameDay ? activity.ends|format_time('short') : activity.ends|format_datetime('full', 'short') }}
+      </p>
+      <p class="p-activities-card__meta">
+        {% if activity.online %}
+          <span class="p-activities-chip"><i class="fas fa-video" aria-hidden="true"></i> {{ 'activityonline'|trans }}</span>
+        {% endif %}
+        <span class="p-activities-chip">
+          <i class="fas fa-location-dot" aria-hidden="true"></i> {{ activity.location.fullname }}
+          {% if activity.location.country %}<i class="o-flag o-flag--{{ activity.location.country.countryId }}" title="{{ activity.location.country.name }}"></i>{% endif %}
+        </span>
+        {% if activity.cancelled %}
+          <span class="p-activities-badge p-activities-badge--cancelled">{{ 'activitycancelled'|trans }}</span>
+        {% elseif activity.over %}
+          <span class="p-activities-badge">{{ 'activities.over'|trans }}</span>
+        {% endif %}
+      </p>
+      {% if activity.address %}
+        <p class="p-activity-hero__address"><i class="fas fa-signs-post" aria-hidden="true"></i> {{ activity.address }}</p>
+      {% endif %}
+      {% if attendees.organizers|length > 0 %}
+        <p class="p-activity-hero__organizers">
+          <span class="p-activities-label">{{ 'activityorganizers'|trans }}</span>
+          {% for organizer in attendees.organizers %}
+            {{ macros.profilelink(organizer.attendee.username, false, 'p-activity-hero__organizer') }}{% if not loop.last %}, {% endif %}
+          {% endfor %}
+        </p>
+      {% endif %}
+    </div>
+    <div class="p-activity-hero__actions">
+      {% if is_granted('ACTIVITY_EDIT', activity) %}
+        <a class="p-activities-btn" href="{{ path('activities_edit', { id: activity.id }) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'activitiesedit'|trans }}</a>
+      {% endif %}
+      {% if is_granted('ACTIVITY_CANCEL', activity) %}
+        {% if activity.cancelled %}
+          <form method="post" action="{{ path('activity_reactivate', { id: activity.id }) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('activity_reactivate') }}">
+            <button class="p-activities-btn" type="submit"><i class="fas fa-rotate-left" aria-hidden="true"></i> {{ 'activityuncancel'|trans }}</button>
+          </form>
+        {% else %}
+          <button type="button" class="p-activities-btn p-activities-btn--danger" data-micromodal-trigger="cancelActivity">
+            <i class="fas fa-ban" aria-hidden="true"></i> {{ 'activitycancel'|trans }}
+          </button>
+        {% endif %}
+      {% endif %}
+      {% if not activity.cancelled %}
+        <a class="p-activities-btn" href="{{ path('activity_download', { id: activity.id }) }}"><i class="far fa-calendar-plus" aria-hidden="true"></i> {{ 'activity.download'|trans }}</a>
+      {% endif %}
+    </div>
+  </section>
+
+  <div class="p-activity-layout">
+    <section class="p-activities-panel p-activity-description">
+      <h2 class="p-activities-panel__title">{{ 'activitydescription'|trans }}</h2>
+      <div class="p-activity-description__text">{{ activity.description|purify }}</div>
+    </section>
+
+    <div class="p-activity-side">
+      {% if answerForm %}
+        {% form_theme answerForm 'activity/_form_theme.html.twig' %}
+        <section class="p-activities-panel">
+          <h2 class="p-activities-panel__title">{{ 'activity.headline.join'|trans }}</h2>
+          {{ form_start(answerForm, { attr: { class: 'p-activity-answer' } }) }}
+            <div class="p-activity-answer__choices" role="radiogroup" aria-label="{{ 'activity.headline.join'|trans }}">
+              {% for choice in answerForm.status %}
+                <label class="p-activity-answer__choice" for="{{ choice.vars.id }}">
+                  <input type="radio" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}"{% if choice.vars.checked %} checked{% endif %}>
+                  <span>{{ choice.vars.label|trans }}</span>
+                </label>
+                {% do choice.setRendered %}
+              {% endfor %}
+            </div>
+            {{ form_errors(answerForm.status) }}
+            <div class="p-activities-field">
+              {{ form_label(answerForm.comment, null, { label_attr: { class: 'p-activities-label' } }) }}
+              {{ form_widget(answerForm.comment, { attr: { class: 'p-activities-input p-activities-input--box' } }) }}
+              {{ form_errors(answerForm.comment) }}
+            </div>
+            <button class="p-activities-btn p-activities-btn--primary" type="submit">{{ attendee ? 'activity.update'|trans : 'activityjointhefun'|trans }}</button>
+          {{ form_end(answerForm) }}
+          {% if attendee and not activity.organizer(member) %}
+            <form method="post" action="{{ path('activity_leave', { id: activity.id }) }}" class="p-activity-answer__leave">
+              <input type="hidden" name="_token" value="{{ csrf_token('activity_leave') }}">
+              <button class="p-activities-link" type="submit">{{ 'activityleave'|trans }}</button>
+            </form>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      <section class="p-activities-panel">
+        <h2 class="p-activities-panel__title">{{ 'activityattendees'|trans }}</h2>
+        {% set groups = { yes: 'activities.count.yes', maybe: 'activities.count.maybe', no: 'activities.count.no' } %}
+        {% set nobody = true %}
+        {% for group, key in groups %}
+          {% if attendees[group]|length > 0 %}
+            {% set nobody = false %}
+            <h3 class="p-activity-attendees__title">{{ key|trans({ count: attendees[group]|length }) }}</h3>
+            <ul class="p-activity-attendees">
+              {% for person in attendees[group] %}
+                {% set username = person.attendee.username %}
+                <li class="p-activity-attendees__item">
+                  <a href="{{ path('members_profile', { username: username }) }}" title="{{ username }}{% if person.comment %}: {{ person.comment }}{% endif %}">
+                    <img src="{{ path('avatar', { username: username, size: 48 }) }}" alt="{{ username }}" width="40" height="40" loading="lazy">
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endfor %}
+        {% if nobody %}
+          <p class="p-activities-muted">{{ 'activities.attendees.none'|trans }}</p>
+        {% endif %}
+      </section>
+    </div>
+  </div>
+
+  {% if not activity.online and activity.location.latitude is not null %}
+    <section class="p-activities-panel p-activities-map js-activities-map" hidden>
+      <div id="activity-map" class="p-activities-map__map"></div>
+      {{ activity_macros.map_data([activity]) }}
+    </section>
+  {% endif %}
 {% endblock content %}
+
+{% block modals %}
+  {% if is_granted('ACTIVITY_CANCEL', activity) and not activity.cancelled %}
+    <div class="micromodal-slide p-activities-confirm" id="cancelActivity" aria-hidden="true">
+      <div class="modal__overlay p-activities-confirm__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container p-activities-confirm__box" role="dialog" aria-modal="true" aria-labelledby="cancelActivity-title">
+          <span class="p-activities-confirm__icon" aria-hidden="true"><i class="fas fa-ban"></i></span>
+          <h2 class="p-activities-confirm__title" id="cancelActivity-title">{{ activity.title }}</h2>
+          <p class="p-activities-confirm__text">{{ 'activities.cancel.confirm'|trans }}</p>
+          <form method="post" action="{{ path('activity_cancel', { id: activity.id }) }}" class="p-activities-confirm__actions">
+            <input type="hidden" name="_token" value="{{ csrf_token('activity_cancel') }}">
+            <button type="button" class="p-activities-btn" data-micromodal-close>{{ 'activities.cancel.keep'|trans }}</button>
+            <button type="submit" class="p-activities-btn p-activities-btn--danger"><i class="fas fa-ban" aria-hidden="true"></i> {{ 'activitycancel'|trans }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock modals %}

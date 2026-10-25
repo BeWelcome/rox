@@ -1,18 +1,18 @@
-{% extends 'base.html.twig' %}
+{% extends 'activity/base.html.twig' %}
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind') }}
-{% endblock %}
+{# Shown after an activity was created: the checklist for a successful activity, and the way on. #}
 
 {% block title %}
-    {{ 'activity.created' | trans }}
+  {{ 'activity.created' | trans }}
 {% endblock %}
 
 {% block content %}
-    <header class="o-text">
-        <h1>{{ 'activity' | trans }}</h1>
-    </header>
-    <div class="u:flex u:flex-col">
-       {{ 'activity.creation.checklist'| trans | raw }}
+  <section class="p-activities-panel p-activities-prose">
+    <h2 class="p-activities-panel__title">{{ activity.title }}</h2>
+    {{ 'activity.creation.checklist'|trans|raw }}
+    <div class="p-activities-form__actions">
+      <a class="p-activities-btn" href="{{ path('activities_edit', { id: activity.id }) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'activitiesedit'|trans }}</a>
+      <a class="p-activities-btn p-activities-btn--primary" href="{{ path('activities_show', { id: activity.id }) }}">{{ 'activities.created.show'|trans }}</a>
     </div>
+  </section>
 {% endblock content %}

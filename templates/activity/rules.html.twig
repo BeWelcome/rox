@@ -1,0 +1,31 @@
+{% extends 'activity/base.html.twig' %}
+
+{# The activity guidelines, from the legacy rules page (same translation keys). #}
+
+{% block title %}
+  {{ 'activities.rules'|trans }}
+{% endblock %}
+
+{% set sections = {
+  'activities.rules.types': ['activities.rules.type.category', 'activities.rules.type.variants'],
+  'activities.rules.duration': ['activities.rules.duration.short', 'activities.rules.duration.volatile', 'activities.rules.duration.recurring'],
+  'activities.rules.noncommercial': ['activities.rules.noncommercial.community', 'activities.rules.noncommercial.bewelcome', 'activities.rules.noncommercial.promotion', 'activities.rules.noncommercial.expenses'],
+  'activities.rules.reporting': ['activities.rules.reporting.process', 'activities.rules.reporting.removal'],
+} %}
+
+{% block content %}
+  <section class="p-activities-panel p-activities-prose">
+    <h2 class="p-activities-panel__title">{{ 'activities.rules.headline'|trans }}</h2>
+    <p>{{ 'activities.rules.tool'|trans|raw }}</p>
+    <p>{{ 'activities.rules.description'|trans|raw }}</p>
+    <p>{{ 'activities.rules.handling'|trans|raw }}</p>
+    {% for heading, items in sections %}
+      <h3>{{ heading|trans }}</h3>
+      <ul>
+        {% for item in items %}
+          <li>{{ item|trans|raw }}</li>
+        {% endfor %}
+      </ul>
+    {% endfor %}
+  </section>
+{% endblock content %}

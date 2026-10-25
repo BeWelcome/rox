@@ -7,8 +7,8 @@ App\Entity\Activity:
         address: '<address()>'
         title: 'Weekend hiking trip around Berlin'
         description: '<paragraph(3)>'
-        status: 1
-        online: 1
+        status: 0
+        online: 0
     activity_city_walk:
         createdBy: '@member_2'
         starts: '<dateTimeBetween("+2 days", "+20 days")>'
@@ -17,8 +17,8 @@ App\Entity\Activity:
         address: '<address()>'
         title: 'Guided city walk and local food tasting'
         description: '<paragraph(3)>'
-        status: 1
-        online: 1
+        status: 0
+        online: 0
     activity_language_cafe:
         createdBy: '@member_3'
         starts: '<dateTimeBetween("-10 days", "-1 days")>'
@@ -27,7 +27,7 @@ App\Entity\Activity:
         address: '<address()>'
         title: 'Language exchange cafe meetup'
         description: '<paragraph(3)>'
-        status: 1
+        status: 0
         online: 1
 
 App\Entity\ActivityAttendee:
@@ -38,15 +38,13 @@ App\Entity\ActivityAttendee:
             - 1
             - 'Looking forward to it, bring good shoes!'
             - true
-        id: '<numberBetween(100000, 199999)>'
     attendee_hiking_{2..5}:
         __construct:
             - '@activity_hiking_trip'
             - '@member_<current()>'
-            - '<numberBetween(0, 2)>'
+            - '<numberBetween(1, 3)>'
             - '<sentence()>'
             - false
-        id: '<numberBetween(200000, 299999)>'
     attendee_city_walk_organizer:
         __construct:
             - '@activity_city_walk'
@@ -54,12 +52,10 @@ App\Entity\ActivityAttendee:
             - 1
             - 'See you all there!'
             - true
-        id: '<numberBetween(300000, 399999)>'
     attendee_city_walk_{6..10}:
         __construct:
             - '@activity_city_walk'
             - '@member_<current()>'
-            - '<numberBetween(0, 2)>'
+            - '<numberBetween(1, 3)>'
             - '<sentence()>'
             - false
-        id: '<numberBetween(400000, 499999)>'

@@ -364,8 +364,8 @@ class MyDataMockups implements MockupProviderInterface
                 $poll = $this->getPoll();
                 $mockEntity = [
                     'poll' => $poll,
-                    'pollChoice' => [
-                        'texts' => ['one', 'two'],
+                    'choices' => [
+                        ['texts' => ['en' => 'one', 'fr' => 'un']],
                     ],
                 ];
                 break;

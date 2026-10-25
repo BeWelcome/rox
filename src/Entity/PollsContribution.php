@@ -7,7 +7,8 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD.
+ * Legacy: the poll data as the old polls pages stored it. The polls pages use App\Entity\Poll;
+ * Version20261026100000 copies this data there. Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\UniqueConstraint(name: 'polls_contributions_members', columns: ['IdMember', 'IdPoll'])]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity]
-class PollContribution
+class PollsContribution
 {
     /**
      * @var string
@@ -59,10 +60,10 @@ class PollContribution
     private $id;
 
     /**
-     * @var Poll
+     * @var Polls
      */
     #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Poll::class, inversedBy: 'contributions', fetch: 'EAGER')]
+    #[ORM\ManyToOne(targetEntity: Polls::class, inversedBy: 'contributions', fetch: 'EAGER')]
     private $poll;
 
     /**
@@ -77,7 +78,7 @@ class PollContribution
      *
      * @param string $email
      *
-     * @return PollContribution
+     * @return PollsContribution
      */
     public function setEmail($email)
     {
@@ -101,7 +102,7 @@ class PollContribution
      *
      * @param string $emailIsConfirmed
      *
-     * @return PollContribution
+     * @return PollsContribution
      */
     public function setEmailIsConfirmed($emailIsConfirmed)
     {
@@ -125,7 +126,7 @@ class PollContribution
      *
      * @param DateTime $updated
      *
-     * @return PollContribution
+     * @return PollsContribution
      */
     public function setUpdated($updated)
     {
@@ -149,7 +150,7 @@ class PollContribution
      *
      * @param DateTime $created
      *
-     * @return PollContribution
+     * @return PollsContribution
      */
     public function setCreated($created)
     {
@@ -173,7 +174,7 @@ class PollContribution
      *
      * @param string $comment
      *
-     * @return PollContribution
+     * @return PollsContribution
      */
     public function setComment($comment)
     {
@@ -205,9 +206,9 @@ class PollContribution
     /**
      * Set idpoll.
      *
-     * @return PollContribution
+     * @return PollsContribution
      */
-    public function setPoll(?Poll $poll = null)
+    public function setPoll(?Polls $poll = null)
     {
         $this->poll = $poll;
 
@@ -217,7 +218,7 @@ class PollContribution
     /**
      * Get idpoll.
      *
-     * @return Poll
+     * @return Polls
      */
     public function getPoll()
     {
@@ -227,7 +228,7 @@ class PollContribution
     /**
      * Set idmember.
      *
-     * @return PollContribution
+     * @return PollsContribution
      */
     public function setMember(?Member $member = null)
     {

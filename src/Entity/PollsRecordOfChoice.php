@@ -7,7 +7,8 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Do not check entities with PHPMD.
+ * Legacy: the poll data as the old polls pages stored it. The polls pages use App\Entity\Poll;
+ * Version20261026100000 copies this data there. Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
@@ -18,7 +19,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'polls_record_of_choices_poll_choice', columns: ['IdPollChoice'])]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Entity]
-class PollRecordOfChoice
+class PollsRecordOfChoice
 {
     /**
      * @var DateTime
@@ -33,10 +34,10 @@ class PollRecordOfChoice
     private $created;
 
     /**
-     * @var PollChoice
+     * @var PollsChoice
      */
     #[ORM\JoinColumn(name: 'IdPollChoice', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \PollChoice::class)]
+    #[ORM\ManyToOne(targetEntity: PollsChoice::class)]
     private $pollChoice;
 
     /**
@@ -54,17 +55,17 @@ class PollRecordOfChoice
     private $id;
 
     /**
-     * @var Poll
+     * @var Polls
      */
     #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Poll::class)]
+    #[ORM\ManyToOne(targetEntity: Polls::class)]
     private $poll;
 
     /**
      * @var Member
      */
     #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id')]
-    #[ORM\OneToOne(targetEntity: Member::class)]
+    #[ORM\ManyToOne(targetEntity: Member::class)]
     private $member;
 
     /**
@@ -72,7 +73,7 @@ class PollRecordOfChoice
      *
      * @param DateTime $updated
      *
-     * @return PollRecordOfChoice
+     * @return PollsRecordOfChoice
      */
     public function setUpdated($updated)
     {
@@ -96,7 +97,7 @@ class PollRecordOfChoice
      *
      * @param DateTime $created
      *
-     * @return PollRecordOfChoice
+     * @return PollsRecordOfChoice
      */
     public function setCreated($created)
     {
@@ -118,9 +119,9 @@ class PollRecordOfChoice
     /**
      * Set poll choice.
      *
-     * @param PollChoice $pollChoice
+     * @param PollsChoice $pollChoice
      *
-     * @return PollRecordOfChoice
+     * @return PollsRecordOfChoice
      */
     public function setPollChoice($pollChoice)
     {
@@ -132,7 +133,7 @@ class PollRecordOfChoice
     /**
      * Get poll choice.
      *
-     * @return PollChoice
+     * @return PollsChoice
      */
     public function getPollChoice()
     {
@@ -144,7 +145,7 @@ class PollRecordOfChoice
      *
      * @param string $email
      *
-     * @return PollRecordOfChoice
+     * @return PollsRecordOfChoice
      */
     public function setEmail($email)
     {
@@ -176,9 +177,9 @@ class PollRecordOfChoice
     /**
      * Set poll.
      *
-     * @return PollRecordOfChoice
+     * @return PollsRecordOfChoice
      */
-    public function setPoll(?Poll $poll = null)
+    public function setPoll(?Polls $poll = null)
     {
         $this->poll = $poll;
 
@@ -188,7 +189,7 @@ class PollRecordOfChoice
     /**
      * Get poll.
      *
-     * @return Poll
+     * @return Polls
      */
     public function getPoll()
     {
@@ -198,7 +199,7 @@ class PollRecordOfChoice
     /**
      * Set member.
      *
-     * @return PollRecordOfChoice
+     * @return PollsRecordOfChoice
      */
     public function setMember(?Member $member = null)
     {

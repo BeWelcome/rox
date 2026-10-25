@@ -13,6 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The activities pages (App\Controller\ActivityController) as members use them. Each test creates its
@@ -248,7 +249,10 @@ class ActivityControllerTest extends WebTestCase
         $crawler = $this->client->submit($form);
 
         $this->assertResponseStatusCodeSame(422);
-        self::assertStringContainsString("can't end before it starts", $crawler->filter('form.p-activities-form')->text());
+        self::assertStringContainsString(
+            $this->translate('activity.end.before.start', [], 'validators'),
+            $crawler->filter('form.p-activities-form')->text()
+        );
         self::assertNull($this->getEntityManager()->getRepository(Activity::class)->findOneBy(['title' => 'Ends before it starts']));
     }
 
@@ -290,7 +294,10 @@ class ActivityControllerTest extends WebTestCase
         self::assertCount(2, $this->activity()->getAttendees(), 'answering again changes the answer');
 
         $crawler = $this->client->request('GET', '/activities/' . $this->activityId);
-        self::assertStringContainsString('1 might attend', $crawler->filter('.p-activity-side')->text());
+        self::assertStringContainsString(
+            $this->translate('activities.count.maybe', ['count' => 1]),
+            $crawler->filter('.p-activity-side')->text()
+        );
         $this->client->submit($crawler->filter('.p-activity-answer__leave')->form());
         $this->assertResponseRedirects('/activities/' . $this->activityId);
         self::assertNull($this->activity()->getAttendeeFor($this->member('member-2')));
@@ -401,6 +408,14 @@ class ActivityControllerTest extends WebTestCase
         self::assertInstanceOf(Location::class, $berlin);
 
         return $berlin;
+    }
+
+    /**
+     * The text the page shows for a key, so the tests pass with and without the new translations imported.
+     */
+    private function translate(string $key, array $parameters = [], string $domain = 'messages'): string
+    {
+        return static::getContainer()->get(TranslatorInterface::class)->trans($key, $parameters, $domain);
     }
 
     private function getEntityManager(): EntityManagerInterface

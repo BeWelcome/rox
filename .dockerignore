@@ -10,6 +10,7 @@ coverage/
 VERSION
 rox_local.ini
 config/reference.php
+config/schema.json
 docker-compose.override.yml
 docker/db/*.sql
 !docker/db/word.sql

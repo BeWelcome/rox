@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Service\NativeLanguageNames;
 use App\Utilities\ForumUtilities;
 use Carbon\Carbon;
 use HTMLPurifier;
@@ -36,6 +37,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         private readonly LoggerInterface $logger,
         private readonly array $locales,
         private readonly string $publicDirectory,
+        private readonly NativeLanguageNames $nativeLanguageNames,
     ) {
     }
 
@@ -74,7 +76,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     public function languageName(string $locale): string
     {
-        return $this->translator->trans(strtolower('lang_' . $locale), [], null, $locale);
+        return $this->nativeLanguageNames->get($locale);
     }
 
     public function languageNameTranslated(string $locale, string $display): string

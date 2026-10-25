@@ -3,42 +3,30 @@ set -e
 
 # first arg is `-f` or `--some-option`
 if [ "${1#-}" != "$1" ]; then
-	set -- frankenphp run "$@"
+	set -- php-fpm "$@"
 fi
 
-ensure_composer_dependencies() {
-	if [ -f vendor/autoload_runtime.php ]; then
-		return 0
-	fi
+ENTRYPOINT_SETUP_RAN=false
 
-	if [ "$APP_ENV" = 'prod' ]; then
-		echo "Missing vendor/autoload_runtime.php in production image; rebuild the image instead of installing dependencies at runtime." >&2
-		exit 1
-	fi
-
-	echo "Installing Composer dependencies (vendor/autoload_runtime.php missing)..."
-	composer install --prefer-dist --no-progress --no-interaction --no-scripts
+# Setup progress, for docker/php/setup-progress.sh (the devcontainer shows it in a terminal) and docker compose logs.
+SETUP_STATUS=/tmp/bewelcome-setup.status
+setup_step() {
+	echo "==> setup: $1"
+	echo "$(date +%s) $1" >> "$SETUP_STATUS"
 }
 
-if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ "$1" = 'ls' ]; then
+if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-production"
 	if [ "$APP_ENV" != 'prod' ]; then
 		PHP_INI_RECOMMENDED="$PHP_INI_DIR/php.ini-development"
 	fi
-	if [ -w "$PHP_INI_DIR" ]; then
-		rm -f "$PHP_INI_DIR/php.ini"
-		ln -s "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
-		sed -i -e "s/^ *memory_limit.*/memory_limit = 4G/g" "$PHP_INI_DIR/php.ini"
-	fi
+	ln -sf "$PHP_INI_RECOMMENDED" "$PHP_INI_DIR/php.ini"
+	: > "$SETUP_STATUS"
 
-	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images public/bundles
-	CURRENT_UID="$(id -u)"
-	ACL_PATHS="var data upload public/bundles"
-	if [ "$APP_ENV" != 'prod' ]; then
-		ACL_PATHS="$ACL_PATHS build"
-	fi
-	setfacl -R -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX $ACL_PATHS 2>/dev/null || true
-	setfacl -dR -m u:www-data:rwX -m u:"${CURRENT_UID}":rwX $ACL_PATHS 2>/dev/null || true
+	mkdir -p var/cache var/log data/user/avatars data/gallery/member upload/images
+#	setfacl -R -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
+#	setfacl -dR -m u:www-data:rwX -m u:"$(whoami)":rwX var build data upload
+
 	if [ "$APP_ENV" != 'prod' ] && [ -f /certs/localCA.crt ]; then
 		ln -sf /certs/localCA.crt /usr/local/share/ca-certificates/localCA.crt
 		update-ca-certificates
@@ -48,96 +36,100 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ] || [ 
 		cp rox_docker.ini rox_local.ini
 	fi
 
-	if [ "$APP_ENV" != 'prod' ]; then
-		git config --global --add safe.directory /srv/bewelcome 2>/dev/null || true
-		if [ ! -f VERSION ]; then
-			git rev-parse --short HEAD > VERSION
-		fi
+	if [ "$APP_ENV" != 'prod' ] && [ ! -f VERSION ]; then
+	    git config --global --add safe.directory /srv/bewelcome
+		git rev-parse --short HEAD > VERSION
 	fi
 
 	if [ "$APP_ENV" != 'prod' ]; then
-		composer install --prefer-dist --no-progress --no-interaction --no-scripts
+		setup_step "Installing JavaScript and PHP dependencies (bun, composer)"
 		bun i --frozen-lockfile
+		composer install --prefer-dist --no-progress --no-suggest --no-interaction --no-scripts
 	fi
 
-	ensure_composer_dependencies
-
-	if [ -f .env ]; then
-	    database_host=$(grep '^DB_HOST=' .env | cut -f 2 -d '=')
-	    database_port=$(grep '^DB_PORT=' .env | cut -f 2 -d '=')
-	    database_name=$(grep '^DB_NAME=' .env | cut -f 2 -d '=')
-	    database_user=$(grep '^DB_USER=' .env | cut -f 2 -d '=')
-	    database_password=$(grep '^DB_PASS=' .env | cut -f 2 -d '=')
-	fi
-
-	# Fall back to environment variables if .env is absent or values are empty
+	database_host=$(grep '^DB_HOST=' .env | cut -f 2 -d '=')
+	database_port=$(grep '^DB_PORT=' .env | cut -f 2 -d '=')
+	database_name=$(grep '^DB_NAME=' .env | cut -f 2 -d '=')
+	database_user=$(grep '^DB_USER=' .env | cut -f 2 -d '=')
+	database_password=$(grep '^DB_PASS=' .env | cut -f 2 -d '=')
 	database_host="${database_host:-${DB_HOST:-db}}"
 	database_port="${database_port:-${DB_PORT:-3306}}"
 	database_name="${database_name:-${DB_NAME:-bewelcome}}"
 	database_user="${database_user:-${DB_USER:-bewelcome}}"
-	database_password="${database_password:-${DB_PASS:-bewelcome}}"
+	database_password="${database_password:-${DB_PASSWORD:-bewelcome}}"
 
-	echo "Waiting for db to be ready..."
+	setup_step "Waiting for the database"
 	db_wait_seconds=0
 	db_wait_max="${BEWELCOME_DB_READY_MAX_WAIT_SECONDS:-300}"
+
 	until php -r "new PDO('mysql:host=${database_host};port=${database_port};dbname=${database_name}', '${database_user}', '${database_password}');" > /dev/null 2>&1; do
 		if [ "$db_wait_seconds" -ge "$db_wait_max" ]; then
 			echo "Database not ready after ${db_wait_max}s; aborting." >&2
 			exit 1
 		fi
 		sleep 1
+		echo "Waited... ${db_wait_seconds}s."
 		db_wait_seconds=$((db_wait_seconds + 1))
 	done
 
-	echo "db ready!"
-
-	# In prod: clear and recompile the Symfony DI container from the current
-	# image's config BEFORE running migrations. Without this, a stale compiled
-	# container (from a previous deploy's var/ volume) that references a renamed
-	# or removed class will crash doctrine:migrations:migrate.
-	if [ "$APP_ENV" = 'prod' ]; then
-		echo "Warmup cache"
-		bin/console cache:clear
+	if [ "$APP_ENV" != 'prod' ]; then
+		setup_step "Creating the development database and importing seed data"
+		if ! bin/console test:database:create --drop --force --no-interaction; then
+			setup_step "WARNING: database creation failed, see docker compose logs php"
+			echo "=========================================================" >&2
+			echo " ERROR: Database creation failed!" >&2
+			echo " Skipping SQL imports to avoid swallowing real errors." >&2
+			echo " Please fix the schema and run bin/console test:database:create manually." >&2
+			echo "=========================================================" >&2
+		else
+			if [ -f docker/db/word.sql ]; then
+				echo "Importing translations"
+				mysql $database_name -u $database_user -p$database_password -h $database_host --port=$database_port < docker/db/word.sql || echo "ERROR: Failed to import word.sql" >&2
+			fi
+		fi
 	fi
 
-	if [ "$APP_ENV" != 'prod' ]; then
-		echo "Creating database..."
-		bin/console test:database:create --drop --force --no-interaction
-		echo "Database created."
-
-		echo "Importing translations"
-		if [ -f docker/db/word.sql ]; then
-			echo "Yepp, really. Importing translations"
-			mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" < docker/db/word.sql
-		fi
-		if [ -f docker/db/geonamesadminunits.sql ]; then
-			mariadb "$database_name" -u "$database_user" -p"$database_password" -h "$database_host" --port="$database_port" < docker/db/geonamesadminunits.sql
-		fi
-    fi
-
-	bin/console translations:add:missing > /dev/null
-
-	if [ "$APP_ENV" = 'prod' ] && ls -A Migrations/*.php > /dev/null 2>&1; then
+	# Run Doctrine migrations in prod. Clear the cache first so a stale compiled
+	# container from a previous image (var/ volume) can't crash the migration.
+	if [ "$APP_ENV" = 'prod' ] && ls Migrations/*.php > /dev/null 2>&1; then
+		setup_step "Running database migrations"
+		bin/console cache:clear
 		bin/console doctrine:migrations:migrate --no-interaction
 	fi
 
+	setup_step "Importing missing translations and warming up the cache"
+	bin/console translations:add:missing
+	
 	# WarmUp translations now database is up to date
+	composer run-script --no-dev post-install-cmd
+
+	# cache:clear runs as root; fix ownership so www-data can write at runtime
+	chown -R www-data:www-data var/cache var/log
+
+	# Local development only: on the servers the deployment creates the data directories
+	# (avatars, gallery, uploads) with the right owner. Locally /srv/bewelcome/data is a
+	# Docker volume that this script and the fixtures fill as root, so php-fpm (www-data)
+	# can't write resized avatars or new uploads there.
 	if [ "$APP_ENV" != 'prod' ]; then
-		composer run-script post-install-cmd
-		composer dump-autoload --classmap-authoritative
-		echo "Warmup cache"
-		bin/console cache:clear
-	else
-		bin/console assets:install public
+		mkdir -p data/user/avatars data/gallery data/uploaded data/groups
+		chown -R www-data:www-data data
 	fi
 
 	if [ "$APP_ENV" != 'prod' ]; then
+		setup_step "Building the frontend assets (bun encore dev)"
 		bun encore dev --mode=development
 	fi
 
-	# Manticore indexing must not block HTTP when search data or schema is not ready yet.
-	bin/console manticore:indices:forum || echo "Warning: manticore:indices:forum failed (exit $?); container continues."
-	bin/console manticore:indices:geonames || echo "Warning: manticore:indices:geonames failed (exit $?); container continues."
+	setup_step "ready"
+	ENTRYPOINT_SETUP_RAN=true
 fi
 
-exec "$@"
+# Non-php-fpm containers (cron, workers) skip the block above and receive no
+# cache:clear or warmup, leaving them vulnerable to stale anonymous-volume
+# content. Warm explicitly so every container type starts with a compiled
+# cache that reflects the current image's templates.
+if [ "$APP_ENV" = 'prod' ] && [ "$ENTRYPOINT_SETUP_RAN" = 'false' ]; then
+	php bin/console cache:warmup --env=prod --no-debug
+fi
+
+exec docker-php-entrypoint "$@"

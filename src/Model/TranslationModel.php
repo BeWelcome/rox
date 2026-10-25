@@ -8,6 +8,7 @@ use App\Pagerfanta\DoNotTranslateTranslationAdapter;
 use App\Pagerfanta\MissingTranslationAdapter;
 use App\Pagerfanta\TranslationAdapter;
 use App\Pagerfanta\UpdateTranslationAdapter;
+use App\Service\NativeLanguageNames;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -16,7 +17,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslationModel
 {
-    public function __construct(private readonly TranslatorInterface $translator, private readonly EntityManagerInterface $entityManager, private readonly Filesystem $filesystem, private readonly string $cacheDirectory, private readonly array $locales)
+    public function __construct(private readonly TranslatorInterface $translator, private readonly EntityManagerInterface $entityManager, private readonly Filesystem $filesystem, private readonly string $cacheDirectory, private readonly array $locales, private readonly NativeLanguageNames $nativeLanguageNames)
     {
     }
 
@@ -91,5 +92,8 @@ class TranslationModel
         }
 
         ini_set('memory_limit', $memoryLimit);
+
+        // Language names are cached separately from the catalogues; drop them so edits show up.
+        $this->nativeLanguageNames->clear();
     }
 }

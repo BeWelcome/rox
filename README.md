@@ -22,7 +22,7 @@ You like the idea? Development is only one way to contribute! Find out how to [g
 
 ## Get your Rox development enviroment :computer:
 
-1. :balloon: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github.
+1. :balloon: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github. The quickest way is the devcontainer: open the repository in VS Code (or a GitHub Codespace) and choose "Reopen in Container". A terminal shows the setup progress; the first start takes a few minutes.
 2. :mag: Pick a [good starter issue](https://github.com/BeWelcome/rox/labels/good%20starter%20issue)
 3. :sparkles: Create a [pull request](https://opensource.guide/how-to-contribute/#opening-a-pull-request) and `@mention` the people from the issue to review
 4. :sun_with_face: Fix the remaining things during review
@@ -66,51 +66,37 @@ If any ```.scss``` file or a file in ```assets/``` changed a ```make build``` is
 
 ## Production image & deployment :rocket:
 
-The production image is **built in CI, not on the deploy server**. The deploy host
-only runs `docker compose pull && docker compose up -d` — there is no on-server
-`docker compose ... --build` and no `composer install` on the server.
+The production images are **built in CI, not on the deploy server**. The deploy
+host only pulls the images and restarts the stack — there is no on-server build and
+no `composer install` on the server.
 
-### How the image is built
+### How the images are built
 
-The [`build-image`](.github/workflows/build-image.yml) workflow builds the
-production `bewelcome_php` target from the [`Dockerfile`](Dockerfile) and pushes a
-multi-arch (`linux/amd64` + `linux/arm64`) manifest to `ghcr.io/bewelcome/rox`. Each
+The app runs as two containers, built from two targets of the [`Dockerfile`](Dockerfile):
+
+* `bewelcome_php` — PHP-FPM with `vendor/` and the compiled front-end assets
+  (`public/build/`) baked in.
+* `bewelcome_nginx` — Nginx serving `public/` and passing PHP requests to `php:9000`.
+
+Both are pushed as multi-arch (`linux/amd64` + `linux/arm64`) manifests to
+`ghcr.io/bewelcome/rox`; the Nginx image carries a `-web` tag suffix. Each
 architecture is built on a native runner (no QEMU) and pushed by digest, then a
-merge job stitches the digests into one tagged manifest list so `docker pull`
-resolves the right arch automatically. The image is self-contained: `vendor/` and
-the compiled front-end assets (`public/build/`) are baked in at build time, so it
-boots with no host checkout and no bind-mount of the source tree.
+merge job stitches the digests into one tagged manifest list.
 
-It runs:
+| Workflow | Runs on | Tags |
+| --- | --- | --- |
+| [`build-image-stage`](.github/workflows/build-image-stage.yml) | pushes to `main` that touch image inputs | `stage` / `stage-web`, `sha-<shortsha>` / `sha-<shortsha>-web` |
+| [`build-image-prod`](.github/workflows/build-image-prod.yml) | `vX.Y.Z` tag pushes | `X.Y.Z`, `X.Y`, `latest` (each also with `-web`) |
+| [`pr-image-build`](.github/workflows/pr-image-build.yml) | pull requests to `main` | builds both images without pushing |
 
-* on every push to `develop` that touches image-affecting paths (`Dockerfile`,
-  `src/**`, `composer.lock`, `assets/**`, etc.), and
-* on every `v*` tag push.
+The PHP image is scanned with [Trivy](https://trivy.dev/) (CRITICAL/HIGH/MEDIUM;
+unfixed CVEs only, exceptions in [`.trivyignore`](.trivyignore)). Results appear in
+the **Scan image** job log.
 
-Tags are produced by `docker/metadata-action`:
-
-| Tag | Meaning |
-| --- | --- |
-| `sha-<shortsha>` | Immutable per-commit pin — **use this to deploy and roll back** |
-| `develop` | Moving pointer to the latest `develop` build (convenience only) |
-| `vX.Y.Z`, `X.Y`, `X` | SemVer tags, published only for `v*` tag pushes |
-
-Every published image is scanned with [Trivy](https://trivy.dev/) (CRITICAL/HIGH/MEDIUM;
-unfixed CVEs only). Results appear in the **Scan image** job log.
-
-After a successful push **on `develop`**, the workflow sends a `repository_dispatch`
-(`event_type: rox-image-pushed`) to `BeWelcome/sysadmins-infra`, which deploys the
-new `sha-<shortsha>` image to **stage** automatically — but **only if all three
-gates pass**:
-
-1. the image build and push succeed,
-2. the Trivy scan finds no CRITICAL/HIGH/MEDIUM unfixed vulnerabilities, and
-3. the parallel [`CI`](.github/workflows/ci.yml) workflow on the same commit also
-   succeeds (phpunit, linters, security checks, etc.).
-
-If CI fails, the image may still be pushed to GHCR for inspection, but stage deploy
-is blocked. The dispatch is *not* sent for `v*` tags — production releases are
-triggered manually/gated from `sysadmins-infra`.
+After a successful stage build and scan, `build-image-stage` sends a
+`repository_dispatch` (`event_type: rox-stage-image-pushed`) to
+`BeWelcome/sysadmins-infra`, which redeploys stage with the new `sha-<shortsha>`
+images.
 
 ### Cut a production release
 
@@ -119,14 +105,13 @@ git tag vX.Y.Z
 git push --tags
 ```
 
-This publishes the SemVer image tags. Promote it to production from the
-`sysadmins-infra` deploy workflow.
+This publishes the SemVer image tags and creates a GitHub release. Promote it to
+production with the "Deploy prod" workflow in `sysadmins-infra`.
 
 ### Roll back
 
 Redeploy a previous immutable tag from `sysadmins-infra` by pointing the deploy at
-an earlier `ghcr.io/bewelcome/rox:sha-<shortsha>` (the digest is recorded in the
-dispatch payload, so the rollback target is exact).
+an earlier `ghcr.io/bewelcome/rox:sha-<shortsha>` (and its `-web` counterpart).
 
 ### Required secrets
 
@@ -148,10 +133,20 @@ GHCR push itself uses the built-in `GITHUB_TOKEN` (`permissions: packages: write
 * [PSR-1](http://www.php-fig.org/psr/psr-1/)
 * [PSR-2](http://www.php-fig.org/psr/psr-2/)
 
-To ensure coding standards are followed run ```make``` everytime before you commit. Fixing coding standard issues can be achieved with
+## Before you push
 
-```bash
-make phpcsfix
-```
+CI runs the same Makefile targets you can run locally, inside the devcontainer or the php container
+(`docker compose exec php make check`):
 
-twice in a row.
+| Command | What it runs | Time |
+|---|---|---|
+| `make check` | php-cs-fixer, phpcs, PHPStan, phpcpd, YAML lint, Doctrine schema | about 20 seconds |
+| `make test` | PHPUnit with coverage, Infection, then the integration tests (need the `bewelcome_test` database) | about 30 seconds |
+| `make security` | `composer audit`, `bun run audit` | seconds |
+| `make phpci` | all of the above and phploc, like CI | about a minute |
+
+Style problems are fixed with `make phpcsfix` (run it twice in a row).
+
+Git hooks do most of this for you. The devcontainer turns them on; elsewhere run `make hooks` once.
+On commit, staged PHP files in `src/` are fixed with php-cs-fixer and checked with phpcs. On push, `make check` runs.
+Skip a hook once with `--no-verify`.

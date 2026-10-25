@@ -2,239 +2,136 @@
 
 namespace App\Entity;
 
-use Carbon\Carbon;
-use DateTime;
-use Doctrine\ORM\Event\PostLoadEventArgs;
+use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Do not check entities with PHPMD.
- *
- * @SuppressWarnings("PHPMD")
+ * One choice of a poll. Its text is translatable (PollChoiceTranslation). `votes` counts the votes for it,
+ * also in anonymous polls, which do not record who chose what.
  */
-#[ORM\Table(name: 'polls_choices')]
-#[ORM\Index(name: 'IdPoll', columns: ['IdPoll'])]
-#[ORM\HasLifecycleCallbacks]
 #[ORM\Entity]
+#[Gedmo\TranslationEntity(class: PollChoiceTranslation::class)]
 class PollChoice
 {
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'IdChoiceText', type: 'integer', nullable: false)]
-    private $text;
-
-    /**
-     * @var string[]
-     *
-     * Collects all translated choices of the poll
-     */
-    private $texts;
-
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'Counter', type: 'integer', nullable: false)]
-    private $counter = '0';
-
-    /**
-     * @var DateTime
-     */
-    #[ORM\Column(name: 'updated', type: 'datetime', nullable: false)]
-    private $updated;
-
-    /**
-     * @var DateTime
-     */
-    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
-    private $created;
-
-    /**
-     * @var Poll
-     */
-    #[ORM\JoinColumn(name: 'IdPoll', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Poll::class, inversedBy: 'choices')]
-    private $poll;
-
-    /**
-     * @var int
-     */
-    #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    private $id;
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\ManyToOne(targetEntity: Poll::class, inversedBy: 'choices')]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    private Poll $poll;
+
+    #[Gedmo\Translatable]
+    #[ORM\Column(type: Types::TEXT)]
+    private string $text = '';
+
+    #[ORM\Column]
+    private int $votes = 0;
+
+    #[ORM\Column]
+    private DateTimeImmutable $createdAt;
 
     /**
-     * Set choice text.
-     *
-     * @param Translation $choiceText
-     *
-     * @return PollChoice
+     * @var Collection<int, PollChoiceTranslation>
      */
-    public function setChoiceText($choiceText)
-    {
-        $this->choiceText = $choiceText;
+    #[ORM\OneToMany(targetEntity: PollChoiceTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'])]
+    private Collection $translations;
 
-        return $this;
+    #[Gedmo\Locale]
+    private ?string $locale = null;
+
+    public function __construct()
+    {
+        $this->translations = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
     }
 
-    /**
-     * Get choice texts.
-     *
-     * @return string[]
-     */
-    public function getTexts()
-    {
-        return $this->texts;
-    }
-
-    /**
-     * Set counter.
-     *
-     * @param int $counter
-     *
-     * @return PollChoice
-     */
-    public function setCounter($counter)
-    {
-        $this->counter = $counter;
-
-        return $this;
-    }
-
-    /**
-     * Get counter.
-     *
-     * @return int
-     */
-    public function getCounter()
-    {
-        return $this->counter;
-    }
-
-    /**
-     * Set updated.
-     *
-     * @param DateTime $updated
-     *
-     * @return PollChoice
-     */
-    public function setUpdated($updated)
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    /**
-     * Get updated.
-     *
-     * @return DateTime
-     */
-    public function getUpdated()
-    {
-        return $this->updated;
-    }
-
-    /**
-     * Set created.
-     *
-     * @param DateTime $created
-     *
-     * @return PollChoice
-     */
-    public function setCreated($created)
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    /**
-     * Get created.
-     *
-     * @return Carbon
-     */
-    public function getCreated()
-    {
-        return Carbon::instance($this->created);
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set poll.
-     *
-     * @return PollChoice
-     */
-    public function setPoll(?Poll $poll = null)
+    public function getPoll(): Poll
+    {
+        return $this->poll;
+    }
+
+    public function setPoll(Poll $poll): self
     {
         $this->poll = $poll;
 
         return $this;
     }
 
-    /**
-     * Get poll.
-     *
-     * @return Poll
-     */
-    public function getPoll()
-    {
-        return $this->poll;
-    }
-
-    /**
-     * Triggered on insert.
-     */
-    #[ORM\PrePersist]
-    public function onPrePersist(): void
-    {
-        $this->created = new DateTime('now');
-        $this->updated = new DateTime('now');
-    }
-
-    /**
-     * Triggered on update.
-     */
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
-    {
-        $this->updated = new DateTime('now');
-    }
-
-    /**
-     * Triggered after load from database.
-     */
-    #[ORM\PostLoad]
-    public function onPostLoad(PostLoadEventArgs $eventArgs): void
-    {
-        $translationRepository = $eventArgs->getObjectManager()->getRepository(Translation::class);
-        $translatedTexts = $translationRepository->findBy(['idTrad' => $this->text]);
-
-        $texts = [];
-        /** @var Translation $text */
-        foreach ($translatedTexts as $text) {
-            $texts[$text->getLanguage()->getShortCode()] = $text->getSentence();
-        }
-        $this->texts = $texts;
-    }
-
-    public function getText(): int
+    public function getText(): string
     {
         return $this->text;
     }
 
-    public function setText(int $text): void
+    public function setText(string $text): self
     {
         $this->text = $text;
+
+        return $this;
+    }
+
+    public function getVotes(): int
+    {
+        return $this->votes;
+    }
+
+    public function setVotes(int $votes): self
+    {
+        $this->votes = max(0, $votes);
+
+        return $this;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * The text in every language it was written in, by locale.
+     *
+     * @return array<string, string>
+     */
+    public function getTexts(): array
+    {
+        $texts = [];
+        foreach ($this->translations as $translation) {
+            $texts[$translation->getLocale()] = $translation->getContent();
+        }
+
+        return [] === $texts && '' !== $this->text ? ['en' => $this->text] : $texts;
+    }
+
+    /**
+     * @return Collection<int, PollChoiceTranslation>
+     */
+    public function getTranslations(): Collection
+    {
+        return $this->translations;
+    }
+
+    public function addTranslation(PollChoiceTranslation $translation): self
+    {
+        if (!$this->translations->contains($translation)) {
+            $this->translations->add($translation);
+            $translation->setObject($this);
+        }
+
+        return $this;
+    }
+
+    public function setTranslatableLocale(string $locale): void
+    {
+        $this->locale = $locale;
     }
 }

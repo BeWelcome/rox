@@ -1,0 +1,30 @@
+{% extends 'poll/base.html.twig' %}
+{% import 'poll/_macros.html.twig' as poll_macros %}
+
+{% block title %}
+  {{ submenu.items[list].key|trans }}
+{% endblock %}
+
+{% block content %}
+  <section class="p-polls__body">
+    {% if polls.nbResults > 0 %}
+      <p class="p-polls__count"><i class="fas fa-square-poll-vertical" aria-hidden="true"></i> {{ 'polls.count'|trans({ count: polls.nbResults }) }}</p>
+      <div class="p-polls__list">
+        {% for poll in polls %}
+          {{ poll_macros.card(poll) }}
+        {% endfor %}
+      </div>
+      {% if polls.haveToPaginate %}
+        <div class="p-polls__pager">
+          {{ pagerfanta(polls, 'rounded_pagination', { routeName: 'polls_list_pages', routeParams: { list: list } }) }}
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="p-polls__empty">
+        <i class="fas fa-square-poll-vertical" aria-hidden="true"></i>
+        <p>{{ 'polls_no_polls'|trans }}</p>
+        <a class="p-polls-btn p-polls-btn--primary" href="{{ path('polls_create') }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'polls_createlink'|trans }}</a>
+      </div>
+    {% endif %}
+  </section>
+{% endblock content %}

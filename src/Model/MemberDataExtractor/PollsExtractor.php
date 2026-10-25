@@ -4,8 +4,7 @@ namespace App\Model\MemberDataExtractor;
 
 use App\Entity\Member;
 use App\Entity\Poll;
-use App\Entity\PollContribution;
-use App\Entity\PollRecordOfChoice;
+use App\Entity\PollVote;
 
 final class PollsExtractor extends AbstractExtractor implements ExtractorInterface
 {
@@ -18,12 +17,11 @@ final class PollsExtractor extends AbstractExtractor implements ExtractorInterfa
         $polls = $pollsRepository->findBy(['creator' => $member]);
         $this->writePersonalDataFileSubDirectory(['polls' => $polls], 'polls_created', $tempDir . 'polls', 'polls_created.html');
 
-        $contributionsRepository = $this->getRepository(PollContribution::class);
-        $contributions = $contributionsRepository->findBy(['member' => $member]);
+        // The votes with their comments, and (polls that are not anonymous) the choices taken
+        $votes = $this->getRepository(PollVote::class)->findBy(['member' => $member], ['id' => 'DESC']);
+        $contributions = $votes;
         $this->writePersonalDataFileSubDirectory(['contributions' => $contributions], 'polls_contributed', $tempDir . 'polls', 'polls_contributed.html');
 
-        $votesRepository = $this->getRepository(PollRecordOfChoice::class);
-        $votes = $votesRepository->findBy(['member' => $member], ['poll' => 'DESC', 'pollChoice' => 'DESC']);
         $this->writePersonalDataFileSubDirectory(['votes' => $votes], 'polls_voted', $tempDir . 'polls', 'polls_voted.html');
 
         return $this->writePersonalDataFile([], 'polls', $tempDir . 'polls.html');

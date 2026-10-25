@@ -1,4 +1,4 @@
-.PHONY: all build phpcpd phploc phpmd php-cs-fixer php-code-sniffer phpmetrics phpunit infection behat version
+.PHONY: all build check test security phpcpd phploc phpmd phpstan php-cs-fixer php-code-sniffer yaml-lint doctrine twig phpmetrics phpunit int-test infection composer-audit bun-audit behat version hooks
 export COMPOSER_MEMORY_LIMIT := -1
 
 SRC_DIR=src tests
@@ -9,10 +9,23 @@ SPACE := $(null) $(null)
 COMMA := ,
 SRC_DIR_COMMA := $(subst $(SPACE),$(COMMA),$(SRC_DIR))
 TIME_STAMP := $(shell git log -n 1 --format=%aI)
+INFECTION_THREADS ?= $(shell nproc)
 
 all: phpci
 
-phpci: phpcpd phploc phpstan php-code-sniffer php-cs-fixer phpunit infection int-test version yaml-lint doctrine twig
+# The same checks as CI (.github/workflows/ci.yml calls these targets).
+phpci: check test security phploc
+
+# Fast checks, run by the pre-push hook.
+check: php-cs-fixer php-code-sniffer phpstan phpcpd yaml-lint doctrine
+
+# int-test needs the bewelcome_test database (bin/console test:database:create --env=test).
+test: phpunit infection int-test
+
+security: composer-audit bun-audit
+
+hooks:
+	git config core.hooksPath .githooks
 
 install:
 	git rev-parse --short HEAD > VERSION
@@ -85,14 +98,21 @@ php-code-sniffer:
 	"./vendor/bin/phpcs"  --colors --warning-severity=Error
 
 phpunit:
-	"./bin/phpunit" --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --exclude-group=integration
+	XDEBUG_MODE=coverage "./bin/phpunit" --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never --order-by=random --exclude-group=integration
 
 int-test:
-	"./bin/phpunit" --log-junit=build/logs/phpunit/junit.xml --colors=never  --order-by=random --group=integration
+	"./bin/phpunit" --log-junit=build/logs/phpunit/integration.xml --colors=never --order-by=random --group=integration
 
-infection: phpunit
+# Uses the coverage of the last `make phpunit`.
+infection:
+	"./vendor/bin/infection" --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=$(INFECTION_THREADS)
 
-	"./vendor/bin/infection" --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=2
+# Fails on security advisories only; abandoned packages are reported but don't fail.
+composer-audit:
+	composer audit --locked --abandoned=ignore --no-interaction
+
+bun-audit:
+	bun run audit
 
 #behat: encore
 #	bin/console doctrine:database:create --env=test --if-not-exists

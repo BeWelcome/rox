@@ -43,7 +43,7 @@
     </details>
 
 Wait a few minutes for containers to build and start (it might take awhile). Project is running at
-[http://localhost:8080](http://localhost:8080). If you see a "502 Bad Gateway" error in your browser, the app is still being built, and should serve the page without error once all processes finish.
+[http://localhost](http://localhost) (mails sent by the app show up in Mailpit at [http://localhost:1080](http://localhost:1080)). If you see a "502 Bad Gateway" error in your browser, the app is still being built, and should serve the page without error once all processes finish.
 
 2. If you want to import geonames data, run the following (this operation takes awhile!):
 

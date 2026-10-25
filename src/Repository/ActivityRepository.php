@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use AnthonyMartin\GeoLocation\GeoLocation;
+use App\Entity\Activity;
 use App\Entity\ActivityAttendee;
 use App\Entity\Location;
 use App\Entity\Member;
@@ -128,6 +129,109 @@ class ActivityRepository extends EntityRepository
         return (int) $unreadCount;
     }
 
+    /**
+     * Activities that have not ended yet, soonest first. Cancelled ones are left out.
+     */
+    public function findUpcoming(bool $onlineOnly, int $page, int $items): Pagerfanta
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.ends >= :now OR a.starts >= :now')
+            ->andWhere('a.status = :active')
+            ->setParameter('now', new DateTime())
+            ->setParameter('active', Activity::STATUS_ACTIVE)
+            ->orderBy('a.starts', 'ASC')
+        ;
+        if ($onlineOnly) {
+            $qb->andWhere('a.online = 1');
+        }
+
+        return $this->paginate($qb, $page, $items);
+    }
+
+    /**
+     * Activities that are over, the latest first, cancelled ones included (as the legacy page did).
+     */
+    public function findPast(int $page, int $items): Pagerfanta
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.ends < :now AND a.starts < :now')
+            ->setParameter('now', new DateTime())
+            ->orderBy('a.ends', 'DESC')
+        ;
+
+        return $this->paginate($qb, $page, $items);
+    }
+
+    /**
+     * Activities the member organizes or answered (yes, maybe or no), the latest start first.
+     */
+    public function findForMember(Member $member, int $page, int $items): Pagerfanta
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->join('a.attendees', 'aa', Join::WITH, 'aa.attendee = :member')
+            ->setParameter('member', $member)
+            ->orderBy('a.starts', 'DESC')
+        ;
+
+        return $this->paginate($qb, $page, $items);
+    }
+
+    /**
+     * Upcoming, not cancelled activities within $distance km of the member's place. With a distance of 0,
+     * only the activities at the member's place itself. Empty when the member has no active address.
+     */
+    public function findNearMember(Member $member, int $distance, int $page, int $items): Pagerfanta
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->join('a.location', 'l')
+            ->where('a.ends >= :now OR a.starts >= :now')
+            ->andWhere('a.status = :active')
+            ->setParameter('now', new DateTime())
+            ->setParameter('active', Activity::STATUS_ACTIVE)
+            ->orderBy('a.starts', 'ASC')
+        ;
+
+        $address = $member->getActiveAddress();
+        if (false === $address || null === $address) {
+            $qb->andWhere('1 = 0');
+        } elseif (0 === $distance) {
+            $qb->andWhere('a.location = :location')->setParameter('location', $address->getLocation());
+        } else {
+            $center = GeoLocation::fromDegrees((float) $address->getLatitude(), (float) $address->getLongitude());
+            $box = $center->boundingCoordinates($distance, 'km');
+            $qb
+                ->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:box, 0)), l.coordinates) = 1')
+                ->setParameter('box', \sprintf(
+                    'LINESTRING(%F %F, %F %F)',
+                    $box[0]->getLongitudeInDegrees(),
+                    $box[0]->getLatitudeInDegrees(),
+                    $box[1]->getLongitudeInDegrees(),
+                    $box[1]->getLatitudeInDegrees()
+                ))
+            ;
+        }
+
+        return $this->paginate($qb, $page, $items);
+    }
+
+    /**
+     * Activities whose title, address or description, or whose place or country name contains the keyword,
+     * the latest end first.
+     */
+    public function search(string $keyword, int $page, int $items): Pagerfanta
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->join('a.location', 'l')
+            ->leftJoin('l.country', 'c')
+            ->where('a.title LIKE :keyword OR a.address LIKE :keyword OR a.description LIKE :keyword'
+                . ' OR l.name LIKE :keyword OR c.name LIKE :keyword')
+            ->setParameter('keyword', '%' . addcslashes($keyword, '%_\\') . '%')
+            ->orderBy('a.ends', 'DESC')
+        ;
+
+        return $this->paginate($qb, $page, $items);
+    }
+
     private function getActivitiesRadius(Member $member)
     {
         $preferenceRepository = $this->getEntityManager()->getRepository(Preference::class);
@@ -165,12 +269,15 @@ class ActivityRepository extends EntityRepository
                 'l',
                 Join::WITH,
                 'a.location = l.geonameId '
-                . 'AND l.latitude BETWEEN :lat_e AND :lat_w AND l.longitude BETWEEN :long_s AND :long_n'
+                . 'AND MBRContains(ST_Envelope(ST_GeomFromText(:boundingBox, 0)), l.coordinates) = 1'
             )
-            ->setParameter('lat_e', $coordinates[0]->getLatitudeInDegrees())
-            ->setParameter('lat_w', $coordinates[1]->getLatitudeInDegrees())
-            ->setParameter('long_s', $coordinates[0]->getLongitudeInDegrees())
-            ->setParameter('long_n', $coordinates[1]->getLongitudeInDegrees())
+            ->setParameter('boundingBox', \sprintf(
+                'LINESTRING(%F %F, %F %F)',
+                $coordinates[0]->getLongitudeInDegrees(),
+                $coordinates[0]->getLatitudeInDegrees(),
+                $coordinates[1]->getLongitudeInDegrees(),
+                $coordinates[1]->getLatitudeInDegrees()
+            ))
             ->where('(a.ends >= :now AND a.ends <= :three_months) OR (a.starts >= :now AND a.starts <= :three_months)')
             ->setParameter('now', new DateTime())
             ->setParameter('three_months', new DateTime()->modify('+3 months'))
@@ -193,5 +300,14 @@ class ActivityRepository extends EntityRepository
         }
 
         return $qb;
+    }
+
+    private function paginate(QueryBuilder $qb, int $page, int $items): Pagerfanta
+    {
+        $paginator = new Pagerfanta(new QueryAdapter($qb));
+        $paginator->setMaxPerPage($items);
+        $paginator->setCurrentPage($page);
+
+        return $paginator;
     }
 }

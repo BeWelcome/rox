@@ -11,11 +11,11 @@ use App\Entity\Subtrip;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -28,7 +28,7 @@ class Mailer
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UrlGeneratorInterface $urlGenerator,
-        /** @var Translator $translator */
+        /** @var TranslatorInterface&LocaleAwareInterface $translator */
         private readonly TranslatorInterface $translator,
         private readonly MailerInterface $mailer,
         private readonly string $noReplyEmailAddress = 'noreply@bewelcome.org',

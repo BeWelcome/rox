@@ -342,9 +342,10 @@ class ForumsController extends PAppController
             $this->_view->ModeditPost($callbackId);
             PPostHandler::clearVars($callbackId);
         } else if ($this->action == self::ACTION_SEARCH_FORUMS) {
-            $currentPage = ($this->args_vars->get['page']) ?? 1;
-            $this->_view->keyword = $request[2];
-            $this->_view->showSearchResultPage($request[2], $currentPage);
+            $currentPage = (int) ($this->args_vars->get['page'] ?? 1);
+            $keyword = (string) ($request[2] ?? '');
+            $this->_view->keyword = $keyword;
+            $this->_view->showSearchResultPage($keyword, max(1, $currentPage));
             PPostHandler::clearVars($searchCallbackId);
         } else if ($this->action == self::ACTION_SEARCH_USERPOSTS) {
             if (!isset($request[2])) {
@@ -474,7 +475,7 @@ class ForumsController extends PAppController
 
     private function redirectReverse() {
         if (!isset($_SERVER['HTTP_REFERER'])) {
-            $redirect = PVars::getObj('env')->baseuri . 'forums/';
+            $referrer = PVars::getObj('env')->baseuri . 'forums/';
         } else {
             $referrer = $_SERVER['HTTP_REFERER'];
             $referrer = str_replace('/reverse', '', $referrer);

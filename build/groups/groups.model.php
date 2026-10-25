@@ -158,10 +158,10 @@ class GroupsModel extends  RoxModelBase
             $order = match ($order) {
                 "nameasc" => 'Name ASC',
                 "namedesc" => 'Name DESC',
-                "membersasc" => "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) ASC, Name ASC",
-                "membersdesc" => "(SELECT COUNT(*) FROM membersgroups AS mg, members as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) DESC, Name ASC",
-                "actasc" => "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.id = forums_threads.last_postid) ASC, Name ASC",
-                "actdesc" => "(SELECT MAX(forums_posts.create_time) FROM forums_threads, forums_posts WHERE g.id = forums_threads.IdGroup AND forums_posts.id = forums_threads.last_postid) DESC, Name ASC",
+                "membersasc" => "(SELECT COUNT(*) FROM membersgroups AS mg, member as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) ASC, Name ASC",
+                "membersdesc" => "(SELECT COUNT(*) FROM membersgroups AS mg, member as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) DESC, Name ASC",
+                "actasc" => "(SELECT MAX(forum_post.create_time) FROM forum_thread, forum_post WHERE g.id = forum_thread.IdGroup AND forum_post.id = forum_thread.last_postid) ASC, Name ASC",
+                "actdesc" => "(SELECT MAX(forum_post.create_time) FROM forum_thread, forum_post WHERE g.id = forum_thread.IdGroup AND forum_post.id = forum_thread.last_postid) DESC, Name ASC",
                 "createdasc" => 'created ASC, Name ASC',
                 "createddesc" => 'created DESC, Name ASC',
                 default => 'created DESC, Name ASC',
@@ -959,7 +959,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
 
         $results = [ 'count' => 0 ];
         if (!empty($manticoreResult)) {
-            $languageId = $this->session->get('IdLanguage', 0);
+            $languageId = $this->dao->escape($this->getWords()->languageShortCode());
             $results['count'] = count($manticoreResult);
             $postIds = [];
             foreach ($manticoreResult as $match) {
@@ -967,42 +967,43 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             }
 
             $query = "
-                SELECT SQL_CALC_FOUND_ROWS
-                    `forums_posts`.`id`,
-                    `members`.`Username`,
-                    `forums_posts`.`message`,
+                SELECT
+                    `forum_post`.`id`,
+                    `member`.`Username`,
+                    `forum_post`.`message`,
                     `forum_trads`.`Sentence`,
-                    `forums_threads`.`id` AS IdThread,
-                    `forums_threads`.`title`,
-                    `forums_threads`.`IdGroup`,
+                    `forum_thread`.`id` AS IdThread,
+                    `forum_thread`.`title`,
+                    `forum_thread`.`IdGroup`,
                     `groups`.`Name` AS `GroupName`,
                     `ThreadVisibility`,
                     `ThreadDeleted`,
-                     UNIX_TIMESTAMP(`forums_posts`.`create_time`) AS `created`,
-                     `geonames`.`name` AS `city`,
-                     `geonamescountries`.`name` AS `country`
+                     UNIX_TIMESTAMP(`forum_post`.`create_time`) AS `created`,
+                     `geo__names`.`name` AS `city`,
+                     `country_names`.`name` AS `country`
                 FROM
-                    `forums_posts`
+                    `forum_post`
                 LEFT JOIN
-                    `forums_threads` ON (`forums_posts`.`threadid` = `forums_threads`.`id`)
+                    `forum_thread` ON (`forum_post`.`threadid` = `forum_thread`.`id`)
                 LEFT JOIN
-                    `groups` ON (`groups`.`id` = `forums_threads`.`IdGroup`)
+                    `groups` ON (`groups`.`id` = `forum_thread`.`IdGroup`)
                 LEFT JOIN
-                    `forum_trads` ON (`forum_trads`.`IdTrad` = `forums_posts`.`IdContent` AND `forum_trads`.`IdLanguage` = " . $languageId . ")
+                    `forum_trads` ON (`forum_trads`.`IdTrad` = `forum_post`.`IdContent` AND `forum_trads`.`ShortCode` = '" . $languageId . "')
                 LEFT JOIN
-                    `members` ON (`forums_posts`.`IdWriter` = `members`.`id`)
+                    `member` ON (`forum_post`.`IdWriter` = `member`.`id`)
                 LEFT JOIN
-                    `addresses` ON `members`.`id` = `addresses`.`IdMember`
+                    `address` ON `member`.`id` = `address`.`member_id` AND `address`.`active` = 1
                 LEFT JOIN
-                    `geonames` ON `addresses`.IdCity = `geonames`.`geonameId`
+                    `geo__names` ON `address`.`location` = `geo__names`.`geoname_id`
                 LEFT JOIN
-                    `geonamescountries` ON `geonames`.`country` = `geonamescountries`.`country`
+                    `geo__names` AS `country_names` ON `geo__names`.`country` = `country_names`.`geoname_id`
                 WHERE
-                    `forums_posts`.`id` IN (" . implode(',', $postIds) . ")
-                    AND `forums_threads`.`IdGroup` = " . $group->getPKValue() . "
+                    `forum_post`.`id` IN (" . implode(',', array_map('intval', $postIds)) . ")
+                    AND `forum_thread`.`IdGroup` = " . (int) $group->getPKValue() . "
                 ORDER BY `created` DESC
             ";
-            $query .= ' LIMIT ' . $items . ' OFFSET ' . ($page - 1) * $items;
+            $items = ((int) $items) ?: 20;
+            $query .= ' LIMIT ' . $items . ' OFFSET ' . (int) ((max(1, (int) $page) - 1) * $items);
             $threads = $this->bulkLookup($query);
             $results['posts'] = $threads;
         } else {

@@ -20,23 +20,24 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ActivityAttendeeRepository::class)]
 class ActivityAttendee
 {
-    public const ATTENDS_NO = 0;
-    public const ATTENDS_YES = 1;
-    public const ATTENDS_MAYBE = 2;
+    // The values the legacy activities pages wrote, and which are in the database.
+    public const int ATTENDS_YES = 1;
+    public const int ATTENDS_MAYBE = 2;
+    public const int ATTENDS_NO = 3;
+    // Set for everyone when an organizer cancels the activity; reactivating sets them back to yes.
+    public const int ACTIVITY_CANCELLED = 4;
 
     /**
      * @var Activity
      */
-    #[ORM\JoinColumn(name: 'activityId', referencedColumnName: 'id')]
-    #[ORM\Id]
+    #[ORM\JoinColumn(name: 'activityId', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Activity::class, inversedBy: 'attendees')]
     private $activity;
 
     /**
      * @var Member
      */
-    #[ORM\JoinColumn(name: 'attendeeId', referencedColumnName: 'id')]
-    #[ORM\Id]
+    #[ORM\JoinColumn(name: 'attendeeId', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private $attendee;
 
@@ -61,7 +62,10 @@ class ActivityAttendee
     /**
      * @var int
      */
+    // The primary key of activitiesattendees (AUTO_INCREMENT on production).
     #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
 
     /**

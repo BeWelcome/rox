@@ -146,29 +146,6 @@
     $this->addRoute('places_city', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:/:cityname:/:citycode:', 'PlacesController', 'city');
     $this->addRoute('places_city_page', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:/:cityname:/:citycode:/page/:page:', 'PlacesController', 'city');
 
-    // activities feature
-    $this->addRoute('activities', 'activities', 'ActivitiesController', 'activities');
-    $this->addRoute('activities_my_activities', 'activities/myactivities', 'ActivitiesController', 'myActivities');
-    $this->addRoute('activities_my_activities_pages', 'activities/myactivities/page/:pageno:', 'ActivitiesController', 'myActivities');
-    $this->addRoute('activities_search', 'activities/search', 'ActivitiesController', 'search');
-    $this->addRoute('activities_search_results', 'activities/search/:keyword:', 'ActivitiesController', 'search');
-    $this->addRoute('activities_search_results_pages', 'activities/search/:keyword:/page/:pageno:', 'ActivitiesController', 'search');
-    $this->addRoute('activities_create', 'activities/create', 'ActivitiesController', 'editcreate');
-    $this->addRoute('activities_upcoming_activities', 'activities/upcoming', 'ActivitiesController', 'upcomingActivities');
-    $this->addRoute('activities_upcoming_activities_pages', 'activities/upcoming/page/:pageno:', 'ActivitiesController', 'upcomingActivities');
-    $this->addRoute('activities_upcoming_online_activities', 'activities/online', 'ActivitiesController', 'upcomingOnlineActivities');
-    $this->addRoute('activities_upcoming_online_activities_pages', 'activities/online/page/:pageno:', 'ActivitiesController', 'upcomingOnlineActivities');
-    $this->addRoute('activities_past_activities', 'activities/past', 'ActivitiesController', 'pastActivities');
-    $this->addRoute('activities_past_activities_pages', 'activities/past/page/:pageno:', 'ActivitiesController', 'pastActivities');
-    $this->addRoute('activities_near_me', 'activities/nearme', 'ActivitiesController', 'activitiesNearMe');
-    $this->addRoute('activities_near_me_pages', 'activities/nearme/page/:pageno:', 'ActivitiesController', 'activitiesNearMe');
-    $this->addRoute('activities_upcoming_activities', 'activities/upcoming', 'ActivitiesController', 'upcomingActivities');
-    $this->addRoute('activities_upcoming_activities_pages', 'activities/upcoming/page/:pageno:', 'ActivitiesController', 'upcomingActivities');
-    $this->addRoute('activities_edit', 'activities/:id:/edit', 'ActivitiesController', 'editcreate');
-    $this->addRoute('activities_show', 'activities/:id:', 'ActivitiesController', 'show');
-    $this->addRoute('activities_show_attendees', 'activities/:id:/attendees/page/:page:', 'ActivitiesController', 'show');
-    $this->addRoute('activities_rules', 'activities/rules', 'ActivitiesController', 'rules');
-
     // searchmembers
     $this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');
     $this->addRoute('searchmembers_map', 'search/members/map', 'SearchController', 'searchMembersOnMap');

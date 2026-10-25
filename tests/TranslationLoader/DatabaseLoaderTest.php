@@ -8,8 +8,13 @@ use App\Entity\Word;
 use App\Repository\WordRepository;
 use App\TranslationLoader\DatabaseLoader;
 use DateTime;
+use Doctrine\DBAL\Driver\PDO\Exception as PdoDriverException;
+use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManager;
+use PDOException;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 
 class DatabaseLoaderTest extends TestCase
@@ -38,6 +43,83 @@ class DatabaseLoaderTest extends TestCase
         // No translations in the message catalogue so get will return the same
         $translation = $result->get('english');
         $this->assertSame('english', $translation);
+    }
+
+    public function testMissingWordTableReturnsEmptyCatalogue(): void
+    {
+        $repositoryStub = $this->createStub(WordRepository::class);
+        $repositoryStub
+            ->method('getTranslationsForLocale')
+            ->willThrowException(new TableNotFoundException(
+                PdoDriverException::new(new PDOException("Table 'bewelcome.word' doesn't exist")),
+                null,
+            ));
+
+        $entityManagerStub = $this->createStub(EntityManager::class);
+        $entityManagerStub
+            ->method('getRepository')
+            ->willReturn($repositoryStub)
+        ;
+
+        $loader = new DatabaseLoader($entityManagerStub);
+
+        $english = $loader->load(null, 'en');
+        $this->assertSame('en', $english->getLocale());
+        $this->assertSame([], $english->all());
+
+        $german = $loader->load(null, 'de');
+        $this->assertSame('de', $german->getLocale());
+        $this->assertSame([], $german->all());
+    }
+
+    // prod (no debug): a cache must not be built without the database translations
+    public function testOtherDatabaseErrorsAreNotSwallowed(): void
+    {
+        $repositoryStub = $this->createStub(WordRepository::class);
+        $repositoryStub
+            ->method('getTranslationsForLocale')
+            ->willThrowException(new ConnectionException(
+                PdoDriverException::new(new PDOException('Connection refused')),
+                null,
+            ));
+
+        $entityManagerStub = $this->createStub(EntityManager::class);
+        $entityManagerStub
+            ->method('getRepository')
+            ->willReturn($repositoryStub)
+        ;
+
+        $loader = new DatabaseLoader($entityManagerStub);
+
+        $this->expectException(ConnectionException::class);
+        $loader->load(null, 'en');
+    }
+
+    public function testUnreachableDatabaseFallsBackToFileTranslationsInDebug(): void
+    {
+        $repositoryMock = $this->createMock(WordRepository::class);
+        $repositoryMock
+            ->expects($this->once())
+            ->method('getTranslationsForLocale')
+            ->willThrowException(new ConnectionException(
+                PdoDriverException::new(new PDOException('getaddrinfo for db failed')),
+                null,
+            ));
+
+        $entityManagerStub = $this->createStub(EntityManager::class);
+        $entityManagerStub
+            ->method('getRepository')
+            ->willReturn($repositoryMock)
+        ;
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger->expects($this->once())->method('warning');
+
+        $loader = new DatabaseLoader($entityManagerStub, true, $logger);
+
+        // the second locale doesn't try the database again
+        $this->assertSame([], $loader->load(null, 'en')->all());
+        $this->assertSame([], $loader->load(null, 'de')->all());
     }
 
     public function testCheckReturnedObjectTypeEnglish(): void

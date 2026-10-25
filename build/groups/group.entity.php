@@ -108,8 +108,8 @@ FROM
     g.id
 FROM
     groups g,
-    forums_threads ft,
-    forums_posts fp
+    forum_thread ft,
+    forum_post fp
 where g.id = ft.IdGroup AND g.approved = 1 AND NOT (g.Name LIKE '[Archived]%')  AND ft.last_postId = fp.id AND DateDIFF(now(), fp.create_time) < 366
 group by g.id) as id
 SQL;
@@ -127,8 +127,8 @@ SELECT
     g.*
 FROM
     groups g,
-    forums_threads ft,
-    forums_posts fp
+    forum_thread ft,
+    forum_post fp
 WHERE g.id = ft.IdGroup AND g.approved = 1 AND NOT (g.Name LIKE '[Archived]%') AND ft.last_postId = fp.id AND DateDIFF(NOW(), fp.create_time) < 366
 GROUP BY g.id
 SQL;
@@ -406,8 +406,9 @@ SQL;
 
         $description = str_replace(["\r\n", "\r", "\n"], "", nl2br($description));
 
+        // groups.IdDescription holds the id of a member_translations row
         $words = $this->getWords();
-        $descriptionId = ((!$this->IdDescription) ? $words->InsertInMTrad($this->dao->escape($description), 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
+        $descriptionId = ((!$this->IdDescription) ? $words->InsertInMTrad($description, 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
 
         if (!$descriptionId)
         {
@@ -415,6 +416,8 @@ SQL;
         }
         elseif ($this->IdDescription != $descriptionId)
         {
+            // the Symfony side (App\Entity\Group::$descriptions) finds descriptions via groups_trads
+            $this->dao->query("INSERT IGNORE INTO groups_trads (group_id, trad_id) VALUES (" . (int) $this->getPKValue() . ", " . (int) $descriptionId . ")");
             $this->IdDescription = $descriptionId;
             return $this->update();
         }

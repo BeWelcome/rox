@@ -1,0 +1,39 @@
+#!/bin/sh
+# Fixes the style of staged PHP files in src/ with php-cs-fixer, then checks them with phpcs.
+# Files that also have unstaged changes are only checked, so the fix never stages work you left out.
+# Skip once with: git commit --no-verify
+set -e
+
+files=$(git diff --cached --name-only --diff-filter=ACMR -- 'src/*.php')
+[ -n "$files" ] || exit 0
+
+fix=""
+check=""
+for file in $files; do
+	if git diff --quiet -- "$file"; then
+		fix="$fix $file"
+	else
+		check="$check $file"
+	fi
+done
+
+hooks=$(dirname "$0")
+
+if [ -n "$fix" ]; then
+	# shellcheck disable=SC2086
+	"$hooks/run-in-php.sh" vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --quiet --path-mode=intersection -- $fix
+	# shellcheck disable=SC2086
+	git add -- $fix
+fi
+
+if [ -n "$check" ]; then
+	# shellcheck disable=SC2086
+	if ! "$hooks/run-in-php.sh" vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff --path-mode=intersection -- $check; then
+		echo "pre-commit: these files have unstaged changes, so they were not fixed:$check" >&2
+		echo "Run make phpcsfix (or stage the whole file) and commit again." >&2
+		exit 1
+	fi
+fi
+
+# shellcheck disable=SC2086
+"$hooks/run-in-php.sh" vendor/bin/phpcs --colors --warning-severity=Error $files

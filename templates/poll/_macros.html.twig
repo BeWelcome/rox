@@ -1,0 +1,51 @@
+{# Status of a poll as a badge #}
+{% macro status(poll) %}
+  {%- if poll.draft -%}
+    <span class="p-polls-badge">{{ 'poll.status.draft'|trans }}</span>
+  {%- elseif poll.closed -%}
+    <span class="p-polls-badge p-polls-badge--closed">{{ 'poll.status.closed'|trans }}</span>
+  {%- else -%}
+    <span class="p-polls-badge p-polls-badge--open">{{ 'poll.status.open'|trans }}</span>
+  {%- endif -%}
+{% endmacro %}
+
+{#
+  One poll in a list: status, title, who created it and for which groups, how many voted, until when,
+  and what the member can do (vote, see results, edit).
+#}
+{% macro card(poll) %}
+  {% import _self as poll_macros %}
+  <article class="p-polls-card{% if poll.closed %} is-closed{% endif %}">
+    <span class="p-polls-card__icon" aria-hidden="true"><i class="fas fa-square-poll-vertical"></i></span>
+    <div class="p-polls-card__body">
+      <p class="p-polls-card__head">
+        <a class="p-polls-card__title" href="{{ path('polls_contribute', { pollId: poll.id }) }}">{{ poll.title ?: ('poll.untitled'|trans) }}</a>
+        {{ poll_macros.status(poll) }}
+      </p>
+      <p class="p-polls-card__meta">
+        {% if poll.creator %}
+          <span class="p-polls-chip"><i class="fa fa-user" aria-hidden="true"></i> {{ poll.creator.username }}</span>
+        {% endif %}
+        <span class="p-polls-chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'polls.voters'|trans({ count: poll.votes|length }) }}</span>
+        {% if not poll.draft and poll.endsAt %}
+          <span class="p-polls-chip"><i class="far fa-calendar" aria-hidden="true"></i>
+            {{ (poll.closed ? 'polls.ended.on' : 'polls.ends.on')|trans({ date: poll.endsAt|format_date('medium') }) }}</span>
+        {% endif %}
+        {% for group in poll.groups %}
+          <span class="p-polls-chip"><i class="fa fa-people-group" aria-hidden="true"></i> {{ group.name }}</span>
+        {% endfor %}
+      </p>
+    </div>
+    <div class="p-polls-card__actions">
+      {% if is_granted('POLL_VOTE', poll) %}
+        <a class="p-polls-btn p-polls-btn--primary" href="{{ path('polls_contribute', { pollId: poll.id }) }}">{{ 'polls_vote'|trans }}</a>
+      {% endif %}
+      {% if is_granted('POLL_RESULTS', poll) %}
+        <a class="p-polls-btn" href="{{ path('polls_view_results', { pollId: poll.id }) }}"><i class="fas fa-chart-simple" aria-hidden="true"></i> {{ 'polls_seeresults'|trans }}</a>
+      {% endif %}
+      {% if is_granted('POLL_EDIT', poll) %}
+        <a class="p-polls-btn p-polls-btn--icon" href="{{ path('polls_update', { pollId: poll.id }) }}" aria-label="{{ 'polls_adminlink'|trans }}" title="{{ 'polls_adminlink'|trans }}"><i class="fas fa-pen" aria-hidden="true"></i></a>
+      {% endif %}
+    </div>
+  </article>
+{% endmacro %}

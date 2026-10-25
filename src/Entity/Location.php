@@ -23,11 +23,8 @@ use LongitudeOne\Spatial\PHP\Types\Geometry\Point;
  */
 #[ORM\Table(name: 'geo__names')]
 #[ORM\Index(name: 'geonames_idx_name', columns: ['name'])]
-#[ORM\Index(name: 'geonames_idx_latitude', columns: ['latitude'])]
-#[ORM\Index(name: 'geonames_idx_longitude', columns: ['longitude'])]
 #[ORM\Index(name: 'geonames_idx_fclass', columns: ['feature_class'])]
 #[ORM\Index(name: 'geonames_idx_fcode', columns: ['feature_code'])]
-#[ORM\Index(name: 'geonames_coordinates', columns: ['latitude', 'longitude'])]
 #[ORM\Index(name: 'geonames_idx_spatial_coordinates', columns: ['coordinates'], flags: ['spatial'])]
 #[ORM\Index(name: 'geonames_idx_country', columns: ['country'])]
 #[ORM\Index(name: 'geonames_idx_admin1', columns: ['admin1'])]
@@ -56,18 +53,6 @@ class Location implements Translatable
 
     #[Gedmo\Locale]
     private $locale;
-
-    /**
-     * @var float
-     */
-    #[ORM\Column(name: 'latitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
-    private $latitude;
-
-    /**
-     * @var float
-     */
-    #[ORM\Column(name: 'longitude', type: 'decimal', precision: 10, scale: 7, nullable: false)]
-    private $longitude;
 
     #[ORM\Column(name: 'coordinates', type: 'point', nullable: false)]
     private ?Point $coordinates = null;
@@ -196,28 +181,34 @@ class Location implements Translatable
         return $this->coordinates;
     }
 
+    /**
+     * Latitude is stored as the y value of coordinates.
+     */
     public function setLatitude(float $latitude): self
     {
-        $this->latitude = $latitude;
+        $this->coordinates = new Point($this->coordinates?->getX() ?? 0.0, $latitude);
 
         return $this;
     }
 
     public function getLatitude(): ?float
     {
-        return $this->latitude;
+        return $this->coordinates?->getY();
     }
 
-    public function setLongitude($longitude): self
+    /**
+     * Longitude is stored as the x value of coordinates.
+     */
+    public function setLongitude(float $longitude): self
     {
-        $this->longitude = $longitude;
+        $this->coordinates = new Point($longitude, $this->coordinates?->getY() ?? 0.0);
 
         return $this;
     }
 
     public function getLongitude(): ?float
     {
-        return $this->longitude;
+        return $this->coordinates?->getX();
     }
 
     public function setFeatureClass(string $featureClass): self

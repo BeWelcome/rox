@@ -23,3 +23,143 @@ activityendbeforestart:
 activities.upcoming:
     - 'Upcoming'
     - Label on the button that is shown if there are no activities near you.
+
+activities.tab.near.me:
+  - 'Near me'
+  - 'Tab on the activities pages: upcoming activities around the member''s place'
+activities.near.place:
+  - 'Around {place}'
+  - 'Activities near me: the member''s place the list is about. {place} is the place name'
+activities.radius.0:
+  - 'Only in this place'
+  - 'Activities near me: distance choice, only activities in the member''s place itself'
+activities.radius.5:
+  - '5 km / 3 mi'
+  - 'Activities near me: distance choice'
+activities.radius.10:
+  - '10 km / 6 mi'
+  - 'Activities near me: distance choice'
+activities.radius.25:
+  - '25 km / 15 mi'
+  - 'Activities near me: distance choice'
+activities.radius.50:
+  - '50 km / 30 mi'
+  - 'Activities near me: distance choice'
+activities.radius.100:
+  - '100 km / 60 mi'
+  - 'Activities near me: distance choice'
+activities.radius.200:
+  - '200 km / 120 mi'
+  - 'Activities near me: distance choice'
+activities.count:
+  - '{count, plural, one {# activity} other {# activities}}'
+  - 'Number of activities above an activity list'
+activities.count.yes:
+  - '{count, plural, =0 {Nobody attends yet} one {# attends} other {# attend}}'
+  - 'Number of members who said they attend an activity'
+activities.count.maybe:
+  - '{count, plural, one {# might attend} other {# might attend}}'
+  - 'Activity page: heading of the members who might attend'
+activities.count.no:
+  - '{count, plural, one {# can''t make it} other {# can''t make it}}'
+  - 'Activity page: heading of the members who said they can''t attend'
+activities.attendees.none:
+  - 'Nobody has answered yet.'
+  - 'Activity page: shown instead of the attendees when nobody answered'
+activities.you.organize:
+  - 'You organize this'
+  - 'Activity list: the member is an organizer of this activity'
+activities.over:
+  - 'Over'
+  - 'Badge on an activity that has ended'
+activities.empty.near:
+  - '{radius, plural, =0 {There are no upcoming activities in your place.} other {There are no upcoming activities within {radius} km of your place.}} Maybe you want to organize one?'
+  - 'Activities near me: no activities in the chosen distance. {radius} is the distance in km'
+activities.empty.no.address:
+  - 'Set your location in your profile to see the activities near you.'
+  - 'Activities near me: the member has no address yet'
+activities.empty.past:
+  - 'There are no past activities.'
+  - 'Past activities: the list is empty'
+activities.search.placeholder:
+  - 'Title, description, place or country'
+  - 'Placeholder of the activity search field'
+activities.when:
+  - 'When'
+  - 'Create or edit an activity: heading of the start and end fields'
+activities.where:
+  - 'Where'
+  - 'Create or edit an activity: heading of the place, address and online fields'
+activities.online.help:
+  - 'Tick this for an online activity and give the link or how to join in the description. The place is used to show it to members nearby.'
+  - 'Create or edit an activity: help under the online checkbox'
+activities.cancel.confirm:
+  - 'Everyone who answered will see that the activity is cancelled. You can reactivate it later.'
+  - 'Activity page: text of the window that asks before cancelling an activity'
+activities.cancel.keep:
+  - 'Keep it'
+  - 'Activity page: button that closes the cancel window without cancelling'
+activities.created.show:
+  - 'Show the activity'
+  - 'After creating an activity: button that opens it'
+activity.created:
+  - 'Your activity was created'
+  - 'Title of the page shown after an activity was created'
+activity.created.flash:
+  - 'The activity was created.'
+  - 'Message after an activity was created'
+activity.updated.flash:
+  - 'The activity was updated.'
+  - 'Message after an activity was saved'
+activity.answer.saved:
+  - 'Your answer was saved.'
+  - 'Message after a member answered an activity (yes, maybe, no)'
+activity.left:
+  - 'You left the activity.'
+  - 'Message after a member left an activity'
+activity.reactivated:
+  - 'The activity takes place again.'
+  - 'Message after an organizer reactivated a cancelled activity'
+flash.activity.not.confirmed:
+  - 'Please confirm your email address before you create an activity.'
+  - 'Message when a member who did not confirm their email address wants to create an activity'
+activity.answer.empty:
+  - 'Please choose whether you attend.'
+  - 'Activity page: the member sent the answer form without choosing yes, maybe or no'
+  - validators
+activity.title.empty:
+  - 'Please give the activity a title.'
+  - 'Activity form: the title is empty'
+  - validators
+activity.title.too.long:
+  - 'The title can have at most 80 characters.'
+  - 'Activity form: the title is longer than 80 characters'
+  - validators
+activity.address.too.long:
+  - 'The address can have at most 320 characters.'
+  - 'Activity form: the address is longer than 320 characters'
+  - validators
+activity.start.empty:
+  - 'Please give the start date and time.'
+  - 'Activity form: the start is empty'
+  - validators
+activity.end.empty:
+  - 'Please give the end date and time.'
+  - 'Activity form: the end is empty'
+  - validators
+activity.end.before.start:
+  - 'The activity can''t end before it starts.'
+  - 'Activity form: the end is before the start'
+  - validators
+activity.description.empty:
+  - 'Please describe the activity.'
+  - 'Activity form: the description is empty'
+  - validators
+activity.description.too.long:
+  - 'The description is too long.'
+  - 'Activity form: the description is longer than the database allows'
+  - validators
+activity.keyword.empty:
+  - 'Please enter what you are looking for.'
+  - 'Activity search: the search field is empty'
+  - validators

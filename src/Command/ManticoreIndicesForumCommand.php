@@ -2,9 +2,9 @@
 
 namespace App\Command;
 
+use App\Entity\ForumPost;
+use App\Repository\ForumPostRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NativeQuery;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Exception;
 use Manticoresearch\Client;
 use Manticoresearch\Table;
@@ -39,19 +39,14 @@ class ManticoreIndicesForumCommand extends Command
         $this->io->newLine();
 
         $index = $this->createForumIndex();
-        if (null !== $index) {
-            $this->addForumDocuments($index, $output);
-
-            $this->io->newLine();
-            $this->io->note('Created ' . self::FORUM_INDEX . '.');
-        } else {
-            $this->io->note(
-                'Skipped creation of ' . self::FORUM_INDEX . ' index. ' . \PHP_EOL .
-                'Index already exists.'
-            );
-
-            return Command::INVALID;
+        if (null === $index) {
+            return Command::FAILURE;
         }
+
+        $this->addForumDocuments($index, $output);
+
+        $this->io->newLine();
+        $this->io->note('Created ' . self::FORUM_INDEX . '.');
 
         $this->io->success('Created Manticore index.');
 
@@ -61,9 +56,16 @@ class ManticoreIndicesForumCommand extends Command
     private function createForumIndex(): ?Table
     {
         $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
-        $index = $client->table('forum_rt');
+        $index = $client->table(self::FORUM_INDEX);
 
         try {
+            // Rebuild from scratch: an existing index would otherwise get every post a second time
+            $existing = $client->sql("SHOW TABLES LIKE '" . self::FORUM_INDEX . "'", true);
+            if (!empty($existing)) {
+                $index->drop();
+                $this->io->note('Dropped existing ' . self::FORUM_INDEX . ' index.');
+            }
+
             $index->create(
                 [
                     'post_id' => ['type' => 'integer'],
@@ -88,10 +90,9 @@ class ManticoreIndicesForumCommand extends Command
                 ]
             );
         } catch (Exception $e) {
-            // $index = null;
+            $this->io->error('Could not create index ' . self::FORUM_INDEX . ': ' . $e->getMessage());
 
-            $this->io->error($e->getMessage());
-            $this->io->error('Index ' . self::FORUM_INDEX . ' already exists or another problem occurred.');
+            return null;
         }
 
         return $index;
@@ -99,115 +100,32 @@ class ManticoreIndicesForumCommand extends Command
 
     private function addForumDocuments(Table $index, OutputInterface $output): void
     {
-        /*
-          SELECT ft.id AS threadid, sentence as text, IdGroup, \
-            IdWriter, UNIX_TIMESTAMP(create_time) as created FROM forum_thread ft, forum_post fp, forum_trads ftr \
-        WHERE fp.id = ft.first_postid AND ft.IdTitle = ftr.IdTrad AND ftr.IdLanguage = 0 AND ThreadDeleted = 'NotDeleted'
-
-        sql_joined_field = text from query; SELECT fp.id, message FROM forum_post fp WHERE PostDeleted = 'NotDeleted' ORDER BY fp.id ASC
-    sql_joined_field = text from query; SELECT ft.id, Sentence FROM forum_thread ft, forum_trads ftr WHERE ft.ThreadDeleted = "NotDeleted" AND ft.IdTitle = ftr.IdTrad AND IDLanguage <> 0 ORDER BY ft.id ASC
-
-
-         */
         $this->io->note('Adding documents to ' . self::FORUM_INDEX . ' from forum and group tables.');
         $this->io->newLine();
 
-        $stmt = $this->entityManager
-            ->getConnection()
-            ->executeQuery(<<<'___SQL'
-                    SELECT
-                        count(*) as cnt
-                    FROM
-                        forum_post fp
-                ___SQL);
-
-        $count = $stmt->fetchNumeric()[0];
-        if (0 !== $count) {
-            $progressBar = $this->getProgressBar($output, $count);
-
-            $firstResult = 0;
-            do {
-                $query = $this->entityManager->createNativeQuery(<<<___SQL
-                        SELECT
-                            fp.id as post_id,
-                            fp.PostDeleted as post_deleted,
-                            fp.PostVisibility as post_visibility,
-                            ft.id AS thread_id,
-                            ft.ThreadDeleted AS thread_deleted,
-                            ft.ThreadVisibility AS thread_visibility,
-                            ftr.Sentence as content,
-                            ft.IdGroup AS `group`,
-                            fp.IdWriter as author,
-                            l.shortcode as locale
-                        FROM
-                            forum_post fp
-                        JOIN forum_thread ft ON fp.threadid = ft.id
-                        JOIN forum_trads ftr ON fp.IdContent = ftr.IdTrad
-                        JOIN languages l ON ftr.IdLanguage = l.id
-                        LIMIT {$firstResult}, {$this->chunkSize}
-                    ___SQL, $this->getResultSetMappingForForumIndex());
-
-                $addDocumentsCount = $this->addForumDocumentsToIndex($index, $query, $progressBar);
-
-                $firstResult += $this->chunkSize;
-            } while ($addDocumentsCount > 0);
-
-            $progressBar->finish();
-            $this->io->newLine();
+        /** @var ForumPostRepository $repository */
+        $repository = $this->entityManager->getRepository(ForumPost::class);
+        $count = $repository->countSearchIndexDocuments();
+        if (0 === $count) {
+            return;
         }
-    }
 
-    private function addForumDocumentsToIndex(Table $index, NativeQuery $query, ProgressBar $progress): int
-    {
-        $forumPosts = $query->getResult();
-        $documents = [];
-
-        foreach ($forumPosts as $forumPost) {
-            $documents[] = [
-                'post_id' => $forumPost['post_id'],
-                'post_deleted' => $forumPost['post_deleted'],
-                'post_visibility' => $forumPost['post_visibility'],
-                'thread_id' => $forumPost['thread_id'],
-                'thread_deleted' => $forumPost['thread_deleted'],
-                'thread_visibility' => $forumPost['thread_visibility'],
-                'content' => $forumPost['content'],
-                'group' => $forumPost['group'] ?? 0,
-                'author' => $forumPost['author'],
-                'locale' => $forumPost['locale'],
-            ];
-            $progress->advance();
-        }
-        $count = \count($forumPosts);
-        unset($forumPosts);
-
-        if (0 !== $count) {
+        $progressBar = $this->getProgressBar($output, $count);
+        for ($offset = 0; $offset < $count; $offset += $this->chunkSize) {
+            $documents = $repository->getSearchIndexDocuments($offset, $this->chunkSize);
+            if (empty($documents)) {
+                break;
+            }
             $index->addDocuments($documents);
             $index->flush();
+            $progressBar->advance(\count($documents));
+
+            unset($documents);
+            gc_collect_cycles();
         }
 
-        gc_collect_cycles();
-
-        return $count;
-    }
-
-    private function getResultSetMappingForForumIndex(): ResultSetMapping
-    {
-        $rsm = new ResultSetMapping();
-        $rsm
-            ->addScalarResult('post_id', 'post_id')
-            ->addScalarResult('post_deleted', 'post_deleted')
-            ->addScalarResult('post_visibility', 'post_visibility')
-            ->addScalarResult('thread_id', 'thread_id')
-            ->addScalarResult('thread_deleted', 'thread_deleted')
-            ->addScalarResult('thread_visibility', 'thread_visibility')
-            ->addScalarResult('content', 'content')
-            ->addScalarResult('group', 'group')
-            ->addScalarResult('author', 'author')
-            ->addScalarResult('locale', 'locale')
-            ->addScalarResult('created', 'created')
-        ;
-
-        return $rsm;
+        $progressBar->finish();
+        $this->io->newLine();
     }
 
     private function getProgressBar(OutputInterface $output, $count): ProgressBar

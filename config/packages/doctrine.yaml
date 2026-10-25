@@ -8,11 +8,17 @@ parameters:
 
 doctrine:
     dbal:
-        url: '%env(resolve:DATABASE_URL)%'
-
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '16'
+        # Read the DB_* variables one by one at runtime, not a DATABASE_URL built from them in .env:
+        # prod images compile .env at build time (composer dump-env prod), which would bake the
+        # default credentials into the URL, and the servers only set DB_PASS etc. to override them.
+        driver: pdo_mysql
+        host: '%env(DB_HOST)%'
+        port: '%env(DB_PORT)%'
+        dbname: '%env(DB_NAME)%'
+        user: '%env(DB_USER)%'
+        password: '%env(DB_PASS)%'
+        # the version docker-compose.yml pulls (mariadb:12.3)
+        server_version: '12.3.3-MariaDB'
 
         profiling_collect_backtrace: '%kernel.debug%'
 
@@ -101,6 +107,8 @@ doctrine:
             numeric_functions:
                 ST_Distance_Sphere: LongitudeOne\Spatial\ORM\Query\AST\Functions\MariaDB\SpDistanceSphere
                 geodistance: App\Doctrine\Functions\GeoDistance
+                ST_X: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StX
+                ST_Y: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StY
             string_functions:
                 ST_GeomFromText: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StGeomFromText
                 ST_Envelope: LongitudeOne\Spatial\ORM\Query\AST\Functions\Standard\StEnvelope

@@ -1,45 +1,37 @@
 x-cache-from:
   - &cache-from
     cache_from:
-      - ${APP_IMAGE:-bewelcome/app}
-
-x-logging: &logging
-  logging:
-    driver: json-file
-    options:
-      max-size: "10m"
-      max-file: "3"
+      - ${NGINX_IMAGE:-bewelcome/nginx}
+      - ${PHP_IMAGE:-bewelcome/php}
 
 services:
-  app:
-    <<: *logging
+  php:
     build:
       context: .
-      target: bewelcome_php
+      target: bewelcome_php_dev
       <<: *cache-from
-    image: ${APP_IMAGE:-bewelcome/app}
-    environment:
-      SERVER_NAME: :80
+    image: ${PHP_IMAGE:-bewelcome/php}
     healthcheck:
       interval: 10s
       timeout: 3s
       retries: 3
       start_period: 30s
-      test: ["CMD", "frankenphp", "php-cli", "-r", "echo 1;"]
+      test: ["NONE"]
     depends_on:
       - db
       - manticore
       - mailer
-    # Production image runs from baked-in /srv/bewelcome (vendor included).
-    # Local development bind-mounts the repo via docker-compose.override.yml.
-    ports:
-      - "8080:80"
-      - "8043:443"
-      - "8043:443/udp"
+  web:
+    build:
+      context: .
+      target: bewelcome_nginx
+      <<: *cache-from
+    image: ${NGINX_IMAGE:-bewelcome/nginx}
+    depends_on:
+      - php
 
   db:
-    <<: *logging
-    image: mariadb:12.0.2
+    image: mariadb:12.3
     environment:
       MYSQL_ROOT_PASSWORD: bewelcome_root_dev
       MYSQL_DATABASE: bewelcome
@@ -49,12 +41,14 @@ services:
       - db-data:/var/lib/mysql:rw
 
   manticore:
-    <<: *logging
-    image: manticoresearch/manticore
+    container_name: manticore
+    # manticoresearch-php 4.x needs Manticore >= 7 (it sends "table" instead of "index").
+    image: manticoresearch/manticore:29.9.0
     restart: always
     ports:
-      - "127.0.0.1:9306:9306"
-      - "127.0.0.1:9308:9308"
+      - 127.0.0.1:9306:9306
+      - 127.0.0.1:9308:9308
+      - 127.0.0.1:9312:9312
     ulimits:
       nproc: 65535
       nofile:
@@ -65,12 +59,12 @@ services:
         hard: -1
     volumes:
       - ./data:/var/lib/manticore
-#      - ./docker/manticore/manticore.conf:/etc/manticoresearch/manticore.conf
 
   mailer:
-    <<: *logging
-    image: tophfr/mailcatcher
+    image: axllent/mailpit
+    environment:
+      MP_SMTP_BIND_ADDR: "0.0.0.0:25"
+      MP_UI_BIND_ADDR: "0.0.0.0:80"
 
 volumes:
   db-data: {}
-  manticore-data: {}

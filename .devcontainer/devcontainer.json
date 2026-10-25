@@ -1,0 +1,75 @@
+{
+    "name": "BeWelcome Rox (Docker Master)",
+    "dockerComposeFile": [
+        "../docker-compose.yml",
+        "../docker-compose.override.yml.dist"
+    ],
+    "service": "php",
+    "workspaceFolder": "/srv/bewelcome",
+    "overrideCommand": false,
+    "postCreateCommand": "git config --global --add safe.directory /srv/bewelcome && make hooks",
+    "postAttachCommand": "sh docker/php/setup-progress.sh",
+    "forwardPorts": ["web:80", "mailer:80", "manticore:9306", "manticore:9308"],
+    "portsAttributes": {
+        "web:80": {
+            "label": "BeWelcome App (Nginx)",
+            "onAutoForward": "openBrowser"
+        },
+        "mailer:80": {
+            "label": "MailPit Web UI",
+            "onAutoForward": "notify"
+        },
+        "manticore:9306": {
+            "label": "Manticore MySQL protocol",
+            "onAutoForward": "silent"
+        },
+        "manticore:9308": {
+            "label": "Manticore HTTP API",
+            "onAutoForward": "silent"
+        }
+    },
+    "hostRequirements": {
+        "cpus": 2,
+        "memory": "4gb",
+        "storage": "32gb"
+    },
+    "customizations": {
+        "jetbrains": {
+            "backend": "PhpStorm",
+            "plugins": [
+                "fr.adrienbrault.idea.symfony2plugin",
+                "ru.adelf.idea.dotenv"
+            ]
+        },
+        "vscode": {
+            "extensions": [
+                "bmewburn.vscode-intelephense-client",
+                "xdebug.php-debug",
+                "symfony-vscode.symfony-vscode",
+                "bradlc.vscode-tailwindcss",
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "junstyle.php-cs-fixer",
+                "mikestead.dotenv",
+                "ms-azuretools.vscode-docker",
+                "GitHub.vscode-pull-request-github"
+            ],
+            "settings": {
+                "php.suggest.basic": false,
+                "editor.formatOnSave": true,
+                "editor.defaultFormatter": "esbenp.prettier-vscode",
+                "[php]": {
+                    "editor.defaultFormatter": "junstyle.php-cs-fixer"
+                },
+                "intelephense.format.enable": false,
+                "php-cs-fixer.executablePath": "/srv/bewelcome/vendor/bin/php-cs-fixer",
+                "php-cs-fixer.config": ".php-cs-fixer.dist.php",
+                "php-cs-fixer.allowRisky": true,
+                "php-cs-fixer.ignorePHPVersion": true,
+                "php-cs-fixer.exclude": ["**", "!/srv/bewelcome/src/**"],
+                "intelephense.environment.phpVersion": "8.4.0",
+                "intelephense.files.maxSize": 5000000
+            }
+        }
+    }
+}

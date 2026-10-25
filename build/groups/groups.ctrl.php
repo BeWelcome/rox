@@ -283,7 +283,7 @@ class GroupsController extends RoxControllerBase
         $order = ((!empty($this->args_vars->get['order'])) ? $this->args_vars->get['order'] : 'nameasc');
         $params = new stdClass;
         $params->strategy = new HalfPagePager('left');
-        $params->items = $this->_model->countGroupsBySearchterms();
+        $params->items = $this->_model->countGroupsBySearchterms([]);
         $params->items_per_page = 20;
         $pager = new PagerWidget($params);
         $page->search_result = $this->_model->findGroups([], $pager->active_page, $order, $pager->items_per_page);
@@ -796,9 +796,14 @@ class GroupsController extends RoxControllerBase
     public function memberSettings()
     {
         $group = $this->_getGroupFromRequest();
-        if (!$this->_model->getLoggedInMember())
+        if (!($member = $this->_model->getLoggedInMember()))
         {
             $this->redirectToLogin($this->router->url('group_membersettings', ['group_id' => $group->getPKValue()], false));
+        }
+        if (!$member->getGroupMembership($group))
+        {
+            // only members of the group have membership settings
+            return $this->redirectAbsolute($this->router->url('group_start', ['group_id' => $group->getPKValue()]));
         }
 
         $page = ((isset($request[3]) && strtolower((string) $request[3]) == 'true') ? new GroupStartPage() : new GroupMemberSettingsPage($group));

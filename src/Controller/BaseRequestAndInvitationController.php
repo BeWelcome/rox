@@ -12,8 +12,9 @@ use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\Form;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class BaseRequestAndInvitationController extends AbstractController
 {
@@ -111,7 +112,7 @@ abstract class BaseRequestAndInvitationController extends AbstractController
         };
 
         if (!empty($suffix)) {
-            /** @var Translator $translator */
+            /** @var TranslatorInterface&LocaleAwareInterface $translator */
             $translator = $this->getTranslator();
             $currentLocale = $translator->getLocale();
             $translator->setLocale($locale);

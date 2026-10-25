@@ -68,7 +68,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 }
                 for ($jj = 0; (($jj < $max) and ($topic->WithDetail)); $jj++) { // Not optimized, it is a bit stupid to look in all the trads here
                     if (($post->Trad[$jj]->trad_created != $post->Trad[$jj]->trad_updated)) { // If one of the trads have been updated
-                        if ($post->Trad[$jj]->IdLanguage == $this->session->get("IdLanguage")) {
+                        if ($post->Trad[$jj]->IdLanguage == $words->languageShortCode()) {
                             if (null !== $post->Trad[$jj]->trad_updated) {
                                 echo '<div class="mr-1"><em><i class="fa fa-edit fa-w-16 mr-1" title="edited"></i>' . date($words->getFormatted('DateHHMMShortFormat'), ServerToLocalDateTime($post->Trad[$jj]->trad_updated, $this->getSession())), ' by ', $post->Trad[$jj]->TranslatorUsername . '</em></div>';
                             }
@@ -143,7 +143,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
             <?php
             $forumUtilities = new ForumUtilities();
-            $postContent = $forumUtilities->removeFqdn($words->fTrad($post->IdContent));
+            $postContent = $forumUtilities->removeFqdn($words->fTrad($post->IdContent, -1, false, $post->message ?? ''));
             $postContent = ForumUtilities::addLightboxToFigures($postContent);
 
 
@@ -173,7 +173,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 echo '<a href="' . ForumsView::groupURL($post) . '">' . $post->GroupName . '</a> ';
             }
             echo '<span class="gray">'.$words->getFormatted('search_topic_text').'</span>';
-            echo ' <a href="' . ForumsView::postURL($post) . '">' . $words->fTrad($post->IdTitle) . '</a>';
+            echo ' <a href="' . ForumsView::postURL($post) . '">' . $words->fTrad($post->IdTitle, -1, false, $post->title ?? '') . '</a>';
             echo '</small></div>';
         }
 

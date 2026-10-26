@@ -11,8 +11,7 @@ html {
 body {
   /* Margin bottom by footer height */
   text-rendering: optimizeLegibility;
-  background: #f7f7f7; /* For browsers that do not support gradients */
-  background: linear-gradient(#afafaf, #f0f0f0 10em) repeat-x scroll left top #f0f0f0;
+  background: #f0f0f0;
   display: flex;
   min-height: 100vh;
   flex-direction: column;

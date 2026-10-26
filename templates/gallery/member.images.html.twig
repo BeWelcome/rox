@@ -1,0 +1,81 @@
+{% extends 'profile/profile.html.twig' %}
+
+{% block page_content %}
+  {% set own = app.user == member %}
+  <div class="p-gallery-page p-profile-main">
+    <div class="card">
+      <div class="card-header u:flex u:flex-row u:justify-between">
+        <span>
+          {{ 'profile.menu.images'|trans }}
+          {% if pictures|length > 0 %}
+            <span class="p-gallery-footer__count">{{ pictures_total ?? pictures|length }}</span>
+          {% endif %}
+        </span>
+        {%- if own -%}
+          <a class="p-gallery-manage-btn" href="{{ url('gallery_manage') }}">
+            <i class="fas fa-edit" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'profile.edit.images'|trans }}</span>
+          </a>
+        {%- endif -%}
+      </div>
+      <div class="card-body">
+        {# Phones: the head above is hidden, the button to manage the gallery comes first #}
+        {% if own and pictures|length > 0 %}
+          <a class="p-gallery-manage-btn p-gallery-manage-btn--phone" href="{{ url('gallery_manage') }}">
+            <i class="fas fa-edit" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'profile.edit.images'|trans }}</span>
+          </a>
+        {% endif %}
+        {# Albums: "All" then one pill per album with its number of pictures, only when there are albums #}
+        {% if albums|length > 0 %}
+          {% set allCount = pictures_total ?? pictures|length %}
+          <nav class="p-gallery-albums" aria-label="{{ 'profile.menu.images'|trans }}">
+            <a class="p-gallery-albums__item{% if not active_album %} is-active{% endif %}" href="{{ path('gallery_member_images', { username: member.username }) }}"{% if not active_album %} aria-current="page"{% endif %}>
+              {{ 'landing.button.all'|trans|striptags }} <span>{{ allCount }}</span>
+            </a>
+            {% for album in albums %}
+              {% set current = active_album and active_album.id == album.id %}
+              <a class="p-gallery-albums__item{% if current %} is-active{% endif %}" href="{{ path('gallery_member_images', { username: member.username, album: album.id }) }}"{% if current %} aria-current="page"{% endif %}>
+                <i class="fas fa-folder" aria-hidden="true"></i>
+                <img class="p-gallery-albums__cover" src="{{ path('gallery_thumbnail', { id: album.cover, t: 2 }) }}" alt="" loading="lazy">
+                {{ album.title }} <span>{{ album.count }}</span>
+              </a>
+            {% endfor %}
+          </nav>
+        {% endif %}
+        {% if pictures|length == 0 %}
+          {% if own %}
+            <div class="p-gallery-empty">
+              <a href="{{ url('gallery_manage') }}" class="p-gallery-empty__btn">
+                <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                <span>{{ 'galleryupload'|trans }}</span>
+              </a>
+            </div>
+          {% else %}
+            <p class="p-profile-empty-hint">{{ 'gallery.no.latest.images'|trans }}</p>
+          {% endif %}
+        {% else %}
+          <ul class="p-gallery-page__grid">
+            {% for picture in pictures %}
+              <li class="p-gallery-page__item">
+                <div class="p-gallery-page__frame">
+                  <a href="{{ url('gallery_image', {id: picture.id}) }}"
+                     class="p-gallery-cell"
+                     style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
+                     data-toggle="lightbox"
+                     data-gallery="member-gallery"
+                     data-type="image"
+                     data-caption="{{ picture.title|e('html_attr') }}"
+                     aria-label="{{ picture.title|e('html_attr') }}"></a>
+                  {# Phones: the title over the bottom of the picture #}
+                  {% if picture.title is not empty %}<span class="p-gallery-page__caption" aria-hidden="true">{{ picture.title }}</span>{% endif %}
+                </div>
+                {% if picture.title is not empty %}
+                  <span class="p-gallery-page__title" title="{{ picture.title|e('html_attr') }}">{{ picture.title }}</span>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock page_content %}

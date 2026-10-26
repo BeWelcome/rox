@@ -1,54 +1,51 @@
-{% import 'macros.twig' as macros %}
-<div id="conversationsdisplay" class="c-dashboard">
-	{% for message in messages %}
-		{% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
-		<div class="c-dashboard__item">
-			<div class="o-avatar o-avatar--m o-avatar--noname o-avatar--shadow-s u:mr-8">{{ macros.roundedavatarstack(message.sender.username, 72, false) }}</div>
-			<div class="u:flex u:flex-col u:h-full u:justify-center u:px-8 u:w-min-0 u:overflow-hidden">
-				{% if message.request %}
-					<a href="{{ path('conversation_view', { id: message.id } ) }}">
-						<div class="u:py-4 u:pr-8">
-							<p class="badge u:bg-blue-dark u:text-white u:font-500 u:text-14 u:leading-10">
-								{% if message.request.inviteForLeg is null %}
-									{{ 'conversations.request'|trans }}
-								{% else %}
-									{{ 'conversations.invitation'|trans }}
-								{% endif %}
-								{{ message.request.arrival | format_date(pattern="MMM d") }}
-								-
-								{{ message.request.departure | format_date(pattern="MMM d yyy") }}
-							</p>
-						</div>
-					</a>
-				{% else %}
-					<p class="u:ellipsis {% if unread %}unread{% endif %}">
-						<a href="{{ path('conversation_view', { id: message.id } ) }}">
-							{% if message.subject %}
-								{{ message.subject.subject|raw }}
-							{% endif %}
-						</a>
-					</p>
-				{% endif %}
-				<p class="u:ellipsis {% if unread %}unread{% endif %}">
-					<a href="{{ path('conversation_view', { id: message.id } ) }}">{{ message.message|striptags|truncate(70) }}</a>
-				</p>
-				<p class="u:font-300 u:text-14">
-					{% if message.sender %}
-						{{ macros.profilelink(message.sender.username) }}
-					{% else %}
-						BeWelcome
-					{% endif %}
-					<span title="{{ message.created.toDateTimeString }}">{{ message.created.DiffForHumans }}</span>
-				</p>
-			</div>
-			<div class="u:ml-auto u:shrink-0">
-				<a href="{{ path('conversation_view', { id: message.id } ) }}">
-					<i class="fa fa-chevron-right"></i>
-				</a>
-			</div>
-		</div>
-	{% else %}
-		<p class="u:my-24 u:font-display u:text-center">{{ 'dashboard.messages.none' | trans }}</p>
-	{% endfor %}
+{#
+  The latest messages received, on the home page (loaded into the Messages tab).
+  A hosting request or invitation shows its kind and dates instead of a subject, and
+  where it stands as an icon on the avatar, like in the inbox.
+#}
+<div id="conversationsdisplay" class="c-home-list"{% if messages is empty %} data-empty{% endif %}>
+    {% for message in messages %}
+        {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
+        {% set request = message.request %}
+        {# Where a request or invitation stands, with the decision's icon on the avatar (as in the inbox list) #}
+        {% set states = {
+            open: { icon: 'fas fa-clock', tone: 'pending' },
+            tentatively: { icon: 'fa fa-question', tone: 'maybe' },
+            accepted: { icon: 'fa fa-check', tone: 'success' },
+            declined: { icon: 'fa fa-times', tone: 'danger' },
+            cancelled: { icon: 'fa fa-times', tone: 'danger' },
+        } %}
+        {% set requestState = request ? ({ 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[request.status] ?? 'open') : null %}
+        <a class="c-home-item{% if unread %} is-unread{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}">
+            {% if message.sender %}
+                <span class="c-home-item__avatar-wrap">
+                    <img class="c-home-item__avatar" src="{{ path('avatar', { username: message.sender.username, size: 48 }) }}" alt="" loading="lazy">
+                    {% if request %}<span class="c-inbox-item__kind c-inbox-item__kind--{{ states[requestState].tone }}" title="{{ ('request.status.' ~ requestState)|trans }}"><i class="{{ states[requestState].icon }}" aria-hidden="true"></i><span class="visually-hidden">{{ ('request.status.' ~ requestState)|trans }}</span></span>{% endif %}
+                </span>
+            {% else %}
+                <span class="c-home-item__avatar c-home-item__avatar--icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
+            {% endif %}
+            <span class="c-home-item__body">
+                <span class="c-home-item__top">
+                    <span class="c-home-item__name">{{ message.sender ? message.sender.username : 'BeWelcome' }}</span>
+                    <span class="c-home-item__time" title="{{ message.created.toDateTimeString }}">{{ message.created.diffForHumans }}{% if unread %}<span class="c-home-item__dot" aria-label="{{ 'conversations.unread'|trans }}"></span>{% endif %}</span>
+                </span>
+                {% if request %}
+                    {% set kindIcon = request.inviteForLeg is null ? 'fa-bed' : 'fa-handshake' %}
+                    <span class="c-inbox-item__badge c-home-item__badge">
+                        <span><i class="fas {{ kindIcon }}" aria-hidden="true"></i> {{ request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}</span>
+                        <span class="c-inbox-item__badge-dates">
+                            {{- request.arrival|format_date(pattern='MMM d') }}
+                            {%- if request.departure %} - {{ request.departure|format_date(pattern='MMM d y') }}{% endif -%}
+                        </span>
+                    </span>
+                {% elseif message.subject %}
+                    <span class="c-home-item__title">{{ message.subject.subject|striptags }}</span>
+                {% endif %}
+                <span class="c-home-item__text">{{ message.message|striptags|truncate(90) }}</span>
+            </span>
+        </a>
+    {% else %}
+        <p class="c-home-list__empty">{{ 'dashboard.messages.none'|trans }}</p>
+    {% endfor %}
 </div>
-

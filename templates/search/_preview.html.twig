@@ -1,0 +1,160 @@
+{#
+  A short view of a member, loaded into the preview panel of the search results
+  (see search/locations.js): who they are with their profile picture, hosting,
+  comments, the start of "about me", their pictures and languages, the main actions and the full profile.
+#}
+{% set displayName = member.name is empty ? member.username : member.name %}
+{% set translations = member.translations %}
+{# "About me" in the reader's language, else in the first language the member wrote it in
+   (the list of languages always starts with an empty "en"). #}
+{% set aboutMe = translations[app.request.locale]['AboutMe'] ?? '' %}
+{% if aboutMe is empty %}
+    {% for texts in translations %}{% if aboutMe is empty and texts['AboutMe'] is defined %}{% set aboutMe = texts['AboutMe'] %}{% endif %}{% endfor %}
+{% endif %}
+{% set aboutMe = aboutMe|replace({'<br />': '\n', '<br>': '\n', '</p>': '\n'})|striptags|trim %}
+{% set profileUrl = path('members_profile', { username: member.username }) %}
+{% set gender = member.isGenderVisible and member.gender in ['female', 'male', 'other'] ? member.gender : null %}
+{% set age = member.isAgeVisible and member.age ? member.age : null %}
+{% set occupation = translations[app.request.locale]['Occupation'] ?? '' %}
+{% if occupation is empty %}
+    {% for texts in translations %}{% if occupation is empty and texts['Occupation'] is defined %}{% set occupation = texts['Occupation'] %}{% endif %}{% endfor %}
+{% endif %}
+{% set occupation = occupation|striptags|trim %}
+{% set hosting = member.accommodation in ['yes', 'no'] ? member.accommodation : null %}
+{% set languages = [] %}
+{% for level, levelLanguages in member.levelLanguages %}
+    {% for language in levelLanguages %}{% set languages = languages|merge([('lang_' ~ language.ShortCode)|lower|trans]) %}{% endfor %}
+{% endfor %}
+{# Last activity as on the profile: this week, this month, or "Last activity 3 months ago"
+   (the sign-up date when the member never logged in). #}
+{% set _activity = member.lastActive ?: member.created %}
+{% set activityDays = _activity ? _activity.diffInDays() : null %}
+{% set lastActive = _activity ? (activityDays <= 7 ? 'profile.active.week'|trans : (activityDays <= 30 ? 'profile.active.month'|trans : _activity.diffForHumans)) : null %}
+
+{# Nothing here links to the profile except the button at the bottom. #}
+<div class="p-search-preview__content">
+    <div class="p-search-preview__who">
+        {# Hosting as a ring around the picture: green when the member hosts, grey when not #}
+        <span class="p-search-preview__picture{% if hosting %} p-search-preview__picture--{{ hosting }}{% endif %}">
+            <img class="p-search-preview__avatar" src="{{ path('avatar', { username: member.username, size: 192 }) }}" alt="">
+        </span>
+        <div class="p-search-preview__names">
+            <p class="p-search-preview__title">
+                <span class="p-search-preview__name" id="search-preview-title">{{ displayName }}</span>
+                {% if gender or age %}
+                    <span class="p-search-card__who p-search-card__who--{{ gender ?: 'none' }}">
+                        {%- if gender -%}
+                            <i class="fas {{ { female: 'fa-venus', male: 'fa-mars', other: 'fa-genderless' }[gender] }}" aria-hidden="true"></i>
+                            <span class="visually-hidden">{{ gender|trans }}</span>
+                        {%- endif -%}
+                        {%- if age %}<span>{{ age }}</span><span class="visually-hidden"> {{ 'searchyearsold'|trans|format('')|striptags|trim }}</span>{% endif -%}
+                    </span>
+                {% endif %}
+            </p>
+            {% if displayName != member.username %}<p class="p-search-preview__username">{{ member.username }}</p>{% endif %}
+        </div>
+    </div>
+
+    {% if occupation %}<p class="p-search-preview__occupation">{{ occupation }}</p>{% endif %}
+
+    <p class="p-search-preview__activity">
+        {%- if lastActive -%}
+            <span class="p-search-card__online{{ activityDays <= 30 ? ' is-recent' : '' }}" aria-hidden="true"></span>
+            <span>{% if activityDays > 30 %}{{ 'profile.last.activity'|trans|trim(': ') }} {% endif %}{{ lastActive }}</span>
+            <span class="p-search-card__dot" aria-hidden="true">·</span>
+        {%- endif -%}
+        <span>{{ 'search.member.duration'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}</span>
+    </p>
+
+    {# Hosting, then the comments with their split #}
+    {% set commentsTotal = comments_count.total ?? 0 %}
+    <div class="p-search-preview__tiles">
+        {% if hosting %}
+            <div class="p-search-preview__tile p-search-preview__tile--host-{{ hosting }}">
+                <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
+                <span>{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</span>
+            </div>
+        {% endif %}
+        {# The comments: the count of each quality, as on the cards of the list #}
+        <div class="p-search-preview__quality{% if commentsTotal %} has-comments{% endif %}">
+            {% for quality, icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
+                {% if comments_count[quality] ?? 0 %}
+                    <span class="p-search-card__quality p-search-card__quality--{{ quality }}">
+                        <i class="fas fa-{{ icon }}" aria-hidden="true"></i> {{ comments_count[quality] }}
+                        <span class="visually-hidden">{{ ('comment.quality.' ~ quality)|trans|striptags }}</span>
+                    </span>
+                {% endif %}
+            {% endfor %}
+            {% if not commentsTotal %}
+                <span class="p-search-preview__quality-none"><i class="fas fa-comments" aria-hidden="true"></i> 0</span>
+            {% endif %}
+            <span class="visually-hidden">{{ commentsTotal }} {{ 'search.preview.comments'|trans({ count: commentsTotal }) }}</span>
+        </div>
+    </div>
+
+    {% if app.user != member and member.status != 'PassedAway' %}
+        <div class="p-search-preview__actions">
+            {% if member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
+                <a class="p-search-preview__btn p-search-preview__btn--primary js-search-contact-open" href="{{ url('hosting_request', { username: member.username }) }}"
+                   data-title="{{ 'request.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
+                    <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
+                </a>
+            {% endif %}
+            {# An existing conversation opens in the panel instead of a new message #}
+            {% set existingConversation = app.user ? conversation_with(member) : null %}
+            <a class="p-search-preview__btn js-search-contact-open" href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', { username: member.username }) }}"
+               data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
+                <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
+            </a>
+        </div>
+    {% endif %}
+
+    {% if aboutMe %}
+        <section class="p-search-preview__section">
+            <h3>{{ 'profile.about.me'|trans }}</h3>
+            {# Cut after a few lines; "Read more" shows the rest (search/preview.js) #}
+            <p class="p-search-preview__about js-preview-about">{{ aboutMe|truncate(4000)|nl2br }}</p>
+            <button type="button" class="p-search-preview__about-more js-preview-about-more" hidden>{{ 'profile.read.more'|trans }}</button>
+        </section>
+    {% endif %}
+
+    {# The member's own pictures as a mosaic; the last tile says how many more there are.
+       A click opens the pictures large (search/locations.js). #}
+    {% if pictures|length %}
+        {% set shown = pictures|slice(0, 6) %}
+        {% set more = pictures|length - shown|length %}
+        {% set images = [] %}
+        {% for picture in pictures|slice(0, 40) %}
+            {% set images = images|merge([{ src: url('gallery_image', { id: picture.id }), title: picture.title }]) %}
+        {% endfor %}
+        <section class="p-search-preview__section">
+            <h3>{{ 'profile.menu.images'|trans|striptags }}</h3>
+            <div class="p-search-preview__mosaic js-preview-gallery" data-images="{{ images|json_encode|e('html_attr') }}"
+                 data-label-close="{{ 'close'|trans|striptags }}" data-label-previous="{{ 'landing.beinformed.previous'|trans|striptags }}" data-label-next="{{ 'landing.beinformed.next'|trans|striptags }}">
+                {% for picture in shown %}
+                    <button type="button" class="p-search-preview__shot js-preview-gallery-open" data-index="{{ loop.index0 }}"
+                            style="background-image: url('{{ url('gallery_thumbnail', { id: picture.id, t: 2 }) }}')"
+                            aria-label="{{ picture.title ?: 'profile.menu.images'|trans|striptags }}">
+                        {% if loop.last and more > 0 %}<span class="p-search-preview__more">+{{ more }}</span>{% endif %}
+                    </button>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+    {% if languages|length %}
+        <section class="p-search-preview__section">
+            <h3>{{ 'languages.spoken'|trans|striptags }}</h3>
+            <ul class="p-search-preview__languages">
+                {% for language in languages %}<li>{{ language }}</li>{% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+
+</div>
+
+<div class="p-search-preview__foot">
+    <a class="p-search-preview__full" href="{{ profileUrl }}" target="_blank" rel="noopener">
+        {{ 'search.preview.full'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i>
+    </a>
+</div>

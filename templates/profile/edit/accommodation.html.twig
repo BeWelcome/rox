@@ -1,90 +1,164 @@
-{% extends 'profile/profile.html.twig' %}
+{% extends 'profile/edit_subpage.html.twig' %}
 {% import 'macros.twig' as macros %}
 
 {% block javascripts %}
   {{ parent() }}
-  {{ encore_entry_script_tags('roxeditor') }}
-  {{ encore_entry_script_tags('profile/edit_accommodation') }}
+  {# It saves each choice as soon as it is made; in the side panel, Save does (and Cancel doesn't) #}
+  {% if not app.request.query.getBoolean('embed') %}
+    {{ encore_entry_script_tags('profile/edit_accommodation') }}
+  {% endif %}
 {% endblock %}
 
-{% block stylesheets %}
-  {{ parent() }}
-  {{ encore_entry_link_tags('roxeditor') }}
-{% endblock %}
+{% block subpage_title -%}
+  {{ 'profilesummary'|trans({}, 'messages', language)|raw }}
+{%- endblock %}
 
-{% block page_content %}
-  <div class="u:w-full">
-    <div class="card">
-      <div class="card-header u:flex u:flex-row u:justify-between">
-        {{ 'profilesummary'|trans({}, "messages", language)|raw }}
+{# One row of the edit page (?field=...): its title and what it is for #}
+{% set drawer_fields = {
+  length: 'profile.max.length.of.stay',
+  ilivewith: 'profile.i.live.with',
+  bring: 'profile.please.bring',
+  sleep: 'profile.where.you.sleep',
+  offers: 'profile.offer.guests',
+  rules: 'profile.house.rules',
+  there: 'profile.getting.there',
+  info: 'profile.additional.information.for.guests',
+} %}
+{% block drawer_eyebrow %}<i class="fas fa-home" aria-hidden="true"></i> {{ 'profile.edit.accommodation.title'|trans }}{% endblock %}
+{% block drawer_title -%}
+  {% set field = app.request.query.get('field') %}
+  {{ field in drawer_fields|keys ? drawer_fields[field]|trans({}, 'messages', language)|striptags : 'profile.edit.accommodation.title'|trans }}
+{%- endblock %}
+{% block drawer_intro -%}
+  {% set field = app.request.query.get('field') %}
+  {{ field in drawer_fields|keys ? ('profile.edit.intro.' ~ field)|trans : 'profile.edit.intro.accommodation'|trans }}
+{%- endblock %}
+{% block drawer_options %}track{% endblock %}
+
+{% block subpage_body %}
+  {{ form_start(form) }}
+  {{ form_errors(form) }}
+
+  {#
+    ?field=... (a row of the edit page): only that part shows, the others stay in the form,
+    hidden, so that saving keeps them as they are. In the side panel, hosting, hosting
+    interest and max guests are edited on the page itself: hidden here too.
+  #}
+  {% set only = app.request.query.get('field') %}
+  {% set embedded = app.request.query.getBoolean('embed') %}
+  {#
+    "Can you host?" not answered yet (an account not finished): the form can't be saved
+    without it, so it is asked here first, above the field.
+  #}
+  {% set needsHosting = (embedded or only) and form.accommodation.vars.value not in ['yes', 'no'] %}
+  {% if needsHosting %}
+    <div class="p-ped-hosting{{ form.accommodation.vars.valid ? '' : ' has-ped-error' }}">
+      <div class="p-ped-label">
+        <span class="o-field-translation__label">{{ 'profile.edit.can.host'|trans }}</span>
+        <span class="p-ped-hosting__badge">{{ 'profile.edit.required'|trans }}</span>
       </div>
-      <div class="card-block p-2">
-        <div class="card-text">
-          {{ form_start(form) }}
-          {{ form_errors(form) }}
+      <p class="p-ped-hosting__hint">{{ 'profile.edit.hosting.first'|trans }}</p>
+      <div class="p-pe-host p-sf-host" data-ped-required="{{ 'profile.edit.hosting.answer'|trans }}" role="radiogroup" aria-label="{{ 'profile.edit.can.host'|trans }}">
+        {% for value in ['yes', 'no'] %}
+          {% set child = form.accommodation|filter(item => item.vars.value == value)|first %}
+          <label class="p-pe-host__option p-pe-host__option--{{ value }}">
+            <input type="radio" class="p-sf-host__input" name="{{ child.vars.full_name }}" value="{{ value }}"{{ child.vars.checked ? ' checked' }} required>
+            <i class="fas fa-{{ value == 'yes' ? 'house-user' : 'times' }}" aria-hidden="true"></i> {{ ('profile.edit.host.' ~ value)|trans }}
+          </label>
+        {% endfor %}
+      </div>
+      {{ form_errors(form.accommodation) }}
+    </div>
+    {% do form.accommodation.setRendered %}
+  {% endif %}
+  <div{{ embedded or only ? ' hidden' }}>
+    {% if needsHosting %}
+      {# Not picked: stays empty #}
+      <input type="hidden" name="{{ form.hosting_interest.vars.full_name }}" value="">
+      {% do form.hosting_interest.setRendered %}
+    {% else %}
+      {% include 'profile/accommodation_widget.html.twig' %}
+    {% endif %}
+    {{ form_row(form.max_guests) }}
+  </div>
 
-          {% include 'profile/accommodation_widget.html.twig' %}
+  {% set username = member.username %}
+  {% set translations = member.translations %}
+  <div class="p-ped-part p-ped-single" data-placeholder="{{ 'profile.edit.placeholder.length'|trans }}"{{ only and only != 'length' ? ' hidden' }}>
+  {{ macros.field_translation(form.length_of_stay, locale, language, 'MaxLengthOfStay', username, translations) }}
+  </div>
+  <div class="p-ped-part p-ped-single" data-placeholder="{{ 'profile.edit.placeholder.ilivewith'|trans }}"{{ only and only != 'ilivewith' ? ' hidden' }}>
+  {{ macros.field_translation(form.i_live_with, locale, language, 'ILiveWith', username, translations) }}
+  </div>
+  <div class="p-ped-part p-ped-single" data-placeholder="{{ 'profile.edit.placeholder.bring'|trans }}"{{ only and only != 'bring' ? ' hidden' }}>
+  {{ macros.field_translation(form.please_bring, locale, language, 'PleaseBring', username, translations) }}
+  </div>
 
-          {{ form_row(form.max_guests) }}
-
-          {% set username = member.username %}
-          {% set translations = member.translations %}
-          {{ macros.field_translation(form.length_of_stay, locale, language, 'MaxLengthOfStay', username, translations) }}
-          {{ macros.field_translation(form.i_live_with, locale, language, 'ILiveWith', username, translations) }}
-          {{ macros.field_translation(form.please_bring, locale, language, 'PleaseBring', username, translations) }}
-
-          <span class="form-check-label">{{ form.offers.vars.label|trans }}</span>
-          <div class="u:flex u:flex-row u:justify-between">
-            {% for child in form.offers.children %}
-              <div class="o-checkbox">
-                <input type="checkbox" class="o-checkbox__input"
-                       id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
-                       value="{{ child.vars.value }}"
-                       data-offer="{{ child.vars.value }}"
-                       {% if child.vars.checked %}checked="checked"{% endif %}
-                >
-                <label class="o-checkbox__label" for="{{ child.vars.id }}">{{ child.vars.label|trans({}, "messages", language) }}</label></div>
-              {% do child.setRendered %}
-            {% endfor %}
-            <div class="o-checkbox">
-              <input type="checkbox" class="o-checkbox__input"
-                     id="{{ form.wheelchair_accessible.vars.id }}"
-                     name="{{ form.wheelchair_accessible.vars.full_name }}"
-                     data-offer="accessible"
-                    {% if form.wheelchair_accessible.vars.checked %}checked="checked"{% endif %}
-              >
-              <label class="o-checkbox__label" for="{{ form.wheelchair_accessible.vars.id }}">{{ form.wheelchair_accessible.vars.label|trans({}, "messages", language) }}</label>
-            </div>
-            {% do form.wheelchair_accessible.setRendered %}
-          </div>
-
-          {{ macros.field_translation(form.offer_guests, locale, language, 'OfferGuests', username, translations) }}
-          {{ macros.field_translation(form.where_you_sleep, locale, language, 'WhereYouSleep', username, translations) }}
-          {{ macros.field_translation(form.additional_info, locale, language, 'AdditionalAccommodationInfo', username, translations) }}
-
-          <span class="form-check-label">{{ form.restrictions.vars.label|trans }}</span>
-          <div class="u:flex u:flex-row u:justify-between">
-            {% for child in form.restrictions.children %}
-              <div class="o-checkbox">
-                <input type="checkbox" class="o-checkbox__input"
-                       id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
-                       value="{{ child.vars.value }}"
-                       data-restrictions="{{ child.vars.value }}"
-                       {% if child.vars.checked %}checked="checked"{% endif %}
-                ><label class="o-checkbox__label" for="{{ child.vars.id }}">{{ child.vars.label|trans({}, "messages", language) }}</label></div>
-              {% do child.setRendered %}
-            {% endfor %}
-          </div>
-
-          {{ macros.field_translation(form.house_rules, locale, language, 'HouseRules', username, translations) }}
-          {{ macros.field_translation(form.getting_there, locale, language, 'GettingThere', username, translations) }}
-
-          <div class="u:flex u:justify-end u:my-8">
-            <a href="{{ url('profile_edit', {username: username, language: language}) }}" class="o-button">{{ 'profile.back'|trans({}, "messages", language) }} - {{ ('lang_' ~ language)|trans({}, "messages", language) }}</a>
-          </div>
-          {{ form_end(form) }}
+  <div class="p-ped-part" data-placeholder="{{ 'profile.edit.placeholder.offers'|trans }}" data-label="{{ 'profile.edit.other.offers'|trans }}"{{ only and only != 'offers' ? ' hidden' }}>
+  <div class="p-pill-group">
+    <span class="p-pill-group__label">{{ form.offers.vars.label|trans }}</span>
+    <div class="p-pill-group__options">
+      {% for child in form.offers.children %}
+        <div class="p-pill-option">
+          <input type="checkbox" class="p-pill-option__input"
+                 id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
+                 value="{{ child.vars.value }}"
+                 data-offer="{{ child.vars.value }}"
+                 {% if child.vars.checked %}checked="checked"{% endif %}
+          >
+          <label class="p-pill-option__label" for="{{ child.vars.id }}"><span class="p-pill-option__icon"><i class="fas fa-{{ child.vars.value == 'dinner' ? 'gift' : 'map-signs' }}" aria-hidden="true"></i></span> {{ child.vars.label|trans({}, "messages", language) }}<span class="p-pill-option__check"><i class="fas fa-check" aria-hidden="true"></i></span></label>
         </div>
+        {% do child.setRendered %}
+      {% endfor %}
+      <div class="p-pill-option">
+        <input type="checkbox" class="p-pill-option__input"
+               id="{{ form.wheelchair_accessible.vars.id }}"
+               name="{{ form.wheelchair_accessible.vars.full_name }}"
+               data-offer="accessible"
+              {% if form.wheelchair_accessible.vars.checked %}checked="checked"{% endif %}
+        >
+        <label class="p-pill-option__label" for="{{ form.wheelchair_accessible.vars.id }}"><span class="p-pill-option__icon"><i class="fas fa-wheelchair" aria-hidden="true"></i></span> {{ form.wheelchair_accessible.vars.label|trans({}, "messages", language) }}<span class="p-pill-option__check"><i class="fas fa-check" aria-hidden="true"></i></span></label>
       </div>
+      {% do form.wheelchair_accessible.setRendered %}
     </div>
   </div>
-{% endblock page_content %}
+
+  {{ macros.field_translation(form.offer_guests, locale, language, 'OfferGuests', username, translations) }}
+  </div>
+  <div class="p-ped-part p-ped-single" data-placeholder="{{ 'profile.edit.placeholder.sleep'|trans }}"{{ only and only != 'sleep' ? ' hidden' }}>
+  {{ macros.field_translation(form.where_you_sleep, locale, language, 'WhereYouSleep', username, translations) }}
+  </div>
+  <div class="p-ped-part p-ped-single" data-placeholder="{{ 'profile.edit.placeholder.info'|trans }}"{{ only and only != 'info' ? ' hidden' }}>
+  {{ macros.field_translation(form.additional_info, locale, language, 'AdditionalAccommodationInfo', username, translations) }}
+  </div>
+
+  <div class="p-ped-part" data-placeholder="{{ 'profile.edit.placeholder.rules'|trans }}" data-label="{{ 'profile.edit.other.rules'|trans }}"{{ only and only != 'rules' ? ' hidden' }}>
+  <div class="p-pill-group">
+    <span class="p-pill-group__label">{{ form.restrictions.vars.label|trans }}</span>
+    <div class="p-pill-group__options">
+      {% for child in form.restrictions.children %}
+        <div class="p-pill-option">
+          <input type="checkbox" class="p-pill-option__input"
+                 id="{{ child.vars.id }}" name="{{ child.vars.full_name }}"
+                 value="{{ child.vars.value }}"
+                 data-restrictions="{{ child.vars.value }}"
+                 {% if child.vars.checked %}checked="checked"{% endif %}
+          >
+          <label class="p-pill-option__label" for="{{ child.vars.id }}"><span class="p-pill-option__icon"><i class="fas fa-ban" aria-hidden="true"></i></span> {{ child.vars.label|trans({}, "messages", language) }}<span class="p-pill-option__check"><i class="fas fa-check" aria-hidden="true"></i></span></label>
+        </div>
+        {% do child.setRendered %}
+      {% endfor %}
+    </div>
+  </div>
+
+  {{ macros.field_translation(form.house_rules, locale, language, 'HouseRules', username, translations) }}
+  </div>
+  <div class="p-ped-part p-ped-single" data-placeholder="{{ 'profile.edit.placeholder.there'|trans }}"{{ only and only != 'there' ? ' hidden' }}>
+  {{ macros.field_translation(form.getting_there, locale, language, 'GettingThere', username, translations) }}
+  </div>
+
+  <div class="p-edit-subpage__actions">
+    <input type="submit" class="o-button" value="{{ 'save'|trans({}, 'messages', language) }}">
+  </div>
+  {{ form_end(form) }}
+{% endblock subpage_body %}

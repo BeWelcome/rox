@@ -1,0 +1,343 @@
+{% import 'macros.twig' as macros %}
+{#
+  The profile page itself (one block per profile language, the language switch shows one):
+  About me (with the spoken languages), the gallery, accommodation and comments in the
+  main column (after the facts: occupation, gender, age); where I live, interests, travels, groups and friends on the right. The edit page keeps profile/content.html.twig.
+#}
+{% set address = member.activeAddress %}
+{% set profileTranslation = translated_fields[profile_language] ?? [] %}
+{% set aboutMe = profileTranslation['AboutMe'] ?? '' %}
+{% set offerHosts = profileTranslation['OfferHosts'] ?? '' %}
+{% set interestFields = [
+  {text: profileTranslation['Hobbies'] ?? '', label: 'profile.hobbies', icon: 'fa-person-hiking'},
+  {text: profileTranslation['Books'] ?? '', label: 'profile.books', icon: 'fa-book'},
+  {text: profileTranslation['Music'] ?? '', label: 'profile.music', icon: 'fa-music'},
+  {text: profileTranslation['Movies'] ?? '', label: 'profile.movies', icon: 'fa-film'},
+  {text: profileTranslation['Organizations'] ?? '', label: 'profile.organizations', icon: 'fa-building'},
+] %}
+{% set interests = interestFields|filter(field => field.text|length > 0) %}
+{% set pastTrips = profileTranslation['PastTrips'] ?? '' %}
+{% set plannedTrips = profileTranslation['PlannedTrips'] ?? '' %}
+{% set standardOffers = member.StandardOffers %}
+{% set offerGuests = profileTranslation['OfferGuests'] ?? '' %}
+{% set restrictions = member.Restrictions %}
+{% set houseRules = profileTranslation['HouseRules'] ?? '' %}
+{% set guestFields = [
+  {text: profileTranslation['MaxLengthOfStay'] ?? '', label: 'profile.max.length.of.stay'},
+  {text: profileTranslation['ILiveWith'] ?? '', label: 'profile.i.live.with'},
+  {text: profileTranslation['PleaseBring'] ?? '', label: 'profile.please.bring'},
+  {text: profileTranslation['WhereYouSleep'] ?? '', label: 'profile.where.you.sleep'},
+  {text: profileTranslation['AdditionalAccommodationInfo'] ?? '', label: 'profile.additional.information.for.guests'},
+  {text: profileTranslation['GettingThere'] ?? '', label: 'profile.getting.there'},
+] %}
+{% set isHosting = member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
+{% set wheelchair = not address is same as(false) and address.isWheelChairAccessible %}
+
+<div id="profile-language-{{ profile_language }}"
+     class="{% if profile_language != active_locale %}u:hidden! {% endif %}">
+  <div class="p-pro-layout">
+
+    <div class="p-pro-layout__main">
+
+      {# Phones and tablets: my note first, under the head #}
+      {% include 'profile/_note.html.twig' with {where: 'top'} %}
+
+      {# ── Occupation, gender and age, membership length ── #}
+      {% include 'profile/_facts.html.twig' %}
+
+      {# ── About me, and what the member can offer their hosts ── #}
+      {% set spokenLanguages = member.levelLanguages %}
+      {% if aboutMe|length > 0 or offerHosts|length > 0 or spokenLanguages|length > 0 %}
+        <section class="p-pro-card">
+          <h2 class="p-pro-card__title">{{ 'profile.about.me'|trans({}, 'messages', profile_language)|raw }}</h2>
+          {% if aboutMe|length > 0 %}
+            <div class="p-pro-about js-pro-about">{{ aboutMe|purify|nl2br }}</div>
+            <button type="button" class="p-pro-about__more js-pro-about-more" hidden>{{ 'profile.read.more'|trans({}, 'messages', profile_language) }}</button>
+          {% endif %}
+          {# What they offer their hosts and the languages they speak: two columns under a line #}
+          {% if offerHosts|length > 0 or spokenLanguages|length > 0 %}
+            <div class="p-pro-about__extra{% if aboutMe|length == 0 %} p-pro-about__extra--alone{% endif %}">
+              {% if offerHosts|length > 0 %}
+                <div class="p-pro-offer">
+                  <h3 class="p-pro-about__label">
+                    <i class="fas fa-gift" aria-hidden="true"></i>
+                    {{ 'profile.offer.hosts'|trans({}, 'messages', profile_language)|striptags }}
+                  </h3>
+                  <div class="p-pro-offer__text">{{ offerHosts|purify|nl2br }}</div>
+                </div>
+              {% endif %}
+              {% if spokenLanguages|length > 0 %}
+                <div class="p-pro-spoken">
+                  <h3 class="p-pro-about__label">
+                    <i class="fas fa-language" aria-hidden="true"></i>
+                    {{ 'languages.spoken'|trans({}, 'messages', profile_language)|striptags }}
+                  </h3>
+                  <ul class="p-pro-spoken__list">
+                    {% for level, langs in spokenLanguages %}
+                      {% for lang in langs %}
+                        <li class="p-pro-spoken__item">
+                          <span class="p-pro-spoken__code" aria-hidden="true">{{ lang.ShortCode|upper|slice(0, 2) }}</span>
+                          <span class="p-pro-spoken__name">{{ ('lang_' ~ lang.ShortCode)|lower|trans({}, 'messages', profile_language) }}</span>
+                          <span class="p-pro-spoken__level">{{ ('language.level.' ~ level)|lower|trans({}, 'messages', profile_language) }}</span>
+                        </li>
+                      {% endfor %}
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      {# ── Gallery, under the spoken languages ── #}
+      {% if pictures|length > 0 %}
+        {% set _galleryUrl = submenu.items.gallery.url ?? url('gallery_show_user_images', {username: member.username}) %}
+        <section class="p-pro-card">
+          <div class="p-pro-card__head">
+            <h2 class="p-pro-card__title">{{ 'profile.menu.images'|trans({}, 'messages', profile_language)|raw }}</h2>
+            <a class="p-pro-card__link" href="{{ _galleryUrl }}">{{ 'profile.all.images'|trans({}, 'messages', profile_language) }} {{ pictures|length }}</a>
+          </div>
+          <div class="p-pro-gallery p-pro-gallery--wide">
+            {% for picture in pictures|slice(0, 4) %}
+              <a href="{{ url('gallery_image', {id: picture.id}) }}"
+                 class="p-pro-gallery__item"
+                 style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
+                 data-toggle="lightbox"
+                 data-gallery="profile-gallery-{{ profile_language }}"
+                 data-type="image"
+                 data-caption="{{ picture.title|e('html_attr') }}"
+                 aria-label="{{ picture.title|e('html_attr') }}"></a>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+      {# ── Accommodation: guests, hosting interest, accessibility, then the details ── #}
+      <section class="p-pro-card">
+        <div class="p-pro-card__head">
+          <h2 class="p-pro-card__title">{{ 'profile.accommodation'|trans({}, 'messages', profile_language)|raw }}</h2>
+          {% if isHosting %}
+            {% set lastUpdate = member.updated ?? member.created %}
+            <span class="p-pro-card__aside"><i class="far fa-clock" aria-hidden="true"></i> {{ 'profile.hosting_interest.last_updated'|trans({updated: lastUpdate}, 'messages+intl-icu', profile_language) }}</span>
+          {% endif %}
+        </div>
+        {% if member.accommodation is null %}
+          <p class="p-pro-card__empty">{{ 'profile.no.accommodation'|trans({}, 'messages', profile_language) }}</p>
+        {% elseif isHosting %}
+          <div class="p-pro-stats">
+            {% if member.maxGuests != 0 %}
+              <div class="p-pro-stat">
+                <i class="fas fa-user-friends p-pro-stat__icon" aria-hidden="true"></i>
+                <span class="p-pro-stat__label">{{ 'profile.max.guests.short'|trans({}, 'messages', profile_language) }}</span>
+                <strong class="p-pro-stat__value">{{ member.maxGuests }}</strong>
+              </div>
+            {% endif %}
+            <div class="p-pro-stat">
+              <i class="fas fa-star p-pro-stat__icon p-pro-stat__icon--star" aria-hidden="true"></i>
+              <span class="p-pro-stat__label">{{ 'profile.hosting_interest'|trans({}, 'messages', profile_language)|striptags|trim(' :') }}</span>
+              {# On 10 steps, filled up to the interest (the words stay for screen readers) #}
+              {% set interest = member.hostingInterest|default(0) %}
+              {% if interest > 0 %}
+                <span class="p-pro-hostbar" aria-hidden="true">
+                  {% for step in 1..10 %}<span class="p-pro-hostbar__seg{{ step <= interest ? ' is-on' }}" style="--step: {{ step }}"></span>{% endfor %}
+                </span>
+                <span class="visually-hidden">{{ macros.hostingInterest(interest, profile_language) }}</span>
+              {% else %}
+                <strong class="p-pro-stat__value">{{ macros.hostingInterest(interest, profile_language) }}</strong>
+              {% endif %}
+            </div>
+            {% if wheelchair %}
+              <div class="p-pro-stat p-pro-stat--access">
+                <i class="fas fa-wheelchair p-pro-stat__icon" aria-hidden="true"></i>
+                <span class="p-pro-stat__label">{{ 'profile.accessibility'|trans({}, 'messages', profile_language) }}</span>
+                <strong class="p-pro-stat__value">{{ 'wheelchair'|trans({}, 'messages', profile_language) }}</strong>
+              </div>
+            {% endif %}
+          </div>
+        {% else %}
+          <p class="p-pro-card__empty">{{ 'member.not.hosting'|trans({}, 'messages', profile_language) }}</p>
+        {% endif %}
+
+        {% for field in guestFields|filter(field => field.text|length > 0) %}
+          <div class="p-pro-field">
+            <h3 class="p-pro-field__label">{{ field.label|trans({}, 'messages', profile_language)|raw }}</h3>
+            <div class="p-pro-field__text">{{ field.text|purify|nl2br }}</div>
+          </div>
+        {% endfor %}
+        {% if standardOffers|length > 0 or offerGuests|length > 0 %}
+          <div class="p-pro-field">
+            <h3 class="p-pro-field__label">{{ 'profile.offer.guests'|trans({}, 'messages', profile_language)|raw }}</h3>
+            <div class="p-pro-field__text">
+              {% for offer in standardOffers %}{{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, 'messages', profile_language) }}<br>{% endfor %}
+              {% if offerGuests|length > 0 %}{{ offerGuests|purify|nl2br }}{% endif %}
+            </div>
+          </div>
+        {% endif %}
+        {% if restrictions|length > 0 or houseRules|length > 0 %}
+          <div class="p-pro-field">
+            <h3 class="p-pro-field__label">{{ 'profile.house.rules'|trans({}, 'messages', profile_language)|raw }}</h3>
+            <div class="p-pro-field__text">
+              {% for restriction in restrictions %}{{ ('restriction_' ~ restriction)|lower|trans({}, 'messages', profile_language) }}<br>{% endfor %}
+              {% if houseRules|length > 0 %}{{ houseRules|purify|nl2br }}{% endif %}
+            </div>
+          </div>
+        {% endif %}
+      </section>
+
+      {# ── Comments: the latest ones; the counts are in the profile head, the total on Show all ── #}
+      <section class="p-pro-card p-pro-card--comments">
+        <div class="p-pro-card__head">
+          <h2 class="p-pro-card__title">
+            {{ 'profile.comments'|trans({}, 'messages', profile_language) }}
+          </h2>
+        </div>
+
+        {% for comment in comments %}
+          {% include 'profile/comment.embedded.html.twig' with { comment: comment, language: profile_language, hide_answer: true } %}
+        {% else %}
+          <div class="p-no-comments">
+            <i class="fas fa-comment-slash" aria-hidden="true"></i>
+            <p>{{ 'profile.no.comments'|trans({}, 'messages', profile_language) }}</p>
+          </div>
+        {% endfor %}
+
+        {% if has_more_comments|default(false) %}
+          <div class="p-comments-more">
+            {# A secondary button with the total, so it shows there are more comments than the latest ones #}
+            <a href="{{ url('profile_comments', {username: member.username}) }}" class="p-comments-more__btn">
+              {{ 'showallcomments'|trans({}, 'messages', profile_language) }}
+              <span class="p-comments-more__count">{{ comments_count.total }}</span>
+              <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </a>
+          </div>
+        {% endif %}
+        {# Only "add a comment": an own comment already has its small edit button. #}
+        {% if submenu.items is defined and submenu.items.comment is defined and submenu.items.comment.key != 'EditComments' %}
+          <div class="p-comments-cta">
+            <a href="{{ submenu.items.comment.url }}" class="p-hero__btn p-hero__btn--secondary js-contact-open" data-title="{{ submenu.items.comment.key|lower|trans|striptags }}">
+              <i class="fas fa-comment" aria-hidden="true"></i> {{ submenu.items.comment.key|lower|trans }}
+            </a>
+          </div>
+        {% endif %}
+      </section>
+
+    </div>
+
+    <aside class="p-pro-layout__side">
+
+      {# ── My private note about this member (only I see it) ── #}
+      {% include 'profile/_note.html.twig' with {where: 'side'} %}
+
+      {# ── Admins: their tools for this member ── #}
+      {% include 'profile/_admin_tools.html.twig' with {where: 'side'} %}
+
+      {# ── Where I live: a small map of the approximate area (rounded coordinates) ── #}
+      {% if not address is same as(false) and address.latitude and address.longitude %}
+        {% set _loc = address.location %}
+        {% set _lat = address.latitude|round(2) %}
+        {% set _lng = address.longitude|round(2) %}
+        <section class="p-pro-card p-pro-card--where">
+          <div class="p-pro-card__head">
+            <h2 class="p-pro-card__title">{{ 'profile.where.i.live'|trans({}, 'messages', profile_language) }}</h2>
+            <a class="p-pro-card__link" href="https://www.openstreetmap.org/?mlat={{ _lat }}&amp;mlon={{ _lng }}#map=13/{{ _lat }}/{{ _lng }}"
+               target="_blank" rel="noopener">{{ 'profile.open.map'|trans({}, 'messages', profile_language) }}</a>
+          </div>
+          <div class="p-pro-where__map js-pro-where-map" data-lat="{{ _lat }}" data-lng="{{ _lng }}"
+               aria-label="{{ 'profile.location'|trans({}, 'messages', profile_language) }}"></div>
+          {% if _loc %}
+            <p class="p-pro-where__city">{{ _loc.name }}</p>
+            <p class="p-pro-where__area">
+              {%- if _loc.admin1 is not null %}{{ _loc.admin1.name }}, {% endif -%}
+              {{ _loc.country.name }} · {{ 'profile.approximate.area'|trans({}, 'messages', profile_language) }}
+            </p>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      {# ── Interests, one icon each ── #}
+      {% if interests|length > 0 %}
+        <section class="p-pro-card">
+          <h2 class="p-pro-card__title">{{ 'profile.interests'|trans({}, 'messages', profile_language)|raw }}</h2>
+          <ul class="p-pro-interests">
+            {% for field in interests %}
+              <li class="p-pro-interest">
+                <span class="p-pro-interest__icon" aria-hidden="true"><i class="fas {{ field.icon }}"></i></span>
+                <span>
+                  <span class="p-pro-interest__label">{{ field.label|trans({}, 'messages', profile_language) }}</span>
+                  <span class="p-pro-interest__text">{{ field.text|purify|nl2br }}</span>
+                </span>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {# ── Past and planned trips ── #}
+      {% if pastTrips|length > 0 or plannedTrips|length > 0 %}
+        <section class="p-pro-card">
+          <h2 class="p-pro-card__title">{{ 'profile.travel.experience'|trans({}, 'messages', profile_language)|raw }}</h2>
+          {% if pastTrips|length > 0 %}
+            <div class="p-pro-trip">
+              <h3 class="p-pro-trip__label">{{ 'profile.past.trips'|trans({}, 'messages', profile_language)|raw }}</h3>
+              <div class="p-pro-trip__text">{{ pastTrips|purify|nl2br }}</div>
+            </div>
+          {% endif %}
+          {% if plannedTrips|length > 0 %}
+            <div class="p-pro-trip p-pro-trip--planned">
+              <h3 class="p-pro-trip__label">{{ 'profile.planned.trips'|trans({}, 'messages', profile_language)|raw }}</h3>
+              <div class="p-pro-trip__text">{{ plannedTrips|purify|nl2br }}</div>
+            </div>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      {# ── Groups ── #}
+      {% if member.groups|length > 0 %}
+        <section class="p-pro-card">
+          <div class="p-pro-card__head">
+            <h2 class="p-pro-card__title">{{ 'profile.groups'|trans({}, 'messages', profile_language)|raw }}</h2>
+            {% if member.groups|length > 5 %}
+              <a class="p-pro-card__link" href="{{ url('group_user_all', {username: member.username}) }}">{{ 'groupsallmylink'|trans({}, 'messages', profile_language) }} {{ member.groups|length }}</a>
+            {% endif %}
+          </div>
+          <ul class="p-pro-groups">
+            {% for group in member.groups|slice(0, 5) %}
+              <li>
+                <a class="p-pro-group" href="{{ url('group_start', {group_id: group.id}) }}">
+                  <img class="p-pro-group__img" width="40" height="40" alt="" src="{{ url('group_thumbimg', {group_id: group.id}) }}">
+                  <span class="p-pro-group__name">{{ group.name }}</span>
+                  <i class="fas fa-chevron-right p-pro-group__go" aria-hidden="true"></i>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+
+      {# ── Family and friends ── #}
+      {% if friends|length > 0 %}
+        <section class="p-pro-card">
+          <div class="p-pro-card__head">
+            <h2 class="p-pro-card__title">{{ 'profile.family.and.friends'|trans({}, 'messages', profile_language)|raw }}</h2>
+            {% if friends|length > 9 %}
+              <a class="p-pro-card__link" href="{{ url('friends', {username: member.username}) }}">{{ 'profile.all.friends'|trans({}, 'messages', profile_language) }} {{ friends|length }}</a>
+            {% endif %}
+          </div>
+          <ul class="p-pro-friends">
+            {% for friend in friends|slice(0, 9) %}
+              {% set other = friend.left == member ? friend.right : friend.left %}
+              <li>
+                <a class="p-pro-friend" href="{{ url('members_profile', {username: other.username}) }}">
+                  <img class="p-pro-friend__img" src="{{ url('avatar', {username: other.username, size: 96}) }}" alt="" loading="lazy">
+                  <span class="p-pro-friend__name">{{ other.username }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+
+    </aside>
+  </div>
+</div>

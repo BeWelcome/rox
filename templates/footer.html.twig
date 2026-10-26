@@ -8,15 +8,20 @@
     <div id="footer_content" class="stickyfooter">
         <div class="stickyfooter__main">
         <div class="container-fluid stickyfooter-container">
-            <div class="row align-items-lg-start stickyfooter__columns">
+            {# Below 768px the links are folded behind this button (footer.js) #}
+            <button type="button" class="stickyfooter__toggle js-footer-toggle" aria-expanded="false" aria-controls="footer_links">
+                <span>{{ 'footer.links.toggle'|trans }}</span>
+                <i class="fas fa-chevron-down stickyfooter__toggle-icon" aria-hidden="true"></i>
+            </button>
+            <div id="footer_links" class="row align-items-lg-start stickyfooter__columns">
                         {% if app.user %}
                         <div class="col-12 col-md-6 col-lg-3 mb-4 mb-lg-0">
                             <h2 class="stickyfooter__heading">
                                 <i class="fa fa-users stickyfooter__heading-icon" aria-hidden="true"></i>{{ 'communitymenu' | trans }}
                             </h2>
                             <ul class="list-unstyled stickyfooter__link-list mb-0">
-                                <li><a href="{{ path('forums') }}">{{ 'communitydiscussions' | trans }}</a></li>
-                                <li><a href="{{ path('groups_mygroups') }}">{{ 'groups' | trans }}</a></li>
+                                <li><a href="{{ path('forums') }}">{{ 'landing.tab.forum' | trans }}</a></li>
+                                <li><a href="{{ path('groups_mygroups') }}">{{ 'landing.button.mygroups' | trans }}</a></li>
                                 <li><a href="{{ path('activities') }}">{{ 'activities' | trans }}</a></li>
                                 <li><a href="{{ path('wiki_front_page') }}">{{ 'wiki' | trans }}</a></li>
                                 <li><a href="{{ path('newsletters') }}">{{ 'newsletters' | trans }}</a></li>

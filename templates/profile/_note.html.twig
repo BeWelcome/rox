@@ -1,0 +1,36 @@
+{#
+  My private note about the member, as a yellow sticky note (only I see it). Shown at the top
+  of the right column, and on phones and tablets under the head (where: 'side' or 'top').
+  It opens in the side panel (note/note.form.html.twig). No note yet: nothing here, it is
+  added from the "…" menu of the head.
+#}
+{% set _noteTitle = 'profile.note.about'|trans({'username': member.username})|striptags %}
+{% if note is defined and note %}
+  <section class="p-pro-note p-pro-note--{{ where }}">
+    <div class="p-pro-note__head">
+      <h2 class="p-pro-note__title"><span class="p-pro-note__mark" aria-hidden="true"></span> {{ 'profile.note.mine'|trans }}</h2>
+      <span class="p-pro-note__private"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'profile.note.only.you.short'|trans }}</span>
+    </div>
+    <div class="p-pro-note__text js-note-clamp">{{ note.comment|purify }}</div>
+    <a class="p-pro-note__more js-note-more js-contact-open" href="{{ path('view_note', {username: member.username}) }}" data-title="{{ _noteTitle }}" hidden>{{ 'profile.note.read.more'|trans }}</a>
+    <div class="p-pro-note__foot">
+      {% if note.category %}<span class="p-pro-note__category">{{ note.category }}</span>{% endif %}
+      {% set _noteDate = note.updated ?: note.created %}
+      {% if _noteDate %}<span class="p-pro-note__date">{{ _noteDate|format_date('medium') }}</span>{% endif %}
+      <a class="p-pro-note__edit-link js-contact-open" href="{{ path('edit_note', {username: member.username}) }}" data-title="{{ _noteTitle }}">
+        <i class="fas fa-pen" aria-hidden="true"></i> {{ 'note.edit'|trans }}
+      </a>
+    </div>
+  </section>
+  {# A long note (or one with pictures) is cut: "Read more" opens it in full in the side panel #}
+  <script>
+    document.querySelectorAll('.p-pro-note--{{ where }} .js-note-clamp').forEach(function (text) {
+      var more = text.parentNode.querySelector('.js-note-more');
+      var check = function () { more.hidden = text.scrollHeight <= text.clientHeight + 4; };
+      text.querySelectorAll('img').forEach(function (img) { img.addEventListener('load', check); });
+      check();
+      window.addEventListener('load', check);
+      window.addEventListener('resize', check);
+    });
+  </script>
+{% endif %}

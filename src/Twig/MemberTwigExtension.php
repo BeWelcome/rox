@@ -16,6 +16,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
+use Twig\TwigFunction;
 
 class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
 {
@@ -133,6 +134,36 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
                 ? $this->browserPushPreferenceService->getValue($this->member)
                 : BrowserPushPreferenceService::VALUE_NO,
         ];
+    }
+
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('member_comments_count', $this->getMemberCommentsCount(...)),
+            new TwigFunction('member_comments_by_quality', $this->getMemberCommentsByQuality(...)),
+        ];
+    }
+
+    /**
+     * Number of visible comments a member received, shown next to the name in the profile header.
+     */
+    public function getMemberCommentsCount(Member $member): int
+    {
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $this->entityManager->getRepository(Comment::class);
+
+        return $commentRepository->getVisibleCommentsForMemberCount($member);
+    }
+
+    /**
+     * Comments the member received, counted by quality (positive, neutral, negative, total).
+     */
+    public function getMemberCommentsByQuality(Member $member): array
+    {
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $this->entityManager->getRepository(Comment::class);
+
+        return $commentRepository->getCommentsCountMemberByQuality($member);
     }
 
     public function getName()

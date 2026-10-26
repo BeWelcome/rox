@@ -1,0 +1,245 @@
+{#
+  Building blocks shared by the conversation lists (/conversations/, /messages/, …)
+  and the conversation view (/conversation/{id}).
+#}
+
+{% macro folder_url(folder, params = {}) -%}
+    {%- if folder in ['spam', 'deleted'] -%}
+        {{ path('conversations_' ~ folder, params) }}
+    {%- else -%}
+        {{ path('conversations', { conversationsType: folder }|merge(params)) }}
+    {%- endif -%}
+{%- endmacro %}
+
+{#
+  A filter link: on the folder pages it reloads the folder; next to an open conversation
+  (linkBase is that page) it keeps the conversation open and only filters the list.
+#}
+{% macro filter_url(folder, params, linkBase) -%}
+    {%- import _self as inbox -%}
+    {%- if linkBase -%}
+        {{ linkBase }}?{{ ({ folder: folder }|merge(params))|url_encode }}
+    {%- else -%}
+        {{ inbox.folder_url(folder, params) }}
+    {%- endif -%}
+{%- endmacro %}
+
+{# Left column on desktop ('column'), drop-down under the list title below 992px ('menu'). #}
+{% macro nav(active, variant) %}
+    {% import _self as inbox %}
+    {% set folders = {
+        conversations: { key: 'conversations', icon: 'fas fa-comments' },
+        messages: { key: 'messages', icon: 'fas fa-envelope' },
+        requests: { key: 'requests', icon: 'fas fa-bed' },
+        invitations: { key: 'invitations', icon: 'fas fa-handshake' },
+        spam: { key: 'conversations.spam', icon: 'fas fa-flag' },
+        deleted: { key: 'conversations.deleted', icon: 'fas fa-trash' },
+    } %}
+    {# Unread conversations show as a count next to their folder, in the column and in the drop-down #}
+    {% set unreadCounts = inbox_unread_counts() %}
+    {% if variant == 'menu' %}
+        <nav class="c-inbox-folders__menu" aria-label="{{ 'messages'|trans }}">
+            {% for folder, item in folders %}
+                <a class="c-inbox-folder{{ folder == active ? ' is-active' : '' }}" href="{{ inbox.folder_url(folder) }}"
+                   {% if folder == active %}aria-current="page"{% endif %}>
+                    <i class="{{ item.icon }} fa-fw" aria-hidden="true"></i>
+                    <span>{{ item.key|trans }}</span>
+                    {% if (unreadCounts[folder] ?? 0) > 0 %}<span class="c-inbox-folder__count">{{ unreadCounts[folder] }}</span>{% endif %}
+                </a>
+            {% endfor %}
+        </nav>
+    {% else %}
+        <nav class="c-inbox__nav" aria-label="{{ 'messages'|trans }}">
+            <h1 class="c-inbox__nav-title">{{ 'messages'|trans }}</h1>
+            {% for folder, item in folders %}
+                <a class="c-inbox-folder{{ folder == active ? ' is-active' : '' }}" href="{{ inbox.folder_url(folder) }}"
+                   {% if folder == active %}aria-current="page"{% endif %}>
+                    <i class="{{ item.icon }} fa-fw" aria-hidden="true"></i>
+                    <span>{{ item.key|trans }}</span>
+                    {% if (unreadCounts[folder] ?? 0) > 0 %}<span class="c-inbox-folder__count">{{ unreadCounts[folder] }}</span>{% endif %}
+                </a>
+            {% endfor %}
+        </nav>
+    {% endif %}
+{% endmacro %}
+
+{# One conversation in the list. #}
+{% macro item(message, member, folder, current, checkbox, filterParams = {}) %}
+    {% import _self as inbox %}
+    {% set otherMember = (message.sender == member) ? message.receiver : message.sender %}
+    {% set lastMessageByMember = (member == message.sender) %}
+    {% set unread = (message.sender == otherMember) and ((message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00')) %}
+    {% set route = folder == 'deleted' ? 'conversation_view_with_deleted' : 'conversation_view' %}
+    {% set params = (folder in ['conversations', 'deleted'] ? { id: message.id } : { id: message.id, folder: folder })|merge(filterParams) %}
+    {% set isActive = current is not null and current.subject is not null and message.subject is not null and current.subject == message.subject %}
+    {% set isActive = isActive or (current is not null and current.id == message.id) %}
+    {% set sent = message.dateSent ?? message.created %}
+    {% if sent|date('Y-m-d') == 'now'|date('Y-m-d') %}
+        {% set when = sent|format_time('short') %}
+    {% elseif sent|date('Y') == 'now'|date('Y') %}
+        {% set when = sent|format_date(pattern='d MMM') %}
+    {% else %}
+        {% set when = sent|format_date('short') %}
+    {% endif %}
+    {% set preview = message.message|replace({'\n': ' ', '<br />': ' ', '</p>': ' '})|striptags|trim %}
+
+    <div class="c-inbox-item{{ unread ? ' is-unread' : '' }}{{ isActive ? ' is-active' : '' }}">
+        {% if checkbox %}
+            <div class="c-inbox-item__check">
+                {{ form_widget(checkbox, { attr: { class: 'checkable' } }) }}
+            </div>
+        {% endif %}
+        <a class="c-inbox-item__link" href="{{ path(route, params) }}"{% if isActive %} aria-current="true"{% endif %}>
+            {% set kindIcon = message.request ? (message.request.inviteForLeg is null ? 'fa-bed' : 'fa-handshake') : null %}
+            {# The request's state colours its badge: green once accepted, red once declined or cancelled. #}
+            {% set requestState = message.request ? ({ 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[message.request.status] ?? 'open') : null %}
+            {% set requestTone = { accepted: 'success', declined: 'danger', cancelled: 'danger' }[requestState] ?? 'pending' %}
+            {# Where the request stands, with the decision's icon (on the avatar) #}
+            {% set states = {
+                open: { icon: 'fas fa-clock', tone: 'pending' },
+                tentatively: { icon: 'fa fa-question', tone: 'maybe' },
+                accepted: { icon: 'fa fa-check', tone: 'success' },
+                declined: { icon: 'fa fa-times', tone: 'danger' },
+                cancelled: { icon: 'fa fa-times', tone: 'danger' },
+            } %}
+            <span class="c-inbox-item__avatar">
+                <img class="c-inbox-avatar" src="{{ path('avatar', { username: otherMember.username, size: 48 }) }}" alt="" loading="lazy">
+                {% if kindIcon %}<span class="c-inbox-item__kind c-inbox-item__kind--{{ states[requestState].tone }}" title="{{ ('request.status.' ~ requestState)|trans }}"><i class="{{ states[requestState].icon }}" aria-hidden="true"></i><span class="visually-hidden">{{ ('request.status.' ~ requestState)|trans }}</span></span>{% endif %}
+            </span>
+            <div class="c-inbox-item__body">
+                <div class="c-inbox-item__top">
+                    <span class="c-inbox-item__name">{{ otherMember.username }}</span>
+                    <span class="c-inbox-item__date">{{ when }}</span>
+                </div>
+                {% if message.request %}
+                    <div class="c-inbox-item__tags">
+                        <div class="c-inbox-item__badge">
+                            <span><i class="fas {{ kindIcon }}" aria-hidden="true"></i> {{ message.request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}</span>
+                            <span class="c-inbox-item__badge-dates">
+                                {{- message.request.arrival|format_date(pattern='d MMM') }}
+                                {%- if message.request.departure %} – {{ message.request.departure|format_date(pattern='d MMM') }}{% endif -%}
+                            </span>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="c-inbox-item__subject">
+                    {%- if message.subject -%}
+                        {{ message.subject.subject|striptags }}
+                    {%- else -%}
+                        {{ 'conversation.with'|trans({ username: otherMember.username }) }}
+                    {%- endif -%}
+                </div>
+                <div class="c-inbox-item__bottom">
+                    <span class="c-inbox-item__preview">
+                        {%- if lastMessageByMember %}{{ 'you'|trans|capitalize }}: {% endif -%}
+                        {{ preview|truncate(140) }}
+                    </span>
+                    {% if unread %}<span class="c-inbox-item__dot" aria-hidden="true"></span>{% endif %}
+                </div>
+            </div>
+        </a>
+    </div>
+{% endmacro %}
+
+{#
+  The list card: title, filters and conversations. On the list pages the conversations
+  sit in the selection form (form is set); on the conversation view they are links only.
+#}
+{% macro list(conversations, folder, options) %}
+    {% import _self as inbox %}
+    {% set options = { form: null, current: null, initiator: 2, unreadOnly: false, linkBase: null }|merge(options) %}
+    {% set form = options.form %}
+    {% set member = app.user %}
+    {% set titles = { spam: 'conversations.spam', deleted: 'conversations.deleted' } %}
+    {% set initiator = options.initiator|default(2) * 1 %}
+    {% set filterParams = {} %}
+    {% if initiator != 2 %}{% set filterParams = filterParams|merge({ initiator: initiator }) %}{% endif %}
+    {% if options.unreadOnly %}{% set filterParams = filterParams|merge({ unread_only: 1 }) %}{% endif %}
+
+    <div class="c-inbox-list__head">
+        {# On mobile the site header is hidden on the inbox, so this leads back to the home page. #}
+        <a class="c-inbox-list__back" href="{{ path('landingpage') }}">
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            <span class="visually-hidden">{{ 'back'|trans }}</span>
+        </a>
+        {# Below 992px the title opens the folder list; on desktop the folders are in the left column. #}
+        <details class="c-inbox-folders">
+            <summary class="c-inbox-list__title">
+                <h2>{{ (titles[folder] ?? folder)|trans }}</h2>
+                <span class="c-inbox-folders__chevron" aria-hidden="true"></span>
+            </summary>
+            {{ inbox.nav(folder, 'menu') }}
+        </details>
+        {% if form and conversations.nbResults > 0 %}
+            <button type="button" class="c-inbox-list__select js-inbox-select" aria-pressed="false"
+                    aria-label="{{ 'select'|trans }}"
+                    data-label-select="{{ 'select'|trans }}" data-label-done="{{ 'conversations.select.done'|trans }}">
+                <i class="fas fa-list-ul c-inbox-list__select-on" aria-hidden="true"></i>
+                <i class="fas fa-times c-inbox-list__select-off" aria-hidden="true"></i>
+            </button>
+        {% endif %}
+    </div>
+
+    {% if folder not in ['spam', 'deleted'] %}
+        {% set meParams = initiator == 1 ? filterParams|filter((v, k) => k != 'initiator') : filterParams|merge({ initiator: 1 }) %}
+        {% set otherParams = initiator == 3 ? filterParams|filter((v, k) => k != 'initiator') : filterParams|merge({ initiator: 3 }) %}
+        {% set unreadParams = options.unreadOnly ? filterParams|filter((v, k) => k != 'unread_only') : filterParams|merge({ unread_only: 1 }) %}
+        {% set allActive = initiator == 2 and not options.unreadOnly %}
+        <div class="c-inbox-filters">
+            <a class="c-inbox-filters__pill c-inbox-filters__pill--all{{ allActive ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, {}, options.linkBase) }}"{% if allActive %} aria-current="true"{% endif %}>{{ 'conversations.filter.all'|trans }}</a>
+            <a class="c-inbox-filters__pill{{ options.unreadOnly ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, unreadParams, options.linkBase) }}"{% if options.unreadOnly %} aria-current="true"{% endif %}>
+                <span class="c-inbox-filters__dot" aria-hidden="true"></span>{{ 'conversations.unread'|trans }}
+            </a>
+            <a class="c-inbox-filters__pill{{ initiator == 1 ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, meParams, options.linkBase) }}"{% if initiator == 1 %} aria-current="true"{% endif %}>{{ 'started.by.me'|trans }}</a>
+            <a class="c-inbox-filters__pill{{ initiator == 3 ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, otherParams, options.linkBase) }}"{% if initiator == 3 %} aria-current="true"{% endif %}>{{ 'started.by.someone.else'|trans }}</a>
+        </div>
+    {% endif %}
+
+    {% if conversations.nbResults == 0 %}
+        <p class="c-inbox-list__empty">{{ 'conversations.none'|trans }}</p>
+        {# Nothing to select: keep form_rest from drawing the buttons and the empty field. #}
+        {% if form %}
+            {% do form.messages.setRendered %}
+            {% do form.delete.setRendered %}
+            {% do form.spam.setRendered %}
+            {% if folder == 'deleted' %}{% do form.purge.setRendered %}{% endif %}
+        {% endif %}
+    {% else %}
+        <div class="c-inbox-list__items">
+            {% for message in conversations.currentPageResults %}
+                {{ inbox.item(message, member, folder, options.current, form ? form.messages[loop.index0] : null, filterParams) }}
+            {% endfor %}
+        </div>
+
+        {% if conversations.haveToPaginate and form %}
+            <div class="c-inbox-list__pages">
+                {{ pagerfanta(conversations, 'rounded_pagination') }}
+            </div>
+        {% endif %}
+
+        {% if form %}
+            <div class="c-inbox-actions" aria-label="{{ 'conversations.label.delete_or_spam'|trans }}">
+                <button type="button" class="c-inbox-actions__all js-inbox-check-all"
+                        data-label-check="{{ 'conversations.check.all'|trans }}" data-label-uncheck="{{ 'conversations.uncheck.all'|trans }}">{{ 'conversations.check.all'|trans }}</button>
+                <div class="c-inbox-actions__buttons">
+                    {{ inbox.action(form.spam, 'fas fa-flag', 'outline') }}
+                    {% if folder == 'deleted' %}
+                        {{ inbox.action(form.delete, 'fas fa-inbox', 'outline') }}
+                        {{ inbox.action(form.purge, 'fas fa-trash', 'danger') }}
+                    {% else %}
+                        {{ inbox.action(form.delete, 'fas fa-trash', 'danger') }}
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endmacro %}
+
+{# A submit button of the selection form, drawn by hand to carry its icon. #}
+{% macro action(button, icon, variant) %}
+    <button type="submit" id="{{ button.vars.id }}" name="{{ button.vars.full_name }}" class="c-inbox-actions__btn c-inbox-actions__btn--{{ variant }}">
+        <i class="{{ icon }}" aria-hidden="true"></i>
+        <span>{{ button.vars.label|trans }}</span>
+    </button>
+    {% do button.setRendered %}
+{% endmacro %}

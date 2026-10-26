@@ -1,66 +1,47 @@
-<div class="u:rounded-8 u:p-8 u:w-full u:mb-8 u:bg-gray-5">
-    <div class="u:flex u:flex-col u:md:flex-row u:justify-between">
-        <div>
-            <div class="u:p-4">
-                {% if original.Initiator == myself %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
-                    class="fa fa-question me-1"></i> {{ 'invitation.host.open'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
-                    class="fa fa-times me-1"></i> {{ 'invitation.host.cancelled'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i
-                    class="fa fa-times me-1"></i> {{ 'invitation.host.declined'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i
-                    class="far fa-handshake me-1"></i> {{ 'invitation.host.accepted'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
-                    class="fa fa-question me-1"></i> {{ 'invitation.host.tentatively'|trans }}{% endif %}
-            {% else %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}<i
-                    class="fa fa-question  me-1"></i> {{ 'invitation.guest.open'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}<i
-                    class="fa fa-times me-1"></i> {{ 'invitation.guest.cancelled'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}<i
-                    class="fa fa-times me-1"></i> {{ 'invitation.guest.declined'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}<i
-                    class="far fa-handshake me-1"></i> {{ 'invitation.guest.accepted'|trans }}{% endif %}
-                {% if invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}<i
-                    class="fa fa-question me-1"></i> {{ 'invitation.guest.tentatively'|trans }}{% endif %}
-            {% endif %}
-            </div>
-            <div class="u:p-4">
-                <i class="fa fa-calendar u:me-8"></i>
-                {{ invitation.arrival|format_date('full') }}
-                -
-                {{ invitation.departure|format_date('full') }}
-            </div>
-        </div>
-        <div>
-            <div class="u:p-4">
-                <i class="fa fa-moon u:me-8"></i>
-                {% set difference = date(invitation.departure).diff(date(invitation.arrival)) %}
-                {% set nights = difference.days %}
-                {{ 'request.night.stay'|trans ({'numbernights': nights}) }}
-            </div>
-        </div>
-        <div>
-            <div class="u:p-4">
-                <i class="fa fa-users u:me-4"></i>
-                {{ 'request.number.persons'|trans ({'numberpersons': invitation.numberOfTravellers}) }}
-            </div>
-            <div class="u:p-4">
-                <i class="fas fa-sync u:me-8"></i>
-                {% if invitation.flexible %}
-                    {{ 'request.flexible.with.arrival.departure'|trans }}
-                {% else %}
-                    {{ 'request.not.flexible.with.arrival.departure'|trans }}
-                {% endif %}
-            </div>
-        </div>
+{#
+  What the invitation is about, above the messages, as a card (like the hosting request
+  one, request/header.html.twig): "Invitation" and where it stands, arrival and
+  departure with the nights between, then the people and the year; a warning when the
+  dates differ from the trip's. The host (who invited) and the guest read a
+  different status text. Expects invitation, leg, original and myself.
+#}
+{% set S = 'App\\Entity\\HostingRequest::' %}
+{% set side = original.Initiator == myself ? 'host' : 'guest' %}
+{% set statuses = {
+    (constant(S ~ 'REQUEST_OPEN')): { key: 'open', tone: 'pending', icon: 'fas fa-clock' },
+    (constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED')): { key: 'tentatively', tone: 'maybe', icon: 'fa fa-question' },
+    (constant(S ~ 'REQUEST_ACCEPTED')): { key: 'accepted', tone: 'success', icon: 'far fa-handshake' },
+    (constant(S ~ 'REQUEST_DECLINED')): { key: 'declined', tone: 'danger', icon: 'fa fa-times' },
+    (constant(S ~ 'REQUEST_CANCELLED')): { key: 'cancelled', tone: 'danger', icon: 'fa fa-times' },
+} %}
+{% set status = statuses[invitation.status] ?? { key: null, tone: 'pending', icon: '' } %}
+{% set nights = date(invitation.departure|date('Y-m-d')).diff(date(invitation.arrival|date('Y-m-d'))).days %}
+{% set sameYear = invitation.arrival|date('Y') == invitation.departure|date('Y') %}
+
+<section class="c-stay-card c-stay-card--{{ status.tone }}">
+    <div class="c-stay-card__top">
+        <p class="c-stay-card__kind"><i class="fas fa-house-user" aria-hidden="true"></i> {{ 'invitation.card.title'|trans }}</p>
+        {% if status.key %}
+            <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ status.key)|trans }}</span>
+        {% endif %}
     </div>
-    {% if invitation.status != constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') and (invitation.arrival|date('Y-m-d') != leg.arrival|date('Y-m-d') or invitation.departure|date('Y-m-d') != leg.departure|date('Y-m-d')) %}
-        <div class="col-12 p-1">
-            <div class="alert alert-danger mb-0 p-2">
-                {{ 'trip.leg.not.matched'|trans }}
-            </div>
-        </div>
-    {% endif%}
-</div>
+    <div class="c-stay-card__dates">
+        <p class="c-stay-card__date">
+            <span class="c-stay-card__label">{{ 'request.card.arrival'|trans }} · {{ invitation.arrival|format_date(pattern='EEE') }}</span>
+            <strong>{{ invitation.arrival|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}{% if sameYear %}<span class="c-stay-card__y"> {{ invitation.arrival|date('Y') }}</span>{% endif %}</strong>
+        </p>
+        <span class="c-stay-card__nights"><i class="fas fa-moon c-stay-card__moon" aria-hidden="true"></i><i class="fas fa-arrow-right c-stay-card__arrow" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>
+        <p class="c-stay-card__date c-stay-card__date--end">
+            <span class="c-stay-card__label">{{ 'request.card.departure'|trans }} · {{ invitation.departure|format_date(pattern='EEE') }}</span>
+            <strong>{{ invitation.departure|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}{% if sameYear %}<span class="c-stay-card__y"> {{ invitation.departure|date('Y') }}</span>{% endif %}</strong>
+        </p>
+    </div>
+    <ul class="c-stay-card__facts">
+        <li><i class="fa fa-users" aria-hidden="true"></i> {{ 'request.card.persons'|trans({ count: invitation.numberOfTravellers }) }}</li>
+        {% include 'request/_card_cancel.html.twig' with { stay: invitation, place: 'facts', confirm: 'invitation.confirm.cancel' } %}
+    </ul>
+    {% include 'request/_card_cancel.html.twig' with { stay: invitation, place: 'side', confirm: 'invitation.confirm.cancel' } %}
+    {% if invitation.status != constant(S ~ 'REQUEST_ACCEPTED') and (invitation.arrival|date('Y-m-d') != leg.arrival|date('Y-m-d') or invitation.departure|date('Y-m-d') != leg.departure|date('Y-m-d')) %}
+        <p class="c-stay-card__warning"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> {{ 'trip.leg.not.matched'|trans }}</p>
+    {% endif %}
+</section>

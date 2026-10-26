@@ -1,0 +1,310 @@
+{% import 'macros.twig' as macros %}
+{#
+  One block of the edit page per profile language (only the active one is shown).
+  Each row opens its form in the side panel (js-contact-open, ?embed=1): it says what to
+  write when empty and shows the start of the text once filled. "Can you host?", the
+  number of guests and the hosting interest are saved as soon as they change
+  (profile/edit.js).
+#}
+{% set address = member.activeAddress %}
+{% set hasAddress = address is not same as(false) and address is not null %}
+{% set t = translated_fields[profile_language] ?? [] %}
+{% set inSetup = member.status in [constant('App\\Doctrine\\MemberStatusType::MAIL_CONFIRMED'), constant('App\\Doctrine\\MemberStatusType::AWAITING_MAIL_CONFIRMATION')] %}
+
+{% macro row(title, hint, text, url, options = {}) %}
+  {% set excerpt = text|default('')|striptags|replace({'&nbsp;': ' '})|trim %}
+  {% set filled = excerpt|length > 0 or options.filled|default(false) %}
+  <a href="{{ url }}" class="p-pe-row js-contact-open{{ filled ? ' is-filled' }}{{ options.icon is defined ? ' p-pe-row--icon' }}"
+     data-title="{{ title|striptags }}">
+    {% if options.icon is defined %}
+      <span class="p-pe-row__icon"><i class="fas fa-{{ options.icon }}" aria-hidden="true"></i></span>
+    {% else %}
+      <span class="p-pe-row__add"><i class="fas fa-{{ filled ? 'check' : 'plus' }}" aria-hidden="true"></i></span>
+    {% endif %}
+    <span class="p-pe-row__text">
+      <strong class="p-pe-row__title">{{ title }}</strong>
+      <span class="p-pe-row__hint">{{ filled and excerpt|length > 0 ? (excerpt|length > 90 ? excerpt|slice(0, 90) ~ '…' : excerpt) : hint }}</span>
+    </span>
+    {% if options.badge is defined and options.badge %}
+      <span class="p-pe-row__badge">{{ options.badge }}</span>
+    {% endif %}
+    {% if options.icon is defined %}
+      <span class="p-pe-row__go"><i class="fas fa-{{ filled ? 'pen' : 'plus' }}" aria-hidden="true"></i></span>
+    {% endif %}
+  </a>
+{% endmacro %}
+{% import _self as edit %}
+
+<div id="profile-language-{{ profile_language }}" class="{% if profile_language != active_locale %}u:hidden! {% endif %}p-pe-lang">
+  <div class="p-pe-layout">
+    <div class="p-pe-layout__main">
+
+      {#
+        Account: name, birth date, gender, email. The eye of each line shows or hides it to
+        the other members, saved at once with the account form (profile/edit.js); the email
+        is never shown. Everything else is changed in the side panel.
+      #}
+      {% set accountUrl = url('account_edit', {username: member.username}) %}
+      {% set age = member.birthdate ? member.birthdate.age : null %}
+      {% set genderIcon = {male: 'mars', female: 'venus'}[member.gender] ?? 'genderless' %}
+      <section class="p-pe-card p-pe-card--account js-pe-account" data-account-url="{{ accountUrl }}"
+               data-shown="{{ 'profile.edit.account.shown'|trans }}" data-hidden="{{ 'profile.edit.account.hidden'|trans }}">
+        <div class="p-pe-card__head">
+          <div class="p-pe-account-title">
+            <h2 class="p-pe-card__title">{{ 'profile.edit.settings.account'|trans }}</h2>
+            <span class="p-pe-account-title__hint">{{ 'profile.edit.account.tap.eye'|trans }}</span>
+          </div>
+          <a href="{{ accountUrl }}" class="p-pe-head__btn p-pe-account-edit js-contact-open" data-title="{{ 'profile.edit.settings.account'|trans }}" title="{{ 'profile.edit.account.edit'|trans }}">
+            <i class="fas fa-pen" aria-hidden="true"></i> <span>{{ 'profile.edit.account.edit'|trans }}</span>
+          </a>
+        </div>
+        <ul class="p-pe-account">
+          {% for line in [
+            {icon: 'user', label: 'profile.edit.account.name', value: member.name, shown: member.nameVisible, field: 'show_name'},
+            {icon: 'calendar', label: 'profile.edit.account.birthdate', value: member.birthdate ? member.birthdate|format_date('medium') : '', extra: age ? 'profile.edit.account.age'|trans({age: age}) : '', shown: member.ageVisible, field: 'show_age'},
+            {icon: 'genderless', label: 'profile.edit.account.gender', value: member.gender ? member.gender|trans : '', pill: genderIcon, shown: member.genderVisible, field: 'show_gender'},
+            {icon: 'envelope', label: 'profile.edit.account.email', value: member.email, shown: false, field: null},
+          ] %}
+            <li class="p-pe-account__item">
+              <span class="p-pe-account__icon"><i class="fas fa-{{ line.icon }}" aria-hidden="true"></i></span>
+              <span class="p-pe-account__text">
+                <span class="p-pe-account__label">{{ line.label|trans }}</span>
+                <span class="p-pe-account__value{{ line.value ? '' : ' is-empty' }}">
+                  {%- if line.pill is defined and line.value -%}
+                    <span class="p-pe-account__pill p-pe-account__pill--{{ member.gender }}"><i class="fas fa-{{ line.pill }}" aria-hidden="true"></i> {{ line.value }}</span>
+                  {%- else -%}
+                    {{ line.value ?: '—' }}
+                  {%- endif -%}
+                  {%- if line.extra is defined and line.extra %} <span class="p-pe-account__extra">{{ line.extra }}</span>{% endif -%}
+                </span>
+              </span>
+              {% if line.field %}
+                {% set seen = (line.shown ? 'profile.edit.account.shown' : 'profile.edit.account.hidden')|trans %}
+                <button type="button" class="p-pe-account__seen js-pe-seen{{ line.shown ? ' is-shown' }}" data-field="{{ line.field }}"
+                        aria-pressed="{{ line.shown ? 'true' : 'false' }}" title="{{ seen }}" aria-label="{{ seen }}">
+                  <i class="fas fa-eye p-pe-account__eye-on" aria-hidden="true"></i>
+                  <i class="fas fa-eye-slash p-pe-account__eye-off" aria-hidden="true"></i>
+                </button>
+              {% else %}
+                <span class="p-pe-account__seen is-locked" title="{{ 'profile.edit.account.private'|trans }}">
+                  <i class="fas fa-lock" aria-hidden="true"></i>
+                  <span class="visually-hidden">{{ 'profile.edit.account.private'|trans }}</span>
+                </span>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+
+      {# ── About me ── #}
+      <section class="p-pe-card">
+        <h2 class="p-pe-card__title">{{ 'profile.about.me'|trans({}, 'messages', profile_language)|striptags }}</h2>
+        <div class="p-pe-rows">
+          {% set aboutUrl = url('profile_edit_section', {username: member.username, language: profile_language, section: 'aboutme'}) ~ '?field=' %}
+          {{ edit.row('profile.about.me'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.about.me'|trans, t['AboutMe'] ?? '', aboutUrl ~ 'about',
+            { badge: inSetup and (t['AboutMe'] ?? '')|striptags|trim is empty ? 'profile.edit.for.setup'|trans : false }) }}
+          {{ edit.row('profile.occupation'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.occupation'|trans, t['Occupation'] ?? '', aboutUrl ~ 'occupation') }}
+          {{ edit.row('profile.offer.hosts'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.offer.hosts'|trans, t['OfferHosts'] ?? '', aboutUrl ~ 'offerhosts') }}
+        </div>
+      </section>
+
+      {# ── Accommodation ── #}
+      {% set accommodationUrl = url('profile_edit_section', {username: member.username, language: profile_language, section: 'accommodation'}) ~ '?field=' %}
+      {% set hosting = member.accommodation %}
+      {# Guests and hosting interest only count once "Yes" is picked: greyed out until then #}
+      <section class="p-pe-card js-pe-accommodation{{ hosting != 'yes' ? ' is-not-hosting' }}" data-accommodation="{{ hosting }}">
+        <div class="p-pe-card__head">
+          <h2 class="p-pe-card__title">{{ 'profile.edit.accommodation.title'|trans }}</h2>
+          {% if member.updated %}
+            <span class="p-pe-card__meta"><i class="fas fa-clock" aria-hidden="true"></i> {{ 'profile.edit.updated'|trans({ date: member.updated|format_date('short') }) }}</span>
+          {% endif %}
+        </div>
+
+        <p class="p-pe-label">{{ 'profile.edit.can.host'|trans }}</p>
+        <div class="p-pe-host" role="radiogroup" aria-label="{{ 'profile.edit.can.host'|trans }}">
+          <button type="button" class="p-pe-host__option p-pe-host__option--yes js-pe-host{{ hosting == 'yes' ? ' is-active' }}" data-value="yes" role="radio" aria-checked="{{ hosting == 'yes' ? 'true' : 'false' }}">
+            <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'profile.edit.host.yes'|trans }}
+          </button>
+          <button type="button" class="p-pe-host__option p-pe-host__option--no js-pe-host{{ hosting == 'no' ? ' is-active' }}" data-value="no" role="radio" aria-checked="{{ hosting == 'no' ? 'true' : 'false' }}">
+            <i class="fas fa-times" aria-hidden="true"></i> {{ 'profile.edit.host.no'|trans }}
+          </button>
+        </div>
+        <p class="p-pe-host-ask js-pe-host-ask" role="alert" hidden>
+          <i class="fas fa-info-circle" aria-hidden="true"></i> {{ 'profile.edit.hosting.ask'|trans }}
+        </p>
+
+        <div class="p-pe-tiles">
+          <a href="{{ url('profile_set_location', {username: member.username}) }}" class="p-pe-tile p-pe-tile--location js-contact-open{{ hasAddress ? ' is-filled' : ' is-todo' }}"
+             data-title="{{ 'profile.edit.location'|trans }}">
+            <i class="fas fa-map-marker-alt p-pe-tile__icon" aria-hidden="true"></i>
+            <span class="p-pe-tile__label">{{ 'profile.edit.location'|trans }}</span>
+            {% if hasAddress and address.location %}
+              <strong class="p-pe-tile__value">{{ address.location.name }}</strong>
+            {% else %}
+              <strong class="p-pe-tile__value">{{ 'profile.edit.set.location'|trans }}</strong>
+            {% endif %}
+          </a>
+
+          <div class="p-pe-tile p-pe-tile--guests js-pe-hosting-only">
+            <i class="fas fa-users p-pe-tile__icon" aria-hidden="true"></i>
+            <span class="p-pe-tile__label">{{ 'profile.edit.max.guests'|trans }}</span>
+            <div class="p-pe-stepper">
+              <button type="button" class="p-pe-stepper__btn js-pe-guests-step" data-step="-1" aria-label="-1"><i class="fas fa-minus" aria-hidden="true"></i></button>
+              <input type="number" class="p-pe-stepper__value js-pe-guests" value="{{ max(1, member.maxGuests) }}" min="1" max="20" inputmode="numeric" aria-label="{{ 'profile.edit.max.guests'|trans }}">
+              <button type="button" class="p-pe-stepper__btn js-pe-guests-step" data-step="1" aria-label="+1"><i class="fas fa-plus" aria-hidden="true"></i></button>
+            </div>
+          </div>
+
+          {% set interestKeys = ['not_set', 'very_low', 'low', 'lower', 'low_to_medium', 'medium', 'medium_to_high', 'high', 'higher', 'very_high', 'cant_wait'] %}
+          {#
+            Hosting interest: the tile shows it on 10 steps; a click opens a small window
+            to pick it (profile/edit.js), saved with "Done".
+          #}
+          {% set interest = member.hostingInterest|default(0) %}
+          <div class="p-pe-tile p-pe-tile--interest js-pe-hosting-only js-pe-interest-tile"
+               data-names="{{ interestKeys|map(key => ('hosting_interest.' ~ key)|trans)|json_encode }}">
+            <input type="hidden" class="js-pe-interest" value="{{ interest }}">
+            <button type="button" class="p-pe-interest js-pe-interest-open" aria-haspopup="dialog" aria-expanded="false">
+              <i class="fas fa-star p-pe-tile__icon" aria-hidden="true"></i>
+              <span class="p-pe-tile__label">{{ 'profile.edit.hosting.interest'|trans }}</span>
+              <strong class="p-pe-tile__value js-pe-interest-name{{ interest ? '' : ' is-empty' }}">{{ ('hosting_interest.' ~ interestKeys[interest])|trans }}</strong>
+              <span class="p-pe-interest__bar" aria-hidden="true">
+                {% for step in 1..10 %}<span class="p-pe-interest__seg{{ step <= interest ? ' is-on' }}" style="--step: {{ step }}"></span>{% endfor %}
+              </span>
+            </button>
+
+            <div class="p-pe-interest-pop js-pe-interest-pop" role="dialog" aria-label="{{ 'profile.edit.interest.question'|trans }}" hidden>
+              <div class="p-pe-interest-pop__head">
+                <p class="p-pe-interest-pop__question">{{ 'profile.edit.interest.question'|trans }}</p>
+                <button type="button" class="p-pe-interest-pop__close js-pe-interest-cancel" aria-label="{{ 'close'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></button>
+              </div>
+              <div class="p-pe-interest-pop__now">
+                <strong class="p-pe-interest-pop__name js-pe-interest-pop-name"></strong>
+                <span class="p-pe-interest-pop__score js-pe-interest-pop-score"></span>
+              </div>
+              <div class="p-pe-interest-pop__steps" role="radiogroup" aria-label="{{ 'profile.edit.hosting.interest'|trans }}">
+                {% for step in 1..10 %}
+                  <button type="button" class="p-pe-interest-pop__step js-pe-interest-step" data-value="{{ step }}" style="--step: {{ step }}"
+                          role="radio" aria-checked="false" aria-label="{{ ('hosting_interest.' ~ interestKeys[step])|trans }}"></button>
+                {% endfor %}
+              </div>
+              <div class="p-pe-interest-pop__scale" aria-hidden="true">
+                <span>{{ 'hosting_interest.very_low'|trans }}</span>
+                <span>{{ 'hosting_interest.medium'|trans }}</span>
+                <span>{{ 'hosting_interest.cant_wait'|trans }}</span>
+              </div>
+              <div class="p-pe-interest-pop__foot">
+                <button type="button" class="p-pe-interest-pop__unset js-pe-interest-step" data-value="0">{{ 'hosting_interest.not_set'|trans }}</button>
+                <button type="button" class="p-pe-interest-pop__done js-pe-interest-done">{{ 'profile.edit.done'|trans }}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-pe-rows">
+          {{ edit.row('profile.max.length.of.stay'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.length.of.stay'|trans, t['MaxLengthOfStay'] ?? '', accommodationUrl ~ 'length', { icon: 'calendar' }) }}
+          {{ edit.row('profile.i.live.with'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.i.live.with'|trans, t['ILiveWith'] ?? '', accommodationUrl ~ 'ilivewith', { icon: 'house-user' }) }}
+          {{ edit.row('profile.please.bring'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.please.bring'|trans, t['PleaseBring'] ?? '', accommodationUrl ~ 'bring', { icon: 'suitcase' }) }}
+          {% set offersText = member.standardOffers|map(offer => ('ProfileTypicOffer_' ~ offer)|lower|trans({}, 'messages', profile_language))|join(', ') %}
+          {% if hasAddress and address.isWheelChairAccessible %}{% set offersText = offersText ~ (offersText ? ', ' : '') ~ 'wheelchair'|trans({}, 'messages', profile_language) %}{% endif %}
+          {% set offersText = offersText ~ ' ' ~ (t['OfferGuests'] ?? '') %}
+          {% set rulesText = member.restrictions|map(restriction => ('restriction_' ~ restriction)|lower|trans({}, 'messages', profile_language))|join(', ') ~ ' ' ~ (t['HouseRules'] ?? '') %}
+          {{ edit.row('profile.where.you.sleep'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.where.you.sleep'|trans, t['WhereYouSleep'] ?? '', accommodationUrl ~ 'sleep', { icon: 'bed' }) }}
+          {{ edit.row('profile.offer.guests'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.offer.guests'|trans, offersText, accommodationUrl ~ 'offers', { icon: 'gift' }) }}
+          {{ edit.row('profile.house.rules'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.house.rules'|trans, rulesText, accommodationUrl ~ 'rules', { icon: 'list-ul' }) }}
+          {{ edit.row('profile.getting.there'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.getting.there'|trans, t['GettingThere'] ?? '', accommodationUrl ~ 'there', { icon: 'route' }) }}
+          {{ edit.row('profile.additional.information.for.guests'|trans({}, 'messages', profile_language)|striptags, 'profile.edit.hint.additional.info'|trans, t['AdditionalAccommodationInfo'] ?? t['AdditionalInfo'] ?? '', accommodationUrl ~ 'info', { icon: 'info-circle' }) }}
+        </div>
+      </section>
+
+      {# ── More about me ── #}
+      {% set interestsText = (t['Hobbies'] ?? '') ~ ' ' ~ (t['Books'] ?? '') ~ ' ' ~ (t['Music'] ?? '') ~ ' ' ~ (t['Movies'] ?? '') ~ ' ' ~ (t['Organizations'] ?? '') %}
+      {% set travelsText = (t['PastTrips'] ?? '') ~ ' ' ~ (t['PlannedTrips'] ?? '') %}
+      <section class="p-pe-card">
+        <h2 class="p-pe-card__title">{{ 'profile.edit.more.about.me'|trans }}</h2>
+        <div class="p-pe-rows">
+          {{ edit.row('profile.edit.interests.title'|trans, 'profile.edit.hint.interests'|trans, interestsText, url('profile_edit_section', {username: member.username, language: profile_language, section: 'interests'}), { icon: 'heart' }) }}
+          {{ edit.row('profile.edit.travels'|trans, 'profile.edit.hint.travels'|trans, travelsText, url('profile_edit_section', {username: member.username, language: profile_language, section: 'travels'}), { icon: 'globe' }) }}
+          {% set friendNames = friends|map(friend => (friend.left == member ? friend.right : friend.left).username)|join(', ') %}
+          <a href="{{ url('friends', {username: member.username}) }}" class="p-pe-row p-pe-row--icon{{ friends|length > 0 ? ' is-filled' }}">
+            <span class="p-pe-row__icon"><i class="fas fa-user-friends" aria-hidden="true"></i></span>
+            <span class="p-pe-row__text">
+              <strong class="p-pe-row__title">{{ 'profile.edit.friends'|trans }}</strong>
+              <span class="p-pe-row__hint">{{ friends|length > 0 ? friendNames : 'profile.edit.hint.friends'|trans }}</span>
+            </span>
+            <span class="p-pe-row__go"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <div class="p-pe-layout__side">
+      {# ── Spoken languages ── #}
+      <section class="p-pe-card p-pe-card--side">
+        <h2 class="p-pe-card__title">{{ 'profile.edit.spoken.languages'|trans }}</h2>
+        {% set languagesUrl = url('profile_edit_languages', {username: member.username, language: profile_language}) %}
+        {% if member.languageLevels|length > 0 %}
+          <ul class="p-pe-langs">
+            {% for level in member.languageLevels %}
+              <li class="p-pe-langs__item">
+                <span class="p-pe-langs__name">{{ ('lang_' ~ level.language.shortCode)|lower|trans }}</span>
+                <span class="p-pe-langs__level">{{ ('language.level.' ~ level.level)|lower|trans }}</span>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+        <a href="{{ languagesUrl }}" class="p-pe-chip js-contact-open" data-title="{{ 'profile.edit.spoken.languages'|trans }}">
+          <i class="fas fa-{{ member.languageLevels|length > 0 ? 'pen' : 'plus' }}" aria-hidden="true"></i>
+          {{ member.languageLevels|length > 0 ? 'profile.edit.change.languages'|trans : 'profile.edit.add.spoken.language'|trans }}
+        </a>
+      </section>
+
+      {# ── Gallery ── #}
+      <section class="p-pe-card p-pe-card--side">
+        <h2 class="p-pe-card__title">{{ 'profile.edit.gallery'|trans }}</h2>
+        {% if pictures|length > 0 %}
+          <div class="p-pe-gallery">
+            {% for picture in pictures|slice(0, 6) %}
+              <a href="{{ url('gallery_image', {id: picture.id}) }}" class="p-pe-gallery__shot"
+                 style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
+                 data-toggle="lightbox" data-gallery="edit-gallery-{{ profile_language }}" data-type="image"
+                 data-caption="{{ picture.title|e('html_attr') }}" aria-label="{{ picture.title|e('html_attr') }}"></a>
+            {% endfor %}
+          </div>
+        {% endif %}
+        <a href="{{ url('gallery_manage') }}" class="p-pe-upload">
+          <span class="p-pe-upload__icon"><i class="fas fa-cloud-upload-alt" aria-hidden="true"></i></span>
+          <strong class="p-pe-upload__title">{{ 'profile.edit.upload.photos'|trans }}</strong>
+          <span class="p-pe-upload__hint">{{ 'profile.edit.hint.upload'|trans }}</span>
+        </a>
+      </section>
+    </div>
+  </div>
+
+  {% if profile_language != 'en' %}
+    {# Delete this language: at the bottom of its own page, after a confirmation #}
+    {% set delete_text = 'profile.edit.delete.translation'|trans({language: ('lang_' ~ profile_language)|lower|trans}) %}
+    <div class="p-pe-lang-delete">
+      <button type="button" class="p-pe-lang-delete__btn" data-delete-language="{{ profile_language }}">
+        <i class="fas fa-trash-alt" aria-hidden="true"></i> {{ delete_text }}
+      </button>
+    </div>
+    {# Opened by the button just above #}
+    {% set language_name = ('lang_' ~ profile_language)|lower|trans %}
+    <div class="micromodal-slide p-pe-confirm" id="delete-{{ profile_language }}" aria-hidden="true">
+      <div class="modal__overlay p-pe-confirm__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container p-pe-confirm__box" role="dialog" aria-modal="true" aria-labelledby="delete-{{ profile_language }}-title">
+          <span class="p-pe-confirm__icon" aria-hidden="true"><i class="fas fa-trash-alt"></i></span>
+          <h2 class="p-pe-confirm__title" id="delete-{{ profile_language }}-title">{{ 'profile.language.delete.modal'|trans({language: language_name}) }}</h2>
+          <p class="p-pe-confirm__text">{{ 'profile.language.delete.blurb'|trans({language: language_name}) }}</p>
+          <div class="p-pe-confirm__actions">
+            <button type="button" class="p-pe-confirm__cancel" data-micromodal-close>{{ 'cancel'|trans }}</button>
+            <a class="p-pe-confirm__delete" href="{{ url('profile_delete_language', {username: member.username, language: profile_language}) }}">
+              <i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'profile.language.delete.confirm'|trans }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>

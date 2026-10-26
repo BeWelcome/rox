@@ -1,3 +1,10 @@
+{#
+  Top of every profile page: the photo, name, username, place and last activity; the actions
+  and the language switch on the right; then what members trust (hosting, comments) on one
+  line, and the tabs. Occupation, gender, age and membership length are in a card on the
+  profile tab (profile/_facts.html.twig). On phones the actions stick to the bottom of the
+  screen and the tabs to the top.
+#}
 {% if member.translations[locale] is defined %}
   {% set memberfields = member.translations[locale] %}
 {% elseif member.translations['en'] is defined %}
@@ -10,108 +17,302 @@
   or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_PROFILE'))
   or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_ADMIN')) %}
 {% set address = member.activeAddress %}
-<div class="row">
-  <div class="col-12 text-center text-md-start">
-    <h2 class="m-0 d-inline"><strong>
-        {% if member.status == 'PassedAway' %}{{ 'profileinmemoriam'|format(member.Username) }}{% else %}{{ member.Username }}{% endif %}
-      </strong>
+{% set lastActivity = (member.lastActive == null) ? member.created : member.lastActive %}
+{% set passedAway = member.status == 'PassedAway' %}
+{% set hosting = not passedAway and member.Accommodation in ['yes', 'no'] ? member.Accommodation : null %}
+{% set items = submenu.items ?? {} %}
+{% set canContact = not own and not app.user is null and not passedAway %}
+{# Already talking with this member: "Send" opens that conversation instead of a new message. #}
+{% set existingConversation = canContact ? conversation_with(member) : null %}
+{% set canRequest = canContact and member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
 
-      {% if member.status != 'PassedAway' and not member.Accommodation is null %}
-        <img src="images/icons/{{ member.Accommodation }}.png" class="mb-2" alt="{{ member.Accommodation|trans }}'
-                        title="{{ ('canoffer' ~ member.Accommodation|lower)|trans }}">
-        {% if not address is same as (false) and address.isWheelChairAccessible %}
-          <img src="images/icons/wheelchairblue.png" class="mb-2" alt="{{ 'wheelchair'|trans }}'
-                        title="{{ 'canhostwheelchairyes'|trans }}" >
-        {% endif %}
+{% set activeItem = submenu.active is defined and submenu.active != '' ? submenu.active : 'profile' %}
+{# Phones, on the other tabs (comments, gallery...): the head shrinks to one orange bar in place of
+   the site header (back to the profile, small photo, name, the "more" menu), the tab content comes first #}
+{% set compactHead = activeItem in ['comments', 'gallery', 'friends', 'forum_posts', 'visitors'] and items.profile is defined %}
+
+<div class="p-pro{% if compactHead %} p-pro--compact{% endif %}">
+
+  {% set _translations = member.translations %}
+  {% set _langs = _translations|keys %}
+  {% set _langCount = 0 %}
+  {% for _l in _langs %}{% if _translations[_l]|length > 1 %}{% set _langCount = _langCount + 1 %}{% endif %}{% endfor %}
+
+  <div class="p-pro__wrap container-lg">
+
+    <div class="p-pro__head">
+      {% if compactHead %}
+        <a class="p-pro__back" href="{{ items.profile.url }}">
+          <i class="fas fa-chevron-left" aria-hidden="true"></i>
+          <span class="visually-hidden">{{ items.profile.key|lower|trans }}</span>
+        </a>
       {% endif %}
-    </h2>
-  </div>
-</div>
-<div class="row align-items-start">
-  <div class="col-12 col-sm-6">
-    <div class="text-center text-md-start">
-      <div class="d-md-none u:w-full u:relative u:aspect-1/1 u:m-auto">
-        <div class="u:absolute u:w-[50%] u:h-[50%]">
-          {% if use_lightbox is defined %}
-            <a class="js-profile-picture" href="{{ url('avatar', { username: member.Username, size: 'original'}) }}"
-               data-bs-toggle="lightbox"
-               data-always-show-close="true" data-type="image"
-               data-title="{{ 'profile.picture.title'| trans }}">
-              <img class="u:rounded-8 u:w-full u:h-full u:object-cover js-profile-picture"
-                   src="{{ url('avatar', { username: member.Username, size: 320}) }}"
-                   alt="{{ 'profile.picture.title'| trans }}">
-            </a>
+
+      {# ── Photo with the hosting badge ── #}
+      <div class="p-pro__avatar">
+        {% if use_lightbox is defined %}
+          <a class="p-pro__avatar-link js-profile-picture"
+             href="{{ url('avatar', {username: member.Username, size: 'original'}) }}"
+             data-toggle="lightbox"
+             data-type="image"
+             data-size="fullscreen"
+             data-caption="{{ 'profile.picture.title'|trans|e('html_attr') }}">
+            <img class="p-pro__avatar-img js-profile-picture"
+                 src="{{ url('avatar', {username: member.Username, size: 320}) }}"
+                 alt="{{ 'profile.picture.title'|trans }}">
+          </a>
+        {% else %}
+          <img class="p-pro__avatar-img"
+               src="{{ url('avatar', {username: member.Username, size: 320}) }}"
+               alt="{{ member.Username }}">
+        {% endif %}
+        {% if hosting %}
+          <span class="p-pro__host p-pro__host--{{ hosting }}">
+            <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
+            <span class="visually-hidden">{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</span>
+          </span>
+        {% endif %}
+      </div>
+
+      {# ── Who: name and username, place, last activity ── #}
+      <div class="p-pro__info">
+        <div class="p-pro__name-row">
+          <h1 class="p-pro__name">
+            {%- if passedAway -%}
+              {{ 'profileinmemoriam'|format(member.visibleName != '' ? member.visibleName : member.Username) }}
+            {%- else -%}
+              {{ member.visibleName != '' ? member.visibleName : member.Username }}
+            {%- endif -%}
+          </h1>
+          {% if member.visibleName != '' %}<span class="p-pro__username">@{{ member.Username }}</span>{% endif %}
+        </div>
+
+        {# Place and activity: one line on large screens, two on phones #}
+        <div class="p-pro__line">
+        <p class="p-pro__meta">
+          {% if not address is same as(false) %}
+            {% set location = address.location %}
+            {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
+            {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
+            <span class="p-pro__meta-item p-pro__place">
+              <a class="p-pro__city" href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>,
+              <a class="p-pro__country" href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
+            </span>
           {% else %}
-            <a href="{{ url('members_profile', {username: member.username}) }}">
-              <img class="u:rounded-8 u:w-full u:h-full u:object-cover js-profile-picture"
-                   src="{{ url('avatar', { username: member.Username, size: 320}) }}"
-                   alt="{{ 'profile.picture.title'| trans }}">
-            </a>
+            <span class="p-pro__meta-item p-pro__place p-pro__place--empty">{{ 'profile.no.city.yet'|trans }}</span>
           {% endif %}
+        </p>
+
+        {% set _days = lastActivity.diffInDays %}
+        <p class="p-pro__activity">
+          <span class="p-pro__status{% if _days <= 7 %} is-active{% elseif _days <= 30 %} is-recent{% endif %}">
+            <span class="p-pro__online" aria-hidden="true"></span>
+            {% if _days <= 7 %}
+              {{ 'profile.active.week'|trans }}
+            {% elseif _days <= 30 %}
+              {{ 'profile.active.month'|trans }}
+            {% else %}
+              {{ 'profile.last.activity'|trans }} {{ lastActivity.diffForHumans }}
+            {% endif %}
+            {%- if admin %} ({{ lastActivity|format_datetime() }}){% endif -%}
+          </span>
+        </p>
         </div>
       </div>
 
-      {% if member.visibleName != ''%}<h3>{{ member.visibleName }}</h3>{% endif %}
-
-      <h5>{% if not address is same as(false) %}
-          {% set location = address.location %}
-          {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
-          {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
-          <a
-            href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">
-            {{ location.name -}}
-          </a>, {% if not location.admin1 is null %}
-          <a
-            href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: location.admin1.name, regioncode: location.admin1id}) }}">
-            {{ location.admin1.name -}}
-          </a>, {% endif %}
-          <a
-            href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">
-            {{ location.country.name -}}
+      {# ── Actions: message and request stay (stuck to the bottom on phones), more, language ── #}
+      <div class="p-pro__actions">
+        {% if own %}
+          <a href="{{ url('profile_edit', {username: member.username}) }}" class="p-hero__btn p-hero__btn--secondary p-pro__edit">
+            <i class="fas fa-pen" aria-hidden="true"></i> <span class="p-pro__edit-text">{{ 'profile.edit'|trans }}</span>
           </a>
-          <input type="hidden" id="latitude" value="{{ address.latitude }}"><input type="hidden" id="longitude" value="{{ address.longitude }}">
-          <div id="location-map"
-               class="u:w-full u:aspect-4/1 u:border u:border-bewelcome"></div>
-        {% else %}
-          {{ 'profile.no.city.yet'|trans }}
-        {% endif %}</h5>
-    </div>
-  </div>
-  <div class="col-12 col-sm-6 teaser-border text-center text-md-start">
-    <div id="occupation" class="h5">{% if memberfields.Occupation is defined and memberfields.Occupation != null %}
-      {{ memberfields.Occupation|purify }}
-    {% endif %}</div>
+          {% set _accountItems = [] %}
+          {% for _k in ['edit_account', 'preferences', 'mydata', 'mynotes'] %}
+            {% if items[_k] is defined %}{% set _accountItems = _accountItems|merge([_k]) %}{% endif %}
+          {% endfor %}
+          {% if _accountItems|length > 0 %}
+            <div class="dropdown">
+              <button class="p-hero__btn p-hero__btn--icon dropdown-toggle-no-arrow" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'my.account'|trans }}">
+                <i class="fas fa-cog" aria-hidden="true"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
+                {% for _k in _accountItems %}
+                  <li><a class="dropdown-item p-hero__dropdown-item" href="{{ items[_k].url }}">
+                    <i class="fas fa-fw fa-{{ items[_k].icon }}" aria-hidden="true"></i> {{ items[_k].key|lower|trans }}
+                  </a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        {% elseif canContact %}
+          <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-hero__btn p-pro__btn p-pro__btn--message"
+            data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
+            <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
+          </a>
+          {% if canRequest %}
+            <a href="{{ url('hosting_request', {username: member.username}) }}" class="js-contact-open p-hero__btn p-pro__btn p-pro__btn--request"
+            data-title="{{ 'request.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
+              <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
+            </a>
+          {% endif %}
+          {% set hasMore = items.comment is defined or items.friend is defined
+            or items.add_note is defined or items.edit_note is defined
+            or items.report is defined %}
+          {% if hasMore %}
+            <div class="dropdown p-pro__more">
+              <button class="p-hero__btn p-hero__btn--icon dropdown-toggle-no-arrow" data-bs-toggle="dropdown" aria-expanded="false" aria-label="More actions">
+                <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
+                {% if items.comment is defined %}
+                  <li><a class="dropdown-item p-hero__dropdown-item js-contact-open" href="{{ items.comment.url }}" data-title="{{ items.comment.key|lower|trans|striptags }}">
+                    <i class="fas fa-fw fa-comment" aria-hidden="true"></i> {{ items.comment.key|lower|trans }}
+                  </a></li>
+                {% endif %}
+                {% if items.friend is defined %}
+                  <li><a class="dropdown-item p-hero__dropdown-item" href="{{ items.friend.url }}">
+                    <i class="fas fa-fw fa-handshake" aria-hidden="true"></i> {{ items.friend.key|lower|trans }}
+                  </a></li>
+                {% endif %}
+                {% if items.add_note is defined or items.edit_note is defined %}
+                  {% set noteItem = items.edit_note is defined ? items.edit_note : items.add_note %}
+                  <li><a class="dropdown-item p-hero__dropdown-item js-contact-open" href="{{ noteItem.url }}" data-title="{{ 'profile.note.about'|trans({'username': member.username})|striptags }}">
+                    <i class="fas fa-fw fa-pencil-alt" aria-hidden="true"></i> {{ noteItem.key|lower|trans }}
+                  </a></li>
+                {% endif %}
+                {% if items.report is defined %}
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item p-hero__dropdown-item p-hero__dropdown-item--danger" href="{{ items.report.url }}">
+                    <i class="fas fa-fw fa-flag" aria-hidden="true"></i> {{ items.report.key|lower|trans }}
+                  </a></li>
+                {% endif %}
+              </ul>
+            </div>
+          {% endif %}
+        {% endif %}
+        {# The profile's languages: one shown at a time #}
+        {% if _langCount > 1 %}
+          {% set _reqLang = app.request.query.get('language') %}
+          {% set _active = _reqLang is not null and _reqLang in _langs ? _reqLang : (locale in _langs ? locale : 'en') %}
+          <div class="p-lang-switch dropdown">
+            <button type="button" class="p-lang-switch__toggle dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                    aria-label="{{ 'menu.language.toggle'|trans }}">
+              <i class="fas fa-globe p-lang-switch__globe" aria-hidden="true"></i>
+              <span class="p-lang-switch__prefix">{{ 'profile.in.language'|trans }}</span>
+              <span class="p-lang-switch__name" data-lang-current-name>{{ language_name(_active) }}</span>
+              <span class="p-lang-switch__code" data-lang-current-code>{{ _active|upper }}</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
+              {% for _l in _langs %}
+                {% if _translations[_l]|length > 1 %}
+                  <li>
+                    <button type="button" class="dropdown-item p-hero__dropdown-item p-lang-option{% if _l is same as(_active) %} p-lang-option--active{% endif %}"
+                            data-lang="{{ _l }}" lang="{{ _l }}">{{ language_name(_l) }}</button>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </div>
 
-    <p class="mb-2">
-      {% set showAge = member.isAgeVisible and member.Age != 0 %}
-      {% set showGender = member.isGenderVisible %}
-      {%- if showAge -%}
-        <strong>{{ 'profile.age'|trans }}</strong> {{ member.age }}
-      {%- endif -%}
-      {%- if showAge and showGender -%}<br>{%- endif %}
-      {%- if showGender -%} <strong>{{ 'profile.gender'|trans }}</strong> {{ member.gender|trans }}{%- endif %}
-      {% if showAge or showGender %}<br>{% endif %}<strong>{{ 'profile.joined'|trans }}</strong>
-      {% if member.created.diffInDays <= 7 %}
-        {{ 'last.activity.privacy'| trans }}
-      {% else %}
-        {{ member.created.diffForHumans }}
+      {# ── What members trust: hosting on the left, the comments by quality on the right ── #}
+      {% set _byQuality = comments_count ?? member_comments_by_quality(member) %}
+      {% set _hasComments = (_byQuality.positive ?? 0) + (_byQuality.neutral ?? 0) + (_byQuality.negative ?? 0) > 0 %}
+      {% if hosting or _hasComments %}
+        <div class="p-pro__trust">
+          {% if hosting %}
+            <span class="p-pro__hosting p-pro__hosting--{{ hosting }}">
+              <i class="fas {{ hosting == 'yes' ? 'fa-home' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
+              {{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}
+            </span>
+          {% endif %}
+          {% if _hasComments %}
+            <a class="p-quality-pill" href="{{ url('profile_comments', {username: member.username}) }}">
+              {% for _q, _icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
+                {% if _byQuality[_q] ?? 0 %}
+                  <span class="p-quality-pill__item p-quality-pill__item--{{ _q }}">
+                    <i class="fas fa-{{ _icon }}" aria-hidden="true"></i> {{ _byQuality[_q] }}
+                    <span class="visually-hidden">{{ ('comment.quality.' ~ _q)|trans|striptags }}</span>
+                  </span>
+                {% endif %}
+              {% endfor %}
+            </a>
+          {% endif %}
+        </div>
       {% endif %}
-      {% if admin %} ({{ member.created|format_datetime() }}){% endif %}
-      <br><strong>{{ 'profile.last.activity'|trans }}</strong>
-      {% set lastActivity = (member.lastActive == null) ? member.created : member.lastActive %}
-      {% if lastActivity.diffInDays <= 7 %}
-        {{ 'last.activity.privacy'| trans }}
-      {% else %}
-        {{ lastActivity.diffForHumans }}
-      {% endif %}
-      {% if admin %} ({{ lastActivity|format_datetime() }}){% endif %}
+      {# Large screens: occupation, gender, age and membership length, a line at the bottom of the head #}
+      {% include 'profile/_facts.html.twig' with {variant: 'head'} %}
+
+      {# Admins: the member's status, changed from a small bar under the head #}
       {% if not own and status_form is defined and not status_form is null %}
-        {{ form_start(status_form, {'attr': {'class': 'u:grid u:grid-cols-2 u:gap-8'}}) }}
-        {{ form_widget(status_form.status) }}
-        <button type="submit" class="o-button o-button--s u:self-center"
-                value="{{ 'submit'|trans }}">{{ 'submit'|trans }}</button>
+        {{ form_start(status_form, {attr: {class: 'p-pro-admin'}}) }}
+          <label class="p-pro-admin__label" for="{{ status_form.status.vars.id }}">
+            <i class="fas fa-user-shield" aria-hidden="true"></i> {{ 'profile.admin.status'|trans }}
+          </label>
+          <span class="p-pro-admin__select">
+            {{ form_widget(status_form.status, {attr: {class: 'p-pro-admin__field'}}) }}
+            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+          </span>
+          <button type="submit" class="p-pro-admin__save">
+            <i class="fas fa-check" aria-hidden="true"></i> {{ 'submit'|trans }}
+          </button>
         {{ form_end(status_form) }}
       {% endif %}
-    </p>
+    </div>
+
+  </div>{# /.p-pro__wrap #}
+
+</div>{# /.p-pro #}
+
+{# ── Tabs: outside the header block so that on phones they stay stuck to the top all the way down ── #}
+  <div class="p-pro__tabs-wrap">
+    <div class="container-lg">
+      <div class="p-hero__tabs-scroller" data-tabs-scroller>
+        <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--prev" data-tabs-scroll="-1" tabindex="-1" aria-hidden="true">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <nav class="p-hero__tabs">
+          {# Gallery third: photos matter. On someone else's profile an empty tab is hidden
+             (unless it is the page being shown); the owner keeps them all, to add content. #}
+          {% for key in ['profile', 'comments', 'gallery', 'friends', 'forum_posts', 'visitors'] %}
+            {% set _empty = items[key] is defined and items[key].count is defined and items[key].count == 0 %}
+            {% if items[key] is defined and not (_empty and not own and activeItem != key) %}
+              <a href="{{ items[key].url }}"
+                 class="p-hero__tab{% if activeItem == key %} p-hero__tab--active{% endif %}">
+                <i class="fas fa-fw fa-{{ items[key].icon }}" aria-hidden="true"></i>
+                {{ items[key].key|lower|trans }}
+                {% if items[key].count is defined and items[key].count > 0 %}
+                  <span class="p-hero__tab-count">{{ items[key].count }}</span>
+                {% endif %}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </nav>
+        <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--next" data-tabs-scroll="1" tabindex="-1" aria-hidden="true">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
   </div>
-</div>
+
+  {# ── Phones: message and request stay stuck to the bottom of the screen ── #}
+  {% if canContact %}
+    <div class="p-pro__bottom-bar">
+      <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-pro__btn p-pro__btn--message"
+            data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
+        <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
+      </a>
+      {% if canRequest %}
+        <a href="{{ url('hosting_request', {username: member.username}) }}" class="js-contact-open p-pro__btn p-pro__btn--request"
+            data-title="{{ 'request.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
+          <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
+        </a>
+      {% endif %}
+    </div>
+  {% endif %}
+
+{# ── Message or stay request in a side panel (bottom sheet on phones), without leaving the profile ── #}
+{% if canContact %}
+  {% include 'conversations/_contact_drawer.html.twig' %}
+{% endif %}

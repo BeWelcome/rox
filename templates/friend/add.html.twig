@@ -1,11 +1,36 @@
-{% extends 'profile/profile.html.twig' %}
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
 
-{% block page_content %}
-  <h1>{{ 'friend.add.headline'|trans }}</h1>
-  <p>{{ 'friend.add.blurb'|trans({username: member.username}) }}</p>
-  <form class="form" method="post">
-    <div class="u:flex u:justify-end u:my-8">
-      <button class="o-button" name="add_friendship" value="add" type="submit">{{ 'profile.add.friend.confirm'|trans }}</button>
+{% set hide_sidebar = true %}
+
+{% block title %}
+  {{ 'friend.add.headline'|trans }}
+{% endblock title %}
+
+{% block content %}
+  <section class="p-edit-subpage p-friend-form">
+    <header class="p-edit-subpage__header">
+      <a href="{{ url('members_profile', {username: member.username}) }}"
+         class="p-edit-subpage__back"
+         aria-label="{{ 'profile.back'|trans }}">
+        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+      </a>
+      <div class="p-edit-subpage__heading">
+        <p class="p-edit-subpage__eyebrow">@{{ member.username }}</p>
+        <h1 class="p-edit-subpage__title">{{ 'friend.add.headline'|trans }}</h1>
+      </div>
+    </header>
+
+    <div class="p-edit-subpage__card">
+      {{ include('friend/_member.html.twig', {member: member}) }}
+      <p class="p-friend-form__blurb">{{ 'friend.add.blurb'|trans({username: member.username}) }}</p>
+
+      <form method="post">
+        <div class="p-edit-subpage__actions p-edit-subpage__actions--split">
+          <a class="p-comment-form__cancel" href="{{ url('members_profile', {username: member.username}) }}">{{ 'cancel'|trans }}</a>
+          <button class="o-button" name="add_friendship" value="add" type="submit">{{ 'profile.add.friend.confirm'|trans }}</button>
+        </div>
+      </form>
     </div>
-  </form>
-{% endblock %}
+  </section>
+{% endblock content %}

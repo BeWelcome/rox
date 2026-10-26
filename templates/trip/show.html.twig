@@ -1,8 +1,10 @@
 {% extends 'trips.html.twig' %}
 {% import 'macros.twig' as macros %}
 
+{% set trips_redesign = true %}
+
 {% block title %}
-    {{ 'trip.show' | trans | capitalize }}
+    {{ trip.summary }}
 {% endblock %}
 
 {% block javascripts %}
@@ -16,178 +18,142 @@
     {{ encore_entry_link_tags('trips') }}
 {% endblock %}
 
+{#
+  One trip: who travels and how (top card), the stops as a timeline next to the
+  map. trips.js draws the map from the hidden .js-data inputs and the two JS
+  objects at the bottom.
+#}
 {% block content %}
-  {% set member = app.user %}
-  {% set address = member.activeAddress %}
-    <section class="u:mb-48">
-        <div class="u:flex u:mt-8 u:mb-24">
-            <div class="o-avatar o-avatar--white u:me-24">{{ macros.roundedavatarstack(trip.creator.username, 96) }}</div>
-            <div class="u:flex u:items-center">
-                <h1 class="u:text-32 u:leading-48 u:md:text-56 u:md:leading-60 u:text-white u:font-700">{{ trip.summary }}</h1>
-                {% if member is same as(trip.creator) and expired == false %}
-                    <a href="{{ path('trip_edit', {'id': trip.id}) }}" class="o-rounded u:ms-24"
-                       aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
-                        <i class="fa fa-edit"></i>
-                    </a>
-                {% endif %}
-                {% if member is same as (trip.creator) %}
-                    <a href="{{ path('trip_copy', {'id': trip.id}) }}" class="o-rounded u:ms-24"
-                       aria-label="{{ 'trip.copy'|trans }}" title="{{ 'trip.copy'|trans }}">
-                        <i class="fa fa-copy"></i>
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-        <div class="l-trips-description">
-            <div class="u:flex u:mb-16">
-                <div class="c-trip-card__icon-grid u:me-24">
-                    <i class="fa fa-users u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                    <p class="u:text-white u:font-display"
-                       aria-label="{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}">{{ 'trip.count.of.travellers'| trans ({ 'countOfTravellers' : trip.countOfTravellers}) }}</p>
-                </div>
+    {% set member = app.user %}
+    {% set address = member.activeAddress %}
+    {% set own = member is same as(trip.creator) %}
+
+    <section class="p-trips-card p-trip-hero">
+        <a class="p-trip-hero__avatar" href="{{ path('members_profile', { username: trip.creator.username }) }}">
+            <img src="{{ path('avatar', { username: trip.creator.username, size: 96 }) }}" alt="" width="64" height="64">
+        </a>
+        <div class="p-trip-hero__body">
+            <p class="p-trip-hero__who">{{ macros.profilelink(trip.creator.username, false, 'p-trips-leg__name') }}</p>
+            <p class="p-trips-leg__meta p-trip-hero__meta">
+                <span class="p-trips-leg__chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) }}</span>
                 {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
-                    <div class="c-trip-card__icon-grid u:me-24">
-                        <i class="fa fa-info-circle u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                        <p class="u:text-white u:font-display"
-                           aria-label="{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans }}">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans }}</p>
-                    </div>
+                    <span class="p-trips-leg__chip"><i class="fa fa-info-circle" aria-hidden="true"></i> {{ ('trip.additional.info.' ~ trip.additionalInfo)|lower|trans }}</span>
                 {% endif %}
-                <div class="c-trip-card__icon-grid">
-                    <i class="fa fa-bullseye u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                    <p class="u:text-white u:font-display"
-                       aria-label="{{ 'trip.invitation.radius'|trans }}">{{ trip.invitationRadius|trans }}</p>
-                </div>
-            </div>
-            <p class="u:text-white u:font-display u:italic u:mb-24">{{ trip.description|nl2br }}</p>
+                <span class="p-trips-leg__chip" title="{{ 'trip.invitation.radius'|trans }}"><i class="fa fa-bullseye" aria-hidden="true"></i> {{ trip.invitationRadius|trans }}</span>
+            </p>
+            {% if trip.description %}
+                <div class="p-trip-hero__text">{{ trip.description|nl2br }}</div>
+            {% endif %}
         </div>
-        <div class="u:md:grid u:md:grid-cols-2 u:md:gap-24">
-            <div id="map" class="o-map"></div>
-            <div class="l-trips-overlay-wrapper">
-                <ul>
-                    {% set current = 1 %}
-                    {% set lastLongitude = ((trip.legs)|first).location.longitude %}
-                    {% for leg in trip.legs %}
-                        {% if not(constant('App\\Doctrine\\LegOptionsType::PRIVATE') in leg.options) or (member is same as (trip.creator)) %}
-                            <li class="l-trip-show">
-                                <span
-                                    class="o-number o-number--white o-number--l u:relative u:ms-__18">{{ current }}</span>
-                                <div><a class="anchor" id="leg{{leg.id}}"></a>
-                                    <div class="u:ms-16 u:md:ms-0 u:md:mt-4">
-                                        <p class="u:text-24 u:text-white u:font-display u:mb-8 u:font-300"><span
-                                                class="u:font-500">{{ leg.location.fullname }}</span>
-                                            <i class="o-flag o-flag--{{ leg.location.country.countryId }} u:ms-4" title="{{ leg.location.country.name }}"></i>
-                                        </p>
-                                        <p class="u:text-white u:font-display u:font-300">{{ leg.arrival|format_date('full') }}{% if leg.arrival != leg.departure %} - <br>{{ leg.departure|format_date('full') }}{% endif %}</p>
-                                    </div>
-                                    <div class="u:ms-16 u:md:ms-0 u:mt-8">
-                                        {% if app.user == trip.creator %}
-                                            {% if constant('App\\Doctrine\\LegOptionsType::PRIVATE') in leg.options %}
-                                                <div class="c-trip-card__icon-grid u:mb-8">
-                                                    <i class="fa fa-check u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                                                    <p class="u:text-white u:font-display"
-                                                       aria-label="{{ 'trip.option.private'|trans }}">{{ 'trip.option.private'|trans }}</p>
-                                                </div>
-                                            {% endif %}
+        {% if own %}
+            <div class="p-trip-hero__actions">
+                {% if expired == false %}
+                    <a class="p-trips-btn" href="{{ path('trip_edit', { id: trip.id }) }}"><i class="fa fa-edit" aria-hidden="true"></i> {{ 'trip.edit'|trans }}</a>
+                {% endif %}
+                <a class="p-trips-btn" href="{{ path('trip_copy', { id: trip.id }) }}"><i class="fa fa-copy" aria-hidden="true"></i> {{ 'trip.copy'|trans }}</a>
+            </div>
+        {% endif %}
+    </section>
 
-                                            {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
-                                                <div class="c-trip-card__icon-grid u:mb-8">
-                                                    <i class="fa fa-check u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                                                    <p class="u:text-white u:font-display"
-                                                       aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.meet.locals'|trans }}</p>
-                                                </div>
-                                            {% endif %}
+    <div class="p-trip-layout">
+        <section class="p-trips-card p-trip-stops">
+            <h2 class="p-trips-card__title">{{ 'trip.legs.title'|trans }}</h2>
+            <ol class="p-trip-timeline">
+                {% set current = 1 %}
+                {% set lastLongitude = ((trip.legs)|first).location.longitude %}
+                {% for leg in trip.legs %}
+                    {% if not(constant('App\\Doctrine\\LegOptionsType::PRIVATE') in leg.options) or own %}
+                        <li class="p-trip-timeline__item" id="leg{{ leg.id }}">
+                            <span class="p-trip-timeline__num">{{ current }}</span>
+                            <div class="p-trip-timeline__body">
+                                <p class="p-trip-timeline__place">
+                                    {{ leg.location.fullname }}
+                                    {% if leg.location.country %}<i class="o-flag o-flag--{{ leg.location.country.countryId }}" title="{{ leg.location.country.name }}"></i>{% endif %}
+                                </p>
+                                <p class="p-trip-timeline__dates"><i class="far fa-calendar-alt" aria-hidden="true"></i> {{ leg.arrival|format_date('medium') }}{% if leg.arrival != leg.departure %} – {{ leg.departure|format_date('medium') }}{% endif %}</p>
 
-                                            {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
-                                                <div class="c-trip-card__icon-grid u:mb-8">
-                                                    <i class="fa fa-check u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                                                    <p class="u:text-white u:font-display"
-                                                       aria-label="{{ 'trip.option.meet.locals'|trans }}">{{ 'trip.option.looking.for.host'|trans }}</p>
-                                                </div>
+                                {% if own %}
+                                    <p class="p-trips-leg__meta">
+                                        {% for option, key in {
+                                            (constant('App\\Doctrine\\LegOptionsType::PRIVATE')): 'trip.option.private',
+                                            (constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST')): 'trip.option.looking.for.host',
+                                            (constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS')): 'trip.option.meet.locals',
+                                        } %}
+                                            {% if option in leg.options %}
+                                                <span class="p-trips-leg__chip"><i class="fa fa-check" aria-hidden="true"></i> {{ key|trans }}</span>
                                             {% endif %}
-                                            {% if leg.acceptedInvitation %}
-                                                {% set invitation = leg.acceptedInvitation %}
+                                        {% endfor %}
+                                    </p>
+                                    {% if leg.acceptedInvitation %}
+                                        {% set invitation = leg.acceptedInvitation %}
+                                        {% set username = invitation.messages[0].initiator.Username %}
+                                        <div class="p-trip-hosts">
+                                            <a class="p-trip-hosts__avatar is-accepted" href="{{ path('conversation_reply', { id: invitation.messages[0].id }) }}" title="{{ username }}">
+                                                <img src="{{ path('avatar', { username: username, size: 48 }) }}" alt="{{ 'profile'|trans }}: {{ username }}">
+                                            </a>
+                                        </div>
+                                    {% elseif leg.openInvitations|length > 0 %}
+                                        {% set invitations = leg.openInvitations %}
+                                        <div class="p-trip-hosts">
+                                            {% for invitation in invitations|slice(0, 4) %}
                                                 {% set username = invitation.messages[0].initiator.Username %}
-                                                <div class="o-avatar__img-wrapper o-avatar--shadow-s o-avatar--shadow-green"
-                                                     style="width:48px; height:48px;">
-                                                    <a href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
-                                                        <img class="o-avatar__img"
-                                                             src="{{ path( 'avatar', { username: username , size: 48 }) }}"
-                                                             title="{{ username }}"
-                                                             alt="{{ 'profile' | trans }}: {{ username }}">
-                                                    </a>
-                                                </div>
+                                                <a class="p-trip-hosts__avatar" href="{{ path('conversation_reply', { id: invitation.messages[0].id }) }}" title="{{ username }}">
+                                                    <img src="{{ path('avatar', { username: username, size: 48 }) }}" alt="{{ 'profile'|trans }}: {{ username }}">
+                                                </a>
+                                            {% endfor %}
+                                            {% if invitations|length > 4 %}
+                                                <a class="p-trip-hosts__more" href="{{ url('conversations', { conversationsType: 'invitations' }) }}">+{{ invitations|length - 4 }}</a>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% elseif distance(leg.location.latitude, leg.location.longitude, address.latitude, address.longitude) <= trip.invitationRadius or leg.location.geonameId == address.location.geonameId %}
+                                    <div class="p-trip-timeline__actions">
+                                        {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
+                                            {% set invitation = leg.invitationBy(member) %}
+                                            {% if invitation %}
+                                                <a class="p-trips-btn p-trips-btn--done" href="{{ path('conversation_reply', { id: invitation.messages[0].id }) }}" title="{{ 'invitation.reply'|trans|format(trip.creator.username) }}">
+                                                    <i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}
+                                                </a>
                                             {% else %}
-                                                {% set invitations = leg.openInvitations %}
-                                                {% for invitation in invitations|slice(0,4) %}
-                                                    {% set username = invitation.messages[0].initiator.Username %}
-                                                    <div class="o-avatar__img-wrapper o-avatar--shadow-s"
-                                                         style="width:48px; height:48px;">
-                                                        <a href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}">
-                                                            <img class="o-avatar__img"
-                                                                 src="{{ path( 'avatar', { username: username , size: 48 }) }}"
-                                                                 title="{{ username }}"
-                                                                 alt="{{ 'profile' | trans }}: {{ username }}">
-                                                        </a>
-                                                    </div>
-                                                {% endfor %}
-                                                {% if invitations|length > 5 %}<a href="{{ url('conversations', {conversationsType: 'invitations'}) }}">...</a>{% endif %}
+                                                <a class="p-trips-btn p-trips-btn--primary" href="{{ path('hosting_invitation', { leg: leg.id }) }}" title="{{ 'invite.username'|trans|format(trip.creator.username) }}">
+                                                    <i class="fa fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invite'|trans }}
+                                                </a>
                                             {% endif %}
-                                        {% else %}
-                                            {% if distance(leg.location.latitude, leg.location.longitude, address.latitude, address.longitude) <= trip.invitationRadius or leg.location.geonameId == address.location.geonameId %}
-                                                <div class="u:flex">
-                                                    {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
-                                                        <a class="o-rounded o-rounded--l u:mx-4"
-                                                           href="{{ path('message_new', { 'username': trip.creator.username }) }}"
-                                                           aria-label="{{ 'message.write_to' | trans | format(trip.creator.username) }}" title="{{ 'message.write_to' | trans | format(trip.creator.username) }}">
-                                                            <i class="fa fa-fw fa-envelope"></i>
-                                                        </a>
-                                                    {% endif %}
-                                                    {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
-                                                        {% set invitation = leg.invitationBy(member) %}
-                                                        {% if invitation %}
-                                                            {% set invited = invitation.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
-                                                           <a class="o-rounded o-rounded--l u:mx-4 {% if invited %}u:bg-green-dark{% endif %}"
-                                                                href="{{ path('conversation_reply', {id: invitation.messages[0].id}) }}"
-                                                           aria-label="{{ 'invitation.reply' | trans | format(trip.creator.username) }}" title="{{ 'invitation.reply' | trans | format(trip.creator.username) }}">
-                                                              <i class="fa fa-fw fa-house-user"></i>
-                                                          </a>
-                                                        {% else %}
-                                                                <a class="o-rounded o-rounded--l u:mx-4"
-                                                                    href="{{ path('hosting_invitation', {
-                                                                        'leg': leg.id
-                                                                    }) }}"
-                                                                    aria-label="{{ 'invite.username' | trans | format(trip.creator.username) }}" title="{{ 'invite.username' | trans | format(trip.creator.username) }}">
-                                                                    <i class="fa fa-fw fa-house-user"></i>
-                                                                </a>
-                                                            {% endif %}
-                                                    {% endif %}
-                                                </div>
-                                            {% endif %}
+                                        {% endif %}
+                                        {% if constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
+                                            <a class="p-trips-btn" href="{{ path('message_new', { username: trip.creator.username }) }}" title="{{ 'message.write_to'|trans|format(trip.creator.username) }}">
+                                                <i class="fa fa-envelope" aria-hidden="true"></i> {{ 'trip.leg.message'|trans }}
+                                            </a>
                                         {% endif %}
                                     </div>
-                                </div>
-                                {% set calculatedLongitude = leg.location.longitude %}
-                                {% if lastLongitude != leg.location.longitude %}
-                                    {% if sgn(lastLongitude) != sgn(leg.location.longitude) %}
-                                        {% if lastLongitude|abs > 170 or leg.location.longitude|abs > 170 %}
-                                            {% set calculatedLongitude = leg.location.longitude + 360.0 %}
-                                        {% endif %}
+                                {% endif %}
+                            </div>
+
+                            {% set calculatedLongitude = leg.location.longitude %}
+                            {% if lastLongitude != leg.location.longitude %}
+                                {% if sgn(lastLongitude) != sgn(leg.location.longitude) %}
+                                    {% if lastLongitude|abs > 170 or leg.location.longitude|abs > 170 %}
+                                        {% set calculatedLongitude = leg.location.longitude + 360.0 %}
                                     {% endif %}
                                 {% endif %}
-                                <input type="hidden" class="js-data"
-                                       value="{{ leg.location.name }},{{ leg.location.latitude }},{{ calculatedLongitude }},{{ leg.location.country.name }},{{ leg.arrival|format_date('short') }}{% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('short') }}{% endif %}">
-                            </li>
-                            {% set current = current + 1 %}
-                        {% endif %}
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </section>
+                            {% endif %}
+                            <input type="hidden" class="js-data"
+                                   value="{{ leg.location.name }},{{ leg.location.latitude }},{{ calculatedLongitude }},{{ leg.location.country.name }},{{ leg.arrival|format_date('short') }}{% if leg.arrival != leg.departure %} - {{ leg.departure|format_date('short') }}{% endif %}">
+                        </li>
+                        {% set current = current + 1 %}
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </section>
+
+        <section class="p-trips-card p-trip-map">
+            <div id="map" class="o-map p-trip-map__map"></div>
+        </section>
+    </div>
 
     <script type="text/javascript">
         let trip = {
-            own: {% if app.user == trip.creator %}true{% else %}false{% endif %},
+            own: {% if own %}true{% else %}false{% endif %},
             radius: {{ trip.invitationRadius * 1000 }},
         }
         let memberInfo = {

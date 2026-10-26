@@ -1052,42 +1052,6 @@
   }
 }
 
-.loginbar--slim {
-  .loginbar-slim__cta {
-    line-height: 1.35;
-
-    a {
-      &:hover,
-      &:focus {
-        color: #fff;
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .loginbar-slim__sep {
-    font-weight: 300;
-    user-select: none;
-  }
-
-  .loginbar-slim__lang-toggle {
-    &:hover,
-    &:focus,
-    &:active {
-      color: #fff !important;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-      text-decoration: none;
-    }
-
-    &:focus-visible {
-      outline: 2px solid rgba(255, 255, 255, 0.45);
-      outline-offset: 2px;
-    }
-  }
-}
-
 /* Cookie consent: bottom full-width banner */
 .cc-window.cc-banner {
   left: 0;

@@ -1,0 +1,138 @@
+{#
+  The host's answer to a hosting request, under the messages (on the conversation page
+  and on the reply page when the form comes back with an error), in two steps:
+  1. Decide: Accept, Maybe or Decline (big buttons), or "Just reply, answer later".
+  2. Write: the picked answer on top ("Change" goes back to step 1), the dates when the
+     guest is flexible (accept or maybe), the message, the reply templates and Send,
+     which submits as the picked button (requests.js).
+  The decision step shows first while the request waits for an answer; once answered
+  the form opens on "Reply" (a plain message), and "Change" offers the other answers.
+  Expects respond (HostingRequestHost form view) and current (the newest message).
+  The invited member answers an invitation with the same form (InvitationGuest form
+  view): then "guest" below is the member who invited, and Accept and Maybe are missing
+  once the invitation was accepted.
+#}
+{% import 'request/_request.macros.twig' as stay %}
+{% set S = 'App\\Entity\\HostingRequest::' %}
+{% set request = current.request %}
+{% set fields = respond.request %}
+{% set flexible = fields.flexible is defined %}
+{% set guest = current.initiator %}
+{% set isInvitation = request.inviteForLeg is not null %}
+{% set texts = isInvitation ? 'invitation.decide.' : 'request.decide.' %}
+{% set guestName = guest.shortNameOrUsername ?? guest.username %}
+
+{% set choices = [] %}
+{% if request.status != constant(S ~ 'REQUEST_ACCEPTED') and respond.accept is defined %}
+    {% set choices = choices|merge([{ key: 'accept', button: respond.accept, icon: 'fa fa-check' }]) %}
+{% endif %}
+{% if request.status != constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED') and respond.tentatively is defined %}
+    {% set choices = choices|merge([{ key: 'maybe', button: respond.tentatively, icon: 'fa fa-question' }]) %}
+{% endif %}
+{% if request.status != constant(S ~ 'REQUEST_DECLINED') %}
+    {% set choices = choices|merge([{ key: 'decline', button: respond.decline, icon: 'fa fa-times' }]) %}
+{% endif %}
+
+{% set awaitingAnswer = request.status == constant(S ~ 'REQUEST_OPEN') %}
+{# The decision first while the request waits for an answer (and the form has no error) #}
+{% set decideFirst = awaitingAnswer and respond.vars.valid and choices|length > 0 %}
+
+{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { class: 'c-inbox-respond c-decide js-respond' ~ (awaitingAnswer ? '' : ' c-decide--answered'), novalidate: 'novalidate', autocomplete: 'off' } }) }}
+    {{ form_errors(respond) }}
+
+    {# 1. Decide #}
+    <div class="c-decide__step js-decide-step" data-step="decide"{{ decideFirst ? '' : ' hidden' }}>
+        <h2 class="c-decide__title">{{ (texts ~ (awaitingAnswer ? 'title' : 'title.again'))|trans({ username: guestName }) }}</h2>
+        <p class="c-decide__hint">{{ 'request.decide.hint'|trans }}</p>
+        {% if choices|length %}
+            <div class="c-decide__choices c-decide__choices--{{ choices|length }}">
+                {% for choice in choices %}
+                    <button type="button" class="c-decide__choice c-decide__choice--{{ choice.key }} js-decide-pick"
+                            data-choice="{{ choice.key }}" data-button="{{ choice.button.vars.full_name }}">
+                        <span class="c-decide__icon"><i class="{{ choice.icon }}" aria-hidden="true"></i></span>
+                        {{ ('request.decide.' ~ choice.key)|trans }}
+                    </button>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <button type="button" class="c-decide__later js-decide-pick" data-choice="reply" data-button="{{ respond.update.vars.full_name }}">
+            <i class="far fa-comment" aria-hidden="true"></i> {{ 'request.decide.later'|trans }}
+        </button>
+    </div>
+    {% if respond.accept is defined %}{% do respond.accept.setRendered %}{% endif %}
+    {% if respond.tentatively is defined %}{% do respond.tentatively.setRendered %}{% endif %}
+    {% do respond.decline.setRendered %}
+
+    {# 2. Write the message #}
+    <div class="c-decide__step c-decide__write js-decide-step" data-step="write" data-choice="reply"{{ decideFirst ? ' hidden' : '' }}>
+        <div class="c-decide__top">
+            {% for key, icon in { accept: 'fa fa-check', maybe: 'fa fa-question', decline: 'fa fa-times', reply: 'far fa-comment' } %}
+                <span class="c-decide__picked c-decide__picked--{{ key }} js-decide-picked" data-choice="{{ key }}"{{ key == 'reply' ? '' : ' hidden' }}>
+                    <i class="{{ icon }}" aria-hidden="true"></i> {{ (key == 'reply' ? 'request.respond.toggle' : 'request.decide.' ~ key)|trans }}
+                </span>
+            {% endfor %}
+            {% if choices|length %}
+                <button type="button" class="c-decide__change js-decide-change">
+                    {%- if awaitingAnswer -%}
+                        {{ 'request.decide.change'|trans }}
+                    {%- else -%}
+                        <i class="fas fa-undo" aria-hidden="true"></i> {{ 'request.decide.change.answer'|trans }}
+                    {%- endif -%}
+                </button>
+            {% endif %}
+        </div>
+
+        {% if flexible %}
+            {# The guest is flexible: when accepting (or maybe), the host may suggest other dates. #}
+            <div class="c-inbox-respond__stay c-decide__stay js-decide-stay" hidden>
+                {{ stay.dates(fields) }}
+                <div class="c-request-line">
+                    {{ stay.nights(fields) }}
+                    {{ stay.flexible(fields.flexible) }}
+                </div>
+                <p class="c-inbox-compose__hint">{{ 'request.host.suggest.dates'|trans }}</p>
+            </div>
+        {% else %}
+            {{ form_widget(fields.arrival) }}
+            {{ form_widget(fields.departure) }}
+            {% if fields.duration is defined %}{% do fields.duration.setRendered %}{% endif %}
+        {% endif %}
+        {{ form_widget(fields.numberOfTravellers) }}
+        {% if fields.inviteForLeg is defined %}{{ form_widget(fields.inviteForLeg) }}{% endif %}
+        {% do fields.setRendered %}
+
+        {% if respond.message.vars.errors|length > 0 %}
+            <div class="c-inbox-compose__error">{{ form_errors(respond.message) }}</div>
+        {% endif %}
+        {# One line: the "^" menu (templates), the message, Send #}
+        <div class="c-decide__foot c-decide__foot--inline">
+            {% include 'conversations/_compose_tools.html.twig' with { editor_id: respond.message.vars.id } only %}
+            {# A plain text field (turned into paragraphs on send) instead of the rich editor: it takes less room. #}
+            <textarea class="c-decide__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="{{ awaitingAnswer ? 3 : 1 }}"
+                      aria-label="{{ respond.message.vars.label|trans }}"
+                      placeholder="{{ 'request.decide.placeholder.reply'|trans({ username: guestName }) }}"
+                      data-placeholder-accept="{{ (texts ~ 'placeholder.accept')|trans({ username: guestName }) }}"
+                      data-placeholder-maybe="{{ (texts ~ 'placeholder.maybe')|trans({ username: guestName }) }}"
+                      data-placeholder-decline="{{ (texts ~ 'placeholder.decline')|trans({ username: guestName }) }}"
+                      data-placeholder-reply="{{ 'request.decide.placeholder.reply'|trans({ username: guestName }) }}">
+                {{- respond.message.vars.value|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim -}}
+            </textarea>
+            <button type="submit" id="{{ respond.update.vars.id }}" name="{{ respond.update.vars.full_name }}"
+                    class="c-decide__send js-respond-send" data-button="{{ respond.update.vars.full_name }}">
+                <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                {% for key in ['accept', 'maybe', 'decline', 'reply'] %}
+                    <span class="js-decide-send" data-choice="{{ key }}"{{ key == 'reply' ? '' : ' hidden' }}>{{ (key == 'reply' ? 'label.message.button.send' : 'request.decide.send.' ~ key)|trans }}</span>
+                {% endfor %}
+            </button>
+        </div>
+        {% do respond.message.setRendered %}
+
+        {% if request.status != constant(S ~ 'REQUEST_DECLINED') %}
+            <a class="c-decide__decline-link js-respond-decline-link" href="{{ path('conversation_decline', { id: current.id }) }}" hidden>
+                {{ 'label.decline.no.message'|trans }}
+            </a>
+        {% endif %}
+    </div>
+    {% do respond.update.setRendered %}
+    {{ form_rest(respond) }}
+{{ form_end(respond) }}

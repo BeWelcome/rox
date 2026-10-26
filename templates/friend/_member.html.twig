@@ -1,0 +1,8 @@
+{% import 'macros.twig' as macros %}
+{# Avatar and name of the member the friendship is about. #}
+<div class="p-friend-form__member">
+  <div class="o-avatar o-avatar--m">
+    {{ macros.roundedavatarstack(member.username, 72, false, true) }}
+  </div>
+  <a class="p-friend-form__name" href="{{ url('members_profile', {username: member.username}) }}">{{ member.username }}</a>
+</div>

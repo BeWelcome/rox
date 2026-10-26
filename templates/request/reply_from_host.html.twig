@@ -1,89 +1,23 @@
-{% extends 'base.html.twig' %}
+{% extends 'conversations/reply_layout.html.twig' %}
+
+{% set compose_class = ' c-inbox-compose--respond' %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('requests') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind')  }}
-    {{ encore_entry_link_tags('requests')  }}
+    {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('requests') }}
 {% endblock stylesheets %}
 
-{% block content %}
-    {% import 'macros.twig' as macros %}
+{% block reply_extra %}
     {% set original = thread | last %}
-    {% set current = thread | first %}
-    {% set request = current.request %}
+    {% set request = (thread | first).request %}
     {% set myself = app.user %}
-    {% set sender =  original.sender %}
-
-    {{ macros.messageheader_no_buttons(thread) }}
-
     {% include 'request/header.html.twig' %}
+{% endblock reply_extra %}
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
-
-    <div class="u:flex u:flex-col">
-        {{ form_label(form.message) }}
-        {{ form_widget(form.message) }}
-        {{ form_errors(form.message) }}
-        <div class="o-form-group">
-            {{ form_label(form.request.duration) }}
-            <div class="input-group date">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">
-                        <i class="fa fa-calendar"></i>
-                    </span>
-                </div>
-                {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
-                {{ form_errors(form.request.duration) }}
-            </div>
-            {% if form.request.flexible is defined %}
-                {{ form_row(form.request.flexible) }}
-                <p class="text-muted">{{ 'request.host.suggest.dates'|trans }}</p>
-            {% else %}
-                <p class="text-muted">{{ 'request.host.fixed.dates'|trans }}</p>
-            {% endif %}
-        </div>
-
-        {{ form_row(form.request.numberOfTravellers) }}
-
-        {{ form_row(form.request.arrival) }}
-        {{ form_row(form.request.departure) }}
-        {% do form.request.setRendered %}
-
-        <div class="u:flex u:justify-end u:mt-8 u:mb-16">
-            {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
-                {{ form_widget(form.accept, {'attr': {'class': 'o-button--s md:o-button u:ml-4'}}) }}
-            {% else %}
-                {% do form.accept.setRendered %}
-            {% endif %}
-            {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
-                {{ form_widget(form.tentatively, {'attr': {'class': 'o-button--s md:o-button u:ml-4'}}) }}
-            {% else %}
-                {% do form.tentatively.setRendered %}
-            {% endif %}
-            {% if request.status != constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
-            <div class="btn-group u:ml-4">
-                <button type="submit" id="{{ form.decline.vars.id }}" name="{{ form.decline.vars.full_name }}" class="o-button--s md:o-button o-button--cut-right md:o-button--cut-right">
-                    {{ form.decline.vars.label|trans }}
-                </button>
-                <button type="button" class="o-button--s md:o-button dropdown-toggle dropdown-toggle-split o-button--cut-left md:o-button--cut-left" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="sr-only">{{ 'toggle.dropdown'|trans }}</span>
-                </button>
-                <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="{{ url('conversation_decline', {id: current.id}) }}">{{ 'label.decline.no.message'|trans }}</a>
-                </div>
-            </div>
-            {% endif %}
-            {% do form.decline.setRendered %}
-            {{ form_widget(form.update, {'attr': {'class': 'o-button--s md:o-button u:ml-4'}}) }}
-        </div>
-    </div>
-
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
-
-    {% include 'message/thread.html.twig' with {'show_deleted': false} %}
-
-{% endblock %}
+{% block reply_form %}
+    {% include 'request/_respond_host.html.twig' with { respond: form, current: thread | first } %}
+{% endblock reply_form %}

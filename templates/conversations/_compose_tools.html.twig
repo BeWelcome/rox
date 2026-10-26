@@ -1,0 +1,38 @@
+{#
+  The "^" button on the left of the message field of the answer forms: it opens a small
+  menu upwards with the reply templates and, for the guest, "Change dates".
+  Expects editor_id (the message field); dates: true adds "Change dates"
+  (requests.js opens the dates card through .js-respond-stay-toggle).
+#}
+{% set conversation_templates = [
+    { label: 'conversation.reply.template.interested.label', body: 'conversation.reply.template.interested.body', icon: 'fa-check' },
+    { label: 'conversation.reply.template.need_details.label', body: 'conversation.reply.template.need_details.body', icon: 'fa-question' },
+    { label: 'conversation.reply.template.not_available.label', body: 'conversation.reply.template.not_available.body', icon: 'fa-times' }
+] %}
+<div class="c-compose-tools dropup">
+    <button type="button" class="c-compose-tools__toggle"
+            data-bs-toggle="dropdown"
+            data-bs-popper-config='{"strategy":"fixed"}'
+            aria-haspopup="true" aria-expanded="false"
+            aria-label="{{ 'conversation.compose.tools'|trans }}" title="{{ 'conversation.compose.tools'|trans }}">
+        <i class="fas fa-chevron-up" aria-hidden="true"></i>
+    </button>
+    <div class="dropdown-menu c-compose-tools__menu">
+        {% if dates ?? false %}
+            <button type="button" class="dropdown-item c-compose-tools__item js-respond-stay-toggle" aria-expanded="false">
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                <span>{{ 'request.respond.change'|trans }}</span>
+            </button>
+            <div class="dropdown-divider"></div>
+        {% endif %}
+        <h6 class="dropdown-header c-compose-tools__header"><i class="far fa-file-alt" aria-hidden="true"></i> {{ 'conversation.reply.templates'|trans }}</h6>
+        {% for template in conversation_templates %}
+            <button type="button" class="dropdown-item c-compose-tools__item js-conversation-template"
+                    data-conversation-template-editor-id="{{ editor_id }}"
+                    data-conversation-template="{{ template.body|trans|e('html_attr') }}">
+                <i class="fa {{ template.icon }}" aria-hidden="true"></i>
+                <span>{{ template.label|trans }}</span>
+            </button>
+        {% endfor %}
+    </div>
+</div>

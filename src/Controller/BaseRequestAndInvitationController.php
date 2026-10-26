@@ -94,7 +94,9 @@ abstract class BaseRequestAndInvitationController extends AbstractController
             $subject = 'Re: ' . $subject;
         }
 
-        $locale = $newRequest->getReceiver()->getPreferredLanguage()->getShortCode();
+        // Members without a preferred language (e.g. test members) fall back to their site language.
+        $receiver = $newRequest->getReceiver();
+        $locale = $receiver->getPreferredLanguage()?->getShortCode() ?? $receiver->getLocale();
 
         return $this->adjustSubject($newRequest->getRequest()->getStatus(), $subject, $locale);
     }

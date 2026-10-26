@@ -13,14 +13,17 @@
     }
 ] %}
 
-<div class="u:flex u:justify-end u:mt-2">
-    <div class="btn-group">
+<div class="c-reply-templates u:flex u:justify-end u:mt-2">
+    <div class="btn-group{{ (menu_up ?? false) ? ' dropup' : '' }}">
         <button type="button"
                 class="o-button o-button--s o-button--outline dropdown-toggle"
                 data-bs-toggle="dropdown"
+                data-bs-popper-config='{"strategy":"fixed"}'
                 aria-haspopup="true"
-                aria-expanded="false">
-            {{ 'conversation.reply.templates'|trans }}
+                aria-expanded="false"
+                aria-label="{{ 'conversation.reply.templates'|trans }}">
+            <i class="far fa-file-alt" aria-hidden="true"></i>
+            <span class="c-reply-templates__label">{{ 'conversation.reply.templates'|trans }}</span>
         </button>
         <div class="dropdown-menu dropdown-menu-end">
             {% for template in conversation_templates %}

@@ -96,3 +96,6 @@ browser.notification.forum.title:
 browser.notification.body:
     - Open BeWelcome to read it.
     - Generic browser push notification body. Do not include private message, request, or forum content.
+footer.links.toggle:
+    - Links and help
+    - Button that opens the footer links on small screens

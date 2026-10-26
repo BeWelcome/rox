@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\AccommodationType;
 use App\Entity\Activity;
+use App\Entity\HostingRequest;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Notification;
@@ -15,9 +16,11 @@ use App\Form\TripRadiusType;
 use App\Model\CommunityNewsModel;
 use App\Model\DonateModel;
 use App\Model\LandingModel;
+use App\Model\PlacesModel;
 use App\Model\TripModel;
 use App\Repository\ActivityRepository;
 use App\Repository\NotificationRepository;
+use App\Repository\RequestRepository;
 use App\Repository\SubtripRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -114,10 +117,25 @@ class LandingController extends AbstractController
         $groups = $request->query->get('groups', '0');
         $forum = $request->query->get('forum', '0');
         $following = $request->query->get('following');
+        // The home page has one tab for the forum and one for the member's groups.
+        $tab = $request->query->get('tab');
 
         /** @var Member $member */
         $member = $this->getUser();
         $preferenceRepository = $this->entityManager->getRepository(Preference::class);
+
+        if ('forum' === $tab || 'groups' === $tab) {
+            $threads = $this->landingModel->getThreads($member, 'groups' === $tab, 'forum' === $tab, false, 5);
+            $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_ORDER_LIST_ASC]);
+
+            return $this->render('landing/widget/forums.html.twig', [
+                'threads' => $threads,
+                'ascending' => 'Yes' === $member->getMemberPreference($preference)->getValue(),
+                'displayId' => 'groups' === $tab ? 'groupsdisplay' : 'threadsdisplay',
+                'tab' => $tab,
+            ]);
+        }
+
         /** @var Preference $preference */
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
         $memberPreference = $member->getMemberPreference($preference);
@@ -206,6 +224,8 @@ class LandingController extends AbstractController
         EntityManagerInterface $entityManager,
         DonateModel $donateModel,
         TripModel $tripModel,
+        PlacesModel $placesModel,
+        Request $request,
         FormFactoryInterface $formFactory,
     ): Response {
         if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
@@ -253,12 +273,16 @@ class LandingController extends AbstractController
             ],
             'radiusForm' => $radiusForm->createView(),
             'communityNews' => $latestNews,
+            'countries' => $placesModel->getCountriesByContinent($request->getLocale()),
             'messageFilter' => $messageFilter,
             'forumFilter' => $forumFilter,
             'onlineActivities' => $onlineActivities,
             'notificationCount' => $this->getUncheckedNotificationsCount($member),
             'visitorsCount' => $this->getVisitorsCount($tripModel, $member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
+            'forumTodayCount' => $this->landingModel->getThreadsWithPostsTodayCount($member, false),
+            'groupsTodayCount' => $this->landingModel->getThreadsWithPostsTodayCount($member, true),
+            'requestsToAnswerCount' => $this->getRequestsToAnswerCount($member),
         ]);
 
         return $content;
@@ -270,6 +294,14 @@ class LandingController extends AbstractController
         $notificationRepository = $this->entityManager->getRepository(Notification::class);
 
         return $notificationRepository->getUncheckedNotificationsCount($member);
+    }
+
+    protected function getRequestsToAnswerCount(Member $member): int
+    {
+        /** @var RequestRepository $requestRepository */
+        $requestRepository = $this->entityManager->getRepository(HostingRequest::class);
+
+        return $requestRepository->getRequestsToAnswerCount($member);
     }
 
     protected function getVisitorsCount(TripModel $tripModel, Member $member): int

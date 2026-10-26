@@ -12,3 +12,129 @@ please.enter.a.message.text:
 flash.request.declined:
     - 'You declined this request.'
     - Flash shown when clicking the decline without message link in the request form
+request.respond.title:
+    - 'Your response'
+    - Title above the answer of the host under a hosting request (accept, maybe, decline)
+request.respond.choose:
+    - 'Choose a response'
+    - Send button of the host's answer to a hosting request, as long as no answer (accept, maybe, decline) is picked
+request.respond.placeholder:
+    - 'Add a message to your response'
+    - Placeholder of the message field of the host's answer to a hosting request
+request.respond.change:
+    - 'Change dates'
+    - Link under the guest's reply in a hosting request that shows the dates and number of travellers to change them
+request.status.open:
+    - 'Pending'
+    - Short status of a hosting request or invitation on its card above the messages, no answer yet
+request.status.tentatively:
+    - 'Maybe'
+    - Short status of a hosting request or invitation on its card above the messages, answered maybe
+request.status.accepted:
+    - 'Accepted'
+    - Short status of a hosting request or invitation on its card above the messages
+request.status.declined:
+    - 'Declined'
+    - Short status of a hosting request or invitation on its card above the messages
+request.status.cancelled:
+    - 'Cancelled'
+    - Short status of a hosting request or invitation on its card above the messages
+request.respond.toggle:
+    - 'Reply'
+    - Button next to Send in the host's answer to a hosting request; opens or closes the panel with the dates and Accept, Maybe, Decline
+request.hosts.up.to:
+    - '{username} hosts up to {count}'
+    - Under "Travellers" in the stay request side panel; {count} is how many guests the host takes at most
+request.flexible.hint:
+    - 'A few days earlier or later is fine'
+    - Under "My dates are flexible" in the stay request side panel
+request.decide.title:
+    - 'Can you host {username}?'
+    - Title of the host's answer to a new hosting request, above Accept, Maybe and Decline
+request.decide.title.again:
+    - 'Change your answer to {username}?'
+    - Title above the other answers (Accept, Maybe, Decline) once the host has already answered a hosting request
+request.decide.hint:
+    - 'Choose an answer, then add a message.'
+    - Under the title of the host's answer to a hosting request
+request.decide.accept:
+    - 'Accept'
+    - Big button of the host's answer to a hosting request
+request.decide.maybe:
+    - 'Maybe'
+    - Big button of the host's answer to a hosting request
+request.decide.decline:
+    - 'Decline'
+    - Big button of the host's answer to a hosting request
+request.decide.later:
+    - 'Just reply, answer later'
+    - Link under Accept, Maybe and Decline; writes a message without answering the hosting request yet
+request.decide.change:
+    - 'Change'
+    - Link next to the picked answer (Accept, Maybe, Decline) above the message; goes back to the choice
+request.decide.placeholder.accept:
+    - 'Say hi and tell {username} how to reach your place...'
+    - Placeholder of the message when the host accepts a hosting request
+request.decide.placeholder.maybe:
+    - 'Tell {username} what you need to know before saying yes...'
+    - Placeholder of the message when the host answers maybe to a hosting request
+request.decide.placeholder.decline:
+    - "Tell {username} why you can't host this time..."
+    - Placeholder of the message when the host declines a hosting request
+request.decide.placeholder.reply:
+    - 'Write to {username}...'
+    - Placeholder of the message when the host only replies to a hosting request, without answering it
+request.decide.send.accept:
+    - 'Send acceptance'
+    - Send button when the host accepts a hosting request
+request.decide.send.maybe:
+    - 'Send answer'
+    - Send button when the host answers maybe to a hosting request
+request.decide.send.decline:
+    - 'Send decline'
+    - Send button when the host declines a hosting request
+request.card.title:
+    - 'Hosting request'
+    - Top of the card about a hosting request, above the messages
+request.card.arrival:
+    - 'Arrival'
+    - Above the arrival date on the card about a hosting request, followed by the day of the week
+request.card.departure:
+    - 'Departure'
+    - Above the departure date on the card about a hosting request, followed by the day of the week
+request.card.persons:
+    - '{count, plural, one {# person} other {# people}}'
+    - How many travellers, on the card about a hosting request
+request.card.flexible:
+    - 'Flexible dates'
+    - On the card about a hosting request, when the guest's dates are flexible
+request.card.not.flexible:
+    - 'Not flexible'
+    - On the card about a hosting request, when the guest's dates are fixed
+invitation.card.title:
+    - 'Invitation'
+    - Top of the card about an invitation to stay, above the messages
+request.guest.declined:
+    - "{username} can't host you this time. You can still write to them."
+    - Under "Declined" above the message field, for the guest whose hosting request was declined
+request.decide.change.answer:
+    - 'Change my answer'
+    - Link under the message field once the host has answered a request; shows Accept, Maybe and Decline again
+invitation.decide.title:
+    - "Accept {username}'s invitation?"
+    - Title of the invited member's answer to an invitation, above Accept, Maybe and Decline
+invitation.decide.title.again:
+    - 'Change your answer to {username}?'
+    - Title above the other answers (Accept, Maybe, Decline) once the invited member has already answered an invitation
+invitation.decide.placeholder.accept:
+    - 'Thank {username} and say when you will arrive...'
+    - Placeholder of the message when the invited member accepts an invitation
+invitation.decide.placeholder.maybe:
+    - 'Tell {username} what you need to know before saying yes...'
+    - Placeholder of the message when the invited member answers maybe to an invitation
+invitation.decide.placeholder.decline:
+    - "Tell {username} why you can't come this time..."
+    - Placeholder of the message when the invited member declines an invitation
+invitation.confirm.cancel:
+    - 'Cancel this invitation?'
+    - Question in the confirmation window when the member who invited cancels the invitation

@@ -15,6 +15,7 @@ use App\Entity\GalleryImage;
 use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Preference;
+use App\Entity\ProfileNote;
 use App\Entity\ProfileVisit;
 use App\Form\AboutMeFormType;
 use App\Form\AccommodationFormType;
@@ -29,6 +30,7 @@ use App\Model\ProfileModel;
 use App\Repository\CommentRepository;
 use App\Repository\FriendRepository;
 use App\Repository\GalleryImageRepository;
+use App\Repository\ProfileNoteRepository;
 use App\Repository\ProfileVisitRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
@@ -57,6 +59,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ProfileController extends AbstractController
 {
     use TranslatedFlashTrait;
+
+    private const int PROFILE_COMMENTS = 10;
 
     public function __construct(
         private readonly ChangeProfilePictureGlobals $globals,
@@ -182,13 +186,13 @@ class ProfileController extends AbstractController
 
         $address = $member->getActiveAddress();
 
-        $setLocationForm = $this->createForm(SetLocationType::class, [
+        $setLocationForm = $this->createForm(SetLocationType::class, $address ? [
             'fullname' => $address->getLocation()->getFullname(),
             'name' => $address->getLocation()->getName(),
             'geoname_id' => $address->getLocation()->getGeonameId(),
             'latitude' => $address->getLatitude(),
             'longitude' => $address->getLongitude(),
-        ]);
+        ] : []);
         $setLocationForm->handleRequest($request);
 
         if ($setLocationForm->isSubmitted() && $setLocationForm->isValid()) {
@@ -198,6 +202,11 @@ class ProfileController extends AbstractController
             /** @var Location $location */
             $location = $locationRepository->find($data['geoname_id']);
             if (null !== $location) {
+                if (!$address) {
+                    $address = new \App\Entity\Address();
+                    $address->setMember($member);
+                    $address->setActive(true);
+                }
                 $address->setLocation($location);
                 $address->setLatitude($data['latitude']);
                 $address->setLongitude($data['longitude']);
@@ -672,7 +681,14 @@ class ProfileController extends AbstractController
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);
         $commentCounts = $commentRepository->getCommentsCountMemberByQuality($member);
-        $comments = $commentRepository->getLatestCommentsMember($member, 5);
+        // Show the 10 latest comments the member received (the ones they wrote are on the
+        // other members' profiles); the "show all" link only appears when some are left out.
+        $latestComments = array_filter(
+            $commentRepository->getLatestCommentsMember($member, self::PROFILE_COMMENTS),
+            fn (array $comment) => isset($comment['from'])
+        );
+        $comments = \array_slice($latestComments, 0, self::PROFILE_COMMENTS, true);
+        $hasMoreComments = $commentRepository->getCommentsForMemberCount($member) > \count($comments);
         $visibleComments = $commentRepository->getVisibleCommentsForMemberCount($member);
 
         /** @var FriendRepository $friendRepository */
@@ -683,20 +699,31 @@ class ProfileController extends AbstractController
         $galleryRepository = $this->entityManager->getRepository(GalleryImage::class);
         $pictures = $galleryRepository->getLatestImagesFor($member);
 
+        // The private note of the member looking at the profile, shown in its own block
+        /** @var ProfileNoteRepository $noteRepository */
+        $noteRepository = $this->entityManager->getRepository(ProfileNote::class);
+        $note = $member === $loggedInMember ? null : $noteRepository->getNoteForMemberPair($loggedInMember, $member);
+
         $template = $editMode ? 'profile/edit.html.twig' : 'profile/show.html.twig';
 
-        return $this->render($template, [
+        $params = [
             'member' => $member,
             'comments' => $comments,
             'comments_count' => $commentCounts,
             'visibleComments' => $visibleComments,
+            'has_more_comments' => $hasMoreComments,
             'friends' => $friends,
             'pictures' => $pictures,
+            'note' => $note,
             'language' => $language,
             'status_form' => $this->profileModel->getStatusForm($loggedInMember, $member),
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member),
-        ]);
+        ];
+
+        $params['hide_sidebar'] = true;
+
+        return $this->render($template, $params);
     }
 
     private function getSectionForm(?string $section, Member $member, string $language): ?FormInterface
@@ -736,9 +763,9 @@ class ProfileController extends AbstractController
                 'offers' => $member->getStandardOffers(),
                 'restrictions' => $member->getRestrictions(),
                 'offer_guests' => $translations[$language]['OfferGuests'] ?? '',
-                'additional_info' => $translations[$language]['AdditionalInfo'] ?? '',
+                'additional_info' => $translations[$language]['AdditionalAccommodationInfo'] ?? $translations[$language]['AdditionalInfo'] ?? '',
                 'transport' => $translations[$language]['PublicTransport'] ?? '',
-                'house_rules' => $translations[$language]['Restrictions'] ?? '',
+                'house_rules' => $translations[$language]['HouseRules'] ?? $translations[$language]['Restrictions'] ?? '',
                 'wheelchair_accessible' => $wheelchairAccessible,
                 'language' => $language,
             ]),

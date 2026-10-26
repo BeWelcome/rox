@@ -9,7 +9,7 @@ languages.error.duplicates:
     - Error message on the edit languages page
     - validators
 languages.error.no.mother.tongue:
-    - 'No mother tongue!'
+    - 'Set one language to Native, your mother tongue, to save.'
     - Error message on the edit languages page
     - validators
 language.delete.no:

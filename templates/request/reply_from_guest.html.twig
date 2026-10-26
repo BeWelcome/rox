@@ -1,69 +1,23 @@
-{% extends 'base.html.twig' %}
+{% extends 'conversations/reply_layout.html.twig' %}
+
+{% set compose_class = ' c-inbox-compose--respond' %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('requests') }}"
+    {{ encore_entry_script_tags('requests') }}
 {% endblock javascripts %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind')  }}
-    {{ encore_entry_link_tags('requests')  }}
+    {{ encore_entry_link_tags('tailwind') }}
+    {{ encore_entry_link_tags('requests') }}
 {% endblock stylesheets %}
 
-{% block content %}
-    {% import 'macros.twig' as macros %}
+{% block reply_extra %}
     {% set original = thread | last %}
-    {% set current = thread | first %}
-    {% set request = current.request %}
+    {% set request = (thread | first).request %}
     {% set myself = app.user %}
-    {% set receiver =  original.receiver %}
-
-    {{ macros.messageheader_no_buttons(thread) }}
-
     {% include 'request/header.html.twig' %}
+{% endblock reply_extra %}
 
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'autocomplete': 'off'}}) }}
-    <div class="u:grid u:grid-cols-3 u:gap-x-12 u:my-4">
-        <div class="u:md:col-span-1 u:col-span-3">
-            <div class="o-form-group">
-                {{ form_label(form.request.duration) }}
-                <div class="input-group date">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            <i class="fa fa-calendar"></i>
-                        </span>
-                    </div>
-                    {{ form_widget(form.request.duration, {'attr': { 'class': 'js-litepicker'}}) }}
-                </div>
-                {{ form_row(form.request.arrival) }}
-                {{ form_row(form.request.departure) }}
-            </div>
-            {% if form.request.flexible is defined %}
-                {{ form_row(form.request.flexible) }}
-            {% endif %}
-
-            {{ form_row(form.request.numberOfTravellers) }}
-            {% do form.request.setRendered %}
-        </div>
-        <div class="u:md:col-span-2 u:col-span-3">
-            {{ form_label(form.message) }}
-            {{ form_widget(form.message) }}
-            {{ form_errors(form.message) }}
-            <div class="u:flex u:justify-end u:mt-8 u:mb-16">
-                {% if current.sender.Username == app.user.Username %}
-                    {% set label = 'update' %}
-                {% else %}
-                    {% set label = 'reply' %}
-                {% endif %}
-                {{ form_widget(form.cancel, {'attr': {'class': 'o-button',
-                'onclick': 'return confirm(\'' ~ ('request.confirm.cancel'|trans) ~ '\');'}})
-                            }}
-
-                {{ form_widget(form.update, {'attr': {'class': 'o-button u:ml-8'},
-                'label' : label}) }}
-            </div>
-        </div>
-    </div>
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
-    {% include 'message/thread.html.twig' with {'show_deleted': false} %}
-{% endblock %}
+{% block reply_form %}
+    {% include 'request/_respond_guest.html.twig' with { respond: form, current: thread | first } %}
+{% endblock reply_form %}

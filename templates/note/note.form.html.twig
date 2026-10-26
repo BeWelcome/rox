@@ -1,5 +1,95 @@
-{% extends 'profile/profile.html.twig' %}
+{#
+  Add or edit a private note about a member. In the side panel of the profile (?embed=1):
+  the member's picture and name on top, "only you" just under, the note on yellow paper,
+  its category (with the ones already used, one click away), then delete, cancel and save
+  at the bottom. Once saved or deleted, the profile is shown again (NoteController).
+#}
+{% extends app.request.query.getBoolean('embed') ? 'profile/edit_subpage.html.twig' : 'profile/profile.html.twig' %}
 {% import 'macros.twig' as macros %}
+
+{% block subpage_title %}{{ member.visibleName ?: member.username }}{% endblock %}
+{% block drawer_eyebrow %}<span class="p-note-form__mark" aria-hidden="true"></span> {{ 'profile.note.about.eyebrow'|trans }}{% endblock %}
+{% block drawer_options %}track noclose{% endblock %}
+{% block drawer_avatar %}<img src="{{ url('avatar', {username: member.username, size: 100}) }}" alt="">{% endblock %}
+
+{% block subpage_body %}
+    {% set editing = buttonLabel == 'note.edit' %}
+    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate', 'class': 'p-note-form' } }) }}
+    <p class="p-note-form__private">
+        <i class="fas fa-lock" aria-hidden="true"></i>
+        {{ 'profile.note.never.told'|trans({name: member.shortNameOrUsername}) }}
+    </p>
+
+    <div class="p-note-form__paper">
+        <label class="visually-hidden" for="{{ form.comment.vars.id }}">{{ 'profile.note.comment'|trans }}</label>
+        {{ form_widget(form.comment) }}
+        {{ form_errors(form.comment) }}
+    </div>
+
+    <div class="p-note-form__categories js-note-categories"
+         data-add="{{ 'profile.note.category.add'|trans }}">
+        <label class="p-note-form__label" for="{{ form.category.vars.id }}">
+            {{ 'profile.note.category'|trans }} <span>· {{ 'profile.note.categories.hint'|trans }}</span>
+        </label>
+        {{ form_widget(form.category) }}
+        {{ form_errors(form.category) }}
+        <div class="p-note-form__used js-note-used" hidden>
+            <span class="p-note-form__used-label">{{ 'profile.note.your.categories'|trans }}</span>
+        </div>
+    </div>
+
+    <div class="p-edit-subpage__actions">
+        {% if editing %}
+            {% set deleteText = 'profile.note.delete'|trans %}
+            <a class="p-note-form__delete" href="{{ path('delete_note', {username: member.username, embed: 1, back: app.request.query.get('back')}) }}"
+               title="{{ deleteText }}" aria-label="{{ deleteText }}"
+               onclick="return confirm({{ 'profile.notes.delete'|trans|striptags|json_encode|e('html_attr') }});">
+                <i class="fas fa-trash-alt" aria-hidden="true"></i>
+            </a>
+        {% endif %}
+        <button type="submit" class="o-button">
+            <i class="fas fa-check" aria-hidden="true"></i> {{ (editing ? 'profile.note.save' : 'profile.note.save.new')|trans }}
+        </button>
+    </div>
+    {{ form_end(form) }}
+
+    <script>
+      // The categories already used: a click puts one in the field (one category per note)
+      window.addEventListener('load', function () {
+        var box = document.querySelector('.js-note-categories');
+        var field = box ? box.querySelector('.js-tom-select') : null;
+        var select = field ? field.tomselect : null;
+        if (!select) {
+          return;
+        }
+        select.control_input.placeholder = box.dataset.add;
+        var used = box.querySelector('.js-note-used');
+        var choices = [];
+        try { choices = JSON.parse(field.dataset.autocompleteChoices || '[]'); } catch (e) {}
+        var show = function () {
+          used.querySelectorAll('.p-note-form__used-chip').forEach(function (chip) {
+            chip.hidden = select.items.indexOf(chip.dataset.value) !== -1;
+          });
+        };
+        choices.forEach(function (choice) {
+          var chip = document.createElement('button');
+          chip.type = 'button';
+          chip.className = 'p-note-form__used-chip';
+          chip.dataset.value = choice.title;
+          chip.textContent = choice.title;
+          chip.addEventListener('click', function () {
+            select.addOption({ title: choice.title });
+            select.setValue(choice.title);
+            select.close();
+          });
+          used.appendChild(chip);
+        });
+        used.hidden = choices.length === 0;
+        select.on('change', show);
+        show();
+      });
+    </script>
+{% endblock subpage_body %}
 
 {% block page_content %}
     <h2>{{ 'profile.note.about'|trans({'username': member.username}) }}</h2>

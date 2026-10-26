@@ -590,7 +590,7 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
 
     public function showGender(): self
     {
-        $this->hideAttribute = ($this->hideAttribute ^ self::GENDER_HIDDEN);
+        $this->hideAttribute = ($this->hideAttribute & ~self::GENDER_HIDDEN);
 
         return $this;
     }
@@ -624,7 +624,7 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
 
     public function showAge(): self
     {
-        $this->hideAttribute = ($this->hideAttribute ^ self::AGE_HIDDEN);
+        $this->hideAttribute = ($this->hideAttribute & ~self::AGE_HIDDEN);
 
         return $this;
     }
@@ -638,7 +638,7 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
 
     public function showName(): self
     {
-        $this->hideAttribute = ($this->hideAttribute ^ self::NAME_HIDDEN);
+        $this->hideAttribute = ($this->hideAttribute & ~self::NAME_HIDDEN);
 
         return $this;
     }
@@ -1359,7 +1359,8 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
                 if (!isset($this->translationsIndexedByLocale[$locale])) {
                     $this->translationsIndexedByLocale[$locale] = [];
                 }
-                $field = $translation->getField();
+                // Some rows were stored with a lowercase first letter ("aboutMe"); templates use "AboutMe".
+                $field = ucfirst($translation->getField());
                 $this->translationsIndexedByLocale[$locale][$field] = $translation->getContent();
             }
         }

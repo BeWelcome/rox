@@ -286,21 +286,13 @@ class ProfileSubmenu
             'url' => $this->routing->generate('friends', ['username' => $username]),
         ]);
 
-        if ($member === $loggedInMember) {
-            $this->addSubmenuItem('gallery', [
-                'key' => 'profile.menu.images',
-                'icon' => 'image',
-                'count' => $parameters['images_count'] ?? 0,
-                'url' => '/gallery/manage',
-            ]);
-        } else {
-            $this->addSubmenuItem('gallery', [
-                'key' => 'profile.menu.images',
-                'icon' => 'image',
-                'count' => $parameters['images_count'] ?? 0,
-                'url' => '/gallery/show/user/' . $username . '/pictures',
-            ]);
-        }
+        // Own profile too: the gallery as others see it, with a button to manage it
+        $this->addSubmenuItem('gallery', [
+            'key' => 'profile.menu.images',
+            'icon' => 'image',
+            'count' => $parameters['images_count'] ?? 0,
+            'url' => '/gallery/show/user/' . $username . '/pictures',
+        ]);
         if ($parameters['show_forum_posts']) {
             $this->addSubmenuItem('forum_posts', [
                 'key' => 'profile.menu.forum.posts',

@@ -1,117 +1,116 @@
 {% extends 'trips.html.twig' %}
 
+{% set trips_redesign = true %}
+
+{#
+  My trips, in the same layout as Visitors (trips.html.twig, trips_redesign): one card per
+  trip with its title, dates, the places of its legs, the travellers, then edit (while the
+  trip is not over) and remove, which asks first.
+#}
+
 {% block title %}
-    {{ 'trips.mytrips' | trans }}
+  {{ 'trips.mytrips' | trans }}
 {% endblock %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind') }}
+  {{ encore_entry_link_tags('tailwind') }}
+  {{ encore_entry_link_tags('trips') }}
 {% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('micromodal') }}
+  {{ encore_entry_script_tags('micromodal') }}
 {% endblock %}
 
 {% block content %}
-    {% if trips.nbResults != 0 %}
-        {% set myself = app.user %}
-        {% if trips.haveToPaginate %}
-            <section>
-                <div class="u:inline-flex u:w-full u:items-center u:justify-end u:mb-24 u:md:mb-16 u:md:h-48 u:flex-col u:md:flex-row">
-                       {{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
-                   </div>
-               </section>
-        {% endif %}
-        <section>
-            {% for trip in trips %}
-            <div class="c-trip-card">
-                <div class="c-trip-card__wrapper">
-                    <a class="u:text-white u:hover:text-gray-20 u:text-24 u:font-display u:font-700 u:col-span-full u:ellipsis u:mb-8" href="{{ path('trip_show', { 'id': trip.id } ) }}">{{ trip.summary }}</a>
-                    <div>
-                        <div class=" u:font-display u:italic u:text-white u:mb-8">{{ trip.description | nl2br | purify | truncate(200) }}</div>
-                        <div class="u:text-white u:font-display u:mt-8 u:mb-16 u:md:m-0 u:flex u:flex-column">
-                            <div class="u:me-8">{{ trip.legs|length }} {{ 'trip.legs'|trans }}
-                             {% for leg in trip.legs %}
-                                {% if leg.location %}<span class="u:whitespace-nowrap u:me-8">
-                                    {% if leg.location.country %}
-                                        <i class="o-flag o-flag--{{ leg.location.country.countryId }} u:-mb-4" title="{{ leg.location.country.name }}"></i>
-                                    {% endif %}
-                                    {{ leg.location.name }}</span>
-                                {% endif %}
-                            {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="c-trip-card__icon-grid">
-                            <div><i class="far fa-calendar-alt u:text-white u:text-16 u:justify-self-center u:self-center"></i></div>
-                            <div><p class="u:text-white u:font-display">{{ (trip.legs|first).arrival|format_date('full') }} –<br>{{ (trip.legs|last).departure|format_date('full') }}</p></div>
-                        </div>
-                        <div class="c-trip-card__icon-grid u:leading-24">
-                            <i class="fa fa-users u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                            <p class="u:text-white u:font-display">{{ 'trip.count.of.travellers'| trans ({'countOfTravellers' : trip.countOfTravellers}) }}</p>
-                        </div>
-                        {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
-                            <div class="c-trip-card__icon-grid u:leading-24">
-                                <i class="fa fa-info-circle u:text-white u:text-16 u:justify-self-center u:self-center"></i>
-                                <p class="u:text-white u:font-display">{{ ('trip.additional.info.' ~ trip.additionalInfo)| lower | trans}}</p>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="u:flex u:justify-center u:md:justify-between u:items-center u:mt-16 u:md:m-0">
-                    {% if not trip.isExpired %}
-                    <a class="o-rounded o-rounded--l u:text-18 u:me-20 u:md:m-0"
-                       href="{{ path('trip_edit', {'id': trip.id}) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
-                        <i class="far fa-edit"></i>
-                    </a>
-                    {% endif %}
-                    <a class="o-rounded o-rounded--l" data-micromodal-trigger="removeTrip-{{ trip.id }}">
-                      <i class="fa fa-times"></i>
-                    </a>
-                </div>
-            </div>
-            {% else %}
-                <p class="u:text-white u:font-display">{{ 'trip.no.trips'|trans }}</p>
-            {% endfor %}
-        </section>
+<section class="p-trips__body">
+  {% if trips.nbResults != 0 %}
+    <div class="p-trips__toolbar">
+      <p class="p-trips__count"><i class="fa fa-route" aria-hidden="true"></i> {{ trips.nbResults }}</p>
+    </div>
 
-        {% if trips.haveToPaginate %}
-        <section>
-            <div class="u:inline-flex u:w-full u:items-center u:justify-end u:mt-16 u:md:h-48 u:flex-col u:md:flex-row">
-                  {{ pagerfanta( trips, 'rounded_pagination', { routeName: 'trips' }) }}
-              </div>
-        </section>
-        {% endif %}
-    {% else %}
-        <p class="u:text-white u:font-display">{{ 'trip.no.trips'|trans }}</p>
+    <div class="p-trips__list">
+      {% for trip in trips %}
+        {% set first = trip.legs|first %}
+        {% set last = trip.legs|last %}
+        <article class="p-trips-trip{% if trip.isExpired %} is-over{% endif %}">
+          <span class="p-trips-trip__icon" aria-hidden="true"><i class="fa fa-route"></i></span>
+          <div class="p-trips-trip__body">
+            <p class="p-trips-trip__head">
+              <a class="p-trips-trip__title" href="{{ path('trip_show', { id: trip.id }) }}">{{ trip.summary }}</a>
+              {% if trip.isExpired %}<span class="p-trips-trip__over">{{ 'trip.over'|trans }}</span>{% endif %}
+            </p>
+            {% if first and last %}
+              <p class="p-trips-trip__dates">
+                <i class="far fa-calendar-alt" aria-hidden="true"></i>
+                {{ first.arrival|format_date('medium') }}{% if last.departure and last.departure != first.arrival %} – {{ last.departure|format_date('medium') }}{% endif %}
+              </p>
+            {% endif %}
+            {% if trip.legs|length > 0 %}
+              <p class="p-trips-trip__legs">
+                {% for leg in trip.legs %}
+                  {% if leg.location %}
+                    <span class="p-trips-trip__leg">
+                      <i class="fas fa-location-dot" aria-hidden="true"></i> {{ leg.location.name }}
+                    </span>
+                    {% if not loop.last %}<i class="fas fa-chevron-right p-trips-trip__arrow" aria-hidden="true"></i>{% endif %}
+                  {% endif %}
+                {% endfor %}
+              </p>
+            {% endif %}
+            {% if trip.description %}
+              <p class="p-trips-leg__text">{{ trip.description|purify|striptags|truncate(240) }}</p>
+            {% endif %}
+            <p class="p-trips-leg__meta">
+              <span class="p-trips-leg__chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) }}</span>
+              {% if trip.additionalInfo != constant('App\\Doctrine\\TripAdditionalInfoType::NONE') %}
+                <span class="p-trips-leg__chip"><i class="fa fa-info-circle" aria-hidden="true"></i> {{ ('trip.additional.info.' ~ trip.additionalInfo)|lower|trans }}</span>
+              {% endif %}
+            </p>
+          </div>
+          <div class="p-trips-trip__actions">
+            {% if not trip.isExpired %}
+              <a class="p-notes-card__action" href="{{ path('trip_edit', { id: trip.id }) }}" aria-label="{{ 'trip.edit'|trans }}" title="{{ 'trip.edit'|trans }}">
+                <i class="fas fa-pen" aria-hidden="true"></i>
+              </a>
+            {% endif %}
+            <button type="button" class="p-notes-card__action" data-micromodal-trigger="removeTrip-{{ trip.id }}" aria-label="{{ 'trip.remove'|trans }}" title="{{ 'trip.remove'|trans }}">
+              <i class="fas fa-trash-alt" aria-hidden="true"></i>
+            </button>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if trips.haveToPaginate %}
+      <div class="p-trips__pager">
+        {{ pagerfanta(trips, 'rounded_pagination', { routeName: 'trips' }) }}
+      </div>
     {% endif %}
+  {% else %}
+    <div class="p-trips__empty">
+      <i class="far fa-map" aria-hidden="true"></i>
+      <p>{{ 'trip.no.trips'|trans }}</p>
+    </div>
+  {% endif %}
+</section>
 {% endblock content %}
 
 {% block modals %}
-    {# add modal later for full screen overlay #}
-    {% for trip in trips %}
-        <div class="modal micromodal-slide" id="removeTrip-{{ trip.id }}" aria-hidden="true">
-            <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-                <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
-                    <header id="modal-header" class="modal__header">
-                        <h2 class="modal__title">
-                            {{ trip.summary|truncate(50) }}
-                        </h2>
-                        <button class="modal__close" aria-label="{{ 'trip.remove.close'|trans }}" data-micromodal-close></button>
-                    </header>
-                    <div id="modal-content-content" class="modal-content-content">
-                        <div id="modal-content" class="modal__content">
-                            {{ 'trip.remove.body'|trans|raw }}
-                        </div>
-                        <footer id="modal-footer" class="modal__footer u:flex u:flex-row u:justify-between">
-                            <a class="btn btn-primary-outline u:border-black" role="button" href="{{ path('trip_remove', {'id': trip.id}) }}" aria-label="{{ 'trip.remove'|trans }}">{{ 'trip.remove.label'|trans }}</a>
-                            <button class="btn btn-primary" data-micromodal-close aria-label="{{ 'trip.remove.close'|trans }}">
-                                {{ 'trip.remove.close'|trans }}</button>
-                        </footer>
-                    </div>
-                </div>
-            </div>
+  {% for trip in trips %}
+    <div class="micromodal-slide p-pe-confirm" id="removeTrip-{{ trip.id }}" aria-hidden="true">
+      <div class="modal__overlay p-pe-confirm__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container p-pe-confirm__box" role="dialog" aria-modal="true" aria-labelledby="removeTrip-{{ trip.id }}-title">
+          <span class="p-pe-confirm__icon" aria-hidden="true"><i class="fas fa-trash-alt"></i></span>
+          <h2 class="p-pe-confirm__title" id="removeTrip-{{ trip.id }}-title">{{ trip.summary|truncate(60) }}</h2>
+          <div class="p-pe-confirm__text">{{ 'trip.remove.body'|trans|raw }}</div>
+          <div class="p-pe-confirm__actions">
+            <button type="button" class="p-pe-confirm__cancel" data-micromodal-close>{{ 'trip.remove.close'|trans }}</button>
+            <a class="p-pe-confirm__delete" href="{{ path('trip_remove', { id: trip.id }) }}">
+              <i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'trip.remove.label'|trans }}
+            </a>
+          </div>
         </div>
-    {% endfor %}
+      </div>
+    </div>
+  {% endfor %}
 {% endblock modals %}

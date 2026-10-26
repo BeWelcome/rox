@@ -34,3 +34,15 @@ help.trips_notifications:
 signup.error.not.unique:
     - Unfortunately either username or email are already in use by someone else.
     - Error message shown on the signup page.
+signup.finalize.eyebrow:
+    - 'Last step'
+    - Finish the account page, small line above the title
+signup.finalize.about:
+    - 'About you'
+    - Finish the account page, title of the block with name, birth date, gender and mother tongue
+signup.finalize.home:
+    - 'Where you live'
+    - Finish the account page, title of the block with the town, the map and "Can you host?"
+signup.finalize.map.search:
+    - 'Search for your town to place the pin'
+    - Finish the account page, on the map before a town is picked

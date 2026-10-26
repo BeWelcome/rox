@@ -1,0 +1,108 @@
+{#
+  New stay request in the "contact a member" side panel (?embed=1, search preview and
+  profile). The dates, nights and travellers work with assets/js/requests.js; Send stays
+  greyed until the dates, the subject and the message are filled (contact/send_state.js).
+#}
+{% import 'request/_request.macros.twig' as stay %}
+{% set fields = form.request %}
+{% set today = 'now'|date('Y-m-d') %}
+{% set _address = host.activeAddress %}
+{% set _city = _address is not same as(false) and _address is not null and _address.location ? _address.location.name : null %}
+{% set _travellers = fields.numberOfTravellers %}
+<div class="c-contact">
+    {% include 'conversations/_contact_head.html.twig' with { member: host, kind: 'request' } %}
+
+    {{ form_start(form, { attr: { novalidate: 'novalidate', autocomplete: 'off', class: 'c-contact__form js-contact-form' } }) }}
+        <div class="c-contact__body">
+            {{ form_errors(form) }}
+
+            <div class="c-contact-stay">
+                <div class="c-contact-stay__row c-contact-stay__row--dates">
+                    <div class="c-contact-stay__top">
+                        <label class="c-contact__label" for="{{ fields.arrival.vars.id }}">{{ 'contact.dates'|trans }}</label>
+                        <div class="c-contact-stay__nights">
+                            <i class="fas fa-moon" aria-hidden="true"></i>
+                            {{- stay.nights(fields) -}}
+                        </div>
+                    </div>
+                    <div class="c-contact-stay__dates js-request-dates">
+                        {{ form_widget(fields.arrival, { type: 'date', attr: { class: 'c-contact-stay__date js-request-arrival js-contact-required', min: today, required: 'required', 'aria-label': 'request.arrival'|trans } }) }}
+                        <i class="fas fa-arrow-right c-contact-stay__sep" aria-hidden="true"></i>
+                        {{ form_widget(fields.departure, { type: 'date', attr: { class: 'c-contact-stay__date js-request-departure js-contact-required', min: today, required: 'required', 'aria-label': 'request.departure'|trans } }) }}
+                    </div>
+                    {# The calendar and its shortcuts, in place of the two fields above (contact/stay_dates.js) #}
+                    <div class="c-stay-dates js-stay-dates"
+                         data-arrival="{{ 'contact.dates.arrival'|trans }}" data-departure="{{ 'contact.dates.departure'|trans }}"
+                         data-select="{{ 'contact.dates.select'|trans }}" data-change="{{ 'contact.dates.change'|trans }}"
+                         data-tap-arrival="{{ 'contact.dates.tap.arrival'|trans }}" data-tap-departure="{{ 'contact.dates.tap.departure'|trans }}"
+                         data-week="{{ 'contact.dates.week'|trans }}"
+                         data-previous="{{ 'contact.dates.previous'|trans }}" data-next="{{ 'contact.dates.next'|trans }}"
+                         data-one="{{ 'request.night.stay'|trans({ numbernights: 1 }) }}"
+                         data-other="{{ 'request.night.stay'|trans({ numbernights: 99 })|replace({ '99': '{n}' }) }}"></div>
+                    {{ form_widget(fields.duration, { type: 'hidden', attr: { class: 'js-request-duration' } }) }}
+                    {{ form_errors(fields.duration) }}
+                    {{ form_errors(fields.arrival) }}
+                    {{ form_errors(fields.departure) }}
+                </div>
+
+                <div class="c-contact-stay__row c-contact-stay__row--line">
+                    <div class="c-contact-stay__text">
+                        <label class="c-contact__label" for="{{ _travellers.vars.id }}">{{ 'contact.travellers'|trans }}</label>
+                        <span class="c-contact-stay__sub">{{ 'request.hosts.up.to'|trans({ username: host.shortNameOrUsername, count: host.maxGuests }) }}</span>
+                    </div>
+                    <div class="c-contact-stay__stepper js-request-stepper">
+                        <button type="button" class="c-contact-stay__step js-request-step" data-step="-1" aria-label="-1">
+                            <i class="fas fa-minus" aria-hidden="true"></i>
+                        </button>
+                        {{ form_widget(_travellers, { type: 'number', value: _travellers.vars.value ?: 1, attr: { class: 'c-contact-stay__count', min: 1, max: 20, inputmode: 'numeric' } }) }}
+                        <button type="button" class="c-contact-stay__step js-request-step" data-step="1" aria-label="+1">
+                            <i class="fas fa-plus" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+                {{ form_errors(_travellers) }}
+
+                <label class="c-contact-stay__row c-contact-stay__row--line c-contact-stay__flexible" for="{{ fields.flexible.vars.id }}">
+                    <span class="c-contact-stay__text">
+                        <span class="c-contact__label">{{ fields.flexible.vars.label|trans }}</span>
+                        <span class="c-contact-stay__sub">{{ 'request.flexible.hint'|trans }}</span>
+                    </span>
+                    <input type="checkbox" class="c-request-switch__input" id="{{ fields.flexible.vars.id }}" name="{{ fields.flexible.vars.full_name }}" value="1"{% if fields.flexible.vars.checked %} checked{% endif %}>
+                    <span class="c-request-switch__track" aria-hidden="true"></span>
+                </label>
+                {% do fields.flexible.setRendered %}
+                {{ form_widget(fields.inviteForLeg) }}
+            </div>
+
+            <div class="c-contact__field">
+                <label class="c-contact__label" for="{{ form.subject.subject.vars.id }}">{{ form.subject.subject.vars.label|trans }}</label>
+                {{ form_widget(form.subject.subject, { attr: form.subject.subject.vars.attr|merge({ class: 'c-contact__input js-contact-required', placeholder: _city ? 'contact.request.subject.placeholder'|trans({ city: _city }) : (form.subject.subject.vars.attr.placeholder ?? '')|trans }) }) }}
+                {{ form_errors(form.subject.subject) }}
+            </div>
+
+            {# A plain text box: the text is sent as paragraphs (contact/plain_text.js) #}
+            <div class="c-contact__field c-contact__field--grow">
+                <label class="c-contact__label" for="{{ form.message.vars.id }}">{{ form.message.vars.label|trans }}</label>
+                <textarea class="c-contact__input c-contact__text js-plain-message js-contact-required" id="{{ form.message.vars.id }}" name="{{ form.message.vars.full_name }}" rows="7"
+                          placeholder="{{ (form.message.vars.attr.placeholder ?? '')|trans }}" data-html="{{ form.message.vars.value }}"></textarea>
+                {% do form.message.setRendered %}
+                {{ form_errors(form.message) }}
+            </div>
+
+            <p class="c-contact__safety">
+                <i class="fas fa-user-shield" aria-hidden="true"></i>
+                {{ 'contact.safety'|trans }}
+            </p>
+            {% do form.send.setRendered %}
+
+            {{ form_rest(form) }}
+        </div>
+
+        <div class="c-contact__foot">
+            <button type="submit" name="{{ form.send.vars.full_name }}" class="c-contact__send js-contact-send">
+                <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ 'contact.send.request'|trans }}
+            </button>
+            <p class="c-contact__hint js-contact-hint">{{ 'contact.send.hint.request'|trans }}</p>
+        </div>
+    {{ form_end(form) }}
+</div>

@@ -41,3 +41,57 @@ gallery.create.new.album:
     - '@GalleryCreateNewPhotoset'
 gallery.use.existing.album:
     - '@GalleryAddToPhotoset'
+gallery.manage.empty.title:
+    - 'No photos yet'
+    - Shown as the title of the empty state on the gallery manage page when the member has not uploaded any photo.
+gallery.manage.empty.text:
+    - 'Share your travels and memories with the community by uploading your first photos.'
+    - Shown as the description in the empty state on the gallery manage page, inviting the member to upload their first photos.
+gallery.manage.photo.count.one:
+    - '%d photo'
+    - Shown next to the page title on the gallery manage page when the member has exactly one photo. The %d placeholder is the photo count.
+gallery.manage.photo.count.many:
+    - '%d photos'
+    - Shown next to the page title on the gallery manage page when the member has more than one photo. The %d placeholder is the photo count.
+gallery.upload.dropzone.title:
+    - 'Drop your photos here'
+    - Title of the drag-and-drop area on the gallery upload page, inviting the member to drag image files.
+gallery.upload.dropzone.subtitle:
+    - 'or click to browse from your computer'
+    - Subtitle below the drag-and-drop area on the gallery upload page, indicating the area can also be clicked to open the file picker.
+gallery.upload.queue.title:
+    - 'Upload queue'
+    - Heading shown above the list of files being uploaded on the gallery upload page.
+gallery.upload.back.to.gallery:
+    - 'Back to my gallery'
+    - Link shown on the gallery upload page that takes the member back to their gallery management page.
+gallery.image.edit.page_title:
+    - 'Edit photo'
+    - Browser tab title suffix on the gallery image edit page (after the image title).
+gallery.image.edit.back:
+    - 'Back to gallery'
+    - Link from the gallery image edit page to the gallery management page (/gallery/manage).
+gallery.image.edit.view_full:
+    - 'Open full size'
+    - Link under the preview on the gallery image edit page to the legacy full image URL.
+gallery.image.edit.save:
+    - 'Save changes'
+    - Primary submit button on the gallery image edit form.
+gallery.upload_to_album:
+    - 'Album (optional)'
+    - Placeholder/label for the album selector in the upload tab of the gallery manage page.
+gallery.album.delete.confirm:
+    - 'Delete this album? Photos will not be deleted.'
+    - Confirmation message shown in the modal when the member tries to delete an album.
+gallery.photo.saving:
+    - 'Saving…'
+    - Label on the save button in the photo edit sheet while the AJAX request is in progress.
+gallery.photo.saved:
+    - 'Saved'
+    - Label on the save button in the photo edit sheet after a successful save.
+gallery.photo.deleting:
+    - 'Deleting…'
+    - Label on the delete button in the photo edit sheet while the delete request is in progress.
+gallery.photo.sheet.description.placeholder:
+    - 'Add a description…'
+    - Placeholder text for the description textarea in the photo edit bottom sheet.

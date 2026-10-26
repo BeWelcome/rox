@@ -3,16 +3,25 @@
 {% if loggedInMember %}
 {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM')
     or is_granted('ROLE_ADMIN_GROUP')%}
-    <div class="container-lg u:z-10 u:relative">
-        <div class="row no-gutters justify-content-end">
-            <div class="py-2">
-                {% if not groupsInApprovalQueue is null %}<a class="btn btn-primary btn-sm"
-                                                             href="{{ path('admin_groups_approval') }}">{{ 'label.admin.groups.awaiting.approval' | trans({'groups':groupsInApprovalQueue}) }}</a>{% endif %}
-                {% if not reportedCommentsCount is null %}<a class="btn btn-primary btn-sm"
-                                                             href="{{ path('admin_comment_reported_overview') }}">{{ 'label.admin.comments.reported'|trans({'comments':reportedCommentsCount}) }}</a>{% endif %}
-                {% if not reportedMessagesCount is null %}<a class="btn btn-primary btn-sm"
-                                                             href="{{ path('admin_spam_messages') }}">{{ 'label.admin.messages.reported'|trans({'messages': reportedMessagesCount}) }}</a>{% endif %}
-            </div>
+    {# Admins: what waits for them, as small pills; the ones with something to do in orange #}
+    <div class="p-admin-bar u:z-10 u:relative">
+        <div class="container-lg p-admin-bar__inner">
+            <span class="p-admin-bar__title"><i class="fas fa-user-shield" aria-hidden="true"></i> Admin</span>
+            {% if groupsInApprovalQueue %}
+                <a class="p-admin-bar__item is-todo" href="{{ path('admin_groups_approval') }}">
+                    <i class="fas fa-users" aria-hidden="true"></i> {{ 'label.admin.groups.awaiting.approval'|trans({'groups': groupsInApprovalQueue}) }}
+                </a>
+            {% endif %}
+            {% if not reportedCommentsCount is null %}
+                <a class="p-admin-bar__item{{ reportedCommentsCount > 0 ? ' is-todo' }}" href="{{ path('admin_comment_reported_overview') }}">
+                    <i class="fas fa-comment" aria-hidden="true"></i> {{ 'label.admin.comments.reported'|trans({'comments': reportedCommentsCount}) }}
+                </a>
+            {% endif %}
+            {% if not reportedMessagesCount is null %}
+                <a class="p-admin-bar__item{{ reportedMessagesCount > 0 ? ' is-todo' }}" href="{{ path('admin_spam_messages') }}">
+                    <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'label.admin.messages.reported'|trans({'messages': reportedMessagesCount}) }}
+                </a>
+            {% endif %}
         </div>
     </div>
 {% endif %}

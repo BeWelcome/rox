@@ -1,23 +1,81 @@
 {% extends 'profile/profile.html.twig' %}
 
+{% block stylesheets %}
+  {{ parent() }}
+  {{ encore_entry_link_tags('readmore') }}
+{% endblock stylesheets %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('readmore') }}
+{% endblock javascripts %}
+
 {% block page_content %}
-    {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
-        <div class="u:w-full u:mb-8">{{ 'commentguidlineslink'|trans|raw }}</div>
-    {% endif %}
-  <div class="w-full u:mb-8">
-    <a href="{{ url('profile_comments', {username: member.username, type: 'positive'}) }}">
-      <span class="u:text-18 {% if type == 'positive' %}u:font-weight-600{% endif %} u:text-green-600">{{ 'comments.positive'| trans({positive: comments_count.positive }) }}</span></a> /
-    <a href="{{ url('profile_comments', {username: member.username, type: 'neutral'}) }}"><span class="u:text-18 {% if type == 'neutral' %}u:font-weight-600{% endif %}">{{ 'comments.neutral'| trans({neutral: comments_count.neutral }) }}</span></a> /
-    <a href="{{ url('profile_comments', {username: member.username, type: 'negative'}) }}"><span class="u:text-18 {% if type == 'negative' %}u:font-weight-600{% endif %} u:text-red-600">{{ 'comments.negative'| trans({negative: comments_count.negative }) }}</span></a> /
-    <a href="{{ url('profile_comments', {username: member.username}) }}"><span class="u:text-18 {% if type == 'all' %}u:font-weight-600{% endif %}  u:text-500">{{ 'comments.total'| trans({total: comments_count.total }) }}</span></a>
-  </div>
-    {% for comment in comments %}
-        {% set commentToVisible = (comment['to'] is defined) ? (comment['to'].showCondition(app.user) > 0) : false %}
-        {% set commentFromVisible = (comment['from'] is defined) ? (comment['from'].showCondition(app.user) > 0) : false %}
-        {% if commentToVisible or commentFromVisible %}
-            {% include 'profile/comment.html.twig' with { comment: comment } %}
+  {% set language = app.request.locale %}
+  {% set filters = [
+    {type: 'all', icon: null, label: 'landing.button.all'|trans, count: comments_count.total},
+    {type: 'positive', icon: 'thumbs-up', label: 'comment.quality.positive'|trans, count: comments_count.positive},
+    {type: 'neutral', icon: 'minus', label: 'comment.quality.neutral'|trans, count: comments_count.neutral},
+    {type: 'negative', icon: 'thumbs-down', label: 'comment.quality.negative'|trans, count: comments_count.negative},
+  ] %}
+  <div class="p-comments-page p-profile-main">
+    <div class="card">
+      {# The same filter as the comments of the profile: all, positive, neutral, negative (greyed when empty) #}
+      <div class="p-pro-card__head p-comments-page__head">
+        <h2 class="p-pro-card__title p-comments-page__title">
+          {{ 'profile.comments'|trans }}
+          {% if comments_count.total %}<span class="p-pro-card__count">{{ comments_count.total }}</span>{% endif %}
+        </h2>
+        {% if comments_count.total > 0 %}
+          <nav class="p-pro-filter" aria-label="{{ 'profile.comments'|trans }}">
+            {% for filter in filters %}
+              {% set active = type == filter.type %}
+              {% set filterUrl = filter.type == 'all' ? url('profile_comments', {username: member.username}) : url('profile_comments', {username: member.username, type: filter.type}) %}
+              {% set classes = 'p-pro-filter__item' ~ (filter.type != 'all' ? ' p-pro-filter__item--' ~ filter.type : ' is-all') ~ (active ? ' is-active' : '') %}
+              {% if filter.count > 0 %}
+                <a href="{{ filterUrl }}" class="{{ classes }}"{% if active %} aria-current="page"{% endif %}>
+              {% else %}
+                <span class="{{ classes }} is-empty">
+              {% endif %}
+                {% if filter.icon %}<i class="fas fa-{{ filter.icon }}" aria-hidden="true"></i>{% endif %}
+                <span class="p-pro-filter__label">{{ filter.label|striptags }}</span>
+                <span class="p-pro-filter__count">{{ filter.count }}</span>
+              {% if filter.count > 0 %}</a>{% else %}</span>{% endif %}
+            {% endfor %}
+          </nav>
         {% endif %}
-    {% else %}
-        {{ 'profile.no.comments'|trans }}
-    {% endfor %}
+      </div>
+      <div class="card-body">
+        <div class="p-comments-page__list">
+          {% set shown = 0 %}
+          {% for comment in comments %}
+            {% set commentFromVisible = (comment['from'] is defined) ? (comment['from'].showCondition(app.user) > 0) : false %}
+            {% if commentFromVisible %}
+              {% set shown = shown + 1 %}
+              {% include 'profile/comment.embedded.html.twig' with { comment: comment, language: language } %}
+            {% endif %}
+          {% endfor %}
+          {% if shown == 0 %}
+            <div class="p-no-comments">
+              <i class="fas fa-comment-slash" aria-hidden="true"></i>
+              <p>{{ 'profile.no.comments'|trans }}</p>
+            </div>
+          {% endif %}
+        </div>
+
+        {# Only "add a comment": an own comment already has its small edit button. #}
+        {% if submenu.items is defined and submenu.items.comment is defined and submenu.items.comment.key != 'EditComments' %}
+          <div class="p-comments-cta">
+            <a href="{{ submenu.items.comment.url }}" class="p-hero__btn p-hero__btn--secondary js-contact-open" data-title="{{ submenu.items.comment.key|lower|trans|striptags }}">
+              <i class="fas fa-comment p-comments-cta__icon" aria-hidden="true"></i><i class="fas fa-pen p-comments-cta__icon p-comments-cta__icon--phone" aria-hidden="true"></i> {{ submenu.items.comment.key|lower|trans }}
+            </a>
+          </div>
+        {% endif %}
+
+        {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
+          <p class="p-comments-page__guidelines"><i class="fas fa-info-circle" aria-hidden="true"></i> <span>{{ 'commentguidlineslink'|trans|raw }}</span></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 {% endblock page_content %}

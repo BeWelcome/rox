@@ -2,7 +2,6 @@
 $words = new MOD_words();
 $Gallery = new GalleryModel;
 
-// Show the galleries/photosets
 if ($galleries) {
     $request = PRequest::get()->request;
     $requestStr = implode('/', $request);
@@ -13,47 +12,51 @@ if ($galleries) {
     } else {
         $page = 1;
     }
-    if (!isset($itemsPerPage)) $itemsPerPage = 12;
+    if (!isset($itemsPerPage)) $itemsPerPage = 24;
     $p = PFunctions::paginate($galleries, $page, $itemsPerPage);
     $galleriesonpage = $p[0];
-
-    ?>
-<div class="row">
-    <?php foreach ($galleriesonpage as $g) {
-    	static $ii = 0;
-        $d = $Gallery->getLatestGalleryItem($g->id);
-        $s = $Gallery->getGalleryItems($g->id,1);
-        $username = MOD_member::getUserHandle($g->user_id_foreign);
-        $this->myself = ($this->loggedInMember && $username == $this->loggedInMember->Username);
-        $num_rows = $s ?: 0;
-        // Only show the galleries with pictures. The belonging user might see them anyway.
-    	if ($d || $this->myself) {
-    	?>
-        <div class="col-12 col-sm-6 col-md-3">
-            <div class="gallery_container d-block">
-                <a href="gallery/show/sets/<?=$g->id?>">
-                    <img class="mb-3 border-2" src="<?=($d) ? 'gallery/thumbimg?id='.$d : 'images/lightview/blank.gif'?>" alt="image" style="width:100px; height:100px; margin: auto; object-fit: cover;"/>
-                    <span class="alert alert-info p-1" style="position: absolute;"><i class="fa fa-image mr-1"></i><?=$num_rows?></span>
-                </a>
-            <h4 class="mb-0"><a href="gallery/show/sets/<?=$g->id?>"><?= htmlspecialchars((string) $g->title)?></a></h4>
-            </div>
-        </div>
-        <?php
-        }
-    }
 ?>
+<div class="p-gallery-albums">
+    <?php foreach ($galleriesonpage as $g) {
+        $d = $Gallery->getLatestGalleryItem($g->id);
+        $s = $Gallery->getGalleryItems($g->id, 1);
+        $username = MOD_member::getUserHandle($g->user_id_foreign);
+        $isOwn = ($this->loggedInMember && $username == $this->loggedInMember->Username);
+        $num_rows = $s ?: 0;
+        $albumHref = (!empty($inManage) && $isOwn)
+            ? 'gallery/manage?set=' . $g->id
+            : 'gallery/show/sets/' . $g->id;
+        if ($d || $isOwn) { ?>
+    <a href="<?= $albumHref ?>" class="p-gallery-album-card">
+        <?php if ($d): ?>
+            <img class="p-gallery-album-card__thumb"
+                 src="gallery/thumbimg?id=<?= $d ?>&t=2"
+                 alt="<?= htmlspecialchars((string) $g->title) ?>"
+                 loading="lazy">
+        <?php else: ?>
+            <div class="p-gallery-album-card__thumb-empty">
+                <i class="fas fa-images" aria-hidden="true"></i>
+            </div>
+        <?php endif; ?>
+        <div class="p-gallery-album-card__info">
+            <p class="p-gallery-album-card__title"><?= htmlspecialchars((string) $g->title) ?></p>
+            <p class="p-gallery-album-card__count">
+                <i class="fas fa-image" aria-hidden="true"></i> <?= $num_rows ?>
+            </p>
+        </div>
+    </a>
+    <?php } } ?>
 </div>
-    <div class="w-100"></div>
-    <div class="col-12 mt-3">
-        <?php
+<div class="u:mt-16">
+    <?php
     if (isset($emptyPhotosets)) echo $emptyPhotosets;
     $pages = $p[1];
     $maxPage = $p[2];
     $currentPage = $page;
     if (isset($requestStrNew)) $requestStr = $requestStrNew;
-    $request = $requestStr.'/=page%d';
+    $request = $requestStr . '/=page%d';
     require 'pages.php'; ?>
-    </div>
+</div>
 <?php } else { ?>
-    <p><?= $words->get('gallery.no.albums'); ?></p>
+    <p class="p-profile-empty-hint"><?= $words->get('gallery.no.albums') ?></p>
 <?php } ?>

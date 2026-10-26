@@ -65,3 +65,168 @@ conversation.reply.template.not_available.label:
 conversation.reply.template.not_available.body:
     - '<p>Thanks for your message. Unfortunately this will not work for me this time. I hope you find another option.</p>'
     - Body for a conversation reply template
+conversations.select.done:
+    - Done
+    - Button on the conversations list that leaves the selection mode (it replaces "Select")
+conversations.pick:
+    - Pick a conversation to read it.
+    - Shown on the right of the conversations list on large screens when no conversation is open
+conversation.reply.to:
+    - Reply to {username}…
+    - Placeholder of the reply box at the bottom of a conversation
+contact.sent.message.title:
+    - 'Your message is on its way'
+    - Title of the confirmation shown in the search preview once a message has been sent
+contact.sent.message.text:
+    - '{username} gets it in their messages and by email. Their answer will show up in your messages.'
+    - Text under the title of the confirmation once a message has been sent from the search preview
+contact.sent.request.title:
+    - 'Your request has been sent'
+    - Title of the confirmation shown in the search preview once a stay request has been sent
+contact.sent.request.text:
+    - '{username} gets it in their messages and by email. You will be told as soon as they answer.'
+    - Text under the title of the confirmation once a stay request has been sent from the search preview
+contact.sent.back:
+    - 'Back to the search'
+    - Button of the confirmation shown in the search preview after sending a message or request; closes the panel
+contact.sent.conversation:
+    - 'See the conversation'
+    - Link of the confirmation shown in the search preview after sending a message or request; opens the conversation
+contact.sent.back.profile:
+    - 'Back to the profile'
+    - Button of the confirmation shown on a profile page after sending a message or request from the side panel; closes the panel
+contact.head.message:
+    - 'Write a message to'
+    - Small label above the member's name at the top of the side panel used to write a message (search preview, profile)
+contact.head.request:
+    - 'Request a stay with'
+    - Small label above the member's name at the top of the side panel used to send a stay request (search preview, profile)
+contact.subject.placeholder:
+    - 'e.g. Question about {city}'
+    - Placeholder of the subject field when writing a message from the side panel; {city} is where the member lives
+contact.request.subject.placeholder:
+    - 'e.g. Visiting {city}'
+    - Placeholder of the subject field of a stay request written from the side panel; {city} is where the host lives
+contact.message.placeholder:
+    - 'Introduce yourself and tell {username} why you are writing.'
+    - Placeholder of the message field when writing a message from the side panel
+contact.safety:
+    - "For your safety, don't share phone numbers, email or social media in a first message."
+    - Note under the message field of the side panel used to write a message or a stay request
+contact.send.message:
+    - 'Send message'
+    - Button at the bottom of the side panel used to write a message
+contact.send.request:
+    - 'Send request'
+    - Button at the bottom of the side panel used to send a stay request
+contact.send.hint.message:
+    - 'Add a subject and a message to send'
+    - Shown under the greyed Send button of the message side panel until the subject and the message are filled
+contact.send.hint.request:
+    - 'Add your dates, a subject and a message to send'
+    - Shown under the greyed Send button of the stay request side panel until the dates, the subject and the message are filled
+contact.dates:
+    - 'Dates'
+    - Label of the arrival and departure dates in the stay request side panel
+contact.dates.arrival:
+    - 'Arrival'
+    - Label of the arrival date box in the stay request side panel
+contact.dates.departure:
+    - 'Departure'
+    - Label of the departure date box in the stay request side panel
+contact.dates.select:
+    - 'Select'
+    - Shown in a date box of the stay request side panel while that date isn't picked yet
+contact.dates.tap.arrival:
+    - 'Tap your arrival day'
+    - Under the calendar of the stay request side panel, before the arrival is picked
+contact.dates.tap.departure:
+    - 'Tap your departure day, or stay for'
+    - Under the calendar of the stay request side panel once the arrival is picked, followed by shortcuts (1 night, 2 nights, 3 nights, 1 week)
+contact.dates.week:
+    - '1 week'
+    - Shortcut under the calendar of the stay request side panel, for a stay of 7 nights
+contact.dates.change:
+    - 'Change'
+    - Link on the picked dates of the stay request side panel, opens the calendar again
+contact.dates.previous:
+    - 'Previous month'
+    - Hidden label of the left arrow of the calendar in the stay request side panel
+contact.dates.next:
+    - 'Next month'
+    - Hidden label of the right arrow of the calendar in the stay request side panel
+contact.travellers:
+    - 'Travellers'
+    - Label of the number of travellers in the stay request side panel
+contact.blocked.message.title:
+    - "You can't send a message right now"
+    - Title in the side panel (search preview, profile) when the member can't write a message (limit reached, no about me...)
+contact.blocked.request.title:
+    - "You can't send a stay request right now"
+    - Title in the side panel (search preview, profile) when the member can't send a stay request (limit reached, no about me...)
+contact.blocked.back:
+    - 'Back to the preview'
+    - Button in the search preview's side panel when a message or stay request can't be written; goes back to the member's preview
+contact.head.invitation:
+    - 'Invite to stay'
+    - Small label above the traveller's name at the top of the side panel used to invite them (home page, Visitors)
+contact.blocked.invitation.title:
+    - "You can't send an invitation right now"
+    - Title in the side panel when the member can't invite a traveller (limit reached, no about me...)
+contact.sent.invitation.title:
+    - 'Invitation sent!'
+    - Title of the confirmation shown in the side panel once an invitation to stay has been sent
+contact.sent.invitation.text:
+    - '{username} gets it in their messages and by email. You will be told as soon as they answer.'
+    - Text under the title of the confirmation once an invitation to stay has been sent from the side panel
+contact.sent.back.home:
+    - 'Back to the home page'
+    - Button of the confirmation shown on the home page after sending a message or invitation from the side panel; closes the panel
+contact.send.invitation:
+    - 'Send invitation'
+    - Button at the bottom of the side panel used to invite a traveller to stay
+contact.invitation.subject.placeholder:
+    - 'e.g. Welcome to {city}'
+    - Placeholder of the subject field of an invitation written from the side panel; {city} is where the traveller goes
+contact.trip.see:
+    - 'See the whole trip'
+    - Link under the trip shown in the invitation side panel; opens the trip page
+contact.head.trip:
+    - 'Trip of'
+    - Small label above the traveller's name at the top of the side panel showing one of their trips (home page, Visitors)
+contact.trip.profile:
+    - "See {username}'s profile"
+    - Link under the trip shown in the side panel of the home page (Visitors); opens the traveller's profile
+contact.trip.near.you:
+    - 'Near you'
+    - Tag on the stop of a trip that is near the member, in the side panel of the home page (Visitors)
+contact.sent.back.visitors:
+    - 'Back to the visitors'
+    - Button of the confirmation shown on the visitors page after sending a message or invitation from the side panel; closes the panel
+contact.trip.invite:
+    - 'Invite to stay'
+    - Button at the bottom of the side panel showing a trip (home page, Visitors); opens the invitation form
+contact.trip.stops:
+    - '{count, plural, one {# stop} other {# stops}}'
+    - Next to the "Itinerary" title in the side panel showing a trip; how many stops
+contact.trip.nights:
+    - '{count, plural, one {# night} other {# nights}}'
+    - Length of one stop of a trip in the side panel showing a trip
+contact.trip.read.more:
+    - 'Read more'
+    - Link under the cut text of a trip in the side panel; shows the whole text
+contact.trip.read.less:
+    - 'Show less'
+    - Link under the whole text of a trip in the side panel; cuts it again
+conversations.filter.all:
+    - 'All'
+    - Filter in the conversation list that removes the other filters (unread, started by me, started by others)
+conversation.report.short:
+    - 'Report'
+    - Short label of the button at the top of a conversation that reports it to BeWelcome
+contact.head.conversation:
+    - 'Conversation with'
+    - Small label above the member's name at the top of the side panel showing a conversation already started with them (profile)
+conversation.compose.tools:
+    - 'Templates and more'
+    - Tooltip of the round arrow button left of the message field in a conversation, it opens the reply templates (and Change dates)

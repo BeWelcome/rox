@@ -203,6 +203,8 @@ readonly class ProfileModel
             if (null === $fieldTranslation) {
                 $fieldTranslation = new MemberTranslation($language, $field, $fieldContent);
             }
+            // The lookup ignores case, so fix a row stored as "aboutMe" while we're at it.
+            $fieldTranslation->setField($field);
             $fieldTranslation->setContent($fieldContent);
 
             $member->addTranslation($fieldTranslation);
@@ -283,7 +285,7 @@ readonly class ProfileModel
         $member->setRestrictions($data['restrictions']);
 
         $address = $member->getActiveAddress();
-        if (null !== $address) {
+        if ($address) {
             $address->setIsWheelChairAccessible($data['wheelchair_accessible'] ?? false);
 
             $this->entityManager->persist($address);
@@ -294,7 +296,10 @@ readonly class ProfileModel
         $this->handleField($member, $language, 'PleaseBring', $data['please_bring']);
         $this->handleField($member, $language, 'OfferGuests', $data['offer_guests']);
         $this->handleField($member, $language, 'WhereYouSleep', $data['where_you_sleep']);
-        $this->handleField($member, $language, 'AdditionalInfo', $data['additional_info']);
+        // Read by the profile and the edit page as AdditionalAccommodationInfo; a text saved before
+        // under AdditionalInfo moves there on save.
+        $this->handleField($member, $language, 'AdditionalAccommodationInfo', $data['additional_info']);
+        $this->handleField($member, $language, 'AdditionalInfo', null);
         $this->handleField($member, $language, 'HouseRules', $data['house_rules']);
         $this->handleField($member, $language, 'GettingThere', $data['getting_there']);
 

@@ -21,16 +21,15 @@
         {% if app.user != guest %}
             {# Show profile summary only to potential hosts #}
             <p><strong>{{ 'profile.summary'|trans }}</strong></p>
-            {% set fields = guest.memberFields %}
+            {# Member texts by language (Member::getTranslations); the summary is "AboutMe" (formerly "ProfileSummary") #}
+            {% set fields = guest.translations %}
+            {% set localeFields = fields[app.request.locale] ?? fields['en'] ?? {} %}
+            {% set summary = localeFields['AboutMe'] ?? localeFields['ProfileSummary'] ?? ((fields|filter(f => f['AboutMe'] ?? false)|first)['AboutMe'] ?? null) %}
             <p>
-                {% if fields[app.request.locale] is defined %}
-                    {{ fields[app.request.locale]['ProfileSummary']|purify }}
+                {% if summary %}
+                    {{ summary|purify }}
                 {% else %}
-                    {% if fields['en'] is defined %}
-                        {{ fields['en']['ProfileSummary']|purify }}
-                    {% else %}
-                        {{ 'profile.summary.none'|trans }}
-                    {% endif %}
+                    {{ 'profile.summary.none'|trans }}
                 {% endif %}
             </p>
         {% endif %}

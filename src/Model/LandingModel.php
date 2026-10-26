@@ -124,6 +124,34 @@ class LandingModel
     }
 
     /**
+     * How many threads got a new post today: the forum (groups false) or the member's groups.
+     */
+    public function getThreadsWithPostsTodayCount(Member $member, bool $groups): int
+    {
+        $queryBuilder = $this->entityManager->createQueryBuilder();
+        $queryBuilder
+            ->select('COUNT(ft.id)')
+            ->from(ForumThread::class, 'ft')
+            ->join(ForumPost::class, 'fp', Expr\Join::WITH, 'ft.lastPost = fp.id')
+            ->where('fp.created >= :today')
+            ->andWhere("ft.deleted = 'NotDeleted'")
+            ->andWhere("fp.deleted = 'NotDeleted'")
+            ->setParameter('today', new \DateTime('today'));
+
+        if ($groups) {
+            $groupIds = array_map(static fn ($group) => $group->getId(), $member->getGroups());
+            if (empty($groupIds)) {
+                return 0;
+            }
+            $queryBuilder->andWhere('ft.group IN (:groups)')->setParameter('groups', $groupIds);
+        } else {
+            $queryBuilder->andWhere('ft.group IS NULL');
+        }
+
+        return (int) $queryBuilder->getQuery()->getSingleScalarResult();
+    }
+
+    /**
      * Generates activities (near you) for display on home page.
      *
      * @throws Exception

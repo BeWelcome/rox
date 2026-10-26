@@ -1,0 +1,86 @@
+{% extends 'base.html.twig' %}
+{#
+  Shown in the search preview's frame once a message or a stay request is sent: it fills
+  the panel with a short animation (the paper plane flies off, a check is drawn), a title
+  and two ways on. It tells the preview with "bw-contact-sent"; "Back to the search" (or
+  "Back to the profile", ?from=profile) and the X send "bw-contact-close" so the page closes the panel.
+#}
+{% set name = member.shortNameOrUsername %}
+{% block title %}{{ ('contact.sent.' ~ kind ~ '.title')|trans }}{% endblock title %}
+
+{% block content %}
+    <div class="c-embed-sent c-embed-sent--{{ kind }}" role="status">
+        <button type="button" class="c-embed-sent__close js-embed-sent-close" aria-label="{{ 'close'|trans }}">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="c-embed-sent__scene" aria-hidden="true">
+            <span class="c-embed-sent__ring"></span>
+            <span class="c-embed-sent__ring c-embed-sent__ring--late"></span>
+            <span class="c-embed-sent__plane"><i class="fas {{ { request: 'fa-bed', invitation: 'fa-house-user' }[kind] ?? 'fa-paper-plane' }}"></i></span>
+            <svg class="c-embed-sent__check" viewBox="0 0 64 64">
+                <circle class="c-embed-sent__disc" cx="32" cy="32" r="30"></circle>
+                <path class="c-embed-sent__tick" d="M19 33.5l9 9 17-19"></path>
+            </svg>
+            {% for i in 1..10 %}<span class="c-embed-sent__spark c-embed-sent__spark--{{ i }}"></span>{% endfor %}
+        </div>
+
+        <h1 class="c-embed-sent__title">{{ ('contact.sent.' ~ kind ~ '.title')|trans }}</h1>
+        <p class="c-embed-sent__text">
+            {{ ('contact.sent.' ~ kind ~ '.text')|trans({ username: name }) }}
+        </p>
+
+        {# What was sent: to whom, the subject and, for a stay, the dates #}
+        {% set sent = conversation ?? null %}
+        {% if sent %}
+            {% set stay = sent.request %}
+            <div class="c-embed-sent__card">
+                <img class="c-embed-sent__avatar" src="{{ path('avatar', { username: member.username, size: 96 }) }}" alt="" loading="lazy">
+                <div class="c-embed-sent__card-text">
+                    {% if sent.subject and sent.subject.subject %}
+                        <strong class="c-embed-sent__subject">{{ sent.subject.subject }}</strong>
+                    {% else %}
+                        <strong class="c-embed-sent__subject">{{ name }}</strong>
+                    {% endif %}
+                    {% if stay and stay.arrival and stay.departure %}
+                        {% set sameYear = stay.arrival|date('Y') == stay.departure|date('Y') %}
+                        <span class="c-embed-sent__stay">
+                            <i class="fas {{ kind == 'invitation' ? 'fa-house-user' : 'fa-bed' }}" aria-hidden="true"></i>
+                            {{ stay.arrival|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }} – {{ stay.departure|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}
+                            · {{ 'request.night.stay'|trans({ numbernights: date(stay.departure).diff(date(stay.arrival)).days }) }}
+                        </span>
+                    {% else %}
+                        <span class="c-embed-sent__stay">
+                            <i class="fas fa-envelope" aria-hidden="true"></i> {{ name }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="c-embed-sent__actions">
+            <button type="button" class="c-embed-sent__btn c-embed-sent__btn--primary js-embed-sent-close">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ ({ profile: 'contact.sent.back.profile', home: 'contact.sent.back.home', visitors: 'contact.sent.back.visitors' }[app.request.query.get('from')] ?? 'contact.sent.back')|trans }}
+            </button>
+            <a class="c-embed-sent__btn" href="{{ conversation is defined and conversation.id ? path('conversation_view', { id: conversation.id }) : path('conversations_with', { username: member.username }) }}" target="_top">
+                <i class="fas fa-comments" aria-hidden="true"></i> {{ 'contact.sent.conversation'|trans }}
+            </a>
+        </div>
+    </div>
+    <script>
+        (function () {
+            var parentWindow = window.parent !== window ? window.parent : null;
+            if (parentWindow) {
+                parentWindow.postMessage({ type: 'bw-contact-sent', kind: '{{ kind }}' }, window.location.origin);
+            }
+            document.querySelectorAll('.js-embed-sent-close').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    if (parentWindow) {
+                        parentWindow.postMessage({ type: 'bw-contact-close' }, window.location.origin);
+                    } else {
+                        window.location.href = '{{ path('members_profile', { username: member.username }) }}';
+                    }
+                });
+            });
+        })();
+    </script>
+{% endblock content %}

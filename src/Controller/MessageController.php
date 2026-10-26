@@ -11,8 +11,10 @@ use App\Form\MessageToMemberType;
 use App\Model\ConversationModel;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
+use App\Service\InboxFolders;
 use App\Service\Mailer;
 use App\Utilities\AllowContactCheck;
+use App\Utilities\ContactPanelTrait;
 use App\Utilities\ConversationThread;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -34,6 +36,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class MessageController extends AbstractController
 {
     use TranslatedFlashTrait;
+    use ContactPanelTrait;
     use TranslatorTrait;
 
     public function __construct(
@@ -42,6 +45,7 @@ class MessageController extends AbstractController
         private readonly ConversationThread $conversationThread,
         private readonly EntityManagerInterface $entityManager,
         private readonly BrowserNotificationService $browserNotificationService,
+        private readonly InboxFolders $inboxFolders,
     ) {
     }
 
@@ -59,19 +63,19 @@ class MessageController extends AbstractController
         if ($sender === $receiver) {
             $this->addTranslatedFlash('notice', 'flash.message.self');
 
-            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]));
         }
 
         if (MemberStatusType::ACCOUNT_ACTIVATED === $sender->getStatus()) {
             $this->addTranslatedFlash('notice', 'flash.conversation.not.active');
 
-            return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]));
         }
 
         if (!$receiver->isBrowsable()) {
             $this->addTranslatedFlash('error', 'flash.member.invalid');
 
-            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]));
         }
 
         if (
@@ -84,7 +88,7 @@ class MessageController extends AbstractController
             $this->addTranslatedFlash('error', 'flash.message.limit');
             $referrer = $request->headers->get('referer');
 
-            return $this->redirect($referrer);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirect($referrer));
         }
 
         $redirectOnNotAllowed = false;
@@ -107,7 +111,7 @@ class MessageController extends AbstractController
         }
 
         if ($redirectOnNotAllowed) {
-            return $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]);
+            return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]));
         }
 
         $messageForm = $this->createForm(MessageToMemberType::class);
@@ -117,7 +121,16 @@ class MessageController extends AbstractController
             $subject = $messageForm->get('subject')->get('subject')->getData();
             $body = $messageForm->get('message')->getData();
 
-            $this->addMessageAndSendNotification($sender, $receiver, null, $subject, $body);
+            $message = $this->addMessageAndSendNotification($sender, $receiver, null, $subject, $body);
+            // Sent from the search preview (in a frame): a short "sent" page instead of the profile.
+            if ($request->query->getBoolean('embed')) {
+                return $this->render('conversations/embed_sent.html.twig', [
+                    'kind' => 'message',
+                    'member' => $receiver,
+                    'conversation' => $message,
+                ]);
+            }
+
             $this->addTranslatedFlash('notice', 'flash.message.sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]);
@@ -126,7 +139,7 @@ class MessageController extends AbstractController
         return $this->render('message/message.html.twig', [
             'receiver' => $receiver,
             'form' => $messageForm->createView(),
-        ]);
+        ] + $this->inboxFolders->getContext($request, $sender));
     }
 
     public function reply(Request $request, Message $message): Response
@@ -157,9 +170,8 @@ class MessageController extends AbstractController
 
             $messageText = $data->getMessage();
             $message = $this->addMessageAndSendNotification($sender, $receiver, $message, $replySubject, $messageText);
-            $this->addTranslatedFlash('notice', 'flash.reply.sent');
 
-            return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+            return $this->redirectToRoute('conversation_view', ['id' => $message->getId()] + $request->query->all());
         }
 
         return $this->render('message/reply.html.twig', [
@@ -167,7 +179,7 @@ class MessageController extends AbstractController
             'receiver' => $receiver,
             'current' => $message,
             'thread' => $thread,
-        ]);
+        ] + $this->inboxFolders->getContext($request, $sender));
     }
 
     /**

@@ -1,68 +1,135 @@
+{#
+  My notes: the title with the count and "only you", a search (member or note), one pill
+  per category with its count, then a card per note: the member's picture and name, the
+  category and date, the note (cut, "Read more" unrolls it), edit (side panel) and delete.
+#}
 {% extends 'profile/profile.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('micromodal') }}
-    {{ encore_entry_script_tags('notes_filter') }}
-    {{ encore_entry_script_tags('readmore') }}
 {% endblock javascripts %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('readmore') }}
-{% endblock stylesheets %}
-
 {% block page_content %}
-    <input type="hidden" id="read.more" value="{{ 'comment.read.more'|trans }}">
-    <input type="hidden" id="show.less" value="{{ 'comment.show.less'|trans }}">
-    <h1>{{ 'profile.notes'|trans }}
-        <div class="u:float-right">
-            <button class="o-button {% if not filtered %}o-button--outline{% endif %}" id="trigger" type="button" aria-expanded="false">
-                <i class="fa fa-filter text-16"></i>
-            </button>
+    <div class="p-notes">
+        <div class="p-notes__head">
+            <div>
+                <h1 class="p-notes__title">
+                    {{ 'profile.notes.mine'|trans }}
+                    {% if notes_total %}<span class="p-notes__total">{{ notes_total }}</span>{% endif %}
+                </h1>
+                <p class="p-notes__private"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'profile.notes.only.you'|trans }}</p>
+            </div>
+            {% if notes_total %}
+                <form class="p-notes__search" method="get" action="{{ path('notes', {username: member.username}) }}" role="search">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <label class="visually-hidden" for="notes-search">{{ 'profile.notes.search'|trans }}</label>
+                    <input type="search" id="notes-search" name="q" value="{{ search }}" placeholder="{{ 'profile.notes.search'|trans }}">
+                    {% if category %}<input type="hidden" name="category" value="{{ category }}">{% endif %}
+                </form>
+            {% endif %}
         </div>
-    </h1>
-    <div id="filter">
-        {{ form_start(form) }}
-        {{ form_row(form.categories) }}
-        {{ form_row(form.order) }}
-        <div class="u:flex u:justify-end"><button type="submit" class="o-button o-button--s u:my-8">{{ 'profile.note.apply'|trans }}</button></div>
-        {{ form_end(form) }}
-        <div id="arrow" data-popper-arrow></div>
+
+        {% if category_counts|length > 0 %}
+            <nav class="p-notes__filters" aria-label="{{ 'profile.note.categories'|trans }}">
+                {% set allParams = search ? {username: member.username, q: search} : {username: member.username} %}
+                <a class="p-notes__filter{% if not category %} is-active{% endif %}" href="{{ path('notes', allParams) }}"{% if not category %} aria-current="page"{% endif %}>
+                    {{ 'landing.button.all'|trans|striptags }} <span>{{ notes_total }}</span>
+                </a>
+                {% for name, count in category_counts %}
+                    {% set params = {username: member.username, category: name} %}
+                    {% if search %}{% set params = params|merge({q: search}) %}{% endif %}
+                    <a class="p-notes__filter{% if category == name %} is-active{% endif %}" href="{{ path('notes', params) }}"{% if category == name %} aria-current="page"{% endif %}>
+                        {{ name }} <span>{{ count }}</span>
+                    </a>
+                {% endfor %}
+            </nav>
+        {% endif %}
+
+        <div class="p-notes__list">
+            {% for note in notes %}
+                {% set noted = note.member %}
+                {% set noteDate = note.updated ?: note.created %}
+                <article class="p-notes-card">
+                    <a class="p-notes-card__avatar" href="{{ path('members_profile', {username: noted.username}) }}">
+                        <img src="{{ url('avatar', {username: noted.username, size: 100}) }}" alt="" loading="lazy">
+                    </a>
+                    <div class="p-notes-card__body">
+                        <p class="p-notes-card__meta">
+                            <a class="p-notes-card__name" href="{{ path('members_profile', {username: noted.username}) }}">{{ noted.username }}</a>
+                            {% if note.category %}<span class="p-notes-card__category">{{ note.category }}</span>{% endif %}
+                            {% if noteDate %}<span class="p-notes-card__date">{{ noteDate|format_date('medium') }}</span>{% endif %}
+                        </p>
+                        <div class="p-notes-card__text js-notes-text">{{ note.comment|purify }}</div>
+                        <button type="button" class="p-notes-card__more js-notes-more" hidden
+                                data-more="{{ 'profile.note.read.more'|trans }}" data-less="{{ 'profile.note.read.less'|trans }}">
+                            <span>{{ 'profile.note.read.more'|trans }}</span> <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                    <div class="p-notes-card__actions">
+                        {% set editText = 'profile.note.edit'|trans %}
+                        <a class="p-notes-card__action js-contact-open" href="{{ path('edit_note', {username: noted.username, back: 'notes'}) }}"
+                           data-title="{{ 'profile.note.about'|trans({username: noted.username})|striptags }}" title="{{ editText }}" aria-label="{{ editText }}">
+                            <i class="fas fa-pen" aria-hidden="true"></i>
+                        </a>
+                        {% set deleteText = 'profile.note.delete'|trans %}
+                        <button type="button" class="p-notes-card__action" data-micromodal-trigger="note-delete-{{ note.id }}" title="{{ deleteText }}" aria-label="{{ deleteText }}">
+                            <i class="fas fa-trash-alt" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </article>
+            {% else %}
+                <div class="p-notes__empty">
+                    <span class="p-pro-note__mark" aria-hidden="true"></span>
+                    <p>{{ (search or category ? 'profile.notes.none.found' : 'profile.no.notes')|trans }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        {% if notes.haveToPaginate %}
+            {{ pagerfanta(notes, 'rounded_pagination_end') }}
+        {% endif %}
     </div>
-    {% if notes.haveToPaginate %}
-        {{ pagerfanta(notes, 'rounded_pagination_end') }}
-    {% endif %}
-    {% for note in notes %}
-        {% include 'note/note.html.twig' with {note: note} %}
-    {% else %}
-        {{ 'profile.no.notes'|trans }}
-    {% endfor %}
-    {% if notes.haveToPaginate %}
-        {{ pagerfanta(notes, 'rounded_pagination_end') }}
-    {% endif %}
+
+    <script>
+      // A long note (or one with pictures) is cut after a few lines: "Read more" unrolls it
+      document.querySelectorAll('.js-notes-text').forEach(function (text) {
+        var more = text.parentNode.querySelector('.js-notes-more');
+        var check = function () {
+          if (!text.classList.contains('is-open')) {
+            more.hidden = text.scrollHeight <= text.clientHeight + 4;
+          }
+        };
+        more.addEventListener('click', function () {
+          var open = text.classList.toggle('is-open');
+          more.classList.toggle('is-open', open);
+          more.querySelector('span').textContent = open ? more.dataset.less : more.dataset.more;
+        });
+        text.querySelectorAll('img').forEach(function (img) { img.addEventListener('load', check); });
+        check();
+        window.addEventListener('load', check);
+        window.addEventListener('resize', check);
+      });
+    </script>
 {% endblock page_content %}
 
 {% block modals %}
     {% for note in notes %}
         {% set preview = note.comment|purify|striptags|trim|truncate(150) %}
-        <div class="modal micromodal-slide" id="note-delete-{{ note.id }}" aria-hidden="true">
-            <div class="modal__overlay u:bg-gray-80 u:bg-opacity-50 u:flex u:justify-center u:items-center u:z-[2001]" tabindex="-1" data-micromodal-close>
-            <div class="u:bg-white u:p-16 u:m-16 u:rounded-8 u:w-[70%] u:sm:w-[30%] u:md:w-[20%] u:max-w-[90%] u:max-h-[80vh] u:overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="note-delete-{{ note.id }}-title">
-                <p class="u:text-24 u:mb-4 u:font-700" id="note-delete-{{ note.id }}-title">{{ 'profile.notes.modal'|trans }}</p>
-                <p class="u:text-16 u:mb-8">{{ 'profile.notes.delete'|trans }}</p>
-                <hr>
-                {% if preview is not empty %}
-                    <p class="u:text-16 u:my-8">{{ preview }}</p>
-                    <hr>
-                {% endif %}
-                <footer class="u:flex u:flex-row u:justify-between">
-                    <button class="o-button" data-micromodal-close>{{ 'profile.notes.no'|trans|capitalize }}</button>
-                    <a href="{{ url('delete_note', {'username': note.member.username }) }}" class="o-button">{{ 'profile.notes.yes'|trans|capitalize }}</a>
-                </footer>
-            </div>
+        <div class="micromodal-slide p-pe-confirm" id="note-delete-{{ note.id }}" aria-hidden="true">
+            <div class="modal__overlay p-pe-confirm__overlay" tabindex="-1" data-micromodal-close>
+                <div class="modal__container p-pe-confirm__box" role="dialog" aria-modal="true" aria-labelledby="note-delete-{{ note.id }}-title">
+                    <span class="p-pe-confirm__icon" aria-hidden="true"><i class="fas fa-trash-alt"></i></span>
+                    <h2 class="p-pe-confirm__title" id="note-delete-{{ note.id }}-title">{{ 'profile.notes.modal'|trans }}</h2>
+                    <p class="p-pe-confirm__text">{{ preview ?: 'profile.notes.delete'|trans }}</p>
+                    <div class="p-pe-confirm__actions">
+                        <button type="button" class="p-pe-confirm__cancel" data-micromodal-close>{{ 'cancel'|trans }}</button>
+                        <a class="p-pe-confirm__delete" href="{{ url('delete_note', {username: note.member.username}) }}">
+                            <i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'profile.note.delete'|trans }}
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
-    {% else %}
     {% endfor %}
 {% endblock %}

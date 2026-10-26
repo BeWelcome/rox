@@ -56,6 +56,7 @@ Encore
     .addEntry('offcanvas', './assets/js/offcanvas.js')
     .addEntry('profile/profile', './assets/js/profile/profile.js')
     .addEntry('profile/show', './assets/js/profile/show.js')
+    .addEntry('profile/comment_form', './assets/js/profile/comment_form.js')
     .addEntry('profile/edit', './assets/js/profile/edit.js')
     .addEntry('profile/account', './assets/js/profile/account.js')
     .addEntry('profile/edit_languages', './assets/js/profile/edit_languages.js')

@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% import 'search/_search.macros.twig' as search %}
+
+{% set hide_sidebar = true %}
 
 {% block title %}{{ 'search.locations'|trans }}{% endblock %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('search/loadcontent') }}
     {{ encore_entry_script_tags('search/locations') }}
 {% endblock javascripts %}
 
@@ -14,183 +15,280 @@
 {% endblock stylesheets %}
 
 {% block content %}
-  {% dump(searchParams) %}
-    {% if pager is not null and pager.nbResults == 0 %}
-    <div class="row g-0">
-        <div class="col-12">
-            <div class="alert alert-notice">
-                {{ 'search.no.members'|trans }}
-            </div>
-        </div>
-    </div>
+    {% set hasResults = pager is not null and pager.nbResults > 0 %}
+    {% set showMap = form.show_map.vars.checked %}
+    {% set locationName = form.location_name.vars.value %}
+    {% set locationFull = form.location_fullname.vars.value %}
+    {% set locationRest = locationFull starts with (locationName ~ ', ') ? locationFull|slice(locationName|length + 2) : '' %}
+
+    {# Number of filters in use, shown on the options button: ticked boxes, keywords, groups, languages, gender. #}
+    {% set activeFilters = 0 %}
+    {% for name in ['accommodation_yes', 'accommodation_no', 'offers_dinner', 'offers_tour', 'accessible', 'has_profile_picture', 'has_about_me', 'no_smoking', 'no_alcohol', 'no_drugs', 'has_comments'] %}
+        {% if form[name] is defined and form[name].vars.checked %}{% set activeFilters = activeFilters + 1 %}{% endif %}
+    {% endfor %}
+    {% for name in ['keywords', 'groups', 'languages', 'gender'] %}
+        {% if form[name] is defined and form[name].vars.value is not empty %}{% set activeFilters = activeFilters + 1 %}{% endif %}
+    {% endfor %}
+
+    {# The members of this page, for the map when the list of all members found (map_members)
+       is missing: where each one set their home on their profile, rounded to about 1 km as on
+       the profile page, else the centre of their city. A marker opens the member's preview. #}
+    {% set mapMembers = [] %}
+    {% if hasResults %}
+        {% for result in pager.currentPageResults %}
+            {% set address = result.member.activeAddress %}
+            {% set ownPoint = address and address.latitude is not null and address.longitude is not null %}
+            {% if ownPoint or (address and address.location and address.location.latitude is not null) %}
+                {% set mapMembers = mapMembers|merge([{
+                    Username: result.member.username,
+                    latitude: ownPoint ? address.latitude|round(2) : address.location.latitude,
+                    longitude: ownPoint ? address.longitude|round(2) : address.location.longitude,
+                }]) %}
+            {% endif %}
+        {% endfor %}
     {% endif %}
 
-    {{ form_start(form, {'attr': {'class': 'm-1 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}
-    {{ form_errors(form) }}
-    {{ form_label(form.location) }}
-    <div class="auto-search-wrapper max-height loupe">
-        <input type="text" id="{{ form.location.vars.id}}" name="{{ form.location.vars.full_name }}"
-           class="o-input js-location-picker" autocomplete="off"
-           placeholder="{{ 'trip.leg.location'|trans }}"
-           aria-label="{{ 'trip.leg.location'|trans }}"
-           {% if form.location.vars.value %}value="{{ form.location.vars.value }}"{% endif %}
-        >
-    </div>
-    <div class="u:block">{{ form_errors(form.location) }}</div>
-    <div class="u:mb-8">{{ form_help(form.location) }}</div>
-    {% do form.location.setRendered %}
-    <div class="row g-3 mb-3">
-      <div class="col-12">
-        <div class="row g-3">
-      <div class="col-sm-4">
-          <div class="form-check form-switch d-flex align-items-center">
-            <input class="form-check-input show_options mt-0 me-2" type="checkbox" role="switch" id="{{ form.show_options.vars.id }}" name="{{ form.show_options.vars.full_name }}"
-                   {% if form.show_options.vars.checked %}checked="checked"{% endif %}
-                   switch>
-            <label class="form-check-label mb-0" for="{{ form.show_options.vars.id }}">{{ form.show_options.vars.label|trans }}</label>
-          </div>
-      </div>
-      <div class="col-sm-4">
-          <div class="form-check form-switch d-flex align-items-center">
-            <input class="form-check-input show_map mt-0 me-2" type="checkbox" role="switch" id="{{ form.show_map.vars.id }}" name="{{ form.show_map.vars.full_name }}"
-                   {% if form.show_map.vars.checked %}checked="checked"{% endif %}
-                   switch>
-            <label class="form-check-label mb-0" for="{{ form.show_map.vars.id }}">{{ form.show_map.vars.label|trans }}</label>
-          </div>
-          {% do form.show_options.setRendered %}
-          {% do form.show_map.setRendered %}
-        </div>
-        </div>
-    </div>
-        <div id="search_options"
-             class="col-12  {% if form.show_options.vars.checked %}d-block{% else %}d-none{% endif %}">
-            <div class="row g-3">
-                <div class="col-sm-4">
-                    <div class="row g-0">
-                        <div class="col-12 mb-2">
-                            <span class="fw-bolder">{{ 'accommodation'|trans }}</span>
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.accommodation_yes) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.accommodation_no) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.accessible) }}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span class="fw-bolder">{{ 'profile.information'|trans }}</span>
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.has_profile_picture) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.has_about_me) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.has_comments) }}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span class="fw-bolder">{{ 'restrictions'|trans }}</span>
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.no_alcohol) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.no_smoking) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.no_drugs) }}
-                        </div>
+    {{ form_start(form, { attr: { class: 'p-search search_form js-search-form' ~ (showMap ? '' : ' is-map-off'), novalidate: 'novalidate', onkeypress: 'return event.keyCode != 13;' } }) }}
+
+    {# Where, radius and the search button #}
+    <div class="p-search__top">
+        <div class="p-search__bar">
+            <div class="p-search-where js-search-where">
+                <button type="button" class="p-search-where__back js-search-where-back" aria-label="{{ 'back'|trans }}">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                </button>
+                <i class="fas fa-map-marker-alt p-search-where__pin" aria-hidden="true"></i>
+                <div class="p-search-where__field">
+                    <label class="p-search-where__label" for="{{ form.location.vars.id }}">{{ 'landing.whereyougo'|trans }}</label>
+                    <div class="auto-search-wrapper max-height p-search-where__input">
+                        <input type="text" id="{{ form.location.vars.id }}" name="{{ form.location.vars.full_name }}"
+                               class="js-location-picker" autocomplete="off"
+                               placeholder="{{ 'trip.leg.location'|trans }}"
+                               {% if form.location.vars.value %}value="{{ form.location.vars.value }}"{% endif %}>
+                        <span class="p-search-where__display js-search-where-display" aria-hidden="true">
+                            <strong class="js-search-where-name">{{ locationName }}</strong>
+                            <span class="js-search-where-rest">{{ locationRest }}</span>
+                            <span class="p-search-where__radius js-search-where-radius"></span>
+                        </span>
                     </div>
+                    {% do form.location.setRendered %}
                 </div>
-                <div class="col-sm-4">
-                    <div class="row g-0">
-                        <div class="col-12">
-                            {{ form_row(form.can_host) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.keywords) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.groups) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.languages) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.last_active) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class="row g-0">
-                        <div class="col-12">
-                            {{ form_row(form.distance) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.min_age) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.max_age) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.gender) }}
-                        </div>
-                        <div class="col-12 mb-2">
-                            <span class="fw-bolder">{{ 'offers'|trans }}</span>
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.offers_dinner) }}
-                        </div>
-                        <div class="col-12">
-                            {{ form_row(form.offers_tour) }}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4">
-                    {{ form_row(form.order) }}
-                </div>
-                <div class="col-sm-4">
-                    {{ form_row(form.direction) }}
-                </div>
-                <div class="col-sm-4">
-                    {{ form_row(form.items) }}
-                </div>
+                <span class="p-search-where__help" title="{{ 'search.locations.help'|trans|striptags }}">
+                    <i class="far fa-question-circle" aria-hidden="true"></i>
+                </span>
+                <p class="p-search-where__hint"><i class="far fa-question-circle" aria-hidden="true"></i> {{ 'search.locations.help'|trans|striptags }}</p>
             </div>
+
+            <div class="p-search__radius js-search-radius">
+                <label class="u:sr-only" for="{{ form.distance.vars.id }}">{{ form.distance.vars.label|trans }}</label>
+                {{ search.select(form.distance, 'p-search-select--radius') }}
+            </div>
+
+            <button type="submit" class="p-search__find js-search-find" name="{{ form.updateMap.vars.full_name }}">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <span>{{ 'search.find.members'|trans }}</span>
+            </button>
+
+            <button type="button" class="p-search__options-btn js-search-options-open" aria-label="{{ 'search.show.advanced'|trans }}">
+                <i class="fas fa-sliders" aria-hidden="true"></i>
+                {% if activeFilters %}<span class="p-search__options-count">{{ activeFilters }}</span>{% endif %}
+            </button>
+
+            <label class="p-search__map-switch" for="{{ form.show_map.vars.id }}">
+                <span>{{ form.show_map.vars.label|trans }}</span>
+                <input type="checkbox" role="switch" class="show_map js-search-map-switch" id="{{ form.show_map.vars.id }}"
+                       name="{{ form.show_map.vars.full_name }}" value="1"{% if showMap %} checked{% endif %}>
+                <span class="p-search__switch" aria-hidden="true"></span>
+            </label>
+            {% do form.show_map.setRendered %}
         </div>
-        <div class="col-12">
-            <div class="u:flex u:justify-end">
-                {% if form.resetOptions is defined %}
-                    {{ form_widget(form.resetOptions) }}
+
+        {% if form.vars.errors|length > 0 %}
+            <ul class="p-search__errors" role="alert">
+                {% for error in form.vars.errors %}
+                    <li><i class="fas fa-exclamation-circle" aria-hidden="true"></i> {{ error.message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {# Quick filters: they tick the same boxes as the panel and search right away. #}
+        <div class="p-search__quick">
+            <button type="button" class="p-search__options-pill js-search-options-open">
+                <i class="fas fa-sliders" aria-hidden="true"></i>
+                <span>{{ 'search.show.advanced'|trans }}</span>
+                {% if activeFilters %}<span class="p-search__options-count">{{ activeFilters }}</span>{% endif %}
+            </button>
+            <span class="p-search__divider" aria-hidden="true"></span>
+            <div class="p-search__pills">
+                {% for item in [
+                    { field: form.accommodation_yes, icon: 'fas fa-house-user' },
+                    { field: form.accommodation_no, icon: 'fas fa-house-user' },
+                    { field: form.offers_dinner, icon: null },
+                    { field: form.offers_tour, icon: 'fas fa-map-signs' },
+                ] %}
+                    <button type="button" class="p-search-pill js-search-pill{{ item.field.vars.checked ? ' is-active' : '' }}"
+                            data-target="{{ item.field.vars.id }}" aria-pressed="{{ item.field.vars.checked ? 'true' : 'false' }}">
+                        {% if item.icon %}<i class="{{ item.icon }} p-search-pill__icon" aria-hidden="true"></i>{% endif %}
+                        {{ item.field.vars.label|trans }}
+                        <i class="fas fa-times p-search-pill__off" aria-hidden="true"></i>
+                    </button>
+                {% endfor %}
+            </div>
+            {# The old "show options" switch: kept so the preference is not lost. #}
+            {% if form.show_options.vars.checked %}<input type="hidden" name="{{ form.show_options.vars.full_name }}" value="1">{% endif %}
+            {% do form.show_options.setRendered %}
+        </div>
+    </div>
+
+    {# Results and map #}
+    <div class="p-search__body">
+        <section class="p-search-results">
+            {% if hasResults %}
+                <div class="p-search-results__head">
+                    <h1 class="p-search-results__count">
+                        {%- if pager.haveToPaginate -%}
+                            {{ 'search.members.found.range'|trans({ first: pager.currentPageOffsetStart, last: pager.currentPageOffsetEnd, count: pager.nbResults }) }}
+                        {%- else -%}
+                            <strong>{{ pager.nbResults|number_format }}</strong> {{ 'places.members.word'|trans({ count: pager.nbResults }) }}
+                        {%- endif -%}
+                    </h1>
+                    <div class="p-search-results__view" role="group">
+                        <button type="button" class="p-search-results__view-btn is-active js-search-view" data-view="list">
+                            <i class="fas fa-list-ul" aria-hidden="true"></i> <span class="p-search-results__view-label">{{ 'search.view.list'|trans }}</span>
+                        </button>
+                        <button type="button" class="p-search-results__view-btn js-search-view" data-view="map">
+                            <i class="fas fa-map" aria-hidden="true"></i> <span class="p-search-results__view-label">{{ 'map'|trans }}</span>
+                        </button>
+                    </div>
+                    <div class="p-search-results__order">
+                        <label for="{{ form.order.vars.id }}">{{ form.order.vars.label|trans }}</label>
+                        {{ search.select(form.order, 'p-search-select--small js-search-autosubmit') }}
+                        {% set descending = form.direction.vars.value == constant('App\\Repository\\MemberRepository::DIRECTION_DESCENDING') %}
+                        <input type="hidden" class="js-search-direction" name="{{ form.direction.vars.full_name }}" value="{{ form.direction.vars.value }}"
+                               data-ascending="{{ constant('App\\Repository\\MemberRepository::DIRECTION_ASCENDING') }}"
+                               data-descending="{{ constant('App\\Repository\\MemberRepository::DIRECTION_DESCENDING') }}">
+                        {% do form.direction.setRendered %}
+                        <button type="button" class="p-search-results__direction js-search-direction-toggle"
+                                aria-label="{{ form.direction.vars.label|trans }}: {{ (descending ? 'search.direction.descending' : 'search.direction.ascending')|trans }}">
+                            <i class="fas {{ descending ? 'fa-arrow-down-wide-short' : 'fa-arrow-up-short-wide' }}" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                {% include 'search/_results.html.twig' with { members: pager } %}
+
+                <div class="p-search-results__foot">
+                    {% if pager.haveToPaginate %}
+                        {{ pagerfanta(pager, 'rounded_pagination', { routeName: routeName, routeParams: routeParams }) }}
+                    {% endif %}
+                    <div class="p-search-results__items">
+                        <label for="{{ form.items.vars.id }}">{{ form.items.vars.label|trans }}</label>
+                        {{ search.select(form.items, 'p-search-select--small js-search-autosubmit') }}
+                    </div>
+                </div>
+            {% else %}
+                {% do form.order.setRendered %}
+                {% do form.items.setRendered %}
+                <input type="hidden" name="{{ form.order.vars.full_name }}" value="{{ form.order.vars.value }}">
+                <input type="hidden" name="{{ form.direction.vars.full_name }}" value="{{ form.direction.vars.value }}">
+                <input type="hidden" name="{{ form.items.vars.full_name }}" value="{{ form.items.vars.value }}">
+                {% do form.direction.setRendered %}
+                <div class="p-search-results__empty">
+                    <i class="fas fa-search" aria-hidden="true"></i>
+                    <p>{{ pager is not null ? 'search.no.members'|trans : 'search.locations.help'|trans|striptags }}</p>
+                </div>
+            {% endif %}
+        </section>
+
+        <div class="p-search__map">
+            <div id="map-box" class="p-search__map-box"></div>
+        </div>
+    </div>
+
+    {{ include('search/_preview_drawer.html.twig') }}
+
+    {# Search options: side panel on large screens, sheet from the bottom on phones #}
+    <div class="p-search-options__backdrop js-search-options-close" hidden></div>
+    <aside class="p-search-options js-search-options" aria-labelledby="search-options-title" aria-hidden="true">
+        <div class="p-search-options__head">
+            <h2 id="search-options-title">{{ 'search.show.advanced'|trans }}</h2>
+            <button type="button" class="p-search-options__close js-search-options-close" aria-label="{{ 'close'|trans }}">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="p-search-options__body js-search-options-body">
+            {# Below 768px the radius moves here from the search bar (see search/locations.js). #}
+            <div class="p-search-options__radius js-search-options-radius"></div>
+
+            <section class="p-search-options__section">
+                <h3>{{ 'accommodation'|trans }}</h3>
+                {{ search.check(form.accommodation_yes) }}
+                {{ search.check(form.accommodation_no) }}
+                {{ search.check(form.accessible) }}
+                {{ search.field(form.can_host, search.select(form.can_host)) }}
+            </section>
+
+            <section class="p-search-options__section">
+                <h3>{{ 'offers'|trans }}</h3>
+                {{ search.check(form.offers_dinner) }}
+                {{ search.check(form.offers_tour) }}
+            </section>
+
+            <section class="p-search-options__section">
+                <h3>{{ 'member'|trans }}</h3>
+                <div class="p-search-options__row">
+                    {{ search.field(form.min_age, search.select(form.min_age, '', true)) }}
+                    {{ search.field(form.max_age, search.select(form.max_age, '', true)) }}
+                </div>
+                {{ search.checks(form.gender) }}
+                {# Only the languages the member speaks can be chosen (see SearchController). #}
+                {{ search.checks(form.languages) }}
+                {{ search.field(form.last_active, search.select(form.last_active)) }}
+                {% if form.groups.vars.choices|length > 0 %}
+                    {{ search.field(form.groups, form_widget(form.groups)) }}
+                {% else %}
+                    {% do form.groups.setRendered %}
                 {% endif %}
-                {{ form_widget(form.updateMap) }}
-            </div>
+                {{ search.field(form.keywords, form_widget(form.keywords, { attr: { class: 'p-search-input' } })) }}
+            </section>
+
+            <section class="p-search-options__section">
+                <h3>{{ 'profile.information'|trans }}</h3>
+                {{ search.check(form.has_profile_picture) }}
+                {{ search.check(form.has_about_me) }}
+                {{ search.check(form.has_comments) }}
+            </section>
+
+            <section class="p-search-options__section">
+                <h3>{{ 'restrictions'|trans }}</h3>
+                {{ search.check(form.no_smoking) }}
+                {{ search.check(form.no_alcohol) }}
+                {{ search.check(form.no_drugs) }}
+            </section>
         </div>
-    </div>
+
+        <div class="p-search-options__foot">
+            <button type="button" class="p-search-options__reset js-search-options-reset">{{ 'search.options.reset'|trans }}</button>
+            <button type="submit" class="p-search__find p-search-options__find" name="{{ form.updateMap.vars.full_name }}">
+                {{ 'search.find.members'|trans }}
+            </button>
+        </div>
+    </aside>
+
+    {% do form.updateMap.setRendered %}
+    {% if form.resetOptions is defined %}{% do form.resetOptions.setRendered %}{% endif %}
     {{ form_rest(form) }}
     {{ form_end(form) }}
-  <input type="hidden" id="min_latitude" value="{{ searchParams.min_latitude }}">
-  <input type="hidden" id="max_latitude" value="{{ searchParams.max_latitude }}">
-  <input type="hidden" id="min_longitude" value="{{ searchParams.min_longitude }}">
-  <input type="hidden" id="max_longitude" value="{{ searchParams.min_longitude }}">
 
-   <div id="map-box"></div>
+    <input type="hidden" id="min_latitude" value="{{ searchParams.min_latitude }}">
+    <input type="hidden" id="max_latitude" value="{{ searchParams.max_latitude }}">
+    <input type="hidden" id="min_longitude" value="{{ searchParams.min_longitude }}">
+    <input type="hidden" id="max_longitude" value="{{ searchParams.max_longitude }}">
 
     <script>
-        var mapMembers =
-            {% if map_members %}
-                {{ map_members | json_encode | raw }}
-            {% else %}
-                null
-            {% endif %}
-        ;
+        var mapMembers = {{ (mapMembers|length ? mapMembers : null)|json_encode|raw }};
+        // Every member found (SearchAdapter::getMapPoints)
+        var mapAllMembers = {{ (map_members ?? null)|json_encode|raw }};
     </script>
-
-    {% if members is not null and members.nbResults > 0 %}
-        <div class="row g-0">
-            {% include 'member/results.html.twig' %}
-        </div>
-    {% endif %}
 {% endblock content %}

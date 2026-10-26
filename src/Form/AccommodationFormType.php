@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotNull;
 
@@ -77,69 +78,53 @@ class AccommodationFormType extends AbstractType
                 'label' => 'profile.wheelchair.accessible',
                 'help' => 'help.profile.wheelchair.accessible',
             ])
-            ->add('length_of_stay', CkEditorType::class, [
+            ->add('length_of_stay', TextareaType::class, [
                 'label' => 'profile.max.length.of.stay',
                 'help' => 'help.profile.length.of.stay',
-                'async' => true,
                 'required' => false,
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'image_upload' => false,
+                'attr' => ['class' => 'o-input', 'rows' => 3],
             ])
-            ->add('i_live_with', CkEditorType::class, [
+            ->add('i_live_with', TextareaType::class, [
                 'label' => 'profile.i.live.with',
                 'help' => 'help.profile.i.live.with',
-                'async' => true,
                 'required' => false,
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'image_upload' => false,
+                'attr' => ['class' => 'o-input', 'rows' => 3],
             ])
-            ->add('please_bring', CkEditorType::class, [
+            ->add('please_bring', TextareaType::class, [
                 'label' => 'profile.please.bring',
                 'help' => 'help.profile.please.bring',
-                'async' => true,
                 'required' => false,
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'image_upload' => false,
+                'attr' => ['class' => 'o-input', 'rows' => 3],
             ])
-            ->add('where_you_sleep', CkEditorType::class, [
+            ->add('where_you_sleep', TextareaType::class, [
                 'label' => 'profile.where.you.sleep',
                 'help' => 'help.profile.where.you.sleep',
-                'async' => true,
                 'required' => false,
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'image_upload' => false,
+                'attr' => ['class' => 'o-input', 'rows' => 4],
             ])
-            ->add('offer_guests', CkEditorType::class, [
+            ->add('offer_guests', TextareaType::class, [
                 'label' => 'profile.offer.guests',
                 'help' => 'help.profile.offer.guests',
-                'async' => true,
                 'required' => false,
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'image_upload' => false,
+                'attr' => ['class' => 'o-input', 'rows' => 4],
             ])
-            ->add('additional_info', CkEditorType::class, [
+            ->add('additional_info', TextareaType::class, [
                 'label' => 'profile.additional.information.for.guests',
                 'help' => 'help.profile.additional.information.for.guests',
-                'async' => true,
                 'required' => false,
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'image_upload' => false,
+                'attr' => ['class' => 'o-input', 'rows' => 4],
             ])
-            ->add('getting_there', CkEditorType::class, [
+            ->add('getting_there', TextareaType::class, [
                 'label' => 'profile.getting.there',
                 'help' => 'help.profile.getting.there',
-                'async' => true,
                 'required' => false,
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'image_upload' => false,
+                'attr' => ['class' => 'o-input', 'rows' => 4],
             ])
-            ->add('house_rules', CkEditorType::class, [
+            ->add('house_rules', TextareaType::class, [
                 'label' => 'profile.house.rules',
                 'help' => 'help.profile.house.rules',
-                'async' => true,
                 'required' => false,
-                'editor_type' => CkEditorType::EDITOR_TYPE_INLINE,
-                'image_upload' => false,
+                'attr' => ['class' => 'o-input', 'rows' => 4],
             ])
             ->add('language', HiddenType::class)
         ;

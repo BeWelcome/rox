@@ -1,0 +1,31 @@
+{#
+  My private note about a member, in full, in the side panel of the profile (?embed=1):
+  the member on top, the note on yellow paper (pictures included), its category and date,
+  then "Edit note" at the bottom, which opens the form in the same panel.
+#}
+{% extends 'profile/edit_subpage.html.twig' %}
+
+{% block subpage_title %}{{ member.visibleName ?: member.username }}{% endblock %}
+{% block drawer_eyebrow %}<span class="p-note-form__mark" aria-hidden="true"></span> {{ 'profile.note.about.eyebrow'|trans }}{% endblock %}
+{% block drawer_options %}noclose{% endblock %}
+{% block drawer_avatar %}<img src="{{ url('avatar', {username: member.username, size: 100}) }}" alt="">{% endblock %}
+
+{% block subpage_body %}
+    <p class="p-note-form__private">
+        <i class="fas fa-lock" aria-hidden="true"></i>
+        {{ 'profile.note.never.told'|trans({name: member.shortNameOrUsername}) }}
+    </p>
+    <div class="p-note-view">
+        <div class="p-pro-note__text">{{ note.comment|purify }}</div>
+        <div class="p-pro-note__foot">
+            {% if note.category %}<span class="p-pro-note__category">{{ note.category }}</span>{% endif %}
+            {% set noteDate = note.updated ?: note.created %}
+            {% if noteDate %}<span class="p-pro-note__date">{{ noteDate|format_date('medium') }}</span>{% endif %}
+        </div>
+    </div>
+    <div class="p-ped-foot">
+        <a class="o-button" href="{{ path('edit_note', {username: member.username, embed: 1}) }}">
+            <i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.note.edit'|trans }}
+        </a>
+    </div>
+{% endblock subpage_body %}

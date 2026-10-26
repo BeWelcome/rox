@@ -1,0 +1,117 @@
+{#
+  Search results: one card per member (photo, name, hosting as an icon, age, gender
+  and place, an extract of "About me", occupation, comments, last login and how long
+  they have been a member); the name's link covers the whole card.
+  Phones get a flat full-width list, larger screens separate cards.
+#}
+<div class="p-search-results__cards">
+    {% for result in members.currentPageResults %}
+        {% set member = result.member %}
+        {% set displayName = member.name is empty ? member.username : member.name %}
+        {% set address = member.activeAddress %}
+        {# "About me" in the reader's language, else the first language it was written in (the list always starts with an empty "en"). #}
+        {% set translations = member.translations %}
+        {% set aboutMe = translations[app.request.locale]['AboutMe'] ?? '' %}
+        {% if aboutMe is empty %}
+            {% for texts in translations %}{% if aboutMe is empty and texts['AboutMe'] is defined %}{% set aboutMe = texts['AboutMe'] %}{% endif %}{% endfor %}
+        {% endif %}
+        {% set aboutMe = aboutMe|replace({'<br />': ' ', '<br>': ' ', '</p>': ' '})|striptags|trim %}
+        {% set occupation = translations[app.request.locale]['Occupation'] ?? '' %}
+        {% if occupation is empty %}
+            {% for texts in translations %}{% if occupation is empty and texts['Occupation'] is defined %}{% set occupation = texts['Occupation'] %}{% endif %}{% endfor %}
+        {% endif %}
+        {% set occupation = occupation|striptags|trim %}
+        {% set profileUrl = path('members_profile', { username: member.username }) %}
+        {% set hosting = member.accommodation in ['yes', 'no'] ? member.accommodation : null %}
+        {% set commentCount = result.commentCount ?? 0 %}
+        {# Last activity as on the profile: this week, this month, or "Last activity 3 months ago"
+           (the sign-up date when the member never logged in). #}
+        {% set _activity = member.lastActive ?: member.created %}
+        {% set activityDays = _activity ? _activity.diffInDays() : null %}
+        {% set lastActive = _activity ? (activityDays <= 7 ? 'profile.active.week'|trans : (activityDays <= 30 ? 'profile.active.month'|trans : _activity.diffForHumans)) : null %}
+
+        <article class="p-search-card">
+            {# Hosting as a ring around the picture: green when the member hosts, grey when not #}
+            <a class="p-search-card__avatar{% if hosting %} p-search-card__avatar--{{ hosting }}{% endif %}" href="{{ profileUrl }}" tabindex="-1" aria-hidden="true">
+                <img src="{{ path('avatar', { username: member.username, size: 192 }) }}" alt="" loading="lazy">
+            </a>
+
+            <div class="p-search-card__head">
+                <p class="p-search-card__title">
+                    <a class="p-search-card__name js-search-preview-open" href="{{ profileUrl }}" data-preview="{{ path('search_member_preview', { username: member.username }) }}">{{ displayName }}</a>
+                    {# Gender and age as one small badge next to the name, coloured by gender. #}
+                    {% set gender = member.isGenderVisible and member.gender in ['female', 'male', 'other'] ? member.gender : null %}
+                    {% set age = member.isAgeVisible and member.age ? member.age : null %}
+                    {% if gender or age %}
+                        <span class="p-search-card__who p-search-card__who--{{ gender ?: 'none' }}">
+                            {%- if gender -%}
+                                <i class="fas {{ { female: 'fa-venus', male: 'fa-mars', other: 'fa-genderless' }[gender] }}" aria-hidden="true"></i>
+                                <span class="visually-hidden">{{ gender|trans }}</span>
+                            {%- endif -%}
+                            {%- if age %}<span>{{ age }}</span><span class="visually-hidden"> {{ 'searchyearsold'|trans|format('')|striptags|trim }}</span>{% endif -%}
+                        </span>
+                    {% endif %}
+                    {% if member.name is not empty and member.name != member.username %}<span class="p-search-card__username">{{ member.username }}</span>{% endif %}
+                    {% if hosting %}
+                        {# Yes, be welcome / No, sorry as one icon; the words are kept for screen readers. #}
+                        <span class="p-search-card__host p-search-card__host--{{ hosting }}">
+                            <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
+                            <span class="visually-hidden">{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</span>
+                        </span>
+                    {% endif %}
+                </p>
+
+                {#- The place is only shown when it is not the place searched for (a nearby town). -#}
+                {%- set searchedPlaceId = searchParams.location_geoname_id ?? null -%}
+                {% if address and address.location and (searchedPlaceId is empty or address.location.geonameId != searchedPlaceId) %}
+                    <p class="p-search-card__meta"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ address.location.name ~ (address.location.country ? ', ' ~ address.location.country.name : '') }}</p>
+                {% endif %}
+                {% if occupation %}
+                    <p class="p-search-card__occupation"><i class="fas fa-briefcase" aria-hidden="true"></i> <span class="visually-hidden">{{ 'profile.occupation'|trans }}:</span> {{ occupation }}</p>
+                {% endif %}
+            </div>
+
+            {# Comments: a small pill at the top right on phones, a line at the bottom on larger screens. #}
+            {# With comments: the count of each quality (only the non-zero ones), as on the profile tab. #}
+            {% set byQuality = { positive: result.positiveCount ?? 0, neutral: result.neutralCount ?? 0, negative: result.negativeCount ?? 0 } %}
+            {% set hasQualities = commentCount and (byQuality.positive + byQuality.neutral + byQuality.negative) > 0 %}
+            <span class="p-search-card__comments-pill{% if commentCount %} has-comments{% endif %}{% if hasQualities %} has-qualities{% endif %}">
+                {% if hasQualities %}
+                    {% for quality, icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
+                        {% if byQuality[quality] %}
+                            <span class="p-search-card__quality p-search-card__quality--{{ quality }}">
+                                <i class="fas fa-{{ icon }}" aria-hidden="true"></i> {{ byQuality[quality] }}
+                                <span class="visually-hidden">{{ ('comment.quality.' ~ quality)|trans|striptags }}</span>
+                            </span>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <i class="fas fa-comments" aria-hidden="true"></i> {{ commentCount }}
+                {% endif %}
+                <span class="visually-hidden">{{ 'search.preview.comments'|trans({ count: commentCount }) }}</span>
+            </span>
+
+            {% if aboutMe %}
+                <p class="p-search-card__about">{{ aboutMe|truncate(300) }}</p>
+            {% endif %}
+
+            <div class="p-search-card__foot">
+                <span class="p-search-card__comments{% if commentCount %} has-comments{% endif %}">
+                    <i class="fas fa-comments" aria-hidden="true"></i> {{ commentCount }} {{ 'search.preview.comments'|trans({ count: commentCount }) }}
+                </span>
+                <span class="p-search-card__activity{{ lastActive ? '' : ' is-since-only' }}">
+                    <i class="far fa-clock" aria-hidden="true"></i>
+                    {%- if lastActive %}
+                        {# A dot, green when active in the last month #}
+                        <span class="p-search-card__online{{ activityDays <= 30 ? ' is-recent' : '' }}" aria-hidden="true"></span>
+                        <span>{% if activityDays > 30 %}<span class="p-search-card__login-label">{{ 'profile.last.activity'|trans|trim(': ') }}</span> {% endif %}<strong>{{ lastActive }}</strong></span>
+                    {%- endif -%}
+                    {%- if member.created -%}
+                        {%- if lastActive %}<span class="p-search-card__dot p-search-card__since-dot" aria-hidden="true">·</span>{% endif -%}
+                        <span class="p-search-card__since">{{ 'search.member.duration'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}</span>
+                    {%- endif -%}
+                </span>
+            </div>
+        </article>
+    {% endfor %}
+</div>

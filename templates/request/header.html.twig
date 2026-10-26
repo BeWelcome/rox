@@ -1,89 +1,49 @@
-<div class="u:rounded-8 u:p-8 u:w-full u:mb-8 u:bg-gray-5">
-    <div class="u:flex u:flex-col u:md:flex-row u:justify-between">
-        <div>
-            <div class="u:p-4">
-                {%- if original.Initiator.Username == myself.Username %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}
-                        <span class="u:p-4 u:rounded-8 u:leading-24 u:bg-notice">
-                                <i class="fas fa-exclamation u:mr-12"></i>
-                                {{ 'request.guest.open'|trans }}</span>
-                    {% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}
-                        <span class="u:p-4 u:rounded-8 u:leading-24 u:bg-red">
-                                <i class="fa fa-times u:mr-12"></i>
-                                {{ 'request.guest.cancelled'|trans }}</span>
-                    {% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
-                        <span class="u:p-4 u:rounded-8 u:leading-24 u:bg-red">
-                                <i class="fa fa-times u:mr-12"></i>
-                                {{ 'request.guest.declined'|trans }}</span>
-                    {% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
-                        <span class=" u:-ml-4 u:p-4 u:rounded-8 u:leading-24 u:bg-green">
-                                <i class="far fa-handshake u:mr-4"></i>
-                                {{ 'request.guest.accepted'|trans }}</span>
-                    {% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
-                        <span class="u:p-4 u:rounded-8 u:leading-24 u:bg-notice">
-                                <i class="fas fa-exclamation u:mr-12"></i>
-                                {{ 'request.guest.tentatively'|trans }}</span>
-                    {% endif %}
-                {% else %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}
-                        <span class="u:p-4 u:rounded-8 u:leading-24 u:bg-notice">
-                                <i class="fas fa-exclamation u:mr-12"></i>
-                                {{ 'request.host.open'|trans }}</span>
-                    {% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}
-                        <span class="u:p-4 u:rounded-8 u:leading-24 u:bg-red">
-                                <i class="fa fa-times u:mr-12"></i>
-                                {{ 'request.host.cancelled'|trans }}</span>
-                    {% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}
-                        <span class="u:p-4 u:rounded-8 u:leading-24 u:bg-red">
-                                <i class="fa fa-times u:mr-12"></i>
-                                {{ 'request.host.declined'|trans }}</span>
-                    {% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}
-                        <span class=" u:-ml-4 u:p-4 u:rounded-8 u:leading-24 u:bg-green">
-                                <i class="far fa-handshake u:mr-4"></i>
-                                {{ 'request.host.accepted'|trans }}</span>
-                    {% endif %}
-                    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}
-                        <span class="u:p-4 u:rounded-8 u:leading-24 u:bg-notice">
-                                <i class="fas fa-exclamation u:mr-12"></i>
-                                {{ 'request.host.tentatively'|trans }}</span>
-                    {% endif %}
-                {% endif -%}
-            </div>
-            <div class="u:p-4">
-                <i class="fa fa-calendar u:mr-8"></i>
-                {{ request.arrival|format_date('full') }}
-                -
-                {{ request.departure|format_date('full') }}
-            </div>
-        </div>
-        <div>
-            <div class="u:p-4">
-                <i class="fa fa-moon u:mr-8"></i>
-                {% set difference = date(request.departure).diff(date(request.arrival)) %}
-                {% set nights = difference.days %}
-                {{ 'request.night.stay'|trans ({'numbernights': nights}) }}
-            </div>
-        </div>
-        <div>
-            <div class="u:p-4">
-                <i class="fa fa-users u:mr-4"></i>
-                {{ 'request.number.persons'|trans ({'numberpersons': request.numberOfTravellers}) }}
-            </div>
-            <div class="u:p-4">
-                <i class="fas fa-sync u:mr-8"></i>
-                {% if request.flexible %}
-                    {{ 'request.flexible.with.arrival.departure'|trans }}
-                {% else %}
-                    {{ 'request.not.flexible.with.arrival.departure'|trans }}
-                {% endif %}
-            </div>
-        </div>
+{#
+  What the hosting request is about, above the messages, as a card: "Hosting request"
+  and where it stands, arrival and departure with the nights between, then the people,
+  whether the dates are flexible and the year.
+  The guest and the host read a different status text. Expects request, original
+  (first message of the thread) and myself.
+#}
+{% set S = 'App\\Entity\\HostingRequest::' %}
+{% set side = original.Initiator.Username == myself.Username ? 'guest' : 'host' %}
+{% set statuses = {
+    (constant(S ~ 'REQUEST_OPEN')): { key: 'open', tone: 'pending', icon: 'fas fa-clock' },
+    (constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED')): { key: 'tentatively', tone: 'maybe', icon: 'fa fa-question' },
+    (constant(S ~ 'REQUEST_ACCEPTED')): { key: 'accepted', tone: 'success', icon: 'far fa-handshake' },
+    (constant(S ~ 'REQUEST_DECLINED')): { key: 'declined', tone: 'danger', icon: 'fa fa-times' },
+    (constant(S ~ 'REQUEST_CANCELLED')): { key: 'cancelled', tone: 'danger', icon: 'fa fa-times' },
+} %}
+{% set status = statuses[request.status] ?? { key: null, tone: 'pending', icon: '' } %}
+{% set nights = date(request.departure|date('Y-m-d')).diff(date(request.arrival|date('Y-m-d'))).days %}
+{% set sameYear = request.arrival|date('Y') == request.departure|date('Y') %}
+
+<section class="c-stay-card c-stay-card--{{ status.tone }}">
+    <div class="c-stay-card__top">
+        <p class="c-stay-card__kind"><i class="fas fa-bed" aria-hidden="true"></i> {{ 'request.card.title'|trans }}</p>
+        {% if status.key %}
+            <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ status.key)|trans }}</span>
+        {% endif %}
     </div>
-</div>
+    <div class="c-stay-card__dates">
+        <p class="c-stay-card__date">
+            <span class="c-stay-card__label">{{ 'request.card.arrival'|trans }} · {{ request.arrival|format_date(pattern='EEE') }}</span>
+            <strong>{{ request.arrival|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}{% if sameYear %}<span class="c-stay-card__y"> {{ request.arrival|date('Y') }}</span>{% endif %}</strong>
+        </p>
+        <span class="c-stay-card__nights"><i class="fas fa-moon c-stay-card__moon" aria-hidden="true"></i><i class="fas fa-arrow-right c-stay-card__arrow" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>
+        <p class="c-stay-card__date c-stay-card__date--end">
+            <span class="c-stay-card__label">{{ 'request.card.departure'|trans }} · {{ request.departure|format_date(pattern='EEE') }}</span>
+            <strong>{{ request.departure|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}{% if sameYear %}<span class="c-stay-card__y"> {{ request.departure|date('Y') }}</span>{% endif %}</strong>
+        </p>
+    </div>
+    <ul class="c-stay-card__facts">
+        <li><i class="fa fa-users" aria-hidden="true"></i> {{ 'request.card.persons'|trans({ count: request.numberOfTravellers }) }}</li>
+        {% if request.flexible %}
+            <li><i class="fas fa-sync" aria-hidden="true"></i> {{ 'request.card.flexible'|trans }}</li>
+        {% else %}
+            <li><i class="fas fa-lock" aria-hidden="true"></i> {{ 'request.card.not.flexible'|trans }}</li>
+        {% endif %}
+        {% include 'request/_card_cancel.html.twig' with { stay: request, place: 'facts', confirm: 'request.confirm.cancel' } %}
+    </ul>
+    {% include 'request/_card_cancel.html.twig' with { stay: request, place: 'side', confirm: 'request.confirm.cancel' } %}
+</section>

@@ -67,7 +67,7 @@ class GalleryImageRepository extends EntityRepository
             ->getArrayResult()
         ;
 
-        return array_map(fn (array $row): array => [
+        return array_map(static fn (array $row): array => [
             'id' => (int) $row['id'],
             'title' => (string) $row['title'],
             'count' => (int) $row['count'],

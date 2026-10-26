@@ -36,8 +36,8 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class InvitationController extends BaseRequestAndInvitationController
 {
-    use TranslatedFlashTrait;
     use ContactPanelTrait;
+    use TranslatedFlashTrait;
     use TranslatorTrait;
 
     private InvitationModel $invitationModel;

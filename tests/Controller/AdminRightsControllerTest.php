@@ -323,7 +323,8 @@ final class AdminRightsControllerTest extends WebTestCase
         $client->loginUser($manager);
         $crawler = $client->request('GET', '/members/member-1');
         self::assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('a[href="/admin/rights/list/member/member-1"]'));
+        // The profile content, admin tools included, is rendered once per profile language
+        self::assertGreaterThanOrEqual(1, $crawler->filter('a[href="/admin/rights/list/member/member-1"]')->count());
     }
 
     private function getEntityManager(): EntityManagerInterface

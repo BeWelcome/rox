@@ -367,7 +367,7 @@ class CommentController extends AbstractController
         // the ones they wrote to others are shown on those members' profiles.
         $comments = array_filter(
             $commentRepository->getAllCommentsMember($member, $type),
-            fn (array $comment) => isset($comment['from'])
+            static fn (array $comment) => isset($comment['from'])
         );
         $commentCounts = $commentRepository->getCommentsCountMemberByQuality($member);
 

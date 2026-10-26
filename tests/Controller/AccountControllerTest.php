@@ -49,7 +49,8 @@ class AccountControllerTest extends WebTestCase
 
         $crawler = $client->request('GET', '/members/bwadmin/change/email/' . $registrationKey);
         $this->assertResponseIsSuccessful();
-        $form = $crawler->filter('form')->form();
+        // the page has other forms too (the layout's), so take the confirmation form by its name
+        $form = $crawler->filter('form[name="confirm_email_address_form"]')->form();
         $client->submit($form);
 
         $this->assertResponseRedirects('/members/bwadmin');

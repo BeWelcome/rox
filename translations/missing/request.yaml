@@ -135,6 +135,3 @@ invitation.decide.placeholder.maybe:
 invitation.decide.placeholder.decline:
     - "Tell {username} why you can't come this time..."
     - Placeholder of the message when the invited member declines an invitation
-invitation.confirm.cancel:
-    - 'Cancel this invitation?'
-    - Question in the confirmation window when the member who invited cancels the invitation

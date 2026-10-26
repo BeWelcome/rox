@@ -247,7 +247,7 @@ class GalleryController extends AbstractController
             'pictures' => null !== $activeAlbum
                 ? $galleryImageRepository->getImagesForMemberInAlbum($member, $activeAlbum['id'])
                 : $galleryImageRepository->getImagesForMember($member),
-            'pictures_total' => null !== $activeAlbum ? count($galleryImageRepository->getImagesForMember($member)) : null,
+            'pictures_total' => null !== $activeAlbum ? \count($galleryImageRepository->getImagesForMember($member)) : null,
             'albums' => $albums,
             'active_album' => $activeAlbum,
             'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
@@ -255,9 +255,6 @@ class GalleryController extends AbstractController
         ]);
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/gallery/upload_multiple', name: 'gallery_upload_multiple')]
     public function uploadImagesToGallery(): Response
     {
@@ -378,5 +375,4 @@ class GalleryController extends AbstractController
 
         return $response;
     }
-
 }

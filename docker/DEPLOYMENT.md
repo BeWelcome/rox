@@ -30,7 +30,12 @@ than the container's healthcheck allows. Run them by hand after the deploy:
 
 ```bash
 docker exec bewelcome-php-1 bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+docker exec bewelcome-php-1 bin/console translations:add:missing
 ```
+
+The entrypoint adds the missing translations before the migrations have run. If the
+new code needs a migrated table for that, it logs a warning and the container starts
+anyway; the second command above adds them then.
 
 Until they have finished, pages that use a changed table can fail.
 

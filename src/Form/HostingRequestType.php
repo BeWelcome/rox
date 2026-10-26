@@ -61,7 +61,7 @@ class HostingRequestType extends AbstractType
 
         // The duration field only mirrors the two dates (filled by requests.js). Fill it here
         // too, so that a request with both dates never fails on "Please set a duration".
-        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, static function (FormEvent $event) {
             $data = $event->getData();
             if (!\is_array($data) || !$event->getForm()->has('duration')) {
                 return;

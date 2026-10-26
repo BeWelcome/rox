@@ -685,7 +685,7 @@ class ProfileController extends AbstractController
         // other members' profiles); the "show all" link only appears when some are left out.
         $latestComments = array_filter(
             $commentRepository->getLatestCommentsMember($member, self::PROFILE_COMMENTS),
-            fn (array $comment) => isset($comment['from'])
+            static fn (array $comment) => isset($comment['from'])
         );
         $comments = \array_slice($latestComments, 0, self::PROFILE_COMMENTS, true);
         $hasMoreComments = $commentRepository->getCommentsForMemberCount($member) > \count($comments);

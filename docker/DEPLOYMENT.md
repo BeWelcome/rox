@@ -22,8 +22,17 @@ docker run --rm --entrypoint sh bewelcome/php -c 'test -f public/build/entrypoin
 
 `public/build/` stays gitignored; production must not rely on committing compiled assets.
 
-On start in `prod`, the PHP entrypoint clears the cache, runs Doctrine migrations,
-adds missing translations and warms the cache.
+On start in `prod`, the PHP entrypoint clears the cache, adds missing translations
+and warms the cache.
+
+It doesn't run the Doctrine migrations: on production data they can take far longer
+than the container's healthcheck allows. Run them by hand after the deploy:
+
+```bash
+docker exec bewelcome-php-1 bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+```
+
+Until they have finished, pages that use a changed table can fail.
 
 ## Local development
 

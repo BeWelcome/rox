@@ -212,6 +212,16 @@ class RequestController extends BaseRequestAndInvitationController
         ] + $this->inboxFolders->getContext($request, $guest));
     }
 
+    protected function addExpiredFlash(Member $receiver): void
+    {
+        $this->addTranslatedFlash('notice', 'flash.request.expired', [
+            '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
+                'username' => $receiver->getUsername(),
+            ]) . '" class="text-primary">',
+            '%link_end%' => '</a>',
+        ]);
+    }
+
     /**
      * The dates of the last stay request sent today, so that the next request (to another
      * host, same trip) starts with them. Kept in the session until the end of the day.
@@ -251,16 +261,6 @@ class RequestController extends BaseRequestAndInvitationController
         $stay = $requestForm->get('request');
         $stay->get('arrival')->setData($arrival);
         $stay->get('departure')->setData($departure);
-    }
-
-    protected function addExpiredFlash(Member $receiver): void
-    {
-        $this->addTranslatedFlash('notice', 'flash.request.expired', [
-            '%link_start%' => '<a href="' . $this->generateUrl('message_new', [
-                'username' => $receiver->getUsername(),
-            ]) . '" class="text-primary">',
-            '%link_end%' => '</a>',
-        ]);
     }
 
     private function guestReply(Request $request, Message $hostingRequest, Member $guest, Member $host): Response
@@ -343,7 +343,6 @@ class RequestController extends BaseRequestAndInvitationController
             if (HostingRequest::REQUEST_DECLINED === $newRequest->getRequest()->getStatus()) {
                 $this->logger->write('Regular decline', 'Request');
             }
-
 
             return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
         }

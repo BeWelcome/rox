@@ -5,6 +5,7 @@ namespace App\Utilities;
 use App\Entity\Member;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 /**
  * New message or stay request opened in the "contact a member" side panel (?embed=1):
@@ -24,9 +25,12 @@ trait ContactPanelTrait
         }
 
         $messages = [];
-        foreach ($request->getSession()->getFlashBag()->all() as $list) {
-            foreach ($list as $message) {
-                $messages[] = $message;
+        $session = $request->getSession();
+        if ($session instanceof FlashBagAwareSessionInterface) {
+            foreach ($session->getFlashBag()->all() as $list) {
+                foreach ($list as $message) {
+                    $messages[] = $message;
+                }
             }
         }
 

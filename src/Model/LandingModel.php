@@ -13,6 +13,7 @@ use App\Entity\Subtrip;
 use App\Repository\ActivityRepository;
 use App\Repository\MessageRepository;
 use App\Repository\SubtripRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr;
 use Exception;
@@ -136,7 +137,7 @@ class LandingModel
             ->where('fp.created >= :today')
             ->andWhere("ft.deleted = 'NotDeleted'")
             ->andWhere("fp.deleted = 'NotDeleted'")
-            ->setParameter('today', new \DateTime('today'));
+            ->setParameter('today', new DateTime('today'));
 
         if ($groups) {
             $groupIds = array_map(static fn ($group) => $group->getId(), $member->getGroups());

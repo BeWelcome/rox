@@ -176,7 +176,7 @@ class SearchController extends AbstractController
             // Calculate bounding box AFTER form processing
             if (
                 null !== $searchRequest->location_geoname_id
-                && 1 !== $searchRequest->location_admin_unit
+                && !$searchRequest->location_admin_unit
                 && -1 !== $searchRequest->distance
             ) {
                 $distance = (int) $searchRequest->distance;

@@ -98,7 +98,11 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 	fi
 
 	setup_step "Importing missing translations and warming up the cache"
-	bin/console translations:add:missing
+	# Needs the current schema. When a deploy brings migrations, they run after the
+	# container is up, so a failure here must not stop the start (see docker/DEPLOYMENT.md).
+	if ! bin/console translations:add:missing; then
+		echo "WARNING: translations:add:missing failed. Run it again after the migrations." >&2
+	fi
 	
 	# WarmUp translations now database is up to date
 	composer run-script --no-dev post-install-cmd

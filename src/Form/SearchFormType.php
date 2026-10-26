@@ -300,7 +300,10 @@ class SearchFormType extends AbstractType
             ->add('location_geoname_id', HiddenType::class)
             ->add('location_latitude', HiddenType::class)
             ->add('location_longitude', HiddenType::class)
-            ->add('location_admin_unit', HiddenType::class)
+            ->add('location_admin_unit', HiddenType::class, [
+                // empty when the place picker sent no admin unit flag: a place, not an admin unit
+                'empty_data' => '0',
+            ])
             ->add('showOnMap', HiddenType::class)
         ;
     }

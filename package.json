@@ -52,7 +52,7 @@
     "leaflet.markercluster": "^1.5.3",
     "leaflet.markercluster.webpack": "^1.0.2",
     "litepicker": "^2.0.12",
-    "maplibre-gl": "^5.24.0",
+    "maplibre-gl": "^6.16.0",
     "mark.js": "^8.11.1",
     "micromodal": "^0.4.10",
     "minimatch": "^3.1.5",

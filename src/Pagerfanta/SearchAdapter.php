@@ -151,7 +151,7 @@ class SearchAdapter implements AdapterInterface
         }
 
         $rows = $this->entityManager->createQueryBuilder()
-            ->select('m.username, m.accommodation, a.latitude AS ownLatitude, a.longitude AS ownLongitude, l.latitude AS townLatitude, l.longitude AS townLongitude')
+            ->select('m.username, m.accommodation, a.latitude AS ownLatitude, a.longitude AS ownLongitude, ST_Y(l.coordinates) AS townLatitude, ST_X(l.coordinates) AS townLongitude')
             ->from(Member::class, 'm')
             ->join('m.addresses', 'a', 'WITH', 'a.active = 1')
             ->leftJoin('a.location', 'l')

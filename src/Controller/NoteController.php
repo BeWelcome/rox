@@ -173,23 +173,6 @@ class NoteController extends AbstractController
     }
 
     /**
-     * From the side panel of the profile (?embed=1): back to the profile, which shows the
-     * note in its own block. From the full page: the list of notes, as before.
-     */
-    private function redirectAfterSave(Request $request, Member $loggedInMember, Member $member): Response
-    {
-        // Opened from my notes: back to the list (the panel then reloads the page)
-        if ('notes' === $request->query->get('back')) {
-            return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
-        }
-        if ($request->query->getBoolean('embed')) {
-            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
-        }
-
-        return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
-    }
-
-    /**
      * My notes: one pill per category (with its count) to filter, a search on the member's
      * username or the note, then the notes as cards (edit in the side panel, delete).
      */
@@ -231,5 +214,22 @@ class NoteController extends AbstractController
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
             'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'notes']),
         ]);
+    }
+
+    /**
+     * From the side panel of the profile (?embed=1): back to the profile, which shows the
+     * note in its own block. From the full page: the list of notes, as before.
+     */
+    private function redirectAfterSave(Request $request, Member $loggedInMember, Member $member): Response
+    {
+        // Opened from my notes: back to the list (the panel then reloads the page)
+        if ('notes' === $request->query->get('back')) {
+            return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
+        }
+        if ($request->query->getBoolean('embed')) {
+            return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
+        }
+
+        return $this->redirectToRoute('notes', ['username' => $loggedInMember->getUsername()]);
     }
 }

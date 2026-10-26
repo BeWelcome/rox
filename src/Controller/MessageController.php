@@ -35,8 +35,8 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class MessageController extends AbstractController
 {
-    use TranslatedFlashTrait;
     use ContactPanelTrait;
+    use TranslatedFlashTrait;
     use TranslatorTrait;
 
     public function __construct(

@@ -28,7 +28,7 @@ class SearchFormRequest
 
     public string $location_longitude;
 
-    public bool $location_admin_unit;
+    public bool $location_admin_unit = false;
 
     public ?float $min_latitude = null;
 

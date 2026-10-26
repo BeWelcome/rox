@@ -5,9 +5,8 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
 
-#[ORM\Table(name: 'geo__names_translations')]
+#[ORM\Table(name: 'location_translation')]
 #[ORM\UniqueConstraint(name: 'lookup_unique_idx', columns: ['locale', 'object_id', 'field'])]
-#[ORM\Index(name: 'object_id', columns: ['object_id'])]
 #[ORM\Entity]
 class LocationTranslation extends AbstractPersonalTranslation
 {

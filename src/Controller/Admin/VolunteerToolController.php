@@ -324,7 +324,7 @@ class VolunteerToolController extends AbstractController
                 messages msg,
                 member m,
                 address a
-            LEFT JOIN geo__names g ON a.location = g.geonameID
+            LEFT JOIN location g ON a.location = g.geoname_id
             WHERE
               a.member_id = m.id 
               AND m.id = msg.IdSender

@@ -109,7 +109,7 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     private function addGeonamesDocuments(Table $index, OutputInterface $output): void
     {
-        $this->io->note('Adding documents to geonames_rt from geo__names table.');
+        $this->io->note('Adding documents to geonames_rt from location table.');
         $this->io->newLine();
 
         $stmt = $this->entityManager
@@ -118,7 +118,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                     SELECT
                         count(*) as cnt
                     FROM
-                        geo__names g
+                        location g
                 ___SQL);
 
         $count = $stmt->fetchNumeric()[0];
@@ -142,7 +142,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                             g.population,
                             IFNULL(membercounts.total, 0) AS member_count
                         FROM
-                            geo__names g
+                            location g
                         LEFT JOIN (
                             SELECT
                                 a.location,
@@ -170,7 +170,7 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     private function addAlternateNamesDocuments(Table $index, OutputInterface $output): void
     {
-        $this->io->note('Adding documents to geonames_rt from geo__names_translations table.');
+        $this->io->note('Adding documents to geonames_rt from location_translation table.');
         $this->io->newLine();
 
         $stmt = $this->entityManager
@@ -179,7 +179,7 @@ class ManticoreIndicesGeonamesCommand extends Command
                     SELECT
                         count(*) as cnt
                     FROM
-                        geo__names_translations gt
+                        location_translation gt
                 ___SQL);
 
         $count = $stmt->fetchNumeric()[0];
@@ -204,9 +204,9 @@ class ManticoreIndicesGeonamesCommand extends Command
                             g.population,
                             IFNULL(membercounts.total, 0) AS member_count
                         FROM
-                            geo__names g
+                            location g
                         JOIN
-                            geo__names_translations gt ON g.geoname_id = gt.object_id
+                            location_translation gt ON g.geoname_id = gt.object_id
                         LEFT JOIN (
                             SELECT
                                 a.location,

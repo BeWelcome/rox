@@ -874,8 +874,8 @@ FROM
      */
     protected function get_address() {
         if ($this->Status != 'AskToLeave') {
-            // address and geo__names replaced addresses and geonames: names (localised through
-            // geo__names_translations) are looked up directly, house number/street/zip are plain text.
+            // address and location replaced addresses and geonames: names (localised through
+            // location_translation) are looked up directly, house number/street/zip are plain text.
             $id = (int) $this->id;
             $locale = $this->dao->escape((string) ($this->lang ?: $this->session->get('lang', 'en')));
             $query = "
@@ -888,12 +888,12 @@ FROM
                 city.country_id AS CountryCode
             FROM
                 address AS a
-            LEFT JOIN geo__names AS city ON city.geoname_id = a.location
-            LEFT JOIN geo__names AS region ON region.geoname_id = city.admin1
-            LEFT JOIN geo__names AS country ON country.geoname_id = city.country
-            LEFT JOIN geo__names_translations AS ct ON ct.object_id = city.geoname_id AND ct.locale = '{$locale}' AND ct.field = 'name'
-            LEFT JOIN geo__names_translations AS rt ON rt.object_id = region.geoname_id AND rt.locale = '{$locale}' AND rt.field = 'name'
-            LEFT JOIN geo__names_translations AS nt ON nt.object_id = country.geoname_id AND nt.locale = '{$locale}' AND nt.field = 'name'
+            LEFT JOIN location AS city ON city.geoname_id = a.location
+            LEFT JOIN location AS region ON region.geoname_id = city.admin1
+            LEFT JOIN location AS country ON country.geoname_id = city.country
+            LEFT JOIN location_translation AS ct ON ct.object_id = city.geoname_id AND ct.locale = '{$locale}' AND ct.field = 'name'
+            LEFT JOIN location_translation AS rt ON rt.object_id = region.geoname_id AND rt.locale = '{$locale}' AND rt.field = 'name'
+            LEFT JOIN location_translation AS nt ON nt.object_id = country.geoname_id AND nt.locale = '{$locale}' AND nt.field = 'name'
             WHERE
                 a.member_id = {$id}
             ORDER BY a.active DESC

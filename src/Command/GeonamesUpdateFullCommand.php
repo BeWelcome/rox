@@ -234,8 +234,8 @@ class GeonamesUpdateFullCommand extends Command
 
         // Set the countryId of database entries (except for historical countries)
         $connection->executeQuery("
-            UPDATE geo__names AS g, (
-                SELECT geoname_id,country_id FROM geo__names WHERE feature_class = 'A' AND feature_code LIKE 'PCL%' AND feature_code <> 'PCLH') AS c
+            UPDATE location AS g, (
+                SELECT geoname_id,country_id FROM location WHERE feature_class = 'A' AND feature_code LIKE 'PCL%' AND feature_code <> 'PCLH') AS c
             SET g.country = c.geoname_id WHERE g.country_id = c.country_id;
         ");
 
@@ -253,7 +253,7 @@ class GeonamesUpdateFullCommand extends Command
     /**
      * Import alternate names into geonamesalternatenames.
      *
-     * Then run query to fill up the geo__names_translations table filtering for short and preferred.
+     * Then run query to fill up the location_translation table filtering for short and preferred.
      *
      * So that in the end Germany shows up as translation for the Federal Republic of Germany.
      */
@@ -389,7 +389,7 @@ class GeonamesUpdateFullCommand extends Command
                 $country = $countryAndAdmin1[0];
                 $admin1 = $countryAndAdmin1[1];
                 // Check if admin unit already exists if so update.
-                $query = "UPDATE geo__names SET admin1 = {$row[3]} WHERE country_id = '{$country}' AND admin_1_id = '{$admin1}';" . \PHP_EOL;
+                $query = "UPDATE location SET admin1 = {$row[3]} WHERE country_id = '{$country}' AND admin_1_id = '{$admin1}';" . \PHP_EOL;
                 $connection->executeQuery($query);
                 $progressBar->setMessage('Executing query', 'status');
             }
@@ -438,7 +438,7 @@ class GeonamesUpdateFullCommand extends Command
                 $admin1 = $countryAndAdmin1AndAdmin2[1];
                 $admin2 = $countryAndAdmin1AndAdmin2[2];
                 // Check if admin unit already exists if so update.
-                $query = "UPDATE geo__names SET admin2 = {$row[3]} WHERE country_id = '{$country}' AND admin_1_id = '{$admin1}' AND admin_2_id = '{$admin2}';" . \PHP_EOL;
+                $query = "UPDATE location SET admin2 = {$row[3]} WHERE country_id = '{$country}' AND admin_1_id = '{$admin1}' AND admin_2_id = '{$admin2}';" . \PHP_EOL;
                 $connection->executeStatement($query);
                 $progressBar->setMessage('Executing query', 'status');
             }
@@ -525,7 +525,7 @@ class GeonamesUpdateFullCommand extends Command
         $connection->executeStatement('SET FOREIGN_KEY_CHECKS=0');
         // Build the query from scratch
         $query =
-            'INSERT IGNORE INTO geo__names (`geoname_id`, `name`, `coordinates`, `feature_class`, `feature_code`,'
+            'INSERT IGNORE INTO location (`geoname_id`, `name`, `coordinates`, `feature_class`, `feature_code`,'
             . '`country_id`, `admin_1_id`, `admin_2_id`, `admin_3_id`, `admin_4_id`, `population`, `moddate`) '
             . 'VALUES '
         ;
@@ -583,7 +583,7 @@ class GeonamesUpdateFullCommand extends Command
         $connection->executeQuery('SET FOREIGN_KEY_CHECKS=0');
         // Build the query from scratch
 
-        $query = 'INSERT IGNORE INTO geo__names_translations (`object_id`, `content`, `locale`, `field`)
+        $query = 'INSERT IGNORE INTO location_translation (`object_id`, `content`, `locale`, `field`)
  '
             . 'VALUES ';
         foreach ($rows as $geonameId => $languages) {

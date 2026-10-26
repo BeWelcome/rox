@@ -101,7 +101,7 @@ $vars =& PPostHandler::getVars($callbackId);
                     $topic_titletrad = "";
                     if (isset($vars['topic_title'])) {
                         if (isset($vars['IdTitle'])) {
-                            $topic_titletrad = $words->fTrad($vars['IdTitle'], -1, false, $vars['topic_title'] ?? '');
+                            $topic_titletrad = $words->fTradForum('thread', $vars['threadid'] ?? 0, $vars['topic_title'] ?? '');
                         } else {
                             $topic_titletrad = $vars['topic_title'];
                         }

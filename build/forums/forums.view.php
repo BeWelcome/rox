@@ -96,7 +96,7 @@ class ForumsView extends RoxAppView {
         if ($baseurl === false) {
             $baseurl = $this->uri;
         }
-        return $baseurl.'s'.$thread->id.'-'.preg_replace('/[^A-Za-z0-9]/', '_',(string) $this->words->fTrad($thread->IdTitle, -1, false, $thread->title ?? '') ) ;
+        return $baseurl.'s'.$thread->id.'-'.preg_replace('/[^A-Za-z0-9]/', '_',(string) $this->words->fTradForum('thread', $thread->id, $thread->title ?? '') ) ;
     }
 
     public  function postURL($post, $baseurl = false)
@@ -108,7 +108,7 @@ class ForumsView extends RoxAppView {
         {
             $baseurl = 'group/' . $post->IdGroup . '/forum/';
         }
-        return $baseurl.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',(string) $this->words->fTrad($post->IdTitle, -1, false, $post->title ?? '') ) ;
+        return $baseurl.'s'.$post->threadid.'-'.preg_replace('/[^A-Za-z0-9]/', '_',(string) $this->words->fTradForum('thread', $post->threadid, $post->title ?? '') ) ;
     }
 
     public  function groupURL($post, $baseurl = false)
@@ -242,14 +242,14 @@ class ForumsView extends RoxAppView {
         }
         // maybe in a later commit..
         if (isset($topic->topicinfo->IdTitle)) {
-            $this->SetPageTitle($this->words->fTrad($topic->topicinfo->IdTitle, -1, false, $topic->topicinfo->title ?? ''));
+            $this->SetPageTitle($this->words->fTradForum('thread', $topic->topicinfo->IdThread, $topic->topicinfo->title ?? ''));
         }
         else {
             $this->SetPageTitle('Forums - BeWelcome '.$this->words->getBuffered('Forum'));
         }
         if (empty($this->session->get('IdMember')))  {
             if (isset($topic->posts[0])) {
-                $this->page->SetMetaDescription(strip_tags((string) $this->_model->words->fTrad($topic->posts[0]->IdContent, -1, false, $topic->posts[0]->message ?? ''))) ; ;
+                $this->page->SetMetaDescription(strip_tags((string) $this->_model->words->fTradForum('post', $topic->posts[0]->postid, $topic->posts[0]->message ?? ''))) ; ;
             }
         }
 

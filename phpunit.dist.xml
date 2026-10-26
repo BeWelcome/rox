@@ -42,5 +42,6 @@
 
     <extensions>
         <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
+        <bootstrap class="App\Tests\PHPUnit\RollBackBeforeChildProcessExtension" />
     </extensions>
 </phpunit>

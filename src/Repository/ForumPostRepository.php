@@ -52,7 +52,7 @@ class ForumPostRepository extends EntityRepository
 
     /**
      * Documents for the forum_rt search index: one per post, with the post's own text and language
-     * (forum_post.message and .ShortCode; translations in forum_trads are optional).
+     * (forum_post.message and .ShortCode; translations in forum_post_translation are optional).
      *
      * @return list<array{post_id: int, post_deleted: string, post_visibility: string, thread_id: int,
      *     thread_deleted: string, thread_visibility: string, content: string, group: int, author: int,

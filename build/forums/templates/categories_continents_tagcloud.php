@@ -28,7 +28,7 @@
           <ul>
           <?php
             foreach ($top_tags as $tagid => $tag) {
-			   $TagCategory=$this->words->fTrad($tag->IdName) ;
+			   $TagCategory=($tag->tag ?? '') ;
 			   echo '<li><a href="forums/t'.$tagid.'-'.rawurlencode($TagCategory).'">'.$TagCategory.'</a><br />' ;
             }
             ?>
@@ -62,8 +62,8 @@
             $class = 'tag_largest';
         }
         
-	    $TagName=$this->words->fTrad($tag->IdName) ;
-	    $TagDescription=$this->words->fTrad($tag->IdDescription) ;
+	    $TagName=($tag->tag ?? '') ;
+	    $TagDescription=($tag->tag_description ?? '') ;
 		
         $tagcloudlist .=  '<div class="p-1"><a href="forums/t'.$tag->tagid.'-'.rawurlencode((string) $TagName).'" title="'.$TagDescription.'" class="'.$class.'"><i class="fa fa-tag"></i> '.$TagName.'</a></div>';
 

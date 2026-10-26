@@ -14,6 +14,8 @@ use App\Doctrine\PostCanStillEditType;
 use App\Repository\ForumPostRepository;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\ObjectManager;
@@ -75,8 +77,16 @@ class ForumPost
     /**
      * @var string
      */
-    #[ORM\Column(name: 'message', type: 'text', length: 65535, nullable: false)]
+    #[ORM\Column(name: 'message', type: 'text', length: 16777215, nullable: false)]
     private $message;
+
+    /**
+     * The message in every language it was written or translated in (forum_post_translation).
+     *
+     * @var Collection<int, ForumPostTranslation>
+     */
+    #[ORM\OneToMany(targetEntity: ForumPostTranslation::class, mappedBy: 'object', fetch: 'EXTRA_LAZY', cascade: ['persist', 'remove'])]
+    private Collection $translations;
 
     /**
      * @var int
@@ -604,24 +614,49 @@ class ForumPost
         return Carbon::instance($this->created);
     }
 
-    /*
-     * Translated post content is only provided on explicit call to avoid long load times
+    /**
+     * The message in every language, by locale, with the language (loaded only when asked for).
+     *
+     * @return array<string, array{language: Language, message: string}>
      */
     public function getMessageTranslations(): array
     {
-        $translationRepository = $this->objectManager->getRepository(Translation::class);
-        $translatedMessages = $translationRepository->findBy(['idTrad' => $this->idcontent]);
+        $languages = [];
+        foreach ($this->objectManager->getRepository(Language::class)->findBy(['shortCode' => $this->getTranslations()->map(
+            static fn (ForumPostTranslation $translation) => $translation->getLocale()
+        )->toArray()]) as $language) {
+            $languages[$language->getShortCode()] = $language;
+        }
 
         $messages = [];
-        /** @var Translation $message */
-        foreach ($translatedMessages as $message) {
-            $messages[$message->getLanguage()->getShortCode()] = [
-                'language' => $message->getLanguage(),
-                'message' => $message->getSentence(),
-            ];
+        foreach ($this->getTranslations() as $translation) {
+            if (isset($languages[$translation->getLocale()])) {
+                $messages[$translation->getLocale()] = [
+                    'language' => $languages[$translation->getLocale()],
+                    'message' => (string) $translation->getContent(),
+                ];
+            }
         }
 
         return $messages;
+    }
+
+    /**
+     * @return Collection<int, ForumPostTranslation>
+     */
+    public function getTranslations(): Collection
+    {
+        return $this->translations ??= new ArrayCollection();
+    }
+
+    public function addTranslation(ForumPostTranslation $translation): self
+    {
+        if (!$this->getTranslations()->contains($translation)) {
+            $this->getTranslations()->add($translation);
+            $translation->setObject($this);
+        }
+
+        return $this;
     }
 
     #[ORM\PostLoad]

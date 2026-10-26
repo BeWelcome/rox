@@ -91,9 +91,8 @@ final class Version20200601000000 extends AbstractMigration
         $this->addConstraintIfMissing('member_photo', 'FK_769611EB7597D3FE', 'ALTER TABLE member_photo ADD CONSTRAINT FK_769611EB7597D3FE FOREIGN KEY (member_id) REFERENCES member (id)');
         $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=1');
 
-        // The legacy forum read and wrote the texts through this view of `translations` (production has it); it
-        // uses forum_post_translation and forum_thread_translation now.
-        $this->connection->executeStatement('DROP VIEW IF EXISTS forum_trads');
+        // Production's `forum_trads` view of `translations` stays: main reads and writes the forum texts through
+        // it. This code doesn't use it any more; it goes when main is replaced by this code.
     }
 
     #[Override]

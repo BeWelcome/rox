@@ -80,7 +80,7 @@ final class Version20200601010000 extends AbstractMigration
             $this->migrateBaseTranslations($statuses);
             $this->migrateDerivedTranslations($statuses);
 
-            $this->write('Migrating `memberstrads` -> `member_translations`...');
+            $this->write('Migrating `memberstrads` -> `member_translation`...');
             $this->migrateTranslations($statuses);
 
             $this->write('Migrating `memberslanguageslevel` -> `member_language_level`...');
@@ -128,8 +128,8 @@ final class Version20200601010000 extends AbstractMigration
         $this->addSql('DELETE FROM comment');
         $this->addSql('DELETE FROM friend');
         $this->addSql('DELETE FROM member_language_level');
-        $this->addSql('DELETE FROM member_translations');
-        $this->addSql('DELETE FROM address_translations');
+        $this->addSql('DELETE FROM member_translation');
+        $this->addSql('DELETE FROM address_translation');
         $this->addSql('DELETE FROM address');
         $this->addSql('DELETE FROM member');
         $this->addSql('SET FOREIGN_KEY_CHECKS=1');
@@ -311,7 +311,7 @@ final class Version20200601010000 extends AbstractMigration
     private function migrateBaseTranslations(string $statuses): void
     {
         $sql = <<<SQL
-                INSERT IGNORE INTO member_translations (object_id, locale, field, content)
+                INSERT IGNORE INTO member_translation (object_id, locale, field, content)
                 SELECT id, 'en', 'ProfileLanguage', 'en'
                 FROM members
                 WHERE Status IN ($statuses)
@@ -323,7 +323,7 @@ final class Version20200601010000 extends AbstractMigration
     private function migrateDerivedTranslations(string $statuses): void
     {
         $sql = <<<SQL
-                INSERT IGNORE INTO member_translations (object_id, locale, field, content)
+                INSERT IGNORE INTO member_translation (object_id, locale, field, content)
                 SELECT DISTINCT mt.IdOwner, l.ShortCode, 'ProfileLanguage', l.ShortCode
                 FROM memberstrads mt
                 INNER JOIN members m ON m.id = mt.IdOwner
@@ -338,7 +338,7 @@ final class Version20200601010000 extends AbstractMigration
     private function migrateTranslations(string $statuses): void
     {
         $sql = <<<SQL
-                INSERT IGNORE INTO member_translations (object_id, locale, field, content)
+                INSERT IGNORE INTO member_translation (object_id, locale, field, content)
                 SELECT mt.IdOwner, l.ShortCode,
                     CASE REPLACE(mt.TableColumn, 'members.', '')
                         WHEN 'ProfileSummary' THEN 'AboutMe'

@@ -406,7 +406,7 @@ SQL;
 
         $description = str_replace(["\r\n", "\r", "\n"], "", nl2br($description));
 
-        // groups.IdDescription holds the id of a member_translations row
+        // groups.IdDescription holds the id of a member_translation row
         $words = $this->getWords();
         $descriptionId = ((!$this->IdDescription) ? $words->InsertInMTrad($description, 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
 

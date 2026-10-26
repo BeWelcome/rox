@@ -12,7 +12,7 @@ final class Version20200601000000 extends AbstractMigration
     public function getDescription(): string
     {
         return 'Create the reshaped member/address/forum/translation tables (member, address, '
-            . 'address_translations, member_translations, member_language_level, friend, comment, '
+            . 'address_translation, member_translation, member_language_level, friend, comment, '
             . 'language, word, forum_thread, forum_post, forum_post_translation, forum_thread_translation, member_photo) that the current entities map '
             . 'to. DDL only, matching Doctrine\'s own schema generation for these entities; data is '
             . 'copied from the legacy tables by the migration that follows this one.';
@@ -26,9 +26,9 @@ final class Version20200601000000 extends AbstractMigration
 
         $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS address (HouseNumber VARCHAR(255) DEFAULT NULL, StreetName VARCHAR(255) DEFAULT NULL, Zip VARCHAR(255) DEFAULT NULL, wheelChairAccessible TINYINT DEFAULT NULL, latitude NUMERIC(10, 7) DEFAULT NULL, longitude NUMERIC(10, 7) DEFAULT NULL, active TINYINT DEFAULT NULL, id INT AUTO_INCREMENT NOT NULL, member_id INT DEFAULT NULL, location INT DEFAULT NULL, INDEX IDX_D4E6F817597D3FE (member_id), INDEX IDX_D4E6F815E9E89CB (location), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
 
-        $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS address_translations (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(8) NOT NULL, field VARCHAR(32) NOT NULL, content LONGTEXT DEFAULT NULL, object_id INT DEFAULT NULL, UNIQUE INDEX lookup_unique_idx (locale, object_id, field), INDEX IDX_CA160E9C232D562B (object_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS address_translation (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(8) NOT NULL, field VARCHAR(32) NOT NULL, content LONGTEXT DEFAULT NULL, object_id INT DEFAULT NULL, UNIQUE INDEX lookup_unique_idx (locale, object_id, field), INDEX IDX_A3A666A4232D562B (object_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
 
-        $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS member_translations (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(8) NOT NULL, field VARCHAR(32) NOT NULL, content LONGTEXT DEFAULT NULL, object_id INT DEFAULT NULL, FULLTEXT INDEX ft_member_translations_content (content), UNIQUE INDEX lookup_unique_idx (locale, object_id, field), INDEX IDX_B304440F232D562B (object_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS member_translation (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(8) NOT NULL, field VARCHAR(32) NOT NULL, content LONGTEXT DEFAULT NULL, object_id INT DEFAULT NULL, FULLTEXT INDEX ft_member_translation_content (content), UNIQUE INDEX lookup_unique_idx (locale, object_id, field), INDEX IDX_6D5451AD232D562B (object_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
 
         $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS member_language_level (level VARCHAR(13) NOT NULL, member_id INT NOT NULL, language VARCHAR(16) NOT NULL, INDEX IDX_15F11F17597D3FE (member_id), INDEX IDX_15F11F1D4DB71B5 (language), PRIMARY KEY (member_id, language, level)) DEFAULT CHARACTER SET utf8mb4');
 
@@ -68,8 +68,8 @@ final class Version20200601000000 extends AbstractMigration
         $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=0');
         $this->addConstraintIfMissing('address', 'FK_D4E6F817597D3FE', 'ALTER TABLE address ADD CONSTRAINT FK_D4E6F817597D3FE FOREIGN KEY (member_id) REFERENCES member (id)');
         $this->addConstraintIfMissing('address', 'FK_D4E6F815E9E89CB', 'ALTER TABLE address ADD CONSTRAINT FK_D4E6F815E9E89CB FOREIGN KEY (location) REFERENCES geo__names (geoname_id)');
-        $this->addConstraintIfMissing('address_translations', 'FK_CA160E9C232D562B', 'ALTER TABLE address_translations ADD CONSTRAINT FK_CA160E9C232D562B FOREIGN KEY (object_id) REFERENCES address (id) ON DELETE CASCADE');
-        $this->addConstraintIfMissing('member_translations', 'FK_B304440F232D562B', 'ALTER TABLE member_translations ADD CONSTRAINT FK_B304440F232D562B FOREIGN KEY (object_id) REFERENCES member (id) ON DELETE CASCADE');
+        $this->addConstraintIfMissing('address_translation', 'FK_A3A666A4232D562B', 'ALTER TABLE address_translation ADD CONSTRAINT FK_A3A666A4232D562B FOREIGN KEY (object_id) REFERENCES address (id) ON DELETE CASCADE');
+        $this->addConstraintIfMissing('member_translation', 'FK_6D5451AD232D562B', 'ALTER TABLE member_translation ADD CONSTRAINT FK_6D5451AD232D562B FOREIGN KEY (object_id) REFERENCES member (id) ON DELETE CASCADE');
         $this->addConstraintIfMissing('member_language_level', 'FK_15F11F17597D3FE', 'ALTER TABLE member_language_level ADD CONSTRAINT FK_15F11F17597D3FE FOREIGN KEY (member_id) REFERENCES member (id)');
         $this->addConstraintIfMissing('member_language_level', 'FK_15F11F1D4DB71B5', 'ALTER TABLE member_language_level ADD CONSTRAINT FK_15F11F1D4DB71B5 FOREIGN KEY (language) REFERENCES language (ShortCode)');
         $this->addConstraintIfMissing('friend', 'FK_55EEAC61E26CCE02', 'ALTER TABLE friend ADD CONSTRAINT FK_55EEAC61E26CCE02 FOREIGN KEY (left_id) REFERENCES member (id)');
@@ -111,8 +111,8 @@ final class Version20200601000000 extends AbstractMigration
         $this->addSql('DROP TABLE IF EXISTS comment');
         $this->addSql('DROP TABLE IF EXISTS friend');
         $this->addSql('DROP TABLE IF EXISTS member_language_level');
-        $this->addSql('DROP TABLE IF EXISTS member_translations');
-        $this->addSql('DROP TABLE IF EXISTS address_translations');
+        $this->addSql('DROP TABLE IF EXISTS member_translation');
+        $this->addSql('DROP TABLE IF EXISTS address_translation');
         $this->addSql('DROP TABLE IF EXISTS address');
         $this->addSql('DROP TABLE IF EXISTS member');
         $this->addSql('DROP TABLE IF EXISTS language');

@@ -304,7 +304,7 @@ class GroupMembership extends RoxEntityBase
         if ($comment)
         {
             $words = $this->getWords();
-            // membersgroups.comment holds the id of a member_translations row
+            // membersgroups.comment holds the id of a member_translation row
             $comment_id = ((!$this->comment) ? $words->InsertInMTrad($comment, 'membersgroups.Comment', $this->getPKValue()) : $words->ReplaceInMTrad($comment, 'membersgroups.Comment', $this->getPKValue(), $this->comment));
 
             if ($comment_id != $this->comment)

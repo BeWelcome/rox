@@ -598,27 +598,27 @@ WHERE
             return ""; // in case there is nothing, return an empty string
         }
         if (!is_numeric($IdTrad)) { // Logging anomalie things to detect database problem if any
-            $sBug = "it look like you are using MOD_WORD::mInTrad with and allready translated word [" . $IdTrad . "], a member_translations.id is expected and it should be numeric !";
+            $sBug = "it look like you are using MOD_WORD::mInTrad with and allready translated word [" . $IdTrad . "], a member_translation.id is expected and it should be numeric !";
             MOD_log::get()->write($sBug, "Bug");
             die($sBug);
         }
 
         // memberstrads is gone: group descriptions and membership comments are stored as single
-        // rows in member_translations and the legacy columns (groups.IdDescription,
+        // rows in member_translation and the legacy columns (groups.IdDescription,
         // membersgroups.comment) hold that row's id. There is one row per id, so the preferred
         // language can't be applied any more.
-        $query = "SELECT `content` FROM `member_translations` WHERE `id` = " . (int) $IdTrad;
+        $query = "SELECT `content` FROM `member_translation` WHERE `id` = " . (int) $IdTrad;
         $q = $this->_dao->query($query);
         $row = $q ? $q->fetch(PDB::FETCH_OBJ) : false;
         if ($row && isset($row->content)) {
             return $this->ReplaceWithBr($row->content, $ReplaceWithBr);
         }
-        MOD_log::get()->write("mInTrad Anomaly : no entry found for member_translations.id=#" . $IdTrad, "Bug");
+        MOD_log::get()->write("mInTrad Anomaly : no entry found for member_translation.id=#" . $IdTrad, "Bug");
         return ""; // If really nothing was found, return an empty string
 	 } // end of mInTrad
 
     /**
-     * @param $IdTrad the id of a member_translations record to retrieve
+     * @param $IdTrad the id of a member_translation record to retrieve
      * @param $ReplaceWithBr allows
      * @return string translated according to the best language find
      */
@@ -737,15 +737,15 @@ WHERE
             $ss = stripslashes($ss);
         }
 
-        // memberstrads is gone. Like App\Model\GroupModel, store the text as one member_translations
+        // memberstrads is gone. Like App\Model\GroupModel, store the text as one member_translation
         // row without a member (object_id NULL) and hand out its id as the "IdTrad".
         $locale = $this->_dao->escape($this->languageShortCode(-1 == $_IdLanguage ? $this->_langWrite : $_IdLanguage));
         $field = $this->_dao->escape($this->memberTranslationField($TableColumn));
-        $str = "INSERT INTO member_translations (object_id, locale, field, content) "
+        $str = "INSERT INTO member_translation (object_id, locale, field, content) "
             . "VALUES (NULL, '" . $locale . "', '" . $field . "', '" . $this->_dao->escape($ss) . "')";
         $s = $this->_dao->query($str);
         if (!$s) {
-            throw new PException('Failed in InsertInMTrad inserting in member_translations');
+            throw new PException('Failed in InsertInMTrad inserting in member_translation');
         }
         $IdTrad = $s->insertId();
 
@@ -762,7 +762,7 @@ WHERE
     } // end of InsertInMTrad
 
     /**
-     * member_translations.field for texts that used to live in memberstrads (same names as
+     * member_translation.field for texts that used to live in memberstrads (same names as
      * App\Model\GroupModel uses).
      */
     private function memberTranslationField($TableColumn): string
@@ -808,8 +808,8 @@ WHERE
             return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // Create a full new translation
         }
 
-        // $IdTrad is the id of a member_translations row (see InsertInMTrad)
-        $s = $this->_dao->query("SELECT id, content FROM member_translations WHERE id = " . (int) $IdTrad);
+        // $IdTrad is the id of a member_translation row (see InsertInMTrad)
+        $s = $this->_dao->query("SELECT id, content FROM member_translation WHERE id = " . (int) $IdTrad);
         if (!$s) {
             throw new PException('Failed in ReplaceInMTrad retrieving IdTrad='.$IdTrad);
         }
@@ -818,7 +818,7 @@ WHERE
             return ($this->InsertInMTrad($ss,$TableColumn,$IdRecord, $IdMember)); // the row is gone, create a new one
         }
         if ($ss !== (string) $rr->content) { // Update only if sentence has changed
-            $str = "UPDATE member_translations SET content = '" . $this->_dao->escape($ss) . "' WHERE id = " . (int) $rr->id;
+            $str = "UPDATE member_translation SET content = '" . $this->_dao->escape($ss) . "' WHERE id = " . (int) $rr->id;
             $s = $this->_dao->query($str);
             if (!$s) {
                 throw new PException('Failed in ReplaceInMTrad updating Sentence for IdTrad=#'.$IdTrad);

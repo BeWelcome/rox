@@ -64,7 +64,7 @@ function GetLanguageChoosen() {
     /**
      * InsertInfTrad function
      *
-     * This InsertInFTrad create a new translatable text in forum_trads
+     * This InsertInFTrad create a new translatable text (forum_post_translation, forum_thread_translation)
      * @$ss is for the content of the text
      * @$TableColumn refers to the table and coilumn the trad is associated to
      * @$IdRecord is the num of the record in this table
@@ -97,11 +97,11 @@ private function InsertInFTrad($ss, $TableColumn, $IdRecord, $_IdMember = 0, $_I
     /**
      * ReplaceInFTrad function
      *
-     * This ReplaceInFTrad replace or create translatable text in forum_trads
+     * This ReplaceInFTrad replace or create translatable text (forum_post_translation, forum_thread_translation)
      * @$ss is for the content of the text
      * @$TableColumn refers to the table and column the trad is associated to
      * @$IdRecord is the num of the record in this table
-     * $IdTrad is the record in forum_trads to replace (unique for each IdLanguage)
+     * $IdTrad is not used any more (the texts are found by the post or thread id)
      * @$Owner ; is the id of the member who own the record
      *
      * Warning : as default language this function will use by priority :
@@ -136,9 +136,9 @@ function FindAppropriatedLanguage($IdPost=0) {
 	}
 
 	// Prefer a translation in the current language of the member
-	if (!empty($post->IdContent)) {
+	if (!empty($IdPost)) {
 		$language = $this->dao->escape($this->words->languageShortCode());
-		$query = "SELECT `ShortCode` FROM `forum_trads` WHERE `IdTrad`=" . (int) $post->IdContent . " AND `ShortCode`='" . $language . "'";
+		$query = "SELECT `locale` AS `ShortCode` FROM `forum_post_translation` WHERE `object_id`=" . (int) $IdPost . " AND `field`='message' AND `locale`='" . $language . "'";
 		$q = $this->dao->query($query);
 		$row = $q ? $q->fetch(PDB::FETCH_OBJ) : false;
 		if ($row && isset($row->ShortCode)) {
@@ -679,24 +679,42 @@ WHERE `forum_post`.`id` = $this->messageId
     } // end of editProcess
 
 /**
+ * The texts of a post in all its languages with who translated them and when, as the thread page shows
+ * them (field names of the former forum_trads query).
+ */
+private function postTranslationsQuery(int $postId): string
+{
+    return "SELECT t.locale AS IdLanguage, t.locale AS ShortCode, t.content AS Sentence,
+            UNIX_TIMESTAMP(t.created_at) AS trad_created, UNIX_TIMESTAMP(COALESCE(t.updated_at, t.created_at)) AS trad_updated,
+            t.translator_id AS IdTranslator, language.Name, mTranslator.Username AS TranslatorUsername
+        FROM forum_post_translation t
+        JOIN language ON language.ShortCode = t.locale
+        LEFT JOIN member AS mTranslator ON mTranslator.id = t.translator_id
+        WHERE t.object_id = " . $postId . " AND t.field = 'message'
+        ORDER BY t.id ASC";
+}
+
+/**
 * the function DofTradUpdate() update a forum translation
 * @IdForumTrads is the primary key of the parameter to update
 */
 	 public function DofTradUpdate($IdForumTrads,$P_Sentence,$P_IdLanguage=0) {
-	 	 $id=(int)$IdForumTrads ;
-        $s=$this->dao->query("select * from forum_trads where id=".$id);
-		 $rBefore=$s->fetch(PDB::FETCH_OBJ) ;
-
-// Save the previous version
-		 $this->words->MakeRevision($id, "forum_trads",$this->session->get("IdMember"), $DoneBy = "DoneByModerator")  ;
+		 // $IdForumTrads is "post-<id>" or "thread-<id>": a row of forum_post_translation or forum_thread_translation
+		 if (!preg_match('/^(post|thread)-(\d+)$/', (string) $IdForumTrads, $matches)) {
+			 throw new PException('Unknown forum translation ' . $IdForumTrads);
+		 }
+		 $table = 'post' === $matches[1] ? 'forum_post_translation' : 'forum_thread_translation';
+		 $id = (int) $matches[2];
+		 $s = $this->dao->query("SELECT * FROM `" . $table . "` WHERE id = " . $id);
+		 $rBefore = $s->fetch(PDB::FETCH_OBJ);
 		 $ShortCode=$this->dao->escape($this->words->languageShortCode($P_IdLanguage)) ;
 		 $Sentence= $this->dao->escape($P_Sentence);
 
-        MOD_log::get()->write("Updating data for IdForumTrads=#".$id." Before [".addslashes((string) $rBefore->Sentence)."] language=".$rBefore->ShortCode." <br />\nAfter [".$Sentence."] language=".$ShortCode, "ForumModerator");
-		 $sUpdate="update forum_trads set Sentence='".$Sentence."',ShortCode='".$ShortCode."',IdTranslator=".(int) $this->session->get("IdMember").", updated=NOW() where id=".$id ;
+        MOD_log::get()->write("Updating " . $table . "#" . $id . " Before [" . addslashes((string) ($rBefore->content ?? '')) . "] language=" . ($rBefore->locale ?? '') . " <br />\nAfter [" . $Sentence . "] language=" . $ShortCode, "ForumModerator");
+		 $sUpdate = "UPDATE `" . $table . "` SET content='" . $Sentence . "', locale='" . $ShortCode . "', translator_id=" . (int) $this->session->get("IdMember") . ", updated_at=NOW() WHERE id=" . $id;
         $s=$this->dao->query($sUpdate);
         if (!$s) {
-            throw new PException('Failed for Update forum_trads.id=#'.$id);
+            throw new PException('Failed to update ' . $table . '#' . $id);
         }
 
 	 } // end of DofTradUpdate
@@ -1006,7 +1024,9 @@ WHERE `id` = '%d' ",
         }
 
         // retrieve all trads for content
-        $query = "select forum_trads.*,language.Name,forum_trads.ShortCode as IdLanguage,forum_trads.id as IdForumTrads from forum_trads,language where forum_trads.ShortCode=language.ShortCode and IdTrad=".(int) $DataPost->Post->IdContent." order by forum_trads.created asc" ;
+        $query = "SELECT t.content AS Sentence, t.locale AS ShortCode, t.locale AS IdLanguage, CONCAT('post-', t.id) AS IdForumTrads, language.Name
+            FROM forum_post_translation t JOIN language ON language.ShortCode = t.locale
+            WHERE t.object_id = " . (int) $DataPost->Post->id . " AND t.field = 'message' ORDER BY t.created_at, t.id" ;
         $s = $this->dao->query($query);
 		 $DataPost->Post->Content=[] ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
@@ -1024,7 +1044,9 @@ WHERE `id` = '%d' ",
 
 
 // retrieve all trads for Title
-        $query = "select forum_trads.*,language.Name,forum_trads.ShortCode as IdLanguage,forum_trads.id as IdForumTrads from forum_trads,language where forum_trads.ShortCode=language.ShortCode and IdTrad=".(int) $DataPost->Thread->IdTitle." order by forum_trads.created asc" ;
+        $query = "SELECT t.content AS Sentence, t.locale AS ShortCode, t.locale AS IdLanguage, CONCAT('thread-', t.id) AS IdForumTrads, language.Name
+            FROM forum_thread_translation t JOIN language ON language.ShortCode = t.locale
+            WHERE t.object_id = " . (int) $DataPost->Thread->id . " AND t.field = 'title' ORDER BY t.created_at, t.id" ;
         $s = $this->dao->query($query);
 		 $DataPost->Thread->Title=[] ;
 		 while ($row=$s->fetch(PDB::FETCH_OBJ)) {
@@ -1077,7 +1099,7 @@ WHERE `id` = '%d' ",
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated title")) { // if a new translation is to be added for a title
 		 	$IdThread=(int)$vars["IdThread"] ;
-			$qry=$this->dao->query("select * from forum_trads where IdTrad=".(int) $vars["IdTrad"]." and ShortCode='".$this->dao->escape($this->words->languageShortCode($vars["IdLanguage"]))."'");
+			$qry=$this->dao->query("SELECT id FROM forum_thread_translation WHERE object_id=" . $IdThread . " AND field='title' AND locale='" . $this->dao->escape($this->words->languageShortCode($vars["IdLanguage"])) . "'");
 			$rr=$qry->fetch(PDB::FETCH_OBJ) ;
 			if (empty($rr->id)) { // Only proceed if no such a title exists
 		 		$ss=$vars["NewTranslatedTitle"]  ;
@@ -1097,7 +1119,7 @@ WHERE `id` = '%d' ",
 
 		 if (isset($vars["submit"]) and ($vars["submit"]=="add translated post")) { // if a new translation is to be added for a title
 		 		$IdPost=(int)$vars["IdPost"] ;
-				$qry=$this->dao->query("select * from forum_trads where IdTrad=".(int) $vars["IdTrad"]." and ShortCode='".$this->dao->escape($this->words->languageShortCode($vars["IdLanguage"]))."'");
+				$qry=$this->dao->query("SELECT id FROM forum_post_translation WHERE object_id=" . $IdPost . " AND field='message' AND locale='" . $this->dao->escape($this->words->languageShortCode($vars["IdLanguage"])) . "'");
 				$rr=$qry->fetch(PDB::FETCH_OBJ) ;
 				if (empty($rr->id)) { // Only proceed if no such a post exists
 		 			$ss=$this->dao->escape($vars["NewTranslatedPost"])  ;
@@ -1309,7 +1331,7 @@ VALUES ('%d', NOW(), '%s','%d','%s','%s','NotDeleted','Yes',0, 0)
 
         $postId = $result->insertId();
 
-		 // Now create the text in forum_trads
+		 // Now create the text in forum_post_translation
  		 $this->InsertInFTrad($this->dao->escape($this->cleanupText($vars['topic_text'])),"forum_post.IdContent",$postId) ;
 
         $query =
@@ -1570,7 +1592,7 @@ WHERE `id` = '$this->threadid'
         }
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 			if ($WithDetail) { // if details are required retrieve all the translated text for posts (sentence, owner, modification time and translator name) of this thread
-				$sw = $this->dao->query("select forum_trads.ShortCode as IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,language.ShortCode,language.Name,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,language,member as mOwner, member as mTranslator where language.ShortCode=forum_trads.ShortCode and forum_trads.IdTrad=".(int) $row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
+				$sw = $this->dao->query($this->postTranslationsQuery((int) $row->postid));
 				while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 					$row->Trad[]=$roww ;
 				}
@@ -1663,7 +1685,7 @@ LIMIT %d
         }
         $this->topic->posts = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-          	$sw = $this->dao->query("select forum_trads.ShortCode as IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,language.ShortCode,language.Name,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,language,member as mOwner, member as mTranslator where language.ShortCode=forum_trads.ShortCode and forum_trads.IdTrad=".(int) $row->IdContent." and mOwner.id=IdOwner and mTranslator.id=IdTranslator order by forum_trads.id asc");
+          	$sw = $this->dao->query($this->postTranslationsQuery((int) $row->postid));
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 			    		$row->Trad[]=$roww ;
 						}
@@ -2054,7 +2076,7 @@ ORDER BY `posttime` DESC",    $IdMember   );
         }
         $posts = [];
         while ($row = $s->fetch(PDB::FETCH_OBJ)) {
-          	$sw = $this->dao->query("select forum_trads.ShortCode as IdLanguage,UNIX_TIMESTAMP(forum_trads.created) as trad_created, UNIX_TIMESTAMP(forum_trads.updated) as trad_updated, forum_trads.Sentence,IdOwner,IdTranslator,language.ShortCode,language.Name,mTranslator.Username as TranslatorUsername ,mOwner.Username as OwnerUsername from forum_trads,language,member as mOwner, member as mTranslator where language.ShortCode=forum_trads.ShortCode and forum_trads.IdTrad=".(int) $row->IdContent." and mTranslator.id=IdTranslator  and mOwner.id=IdOwner order by forum_trads.id asc");
+          	$sw = $this->dao->query($this->postTranslationsQuery((int) $row->postid));
         	  while ($roww = $sw->fetch(PDB::FETCH_OBJ)) {
 			    			$row->Trad[]=$roww ;
 			  		}
@@ -2625,7 +2647,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                     `forum_post`.`id`,
                     `member`.`Username`,
                     `forum_post`.`message`,
-                    `forum_trads`.`Sentence`,
+                    `forum_post_translation`.`content` AS `Sentence`,
                     `forum_thread`.`id` AS `IdThread`,
                     `forum_thread`.`title`,
                     `forum_thread`.`IdGroup`,
@@ -2643,7 +2665,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                 LEFT JOIN
                     `groups` ON (`groups`.`id` = `forum_thread`.`IdGroup`)
                 LEFT JOIN
-                    `forum_trads` ON (`forum_trads`.`IdTrad` = `forum_post`.`IdContent` AND `forum_trads`.`ShortCode` = '{$languageId}')
+                    `forum_post_translation` ON (`forum_post_translation`.`object_id` = `forum_post`.`id` AND `forum_post_translation`.`field` = 'message' AND `forum_post_translation`.`locale` = '{$languageId}')
                 LEFT JOIN
                     `member` ON (`forum_post`.`IdWriter` = `member`.`id`)
                 LEFT JOIN

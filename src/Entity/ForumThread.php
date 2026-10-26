@@ -59,6 +59,14 @@ class ForumThread
     private $title;
 
     /**
+     * The title in every language it was written or translated in (forum_thread_translation).
+     *
+     * @var Collection<int, ForumThreadTranslation>
+     */
+    #[ORM\OneToMany(targetEntity: ForumThreadTranslation::class, mappedBy: 'object', fetch: 'EXTRA_LAZY', cascade: ['persist', 'remove'])]
+    private Collection $translations;
+
+    /**
      * @var ForumPost
      */
     #[ORM\JoinColumn(name: 'first_postid', referencedColumnName: 'id', nullable: false)]
@@ -737,5 +745,38 @@ class ForumThread
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * @return Collection<int, ForumThreadTranslation>
+     */
+    public function getTranslations(): Collection
+    {
+        return $this->translations ??= new ArrayCollection();
+    }
+
+    /**
+     * The title in every language, by locale.
+     *
+     * @return array<string, string>
+     */
+    public function getTitles(): array
+    {
+        $titles = [];
+        foreach ($this->getTranslations() as $translation) {
+            $titles[$translation->getLocale()] = (string) $translation->getContent();
+        }
+
+        return $titles;
+    }
+
+    public function addTranslation(ForumThreadTranslation $translation): self
+    {
+        if (!$this->getTranslations()->contains($translation)) {
+            $this->getTranslations()->add($translation);
+            $translation->setObject($this);
+        }
+
+        return $this;
     }
 }

@@ -50,8 +50,8 @@ $User = $this->_model->getLoggedInMember();
                 <h3>
                 <?php
                 if (isset($list->IdName)) {
-                    $TagName=$this->words->fTrad($list->IdName) ;
-                    $tag_description=$this->words->fTrad($list->IdDescription) ;
+                    $TagName=($list->tag ?? '') ;
+                    $tag_description=($list->tag_description ?? '') ;
                     echo '<a href="forums/t'.$list->IdTagCategory.'-'.rawurlencode((string) $TagName).'" title="'.$tag_description.'">'.$TagName.'</a>' ;
                 } else {
                     $TagName=$this->words->getFormatted('ForumNoSpecificCategories') ;

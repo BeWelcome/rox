@@ -13,7 +13,7 @@ final class Version20200601000000 extends AbstractMigration
     {
         return 'Create the reshaped member/address/forum/translation tables (member, address, '
             . 'address_translations, member_translations, member_language_level, friend, comment, '
-            . 'language, word, forum_thread, forum_post, member_photo) that the current entities map '
+            . 'language, word, forum_thread, forum_post, forum_post_translation, forum_thread_translation, member_photo) that the current entities map '
             . 'to. DDL only, matching Doctrine\'s own schema generation for these entities; data is '
             . 'copied from the legacy tables by the migration that follows this one.';
     }
@@ -42,7 +42,12 @@ final class Version20200601000000 extends AbstractMigration
         // tables are created without those FKs first; every FK for this group is added afterwards instead.
         $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS forum_thread (id INT AUTO_INCREMENT NOT NULL, expiredate DATETIME DEFAULT NULL, IdTitle INT NOT NULL, title VARCHAR(255) NOT NULL, replies INT NOT NULL, views INT NOT NULL, stickyvalue INT NOT NULL, ThreadVisibility VARCHAR(13) NOT NULL, WhoCanReply VARCHAR(16) NOT NULL, ThreadDeleted VARCHAR(10) NOT NULL, first_postid INT NOT NULL, last_postid INT NOT NULL, ShortCode VARCHAR(16) NOT NULL, IdGroup INT DEFAULT NULL, UNIQUE INDEX UNIQ_298F7F5295E45CB7 (first_postid), UNIQUE INDEX UNIQ_298F7F52FF177475 (last_postid), INDEX IdGroup (IdGroup), INDEX ThreadVisibility (ThreadVisibility), INDEX ThreadDeleted (ThreadDeleted), INDEX IDX_298F7F526FFD4460 (ShortCode), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
 
-        $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS forum_post (id INT AUTO_INCREMENT NOT NULL, PostVisibility VARCHAR(13) NOT NULL, create_time DATETIME NOT NULL, message TEXT NOT NULL, IdContent INT NOT NULL, OwnerCanStillEdit VARCHAR(3) NOT NULL, last_edittime DATETIME DEFAULT NULL, last_editorid INT DEFAULT NULL, edit_count TINYINT NOT NULL, PostDeleted VARCHAR(10) NOT NULL, threadid INT DEFAULT NULL, IdWriter INT DEFAULT NULL, ShortCode VARCHAR(16) NOT NULL, INDEX last_editorid (last_editorid), INDEX threadid (threadid), INDEX IdWriter (IdWriter), INDEX PostVisibility (PostVisibility), INDEX PostDeleted (PostDeleted), INDEX create_time (create_time), INDEX IDX_996BCC5A6FFD4460 (ShortCode), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS forum_post (id INT AUTO_INCREMENT NOT NULL, PostVisibility VARCHAR(13) NOT NULL, create_time DATETIME NOT NULL, message MEDIUMTEXT NOT NULL, IdContent INT NOT NULL, OwnerCanStillEdit VARCHAR(3) NOT NULL, last_edittime DATETIME DEFAULT NULL, last_editorid INT DEFAULT NULL, edit_count TINYINT NOT NULL, PostDeleted VARCHAR(10) NOT NULL, threadid INT DEFAULT NULL, IdWriter INT DEFAULT NULL, ShortCode VARCHAR(16) NOT NULL, INDEX last_editorid (last_editorid), INDEX threadid (threadid), INDEX IdWriter (IdWriter), INDEX PostVisibility (PostVisibility), INDEX PostDeleted (PostDeleted), INDEX create_time (create_time), INDEX IDX_996BCC5A6FFD4460 (ShortCode), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
+
+        // The translated texts of posts and thread titles, every language (Gedmo personal translations); filled
+        // from the legacy `translations` table by the migration that follows this one.
+        $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS forum_post_translation (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(8) NOT NULL, field VARCHAR(32) NOT NULL, content LONGTEXT DEFAULT NULL, created_at DATETIME DEFAULT NULL, updated_at DATETIME DEFAULT NULL, object_id INT DEFAULT NULL, translator_id INT DEFAULT NULL, UNIQUE INDEX lookup_unique_idx (locale, object_id, field), INDEX IDX_D81AF0A9232D562B (object_id), INDEX IDX_D81AF0A95370E40B (translator_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
+        $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS forum_thread_translation (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(8) NOT NULL, field VARCHAR(32) NOT NULL, content LONGTEXT DEFAULT NULL, created_at DATETIME DEFAULT NULL, updated_at DATETIME DEFAULT NULL, object_id INT DEFAULT NULL, translator_id INT DEFAULT NULL, UNIQUE INDEX lookup_unique_idx (locale, object_id, field), INDEX IDX_6E12F343232D562B (object_id), INDEX IDX_6E12F3435370E40B (translator_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
 
         $this->connection->executeStatement('CREATE TABLE IF NOT EXISTS member_photo (FilePath TINYTEXT NOT NULL, created DATETIME NOT NULL, id INT AUTO_INCREMENT NOT NULL, member_id INT DEFAULT NULL, UNIQUE INDEX UNIQ_769611EB7597D3FE (member_id), PRIMARY KEY (id)) DEFAULT CHARACTER SET utf8mb4');
 
@@ -79,8 +84,16 @@ final class Version20200601000000 extends AbstractMigration
         $this->addConstraintIfMissing('forum_post', 'FK_996BCC5AD0FD9043', 'ALTER TABLE forum_post ADD CONSTRAINT FK_996BCC5AD0FD9043 FOREIGN KEY (threadid) REFERENCES forum_thread (id)');
         $this->addConstraintIfMissing('forum_post', 'FK_996BCC5ADC7124E', 'ALTER TABLE forum_post ADD CONSTRAINT FK_996BCC5ADC7124E FOREIGN KEY (IdWriter) REFERENCES member (id)');
         $this->addConstraintIfMissing('forum_post', 'FK_996BCC5A6FFD4460', 'ALTER TABLE forum_post ADD CONSTRAINT FK_996BCC5A6FFD4460 FOREIGN KEY (ShortCode) REFERENCES language (ShortCode)');
+        $this->addConstraintIfMissing('forum_post_translation', 'FK_D81AF0A9232D562B', 'ALTER TABLE forum_post_translation ADD CONSTRAINT FK_D81AF0A9232D562B FOREIGN KEY (object_id) REFERENCES forum_post (id) ON DELETE CASCADE');
+        $this->addConstraintIfMissing('forum_thread_translation', 'FK_6E12F343232D562B', 'ALTER TABLE forum_thread_translation ADD CONSTRAINT FK_6E12F343232D562B FOREIGN KEY (object_id) REFERENCES forum_thread (id) ON DELETE CASCADE');
+        $this->addConstraintIfMissing('forum_post_translation', 'FK_D81AF0A95370E40B', 'ALTER TABLE forum_post_translation ADD CONSTRAINT FK_D81AF0A95370E40B FOREIGN KEY (translator_id) REFERENCES member (id) ON DELETE SET NULL');
+        $this->addConstraintIfMissing('forum_thread_translation', 'FK_6E12F3435370E40B', 'ALTER TABLE forum_thread_translation ADD CONSTRAINT FK_6E12F3435370E40B FOREIGN KEY (translator_id) REFERENCES member (id) ON DELETE SET NULL');
         $this->addConstraintIfMissing('member_photo', 'FK_769611EB7597D3FE', 'ALTER TABLE member_photo ADD CONSTRAINT FK_769611EB7597D3FE FOREIGN KEY (member_id) REFERENCES member (id)');
         $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=1');
+
+        // The legacy forum read and wrote the texts through this view of `translations` (production has it); it
+        // uses forum_post_translation and forum_thread_translation now.
+        $this->connection->executeStatement('DROP VIEW IF EXISTS forum_trads');
     }
 
     #[Override]
@@ -90,6 +103,8 @@ final class Version20200601000000 extends AbstractMigration
         // toggles have to be queued the same way as the drops - calling $this->connection
         // directly here would run them immediately, before any queued DROP TABLE executes.
         $this->addSql('SET FOREIGN_KEY_CHECKS=0');
+        $this->addSql('DROP TABLE IF EXISTS forum_thread_translation');
+        $this->addSql('DROP TABLE IF EXISTS forum_post_translation');
         $this->addSql('DROP TABLE IF EXISTS member_photo');
         $this->addSql('DROP TABLE IF EXISTS forum_post');
         $this->addSql('DROP TABLE IF EXISTS forum_thread');

@@ -40,7 +40,7 @@ final class Version20200601010000 extends AbstractMigration
     {
         return 'Copy member/address/translation/language-level/friend/comment/language/word/forum/photo data '
             . 'from the legacy tables (members, addresses, cryptedfields, memberstrads, specialrelations, '
-            . 'comments, languages, words, forums_threads, forums_posts, membersphotos) into the tables created '
+            . 'comments, languages, words, forums_threads, forums_posts, translations, membersphotos) into the tables created '
             . 'by Version20200601000000. Ports the logic previously run by hand via `bin/console migrate:database` '
             . '(src/Command/MigrateDatabaseCommand.php), plus the address House Number/Street Name/Zip decryption '
             . 'that command never performed. No-ops on databases that never had the legacy tables (fresh/CI).';
@@ -104,6 +104,9 @@ final class Version20200601010000 extends AbstractMigration
             $this->write('Migrating `forums_posts` -> `forum_post`...');
             $this->migrateForumPosts();
 
+            $this->write('Migrating `translations` -> `forum_post_translation`, `forum_thread_translation`...');
+            $this->migrateForumTexts();
+
             $this->write('Migrating `membersphotos` -> `member_photo`...');
             $this->migrateMemberPhotos($statuses);
         } finally {
@@ -117,6 +120,8 @@ final class Version20200601010000 extends AbstractMigration
         $this->addSql('SET FOREIGN_KEY_CHECKS=0');
         $this->addSql('DELETE FROM member_photo');
         $this->addSql('DELETE FROM forum_post');
+        $this->addSql('DELETE FROM forum_thread_translation');
+        $this->addSql('DELETE FROM forum_post_translation');
         $this->addSql('DELETE FROM forum_thread');
         $this->addSql('DELETE FROM word');
         $this->addSql('DELETE FROM language');
@@ -516,23 +521,63 @@ final class Version20200601010000 extends AbstractMigration
                     ft.id,
                     ft.expiredate,
                     ft.IdTitle,
-                    w.Sentence,
-                    ft.first_postid,
-                    ft.last_postid,
+                    COALESCE(
+                        (SELECT t.Sentence FROM translations t WHERE t.IdTrad = ft.IdTitle AND t.IdLanguage = ft.IdFirstLanguageUsed ORDER BY t.id LIMIT 1),
+                        (SELECT t.Sentence FROM translations t WHERE t.IdTrad = ft.IdTitle ORDER BY t.id LIMIT 1),
+                        ft.title
+                    ),
+                    -- A first/last post of another thread (a moved post; once in production) would break the
+                    -- unique keys of the one-to-one mappings: take the thread's own first/last post instead.
+                    COALESCE(
+                        (SELECT p.id FROM forums_posts p WHERE p.id = ft.first_postid AND p.threadid = ft.id),
+                        (SELECT MIN(p.id) FROM forums_posts p WHERE p.threadid = ft.id),
+                        ft.first_postid
+                    ),
+                    COALESCE(
+                        (SELECT p.id FROM forums_posts p WHERE p.id = ft.last_postid AND p.threadid = ft.id),
+                        (SELECT MAX(p.id) FROM forums_posts p WHERE p.threadid = ft.id),
+                        ft.last_postid
+                    ),
                     ft.replies,
                     ft.views,
                     ft.stickyvalue,
-                    l.ShortCode,
+                    COALESCE(l.ShortCode, 'en'),
                     ft.IdGroup,
                     ft.ThreadVisibility,
                     ft.WhoCanReply,
                     ft.ThreadDeleted
                 FROM forums_threads ft
-                INNER JOIN words w ON ft.IdTitle = w.id
-                INNER JOIN languages l ON w.IdLanguage = l.id
+                LEFT JOIN languages l ON l.id = ft.IdFirstLanguageUsed
             SQL;
 
         $this->connection->executeStatement($sql);
+    }
+
+    /**
+     * Every language of the posts' texts and the threads' titles, from `translations` (rows are found by the
+     * IdTrad in forum_post.IdContent / forum_thread.IdTitle), with who translated it and when. The tags'
+     * texts are left behind.
+     */
+    private function migrateForumTexts(): void
+    {
+        foreach ([
+            ['forum_post_translation', 'forum_post', 'IdContent', 'message'],
+            ['forum_thread_translation', 'forum_thread', 'IdTitle', 'title'],
+        ] as [$translationTable, $table, $idTradColumn, $field]) {
+            $this->connection->executeStatement(
+                "INSERT IGNORE INTO {$translationTable} (locale, field, content, object_id, translator_id, created_at, updated_at)
+                 SELECT COALESCE(l.ShortCode, 'en'), ?, t.Sentence, o.id, m.id,
+                     IF(t.created < '1970-01-02', NULL, t.created),
+                     IF(t.updated < '1970-01-02' OR t.updated = t.created, NULL, t.updated)
+                 FROM {$table} o
+                 JOIN translations t ON t.IdTrad = o.{$idTradColumn}
+                 LEFT JOIN languages l ON l.id = t.IdLanguage
+                 LEFT JOIN member m ON m.id = t.IdTranslator
+                 WHERE o.{$idTradColumn} <> 0
+                 ORDER BY t.id",
+                [$field]
+            );
+        }
     }
 
     private function migrateForumPosts(): void
@@ -548,17 +593,20 @@ final class Version20200601010000 extends AbstractMigration
                     fp.PostVisibility,
                     fp.IdWriter,
                     fp.create_time,
-                    w.Sentence,
+                    COALESCE(
+                        (SELECT t.Sentence FROM translations t WHERE t.IdTrad = fp.IdContent AND t.IdLanguage = fp.IdFirstLanguageUsed ORDER BY t.id LIMIT 1),
+                        (SELECT t.Sentence FROM translations t WHERE t.IdTrad = fp.IdContent ORDER BY t.id LIMIT 1),
+                        fp.message
+                    ),
                     fp.IdContent,
                     fp.OwnerCanStillEdit,
                     fp.last_edittime,
                     fp.last_editorid,
                     fp.edit_count,
-                    l.ShortCode,
+                    COALESCE(l.ShortCode, 'en'),
                     fp.PostDeleted
                 FROM forums_posts fp
-                INNER JOIN words w ON fp.IdContent = w.id
-                INNER JOIN languages l ON w.IdLanguage = l.id
+                LEFT JOIN languages l ON l.id = fp.IdFirstLanguageUsed
             SQL;
 
         $this->connection->executeStatement($sql);

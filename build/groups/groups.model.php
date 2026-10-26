@@ -971,7 +971,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                     `forum_post`.`id`,
                     `member`.`Username`,
                     `forum_post`.`message`,
-                    `forum_trads`.`Sentence`,
+                    `forum_post_translation`.`content` AS `Sentence`,
                     `forum_thread`.`id` AS IdThread,
                     `forum_thread`.`title`,
                     `forum_thread`.`IdGroup`,
@@ -988,7 +988,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 LEFT JOIN
                     `groups` ON (`groups`.`id` = `forum_thread`.`IdGroup`)
                 LEFT JOIN
-                    `forum_trads` ON (`forum_trads`.`IdTrad` = `forum_post`.`IdContent` AND `forum_trads`.`ShortCode` = '" . $languageId . "')
+                    `forum_post_translation` ON (`forum_post_translation`.`object_id` = `forum_post`.`id` AND `forum_post_translation`.`field` = 'message' AND `forum_post_translation`.`locale` = '" . $languageId . "')
                 LEFT JOIN
                     `member` ON (`forum_post`.`IdWriter` = `member`.`id`)
                 LEFT JOIN

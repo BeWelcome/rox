@@ -63,7 +63,7 @@ if ((!isset($topic->topicinfo->IdTitle)) && (!isset($topic->topicinfo->ThreadDel
     }
     $ascending = 'Yes' == $User->getPreference('PreferenceForumOrderListAsc', 'Yes');
 
-    echo $words->fTrad($topic->topicinfo->IdTitle, -1, false, $topic->topicinfo->title ?? '');
+    echo $words->fTradForum('thread', $topic->topicinfo->IdThread, $topic->topicinfo->title ?? '');
 
     echo '</h2></div>';
 

@@ -78,7 +78,7 @@ $layoutbits = new MOD_layoutbits();
                     ?>
                     <a href="<?php echo $url; ?>">
                     <?php
-                    echo $words->fTrad($thread->IdTitle, -1, false, $thread->title ?? '');
+                    echo $words->fTradForum('thread', $thread->id, $thread->title ?? '');
                     ?></a>
                     <div class="w-100">
                     <span class="small grey"><?php echo $words->getSilent('by');?> <a href="members/<?php echo $thread->last_author; ?>"><?php echo $thread->last_author; ?></a>

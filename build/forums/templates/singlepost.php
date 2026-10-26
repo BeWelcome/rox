@@ -143,7 +143,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
 
             <?php
             $forumUtilities = new ForumUtilities();
-            $postContent = $forumUtilities->removeFqdn($words->fTrad($post->IdContent, -1, false, $post->message ?? ''));
+            $postContent = $forumUtilities->removeFqdn($words->fTradForum('post', $post->postid, $post->message ?? ''));
             $postContent = ForumUtilities::addLightboxToFigures($postContent);
 
 
@@ -173,7 +173,7 @@ if (($post->IdGroup > 0) && ($post->PostVisibility == "GroupOnly")) {
                 echo '<a href="' . ForumsView::groupURL($post) . '">' . $post->GroupName . '</a> ';
             }
             echo '<span class="gray">'.$words->getFormatted('search_topic_text').'</span>';
-            echo ' <a href="' . ForumsView::postURL($post) . '">' . $words->fTrad($post->IdTitle, -1, false, $post->title ?? '') . '</a>';
+            echo ' <a href="' . ForumsView::postURL($post) . '">' . $words->fTradForum('thread', $post->threadid, $post->title ?? '') . '</a>';
             echo '</small></div>';
         }
 

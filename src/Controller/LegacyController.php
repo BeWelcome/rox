@@ -6,6 +6,7 @@ use App\Entity\Member;
 use App\LegacyKernel\LegacyHttpKernel;
 use App\Utilities\SessionSingleton;
 use App\Utilities\TranslatorSingleton;
+use Doctrine\DBAL\Connection;
 use EnvironmentExplorer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -28,6 +29,7 @@ class LegacyController extends AbstractController
         UrlGeneratorInterface $urlGenerator,
         ParameterBagInterface $params,
         Security $securityHelper,
+        Connection $connection,
     ): Response {
         // Kick-start the Symfony session. This replaces session_start() in the
         // old code, which is now turned off.
@@ -42,7 +44,8 @@ class LegacyController extends AbstractController
         $environmentExplorer = new EnvironmentExplorer($urlGenerator);
         $environmentExplorer->initializeGlobalState(
             $params->get('database_host'),
-            $params->get('database_name'),
+            // The database Doctrine uses: with the test environment's suffix (bewelcome_test) in tests
+            $connection->getDatabase() ?? $params->get('database_name'),
             $params->get('database_user'),
             $params->get('database_password'),
             $params->get('manticore.host'),

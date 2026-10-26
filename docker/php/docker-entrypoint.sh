@@ -89,12 +89,12 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		fi
 	fi
 
-	# Run Doctrine migrations in prod. Clear the cache first so a stale compiled
-	# container from a previous image (var/ volume) can't crash the migration.
-	if [ "$APP_ENV" = 'prod' ] && ls Migrations/*.php > /dev/null 2>&1; then
-		setup_step "Running database migrations"
+	# Clear the cache in prod so a stale compiled container from a previous image
+	# (var/ volume) can't crash the console commands below. Doctrine migrations are
+	# not run here: they are run by hand after the deploy (see docker/DEPLOYMENT.md).
+	if [ "$APP_ENV" = 'prod' ]; then
+		setup_step "Clearing the cache"
 		bin/console cache:clear
-		bin/console doctrine:migrations:migrate --no-interaction
 	fi
 
 	setup_step "Importing missing translations and warming up the cache"

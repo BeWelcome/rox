@@ -39,8 +39,8 @@ class Places extends RoxModelBase {
                 SELECT
                     g.geoname_id AS geoname_id, g.name AS name, t.content AS translation
                 FROM
-                    geo__names g
-                LEFT JOIN geo__names_translations t ON g.geoname_id = t.object_id 
+                    location g
+                LEFT JOIN location_translation t ON g.geoname_id = t.object_id 
                 WHERE
                     g.geoname_id = {$geonameid} 
         ";
@@ -92,7 +92,7 @@ class Places extends RoxModelBase {
                 COUNT(*) cnt
             FROM
                 member m,
-                geo__names g,
+                location g,
                 address a
             WHERE
                 m.status IN ('Active', 'OutOfRemind')
@@ -114,7 +114,7 @@ class Places extends RoxModelBase {
                 COUNT(*) cnt
             FROM
                 member m,
-                geo__names g,
+                location g,
                 address a
             WHERE
                 m.status IN ('Active', 'OutOfRemind')
@@ -156,7 +156,7 @@ class Places extends RoxModelBase {
         $totalCount = $this->getTotalMemberCountCountry($countrycode);
         $fromWhere = sprintf("
             FROM
-                geo__names g,
+                location g,
                 member m,
                 address a
             WHERE
@@ -181,7 +181,7 @@ class Places extends RoxModelBase {
         $totalCount = $this->getTotalMemberCountRegion($countrycode, $regioncode);
         $fromWhere = sprintf("
             FROM
-                geo__names g,
+                location g,
                 address a,
                 member m
             WHERE
@@ -206,7 +206,7 @@ class Places extends RoxModelBase {
         $totalCount = $this->getTotalMemberCountCity($cityCode);
         $fromWhere = sprintf("
             FROM
-                geo__names g,
+                location g,
                 address a,
                 member m
             WHERE
@@ -257,7 +257,7 @@ class Places extends RoxModelBase {
                 g.country AS country,
                 COUNT(m.id) AS count
             FROM
-                geo__names g,
+                location g,
                 member m,
                 address a
             WHERE
@@ -284,7 +284,7 @@ class Places extends RoxModelBase {
                 c.continent AS continent
             FROM
                 geo__countries c,
-                geo__names_translations t
+                location_translation t
             WHERE
                 c.country = t.object_id
                 AND t.locale = '" . $this->dao->escape($this->lang) . "'
@@ -331,8 +331,8 @@ class Places extends RoxModelBase {
                 g.admin_1_id AS admin1,
                 t.content AS name
             FROM
-                geo__names g,
-                geo__names_translations t
+                location g,
+                location_translation t
             WHERE
                 g.country_id = '%1\$s'  
                 AND g.feature_code = 'ADM1'
@@ -362,7 +362,7 @@ class Places extends RoxModelBase {
             FROM
                 member m,
                 address a,
-                geo__names g
+                location g
             WHERE
                 g.country_id = '%1\$s'
                 AND g.feature_class = 'P'
@@ -407,8 +407,8 @@ class Places extends RoxModelBase {
             FROM
                 member m,
                 address a,
-                geo__names g,
-                geo__names_translations t
+                location g,
+                location_translation t
             WHERE
                 m.status IN ('Active', 'OutOfRemind')
                 AND m.MaxGuests >= 1

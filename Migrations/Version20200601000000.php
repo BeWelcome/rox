@@ -67,7 +67,7 @@ final class Version20200601000000 extends AbstractMigration
         // ran once) rather than the freshly-created, still-empty tables above.
         $this->connection->executeStatement('SET FOREIGN_KEY_CHECKS=0');
         $this->addConstraintIfMissing('address', 'FK_D4E6F817597D3FE', 'ALTER TABLE address ADD CONSTRAINT FK_D4E6F817597D3FE FOREIGN KEY (member_id) REFERENCES member (id)');
-        $this->addConstraintIfMissing('address', 'FK_D4E6F815E9E89CB', 'ALTER TABLE address ADD CONSTRAINT FK_D4E6F815E9E89CB FOREIGN KEY (location) REFERENCES geo__names (geoname_id)');
+        $this->addConstraintIfMissing('address', 'FK_D4E6F815E9E89CB', 'ALTER TABLE address ADD CONSTRAINT FK_D4E6F815E9E89CB FOREIGN KEY (location) REFERENCES location (geoname_id)');
         $this->addConstraintIfMissing('address_translations', 'FK_CA160E9C232D562B', 'ALTER TABLE address_translations ADD CONSTRAINT FK_CA160E9C232D562B FOREIGN KEY (object_id) REFERENCES address (id) ON DELETE CASCADE');
         $this->addConstraintIfMissing('member_translations', 'FK_B304440F232D562B', 'ALTER TABLE member_translations ADD CONSTRAINT FK_B304440F232D562B FOREIGN KEY (object_id) REFERENCES member (id) ON DELETE CASCADE');
         $this->addConstraintIfMissing('member_language_level', 'FK_15F11F17597D3FE', 'ALTER TABLE member_language_level ADD CONSTRAINT FK_15F11F17597D3FE FOREIGN KEY (member_id) REFERENCES member (id)');

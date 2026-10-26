@@ -230,7 +230,7 @@ final class Version20200601010000 extends AbstractMigration
                     m.Longitude,
                     IF(m.TypicOffer LIKE '%WheelchairAccessible%', 1, 0)
                 FROM members m
-                INNER JOIN geo__names g ON m.IdCity = g.geoname_id
+                INNER JOIN location g ON m.IdCity = g.geoname_id
                 WHERE m.Status NOT IN ('AskToLeave', 'TakenOut')
                 AND m.Status IN ($statuses)
                 AND NOT EXISTS (SELECT 1 FROM address ex WHERE ex.member_id = m.id)

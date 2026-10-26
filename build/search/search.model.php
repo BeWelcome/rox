@@ -773,7 +773,7 @@ LIMIT 1
         $this->orderByExpression = $this->getOrderByExpression($vars);
         $this->distanceExpression = $this->getDistanceExpression($vars);
 
-        $this->tables = 'geo__names g';
+        $this->tables = 'location g';
         if (!empty($this->keywordCondition)) {
             $this->tables .= ", memberstrads mt";
         }

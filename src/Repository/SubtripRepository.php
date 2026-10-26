@@ -231,7 +231,7 @@ class SubtripRepository extends EntityRepository
             ->addSelect('t')
         ;
 
-        // Bounding-box prefilter on the spatial index of geo__names.coordinates, so the
+        // Bounding-box prefilter on the spatial index of location.coordinates, so the
         // haversine GeoDistance only runs on legs that can be in range instead of on every leg.
         // Without an address latitude/longitude are null and GeoDistance already matches nothing.
         if (null !== $latitude && null !== $longitude) {

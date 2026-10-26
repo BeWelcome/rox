@@ -979,7 +979,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                     `ThreadVisibility`,
                     `ThreadDeleted`,
                      UNIX_TIMESTAMP(`forum_post`.`create_time`) AS `created`,
-                     `geo__names`.`name` AS `city`,
+                     `location`.`name` AS `city`,
                      `country_names`.`name` AS `country`
                 FROM
                     `forum_post`
@@ -994,9 +994,9 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 LEFT JOIN
                     `address` ON `member`.`id` = `address`.`member_id` AND `address`.`active` = 1
                 LEFT JOIN
-                    `geo__names` ON `address`.`location` = `geo__names`.`geoname_id`
+                    `location` ON `address`.`location` = `location`.`geoname_id`
                 LEFT JOIN
-                    `geo__names` AS `country_names` ON `geo__names`.`country` = `country_names`.`geoname_id`
+                    `location` AS `country_names` ON `location`.`country` = `country_names`.`geoname_id`
                 WHERE
                     `forum_post`.`id` IN (" . implode(',', array_map('intval', $postIds)) . ")
                     AND `forum_thread`.`IdGroup` = " . (int) $group->getPKValue() . "

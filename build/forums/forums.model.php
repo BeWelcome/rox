@@ -1572,9 +1572,9 @@ WHERE `id` = '$this->threadid'
             LEFT JOIN
                 address AS a ON a.member_id = member.id AND a.active = 1
             LEFT JOIN
-                geo__names g ON a.location = g.geoname_id
+                location g ON a.location = g.geoname_id
             LEFT JOIN
-                geo__names c ON g.country = c.geoname_id
+                location c ON g.country = c.geoname_id
             WHERE
                 forum_post.threadid = '%d'
                 AND forum_post.threadid=forum_thread.id
@@ -1659,12 +1659,12 @@ SELECT
     `PostDeleted`,
     `ThreadDeleted`,
 	`OwnerCanStillEdit`,
-    `geo__names`.`name` as `city`,
+    `location`.`name` as `city`,
     `country_names`.`name` as `country`,
     `IdGroup`
 FROM forum_post, forum_thread, member, address
-LEFT JOIN `geo__names` ON (address.location = `geo__names`.`geoname_id`)
-LEFT JOIN `geo__names` AS `country_names` ON (geo__names.country = `country_names`.`geoname_id`)
+LEFT JOIN `location` ON (address.location = `location`.`geoname_id`)
+LEFT JOIN `location` AS `country_names` ON (location.country = `country_names`.`geoname_id`)
 WHERE `forum_post`.`threadid` = '%d' AND `forum_post`.`IdWriter` = `member`.`id`
 AND address.member_id = member.id AND address.active = 1
  AND `forum_post`.`threadid`=`forum_thread`.`id`
@@ -2051,7 +2051,7 @@ AND IdThread=%d
         }
 
         $query = sprintf(
-            "SELECT    `forum_post`.`id` AS `postid`,`forum_post`.`id` as IdPost, `forum_post`.`id`, UNIX_TIMESTAMP(`create_time`) AS `posttime`, UNIX_TIMESTAMP(`create_time`) AS `created`, `message`, `forum_thread`.`id` AS `IdThread`, `member`.`Username`, `geo__names`.`name` AS `city`, `country_names`.`name` AS `country`,
+            "SELECT    `forum_post`.`id` AS `postid`,`forum_post`.`id` as IdPost, `forum_post`.`id`, UNIX_TIMESTAMP(`create_time`) AS `posttime`, UNIX_TIMESTAMP(`create_time`) AS `created`, `message`, `forum_thread`.`id` AS `IdThread`, `member`.`Username`, `location`.`name` AS `city`, `country_names`.`name` AS `country`,
     `OwnerCanStillEdit`,`IdContent`,  `forum_thread`.`id` AS `threadid`,   `forum_thread`.`title`,
     `ThreadVisibility`,
     `ThreadDeleted`,
@@ -2062,8 +2062,8 @@ AND IdThread=%d
 		FROM (forum_post, member, forum_thread)
 LEFT JOIN `groups` ON (`forum_thread`.`IdGroup` = `groups`.`id`)
 LEFT JOIN `address` ON (address.member_id = member.id AND address.active = 1)
-LEFT JOIN `geo__names` ON (address.location = geo__names.geoname_id)
-LEFT JOIN `geo__names` AS `country_names` ON (geo__names.country = country_names.geoname_id)
+LEFT JOIN `location` ON (address.location = location.geoname_id)
+LEFT JOIN `location` AS `country_names` ON (location.country = country_names.geoname_id)
 WHERE `forum_post`.`IdWriter` = %d AND `forum_post`.`IdWriter` = `member`.`id`
 AND `forum_post`.`threadid` = `forum_thread`.`id`
 AND ($this->PublicThreadVisibility)
@@ -2656,7 +2656,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                     `forum_thread`.`ThreadVisibility`,
                     `forum_thread`.`ThreadDeleted`,
                      UNIX_TIMESTAMP(`forum_post`.`create_time`) AS `created`,
-                    geo__names.name AS city,
+                    location.name AS city,
                     country_names.name AS country
                 FROM
                     `forum_post`
@@ -2671,9 +2671,9 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                 LEFT JOIN
                     `address` ON `member`.`id` = `address`.`member_id` and `address`.`active` = 1 
                 LEFT JOIN
-                    `geo__names` ON `address`.location = `geo__names`.`geoname_id`
+                    `location` ON `address`.location = `location`.`geoname_id`
                 LEFT JOIN
-                    `geo__names` AS `country_names` ON `geo__names`.`country` = `country_names`.`geoname_id`
+                    `location` AS `country_names` ON `location`.`country` = `country_names`.`geoname_id`
                 WHERE
                     `forum_post`.`id` IN ({$separatedPostIds})
                     AND (`forum_thread`.`IdGroup` IN ({$separatedGroupIds}) OR `forum_thread`.`IdGroup` IS NULL)

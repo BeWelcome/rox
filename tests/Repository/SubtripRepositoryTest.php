@@ -81,11 +81,11 @@ class SubtripRepositoryTest extends KernelTestCase
             ->setInvitationRadius(50)
         ;
 
-        $geonameId = (int) $this->connection->fetchOne('SELECT MAX(geoname_id) FROM geo__names');
+        $geonameId = (int) $this->connection->fetchOne('SELECT MAX(geoname_id) FROM location');
         foreach ($coordinates as [$latitude, $longitude]) {
             ++$geonameId;
             $this->connection->executeStatement(
-                "INSERT INTO geo__names (geoname_id, name, feature_class, coordinates)
+                "INSERT INTO location (geoname_id, name, feature_class, coordinates)
                     VALUES (?, 'Bounding box test', 'P', ST_GeomFromText(?, 0))",
                 [$geonameId, \sprintf('POINT(%F %F)', $longitude, $latitude)]
             );

@@ -88,8 +88,8 @@ class FlagMemberRepository extends ServiceEntityRepository
                 . 'WHERE active_address.member_id = m.id AND active_address.active = 1'
                 . ')',
             )
-            ->leftJoin('a', 'geo__names', 'place', 'place.geoname_id = a.location')
-            ->leftJoin('place', 'geo__names', 'country', 'country.geoname_id = place.country')
+            ->leftJoin('a', 'location', 'place', 'place.geoname_id = a.location')
+            ->leftJoin('place', 'location', 'country', 'country.geoname_id = place.country')
             ->where('m.Status IN (:statuses)')
             ->andWhere('f.Relevance > 0')
             ->setParameter('statuses', MemberStatusType::ACTIVE_ALL_ARRAY, ArrayParameterType::STRING)

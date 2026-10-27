@@ -6,14 +6,15 @@ use App\Doctrine\DeleteRequestType;
 use App\Doctrine\InFolderType;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
+use App\Entity\Comment;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Repository\CommentRepository;
 use App\Repository\MessageRepository;
 use App\Service\Mailer;
 use App\Utilities\ConversationThread;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Normalizer;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -126,115 +127,17 @@ class ConversationModel
     /**
      * Tests if a member has exceeded their limit for sending messages.
      */
-    public function hasMessageLimitExceeded($member, $perHour, $perDay)
+    public function hasMessageLimitExceeded(Member $member, int $perHour, int $perDay): bool
     {
-        $sql = "
-            SELECT
-                (
-                SELECT
-                    COUNT(*)
-                FROM
-                    comments
-                WHERE
-                    comments.IdToMember = :id
-                    AND
-                    comments.Quality = 'Good'
-                ) AS numberOfComments,
-                (
-                SELECT
-                    COUNT(*)
-                FROM
-                    messages
-                WHERE
-                    messages.IdSender = :id
-                    AND messages.IdParent IS NULL
-                    AND messages.request_id IS NULL
-                    AND
-                    (
-                        Status = 'ToSend'
-                        OR
-                        Status = 'Sent'
-                    )
-                    AND
-                    DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
-                ) AS numberOfMessagesLastHour,
-                (
-                SELECT
-                    COUNT(*)
-                FROM
-                    messages
-                WHERE
-                    messages.IdSender = :id
-                    AND messages.IdParent IS NULL
-                    AND messages.request_id IS NULL
-                    AND
-                    (
-                        Status = 'ToSend'
-                        OR
-                        Status = 'Sent'
-                    )
-                    AND
-                    DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
-                ) AS numberOfMessagesLastDay
-            ";
-
-        return $this->hasLimitExceeded($member, $sql, $perHour, $perDay);
+        return $this->hasLimitExceeded($member, false, $perHour, $perDay);
     }
 
     /**
      * Tests if a member has exceeded their limit for sending requests.
      */
-    public function hasRequestLimitExceeded($member, $perHour, $perDay): bool
+    public function hasRequestLimitExceeded(Member $member, int $perHour, int $perDay): bool
     {
-        $sql = "
-            SELECT
-                (
-                SELECT
-                    COUNT(*)
-                FROM
-                    comments
-                WHERE
-                    comments.IdToMember = :id
-                    AND
-                    comments.Quality = 'Good'
-                ) AS numberOfComments,
-                (
-                SELECT
-                    COUNT(*)
-                FROM
-                    messages
-                WHERE
-                    messages.IdSender = :id
-                    AND NOT messages.request_id IS NULL
-                    AND
-                    (
-                        Status = 'ToSend'
-                        OR
-                        Status = 'Sent'
-                    )
-                    AND
-                    DateSent > DATE_SUB(NOW(), INTERVAL 1 HOUR)
-                ) AS numberOfMessagesLastHour,
-                (
-                SELECT
-                    COUNT(*)
-                FROM
-                    messages
-                WHERE
-                    messages.IdSender = :id
-                    AND NOT messages.request_id IS NULL
-                    AND
-                    (
-                        Status = 'ToSend'
-                        OR
-                        Status = 'Sent'
-                    )
-                    AND
-                    DateSent > DATE_SUB(NOW(), INTERVAL 1 DAY)
-                ) AS numberOfMessagesLastDay
-            ";
-
-        return $this->hasLimitExceeded($member, $sql, $perHour, $perDay);
+        return $this->hasLimitExceeded($member, true, $perHour, $perDay);
     }
 
     public function getThreadInformationForMessage(Message $message): array
@@ -294,30 +197,21 @@ class ConversationModel
         return $message;
     }
 
-    private function hasLimitExceeded(Member $member, string $sql, int $perHour, int $perDay): bool
+    /**
+     * New members, those without a positive comment, may only send a few messages or requests per hour and day.
+     */
+    private function hasLimitExceeded(Member $member, bool $requests, int $perHour, int $perDay): bool
     {
-        $id = $member->getId();
-
-        $connection = $this->entityManager->getConnection();
-
-        try {
-            $statement = $connection->prepare($sql);
-            $statement->bindValue(':id', $id);
-
-            $result = $statement->executeQuery();
-            $row = $result->fetchAssociative();
-        } catch (Exception) {
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $this->entityManager->getRepository(Comment::class);
+        if ($commentRepository->countPositiveCommentsAbout($member) > 0) {
             return false;
         }
 
-        $comments = $row['numberOfComments'];
-        $lastHour = $row['numberOfMessagesLastHour'];
-        $lastDay = $row['numberOfMessagesLastDay'];
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->entityManager->getRepository(Message::class);
 
-        if ($comments < 1 && ($lastHour >= $perHour || $lastDay >= $perDay)) {
-            return true;
-        }
-
-        return false;
+        return $messageRepository->countSentSince($member, new DateTime('-1 hour'), $requests) >= $perHour
+            || $messageRepository->countSentSince($member, new DateTime('-1 day'), $requests) >= $perDay;
     }
 }

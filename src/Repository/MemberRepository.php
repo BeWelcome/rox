@@ -38,6 +38,27 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
         parent::__construct($registry, Member::class);
     }
 
+    /**
+     * The active members with the SafetyTeam right (level above 0), by username; not the team's own account.
+     *
+     * @return list<Member>
+     */
+    public function findSafetyTeamMembers(): array
+    {
+        return $this->createQueryBuilder('m')
+            ->innerJoin('m.volunteerRights', 'rv')
+            ->innerJoin('rv.right', 'r')
+            ->where('m.status = :active')
+            ->andWhere('m.username <> :team')
+            ->andWhere('r.name = :team')
+            ->andWhere('rv.level > 0')
+            ->setParameter('active', MemberStatusType::ACTIVE)
+            ->setParameter('team', 'SafetyTeam')
+            ->orderBy('m.username')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof Member) {

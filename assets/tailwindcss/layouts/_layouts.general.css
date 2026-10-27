@@ -6991,6 +6991,8 @@ body:has(.p-search) footer:has(#footer_content) { display: none; }
   font-size: 0.875rem;
   font-weight: 700;
 }
+/* No comment yet: the pill stays, pale */
+.p-search-card .p-search-card__comments-pill:not(.has-comments) { opacity: 0.45; }
 .p-search-card__comments-pill.has-comments { background: #fff1e6; color: #c2410c; }
 .p-search-card__comments-pill.has-comments i,
 .p-search-card__comments-pill.has-comments svg { color: #ea7a2e; }

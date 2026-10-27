@@ -7758,6 +7758,14 @@ legend.p-search-options__label { float: none; width: auto; padding: 0; }
 .c-home-pill.active { border-color: #fdba74; background: #fff7ed; color: #c2410c; }
 .c-home-pill:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.2); }
 .c-home-pill--action { margin-left: auto; color: #c2410c; }
+/* Activities: the online switch and Create activity stay on one line, on phones too */
+#activities .c-home-pane__filters { flex-wrap: nowrap; }
+#activities .c-home-switch { min-width: 0; white-space: nowrap; }
+#activities .c-home-pill--action { flex-shrink: 0; white-space: nowrap; }
+@media (max-width: 400px) {
+  #activities .c-home-switch { gap: 0.4rem; font-size: 0.75rem; }
+  #activities .c-home-pill--action { padding-right: 0.7rem; padding-left: 0.7rem; font-size: 0.75rem; }
+}
 
 .c-home-switch { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0; color: #475569; font-size: 0.8125rem; font-weight: 600; cursor: pointer; }
 .c-home-switch input { position: absolute; opacity: 0; pointer-events: none; }
@@ -10568,6 +10576,14 @@ body.is-embedded { background: #fff; }
 .c-stay-dates__summary-range i, .c-stay-dates__summary-range svg { margin: 0 0.2rem; color: #94a3b8; font-size: 0.75rem; }
 .c-stay-dates__summary-nights { color: #c2410c; font-size: 0.8125rem; font-weight: 700; }
 .c-stay-dates__summary-nights i, .c-stay-dates__summary-nights svg { font-size: 0.75rem; }
+/* Phones: the two dates on one line */
+@media (max-width: 575.98px) {
+  .c-stay-dates__summary { gap: 0.6rem; padding: 0.6rem 0.75rem; }
+  .c-stay-dates__summary-icon { width: 2.1rem; height: 2.1rem; }
+  .c-stay-dates__summary-range { overflow: hidden; font-size: 0.875rem; text-overflow: ellipsis; white-space: nowrap; }
+  .c-stay-dates__summary-range i, .c-stay-dates__summary-range svg { margin: 0 0.1rem; font-size: 0.625rem; }
+  .c-stay-dates__summary .c-stay-dates__change { flex-shrink: 0; font-size: 0.8125rem; }
+}
 .c-stay-dates__change { flex-shrink: 0; color: #c2410c; font-size: 0.875rem; font-weight: 700; }
 
 /* "Sent" page of the side panel: a card with what was sent (subject, dates and nights) */

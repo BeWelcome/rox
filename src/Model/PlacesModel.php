@@ -216,8 +216,7 @@ class PlacesModel
 
     /**
      * Name, continent and position of countries. The country itself is the place of geonames
-     * whose feature code starts with PCL; geo__countries gives the continent when it is filled,
-     * otherwise the continent comes from the country code.
+     * whose feature code starts with PCL; the continent comes from the country code.
      *
      * @param list<string> $codes
      *
@@ -232,9 +231,8 @@ class PlacesModel
 
         $rows = $this->connection()->executeQuery("
             SELECT g.country_id AS code, g.geoname_id, ST_Y(g.coordinates) AS latitude, ST_X(g.coordinates) AS longitude, g.name AS slug,
-                COALESCE(t.content, g.name) AS name, c.continent, g.feature_code
+                COALESCE(t.content, g.name) AS name, g.feature_code
             FROM location g
-            LEFT JOIN geo__countries c ON c.country_id = g.country_id
             LEFT JOIN location_translation t ON t.object_id = g.geoname_id AND t.locale = :locale AND t.field = 'name'
             WHERE g.country_id IN (:codes) AND g.feature_code LIKE 'PCL%'
             ORDER BY g.feature_code = 'PCLI' DESC, g.population DESC
@@ -249,7 +247,7 @@ class PlacesModel
                 'code' => $row['code'],
                 'name' => $row['name'],
                 'slug' => $row['slug'],
-                'continent' => $row['continent'] ?: self::continentOf($row['code']),
+                'continent' => self::continentOf($row['code']),
                 'geonameId' => (int) $row['geoname_id'],
                 'latitude' => (float) $row['latitude'],
                 'longitude' => (float) $row['longitude'],

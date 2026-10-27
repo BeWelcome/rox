@@ -4,6 +4,7 @@ namespace App\Pagerfanta;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\CommentQualityType;
+use App\Doctrine\MemberStatusType;
 use App\Dto\MemberSearchResult;
 use App\Entity\Location;
 use App\Entity\Member;
@@ -90,16 +91,22 @@ class SearchAdapter implements AdapterInterface
                 ->from('App\Entity\Message', 'msgR')
                 ->where('msgR.sender = :currentUserId AND msgR.receiver = m.id');
 
+            // Only the comments the profile shows (CommentRepository::getCommentsCountMemberByQuality)
             $commentCountQueryBuilder = $this->entityManager->createQueryBuilder()
                 ->select('COUNT(commentCountTable.id)')
                 ->from('App\Entity\Comment', 'commentCountTable')
-                ->where('commentCountTable.toMember = m.id');
+                ->join('commentCountTable.fromMember', 'commentCountAuthor')
+                ->where('commentCountTable.toMember = m.id AND commentCountTable.showToOtherMembers = 1')
+                ->andWhere('commentCountAuthor.status IN (' . $this->commentAuthorStatuses() . ')');
 
             // The comments by quality too, for the positive / neutral / negative pill of the card
             $qualityCount = fn (string $quality): string => $this->entityManager->createQueryBuilder()
                 ->select('COUNT(cq' . $quality . '.id)')
                 ->from('App\Entity\Comment', 'cq' . $quality)
+                ->join('cq' . $quality . '.fromMember', 'cqa' . $quality)
                 ->where('cq' . $quality . '.toMember = m.id AND cq' . $quality . ".quality = '" . $quality . "'")
+                ->andWhere('cq' . $quality . '.showToOtherMembers = 1')
+                ->andWhere('cqa' . $quality . '.status IN (' . $this->commentAuthorStatuses() . ')')
                 ->getDQL();
 
             $qb->select(
@@ -263,6 +270,17 @@ class SearchAdapter implements AdapterInterface
         $featureCode = (string) $location->getFeatureCode();
 
         return str_starts_with($featureCode, 'PCL') || 'ADM1' === $featureCode ? $location : null;
+    }
+
+    /**
+     * The statuses of the members whose comments count, as a DQL list of literals.
+     */
+    private function commentAuthorStatuses(): string
+    {
+        return implode(', ', array_map(
+            static fn (string $status): string => "'" . $status . "'",
+            MemberStatusType::MEMBER_COMMENTS_ARRAY
+        ));
     }
 
     /**

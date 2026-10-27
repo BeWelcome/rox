@@ -32,8 +32,10 @@ class LogController extends AbstractController
         $logViewer = $this->getUser();
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
-        $types = $request->query->get('log.types', []);
-        $username = $request->query->get('log[username]', null);
+        // the filter form (name log) sends log[types][] and log[username]
+        $filter = $request->query->all('log');
+        $types = $filter['types'] ?? [];
+        $username = $filter['username'] ?? null;
 
         $logTypes = $logModel->getLogTypes($logViewer);
         if (1 === \count($logTypes)) {

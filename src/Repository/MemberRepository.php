@@ -38,6 +38,42 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
         parent::__construct($registry, Member::class);
     }
 
+    /**
+     * Active members per country of their active address, with their average birth year and age, most members first
+     * (volunteer tool "age by country").
+     *
+     * @return list<array{Name: ?string, Count: int, BirthYear: int, Age: int}>
+     */
+    public function getAgeByCountry(): array
+    {
+        $rows = $this->createQueryBuilder('m')
+            ->select('c.name AS Name, COUNT(m.id) AS Count, AVG(YEAR(m.birthdate)) AS averageYear')
+            ->innerJoin('m.addresses', 'a', Join::WITH, 'a.active = true')
+            ->innerJoin('a.location', 'l')
+            ->leftJoin('l.country', 'c')
+            ->where('m.status = :active')
+            ->andWhere('m.birthdate IS NOT NULL')
+            ->setParameter('active', MemberStatusType::ACTIVE)
+            ->groupBy('l.countryId')
+            ->addGroupBy('c.geonameId')
+            ->orderBy('Count', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+
+        $thisYear = (int) date('Y');
+
+        return array_map(static function (array $row) use ($thisYear): array {
+            $birthYear = (int) round((float) $row['averageYear']);
+
+            return [
+                'Name' => $row['Name'],
+                'Count' => (int) $row['Count'],
+                'BirthYear' => $birthYear,
+                'Age' => $thisYear - $birthYear,
+            ];
+        }, $rows);
+    }
+
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof Member) {

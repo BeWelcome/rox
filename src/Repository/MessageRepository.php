@@ -10,6 +10,8 @@ use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
+use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -19,6 +21,81 @@ use Pagerfanta\Pagerfanta;
 
 class MessageRepository extends EntityRepository
 {
+    /**
+     * Banned or rejected members updated during the last 90 days and the number of messages they sent, last
+     * updated first (volunteer tool "top spammer").
+     *
+     * @return list<array{MessagesSent: int, Username: string, Status: string, Updated: ?DateTimeInterface}>
+     */
+    public function findTopSpammers(int $limit = 100): array
+    {
+        return $this->createQueryBuilder('msg')
+            ->select('COUNT(msg.id) AS MessagesSent, s.username AS Username, s.status AS Status, s.updated AS Updated')
+            ->innerJoin('msg.sender', 's')
+            ->where('s.status IN (:spammers)')
+            ->andWhere('s.updated > :since')
+            ->setParameter('spammers', [MemberStatusType::BANNED, MemberStatusType::REJECTED])
+            ->setParameter('since', new DateTimeImmutable('-91 days'))
+            ->groupBy('s.id')
+            ->orderBy('s.updated', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * Messages of banned or rejected members to members who then left (volunteer tool "damage done").
+     *
+     * @return list<array{Receiver: string, ReceiverStatus: string, LastUpdated: ?DateTimeInterface, Sender: string, SenderStatus: string}>
+     */
+    public function findDamageDone(int $limit = 40): array
+    {
+        return $this->createQueryBuilder('msg')
+            ->select('r.username AS Receiver, r.status AS ReceiverStatus, r.updated AS LastUpdated')
+            ->addSelect('s.username AS Sender, s.status AS SenderStatus')
+            ->innerJoin('msg.sender', 's')
+            ->innerJoin('msg.receiver', 'r')
+            ->where('s.status IN (:spammers)')
+            ->andWhere('r.status IN (:left)')
+            ->setParameter('spammers', [MemberStatusType::BANNED, MemberStatusType::REJECTED])
+            ->setParameter('left', [MemberStatusType::TAKEN_OUT, MemberStatusType::ASKED_TO_LEAVE])
+            ->orderBy('s.updated', 'DESC')
+            ->addOrderBy('s.username')
+            ->addOrderBy('r.updated', 'DESC')
+            ->addOrderBy('r.id')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * Members who sent more than $moreThan messages (or only hosting requests and replies to them) during the last
+     * $days days, with the place and country code of their active address (volunteer tools "messages sent" and
+     * "requests sent").
+     *
+     * @return list<array{Username: string, City: ?string, Country: ?string, Count: int}>
+     */
+    public function findFrequentSenders(int $days, bool $requestsOnly, int $moreThan = 9): array
+    {
+        $qb = $this->createQueryBuilder('msg')
+            ->select('s.username AS Username, l.name AS City, l.countryId AS Country, COUNT(DISTINCT msg.id) AS Count')
+            ->innerJoin('msg.sender', 's')
+            ->leftJoin('s.addresses', 'a', Join::WITH, 'a.active = true')
+            ->leftJoin('a.location', 'l')
+            ->where('msg.created > :since')
+            ->setParameter('since', new DateTimeImmutable('-' . $days . ' days'))
+            ->groupBy('s.id')
+            ->addGroupBy('l.geonameId')
+            ->having('COUNT(DISTINCT msg.id) > :moreThan')
+            ->setParameter('moreThan', $moreThan)
+            ->orderBy('Count', 'DESC');
+        if ($requestsOnly) {
+            $qb->andWhere('msg.request IS NOT NULL');
+        }
+
+        return $qb->getQuery()->getArrayResult();
+    }
+
     public function getUnreadConversationsCount(Member $member): int
     {
         $sql = $this->getSql(true);

@@ -23,7 +23,7 @@
                         <td>{{ macros.avatar(result.Username) }}</td>
                         <td>{{ macros.profilelink(result.Username) }}</td>
                         <td>{{ result.Status }}</td>
-                        <td>{{ result.Updated }}</td>
+                        <td>{{ result.Updated ? result.Updated|date('Y-m-d H:i') }}</td>
                         <td>{{ result.MessagesSent }}</td>
                     </tr>
                 {% endfor %}

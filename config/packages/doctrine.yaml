@@ -104,6 +104,7 @@ doctrine:
             datetime_functions:
                 datediff: App\Doctrine\Functions\DateDiff
                 yearweek: App\Doctrine\Functions\YearWeek
+                year: DoctrineExtensions\Query\Mysql\Year
             numeric_functions:
                 ST_Distance_Sphere: LongitudeOne\Spatial\ORM\Query\AST\Functions\MariaDB\SpDistanceSphere
                 geodistance: App\Doctrine\Functions\GeoDistance

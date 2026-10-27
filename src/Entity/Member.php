@@ -989,7 +989,8 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
 
         /** @var RightVolunteer $volunteerRight */
         foreach ($volunteerRights->getIterator() as $volunteerRight) {
-            if ($volunteerRight->getRight()->getName() === $nameOfRight) {
+            // rights are named like Logs or SafetyTeam; main compared them in SQL, without case
+            if (0 === strcasecmp($volunteerRight->getRight()->getName(), $nameOfRight)) {
                 $hasRight = true;
                 break;
             }
@@ -1045,7 +1046,8 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
 
         /** @var RightVolunteer $volunteerRight */
         foreach ($volunteerRights->getIterator() as $volunteerRight) {
-            if ($volunteerRight->getRight()->getName() === $nameOfRight) {
+            // rights are named like Logs or SafetyTeam; main compared them in SQL, without case
+            if (0 === strcasecmp($volunteerRight->getRight()->getName(), $nameOfRight)) {
                 $scopes = str_replace(';', ',', str_replace('"', '', $volunteerRight->getScope()));
                 $scope = explode(',', $scopes);
             }

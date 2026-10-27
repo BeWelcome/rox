@@ -2,9 +2,10 @@
 
 namespace App\Model;
 
+use App\Entity\Log;
 use App\Entity\Member;
-use App\Pagerfanta\LogAdapter;
 use Doctrine\ORM\EntityManagerInterface;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 class LogModel
@@ -15,19 +16,24 @@ class LogModel
     }
 
     /**
-     * Returns a Pagerfanta object that contains the currently selected logs.
-     *
-     * @param int $page
-     * @param int $limit
-     *
-     * @return Pagerfanta
+     * The logs of the given types (all if none) and member (all if none), newest first.
      */
-    public function getFilteredLogs(array $types, $member, $page, $limit)
+    public function getFilteredLogs(array $types, ?Member $member, int|string $page, int|string $limit): Pagerfanta
     {
-        $adapter = new LogAdapter($this->entityManager, $types, $member);
-        $pagerFanta = new Pagerfanta($adapter);
-        $pagerFanta->setMaxPerPage($limit);
-        $pagerFanta->setCurrentPage($page);
+        $qb = $this->entityManager->getRepository(Log::class)->createQueryBuilder('l')
+            ->addSelect('m')
+            ->leftJoin('l.member', 'm')
+            ->orderBy('l.created', 'DESC');
+        if ([] !== $types) {
+            $qb->andWhere('l.type IN (:types)')->setParameter('types', $types);
+        }
+        if (null !== $member) {
+            $qb->andWhere('l.member = :member')->setParameter('member', $member);
+        }
+
+        $pagerFanta = new Pagerfanta(new QueryAdapter($qb, fetchJoinCollection: false));
+        $pagerFanta->setMaxPerPage((int) $limit);
+        $pagerFanta->setCurrentPage((int) $page);
 
         return $pagerFanta;
     }

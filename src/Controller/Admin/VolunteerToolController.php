@@ -233,26 +233,7 @@ class VolunteerToolController extends AbstractController
         $subMenuItems = $this->checkPermissions(self::CHECK_TOP_SPAMMER);
 
         // Get all banned members with the number of sent messages for the last two months
-        $connection = $entityManager->getConnection();
-
-        $messagesSent = $connection->executeQuery("
-            SELECT
-                COUNT(*) AS 'MessagesSent',
-                Username AS Username,
-                members.Status AS Status,
-                members.updated AS Updated
-            FROM
-                members,
-                messages
-            WHERE
-                messages.IdSender = members.id
-                AND (members.Status = 'Banned'
-                OR members.Status = 'Rejected')
-                AND DATEDIFF(NOW(), members.Updated) < 91
-            GROUP BY members.id
-            ORDER BY MAX(members.updated) DESC
-            LIMIT 100;
-        ")->fetchAllAssociative();
+        $messagesSent = $entityManager->getRepository(Message::class)->findTopSpammers();
 
         return $this->render(
             'admin/tools/top.spammer.html.twig',
@@ -273,27 +254,7 @@ class VolunteerToolController extends AbstractController
         $subMenuItems = $this->checkPermissions(self::DAMAGE_DONE);
 
         // Get all banned members with the number of sent messages for the last two months
-        $connection = $entityManager->getConnection();
-
-        $damageDone = $connection->executeQuery("
-            SELECT
-                m1.Username AS 'Receiver',
-                m1.Status AS 'ReceiverStatus',
-                m1.updated 'LastUpdated',
-                m2.Username AS 'Sender',
-                m2.Status AS 'SenderStatus'
-            FROM
-                members AS m1,
-                members AS m2,
-                messages
-            WHERE
-                messages.IdSender = m2.id
-                AND messages.IdReceiver = m1.id
-                AND m2.Status IN ('Banned' , 'Rejected')
-                AND m1.Status IN ('TakenOut' , 'AskToLeave')
-            ORDER BY m2.Updated DESC, m2.Username, m1.updated DESC , m1.id
-            LIMIT 40
-        ")->fetchAllAssociative();
+        $damageDone = $entityManager->getRepository(Message::class)->findDamageDone();
 
         return $this->render(
             'admin/tools/damage.done.html.twig',
@@ -313,26 +274,7 @@ class VolunteerToolController extends AbstractController
         // check permissions
         $subMenuItems = $this->checkPermissions(self::MESSAGES_SENT);
 
-        $connection = $entityManager->getConnection();
-        $results = $connection->executeQuery('
-            SELECT
-                m.username AS Username,
-                g.name AS City,
-                g.country AS Country,
-                count(msg.id) AS Count
-            FROM
-                messages msg,
-                member m,
-                address a
-            LEFT JOIN location g ON a.location = g.geoname_id
-            WHERE
-              a.member_id = m.id 
-              AND m.id = msg.IdSender
-              AND (DATE_ADD(msg.created, INTERVAL 7 DAY) > NOW())
-            GROUP BY m.Username
-            HAVING COUNT(msg.id) > 9
-            ORDER BY count(msg.id) DESC
-        ')->fetchAllAssociative();
+        $results = $entityManager->getRepository(Message::class)->findFrequentSenders(7, requestsOnly: false);
 
         return $this->render(
             'admin/tools/messages.sent.html.twig',
@@ -352,25 +294,7 @@ class VolunteerToolController extends AbstractController
         // check permissions
         $subMenuItems = $this->checkPermissions(self::REQUESTS_SENT);
 
-        $connection = $entityManager->getConnection();
-        $results = $connection->executeQuery('
-        SELECT
-m.username AS Username,
-g.name AS City,
-g.country AS Country,
-count(msg.id) AS Count
-FROM
-messages msg,
-members m
-LEFT JOIN geonames g ON m.IdCity = g.geonameID
-WHERE
-m.id = msg.IdSender
-AND NOT msg.request_id IS NULL
-AND (DATE_ADD(msg.created,
-    INTERVAL 14 DAY) > NOW())
-GROUP BY m.Username
-HAVING COUNT(msg.id) > 9
-ORDER BY count(msg.id) DESC')->fetchAllAssociative();
+        $results = $entityManager->getRepository(Message::class)->findFrequentSenders(14, requestsOnly: true);
 
         return $this->render(
             'admin/tools/requests.sent.html.twig',
@@ -469,24 +393,7 @@ ORDER BY count(msg.id) DESC')->fetchAllAssociative();
         // check permissions
         $subMenuItems = $this->checkPermissions(self::AGE_BY_COUNTRY);
 
-        $connection = $entityManager->getConnection();
-        $results = $connection->executeQuery("
-            SELECT
-                gc.Name AS Name,
-                COUNT(*) AS Count,
-                ROUND(AVG(m.BirthDate) / 10000) AS BirthYear,
-                DATE_FORMAT(NOW(), '%Y') - ROUND(AVG(m.BirthDate) / 10000) AS 'Age'
-            FROM
-                members m,
-                geonames g,
-                geonamescountries gc
-            WHERE
-                m.Status = 'Active'
-                AND m.IdCity = g.geonameId
-                AND g.country = gc.country
-            GROUP BY g.country
-            ORDER BY 2 DESC;
-        ")->fetchAllAssociative();
+        $results = $entityManager->getRepository(Member::class)->getAgeByCountry();
 
         return $this->render(
             'admin/tools/age.country.html.twig',

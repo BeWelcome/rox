@@ -46,8 +46,8 @@
             <tr>
                 <td>{{ log.type }}</td>
                 <td>{{ log.logMessage | raw }}</td>
-                <td>{{ log.Username }}</td>
-                <td>{{ log.created }}</td>
+                <td>{{ log.member ? log.member.username }}</td>
+                <td>{{ log.created|date('Y-m-d H:i:s') }}</td>
             </tr>
         {% endfor %}
         </table>

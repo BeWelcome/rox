@@ -1,7 +1,7 @@
 name: PR image build
 
 # Builds the PHP-FPM and Nginx images (including bun install and encore production)
-# for every pull request to develop, without pushing them, so a broken Dockerfile,
+# for every pull request to develop or main, without pushing them, so a broken Dockerfile,
 # lockfile or webpack config fails before the merge instead of on stage (#577).
 #
 # "Image build" always reports a result, so it can be a required check: it passes
@@ -9,7 +9,7 @@ name: PR image build
 
 on:
   pull_request:
-    branches: [develop]
+    branches: [develop, main]
 
 permissions:
   contents: read

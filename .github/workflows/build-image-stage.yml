@@ -1,11 +1,11 @@
 name: Build staging image
 
-# Builds the production images for the develop branch (PHP-FPM + Nginx
+# Builds the production images for the develop and main branches (PHP-FPM + Nginx
 # architecture) and pushes them to GHCR. On success, dispatches a repository_dispatch
 # event to sysadmins-infra so the stage stack auto-redeploys.
 #
-# Triggered by: pushes to develop (code or Docker changes), so every merge deploys
-#               to stage. Migrations still run by hand (docker/DEPLOYMENT.md).
+# Triggered by: pushes to develop or main (code or Docker changes), so every merge
+#               deploys to stage. Migrations still run by hand (docker/DEPLOYMENT.md).
 # Deploys to:   stage only (leopard.stage.bewelcome.org)
 # Prod deploy:  manual — use the "Deploy prod" workflow in sysadmins-infra
 #
@@ -17,7 +17,7 @@ name: Build staging image
 
 on:
   push:
-    branches: [develop]
+    branches: [develop, main]
     paths:
       - 'Dockerfile'
       - '.dockerignore'
@@ -262,7 +262,7 @@ jobs:
     needs: [merge-php, merge-nginx, scan]
     if: >
       github.event_name == 'push' &&
-      github.ref == 'refs/heads/develop' &&
+      (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/main') &&
       needs.merge-php.result == 'success' &&
       needs.merge-nginx.result == 'success' &&
       needs.scan.result == 'success'

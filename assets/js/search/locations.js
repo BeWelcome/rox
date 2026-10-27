@@ -349,14 +349,18 @@ Map.prototype.showMap = function () {
     this.markerClusterGroup = this.addMarkers(this.map);
 
     this.centerMap();
-    if (this.markerClusterGroup.getLayers().length > 0) {
-        // Frame the members found (and the searched place), not the whole search area,
-        // without going closer than a district when they are all at one spot.
-        const bounds = this.markerClusterGroup.getBounds();
-        if (this.placeMarker && '1' !== hidden('admin_unit').value) {
-            bounds.extend(this.placeMarker.getLatLng());
-        }
-        this.map.fitBounds(bounds, {padding: [48, 48], maxZoom: 13});
+    const radius = document.getElementById('search_distance');
+    const distance = radius ? parseInt(radius.value, 10) : NaN;
+    if (this.placeMarker && '1' !== hidden('admin_unit').value && distance >= 0) {
+        // A town: the map opens on the town itself (the search radius, between 3 and
+        // 10 km around its centre), not on every member of the area; zooming out shows
+        // the others.
+        const halfSide = Math.min(Math.max(distance, 3), 10) * 1000;
+        this.map.fitBounds(this.placeMarker.getLatLng().toBounds(2 * halfSide));
+    } else if (this.markerClusterGroup.getLayers().length > 0) {
+        // A country or a region: frame the members found, without going closer than a
+        // district when they are all at one spot.
+        this.map.fitBounds(this.markerClusterGroup.getBounds(), {padding: [48, 48], maxZoom: 13});
     }
 
     // Zooming or moving the map only changes the view; it doesn't search again.

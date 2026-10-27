@@ -433,12 +433,15 @@ Map.prototype.addMarkers = function (map) {
     this.memberMarkers = {};
     const markers = L.markerClusterGroup({
         showCoverageOnHover: false,
+        // Spread out by groupClick below, only when there are few members
+        spiderfyOnMaxZoom: false,
         iconCreateFunction: (cluster) => L.divIcon({
             iconSize: [48, 48],
             className: 'p-search-map-cluster',
             html: '<span>' + cluster.getChildCount() + '</span>'
         })
     });
+    markers.on('clusterclick', (event) => this.groupClick(event.layer));
 
     // Every member found (or, without that list, the members of this page): a click on the
     // marker opens the member's preview, as from the list.
@@ -468,6 +471,21 @@ Map.prototype.addMarkers = function (map) {
     map.addLayer(markers);
 
     return markers;
+};
+
+// A group the map can't open by zooming in (members at one spot, or the closest zoom):
+// up to 10 members are spread around it; more would cover the whole map, so nothing happens.
+const GROUP_SPREAD_MAX = 10;
+
+Map.prototype.groupClick = function (cluster) {
+    const bounds = cluster.getBounds();
+    const atOneSpot = bounds.getNorthEast().equals(bounds.getSouthWest());
+    if (!atOneSpot && this.map.getZoom() < this.map.getMaxZoom()) {
+        return; // the cluster group zooms in on it
+    }
+    if (cluster.getChildCount() <= GROUP_SPREAD_MAX) {
+        cluster.spiderfy();
+    }
 };
 
 const map = new Map();

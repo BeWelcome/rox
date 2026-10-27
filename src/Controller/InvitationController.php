@@ -96,9 +96,8 @@ class InvitationController extends BaseRequestAndInvitationController
             )
         ) {
             $this->addTranslatedFlash('error', 'flash.request.limit');
-            $referrer = $request->headers->get('referer');
 
-            return $this->notAllowedInPanel($request, $guest, 'invitation', $this->redirect($referrer));
+            return $this->notAllowedInPanel($request, $guest, 'invitation', $this->redirectBack($request, 'members_profile', ['username' => $guest->getUsername()]));
         }
 
         $redirectOnNotAllowed = false;

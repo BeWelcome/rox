@@ -15,6 +15,7 @@ use App\Form\TranslationFormType;
 use App\Model\TranslationModel;
 use App\Repository\LanguageRepository;
 use App\Repository\WordRepository;
+use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
@@ -40,6 +41,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class TranslationController extends AbstractController
 {
+    use RedirectBackTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -141,14 +143,11 @@ class TranslationController extends AbstractController
 
                 $referrer = $request->getSession()->get('originalReferrer');
                 $request->getSession()->remove('originalReferrer');
-                if (null === $referrer) {
-                    return $this->redirectToRoute('translations_locale_code', [
-                        'locale' => $language->getShortCode(),
-                        'type' => 'all',
-                    ]);
-                }
 
-                return $this->redirect($referrer);
+                return $this->redirectToPageOrRoute($referrer, $request, 'translations_locale_code', [
+                    'locale' => $language->getShortCode(),
+                    'type' => 'all',
+                ]);
             }
             $editForm->get('translatedText')->addError(new FormError($invalidMessage));
         }
@@ -394,7 +393,10 @@ class TranslationController extends AbstractController
                 $referrer = $request->getSession()->get('originalReferrer');
                 $request->getSession()->remove('originalReferrer');
 
-                return $this->redirect($referrer);
+                return $this->redirectToPageOrRoute($referrer, $request, 'translations_locale_code', [
+                    'locale' => $language->getShortCode(),
+                    'type' => 'all',
+                ]);
             }
             $addForm->get('translatedText')->addError(new FormError($invalidMessage));
         }
@@ -427,9 +429,8 @@ class TranslationController extends AbstractController
         $this->addTranslatedFlash('notice', $flashId);
 
         $request->getSession()->set('translation_mode', $mode);
-        $referrer = $request->headers->get('referer');
 
-        return $this->redirect($referrer);
+        return $this->redirectBack($request, 'translations');
     }
 
     /**

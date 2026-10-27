@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Model\BaseRequestModel;
 use App\Model\ConversationModel;
+use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use DateTime;
@@ -18,6 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class BaseRequestAndInvitationController extends AbstractController
 {
+    use RedirectBackTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 

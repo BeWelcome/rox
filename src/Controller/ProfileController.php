@@ -34,6 +34,7 @@ use App\Repository\ProfileNoteRepository;
 use App\Repository\ProfileVisitRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
+use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -58,6 +59,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 class ProfileController extends AbstractController
 {
+    use RedirectBackTrait;
     use TranslatedFlashTrait;
 
     private const int PROFILE_COMMENTS = 10;
@@ -95,6 +97,7 @@ class ProfileController extends AbstractController
     {
         $statusForm = $this->createForm(ProfileStatusFormType::class);
         $statusForm->handleRequest($request);
+        $member = null;
 
         if ($statusForm->isSubmitted() && $statusForm->isValid()) {
             $data = $statusForm->getData();
@@ -109,7 +112,9 @@ class ProfileController extends AbstractController
             }
         }
 
-        return new RedirectResponse($request->headers->get('referer'));
+        return null === $member
+            ? $this->redirectBack($request, 'homepage')
+            : $this->redirectBack($request, 'members_profile', ['username' => $member->getUsername()]);
     }
 
     #[Route(path: '/members/{username:member}/visitors/{page}', name: 'profile_visitors')]

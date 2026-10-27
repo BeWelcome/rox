@@ -7,6 +7,11 @@ exercise_html_purifier:
                 # the charset used by the original contents
                 Core.Encoding: 'UTF-8'
                 # full configuration reference: http://htmlpurifier.org/live/configdoc/plain.html
+        # Plain text such as titles: no markup at all
+        text:
+            config:
+                Core.Encoding: 'UTF-8'
+                HTML.Allowed: ''
         custom:
             config:
                 Core.Encoding: 'UTF-8'

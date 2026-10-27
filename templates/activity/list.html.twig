@@ -75,7 +75,7 @@
         <i class="far fa-calendar" aria-hidden="true"></i>
         <p>
           {%- if tab == 'activitiesnearme' -%}
-            {{ place ? 'activities.empty.near'|trans({ radius: radius }) : 'activities.empty.no.address'|trans }}
+            {{ place ? 'activities.empty.within'|trans({ radius: radius }) : 'activities.empty.no.address'|trans }}
           {%- elseif tab == 'myactivities' -%}{{ 'activitiesnomyactivities'|trans }}
           {%- elseif tab == 'upcomingactivities' -%}{{ 'activitiesnoupcoming'|trans }}
           {%- elseif tab == 'upcomingonlineactivities' -%}{{ 'activitiesnoupcomingonline'|trans }}

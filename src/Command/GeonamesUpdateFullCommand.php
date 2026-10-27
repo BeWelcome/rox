@@ -2,7 +2,6 @@
 
 namespace App\Command;
 
-use App\Entity\Country;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
@@ -71,12 +70,6 @@ class GeonamesUpdateFullCommand extends Command
                 'Fetch admin unit info and import.'
             )
             ->addOption(
-                'countries',
-                null,
-                InputOption::VALUE_NONE,
-                ''
-            )
-            ->addOption(
                 'translations',
                 null,
                 InputOption::VALUE_NONE,
@@ -116,12 +109,10 @@ class GeonamesUpdateFullCommand extends Command
         $geonames = $input->getOption('geonames');
         $translations = $input->getOption('translations');
         $adminUnits = $input->getOption('admin-units');
-        $countries = $input->getOption('countries');
 
         // Assumption is that the tables exist (thanks to doctrine create:schema).
         if ($input->getOption('full')) {
             $geonames = true;
-            $countries = true;
             $translations = true;
             $adminUnits = true;
         }
@@ -131,13 +122,6 @@ class GeonamesUpdateFullCommand extends Command
 
         if ($geonames) {
             $returnCode = $this->updateGeonames($io, $downloadFiles);
-            if (0 !== $returnCode && !$continueOnErrors) {
-                return $returnCode;
-            }
-        }
-
-        if ($countries) {
-            $returnCode = $this->setupCountries($io, $downloadFiles);
             if (0 !== $returnCode && !$continueOnErrors) {
                 return $returnCode;
             }
@@ -659,53 +643,5 @@ class GeonamesUpdateFullCommand extends Command
                 }
             }
         }
-    }
-
-    private function setupCountries(SymfonyStyle $io, mixed $downloadFiles): int
-    {
-        $io->title('Fetching country info from geonames');
-        $this->entityManager->getConnection()->executeStatement('TRUNCATE geo__countries');
-
-        $filename = $this->getFile(
-            $io,
-            'countryInfo.txt',
-            $downloadFiles
-        );
-
-        if (null === $filename) {
-            return -1;
-        }
-
-        $handle = fopen($filename, 'r');
-
-        $countries = [];
-        while (($row = fgetcsv($handle, 0, "\t", escape: '\\')) !== false) {
-            if ('#' !== $row[0][0]) {
-                $countries[] = $row;
-            }
-        }
-
-        $query = 'INSERT INTO geo__countries (continent, country_id, country) VALUE ';
-
-        foreach ($countries as $country) {
-            $continent = match ($country[8]) {
-                'EU', 'AS' => 'EA',
-                'NA', 'SA' => 'AM',
-                default => $country[8],
-            };
-            $query .= \sprintf(
-                '(%s, %s, %s), ',
-                $this->entityManager->getConnection()->quote($continent),
-                $this->entityManager->getConnection()->quote($country[0]),
-                $this->entityManager->getConnection()->quote($country[16])
-            );
-        }
-
-        $query = substr($query, 0, -2);
-
-        $this->entityManager->getConnection()->executeStatement($query);
-        fclose($handle);
-
-        return Command::SUCCESS;
     }
 }

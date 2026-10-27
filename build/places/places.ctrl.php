@@ -21,16 +21,6 @@ class PlacesController extends RoxControllerBase {
         unset($this->_model);
     }
 
-    /**
-     * Shows a list of all countries together with number of members if any
-     */
-    public function countries() {
-        $page = new CountriesPage();
-        $page->continents = $this->_model->getContinents();
-        $page->countries = $this->_model->getAllCountries();
-        return $page;
-    }
-
     public function country() {
         $loggedInMember = $this->_model->getLoggedInMember();
         $page = new CountryPage();

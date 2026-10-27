@@ -9267,7 +9267,11 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 /* Name, gender, username; place, occupation, last login */
 .p-pro__info { min-width: 0; padding-top: 0.6rem; }
 .p-pro__name-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.65rem; }
-.p-pro .p-pro__name { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.1rem; font-weight: 700; line-height: 1.15; }
+.p-pro .p-pro__name { min-width: 0; max-width: 100%; margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.1rem; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
+/* A long username with no space (nom_ici_trop_long) breaks instead of running off the page */
+.p-pro__name-row,
+.p-pro__name-row > * { min-width: 0; max-width: 100%; }
+.p-pro__username { overflow-wrap: anywhere; }
 .p-pro__who { font-size: 0.8125rem; }
 .p-pro__who--name { display: none; }
 .p-pro__username { color: #94a3b8; font-size: 0.9375rem; }

@@ -6,7 +6,7 @@
 
     <title>
         {%- if block('title') is defined -%}
-            {{ block('title') | trim }} |
+            {{ block('title') | trim|raw }} |
         {%- endif -%} BeWelcome
     </title>
 

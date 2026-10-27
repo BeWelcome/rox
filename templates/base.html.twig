@@ -10,7 +10,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('/images/apple-touch-icon.png') }}"/>
   <meta name="apple-mobile-web-app-title" content="beWelcome"/>
 
-  <title>{%- if block('title') is defined %}{{ block('title') | trim }} | {% endif -%} BeWelcome</title>
+  <title>{%- if block('title') is defined %}{{ block('title') | trim|raw }} | {% endif -%} BeWelcome</title>
 
   <meta name="description" content="{{ 'default_meta_description' | trans }}">
   <meta name="keywords" content="{{ 'default_meta_keyword' | trans }}">

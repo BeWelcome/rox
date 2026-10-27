@@ -11,12 +11,18 @@ use App\Entity\Preference;
 use App\Form\ActivityRadiusType;
 use App\Repository\ActivityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use HTMLPurifier;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class ActivityModel
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        #[Autowire(service: 'exercise_html_purifier.default')]
+        private readonly HTMLPurifier $purifier,
+        #[Autowire(service: 'exercise_html_purifier.text')]
+        private readonly HTMLPurifier $textPurifier,
     ) {
     }
 
@@ -56,7 +62,7 @@ class ActivityModel
         $activity = new Activity();
         $activity->setCreatedBy($creator);
         $activity->setStatus(Activity::STATUS_ACTIVE);
-        $data->toEntity($activity);
+        $this->purify($data)->toEntity($activity);
 
         $organizer = new ActivityAttendee($activity, $creator, ActivityAttendee::ATTENDS_YES, '', true);
         $activity->addAttendee($organizer);
@@ -70,7 +76,7 @@ class ActivityModel
 
     public function update(Activity $activity, ActivityDto $data): void
     {
-        $data->toEntity($activity);
+        $this->purify($data)->toEntity($activity);
         $this->entityManager->flush();
     }
 
@@ -186,5 +192,21 @@ class ActivityModel
             ->findOneBy(['codename' => Preference::ACTIVITIES_NEAR_ME_RADIUS]);
 
         return $preference;
+    }
+
+    /**
+     * The title is plain text: markup is removed, characters stay as they are (Twig escapes them on output). The
+     * description is HTML: what the purifier allows stays.
+     */
+    private function purify(ActivityDto $data): ActivityDto
+    {
+        $data->title = html_entity_decode(
+            $this->textPurifier->purify((string) $data->title),
+            \ENT_QUOTES | \ENT_HTML5,
+            'UTF-8'
+        );
+        $data->description = $this->purifier->purify((string) $data->description);
+
+        return $data;
     }
 }

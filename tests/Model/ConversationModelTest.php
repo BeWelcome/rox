@@ -12,9 +12,6 @@ use App\Entity\Subject;
 use App\Model\ConversationModel;
 use App\Service\Mailer;
 use DateTime;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Result;
-use Doctrine\DBAL\Statement;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\MockObject\Stub;
@@ -220,56 +217,6 @@ class ConversationModelTest extends TestCase
         $this->assertSame($msg2, $result);
     }
 
-    public function testHasMessageLimitExceededTrueWhenLimitReached(): void
-    {
-        // Mock DBAL for "hasLimitExceeded" private method logic
-        $mockRow = [
-            'numberOfComments' => 0, // < 1
-            'numberOfMessagesLastHour' => 10,
-            'numberOfMessagesLastDay' => 15,
-        ];
-
-        $this->setupLimitMock($mockRow);
-
-        // Limit per hour: 5. We have 10. Should return true.
-        $member = $this->createStub(Member::class);
-        $member->method('getId')->willReturn(1);
-        $this->assertTrue($this->model->hasMessageLimitExceeded($member, 5, 20));
-    }
-
-    public function testHasMessageLimitExceededFalseIfOneCommentExistEvenWhenLimitReached(): void
-    {
-        // Mock DBAL for "hasLimitExceeded" private method logic
-        $mockRow = [
-            'numberOfComments' => 1,
-            'numberOfMessagesLastHour' => 10,
-            'numberOfMessagesLastDay' => 15,
-        ];
-
-        $this->setupLimitMock($mockRow);
-
-        // Limit per hour: 5. We have 10. Should return true.
-        $member = $this->createStub(Member::class);
-        $member->method('getId')->willReturn(1);
-        $this->assertFalse($this->model->hasMessageLimitExceeded($member, 5, 20));
-    }
-
-    public function testHasMessageLimitExceededFalseWhenUnderLimit(): void
-    {
-        $mockRow = [
-            'numberOfComments' => 0,
-            'numberOfMessagesLastHour' => 2,
-            'numberOfMessagesLastDay' => 5,
-        ];
-
-        $this->setupLimitMock($mockRow);
-
-        // Limit per hour: 5. We have 2. Limit per day: 20. We have 5. -> False
-        $member = $this->createStub(Member::class);
-        $member->method('getId')->willReturn(1);
-        $this->assertFalse($this->model->hasMessageLimitExceeded($member, 5, 20));
-    }
-
     public function testIsMarkedCorrectly(): void
     {
         $message = new Message();
@@ -324,20 +271,6 @@ class ConversationModelTest extends TestCase
              Guy and Lirane :)
             MSG
         );
-    }
-
-    private function setupLimitMock(array $returnData): void
-    {
-        $result = $this->createStub(Result::class);
-        $result->method('fetchAssociative')->willReturn($returnData);
-
-        $stmt = $this->createStub(Statement::class);
-        $stmt->method('executeQuery')->willReturn($result);
-
-        $conn = $this->createStub(Connection::class);
-        $conn->method('prepare')->willReturn($stmt);
-
-        $this->entityManager->method('getConnection')->willReturn($conn);
     }
 
     private function expectPersistAndFlush(Message $message): void

@@ -8,6 +8,7 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
 use App\Entity\Member;
 use App\Utilities\CommentSorter;
+use DateTimeInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -15,6 +16,32 @@ use Pagerfanta\Pagerfanta;
 
 class CommentRepository extends EntityRepository
 {
+    public function countPositiveCommentsAbout(Member $member): int
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.toMember = :member')
+            ->andWhere('c.quality = :positive')
+            ->setParameter('member', $member)
+            ->setParameter('positive', CommentQualityType::POSITIVE)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return list<Comment>
+     */
+    public function findWrittenBySince(Member $member, DateTimeInterface $since): array
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.fromMember = :member')
+            ->andWhere('c.created > :since')
+            ->setParameter('member', $member)
+            ->setParameter('since', $since)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function pageAll($page = 1, $items = 10): Pagerfanta
     {
         $paginator = new Pagerfanta(new QueryAdapter($this->queryAll()));

@@ -16,8 +16,8 @@ all: phpci
 # The same checks as CI (.github/workflows/ci.yml calls these targets).
 phpci: check test security phploc
 
-# Fast checks, run by the pre-push hook.
-check: php-cs-fixer php-code-sniffer phpstan phpcpd yaml-lint doctrine
+# Fast checks, run by the pre-push hook. The audits catch a new advisory before CI does (they need the network).
+check: php-cs-fixer php-code-sniffer phpstan phpcpd yaml-lint doctrine security
 
 # int-test needs the bewelcome_test database (bin/console test:database:create --env=test).
 test: phpunit infection int-test

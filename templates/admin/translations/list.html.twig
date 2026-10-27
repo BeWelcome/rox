@@ -58,7 +58,7 @@
                         <tr>
                             <td class="w-25">
                                 <p class="m-0"><small class="text-muted">{{ translation.code }}</small></p>
-                                <p class="m-0">{{ translation.code | trans( {}, 'messages', 'en' ) | striptags | truncate(50) }}</p>
+                                <p class="m-0">{{ translation.english|default('')|striptags|truncate(50) }}</p>
                             </td>
                             <td class="w-75">
                                 <p class="m-0"><small class="text-muted">{{ translation.domain }}</small></p>

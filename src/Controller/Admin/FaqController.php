@@ -114,8 +114,8 @@ class FaqController extends FaqBaseController
             $data = $faqForm->getData();
 
             $wordRepository = $this->entityManager->getRepository(Word::class);
-            $checkQuestion = $wordRepository->findBy(['code' => 'faqq_' . $data->wordCode, 'shortCode' => 'en']);
-            $checkAnswer = $wordRepository->findBy(['code' => 'faqa_' . $data->wordCode, 'shortCode' => 'en']);
+            $checkQuestion = $wordRepository->findBy(['code' => 'faqq_' . $data->wordCode, 'language' => 'en']);
+            $checkAnswer = $wordRepository->findBy(['code' => 'faqa_' . $data->wordCode, 'language' => 'en']);
             $valid = (empty($checkQuestion) && empty($checkAnswer));
             if ($valid) {
                 /** @var Member $author */
@@ -229,8 +229,8 @@ class FaqController extends FaqBaseController
 
             /** @var EntityRepository $wordRepository */
             $wordRepository = $this->entityManager->getRepository(Word::class);
-            $question = $wordRepository->findOneBy(['code' => 'faqq_' . $data->wordCode, 'shortCode' => 'en']);
-            $answer = $wordRepository->findOneBy(['code' => 'faqa_' . $data->wordCode, 'shortCode' => 'en']);
+            $question = $wordRepository->findOneBy(['code' => 'faqq_' . $data->wordCode, 'language' => 'en']);
+            $answer = $wordRepository->findOneBy(['code' => 'faqa_' . $data->wordCode, 'language' => 'en']);
 
             $question
                 ->setSentence($data->question)

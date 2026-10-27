@@ -25,6 +25,7 @@ class WordRepository extends EntityRepository
             ->addSelect('COALESCE(lang.domain, dflt.domain) AS domain')
             ->addSelect('COALESCE(lang.sentence, dflt.sentence) AS sentence')
             ->addSelect('COALESCE(lang.created, dflt.created) AS created')
+            ->addSelect('dflt.sentence AS english')
             ->leftJoin(
                 Word::class,
                 'dflt',
@@ -77,7 +78,7 @@ class WordRepository extends EntityRepository
     {
         return $this->createQueryBuilder('w')
             ->select('w.code AS code, w.domain AS domain, IDENTITY(w.language) AS shortCode, w.sentence AS sentence')
-            ->addSelect('w.created AS created')
+            ->addSelect('w.created AS created, en.sentence AS english')
             ->addSelect('CASE WHEN en.majorUpdate > w.updated THEN 1 ELSE 0 END AS majorUpdate')
             ->innerJoin(Word::class, 'en', Join::WITH, "en.code = w.code AND IDENTITY(en.language) = 'en'")
             ->where('IDENTITY(w.language) = :locale')
@@ -207,7 +208,7 @@ class WordRepository extends EntityRepository
     {
         return $this->createQueryBuilder($alias)
             ->select("{$alias}.code AS code, {$alias}.domain AS domain, IDENTITY({$alias}.language) AS shortCode")
-            ->addSelect("{$alias}.sentence AS sentence, {$alias}.created AS created")
+            ->addSelect("{$alias}.sentence AS sentence, {$alias}.created AS created, {$alias}.sentence AS english")
             ->where("IDENTITY({$alias}.language) = 'en'");
     }
 

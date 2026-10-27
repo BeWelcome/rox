@@ -30,7 +30,7 @@ class FaqCategoryRequest
 
         // Find matching entry in words table for locale 'en'
         $wordRepository = $entityManager->getRepository(Word::class);
-        $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'shortCode' => 'en']);
+        $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'language' => 'en']);
         $faqCategoryRequest->description = $description->getSentence();
 
         return $faqCategoryRequest;

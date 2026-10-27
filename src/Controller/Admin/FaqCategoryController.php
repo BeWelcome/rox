@@ -52,7 +52,7 @@ class FaqCategoryController extends FaqBaseController
             $data = $faqCategoryForm->getData();
 
             $wordRepository = $this->entityManager->getRepository(Word::class);
-            $check = $wordRepository->findBy(['code' => $data->wordCode, 'shortCode' => 'en']);
+            $check = $wordRepository->findBy(['code' => $data->wordCode, 'language' => 'en']);
             $valid = empty($check);
             if ($valid) {
                 /** @var Member $author */
@@ -113,7 +113,7 @@ class FaqCategoryController extends FaqBaseController
             // Update description accordingly
             $data = $faqCategoryForm->getData();
             $wordRepository = $this->entityManager->getRepository(Word::class);
-            $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'shortCode' => 'en']);
+            $description = $wordRepository->findOneBy(['code' => $faqCategoryRequest->wordCode, 'language' => 'en']);
             $description->setSentence($data->description);
             $description->setMajorUpdate(new DateTime());
             $this->entityManager->persist($description);

@@ -10800,7 +10800,9 @@ body.is-embedded { background: #fff; }
 .p-pe-head__langs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.6rem; }
 .p-pe-head__langs-label { margin-right: 0.2rem; color: #64748b; font-size: 0.8125rem; }
 /* The languages as one segmented pill: the one shown in black, "+" in a dashed circle */
-.p-pe-head__lang-tabs { display: inline-flex; flex-wrap: nowrap; align-items: center; gap: 0.15rem; max-width: 100%; padding: 0.25rem; border: 1px solid #ece3d9; border-radius: 999px; background: #fff; overflow-x: auto; scrollbar-width: none; }
+/* position: relative keeps the visually-hidden text of "+" (absolute) inside the scrolled
+   row: without it, it stuck out at the far right and widened the whole page on phones */
+.p-pe-head__lang-tabs { position: relative; display: inline-flex; flex-wrap: nowrap; align-items: center; gap: 0.15rem; max-width: 100%; padding: 0.25rem; border: 1px solid #ece3d9; border-radius: 999px; background: #fff; overflow-x: auto; scrollbar-width: none; }
 .p-pe-head__lang-tabs::-webkit-scrollbar { display: none; }
 .p-pe-head__lang, .p-pe-head__lang:hover { display: inline-flex; flex: 0 0 auto; align-items: center; padding: 0.4rem 0.95rem; border: 0; border-radius: 999px; background: transparent; color: #334155; font-size: 0.875rem; font-weight: 700; line-height: 1.3; white-space: nowrap; text-decoration: none; cursor: pointer; }
 .p-pe-head__lang:hover { background: #f8fafc; color: #0f172a; }

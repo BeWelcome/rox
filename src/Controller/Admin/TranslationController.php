@@ -75,14 +75,14 @@ class TranslationController extends AbstractController
         /** @var Word $original */
         $original = $translationRepository->findOneBy([
             'code' => $code,
-            'shortCode' => 'en',
+            'language' => 'en',
         ]);
 
         // Check that there is already a translation for this id/code
         /** @var Word $translation */
         $translation = $translationRepository->findOneBy([
             'code' => $code,
-            'shortCode' => $language->getShortCode(),
+            'language' => $language->getShortCode(),
         ]);
         if (null === $translation) {
             return $this->redirectToRoute('translation_add', [
@@ -192,7 +192,7 @@ class TranslationController extends AbstractController
         /** @var Word $englishTranslation */
         $englishTranslation = $translationRepository->findOneBy([
             'code' => $translationId,
-            'shortCode' => 'en',
+            'language' => 'en',
         ]);
 
         if (null !== $englishTranslation) {
@@ -342,11 +342,11 @@ class TranslationController extends AbstractController
         /** @var Word $original */
         $original = $translationRepository->findOneBy([
             'code' => $code,
-            'shortCode' => 'en',
+            'language' => 'en',
         ]);
         $translation = $translationRepository->findOneBy([
             'code' => $code,
-            'shortCode' => $language->getShortCode(),
+            'language' => $language->getShortCode(),
         ]);
 
         // Work around a problem in the database

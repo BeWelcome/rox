@@ -7551,6 +7551,11 @@ legend.p-search-options__label { float: none; width: auto; padding: 0; }
   .p-search-results__view-label { display: none; }
   .p-search-results .p-search-results__order { order: 1; width: auto; min-width: 0; margin-left: auto; gap: 0.35rem; }
   .p-search-results__order label { display: none; }
+  /* No room for the chosen order: only the direction icon and a small arrow that opens the menu */
+  .p-search-results__order .p-select__text { display: none; }
+  .p-search-results__order .p-select__button { gap: 0; }
+  .p-search-results__order .p-select__button::after { content: ''; width: 0; height: 0; margin: 0.15rem 0 0 0.1rem; border-top: 5px solid #64748b; border-right: 4px solid transparent; border-left: 4px solid transparent; }
+  .p-search-results__order .p-select__menu { right: 0; left: auto; }
   .p-search-results__order .p-search-results__direction { order: -1; width: auto; height: auto; border: 0; background: none; color: #64748b; }
   .p-search .p-search-results__order .p-search-select {
     width: auto;

@@ -138,9 +138,8 @@ class RequestController extends BaseRequestAndInvitationController
             )
         ) {
             $this->addTranslatedFlash('error', 'flash.request.limit');
-            $referrer = $request->headers->get('referer');
 
-            return $this->notAllowedInPanel($request, $host, 'request', $this->redirect($referrer));
+            return $this->notAllowedInPanel($request, $host, 'request', $this->redirectBack($request, 'members_profile', ['username' => $host->getUsername()]));
         }
 
         if (AccommodationType::NO === $host->getAccommodation()) {

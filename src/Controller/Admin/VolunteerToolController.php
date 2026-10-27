@@ -62,7 +62,7 @@ class VolunteerToolController extends AbstractController
     #[Route(path: '/admin/tools', name: 'admin_volunteer_tools')]
     public function showOverview(Request $request): RedirectResponse
     {
-        $subMenuItems = $this->checkPermissions($request);
+        $subMenuItems = $this->checkPermissions();
         $firstSubMenuItem = reset($subMenuItems);
 
         return $this->redirect($firstSubMenuItem['url']);
@@ -76,7 +76,7 @@ class VolunteerToolController extends AbstractController
         Logger $logger,
     ): Response {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::CHANGE_USERNAME);
+        $subMenuItems = $this->checkPermissions(self::CHANGE_USERNAME);
 
         $form = $this->createForm(ChangeUsernameFormType::class, new ChangeUsernameRequest());
         $form->handleRequest($request);
@@ -157,7 +157,7 @@ class VolunteerToolController extends AbstractController
     public function findUser(Request $request, EntityManagerInterface $entityManager, Logger $logger): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::FIND_USER);
+        $subMenuItems = $this->checkPermissions(self::FIND_USER);
 
         $form = $this->createForm(FindUserFormType::class, new FindUserRequest());
         $form->handleRequest($request);
@@ -190,7 +190,7 @@ class VolunteerToolController extends AbstractController
     public function showSignupFeedback(Request $request): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::CHECK_FEEDBACK);
+        $subMenuItems = $this->checkPermissions(self::CHECK_FEEDBACK);
 
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 20);
@@ -230,7 +230,7 @@ class VolunteerToolController extends AbstractController
     public function showTopSpammer(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::CHECK_TOP_SPAMMER);
+        $subMenuItems = $this->checkPermissions(self::CHECK_TOP_SPAMMER);
 
         // Get all banned members with the number of sent messages for the last two months
         $messagesSent = $entityManager->getRepository(Message::class)->findTopSpammers();
@@ -251,7 +251,7 @@ class VolunteerToolController extends AbstractController
     public function showDamageDone(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::DAMAGE_DONE);
+        $subMenuItems = $this->checkPermissions(self::DAMAGE_DONE);
 
         // Get all banned members with the number of sent messages for the last two months
         $damageDone = $entityManager->getRepository(Message::class)->findDamageDone();
@@ -272,7 +272,7 @@ class VolunteerToolController extends AbstractController
     public function showMessagesLastWeekAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::MESSAGES_SENT);
+        $subMenuItems = $this->checkPermissions(self::MESSAGES_SENT);
 
         $results = $entityManager->getRepository(Message::class)->findFrequentSenders(7, requestsOnly: false);
 
@@ -292,7 +292,7 @@ class VolunteerToolController extends AbstractController
     public function showRequestsLastTwoWeeks(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::REQUESTS_SENT);
+        $subMenuItems = $this->checkPermissions(self::REQUESTS_SENT);
 
         $results = $entityManager->getRepository(Message::class)->findFrequentSenders(14, requestsOnly: true);
 
@@ -311,7 +311,7 @@ class VolunteerToolController extends AbstractController
     #[Route(path: '/admin/tools/messages/member', name: 'admin_tools_messages_by_member')]
     public function showMessagesByMember(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $subMenuItems = $this->checkPermissions($request, self::MESSAGES_BY_MEMBER);
+        $subMenuItems = $this->checkPermissions(self::MESSAGES_BY_MEMBER);
 
         $usernameForm = $this->createFormBuilder()
             ->add('username', TextType::class, [
@@ -391,7 +391,7 @@ class VolunteerToolController extends AbstractController
     public function showAverageAgePerCountryAction(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::AGE_BY_COUNTRY);
+        $subMenuItems = $this->checkPermissions(self::AGE_BY_COUNTRY);
 
         $results = $entityManager->getRepository(Member::class)->getAgeByCountry();
 
@@ -411,7 +411,7 @@ class VolunteerToolController extends AbstractController
     public function showUploadedImages(Request $request, EntityManagerInterface $entityManager, int $page = 1): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::UPLOADED_IMAGES);
+        $subMenuItems = $this->checkPermissions(self::UPLOADED_IMAGES);
 
         $repository = $entityManager->getRepository(UploadedImage::class);
         $qb = $repository->createQueryBuilder('i');
@@ -437,7 +437,7 @@ class VolunteerToolController extends AbstractController
     public function addLoginMessage(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::LOGIN_MESSAGE_ADD);
+        $subMenuItems = $this->checkPermissions(self::LOGIN_MESSAGE_ADD);
 
         $form = $this->createForm(LoginMessageType::class);
         $form->handleRequest($request);
@@ -466,7 +466,7 @@ class VolunteerToolController extends AbstractController
     public function showLoginMessages(Request $request, EntityManagerInterface $entityManager): Response
     {
         // check permissions
-        $subMenuItems = $this->checkPermissions($request, self::LOGIN_MESSAGES_SHOW);
+        $subMenuItems = $this->checkPermissions(self::LOGIN_MESSAGES_SHOW);
 
         $loginMessageRepository = $entityManager->getRepository(LoginMessage::class);
         $loginMessages = $loginMessageRepository->findBy([], ['expires' => 'DESC', 'id' => 'DESC']);
@@ -586,18 +586,18 @@ class VolunteerToolController extends AbstractController
     }
 
     /**
-     * @return RedirectResponse|array
+     * The tools the volunteer may use; denies access if there are none or $tool isn't one of them.
+     *
+     * @return array<string, array{key: string, url: string}>
      */
-    private function checkPermissions(Request $request, ?string $tool = null)
+    private function checkPermissions(?string $tool = null): array
     {
         // check permissions
         $subMenuItems = $this->getSubMenuItems();
 
+        // The callers render the returned menu, so a redirect can't be handed back: deny as the other admin pages do
         if (empty($subMenuItems) || ((null !== $tool) && !\array_key_exists($tool, $subMenuItems))) {
-            $this->addFlash('notice', 'admin.tools.not.allowed');
-            $referrer = $request->headers->get('referer');
-
-            return $this->redirect($referrer);
+            throw $this->createAccessDeniedException('admin.tools.not.allowed');
         }
 
         return $subMenuItems;

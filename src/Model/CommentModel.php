@@ -5,6 +5,8 @@ namespace App\Model;
 use App\Doctrine\CommentRelationsType;
 use App\Entity\Comment;
 use App\Entity\Member;
+use App\Repository\CommentRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Jfcherng\Diff\LevenshteinDistance;
 use Throwable;
@@ -95,9 +97,9 @@ class CommentModel
     public function checkCommentSpam(Member $loggedInMember, Comment $comment): bool
     {
         $spamCheckParams = [
-            ['duration' => '00:02:00', 'count' => 1],
-            ['duration' => '00:20:00', 'count' => 5],
-            ['duration' => '06:00:00', 'count' => 25],
+            ['duration' => '2 minutes', 'count' => 1],
+            ['duration' => '20 minutes', 'count' => 5],
+            ['duration' => '6 hours', 'count' => 25],
         ];
 
         $check1 = $this->checkCommentsDuration($loggedInMember, $comment, $spamCheckParams[0]);
@@ -123,72 +125,42 @@ class CommentModel
         return $found > 0;
     }
 
+    /**
+     * Whether the member wrote at least `count` comments during the last `duration` that are all (nearly) the same
+     * as this one.
+     */
     private function checkCommentsDuration(Member $member, Comment $comment, array $params): bool
     {
-        $duration = $params['duration'];
-        $count = $params['count'];
-
-        $result = false;
-        $commentCount = $this->entityManager
-            ->getConnection()
-            ->executeQuery(
-                '
-                    SELECT
-                        COUNT(*) as cnt
-                    FROM
-                        comments c
-                    WHERE
-                        c.IdFromMember = :memberId
-                        AND TIMEDIFF(NOW(), created) < :duration
-                ',
-                ['memberId' => $member->getId(), 'duration' => $duration]
-            )
-            ->fetchOne()
-        ;
-
-        if ($commentCount >= $count) {
-            // Okay limit was hit, check for comment quality
-            // Get all comments written during the given duration
-            $comments = $this->entityManager
-                ->getConnection()
-                ->executeQuery(
-                    '
-                        SELECT
-                            c.comment
-                        FROM
-                            comments c
-                        WHERE
-                            c.from_member_id = :memberId
-                            AND TIMEDIFF(NOW(), created) < :duration
-                    ',
-                    ['memberId' => $member->getId(), 'duration' => $duration]
-                )
-                ->fetchAllAssociative()
-            ;
-            $result = $this->checkCommentSimilarity($comments, $comment);
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $this->entityManager->getRepository(Comment::class);
+        $comments = $commentRepository->findWrittenBySince($member, new DateTime('-' . $params['duration']));
+        if (\count($comments) < $params['count']) {
+            return false;
         }
 
-        return $result;
+        $texts = array_map(static fn (Comment $written): string => $written->getComment(), $comments);
+        $texts[] = $comment->getComment();
+
+        return $this->allSimilar($texts);
     }
 
-    private function checkCommentSimilarity(array $comments, Comment $comment): bool
+    /**
+     * Whether every two of the texts are more than 95% alike.
+     *
+     * @param list<string> $texts
+     */
+    private function allSimilar(array $texts): bool
     {
-        $similar = 0;
-        $comments[\count($comments)] = ['comment' => $comment->getComment()];
-        $count = \count($comments);
+        $count = \count($texts);
         for ($i = 0; $i < $count - 1; ++$i) {
             for ($j = $i + 1; $j < $count; ++$j) {
-                similar_text(
-                    (string) $comments[$i]['comment'],
-                    (string) $comments[$j]['comment'],
-                    $percent
-                );
-                if ($percent > 95) {
-                    ++$similar;
+                similar_text($texts[$i], $texts[$j], $percent);
+                if ($percent <= 95) {
+                    return false;
                 }
             }
         }
 
-        return $similar !== $count * ($count - 1);
+        return true;
     }
 }

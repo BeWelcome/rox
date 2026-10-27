@@ -96,6 +96,29 @@ class MessageRepository extends EntityRepository
         return $qb->getQuery()->getArrayResult();
     }
 
+    /**
+     * Messages (first messages of a conversation, no replies) or hosting requests and their replies that
+     * the member sent since the given time and that went out or will go out.
+     */
+    public function countSentSince(Member $sender, DateTimeInterface $since, bool $requests): int
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->select('COUNT(m.id)')
+            ->where('m.sender = :sender')
+            ->andWhere('m.status IN (:sent)')
+            ->andWhere('m.dateSent > :since')
+            ->setParameter('sender', $sender)
+            ->setParameter('sent', [MessageStatusType::SEND, MessageStatusType::SENT])
+            ->setParameter('since', $since);
+        if ($requests) {
+            $qb->andWhere('m.request IS NOT NULL');
+        } else {
+            $qb->andWhere('m.request IS NULL')->andWhere('m.parent IS NULL');
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
     public function getUnreadConversationsCount(Member $member): int
     {
         $sql = $this->getSql(true);

@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Statistic;
@@ -77,11 +78,11 @@ class StatisticsModel
                 SELECT
                     COUNT(c.id) AS cnt
                 FROM
-                    comments c,
+                    comment c,
                     member m
                 WHERE
-                    c.Quality = 'Good'
-                    AND IdFromMember = m.Id
+                    c.quality = '" . CommentQualityType::POSITIVE . "'
+                    AND c.from_member_id = m.id
                     AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ')
             ')->fetchOne();
 
@@ -270,18 +271,18 @@ class StatisticsModel
         $connection = $this->entityManager->getConnection();
         $result = $connection->executeQuery('
             SELECT
-                l.shortCode AS `language`,
+                l.ShortCode AS `language`,
                 COUNT(m.id) cnt
             FROM
                 member_language_level mll,
-                languages l,
-                members m
+                language l,
+                member m
             WHERE
-                l.shortCode = mll.shortCode
+                l.ShortCode = mll.language
                 AND mll.member_id = m.id
                 AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
             GROUP BY
-                l.name
+                l.ShortCode
             ORDER BY
                 cnt DESC
         ');
@@ -296,20 +297,14 @@ class StatisticsModel
         $connection = $this->entityManager->getConnection();
         $result = $connection->executeQuery('
             SELECT
-                l.shortCode language,
+                m.Locale AS `language`,
                 COUNT(m.id) cnt
             FROM
-                languages l, `members` m
-            LEFT JOIN
-                memberspreferences mp
-            ON
-                m.id = mp.idmember
-                AND mp.idpreference = 1
+                member m
             WHERE
-                m.status IN (' . MemberStatusType::ACTIVE_ALL . ')
-                AND l.ShortCode = IFNULL(mp.value, \'en\')
+                m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
             GROUP BY
-                language
+                m.Locale
             ORDER BY
                 cnt DESC
         ');
@@ -324,10 +319,10 @@ class StatisticsModel
         $connection = $this->entityManager->getConnection();
         $result = $connection->executeQuery('
             SELECT
-                gc.country AS country,
-                count(*) AS cnt
+                g.country_id AS country,
+                COUNT(*) AS cnt
             FROM
-                members m,
+                member m,
                 address a,
                 location g
             WHERE
@@ -336,7 +331,7 @@ class StatisticsModel
                 AND a.active = 1
                 AND a.location = g.geoname_id
             GROUP BY
-                g.country
+                g.country_id
             ORDER BY
                 cnt DESC
         ');
@@ -354,11 +349,11 @@ class StatisticsModel
         $connection = $this->entityManager->getConnection();
         $executionResult = $connection->executeQuery('
             SELECT
-                TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) AS logindiff,
+                TIMESTAMPDIFF(DAY, m.LastActive, NOW()) AS logindiff,
                 COUNT(*) AS cnt
-            FROM members
-            WHERE TIMESTAMPDIFF(DAY,members.LastLogin,NOW()) >= 0
-            AND status IN (' . MemberStatusType::ACTIVE_ALL . ')
+            FROM member m
+            WHERE TIMESTAMPDIFF(DAY, m.LastActive, NOW()) >= 0
+            AND m.Status IN (' . MemberStatusType::ACTIVE_ALL . ')
             GROUP BY logindiff
             ORDER BY logindiff ASC
         ');
@@ -437,7 +432,7 @@ class StatisticsModel
                     SELECT
                       COUNT(*) AS cnt
                     FROM
-                      members m
+                      member m
                     WHERE
                       m.`Status` IN ('Active','ChoiceInactive','OutOfRemind')
                       AND m.created <= :created
@@ -455,15 +450,16 @@ class StatisticsModel
                     SELECT
                       COUNT(DISTINCT(m.id)) AS cnt
                     FROM
-                      members m,
-                      comments c
+                      member m,
+                      comment c
                     WHERE
                       m.`Status` IN ('Active','ChoiceInactive','OutOfRemind')
-                      AND m.id=c.IdToMember
-                      AND c.Quality='Good'
+                      AND m.id = c.to_member_id
+                      AND c.quality = :quality
                       AND c.updated <= :updated
                       ",
             [
+                'quality' => CommentQualityType::POSITIVE,
                 'updated' => $current,
             ]
         )
@@ -482,8 +478,8 @@ class StatisticsModel
                           member m
                         WHERE
                           m.`Status` IN ('Active','ChoiceInactive','OutOfRemind')
-                          AND m.LastLogin >= :current
-                          AND m.LastLogin < :next
+                          AND m.LastActive >= :current
+                          AND m.LastActive < :next
                           ",
             [
                 'current' => $current,

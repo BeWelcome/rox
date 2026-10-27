@@ -46,10 +46,11 @@ class HostingRequest
     #[Assert\LessThanOrEqual(propertyPath: 'departure')]
     private DateTime $arrival;
 
-    #[ORM\Column(name: 'departure', type: 'datetime', nullable: false)]
+    // Some requests of 2019 to 2023 have no departure (NULL in the database, which main allows). New ones need one.
+    #[ORM\Column(name: 'departure', type: 'datetime', nullable: true)]
     #[Assert\NotBlank]
     #[Assert\GreaterThanOrEqual(propertyPath: 'arrival')]
-    private DateTime $departure;
+    private ?DateTime $departure = null;
 
     #[ORM\Column(name: 'flexible', type: 'boolean', nullable: true)]
     private bool $flexible = false;

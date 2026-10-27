@@ -99,7 +99,7 @@
     "dev": "encore dev",
     "watch": "encore dev --watch",
     "build": "encore production --progress",
-    "audit": "bun audit --ignore GHSA-vfj7-8cjw-p6xm"
+    "audit": "bun audit"
   },
   "dependencies": {
     "@fontsource/noto-sans": "^5.3.0",

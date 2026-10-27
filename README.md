@@ -140,9 +140,9 @@ CI runs the same Makefile targets you can run locally, inside the devcontainer o
 
 | Command | What it runs | Time |
 |---|---|---|
-| `make check` | php-cs-fixer, phpcs, PHPStan, phpcpd, YAML lint, Doctrine schema | about 20 seconds |
+| `make check` | php-cs-fixer, phpcs, PHPStan, phpcpd, YAML lint, Doctrine schema, and `make security` | about 20 seconds |
 | `make test` | PHPUnit with coverage, Infection, then the integration tests (need the `bewelcome_test` database) | about 30 seconds |
-| `make security` | `composer audit`, `bun run audit` | seconds |
+| `make security` | `composer audit`, `bun run audit` (known vulnerabilities in the locked packages; needs the network) | seconds |
 | `make phpci` | all of the above and phploc, like CI | about a minute |
 
 Style problems are fixed with `make phpcsfix` (run it twice in a row).

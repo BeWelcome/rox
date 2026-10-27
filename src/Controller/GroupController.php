@@ -18,6 +18,7 @@ use App\Model\GroupModel;
 use App\Model\WikiModel;
 use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
+use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
@@ -47,6 +48,7 @@ use Throwable;
  */
 class GroupController extends AbstractController
 {
+    use RedirectBackTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
     use UniqueFilenameTrait;
@@ -311,9 +313,8 @@ class GroupController extends AbstractController
         } else {
             $this->addTranslatedFlash('error', 'flash.group.invite.withdrawn.error');
         }
-        $referer = $request->headers->get('referer');
 
-        return $this->redirect($referer);
+        return $this->redirectBack($request, 'group_start', ['group_id' => $group->getId()]);
     }
 
     #[Route(

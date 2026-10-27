@@ -7,6 +7,7 @@ use App\Entity\Member;
 use App\Logger\Logger;
 use App\Service\Mailer;
 use App\Utilities\ItemsPerPageTraits;
+use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -35,6 +36,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class GroupController extends AbstractController
 {
     use ItemsPerPageTraits;
+    use RedirectBackTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
@@ -192,12 +194,7 @@ class GroupController extends AbstractController
             'Group'
         );
 
-        $referrer = $request->headers->get('referer');
-        if (null === $referrer) {
-            return $this->redirectToRoute('admin_groups_approval');
-        }
-
-        return $this->redirect($referrer);
+        return $this->redirectBack($request, 'admin_groups_approval');
     }
 
     /**
@@ -229,9 +226,7 @@ class GroupController extends AbstractController
         $groupAdmin = $this->getUser();
         $logger->write("Group {$this->getGroupLinkTag($group)} dismissed by {$groupAdmin->getUsername()}", 'Group');
 
-        $referrer = $request->headers->get('referer');
-
-        return $this->redirect($referrer);
+        return $this->redirectBack($request, 'admin_groups_approval');
     }
 
     /**
@@ -267,9 +262,7 @@ class GroupController extends AbstractController
         $creator = current($group->getMembers());
         $this->sendNewGroupApprovedNotification($group, $creator);
 
-        $referrer = $request->headers->get('referer');
-
-        return $this->redirect($referrer);
+        return $this->redirectBack($request, 'admin_groups_approval');
     }
 
     /**
@@ -301,9 +294,7 @@ class GroupController extends AbstractController
         $groupAdmin = $this->getUser();
         $logger->write("Group {$this->getGroupLinkTag($group)} archived by {$groupAdmin->getUsername()}.", 'Group');
 
-        $referrer = $request->headers->get('referer');
-
-        return $this->redirect($referrer);
+        return $this->redirectBack($request, 'admin_groups_approval');
     }
 
     /**
@@ -335,9 +326,7 @@ class GroupController extends AbstractController
         $groupAdmin = $this->getUser();
         $logger->write("Group {$this->getGroupLinkTag($group)} un-archived by {$groupAdmin->getUsername()}.", 'Group');
 
-        $referrer = $request->headers->get('referer');
-
-        return $this->redirect($referrer);
+        return $this->redirectBack($request, 'admin_groups_approval');
     }
 
     /**

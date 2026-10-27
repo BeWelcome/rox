@@ -6,9 +6,16 @@ on:
     - cron: 0 2 * * *
   # Run CI on every Pull Request
   pull_request: ~
-  # Run CI only on push on develop branch
+  # Run CI on pushes to develop and main only: a push to a PR branch is covered by
+  # the pull_request run, so it doesn't need a second one.
   push:
+    branches: [develop, main]
   workflow_dispatch:
+
+# A new push to a PR cancels the run of the previous one
+concurrency:
+  group: ci-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   PHP_VERSION: 8.4

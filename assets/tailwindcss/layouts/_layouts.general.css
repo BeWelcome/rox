@@ -7185,6 +7185,7 @@ body:has(.p-search) footer:has(#footer_content) { display: none; }
 .p-search-preview__who { display: flex; align-items: center; gap: 1rem; }
 .p-search-preview__photos + .p-search-preview__content .p-search-preview__who { align-items: flex-end; margin-top: -3.25rem; }
 .p-search-preview__picture { position: relative; flex-shrink: 0; }
+.p-search-preview__avatar-open { display: block; padding: 0; border: 0; border-radius: 50%; background: none; cursor: zoom-in; }
 .p-search-preview__avatar { display: block; width: 5.5rem; height: 5.5rem; border-radius: 50%; object-fit: cover; background: #f1f5f9; box-shadow: 0 0 0 1px #e2e8f0; }
 .p-search-preview__photos + .p-search-preview__content .p-search-preview__avatar { border: 4px solid #fff; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.12); }
 .p-search-preview__host { position: absolute; right: -0.15rem; bottom: -0.15rem; display: inline-flex; align-items: center; justify-content: center; width: 2.1rem; height: 2.1rem; border: 3px solid #fff; border-radius: 999px; color: #fff; font-size: 0.8rem; }
@@ -9295,7 +9296,7 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 
 /* Photo with the hosting badge */
 .p-pro__avatar { position: relative; flex-shrink: 0; width: 150px; height: 150px; }
-.p-pro__avatar-link { display: block; }
+.p-pro__avatar-link { display: block; cursor: zoom-in; }
 .p-pro__avatar-img { display: block; width: 150px; height: 150px; border: 5px solid #fff; border-radius: 50%; object-fit: cover; background: #f1f5f9; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15); }
 .p-pro__host { position: absolute; right: 4px; bottom: 6px; display: inline-flex; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; border: 3px solid #fff; border-radius: 999px; color: #fff; font-size: 1rem; }
 .p-pro__host--yes { background: #3fa75a; }
@@ -10543,10 +10544,10 @@ body.is-embedded { background: #fff; }
 }
 
 /* The pictures shown large, over everything */
-.p-photo-viewer { position: fixed; inset: 0; z-index: 2100; display: flex; align-items: center; justify-content: center; padding: 3.5rem 0.75rem; background: rgba(15, 23, 42, 0.92); }
+.p-photo-viewer { position: fixed; inset: 0; z-index: 2100; display: flex; align-items: center; justify-content: center; padding: 3.5rem 0.75rem; background: rgba(0, 0, 0, 0.75); }
 .p-photo-viewer[hidden] { display: none; }
 .p-photo-viewer__figure { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; margin: 0; }
-.p-photo-viewer__img { max-width: 100%; max-height: calc(100% - 2rem); border-radius: 0.5rem; object-fit: contain; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4); }
+.p-photo-viewer__img { max-width: 100%; max-height: calc(100% - 2rem); object-fit: contain; }
 .p-photo-viewer__caption { margin-top: 0.6rem; color: #e2e8f0; font-size: 0.9375rem; text-align: center; }
 .p-photo-viewer__close,
 .p-photo-viewer__nav {
@@ -10700,7 +10701,10 @@ body.is-embedded { background: #fff; }
 .p-select { position: relative; display: inline-flex; }
 .p-search__radius .p-select,
 .p-search-options__radius .p-select { display: flex; width: 100%; }
-.p-select .p-select__native { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; pointer-events: none; }
+.p-select .p-select__native { position: absolute; top: 0; left: 0; width: 1px !important; min-width: 0 !important; max-width: 1px !important; height: 1px !important; min-height: 0 !important; padding: 0 !important; border: 0 !important; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; pointer-events: none; }
+/* (!important: the sort's own rules (width: auto) made it 144px wide: next to the sort icon on
+   phones it went past the right edge, the page got wider than the screen and the preview
+   drawer and the sticky search bar came out cut.) */
 .p-select .p-select__button { display: flex; align-items: center; width: 100%; text-align: left; white-space: nowrap; }
 .p-select__text { overflow: hidden; text-overflow: ellipsis; }
 .p-select.is-open .p-select__button { border-color: #f37000; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.12); }

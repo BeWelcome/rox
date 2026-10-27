@@ -57,7 +57,7 @@
             {% for picture in pictures %}
               <li class="p-gallery-page__item">
                 <div class="p-gallery-page__frame">
-                  <a href="{{ url('gallery_image', {id: picture.id}) }}"
+                  <a href="{{ url('gallery_thumbnail', {id: picture.id, t: 3}) }}"
                      class="p-gallery-cell"
                      style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
                      data-toggle="lightbox"

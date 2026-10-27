@@ -202,9 +202,17 @@ class PlacesModel
         $rows = $this->connection()->executeQuery('
             SELECT c.to_member_id AS member, c.quality, COUNT(*) AS cnt
             FROM comment c
-            WHERE c.to_member_id IN (:ids)
+            JOIN member author ON author.id = c.from_member_id AND author.Status IN (:statuses)
+            WHERE c.to_member_id IN (:ids) AND c.show_to_other_members = 1
             GROUP BY c.to_member_id, c.quality
-        ', ['ids' => array_keys($counts)], ['ids' => ArrayParameterType::INTEGER])->fetchAllAssociative();
+        ', [
+            'ids' => array_keys($counts),
+            // As on the profile (CommentRepository::getCommentsCountMemberByQuality)
+            'statuses' => MemberStatusType::MEMBER_COMMENTS_ARRAY,
+        ], [
+            'ids' => ArrayParameterType::INTEGER,
+            'statuses' => ArrayParameterType::STRING,
+        ])->fetchAllAssociative();
         foreach ($rows as $row) {
             if (isset($counts[$row['member']][$row['quality']])) {
                 $counts[$row['member']][$row['quality']] = (int) $row['cnt'];

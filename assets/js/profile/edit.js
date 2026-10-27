@@ -248,7 +248,6 @@ function init() {
                 const text = shown ? account.dataset.shown : account.dataset.hidden;
                 eye.classList.toggle('is-shown', shown);
                 eye.setAttribute('aria-pressed', shown ? 'true' : 'false');
-                eye.title = text;
                 eye.setAttribute('aria-label', text);
             });
         };

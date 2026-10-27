@@ -6991,6 +6991,8 @@ body:has(.p-search) footer:has(#footer_content) { display: none; }
   font-size: 0.875rem;
   font-weight: 700;
 }
+/* No comment yet: the pill stays, pale */
+.p-search-card .p-search-card__comments-pill:not(.has-comments) { opacity: 0.45; }
 .p-search-card__comments-pill.has-comments { background: #fff1e6; color: #c2410c; }
 .p-search-card__comments-pill.has-comments i,
 .p-search-card__comments-pill.has-comments svg { color: #ea7a2e; }
@@ -7063,8 +7065,12 @@ body:has(.p-search) footer:has(#footer_content) { display: none; }
   background: #fff;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
 }
+/* Leaflet sets width: auto on marker images (.leaflet-container .leaflet-marker-pane img):
+   a picture that isn't square came out oval */
+.leaflet-container .leaflet-marker-pane .p-search-map-member img { width: 36px; height: 36px; }
 /* The member picked in the list */
-.p-search-map-member.is-focused img { width: 44px; height: 44px; margin: -4px; box-shadow: 0 0 0 4px rgba(243, 112, 0, 0.35), 0 6px 16px rgba(15, 23, 42, 0.3); }
+.p-search-map-member.is-focused img,
+.leaflet-container .leaflet-marker-pane .p-search-map-member.is-focused img { width: 44px; height: 44px; margin: -4px; box-shadow: 0 0 0 4px rgba(243, 112, 0, 0.35), 0 6px 16px rgba(15, 23, 42, 0.3); }
 .p-search-map-place { border: 3px solid #fff; border-radius: 50%; background: #0f172a; box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.15); }
 /* Popup of a member on the map */
 .p-search-map-bubble .leaflet-popup-content-wrapper { padding: 0; border-radius: 1rem; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18); }
@@ -7551,6 +7557,11 @@ legend.p-search-options__label { float: none; width: auto; padding: 0; }
   .p-search-results__view-label { display: none; }
   .p-search-results .p-search-results__order { order: 1; width: auto; min-width: 0; margin-left: auto; gap: 0.35rem; }
   .p-search-results__order label { display: none; }
+  /* No room for the chosen order: only the direction icon and a small arrow that opens the menu */
+  .p-search-results__order .p-select__text { display: none; }
+  .p-search-results__order .p-select__button { gap: 0; }
+  .p-search-results__order .p-select__button::after { content: ''; width: 0; height: 0; margin: 0.15rem 0 0 0.1rem; border-top: 5px solid #64748b; border-right: 4px solid transparent; border-left: 4px solid transparent; }
+  .p-search-results__order .p-select__menu { right: 0; left: auto; }
   .p-search-results__order .p-search-results__direction { order: -1; width: auto; height: auto; border: 0; background: none; color: #64748b; }
   .p-search .p-search-results__order .p-search-select {
     width: auto;
@@ -7749,6 +7760,14 @@ legend.p-search-options__label { float: none; width: auto; padding: 0; }
 .c-home-pill.active { border-color: #fdba74; background: #fff7ed; color: #c2410c; }
 .c-home-pill:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.2); }
 .c-home-pill--action { margin-left: auto; color: #c2410c; }
+/* Activities: the online switch and Create activity stay on one line, on phones too */
+#activities .c-home-pane__filters { flex-wrap: nowrap; }
+#activities .c-home-switch { min-width: 0; white-space: nowrap; }
+#activities .c-home-pill--action { flex-shrink: 0; white-space: nowrap; }
+@media (max-width: 400px) {
+  #activities .c-home-switch { gap: 0.4rem; font-size: 0.75rem; }
+  #activities .c-home-pill--action { padding-right: 0.7rem; padding-left: 0.7rem; font-size: 0.75rem; }
+}
 
 .c-home-switch { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0; color: #475569; font-size: 0.8125rem; font-weight: 600; cursor: pointer; }
 .c-home-switch input { position: absolute; opacity: 0; pointer-events: none; }
@@ -8791,11 +8810,20 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .p-trips-form__actions { display: flex; justify-content: flex-end; }
 .p-trips .form-error-message,
 .p-trips .invalid-feedback { display: block; color: #dc2626; font-size: 0.8125rem; }
+/* One line in red under the field, without the "Error" badge */
+.p-trips .invalid-feedback { margin: 0.1rem 0 0; padding: 0; background: none !important; }
+.p-trips .invalid-feedback > span { height: auto; }
+.p-trips .form-error-icon { display: none; }
+.p-trips .form-error-message { font-weight: 600; }
+.p-trips .p-trips-input.is-invalid { border-color: #fca5a5; }
 
 .p-trips-stops { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; }
 .p-trips-stop { padding: 1rem; border: 1px solid #eef0f3; border-radius: 0.9rem; background: #fcfcfd; }
 .p-trips-stop__fields { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 0.6rem; align-items: center; }
 .p-trips-stop__fields .p-trips-field { margin: 0; }
+/* The dates of a stop: the calendar of the stay requests under the place (trips.js) */
+.p-trips-stop.has-calendar .p-trips-stop__fields { grid-template-columns: minmax(0, 1fr) auto; }
+.p-trips-stop__dates { max-width: 26rem; margin-top: 0.75rem; }
 .p-trips-stop__remove {
   display: inline-flex;
   align-items: center;
@@ -8829,6 +8857,34 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 }
 .p-trips-option input { width: 0.95rem; height: 0.95rem; margin: 0; accent-color: #ea7a2e; }
 .p-trips-option:has(input:checked) { border-color: #fed7aa; background: #fff7ed; color: #c2410c; }
+
+/* Each part of the form: an icon, the title and a line on what to fill in */
+.p-trips-card__head { display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 1.25rem; }
+.p-trips-card__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #fff4eb; color: #ea7a2e; font-size: 1rem; }
+.p-trips .p-trips-card__head .p-trips-card__title { margin: 0; line-height: 1.3; }
+.p-trips .p-trips-card__hint { margin: 0.15rem 0 0; color: #64748b; font-size: 0.875rem; line-height: 1.4; }
+.p-trips-form__row { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1rem; }
+
+/* Travellers, radius...: the menu of pretty-select.js, with a caret */
+.p-trips-form .p-select { display: flex; width: 100%; }
+.p-trips .p-trips-select.p-select__button {
+  padding-right: 2.25rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-position: right 0.85rem center;
+  background-repeat: no-repeat;
+  background-size: 12px 10px;
+  cursor: pointer;
+}
+.p-trips-form .p-select.is-open .p-trips-select { border-color: #ea7a2e; background-color: #fff; }
+
+/* In the side panel of the home page (?embed=1): the parts one under the other, no boxes */
+.p-trips--embed { margin: 0; background: #fff; }
+.p-trips-embed .p-trips-form { gap: 0; }
+.p-trips-embed .p-trips-card { padding: 1.4rem 0; border: 0; border-bottom: 1px solid #eef2f6; border-radius: 0; box-shadow: none; }
+.p-trips-embed .p-trips-card:last-of-type { border-bottom: 0; }
+.p-trips-embed .p-trips-stop__dates { max-width: none; }
+.p-trips-embed .p-trips-btn.js-btn-add { width: 100%; justify-content: center; border-style: dashed; }
+.c-embed-sent__avatar--icon { display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 1.25rem; }
 
 @media (max-width: 767.98px) {
   .p-trips { margin-top: 1rem; }
@@ -9250,7 +9306,11 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 /* Name, gender, username; place, occupation, last login */
 .p-pro__info { min-width: 0; padding-top: 0.6rem; }
 .p-pro__name-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.65rem; }
-.p-pro .p-pro__name { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.1rem; font-weight: 700; line-height: 1.15; }
+.p-pro .p-pro__name { min-width: 0; max-width: 100%; margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.1rem; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
+/* A long username with no space (nom_ici_trop_long) breaks instead of running off the page */
+.p-pro__name-row,
+.p-pro__name-row > * { min-width: 0; max-width: 100%; }
+.p-pro__username { overflow-wrap: anywhere; }
 .p-pro__who { font-size: 0.8125rem; }
 .p-pro__who--name { display: none; }
 .p-pro__username { color: #94a3b8; font-size: 0.9375rem; }
@@ -9556,11 +9616,16 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro-about { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
   .p-pro-about { font-size: 1rem; line-height: 1.65; }
   .p-pro-about__extra { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; margin-top: 1.25rem; padding-top: 1.25rem; }
-  .p-pro-spoken__list { gap: 0.5rem; }
-  .p-pro-spoken__item { gap: 0.5rem; padding-right: 0.85rem; }
-  .p-pro-spoken__code { width: 1.85rem; height: 1.85rem; }
-  .p-pro-spoken__name { font-size: 0.9375rem; }
-  .p-pro-spoken__level { font-size: 0.8125rem; }
+  /* Two languages a row, the level under the name: half the lines of the pills */
+  .p-pro-spoken__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; }
+  .p-pro-spoken__item { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.5rem; row-gap: 0; align-content: center; align-items: center; padding: 0.35rem 0.6rem 0.35rem 0.35rem; border-radius: 0.75rem; }
+  .p-pro-spoken__code { grid-row: span 2; width: 1.75rem; height: 1.75rem; font-size: 0.625rem; }
+  .p-pro-spoken__name,
+  .p-pro-spoken__level { overflow: hidden; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
+  .p-pro-spoken__name { font-size: 0.875rem; }
+  .p-pro-spoken__level { margin-top: 0.05rem; font-size: 0.75rem; }
+  .p-pro-spoken__name { align-self: end; }
+  .p-pro-spoken__level { align-self: start; }
   .p-pro-about.is-open { display: block; }
   .p-pro-stats { gap: 0.45rem; }
   .p-pro-stat { padding: 0.7rem; }
@@ -10554,6 +10619,14 @@ body.is-embedded { background: #fff; }
 .c-stay-dates__summary-range i, .c-stay-dates__summary-range svg { margin: 0 0.2rem; color: #94a3b8; font-size: 0.75rem; }
 .c-stay-dates__summary-nights { color: #c2410c; font-size: 0.8125rem; font-weight: 700; }
 .c-stay-dates__summary-nights i, .c-stay-dates__summary-nights svg { font-size: 0.75rem; }
+/* Phones: the two dates on one line */
+@media (max-width: 575.98px) {
+  .c-stay-dates__summary { gap: 0.6rem; padding: 0.6rem 0.75rem; }
+  .c-stay-dates__summary-icon { width: 2.1rem; height: 2.1rem; }
+  .c-stay-dates__summary-range { overflow: hidden; font-size: 0.875rem; text-overflow: ellipsis; white-space: nowrap; }
+  .c-stay-dates__summary-range i, .c-stay-dates__summary-range svg { margin: 0 0.1rem; font-size: 0.625rem; }
+  .c-stay-dates__summary .c-stay-dates__change { flex-shrink: 0; font-size: 0.8125rem; }
+}
 .c-stay-dates__change { flex-shrink: 0; color: #c2410c; font-size: 0.875rem; font-weight: 700; }
 
 /* "Sent" page of the side panel: a card with what was sent (subject, dates and nights) */
@@ -10770,7 +10843,9 @@ body.is-embedded { background: #fff; }
 .p-pe-head__langs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin-top: 0.6rem; }
 .p-pe-head__langs-label { margin-right: 0.2rem; color: #64748b; font-size: 0.8125rem; }
 /* The languages as one segmented pill: the one shown in black, "+" in a dashed circle */
-.p-pe-head__lang-tabs { display: inline-flex; flex-wrap: nowrap; align-items: center; gap: 0.15rem; max-width: 100%; padding: 0.25rem; border: 1px solid #ece3d9; border-radius: 999px; background: #fff; overflow-x: auto; scrollbar-width: none; }
+/* position: relative keeps the visually-hidden text of "+" (absolute) inside the scrolled
+   row: without it, it stuck out at the far right and widened the whole page on phones */
+.p-pe-head__lang-tabs { position: relative; display: inline-flex; flex-wrap: nowrap; align-items: center; gap: 0.15rem; max-width: 100%; padding: 0.25rem; border: 1px solid #ece3d9; border-radius: 999px; background: #fff; overflow-x: auto; scrollbar-width: none; }
 .p-pe-head__lang-tabs::-webkit-scrollbar { display: none; }
 .p-pe-head__lang, .p-pe-head__lang:hover { display: inline-flex; flex: 0 0 auto; align-items: center; padding: 0.4rem 0.95rem; border: 0; border-radius: 999px; background: transparent; color: #334155; font-size: 0.875rem; font-weight: 700; line-height: 1.3; white-space: nowrap; text-decoration: none; cursor: pointer; }
 .p-pe-head__lang:hover { background: #f8fafc; color: #0f172a; }
@@ -11040,8 +11115,8 @@ a.p-pe-tile:hover { border-color: #fbc99f; }
 .p-lang-card { padding: 0.9rem 1rem 1rem; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; }
 .p-lang-card__head { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.75rem; }
 .p-lang-card__name { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.05rem; font-weight: 700; }
-.p-lang-card__native { color: #94a3b8; font-size: 0.8125rem; }
-.p-lang-card__level { margin-left: auto; color: #9a3412; font-size: 0.8125rem; font-weight: 700; }
+.p-lang-card__native { min-width: 0; overflow: hidden; color: #94a3b8; font-size: 0.8125rem; text-overflow: ellipsis; white-space: nowrap; }
+.p-lang-card__level { flex: none; margin-left: auto; color: #9a3412; font-size: 0.8125rem; font-weight: 700; white-space: nowrap; }
 .p-lang-card__remove { align-self: center; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; padding: 0; border: 0; border-radius: 999px; background: none; color: #94a3b8; font-size: 0.8rem; cursor: pointer; }
 .p-lang-card__remove:hover { background: #f1f5f9; color: #334155; }
 .p-lang-card__levels { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.35rem; }

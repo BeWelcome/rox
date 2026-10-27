@@ -30,6 +30,14 @@ Encore
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
+    // maplibre-gl 6 starts its map worker from a file of its own (assets/js/map/positron.js):
+    // copied into the build as .js, as nginx serves .mjs as application/octet-stream and a
+    // module worker refuses that
+    .addRule({
+        test: /maplibre-gl-worker\.mjs$/,
+        type: 'asset/resource',
+        generator: { filename: 'maplibre-gl-worker.[contenthash:8].js' },
+    })
     .addEntry('bewelcome', './assets/js/bewelcome.js')
     .addEntry('home', './assets/js/home.js')
     .addEntry('jquery_ui', './assets/js/jquery_ui.js')

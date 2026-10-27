@@ -4,9 +4,12 @@ namespace App\Pagerfanta;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\CommentQualityType;
+use App\Doctrine\MemberStatusType;
 use App\Dto\MemberSearchResult;
 use App\Entity\Location;
 use App\Entity\Member;
+use App\Entity\MemberPhoto;
+use App\Entity\MemberTranslation;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Repository\MemberRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -88,16 +91,22 @@ class SearchAdapter implements AdapterInterface
                 ->from('App\Entity\Message', 'msgR')
                 ->where('msgR.sender = :currentUserId AND msgR.receiver = m.id');
 
+            // Only the comments the profile shows (CommentRepository::getCommentsCountMemberByQuality)
             $commentCountQueryBuilder = $this->entityManager->createQueryBuilder()
                 ->select('COUNT(commentCountTable.id)')
                 ->from('App\Entity\Comment', 'commentCountTable')
-                ->where('commentCountTable.toMember = m.id');
+                ->join('commentCountTable.fromMember', 'commentCountAuthor')
+                ->where('commentCountTable.toMember = m.id AND commentCountTable.showToOtherMembers = 1')
+                ->andWhere('commentCountAuthor.status IN (' . $this->commentAuthorStatuses() . ')');
 
             // The comments by quality too, for the positive / neutral / negative pill of the card
             $qualityCount = fn (string $quality): string => $this->entityManager->createQueryBuilder()
                 ->select('COUNT(cq' . $quality . '.id)')
                 ->from('App\Entity\Comment', 'cq' . $quality)
+                ->join('cq' . $quality . '.fromMember', 'cqa' . $quality)
                 ->where('cq' . $quality . '.toMember = m.id AND cq' . $quality . ".quality = '" . $quality . "'")
+                ->andWhere('cq' . $quality . '.showToOtherMembers = 1')
+                ->andWhere('cqa' . $quality . '.status IN (' . $this->commentAuthorStatuses() . ')')
                 ->getDQL();
 
             $qb->select(
@@ -263,6 +272,40 @@ class SearchAdapter implements AdapterInterface
         return str_starts_with($featureCode, 'PCL') || 'ADM1' === $featureCode ? $location : null;
     }
 
+    /**
+     * The statuses of the members whose comments count, as a DQL list of literals.
+     */
+    private function commentAuthorStatuses(): string
+    {
+        return implode(', ', array_map(
+            static fn (string $status): string => "'" . $status . "'",
+            MemberStatusType::MEMBER_COMMENTS_ARRAY
+        ));
+    }
+
+    /**
+     * 1 for a profile picture, 2 for an about me text: 3 is a complete profile.
+     */
+    private function profileCompletenessDql(): string
+    {
+        $picture = $this->entityManager->createQueryBuilder()
+            ->select('orderPhoto.id')
+            ->from(MemberPhoto::class, 'orderPhoto')
+            ->where('orderPhoto.member = m')
+            ->getDQL();
+        $aboutMe = $this->entityManager->createQueryBuilder()
+            ->select('orderAbout.id')
+            ->from(MemberTranslation::class, 'orderAbout')
+            ->where("orderAbout.object = m AND orderAbout.field = 'aboutMe' AND orderAbout.content <> ''")
+            ->getDQL();
+
+        return \sprintf(
+            '(CASE WHEN EXISTS (%s) THEN 1 ELSE 0 END) + (CASE WHEN EXISTS (%s) THEN 2 ELSE 0 END)',
+            $picture,
+            $aboutMe
+        );
+    }
+
     private function applySorting(QueryBuilder $qb): void
     {
         $direction = (MemberRepository::DIRECTION_ASCENDING === $this->searchRequest->direction) ? 'ASC' : 'DESC';
@@ -272,9 +315,12 @@ class SearchAdapter implements AdapterInterface
                 $qb->orderBy('m.username', $direction);
                 break;
             case MemberRepository::ORDER_ACCOMMODATION:
+                // As on main: hosts first, then the fuller profiles (picture, about me), then
+                // the most willing to host, then the most recently active.
                 $qb->orderBy('m.accommodation', $direction)
-                    ->addOrderBy('m.hostingInterest', 'ASC')
-                    ->addOrderBy('m.lastActive', 'ASC');
+                    ->addOrderBy($this->profileCompletenessDql(), $direction)
+                    ->addOrderBy('m.hostingInterest', $direction)
+                    ->addOrderBy('m.lastActive', $direction);
                 break;
             case MemberRepository::ORDER_LOGIN:
                 $qb->orderBy('m.lastActive', 'ASC' === $direction ? 'DESC' : 'ASC');

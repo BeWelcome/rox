@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+{#
+  Shown in the side panel of the home page once a trip is created (?embed=1): the same
+  animated confirmation as a sent request (conversations/embed_sent.html.twig), the trip
+  (title, dates, stops) and two ways on: back to the home page, or the trip's page.
+#}
+{% block title %}{{ 'trip.created.title'|trans }}{% endblock title %}
+
+{% block content %}
+    <div class="c-embed-sent c-embed-sent--trip" role="status">
+        <button type="button" class="c-embed-sent__close js-embed-sent-close" aria-label="{{ 'close'|trans }}">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="c-embed-sent__scene" aria-hidden="true">
+            <span class="c-embed-sent__ring"></span>
+            <span class="c-embed-sent__ring c-embed-sent__ring--late"></span>
+            <span class="c-embed-sent__plane"><i class="fas fa-suitcase"></i></span>
+            <svg class="c-embed-sent__check" viewBox="0 0 64 64">
+                <circle class="c-embed-sent__disc" cx="32" cy="32" r="30"></circle>
+                <path class="c-embed-sent__tick" d="M19 33.5l9 9 17-19"></path>
+            </svg>
+            {% for i in 1..10 %}<span class="c-embed-sent__spark c-embed-sent__spark--{{ i }}"></span>{% endfor %}
+        </div>
+
+        <h1 class="c-embed-sent__title">{{ 'trip.created.title'|trans }}</h1>
+        <p class="c-embed-sent__text">{{ 'trip.created.text'|trans }}</p>
+
+        {# The trip: its title, from the first arrival to the last departure, how many stops #}
+        {% set first_day = null %}{% set last_day = null %}
+        {% for leg in trip.legs %}
+            {% if leg.arrival and (first_day is null or leg.arrival < first_day) %}{% set first_day = leg.arrival %}{% endif %}
+            {% if leg.departure and (last_day is null or leg.departure > last_day) %}{% set last_day = leg.departure %}{% endif %}
+        {% endfor %}
+        <div class="c-embed-sent__card">
+            <span class="c-embed-sent__avatar c-embed-sent__avatar--icon" aria-hidden="true"><i class="fas fa-route"></i></span>
+            <div class="c-embed-sent__card-text">
+                <strong class="c-embed-sent__subject">{{ trip.summary }}</strong>
+                <span class="c-embed-sent__stay">
+                    <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                    {% if first_day and last_day %}
+                        {% set sameYear = first_day|date('Y') == last_day|date('Y') %}
+                        {{ first_day|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }} – {{ last_day|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }} ·
+                    {% endif %}
+                    {{ 'contact.trip.stops'|trans({ count: trip.legs|length }) }}
+                </span>
+            </div>
+        </div>
+
+        <div class="c-embed-sent__actions">
+            <button type="button" class="c-embed-sent__btn c-embed-sent__btn--primary js-embed-sent-close">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'contact.sent.back.home'|trans }}
+            </button>
+            <a class="c-embed-sent__btn" href="{{ path('trip_show', { id: trip.id }) }}" target="_top">
+                <i class="fas fa-route" aria-hidden="true"></i> {{ 'trip.created.see'|trans }}
+            </a>
+        </div>
+    </div>
+    <script>
+        (function () {
+            var parentWindow = window.parent !== window ? window.parent : null;
+            if (parentWindow) {
+                parentWindow.postMessage({ type: 'bw-contact-sent', kind: 'trip' }, window.location.origin);
+            }
+            document.querySelectorAll('.js-embed-sent-close').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    if (parentWindow) {
+                        parentWindow.postMessage({ type: 'bw-contact-close' }, window.location.origin);
+                    } else {
+                        window.location.href = '{{ path('trip_show', { id: trip.id }) }}';
+                    }
+                });
+            });
+        })();
+    </script>
+{% endblock content %}

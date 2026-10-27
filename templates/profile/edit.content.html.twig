@@ -54,7 +54,7 @@
             <h2 class="p-pe-card__title">{{ 'profile.edit.settings.account'|trans }}</h2>
             <span class="p-pe-account-title__hint">{{ 'profile.edit.account.tap.eye'|trans }}</span>
           </div>
-          <a href="{{ accountUrl }}" class="p-pe-head__btn p-pe-account-edit js-contact-open" data-title="{{ 'profile.edit.settings.account'|trans }}" title="{{ 'profile.edit.account.edit'|trans }}">
+          <a href="{{ accountUrl }}" class="p-pe-head__btn p-pe-account-edit js-contact-open" data-title="{{ 'profile.edit.settings.account'|trans }}" aria-label="{{ 'profile.edit.account.edit'|trans }}">
             <i class="fas fa-pen" aria-hidden="true"></i> <span>{{ 'profile.edit.account.edit'|trans }}</span>
           </a>
         </div>
@@ -81,12 +81,12 @@
               {% if line.field %}
                 {% set seen = (line.shown ? 'profile.edit.account.shown' : 'profile.edit.account.hidden')|trans %}
                 <button type="button" class="p-pe-account__seen js-pe-seen{{ line.shown ? ' is-shown' }}" data-field="{{ line.field }}"
-                        aria-pressed="{{ line.shown ? 'true' : 'false' }}" title="{{ seen }}" aria-label="{{ seen }}">
+                        aria-pressed="{{ line.shown ? 'true' : 'false' }}" aria-label="{{ seen }}">
                   <i class="fas fa-eye p-pe-account__eye-on" aria-hidden="true"></i>
                   <i class="fas fa-eye-slash p-pe-account__eye-off" aria-hidden="true"></i>
                 </button>
               {% else %}
-                <span class="p-pe-account__seen is-locked" title="{{ 'profile.edit.account.private'|trans }}">
+                <span class="p-pe-account__seen is-locked" aria-label="{{ 'profile.edit.account.private'|trans }}">
                   <i class="fas fa-lock" aria-hidden="true"></i>
                   <span class="visually-hidden">{{ 'profile.edit.account.private'|trans }}</span>
                 </span>

@@ -6,7 +6,7 @@
 <header class="p-pe-head">
   <div class="p-pe-head__wrap container-lg">
     <div class="p-pe-head__top">
-      <a href="{{ url('profile_edit_avatar', {username: member.username}) }}" class="p-pe-head__avatar js-contact-open" data-title="{{ 'profile.change.avatar'|trans|striptags }}" title="{{ 'profile.change.avatar'|trans }}">
+      <a href="{{ url('profile_edit_avatar', {username: member.username}) }}" class="p-pe-head__avatar js-contact-open" data-title="{{ 'profile.change.avatar'|trans|striptags }}" aria-label="{{ 'profile.change.avatar'|trans }}">
         <img src="{{ url('avatar', {username: member.username, size: 160}) }}" alt="{{ member.username }}">
         <span class="p-pe-head__camera" aria-hidden="true"><i class="fas fa-camera"></i></span>
         <span class="visually-hidden">{{ 'profile.change.avatar'|trans }}</span>
@@ -28,7 +28,7 @@
               </button>
             {% endfor %}
             <a href="{{ url('profile_add_language', {username: member.username}) }}" class="p-pe-head__lang-add js-contact-open"
-               data-title="{{ 'profile.edit.add.translation'|trans }}" title="{{ 'profile.edit.add.translation'|trans }}">
+               data-title="{{ 'profile.edit.add.translation'|trans }}" aria-label="{{ 'profile.edit.add.translation'|trans }}">
               <i class="fas fa-plus" aria-hidden="true"></i><span class="visually-hidden">{{ 'profile.edit.add.translation'|trans }}</span>
             </a>
           </div>
@@ -41,7 +41,7 @@
         </a>
         {# Settings: the account, the preferences and my data, each in the side panel #}
         <div class="p-pe-settings js-pe-settings">
-          <button type="button" class="p-pe-head__btn p-pe-head__btn--icon js-pe-settings-open" aria-haspopup="menu" aria-expanded="false" title="{{ 'profile.edit.settings'|trans }}">
+          <button type="button" class="p-pe-head__btn p-pe-head__btn--icon js-pe-settings-open" aria-haspopup="menu" aria-expanded="false" aria-label="{{ 'profile.edit.settings'|trans }}">
             <i class="fas fa-cog" aria-hidden="true"></i><span class="visually-hidden">{{ 'profile.edit.settings'|trans }}</span>
           </button>
           <div class="p-pe-settings__menu js-pe-settings-menu" role="menu" hidden>

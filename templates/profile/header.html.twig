@@ -126,24 +126,8 @@
           <a href="{{ url('profile_edit', {username: member.username}) }}" class="p-hero__btn p-hero__btn--secondary p-pro__edit">
             <i class="fas fa-pen" aria-hidden="true"></i> <span class="p-pro__edit-text">{{ 'profile.edit'|trans }}</span>
           </a>
-          {% set _accountItems = [] %}
-          {% for _k in ['edit_account', 'preferences', 'mydata', 'mynotes'] %}
-            {% if items[_k] is defined %}{% set _accountItems = _accountItems|merge([_k]) %}{% endif %}
-          {% endfor %}
-          {% if _accountItems|length > 0 %}
-            <div class="dropdown">
-              <button class="p-hero__btn p-hero__btn--icon dropdown-toggle-no-arrow" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'my.account'|trans }}">
-                <i class="fas fa-cog" aria-hidden="true"></i>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown">
-                {% for _k in _accountItems %}
-                  <li><a class="dropdown-item p-hero__dropdown-item" href="{{ items[_k].url }}">
-                    <i class="fas fa-fw fa-{{ items[_k].icon }}" aria-hidden="true"></i> {{ items[_k].key|lower|trans }}
-                  </a></li>
-                {% endfor %}
-              </ul>
-            </div>
-          {% endif %}
+          {# No settings menu here: account, preferences and my data are in the settings of the
+             edit page, my notes in the top menu #}
         {% elseif canContact %}
           <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-hero__btn p-pro__btn p-pro__btn--message"
             data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">

@@ -99,3 +99,6 @@ landing.see.all:
 landing.thread.replies:
     - '{count} replies'
     - Tooltip of the replies count on the right of a forum or group thread on the home page. Keep {count} intact.
+landing.activities.online:
+    - 'Show online'
+    - Short switch label above the activities on the home page, shows the online activities too. Keep it short, it shares a line with Create activity on phones.

@@ -66,7 +66,11 @@
   {% set choices = [] %}
   {% for group in prototype.language.vars.choices %}
     {% for choice in (group.choices is defined ? group.choices : [group]) %}
-      {% set choices = choices|merge([{code: choice.value, name: choice.label}]) %}
+      {# Named in the member's language (Spanish): the languages table holds the native
+         names, with HTML entities (espa&ntilde;ol) #}
+      {% set key = ('lang_' ~ choice.value)|lower %}
+      {% set translated = key|trans %}
+      {% set choices = choices|merge([{code: choice.value, name: translated != key ? translated : choice.label}]) %}
     {% endfor %}
   {% endfor %}
   {% set common = ['en', 'fr', 'es', 'de', 'it', 'pt'] %}

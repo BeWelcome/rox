@@ -81,23 +81,49 @@
         {% if create %}{{ 'trip.create' | trans }}{% else %}{{ 'trip.update' | trans }}{% endif %}
     {%- endset -%}
 
+    {% set embedded = app.request.query.getBoolean('embed') %}
+    {% if embedded %}
+    {#
+      In the side panel of the home page (?embed=1): the head of the panels (back, title,
+      close) and Cancel / Create at the bottom, as in the edit page's panels.
+    #}
+    <div class="p-ped p-trips-embed">
+      <header class="p-ped-head">
+        <button type="button" class="p-ped-head__btn js-ped-close" aria-label="{{ 'back'|trans }}">
+          <i class="fas fa-arrow-left" aria-hidden="true"></i>
+        </button>
+        <div class="p-ped-head__text">
+          <p class="p-ped-head__eyebrow"><i class="fas fa-suitcase" aria-hidden="true"></i> {{ 'trip'|trans }}</p>
+          <h1 class="p-ped-head__title">{{ 'landing.stats.trip'|trans }}</h1>
+        </div>
+        <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </header>
+    {% endif %}
     {{ form_start(form, { attr: { autocomplete: 'off', class: 'p-trips-form' } }) }}
         <section class="p-trips-card">
-            <h2 class="p-trips-card__title">{{ 'trip.details'|trans }}</h2>
+            <div class="p-trips-card__head">
+                <span class="p-trips-card__icon" aria-hidden="true"><i class="fas fa-suitcase"></i></span>
+                <div>
+                    <h2 class="p-trips-card__title">{{ 'trip.details'|trans }}</h2>
+                    <p class="p-trips-card__hint">{{ 'trip.details.hint'|trans }}</p>
+                </div>
+            </div>
             <div class="p-trips-field">
-                {{ form_label(form.summary, null, { label_attr: { class: 'p-trips-label' } }) }}
+                <label class="p-trips-label" for="{{ form.summary.vars.id }}">{{ form.summary.vars.label|trans }}</label>
                 {{ form_widget(form.summary, { attr: form.summary.vars.attr|merge({ class: 'p-trips-input p-trips-input--box' }) }) }}
                 {{ form_errors(form.summary) }}
             </div>
             <div class="p-trips-field">
-                {{ form_label(form.description, null, { label_attr: { class: 'p-trips-label' } }) }}
+                <label class="p-trips-label" for="{{ form.description.vars.id }}">{{ form.description.vars.label|trans }}</label>
                 {{ form_widget(form.description, { attr: form.description.vars.attr|merge({ class: 'p-trips-input p-trips-input--box', rows: 4 }) }) }}
                 {{ form_errors(form.description) }}
             </div>
             <div class="p-trips-form__row">
                 {% for field in [form.countOfTravellers, form.additionalInfo, form.invitationRadius] %}
                     <div class="p-trips-field">
-                        {{ form_label(field, null, { label_attr: { class: 'p-trips-label' } }) }}
+                        <label class="p-trips-label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
                         {{ form_widget(field, { attr: { class: 'p-trips-select' } }) }}
                         {{ form_errors(field) }}
                     </div>
@@ -106,7 +132,22 @@
         </section>
 
         <section class="p-trips-card">
-            <h2 class="p-trips-card__title">{{ 'trip.legs.title'|trans }}</h2>
+            <div class="p-trips-card__head">
+                <span class="p-trips-card__icon" aria-hidden="true"><i class="fas fa-route"></i></span>
+                <div>
+                    <h2 class="p-trips-card__title">{{ 'trip.legs.title'|trans }}</h2>
+                    <p class="p-trips-card__hint">{{ 'trip.legs.hint'|trans }}</p>
+                </div>
+            </div>
+            {# The texts of the calendar of each stop (trips.js, contact/stay_dates.js) #}
+            <div class="js-trip-dates-texts" hidden
+                 data-arrival="{{ 'contact.dates.arrival'|trans }}" data-departure="{{ 'contact.dates.departure'|trans }}"
+                 data-select="{{ 'contact.dates.select'|trans }}" data-change="{{ 'contact.dates.change'|trans }}"
+                 data-tap-arrival="{{ 'contact.dates.tap.arrival'|trans }}" data-tap-departure="{{ 'contact.dates.tap.departure'|trans }}"
+                 data-week="{{ 'contact.dates.week'|trans }}"
+                 data-previous="{{ 'contact.dates.previous'|trans }}" data-next="{{ 'contact.dates.next'|trans }}"
+                 data-one="{{ 'request.night.stay'|trans({ numbernights: 1 }) }}"
+                 data-other="{{ 'request.night.stay'|trans({ numbernights: 99 })|replace({ '99': '{n}' }) }}"></div>
             <div id="legs-list" class="p-trips-stops"
                  data-prototype="{{ _self.widget_prototype(form.legs.vars.prototype)|escape('html_attr') }}">
                 {% for leg in form.legs %}
@@ -119,8 +160,38 @@
         </section>
 
         {{ form_errors(form) }}
+        {% if embedded %}
+        <div class="p-ped-foot">
+            <button type="button" class="p-ped-foot__cancel js-ped-close">{{ 'cancel'|trans }}</button>
+            <button class="p-ped-foot__save" type="submit"><i class="fas fa-check" aria-hidden="true"></i> {{ button_text|trans|capitalize }}</button>
+        </div>
+        {% else %}
         <div class="p-trips-form__actions">
             <button class="p-trips-btn p-trips-btn--primary p-trips-btn--l" type="submit">{{ button_text|trans|capitalize }}</button>
         </div>
+        {% endif %}
     {{ form_end(form) }}
+    {% if embedded %}
+    </div>
+    <script>
+      (function () {
+        var parentWindow = window.parent !== window ? window.parent : null;
+        // The panel's own head is hidden: this page has its own
+        if (parentWindow) {
+          parentWindow.postMessage({ type: 'bw-contact-ready' }, window.location.origin);
+        }
+        document.body.classList.add('has-ped-foot');
+        document.addEventListener('click', function (event) {
+          if (event.target.closest('.js-ped-close')) {
+            event.preventDefault();
+            if (parentWindow) {
+              parentWindow.postMessage({ type: 'bw-contact-back' }, window.location.origin);
+            } else {
+              window.location.href = '{{ path('landingpage') }}';
+            }
+          }
+        });
+      })();
+    </script>
+    {% endif %}
 {% endblock content %}

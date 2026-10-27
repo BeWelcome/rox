@@ -198,3 +198,18 @@ landing.visitors.more.stops:
 trip.over:
     - 'Over'
     - My trips page, small tag on a trip whose dates are past
+trip.created.title:
+    - 'Your trip is online'
+    - Title of the confirmation shown in the side panel of the home page once a trip has been created
+trip.created.text:
+    - 'Hosts near your stops can now see it and invite you to stay.'
+    - Text under the title of the confirmation shown in the side panel once a trip has been created
+trip.created.see:
+    - 'See the trip'
+    - Link of the confirmation shown in the side panel once a trip has been created; opens the trip page
+trip.details.hint:
+    - 'A title and a few words help hosts know you.'
+    - Line under the title of the first part of the trip creation form (title, description, travellers)
+trip.legs.hint:
+    - 'Add each place you will stay, with your dates.'
+    - Line under the title of the itinerary part of the trip creation form

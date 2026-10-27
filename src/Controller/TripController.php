@@ -108,6 +108,13 @@ class TripController extends AbstractController
                 $this->entityManager->flush();
                 $this->tripModel->notifyHostsAboutTrip($trip);
 
+                // From the side panel of the home page: a confirmation fills the panel
+                if ($request->query->getBoolean('embed')) {
+                    return $this->render('trip/embed_created.html.twig', [
+                        'trip' => $trip,
+                    ]);
+                }
+
                 $this->addTranslatedFlash('success', 'trip.created');
 
                 return $this->redirectToRoute('trip_show', ['id' => $trip->getId()]);

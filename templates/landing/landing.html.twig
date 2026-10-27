@@ -128,7 +128,7 @@
 			<span class="l-hello__stat-text"><strong>{{ visitorsCount }}</strong> <span class="l-hello__long">{% if homeCity %}{{ 'landing.stats.travelers'|trans({ city: homeCity }) }}{% else %}{{ 'landing.stats.travelers.area'|trans }}{% endif %}</span><span class="l-hello__short">{{ 'landing.stats.travelers.short'|trans }}</span></span>
 			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>
 		</a>
-		<a class="l-hello__stat l-hello__stat--trip" href="{{ path('new_trip') }}">
+		<a class="l-hello__stat l-hello__stat--trip js-contact-open" href="{{ path('new_trip') }}" data-title="{{ 'landing.stats.trip'|trans }}">
 			<span class="l-hello__stat-icon"><i class="fa fa-plus" aria-hidden="true"></i></span>
 			<span class="l-hello__stat-text"><span class="l-hello__long"><span class="l-hello__trip-title">{{ 'landing.stats.trip'|trans }}</span><span class="l-hello__trip-hint">{{ 'landing.stats.trip.hint'|trans }}</span></span><span class="l-hello__short">{{ 'landing.stats.trip.short'|trans }}</span></span>
 			<i class="fas fa-chevron-right l-hello__stat-go" aria-hidden="true"></i>

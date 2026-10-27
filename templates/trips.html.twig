@@ -7,8 +7,11 @@
       New trips layout: a page head with the trips tabs, then the page content on
       the light page background. Pages opt in with {% set trips_redesign = true %}.
     #}
-    <main role="main" class="p-trips">
+    {# ?embed=1 (side panel of the home page): the page has its own head, no tabs #}
+    {% set trips_embedded = app.request.query.getBoolean('embed') %}
+    <main role="main" class="p-trips{{ trips_embedded ? ' p-trips--embed' }}">
       <div id="toasts" class="position-fixed w-100 d-flex flex-column px-2" style="z-index:1000"></div>
+      {% if not trips_embedded %}
       <header class="p-trips__head">
         {# Phones: an orange bar in place of the site header (as in the inbox): back, the title, Create #}
         <div class="p-trips__top">
@@ -32,6 +35,7 @@
           </nav>
         {% endif %}
       </header>
+      {% endif %}
       {% for label, messages in app.flashes %}
         {% for message in messages %}
           <div class="alert alert-{{ label }}">{{ message|raw }}</div>

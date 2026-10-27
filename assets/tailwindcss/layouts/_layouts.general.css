@@ -8808,11 +8808,20 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .p-trips-form__actions { display: flex; justify-content: flex-end; }
 .p-trips .form-error-message,
 .p-trips .invalid-feedback { display: block; color: #dc2626; font-size: 0.8125rem; }
+/* One line in red under the field, without the "Error" badge */
+.p-trips .invalid-feedback { margin: 0.1rem 0 0; padding: 0; background: none !important; }
+.p-trips .invalid-feedback > span { height: auto; }
+.p-trips .form-error-icon { display: none; }
+.p-trips .form-error-message { font-weight: 600; }
+.p-trips .p-trips-input.is-invalid { border-color: #fca5a5; }
 
 .p-trips-stops { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; }
 .p-trips-stop { padding: 1rem; border: 1px solid #eef0f3; border-radius: 0.9rem; background: #fcfcfd; }
 .p-trips-stop__fields { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto; gap: 0.6rem; align-items: center; }
 .p-trips-stop__fields .p-trips-field { margin: 0; }
+/* The dates of a stop: the calendar of the stay requests under the place (trips.js) */
+.p-trips-stop.has-calendar .p-trips-stop__fields { grid-template-columns: minmax(0, 1fr) auto; }
+.p-trips-stop__dates { max-width: 26rem; margin-top: 0.75rem; }
 .p-trips-stop__remove {
   display: inline-flex;
   align-items: center;
@@ -8846,6 +8855,34 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 }
 .p-trips-option input { width: 0.95rem; height: 0.95rem; margin: 0; accent-color: #ea7a2e; }
 .p-trips-option:has(input:checked) { border-color: #fed7aa; background: #fff7ed; color: #c2410c; }
+
+/* Each part of the form: an icon, the title and a line on what to fill in */
+.p-trips-card__head { display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 1.25rem; }
+.p-trips-card__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #fff4eb; color: #ea7a2e; font-size: 1rem; }
+.p-trips .p-trips-card__head .p-trips-card__title { margin: 0; line-height: 1.3; }
+.p-trips .p-trips-card__hint { margin: 0.15rem 0 0; color: #64748b; font-size: 0.875rem; line-height: 1.4; }
+.p-trips-form__row { grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 1rem; }
+
+/* Travellers, radius...: the menu of pretty-select.js, with a caret */
+.p-trips-form .p-select { display: flex; width: 100%; }
+.p-trips .p-trips-select.p-select__button {
+  padding-right: 2.25rem;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+  background-position: right 0.85rem center;
+  background-repeat: no-repeat;
+  background-size: 12px 10px;
+  cursor: pointer;
+}
+.p-trips-form .p-select.is-open .p-trips-select { border-color: #ea7a2e; background-color: #fff; }
+
+/* In the side panel of the home page (?embed=1): the parts one under the other, no boxes */
+.p-trips--embed { margin: 0; background: #fff; }
+.p-trips-embed .p-trips-form { gap: 0; }
+.p-trips-embed .p-trips-card { padding: 1.4rem 0; border: 0; border-bottom: 1px solid #eef2f6; border-radius: 0; box-shadow: none; }
+.p-trips-embed .p-trips-card:last-of-type { border-bottom: 0; }
+.p-trips-embed .p-trips-stop__dates { max-width: none; }
+.p-trips-embed .p-trips-btn.js-btn-add { width: 100%; justify-content: center; border-style: dashed; }
+.c-embed-sent__avatar--icon { display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 1.25rem; }
 
 @media (max-width: 767.98px) {
   .p-trips { margin-top: 1rem; }

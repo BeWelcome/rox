@@ -1,7 +1,4 @@
-import Litepicker from 'litepicker';
-
 import dayjs from 'dayjs';
-import '../scss/_daterangepicker.scss';
 
 import L from 'leaflet';
 import 'leaflet.fullscreen';
@@ -11,6 +8,8 @@ import 'leaflet/dist/leaflet.css';
 require('leaflet-polylinedecorator');
 import {initializeMultipleAutoCompletes} from './suggest/locations';
 import {initContactDrawer} from './contact/drawer';
+import {initStayDates} from './contact/stay_dates';
+import {prettySelect} from './pretty-select';
 
 // Visitors page: a trip, the invitation or the message open in a side panel
 initContactDrawer();
@@ -31,42 +30,51 @@ function onChange(element, result) {
 
 initializeMultipleAutoCompletes("/suggest/locations/places", 'js-location-picker', onChange);
 
+// Travellers, radius...: a menu in the site's look instead of the browser's own
+document.querySelectorAll('.p-trips-form select.p-trips-select').forEach(prettySelect);
+
 let pickers = document.querySelectorAll('*[id*="_duration"]');
 let lastEndDateSet = null;
 
 pickers.forEach(initializePicker);
 
+// The dates of a stop: the calendar of the stay requests (contact/stay_dates.js), open
+// under the stop while the dates are picked, then folded into one line with "Change".
+// It fills the stop's hidden arrival and departure; the duration field only shows them.
 function initializePicker(value) {
     const parent = value.id.replace('_duration', '');
-    const picker = new Litepicker({
-        element: value,
-        singleMode: false,
-        allowRepick: true,
-        minDate: dayjs(),
-        numberOfMonths: 2,
-        numberOfColumns: 2,
-        format: "YYYY-MM-DD",
-        position: 'top left',
-        lang: document.documentElement.lang,
-        showTooltip: false,
-        setup: (picker) => {
-            picker.on('selected', (start, end) => {
-                lastEndDateSet = end.format('YYYY-MM-DD');
-                const leg = picker.options.element.id.replace('_duration', '');
-                const arrival = document.getElementById(leg + '_arrival');
-                arrival.value = start ? start.format('YYYY-MM-DD') : '';
-                const departure = document.getElementById(leg + '_departure');
-                departure.value = end ? end.format('YYYY-MM-DD') : '';
-            });
-        }
-    });
+    const arrival = document.getElementById(parent + '_arrival');
+    const departure = document.getElementById(parent + '_departure');
+    const show = () => {
+        value.value = arrival.value && departure.value ? arrival.value + ' - ' + departure.value : '';
+    };
+    show();
 
-    const arrival = document.getElementById(parent + '_arrival').value;
-    const departure = document.getElementById(parent + '_departure').value;
-
-    if (arrival !== "") {
-        picker.setDateRange(arrival, departure);
+    // A past stop can't be changed: its dates stay in the (disabled) field
+    const stop = value.closest('.p-trips-stop');
+    const texts = document.querySelector('.js-trip-dates-texts');
+    if (value.disabled || !stop || !texts) {
+        return;
     }
+
+    const root = document.createElement('div');
+    root.className = 'c-stay-dates p-trips-stop__dates';
+    stop.classList.add('has-calendar');
+    Object.assign(root.dataset, texts.dataset);
+    stop.querySelector('.p-trips-stop__fields').insertAdjacentElement('afterend', root);
+
+    [arrival, departure].forEach((input) => input.addEventListener('change', () => {
+        show();
+        if (departure.value) {
+            lastEndDateSet = departure.value;
+        }
+    }));
+
+    initStayDates(root, {
+        arrival,
+        departure,
+        hide: [value.closest('.p-trips-field--dates')].filter(Boolean),
+    });
 }
 
 document.addEventListener('click', function(event) {

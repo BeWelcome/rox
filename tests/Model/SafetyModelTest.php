@@ -4,29 +4,59 @@ namespace App\Tests\Model;
 
 use App\Entity\Member;
 use App\Model\SafetyModel;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NativeQuery;
-use PHPUnit\Framework\TestCase;
+use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\Group;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class SafetyModelTest extends TestCase
+/**
+ * The safety team shown on /safety/team: active members with the SafetyTeam right, read from member (not main's
+ * members table).
+ */
+#[Group('integration')]
+class SafetyModelTest extends KernelTestCase
 {
-    public function testGetSafetyTeamMembersReturnsList(): void
+    private Connection $connection;
+    private SafetyModel $safetyModel;
+
+    protected function setUp(): void
     {
-        // Loose mocking: we don't check exact SQL string or exact parameter types unless necessary.
-        // We fundamentally test: "If the DB returns X, does the method return X?"
+        self::bootKernel();
+        $this->connection = static::getContainer()->get(Connection::class);
+        $this->safetyModel = static::getContainer()->get(SafetyModel::class);
+    }
 
-        $expectedMembers = [new Member(), new Member()];
+    public function testListsTheActiveMembersWithTheSafetyTeamRight(): void
+    {
+        self::assertSame(['bwadmin'], $this->usernames());
+    }
 
-        $query = $this->createStub(NativeQuery::class);
-        $query->method('getResult')->willReturn($expectedMembers);
+    public function testLeavesOutMembersWithoutAnActiveRightOrStatus(): void
+    {
+        $safetyTeam = (int) $this->connection->fetchOne("SELECT id FROM rights WHERE Name = 'SafetyTeam'");
+        [$levelZero, $banned, $second] = $this->connection->fetchFirstColumn(
+            "SELECT id FROM member WHERE Status = 'Active' AND Username <> 'bwadmin' ORDER BY id LIMIT 3"
+        );
+        foreach ([[$levelZero, 0], [$banned, 10], [$second, 1]] as [$member, $level]) {
+            $this->connection->executeStatement(
+                "INSERT INTO rightsvolunteers (IdMember, IdRight, Level, Scope, Comment, created, updated)
+                 VALUES (?, ?, ?, '\"All\"', 'test', NOW(), NOW())",
+                [$member, $safetyTeam, $level]
+            );
+        }
+        $this->connection->executeStatement("UPDATE member SET Status = 'Banned' WHERE id = ?", [$banned]);
 
-        $entityManager = $this->createStub(EntityManagerInterface::class);
-        $entityManager->method('createNativeQuery')->willReturn($query);
+        $expected = $this->connection->fetchFirstColumn(
+            'SELECT Username FROM member WHERE id IN (?, ?) ORDER BY Username',
+            [$this->connection->fetchOne("SELECT id FROM member WHERE Username = 'bwadmin'"), $second]
+        );
+        self::assertSame($expected, $this->usernames());
+    }
 
-        $safetyModel = new SafetyModel($entityManager);
-        $result = $safetyModel->getSafetyTeamMembers();
-
-        $this->assertCount(2, $result);
-        $this->assertEquals($expectedMembers, $result);
+    /**
+     * @return list<string>
+     */
+    private function usernames(): array
+    {
+        return array_map(static fn (Member $member): string => $member->getUsername(), $this->safetyModel->getSafetyTeamMembers());
     }
 }

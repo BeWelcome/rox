@@ -72,7 +72,7 @@ activities.you.organize:
 activities.over:
   - 'Over'
   - 'Badge on an activity that has ended'
-activities.empty.within:
+activities.empty.near:
   - '{radius, plural, =0 {There are no upcoming activities in your place.} other {There are no upcoming activities within # km of your place.}} Maybe you want to organize one?'
   - 'Activities near me: no activities in the chosen distance. # is the distance in km (radius)'
 activities.empty.no.address:

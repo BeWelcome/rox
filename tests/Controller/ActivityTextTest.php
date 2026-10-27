@@ -40,7 +40,7 @@ class ActivityTextTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $text = $this->client->getCrawler()->filter('main')->text();
         self::assertTrue(
-            str_contains($text, 'within 25 km of your place') || str_contains($text, 'activities.empty.within'),
+            str_contains($text, 'within 25 km of your place') || str_contains($text, 'activities.empty.near'),
             'the near me page says there are no activities nearby'
         );
     }

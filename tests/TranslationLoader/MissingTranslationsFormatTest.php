@@ -12,7 +12,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * ICU accepts some broken texts as patterns and only fails when formatting, on the page: an argument used as a
  * plural and again as {name} inside it ("Inconsistent types declared for an argument", activities.empty.near).
- * translations:add:missing never changes a text once it is in the database, so a broken one needs a new key.
+ * translations:add:missing never changes a text once it is in the database: fix one there in the translation tool.
  */
 class MissingTranslationsFormatTest extends TestCase
 {

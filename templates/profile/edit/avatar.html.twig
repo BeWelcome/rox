@@ -31,7 +31,7 @@
       <i class="fas fa-minus p-avatar-edit__zoom-icon" aria-hidden="true"></i>
       <div class="p-avatar-edit__zoom js-avatar-zoom"></div>
       <i class="fas fa-plus p-avatar-edit__zoom-icon" aria-hidden="true"></i>
-      <button type="button" id="avatar-rotate" class="p-avatar-edit__rotate" aria-label="{{ 'profile.edit.avatar.rotate'|trans }}" title="{{ 'profile.edit.avatar.rotate'|trans }}">
+      <button type="button" id="avatar-rotate" class="p-avatar-edit__rotate" aria-label="{{ 'profile.edit.avatar.rotate'|trans }}">
         <i class="fas fa-sync" aria-hidden="true"></i>
       </button>
     </div>
@@ -41,7 +41,7 @@
         <p class="p-avatar-edit__gallery-title">{{ 'profile.edit.avatar.from.gallery'|trans }}</p>
         <div class="p-avatar-edit__shots">
           {% for picture in pictures %}
-            <button type="button" class="p-avatar-edit__shot" data-image-id="{{ picture.id }}" title="{{ picture.title }}">
+            <button type="button" class="p-avatar-edit__shot" data-image-id="{{ picture.id }}" aria-label="{{ picture.title }}">
               <img loading="lazy" src="gallery/thumbimg?id={{ picture.id }}" alt="{{ picture.title }}">
             </button>
           {% endfor %}

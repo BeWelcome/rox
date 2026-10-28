@@ -49,6 +49,8 @@ class TranslationToolTest extends WebTestCase
 
     public function testATranslatorCorrectsTheText(): void
     {
+        // as translations:add:missing stores them: not archived means NULL, not 0
+        $this->connection->executeStatement("UPDATE word SET isarchived = NULL WHERE code = 'zztest.broken'");
         $crawler = $this->client->request('GET', '/admin/translations/edit/en/zztest.broken');
         $this->assertResponseIsSuccessful();
 

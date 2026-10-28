@@ -135,3 +135,6 @@ invitation.decide.placeholder.maybe:
 invitation.decide.placeholder.decline:
     - "Tell {username} why you can't come this time..."
     - Placeholder of the message when the invited member declines an invitation
+request.cancel.reason:
+    - 'A few words to say why (required)'
+    - Placeholder of the message field in the dialog that confirms cancelling a hosting request or an invitation, the message is sent to the other member

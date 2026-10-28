@@ -281,6 +281,23 @@
   line-height: 1.5;
 }
 
+.c-confirm-modal__field {
+  display: block;
+  width: 100%;
+  min-height: 5.5rem;
+  margin: -0.5rem 0 1.25rem;
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 0.8rem;
+  color: #0f172a;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  resize: vertical;
+}
+.c-confirm-modal__field:focus { border-color: #f37000; outline: 0; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.12); }
+.c-confirm-modal__field.is-invalid { border-color: #dc2626; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12); }
+.c-confirm-modal__field[hidden] { display: none; }
+
 .c-confirm-modal__actions {
   display: flex;
   gap: 0.625rem;

@@ -64,6 +64,8 @@ class SignupMockups implements MockupProviderInterface
         $finalizeForm = $this->formFactory->create(SignupFormFinalizeType::class);
 
         return [
+            // the finalize page shows the member's picture
+            'member' => $user,
             'username' => $user->getUsername(),
             'gender' => $user->getGender(),
             'key' => hash('sha256', $user->getUsername()),

@@ -9,9 +9,11 @@ use App\Entity\Subject;
 use App\Form\HostingRequestGuest;
 use App\Form\HostingRequestHost;
 use App\Form\ReportSpamType;
+use App\Service\InboxFolders;
 use Carbon\Carbon;
 use Mockery;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestMockups implements MockupProviderInterface
 {
@@ -46,8 +48,11 @@ class RequestMockups implements MockupProviderInterface
         ],
     ];
 
-    public function __construct(private readonly FormFactoryInterface $formFactory)
-    {
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+        private readonly InboxFolders $inboxFolders,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function getFeature(): string
@@ -89,11 +94,12 @@ class RequestMockups implements MockupProviderInterface
     {
         $form = $this->formFactory->create(HostingRequestGuest::class);
 
+        // the inbox beside the form, as RequestController::newHostingRequest() shows it
         return [
             'host' => $parameters['admin'],
             'guest' => $parameters['user'],
             'form' => $form->createView(),
-        ];
+        ] + $this->inboxFolders->getContext($this->requestStack->getCurrentRequest(), $parameters['user'], 'requests');
     }
 
     private function getVariablesForReplyGuest(array $parameters): array

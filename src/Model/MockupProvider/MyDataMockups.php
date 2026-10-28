@@ -2,6 +2,7 @@
 
 namespace App\Model\MockupProvider;
 
+use App\Doctrine\CommentQualityType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LegOptionsType;
 use App\Doctrine\TripAdditionalInfoType;
@@ -258,7 +259,7 @@ class MyDataMockups implements MockupProviderInterface
                 $mockComment = Mockery::mock(Comment::class, [
                     'getToMember' => $parameters['user'],
                     'getFromMember' => $parameters['admin'],
-                    'getQuality' => 'good',
+                    'getQuality' => CommentQualityType::POSITIVE,
                     'getTextWhere' => 'Somewhere over the rainbow',
                     'getComment' => 'I\'m so free',
                     'getCreated' => new Carbon(),
@@ -294,14 +295,15 @@ class MyDataMockups implements MockupProviderInterface
                 ];
                 break;
             case 'donations':
+                // Twig reads donation.money through getMoney(): the getters need the values
                 $mockEntity = Mockery::mock(Donation::class, [
-                    'money' => '€',
-                    'amount' => 100.00,
-                    'namegiven' => 'donor',
-                    'referencepaypal' => 'paypal',
-                    'systemcomment' => 'system comment',
-                    'membercomment' => 'member comment',
-                    'statusprivate' => ($parameters['count'] % 2 === 1),
+                    'getMoney' => '€',
+                    'getAmount' => '100.00',
+                    'getNameGiven' => 'donor',
+                    'getReferencePaypal' => 'paypal',
+                    'getSystemComment' => 'system comment',
+                    'getMemberComment' => 'member comment',
+                    'getStatusPrivate' => 1 === $parameters['count'] % 2 ? 'showamountonly' : 'showall',
                 ]);
                 break;
             case 'gallery':
@@ -461,19 +463,19 @@ class MyDataMockups implements MockupProviderInterface
                 'en' => 'description',
                 'fr' => 'description',
             ],
-            'getGroups' => [
+            'getGroups' => new ArrayCollection([
                 Mockery::mock(Group::class, [
                     'getName' => 'group',
                 ]),
-            ],
-            'getChoices' => [
+            ]),
+            'getChoices' => new ArrayCollection([
                 Mockery::mock(PollChoice::class, [
                     'getTexts' => [
                         'en' => 'English',
                         'fr' => 'French',
                     ],
                 ]),
-            ],
+            ]),
         ]);
     }
 

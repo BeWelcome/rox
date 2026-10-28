@@ -29,3 +29,6 @@ group.picture.missing:
     - 'Please select a picture for the group.'
     - Error message shown under the picture field when a new group is created without a picture.
     - validators
+group.declined.invitation:
+    - '{username} has declined the invitation to the {group} group.'
+    - Mail to the admins of a group when a member declines the invitation to the group.

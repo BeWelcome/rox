@@ -16,7 +16,7 @@
                     {% include 'private/poll.html.twig' with {'poll':contribution.poll} %}
                     {% if contribution.comment|length %}
                         <p>
-                            <strong>{{ 'mydata.polls.comment' }}</strong><br>
+                            <strong>{{ 'mydata.polls.comment'|trans }}</strong><br>
                             {{ contribution.comment|purify }}
                         </p>
                     {% endif %}

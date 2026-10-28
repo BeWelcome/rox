@@ -171,3 +171,12 @@ mydata.browser.push.deliveries.updated:
     - Updated
 mydata.browser.push.deliveries.last.error:
     - Last error
+mydata.newsletter.no.title:
+    - '(no title)'
+    - Shown in the data export for a newsletter without a title in any language.
+mydata.newsletter.no.body:
+    - '(no text)'
+    - Shown in the data export for a newsletter without a text in any language.
+mydata.polls.comment:
+    - 'Your comment'
+    - Data export, polls you contributed to, above the comment you left on the poll.

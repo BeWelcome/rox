@@ -12,10 +12,10 @@
                 {% if translation.author == member %}
             <div class="card o-card">
                 <div class="card-header text-truncate">
-                    {% if translation.title is defined %}{{ translation.title }}{% else %}{{ 'mydata.newsletter.no.title' }}{% endif %}
+                    {% if translation.title is defined %}{{ translation.title }}{% else %}{{ 'mydata.newsletter.no.title'|trans }}{% endif %}
                 </div>
                 <div class="card-body">
-                    {% if translation.body is defined %}{{ translation.body|purify|truncate(500) }}{% else %}{{ 'mydata.newsletter.no.body' }}{% endif %}
+                    {% if translation.body is defined %}{{ translation.body|purify|truncate(500) }}{% else %}{{ 'mydata.newsletter.no.body'|trans }}{% endif %}
                     <p class="small text-muted mb-0">{{ 'created'|trans|capitalize }}:{{ newsletter.created|format_date('medium') }}</p>
                 </div>
                 <div class="card-footer text-right">

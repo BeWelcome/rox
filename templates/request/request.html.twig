@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 {% set inbox_page = true %}
-{% import 'conversations/_inbox.macros.twig' as inbox %}
-{% import 'request/_request.macros.twig' as stay %}
 
 {% set hide_sidebar = true %}
 
@@ -19,6 +17,9 @@
 {% endblock title %}
 
 {% block content %}
+    {# imported in the block: the translators' preview renders only this block #}
+    {% import 'conversations/_inbox.macros.twig' as inbox %}
+    {% import 'request/_request.macros.twig' as stay %}
     {% set address = host.activeAddress %}
     {% set languages %}
         {%- for level in host.languageLevels -%}

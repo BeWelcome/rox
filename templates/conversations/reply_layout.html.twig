@@ -5,7 +5,6 @@
 #}
 {% extends 'base.html.twig' %}
 {% set inbox_page = true %}
-{% import 'conversations/_inbox.macros.twig' as inbox %}
 
 {% set hide_sidebar = true %}
 
@@ -14,6 +13,8 @@
 {% endblock title %}
 
 {% block content %}
+    {# imported in the block: the translators' preview renders only this block #}
+    {% import 'conversations/_inbox.macros.twig' as inbox %}
     {% set myself = app.user %}
     {% set newest = thread|first %}
     {% set correspondent = (newest.sender == myself) ? newest.receiver : newest.sender %}

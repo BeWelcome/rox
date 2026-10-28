@@ -738,7 +738,7 @@ SQL;
             $values[] = "'" . $this->dao->escape($this->$field). "'";
         }
 
-        $query = "INSERT INTO {$this->getTableName()} (" . implode(',',$fields) . ") VALUES (" . implode(',',$values) . ")";
+        $query = "INSERT INTO `{$this->getTableName()}` (" . implode(',',$fields) . ") VALUES (" . implode(',',$values) . ")";
         try
         {
             if (!($result = $this->dao->query($query)))

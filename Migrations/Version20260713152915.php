@@ -18,6 +18,8 @@ final class Version20260713152915 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
+        // main's tables; a new database built from develop's entities has neither
+        $this->skipIf(!$schema->hasTable('membersgroups') || !$schema->hasTable('groups'), 'No membersgroups or groups table.');
         $this->addSql('DELETE mg FROM membersgroups mg LEFT JOIN `groups` g ON g.id = mg.IdGroup WHERE g.id IS NULL');
     }
 

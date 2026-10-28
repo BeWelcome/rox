@@ -28,8 +28,8 @@ final class GroupControllerTest extends WebTestCase
         $client->request('GET', "/group/{$groupId}/delete/true");
 
         self::assertResponseRedirects('/groups/');
-        self::assertSame(0, $this->countRows($connection, 'groups', 'id', $groupId));
-        self::assertSame(0, $this->countRows($connection, 'membersgroups', 'IdGroup', $groupId));
+        self::assertSame(0, $this->countRows($connection, 'group', 'id', $groupId));
+        self::assertSame(0, $this->countRows($connection, 'group_membership', 'group_id', $groupId));
         self::assertSame(0, $this->countRows($connection, 'privilegescopes', 'IdType', $groupId));
     }
 
@@ -53,8 +53,8 @@ final class GroupControllerTest extends WebTestCase
         /** @var Session $session */
         $session = $client->getRequest()->getSession();
         self::assertNotEmpty($session->getFlashBag()->peek('error'));
-        self::assertSame(1, $this->countRows($connection, 'groups', 'id', $groupId));
-        self::assertSame(3, $this->countRows($connection, 'membersgroups', 'IdGroup', $groupId));
+        self::assertSame(1, $this->countRows($connection, 'group', 'id', $groupId));
+        self::assertSame(3, $this->countRows($connection, 'group_membership', 'group_id', $groupId));
         self::assertSame(1, $this->countRows($connection, 'privilegescopes', 'IdType', $groupId));
     }
 
@@ -75,10 +75,10 @@ final class GroupControllerTest extends WebTestCase
     ): void {
         $connection->executeStatement(
             <<<'SQL'
-                INSERT INTO groups
-                    (id, Name, Type, created, Picture, MoreInfo, IdDescription, VisiblePosts, approved)
+                INSERT INTO `group`
+                    (id, name, type, created, picture, members_only, approved)
                 VALUES
-                    (?, 'Issue 80 regression', 'Public', NOW(), '', '', 0, 'yes', 1)
+                    (?, 'Issue 80 regression', 'Public', NOW(), '', 0, 1)
                 SQL,
             [$groupId],
         );
@@ -92,11 +92,10 @@ final class GroupControllerTest extends WebTestCase
         ) {
             $connection->executeStatement(
                 <<<'SQL'
-                    INSERT INTO membersgroups
-                        (updated, created, comment, Status, IacceptMassMailFromThisGroup,
-                         CanSendGroupMessage, notificationsEnabled, IdMember, IdGroup)
+                    INSERT INTO group_membership
+                        (updated, created, status, accept_mass_mail, notifications_enabled, member_id, group_id)
                     VALUES
-                        (NOW(), NOW(), 0, ?, 'no', 'yes', 1, ?, ?)
+                        (NOW(), NOW(), ?, 0, 1, ?, ?)
                     SQL,
                 [$status, $memberId, $groupId],
             );

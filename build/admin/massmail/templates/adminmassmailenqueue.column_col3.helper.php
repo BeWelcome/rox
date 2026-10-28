@@ -12,9 +12,9 @@
 
     // get groups
     if (count($this->enqueueGroups) <> 0) {
-        $query = "SELECT id,Name FROM groups WHERE id IN ('"
-            . implode("', '", $this->enqueueGroups) . "') ORDER BY Name";
+        $query = "SELECT id, name AS Name FROM `group` WHERE id IN ('"
+            . implode("', '", array_map('intval', $this->enqueueGroups)) . "') ORDER BY name";
     } else {
-        $query = "SELECT id, Name FROM groups ORDER BY Name";
+        $query = "SELECT id, name AS Name FROM `group` ORDER BY name";
     }
     $groups = $this->model->BulkLookup($query);

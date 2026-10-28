@@ -41,7 +41,7 @@ class GroupDescriptionLegacyTest extends WebTestCase
         $this->client = static::createClient();
         $entityManager = $this->entityManager();
         $group = new Group();
-        $group->setName(self::NAME)->setType('Public')->setVisiblePosts('yes')->setPicture('')->setApproved(Group::APPROVED);
+        $group->setName(self::NAME)->setType('Public')->setMembersOnly(false)->setPicture('')->setApproved(Group::APPROVED);
         $group->setDescription('en', 'Written in English', $this->member('member-3'));
         $group->setDescription('de', 'Auf Deutsch geschrieben', $this->member('member-3'));
         $entityManager->persist($group);

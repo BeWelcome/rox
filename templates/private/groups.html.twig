@@ -18,14 +18,9 @@
                 {% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP') %}{{ 'mydata.groups.wantin'|trans({'wantin': membership.created}) }}{% endif %}
                 {% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::KICKED_FROM_GROUP') %}{{ 'mydata.groups.kicked'|trans({'kicked': membership.updated}) }}{% endif %}
                 {% if membership.status == constant('App\\Doctrine\\GroupMembershipStatusType::INVITED_INTO_GROUP') %}{{ 'mydata.groups.invited'|trans({'kicked': membership.created}) }}{% endif %}</p>
-                {% if membership.comments|length %}
+                {% if membership.comment %}
                     <p>{{ 'mydata.groups.why.im.here'|trans }}</p>
-                    {% for comment in membership.comments %}
-                        <p>
-                            <small class="text-muted">{{ comment.Language.WordCode|lower|trans }} ({{ locale }})</small><br>
-                            {{ comment.Sentence|purify }}
-                        </p>
-                    {% endfor %}
+                    <p>{{ membership.comment|purify }}</p>
                 {% endif %}
 
                     </div>

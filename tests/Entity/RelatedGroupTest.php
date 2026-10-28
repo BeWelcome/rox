@@ -65,8 +65,8 @@ class RelatedGroupTest extends KernelTestCase
         $this->entityManager->persist(new RelatedGroup($other, $group, null));
         $this->entityManager->flush();
 
-        $connection->executeStatement('DELETE FROM membersgroups WHERE IdGroup = ?', [$other->getId()]);
-        $connection->executeStatement('DELETE FROM `groups` WHERE id = ?', [$other->getId()]);
+        // the memberships go with the group (ON DELETE CASCADE)
+        $connection->executeStatement('DELETE FROM `group` WHERE id = ?', [$other->getId()]);
 
         self::assertSame(0, (int) $connection->fetchOne(
             'SELECT COUNT(*) FROM groups_related WHERE ? IN (group_id, related_id)',

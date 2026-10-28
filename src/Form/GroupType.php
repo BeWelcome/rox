@@ -67,6 +67,8 @@ class GroupType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'label' => 'groupsvisiblepostsheading',
+                // the field keeps main's name; 'No' makes the group's posts visible to its members only
+                'property_path' => 'visiblePosts',
             ])
             ->add('picture', FileType::class, [
                 'label' => 'label.group.picture',

@@ -16,9 +16,9 @@ class GroupRequest
     #[Assert\NotBlank]
     public string $type = 'Public';
 
-    /** Whether the group's forum posts are visible to members only ('Yes') or to everyone ('No'). */
+    /** The group's forum posts are visible to all members ('Yes') or to the group's members only ('No'). */
     #[Assert\Choice(choices: ['Yes', 'No'])]
-    public string $membersOnly = 'Yes';
+    public string $visiblePosts = 'Yes';
 
     #[Assert\Image(minWidth: 200, maxWidth: 400, minHeight: 200, maxHeight: 400)]
     public ?File $picture = null;

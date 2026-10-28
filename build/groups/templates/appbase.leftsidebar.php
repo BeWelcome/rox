@@ -5,7 +5,7 @@
         foreach ($last_visited as $group) {
             if ($group) {
                 ?>
-                <li><a href="group/<?=$group->getData()->id ?>"><?=$group->getData()->Name ?></a></li>
+                <li><a href="group/<?=$group->getData()->id ?>"><?=$group->getData()->name ?></a></li>
                 <?php
             }
         }
@@ -18,7 +18,7 @@
         foreach ($my_groups as $group_data) {
             if ($group_data) {
                 ?>
-                <li><a href="group/<?=$group_data->id ?>"><?=$group_data->Name ?></a></li>
+                <li><a href="group/<?=$group_data->id ?>"><?=$group_data->name ?></a></li>
                 <?php
             }
         }

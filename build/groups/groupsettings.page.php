@@ -59,7 +59,7 @@ class GroupSettingsPage extends GroupsSubPage
             return;
         }
 
-        if (!$this->isGroupOwner() && !($this->group->Type !== GroupType::INVITE_ONLY && $this->isGroupAdmin())) {
+        if (!$this->isGroupOwner() && !($this->group->type !== GroupType::INVITE_ONLY && $this->isGroupAdmin())) {
             echo $words->get('GroupsSettingsOnlyAdmin');
             return;
         }
@@ -80,9 +80,9 @@ class GroupSettingsPage extends GroupsSubPage
         else
         {
             $GroupDesc_ = str_replace(['<br>','<br/>', '<br />'], "\n", $this->group->getDescription());
-            $Type = $this->group->Type;
-            $VisiblePosts = (($this->group->VisiblePosts == 'no') ? 'no' : 'yes');
-            $DisplayedOnProfile = (($this->group->DisplayedOnProfile == 'No') ? 'No' : 'Yes');
+            $Type = $this->group->type;
+            $VisiblePosts = ($this->group->members_only ? 'no' : 'yes');
+            $DisplayedOnProfile = 'Yes'; // never stored
             $problems = [];
         }
 ?>

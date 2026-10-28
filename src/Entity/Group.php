@@ -21,11 +21,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\ObjectManager;
 
 /**
+ * A group (`group`). main's table `groups` is App\Entity\Groups; Version20261029100000 copied it into this one.
+ *
  * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'groups')]
+#[ORM\Table(name: '`group`')]
 #[ORM\Entity(repositoryClass: \App\Repository\GroupRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Group
@@ -50,24 +52,18 @@ class Group
         self::APPROVED_CLOSED, self::DISMISSED_CLOSED, self::IN_DISCUSSION_CLOSED,
     ];
 
-    #[ORM\Column(name: 'Name', type: 'string', length: 40, nullable: false)]
+    #[ORM\Column(name: 'name', type: 'string', length: 100, nullable: false)]
     private string $name;
 
-    #[ORM\Column(name: 'Type', type: 'group_type', nullable: false)]
+    #[ORM\Column(name: 'type', type: 'group_type', nullable: false)]
     private string $type = GroupType::PUBLIC;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    #[ORM\Column(name: 'Picture', type: 'text', length: 65535, nullable: false)]
-    private string $picture;
-
-    #[ORM\Column(name: 'MoreInfo', type: 'text', length: 65535, nullable: false)]
-    private string $moreInfo = '';
-
-    /** main's link to the description (memberstrads.IdTrad); develop keeps the texts in group_translation. */
-    #[ORM\Column(name: 'IdDescription', type: 'integer', nullable: false)]
-    private int $idDescription = 0;
+    /** The file name of the group's picture in the group image directory; empty for none. */
+    #[ORM\Column(name: 'picture', type: 'string', length: 255, nullable: false, options: ['default' => ''])]
+    private string $picture = '';
 
     /** The description in every language it was written or translated in. */
     #[ORM\OneToMany(targetEntity: GroupTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -76,10 +72,11 @@ class Group
     #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'group', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $groupMemberships;
 
-    #[ORM\Column(name: 'VisiblePosts', type: 'string', nullable: false)]
-    private string $visibleposts = 'yes';
+    /** The group's forum posts are visible to its members only (else to all members). */
+    #[ORM\Column(name: 'members_only', type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $membersOnly = false;
 
-    #[ORM\Column(name: 'approved', type: 'smallint', nullable: true)]
+    #[ORM\Column(name: 'approved', type: 'smallint', nullable: false, options: ['default' => 0])]
     private int $approved = self::NOT_APPROVED;
 
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -235,28 +232,16 @@ class Group
         return false === $description ? '' : (string) $description->getContent();
     }
 
-    /**
-     * Set visibleposts.
-     *
-     * @param string $visibleposts
-     *
-     * @return Group
-     */
-    public function setVisibleposts($visibleposts)
+    public function setMembersOnly(bool $membersOnly): self
     {
-        $this->visibleposts = $visibleposts;
+        $this->membersOnly = $membersOnly;
 
         return $this;
     }
 
-    /**
-     * Get visibleposts.
-     *
-     * @return string
-     */
-    public function getVisibleposts()
+    public function isMembersOnly(): bool
     {
-        return $this->visibleposts;
+        return $this->membersOnly;
     }
 
     /**
@@ -417,29 +402,5 @@ class Group
     public function onPostLoad(PostLoadEventArgs $eventArgs): void
     {
         $this->objectManager = $eventArgs->getObjectManager();
-    }
-
-    public function getMoreInfo(): ?string
-    {
-        return $this->moreInfo;
-    }
-
-    public function setMoreInfo(string $moreInfo): self
-    {
-        $this->moreInfo = $moreInfo;
-
-        return $this;
-    }
-
-    public function getIdDescription(): ?int
-    {
-        return $this->idDescription;
-    }
-
-    public function setIdDescription(int $idDescription): self
-    {
-        $this->idDescription = $idDescription;
-
-        return $this;
     }
 }

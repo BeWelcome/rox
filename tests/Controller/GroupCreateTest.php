@@ -43,7 +43,7 @@ class GroupCreateTest extends WebTestCase
 
         $this->assertResponseRedirects();
         $group = $this->group();
-        self::assertSame('Yes', $group->getVisiblePosts());
+        self::assertFalse($group->isMembersOnly());
         $descriptions = $group->getDescriptions();
         self::assertSame(['en'], array_keys($descriptions));
         self::assertInstanceOf(GroupTranslation::class, $descriptions['en']);

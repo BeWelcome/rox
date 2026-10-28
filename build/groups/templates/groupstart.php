@@ -13,13 +13,13 @@
     <div class="col-12 col-md-8">
 
         <div class="media bg-white p-1">
-                <?= ((strlen((string) $this->group->Picture) > 0) ? "<img class=\"float-left mr-2 mb-2 img-thumbnail\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
+                <?= ((strlen((string) $this->group->picture) > 0) ? "<img class=\"float-left mr-2 mb-2 img-thumbnail\" src='group/realimg/{$this->group->getPKValue()}' width=\"100px\" alt='Image for the group {$group_name_html}' />" : ''); ?>
             <div class="media-body bg-groupheader p-1 u:break-words">
                 <?php echo $purifier->purify(nl2br((string) $this->group->getDescription())) ?>
                 <?php if ($this->isGroupMember() || $this->isGroupAdmin()) { ?>
                     <a href="/group/<?= $this->group->id ?>/new"
                         class="btn btn-primary float-right"><?php echo $this->words->getBuffered('ForumNewTopic'); ?></a>
-                <?php } elseif ($this->group->Type !== GroupType::NEED_ACCEPTANCE) { ?>
+                <?php } elseif ($this->group->type !== GroupType::NEED_ACCEPTANCE) { ?>
                     <a class="btn btn-primary float-right" href="group/<?= $this->group->id ?>/join">
                         <?= $words->getSilent('GroupsJoinTheGroup'); ?>
                     </a>
@@ -37,11 +37,11 @@
             }
 
             $showNewTopicButton = false;
-            if ($isGroupMember || ($this->group->Type !== GroupType::INVITE_ONLY && $isGroupAdmin)) {
+            if ($isGroupMember || ($this->group->type !== GroupType::INVITE_ONLY && $isGroupAdmin)) {
                 $showNewTopicButton = true;
             }
 
-            if ($isGroupMember || $isGroupAdmin || $this->group->Type !== GroupType::NEED_ACCEPTANCE)
+            if ($isGroupMember || $isGroupAdmin || $this->group->type !== GroupType::NEED_ACCEPTANCE)
             {
                 echo $Forums->showExternalGroupThreads($group_id, $isGroupMember || $isGroupAdmin, false, $showNewTopicButton);
             }
@@ -70,7 +70,7 @@
                 echo $words->getSilent('GroupsAlreadyApplied');
                 break;
             default:
-                if (!$this->isGroupMember() and $this->group->Type == 'NeedAcceptance') {
+                if (!$this->isGroupMember() and $this->group->type == 'NeedAcceptance') {
                     // tell user that application will be moderated
                     echo $words->getSilent('GroupsJoinNeedAccept');
                 }

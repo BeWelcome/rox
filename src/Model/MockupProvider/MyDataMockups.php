@@ -690,24 +690,10 @@ class MyDataMockups implements MockupProviderInterface
                     'getName' => 'group #' . ($index + 1),
                     'getId' => ($index + 1),
                 ]),
-                'getCreated' => new DateTime(),
+                'getCreated' => Carbon::now(),
                 'getStatus' => GroupMembershipStatusType::CURRENT_MEMBER,
-                'getComments' => [
-                    [
-                        'code' => 'mydata.translations.headline',
-                        'Sentence' => 'Translations',
-                        'shortCode' => 'en',
-                        'Language' => ['WordCode' => 'lang_pt'],
-                        'created' => new DateTime()->format('Y-m-d'),
-                    ],
-                    [
-                        'code' => 'mydata.translations.abstract',
-                        'Sentence' => 'Traducions',
-                        'shortCode' => 'en',
-                        'Language' => ['WordCode' => 'lang_es'],
-                        'created' => new DateTime()->format('Y-m-d'),
-                    ],
-                ],
+                'getComment' => 'Why I am in this group',
+                'getUpdated' => Carbon::now(),
             ]);
         }
 

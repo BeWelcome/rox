@@ -6,7 +6,7 @@ if (empty($vars))
 {
     $vars['topic_text'] = '';
     $vars['topic_title'] = '';
-    if ($this->group->Type !== 'Public') {
+    if ($this->group->type !== 'Public') {
         $vars['ThreadVisibility'] = 'GroupOnly';
     }
     $vars['NotifyMe'] = false;
@@ -21,7 +21,7 @@ elseif (isset($vars['errors'])) {
     $error['title'] = in_array('title', $vars['errors']);
 }
 $notifyChecked = ($vars['NotifyMe']) ? 'checked="checked"' : '';
-$groupOnly = ($this->group->VisiblePosts == 'no');
+$groupOnly = (bool) $this->group->members_only;
 ?>
 <div class="row">
     <div class="col-12">

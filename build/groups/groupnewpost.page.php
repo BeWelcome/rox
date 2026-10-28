@@ -41,7 +41,7 @@ class GroupNewPostPage extends GroupsSubPage
         $this->addLateLoadScriptFile('build/roxeditor.js');
         $this->addStylesheet('build/roxeditor.css');
 
-        $groupOnly = ($group->VisiblePosts == 'no');
+        $groupOnly = (bool) $group->members_only;
         if ($groupOnly) {
             $threadVisibility = 'GroupOnly';
         } else {

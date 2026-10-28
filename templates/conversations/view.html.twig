@@ -33,7 +33,10 @@
 
     {% set listParams = (initiator != 2 ? { initiator: initiator } : {})|merge(unreadOnly ? { unread_only: 1 } : {}) %}
 
-    {% if app.request.query.getBoolean('embed') and reply_form %}
+    {# The stay card of a hosting request or an invitation (request/view, invitation/view) #}
+    {% set additional %}{% block additional %}{% endblock additional %}{% endset %}
+
+    {% if app.request.query.getBoolean('embed') %}
         {# The "contact a member" side panel (profile "Send" when a conversation already exists) #}
         {% include 'conversations/_embed_thread.html.twig' %}
     {% else %}
@@ -50,7 +53,6 @@
         <section class="c-inbox__pane">
             {% include 'conversations/_pane_head.html.twig' with { back_url: inbox.folder_url(folder, listParams), show_actions: true } %}
 
-            {% set additional %}{% block additional %}{% endblock additional %}{% endset %}
             {% if additional|trim is not empty %}
                 <div class="c-inbox-pane__extra">{{ additional }}</div>
             {% endif %}

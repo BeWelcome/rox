@@ -139,6 +139,9 @@
               <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
             </a>
           {% endif %}
+          {% if existingConversation %}
+            {% include 'profile/_contact_status.html.twig' with { conversation: existingConversation, place: 'head' } %}
+          {% endif %}
           {% set hasMore = items.comment is defined or items.friend is defined
             or items.add_note is defined or items.edit_note is defined
             or items.report is defined %}
@@ -283,6 +286,9 @@
   {# ── Phones: message and request stay stuck to the bottom of the screen ── #}
   {% if canContact %}
     <div class="p-pro__bottom-bar">
+      {% if existingConversation %}
+        {% include 'profile/_contact_status.html.twig' with { conversation: existingConversation, place: 'bar' } %}
+      {% endif %}
       <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-pro__btn p-pro__btn--message"
             data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
         <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}

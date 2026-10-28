@@ -1,34 +1,61 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% set inbox_page = true %}
+{% import 'conversations/_inbox.macros.twig' as inbox %}
+
+{% set hide_sidebar = true %}
 
 {% block stylesheets %}
     {{ encore_entry_link_tags('tailwind') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('conversations') }}
 {% endblock %}
 
 {% block title %}
     {{ 'conversations' | trans }}
 {% endblock title %}
 
+{#
+  All the conversations with one member (messages, hosting requests, invitations), in the
+  inbox layout: the folders on the left, the list, a click opens the conversation.
+#}
 {% block content %}
-    {%  set loggedInMember = app.user %}
-    {{ macros.new_conversation_header(otherMember, 'messages.with.member.headline', false) }}
+    <div class="c-inbox c-inbox--list">
+        {{ inbox.nav('conversations', 'column') }}
 
-    {% if items.nbResults == 0 %}
-        <p>{{ 'messages.none' | trans }}</p>
-    {% else %}
-        {% if items.haveToPaginate %}
-            <div class="u:flex u:justify-end u:my-8">
-                {{ pagerfanta( items, 'rounded_pagination') }}
-            </div>
-        {% endif %}
-        {% for message in items.currentPageResults %}
-            {% include 'conversations/message.html.twig' with { 'message': message, 'between': false, 'folder': 'none' } %}
-        {% endfor %}
-        {% if items.haveToPaginate %}
-            <div class="u:flex u:justify-end u:my-8">
-                {{ pagerfanta( items, 'rounded_pagination') }}
-            </div>
-        {% endif %}
+        <section class="c-inbox__list">
+            <div class="c-inbox-list">
+                <div class="c-inbox-list__head">
+                    <a class="c-inbox-list__back c-inbox-list__back--always" href="{{ path('members_profile', { username: otherMember.username }) }}">
+                        <i class="fas fa-chevron-left" aria-hidden="true"></i>
+                        <span class="visually-hidden">{{ 'back'|trans }}</span>
+                    </a>
+                    <div class="c-inbox-list__title">
+                        <h2>{{ 'messages.with.member.headline'|trans|format(otherMember.shortNameOrUsername) }}</h2>
+                    </div>
+                </div>
 
-    {% endif %}
+                {% if items.nbResults == 0 %}
+                    <p class="c-inbox-list__empty">{{ 'conversations.none'|trans }}</p>
+                {% else %}
+                    <div class="c-inbox-list__items">
+                        {% for message in items.currentPageResults %}
+                            {{ inbox.item(message, app.user, 'conversations', null, null) }}
+                        {% endfor %}
+                    </div>
+                    {% if items.haveToPaginate %}
+                        <div class="c-inbox-list__pages">
+                            {{ pagerfanta(items, 'rounded_pagination') }}
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="c-inbox__pane c-inbox__pane--empty" aria-hidden="true">
+            <i class="fas fa-comments" aria-hidden="true"></i>
+            <p>{{ 'conversations.pick'|trans }}</p>
+        </section>
+    </div>
 {% endblock %}

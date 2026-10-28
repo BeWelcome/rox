@@ -14,6 +14,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Contracts\Translation\LocaleAwareInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -32,6 +33,17 @@ abstract class BaseRequestAndInvitationController extends AbstractController
     }
 
     abstract protected function addExpiredFlash(Member $receiver);
+
+    /**
+     * Back to the conversation after an answer. In the side panel (?embed=1) it stays in the
+     * panel: the conversation is shown again there instead of the whole inbox page.
+     */
+    protected function redirectToConversation(Message $message): RedirectResponse
+    {
+        $embed = $this->container->get('request_stack')->getCurrentRequest()?->query->getBoolean('embed');
+
+        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()] + ($embed ? ['embed' => 1] : []));
+    }
 
     protected function getMessageClone(Message $message): Message
     {

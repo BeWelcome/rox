@@ -7,6 +7,7 @@ use App\Doctrine\InFolderType;
 use App\Entity\Member;
 use App\Entity\Message;
 use App\Pagerfanta\ConversationsAdapter;
+use App\Pagerfanta\ConversationsWithAdapter;
 use App\Pagerfanta\DeletedAdapter;
 use App\Pagerfanta\InvitationsAdapter;
 use App\Pagerfanta\MessagesAdapter;
@@ -100,8 +101,8 @@ class InboxFolders
     }
 
     /**
-     * The latest message of a plain conversation (not a request or invitation) between the
-     * logged-in member and $other that is still in the inbox, or null when there is none
+     * The latest message between the logged-in member and $other that is still in the inbox
+     * (a plain conversation, a hosting request or an invitation), or null when there is none
      * (Twig: conversation_with(member), for the "Send" button of a profile).
      */
     #[AsTwigFunction('conversation_with')]
@@ -115,8 +116,7 @@ class InboxFolders
         return $this->entityManager->createQueryBuilder()
             ->select('m')
             ->from(Message::class, 'm')
-            ->where('m.request IS NULL')
-            ->andWhere('(m.sender = :member AND m.receiver = :other AND m.deleteRequest NOT LIKE :senderDeleted AND m.deleteRequest NOT LIKE :senderPurged)'
+            ->where('(m.sender = :member AND m.receiver = :other AND m.deleteRequest NOT LIKE :senderDeleted AND m.deleteRequest NOT LIKE :senderPurged)'
                 . ' OR (m.receiver = :member AND m.sender = :other AND m.deleteRequest NOT LIKE :receiverDeleted AND m.deleteRequest NOT LIKE :receiverPurged)')
             ->andWhere('m.initiator = :member OR m.folder <> :spam')
             ->setParameter('member', $member)
@@ -130,6 +130,22 @@ class InboxFolders
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    /**
+     * How many conversations the logged-in member has with $other, requests and invitations
+     * included (Twig: conversations_with_count(member), the "All conversations" link of the
+     * side panel, to /conversations/with/{username}).
+     */
+    #[AsTwigFunction('conversations_with_count')]
+    public function getConversationsWithCount(Member $other): int
+    {
+        $member = $this->security->getUser();
+        if (!$member instanceof Member || $member === $other) {
+            return 0;
+        }
+
+        return (int) new ConversationsWithAdapter($this->entityManager, $member, $other)->getNbResults();
     }
 
     /**

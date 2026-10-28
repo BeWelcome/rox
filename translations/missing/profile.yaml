@@ -802,3 +802,6 @@ profile.facts.gender.age:
 profile.in.language:
     - 'Profile in'
     - Words before the language name in the language switch of a profile, such as Profile in English
+profile.contact.conversation:
+    - 'Conversation going on'
+    - Line next to the Send button of a profile when a conversation with that member already exists, followed by the date of its last message

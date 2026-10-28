@@ -5600,6 +5600,11 @@ main:has(.p-hero) {
 }
 .c-inbox-head__back:hover { color: #0f172a; text-decoration: none; }
 .c-inbox-list__back { display: none; }
+/* All the conversations with one member: back to their profile, on a computer too */
+.c-inbox-list__back--always { display: inline-flex; flex-shrink: 0; align-items: center; color: #334155; text-decoration: none; }
+.c-inbox-list__back--always:hover { color: #0f172a; text-decoration: none; }
+.c-inbox-list__back--always + .c-inbox-list__title { margin-right: auto; }
+.c-inbox-list__title h2 { margin: 0; font-size: inherit; font-weight: inherit; line-height: 1.2; }
 .c-inbox-head__who { flex: 1; min-width: 0; line-height: 1.3; }
 .c-inbox-head__subject {
   margin: 0;
@@ -9532,6 +9537,20 @@ a.p-pro-filter__item:hover { background: #fff; }
 .p-pro-friend__img { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; background: #f1f5f9; }
 .p-pro-friend__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .p-pro__bottom-bar { display: none; }
+/* Already talking with this member: the latest conversation next to "Send" (profile/_contact_status) */
+.p-pro-contact-status { display: inline-flex; flex-basis: 100%; align-items: center; justify-content: flex-end; gap: 0.45rem; order: 10; min-width: 0; color: #64748b; font-size: 0.8125rem; font-weight: 600; text-decoration: none; }
+.p-pro-contact-status:hover { color: #0f172a; text-decoration: none; }
+.p-pro-contact-status i, .p-pro-contact-status svg { flex-shrink: 0; color: #94a3b8; }
+.p-pro-contact-status__text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.p-pro-contact-status__state { flex-shrink: 0; padding: 0.1rem 0.55rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.75rem; font-weight: 700; }
+.p-pro-contact-status--success .p-pro-contact-status__state { background: #e9f6ec; color: #2e7d32; }
+.p-pro-contact-status--danger .p-pro-contact-status__state { background: #fdecec; color: #b42318; }
+.p-pro-contact-status--maybe .p-pro-contact-status__state { background: #fef9c3; color: #a16207; }
+.p-pro-contact-status__dot { flex-shrink: 0; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #f37000; }
+.p-pro-contact-status.is-unread .p-pro-contact-status__text { color: #0f172a; }
+.p-pro-contact-status .p-pro-contact-status__arrow { font-size: 0.65rem; }
+.p-pro-contact-status--bar { display: none; }
+.p-pro-contact-status--preview { display: flex; justify-content: flex-start; margin-top: 0.7rem; }
 
 /* Where I live: grey map with the approximate area */
 .p-pro-where__map { height: 165px; overflow: hidden; border-radius: 0.8rem; background: #f1f5f9; }
@@ -9640,6 +9659,11 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro__bottom-bar .p-pro__btn { flex: 1; min-height: 2.9rem; font-size: 0.9375rem; }
   .p-pro__bottom-bar .p-pro__btn--request { flex-grow: 1.3; }
   body:has(.p-pro__bottom-bar) { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+  /* Phones: the line sits on top of the bottom bar, above the two buttons */
+  .p-pro__bottom-bar:has(.p-pro-contact-status) { flex-wrap: wrap; row-gap: 0.5rem; padding-top: 0.55rem; }
+  .p-pro__bottom-bar .p-pro-contact-status--bar { display: flex; order: -1; justify-content: center; }
+  .p-pro__actions .p-pro-contact-status--head { display: none; }
+  body:has(.p-pro__bottom-bar .p-pro-contact-status) { padding-bottom: calc(6.3rem + env(safe-area-inset-bottom)); }
   /* No site footer under a profile on phones */
   body:has(.p-pro) footer:has(#footer_content) { display: none; }
 }
@@ -10581,6 +10605,16 @@ body.is-embedded { background: #fff; }
 /* The other member's face next to their messages, as in the inbox on a computer */
 .c-contact--thread .c-bubble-row:not(.is-own) { align-items: flex-end; gap: 0.5rem; }
 .c-contact--thread .c-bubble__avatar { display: block; flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 50%; object-fit: cover; background: #e4e4e7; }
+/* All the conversations with this member (several: messages, requests), under the head */
+.c-contact__all { display: flex; flex-shrink: 0; align-items: center; gap: 0.5rem; margin: 0 1.25rem 0.6rem; padding: 0.55rem 0.9rem; border-radius: 0.8rem; background: #f8fafc; color: #334155; font-size: 0.875rem; font-weight: 600; text-decoration: none; }
+.c-contact__all:hover { background: #f1f5f9; color: #0f172a; text-decoration: none; }
+.c-contact__all i, .c-contact__all svg { color: #94a3b8; }
+.c-contact__all .c-contact__all-arrow { margin-left: auto; font-size: 0.75rem; }
+/* A hosting request or an invitation: its stay card above the messages, its answer at the bottom */
+.c-contact__extra { flex-shrink: 0; padding: 0 1.25rem 0.75rem; font-size: 0.875rem; }
+.c-contact__extra > .c-stay-card { margin-bottom: 0 !important; border-radius: 1.25rem; background: #fff; }
+.c-contact__foot--respond { max-height: 60%; padding: 0; overflow-y: auto; border-top: 0; background: transparent; }
+.c-contact__foot--respond .c-inbox-compose--respond { max-height: none; }
 
 /* Stay request in the side panel: the dates, a calendar and shortcuts (contact/stay_dates.js) */
 .c-stay-dates:empty { display: none; }

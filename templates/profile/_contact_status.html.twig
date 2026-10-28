@@ -1,0 +1,36 @@
+{#
+  Next to "Send" and "Request stay", when the logged-in member already talks with this member:
+  the latest conversation in one line (a message, or a hosting request / invitation with its
+  dates and where it stands). A click opens it in the side panel, like "Send".
+  Expects conversation (InboxFolders::getConversationWith) and member; place (head, bar, preview)
+  and link_class (the class that opens the side panel, js-contact-open by default).
+#}
+{% set _m = conversation %}
+{% set _stay = _m.request %}
+{% set _unread = _m.receiver == app.user and (_m.firstRead is null or _m.firstRead == '0000-00-00 00:00.00') %}
+{% if _stay %}
+    {% set _state = { 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[_stay.status] ?? 'open' %}
+    {% set _tone = { accepted: 'success', declined: 'danger', cancelled: 'danger', tentatively: 'maybe' }[_state] ?? 'pending' %}
+{% else %}
+    {% set _tone = 'message' %}
+{% endif %}
+{% set _sent = _m.dateSent ?? _m.created %}
+<a class="p-pro-contact-status p-pro-contact-status--{{ _tone }} {{ link_class ?? 'js-contact-open' }}{{ _unread ? ' is-unread' : '' }}{{ place is defined ? ' p-pro-contact-status--' ~ place : '' }}"
+   href="{{ path('conversation_view', { id: _m.id }) }}"
+   data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
+    {% if _stay %}
+        <i class="fas {{ _stay.inviteForLeg is null ? 'fa-bed' : 'fa-handshake' }}" aria-hidden="true"></i>
+        <span class="p-pro-contact-status__text">
+            {{ _stay.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}
+            · {{ _stay.arrival|format_date(pattern='d MMM') }}{% if _stay.departure %} – {{ _stay.departure|format_date(pattern='d MMM') }}{% endif %}
+        </span>
+        <span class="p-pro-contact-status__state">{{ ('request.status.' ~ _state)|trans }}</span>
+    {% else %}
+        <i class="fas fa-envelope" aria-hidden="true"></i>
+        <span class="p-pro-contact-status__text">
+            {{ 'profile.contact.conversation'|trans }} · {{ _sent|format_date(pattern=(_sent|date('Y') == 'now'|date('Y') ? 'd MMM' : 'd MMM y')) }}
+        </span>
+    {% endif %}
+    {% if _unread %}<span class="p-pro-contact-status__dot" aria-label="{{ 'conversations.unread'|trans }}"></span>{% endif %}
+    <i class="fas fa-chevron-right p-pro-contact-status__arrow" aria-hidden="true"></i>
+</a>

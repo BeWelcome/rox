@@ -110,6 +110,9 @@
                 <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
             </a>
         </div>
+        {% if existingConversation %}
+            {% include 'profile/_contact_status.html.twig' with { conversation: existingConversation, place: 'preview', link_class: 'js-search-contact-open' } %}
+        {% endif %}
     {% endif %}
 
     {% if aboutMe %}

@@ -1,26 +1,65 @@
 {#
   An existing conversation in the "contact a member" side panel (?embed=1, profile "Send"):
-  the member at the top, the messages, and the reply box. A reply posts to this same page
-  with ?embed=1, so the panel shows the conversation again with the new message.
-  Expects thread, current, correspondent and reply_form (see view.html.twig).
+  the member at the top, the stay card of a hosting request or an invitation, the messages,
+  and the answer at the bottom, as in the inbox. Answers post with ?embed=1, so the panel
+  shows the conversation again after them.
+  Expects thread, current, correspondent, myself, additional, reply_form and request_form (see view.html.twig).
 #}
+{% set _count = conversations_with_count(correspondent) %}
 <div class="c-contact c-contact--thread">
     {% include 'conversations/_contact_head.html.twig' with { member: correspondent, kind: 'conversation' } %}
 
+    {% if _count > 1 %}
+        {# Several conversations with this member (messages, requests): all of them in the inbox #}
+        <a class="c-contact__all" href="{{ path('conversations_with', { username: correspondent.username }) }}" target="_top">
+            <i class="fas fa-envelope" aria-hidden="true"></i>
+            {{ 'contact.conversations.all'|trans({ count: _count }) }}
+            <i class="fas fa-chevron-right c-contact__all-arrow" aria-hidden="true"></i>
+        </a>
+    {% endif %}
+
+    {% if additional|trim is not empty %}
+        <div class="c-contact__extra">{{ additional }}</div>
+    {% endif %}
+
     {% include 'conversations/_thread.html.twig' %}
 
-    <div class="c-contact__foot c-contact__foot--reply">
-        {{ form_start(reply_form, { attr: { class: 'c-inbox-reply js-inbox-reply', novalidate: 'novalidate' } }) }}
-            <textarea class="c-inbox-reply__field js-inbox-reply-text" name="{{ reply_form.message.vars.full_name }}" rows="1"
-                      placeholder="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}"
-                      aria-label="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}" required></textarea>
-            {% do reply_form.message.setRendered %}
-            {% do reply_form.subject.setRendered %}
-            {{ form_rest(reply_form) }}
-            <button type="submit" class="c-inbox-reply__btn">
-                <i class="fas fa-paper-plane" aria-hidden="true"></i>
-                <span class="c-inbox-reply__label">{{ 'message.button.reply'|trans }}</span>
-            </button>
-        {{ form_end(reply_form) }}
-    </div>
+    {% if request_form ?? null %}
+        {# Hosting requests and invitations: the same answer as in the inbox #}
+        <div class="c-contact__foot c-contact__foot--respond">
+            <div class="c-inbox-compose c-inbox-compose--respond">
+                {% if current.request.inviteForLeg %}
+                    {% include (current.initiator == myself ? 'invitation/_respond_inviter.html.twig' : 'request/_respond_host.html.twig') with { respond: request_form } %}
+                {% else %}
+                    {% include (current.initiator == myself ? 'request/_respond_guest.html.twig' : 'request/_respond_host.html.twig') with { respond: request_form } %}
+                {% endif %}
+            </div>
+        </div>
+    {% elseif reply_form %}
+        <div class="c-contact__foot c-contact__foot--reply">
+            {{ form_start(reply_form, { attr: { class: 'c-inbox-reply js-inbox-reply', novalidate: 'novalidate' } }) }}
+                <textarea class="c-inbox-reply__field js-inbox-reply-text" name="{{ reply_form.message.vars.full_name }}" rows="1"
+                          placeholder="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}"
+                          aria-label="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}" required></textarea>
+                {% do reply_form.message.setRendered %}
+                {% do reply_form.subject.setRendered %}
+                {{ form_rest(reply_form) }}
+                <button type="submit" class="c-inbox-reply__btn">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                    <span class="c-inbox-reply__label">{{ 'message.button.reply'|trans }}</span>
+                </button>
+            {{ form_end(reply_form) }}
+        </div>
+    {% else %}
+        {# An expired request, a member who can't write yet: the reply page explains why #}
+        <div class="c-contact__foot c-contact__foot--reply">
+            <a class="c-inbox-reply" href="{{ path('conversation_reply', { id: current.id }) }}" target="_top">
+                <span class="c-inbox-reply__field">{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}</span>
+                <span class="c-inbox-reply__btn">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                    <span class="c-inbox-reply__label">{{ 'message.button.reply'|trans }}</span>
+                </span>
+            </a>
+        </div>
+    {% endif %}
 </div>

@@ -227,6 +227,9 @@ conversation.report.short:
 contact.head.conversation:
     - 'Conversation with'
     - Small label above the member's name at the top of the side panel showing a conversation already started with them (profile)
+contact.conversations.all:
+    - 'All conversations with this member ({count})'
+    - Link under the head of the side panel showing a conversation, when there are several with that member (messages, hosting requests, invitations)
 conversation.compose.tools:
     - 'Templates and more'
     - Tooltip of the round arrow button left of the message field in a conversation, it opens the reply templates (and Change dates)

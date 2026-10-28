@@ -207,7 +207,7 @@ class InvitationController extends BaseRequestAndInvitationController
         $this->addTranslatedFlash('notice', 'flash.invitation.declined');
         $this->logger->write('Directly declined', 'Invitation');
 
-        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+        return $this->redirectToConversation($message);
     }
 
     /**
@@ -291,7 +291,7 @@ class InvitationController extends BaseRequestAndInvitationController
                 $leg
             );
 
-            return $this->redirectToRoute('conversation_view', ['id' => $finalInvitation->getId()]);
+            return $this->redirectToConversation($finalInvitation);
         }
 
         return $this->render('invitation/reply_from_guest.html.twig', [
@@ -356,7 +356,7 @@ class InvitationController extends BaseRequestAndInvitationController
                 $leg
             );
 
-            return $this->redirectToRoute('conversation_view', ['id' => $invitation->getId()]);
+            return $this->redirectToConversation($invitation);
         }
 
         return $this->render('invitation/reply_from_host.html.twig', [

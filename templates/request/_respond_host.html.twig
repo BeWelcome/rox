@@ -37,7 +37,7 @@
 {# The decision first while the request waits for an answer (and the form has no error) #}
 {% set decideFirst = awaitingAnswer and respond.vars.valid and choices|length > 0 %}
 
-{{ form_start(respond, { action: path('conversation_reply', { id: current.id }), attr: { class: 'c-inbox-respond c-decide js-respond' ~ (awaitingAnswer ? '' : ' c-decide--answered'), novalidate: 'novalidate', autocomplete: 'off' } }) }}
+{{ form_start(respond, { action: path('conversation_reply', { id: current.id }|merge(app.request.query.getBoolean('embed') ? { embed: 1 } : {})), attr: { class: 'c-inbox-respond c-decide js-respond' ~ (awaitingAnswer ? '' : ' c-decide--answered'), novalidate: 'novalidate', autocomplete: 'off' } }) }}
     {{ form_errors(respond) }}
 
     {# 1. Decide #}
@@ -128,7 +128,7 @@
         {% do respond.message.setRendered %}
 
         {% if request.status != constant(S ~ 'REQUEST_DECLINED') %}
-            <a class="c-decide__decline-link js-respond-decline-link" href="{{ path('conversation_decline', { id: current.id }) }}" hidden>
+            <a class="c-decide__decline-link js-respond-decline-link" href="{{ path('conversation_decline', { id: current.id }|merge(app.request.query.getBoolean('embed') ? { embed: 1 } : {})) }}" hidden>
                 {{ 'label.decline.no.message'|trans }}
             </a>
         {% endif %}

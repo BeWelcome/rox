@@ -79,7 +79,7 @@ class RequestController extends BaseRequestAndInvitationController
         $this->addTranslatedFlash('notice', 'flash.request.declined');
         $this->logger->write('Directly declined', 'Request');
 
-        return $this->redirectToRoute('conversation_view', ['id' => $message->getId()]);
+        return $this->redirectToConversation($message);
     }
 
     /**
@@ -296,7 +296,7 @@ class RequestController extends BaseRequestAndInvitationController
                 $newRequest->getRequest()->getId() !== $realParent->getRequest()->getId()
             );
 
-            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
+            return $this->redirectToConversation($newRequest);
         }
 
         return $this->render('request/reply_from_guest.html.twig', [
@@ -343,7 +343,7 @@ class RequestController extends BaseRequestAndInvitationController
                 $this->logger->write('Regular decline', 'Request');
             }
 
-            return $this->redirectToRoute('conversation_view', ['id' => $newRequest->getId()]);
+            return $this->redirectToConversation($newRequest);
         }
 
         return $this->render('request/reply_from_host.html.twig', [

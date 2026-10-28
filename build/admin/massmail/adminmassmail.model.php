@@ -132,13 +132,13 @@ class AdminMassmailModel extends RoxModelBase
                 w2.Sentence AS Body,
                 w2.Description AS Description
             FROM
-                words AS w1,
-                words AS w2
+                word AS w1,
+                word AS w2
             WHERE
-                w1.Code = 'broadcast_title_" . $this->dao->escape($broadcast->Name) . "'
-                AND w1.IdLanguage = 0
-                AND w2.Code = 'broadcast_body_" . $this->dao->escape($broadcast->Name) . "'
-                AND w2.IdLanguage = 0";
+                w1.code = 'broadcast_title_" . $this->dao->escape($broadcast->Name) . "'
+                AND w1.ShortCode = 'en'
+                AND w2.code = 'broadcast_body_" . $this->dao->escape($broadcast->Name) . "'
+                AND w2.ShortCode = 'en'";
         $entry = $this->SingleLookup($query);
         $ret = new StdClass;
         $ret->id = $id;
@@ -151,12 +151,12 @@ class AdminMassmailModel extends RoxModelBase
         // translations
         $query = "
             SELECT
-                languages.ShortCode AS ShortCode,
-                languages.Name AS Name
+                language.ShortCode AS ShortCode,
+                language.Name AS Name
             FROM
-                languages, words
-            WHERE words.code='broadcast_body_" . $broadcast->Name . "'
-            AND languages.id=words.IdLanguage";
+                language, word
+            WHERE word.code='broadcast_body_" . $this->dao->escape($broadcast->Name) . "'
+            AND language.ShortCode=word.ShortCode";
         $ret->Languages = $this->BulkLookup($query);
 
         // Make sure all counts are set (to avoid isset)
@@ -186,49 +186,29 @@ class AdminMassmailModel extends RoxModelBase
             case 'sent': $status = "Sent"; break;
             case 'failed': $status = "Failed"; break;
         }
+        // The country of the member's active address; the language is the member's locale (English if unknown)
         $query = "
             SELECT
-                m.Id AS Id, m.Username AS Username, gc.Name AS Country, m.Status AS Status
+                m.id AS Id, m.Username AS Username, m.Email AS Email, c.name AS Country, m.Status AS Status,
+                COALESCE(l.ShortCode, 'en') AS LanguageId, COALESCE(l.Name, 'English') AS Language
             FROM
-                broadcastmessages AS bm, members AS m, geonames AS g, geonamescountries AS gc
+                broadcastmessages AS bm
+            JOIN
+                member AS m ON m.id = bm.IdReceiver
+            LEFT JOIN
+                address AS a ON a.member_id = m.id AND a.active = 1
+            LEFT JOIN
+                location AS g ON g.geoname_id = a.location
+            LEFT JOIN
+                location AS c ON c.geoname_id = g.country
+            LEFT JOIN
+                language AS l ON l.ShortCode = m.Locale
             WHERE
-                bm.IdBroadcast = " . $id . "
+                bm.IdBroadcast = " . (int) $id . "
                 AND bm.Status = '" . $status . "'
-                AND bm.IdReceiver = m.id
-                AND g.geonameId = m.IdCity
-                AND g.country = gc.country
-            LIMIT " . $start . "," . $limit;
-        $mmris = $this->BulkLookup($query);
-        // Now get email address and preferred language of the found members
-        foreach($mmris as &$mmri) {
-            $m = $this->createEntity('Member', $mmri->Id);
-            $mmri->LanguageId = $m->getLanguagePreferenceId();
-            $mmri->Email = $m->get_email();
-        }
+            LIMIT " . (int) $start . "," . (int) $limit;
 
-        // get language names from DB
-        $languages = [];
-        $languagesnames = [];
-        foreach($mmris as $mm) {
-            $languages[] = $mm->LanguageId;
-        }
-
-        $query = "SELECT id, EnglishName FROM languages WHERE id IN ('" . implode("', '", $languages) . "')";
-        $r = $this->dao->query($query);
-        while ($row = $r->fetch(PDB::FETCH_OBJ)) {
-            $languagesnames[$row->id] = $row->EnglishName;
-        }
-
-        foreach($mmris as &$mmri) {
-            if (isset($languagesnames[$mmri->LanguageId])) {
-                $mmri->Language = $languagesnames[$mmri->LanguageId];
-            } else {
-                $mmri->Language = $languagesnames[0];
-                $mmri->LanguageId = 0;
-            }
-        }
-
-        return $mmris;
+        return $this->BulkLookup($query);
     }
 
     public function getMassmailRecipientsCount($id, $type) {
@@ -270,37 +250,37 @@ class AdminMassmailModel extends RoxModelBase
 
         $query = "
             INSERT INTO
-                words
+                word
             SET
                 code = 'broadcast_title_" . $name . "',
                 ShortCode = 'en',
-                IdLanguage = 0,
                 `domain` = 'messages+intl-icu',
                 Sentence = '" . $this->dao->escape($subject) . "',
                 updated = NOW(),
                 created = NOW(),
                 majorupdate = NOW(),
-                isarchived = NULL,
+                isarchived = 0,
                 donottranslate = 'no',
-                IdMember = " . $this->getLoggedInMember()->id . ",
+                TranslationPriority = 5,
+                author_id = " . $this->getLoggedInMember()->id . ",
                 Description = '" . $this->dao->escape($description) . "'";
         $this->dao->query($query);
 
         $query = "
             INSERT INTO
-                words
+                word
             SET
                 code = 'broadcast_body_" . $name . "',
                 ShortCode = 'en',
-                IdLanguage = 0,
                 `domain` = 'messages+intl-icu',
                 Sentence = '" . $this->dao->escape($body) . "',
                 updated = NOW(),
                 created = NOW(),
                 majorupdate = NOW(),
-                isarchived = NULL,
+                isarchived = 0,
                 donottranslate = 'no',
-                IdMember = " . $this->getLoggedInMember()->id . ",
+                TranslationPriority = 5,
+                author_id = " . $this->getLoggedInMember()->id . ",
                 Description = '" . $this->dao->escape($description) . "'";
         $this->dao->query($query);
     }
@@ -319,28 +299,26 @@ class AdminMassmailModel extends RoxModelBase
 
         $query = "
             UPDATE
-                words
+                word
             SET
                 Sentence = '" . $this->dao->escape($subject) . "',
                 updated = NOW(),
-                IdMember = " . $this->getLoggedInMember()->id . "
+                author_id = " . $this->getLoggedInMember()->id . "
             WHERE
-                code = 'broadcast_title_" . $name . "'
-                AND ShortCode = 'en'
-                AND IdLanguage = 0";
+                code = 'broadcast_title_" . $this->dao->escape($name) . "'
+                AND ShortCode = 'en'";
         $this->dao->query($query);
 
         $query = "
             UPDATE
-                words
+                word
             SET
                 Sentence = '" . $this->dao->escape($body) . "',
                 updated = NOW(),
-                IdMember = " . $this->getLoggedInMember()->id . "
+                author_id = " . $this->getLoggedInMember()->id . "
             WHERE
-                code = 'broadcast_body_" . $name . "'
-                AND ShortCode = 'en'
-                AND IdLanguage = 0";
+                code = 'broadcast_body_" . $this->dao->escape($name) . "'
+                AND ShortCode = 'en'";
         $this->dao->query($query);
     }
 
@@ -386,12 +364,12 @@ class AdminMassmailModel extends RoxModelBase
     public function getAdminUnits($countrycode) {
         $query = "
             SELECT
-                admin1, name
+                admin_1_id AS admin1, name
             FROM
-                geonames
+                location
             WHERE
-                country = '" . $countrycode . "'
-                AND fcode = 'ADM1'
+                country_id = '" . $this->dao->escape($countrycode) . "'
+                AND feature_code = 'ADM1'
             ORDER BY
                 name";
         return $this->BulkLookup($query);
@@ -400,14 +378,14 @@ class AdminMassmailModel extends RoxModelBase
     public function getPlaces($countrycode, $adminunit) {
         $query = "
             SELECT
-                geonameId, name
+                geoname_id AS geonameId, name
             FROM
-                geonames
+                location
             WHERE
-                country = '" . $countrycode . "'
-                AND admin1 = '" . $adminunit . "'
-                AND fclass = 'P'
-                AND fcode <> 'PPLX'
+                country_id = '" . $this->dao->escape($countrycode) . "'
+                AND admin_1_id = '" . $this->dao->escape($adminunit) . "'
+                AND feature_class = 'P'
+                AND feature_code <> 'PPLX'
             ORDER BY
                 name";
         return $this->BulkLookup($query);
@@ -506,7 +484,7 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                members AS m
+                member AS m
             LEFT JOIN
                 memberspreferences AS mp
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")";
@@ -537,20 +515,23 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                geonames AS g, members AS m
+                member AS m
+            JOIN
+                address AS a ON a.member_id = m.id AND a.active = 1
+            JOIN
+                location AS g ON g.geoname_id = a.location
             LEFT JOIN
                 memberspreferences AS mp
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
             WHERE
-                (m.IdCity = g.geonameId)
-                AND g.country = '" . $this->dao->escape($countrycode) . "'
+                g.country_id = '" . $this->dao->escape($countrycode) . "'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
                 AND (m.Status IN (" . MemberStatusType::ACTIVE_WITH_MESSAGES . "))";
         if ($adminunit) {
-            $query .= " AND g.admin1 = '". $adminunit . "'";
+            $query .= " AND g.admin_1_id = '" . $this->dao->escape($adminunit) . "'";
         }
         if ($place) {
-            $query .= " AND g.geonameId = ". $place;
+            $query .= " AND g.geoname_id = " . (int) $place;
         }
         $r = $this->dao->query($query);
         if (!$r) {
@@ -569,7 +550,7 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                membersgroups as mg, members AS m
+                membersgroups as mg, member AS m
             LEFT JOIN
                 memberspreferences AS mp
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
@@ -592,20 +573,20 @@ class AdminMassmailModel extends RoxModelBase
         // first set all members that didn't login for longer than a year to 'OutOfRemind'
         $query = "
                 UPDATE
-                    members m
+                    member m
                 SET
                     m.status = 'OutOfRemind'
                 WHERE
-                    (DATEDIFF(NOW(), m.LastLogin) > 365 OR m.LastLogin = '0000-00-00 00:00:00')
+                    (DATEDIFF(NOW(), m.LastActive) > 365 OR m.LastActive IS NULL)
                     AND m.status = 'Active'";
         $r = $this->dao->query($query);
 
         // then increase the counter for reminders without login for all members that are OutOfRemind
         $query = "
                 UPDATE
-                    members m
+                    member m
                 SET
-                    m.NbRemindWithoutLogingIn = m.NbRemindWithoutLogingIn + 1
+                    m.Reminders = m.Reminders + 1
                 WHERE
                     m.status = 'OutOfRemind'";
         $r = $this->dao->query($query);
@@ -616,7 +597,7 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                members AS m
+                member AS m
             WHERE
                 m.Status = 'OutOfRemind'";
         $r = $this->dao->query($query);
@@ -632,7 +613,7 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                members AS m
+                member AS m
             WHERE
                 m.Status = 'MailToConfirm'
                 AND created BETWEEN '2015-01-01' AND (NOW() - INTERVAL 1 WEEK)";
@@ -649,7 +630,7 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                members AS m
+                member AS m
             WHERE
                 m.Status IN ('Active', 'OutOfRemind')
                 AND BirthDate < '1922-06-22'";
@@ -666,20 +647,20 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                members AS m
+                member AS m
             WHERE
                 m.Status IN ('OutOfRemind')
-                AND DATEDIFF(NOW(), m.LastLogin) > 365 * 5";
+                AND DATEDIFF(NOW(), m.LastActive) > 365 * 5";
         $r = $this->dao->query($query);
 
         // Now set all those members to suspended
         $query = "
                 UPDATE
-                    members m
+                    member m
                 SET
-                    m.status = 'SuspendedBeta', m.NbRemindWithoutLogingIn = 100
+                    m.status = 'SuspendedBeta', m.Reminders = 100
                 WHERE
-                    m.status = 'OutOfRemind' AND DATEDIFF(NOW(), m.LastLogin) > 365 * 5"
+                    m.status = 'OutOfRemind' AND DATEDIFF(NOW(), m.LastActive) > 365 * 5"
                 ;
         $r = $this->dao->query($query);
         $count = $r->affectedRows();
@@ -696,7 +677,7 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                members AS m
+                member AS m
             WHERE
                 m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")
             ";
@@ -821,7 +802,7 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 count(*) as mailToConfirmCount
             FROM
-                members
+                member
             WHERE
                 status = 'MailToConfirm'
                 AND created BETWEEN '2015-01-01' AND (NOW() - INTERVAL 1 WEEK)
@@ -845,7 +826,7 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 count(*) as incorrectBirthDateCount
             FROM
-                members
+                member
             WHERE
                 status IN ('Active', 'OutOfRemind')
                 AND BirthDate < '1922-06-22'
@@ -869,9 +850,9 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 count(*) as suspensionNotificationCount
             FROM
-                members m
+                member m
             WHERE
-                m.status = 'OutOfRemind' AND DATEDIFF(NOW(), m.LastLogin) > 365 * 5
+                m.status = 'OutOfRemind' AND DATEDIFF(NOW(), m.LastActive) > 365 * 5
                  ";
         $r = $this->dao->query($query);
         if (!$r) {

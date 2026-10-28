@@ -1,7 +1,7 @@
 {% extends 'emails/email_no_greeting.html.twig' %}
 
 {% block content %}
-    <p>{{ message.message | raw }}</p>
+    <p>{{ message.message|purify('custom') }}</p>
 
     {% include 'emails/_buttons.html.twig' with {'message': message} %}
 

@@ -20,6 +20,9 @@ class MessageToMemberType extends AbstractType
     {
         $builder
             ->add('message', CkEditorType::class, [
+                // member-written HTML: purified as it is shown (purify('custom') in the templates)
+                'purify_html' => true,
+                'purify_html_profile' => 'custom',
                 'attr' => [
                     'placeholder' => 'please.enter.a.message',
                     'class' => 'form-control editor',

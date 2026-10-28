@@ -3,7 +3,7 @@
 {% block message %}
     <p>{{ 'email.invitation.to.stay'|trans({'username': sender.Username, 'gender': sender.Gender} ) }}</p>
     <callout class="secondary">
-        {{ message.message | raw }}
+        {{ message.message|purify('custom') }}
     </callout>
 {% endblock message %}
 

@@ -39,41 +39,6 @@ class SearchController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/search/members', name: 'search_members')]
-    public function searchMembers(
-        Request $request,
-        MemberRepository $memberRepository,
-    ): Response {
-        $username = $request->query->get('username', '');
-        $members = null;
-        $activeTab = 2; // Default to 'username' tab
-
-        if ('' !== $username) {
-            $username = trim($username);
-
-            // First try an exact match (or email)
-            $user = $memberRepository->loadUserByIdentifier($username);
-
-            if ($user && $this->isGranted(MemberVoter::MEMBER_VIEW, $user)) {
-                return $this->redirectToRoute('members_profile', ['username' => $user->getUsername()]);
-            }
-
-            // If not found, try a wildcard search
-            $members = $memberRepository->findByProfileInfoStartsWith($username);
-            $activeTab = 1;
-
-            if (1 === \count($members)) {
-                return $this->redirectToRoute('members_profile', ['username' => $members[0]->getUsername()]);
-            }
-        }
-
-        return $this->render('search/searchmembers.html.twig', [
-            'members' => $members,
-            'username' => $username,
-            'active_tab' => $activeTab,
-        ]);
-    }
-
     #[Route(path: '/search/locations', name: 'search_locations')]
     public function searchLocations(
         Request $request,

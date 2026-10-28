@@ -95,7 +95,7 @@
 			</div>
 
 			<div class="js-hello-mode-member" hidden>
-				<form action="{{ path('search_members') }}" method="get" class="l-hello__member-form u:w-full">
+				<form method="get" class="l-hello__member-form u:w-full" data-profile-url="{{ path('members_profile', { username: '__username__' }) }}">
 					<label for="hello_username" class="visually-hidden">{{ 'landing.search.findmember'|trans }}</label>
 					<div class="l-hello__bar">
 						<i class="fas fa-at l-hello__bar-icon" aria-hidden="true"></i>

@@ -39,15 +39,19 @@ class SearchControllerTest extends WebTestCase
         self::assertCount(1, $crawler->filter('.p-search-options select#search_can_host'));
     }
 
-    public function testSearchMembersByExactUsernameRedirectsToTheProfile(): void
+    public function testTheHomePageMemberSearchOpensProfiles(): void
     {
         $client = static::createClient();
         $member = static::getContainer()->get(MemberRepository::class)->loadUserByIdentifier('member-2');
         $client->loginUser($member);
 
-        $client->request('GET', '/search/members', ['username' => 'member-5']);
+        // the member field goes to the profile itself (landing.js); there's no search page for members
+        $crawler = $client->request('GET', '/');
+        $this->assertResponseIsSuccessful();
+        self::assertSame('/members/__username__', $crawler->filter('form.l-hello__member-form')->attr('data-profile-url'));
 
-        $this->assertResponseRedirects('/members/member-5');
+        $client->request('GET', '/search/members');
+        $this->assertResponseStatusCodeSame(404);
     }
 
     public function testPlaceSearchFromTheHomePageOpensTheSearchForThatPlace(): void

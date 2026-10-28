@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * Members who just signed up (MailToConfirm, MailConfirmed, Activated) aren't shown to other members, except to
- * volunteers; and the member search page opens.
+ * volunteers.
  */
 #[Group('integration')]
 class NewMemberVisibilityTest extends WebTestCase
@@ -30,16 +30,6 @@ class NewMemberVisibilityTest extends WebTestCase
         $this->connection->executeStatement("UPDATE member SET Status = 'MailToConfirm' WHERE Username = ?", [$this->newMember]);
     }
 
-    public function testTheMemberSearchPageOpens(): void
-    {
-        $this->client->loginUser($this->member('member-2'));
-
-        $this->client->request('GET', '/search/members');
-
-        $this->assertResponseIsSuccessful();
-        $this->assertSelectorExists('form input[name=username]');
-    }
-
     public function testOtherMembersDontSeeANewMember(): void
     {
         $this->client->loginUser($this->member('member-2'));
@@ -49,10 +39,6 @@ class NewMemberVisibilityTest extends WebTestCase
 
         $this->client->request('GET', '/search/members/' . $this->newMember . '/preview');
         $this->assertResponseStatusCodeSame(403);
-
-        // the exact username doesn't lead to the profile either
-        $this->client->request('GET', '/search/members?username=' . $this->newMember);
-        $this->assertResponseIsSuccessful();
     }
 
     public function testANewMemberSeesTheirOwnProfile(): void

@@ -64,7 +64,7 @@
 
             <div class="o-form-group row">
                 <label class="col-12 col-sm-4 col-lg-2 col-form-label" for="ProfileNoteCategory"><?=$words->get("Category")?></label>
-                <select id="ProfileNoteCategory" name="ProfileNoteCategory" class="o-input select2 col-12 col-sm-8 col-lg-10 mb-2">
+                <select id="ProfileNoteCategory" name="ProfileNoteCategory" class="o-input js-tom-select col-12 col-sm-8 col-lg-10 mb-2">
                     <option value="">-<?php echo $words->getBuffered('ProfileNoteCategory');?>-</option>
                         <?php foreach($categories as $category) {
                                 $catoption = '<option value="' . $category . '"';

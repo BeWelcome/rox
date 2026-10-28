@@ -4,8 +4,7 @@ import 'tom-select/dist/css/tom-select.bootstrap5.min.css';
 
 let tomSelects = [];
 
-// select.select2: the selects of legacy pages (forums moderation, mass mail), which used select2 before
-export function initializeTomSelects(cssClass = ".js-tom-select, select.select2") {
+export function initializeTomSelects(cssClass = ".js-tom-select") {
     document
         .querySelectorAll(cssClass)
         .forEach((element) => {

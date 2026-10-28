@@ -175,7 +175,7 @@ $words = new MOD_words();
             <div class="tab-pane fade show mt-2" id="location" role="tabpanel" aria-labelledby="location-tab">
                 <div class="o-form-group">
                     <label class="o-input-label" for="CountryIsoCode">Choose a country</label><br>
-                    <select id="CountryIsoCode" name="CountryIsoCode" class="o-input select2">
+                    <select id="CountryIsoCode" name="CountryIsoCode" class="o-input js-tom-select">
                         <option value="0">Select a country</option>
                         <?php
                         foreach ($countries as $country) {
@@ -186,13 +186,13 @@ $words = new MOD_words();
                 </div>
                 <div class="o-form-group">
                     <label class="o-input-label"AdminUnits">Choose an administrative unit</label>
-                    <select id="AdminUnits" name="AdminUnits" class="o-input" disabled="disabled">
+                    <select id="AdminUnits" name="AdminUnits" class="o-input js-tom-select" disabled="disabled">
                         <option value="0">All administrative units</option>
                     </select>
                 </div>
                 <div class="o-form-group">
                     <label class="o-input-label" for="Places">Choose a place:</label>
-                    <select id="Places" name="Places" class="o-input" disabled="disabled">
+                    <select id="Places" name="Places" class="o-input js-tom-select" disabled="disabled">
                         <option value="0">All places</option>
                     </select>
                 </div>
@@ -207,7 +207,7 @@ $words = new MOD_words();
             <div class="tab-pane fade show mt-2" role="tabpanel" aria-labelledby="group-tab" id="group">
                 <div class="o-form-group">
                     <label class="o-input-label" for="IdGroup">Choose a group</label>
-                    <select id="IdGroup" name="IdGroup" class="o-input select2" ;>
+                    <select id="IdGroup" name="IdGroup" class="o-input js-tom-select" ;>
                         <option value="0">Select a group</option>
                         <?php
                         foreach ($groups as $group) {
@@ -286,50 +286,49 @@ $words = new MOD_words();
         </div>
     </form>
     <script type="text/javascript">
-        $( document ).ready(function() {
-            // geo dropdown stuff
-            let countries = $('#CountryIsoCode');
-            let adminUnits = $('#AdminUnits');
-            let places = $('#Places');
-            countries.change(function () {
-                var value = countries.val();
-                // clear admin units and places list
-                adminUnits.empty().append('<option selected="selected" value="0">All administrative units</option>');
-                places.empty().append('<option selected="selected" value="0">All places</option>');
-                if (value === 0) {
-                    adminUnits.attr('disabled', 'disabled');
-                    places.attr('disabled', 'disabled');
-                } else {
-                    // and rebuild the admin units select with the admin units for the selected country
-                    $.getJSON('admin/massmail/getadminunits/' + value, function (data) {
-                        var html = '';
-                        var len = data.length;
-                        for (var i = 0; i < len; i++) {
-                            html += '<option value="' + data[i].admin1 + '">' + data[i].name + '</option>';
-                        }
-                        adminUnits.append(html);
+        // The location selects are tom-selects (assets/js/tom-select.js): the administrative units of the chosen
+        // country and the places of the chosen unit are loaded into them from the server.
+        (function () {
+            const countries = document.getElementById('CountryIsoCode');
+            const adminUnits = document.getElementById('AdminUnits');
+            const places = document.getElementById('Places');
+            if (!countries || !adminUnits || !places) {
+                return;
+            }
+
+            function reset(select, label) {
+                const tomSelect = select.tomselect;
+                tomSelect.clear(true);
+                tomSelect.clearOptions();
+                tomSelect.addOption({value: '0', text: label});
+                tomSelect.setValue('0', true);
+                tomSelect.disable();
+            }
+
+            function fill(select, url, valueKey) {
+                fetch(url, {credentials: 'same-origin'})
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const tomSelect = select.tomselect;
+                        data.forEach((item) => tomSelect.addOption({value: String(item[valueKey]), text: item.name}));
+                        tomSelect.refreshOptions(false);
+                        tomSelect.enable();
                     });
-                    adminUnits.removeAttr('disabled');
+            }
+
+            countries.addEventListener('change', function () {
+                reset(adminUnits, 'All administrative units');
+                reset(places, 'All places');
+                if (countries.value !== '0') {
+                    fill(adminUnits, 'admin/massmail/getadminunits/' + countries.value, 'admin1');
                 }
             });
-            adminUnits.change(function () {
-                var value = adminUnits.val();
-                // clear places list
-                places.empty().append('<option selected="selected" value="0">All places</option>');
-                if (value === 0) {
-                    places.attr('disabled', 'disabled');
-                } else {
-                    $.getJSON('admin/massmail/getplaces/' + $('#CountryIsoCode').val() + '/' + value, function (data) {
-                        var html = '';
-                        var len = data.length;
-                        for (var i = 0; i < len; i++) {
-                            html += '<option value="' + data[i].geonameId + '">' + data[i].name + '</option>';
-                        }
-                        places.append(html);
-                    });
-                    places.removeAttr('disabled');
+            adminUnits.addEventListener('change', function () {
+                reset(places, 'All places');
+                if (adminUnits.value !== '0') {
+                    fill(places, 'admin/massmail/getplaces/' + countries.value + '/' + adminUnits.value, 'geonameId');
                 }
             });
-        });
+        })();
     </script>
 </div>

@@ -83,7 +83,7 @@ if (!empty($errors))
 </div>
     <div class="o-form-group">
     <label for="donate-country"><?php echo $words->get('AdminTreasurerSelectCountry'); ?></label>
-    <select id="donate-country" name="donate-country" class="select2 o-input">
+    <select id="donate-country" name="donate-country" class="js-tom-select o-input">
     <option value="0"><?php echo $words->getBuffered('AdminTreasurerSelectACountry'); ?></option>
     <?php
     foreach($countries as $country) {

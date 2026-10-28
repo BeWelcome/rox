@@ -73,6 +73,7 @@ class GroupType extends AbstractType
             ->add('picture', FileType::class, [
                 'label' => 'label.group.picture',
                 'help' => 'group.picture.help',
+                // required (GroupRequest::$picture), but without the browser's hint: the form shows the message
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'group.choose.group.image',

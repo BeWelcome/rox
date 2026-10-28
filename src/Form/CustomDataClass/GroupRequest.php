@@ -20,6 +20,11 @@ class GroupRequest
     #[Assert\Choice(choices: ['Yes', 'No'])]
     public string $visiblePosts = 'Yes';
 
+    /**
+     * Required, as on main. The form field has no required attribute: the message of this constraint is shown under
+     * the field instead of each browser's own hint.
+     */
+    #[Assert\NotBlank(message: 'group.picture.missing')]
     #[Assert\Image(minWidth: 200, maxWidth: 400, minHeight: 200, maxHeight: 400)]
     public ?File $picture = null;
 

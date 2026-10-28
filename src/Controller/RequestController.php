@@ -201,6 +201,7 @@ class RequestController extends BaseRequestAndInvitationController
             }
 
             $this->addTranslatedFlash('notice', 'flash.request.sent');
+            $this->addFlash('plausible_event', 'Request Sent');
 
             return $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]);
         }

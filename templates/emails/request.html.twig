@@ -3,7 +3,7 @@
 {% block message %}
     <p>{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.stay{% endtrans %}</p>
     <callout class="secondary">
-        {{ message.message | raw }}
+        {{ message.message|purify('custom') }}
     </callout>
 {% endblock message %}
 

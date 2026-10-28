@@ -4,7 +4,7 @@
     <p>{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.invitation.reply.guest{% endtrans %}</p>
     <p></p>
     <callout class="secondary">
-        {{ message.message | raw }}
+        {{ message.message|purify('custom') }}
     </callout>
 {% endblock message %}
 

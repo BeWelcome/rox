@@ -38,7 +38,7 @@ class Word
     private string $domain;
 
     #[ORM\Column(name: 'Sentence', type: 'text', length: 65535, nullable: false)]
-    private string $sentence;
+    private string $sentence = '';
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;

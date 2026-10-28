@@ -9,6 +9,7 @@ use App\Entity\Message;
 use App\Entity\Subject;
 use App\Form\MessageToMemberType;
 use App\Model\ConversationModel;
+use App\Security\MemberVoter;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
 use App\Service\InboxFolders;
@@ -74,7 +75,7 @@ class MessageController extends AbstractController
             return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $receiver->getUsername()]));
         }
 
-        if (!$receiver->isBrowsable()) {
+        if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $receiver)) {
             $this->addTranslatedFlash('error', 'flash.member.invalid');
 
             return $this->notAllowedInPanel($request, $receiver, 'message', $this->redirectToRoute('members_profile', ['username' => $sender->getUsername()]));

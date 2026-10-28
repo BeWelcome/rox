@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Entity\MemberPhoto;
+use App\Security\MemberVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -74,11 +75,7 @@ class AvatarController extends AbstractController
             return $this->emptyAvatar($size);
         }
 
-        $isBrowsable = $member->isBrowsable();
-        $isAdministrativeProfile =
-            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || $this->isGranted(Member::ROLE_ADMIN_PROFILE);
-        if (!$isBrowsable && !$isAdministrativeProfile) {
+        if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $member)) {
             return $this->emptyAvatar($size);
         }
 

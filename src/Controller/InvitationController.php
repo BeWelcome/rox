@@ -14,6 +14,7 @@ use App\Form\InvitationType;
 use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\InvitationModel;
+use App\Security\MemberVoter;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
 use App\Service\InboxFolders;
@@ -84,7 +85,7 @@ class InvitationController extends BaseRequestAndInvitationController
             return $this->notAllowedInPanel($request, $guest, 'invitation', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));
         }
 
-        if (!$guest->isBrowsable()) {
+        if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $guest)) {
             $this->addTranslatedFlash('note', 'flash.member.invalid');
         }
 

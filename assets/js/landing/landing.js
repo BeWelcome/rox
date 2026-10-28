@@ -322,6 +322,17 @@ var Home = {
  */
 function initMemberSuggest(input, list) {
     const form = input.form;
+    // A member picked or typed opens their profile
+    const goTo = (name) => {
+        window.location.href = form.dataset.profileUrl.replace('__username__', encodeURIComponent(name));
+    };
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const name = input.value.trim();
+        if (name !== '') {
+            goTo(name);
+        }
+    });
     let timer = null;
     let controller = null;
     let active = -1;
@@ -362,7 +373,7 @@ function initMemberSuggest(input, list) {
     const pick = (value) => {
         input.value = value;
         close();
-        form.requestSubmit();
+        goTo(value);
     };
     const render = (items, term) => {
         if (items.length === 0) {

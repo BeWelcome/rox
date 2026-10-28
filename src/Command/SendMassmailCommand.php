@@ -11,6 +11,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -31,9 +32,16 @@ class SendMassmailCommand extends Command
         parent::__construct();
     }
 
+    protected function configure(): void
+    {
+        // The crontabs call "send:massmail 100", as main's command takes the batch size as argument
+        $this->addArgument('batchSize', InputArgument::OPTIONAL, 'Count of mails sent while the command is running (default: massmail_batch_size)');
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $batchSize = (int) $input->getArgument('batchSize') ?: $this->batchSize;
 
         $massmailRepository = $this->entityManager->getRepository(BroadcastMessage::class);
 
@@ -41,7 +49,7 @@ class SendMassmailCommand extends Command
         $scheduledBroadcastMessages = $massmailRepository->findBy(
             ['status' => 'ToSend'],
             ['updated' => 'ASC'],
-            $this->batchSize,
+            $batchSize,
             0
         );
 

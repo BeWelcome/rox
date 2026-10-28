@@ -75,6 +75,9 @@ class PDBStatement_mysqli extends PDBStatement {
     {
         if (isset($this->result) && is_object($this->result))
             return $this->result->affected_rows;
+        // INSERT, UPDATE, REPLACE and DELETE give true instead of a result
+        if (isset($this->result) && true === $this->result)
+            return $this->_dao->MySQLi->affected_rows;
         if (isset($this->_statement[$this->_i]))
             return $this->_statement[$this->_i]->affected_rows;
         return false;

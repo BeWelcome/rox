@@ -11,6 +11,7 @@ use App\Form\GalleryEditImageFormType;
 use App\Logger\Logger;
 use App\Model\GalleryModel;
 use App\Repository\GalleryImageRepository;
+use App\Security\MemberVoter;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
@@ -217,15 +218,7 @@ class GalleryController extends AbstractController
         ChangeProfilePictureGlobals $globals,
         #[MapQueryParameter] ?int $album = null,
     ): Response {
-        if (
-            !($member->isBrowsable()
-                || $this->isGranted(Member::ROLE_ADMIN_ADMIN, $member)
-                || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM, $member)
-                || $this->isGranted(Member::ROLE_ADMIN_PROFILE, $member)
-            )
-        ) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted(MemberVoter::MEMBER_VIEW, $member);
 
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();

@@ -32,6 +32,7 @@ use App\Repository\FriendRepository;
 use App\Repository\GalleryImageRepository;
 use App\Repository\ProfileNoteRepository;
 use App\Repository\ProfileVisitRepository;
+use App\Security\MemberVoter;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\RedirectBackTrait;
@@ -76,15 +77,7 @@ class ProfileController extends AbstractController
     #[Route(path: '/members/{username:member}/{language}', name: 'members_profile')]
     public function show(Member $member, ?string $language = null): Response
     {
-        if (
-            !($member->isBrowsable()
-                || $this->isGranted(Member::ROLE_ADMIN_ADMIN, $member)
-                || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM, $member)
-                || $this->isGranted(Member::ROLE_ADMIN_PROFILE, $member)
-            )
-        ) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted(MemberVoter::MEMBER_VIEW, $member);
 
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();

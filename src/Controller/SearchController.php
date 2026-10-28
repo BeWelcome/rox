@@ -15,6 +15,7 @@ use App\Pagerfanta\SearchAdapter;
 use App\Repository\CommentRepository;
 use App\Repository\GalleryImageRepository;
 use App\Repository\MemberRepository;
+use App\Security\MemberVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,7 +54,7 @@ class SearchController extends AbstractController
             // First try an exact match (or email)
             $user = $memberRepository->loadUserByIdentifier($username);
 
-            if ($user) {
+            if ($user && $this->isGranted(MemberVoter::MEMBER_VIEW, $user)) {
                 return $this->redirectToRoute('members_profile', ['username' => $user->getUsername()]);
             }
 
@@ -234,15 +235,7 @@ class SearchController extends AbstractController
     #[Route(path: '/search/members/{username:member}/preview', name: 'search_member_preview', methods: ['GET'])]
     public function memberPreview(Member $member): Response
     {
-        if (
-            !($member->isBrowsable()
-                || $this->isGranted(Member::ROLE_ADMIN_ADMIN, $member)
-                || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM, $member)
-                || $this->isGranted(Member::ROLE_ADMIN_PROFILE, $member)
-            )
-        ) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted(MemberVoter::MEMBER_VIEW, $member);
 
         /** @var CommentRepository $commentRepository */
         $commentRepository = $this->entityManager->getRepository(Comment::class);

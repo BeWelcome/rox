@@ -13,6 +13,7 @@ use App\Form\HostingRequestHost;
 use App\Logger\Logger;
 use App\Model\ConversationModel;
 use App\Model\HostingRequestModel;
+use App\Security\MemberVoter;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
 use App\Service\InboxFolders;
@@ -124,7 +125,7 @@ class RequestController extends BaseRequestAndInvitationController
             return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $host->getUsername()]));
         }
 
-        if (!$host->isBrowsable()) {
+        if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $host)) {
             $this->addTranslatedFlash('note', 'flash.member.invalid');
 
             return $this->notAllowedInPanel($request, $host, 'request', $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]));

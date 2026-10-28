@@ -27,6 +27,16 @@ class MemberStatusType extends EnumType
     public const string PASSED_AWAY = 'PassedAway';
     public const string BUGGY = 'Buggy';
 
+    /**
+     * Signed up, but the e-mail address isn't confirmed or the details (finalize step) aren't filled in yet. These
+     * members aren't shown to other members (see App\Security\MemberVoter).
+     */
+    public const array SIGNUP_UNFINISHED = [
+        self::AWAITING_MAIL_CONFIRMATION,
+        self::MAIL_CONFIRMED,
+        self::ACCOUNT_ACTIVATED,
+    ];
+
     public const string ACTIVE_ALL = "'" .
         self::ACTIVE . "', '" .
         self::ACTIVE_HIDDEN . "', '" .

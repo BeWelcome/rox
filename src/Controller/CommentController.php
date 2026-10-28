@@ -13,6 +13,7 @@ use App\Form\CustomDataClass\ReportCommentRequest;
 use App\Form\ReportCommentType;
 use App\Model\CommentModel;
 use App\Model\ProfileModel;
+use App\Security\MemberVoter;
 use App\Service\Mailer;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ProfileSubmenu;
@@ -143,7 +144,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
-        if (!$member->isBrowsable()) {
+        if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $member)) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
@@ -238,7 +239,7 @@ class CommentController extends AbstractController
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 
-        if (!$member->isBrowsable()) {
+        if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $member)) {
             return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
         }
 

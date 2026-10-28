@@ -13,18 +13,20 @@
 {% block content %}
   <h1 class="u:text-24">{{ 'search.members'|trans }}</h1>
   <p class="u:mb-8">{{ 'search.member.abstract'|trans }}</p>
-  {{ form_start(form) }}
-  {{ form_label(form.username) }}
-  <input type="text"
-         id="{{ form.username.vars.id }}" name="{{ form.username.vars.full_name }}"
-         value="{{ form.username.vars.value }}"
-         required="required"
-         placeholder="{{ 'search.member.placeholder'|trans }}"
-         class="member-autocomplete-start o-input"
-  >
-  {{ form_help(form.username) }}
-  {% do form.username.setRendered %}
-  {{ form_end(form) }}
+  {# A GET form with the field the controller reads (username), as on the landing page #}
+  <form action="{{ path('search_members') }}" method="get">
+    <label for="search_members_username">{{ 'label.username'|trans }}</label>
+    <input type="text"
+           id="search_members_username" name="username"
+           value="{{ username }}"
+           required="required"
+           placeholder="{{ 'search.member.placeholder'|trans }}"
+           class="member-autocomplete-start o-input"
+           aria-describedby="search_members_username_help"
+    >
+    <p id="search_members_username_help" class="u:text-14">{{ 'help.username.auto.complete'|trans }}</p>
+    <button type="submit" class="o-button">{{ 'label.search.username'|trans }}</button>
+  </form>
   {% if not members is null %}
     <div class="u:w-full u:grid u:grid-cols-1 {% if members|length > 0 %}u:sm:grid-cols-2 u:md:grid-cols-3{% endif %} u:gap-12">
       {% for member in members %}
@@ -37,9 +39,9 @@
               {% if not address is same as(false) %}
               <p>{{ address.location.name }}, {{ address.location.country.name }}
                 {% if translations[app.request.locale] is defined %}
-                  <p>{{ (translations[app.request.locale]['AboutMe']??'')|truncate(100)|raw }}</p>
+                  <p>{{ (translations[app.request.locale]['AboutMe']??'')|purify|striptags|truncate(100) }}</p>
                 {% else %}
-                  <p>{{ ((translations|first)['AboutMe']??'')|truncate(100)|raw }}</p>
+                  <p>{{ ((translations|first)['AboutMe']??'')|purify|striptags|truncate(100) }}</p>
               {% endif %}
               {% endif %}
             </div>

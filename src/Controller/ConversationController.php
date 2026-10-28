@@ -256,7 +256,17 @@ class ConversationController extends AbstractController
         $this->conversationModel->markConversationAsRead($member, $thread);
 
         // A reply written under the conversation is posted to this same page.
-        if ($current->isMessage() && $request->isMethod('POST') && $request->request->has('app_message')) {
+        if ($this->canReplyInline($current) && $request->isMethod('POST') && $request->request->has('app_message')) {
+            // A request or invitation whose dates have passed gets a plain message, without
+            // the "expired" notice its own reply page shows.
+            if (
+                !$current->isMessage()
+                && ($member === $current->getSender() || $member === $current->getReceiver())
+                && MemberStatusType::ACCOUNT_ACTIVATED !== $member->getStatus()
+            ) {
+                return $this->forward(MessageController::class . '::reply', ['message' => $current]);
+            }
+
             return $this->forward(self::class . '::reply', ['message' => $current]);
         }
 
@@ -283,12 +293,17 @@ class ConversationController extends AbstractController
     }
 
     /**
-     * Plain messages are answered right under the thread (the form posts back to the
-     * conversation page). Requests and invitations keep their own reply page.
+     * Plain messages are answered right under the thread, and so are hosting requests and
+     * invitations whose dates have passed: they can't be answered any more, only written to.
      */
+    private function canReplyInline(Message $current): bool
+    {
+        return $current->isMessage() || (null !== $current->getRequest() && $this->requestModel->hasExpired($current));
+    }
+
     private function createInlineReplyForm(Message $current): ?FormView
     {
-        if (!$current->isMessage()) {
+        if (!$this->canReplyInline($current)) {
             return null;
         }
 

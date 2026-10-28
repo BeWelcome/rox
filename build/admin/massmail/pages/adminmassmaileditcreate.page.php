@@ -71,7 +71,7 @@ class AdminMassmailEditCreatePage extends AdminMassmailBasePage
         } else {
             $editcreate = 'edit';
         }
-        return '<a href="admin">' . $this->words->get('AdminTools') . "</a> "
+        return '<a href="admin/tools">' . $this->words->get('AdminTools') . "</a> "
             . ' &raquo; <a href="admin/massmail">' . $this->words->get('AdminMassMail') . "</a>"
             . ' &raquo; <a href="admin/massmail/' . $editcreate . '">' . $this->words->get('AdminMassMail'. $editcreate) . "</a>";
     }

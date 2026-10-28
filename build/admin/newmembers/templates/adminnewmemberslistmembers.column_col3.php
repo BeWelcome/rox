@@ -48,7 +48,7 @@ $layoutbits = new MOD_layoutbits();
         <td><?php if ($details->languages) :
             $str = "";
             foreach($details->languages as $language) :
-                $str .= $words->getBuffered($language->WordCode) . " (" . $words->getBuffered("LanguageLevel_" . $language->Level) . ")<br />";
+                $str .= $words->getBuffered($language->WordCode) . " (" . $words->getBuffered("language.level." . $language->Level) . ")<br />";
             endforeach;
             if (!empty($str)) {
                 $str = substr($str, 0, -6);

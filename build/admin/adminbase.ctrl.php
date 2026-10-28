@@ -40,12 +40,13 @@ class AdminBaseController extends RoxController {
     }
 
     /**
-     * displays message about not having any admin rights
+     * displays message about not having any admin rights (route admin_norights, where checkRights() sends members
+     * without the right)
      *
      * @access public
      * @return object
      */
-    protected function noRights()
+    public function noRights()
     {
         if (!$member = $this->_model->getLoggedInMember()) {
             $this->redirectAbsolute($this->router->url('main_page'));

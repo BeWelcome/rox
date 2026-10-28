@@ -1091,10 +1091,13 @@ class LookedUpWord {
 
     private function _trLinkURL()
     {
+        // the translation tool (App\Controller\Admin\TranslationController); edit leads to the add page when the
+        // language has no translation yet
+        $code = rawurlencode((string) $this->_code);
         if($this->_tr_success == self::MISSING_WORD){
-            return PVars::getObj('env')->baseuri.'admin/word/createcode/'.$this->_code;
+            return PVars::getObj('env')->baseuri.'admin/translations/create/en/'.$code;
         } else {
-            return PVars::getObj('env')->baseuri.'admin/word/edit/'.$this->_code.'/'.$this->_trLinkLanguage();
+            return PVars::getObj('env')->baseuri.'admin/translations/edit/'.$this->_trLinkLanguage().'/'.$code;
         }
     }
 

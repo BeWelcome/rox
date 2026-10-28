@@ -22,33 +22,23 @@ class AdminSubscriptionsModel extends RoxModelBase {
     public function manageSubscriptions($vars, $enable) {
         $temp = new Member();
         $member = $temp->findByUsername($vars['username']);
-        $memberId = $member->id;
-        // update subscription (keep old assignments through negating if disabling)
-        // members_threads_subscribed
-        if ($enable) {
-            $newSubscriberId = $memberId;
-            $oldSubscriberId = (-1) * $memberId;
-        } else {
-            $newSubscriberId = (-1) * $memberId;
-            $oldSubscriberId = $memberId;
-        }
-        $query ="
+        $memberId = (int) $member->id;
+        $enabled = $enable ? 1 : 0;
+        // the subscriptions stay; only their notifications are switched (as forums.model.php does)
+        $this->dao->query("
             UPDATE
                 members_threads_subscribed
             SET
-                IdSubscriber = " . $newSubscriberId . "
+                notificationsEnabled = " . $enabled . "
             WHERE
-                IdSubscriber = " . $oldSubscriberId;
-        $this->dao->query($query);
-        $query = "
+                IdSubscriber = " . $memberId);
+        $this->dao->query("
             UPDATE
-                membersgroups
+                group_membership
             SET
-                IdMember = " . $newSubscriberId . "
+                notifications_enabled = " . $enabled . "
             WHERE
-                IdMember = " . $oldSubscriberId . "
-                AND IacceptMassMailFromThisGroup = 'Yes'
-        ";
-        $this->dao->query($query);
+                member_id = " . $memberId . "
+                AND accept_mass_mail = 1");
     }
 }

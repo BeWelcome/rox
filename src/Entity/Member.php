@@ -52,7 +52,7 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
     public const ROLE_ADMIN_LOGS = 'ROLE_ADMIN_LOGS';
     public const ROLE_ADMIN_MANAGESUBSCRIPTIONS = 'ROLE_ADMIN_MANAGESUBSCRIPTIONS';
     public const ROLE_ADMIN_MASSMAIL = 'ROLE_ADMIN_MASSMAIL';
-    public const ROLE_ADMIN_MemberSBEWELCOME = 'ROLE_ADMIN_MemberSBEWELCOME';
+    public const ROLE_ADMIN_NEWMEMBERSBEWELCOME = 'ROLE_ADMIN_NEWMEMBERSBEWELCOME';
     public const ROLE_ADMIN_POLL = 'ROLE_ADMIN_POLL';
     public const ROLE_ADMIN_PROFILE = 'ROLE_ADMIN_PROFILE';
     public const ROLE_ADMIN_RIGHTS = 'ROLE_ADMIN_RIGHTS';

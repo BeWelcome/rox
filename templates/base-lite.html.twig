@@ -28,6 +28,7 @@
     {{ encore_entry_link_tags('tailwind') }}
     {% block stylesheets %}{% endblock %}
 
+  {% include '_analytics.html.twig' %}
 </head>
 <body>
     {% include 'loginbar.html.twig' with { slim_nav: true } %}

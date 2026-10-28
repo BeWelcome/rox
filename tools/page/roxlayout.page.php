@@ -13,6 +13,18 @@ class PageWithRoxLayout extends PageWithHTML
     protected $yamlFileLocator = null;
     protected $router = null;
 
+    /**
+     * Same Plausible snippet and queued events as the Twig layouts (#540), so
+     * legacy pages (forums, groups, admin tools) are tracked too.
+     */
+    protected function head()
+    {
+        parent::head();
+        if (null !== $this->environment) {
+            echo $this->environment->render('_analytics.html.twig');
+        }
+    }
+
     /*
      * Return a list of stylesheets to be included.
      */

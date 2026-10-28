@@ -213,6 +213,8 @@ class SignupController extends AbstractController
 
                 $this->entityManager->persist($member);
                 $this->entityManager->flush();
+                // The email address is confirmed: the signup funnel's goal in Plausible (#540)
+                $this->addFlash('plausible_event', 'Signup Confirmed');
             }
 
             if (MemberStatusType::ACTIVE === $member->getStatus()) {

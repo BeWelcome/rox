@@ -1,0 +1,28 @@
+{#
+    Plausible analytics (#540). Include in the <head> of every layout, before
+    any loop over app.flashes: the plausible_event flashes are read here.
+
+    Events are queued with flashes, so they also work across a redirect:
+        $this->addFlash('plausible_event', 'Message Sent');
+        $this->addFlash('plausible_event', ['name' => 'Donation', 'revenue' => ['currency' => 'EUR', 'amount' => 10]]);
+    Everything except "name" is passed as Plausible's options (props, revenue).
+
+    Flashes are only read when the visitor already has a session, so pages for
+    anonymous visitors do not start one just for analytics.
+#}
+{% if plausible_script_url is defined and plausible_script_url %}
+    <script async src="{{ plausible_script_url }}"></script>
+    <script>
+      window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
+      plausible.init()
+    </script>
+    {% if app.request and app.request.hasPreviousSession %}
+        {% for event in app.flashes('plausible_event') %}
+            {% if event is iterable %}
+    <script>plausible({{ event.name|json_encode|raw }}, {{ event|filter((value, key) => key != 'name')|json_encode|raw }})</script>
+            {% else %}
+    <script>plausible({{ event|json_encode|raw }})</script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endif %}

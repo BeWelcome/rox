@@ -35,6 +35,7 @@
       });
     }
   </script>
+  {% include '_analytics.html.twig' %}
 </head>
 {# ?embed=1: the page alone, without menu and footer, to be shown in a frame (search preview) #}
 {% set embedded = app.request.query.getBoolean('embed') %}

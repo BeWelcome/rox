@@ -315,6 +315,10 @@ services:
         tags: [twig.extension]
 
 
+    # src/Twig is excluded from autowiring above, so every extension is listed here.
+    App\Twig\AnalyticsExtension:
+        tags: [twig.extension]
+
     rox.member_twig_extension:
         class: App\Twig\MemberTwigExtension
         public: true

@@ -339,11 +339,14 @@ class TranslationController extends AbstractController
         }
         $translationRepository = $this->entityManager->getRepository(Word::class);
 
-        /** @var Word $original */
         $original = $translationRepository->findOneBy([
             'code' => $code,
             'language' => 'en',
         ]);
+        if (null === $original) {
+            throw $this->createNotFoundException();
+        }
+
         $translation = $translationRepository->findOneBy([
             'code' => $code,
             'language' => $language->getShortCode(),

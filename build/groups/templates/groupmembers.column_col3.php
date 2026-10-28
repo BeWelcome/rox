@@ -46,7 +46,7 @@ else
                     <p class="small m-0"><?= $member->get_city(); ?>, <?= $member->get_country(); ?></p>
                 </td>
                 <td>
-                    <em><?php echo $purifier->purify($words->mTrad($membershipinfo->comment, true)) ?></em>
+                    <em><?php echo $purifier->purify(nl2br(htmlspecialchars((string) $membershipinfo->comment))) ?></em>
                 </td>
                 <?php
                 }

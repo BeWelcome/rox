@@ -67,10 +67,13 @@ class GroupType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
                 'label' => 'groupsvisiblepostsheading',
+                // the field keeps main's name; 'No' makes the group's posts visible to its members only
+                'property_path' => 'visiblePosts',
             ])
             ->add('picture', FileType::class, [
                 'label' => 'label.group.picture',
                 'help' => 'group.picture.help',
+                // required (GroupRequest::$picture), but without the browser's hint: the form shows the message
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'group.choose.group.image',

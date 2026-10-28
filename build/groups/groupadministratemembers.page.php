@@ -116,7 +116,7 @@ class GroupMemberAdministrationPage extends GroupsSubPage
         </div>
 
         <?= $words->flushBuffer() ?>
-        <?php if ($this->group->Type != 'Public') : ?>
+        <?php if ($this->group->type != 'Public') : ?>
         <?php if (!empty($need_approval)) : ?>
             <div id="possible_members" class="col-12">
                     <h4><?= $words->get('GroupsProspectiveMembers'); ?></h4>

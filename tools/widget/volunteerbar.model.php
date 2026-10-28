@@ -184,9 +184,9 @@ class VolunteerbarModel extends PAppModel
                                          }
                                          $where=$where.$Scope;
                          }
-                         $where=" and `groups`.`Name` in " .$where.")" ;
+                         $where=" and `group`.`name` in " .$where.")" ;
                 }
-        $query = 'SELECT SQL_CACHE COUNT(*) AS cnt FROM `membersgroups`,`groups` where `membersgroups`.`Status`="WantToBeIn" and `groups`.`id`=`membersgroups`.`IdGroup`'.$where ;
+        $query = 'SELECT SQL_CACHE COUNT(*) AS cnt FROM `group_membership`,`group` where `group_membership`.`status`="WantToBeIn" and `group`.`id`=`group_membership`.`group_id`'.$where ;
 //   die($query) ;
         $result = $this->dao->query($query);
         $record = $result->fetch(PDB::FETCH_OBJ);

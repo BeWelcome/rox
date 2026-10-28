@@ -7,32 +7,26 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class GroupRequest
 {
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $name;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $description;
 
-    /**
-     * @Assert\NotBlank()
-     */
+    #[Assert\NotBlank]
     public string $type = 'Public';
 
+    /** The group's forum posts are visible to all members ('Yes') or to the group's members only ('No'). */
+    #[Assert\Choice(choices: ['Yes', 'No'])]
+    public string $visiblePosts = 'Yes';
+
     /**
-     * @Assert\NotBlank()
-     *
-     * @Assert\Image(
-     *     minWidth = 200,
-     *     maxWidth = 400,
-     *     minHeight = 200,
-     *     maxHeight = 400
-     * )
+     * Required, as on main. The form field has no required attribute: the message of this constraint is shown under
+     * the field instead of each browser's own hint.
      */
-    public File $picture;
+    #[Assert\NotBlank(message: 'group.picture.missing')]
+    #[Assert\Image(minWidth: 200, maxWidth: 400, minHeight: 200, maxHeight: 400)]
+    public ?File $picture = null;
 
     public bool $comments = false;
 }

@@ -37,7 +37,7 @@ class GroupStartPage extends GroupsBasePage
     {
         $words = $this->getWords();
 
-		if (!$this->isGroupMember() && $this->group->Type == GroupType::INVITE_ONLY)
+		if (!$this->isGroupMember() && $this->group->type == GroupType::INVITE_ONLY)
 		{
 			echo $words->get('GroupsNotPublic');
 		}

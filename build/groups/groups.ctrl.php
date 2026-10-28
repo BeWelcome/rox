@@ -61,7 +61,7 @@ class GroupsController extends RoxControllerBase
     {
         $member = $this->_model->getLoggedInMember();
         $group = $this->_getGroupFromRequest();
-        if (false === $group || ($group->Type == GroupType::INVITE_ONLY && !$this->_model->getLoggedInMember()))
+        if (false === $group || ($group->type == GroupType::INVITE_ONLY && !$this->_model->getLoggedInMember()))
         {
             return $this->redirectAbsolute($this->router->url('groups_redirect'));
         }
@@ -71,7 +71,7 @@ class GroupsController extends RoxControllerBase
         }
         $this->_model->setGroupVisit($group->getPKValue());
         $page = new GroupStartPage();
-        $page->setTeaserHeadline($group->Name);
+        $page->setTeaserHeadline($group->name);
         $page->group = $group;
         $this->_fillObject($page);
         return $page;
@@ -329,7 +329,7 @@ class GroupsController extends RoxControllerBase
         $member_id = $this->_getMemberIdFromRequest();
         $group = $this->_getGroupFromRequest();
         $invitedby = $this->_model->getLoggedInMember();
-        if ($group->Status != 'Public' && !$group->isGroupOwner($invitedby)) {
+        if ($group->type != 'Public' && !$group->isGroupOwner($invitedby)) {
             $this->redirectAbsolute($this->router->url('groups_redirect'));
         } else {
             $page = new GroupStartPage;
@@ -361,7 +361,7 @@ class GroupsController extends RoxControllerBase
             exit;
         }
         $invitedby = $this->_model->getLoggedInMember();
-        if ( !$invitedby || ($group->Type != 'Public' && !$group->isGroupOwner($invitedby)))
+        if ( !$invitedby || ($group->type != 'Public' && !$group->isGroupOwner($invitedby)))
         {
             header('Status: 500 Fudged it');
             exit;
@@ -389,7 +389,7 @@ class GroupsController extends RoxControllerBase
         if (!empty($vars['member_id']) && !empty($vars['group_id']) && ($group = $this->_model->findGroup($vars['group_id'])))
         {
             $invitedby = $this->_model->getLoggedInMember();
-            if (!($group->Type != 'Public' && !$group->isGroupOwner($invitedby)) && $this->_model->inviteMember($group, $vars['member_id']))
+            if (!($group->type != 'Public' && !$group->isGroupOwner($invitedby)) && $this->_model->inviteMember($group, $vars['member_id']))
             {
                 $this->logWrite("Member #{$vars['member_id']} was invited to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
                 $this->_model->sendInvitation($group, $vars['member_id'], $this->_model->getLoggedInMember());
@@ -583,7 +583,7 @@ class GroupsController extends RoxControllerBase
                 $resigned = $this->_model->resignGroupAdmin($group, $resigner->getPKValue());
                 if ($resigned)
                 {
-                    $this->logWrite("Member #{$resigner->Username} resigned as admin from the group #{$group->Name}");
+                    $this->logWrite("Member #{$resigner->Username} resigned as admin from the group #{$group->name}");
                     $this->setFlashNotice($this->getWords()->getSilent('GroupAdminResignationSuccess'));
                 } else {
                     $this->setFlashError($this->getWords()->getSilent('GroupAdminResignationFailed'));
@@ -715,7 +715,7 @@ class GroupsController extends RoxControllerBase
 
         if ($this->_model->joinGroup($member, $group))
         {
-            if ($group->Type == 'NeedAcceptance') {
+            if ($group->type == 'NeedAcceptance') {
                 $this->setFlashNotice($this->getWords()->getSilent('GroupsJoinApprovalWait'));
             }
             $this->_model->updateMembershipSettings($member->id, $group->getPKValue(), $post['membershipinfo_acceptgroupmail'], !empty($post['membershipinfo_comment']) ? $post['membershipinfo_comment']:'');

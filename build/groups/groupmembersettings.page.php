@@ -55,28 +55,28 @@ class GroupMemberSettingsPage extends GroupsSubPage
         <?= $problemmsg; ?>
         <form action="" method="post">
         <?= $callbacktag; ?>
-            <h2><?= $words->get('GroupsMemberSettings') ;?><?= htmlspecialchars((string) $this->group->Name, ENT_QUOTES) ?></h2>
+            <h2><?= $words->get('GroupsMemberSettings') ;?><?= htmlspecialchars((string) $this->group->name, ENT_QUOTES) ?></h2>
             <input type='hidden' name='member_id' value='<?= $this->member->id ;?>' />
-            <input type='hidden' name='group_id' value='<?= $membershipinfo->IdGroup ;?>' />
+            <input type='hidden' name='group_id' value='<?= $membershipinfo->group_id ;?>' />
             <div class="row">
                 <div class="col-12 col-md-6">
                     <div class="o-form-group"><label for="comment"><?= $words->get('GroupsMemberComments') ;?></label><br>
-                    <textarea class="o-input" id="comment" name="membershipinfo_comment" cols="30" rows="3"><?php /* plain read: entity columns are magic properties without __isset() */ $commentId = $membershipinfo->comment; ?><?= ($commentId ? htmlspecialchars((string) $words->mTrad($commentId)) : '' ); ?></textarea>
+                    <textarea class="o-input" id="comment" name="membershipinfo_comment" cols="30" rows="3"><?php /* plain read: entity columns are magic properties without __isset() */ $comment = $membershipinfo->comment; ?><?= htmlspecialchars((string) $comment) ?></textarea>
                     </div>
                 </div> <!-- row -->
                 <div class="col-12 col-md-6">
                     <label><?= $words->get('GroupsMemberAcceptMail') ;?>:  </label><br>
 
                     <div class="btn-group w-100" data-toggle="buttons">
-                        <label class="btn btn-outline-primary <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'active' : '' ); ?>" for="yes_option">
-                            <input id='yes_option' class="noradio" autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'yes') ? 'checked="checked" ' : '' ); ?>><?= $words->get('yes'); ?>
+                        <label class="btn btn-outline-primary <?= (($membershipinfo->accept_mass_mail) ? 'active' : '' ); ?>" for="yes_option">
+                            <input id='yes_option' class="noradio" autocomplete="off" type="radio" value="yes" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->accept_mass_mail) ? 'checked="checked" ' : '' ); ?>><?= $words->get('yes'); ?>
                         </label>
-                        <label for="no_option" class="btn btn-outline-primary <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no') ? 'active' : '' ); ?>">
-                            <input id='no_option' class="noradio" autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= (($membershipinfo->IacceptMassMailFromThisGroup == 'no' || !$membershipinfo->IacceptMassMailFromThisGroup) ? 'checked="checked" ' : '' ); ?>><?= $words->get('no'); ?>
+                        <label for="no_option" class="btn btn-outline-primary <?= ((!$membershipinfo->accept_mass_mail) ? 'active' : '' ); ?>">
+                            <input id='no_option' class="noradio" autocomplete="off" type="radio" value="no" name="membershipinfo_acceptgroupmail" <?= ((!$membershipinfo->accept_mass_mail) ? 'checked="checked" ' : '' ); ?>><?= $words->get('no'); ?>
                         </label>
                     </div>
                 </div>
-            <?php if ($membershipinfo->IdMember < 0) { ?>
+            <?php if ($membershipinfo->member_id < 0) { ?>
                 <p><?= $words->get('GroupMemberSettingsDisabledInfo') ?></p>
             <?php } ?>
             <div class="col-12">

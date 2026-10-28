@@ -44,7 +44,7 @@ class GroupSettingsPage2 extends GroupsBasePage
         }
         else
         {
-            $GroupDesc_ = (($this->group->IdDescription) ? $words->mTrad($this->group->IdDescription) : '');
+            $GroupDesc_ = $this->group->getDescription();
             $Type = $this->group->Type;
             $VisiblePosts = (($this->group->VisiblePosts == 'no') ? 'no' : 'yes');
             $DisplayedOnProfile = (($this->group->DisplayedOnProfile == 'No') ? 'No' : 'Yes');

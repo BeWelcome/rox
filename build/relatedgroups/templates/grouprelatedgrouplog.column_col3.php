@@ -33,12 +33,12 @@ Boston, MA  02111-1307, USA.
                 <div class="mr-2">
                     <!-- group image -->
                     <a href="group/<?=$group_data->getPKValue() ?>">
-                        <img class="framed groupimg" alt="<?=htmlspecialchars((string) $group_data->Name, ENT_QUOTES) ?>" src="<?= ((strlen((string) $group_data->Picture) > 0) ? "group/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" />
+                        <img class="framed groupimg" alt="<?=htmlspecialchars((string) $group_data->name, ENT_QUOTES) ?>" src="<?= ((strlen((string) $group_data->picture) > 0) ? "group/thumbimg/{$group_data->getPKValue()}" : 'images/icons/group.png' ) ?>" />
                     </a>
                 </div>
                 <div>
                     <!-- group name -->
-                    <a href="group/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars((string) $group_data->Name, ENT_QUOTES) ?></a>
+                    <a href="group/<?=$group_data->getPKValue() ?>" class="h4"><?=htmlspecialchars((string) $group_data->name, ENT_QUOTES) ?></a>
                     <!-- group details -->
                     <ul class="groupul mt-1 text-truncate">
                         <li><i class="fa fa-users pr-1" title="<?php echo $words->get('GroupsMemberCount');?>"></i><?=$group_data->getMemberCount(); ?></li>
@@ -91,7 +91,7 @@ Boston, MA  02111-1307, USA.
                                 ?>
                                 <?php
                                 $memberlink = '<a href="members/' . $value->member->Username . '">' . $value->member->Username . '</a>';
-                                $grouplink =  '<a href="group/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars((string) $value->relatedgroup->Name, ENT_QUOTES) . '</a>';
+                                $grouplink =  '<a href="group/' . $value->relatedgroup->getPKValue() . '">' . htmlspecialchars((string) $value->relatedgroup->name, ENT_QUOTES) . '</a>';
                                 $logentry = $words->get($value->RelatedGroupAction, $memberlink, $grouplink);
                                 echo $logentry;
                                 echo "<br>" . $layoutbits->ago(strtotime((string) $value->ts)); ?>

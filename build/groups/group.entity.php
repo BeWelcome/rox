@@ -35,7 +35,7 @@ use App\Doctrine\MemberStatusType;
 class Group extends RoxEntityBase
 {
 
-    protected $_table_name = 'groups';
+    protected $_table_name = 'group';
 
     protected $_validations = ['Name', 'Type'];
 
@@ -80,7 +80,7 @@ class Group extends RoxEntityBase
         {
             // get latest post timestamp (if any)
             $query = "SELECT UNIX_TIMESTAMP(MAX( p.create_time )) AS ts
-FROM groups AS g, forum_thread AS t, forum_post AS p
+FROM `group` AS g, forum_thread AS t, forum_post AS p
 WHERE g.id = " . $this->id . "
 AND g.id = t.IdGroup
 AND t.last_postid = p.id";
@@ -107,10 +107,10 @@ FROM
 (SELECT
     g.id
 FROM
-    groups g,
+    `group` g,
     forum_thread ft,
     forum_post fp
-where g.id = ft.IdGroup AND g.approved = 1 AND NOT (g.Name LIKE '[Archived]%')  AND ft.last_postId = fp.id AND DateDIFF(now(), fp.create_time) < 366
+where g.id = ft.IdGroup AND g.approved = 1 AND NOT (g.name LIKE '[Archived]%')  AND ft.last_postId = fp.id AND DateDIFF(now(), fp.create_time) < 366
 group by g.id) as id
 SQL;
         return $this->sqlCount($sql);
@@ -126,10 +126,10 @@ SQL;
 SELECT
     g.*
 FROM
-    groups g,
+    `group` g,
     forum_thread ft,
     forum_post fp
-WHERE g.id = ft.IdGroup AND g.approved = 1 AND NOT (g.Name LIKE '[Archived]%') AND ft.last_postId = fp.id AND DateDIFF(NOW(), fp.create_time) < 366
+WHERE g.id = ft.IdGroup AND g.approved = 1 AND NOT (g.name LIKE '[Archived]%') AND ft.last_postId = fp.id AND DateDIFF(NOW(), fp.create_time) < 366
 GROUP BY g.id
 SQL;
         if ($this->sql_order !== '') {
@@ -162,7 +162,7 @@ SQL;
         {
             if (is_string($term))
             {
-                $term = "{$this->_table_name}.Name LIKE '%" . $this->dao->escape($term) . "%'";
+                $term = "`{$this->_table_name}`.name LIKE '%" . $this->dao->escape($term) . "%'";
             }
             else
             {
@@ -343,18 +343,20 @@ SQL;
     {
         $group_name = $this->dao->escape($input['Group_']);
         $type = $this->dao->escape($input['Type']);
-        $visible_posts = $this->dao->escape($input['VisiblePosts']);
+        // VisiblePosts 'no': the group's posts are for its members only
+        $members_only = ('no' === strtolower((string) $input['VisiblePosts'])) ? 1 : 0;
         $picture = ((!empty($input['Picture'])) ? $this->dao->escape($input['Picture']) : '');
 
-        if ($this->createEntity('Group')->findByWhere("Name = '{$group_name}'"))
+        if ($this->createEntity('Group')->findByWhere("name = '{$group_name}'"))
         {
             return false;
         }
 
-        $this->Name = $group_name;
-        $this->Type = $type;
-        $this->VisiblePosts = $visible_posts;
-        $this->Picture = $picture;
+        $this->name = $group_name;
+        $this->type = $type;
+        $this->members_only = $members_only;
+        $this->picture = $picture;
+        $this->approved = 0;
         $this->created = date('Y-m-d H:i:s');
         return $this->insert();
     }
@@ -406,39 +408,43 @@ SQL;
 
         $description = str_replace(["\r\n", "\r", "\n"], "", nl2br($description));
 
-        // groups.IdDescription holds the id of a member_translation row
-        $words = $this->getWords();
-        $descriptionId = ((!$this->IdDescription) ? $words->InsertInMTrad($description, 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
+        // The description is the group's own text in group_translation, one row per language
+        // (App\Entity\GroupTranslation); this changes the one in the member's language.
+        $locale = $this->dao->escape($this->getWords()->languageShortCode());
+        $member = $this->getLoggedInMember();
+        $translator = $member ? (int) $member->id : 'NULL';
+        $text = $this->dao->escape($description);
+        $result = $this->dao->query(
+            "INSERT INTO group_translation (object_id, locale, field, content, translator_id, created_at) "
+            . "VALUES (" . (int) $this->getPKValue() . ", '" . $locale . "', 'description', '" . $text . "', " . $translator . ", NOW()) "
+            . "ON DUPLICATE KEY UPDATE translator_id = VALUES(translator_id), "
+            . "updated_at = IF(content = VALUES(content), updated_at, NOW()), content = VALUES(content)"
+        );
 
-        if (!$descriptionId)
-        {
-            return false;
-        }
-        elseif ($this->IdDescription != $descriptionId)
-        {
-            // the Symfony side (App\Entity\Group::$descriptions) finds descriptions via groups_trads
-            $this->dao->query("INSERT IGNORE INTO groups_trads (group_id, trad_id) VALUES (" . (int) $this->getPKValue() . ", " . (int) $descriptionId . ")");
-            $this->IdDescription = $descriptionId;
-            return $this->update();
-        }
-
-        return true;
+        return (bool) $result;
     }
 
     /**
-     * returns the description for a group
+     * returns the description for a group: in the member's language, else in English, else in the
+     * language it was written in
      *
      * @access public
      * @return string
      */
     public function getDescription()
     {
-        if (!$this->isLoaded() || !$this->IdDescription)
+        if (!$this->isLoaded())
         {
             return '';
         }
 
-        return $this->getWords()->mTrad($this->IdDescription);
+        $locale = $this->dao->escape($this->getWords()->languageShortCode());
+        $row = $this->singleLookup(
+            "SELECT content FROM group_translation WHERE object_id = " . (int) $this->getPKValue()
+            . " AND field = 'description' ORDER BY locale = '" . $locale . "' DESC, locale = 'en' DESC, id LIMIT 1"
+        );
+
+        return $row ? (string) $row->content : '';
     }
 
     /**
@@ -462,9 +468,10 @@ SQL;
             return false;
         }
 
-        $this->Type = $this->dao->escape($type);
-        $this->VisiblePosts = $this->dao->escape($visible_posts);
-        $this->Picture = (($picture) ? $this->dao->escape($picture) : $this->Picture);
+        $this->type = $this->dao->escape($type);
+        // VisiblePosts 'no': the group's posts are for its members only
+        $this->members_only = ('no' === strtolower((string) $visible_posts)) ? 1 : 0;
+        $this->picture = (($picture) ? $this->dao->escape($picture) : $this->picture);
         return $this->update();
     }
 

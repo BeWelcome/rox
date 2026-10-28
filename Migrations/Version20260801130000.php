@@ -32,7 +32,9 @@ final class Version20260801130000 extends AbstractMigration
         $this->addSql('ALTER TABLE member MODIFY COLUMN Accommodation VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci DEFAULT NULL');
         $this->addSql('ALTER TABLE member MODIFY COLUMN Gender VARCHAR(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci NOT NULL');
         $this->addSql('ALTER TABLE member MODIFY COLUMN Status VARCHAR(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci NOT NULL');
-        $this->addSql('ALTER TABLE membersgroups MODIFY COLUMN Status VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci NOT NULL');
+        if ($schema->hasTable('membersgroups')) { // main's table, not in a new database built from develop's entities
+            $this->addSql('ALTER TABLE membersgroups MODIFY COLUMN Status VARCHAR(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci NOT NULL');
+        }
         $this->addSql('ALTER TABLE members_threads_subscribed MODIFY COLUMN ActionToWatch VARCHAR(7) CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci NOT NULL');
         $this->addSql('ALTER TABLE member_language_level MODIFY COLUMN level VARCHAR(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci NOT NULL');
         $this->addSql('ALTER TABLE messages MODIFY COLUMN InFolder VARCHAR(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_ai_ci NOT NULL');

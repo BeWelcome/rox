@@ -11,6 +11,7 @@ namespace App\Entity;
 use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -20,11 +21,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\ObjectManager;
 
 /**
+ * A group (`group`). main's table `groups` is App\Entity\Groups; Version20261029100000 copied it into this one.
+ *
  * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'groups')]
+#[ORM\Table(name: '`group`')]
 #[ORM\Entity(repositoryClass: \App\Repository\GroupRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Group
@@ -49,37 +52,31 @@ class Group
         self::APPROVED_CLOSED, self::DISMISSED_CLOSED, self::IN_DISCUSSION_CLOSED,
     ];
 
-    #[ORM\Column(name: 'Name', type: 'string', length: 40, nullable: false)]
+    #[ORM\Column(name: 'name', type: 'string', length: 100, nullable: false)]
     private string $name;
 
-    #[ORM\Column(name: 'Type', type: 'group_type', nullable: false)]
+    #[ORM\Column(name: 'type', type: 'group_type', nullable: false)]
     private string $type = GroupType::PUBLIC;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    #[ORM\Column(name: 'Picture', type: 'text', length: 65535, nullable: false)]
-    private string $picture;
+    /** The file name of the group's picture in the group image directory; empty for none. */
+    #[ORM\Column(name: 'picture', type: 'string', length: 255, nullable: false, options: ['default' => ''])]
+    private string $picture = '';
 
-    #[ORM\Column(name: 'MoreInfo', type: 'text', length: 65535, nullable: false)]
-    private string $moreInfo = '';
-
-    #[ORM\Column(name: 'IdDescription', type: 'integer', nullable: false)]
-    private int $idDescription = 0;
-
-    #[ORM\JoinTable(name: 'groups_trads')]
-    #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'trad_id', referencedColumnName: 'id', unique: true)]
-    #[ORM\ManyToMany(targetEntity: MemberTranslation::class, fetch: 'LAZY')]
-    private Collection $descriptions;
+    /** The description in every language it was written or translated in. */
+    #[ORM\OneToMany(targetEntity: GroupTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $translations;
 
     #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'group', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $groupMemberships;
 
-    #[ORM\Column(name: 'VisiblePosts', type: 'string', nullable: false)]
-    private string $visibleposts = 'yes';
+    /** The group's forum posts are visible to its members only (else to all members). */
+    #[ORM\Column(name: 'members_only', type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $membersOnly = false;
 
-    #[ORM\Column(name: 'approved', type: 'smallint', nullable: true)]
+    #[ORM\Column(name: 'approved', type: 'smallint', nullable: false, options: ['default' => 0])]
     private int $approved = self::NOT_APPROVED;
 
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -91,7 +88,7 @@ class Group
 
     public function __construct()
     {
-        $this->descriptions = new ArrayCollection();
+        $this->translations = new ArrayCollection();
         $this->groupMemberships = new ArrayCollection();
     }
 
@@ -190,64 +187,61 @@ class Group
     }
 
     /**
-     * Add description.
-     *
-     * @return Group
+     * Sets the description in a language: a new translation, or a change of the one there is.
      */
-    public function addDescription(MemberTranslation $description)
+    public function setDescription(string $locale, string $text, ?Member $translator): self
     {
-        if (!$this->descriptions->contains($description)) {
-            $this->descriptions[] = $description;
-            $this->idDescription = $description->getId();
+        $description = $this->getDescriptions()[$locale] ?? null;
+        if (null === $description) {
+            $description = new GroupTranslation($locale, GroupTranslation::DESCRIPTION, $text);
+            $description->setObject($this);
+            $this->translations->add($description);
+        } elseif ($description->getContent() !== $text) {
+            $description->setContent($text);
+            $description->setUpdatedAt(new DateTimeImmutable());
         }
+        $description->setTranslator($translator);
 
         return $this;
     }
 
     /**
-     * Remove description.
+     * @return array<string, GroupTranslation> the description in every language, by locale
      */
-    public function removeDescription(MemberTranslation $description): void
-    {
-        $this->descriptions->removeElement($description);
-    }
-
-    /**
-     * @return array
-     */
-    public function getDescriptions()
+    public function getDescriptions(): array
     {
         $descriptions = [];
-        // return array based on locale
-        foreach ($this->descriptions as $description) {
-            $descriptions[$description->getLanguage()->getShortCode()] = $description;
+        /** @var GroupTranslation $translation */
+        foreach ($this->translations as $translation) {
+            if (GroupTranslation::DESCRIPTION === $translation->getField()) {
+                $descriptions[$translation->getLocale()] = $translation;
+            }
         }
 
         return $descriptions;
     }
 
     /**
-     * Set visibleposts.
-     *
-     * @param string $visibleposts
-     *
-     * @return Group
+     * The description in a language; else in English, else in the language it was written in.
      */
-    public function setVisibleposts($visibleposts)
+    public function getDescription(string $locale = 'en'): string
     {
-        $this->visibleposts = $visibleposts;
+        $descriptions = $this->getDescriptions();
+        $description = $descriptions[$locale] ?? $descriptions['en'] ?? reset($descriptions);
+
+        return false === $description ? '' : (string) $description->getContent();
+    }
+
+    public function setMembersOnly(bool $membersOnly): self
+    {
+        $this->membersOnly = $membersOnly;
 
         return $this;
     }
 
-    /**
-     * Get visibleposts.
-     *
-     * @return string
-     */
-    public function getVisibleposts()
+    public function isMembersOnly(): bool
     {
-        return $this->visibleposts;
+        return $this->membersOnly;
     }
 
     /**
@@ -408,29 +402,5 @@ class Group
     public function onPostLoad(PostLoadEventArgs $eventArgs): void
     {
         $this->objectManager = $eventArgs->getObjectManager();
-    }
-
-    public function getMoreInfo(): ?string
-    {
-        return $this->moreInfo;
-    }
-
-    public function setMoreInfo(string $moreInfo): self
-    {
-        $this->moreInfo = $moreInfo;
-
-        return $this;
-    }
-
-    public function getIdDescription(): ?int
-    {
-        return $this->idDescription;
-    }
-
-    public function setIdDescription(int $idDescription): self
-    {
-        $this->idDescription = $idDescription;
-
-        return $this;
     }
 }

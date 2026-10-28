@@ -67,7 +67,7 @@ class ForumsView extends RoxAppView {
             $visibilityCheckbox = ''; // MembersOnly
         } else {
             $group = $this->_model->getGroupEntity($IdGroup);
-            $groupOnly = ($group->VisiblePosts == 'no');
+            $groupOnly = (bool) $group->members_only;
             if ($groupOnly) {
                 $threadVisibility = 'GroupOnly';
             } else {

@@ -1,24 +1,21 @@
 App\Entity\Group:
     group_hiking:
-        Name: 'Hiking Enthusiasts'
-        Type: 'Public'
-        Picture: ''
-        MoreInfo: '<paragraph(2)>'
-        VisiblePosts: 'yes'
+        name: 'Hiking Enthusiasts'
+        type: 'Public'
+        picture: ''
+        membersOnly: false
         approved: 1
     group_language_exchange:
-        Name: 'Language Exchange'
-        Type: 'Public'
-        Picture: ''
-        MoreInfo: '<paragraph(2)>'
-        VisiblePosts: 'yes'
+        name: 'Language Exchange'
+        type: 'Public'
+        picture: ''
+        membersOnly: false
         approved: 1
     group_vegan_travelers:
-        Name: 'Vegan Travelers'
-        Type: 'NeedAcceptance'
-        Picture: ''
-        MoreInfo: '<paragraph(2)>'
-        VisiblePosts: 'yes'
+        name: 'Vegan Travelers'
+        type: 'NeedAcceptance'
+        picture: ''
+        membersOnly: true
         approved: 1
 
 App\Entity\GroupMembership:
@@ -26,14 +23,12 @@ App\Entity\GroupMembership:
         member: '@member_<current()>'
         group: '@group_hiking'
         status: 'In'
-        comment: 0
+        comment: '<sentence()>'
     membership_language_{1..5}:
         member: '@member_<current()>'
         group: '@group_language_exchange'
         status: 'In'
-        comment: 0
     membership_vegan_{6..10}:
         member: '@member_<current()>'
         group: '@group_vegan_travelers'
         status: '<randomElement(["In", "WantToBeIn"])>'
-        comment: 0

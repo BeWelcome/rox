@@ -187,9 +187,9 @@ class SendCommentReminderCommand extends Command
 	            AND date(r.departure) BETWEEN DATE_SUB(NOW(), INTERVAL ? DAY_SECOND) AND DATE_SUB(NOW(), INTERVAL ? DAY_SECOND)
            /*
            INNER JOIN
-               membersgroups mgt ON m.IdSender = mgt.IdMember AND mgt.IdGroup = 62 AND mgt.`Status` = 'In'
+               group_membership mgt ON m.IdSender = mgt.member_id AND mgt.group_id = 62 AND mgt.status = 'In'
            INNER JOIN
-               membersgroups mgf ON m.IdReceiver = mgf.IdMember AND mgf.IdGroup = 62 AND mgf.`Status` = 'In'
+               group_membership mgf ON m.IdReceiver = mgf.member_id AND mgf.group_id = 62 AND mgf.status = 'In'
             */
             WHERE
                 m.IdParent IS NULL AND NOT m.request_id IS NULL

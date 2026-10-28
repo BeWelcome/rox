@@ -35,7 +35,7 @@ use App\Doctrine\MemberStatusType;
 class GroupMembership extends RoxEntityBase
 {
 
-    protected $_table_name = 'membersgroups';
+    protected $_table_name = 'group_membership';
 
     public function __construct()
     {
@@ -58,7 +58,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        return $this->findByWhere("IdMember = {$member_id} AND IdGroup = {$group_id}");
+        return $this->findByWhere("member_id = {$member_id} AND group_id = {$group_id}");
     }
 
     /**
@@ -90,8 +90,8 @@ class GroupMembership extends RoxEntityBase
         }
 
         $sql = "SELECT COUNT(*) AS count FROM member AS m, " . $this->getTableName()
-            . " AS mg WHERE mg.IdGroup = " . $group_id . " AND mg.Status = 'In' "
-            . " AND mg.IdMember = m.id AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")";
+            . " AS mg WHERE mg.group_id = " . $group_id . " AND mg.status = 'In' "
+            . " AND mg.member_id = m.id AND m.Status IN (" . MemberStatusType::ACTIVE_ALL . ")";
 
         $rr = $this->dao->query($sql);
         $count = 0;
@@ -118,7 +118,7 @@ class GroupMembership extends RoxEntityBase
             return [];
         }
 
-        $where_clause = "IdGroup = '{$group_id}'" . (($status = $this->dao->escape($status)) ? " AND Status = '{$status}'" : '');
+        $where_clause = "group_id = '{$group_id}'" . (($status = $this->dao->escape($status)) ? " AND status = '{$status}'" : '');
         if (isset($where) && strlen($where))
         {
             $where_clause .= " AND {$where}";
@@ -130,7 +130,7 @@ class GroupMembership extends RoxEntityBase
         $members = [];
         foreach ($links as &$link)
         {
-            $members[] = $link->IdMember;
+            $members[] = $link->member_id;
             unset($link);
         }
         unset($links);
@@ -158,7 +158,7 @@ class GroupMembership extends RoxEntityBase
                 IF(m.LastActive >= CURDATE() - INTERVAL 1 week, (CURDATE() - INTERVAL FLOOR(RAND() * 100) MINUTE), m.LastActive) as covertracks
                 FROM member AS m, {$this->getTableName()} AS mg";
         // (the old public profile restriction for visitors joined a table that no longer exists)
-        $sql .= " WHERE m.Status IN ( " . MemberStatusType::ACTIVE_ALL . ") AND m.id IN ('" . implode("','", array_map('intval', $members)) . "') AND mg.IdMember = m.id AND mg.IdGroup = " . (int) $group_id;
+        $sql .= " WHERE m.Status IN ( " . MemberStatusType::ACTIVE_ALL . ") AND m.id IN ('" . implode("','", array_map('intval', $members)) . "') AND mg.member_id = m.id AND mg.group_id = " . (int) $group_id;
         $sql .= " ORDER BY {$orderby}{$limit_clause}{$offset_clause}";
         return $this->createEntity('Member')->findBySQLMany($sql);
     }
@@ -180,7 +180,7 @@ class GroupMembership extends RoxEntityBase
         }
 
         $this->sql_order = 'updated desc';
-        $links = $this->findByWhereMany("IdMember = '{$member_id}'" . ((!empty($status)) ? " AND Status = '" . $this->dao->escape($status) . "'" : ''));
+        $links = $this->findByWhereMany("member_id = '{$member_id}'" . ((!empty($status)) ? " AND status = '" . $this->dao->escape($status) . "'" : ''));
 
         $groups = [];
         $current = 0;
@@ -190,7 +190,7 @@ class GroupMembership extends RoxEntityBase
                 unset($link);
                 continue;
             }
-            $groups[] = $link->IdGroup;
+            $groups[] = $link->group_id;
             $current++;
         }
         unset($links);
@@ -199,7 +199,7 @@ class GroupMembership extends RoxEntityBase
             return [];
         }
 
-        $where = "id IN ('" . implode("','", $groups) . "') AND NOT (Name LIKE '[Archived] %') AND Approved = 1";
+        $where = "id IN ('" . implode("','", $groups) . "') AND NOT (name LIKE '[Archived] %') AND approved = 1";
         $group = $this->createEntity('Group');
         $group->sql_order = '';
         return $group->findByWhereMany($where);
@@ -222,7 +222,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        if ($this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'" . (($only_in) ? " AND Status = 'In'" : '')))
+        if ($this->findByWhere("member_id = '{$member_id}' AND group_id = '{$group_id}'" . (($only_in) ? " AND status = 'In'" : '')))
         {
             return true;
         }
@@ -250,15 +250,14 @@ class GroupMembership extends RoxEntityBase
         // only bother if member is not already ... a member
         if (!$this->isMember($group, $member, false))
         {
-            $this->Status = $this->dao->escape($status);
-            $this->IdGroup = $group_id;
-            $this->IdMember = $member_id;
-            // membersgroups has no defaults for these any more
+            $this->status = $this->dao->escape($status);
+            $this->group_id = $group_id;
+            $this->member_id = $member_id;
             $this->created = $this->updated = date('Y-m-d H:i:s');
-            $this->comment = $this->comment ?: 0;
-            $this->IacceptMassMailFromThisGroup = $this->IacceptMassMailFromThisGroup ?: 'no';
-            $this->CanSendGroupMessage = $this->CanSendGroupMessage ?: 'yes';
-            $this->notificationsEnabled = $this->notificationsEnabled ?: 0;
+            // insert() leaves out properties that are false: NULL and the defaults of the table then
+            $this->comment = $this->comment ?: false;
+            $this->accept_mass_mail = $this->accept_mass_mail ?: 0;
+            $this->notifications_enabled = $this->notifications_enabled ?: 0;
 
             return $this->insert();
         }
@@ -278,7 +277,7 @@ class GroupMembership extends RoxEntityBase
      */
     public function memberLeave(Group $group, Member $member)
     {
-        if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()) || !$this->findByWhere("IdMember = '{$member_id}' AND IdGroup = '{$group_id}'"))
+        if (!is_object($group) ||  !is_object($member) || !($member_id = $member->getPKValue()) || !($group_id = $group->getPKValue()) || !$this->findByWhere("member_id = '{$member_id}' AND group_id = '{$group_id}'"))
         {
             return false;
         }
@@ -303,17 +302,11 @@ class GroupMembership extends RoxEntityBase
 
         if ($comment)
         {
-            $words = $this->getWords();
-            // membersgroups.comment holds the id of a member_translation row
-            $comment_id = ((!$this->comment) ? $words->InsertInMTrad($comment, 'membersgroups.Comment', $this->getPKValue()) : $words->ReplaceInMTrad($comment, 'membersgroups.Comment', $this->getPKValue(), $this->comment));
-
-            if ($comment_id != $this->comment)
-            {
-                $this->comment = $comment_id;
-            }
+            // the member's own text about the membership (group_membership.comment)
+            $this->comment = str_replace(["\r\n", "\r"], "\n", (string) $comment);
         }
-        $this->IacceptMassMailFromThisGroup = $acceptgroupmail;
-        $this->notificationsEnabled = ($acceptgroupmail == 'yes' ? 1 : 0);
+        $this->accept_mass_mail = ($acceptgroupmail == 'yes' ? 1 : 0);
+        $this->notifications_enabled = ($acceptgroupmail == 'yes' ? 1 : 0);
         $this->updated = date('Y-m-d H:i:s');
         return $this->update();
     }
@@ -332,7 +325,7 @@ class GroupMembership extends RoxEntityBase
             return false;
         }
 
-        $this->Status = $this->dao->escape($status);
+        $this->status = $this->dao->escape($status);
         return $this->update();
     }
 

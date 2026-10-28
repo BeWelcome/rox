@@ -158,8 +158,8 @@ class GroupsModel extends  RoxModelBase
             $order = match ($order) {
                 "nameasc" => 'Name ASC',
                 "namedesc" => 'Name DESC',
-                "membersasc" => "(SELECT COUNT(*) FROM membersgroups AS mg, member as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) ASC, Name ASC",
-                "membersdesc" => "(SELECT COUNT(*) FROM membersgroups AS mg, member as m WHERE mg.IdGroup = g.id AND mg.Status = 'In' AND m.id = mg.idmember AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) DESC, Name ASC",
+                "membersasc" => "(SELECT COUNT(*) FROM group_membership AS mg, member as m WHERE mg.group_id = g.id AND mg.status = 'In' AND m.id = mg.member_id AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) ASC, Name ASC",
+                "membersdesc" => "(SELECT COUNT(*) FROM group_membership AS mg, member as m WHERE mg.group_id = g.id AND mg.status = 'In' AND m.id = mg.member_id AND m.status IN (" . MemberStatusType::ACTIVE_ALL . ")) DESC, Name ASC",
                 "actasc" => "(SELECT MAX(forum_post.create_time) FROM forum_thread, forum_post WHERE g.id = forum_thread.IdGroup AND forum_post.id = forum_thread.last_postid) ASC, Name ASC",
                 "actdesc" => "(SELECT MAX(forum_post.create_time) FROM forum_thread, forum_post WHERE g.id = forum_thread.IdGroup AND forum_post.id = forum_thread.last_postid) DESC, Name ASC",
                 "createdasc" => 'created ASC, Name ASC',
@@ -206,7 +206,7 @@ class GroupsModel extends  RoxModelBase
     public function countMyGroups()
     {
         $membership = $this->createEntity('GroupMembership');
-        return $membership->countWhere("(IdMember = {$this->getLoggedInMember()->getPKValue()} OR IdMember = -{$this->getLoggedInMember()->getPKValue()}) AND Status = 'In'");
+        return $membership->countWhere("(member_id = {$this->getLoggedInMember()->getPKValue()} OR member_id = -{$this->getLoggedInMember()->getPKValue()}) AND status = 'In'");
     }
 
     /**
@@ -220,8 +220,8 @@ class GroupsModel extends  RoxModelBase
         $status = '';
         $sql = "
 SELECT status
-FROM membersgroups
-WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
+FROM group_membership
+WHERE group_id=" . (int)$group->id . " AND member_id=" . (int)$memberid;
         $rr = $this->dao->query($sql);
         if ($rr) {
             $row = $rr->fetch(PDB::FETCH_OBJ);
@@ -478,15 +478,15 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         {
             return false;
         }
-        if ($membership = $this->createEntity('GroupMembership')->findByWhere("IdMember = '{$member->getPKValue()}' AND IdGroup = '{$group->getPKValue()}' AND Status = 'Invited'"))
+        if ($membership = $this->createEntity('GroupMembership')->findByWhere("member_id = '{$member->getPKValue()}' AND group_id = '{$group->getPKValue()}' AND status = 'Invited'"))
         {
             return $membership->updateStatus('In');
         }
-        elseif ($group->Type == GroupType::INVITE_ONLY)
+        elseif ($group->type == GroupType::INVITE_ONLY)
         {
             return false;
         }
-        $status = (($group->Type == GroupType::NEED_ACCEPTANCE) ? 'WantToBeIn' : 'In');
+        $status = (($group->type == GroupType::NEED_ACCEPTANCE) ? 'WantToBeIn' : 'In');
         $result = (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);
         if ($result && $status == 'WantToBeIn')
         {
@@ -618,20 +618,20 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
      */
     public function thumbImg($id)
     {
-        if (!($group = $this->createEntity('Group')->findById($id)) || !$group->Picture)
+        if (!($group = $this->createEntity('Group')->findById($id)) || !$group->picture)
         {
             PPHP::PExit();
         }
 
         $dir = new PDataDir('groups');
-        if (!$dir->fileExists('thumb' . $group->Picture) || ($dir->file_Size('thumb' . $group->Picture) == 0))
+        if (!$dir->fileExists('thumb' . $group->picture) || ($dir->file_Size('thumb' . $group->picture) == 0))
         {
             PPHP::PExit();
         }
-        $img = new MOD_images_Image($dir->dirName() . '/thumb' . $group->Picture);
+        $img = new MOD_images_Image($dir->dirName() . '/thumb' . $group->picture);
 
         header('Content-type: '.$img->getMimetype());
-        $dir->readFile('thumb' . $group->Picture);
+        $dir->readFile('thumb' . $group->picture);
         PPHP::PExit();
     }
 
@@ -643,21 +643,21 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
      */
     public function realImg($id)
     {
-        if (!($group = $this->createEntity('Group')->findById($id)) || !$group->Picture)
+        if (!($group = $this->createEntity('Group')->findById($id)) || !$group->picture)
         {
             PPHP::PExit();
         }
 
         $dir = new PDataDir('groups');
 
-        if (!$dir->fileExists($group->Picture) || ($dir->file_Size($group->Picture) == 0))
+        if (!$dir->fileExists($group->picture) || ($dir->file_Size($group->picture) == 0))
         {
             PPHP::PExit();
         }
-        $img = new MOD_images_Image($dir->dirName() . '/' . $group->Picture);
+        $img = new MOD_images_Image($dir->dirName() . '/' . $group->picture);
 
         header('Content-type: '.$img->getMimetype());
-        $dir->readFile($group->Picture);
+        $dir->readFile($group->picture);
         PPHP::PExit();
     }
 
@@ -760,14 +760,14 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         {
             return false;
         }
-        if (($membership = $this->createEntity('GroupMembership')->findByWhere("IdGroup = '" . $group->getPKValue() . "' AND IdMember = '" . $member->getPKValue() . "'")) && $membership->Status == 'WantToBeIn')
+        if (($membership = $this->createEntity('GroupMembership')->findByWhere("group_id = '" . $group->getPKValue() . "' AND member_id = '" . $member->getPKValue() . "'")) && $membership->status == 'WantToBeIn')
         {
             $param['IdMember'] = $member->getPKValue();
             $param['IdRelMember'] = $acceptedby->getPKValue();
             $param['Type'] = 'message';
             $param['Link'] = "/group/{$group->getPKValue()}";
             $param['WordCode'] = '';
-            $param['TranslationParams'] = ['GroupsAcceptedIntoGroup', $group->Name];
+            $param['TranslationParams'] = ['GroupsAcceptedIntoGroup', $group->name];
             $note = $this->createEntity('Note')->createNote($param);
             return $membership->updateStatus('In');
         }
@@ -799,7 +799,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $urlaccept = '<a href="' . $url . '/acceptinvitation/'. $member->getPKValue() .'">' . $url . '/acceptinvitation/' . $member->getPKValue() . '</a>';
             $urldecline = '<a href="' . $url . '/declineinvitation/'. $member->getPKValue() .'">' . $url . '/declineinvitation/' . $member->getPKValue() . '</a>';
             $words = $this->getWords();
-            $msg->Message = $words->getFormattedInLang('GroupInvitation', $member->getLanguagePreference(), $member->Username, $group->Name, $urlaccept, $urldecline);
+            $msg->Message = $words->getFormattedInLang('GroupInvitation', $member->getLanguagePreference(), $member->Username, $group->name, $urlaccept, $urldecline);
             $msg->InFolder = 'Normal';
             $msg->JoinMemberPict = 'no';
             $msg->insert();
@@ -809,7 +809,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
             $param['Type'] = 'message';
             $param['Link'] = "/group/{$group->getPKValue()}";
             $param['WordCode'] = '';
-            $param['TranslationParams'] = ['GroupsInvitedNote', $group->Name];
+            $param['TranslationParams'] = ['GroupsInvitedNote', $group->name];
             $note = $this->createEntity('Note')->createNote($param);
         }
     }
@@ -828,7 +828,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         {
             return false;
         }
-        if ($membership = $this->createEntity('GroupMembership')->findByWhere("IdGroup = '{$group->getPKValue()}' AND IdMember = '{$member->getPKValue()}' AND Status = 'Invited'"))
+        if ($membership = $this->createEntity('GroupMembership')->findByWhere("group_id = '{$group->getPKValue()}' AND member_id = '{$member->getPKValue()}' AND status = 'Invited'"))
         {
             return $membership->updateStatus('In');
         }
@@ -852,7 +852,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
         {
             return false;
         }
-        if ($membership = $this->createEntity('GroupMembership')->findByWhere("IdGroup = '{$group->getPKValue()}' AND IdMember = '{$member->getPKValue()}' AND Status = 'Invited'"))
+        if ($membership = $this->createEntity('GroupMembership')->findByWhere("group_id = '{$group->getPKValue()}' AND member_id = '{$member->getPKValue()}' AND status = 'Invited'"))
         {
             return $membership->delete();
         }
@@ -886,7 +886,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 $msg->SpamInfo = 'NotSpam';
                 $url = '<a href="' . PVars::getObj('env')->baseuri . 'group/' . $group->getPKValue() . '/memberadministration">' . PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue() . '/memberadministration</a>';
                 $words = $this->getWords();
-                $msg->Message = $words->get('GroupJoinRequest', $admin->Username, $member->Username, $group->Name, $url);
+                $msg->Message = $words->get('GroupJoinRequest', $admin->Username, $member->Username, $group->name, $url);
                 $msg->InFolder = 'Normal';
                 $msg->JoinMemberPict = 'no';
                 $msg->insert();
@@ -975,7 +975,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                     `forum_thread`.`id` AS IdThread,
                     `forum_thread`.`title`,
                     `forum_thread`.`IdGroup`,
-                    `groups`.`Name` AS `GroupName`,
+                    `group`.`name` AS `GroupName`,
                     `ThreadVisibility`,
                     `ThreadDeleted`,
                      UNIX_TIMESTAMP(`forum_post`.`create_time`) AS `created`,
@@ -986,7 +986,7 @@ WHERE IdGroup=" . (int)$group->id . " AND IdMember=" . (int)$memberid;
                 LEFT JOIN
                     `forum_thread` ON (`forum_post`.`threadid` = `forum_thread`.`id`)
                 LEFT JOIN
-                    `groups` ON (`groups`.`id` = `forum_thread`.`IdGroup`)
+                    `group` ON (`group`.`id` = `forum_thread`.`IdGroup`)
                 LEFT JOIN
                     `forum_post_translation` ON (`forum_post_translation`.`object_id` = `forum_post`.`id` AND `forum_post_translation`.`field` = 'message' AND `forum_post_translation`.`locale` = '" . $languageId . "')
                 LEFT JOIN

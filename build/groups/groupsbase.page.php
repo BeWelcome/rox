@@ -106,7 +106,7 @@ class GroupsBasePage extends PageWithActiveSkin
     protected function getPageTitle() {
         $words = $this->getWords();
         if (is_object($this->group)) {
-            return  $words->getBuffered('Group') . " " .$this->group->Name . " | BeWelcome";
+            return  $words->getBuffered('Group') . " " .$this->group->name . " | BeWelcome";
         } else return $words->getBuffered('Groups') . ' | BeWelcome';
     }
 
@@ -124,8 +124,8 @@ class GroupsBasePage extends PageWithActiveSkin
         }
         else
         {
-            // use translation ... return $words->get($this->group->Name);
-            return $this->group->Name;
+            // use translation ... return $words->get($this->group->name);
+            return $this->group->name;
         }
     }
 
@@ -165,9 +165,9 @@ class GroupsBasePage extends PageWithActiveSkin
     protected function canMemberAccess()
     {
         $canAccess =
-            ('Public' == $this->group->Type)
+            ('Public' == $this->group->type)
             || $this->isGroupMember()
-            || ('NeedAcceptance' == $this->group->Type && $this->isGroupAdmin());
+            || ('NeedAcceptance' == $this->group->type && $this->isGroupAdmin());
 
         return $canAccess;
     }
@@ -242,7 +242,7 @@ class GroupsBasePage extends PageWithActiveSkin
 SEARCH_FORM;
                 $items[] = ['search', '', $searchForm];
             }
-            if ($isOwner || ($isAdmin && GroupType::INVITE_ONLY !== $this->group->Type))
+            if ($isOwner || ($isAdmin && GroupType::INVITE_ONLY !== $this->group->type))
             {
                 $items[] = ['admin', "group/{$this->group->getPKValue()}/groupsettings", $words->getSilent('GroupGroupsettings')];
             }

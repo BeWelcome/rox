@@ -27,6 +27,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -74,11 +75,9 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     *
      * @return RedirectResponse
      */
-    #[Route(path: '/groups/{groupId:group}/{path}', name: 'groups_redirect_path', requirements: ['groupId' => '\d+', 'path' => '.+'])]
+    #[Route(path: '/groups/{groupId}/{path}', name: 'groups_redirect_path', requirements: ['groupId' => '\d+', 'path' => '.+'])]
     public function groupsRedirectPath(Request $request)
     {
         // We only need the request
@@ -86,24 +85,20 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     *
      * @return RedirectResponse
      */
-    #[Route(path: '/groups/{groupId:group}', name: 'groups_redirect_group', requirements: ['groupId' => '\d+'])]
+    #[Route(path: '/groups/{groupId}', name: 'groups_redirect_group', requirements: ['groupId' => '\d+'])]
     public function groupsRedirect(Request $request)
     {
         return $this->redirectGroup($request);
     }
 
     /**
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    #[Route(path: '/group/{groupId:group}/join', name: 'join_group')]
-    public function join(Request $request, Group $group): Response
+    #[Route(path: '/group/{groupId}/join', name: 'join_group')]
+    public function join(Request $request, #[MapEntity(id: 'groupId')] Group $group): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
@@ -168,16 +163,15 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/acceptjoin/{memberId}', name: 'group_accept_join')]
-    public function approveJoin(Group $group, Member $member)
-    {
+    public function approveJoin(
+        #[MapEntity(id: 'groupId')] Group $group,
+        #[MapEntity(id: 'memberId')] Member $member,
+    ) {
         /** @var Member $admin */
         $admin = $this->getUser();
         if (!$group->isAdmin($admin)) {
@@ -200,16 +194,15 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @throws AccessDeniedException
      *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/declinejoin/{memberId}', name: 'group_decline_join')]
-    public function declineJoin(Group $group, Member $member)
-    {
+    public function declineJoin(
+        #[MapEntity(id: 'groupId')] Group $group,
+        #[MapEntity(id: 'memberId')] Member $member,
+    ) {
         /** @var Member $admin */
         $admin = $this->getUser();
         if (!$group->isAdmin($admin)) {
@@ -232,16 +225,15 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @throws AccessDeniedException
      *
      * @return JsonResponse
      */
     #[Route(path: '/group/{groupId}/invite/{memberId}', name: 'invite_member_to_group')]
-    public function inviteMemberToGroup(Group $group, Member $member)
-    {
+    public function inviteMemberToGroup(
+        #[MapEntity(id: 'groupId')] Group $group,
+        #[MapEntity(id: 'memberId')] Member $member,
+    ) {
         /** @var Member $admin */
         $admin = $this->getUser();
         if (!$group->isAdmin($admin)) {
@@ -256,14 +248,13 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/accept/{memberId}', name: 'accept_invite_to_group')]
-    public function acceptInviteToGroup(Group $group, Member $member)
-    {
+    public function acceptInviteToGroup(
+        #[MapEntity(id: 'groupId')] Group $group,
+        #[MapEntity(id: 'memberId')] Member $member,
+    ) {
         $success = $this->groupModel->acceptInviteToGroup($group, $member);
 
         if ($success) {
@@ -277,14 +268,13 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/decline/{memberId}', name: 'decline_invite_to_group')]
-    public function declineInviteToGroup(Group $group, Member $member)
-    {
+    public function declineInviteToGroup(
+        #[MapEntity(id: 'groupId')] Group $group,
+        #[MapEntity(id: 'memberId')] Member $member,
+    ) {
         $success = $this->groupModel->declineInviteToGroup($group, $member);
 
         if ($success) {
@@ -298,14 +288,14 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @ParamConverter("group", class="App\Entity\Group", options={"id" = "groupId"})
-     * @ParamConverter("member", class="App\Entity\Member", options={"id" = "memberId"})
-     *
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/withdraw/{memberId}', name: 'withdraw_member_invite_to_group')]
-    public function withdrawInviteMemberGroup(Request $request, Group $group, Member $member)
-    {
+    public function withdrawInviteMemberGroup(
+        Request $request,
+        #[MapEntity(id: 'groupId')] Group $group,
+        #[MapEntity(id: 'memberId')] Member $member,
+    ) {
         $success = $this->groupModel->withdrawInviteMemberToGroup($group, $member);
 
         if ($success) {

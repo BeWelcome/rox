@@ -9,7 +9,6 @@ use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Language;
 use App\Entity\Member;
-use App\Entity\MemberTranslation;
 use App\Entity\Notification;
 use App\Entity\Privilege;
 use App\Entity\PrivilegeScope;
@@ -37,25 +36,17 @@ class GroupModel
     public function inviteMemberToGroup(Group $group, Member $member, Member $admin): bool
     {
         $em = $this->entityManager;
-        // We need a comment on the GroupMembership, so let's create one in English
-        $languageRepository = $em->getRepository(Language::class);
-        /** @var Language $language */
-        $language = $languageRepository->findOneBy(['shortCode' => 'en']);
 
         $membership = new GroupMembership();
         $membership->setGroup($group);
         $membership->setMember($member);
-
-        $comment = new MemberTranslation(
-            $member->getPreferredLanguage()->getShortCode(),
-            'GroupMembership',
-            $this->translator->trans('group.got.invited.by', ['admin' => $admin->getUsername()])
-        );
-
-        $em->persist($comment);
-        $em->flush();
-
-        $membership->addComment($comment);
+        // The invitee's comment until they write their own, in their language
+        $membership->setComment($this->translator->trans(
+            'group.got.invited.by',
+            ['admin' => $admin->getUsername()],
+            null,
+            $member->getLocale()
+        ));
         $membership->setStatus(GroupMembershipStatusType::INVITED_INTO_GROUP);
         $em->persist($membership);
         $em->flush();
@@ -150,19 +141,12 @@ class GroupModel
             $reason = $data['reason'] ?? '';
             $notifications = $data['notifications'];
             $em = $this->entityManager;
-            $languageRepository = $em->getRepository(Language::class);
-            /** @var Language $language */
-            $language = $languageRepository->findOneBy(['shortCode' => $locale]);
-
-            $comment = new MemberTranslation($language->getShortCode(), 'GroupMembership', $reason);
-            $em->persist($comment);
-            $em->flush();
 
             $membership = new GroupMembership();
             $membership->setGroup($group);
             $membership->setMember($member);
-            $membership->addComment($comment);
-            $membership->setNotificationsenabled('yes' === $notifications);
+            $membership->setComment('' === $reason ? null : $reason);
+            $membership->setNotificationsEnabled('yes' === $notifications);
             if (GroupType::NEED_ACCEPTANCE === $group->getType()) {
                 $membership->setStatus(GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP);
 
@@ -205,48 +189,35 @@ class GroupModel
     {
         $em = $this->entityManager;
 
-        // \todo: This is convoluted due to having to support the old structure! When recoding groups this should be simpler
-        // We need the current locale for the MemberTranslation entity
         $languageRepository = $em->getRepository(Language::class);
         /** @var Language $language */
         $language = $languageRepository->findOneBy(['shortCode' => $locale]);
-        /** @var Language $english */
-        $english = $languageRepository->findOneBy(['shortCode' => 'en']);
 
         // We create the group entity and add the first member
         $group = new Group();
         $group
             ->setName($data->name)
             ->setType($data->type)
-            ->setVisiblePosts($data->membersOnly)
-            ->setPicture($groupPicture)
+            ->setMembersOnly('No' === $data->visiblePosts)
+            ->setPicture($groupPicture ?? '')
         ;
         $em->persist($group);
         $em->flush();
 
-        // Create the description as a member translation using the current language
-        $description = new MemberTranslation($language->getShortCode(), 'GroupDescription', $data->description);
-        $em->persist($description);
-        $em->flush();
-
-        // Add a comment for the creator of the group in English
-        $groupComment = new MemberTranslation($english->getShortCode(), 'GroupComment', 'Group creator');
-        $em->persist($groupComment);
-        $em->flush();
+        // The description is the group's own text, in the language the member writes in
+        $group->setDescription($language->getShortCode(), $data->description, $member);
 
         $groupMembership = new GroupMembership();
         $groupMembership
             ->setStatus(GroupMembershipStatusType::CURRENT_MEMBER)
-            ->setAcceptMailNotifications('Yes')
-            ->addComment($groupComment)
+            ->setAcceptMassMail(true)
+            ->setComment('Group creator')
             ->setGroup($group)
             ->setMember($member);
 
         $member->addGroupMembership($groupMembership);
         $group->addGroupMembership($groupMembership);
 
-        // Link group and description
-        $group->addDescription($description);
         $em->persist($group);
         $em->flush();
 
@@ -293,8 +264,8 @@ class GroupModel
                         SQL,
                     [Role::GROUP_OWNER, (string) $groupId],
                 );
-                $connection->executeStatement('DELETE FROM membersgroups WHERE IdGroup = ?', [$groupId]);
-                $connection->executeStatement('DELETE FROM `groups` WHERE id = ?', [$groupId]);
+                // group_membership and group_translation go with the group (ON DELETE CASCADE)
+                $connection->executeStatement('DELETE FROM `group` WHERE id = ?', [$groupId]);
             },
         );
     }

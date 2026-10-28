@@ -59,7 +59,7 @@ class GroupSettingsPage extends GroupsSubPage
             return;
         }
 
-        if (!$this->isGroupOwner() && !($this->group->Type !== GroupType::INVITE_ONLY && $this->isGroupAdmin())) {
+        if (!$this->isGroupOwner() && !($this->group->type !== GroupType::INVITE_ONLY && $this->isGroupAdmin())) {
             echo $words->get('GroupsSettingsOnlyAdmin');
             return;
         }
@@ -80,9 +80,9 @@ class GroupSettingsPage extends GroupsSubPage
         else
         {
             $GroupDesc_ = str_replace(['<br>','<br/>', '<br />'], "\n", $this->group->getDescription());
-            $Type = $this->group->Type;
-            $VisiblePosts = (($this->group->VisiblePosts == 'no') ? 'no' : 'yes');
-            $DisplayedOnProfile = (($this->group->DisplayedOnProfile == 'No') ? 'No' : 'Yes');
+            $Type = $this->group->type;
+            $VisiblePosts = ($this->group->members_only ? 'no' : 'yes');
+            $DisplayedOnProfile = 'Yes'; // never stored
             $problems = [];
         }
 ?>
@@ -129,7 +129,7 @@ class GroupSettingsPage extends GroupsSubPage
         <div class="col-12">
             <div class="o-form-group my-3">
                 <label for="description" class="h5 m-0"><?= $words->get('Description');?></label>
-                <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" class="o-input editor p-2"><?=htmlspecialchars((string) $GroupDesc_, ENT_QUOTES)?></textarea>
+                <textarea  id="description" name="GroupDesc_" aria-describedby="newgroupdescription" rows="5" data-editor-type="textarea" class="o-input p-2"><?=htmlspecialchars((string) $GroupDesc_, ENT_QUOTES)?></textarea>
             </div>
         </div>
 

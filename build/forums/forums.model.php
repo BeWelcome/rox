@@ -204,7 +204,7 @@ function FindAppropriatedLanguage($IdPost=0) {
 			$this->PublicPostVisibility = "(PostVisibility != 'ModeratorOnly') AND (PostDeleted !='Deleted')" ;
 			$this->PostGroupsRestriction = " PostVisibility IN ('MembersOnly','NoRestriction') OR (PostVisibility='GroupOnly' AND (IdGroup IS NULL OR IdGroup in (0" ;
 			$this->ThreadGroupsRestriction = " ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' and (IdGroup IS NULL OR IdGroup in (0" ;
-			$qry = $this->dao->query("SELECT IdGroup FROM membersgroups WHERE IdMember = " . $this->session->get("IdMember") . " AND Status = 'In'");
+			$qry = $this->dao->query("SELECT group_id AS IdGroup FROM group_membership WHERE member_id = " . (int) $this->session->get("IdMember") . " AND status = 'In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$this->session->get("IdMember").' !');
 			}
@@ -488,7 +488,7 @@ WHERE
     // This build the board for the $this->IdGroup
     private function boardGroup($showsticky = true) {
 
-        $query = "SELECT `Name` FROM `groups` WHERE `id` = " . (int)$this->IdGroup;
+        $query = "SELECT `name` AS `Name` FROM `group` WHERE `id` = " . (int)$this->IdGroup;
         $gr = $this->dao->query($query);
         if (!$gr) {
             throw new PException('No such IdGroup=#'.$this->IdGroup);
@@ -502,7 +502,7 @@ WHERE
     } // end of boardGroup
 
 	/*
-	@ $Name name of the group (direct from groups.Name
+	@ $Name name of the group (direct from group.name
 	*/
     public function getGroupName($Name) {
 		return($Name) ;
@@ -1008,7 +1008,7 @@ WHERE `id` = '%d' ",
                     $group = $this->createEntity('Group')->findByid($IdGroup);
                     $member = $this->getLoggedInMember();
                     // Can't use $group->isMember() for some reason
-                    $query = " SELECT * FROM membersgroups WHERE IdMember = " . $member->id . " AND IdGroup = " . $IdGroup;
+                    $query = " SELECT * FROM group_membership WHERE member_id = " . (int) $member->id . " AND group_id = " . (int) $IdGroup;
                     $s = $this->dao->query($query);
                     $row = $s->fetch(PDB::FETCH_OBJ);
                     if (!$row) {
@@ -1375,7 +1375,7 @@ WHERE `id` = '$this->threadid'
         if (!($User  = $this->getLoggedInMember())) {
             throw new PException('User gone missing...');
         }
-        // forum_thread.IdGroup references groups.id: "no group" has to be NULL, not 0
+        // forum_thread.IdGroup references group.id: "no group" has to be NULL, not 0
         $IdGroup = null;
         if (!empty($vars['IdGroup'])) {
             $IdGroup = (int) $vars['IdGroup'];
@@ -1497,10 +1497,10 @@ WHERE `id` = '$this->threadid'
                `forum_thread`.`expiredate`,
                `forum_thread`.`stickyvalue`,
                `forum_thread`.`IdGroup`,
-                `groups`.`Name` AS `GroupName`
+                `group`.`name` AS `GroupName`
             FROM
                 `forum_thread`
-            LEFT JOIN `groups` ON (`forum_thread`.`IdGroup` = `groups`.`id`)
+            LEFT JOIN `group` ON (`forum_thread`.`IdGroup` = `group`.`id`)
             WHERE
                 `forum_thread`.`id` = '$this->threadid'
                 AND ($this->PublicThreadVisibility)
@@ -1627,9 +1627,9 @@ AND IdSubscriber = {$memberId}";
                 $member = $this->createEntity('Member', $this->session->get("IdMember"));
                 $membership = $this->createEntity('GroupMembership')->getMembership($group, $member);
                 if ($membership) {
-					$this->topic->isGroupSubscribed = ($membership->IacceptMassMailFromThisGroup == 'yes');
+					$this->topic->isGroupSubscribed = (bool) $membership->accept_mass_mail;
 					if (!isset($row->IdSubscribe)) {
-						$this->topic->notificationsEnabled = ($membership->notificationsEnabled);
+						$this->topic->notificationsEnabled = ($membership->notifications_enabled);
 					}
                 }
 			}
@@ -1711,12 +1711,12 @@ LIMIT %d
 	private function updateGroupNotifications($memberId, $enable) {
 		$query = "
             UPDATE
-                membersgroups
+                group_membership
             SET
-                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
+                notifications_enabled = " . ($enable ? 1 : 0) . "
             WHERE
-                IdMember = " . $memberId . "
-                AND IacceptMassMailFromThisGroup = 'Yes'
+                member_id = " . (int) $memberId . "
+                AND accept_mass_mail = 1
         ";
 		$this->dao->query($query);
 	}
@@ -1724,13 +1724,13 @@ LIMIT %d
 	private function updateGroupNotification($groupId, $memberId, $enable) {
 		$query = "
             UPDATE
-                membersgroups
+                group_membership
             SET
-                notificationsEnabled = '" . ($enable ? 1 : 0) . "'
+                notifications_enabled = " . ($enable ? 1 : 0) . "
             WHERE
-            	IdGroup = " . $groupId . "
-                AND IdMember = " . $memberId . "
-                AND IacceptMassMailFromThisGroup = 'Yes'
+            	group_id = " . (int) $groupId . "
+                AND member_id = " . (int) $memberId . "
+                AND accept_mass_mail = 1
         ";
 		$this->dao->query($query);
 	}
@@ -1835,16 +1835,17 @@ ORDER BY `subscribedtime` DESC
 
         $query = "
             SELECT
-                Name, IdGroup, IdMember, IacceptMassMailFromThisGroup As AcceptMails, notificationsEnabled
+                g.name AS Name, mg.group_id AS IdGroup, mg.member_id AS IdMember,
+                IF(mg.accept_mass_mail, 'yes', 'no') AS AcceptMails, mg.notifications_enabled AS notificationsEnabled
             FROM
-                `membersgroups` mg,
-                `groups` g
+                `group_membership` mg,
+                `group` g
             WHERE
-                g.id = mg.IdGroup
-                AND IdMember = '{$member->id}'
-                AND Status = 'In'
+                g.id = mg.group_id
+                AND mg.member_id = '{$member->id}'
+                AND mg.status = 'In'
             ORDER BY
-                Name";
+                g.name";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Could load group memberships');
@@ -2058,9 +2059,9 @@ AND IdThread=%d
     `PostVisibility`,
     `PostDeleted`,
     `ThreadDeleted`,
-    `forum_thread`.`IdTitle`,`forum_thread`.`IdGroup`,   `IdWriter`,   `member`.`Username` AS `OwnerUsername`, `groups`.`Name` AS `GroupName`
+    `forum_thread`.`IdTitle`,`forum_thread`.`IdGroup`,   `IdWriter`,   `member`.`Username` AS `OwnerUsername`, `group`.`name` AS `GroupName`
 		FROM (forum_post, member, forum_thread)
-LEFT JOIN `groups` ON (`forum_thread`.`IdGroup` = `groups`.`id`)
+LEFT JOIN `group` ON (`forum_thread`.`IdGroup` = `group`.`id`)
 LEFT JOIN `address` ON (address.member_id = member.id AND address.active = 1)
 LEFT JOIN `location` ON (address.location = location.geoname_id)
 LEFT JOIN `location` AS `country_names` ON (location.country = country_names.geoname_id)
@@ -2240,8 +2241,8 @@ ORDER BY `posttime` DESC",    $IdMember   );
 	 public function ModeratorGroupChoice() {
 	 		$tt=[] ;
 
-			$query="select groups.id as IdGroup,Name,count(*) as cnt from groups,membersgroups
-										 WHERE membersgroups.IdGroup=groups.id group by groups.id order by Name ";
+			$query="select g.id as IdGroup,g.name AS Name,count(*) as cnt from `group` g,group_membership mg
+										 WHERE mg.group_id=g.id group by g.id order by g.name ";
       $s = $this->dao->query($query);
       while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$row->Name=$this->getGroupName($row->Name);
@@ -2256,9 +2257,9 @@ ORDER BY `posttime` DESC",    $IdMember   );
 	 public function GroupChoice() {
  		$tt=[] ;
 
-		$query="select groups.id as IdGroup,groups.Name,count(*) as cnt from groups,membersgroups,member
-										 WHERE membersgroups.IdGroup=groups.id and member.id=membersgroups.IdMember and
-										  member.Status in ('Active','ActiveHidden') and member.id=".$this->session->get('IdMember')." and membersgroups.Status='In' group by groups.id order by groups.id ";
+		$query="select g.id as IdGroup,g.name AS Name,count(*) as cnt from `group` g,group_membership mg,member
+										 WHERE mg.group_id=g.id and member.id=mg.member_id and
+										  member.Status in ('Active','ActiveHidden') and member.id=".(int) $this->session->get('IdMember')." and mg.status='In' group by g.id order by g.id ";
      	$s = $this->dao->query($query);
      	while ($row = $s->fetch(PDB::FETCH_OBJ)) {
 				$row->GroupName=$this->getGroupName($row->Name);
@@ -2290,8 +2291,8 @@ public function NotAllowedForGroup($IdMember, $rPost) {
 			}
 
 		if (($rPost->PostVisibility=='GroupOnly') or ($rPost->ThreadVisibility=='GroupOnly')) { // If there is a group restriction, we need to check the membership of the member
-		    $query = "select IdGroup from membersgroups where IdMember=".$IdMember." and IdGroup=".$rPost->IdGroup." and Status='In'";
-			$qry = $this->dao->query("select IdGroup from membersgroups where IdMember=".$IdMember." and IdGroup=".$rPost->IdGroup." and Status='In'");
+		    $query = "select group_id AS IdGroup from group_membership where member_id=".(int) $IdMember." and group_id=".(int) $rPost->IdGroup." and status='In'";
+			$qry = $this->dao->query($query);
 			if (!$qry) {
 				throw new PException('Failed to retrieve groupsmembership for member id =#'.$IdMember.'  !');
 			}
@@ -2487,7 +2488,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
        }
 
        // members_groups_subscribed is gone: group mails are a setting of the membership
-       $query = sprintf("select id as IdSubscribe from membersgroups where IdGroup=%d and IdMember=%d and Status='In' and IacceptMassMailFromThisGroup='yes'",$IdGroup,$IdMember);
+       $query = sprintf("select id as IdSubscribe from group_membership where group_id=%d and member_id=%d and status='In' and accept_mass_mail=1",$IdGroup,$IdMember);
        $s = $this->dao->query($query);
        if (!$s) {
               throw new PException('IsGroupSubscribed Could not check previous subscription !');
@@ -2651,7 +2652,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                     `forum_thread`.`id` AS `IdThread`,
                     `forum_thread`.`title`,
                     `forum_thread`.`IdGroup`,
-                    `groups`.`Name` AS `GroupName`,
+                    `group`.`name` AS `GroupName`,
                     `forum_post`.`PostVisibility`,
                     `forum_thread`.`ThreadVisibility`,
                     `forum_thread`.`ThreadDeleted`,
@@ -2663,7 +2664,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                 LEFT JOIN
                     `forum_thread` ON (`forum_post`.`threadid` = `forum_thread`.`id`)
                 LEFT JOIN
-                    `groups` ON (`groups`.`id` = `forum_thread`.`IdGroup`)
+                    `group` ON (`group`.`id` = `forum_thread`.`IdGroup`)
                 LEFT JOIN
                     `forum_post_translation` ON (`forum_post_translation`.`object_id` = `forum_post`.`id` AND `forum_post_translation`.`field` = 'message' AND `forum_post_translation`.`locale` = '{$languageId}')
                 LEFT JOIN
@@ -2850,7 +2851,7 @@ class Board implements Iterator {
                 $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND (IdGroup IS NULL OR IdGroup IN (0";
                 $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND (IdGroup IS NULL OR IdGroup IN (0";
             }
-            $query = "SELECT IdGroup FROM membersgroups WHERE IdMember=" . $this->session->get("IdMember") . " AND Status = 'In'";
+            $query = "SELECT group_id AS IdGroup FROM group_membership WHERE member_id=" . (int) $this->session->get("IdMember") . " AND status = 'In'";
             $qry = $this->dao->query($query);
             if (!$qry) {
                 throw new PException('Failed to retrieve groups for member id =#' . $this->session->get("IdMember") . ' !');
@@ -2959,7 +2960,7 @@ class Board implements Iterator {
 				  `forum_thread`.`IdGroup`,
 				  `forum_thread`.`replies`,
 		          `forum_thread`.`stickyvalue`,
-		          `groups`.`Name` as `GroupName`,
+		          `group`.`name` as `GroupName`,
                   `ThreadVisibility`,
 	              `ThreadDeleted`,
 				  `forum_thread`.`views`,
@@ -2972,7 +2973,7 @@ class Board implements Iterator {
 				  UNIX_TIMESTAMP(`last`.`create_time`) AS `last_create_time`," ;
 		$query .= "`first_member`.`Username` AS `first_author`,`last_member`.`Username` AS `last_author`" ;
 		$query .= "FROM `forum_thread` LEFT JOIN `forum_post` AS `first` ON (`forum_thread`.`first_postid` = `first`.`id`)" ;
-		$query .= "LEFT JOIN `groups` ON (`groups`.`id` = `forum_thread`.`IdGroup`)" ;
+		$query .= "LEFT JOIN `group` ON (`group`.`id` = `forum_thread`.`IdGroup`)" ;
 		$query .= "LEFT JOIN `forum_post` AS `last` ON last.id =
 		( SELECT    MAX(id)
               FROM      forum_post fp

@@ -29,7 +29,7 @@
                             <td><p><strong><a href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.Name }}</a></strong><br>
                                     <small>Created: {{ group.created|format_date }}</small></p>
                             <td>{% for locale, description in group.descriptions %}
-                                     <small class="text-muted">{{ description.Language.WordCode|lower|trans }} ({{ locale }})</small><br>{{ description.Sentence|purify }}
+                                     <small class="text-muted">{{ language_name(locale) }} ({{ locale }})</small><br>{{ description.content|purify }}
                                 {% endfor %}
                                 </td>
                             <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username, 50) }}{% endif %}</td>

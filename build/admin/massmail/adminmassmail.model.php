@@ -550,14 +550,14 @@ class AdminMassmailModel extends RoxModelBase
             SELECT
                 " . $id . ", m.id, " . $IdEnqueuer . ", 'ToApprove', NOW()
             FROM
-                membersgroups as mg, member AS m
+                group_membership as mg, member AS m
             LEFT JOIN
                 memberspreferences AS mp
                 ON (m.id = mp.IdMember AND mp.IdPreference = " . $pref_id . ")
             WHERE
-                m.id = mg.IdMember
-                AND mg.IdGroup = " . $groupId . "
-                AND mg.Status = 'In'
+                m.id = mg.member_id
+                AND mg.group_id = " . (int) $groupId . "
+                AND mg.status = 'In'
                 AND (mp.Value = 'Yes' OR mp.Value IS NULL)
                 AND (m.Status IN (" . MemberStatusType::ACTIVE_WITH_MESSAGES . "))";
         $r = $this->dao->query($query);

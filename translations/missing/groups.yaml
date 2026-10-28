@@ -25,3 +25,7 @@ flash.group.invite.withdrawn.error:
 flash.group.delete.error:
     - 'The group could not be deleted.'
     - Error message shown when deleting a group fails.
+group.picture.missing:
+    - 'Please select a picture for the group.'
+    - Error message shown under the picture field when a new group is created without a picture.
+    - validators

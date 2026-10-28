@@ -36,7 +36,10 @@
     <div class="p-search-preview__who">
         {# Hosting as a ring around the picture: green when the member hosts, grey when not #}
         <span class="p-search-preview__picture{% if hosting %} p-search-preview__picture--{{ hosting }}{% endif %}">
-            <img class="p-search-preview__avatar" src="{{ path('avatar', { username: member.username, size: 192 }) }}" alt="">
+            {# A click shows the picture large in the photo viewer (preview.js) #}
+            <button type="button" class="p-search-preview__avatar-open js-preview-avatar" data-src="{{ path('avatar', { username: member.username, size: 800 }) }}" aria-label="{{ 'profile.picture.title'|trans|striptags }}">
+                <img class="p-search-preview__avatar" src="{{ path('avatar', { username: member.username, size: 192 }) }}" alt="">
+            </button>
         </span>
         <div class="p-search-preview__names">
             <p class="p-search-preview__title">
@@ -125,7 +128,7 @@
         {% set more = pictures|length - shown|length %}
         {% set images = [] %}
         {% for picture in pictures|slice(0, 40) %}
-            {% set images = images|merge([{ src: url('gallery_image', { id: picture.id }), title: picture.title }]) %}
+            {% set images = images|merge([{ src: url('gallery_thumbnail', { id: picture.id, t: 3 }), title: picture.title }]) %}
         {% endfor %}
         <section class="p-search-preview__section">
             <h3>{{ 'profile.menu.images'|trans|striptags }}</h3>

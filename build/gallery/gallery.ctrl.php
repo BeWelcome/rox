@@ -669,8 +669,15 @@ class GalleryController extends RoxControllerBase {
             $thumbFile = 'thumb'.$d->file;
         }
         if (!$tmpDir->fileExists($thumbFile) || $tmpDir->file_Size($thumbFile) == 0) {
-            if ($img = new MOD_images_Image($tmpDir->dirName().'/'.$d->file)) {
-                if (!$this->_model->createThumbnails($tmpDir,$img) || (isset($_GET['t'])))
+            $type = isset($_GET['t']) ? (int)$_GET['t'] : 0;
+            if (in_array($type, [1, 2, 3], true)) {
+                // The sizes the pages ask for (t=1: 240px, 2: 500px, 3: 1600px for the photo viewers),
+                // made once next to the original. Before, they were named after a hash that uploads
+                // from the new site don't use: they never existed, and the original was sent every time.
+                if (!$this->_model->createSizedImage($tmpDir, $d->file, $type))
+                    $thumbFile = $d->file;
+            } elseif ($img = new MOD_images_Image($tmpDir->dirName().'/'.$d->file)) {
+                if (!$this->_model->createThumbnails($tmpDir,$img))
                     $thumbFile = $d->file;
             }
         }

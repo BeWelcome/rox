@@ -100,7 +100,7 @@
           </div>
           <div class="p-pro-gallery p-pro-gallery--wide">
             {% for picture in pictures|slice(0, 4) %}
-              <a href="{{ url('gallery_image', {id: picture.id}) }}"
+              <a href="{{ url('gallery_thumbnail', {id: picture.id, t: 3}) }}"
                  class="p-pro-gallery__item"
                  style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
                  data-toggle="lightbox"

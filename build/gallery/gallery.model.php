@@ -149,6 +149,7 @@ VALUES
         $userDir->delFile('thumb'.$filename);
         $userDir->delFile('thumb1'.$filename);
         $userDir->delFile('thumb2'.$filename);
+        $userDir->delFile('thumb3'.$filename);
 
         $this->dao->exec('
 DELETE FROM `gallery_items_to_gallery`
@@ -645,6 +646,32 @@ VALUES
             }
         }
         return $noError;
+    }
+
+    /**
+     * One size of a picture (t=1: 240px, 2: 500px, 3: 1600px), named thumb<t><file> next to the
+     * original: turned upright, never enlarged. False when the original is smaller than that size
+     * (the original is then the one to send) or when it can't be read.
+     */
+    public function createSizedImage($dataDir, $file, $type)
+    {
+        $bounds = [1 => 240, 2 => 500, 3 => 1600];
+        $original = $dataDir->dirName() . '/' . $file;
+        $info = @getimagesize($original);
+        if (!isset($bounds[$type]) || !$info || ($info[0] <= $bounds[$type] && $info[1] <= $bounds[$type])) {
+            return false;
+        }
+        try {
+            $manager = new \Intervention\Image\ImageManager(new \Intervention\Image\Drivers\Gd\Driver());
+            $image = $manager->read($original)->orient();
+            $image->scaleDown($bounds[$type], $bounds[$type]);
+            $encoded = in_array($info['mime'], ['image/jpeg', 'image/webp'], true)
+                ? $image->encodeByMediaType($info['mime'], quality: 85)
+                : $image->encodeByMediaType($info['mime']);
+            return false !== file_put_contents($dataDir->dirName() . '/thumb' . $type . $file, (string) $encoded);
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     public function createThumbnails ($dataDir, $img)

@@ -50,12 +50,12 @@
 
       {# ── Photo with the hosting badge ── #}
       <div class="p-pro__avatar">
-        {% if use_lightbox is defined %}
+        {# A click shows the picture big in the photo viewer (lightbox), at 800px: lighter than the original #}
+        {% if use_lightbox ?? true %}
           <a class="p-pro__avatar-link js-profile-picture"
-             href="{{ url('avatar', {username: member.Username, size: 'original'}) }}"
+             href="{{ url('avatar', {username: member.Username, size: 800}) }}"
              data-toggle="lightbox"
              data-type="image"
-             data-size="fullscreen"
              data-caption="{{ 'profile.picture.title'|trans|e('html_attr') }}">
             <img class="p-pro__avatar-img js-profile-picture"
                  src="{{ url('avatar', {username: member.Username, size: 320}) }}"

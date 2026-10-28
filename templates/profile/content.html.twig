@@ -402,7 +402,7 @@
                 <span class="p-gallery-cell__more-label">+{{ pictures|length - 4 }}</span>
               </a>
             {% else %}
-              <a href="{{ url('gallery_image', {id: picture.id}) }}"
+              <a href="{{ url('gallery_thumbnail', {id: picture.id, t: 3}) }}"
                  class="p-gallery-cell"
                  style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
                  data-toggle="lightbox"

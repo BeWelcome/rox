@@ -9537,6 +9537,20 @@ a.p-pro-filter__item:hover { background: #fff; }
 .p-pro-friend__img { width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; background: #f1f5f9; }
 .p-pro-friend__name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .p-pro__bottom-bar { display: none; }
+/* Already talking with this member: the latest conversation next to "Send" (profile/_contact_status) */
+.p-pro-contact-status { display: inline-flex; flex-basis: 100%; align-items: center; justify-content: flex-end; gap: 0.45rem; order: 10; min-width: 0; color: #64748b; font-size: 0.8125rem; font-weight: 600; text-decoration: none; }
+.p-pro-contact-status:hover { color: #0f172a; text-decoration: none; }
+.p-pro-contact-status i, .p-pro-contact-status svg { flex-shrink: 0; color: #94a3b8; }
+.p-pro-contact-status__text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.p-pro-contact-status__state { flex-shrink: 0; padding: 0.1rem 0.55rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.75rem; font-weight: 700; }
+.p-pro-contact-status--success .p-pro-contact-status__state { background: #e9f6ec; color: #2e7d32; }
+.p-pro-contact-status--danger .p-pro-contact-status__state { background: #fdecec; color: #b42318; }
+.p-pro-contact-status--maybe .p-pro-contact-status__state { background: #fef9c3; color: #a16207; }
+.p-pro-contact-status__dot { flex-shrink: 0; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #f37000; }
+.p-pro-contact-status.is-unread .p-pro-contact-status__text { color: #0f172a; }
+.p-pro-contact-status .p-pro-contact-status__arrow { font-size: 0.65rem; }
+.p-pro-contact-status--bar { display: none; }
+.p-pro-contact-status--preview { display: flex; justify-content: flex-start; margin-top: 0.7rem; }
 
 /* Where I live: grey map with the approximate area */
 .p-pro-where__map { height: 165px; overflow: hidden; border-radius: 0.8rem; background: #f1f5f9; }
@@ -9645,6 +9659,11 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro__bottom-bar .p-pro__btn { flex: 1; min-height: 2.9rem; font-size: 0.9375rem; }
   .p-pro__bottom-bar .p-pro__btn--request { flex-grow: 1.3; }
   body:has(.p-pro__bottom-bar) { padding-bottom: calc(4.5rem + env(safe-area-inset-bottom)); }
+  /* Phones: the line sits on top of the bottom bar, above the two buttons */
+  .p-pro__bottom-bar:has(.p-pro-contact-status) { flex-wrap: wrap; row-gap: 0.5rem; padding-top: 0.55rem; }
+  .p-pro__bottom-bar .p-pro-contact-status--bar { display: flex; order: -1; justify-content: center; }
+  .p-pro__actions .p-pro-contact-status--head { display: none; }
+  body:has(.p-pro__bottom-bar .p-pro-contact-status) { padding-bottom: calc(6.3rem + env(safe-area-inset-bottom)); }
   /* No site footer under a profile on phones */
   body:has(.p-pro) footer:has(#footer_content) { display: none; }
 }

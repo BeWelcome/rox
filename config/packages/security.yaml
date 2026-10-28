@@ -49,6 +49,7 @@ security:
     access_control:
         - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/login, roles:  PUBLIC_ACCESS }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
         - { path: ^/about, roles:  PUBLIC_ACCESS }
         - { path: ^/donate, roles:  PUBLIC_ACCESS }
         - { path: ^/donation, roles:  PUBLIC_ACCESS }

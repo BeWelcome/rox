@@ -14,7 +14,6 @@ class PageWithHTML extends AbstractBasePage
     private $_late_scriptfiles = array(
         'build/offcanvas.js',
         'build/updatecounters.js',
-        '/script/common/initialize.js?1',
     );
 
     private $_stylesheets = array(

@@ -65,4 +65,9 @@ export function destroyTomSelects(cssClass = "js-tom-select") {
     })
 }
 
-initializeTomSelects();
+// Legacy pages load this bundle in the head, before the page is parsed; the Twig layouts load it deferred
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => initializeTomSelects());
+} else {
+    initializeTomSelects();
+}

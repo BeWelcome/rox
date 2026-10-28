@@ -177,7 +177,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
         <?php $ArrayLanguage = $this->_model->LanguageChoices($Title->IdLanguage); ?>
         <div class="o-form-group form-row">
             <label class="col-3 col-form-label" for="IdLanguage">Language</label>
-            <select class="col-9 o-input select2" id="IdLanguage" name="IdLanguage">
+            <select class="col-9 o-input js-tom-select" id="IdLanguage" name="IdLanguage">
                 <?php foreach ($ArrayLanguage as $Choices) {
                     if (is_object($Choices)) {
                         echo "<option value=\"", $Choices->IdLanguage, "\"";
@@ -209,7 +209,7 @@ foreach ($DataPost->Thread->Title as $Title) { ?>
     ?>
     <div class="o-form-group form-row">
         <label class="col-3 col-form-label" for="IdLanguage">Language</label>
-        <select class="o-input col-9 select2" id="IdLanguage" name="IdLanguage">
+        <select class="o-input col-9 js-tom-select" id="IdLanguage" name="IdLanguage">
             <?php
             foreach ($ArrayLanguage as $Choices) {
                 if (is_object($Choices)) {
@@ -310,7 +310,7 @@ foreach ($DataPost->Post->Content as $Content) { ?>
         <?php $ArrayLanguage = $this->_model->LanguageChoices($Content->IdLanguage); ?>
         <div class="o-form-group form-row">
             <label class="col-3 col-form-label" for="IdLanguage">Language</label>
-            <select class="col-9 o-input select2" name="IdLanguage" id="IdLanguage">
+            <select class="col-9 o-input js-tom-select" name="IdLanguage" id="IdLanguage">
                 <?php foreach ($ArrayLanguage as $Choices) {
                     if (is_object($Choices)) {
                         echo "<option value=\"", $Choices->IdLanguage, "\"";
@@ -342,7 +342,7 @@ foreach ($DataPost->Post->Content as $Content) { ?>
     <?php $ArrayLanguage = $this->_model->LanguageChoices(); ?>
     <div class="o-form-group form-row">
         <label class="col-3 col-form-label" id="IdLanguage">Language</label>
-        <select class="col-9 o-input select2" id="IdLanguage" name="IdLanguage">
+        <select class="col-9 o-input js-tom-select" id="IdLanguage" name="IdLanguage">
             <?php foreach ($ArrayLanguage as $Choices) {
                 if (is_object($Choices)) {
                     echo "<option value=\"", $Choices->IdLanguage, "\"";

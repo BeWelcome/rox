@@ -134,7 +134,7 @@ if (isset($TCom->comQuality) && $TCom->comQuality == "Bad" && $TCom->AllowEdit !
                 <i class="fa fa-question"></i>
             </a>
 
-            <select class="o-input select2 mb-2 mr-sm-2 mb-sm-0" name="Quality" id="Quality">
+            <select class="o-input js-tom-select mb-2 mr-sm-2 mb-sm-0" name="Quality" id="Quality">
                 <option value=""><?=$words->getSilent("CommentQuality_SelectOne")?></option>
                 <option value="Good"
                     <?=(isset($TCom->comQuality) && $TCom->comQuality == "Good") ? " selected " : ""?>

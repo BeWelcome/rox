@@ -44,7 +44,7 @@
                         <div class="form-row">
                             <label for="PreferenceLanguage" class="col-md-3"><?=$words->get('PreferenceLanguageDesc')?></label>
                             <div class="col-12 col-md-9">
-                                <select name="PreferenceLanguage" class="select2">
+                                <select name="PreferenceLanguage" class="js-tom-select">
                                     <?php foreach ($languages as $lang) { ?>
                                         <option value="<?=$lang->id ?>" <?=($lang->id == $p['PreferenceLanguage']->Value) ? 'selected' : ''?> ><?=$lang->TranslatedName . " (" . $lang->Name . ")"?></option>
                                     <?php } ?>
@@ -80,7 +80,7 @@
 
                             <?php $PossibleValueArray = explode((strpos((string) $rr->PossibleValues,',') ? ',' : ';'),(string) $rr->PossibleValues); ?>
                             <?php if ($rr->codeName == 'PreferenceLocalTime') { ?>
-                                <div class="col-12 col-md-7 order-3 order-md-2"><select name="PreferenceLocalTime" class="prefsel select2">
+                                <div class="col-12 col-md-7 order-3 order-md-2"><select name="PreferenceLocalTime" class="prefsel js-tom-select">
                                     <?php
                                     foreach($timezones as $timezone) {
                                         $option = '<option value="' . $timezone['timeshift'] . '"';

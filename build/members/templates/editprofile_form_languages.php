@@ -35,7 +35,7 @@
 
                     </div>
                     <div class="col-10 offset-2 col-md-7 offset-md-0">
-                        <select id="mll_<?= $ii ?>" class="mll select2 o-input" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
+                        <select id="mll_<?= $ii ?>" class="mll js-tom-select o-input" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
                                 data-minimum-results-for-search="-1"
                                 name="memberslanguageslevel[]">
                             <?php
@@ -91,7 +91,7 @@
                     </select>
                 </div>
                 <div class="col-10 offset-2 col-md-7 offset-md-0">
-                    <select class="mll select2 o-input" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
+                    <select class="mll js-tom-select o-input" data-minimum-results-for-search="-1" name="memberslanguageslevel[]">
                             name="memberslanguageslevel[]">
                         <?php
                         for ($jj = 0; $jj < count($vars['language_levels']); $jj++) {

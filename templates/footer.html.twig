@@ -75,7 +75,7 @@
                                 <div class="footer-help-translate footer-help-translate--embed mt-3" role="group">
                                     <label for="footer_embed_select" class="footer-help-translate__text mb-0">{{ 'translation.mode' | trans }}</label>
                                     <select id="footer_embed_select" name="translation_mode"
-                                            class="select2 footer-help-translate__control"
+                                            class="footer-help-translate__control"
                                             data-minimum-results-for-search="-1"
                                             onchange="window.location.href=this.value; return false">
                                         <option {% if app.session.get('translation_mode') == 'on' %}selected="selected"{% endif %}
@@ -121,7 +121,7 @@
                                     </label>
                                 </div>
                                 <div class="col-12 col-md-auto footer-bottom-band__lang-select-wrap">
-                                    <select id="language" name="language" class="form-control-sm select2 footer-site-language"
+                                    <select id="language" name="language" class="form-control-sm footer-site-language"
                                             onchange="window.location.href=this.value; return false">
                                         {% for lang in locales %}
                                             <option {% if lang == app.request.locale %}selected="selected"{% endif %}

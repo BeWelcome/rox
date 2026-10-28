@@ -4,7 +4,8 @@ import 'tom-select/dist/css/tom-select.bootstrap5.min.css';
 
 let tomSelects = [];
 
-export function initializeTomSelects(cssClass = ".js-tom-select") {
+// select.select2: the selects of legacy pages (forums moderation, mass mail), which used select2 before
+export function initializeTomSelects(cssClass = ".js-tom-select, select.select2") {
     document
         .querySelectorAll(cssClass)
         .forEach((element) => {
@@ -65,4 +66,9 @@ export function destroyTomSelects(cssClass = "js-tom-select") {
     })
 }
 
-initializeTomSelects();
+// Legacy pages load this bundle in the head, before the page is parsed; the Twig layouts load it deferred
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => initializeTomSelects());
+} else {
+    initializeTomSelects();
+}

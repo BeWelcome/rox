@@ -70,7 +70,7 @@ $words = new MOD_words();
         <ul class="nav nav-tabs" id="enqueueTabs" role="tablist">
             <?php if ($this->canEnqueueMembers) { ?>
             <li class="nav-item">
-                <a class="nav-link active" id="members-tab" data-toggle="tab" href="#members" aria-controls="members"
+                <a class="nav-link active" id="members-tab" data-bs-toggle="tab" href="#members" aria-controls="members"
                    aria-selected="true">
                     <?php echo $words->getBuffered('AdminMassMailEnqueueMembers'); ?>
                 </a>
@@ -78,7 +78,7 @@ $words = new MOD_words();
             <?php } ?>
             <?php if ($this->canEnqueueLocation) { ?>
             <li class="nav-item">
-                <a class="nav-link" id="location-tab" data-toggle="tab" href="#location" role="tab"
+                <a class="nav-link" id="location-tab" data-bs-toggle="tab" href="#location" role="tab"
                    aria-controls="location" aria-selected="true">
                     <?php echo $words->getBuffered('AdminMassMailEnqueueLocation'); ?>
                 </a>
@@ -86,7 +86,7 @@ $words = new MOD_words();
             <?php } ?>
             <?php if ($this->canEnqueueGroup) { ?>
                 <li class="nav-item">
-                    <a class="nav-link" id="group-tab" data-toggle="tab" href="#group" role="tab"
+                    <a class="nav-link" id="group-tab" data-bs-toggle="tab" href="#group" role="tab"
                        aria-controls="group" aria-selected="true">
                         <?php echo $words->getBuffered('AdminMassMailEnqueueGroup'); ?>
                     </a>
@@ -94,7 +94,7 @@ $words = new MOD_words();
             <?php } ?>
             <?php if ($this->type == 'RemindToLog' && $this->canEnqueueReminder) { ?>
                 <li class="nav-item">
-                    <a class="nav-link" id="reminder-tab" data-toggle="tab" href="#reminder" role="tab"
+                    <a class="nav-link" id="reminder-tab" data-bs-toggle="tab" href="#reminder" role="tab"
                        aria-controls="reminder" aria-selected="true">
                         <?php echo $words->getBuffered('AdminMassMailEnqueueMailToConfirmReminder'); ?>
                     </a>
@@ -102,7 +102,7 @@ $words = new MOD_words();
             <?php } ?>
             <?php if ($this->type == 'CorrectBirthDate' && $this->canEnqueueCorrectBirthDate) { ?>
                 <li class="nav-item">
-                    <a class="nav-link" id="reminder-tab" data-toggle="tab" href="#correctbday" role="tab"
+                    <a class="nav-link" id="reminder-tab" data-bs-toggle="tab" href="#correctbday" role="tab"
                        aria-controls="correctbday" aria-selected="true">
                         <?php echo $words->getBuffered('massmail.correct.birth.date'); ?>
                     </a>
@@ -110,7 +110,7 @@ $words = new MOD_words();
             <?php } ?>
             <?php if ($this->type == 'TermsOfUse' && $this->canEnqueueTermsOfUse) { ?>
                 <li class="nav-item">
-                    <a class="nav-link" id="termsofuse-tab" data-toggle="tab" href="#termsofuse" role="tab"
+                    <a class="nav-link" id="termsofuse-tab" data-bs-toggle="tab" href="#termsofuse" role="tab"
                        aria-controls="termsofuse" aria-selected="true">
                         <?php echo $words->getBuffered('AdminMassMailEnqueueTermsOfUse'); ?>
                     </a>
@@ -118,7 +118,7 @@ $words = new MOD_words();
             <?php } ?>
             <?php if ($this->type == 'SuspendAfter5Reminders' && $this->canEnqueueSuspensionNotification) { ?>
                 <li class="nav-item">
-                    <a class="nav-link" id="suspension-tab" data-toggle="tab" href="#suspension" role="tab"
+                    <a class="nav-link" id="suspension-tab" data-bs-toggle="tab" href="#suspension" role="tab"
                        aria-controls="suspension" aria-selected="true">
                         <?php echo $words->getBuffered('admin.massmail.enqueue.suspension.notification'); ?>
                     </a>
@@ -186,13 +186,13 @@ $words = new MOD_words();
                 </div>
                 <div class="o-form-group">
                     <label class="o-input-label"AdminUnits">Choose an administrative unit</label>
-                    <select id="AdminUnits" name="AdminUnits" class="o-input select2" disabled="disabled">
+                    <select id="AdminUnits" name="AdminUnits" class="o-input" disabled="disabled">
                         <option value="0">All administrative units</option>
                     </select>
                 </div>
                 <div class="o-form-group">
                     <label class="o-input-label" for="Places">Choose a place:</label>
-                    <select id="Places" name="Places" class="o-input select2" disabled="disabled">
+                    <select id="Places" name="Places" class="o-input" disabled="disabled">
                         <option value="0">All places</option>
                     </select>
                 </div>
@@ -302,18 +302,12 @@ $words = new MOD_words();
                 } else {
                     // and rebuild the admin units select with the admin units for the selected country
                     $.getJSON('admin/massmail/getadminunits/' + value, function (data) {
-                        adminUnits.select2('destroy');
-                        adminUnits.removeAttr('data-select2-id');
                         var html = '';
                         var len = data.length;
                         for (var i = 0; i < len; i++) {
                             html += '<option value="' + data[i].admin1 + '">' + data[i].name + '</option>';
                         }
                         adminUnits.append(html);
-                        adminUnits.select2({
-                            theme: 'bootstrap4',
-                            containerCssClass: 'o-input'
-                        });
                     });
                     adminUnits.removeAttr('disabled');
                 }
@@ -326,18 +320,12 @@ $words = new MOD_words();
                     places.attr('disabled', 'disabled');
                 } else {
                     $.getJSON('admin/massmail/getplaces/' + $('#CountryIsoCode').val() + '/' + value, function (data) {
-                        places.select2('destroy');
-                        places.removeAttr('data-select2-id');
                         var html = '';
                         var len = data.length;
                         for (var i = 0; i < len; i++) {
                             html += '<option value="' + data[i].geonameId + '">' + data[i].name + '</option>';
                         }
                         places.append(html);
-                        places.select2({
-                            theme: 'bootstrap4',
-                            containerCssClass: 'o-input'
-                        });
                     });
                     places.removeAttr('disabled');
                 }

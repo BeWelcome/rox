@@ -431,8 +431,8 @@ class Mailer
         );
 
         return [
-            'Precedence'            => 'bulk',
-            'List-Unsubscribe'      => '<' . $unsubscribeUrl . '>',
+            'Precedence' => 'bulk',
+            'List-Unsubscribe' => '<' . $unsubscribeUrl . '>',
             'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click',
         ];
     }

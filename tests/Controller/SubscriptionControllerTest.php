@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 use App\Controller\SubscriptionController;
 use App\Model\SubscriptionModel;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormInterface;
@@ -11,6 +12,8 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+// The controller is a partial mock: createForm() and render() are replaced, not expected
+#[AllowMockObjectsWithoutExpectations]
 class SubscriptionControllerTest extends TestCase
 {
     private const KEY = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
@@ -21,7 +24,7 @@ class SubscriptionControllerTest extends TestCase
     /** @var SubscriptionModel&MockObject */
     private $subscriptionModel;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         $form = $this->createStub(FormInterface::class);
         $form->method('handleRequest')->willReturnSelf();
@@ -38,7 +41,7 @@ class SubscriptionControllerTest extends TestCase
         $this->subscriptionModel = $this->createMock(SubscriptionModel::class);
     }
 
-    public function testOneClickPostUnsubscribes()
+    public function testOneClickPostUnsubscribes(): void
     {
         // what Gmail, Yahoo and Apple Mail send (RFC 8058)
         $request = $this->request('POST', ['List-Unsubscribe' => 'One-Click']);
@@ -54,7 +57,7 @@ class SubscriptionControllerTest extends TestCase
         $this->assertSame('', $response->getContent());
     }
 
-    public function testLinkInTheMailShowsTheConfirmationPage()
+    public function testLinkInTheMailShowsTheConfirmationPage(): void
     {
         $request = $this->request('GET', ['List-Unsubscribe' => 'One-Click']);
 
@@ -65,7 +68,7 @@ class SubscriptionControllerTest extends TestCase
         $this->assertSame('confirmation page', $response->getContent());
     }
 
-    public function testPostWithoutOneClickShowsTheConfirmationPage()
+    public function testPostWithoutOneClickShowsTheConfirmationPage(): void
     {
         $request = $this->request('POST', ['List-Unsubscribe' => 'List-Unsubscribe=One-Click']);
 

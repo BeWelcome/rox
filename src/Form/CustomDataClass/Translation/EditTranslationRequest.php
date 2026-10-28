@@ -27,7 +27,7 @@ class EditTranslationRequest extends TranslationRequest
         $editTranslationRequest->description = $original->getDescription();
         $editTranslationRequest->locale = $translation->getLanguage()->getShortCode();
         $editTranslationRequest->isMajorUpdate = ($original->getMajorUpdate() > $translation->getUpdated());
-        // NULL in the database means not archived (translations:add:missing leaves it unset)
+        // NULL in the database means not archived (translations:add:missing left it unset until 2026-10)
         $editTranslationRequest->isArchived = true === $original->getIsArchived();
         $editTranslationRequest->translationAllowed = (TranslationAllowedType::TRANSLATION_ALLOWED === $original->getTranslationAllowed());
         $editTranslationRequest->translatedText = $translation->getSentence();

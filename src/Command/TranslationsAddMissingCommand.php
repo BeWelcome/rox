@@ -104,6 +104,7 @@ class TranslationsAddMissingCommand extends Command
                         $translation->setDomain($domain);
                         $translation->setLanguage($english);
                         $translation->setTranslationAllowed($allowTranslation);
+                        $translation->setIsArchived(false);
                         $translation->setAuthor($admin);
 
                         $this->entityManager->persist($translation);

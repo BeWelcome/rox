@@ -20,12 +20,18 @@
                         <span class="h4">{{ member.name }}</span>
                     </h2>
 
-                    <h5>
-                        <strong><a href="{{ url('places_city', {'countryname': member.country.name, 'countrycode': member.country.geonameId, 'regionname': member.region.name, 'regioncode': member.region.geonameId,
-                                'cityname': member.city.name, 'citycode': member.city.geonameId }) }}">{{ member.city.name }}</a></strong>,
-                        <a href="{{ url('places_region', {'countryname': member.country.name, 'countrycode': member.country.geonameId, 'regionname': member.region.name, 'regioncode': member.region.geonameId }) }}">{{ member.region.name }}</a>,
-                        <a href="{{ url('places_country', {'countryname': member.country.name, 'countrycode': member.country.countryId }) }}">{{ member.country.name }}</a>
-                    </h5><!-- city -->
+                    {# the place of the active address, linked as on the profile (profile/header.html.twig) #}
+                    {% set address = member.activeAddress %}
+                    {% if address %}
+                        {% set location = address.location %}
+                        {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
+                        {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
+                        <h5>
+                            <strong><a href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a></strong>,
+                            {% if location.admin1 is not null %}<a href="{{ url('places_region', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode}) }}">{{ regionName }}</a>,{% endif %}
+                            <a href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
+                        </h5><!-- city -->
+                    {% endif %}
 
                     <div class="o-form-group form-inline small">{{ member.status|trans }}</div>
 
@@ -142,15 +148,14 @@
                                                 <div>{{ fields[locale]['PleaseBring']|purify }}</div>
                                             {% endif %}
 
-                                            {% set offers = member.TypicalOffer|split(',') %}
+                                            {# a list (dinner, guidedtour); the keys as on the profile #}
+                                            {% set offers = member.standardOffers %}
                                             {% if offers|length %}
                                                 <div class="h5 mb-0">{{ 'profileofferguests'|trans({}, "messages", locale) }}:</div>
 
                                                 {% for offer in offers %}
-                                                    {% if offer != 'CanHostWeelChair' %}
-                                                        {{ ('profiletypicoffer_' ~ offer)|trans({}, "messages", locale) }}
-                                                        {% if not loop.last %}<br>{% endif %}
-                                                    {% endif %}
+                                                    {{ ('ProfileTypicOffer_' ~ offer)|lower|trans({}, "messages", locale) }}
+                                                    {% if not loop.last %}<br>{% endif %}
                                                 {% endfor %}
                                             {% endif %}
 
@@ -166,10 +171,10 @@
                                             <div class="h5 mb-0">{{ 'profilepublictransport'| trans({}, "messages", locale) }}:</div>
                                             <div>{{ fields[locale]['PublicTransport'] }}</div>
 
-                                            <div class="h5 mb-0">{{ 'profilehouserules' }}:</div>
-                                            {% set restrictions = member.restrictions|split(',') %}
-                                            {% for restriction in restrictions %}
-                                                {{ ('restrictions_' ~ restriction)|lower|trans({}, "messages", locale) }}
+                                            <div class="h5 mb-0">{{ 'profilehouserules'|trans({}, "messages", locale) }}:</div>
+                                            {# a list already; the keys as on the profile (restriction_no.smoking, ...) #}
+                                            {% for restriction in member.restrictions %}
+                                                {{ ('restriction_' ~ restriction)|lower|trans({}, "messages", locale) }}
                                                 {% if not loop.last %}<br>{% endif %}
                                             {% endfor %}
                                         </div>

@@ -36,7 +36,7 @@ class SignupFormFinalizeType extends AbstractType
                 'attr' => [
                     'placeholder' => 'placeholder.registration.key.optional',
                 ],
-                'help' => 'help.registration.key.optional',
+                'help' => 'help.registration.key-optional',
                 'required' => false,
             ]);
         } else {

@@ -1,6 +1,7 @@
 {#
   Members travelling near the member, on the home page (loaded into the Visitors tab).
 #}
+{% block content %}{# the translators' preview renders this block #}
 <div id="legsdisplay" class="c-home-list">
     {% for leg in legs %}
         {% include 'trip/landing.html.twig' with { leg: leg } %}
@@ -8,3 +9,4 @@
         <p class="c-home-list__empty">{{ 'landing.bevisited.none'|trans }}</p>
     {% endfor %}
 </div>
+{% endblock content %}

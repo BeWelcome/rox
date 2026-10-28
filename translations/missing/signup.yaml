@@ -46,3 +46,6 @@ signup.finalize.home:
 signup.finalize.map.search:
     - 'Search for your town to place the pin'
     - Finish the account page, on the map before a town is picked
+signup.confirm.key:
+    - 'If the link does not work, enter this registration key on the confirmation page:'
+    - Sign-up mail, above the registration key, for members whose mail program does not open the link.

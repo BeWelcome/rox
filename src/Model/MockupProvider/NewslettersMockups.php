@@ -36,16 +36,21 @@ class NewslettersMockups implements MockupProviderInterface
     public function getMockupVariables(array $parameters): array
     {
         $newsletterRepository = $this->entityManager->getRepository(Newsletter::class);
-        $newsletters = $newsletterRepository->findBy(['type' => $parameters['type']], ['created' => 'DESC']);
-
-        if (0 === \count($newsletters)) {
-            throw new Exception('Sorry, no newsletter of type ' . $parameters['type'] . ' found, please create one.');
+        $newsletter = $newsletterRepository->findOneBy(['type' => $parameters['type']], ['created' => 'DESC']);
+        if (null === $newsletter) {
+            // none of this type yet: the newest of any type shows how one would look (a copy, never saved)
+            $newest = $newsletterRepository->findOneBy([], ['created' => 'DESC']);
+            if (null === $newest) {
+                throw new Exception('Sorry, there is no newsletter yet, please create one.');
+            }
+            $newsletter = clone $newest;
+            $newsletter->setType($parameters['type']);
         }
 
         return [
-            'wordcode' => strtolower('broadcast_body_' . $newsletters[0]->getName()),
+            'wordcode' => strtolower('broadcast_body_' . $newsletter->getName()),
             'unsubscribe_key' => '91aeecc7154b8fc9b2855a331e975bc8aafb088b6617d9aefe543e5fee427ae7',
-            'newsletter' => $newsletters[0],
+            'newsletter' => $newsletter,
             'receiver' => $parameters['user'],
         ];
     }

@@ -80,35 +80,8 @@
 
     $this->addRoute('members_edit_flags', 'members/:username:/flags', 'MembersController', 'editFlags');
 
-    // admin app routes
-    $this->addRoute('admin_main', 'admin', 'AdminGeneralController', 'index');
-    $this->addRoute('admin_norights', 'admin/norights', 'AdminGeneralController', 'noRights');
-
-    // admin comments
-    $this->addRoute('admin_comments_list_from', 'admin/comments/list/from/:id:', 'AdminCommentsController', 'from');
-    $this->addRoute('admin_comments_list_to', 'admin/comments/list/to/:id:', 'AdminCommentsController', 'to');
-    $this->addRoute('admin_comments_list_single', 'admin/comments/list/single/:id:', 'AdminCommentsController', 'single');
-    $this->addRoute('admin_comments_list_subset', 'admin/comments/list/:subset:', 'AdminCommentsController', 'subset');
-
-    // admin words routes
-    // the overview route redirects to an empty edit screen,
-    // ideally this would become a real overview screen later on
-    $this->addRoute('admin_word_overview', 'admin/word', 'AdminWordController', 'editTranslation');
-    $this->addRoute('admin_word_editempty', 'admin/word/edit', 'AdminWordController', 'editTranslation');
-    $this->addRoute('admin_word_editone', 'admin/word/edit/:wordcode:', 'AdminWordController', 'editTranslation');
-    $this->addRoute('admin_word_editlang', 'admin/word/edit/:wordcode:/:shortcode:', 'AdminWordController', 'editTranslation');
-    $this->addRoute('admin_word_create', 'admin/word/createcode', 'AdminWordController', 'createCode');
-    $this->addRoute('admin_word_createone', 'admin/word/createcode/:wordcode:', 'AdminWordController', 'createCode');
-    $this->addRoute('admin_word_code', 'admin/word/editcode','AdminWordController','editCode');
-    $this->addRoute('admin_word_listal', 'admin/word/list/all/long', 'AdminWordController', 'showList');
-    $this->addRoute('admin_word_listas', 'admin/word/list/all/short', 'AdminWordController', 'showList');
-    $this->addRoute('admin_word_listml', 'admin/word/list/missing/long', 'AdminWordController', 'showList');
-    $this->addRoute('admin_word_listms', 'admin/word/list/missing/short', 'AdminWordController', 'showList');
-    $this->addRoute('admin_word_listul', 'admin/word/list/update/long', 'AdminWordController', 'showList');
-    $this->addRoute('admin_word_listus', 'admin/word/list/update/short', 'AdminWordController', 'showList');
-    $this->addRoute('admin_word_stats', 'admin/word/stats', 'AdminWordController', 'showStatistics');
-    $this->addRoute('admin_word_find', 'admin/word/find', 'AdminWordController','findTranslations');
-    $this->addRoute('admin_word_noupdate', 'admin/word/noupdate/:id:', 'AdminWordController','noUpdateNeeded');
+    // admin app routes: the tools themselves are Symfony pages (/admin/tools, /admin/comment, /admin/translations, ...)
+    $this->addRoute('admin_norights', 'admin/norights', 'AdminBaseController', 'noRights');
 
     // admin massmailing
     $this->addRoute('admin_massmail', 'admin/massmail', 'AdminMassmailController', 'massmail');
@@ -132,13 +105,6 @@
         'massmailTrigger');
     $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminMassmailController',
         'massmailUntrigger');
-
-    // admin treasurer routes
-    // $this->addRoute('admin_treasurer_overview', 'admin/treasurer', 'AdminTreasurerController', 'treasurerOverview');
-    // $this->addRoute('admin_treasurer_add_donation', 'admin/treasurer/add', 'AdminTreasurerController', 'treasurerEditCreateDonation');
-    // $this->addRoute('admin_treasurer_edit_donation', 'admin/treasurer/edit/:id:', 'AdminTreasurerController', 'treasurerEditCreateDonation');
-    // $this->addRoute('admin_treasurer_campaign_start', 'admin/treasurer/campaign/start', 'AdminTreasurerController', 'treasurerStartDonationCampaign');
-    // $this->addRoute('admin_treasurer_campaign_stop', 'admin/treasurer/campaign/stop', 'AdminTreasurerController', 'treasurerStopDonationCampaign');
 
     // places routes (the list of countries and the country page are in App\Controller\PlacesController)
     $this->addRoute('places_region', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:', 'PlacesController', 'region');

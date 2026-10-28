@@ -1,5 +1,7 @@
 <?php
 
+use App\Doctrine\MemberStatusType;
+
 /**
  * Class AdminNewMembersModel
  */
@@ -7,123 +9,41 @@ class AdminNewMembersModel extends RoxModelBase {
 
     private $_statuses = null;
 
-    private function ReplaceWithBR($ss,$ReplaceWith=false) {
-        if (!$ReplaceWith) return ($ss);
-        return(str_replace("\n","<br>",$ss));
-    }
+    /**
+     * The statuses a new member is listed with: active members for the greeters, also the members who haven't
+     * finished signing up for the Safety Team and the checkers.
+     */
+    private function statuses($safetyTeamOrAdmin): string
+    {
+        $statuses = [MemberStatusType::ACTIVE];
+        if ($safetyTeamOrAdmin) {
+            $statuses = array_merge($statuses, MemberStatusType::SIGNUP_UNFINISHED);
+        }
 
-    private function FindTrad($IdTrad,$ReplaceWithBr=false) {
-
-        $AllowedTags = "<b><i><br>";
-        if ($IdTrad == "")
-            return ("");
-
-        if ($this->session->has( 'IdLanguage' )) {
-            $IdLanguage=$this->session->get('IdLanguage') ;
-        }
-        else {
-            $IdLanguage=0 ; // by default laguange 0
-        }
-        // Try default language
-        $query = $this->dao->query(
-            "
-SELECT SQL_CACHE
-    Sentence
-FROM
-    memberstrads
-WHERE
-    IdTrad = $IdTrad AND
-    IdLanguage= $IdLanguage
-            "
-        );
-        $row = $query->fetch(PDB::FETCH_OBJ);
-        if (isset ($row->Sentence)) {
-            if (isset ($row->Sentence) == "") {
-                //LogStr("Blank Sentence for language " . $IdLanguage . " with MembersTrads.IdTrad=" . $IdTrad, "Bug");
-            } else {
-                return (strip_tags((string) $this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
-            }
-        }
-        // Try default eng
-        $query = $this->dao->query(
-            "
-SELECT SQL_CACHE
-    Sentence
-FROM
-    memberstrads
-WHERE
-    IdTrad = $IdTrad  AND
-    IdLanguage = 0
-            "
-        );
-        $row = $query->fetch(PDB::FETCH_OBJ);
-        if (isset ($row->Sentence)) {
-            if (isset ($row->Sentence) == "") {
-                //LogStr("Blank Sentence for language 1 (eng) with memberstrads.IdTrad=" . $IdTrad, "Bug");
-            } else {
-                return (strip_tags((string) $this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
-            }
-        }
-        // Try first language available
-        $query = $this->dao->query(
-            "
-SELECT SQL_CACHE
-    Sentence
-FROM
-    memberstrads
-WHERE
-    IdTrad = $IdTrad
-ORDER BY id ASC
-LIMIT 1
-            "
-        );
-        $row = $query->fetch(PDB::FETCH_OBJ);
-        if (isset ($row->Sentence)) {
-            if (isset ($row->Sentence) == "") {
-                //LogStr("Blank Sentence (any language) memberstrads.IdTrad=" . $IdTrad, "Bug");
-            } else {
-                return (strip_tags((string) $this->ReplaceWithBr($row->Sentence,$ReplaceWithBr), $AllowedTags));
-            }
-        }
-        return ("");
-    } // end of FindTrad
-
-    private function getNamePart($namePartId) {
-        $namePart = "";
-        if ($namePartId == 0) {
-            return $namePart;
-        }
-        if ($this->_crypt->IsCrypted($namePartId) == 1) {
-        } else {
-            $namePart = $this->_crypt->get_crypted($namePartId, "");
-        }
-        return $namePart;
+        return "'" . implode("', '", $statuses) . "'";
     }
 
     /**
      *
      */
     public function getMembersCount($safetyTeamOrAdmin) {
-        $statuses = "'Active'";
-        if ($safetyTeamOrAdmin) {
-            $statuses .= ", 'MailToConfirm'";
-        }
         $query = "
             SELECT
                 count(*) as cnt
             FROM
-                members m
+                member m
             WHERE
-                m.Status IN (" . $statuses . ")";
+                m.Status IN (" . $this->statuses($safetyTeamOrAdmin) . ")";
         if (!$safetyTeamOrAdmin) {
-            $query .= " AND bewelcomed < 3";
+            $query .= " AND m.bewelcomed < 3";
         }
-        $query .= " AND DATEDIFF(NOW(), created) < 90";
+        $query .= " AND DATEDIFF(NOW(), m.created) < 90";
         $row = $this->singleLookup($query);
         return $row->cnt;
     }
 
     /**
+     * The members who signed up in the last 90 days, with their place, about me text and languages.
      *
      * @param $first
      * @param $count
@@ -133,156 +53,63 @@ LIMIT 1
      */
     public function getMembers($first, $count, $safetyTeamOrAdmin) {
         $langarr = explode('-', (string) $this->session->get('lang'));
-        $lang = $langarr[0];
-        // First get current page and limits
+        $lang = $this->dao->escape($langarr[0] ?: 'en');
 
-        $statuses = "'Active'";
-        if ($safetyTeamOrAdmin) {
-            $statuses .= ", 'MailToConfirm'";
-        }
+        // place and country in the member's language, else in English, else as named by GeoNames
+        $placeName = static fn (string $alias) => "COALESCE(
+                    (SELECT t.content FROM location_translation t WHERE t.object_id = {$alias}.geoname_id AND t.field = 'name'
+                        AND t.locale IN ('{$lang}', 'en') ORDER BY t.locale = '{$lang}' DESC LIMIT 1),
+                    {$alias}.name)";
 
         $str = "
-            SELECT DISTINCT
+            SELECT
                 m.id,
                 m.Username,
                 m.created,
                 m.Status,
-                m.BirthDate,
-                m.HideBirthDate,
-                m.Accomodation,
-                m.TypicOffer,
-                m.Restrictions,
-                m.ProfileSummary,
-                m.Occupation,
-                m.Gender,
-                m.HideGender,
-                m.FirstName,
-                m.SecondName,
-                m.LastName,
                 m.Email,
                 m.bewelcomed,
-                g.geonameId as geonameId,
-                g.country as country
+                m.AboutMe,
+                " . $placeName('g') . " AS CityName,
+                " . $placeName('c') . " AS CountryName
             FROM
-                members m,
-                geonames g
+                member m
+            LEFT JOIN
+                address a ON a.member_id = m.id AND a.active = 1
+            LEFT JOIN
+                location g ON g.geoname_id = a.location
+            LEFT JOIN
+                location c ON c.geoname_id = g.country
             WHERE
-                m.Status IN (" . $statuses . ")
-                AND DATEDIFF(NOW(), created) < 90";
+                m.Status IN (" . $this->statuses($safetyTeamOrAdmin) . ")
+                AND DATEDIFF(NOW(), m.created) < 90";
         if (!$safetyTeamOrAdmin) {
-            $str .= " AND bewelcomed < 3";
+            $str .= " AND m.bewelcomed < 3";
         }
-        $str .= " AND m.IdCity = g.geonameId
-            ORDER BY m.created ";
-        if (!$safetyTeamOrAdmin) {
-            $str .= " DESC";
-        } else {
-            $str .= " ASC";
-        }
-        $str .= " LIMIT
-                " . $first . ", " . $count;
-
-        $rawMembers = $this->bulkLookup($str);
-
-        $loggedInMember = $this->getLoggedInMember();
+        $str .= "
+            ORDER BY m.created " . ($safetyTeamOrAdmin ? 'ASC' : 'DESC') . "
+            LIMIT " . (int) $first . ", " . (int) $count;
 
         $members = [];
-        $geonameIds = [];
-        $countryIds = [];
-        $layoutBits = new MOD_layoutbits();
-        foreach($rawMembers as $member) {
-            $geonameIds[$member->geonameId] = $member->geonameId;
-            $countryIds[$member->country] = $member->country;
-            $aboutMe = MOD_layoutbits::truncate_words($this->FindTrad($member->ProfileSummary,true), 70);
-            $FirstName = $member->FirstName;
-            $SecondName = $member->SecondName;
-            $LastName = $member->LastName;
-            $member->Name = trim($FirstName . " " . $SecondName . " " . $LastName);
-            $member->ProfileSummary = $aboutMe;
-
+        foreach ($this->bulkLookup($str) as $member) {
+            $member->ProfileSummary = MOD_layoutbits::truncate_words(strip_tags((string) $member->AboutMe, '<b><i><br>'), 70);
             if ($safetyTeamOrAdmin) {
                 $member->EmailAddress = $member->Email;
             }
-
-            if ($member->HideBirthDate=="No") {
-                $member->Age =floor($layoutBits->fage_value($member->BirthDate));
-            } else {
-                $member->Age = "";
-            }
-            if ($member->HideGender != "Yes") {
-                $member->GenderString = MOD_layoutbits::getGenderTranslated($member->Gender, false, false);
-            }
-            $member->Occupation = MOD_layoutbits::truncate_words($this->FindTrad($member->Occupation), 10);
-
-            $query = "
+            // language names are translated as lang_<code>, the levels as language.level.<level>
+            $member->languages = $this->bulkLookup("
                 SELECT
-                    mll.Level,
-                    l.WordCode,
-                    l.EnglishName,
-                    l.Name
+                    mll.level AS Level,
+                    CONCAT('lang_', mll.language) AS WordCode
                 FROM
-                    memberslanguageslevel mll,
-                    languages l
+                    member_language_level mll
                 WHERE
-                  mll.IdMember = " . $member->id . "
-                  AND mll.IdLanguage = l.Id
+                    mll.member_id = " . (int) $member->id . "
                 ORDER BY
-                  mll.Level ASC";
-            $languages = $this->bulkLookup($query);
-            $member->languages = $languages;
+                    FIELD(mll.level, 'mother.tongue', 'expert', 'fluent', 'intermediate', 'beginner', 'hello.only')");
             $members[] = $member;
         }
-        $inGeonameIds = implode("', '", $geonameIds);
-        $query = "
-            SELECT
-                g.geonameId geonameId, a.alternatename name, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
-            FROM
-                geonames g, geonamesalternatenames a
-            WHERE
-                g.geonameId IN ('" . $inGeonameIds . "') AND g.geonameId = a.geonameId AND a.isoLanguage = '" . $lang . "'
-            UNION SELECT
-                g.geonameId geonameId, g.name name, 0 ispreferred, 0 isshort, 'geoname' source
-            FROM
-                geonames g
-            WHERE
-                g.geonameId IN ('" . $inGeonameIds . "')
-            ORDER BY
-                geonameId, source, ispreferred DESC, isshort DESC";
-        $rawNames = $this->bulkLookup($query);
-        $names = [];
-        foreach($rawNames as $rawName) {
-            if (!isset($names[$rawName->geonameId])) {
-                $names[$rawName->geonameId] = $rawName->name;
-            }
-        }
-        $inCountries = implode("', '", $countryIds);
-        // fetch country names, prefer alternate names (preferred, short) over geonames entry
-        $query = "
-            SELECT
-                c.geonameId geonameId, c.country countryCode, a.alternatename country, a.ispreferred ispreferred, a.isshort isshort, 'alternate' source
-            FROM
-                geonamescountries c, geonamesalternatenames a
-            WHERE
-                c.country IN ('" . $inCountries . "') AND c.geonameId = a.geonameId AND a.isoLanguage = '" . $lang . "'
-            UNION SELECT
-                c.geonameId geonameId, c.country countryCode, c.name country, 0 ispreferred, 0 isshort, 'geoname' source
-            FROM
-                geonamescountries c
-            WHERE
-                c.country IN ('" . $inCountries . "')
-            ORDER BY
-                geonameId, source, ispreferred DESC, isshort DESC";
-        $countryRawNames = $this->bulkLookup($query);
-        $countryNames = [];
-        foreach($countryRawNames as $countryRawName) {
-            if (!isset($countryNames[$countryRawName->countryCode])) {
-                $countryNames[$countryRawName->countryCode] = $countryRawName->country;
-            }
-        }
-        foreach($members as &$member) {
-            $member->CityName = $names[$member->geonameId];
-            $member->CountryName = $countryNames[$member->country];
-        }
+
         return $members;
     }
 

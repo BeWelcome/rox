@@ -54,7 +54,7 @@ class AdminBasePage extends PageWithActiveSkin
     
     public function teaserHeadline()
     {
-        return "<a href='admin'>{$this->words->get('AdminTools')}</a>";
+        return "<a href='admin/tools'>{$this->words->get('AdminTools')}</a>";
     }
     
     #[\Override]

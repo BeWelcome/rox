@@ -11,6 +11,7 @@ namespace App\Entity;
 use App\Doctrine\GroupType;
 use App\Doctrine\MemberStatusType;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -64,14 +65,13 @@ class Group
     #[ORM\Column(name: 'MoreInfo', type: 'text', length: 65535, nullable: false)]
     private string $moreInfo = '';
 
+    /** main's link to the description (memberstrads.IdTrad); develop keeps the texts in group_translation. */
     #[ORM\Column(name: 'IdDescription', type: 'integer', nullable: false)]
     private int $idDescription = 0;
 
-    #[ORM\JoinTable(name: 'groups_trads')]
-    #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id')]
-    #[ORM\InverseJoinColumn(name: 'trad_id', referencedColumnName: 'id', unique: true)]
-    #[ORM\ManyToMany(targetEntity: MemberTranslation::class, fetch: 'LAZY')]
-    private Collection $descriptions;
+    /** The description in every language it was written or translated in. */
+    #[ORM\OneToMany(targetEntity: GroupTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $translations;
 
     #[ORM\OneToMany(targetEntity: GroupMembership::class, mappedBy: 'group', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $groupMemberships;
@@ -91,7 +91,7 @@ class Group
 
     public function __construct()
     {
-        $this->descriptions = new ArrayCollection();
+        $this->translations = new ArrayCollection();
         $this->groupMemberships = new ArrayCollection();
     }
 
@@ -190,40 +190,49 @@ class Group
     }
 
     /**
-     * Add description.
-     *
-     * @return Group
+     * Sets the description in a language: a new translation, or a change of the one there is.
      */
-    public function addDescription(MemberTranslation $description)
+    public function setDescription(string $locale, string $text, ?Member $translator): self
     {
-        if (!$this->descriptions->contains($description)) {
-            $this->descriptions[] = $description;
-            $this->idDescription = $description->getId();
+        $description = $this->getDescriptions()[$locale] ?? null;
+        if (null === $description) {
+            $description = new GroupTranslation($locale, GroupTranslation::DESCRIPTION, $text);
+            $description->setObject($this);
+            $this->translations->add($description);
+        } elseif ($description->getContent() !== $text) {
+            $description->setContent($text);
+            $description->setUpdatedAt(new DateTimeImmutable());
         }
+        $description->setTranslator($translator);
 
         return $this;
     }
 
     /**
-     * Remove description.
+     * @return array<string, GroupTranslation> the description in every language, by locale
      */
-    public function removeDescription(MemberTranslation $description): void
-    {
-        $this->descriptions->removeElement($description);
-    }
-
-    /**
-     * @return array
-     */
-    public function getDescriptions()
+    public function getDescriptions(): array
     {
         $descriptions = [];
-        // return array based on locale
-        foreach ($this->descriptions as $description) {
-            $descriptions[$description->getLanguage()->getShortCode()] = $description;
+        /** @var GroupTranslation $translation */
+        foreach ($this->translations as $translation) {
+            if (GroupTranslation::DESCRIPTION === $translation->getField()) {
+                $descriptions[$translation->getLocale()] = $translation;
+            }
         }
 
         return $descriptions;
+    }
+
+    /**
+     * The description in a language; else in English, else in the language it was written in.
+     */
+    public function getDescription(string $locale = 'en'): string
+    {
+        $descriptions = $this->getDescriptions();
+        $description = $descriptions[$locale] ?? $descriptions['en'] ?? reset($descriptions);
+
+        return false === $description ? '' : (string) $description->getContent();
     }
 
     /**

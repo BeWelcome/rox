@@ -48,7 +48,7 @@ $groupOnly = ($this->group->VisiblePosts == 'no');
                     <div class="o-form-group">
                         <label for="topic_text"><?php echo $words->getFormatted("forum_label_text"); ?></label>
 
-                        <textarea name="topic_text" id="topic_text" class="o-input editor <?= ($error['text']) ? 'is-invalid': ''; ?>" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>" >
+                        <textarea name="topic_text" id="topic_text" data-editor-type="textarea" data-image-upload="yes" class="o-input <?= ($error['text']) ? 'is-invalid': ''; ?>" rows="10" style="min-height: 10em;" placeholder="<?= $words->get('forum.post.placeholder'); ?>" >
                             <?= $vars['topic_text']; ?>
                         </textarea>
 

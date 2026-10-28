@@ -406,39 +406,43 @@ SQL;
 
         $description = str_replace(["\r\n", "\r", "\n"], "", nl2br($description));
 
-        // groups.IdDescription holds the id of a member_translation row
-        $words = $this->getWords();
-        $descriptionId = ((!$this->IdDescription) ? $words->InsertInMTrad($description, 'groups.IdDescription', $this->getPKValue()) : $words->ReplaceInMTrad($description, 'groups.IdDescription', $this->getPKValue(), $this->IdDescription));
+        // The description is the group's own text in group_translation, one row per language
+        // (App\Entity\GroupTranslation); this changes the one in the member's language.
+        $locale = $this->dao->escape($this->getWords()->languageShortCode());
+        $member = $this->getLoggedInMember();
+        $translator = $member ? (int) $member->id : 'NULL';
+        $text = $this->dao->escape($description);
+        $result = $this->dao->query(
+            "INSERT INTO group_translation (object_id, locale, field, content, translator_id, created_at) "
+            . "VALUES (" . (int) $this->getPKValue() . ", '" . $locale . "', 'description', '" . $text . "', " . $translator . ", NOW()) "
+            . "ON DUPLICATE KEY UPDATE translator_id = VALUES(translator_id), "
+            . "updated_at = IF(content = VALUES(content), updated_at, NOW()), content = VALUES(content)"
+        );
 
-        if (!$descriptionId)
-        {
-            return false;
-        }
-        elseif ($this->IdDescription != $descriptionId)
-        {
-            // the Symfony side (App\Entity\Group::$descriptions) finds descriptions via groups_trads
-            $this->dao->query("INSERT IGNORE INTO groups_trads (group_id, trad_id) VALUES (" . (int) $this->getPKValue() . ", " . (int) $descriptionId . ")");
-            $this->IdDescription = $descriptionId;
-            return $this->update();
-        }
-
-        return true;
+        return (bool) $result;
     }
 
     /**
-     * returns the description for a group
+     * returns the description for a group: in the member's language, else in English, else in the
+     * language it was written in
      *
      * @access public
      * @return string
      */
     public function getDescription()
     {
-        if (!$this->isLoaded() || !$this->IdDescription)
+        if (!$this->isLoaded())
         {
             return '';
         }
 
-        return $this->getWords()->mTrad($this->IdDescription);
+        $locale = $this->dao->escape($this->getWords()->languageShortCode());
+        $row = $this->singleLookup(
+            "SELECT content FROM group_translation WHERE object_id = " . (int) $this->getPKValue()
+            . " AND field = 'description' ORDER BY locale = '" . $locale . "' DESC, locale = 'en' DESC, id LIMIT 1"
+        );
+
+        return $row ? (string) $row->content : '';
     }
 
     /**

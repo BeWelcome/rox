@@ -219,15 +219,13 @@ class GroupModel
             ->setName($data->name)
             ->setType($data->type)
             ->setVisiblePosts($data->membersOnly)
-            ->setPicture($groupPicture)
+            ->setPicture($groupPicture ?? '')
         ;
         $em->persist($group);
         $em->flush();
 
-        // Create the description as a member translation using the current language
-        $description = new MemberTranslation($language->getShortCode(), 'GroupDescription', $data->description);
-        $em->persist($description);
-        $em->flush();
+        // The description is the group's own text, in the language the member writes in
+        $group->setDescription($language->getShortCode(), $data->description, $member);
 
         // Add a comment for the creator of the group in English
         $groupComment = new MemberTranslation($english->getShortCode(), 'GroupComment', 'Group creator');
@@ -245,8 +243,6 @@ class GroupModel
         $member->addGroupMembership($groupMembership);
         $group->addGroupMembership($groupMembership);
 
-        // Link group and description
-        $group->addDescription($description);
         $em->persist($group);
         $em->flush();
 

@@ -98,5 +98,3 @@ if ($User) {
 //!-->
 </script>
 
-<br /><br />
-<a href="rss/forumthreads"><img src="images/icons/feed.png" alt="RSS feed" /></a>

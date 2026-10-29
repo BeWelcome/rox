@@ -12,7 +12,6 @@ App\Entity\Params:
     featuresignupclose: 'No'
     featuresearchpageisclosed: 'No'
     featurequicksearchisclosed: 'No'
-    rssfeedisclosed: 'No'
     ajaxchatspecialallowedlist: ''
     ajaxchatdebulevel: 0
     reloadrightsandflags: 'No'

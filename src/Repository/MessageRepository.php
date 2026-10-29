@@ -8,10 +8,12 @@ use App\Doctrine\MemberStatusType;
 use App\Doctrine\MessageResultSetMapping;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
+use App\Dto\ReplyRate;
 use App\Entity\Member;
 use App\Entity\Message;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -117,6 +119,57 @@ class MessageRepository extends EntityRepository
         }
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Hosting requests and invitations the member received (the first message of each conversation, no spam,
+     * drafts or messages still held back) and how many of them the member answered with any later message in
+     * that conversation. With $since only requests sent after that time count.
+     */
+    public function getReplyRate(Member $member, ?DateTimeInterface $since = null): ReplyRate
+    {
+        $sinceCondition = null === $since ? '' : 'AND m.created >= :since';
+        $sql = <<<SQL
+                WITH RECURSIVE chain (root_id, id) AS (
+                    SELECT m.id, m.id
+                    FROM messages m
+                    WHERE m.IdReceiver = :member
+                        AND m.IdParent IS NULL
+                        AND m.request_id IS NOT NULL
+                        AND m.InFolder NOT IN (:hiddenFolders)
+                        AND m.Status NOT IN (:notDelivered)
+                        {$sinceCondition}
+                    UNION
+                    SELECT c.root_id, r.id
+                    FROM messages r
+                    JOIN chain c ON r.IdParent = c.id
+                )
+                SELECT
+                    COUNT(DISTINCT c.root_id) AS received,
+                    COUNT(DISTINCT CASE
+                        WHEN m.IdSender = :member AND m.id <> c.root_id AND m.Status <> :draft THEN c.root_id
+                    END) AS answered
+                FROM chain c
+                JOIN messages m ON m.id = c.id
+            SQL;
+
+        $parameters = [
+            'member' => $member->getId(),
+            'hiddenFolders' => [InFolderType::SPAM, InFolderType::DRAFT],
+            'notDelivered' => [MessageStatusType::DRAFT, MessageStatusType::CHECK, MessageStatusType::FROZEN],
+            'draft' => MessageStatusType::DRAFT,
+        ];
+        $types = [
+            'hiddenFolders' => ArrayParameterType::STRING,
+            'notDelivered' => ArrayParameterType::STRING,
+        ];
+        if (null !== $since) {
+            $parameters['since'] = $since->format('Y-m-d H:i:s');
+        }
+
+        $counts = $this->getEntityManager()->getConnection()->fetchAssociative($sql, $parameters, $types);
+
+        return new ReplyRate((int) ($counts['received'] ?? 0), (int) ($counts['answered'] ?? 0));
     }
 
     public function getUnreadConversationsCount(Member $member): int

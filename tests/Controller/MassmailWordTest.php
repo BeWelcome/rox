@@ -59,6 +59,14 @@ class MassmailWordTest extends WebTestCase
         parent::tearDown();
     }
 
+    public function testTheBodyIsWrittenInTheEditor(): void
+    {
+        $crawler = $this->legacyRequest('/admin/massmail/create');
+
+        // roxeditor.js turns textareas with data-editor-type into CKEditor; newsletters may carry images
+        self::assertCount(1, $crawler->filter('textarea[name=Body][data-editor-type=textarea][data-image-upload=yes]'));
+    }
+
     public function testCreatingAMailingStoresSubjectAndBodyAsEnglishTexts(): void
     {
         new AdminMassmailModel()->createMassmail(self::NAME, 'Normal', 'The subject', '<p>The body</p>', 'For the test');

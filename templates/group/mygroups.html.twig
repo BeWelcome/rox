@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-6 mb-3">
+            <h1 class="h3">{{ 'MyGroups'|trans }}</h1>
+            <a href="{{ path('groups_search') }}">{{ 'GroupsSearchHeading'|trans }}</a>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+            <h2 class="h3">{{ 'GroupsCreateHeading'|trans }}</h2>
+            <a class="btn btn-primary" role="button" href="{{ path('new_group') }}">{{ 'GroupsCreateNew'|trans }}</a>
+        </div>
+    </div>
+
+    {% if groups.nbResults > 0 %}
+        <div class="row">
+            {% for row in groups %}
+                {% include 'group/_card.html.twig' %}
+            {% endfor %}
+        </div>
+        {% if groups.haveToPaginate %}
+            <div class="u:flex u:justify-end u:my-8">
+                {{ pagerfanta(groups, 'rounded_pagination', {routeName: 'groups_mygroups', pageParameter: '[page]'}) }}
+            </div>
+        {% endif %}
+    {% else %}
+        <p>{{ 'GroupsMyGroupsNoResults'|trans|format('<a href="' ~ path('groups_search') ~ '">', '</a>', '<a href="' ~ path('new_group') ~ '">', '</a>')|raw }}</p>
+    {% endif %}
+{% endblock %}

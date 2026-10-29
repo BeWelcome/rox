@@ -50,3 +50,12 @@ admin.group.category.saved:
 admin.group.category.deleted:
     - 'The category is deleted.'
     - Message after a group admin deleted a group category
+group.search.category:
+    - 'Category'
+    - Label of the category filter on the group search page
+group.search.category.all:
+    - 'All categories'
+    - First choice of the category filter on the group search page (no filter)
+group.search.no.results:
+    - 'No groups found.'
+    - Shown on the group search page when no group matches the search

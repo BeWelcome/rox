@@ -15,7 +15,6 @@
      */
 
     // group routes
-    $this->addRoute('group_start','group/:group_id:', 'GroupsController', 'showGroup');
     $this->addRoute('group_new_post', 'group/:group_id:/new', 'GroupsController', 'newPost');
     $this->addRoute('group_acceptinvitation','group/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
     $this->addRoute('group_acceptmember','group/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
@@ -40,19 +39,12 @@
     $this->addRoute('group_left','group/:group_id:/leave/true', 'GroupsController', 'left');
     $this->addRoute('group_memberadministration','group/:group_id:/memberadministration', 'GroupsController', 'memberAdministration');
     $this->addRoute('group_memberadministration_paged','group/:group_id:/memberadministration/page/:page_number:', 'GroupsController', 'memberAdministration');
-    $this->addRoute('group_members','group/:group_id:/members', 'GroupsController', 'members');
-    $this->addRoute('group_members_paged','group/:group_id:/members/page/:page_number:', 'GroupsController', 'members');
     $this->addRoute('group_membersearch_ajax','group/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
     $this->addRoute('group_membersettings','group/:group_id:/membersettings', 'GroupsController', 'memberSettings');
     $this->addRoute('group_search_discussions','group/:group_id:/search', 'GroupsController', 'searchDiscussions');
     $this->addRoute('group_wiki','group/:group_id:/wiki', 'GroupsController', 'wiki');
-    $this->addRoute('group_realimg','group/realimg/:group_id:', 'GroupsController', 'realImg');
-    $this->addRoute('group_thumbimg','group/thumbimg/:group_id:', 'GroupsController', 'thumbImg');
-    $this->addRoute('groups_featured','groups/featured', 'GroupsController', 'featured');
     $this->addRoute('groups_forums_overview','groups/forums', 'GroupsController', 'groupForumsOverview');
     $this->addRoute('groups_forums_overview_paged','groups/forums/:page_number:', 'GroupsController', 'groupForumsOverview');
-    $this->addRoute('groups_mygroups','groups/mygroups', 'GroupsController', 'myGroups');
-    $this->addRoute('groups_search','groups/search', 'GroupsController', 'search');
 
     // related groups routes
     $this->addRoute('relatedgroup_select','group/:group_id:/selectrelatedgroup', 'RelatedGroupsController', 'selectRelatedGroup');

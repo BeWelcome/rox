@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% set isMember = membershipStatus == constant('App\\Doctrine\\GroupMembershipStatusType::CURRENT_MEMBER') %}
+    <div class="row">
+        <div class="col-12 col-md-8">
+            <div class="d-flex bg-white p-1">
+                {% if group.picture %}
+                    <img class="flex-shrink-0 me-2 mb-2 img-thumbnail" width="100" src="{{ path('group_realimg', {group_id: group.id}) }}" alt="{{ group.name }}">
+                {% endif %}
+                <div class="bg-groupheader p-1 u:break-words w-100">
+                    <h1 class="h3">{{ group.name }}</h1>
+                    {% if group.location or group.categories|length %}
+                        <p class="small mb-2">
+                            {% if group.location %}{% include 'group/_location.html.twig' with {location: group.location} %}{% endif %}
+                            {% for category in group.categories %}
+                                <span class="badge text-bg-secondary ms-1">{{ category.name(app.request.locale) }}</span>
+                            {% endfor %}
+                        </p>
+                    {% endif %}
+                    <div>{{ description|purify|nl2br }}</div>
+                    {% if isMember %}
+                        <a href="{{ path('group_new_post', {group_id: group.id}) }}" class="btn btn-primary float-end">{{ 'ForumNewTopic'|trans }}</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="w-100 mt-3">
+                <h2 class="h3">{{ 'ForumRecentPostsLong'|trans }}</h2>
+                {% if not canViewForum %}
+                    <p>{{ 'GroupsNotPublic'|trans }}</p>
+                {% elseif threads is empty %}
+                    <p>{{ 'GroupsNoPostYet'|trans }}</p>
+                {% else %}
+                    <ul class="list-unstyled">
+                        {% for thread in threads %}
+                            <li class="mb-2">
+                                <a href="{{ thread.agora ? path('forum_thread', {threadId: thread.id}) : path('group_forum_thread', {group_id: group.id, thread: thread.id}) }}">{{ thread.title|striptags }}</a>
+                                <span class="small text-muted ms-2">{{ thread.lastPost.created|format_datetime('short', 'short') }} · {{ thread.lastPost.author.username }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'GroupDiscussions'|trans }}</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+            {% if membershipStatus == constant('App\\Doctrine\\GroupMembershipStatusType::KICKED_FROM_GROUP') %}
+                <p>{{ 'GroupsBanned'|trans }}</p>
+            {% elseif membershipStatus == constant('App\\Doctrine\\GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP') %}
+                <p>{{ 'GroupsAlreadyApplied'|trans }}</p>
+            {% elseif not isMember %}
+                {% if group.type == constant('App\\Doctrine\\GroupType::NEED_ACCEPTANCE') %}
+                    <p>{{ 'GroupsJoinNeedAccept'|trans }}</p>
+                {% endif %}
+                {% if group.type != constant('App\\Doctrine\\GroupType::INVITE_ONLY') %}
+                    <a class="btn btn-primary w-100 mb-3" href="{{ path('join_group', {groupId: group.id}) }}">{{ 'GroupsJoinTheGroup'|trans }}</a>
+                {% endif %}
+            {% endif %}
+
+            <h2 class="h4 mb-1">{{ 'GroupMembers'|trans }} <span class="small text-muted">({{ memberCount }})</span></h2>
+            <div class="row g-1 mb-2">
+                {% for membership in latestMembers %}
+                    <div class="col-3 text-center">
+                        <a href="{{ path('members_profile', {username: membership.member.username}) }}" title="{{ membership.member.username }}">
+                            <img class="rounded" width="50" height="50" loading="lazy" alt="{{ membership.member.username }}"
+                                 src="{{ path('avatar', {username: membership.member.username, size: 50}) }}">
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+            <a href="{{ path('group_members', {group_id: group.id}) }}" class="btn btn-outline-primary w-100 mb-3">{{ 'GroupSeeAllMembers'|trans }}</a>
+
+            <h2 class="h4">{{ 'GroupAdmins'|trans }}</h2>
+            <div class="row g-1">
+                {% for admin in administrators %}
+                    <div class="col-6 mb-1">
+                        <img class="rounded" width="50" height="50" loading="lazy" alt="" src="{{ path('avatar', {username: admin.username, size: 50}) }}">
+                        <br><a href="{{ path('members_profile', {username: admin.username}) }}" class="small">{{ admin.username }}</a>
+                    </div>
+                {% else %}
+                    <p>{{ 'GroupNoAdmin'|trans }}</p>
+                {% endfor %}
+            </div>
+
+            {% if isMember %}
+                <a class="btn btn-danger w-100 mt-3" href="{{ path('group_leave', {group_id: group.id}) }}">{{ 'GroupsLeaveTheGroup'|trans }}</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if relatedGroups is not empty or isMember %}
+        <div class="row mt-5">
+            <div class="col-12 col-md-8"><h2 class="h3">{{ 'RelatedGroupsTitle'|trans }}</h2></div>
+            <div class="col-12 col-md-4">
+                {% if isMember %}
+                    <a href="{{ path('relatedgroup_select', {group_id: group.id}) }}" class="btn btn-outline-primary w-100">{{ 'AddRelatedGroupButton'|trans }}</a>
+                {% endif %}
+            </div>
+            {% for related in relatedGroups %}
+                <div class="col-12 col-md-6 col-lg-4 pt-2">
+                    <a href="{{ path('group_start', {group_id: related.id}) }}">
+                        <img class="groupimg framed me-1" width="40" height="40" alt="" loading="lazy"
+                             src="{{ related.picture ? path('group_thumbimg', {group_id: related.id}) : asset('images/icons/group.png') }}">
+                        {{ related.name }}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}

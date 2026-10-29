@@ -1,0 +1,6 @@
+{# The group's location with what it's in: country › region › place. #}
+{% set parts = [] %}
+{% for part in [location.country, location.admin1, location] %}
+    {% if part and part.name not in parts %}{% set parts = parts|merge([part.name]) %}{% endif %}
+{% endfor %}
+<span class="text-muted"><i class="fas fa-location-dot me-1" aria-hidden="true"></i>{{ parts|join(' › ') }}</span>

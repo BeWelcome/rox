@@ -18,6 +18,7 @@ use App\Model\GroupModel;
 use App\Model\WikiModel;
 use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
+use App\Utilities\GroupSubmenuTrait;
 use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -49,6 +50,7 @@ use Throwable;
  */
 class GroupController extends AbstractController
 {
+    use GroupSubmenuTrait;
     use RedirectBackTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
@@ -507,50 +509,6 @@ class GroupController extends AbstractController
         $pathInfo = str_replace('/groups/', '/group/', $request->getPathInfo());
 
         return new RedirectResponse($pathInfo);
-    }
-
-    /**
-     * @return array
-     */
-    private function getSubmenuItems(?Member $member, Group $group)
-    {
-        $groupId = $group->getId();
-        $submenuItems = [
-            'overview' => [
-                'key' => 'GroupOverview',
-                'url' => $this->generateUrl('group_start', ['group_id' => $groupId]),
-            ],
-            'forum' => [
-                'key' => 'GroupDiscussions',
-                'url' => $this->generateUrl('group_forum', ['group_id' => $groupId]),
-            ],
-            'wiki' => [
-                'key' => 'GroupWiki',
-                'url' => $this->generateUrl('group_wiki_page', ['id' => $groupId]),
-            ],
-            'members' => [
-                'key' => 'GroupMembers',
-                'url' => $this->generateUrl('group_members', ['group_id' => $groupId]),
-            ],
-        ];
-        // \todo: Check if current user is member of this group
-        if (\in_array($member, $group->getCurrentMembers(), true)) {
-            $submenuItems['membersettings'] = [
-                'key' => 'GroupMembersettings',
-                'url' => $this->generateUrl('group_membersettings', ['group_id' => $groupId]),
-            ];
-            $submenuItems['relatedgroupsettings'] = [
-                'key' => 'GroupRelatedGroups',
-                'url' => $this->generateUrl('relatedgroup_log', ['group_id' => $groupId]),
-            ];
-        } else {
-            $submenuItems['join'] = [
-                'key' => 'group.join',
-                'url' => $this->generateUrl('join_group', ['groupId' => $groupId]),
-            ];
-        }
-
-        return $submenuItems;
     }
 
     /**

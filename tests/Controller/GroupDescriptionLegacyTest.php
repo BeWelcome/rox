@@ -51,7 +51,7 @@ class GroupDescriptionLegacyTest extends WebTestCase
 
     protected function tearDown(): void
     {
-        $this->entityManager()->getConnection()->executeStatement('DELETE FROM `groups` WHERE id = ?', [$this->groupId]);
+        $this->entityManager()->getConnection()->executeStatement('DELETE FROM `group` WHERE id = ?', [$this->groupId]);
         chdir($this->originalWorkingDirectory);
 
         parent::tearDown();
@@ -72,7 +72,8 @@ class GroupDescriptionLegacyTest extends WebTestCase
     {
         $member = $this->member('member-2');
         $this->client->loginUser($member);
-        $this->legacyRequest('/group/' . $this->groupId);
+        // any legacy page sets up the legacy session; the group page itself isn't legacy any more
+        $this->legacyRequest('/group/' . $this->groupId . '/forum');
 
         // as the group settings form does (GroupsController::changeGroupSettings())
         $legacyGroup = new GroupsModel()->findGroup($this->groupId);

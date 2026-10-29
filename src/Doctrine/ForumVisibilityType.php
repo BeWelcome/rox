@@ -7,7 +7,7 @@ class ForumVisibilityType extends EnumType
     public const string NO_RESTRICTION = 'NoRestriction';
     public const string MEMBERS_ONLY = 'MembersOnly';
     public const string GROUP_ONLY = 'GroupOnly';
-    public const string MODERATOR_ONLY = 'Moderator';
+    public const string MODERATOR_ONLY = 'ModeratorOnly';
 
     protected string $name = 'forum_visibility';
 

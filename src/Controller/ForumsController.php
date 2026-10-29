@@ -63,7 +63,7 @@ class ForumsController extends AbstractController
 
         $memberPreference = $member->getMemberPreference($preference);
         $value = (int) $memberPreference->getValue();
-        $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
+        $value = max($value - self::POSTS_DIFF, self::POSTS_MIN);
         $memberPreference->setValue($value);
         $this->entityManager->persist($memberPreference);
         $this->entityManager->flush();
@@ -103,7 +103,7 @@ class ForumsController extends AbstractController
 
         $memberPreference = $member->getMemberPreference($preference);
         $value = (int) $memberPreference->getValue();
-        $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
+        $value = max($value - self::POSTS_DIFF, self::POSTS_MIN);
         $memberPreference->setValue($value);
         $this->entityManager->persist($memberPreference);
         $this->entityManager->flush();

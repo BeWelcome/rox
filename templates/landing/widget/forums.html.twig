@@ -10,7 +10,7 @@
         {% set lastpost = '' %}
         {% if ascending %}
             {% set lastpost = 'post' ~ thread.lastpost.id %}
-            {% set page = thread.replies // constant('\\Forums::CV_POSTS_PER_PAGE') + 1 %}
+            {% set page = thread.replies // constant('App\\Controller\\ForumPagesController::POSTS_PER_PAGE') + 1 %}
         {% endif %}
         {% if not thread.agora %}
             {% set threadUrl = url('group_forum_thread', { thread: thread.id, group_id: thread.group.id }) %}

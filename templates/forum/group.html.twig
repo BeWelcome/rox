@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+        <h1 class="h3 mb-0">
+            {% if group.beWelcome %}{{ 'AgoraForum'|trans }}{% else %}<a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a> – {{ 'GroupDiscussions'|trans }}{% endif %}
+        </h1>
+        {% if canRead %}
+            <a class="btn btn-primary" href="{{ group.beWelcome ? path('forums_new') : path('group_new_post', {group_id: group.id}) }}">{{ 'ForumNewTopic'|trans }}</a>
+        {% endif %}
+    </div>
+    {% if group.beWelcome %}<div class="mb-3">{{ 'AgoraTagLine'|trans|purify }}</div>{% endif %}
+
+    {% if not canRead %}
+        <p>{{ 'GroupsNotPublic'|trans }}</p>
+    {% else %}
+        {% include 'forum/_threads.html.twig' with {threads: threads} %}
+        {% if threads.haveToPaginate %}
+            <div class="u:flex u:justify-end u:my-8">
+                {{ pagerfanta(threads, 'rounded_pagination', {routeName: 'group_forum_pages', routeParams: {group_id: group.id}, pageParameter: '[page_id]'}) }}
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

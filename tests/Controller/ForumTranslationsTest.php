@@ -69,7 +69,7 @@ class ForumTranslationsTest extends WebTestCase
         $this->client->loginUser($this->member('member-1'));
 
         $this->client->request('GET', '/rox/in/de');
-        $crawler = $this->legacyRequest('/forums/s1');
+        $crawler = $this->client->request('GET', '/forums/s1');
 
         $this->assertResponseIsSuccessful();
         self::assertStringContainsString(self::GERMAN_POST, $crawler->filter('body')->text());
@@ -82,7 +82,7 @@ class ForumTranslationsTest extends WebTestCase
         $original = $this->getEntityManager()->find(ForumPost::class, 1)->getMessage();
 
         $this->client->request('GET', '/rox/in/fr');
-        $crawler = $this->legacyRequest('/forums/s1');
+        $crawler = $this->client->request('GET', '/forums/s1');
 
         $this->assertResponseIsSuccessful();
         // No French text: the English one (the German one is only in the list of available translations)
@@ -115,7 +115,8 @@ class ForumTranslationsTest extends WebTestCase
     {
         $member = $this->member('member-1');
         $this->client->loginUser($member);
-        $this->legacyRequest('/forums/s1');
+        // any legacy page sets up the legacy session; the thread page itself isn't legacy any more
+        $this->legacyRequest('/forums/rules');
 
         // As the moderator's "add translated post" and a new post or reply do
         $result = new MOD_words()->InsertInFTrad('Texte français du premier message', 'forum_post.IdContent', 1, $member->getId(), 'fr');
@@ -133,7 +134,8 @@ class ForumTranslationsTest extends WebTestCase
     public function testAnEmptyTextIsNotStored(): void
     {
         $this->client->loginUser($this->member('member-1'));
-        $this->legacyRequest('/forums/s1');
+        // any legacy page sets up the legacy session; the thread page itself isn't legacy any more
+        $this->legacyRequest('/forums/rules');
 
         $result = new MOD_words()->InsertInFTrad('', 'forum_thread.IdTitle', 1, 0, 'fr');
 
@@ -145,7 +147,8 @@ class ForumTranslationsTest extends WebTestCase
     {
         $member = $this->member('member-1');
         $this->client->loginUser($member);
-        $this->legacyRequest('/forums/s1');
+        // any legacy page sets up the legacy session; the thread page itself isn't legacy any more
+        $this->legacyRequest('/forums/rules');
         $english = $this->translationRow('forum_post_translation', 'en');
         $german = $this->translationRow('forum_post_translation', 'de');
 
@@ -168,7 +171,8 @@ class ForumTranslationsTest extends WebTestCase
     public function testSavingTheSameTextAgainDoesNotMarkItAsEdited(): void
     {
         $this->client->loginUser($this->member('member-1'));
-        $this->legacyRequest('/forums/s1');
+        // any legacy page sets up the legacy session; the thread page itself isn't legacy any more
+        $this->legacyRequest('/forums/rules');
 
         new MOD_words()->InsertInFTrad(self::GERMAN_TITLE, 'forum_thread.IdTitle', 1, 0, 'de');
 
@@ -182,7 +186,8 @@ class ForumTranslationsTest extends WebTestCase
     {
         $member = $this->member('member-1');
         $this->client->loginUser($member);
-        $this->legacyRequest('/forums/s1');
+        // any legacy page sets up the legacy session; the thread page itself isn't legacy any more
+        $this->legacyRequest('/forums/rules');
         $german = $this->translationRow('forum_thread_translation', 'de');
 
         // The moderator's full edit form posts IdForumTrads as "thread-<id>" (ModeratorEditPostProcess())

@@ -8,3 +8,6 @@ forum.read.more:
     - '@comment.read.more'
 forum.show.less:
     - '@comment.show.less'
+forum.moderator.edit:
+    - 'Admin edit'
+    - Button on each post of a forum thread for forum moderators; opens the moderator's edit of the post

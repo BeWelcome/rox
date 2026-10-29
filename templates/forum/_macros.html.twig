@@ -1,0 +1,10 @@
+{# Links into the forum: agora threads live under /forums, a group's threads under /group/{id}/forum. #}
+{% macro thread_url(thread, page = 1) %}
+    {%- if thread.agora -%}
+        {{ page > 1 ? path('forum_thread_pages', {threadId: thread.id, pageId: page}) : path('forum_thread', {threadId: thread.id}) }}
+    {%- else -%}
+        {{ page > 1 ? path('group_forum_thread_pages', {group_id: thread.group.id, thread: thread.id, page_id: page}) : path('group_forum_thread', {group_id: thread.group.id, thread: thread.id}) }}
+    {%- endif -%}
+{% endmacro %}
+
+{% macro thread_title(thread, locale) %}{{ (thread.titles[locale] ?? thread.title)|striptags }}{% endmacro %}

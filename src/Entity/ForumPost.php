@@ -642,6 +642,21 @@ class ForumPost
     }
 
     /**
+     * The message in a language: else in English, else in the language it was written in.
+     *
+     * @return array{language: ?Language, message: string}
+     */
+    public function getMessageIn(string $locale): array
+    {
+        $translations = $this->getMessageTranslations();
+
+        return $translations[$locale] ?? $translations['en'] ?? reset($translations) ?: [
+            'language' => null,
+            'message' => (string) $this->getMessage(),
+        ];
+    }
+
+    /**
      * @return Collection<int, ForumPostTranslation>
      */
     public function getTranslations(): Collection

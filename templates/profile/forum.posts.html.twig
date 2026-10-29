@@ -55,7 +55,7 @@
             <div class="post">
                 {% if translations|length > 1 %}
                     {% if not loop.first %}<hr class="u:my-8" style="border-top:1px solid gray;">{% endif %}
-                    <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortCode }})</small><br>
+                    <small class="text-muted">{{ translation.language.name }} ({{ translation.language.shortCode }})</small><br>
                 {% endif %}
                 {{ translation.message | purify | forum_lightbox | nl2br }}
             </div>

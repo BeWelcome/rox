@@ -16,18 +16,9 @@
 
     // group routes
     $this->addRoute('group_new_post', 'group/:group_id:/new', 'GroupsController', 'newPost');
-    $this->addRoute('group_forum','group/:group_id:/forum', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_pages','group/:group_id:/forum/page:page_id:', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_thread','group/:group_id:/forum/s:thread:', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_thread_pages','group/:group_id:/forum/s:thread:/page:page_id:', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_thread_slash','group/:group_id:/forum/:thread:/', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_thread_title','group/:group_id:/forum/s:thread:-:title:', 'GroupsController', 'forum');
-    $this->addRoute('group_forum_thread_title_slash','group/:group_id:/forum/:thread:-:title:/', 'GroupsController', 'forum');
     $this->addRoute('group_forum_action','group/:group_id:/forum/:thread:/:action:', 'GroupsController', 'forum');
     $this->addRoute('group_search_discussions','group/:group_id:/search', 'GroupsController', 'searchDiscussions');
     $this->addRoute('group_wiki','group/:group_id:/wiki', 'GroupsController', 'wiki');
-    $this->addRoute('groups_forums_overview','groups/forums', 'GroupsController', 'groupForumsOverview');
-    $this->addRoute('groups_forums_overview_paged','groups/forums/:page_number:', 'GroupsController', 'groupForumsOverview');
 
     // related groups routes
 

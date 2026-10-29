@@ -27,7 +27,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'IdGroup', columns: ['IdGroup'])]
 #[ORM\Index(name: 'ThreadVisibility', columns: ['ThreadVisibility'])]
 #[ORM\Index(name: 'ThreadDeleted', columns: ['ThreadDeleted'])]
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Repository\ForumThreadRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class ForumThread
 {

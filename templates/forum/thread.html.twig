@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+{% import 'forum/_macros.html.twig' as forum %}
+
+{% block title %}{{ forum.thread_title(thread, locale) }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('highlight') }}
+    {{ encore_entry_script_tags('lightbox') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('highlight') }}
+{% endblock %}
+
+{% block content %}
+    {% set moderator = is_granted('ROLE_ADMIN_FORUMMODERATOR') or is_granted('ROLE_ADMIN_ADMIN') %}
+    <p class="small mb-1">
+        <a href="{{ path('forums') }}">{{ 'Forum'|trans }}</a> »
+        {% if thread.agora %}
+            <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'AgoraForum'|trans }}</a>
+        {% else %}
+            <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a> »
+            <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'GroupDiscussions'|trans }}</a>
+        {% endif %}
+    </p>
+    <h1 class="h3">{{ forum.thread_title(thread, locale) }}</h1>
+    {% if thread.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
+        <p class="alert alert-warning">{{ 'threadclosed'|trans }}</p>
+    {% endif %}
+
+    <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
+        {% if is_granted('FORUM_THREAD_REPLY', thread) %}
+            <a class="btn btn-primary" href="{{ thread.agora ? path('forum_reply', {threadId: thread.id}) : '/group/' ~ group.id ~ '/forum/s' ~ thread.id ~ '/reply' }}">{{ 'ForumReply'|trans }}</a>
+        {% endif %}
+        <a class="btn btn-outline-primary" href="{{ path('forum_thread_subscription', {threadId: thread.id}) }}">{{ 'ForumSubscribe'|trans }}</a>
+        <a class="btn btn-outline-secondary" href="{{ thread.agora ? path('forum_reverse', {threadId: thread.id}) : path('group_forum_thread_reverse', {group_id: group.id, thread: thread.id}) }}">
+            {{ (ascending ? 'forums.sort.latest.first' : 'forums.sort.oldest.first')|trans }}
+        </a>
+    </div>
+
+    {% if posts.haveToPaginate %}
+        {{ pagerfanta(posts, 'rounded_pagination', thread.agora
+            ? {routeName: 'forum_thread_pages', routeParams: {threadId: thread.id}, pageParameter: '[pageId]'}
+            : {routeName: 'group_forum_thread_pages', routeParams: {group_id: group.id, thread: thread.id}, pageParameter: '[page_id]'}) }}
+    {% endif %}
+
+    {% for post in posts %}
+        {% include 'forum/_post.html.twig' with {post: post, dark: loop.index is even, moderator: moderator} %}
+    {% endfor %}
+
+    {% if posts.haveToPaginate %}
+        {{ pagerfanta(posts, 'rounded_pagination', thread.agora
+            ? {routeName: 'forum_thread_pages', routeParams: {threadId: thread.id}, pageParameter: '[pageId]'}
+            : {routeName: 'group_forum_thread_pages', routeParams: {group_id: group.id, thread: thread.id}, pageParameter: '[page_id]'}) }}
+    {% endif %}
+
+    {% if is_granted('FORUM_THREAD_REPLY', thread) %}
+        <a class="btn btn-primary mt-3" href="{{ thread.agora ? path('forum_reply', {threadId: thread.id}) : '/group/' ~ group.id ~ '/forum/s' ~ thread.id ~ '/reply' }}">{{ 'ForumReply'|trans }}</a>
+    {% endif %}
+{% endblock %}

@@ -92,8 +92,6 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('group_unsubscribe', '/forums/subscriptions/unsubscribe/group/{groupId}');
         $this->addRouteDirectly('group_new_topic', '/groups/{groupId}/forum/new');
         $this->addRouteDirectly('group_user_all', '/members/{username}/groups');
-        $this->addRouteDirectly('group_add_related_group', '/groups/{groupId}/selectrelatedgroup');
-        $this->addRouteDirectly('group_invite_member', '/groups/{groupId}/invitemembers/search');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');
         $this->addRouteDirectly('gallery_show_user', '/gallery/show/user/{username}');

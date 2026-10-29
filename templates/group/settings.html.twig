@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('groups/location') }}
+{% endblock %}
+
+{% block content %}
+    <h1 class="h3">{{ 'GroupsAdministrateGroup'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    {{ form_start(form) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.visiblePosts) }}
+    {{ form_row(form.picture) }}
+    {{ form_row(form.categories) }}
+    <div class="auto-search-wrapper max-height mb-3">
+        {{ form_row(form.locationName) }}
+    </div>
+    {{ form_row(form.location, {id: 'group_settings_location'}) }}
+    {{ form_end(form) }}
+{% endblock %}

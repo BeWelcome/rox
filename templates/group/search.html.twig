@@ -2,7 +2,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('groups/search') }}
+    {{ encore_entry_script_tags('groups/location') }}
 {% endblock %}
 
 {% block content %}
@@ -27,7 +27,7 @@
                     <div class="col-12 col-md-4">
                         <label class="form-label" for="group_search_location_name">{{ 'location'|trans }}</label>
                         <div class="auto-search-wrapper max-height">
-                            <input type="text" class="o-input js-location-picker" id="group_search_location_name" name="locationName"
+                            <input type="text" class="o-input js-location-picker" id="group_search_location_name" name="locationName" data-location-target="#group_search_location"
                                    value="{{ search.locationName }}" autocomplete="off">
                         </div>
                         <input type="hidden" id="group_search_location" name="location" value="{{ search.location }}">

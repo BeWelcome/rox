@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="h3">{{ 'AdministrateRelatedGroupsTitle'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    {% if isMember %}
+        <p>
+            <a class="btn btn-outline-primary" href="{{ path('relatedgroup_select', {group_id: group.id}) }}">{{ 'AddRelatedGroupButton'|trans }}</a>
+            <a class="btn btn-outline-danger" href="{{ path('relatedgroup_selectdelete', {group_id: group.id}) }}">{{ 'RemoveRelatedGroupButton'|trans }}</a>
+        </p>
+    {% endif %}
+    <ul class="list-unstyled" id="related-group-log">
+        {% for link in links %}
+            <li>
+                <span class="text-muted small">{{ link.updated|format_datetime('short', 'short') }}</span>
+                {% set by = link.removed ? link.deletedBy : link.addedBy %}
+                {% if by %}<a href="{{ path('members_profile', {username: by.username}) }}">{{ by.username }}</a>{% endif %}
+                {{ (link.removed ? 'RemoveRelatedGroupTitle' : 'AddRelatedGroupTitle')|trans }}:
+                <a href="{{ path('group_start', {group_id: link.relatedGroup.id}) }}">{{ link.relatedGroup.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

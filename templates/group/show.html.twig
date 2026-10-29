@@ -84,6 +84,20 @@
                 {% endfor %}
             </div>
 
+            {% if is_granted('GROUP_ADMINISTER', group) %}
+                <a class="btn btn-outline-primary w-100 mt-3" href="{{ path('group_memberadministration', {group_id: group.id}) }}">{{ 'GroupsAdministrateMembers'|trans }}</a>
+                <a class="btn btn-outline-primary w-100 mt-2" href="{{ path('group_groupsettings', {group_id: group.id}) }}">{{ 'GroupsAdministrateGroup'|trans }}</a>
+                {% if not group.beWelcome %}
+                    <a class="btn btn-outline-danger w-100 mt-2" href="{{ path('group_delete', {group_id: group.id}) }}">{{ 'GroupsDeleteGroup'|trans }}</a>
+                {% endif %}
+            {% endif %}
+            {% if app.user.id in administrators|map(admin => admin.id) %}
+                <form method="post" action="{{ path('group_resignadmin', {group_id: group.id}) }}" class="mt-2"
+                      onsubmit="return confirm('{{ 'GroupsConfirmResignAsAdmin'|trans|e('js') }}')">
+                    <input type="hidden" name="_token" value="{{ csrf_token('group-resign-' ~ group.id) }}">
+                    <button type="submit" class="btn btn-outline-secondary w-100">{{ 'group.admin.resign'|trans }}</button>
+                </form>
+            {% endif %}
             {% if isMember %}
                 <a class="btn btn-danger w-100 mt-3" href="{{ path('group_leave', {group_id: group.id}) }}">{{ 'GroupsLeaveTheGroup'|trans }}</a>
             {% endif %}

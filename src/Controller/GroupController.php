@@ -257,6 +257,11 @@ class GroupController extends AbstractController
         #[MapEntity(id: 'groupId')] Group $group,
         #[MapEntity(id: 'memberId')] Member $member,
     ) {
+        // only the invited member answers the invitation
+        if ($this->getUser() !== $member) {
+            throw $this->createAccessDeniedException();
+        }
+
         $success = $this->groupModel->acceptInviteToGroup($group, $member);
 
         if ($success) {
@@ -277,6 +282,11 @@ class GroupController extends AbstractController
         #[MapEntity(id: 'groupId')] Group $group,
         #[MapEntity(id: 'memberId')] Member $member,
     ) {
+        // only the invited member answers the invitation
+        if ($this->getUser() !== $member) {
+            throw $this->createAccessDeniedException();
+        }
+
         $success = $this->groupModel->declineInviteToGroup($group, $member);
 
         if ($success) {

@@ -59,3 +59,18 @@ group.search.category.all:
 group.search.no.results:
     - 'No groups found.'
     - Shown on the group search page when no group matches the search
+group.membership.notifications:
+    - 'Notify me about new posts in the group''s forum'
+    - Checkbox in a member's settings for a group they're in
+group.member.banned:
+    - 'The member is banned from the group.'
+    - Message after a group admin banned a member from the group
+group.member.ban.failed:
+    - 'The member could not be banned. Admins of the group, BeWelcome admins and forum moderators can''t be banned.'
+    - Error when a group admin couldn't ban a member from the group
+group.admin.add.failed:
+    - 'The member could not be made an admin of the group.'
+    - Error when a group admin couldn't promote a member to admin
+group.admin.resign:
+    - 'Step down as admin'
+    - Button on a group's page for its admins; the last admin of a group can't step down

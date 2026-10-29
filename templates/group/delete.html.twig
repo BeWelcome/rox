@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="h3">{{ 'GroupsDeleteGroup'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    <p>{{ 'GroupsDeleteConsiderations'|trans }}</p>
+    <a class="btn btn-danger" href="{{ path('group_delete_confirmed', {id: group.id}) }}">{{ 'GroupsReallyDelete'|trans }}</a>
+    <a class="btn btn-outline-primary" href="{{ path('group_start', {group_id: group.id}) }}">{{ 'GroupsDontDelete'|trans }}</a>
+{% endblock %}

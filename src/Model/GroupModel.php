@@ -8,11 +8,13 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Language;
+use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\Notification;
 use App\Entity\Privilege;
 use App\Entity\PrivilegeScope;
 use App\Entity\Role;
+use App\Form\CustomDataClass\GroupSettingsRequest;
 use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
 use Doctrine\DBAL\ArrayParameterType;
@@ -223,31 +225,7 @@ class GroupModel
         $em->persist($group);
         $em->flush();
 
-        $roleRepository = $em->getRepository(Role::class);
-        /** @var Role $groupOwner */
-        $groupOwner = $roleRepository->findOneBy(['name' => Role::GROUP_OWNER]);
-
-        $privilegeRepository = $em->getRepository(Privilege::class);
-        /** @var Privilege $groupController */
-        $groupController = $privilegeRepository->findOneBy(['controller' => Privilege::GROUP_CONTROLLER]);
-
-        $privilegeScopeRepository = $em->getRepository(PrivilegeScope::class);
-        $privilege = $privilegeScopeRepository->findOneBy([
-            'member' => $member,
-            'role' => $groupOwner,
-            'privilege' => $groupController,
-        ]);
-
-        if (null === $privilege) {
-            $privilege = new PrivilegeScope();
-        }
-        $privilege
-            ->setMember($member)
-            ->setRole($groupOwner)
-            ->setPrivilege($groupController)
-            ->setType($group->getId());
-        $em->persist($privilege);
-        $em->flush();
+        $this->addAdministrator($group, $member);
 
         return $group;
     }
@@ -390,6 +368,134 @@ class GroupModel
     }
 
     /**
+     * Makes a current member of the group one of its admins (a GroupOwner privilege scope for the group).
+     */
+    public function addAdministrator(Group $group, Member $member): bool
+    {
+        if (!$this->isCurrentMember($group, $member)) {
+            return false;
+        }
+        if (null !== $this->findAdministratorScope($group, $member)) {
+            return true;
+        }
+
+        $privilegeScope = new PrivilegeScope()
+            ->setMember($member)
+            ->setRole($this->getGroupOwnerRole())
+            ->setPrivilege($this->getGroupPrivilege())
+            ->setType((string) $group->getId());
+        $this->entityManager->persist($privilegeScope);
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    /**
+     * An admin steps down; the last admin can't.
+     */
+    public function removeAdministrator(Group $group, Member $member): bool
+    {
+        $scope = $this->findAdministratorScope($group, $member);
+        if (null === $scope || \count($group->getAdministrators()) < 2) {
+            return false;
+        }
+
+        $this->entityManager->remove($scope);
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    public function isAdministrator(Group $group, Member $member): bool
+    {
+        return null !== $this->findAdministratorScope($group, $member);
+    }
+
+    /**
+     * The member leaves the group. Admins step down first.
+     */
+    public function leave(Group $group, Member $member): bool
+    {
+        $membership = $this->getMembership($group, $member);
+        if (null === $membership || $this->isAdministrator($group, $member)) {
+            return false;
+        }
+
+        $this->entityManager->remove($membership);
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    /**
+     * An admin takes a member out of the group (kick) or bans them, so they can't join again. Admins of the group and
+     * BeWelcome's admins and forum moderators can't be taken out.
+     */
+    public function removeMember(Group $group, Member $member, bool $ban): bool
+    {
+        $membership = $this->getMembership($group, $member);
+        if (null === $membership || $this->isAdministrator($group, $member)) {
+            return false;
+        }
+        $roles = $member->getRoles();
+        if (\in_array(Member::ROLE_ADMIN_ADMIN, $roles, true) || \in_array(Member::ROLE_ADMIN_FORUMMODERATOR, $roles, true)) {
+            return false;
+        }
+
+        if ($ban) {
+            $membership->setStatus(GroupMembershipStatusType::KICKED_FROM_GROUP);
+        } else {
+            $this->entityManager->remove($membership);
+        }
+        $this->entityManager->flush();
+
+        return true;
+    }
+
+    public function updateMembershipSettings(
+        GroupMembership $membership,
+        ?string $comment,
+        bool $acceptMassMail,
+        bool $notificationsEnabled,
+    ): void {
+        $membership
+            ->setComment('' === trim((string) $comment) ? null : $comment)
+            ->setAcceptMassMail($acceptMassMail)
+            ->setNotificationsEnabled($notificationsEnabled);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Saves the settings an admin made: the description in their language, who may join, who sees the posts, the
+     * categories, the location and a new picture (already stored, by its file name).
+     */
+    public function updateSettings(
+        Group $group,
+        GroupSettingsRequest $settings,
+        string $locale,
+        Member $admin,
+        ?string $picture,
+    ): void {
+        $group
+            ->setDescription($locale, $settings->description, $admin)
+            ->setType($settings->type)
+            ->setMembersOnly('No' === $settings->visiblePosts)
+            ->setLocation(null === $settings->location ? null : $this->entityManager->find(Location::class, $settings->location));
+        if (null !== $picture) {
+            $group->setPicture($picture);
+        }
+        foreach ($group->getCategories() as $category) {
+            if (!\in_array($category, $settings->categories, true)) {
+                $group->removeCategory($category);
+            }
+        }
+        foreach ($settings->categories as $category) {
+            $group->addCategory($category);
+        }
+        $this->entityManager->flush();
+    }
+
+    /**
      * Deletes the threads of a group's forum and everything that hangs on them. Threads and posts point at each
      * other (first and last post), so the foreign key checks are off while they go.
      */
@@ -422,6 +528,39 @@ class GroupModel
         } finally {
             $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
         }
+    }
+
+    private function isCurrentMember(Group $group, Member $member): bool
+    {
+        $membership = $this->getMembership($group, $member);
+
+        return null !== $membership && GroupMembershipStatusType::CURRENT_MEMBER === $membership->getStatus();
+    }
+
+    private function findAdministratorScope(Group $group, Member $member): ?PrivilegeScope
+    {
+        return $this->entityManager->getRepository(PrivilegeScope::class)->findOneBy([
+            'member' => $member,
+            'role' => $this->getGroupOwnerRole(),
+            'privilege' => $this->getGroupPrivilege(),
+            'type' => (string) $group->getId(),
+        ]);
+    }
+
+    private function getGroupOwnerRole(): Role
+    {
+        /** @var Role $role */
+        $role = $this->entityManager->getRepository(Role::class)->findOneBy(['name' => Role::GROUP_OWNER]);
+
+        return $role;
+    }
+
+    private function getGroupPrivilege(): Privilege
+    {
+        /** @var Privilege $privilege */
+        $privilege = $this->entityManager->getRepository(Privilege::class)->findOneBy(['controller' => Privilege::GROUP_CONTROLLER]);
+
+        return $privilege;
     }
 
     private function getMembership($group, $member): ?GroupMembership

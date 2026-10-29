@@ -4,6 +4,7 @@ namespace App\Utilities;
 
 use App\Entity\Group;
 use App\Entity\Member;
+use App\Security\GroupVoter;
 
 /**
  * The submenu of a group's pages (overview, forum, wiki, members, ...).
@@ -47,6 +48,17 @@ trait GroupSubmenuTrait
             $submenuItems['join'] = [
                 'key' => 'group.join',
                 'url' => $this->generateUrl('join_group', ['groupId' => $groupId]),
+            ];
+        }
+
+        if ($this->isGranted(GroupVoter::GROUP_ADMINISTER, $group)) {
+            $submenuItems['memberadministration'] = [
+                'key' => 'GroupsAdministrateMembers',
+                'url' => $this->generateUrl('group_memberadministration', ['group_id' => $groupId]),
+            ];
+            $submenuItems['groupsettings'] = [
+                'key' => 'GroupsAdministrateGroup',
+                'url' => $this->generateUrl('group_groupsettings', ['group_id' => $groupId]),
             ];
         }
 

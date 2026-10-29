@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% macro action(route, group, member, token, label, class, confirm) %}
+    <form method="post" action="{{ path(route, {group_id: group.id, member_id: member.id}) }}" class="d-inline"
+          {% if confirm %}onsubmit="return confirm('{{ confirm|trans|e('js') }}')"{% endif %}>
+        <input type="hidden" name="_token" value="{{ csrf_token('group-' ~ token ~ '-' ~ group.id ~ '-' ~ member.id) }}">
+        <button type="submit" class="btn btn-sm {{ class }}">{{ label|trans }}</button>
+    </form>
+{% endmacro %}
+
+{% block content %}
+    {% import _self as admin %}
+    <h1 class="h3">{{ 'GroupsAdministrateMembers'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+
+    <h2 class="h4 mt-3">{{ 'GroupsInviteMembers'|trans }}</h2>
+    <form method="post" action="{{ path('group_invite_member', {group_id: group.id}) }}" class="d-flex gap-2 mb-3">
+        <input type="hidden" name="_token" value="{{ csrf_token('group-invite-' ~ group.id) }}">
+        <input type="text" class="o-input" name="username" aria-label="{{ 'Username'|trans }}" required>
+        <button type="submit" class="btn btn-primary">{{ 'GroupsInvite'|trans }}</button>
+    </form>
+
+    {% if applicants is not empty %}
+        <h2 class="h4 mt-3">{{ 'GroupsAcceptMember'|trans }}</h2>
+        <table class="table table-striped">
+            <tbody>
+                {% for membership in applicants %}
+                    <tr>
+                        <td><a href="{{ path('members_profile', {username: membership.member.username}) }}">{{ membership.member.username }}</a></td>
+                        <td><em>{{ membership.comment|purify }}</em></td>
+                        <td class="text-end">
+                            {{ admin.action('group_acceptmember', group, membership.member, 'accept', 'GroupsAcceptMember', 'btn-primary', null) }}
+                            {{ admin.action('group_declinemember', group, membership.member, 'decline', 'GroupsDeclineMember', 'btn-outline-danger', 'GroupsConfirmMemberDecline') }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    {% if invited is not empty %}
+        <h2 class="h4 mt-3">{{ 'GroupsInvitedMembers'|trans }}</h2>
+        <ul>
+            {% for membership in invited %}
+                <li>
+                    <a href="{{ path('members_profile', {username: membership.member.username}) }}">{{ membership.member.username }}</a>
+                    (<a href="{{ path('withdraw_member_invite_to_group', {groupId: group.id, memberId: membership.member.id}) }}">{{ 'GroupsWithdrawInvitation'|trans }}</a>)
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <h2 class="h4 mt-3">{{ 'GroupsCurrentMembers'|trans }}</h2>
+    <table class="table table-striped">
+        <tbody>
+            {% for membership in members %}
+                {% set member = membership.member %}
+                <tr>
+                    <td><a href="{{ path('members_profile', {username: member.username}) }}" class="username">{{ member.username }}</a></td>
+                    <td class="text-end">
+                        {% if member.id in administratorIds %}
+                            <span class="badge text-bg-secondary">{{ 'GroupAdmins'|trans }}</span>
+                        {% else %}
+                            {{ admin.action('group_addadmin', group, member, 'admin', 'GroupsAddAdmin', 'btn-outline-primary', 'GroupsConfirmMemberAsAdmin') }}
+                            {{ admin.action('group_kickmember', group, member, 'kick', 'GroupsKickMember', 'btn-outline-danger', 'GroupsConfirmMemberKick') }}
+                            {{ admin.action('group_banmember', group, member, 'ban', 'GroupsBanMember', 'btn-danger', 'GroupsConfirmMemberBan') }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if members.haveToPaginate %}
+        <div class="u:flex u:justify-end u:my-8">
+            {{ pagerfanta(members, 'rounded_pagination', {routeName: 'group_memberadministration_paged', routeParams: {group_id: group.id}, pageParameter: '[page_number]'}) }}
+        </div>
+    {% endif %}
+{% endblock %}

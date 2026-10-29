@@ -16,15 +16,6 @@
 
     // group routes
     $this->addRoute('group_new_post', 'group/:group_id:/new', 'GroupsController', 'newPost');
-    $this->addRoute('group_acceptinvitation','group/:group_id:/acceptinvitation/:member_id:', 'GroupsController', 'acceptInvitation');
-    $this->addRoute('group_acceptmember','group/:group_id:/acceptmember/:member_id:', 'GroupsController', 'acceptMember');
-    $this->addRoute('group_banmember','group/:group_id:/banmember/:member_id:', 'GroupsController', 'banMember');
-    $this->addRoute('group_addadmin','group/:group_id:/addAdmin/:member_id:', 'GroupsController', 'addMemberAsAdmin');
-    $this->addRoute('group_resignadmin','group/:group_id:/resignAdmin', 'GroupsController', 'resignAsAdmin');
-    $this->addRoute('group_declineinvitation','group/:group_id:/declineinvitation/:member_id:', 'GroupsController', 'declineInvitation');
-    $this->addRoute('group_declinemember','group/:group_id:/declinemember/:member_id:', 'GroupsController', 'declineMember');
-    $this->addRoute('group_delete','group/:group_id:/delete', 'GroupsController', 'delete');
-    $this->addRoute('group_deleted','group/:group_id:/delete/true', 'GroupsController', 'delete');
     $this->addRoute('group_forum','group/:group_id:/forum', 'GroupsController', 'forum');
     $this->addRoute('group_forum_pages','group/:group_id:/forum/page:page_id:', 'GroupsController', 'forum');
     $this->addRoute('group_forum_thread','group/:group_id:/forum/s:thread:', 'GroupsController', 'forum');
@@ -33,25 +24,12 @@
     $this->addRoute('group_forum_thread_title','group/:group_id:/forum/s:thread:-:title:', 'GroupsController', 'forum');
     $this->addRoute('group_forum_thread_title_slash','group/:group_id:/forum/:thread:-:title:/', 'GroupsController', 'forum');
     $this->addRoute('group_forum_action','group/:group_id:/forum/:thread:/:action:', 'GroupsController', 'forum');
-    $this->addRoute('group_groupsettings','group/:group_id:/groupsettings', 'GroupsController', 'groupSettings');
-    $this->addRoute('group_kickmember','group/:group_id:/kickmember/:member_id:', 'GroupsController', 'kickMember');
-    $this->addRoute('group_leave','group/:group_id:/leave', 'GroupsController', 'leave');
-    $this->addRoute('group_left','group/:group_id:/leave/true', 'GroupsController', 'left');
-    $this->addRoute('group_memberadministration','group/:group_id:/memberadministration', 'GroupsController', 'memberAdministration');
-    $this->addRoute('group_memberadministration_paged','group/:group_id:/memberadministration/page/:page_number:', 'GroupsController', 'memberAdministration');
-    $this->addRoute('group_membersearch_ajax','group/:group_id:/membersearchajax/:search_term:', 'GroupsController', 'memberSearchAjax');
-    $this->addRoute('group_membersettings','group/:group_id:/membersettings', 'GroupsController', 'memberSettings');
     $this->addRoute('group_search_discussions','group/:group_id:/search', 'GroupsController', 'searchDiscussions');
     $this->addRoute('group_wiki','group/:group_id:/wiki', 'GroupsController', 'wiki');
     $this->addRoute('groups_forums_overview','groups/forums', 'GroupsController', 'groupForumsOverview');
     $this->addRoute('groups_forums_overview_paged','groups/forums/:page_number:', 'GroupsController', 'groupForumsOverview');
 
     // related groups routes
-    $this->addRoute('relatedgroup_select','group/:group_id:/selectrelatedgroup', 'RelatedGroupsController', 'selectRelatedGroup');
-    $this->addRoute('relatedgroup_add','group/:group_id:/addrelatedgroup/:related_id:', 'RelatedGroupsController', 'addRelatedGroup');
-    $this->addRoute('relatedgroup_selectdelete','group/:group_id:/selectdeleterelatedgroup', 'RelatedGroupsController', 'selectdeleteRelatedGroup');
-    $this->addRoute('relatedgroup_delete','group/:group_id:/deleterelatedgroup/:related_id:', 'RelatedGroupsController', 'deleteRelatedGroup');
-    $this->addRoute('relatedgroup_log','group/:group_id:/relatedgroupsettings', 'RelatedGroupsController', 'showRelatedGroupLog');
 
     // member app routes
     $this->addRoute('members_profile_old', '/members/:username:/old', 'MembersController', 'index');

@@ -1,8 +1,9 @@
 import {initializeSingleAutoComplete} from '../suggest/locations';
 
-// The location filter of the group search: a place, region or country from the suggestions sets the hidden geonames id.
-const locationName = document.getElementById('group_search_location_name');
-const location = document.getElementById('group_search_location');
+// The location field of the group search and the group settings: a place, region or country from the suggestions
+// sets the geonames id in the hidden field named by data-location-target.
+const locationName = document.querySelector('.js-location-picker[data-location-target]');
+const location = locationName ? document.querySelector(locationName.dataset.locationTarget) : null;
 
 if (locationName && location) {
     initializeSingleAutoComplete('/suggest/locations/all', 'js-location-picker', (element, result) => {

@@ -9460,11 +9460,10 @@ a.p-pro__tile--comments:hover { border-color: #e2e8f0; background: #f8fafc; }
 .p-pro-offer__text { color: #0f172a; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
 .p-pro-offer__text p { margin: 0 0 0.5rem; }
 .p-pro-offer__text p:last-child { margin-bottom: 0; }
-.p-pro-spoken__list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
-.p-pro-spoken__item { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.3rem 1rem 0.3rem 0.3rem; border-radius: 999px; background: #f6f7f9; }
-.p-pro-spoken__code { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 2.05rem; height: 2.05rem; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #334155; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; }
-.p-pro-spoken__name { color: #0f172a; font-size: 1rem; font-weight: 600; }
-.p-pro-spoken__level { color: #64748b; font-size: 0.875rem; }
+.p-pro-spoken__list { display: flex; flex-direction: column; gap: 0.9rem; margin: 0; padding: 0; }
+.p-pro-spoken__group { margin: 0; }
+.p-pro-spoken__level { margin: 0 0 0.15rem; color: #9a3412; font-size: 0.875rem; font-weight: 700; }
+.p-pro-spoken__names { margin: 0; color: #0f172a; font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
 
 /* Accommodation: three tiles, then the details */
 .p-pro-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
@@ -9636,16 +9635,9 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro-about { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
   .p-pro-about { font-size: 1rem; line-height: 1.65; }
   .p-pro-about__extra { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; margin-top: 1.25rem; padding-top: 1.25rem; }
-  /* Two languages a row, the level under the name: half the lines of the pills */
-  .p-pro-spoken__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; }
-  .p-pro-spoken__item { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.5rem; row-gap: 0; align-content: center; align-items: center; padding: 0.35rem 0.6rem 0.35rem 0.35rem; border-radius: 0.75rem; }
-  .p-pro-spoken__code { grid-row: span 2; width: 1.75rem; height: 1.75rem; font-size: 0.625rem; }
-  .p-pro-spoken__name,
-  .p-pro-spoken__level { overflow: hidden; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
-  .p-pro-spoken__name { font-size: 0.875rem; }
-  .p-pro-spoken__level { margin-top: 0.05rem; font-size: 0.75rem; }
-  .p-pro-spoken__name { align-self: end; }
-  .p-pro-spoken__level { align-self: start; }
+  .p-pro-spoken__list { gap: 0.75rem; }
+  .p-pro-spoken__level { font-size: 0.8125rem; }
+  .p-pro-spoken__names { font-size: 1rem; }
   .p-pro-about.is-open { display: block; }
   .p-pro-stats { gap: 0.45rem; }
   .p-pro-stat { padding: 0.7rem; }

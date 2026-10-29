@@ -72,17 +72,19 @@
                     <i class="fas fa-language" aria-hidden="true"></i>
                     {{ 'languages.spoken'|trans({}, 'messages', profile_language)|striptags }}
                   </h3>
-                  <ul class="p-pro-spoken__list">
-                    {% for level, langs in spokenLanguages %}
-                      {% for lang in langs %}
-                        <li class="p-pro-spoken__item">
-                          <span class="p-pro-spoken__code" aria-hidden="true">{{ lang.ShortCode|upper|slice(0, 2) }}</span>
-                          <span class="p-pro-spoken__name">{{ ('lang_' ~ lang.ShortCode)|lower|trans({}, 'messages', profile_language) }}</span>
-                          <span class="p-pro-spoken__level">{{ ('language.level.' ~ level)|lower|trans({}, 'messages', profile_language) }}</span>
-                        </li>
-                      {% endfor %}
+                  {# One line per level, mother tongue first: the level, then its languages #}
+                  <dl class="p-pro-spoken__list">
+                    {% for level, langs in spokenLanguages|filter(langs => langs|length > 0) %}
+                      <div class="p-pro-spoken__group">
+                        <dt class="p-pro-spoken__level">{{ ('language.level.' ~ level)|lower|trans({}, 'messages', profile_language) }}</dt>
+                        <dd class="p-pro-spoken__names">
+                          {%- for lang in langs -%}
+                            {{ ('lang_' ~ lang.ShortCode)|lower|trans({}, 'messages', profile_language) }}{{ not loop.last ? ', ' }}
+                          {%- endfor -%}
+                        </dd>
+                      </div>
                     {% endfor %}
-                  </ul>
+                  </dl>
                 </div>
               {% endif %}
             </div>

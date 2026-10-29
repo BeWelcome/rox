@@ -127,6 +127,8 @@ final class Version20261029100000 extends AbstractMigration
      */
     private function copyMemberships(): void
     {
+        // memberstrads (main) and member_translation (develop) have different collations, so COALESCE() of the two
+        // has none: both are read as group_membership.comment's collation.
         $mainComments = $this->tableExists('memberstrads')
             ? <<<'SQL'
                 LEFT JOIN (
@@ -146,7 +148,8 @@ final class Version20261029100000 extends AbstractMigration
         $this->connection->executeStatement(<<<SQL
             INSERT IGNORE INTO group_membership
                 (member_id, group_id, status, comment, accept_mass_mail, notifications_enabled, created, updated)
-            SELECT mg.IdMember, mg.IdGroup, mg.Status, NULLIF(COALESCE(mc.Sentence, dc.content), ''),
+            SELECT mg.IdMember, mg.IdGroup, mg.Status,
+                NULLIF(COALESCE(mc.Sentence COLLATE utf8mb4_uca1400_ai_ci, dc.content COLLATE utf8mb4_uca1400_ai_ci), ''),
                 mg.IacceptMassMailFromThisGroup = 'yes', mg.notificationsEnabled = 1,
                 COALESCE(NULLIF(mg.created, '0000-00-00 00:00:00'), mg.updated), mg.updated
             FROM membersgroups mg

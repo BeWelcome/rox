@@ -33,4 +33,20 @@ class GroupCategoryRepository extends EntityRepository
 
         return $categories;
     }
+
+    /**
+     * @return array<int, int> the number of groups in each category, by category id (categories without groups left out)
+     */
+    public function countGroups(): array
+    {
+        $rows = $this->getEntityManager()->getConnection()->fetchAllNumeric(
+            'SELECT group_category_id, COUNT(*) FROM group_category_group GROUP BY group_category_id'
+        );
+        $counts = [];
+        foreach ($rows as [$categoryId, $count]) {
+            $counts[(int) $categoryId] = (int) $count;
+        }
+
+        return $counts;
+    }
 }

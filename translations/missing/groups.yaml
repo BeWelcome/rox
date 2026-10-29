@@ -32,3 +32,21 @@ group.picture.missing:
 group.declined.invitation:
     - '{username} has declined the invitation to the {group} group.'
     - Mail to the admins of a group when a member declines the invitation to the group.
+admin.groups.categories:
+    - 'Categories'
+    - Item in the menu of the group admin pages and heading of the page that lists the categories groups can be put in
+admin.group.category.groups:
+    - 'Groups'
+    - Column heading on the group categories admin page; the number of groups in a category
+admin.group.category.name.help:
+    - 'An empty name removes the language. The English name is required.'
+    - Help below the name field when a group admin sets the name of a group category in a language
+admin.group.category.english:
+    - 'A category needs an English name.'
+    - Error when a group admin tries to remove the English name of a group category
+admin.group.category.saved:
+    - 'The category is saved.'
+    - Message after a group admin added a group category or changed one of its names
+admin.group.category.deleted:
+    - 'The category is deleted.'
+    - Message after a group admin deleted a group category

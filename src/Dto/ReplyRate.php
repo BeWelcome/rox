@@ -8,6 +8,11 @@ namespace App\Dto;
  */
 readonly class ReplyRate
 {
+    /**
+     * Below this many requests one unanswered request would say too much: the rate is not shown.
+     */
+    public const int SHOWN_FROM = 3;
+
     public function __construct(
         public int $received,
         public int $answered,
@@ -30,5 +35,13 @@ readonly class ReplyRate
         $rate = $this->getRate();
 
         return null === $rate ? null : (int) round($rate * 100);
+    }
+
+    /**
+     * The percentage to show to members (profile, search), null under SHOWN_FROM requests received.
+     */
+    public function getShownPercentage(): ?int
+    {
+        return $this->received < self::SHOWN_FROM ? null : $this->getPercentage();
     }
 }

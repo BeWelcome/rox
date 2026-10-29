@@ -128,38 +128,59 @@ class MessageRepository extends EntityRepository
      */
     public function getReplyRate(Member $member, ?DateTimeInterface $since = null): ReplyRate
     {
+        return $this->getReplyRates([$member->getId()], $since)[$member->getId()];
+    }
+
+    /**
+     * The reply rate (see getReplyRate()) of several members in one query, for a page of search results.
+     *
+     * @param int[] $memberIds
+     *
+     * @return array<int, ReplyRate> by member id, one for each member asked for
+     */
+    public function getReplyRates(array $memberIds, ?DateTimeInterface $since = null): array
+    {
+        $memberIds = array_values(array_unique(array_map('intval', $memberIds)));
+        $rates = array_fill_keys($memberIds, new ReplyRate(0, 0));
+        if ([] === $memberIds) {
+            return $rates;
+        }
+
         $sinceCondition = null === $since ? '' : 'AND m.created >= :since';
         $sql = <<<SQL
-                WITH RECURSIVE chain (root_id, id) AS (
-                    SELECT m.id, m.id
+                WITH RECURSIVE chain (member_id, root_id, id) AS (
+                    SELECT m.receiver_id, m.id, m.id
                     FROM message m
-                    WHERE m.receiver_id = :member
+                    WHERE m.receiver_id IN (:members)
                         AND m.parent_id IS NULL
                         AND m.request_id IS NOT NULL
                         AND m.folder NOT IN (:hiddenFolders)
                         AND m.status NOT IN (:notDelivered)
                         {$sinceCondition}
                     UNION
-                    SELECT c.root_id, r.id
+                    SELECT c.member_id, c.root_id, r.id
                     FROM message r
                     JOIN chain c ON r.parent_id = c.id
                 )
                 SELECT
+                    c.member_id,
                     COUNT(DISTINCT c.root_id) AS received,
                     COUNT(DISTINCT CASE
-                        WHEN m.sender_id = :member AND m.id <> c.root_id AND m.status <> :draft THEN c.root_id
+                        WHEN m.sender_id = c.member_id AND m.id <> c.root_id AND m.status <> :draft THEN c.root_id
                     END) AS answered
                 FROM chain c
                 JOIN message m ON m.id = c.id
+                GROUP BY c.member_id
             SQL;
 
         $parameters = [
-            'member' => $member->getId(),
+            'members' => $memberIds,
             'hiddenFolders' => [InFolderType::SPAM, InFolderType::DRAFT],
             'notDelivered' => [MessageStatusType::DRAFT, MessageStatusType::CHECK, MessageStatusType::FROZEN],
             'draft' => MessageStatusType::DRAFT,
         ];
         $types = [
+            'members' => ArrayParameterType::INTEGER,
             'hiddenFolders' => ArrayParameterType::STRING,
             'notDelivered' => ArrayParameterType::STRING,
         ];
@@ -167,9 +188,12 @@ class MessageRepository extends EntityRepository
             $parameters['since'] = $since->format('Y-m-d H:i:s');
         }
 
-        $counts = $this->getEntityManager()->getConnection()->fetchAssociative($sql, $parameters, $types);
+        $rows = $this->getEntityManager()->getConnection()->fetchAllAssociative($sql, $parameters, $types);
+        foreach ($rows as $row) {
+            $rates[(int) $row['member_id']] = new ReplyRate((int) $row['received'], (int) $row['answered']);
+        }
 
-        return new ReplyRate((int) ($counts['received'] ?? 0), (int) ($counts['answered'] ?? 0));
+        return $rates;
     }
 
     public function getUnreadConversationsCount(Member $member): int

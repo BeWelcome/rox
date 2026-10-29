@@ -69,15 +69,17 @@
         <span>{{ 'search.member.duration'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) }}</span>
     </p>
 
-    {# Hosting, then the comments with their split #}
+    {# One compact row: hosting, the reply rate, then the comments with their split on the right #}
     {% set commentsTotal = comments_count.total ?? 0 %}
     <div class="p-search-preview__tiles">
         {% if hosting %}
-            <div class="p-search-preview__tile p-search-preview__tile--host-{{ hosting }}">
-                <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
-                <span>{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</span>
-            </div>
+            <span class="p-search-preview__chip p-search-preview__chip--host-{{ hosting }}">
+                {{ ('member.hosting.' ~ hosting)|trans }}
+            </span>
         {% endif %}
+        {# How often they answer requests (from 3 received, last 12 months) #}
+        {% set replyRate = member_reply_rate(member, '-12 months').shownPercentage %}
+        {% include 'profile/_reply_rate.html.twig' with { percent: replyRate, variant: 'chip' } %}
         {# The comments: the count of each quality, as on the cards of the list #}
         <div class="p-search-preview__quality{% if commentsTotal %} has-comments{% endif %}">
             {% for quality, icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
@@ -94,6 +96,10 @@
             <span class="visually-hidden">{{ commentsTotal }} {{ 'search.preview.comments'|trans({ count: commentsTotal }) }}</span>
         </div>
     </div>
+    {% if replyRate is not null %}
+        {# Phones: the sentence of the reply rate, a tooltip on a computer #}
+        <p class="p-search-preview__reply-note">{{ 'profile.reply.rate.sentence'|trans({ percent: replyRate }) }}</p>
+    {% endif %}
 
     {% if app.user != member and member.status != 'PassedAway' %}
         <div class="p-search-preview__actions">

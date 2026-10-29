@@ -49,7 +49,7 @@
       {% endif %}
 
       {# ── Photo with the hosting badge ── #}
-      <div class="p-pro__avatar">
+      <div class="p-pro__avatar{% if hosting %} p-pro__avatar--{{ hosting }}{% endif %}">
         {# A click shows the picture big in the photo viewer (lightbox), at 800px: lighter than the original #}
         {% if use_lightbox ?? true %}
           <a class="p-pro__avatar-link js-profile-picture"
@@ -67,10 +67,7 @@
                alt="{{ member.Username }}">
         {% endif %}
         {% if hosting %}
-          <span class="p-pro__host p-pro__host--{{ hosting }}">
-            <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
-            <span class="visually-hidden">{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</span>
-          </span>
+          <span class="visually-hidden">{{ ('member.hosting.' ~ hosting)|trans }}</span>
         {% endif %}
       </div>
 
@@ -206,14 +203,15 @@
       {# ── What members trust: hosting on the left, the comments by quality on the right ── #}
       {% set _byQuality = comments_count ?? member_comments_by_quality(member) %}
       {% set _hasComments = (_byQuality.positive ?? 0) + (_byQuality.neutral ?? 0) + (_byQuality.negative ?? 0) > 0 %}
-      {% if hosting or _hasComments %}
+      {% set _replyRate %}{% include 'profile/_reply_rate.html.twig' %}{% endset %}
+      {% if hosting or _hasComments or _replyRate|trim is not empty %}
         <div class="p-pro__trust">
           {% if hosting %}
             <span class="p-pro__hosting p-pro__hosting--{{ hosting }}">
-              <i class="fas {{ hosting == 'yes' ? 'fa-home' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
-              {{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}
+              {{ ('member.hosting.' ~ hosting)|trans }}
             </span>
           {% endif %}
+          {{ _replyRate }}
           {% if _hasComments %}
             <a class="p-quality-pill" href="{{ url('profile_comments', {username: member.username}) }}">
               {% for _q, _icon in { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}

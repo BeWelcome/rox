@@ -10,7 +10,7 @@ class MessagesAdapter extends AbstractConversationsAdapter implements AdapterInt
     {
         return '
             SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             WHERE
             ' . $this->getInitiatorCondition() . '
             AND ' . $this->getNotSpamCondition() . '
@@ -18,13 +18,13 @@ class MessagesAdapter extends AbstractConversationsAdapter implements AdapterInt
             AND `m`.`request_id` IS NULL
             AND `m`.`id` IN (
                     SELECT max(`m`.`id`)
-                    FROM `messages` m
+                    FROM `message` m
                     WHERE ' . $this->getNotDeletedOrPurgedCondition() . '
                     GROUP BY `m`.`subject_id`
                 )
             UNION
             SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             WHERE
             ' . $this->getInitiatorCondition() . '
             AND ' . $this->getNotSpamCondition() . '

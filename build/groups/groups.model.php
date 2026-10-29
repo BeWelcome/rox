@@ -71,24 +71,6 @@ class GroupsModel extends  RoxModelBase
     }
 
     /**
-     * creates a membership for a member and sets the status to invited
-     *
-     * @param object $group - Group entity
-     * @param int $memberId - id of member to invite
-     * @access public
-     * @return bool
-     */
-    public function inviteMember($group, $memberId)
-    {
-        if (!$group->isLoaded() || !($member = $this->createEntity('Member', $memberId)))
-        {
-            return false;
-        }
-        $ms = $this->createEntity('GroupMembership');
-        return  $ms->memberJoin($group, $member, 'Invited');
-    }
-
-    /**
      * searches for members, using username
      * if group is provided, any members found that are in that
      * group will not be returned
@@ -465,37 +447,6 @@ WHERE group_id=" . (int)$group->id . " AND member_id=" . (int)$memberid;
 
 
     /**
-     * handles a user joining a group
-     *
-     * @param object $member - member entity of the user joining
-     * @param object $group - group entity for the group joined
-     * @return bool
-     * @access public
-     */
-    public function joinGroup($member, $group)
-    {
-        if (!is_object($group) || !$group->isLoaded() || !is_object($member) || !$member->isLoaded())
-        {
-            return false;
-        }
-        if ($membership = $this->createEntity('GroupMembership')->findByWhere("member_id = '{$member->getPKValue()}' AND group_id = '{$group->getPKValue()}' AND status = 'Invited'"))
-        {
-            return $membership->updateStatus('In');
-        }
-        elseif ($group->type == GroupType::INVITE_ONLY)
-        {
-            return false;
-        }
-        $status = (($group->type == GroupType::NEED_ACCEPTANCE) ? 'WantToBeIn' : 'In');
-        $result = (bool) $this->createEntity('GroupMembership')->memberJoin($group, $member, $status);
-        if ($result && $status == 'WantToBeIn')
-        {
-            $this->notifyGroupAdmins($group, $member);
-        }
-        return $result;
-    }
-
-    /**
      * handles a user leaving a group
      *
      * @param object $member - member entity of the user joining
@@ -775,46 +726,6 @@ WHERE group_id=" . (int)$group->id . " AND member_id=" . (int)$memberid;
     }
 
     /**
-     * creates a message for the invited member
-     *
-     * @param object $group
-     * @param int $memberId
-     * @param object $from - member entity
-     * @access public
-     */
-    public function sendInvitation($group, $memberId, $from)
-    {
-        if ($group->isLoaded() && ($member = $this->createEntity('Member', $memberId)) && $from->isLoaded())
-        {
-            $msg = $this->createEntity('Message');
-            $msg->MessageType = 'MemberToMember';
-            $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
-            $msg->IdParent = 0;
-            $msg->IdReceiver = $member->getPKValue();
-            $msg->IdSender = $from->getPKValue();
-            $msg->SendConfirmation = 'No';
-            $msg->Status = 'ToSend';
-            $msg->SpamInfo = 'NotSpam';
-            $url = PVars::getObj('env')->baseuri . 'group/' . $group->getPKValue();
-            $urlaccept = '<a href="' . $url . '/acceptinvitation/'. $member->getPKValue() .'">' . $url . '/acceptinvitation/' . $member->getPKValue() . '</a>';
-            $urldecline = '<a href="' . $url . '/declineinvitation/'. $member->getPKValue() .'">' . $url . '/declineinvitation/' . $member->getPKValue() . '</a>';
-            $words = $this->getWords();
-            $msg->Message = $words->getFormattedInLang('GroupInvitation', $member->getLanguagePreference(), $member->Username, $group->name, $urlaccept, $urldecline);
-            $msg->InFolder = 'Normal';
-            $msg->JoinMemberPict = 'no';
-            $msg->insert();
-
-            $param['IdMember'] = $member->getPKValue();
-            $param['IdRelMember'] = $from->getPKValue();
-            $param['Type'] = 'message';
-            $param['Link'] = "/group/{$group->getPKValue()}";
-            $param['WordCode'] = '';
-            $param['TranslationParams'] = ['GroupsInvitedNote', $group->name];
-            $note = $this->createEntity('Note')->createNote($param);
-        }
-    }
-
-    /**
      * changes a membership from invited to in
      *
      * @param object $group
@@ -862,37 +773,6 @@ WHERE group_id=" . (int)$group->id . " AND member_id=" . (int)$memberid;
         }
     }
 
-
-    /**
-     * creates a message for the group admins, that a new member wants to join
-     *
-     * @param object $group
-     * @param object $member - member entity
-     * @access public
-     */
-    public function notifyGroupAdmins($group, $member)
-    {
-        if ($group->isLoaded() && $member->isLoaded() && ($admins = $group->getGroupOwners()))
-        {
-            foreach ($admins as $admin) {
-                $msg = $this->createEntity('Message');
-                $msg->MessageType = 'MemberToMember';
-                $msg->updated = $msg->created = $msg->DateSent = date('Y-m-d H:i:s');
-                $msg->IdParent = 0;
-                $msg->IdReceiver = $admin->getPKValue();
-                $msg->IdSender = $member->getPKValue();
-                $msg->SendConfirmation = 'No';
-                $msg->Status = 'ToSend';
-                $msg->SpamInfo = 'NotSpam';
-                $url = '<a href="' . PVars::getObj('env')->baseuri . 'group/' . $group->getPKValue() . '/memberadministration">' . PVars::getObj('env')->baseuri . 'groups/' . $group->getPKValue() . '/memberadministration</a>';
-                $words = $this->getWords();
-                $msg->Message = $words->get('GroupJoinRequest', $admin->Username, $member->Username, $group->name, $url);
-                $msg->InFolder = 'Normal';
-                $msg->JoinMemberPict = 'no';
-                $msg->insert();
-            }
-        }
-    }
 
     /**
      * @param Group $group

@@ -67,10 +67,10 @@ abstract class AbstractConversationsAdapter
     protected function getUnreadCondition(): string
     {
         if ($this->unreadOnly) {
-            $unreadCondition = '(m.IdReceiver = :memberId) '
-                . 'AND (`m`.WhenFirstRead IS NULL OR `m`.WhenFirstRead = \'0000-00-00 00:00:00\')';
+            $unreadCondition = '(m.receiver_id = :memberId) '
+                . 'AND (`m`.first_read IS NULL OR `m`.first_read = \'0000-00-00 00:00:00\')';
         } else {
-            $unreadCondition = '(m.IdReceiver = :memberId OR m.IdSender = :memberId)';
+            $unreadCondition = '(m.receiver_id = :memberId OR m.sender_id = :memberId)';
         }
 
         return $unreadCondition;
@@ -79,13 +79,13 @@ abstract class AbstractConversationsAdapter
     protected function getNotDeletedOrPurgedCondition(): string
     {
         $notDeletedOrPurgedCondition =
-            '((m.IdReceiver = :memberId) OR (m.IdSender = :memberId)) AND (' .
-                '((m.IdReceiver = :memberId) AND ' .
-                    'm.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'' .
-                    ' AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'' .
-                ') OR ((m.IdSender = :memberId) AND ' .
-                    'm.DeleteRequest NOT LIKE \'%' . DeleteRequestType::SENDER_DELETED . '%\'' .
-                    ' AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::SENDER_PURGED . '%\'' .
+            '((m.receiver_id = :memberId) OR (m.sender_id = :memberId)) AND (' .
+                '((m.receiver_id = :memberId) AND ' .
+                    'm.delete_request NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'' .
+                    ' AND m.delete_request NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'' .
+                ') OR ((m.sender_id = :memberId) AND ' .
+                    'm.delete_request NOT LIKE \'%' . DeleteRequestType::SENDER_DELETED . '%\'' .
+                    ' AND m.delete_request NOT LIKE \'%' . DeleteRequestType::SENDER_PURGED . '%\'' .
                 ')' .
             ')';
 
@@ -116,7 +116,7 @@ abstract class AbstractConversationsAdapter
 
     protected function getNotSpamCondition(): string
     {
-        return '(m.initiator_id = :memberId or InFolder <> \'' . InFolderType::SPAM . '\')';
+        return '(m.initiator_id = :memberId or folder <> \'' . InFolderType::SPAM . '\')';
     }
 
     abstract protected function getConversationsQuery(): string;

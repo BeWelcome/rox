@@ -10,19 +10,19 @@ class ConversationsAdapter extends AbstractConversationsAdapter implements Adapt
     {
         return '
             SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             WHERE ' . $this->getInitiatorCondition() . '
             AND ' . $this->getUnreadCondition() . '
             AND `m`.`id` IN (
                     SELECT max(`m`.`id`)
-                    FROM `messages` m
+                    FROM `message` m
                     WHERE ' . $this->getNotDeletedOrPurgedCondition() . '
                     AND ' . $this->getNotSpamCondition() . '
                     GROUP BY `m`.`subject_id`
                 )
             UNION
                 SELECT `m`.*
-                FROM `messages` m
+                FROM `message` m
                 WHERE ' . $this->getInitiatorCondition() . '
                 AND ' . $this->getUnreadCondition() . '
                 AND ' . $this->getNotSpamCondition() . '

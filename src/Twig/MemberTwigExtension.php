@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Dto\ReplyRate;
 use App\Entity\Comment;
 use App\Entity\Group;
 use App\Entity\LoginMessage;
@@ -141,6 +142,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         return [
             new TwigFunction('member_comments_count', $this->getMemberCommentsCount(...)),
             new TwigFunction('member_comments_by_quality', $this->getMemberCommentsByQuality(...)),
+            new TwigFunction('member_reply_rate', $this->getMemberReplyRate(...)),
         ];
     }
 
@@ -153,6 +155,17 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $commentRepository = $this->entityManager->getRepository(Comment::class);
 
         return $commentRepository->getVisibleCommentsForMemberCount($member);
+    }
+
+    /**
+     * Hosting requests and invitations the member received and answered, for the reply rate on the profile.
+     */
+    public function getMemberReplyRate(Member $member): ReplyRate
+    {
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->entityManager->getRepository(Message::class);
+
+        return $messageRepository->getReplyRate($member);
     }
 
     /**

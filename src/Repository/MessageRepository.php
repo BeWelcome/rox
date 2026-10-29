@@ -8,10 +8,12 @@ use App\Doctrine\MemberStatusType;
 use App\Doctrine\MessageResultSetMapping;
 use App\Doctrine\MessageStatusType;
 use App\Doctrine\SpamInfoType;
+use App\Dto\ReplyRate;
 use App\Entity\Member;
 use App\Entity\Message;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -106,7 +108,7 @@ class MessageRepository extends EntityRepository
             ->select('COUNT(m.id)')
             ->where('m.sender = :sender')
             ->andWhere('m.status IN (:sent)')
-            ->andWhere('m.dateSent > :since')
+            ->andWhere('m.created > :since')
             ->setParameter('sender', $sender)
             ->setParameter('sent', [MessageStatusType::SEND, MessageStatusType::SENT])
             ->setParameter('since', $since);
@@ -117,6 +119,57 @@ class MessageRepository extends EntityRepository
         }
 
         return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Hosting requests and invitations the member received (the first message of each conversation, no spam,
+     * drafts or messages still held back) and how many of them the member answered with any later message in
+     * that conversation. With $since only requests sent after that time count.
+     */
+    public function getReplyRate(Member $member, ?DateTimeInterface $since = null): ReplyRate
+    {
+        $sinceCondition = null === $since ? '' : 'AND m.created >= :since';
+        $sql = <<<SQL
+                WITH RECURSIVE chain (root_id, id) AS (
+                    SELECT m.id, m.id
+                    FROM message m
+                    WHERE m.receiver_id = :member
+                        AND m.parent_id IS NULL
+                        AND m.request_id IS NOT NULL
+                        AND m.folder NOT IN (:hiddenFolders)
+                        AND m.status NOT IN (:notDelivered)
+                        {$sinceCondition}
+                    UNION
+                    SELECT c.root_id, r.id
+                    FROM message r
+                    JOIN chain c ON r.parent_id = c.id
+                )
+                SELECT
+                    COUNT(DISTINCT c.root_id) AS received,
+                    COUNT(DISTINCT CASE
+                        WHEN m.sender_id = :member AND m.id <> c.root_id AND m.status <> :draft THEN c.root_id
+                    END) AS answered
+                FROM chain c
+                JOIN message m ON m.id = c.id
+            SQL;
+
+        $parameters = [
+            'member' => $member->getId(),
+            'hiddenFolders' => [InFolderType::SPAM, InFolderType::DRAFT],
+            'notDelivered' => [MessageStatusType::DRAFT, MessageStatusType::CHECK, MessageStatusType::FROZEN],
+            'draft' => MessageStatusType::DRAFT,
+        ];
+        $types = [
+            'hiddenFolders' => ArrayParameterType::STRING,
+            'notDelivered' => ArrayParameterType::STRING,
+        ];
+        if (null !== $since) {
+            $parameters['since'] = $since->format('Y-m-d H:i:s');
+        }
+
+        $counts = $this->getEntityManager()->getConnection()->fetchAssociative($sql, $parameters, $types);
+
+        return new ReplyRate((int) ($counts['received'] ?? 0), (int) ($counts['answered'] ?? 0));
     }
 
     public function getUnreadConversationsCount(Member $member): int
@@ -140,24 +193,24 @@ class MessageRepository extends EntityRepository
         $connection = $this->getEntityManager()->getConnection();
         $count = $connection->fetchOne(
             'SELECT count(*) AS cnt FROM (SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             WHERE
 				NOT m.subject_id IS NULL
 				AND m.id IN (
 					SELECT max(m.id)
-					FROM messages m
+					FROM message m
                     WHERE
-						((m.IdReceiver = :loggedIn AND m.IdSender = :member) OR
-						(m.IdReceiver = :member AND m.IdSender = :loggedIn))
+						((m.receiver_id = :loggedIn AND m.sender_id = :member) OR
+						(m.receiver_id = :member AND m.sender_id = :loggedIn))
 					GROUP BY m.subject_id
 				)
 			UNION
             SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             WHERE
 				m.subject_id is null
-				AND	((m.IdReceiver = :loggedIn AND m.IdSender = :member) OR
-						(m.IdReceiver = :member AND m.IdSender = :loggedIn))) AS a',
+				AND	((m.receiver_id = :loggedIn AND m.sender_id = :member) OR
+						(m.receiver_id = :member AND m.sender_id = :loggedIn))) AS a',
             [
                 'loggedIn' => $loggedInMember->getId(),
                 'member' => $member->getId(),
@@ -528,34 +581,34 @@ class MessageRepository extends EntityRepository
     private function getSql(bool $unreadOnly): string
     {
         if ($unreadOnly) {
-            $unreadCondition = '(m.IdReceiver = :memberId) '
-                . 'AND (`m`.WhenFirstRead IS NULL OR `m`.WhenFirstRead = \'0000-00-00 00:00:00\')';
+            $unreadCondition = '(m.receiver_id = :memberId) '
+                . 'AND (`m`.first_read IS NULL OR `m`.first_read = \'0000-00-00 00:00:00\')';
         } else {
-            $unreadCondition = '(m.IdReceiver = :memberId)';
+            $unreadCondition = '(m.receiver_id = :memberId)';
         }
 
         $sql = '
             SELECT * FROM (
                     SELECT *
-                    FROM `messages` m
+                    FROM `message` m
                     WHERE ' . $unreadCondition . '
                     AND `m`.`id` IN (
                         SELECT max(`m`.`id`)
-                        FROM `messages` m
-                        WHERE m.IdReceiver = :memberId AND m.InFolder = \'Normal\' AND (
-                            m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
-                            AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
+                        FROM `message` m
+                        WHERE m.receiver_id = :memberId AND m.folder = \'Normal\' AND (
+                            m.delete_request NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
+                            AND m.delete_request NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
                         )
                     GROUP BY `m`.`subject_id`
                     )
                 UNION
                     SELECT *
-                    FROM `messages` m
-                    WHERE ' . $unreadCondition . ' AND m.InFolder = \'Normal\'
+                    FROM `message` m
+                    WHERE ' . $unreadCondition . ' AND m.folder = \'Normal\'
                     AND `m`.`subject_id` IS NULL
                     AND (
-                            m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
-                            AND m.DeleteRequest NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
+                            m.delete_request NOT LIKE \'%' . DeleteRequestType::RECEIVER_DELETED . '%\'
+                            AND m.delete_request NOT LIKE \'%' . DeleteRequestType::RECEIVER_PURGED . '%\'
                         )
              ) m
          ';

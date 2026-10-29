@@ -118,7 +118,7 @@ class SendingLimitsTest extends KernelTestCase
         );
         self::assertCount(2, $ids, 'the fixtures need two active members without a positive comment');
         // only what the test sends counts (the fixture messages reply to each other, so they stay, but long ago)
-        $this->connection()->executeStatement("UPDATE messages SET DateSent = '2000-01-01' WHERE IdSender IN (?, ?)", $ids);
+        $this->connection()->executeStatement("UPDATE message SET created = '2000-01-01' WHERE sender_id IN (?, ?)", $ids);
         $this->connection()->executeStatement('DELETE FROM comment WHERE from_member_id IN (?, ?)', $ids);
         $members = $this->entityManager->getRepository(Member::class);
 
@@ -148,7 +148,7 @@ class SendingLimitsTest extends KernelTestCase
         if (null !== $sentAt) {
             // saving sets the time sent to now
             $this->connection()->executeStatement(
-                'UPDATE messages SET DateSent = ? WHERE id IN (?)',
+                'UPDATE message SET created = ? WHERE id IN (?)',
                 [$sentAt->format('Y-m-d H:i:s'), array_map(static fn (Message $sent): int => $sent->getId(), $messages)],
                 [ParameterType::STRING, ArrayParameterType::INTEGER]
             );

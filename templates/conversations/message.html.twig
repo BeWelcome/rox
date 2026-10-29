@@ -21,7 +21,7 @@
     {% endif %}
     <div class="u:flex u:flex-col u:justify-between">
         <div class="text-muted small u:mb-4">
-            {{  message.dateSent | format_date( 'medium') }}
+            {{  message.created | format_date( 'medium') }}
         </div>
         <div class="o-avatar o-avatar--m u:mr-16">
             {{ macros.roundedavatarstack(otherMember.Username, 72) }}

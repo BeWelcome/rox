@@ -297,56 +297,6 @@ class GroupsController extends RoxControllerBase
     //{{{ group action functions
 
     /**
-     * displays a page allowing a group owner to invite members to the group
-     *
-     * @access public
-     * @return object
-     */
-    public function inviteMembers()
-    {
-        $group = $this->_getGroupFromRequest($this->router->url('groups_redirect'));
-        $args = $this->args_vars;
-        if (empty($args->get['username']))
-        {
-            $this->redirectAbsolute($this->router->url('group_start', ['group_id' => $group->getPKValue()]));
-        }
-        $members = $this->_model->findMembersByName($group, $args->get['username']);
-        $page = new GroupInvitePage;
-        $page->search_result = $members;
-        $this->_fillObject($page);
-        $page->group = $group;
-        return $page;
-    }
-
-    /**
-     * no-js method for inviting a member
-     *
-     * @access public
-     * @return object
-     */
-    public function inviteMember()
-    {
-        $member_id = $this->_getMemberIdFromRequest();
-        $group = $this->_getGroupFromRequest();
-        $invitedby = $this->_model->getLoggedInMember();
-        if ($group->type != 'Public' && !$group->isGroupOwner($invitedby)) {
-            $this->redirectAbsolute($this->router->url('groups_redirect'));
-        } else {
-            $page = new GroupStartPage;
-            if ($this->_model->inviteMember($group, $member_id)) {
-                $this->_model->sendInvitation($group, $member_id, $this->_model->getLoggedInMember());
-                $page->memberinvited = true;
-                $this->logWrite("Member #{$member_id} was invited to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-            } else {
-                $page->memberinvited = false;
-            }
-        }
-        $this->_fillObject($page);
-        $page->group = $group;
-        return $page;
-    }
-
-    /**
      * ajax method for searching for members to send group invites to
      *
      * @access public
@@ -374,38 +324,6 @@ class GroupsController extends RoxControllerBase
         }
         echo json_encode($output);
         exit;
-    }
-
-    /**
-     * ajax method for inviting a member
-     *
-     * @access public
-     * @return object
-     */
-    public function inviteMemberAjax()
-    {
-        header('Content-Type: text/plain; encoding=utf-8');
-        $vars = $this->route_vars;
-        if (!empty($vars['member_id']) && !empty($vars['group_id']) && ($group = $this->_model->findGroup($vars['group_id'])))
-        {
-            $invitedby = $this->_model->getLoggedInMember();
-            if (!($group->type != 'Public' && !$group->isGroupOwner($invitedby)) && $this->_model->inviteMember($group, $vars['member_id']))
-            {
-                $this->logWrite("Member #{$vars['member_id']} was invited to group #{$group->getPKValue()} by member #{$this->_model->getLoggedInMember()->getPKValue()}");
-                $this->_model->sendInvitation($group, $vars['member_id'], $this->_model->getLoggedInMember());
-                echo "success";
-            }
-            else
-            {
-                echo "fail";
-            }
-            exit;
-        }
-        else
-        {
-            header('Status: 500 Fudged it');
-            exit;
-        }
     }
 
     /**
@@ -665,70 +583,6 @@ class GroupsController extends RoxControllerBase
         return $page;
     }
 
-
-    /**
-     * handles member joining a group
-     *
-     * @access public
-     * @return object $page
-     */
-    public function join()
-    {
-        $group = $this->_getGroupFromRequest();
-        if (!($member = $this->_model->getLoggedInMember()))
-        {
-            $this->redirectToLogin($this->router->url('group_join', ['group_id' => $group->getPKValue()], false));
-        }
-
-        $page = new GroupJoinPage();
-        $this->_fillObject($page);
-        $page->group = $group;
-        $page->member = $member;
-        return $page;
-    }
-
-    /**
-     * Callback function for joining a group
-     *
-     * @param object $args         contains vars
-     * @param object $action       contains something else
-     * @param object $mem_redirect memory for the page after redirect
-     * @param object $mem_resend   memory for resending the form
-     *
-     * @return string relative request for redirect
-     */
-    public function joined($args, $action, $mem_redirect, $mem_resend)
-    {
-        $group = $this->_getGroupFromRequest();
-        if (!($member = $this->_model->getLoggedInMember()))
-        {
-            return false;
-        }
-
-        $post = $args->post;
-        if (empty($post) || empty($post['membershipinfo_acceptgroupmail']) || empty($post['join']))
-        {
-            $mem_redirect->post = $post;
-            return false;
-        }
-
-
-        if ($this->_model->joinGroup($member, $group))
-        {
-            if ($group->type == 'NeedAcceptance') {
-                $this->setFlashNotice($this->getWords()->getSilent('GroupsJoinApprovalWait'));
-            }
-            $this->_model->updateMembershipSettings($member->id, $group->getPKValue(), $post['membershipinfo_acceptgroupmail'], !empty($post['membershipinfo_comment']) ? $post['membershipinfo_comment']:'');
-            $this->logWrite("Member #{$this->_model->getLoggedInMember()->getPKValue()} joined group #{$group->getPKValue()}");
-        }
-        else
-        {
-            $mem_redirect->post = $post;
-            $this->setFlashError($this->getWords()->getSilent('GroupsErrorJoiningGroup'));
-            return $this->router->url('group_start', ['group_id' => $group->getPKValue()], false);;
-        }
-        return $this->router->url('group_start', ['group_id' => $group->getPKValue()], false);
-    }
 
     /**
      * handles member leaving a group

@@ -96,7 +96,7 @@
     </div>
     <div class="o-form-group">
         <label for="Body">Text of the mail</label>
-        <textarea class="o-input editor" id="Body" name="Body"><?php echo $body;?></textarea>
+        <textarea class="o-input" id="Body" name="Body" data-editor-type="textarea" data-image-upload="yes"><?php echo $body;?></textarea>
         <small id="bodyHelp" class="form-text text-muted">Body of the newsletter (%username%, if any, will be replaced by the username at sending)</small>
     </div>
     <div class="o-form-group">

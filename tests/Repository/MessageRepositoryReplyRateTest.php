@@ -33,7 +33,7 @@ class MessageRepositoryReplyRateTest extends KernelTestCase
 
         // members that never received a message, so the fixtures don't change the counts
         $members = $this->connection->fetchFirstColumn(
-            'SELECT id FROM member WHERE id NOT IN (SELECT IdReceiver FROM messages) ORDER BY id LIMIT 3'
+            'SELECT id FROM member WHERE id NOT IN (SELECT receiver_id FROM message) ORDER BY id LIMIT 3'
         );
         self::assertCount(3, $members, 'the test fixtures contain members without messages');
         [$this->host, $this->guest, $this->otherGuest] = array_map('intval', $members);
@@ -164,18 +164,16 @@ class MessageRepositoryReplyRateTest extends KernelTestCase
         string $created = 'now',
     ): int {
         $created = new DateTimeImmutable($created)->format('Y-m-d H:i:s');
-        $this->connection->insert('messages', [
-            'MessageType' => 'MemberToMember',
+        $this->connection->insert('message', [
             'created' => $created,
-            'DateSent' => $created,
-            'SpamInfo' => 'NotSpam',
-            'Status' => $status,
-            'Message' => 'Hello',
-            'InFolder' => $folder,
+            'spam_info' => 'NotSpam',
+            'status' => $status,
+            'message' => 'Hello',
+            'folder' => $folder,
             'initiator_id' => $sender,
-            'IdSender' => $sender,
-            'IdReceiver' => $receiver,
-            'IdParent' => $parent,
+            'sender_id' => $sender,
+            'receiver_id' => $receiver,
+            'parent_id' => $parent,
             'request_id' => $request,
         ]);
 

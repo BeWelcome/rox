@@ -675,10 +675,10 @@ LIMIT 1
                     SELECT
                         COUNT(*) cnt
                     FROM
-                        `messages`
+                        `message`
                     WHERE
-                        (IdSender = " . $member->id . " OR IdReceiver = " . $member->id . ")
-                        AND (IdSender = " . $loggedInMember->id . " OR IdReceiver = " . $loggedInMember->id . ")";
+                        (sender_id = " . $member->id . " OR receiver_id = " . $member->id . ")
+                        AND (sender_id = " . $loggedInMember->id . " OR receiver_id = " . $loggedInMember->id . ")";
                 $messageCount = $this->singleLookup($query);
                 $member->MessageCount = $messageCount->cnt;
             }

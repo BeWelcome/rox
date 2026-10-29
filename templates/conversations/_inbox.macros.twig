@@ -73,7 +73,7 @@
     {% set params = (folder in ['conversations', 'deleted'] ? { id: message.id } : { id: message.id, folder: folder })|merge(filterParams) %}
     {% set isActive = current is not null and current.subject is not null and message.subject is not null and current.subject == message.subject %}
     {% set isActive = isActive or (current is not null and current.id == message.id) %}
-    {% set sent = message.dateSent ?? message.created %}
+    {% set sent = message.created %}
     {% if sent|date('Y-m-d') == 'now'|date('Y-m-d') %}
         {% set when = sent|format_time('short') %}
     {% elseif sent|date('Y') == 'now'|date('Y') %}

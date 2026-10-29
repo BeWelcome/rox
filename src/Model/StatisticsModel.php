@@ -498,10 +498,10 @@ class StatisticsModel
                     SELECT
                       COUNT(m.id) AS cnt
                     FROM
-                      messages m
+                      message m
                     WHERE
-                      m.DateSent >= :current
-                      AND m.DateSent < :next
+                      m.created >= :current
+                      AND m.created < :next
                       AND m.request_id IS null
                       ',
             [
@@ -518,10 +518,10 @@ class StatisticsModel
                     SELECT
                       COUNT(m.id) AS cnt
                     FROM
-                      messages m
+                      message m
                     WHERE
-                      m.WhenFirstRead >= :current
-                      AND m.WhenFirstRead < :next
+                      m.first_read >= :current
+                      AND m.first_read < :next
                       AND m.request_id IS null
                       ',
             [

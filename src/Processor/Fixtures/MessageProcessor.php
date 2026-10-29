@@ -9,7 +9,7 @@ use Doctrine\DBAL\Types\Types;
 use Fidry\AliceDataFixtures\ProcessorInterface;
 
 /**
- * Message::onPrePersist() sets created and dateSent to now. This keeps the created date
+ * Message::onPrePersist() sets created to now. This keeps the created date
  * given in the fixture and writes it back once the message is stored, so that test data
  * has messages spread out over time.
  */
@@ -38,9 +38,8 @@ final class MessageProcessor implements ProcessorInterface
             return;
         }
 
-        // Plain SQL so that Message::onPreUpdate() doesn't set updated.
         $this->connection->executeStatement(
-            'UPDATE messages SET created = :sent, DateSent = :sent WHERE id = :id',
+            'UPDATE message SET created = :sent WHERE id = :id',
             ['sent' => $this->sentDates[$id], 'id' => $object->getId()],
             ['sent' => Types::DATETIME_MUTABLE],
         );

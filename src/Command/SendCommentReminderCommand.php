@@ -179,20 +179,20 @@ class SendCommentReminderCommand extends Command
         ;
         $query = $this->entityManager->createNativeQuery("
             SELECT
-                m.IdSender AS guest, m.IdReceiver AS host
+                m.sender_id AS guest, m.receiver_id AS host
             FROM
-                messages m
+                message m
 	        INNER JOIN
 	            request r ON m.request_id = r.id AND r.Status = 8 AND r.invite_for_leg IS NULL
 	            AND date(r.departure) BETWEEN DATE_SUB(NOW(), INTERVAL ? DAY_SECOND) AND DATE_SUB(NOW(), INTERVAL ? DAY_SECOND)
            /*
            INNER JOIN
-               group_membership mgt ON m.IdSender = mgt.member_id AND mgt.group_id = 62 AND mgt.status = 'In'
+               group_membership mgt ON m.sender_id = mgt.member_id AND mgt.group_id = 62 AND mgt.status = 'In'
            INNER JOIN
-               group_membership mgf ON m.IdReceiver = mgf.member_id AND mgf.group_id = 62 AND mgf.status = 'In'
+               group_membership mgf ON m.receiver_id = mgf.member_id AND mgf.group_id = 62 AND mgf.status = 'In'
             */
             WHERE
-                m.IdParent IS NULL AND NOT m.request_id IS NULL
+                m.parent_id IS NULL AND NOT m.request_id IS NULL
             ", $rsm);
         $query->setParameter(1, $start);
         $query->setParameter(2, $end);

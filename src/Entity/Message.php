@@ -1,11 +1,5 @@
 <?php
 
-/*
- * @codingStandardsIgnoreFile
- *
- * Auto generated file ignore for Code Sniffer
- */
-
 namespace App\Entity;
 
 use App\Doctrine\DeleteRequestType;
@@ -17,75 +11,68 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * A message, hosting request or invitation (develop's `message`, filled from main's `messages` by
+ * Version20261029110000; see App\Entity\Messages).
+ *
  * Do not check entities with PHPMD.
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'messages', options: ['collate' => 'utf8mb4_general_ci', 'charset' => 'utf8mb4'])]
-#[ORM\Index(name: 'IdParent', columns: ['IdParent', 'IdReceiver', 'IdSender'])]
-#[ORM\Index(name: 'IdReceiver', columns: ['IdReceiver'])]
-#[ORM\Index(name: 'IdSender', columns: ['IdSender'])]
-#[ORM\Index(name: 'messages_by_spaminfo', columns: ['SpamInfo'])]
-#[ORM\Index(name: 'IdxStatus', columns: ['Status'])]
-#[ORM\Index(name: 'DeleteRequest', columns: ['DeleteRequest'])]
-#[ORM\Index(name: 'WhenFirstRead', columns: ['WhenFirstRead'])]
+#[ORM\Table(name: 'message')]
+#[ORM\Index(name: 'message_spam_info', columns: ['spam_info'])]
+#[ORM\Index(name: 'message_status', columns: ['status'])]
+#[ORM\Index(name: 'message_delete_request', columns: ['delete_request'])]
+#[ORM\Index(name: 'message_first_read', columns: ['first_read'])]
+#[ORM\Index(name: 'message_created', columns: ['created'])]
 #[ORM\Entity(repositoryClass: \App\Repository\MessageRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 class Message
 {
-    #[ORM\Column(name: 'MessageType', type: 'string', nullable: false)]
-    private string $messageType = 'MemberToMember';
-
-    #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?DateTime $updated = null;
-
+    /** When the message was sent. */
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
-    #[ORM\Column(name: 'DateSent', type: 'datetime', nullable: false)]
-    private DateTime $dateSent;
+    #[ORM\Column(name: 'delete_request', type: 'delete_request', nullable: true)]
+    private ?string $deleteRequest = null;
 
-    #[ORM\Column(name: 'DeleteRequest', type: 'delete_request', nullable: true)]
-    private string $deleteRequest;
-
-    #[ORM\JoinColumn(name: 'IdParent', referencedColumnName: 'id', nullable: true)]
-    #[ORM\OneToOne(targetEntity: self::class, fetch: 'LAZY')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: self::class, fetch: 'LAZY')]
     private ?Message $parent = null;
 
     #[ORM\JoinColumn(name: 'initiator_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'LAZY')]
     private Member $initiator;
 
-    #[ORM\JoinColumn(name: 'IdReceiver', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'receiver_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private Member $receiver;
 
-    #[ORM\JoinColumn(name: 'IdSender', referencedColumnName: 'id', nullable: false)]
+    #[ORM\JoinColumn(name: 'sender_id', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Member::class, fetch: 'EAGER')]
     private Member $sender;
 
-    #[ORM\Column(name: 'SpamInfo', type: 'spam_info', nullable: false)]
+    #[ORM\Column(name: 'spam_info', type: 'spam_info', nullable: false)]
     private string $spamInfo = SpamInfoType::NO_SPAM;
 
-    #[ORM\Column(name: 'Status', type: 'message_status', nullable: false)]
+    #[ORM\Column(name: 'status', type: 'message_status', nullable: false)]
     private string $status = 'ToSend';
 
-    #[ORM\Column(name: 'Message', type: 'text', length: 65535, nullable: false)]
+    #[ORM\Column(name: 'message', type: 'text', nullable: false)]
     private string $message;
 
-    #[ORM\Column(name: 'InFolder', type: 'in_folder', nullable: false)]
+    #[ORM\Column(name: 'folder', type: 'in_folder', nullable: false)]
     private string $folder = InFolderType::NORMAL;
 
-    #[ORM\Column(name: 'WhenFirstRead', type: 'datetime', nullable: true)]
-    private ?DateTime $firstRead;
+    #[ORM\Column(name: 'first_read', type: 'datetime', nullable: true)]
+    private ?DateTime $firstRead = null;
 
-    #[ORM\Column(name: 'CheckerComment', type: 'text', nullable: true)]
-    private ?string $checkerComment;
+    #[ORM\Column(name: 'checker_comment', type: 'text', nullable: true)]
+    private ?string $checkerComment = null;
 
     #[ORM\JoinColumn(nullable: true)]
     #[ORM\ManyToOne(targetEntity: Subject::class, cascade: ['persist'])]
     #[Assert\NotBlank]
-    private ?Subject $subject;
+    private ?Subject $subject = null;
 
     #[ORM\JoinColumn(nullable: true)]
     #[ORM\ManyToOne(targetEntity: HostingRequest::class, cascade: ['persist'], fetch: 'EAGER', inversedBy: 'messages')]
@@ -95,27 +82,6 @@ class Message
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private int $id;
-
-    public function getMessageType(): string
-    {
-        return $this->messageType;
-    }
-
-    public function setUpdated($updated): self
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    public function getUpdated(): ?Carbon
-    {
-        if (null === $this->updated) {
-            return null;
-        }
-
-        return Carbon::instance($this->updated);
-    }
 
     public function setCreated($created): self
     {
@@ -129,19 +95,7 @@ class Message
         return Carbon::instance($this->created);
     }
 
-    public function setDateSent(DateTime $dateSent): self
-    {
-        $this->dateSent = $dateSent;
-
-        return $this;
-    }
-
-    public function getDateSent(): Carbon
-    {
-        return Carbon::instance($this->dateSent);
-    }
-
-    public function setDeleteRequest($deleteRequest): self
+    public function setDeleteRequest(?string $deleteRequest): self
     {
         $this->deleteRequest = $deleteRequest;
 
@@ -411,20 +365,6 @@ class Message
         } else {
             $this->initiator = $this->parent->getInitiator();
         }
-        $this->dateSent = $this->created;
-    }
-
-    #[ORM\PreUpdate]
-    public function onPreUpdate(): void
-    {
-        $this->updated = new DateTime('now');
-    }
-
-    public function setMessageType(string $messageType): self
-    {
-        $this->messageType = $messageType;
-
-        return $this;
     }
 
     public function isMessage(): bool

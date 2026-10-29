@@ -86,10 +86,7 @@ landing.beinformed.next:
     - Button that shows the next page of links in the "Be informed" box of the home page
 landing.tab.today:
     - 'Threads with a new post today'
-    - Tooltip of the count next to the Forum and My groups tabs on the home page
-landing.threads.empty:
-    - 'No discussions yet.'
-    - Shown in the Forum tab of the home page when there is no thread to show
+    - Tooltip of the count next to the My groups tab on the home page
 landing.groups.empty:
     - 'No discussions in your groups yet.'
     - Shown in the My groups tab of the home page when the member's groups have no thread

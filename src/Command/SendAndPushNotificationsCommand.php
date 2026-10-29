@@ -160,7 +160,7 @@ class SendAndPushNotificationsCommand extends Command
     private function determineSender(ForumPost $post): Address
     {
         $thread = $post->getThread();
-        if ($thread->getGroup()) {
+        if (!$thread->isAgora()) {
             $from = new Address('group@bewelcome.org', 'BeWelcome - ' . $post->getAuthor()->getUsername());
         } else {
             $from = new Address('forum@bewelcome.org', 'BeWelcome - ' . $post->getAuthor()->getUsername());
@@ -178,7 +178,7 @@ class SendAndPushNotificationsCommand extends Command
 
         $fragment = 'post' . $post->getId();
         $group = $thread->getGroup();
-        if (null !== $group) {
+        if (!$thread->isAgora()) {
             return $this->urlGenerator->generate('group_forum_thread', [
                 'group_id' => $group->getId(),
                 'thread' => $thread->getId(),
@@ -210,8 +210,9 @@ class SendAndPushNotificationsCommand extends Command
                 break;
         }
         $subject = $prefix . $notification->getPost()->getThread()->getTitle();
-        if ($notification->getPost()->getThread()->getGroup()) {
-            $subject .= ' [' . $notification->getPost()->getThread()->getGroup()->getName() . ']';
+        $thread = $notification->getPost()->getThread();
+        if (!$thread->isAgora()) {
+            $subject .= ' [' . $thread->getGroup()->getName() . ']';
         }
 
         return strip_tags($subject);

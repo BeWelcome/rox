@@ -78,6 +78,7 @@ class GroupMockups implements MockupProviderInterface
         $mockThread = Mockery::mock(ForumThread::class, [
             'getId' => 1,
             'getGroup' => $group,
+            'isAgora' => false,
             'getTitle' => 'Thread title',
         ]);
 

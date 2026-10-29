@@ -15,9 +15,11 @@ use App\Entity\PrivilegeScope;
 use App\Entity\Role;
 use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use LogicException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -250,11 +252,20 @@ class GroupModel
         return $group;
     }
 
+    /**
+     * Deletes the group with its forum: threads, posts, their translations, subscriptions and queued notifications.
+     * The BeWelcome group (the agora) can't be deleted.
+     */
     public function delete(Group $group): void
     {
+        if ($group->isBeWelcome()) {
+            throw new LogicException('The BeWelcome group can\'t be deleted.');
+        }
+
         $groupId = $group->getId();
         $this->entityManager->getConnection()->transactional(
             static function (Connection $connection) use ($groupId): void {
+                self::deleteForum($connection, $groupId);
                 $connection->executeStatement(
                     <<<'SQL'
                         DELETE scopes
@@ -376,6 +387,41 @@ class GroupModel
         }
 
         return $admins;
+    }
+
+    /**
+     * Deletes the threads of a group's forum and everything that hangs on them. Threads and posts point at each
+     * other (first and last post), so the foreign key checks are off while they go.
+     */
+    private static function deleteForum(Connection $connection, int $groupId): void
+    {
+        $threadIds = $connection->fetchFirstColumn('SELECT id FROM forum_thread WHERE IdGroup = ?', [$groupId]);
+        if ([] === $threadIds) {
+            return;
+        }
+
+        $types = [ArrayParameterType::INTEGER];
+        $connection->executeStatement(
+            'DELETE n FROM posts_notificationqueue n JOIN forum_post p ON p.id = n.IdPost WHERE p.threadid IN (?)',
+            [$threadIds],
+            $types,
+        );
+        $connection->executeStatement('DELETE FROM members_threads_subscribed WHERE IdThread IN (?)', [$threadIds], $types);
+
+        $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 0');
+        try {
+            // the translations go with the posts and threads (ON DELETE CASCADE), but not while the checks are off
+            $connection->executeStatement(
+                'DELETE t FROM forum_post_translation t JOIN forum_post p ON p.id = t.object_id WHERE p.threadid IN (?)',
+                [$threadIds],
+                $types,
+            );
+            $connection->executeStatement('DELETE FROM forum_post WHERE threadid IN (?)', [$threadIds], $types);
+            $connection->executeStatement('DELETE FROM forum_thread_translation WHERE object_id IN (?)', [$threadIds], $types);
+            $connection->executeStatement('DELETE FROM forum_thread WHERE id IN (?)', [$threadIds], $types);
+        } finally {
+            $connection->executeStatement('SET FOREIGN_KEY_CHECKS = 1');
+        }
     }
 
     private function getMembership($group, $member): ?GroupMembership

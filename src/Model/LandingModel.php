@@ -71,85 +71,55 @@ class LandingModel
     }
 
     /**
-     * Generates threads for display on home page.
+     * The threads with the newest posts in the member's groups (the BeWelcome group's agora included, if the member
+     * is in it), for the home page.
      *
-     * Depends on checkboxes shown above the display.
+     * @return list<ForumThread>
      */
-    public function getThreads(Member $member, bool $groups, bool $forum, bool $following, int $limit = 0): array
+    public function getGroupThreads(Member $member, int $limit): array
     {
-        if (!$groups && !$forum && !$following) {
-            // Member decided not to show anything
+        $groupIds = $this->getGroupIds($member);
+        if ([] === $groupIds) {
             return [];
         }
 
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-
-        $queryBuilder
+        return $this->entityManager->createQueryBuilder()
             ->select('ft')
             ->from(ForumThread::class, 'ft')
             ->join(ForumPost::class, 'fp', Expr\Join::WITH, 'ft.lastPost = fp.id')
+            ->where('ft.group IN (:groups)')
+            // only threads and posts that aren't deleted
+            ->andWhere("ft.deleted = 'NotDeleted'")
+            ->andWhere("fp.deleted = 'NotDeleted'")
+            ->setParameter('groups', $groupIds)
             ->orderBy('fp.created', 'desc')
-        ;
-
-        $groupIds = [];
-        if ($groups) {
-            $groupIds = array_map(static function ($group) {
-                return $group->getId();
-            }, $member->getGroups());
-        }
-
-        $queryBuilder
-            ->andWhere('ft.group IN (:groups)')
-            ->setParameter('groups', $groupIds);
-        if ($forum) {
-            $queryBuilder
-                ->orWhere('ft.group IS NULL');
-        }
-
-        if ($following) {
-            // \todo: Add subscriptions?
-        }
-
-        // Only show posts that aren't deleted and that aren't in a deleted thread
-        $queryBuilder
-            ->andwhere("ft.deleted = 'NotDeleted'")
-            ->andWhere("fp.deleted = 'NotDeleted'");
-
-        if ($limit) {
-            $queryBuilder->setMaxResults($limit);
-        }
-
-        $query = $queryBuilder->getQuery();
-
-        return $query->getResult();
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 
     /**
-     * How many threads got a new post today: the forum (groups false) or the member's groups.
+     * How many threads in the member's groups got a new post today.
      */
-    public function getThreadsWithPostsTodayCount(Member $member, bool $groups): int
+    public function getGroupThreadsWithPostsTodayCount(Member $member): int
     {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder
+        $groupIds = $this->getGroupIds($member);
+        if ([] === $groupIds) {
+            return 0;
+        }
+
+        return (int) $this->entityManager->createQueryBuilder()
             ->select('COUNT(ft.id)')
             ->from(ForumThread::class, 'ft')
             ->join(ForumPost::class, 'fp', Expr\Join::WITH, 'ft.lastPost = fp.id')
             ->where('fp.created >= :today')
+            ->andWhere('ft.group IN (:groups)')
             ->andWhere("ft.deleted = 'NotDeleted'")
             ->andWhere("fp.deleted = 'NotDeleted'")
-            ->setParameter('today', new DateTime('today'));
-
-        if ($groups) {
-            $groupIds = array_map(static fn ($group) => $group->getId(), $member->getGroups());
-            if (empty($groupIds)) {
-                return 0;
-            }
-            $queryBuilder->andWhere('ft.group IN (:groups)')->setParameter('groups', $groupIds);
-        } else {
-            $queryBuilder->andWhere('ft.group IS NULL');
-        }
-
-        return (int) $queryBuilder->getQuery()->getSingleScalarResult();
+            ->setParameter('today', new DateTime('today'))
+            ->setParameter('groups', $groupIds)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**
@@ -194,5 +164,20 @@ class LandingModel
         $em->flush();
 
         return $member;
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function getGroupIds(Member $member): array
+    {
+        $groupIds = [];
+        foreach ($member->getGroups() as $group) {
+            if (null !== $group) {
+                $groupIds[] = $group->getId();
+            }
+        }
+
+        return $groupIds;
     }
 }

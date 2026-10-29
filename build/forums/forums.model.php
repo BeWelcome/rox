@@ -196,14 +196,14 @@ function FindAppropriatedLanguage($IdPost=0) {
                 $this->session->get("MemberStatus") == 'NeedMore' ) {
 			$this->PublicThreadVisibility=" (ThreadVisibility = 'NoRestriction') AND (ThreadDeleted != 'Deleted')";
 			$this->PublicPostVisibility = " (PostVisibility = 'NoRestriction') AND (PostDeleted != 'Deleted')";
-			$this->ThreadGroupsRestriction = " (IdGroup IS NULL OR ThreadVisibility = 'NoRestriction')";
-			$this->PostGroupsRestriction = " (IdGroup IS NULL OR PostVisibility = 'NoRestriction')" ;
+			$this->ThreadGroupsRestriction = " (IdGroup = 0 OR ThreadVisibility = 'NoRestriction')";
+			$this->PostGroupsRestriction = " (IdGroup = 0 OR PostVisibility = 'NoRestriction')" ;
 		}
 		else {
 			$this->PublicThreadVisibility = "(ThreadVisibility != 'ModeratorOnly') AND (ThreadDeleted != 'Deleted')" ;
 			$this->PublicPostVisibility = "(PostVisibility != 'ModeratorOnly') AND (PostDeleted !='Deleted')" ;
-			$this->PostGroupsRestriction = " PostVisibility IN ('MembersOnly','NoRestriction') OR (PostVisibility='GroupOnly' AND (IdGroup IS NULL OR IdGroup in (0" ;
-			$this->ThreadGroupsRestriction = " ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' and (IdGroup IS NULL OR IdGroup in (0" ;
+			$this->PostGroupsRestriction = " PostVisibility IN ('MembersOnly','NoRestriction') OR (PostVisibility='GroupOnly' AND (IdGroup = 0 OR IdGroup in (0" ;
+			$this->ThreadGroupsRestriction = " ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' and (IdGroup = 0 OR IdGroup in (0" ;
 			$qry = $this->dao->query("SELECT group_id AS IdGroup FROM group_membership WHERE member_id = " . (int) $this->session->get("IdMember") . " AND status = 'In'");
 			if (!$qry) {
 				throw new PException('Failed to retrieve groups for member id =#'.$this->session->get("IdMember").' !');
@@ -758,7 +758,7 @@ private function postTranslationsQuery(int $postId): string
 		 	$this->ReplaceInFTrad($this->dao->escape($this->cleanupText($vars['topic_title'])), "forum_thread.IdTitle", $rBefore->threadid, $rBefore->IdTitle, $rBefore->IdWriter) ;
 		// case the update concerns the reference language of the threads
 		 	if ($rBefore->thread_language==$this->GetLanguageChoosen()) {
-		 	    $groupId = empty($vars['IdGroup']) ? 'NULL' : (int) $vars['IdGroup'];
+		 	    $groupId = empty($vars['IdGroup']) ? 0 : (int) $vars['IdGroup'];
 		 	   $query="update forum_thread set IdGroup=". $groupId.",title='".$this->dao->escape($this->cleanupText($vars['topic_title']))."' where forum_thread.id=".$rBefore->threadid ;
         	   $s=$this->dao->query($query);
 		   }
@@ -1087,7 +1087,7 @@ WHERE `id` = '%d' ",
         MOD_log::get()->write("Updating Thread=#".$IdThread." IdGroup=#".$IdGroup." Setting expiredate=[".$expiredate."] stickyvalue=".$stickyvalue." ThreadDeleted=".$ThreadDeleted." ThreadVisibility=".$ThreadVisibility." WhoCanReply=".$WhoCanReply,"ForumModerator");
         $sql="update forum_thread set ";
          if ($IdGroup === 0) {
-             $sql .= "IdGroup = NULL";
+             $sql .= "IdGroup = 0";
          } else {
              $sql .= "IdGroup=" . $IdGroup;
          }
@@ -1376,7 +1376,7 @@ WHERE `id` = '$this->threadid'
             throw new PException('User gone missing...');
         }
         // forum_thread.IdGroup references group.id: "no group" has to be NULL, not 0
-        $IdGroup = null;
+        $IdGroup = 0;
         if (!empty($vars['IdGroup'])) {
             $IdGroup = (int) $vars['IdGroup'];
         }
@@ -2677,7 +2677,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                     `location` AS `country_names` ON `location`.`country` = `country_names`.`geoname_id`
                 WHERE
                     `forum_post`.`id` IN ({$separatedPostIds})
-                    AND (`forum_thread`.`IdGroup` IN ({$separatedGroupIds}) OR `forum_thread`.`IdGroup` IS NULL)
+                    AND (`forum_thread`.`IdGroup` IN ({$separatedGroupIds}) OR `forum_thread`.`IdGroup` = 0)
                 ORDER BY `created` DESC
                 LIMIT {$items} OFFSET {$offset}
             ";
@@ -2692,7 +2692,7 @@ public function NotAllowedForGroup($IdMember, $rPost) {
                 LEFT JOIN `forum_thread` on `forum_post`.`threadId` = `forum_thread`.`id`
                 WHERE
                     `forum_post`.`id` IN ({$separatedPostIds})
-                    AND (`forum_thread`.`IdGroup` IN ({$separatedGroupIds}) OR `forum_thread`.`IdGroup` IS NULL)
+                    AND (`forum_thread`.`IdGroup` IN ({$separatedGroupIds}) OR `forum_thread`.`IdGroup` = 0)
             ";
             $count = $this->singleLookup($query);
             $results['count'] = $count->count;
@@ -2837,8 +2837,8 @@ class Board implements Iterator {
         $owngroupsonly = $member->getPreference("ShowMyGroupsTopicsOnly", $default = "No");
         $this->owngroupsonly = $owngroupsonly;
         if ($this->IdGroup === null) {
-            $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly')) AND (IdGroup IS NULL))";
-            $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly')) AND (IdGroup IS NULL))";
+            $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly')) AND (IdGroup = 0))";
+            $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly')) AND (IdGroup = 0))";
         } elseif ($this->IdGroup > 0) {
             $this->PostGroupsRestriction = " (IdGroup= " . (int)$this->IdGroup . ") ";
             $this->ThreadGroupsRestriction = " (IdGroup= " . (int)$this->IdGroup . ") ";
@@ -2848,8 +2848,8 @@ class Board implements Iterator {
                 $this->PostGroupsRestriction = " ((((IdGroup IN (-1";
                 $this->ThreadGroupsRestriction = " ((((IdGroup IN (-1";
             } else {
-                $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND (IdGroup IS NULL OR IdGroup IN (0";
-                $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND (IdGroup IS NULL OR IdGroup IN (0";
+                $this->PostGroupsRestriction = " ((PostVisibility IN ('MembersOnly','NoRestriction') or (PostVisibility = 'GroupOnly' AND (IdGroup = 0 OR IdGroup IN (0";
+                $this->ThreadGroupsRestriction = " ((ThreadVisibility IN ('MembersOnly','NoRestriction') OR (ThreadVisibility = 'GroupOnly' AND (IdGroup = 0 OR IdGroup IN (0";
             }
             $query = "SELECT group_id AS IdGroup FROM group_membership WHERE member_id=" . (int) $this->session->get("IdMember") . " AND status = 'In'";
             $qry = $this->dao->query($query);
@@ -2862,11 +2862,11 @@ class Board implements Iterator {
             }
 
             if ($no_forumsgroup) {
-                $this->PostGroupsRestriction = $this->PostGroupsRestriction . ")))) AND (NOT IdGroup IS NULL))";
-                $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . ")))) AND (NOT IdGroup IS NULL))";
+                $this->PostGroupsRestriction = $this->PostGroupsRestriction . ")))) AND (IdGroup <> 0))";
+                $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . ")))) AND (IdGroup <> 0))";
             } else {
-                $this->PostGroupsRestriction = $this->PostGroupsRestriction . ")))) AND (IDGroup IS NULL))";
-                $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . ")))) AND (IDGroup IS NULL))";
+                $this->PostGroupsRestriction = $this->PostGroupsRestriction . ")))) AND (IdGroup = 0))";
+                $this->ThreadGroupsRestriction = $this->ThreadGroupsRestriction . ")))) AND (IdGroup = 0))";
             }
         }
 
@@ -2876,8 +2876,8 @@ class Board implements Iterator {
 			$this->PublicThreadVisibility = " ThreadVisibility IN ('NoRestriction', 'MembersOnly','GroupOnly','ModeratorOnly')";
 			if ($this->BW_Right->HasRight("ForumModerator","AllGroups") or $this->BW_Right->HasRight("ForumModerator","All")) {
 			    if ($IdGroup === null) {
-                    $this->PostGroupsRestriction = " (IdGroup IS NULL)";
-                    $this->ThreadGroupsRestriction = " (IdGroup IS NULL)";
+                    $this->PostGroupsRestriction = " (IdGroup = 0)";
+                    $this->ThreadGroupsRestriction = " (IdGroup = 0)";
                 } elseif ($no_forumsgroup) {
                         $this->PostGroupsRestriction = " (IdGroup != 0)";
                         $this->ThreadGroupsRestriction = " (IdGroup != 0)";
@@ -2910,7 +2910,7 @@ class Board implements Iterator {
             if (is_numeric($this->IdGroup)) {
                 $wherethread .= sprintf("AND `forum_thread`.`IdGroup` = '%d' ", $this->IdGroup);
             } elseif ($this->IdGroup === null) {
-                $wherethread .= "AND `forum_thread`.`IdGroup` IS NULL ";
+                $wherethread .= "AND `forum_thread`.`IdGroup` = 0 ";
             }
         }
 		$wherethread=$wherethread." AND (".$this->PublicThreadVisibility.")" ;

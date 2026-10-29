@@ -58,6 +58,52 @@ final class GroupControllerTest extends WebTestCase
         self::assertSame(1, $this->countRows($connection, 'privilegescopes', 'IdType', $groupId));
     }
 
+    public function testConfirmedDeleteRemovesTheGroupsForum(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $connection = $entityManager->getConnection();
+        $owner = $this->getMember($entityManager, 'member-2');
+        $groupId = random_int(1_500_000_000, 2_000_000_000);
+        $this->createGroupFixture(
+            $connection,
+            $groupId,
+            $owner,
+            $this->getMember($entityManager, 'member-1'),
+            $this->getMember($entityManager, 'member-banned'),
+        );
+
+        // move a fixture thread with its posts into the group, with a subscription and a queued notification
+        $threadId = (int) $connection->fetchOne('SELECT t.id FROM forum_thread t WHERE t.IdGroup <> 0 ORDER BY t.id LIMIT 1');
+        $postIds = $connection->fetchFirstColumn('SELECT id FROM forum_post WHERE threadid = ?', [$threadId]);
+        self::assertNotEmpty($postIds, 'the fixtures contain a group thread with posts');
+        $connection->executeStatement('UPDATE forum_thread SET IdGroup = ? WHERE id = ?', [$groupId, $threadId]);
+        $connection->executeStatement(
+            'INSERT INTO members_threads_subscribed (IdSubscriber, IdThread, ActionToWatch, UnSubscribeKey, notificationsEnabled, created)'
+            . " VALUES (?, ?, 'replies', 'key', 1, NOW())",
+            [$owner->getId(), $threadId],
+        );
+        $connection->executeStatement(
+            'INSERT INTO posts_notificationqueue (IdMember, IdPost, created, Type, TableSubscription, IdSubscription, Status)'
+            . " VALUES (?, ?, NOW(), 'reply', 'members_threads_subscribed', 0, 'ToSend')",
+            [$owner->getId(), $postIds[0]],
+        );
+        $client->loginUser($owner);
+
+        $client->request('GET', "/group/{$groupId}/delete/true");
+
+        self::assertResponseRedirects('/groups/');
+        self::assertSame(0, $this->countRows($connection, 'group', 'id', $groupId));
+        self::assertSame(0, $this->countRows($connection, 'forum_thread', 'id', $threadId));
+        self::assertSame(0, $this->countRows($connection, 'forum_thread_translation', 'object_id', $threadId));
+        self::assertSame(0, $this->countRows($connection, 'members_threads_subscribed', 'IdThread', $threadId));
+        foreach ($postIds as $postId) {
+            self::assertSame(0, $this->countRows($connection, 'forum_post', 'id', (int) $postId));
+            self::assertSame(0, $this->countRows($connection, 'forum_post_translation', 'object_id', (int) $postId));
+            self::assertSame(0, $this->countRows($connection, 'posts_notificationqueue', 'IdPost', (int) $postId));
+        }
+    }
+
     private function getMember(EntityManagerInterface $entityManager, string $username): Member
     {
         $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => $username]);

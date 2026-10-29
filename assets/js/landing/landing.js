@@ -157,9 +157,6 @@ var Home = {
             case 'notifications':
                 return Home.updateNotifications();
 
-            case 'threads':
-                return Home.updateThreads();
-
             case 'groups':
                 return Home.updateGroups();
 
@@ -220,18 +217,12 @@ var Home = {
                 });
             });
     },
-    // The Forum tab (forum threads) and the My groups tab (threads of the member's groups).
-    updateThreads: function () {
-        Home.loadThreads('forum', 'threadsdisplay');
-    },
+    // The My groups tab: threads of the member's groups, the BeWelcome group's agora included.
     updateGroups: function () {
-        Home.loadThreads('groups', 'groupsdisplay');
-    },
-    loadThreads: function (tab, displayId) {
-        fetch('/widget/threads?' + new URLSearchParams({ tab: tab }).toString())
+        fetch('/widget/threads')
             .then(response => response.text())
             .then(threads => {
-                const display = document.getElementById(displayId);
+                const display = document.getElementById('groupsdisplay');
                 if (display) {
                     display.outerHTML = threads;
                 }

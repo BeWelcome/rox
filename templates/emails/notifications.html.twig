@@ -2,7 +2,7 @@
 
 {% block content %}
     {% set post = notification.post %}
-    <p>{% if post.thread.group %}
+    <p>{% if not post.thread.agora %}
             <a href="{{ url('group_forum_thread', {'thread': post.thread.id, 'group_id': post.thread.group.id}) }}">{{ post.thread.title|striptags }} [{{ post.thread.group.name }}]</a>
             (<a href="{{ url('group_forum_thread', {'thread': post.thread.id, 'group_id': post.thread.group.id}) }}/reply">{{ 'reply'|trans }}</a>)
         {% else %}

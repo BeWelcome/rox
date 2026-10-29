@@ -15,7 +15,6 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Exception;
 
 /**
  * Do not check entities with PHPMD.
@@ -107,12 +106,10 @@ class ForumThread
     #[ORM\ManyToOne(targetEntity: Language::class)]
     private $language;
 
-    /**
-     * @var Group
-     */
-    #[ORM\JoinColumn(name: 'IdGroup', referencedColumnName: 'id', nullable: true)]
+    /** The group whose forum the thread is in; the agora's threads are in the BeWelcome group (Group::BEWELCOME). */
+    #[ORM\JoinColumn(name: 'IdGroup', referencedColumnName: 'id', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Group::class)]
-    private $group;
+    private ?Group $group = null;
 
     /**
      * @var string
@@ -701,20 +698,15 @@ class ForumThread
 
     public function getGroup(): ?Group
     {
-        if (null === $this->group) {
-            return null;
-        }
+        return $this->group;
+    }
 
-        // Database might still link to deleted group row try to access group name and
-        // return null in case that triggers an exception
-        $group = $this->group;
-        try {
-            $groupName = $this->group->getName();
-        } catch (Exception) {
-            $group = null;
-        }
-
-        return $group;
+    /**
+     * The thread is in the agora, the forum of the BeWelcome group (a thread not stored yet without a group, too).
+     */
+    public function isAgora(): bool
+    {
+        return null === $this->group || $this->group->isBeWelcome();
     }
 
     /**

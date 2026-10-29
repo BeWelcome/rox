@@ -94,9 +94,13 @@
             {% set location = address.location %}
             {% set regionName = location.admin1 is null ? '*' : location.admin1.name %}
             {% set regionCode = location.admin1 is null ? '*' : location.admin1.geonameId %}
+            {% set countryUrl = url('places_country', {countryname: location.country.name, countrycode: location.countryId}) %}
+            {# The country's round flag, then the town; the country's name only on large screens #}
             <span class="p-pro__meta-item p-pro__place">
-              <a class="p-pro__city" href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a>,
-              <a class="p-pro__country" href="{{ url('places_country', {countryname: location.country.name, countrycode: location.countryId}) }}">{{ location.country.name }}</a>
+              <span class="c-tip" data-tip="{{ location.country.name }}"><a class="p-pro__flag o-flag o-flag--{{ location.countryId|upper }}" href="{{ countryUrl }}" aria-label="{{ location.country.name }}"></a></span>
+              <span class="p-pro__place-text">
+                <a class="p-pro__city" href="{{ url('places_city', {countryname: location.country.name, countrycode: location.countryId, regionname: regionName, regioncode: regionCode, cityname: location.name, citycode: location.geonameId}) }}">{{ location.name }}</a><span class="p-pro__country-part">, <a class="p-pro__country" href="{{ countryUrl }}">{{ location.country.name }}</a></span>
+              </span>
             </span>
           {% else %}
             <span class="p-pro__meta-item p-pro__place p-pro__place--empty">{{ 'profile.no.city.yet'|trans }}</span>

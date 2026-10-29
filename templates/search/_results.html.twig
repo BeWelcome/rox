@@ -64,7 +64,14 @@
                 {#- The place is only shown when it is not the place searched for (a nearby town). -#}
                 {%- set searchedPlaceId = searchParams.location_geoname_id ?? null -%}
                 {% if address and address.location and (searchedPlaceId is empty or address.location.geonameId != searchedPlaceId) %}
-                    <p class="p-search-card__meta"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ address.location.name ~ (address.location.country ? ', ' ~ address.location.country.name : '') }}</p>
+                    {% set _country = address.location.country %}
+                    <p class="p-search-card__meta">
+                        {%- if _country -%}
+                            <span class="c-tip" data-tip="{{ _country.name }}"><span class="o-flag o-flag--{{ address.location.countryId|upper }} p-search-card__flag" aria-hidden="true"></span></span>
+                        {%- else -%}
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        {%- endif %} {{ address.location.name }}{% if _country %}<span class="p-search-card__country">, {{ _country.name }}</span>{% endif -%}
+                    </p>
                 {% endif %}
                 {% if occupation %}
                     <p class="p-search-card__occupation"><i class="fas fa-briefcase" aria-hidden="true"></i> <span class="visually-hidden">{{ 'profile.occupation'|trans }}:</span> {{ occupation }}</p>

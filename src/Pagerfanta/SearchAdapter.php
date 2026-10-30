@@ -139,7 +139,7 @@ class SearchAdapter implements AdapterInterface
         $replyRates = $messageRepository->getReplyRates($memberIds, new DateTimeImmutable('-12 months'));
 
         return array_map(
-            fn (MemberSearchResult $result): MemberSearchResult => $result->withReplyRate(
+            static fn (MemberSearchResult $result): MemberSearchResult => $result->withReplyRate(
                 ($replyRates[$result->member->getId()] ?? null)?->getShownPercentage()
             ),
             $results

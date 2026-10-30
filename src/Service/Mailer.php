@@ -8,6 +8,7 @@ use App\Entity\Friend;
 use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Subtrip;
+use DateTimeInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use InvalidArgumentException;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -40,6 +41,8 @@ class Mailer
         private readonly string $reminderEmailAddress = 'reminder@bewelcome.org',
         private readonly string $termsOfUseEmailAddress = 'tou@bewelcome.org',
         private readonly string $newsletterEmailAddress = 'newsletter@bewelcome.org',
+        // bounces of suspension notices need no answer: they go to a mailbox support doesn't read (empty: as usual)
+        private readonly string $suspensionBounceAddress = '',
     ) {
     }
 
@@ -143,6 +146,44 @@ class Mailer
             $parameters,
             [],
             $this->buildNewsletterHeaders($newsletter, $receiver, $parameters),
+            Newsletter::SUSPENSION_NOTIFICATION === $newsletter->getType() ? $this->suspensionBounceAddress : '',
+        );
+    }
+
+    /**
+     * Asks a member who hasn't logged in for a year to come back and check the profile.
+     */
+    public function sendMemberLoginReminder(Member $member): bool
+    {
+        return $this->sendTemplateEmail(
+            new Address($this->reminderEmailAddress, 'BeWelcome'),
+            $member,
+            'login.reminder',
+            [
+                'subject' => 'email.login.reminder.subject',
+            ]
+        );
+    }
+
+    /**
+     * Tells a member who didn't come back despite the reminders that the account is suspended and when it will be
+     * deleted.
+     */
+    public function sendMemberSuspensionNotice(Member $member, DateTimeInterface $deletionDate): bool
+    {
+        return $this->sendTemplateEmail(
+            new Address($this->reminderEmailAddress, 'BeWelcome'),
+            $member,
+            'suspension.notice',
+            [
+                'subject' => [
+                    'translationId' => 'email.suspension.notice.subject',
+                    // a timestamp: ICU formats it ({deletion_date, date, short}) and it survives a missing translation
+                    'parameters' => ['deletion_date' => $deletionDate->getTimestamp()],
+                ],
+                'deletion_date' => $deletionDate->getTimestamp(),
+            ],
+            returnPath: $this->suspensionBounceAddress,
         );
     }
 
@@ -338,6 +379,7 @@ class Mailer
         array $parameters,
         array $identificationHeaders = [],
         array $extraTextHeaders = [],
+        string $returnPath = '',
     ): bool {
         $currentLocale = $this->translator->getLocale();
         $success = true;
@@ -382,6 +424,11 @@ class Mailer
 
         foreach ($extraTextHeaders as $name => $value) {
             $email->getHeaders()->addTextHeader($name, $value);
+        }
+
+        if ('' !== $returnPath) {
+            // the mailer uses the Return-Path as the envelope sender, so bounces go there
+            $email->returnPath(new Address($returnPath));
         }
 
         try {

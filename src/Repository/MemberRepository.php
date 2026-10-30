@@ -167,7 +167,10 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->getResult();
     }
 
-    public function loadDataRetentionMembers(): array
+    /**
+     * @return list<Member> the members who left more than a year ago and still have their data, oldest first
+     */
+    public function loadDataRetentionMembers(?int $limit = null): array
     {
         $query = $this->createQueryBuilder('m')
             ->where('m.status = :askToLeave')
@@ -176,10 +179,103 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
             ->setParameter('askToLeave', MemberStatusType::ASKED_TO_LEAVE)
             ->setParameter('retired', 'Retired\_%')
             ->setParameter('now', new DateTime())
+            ->orderBy('m.id', 'ASC')
+            ->setMaxResults($limit)
             ->getQuery()
         ;
 
         return $query->getResult();
+    }
+
+    /**
+     * Members who haven't been active for a year and weren't reminded in the last year (updated is set when one
+     * is reminded).
+     *
+     * @return list<Member>
+     */
+    public function findMembersToRemind(int $limit): array
+    {
+        $yearAgo = new DateTime('-1 year');
+
+        return $this->createQueryBuilder('m')
+            ->where('m.status IN (:statuses)')
+            ->andWhere('m.lastActive < :yearAgo OR (m.lastActive IS NULL AND m.created < :yearAgo)')
+            ->andWhere('m.updated IS NULL OR m.updated <= :yearAgo')
+            ->setParameter('statuses', [
+                MemberStatusType::ACTIVE,
+                MemberStatusType::CHOICE_INACTIVE,
+                MemberStatusType::OUT_OF_REMIND,
+            ])
+            ->setParameter('yearAgo', $yearAgo)
+            ->orderBy('m.id', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Reminded members who haven't been active for five years despite the reminders.
+     *
+     * @return list<Member>
+     */
+    public function findMembersToSuspend(int $limit): array
+    {
+        $fiveYearsAgo = new DateTime('-5 years');
+
+        return $this->createQueryBuilder('m')
+            ->where('m.status = :outOfRemind')
+            ->andWhere('m.lastActive <= :fiveYearsAgo OR (m.lastActive IS NULL AND m.created <= :fiveYearsAgo)')
+            ->setParameter('outOfRemind', MemberStatusType::OUT_OF_REMIND)
+            ->setParameter('fiveYearsAgo', $fiveYearsAgo)
+            ->orderBy('m.id', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Members who didn't both confirm their email address and finish the setup within two weeks: waiting for the
+     * confirmation (MailToConfirm), confirmed but without setup (MailConfirmed), set up but not confirmed
+     * (Activated).
+     *
+     * @return list<Member>
+     */
+    public function findSignupsNotFinished(): array
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.status IN (:statuses)')
+            ->andWhere('m.created < :deadline')
+            ->setParameter('statuses', [
+                MemberStatusType::AWAITING_MAIL_CONFIRMATION,
+                MemberStatusType::MAIL_CONFIRMED,
+                MemberStatusType::ACCOUNT_ACTIVATED,
+            ])
+            ->setParameter('deadline', new DateTime('-' . Member::DAYS_TO_FINISH_SIGNUP . ' days'))
+            ->orderBy('m.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Hands the members suspended more than two months ago over to the data retention: they left a year ago as
+     * far as it is concerned.
+     *
+     * @return int the number of members
+     */
+    public function scheduleSuspendedMembersForDeletion(): int
+    {
+        return $this->createQueryBuilder('m')
+            ->update()
+            ->set('m.status', ':askedToLeave')
+            ->set('m.lastActive', ':yearAgo')
+            ->where('m.status = :suspended')
+            ->andWhere('m.updated < :twoMonthsAgo')
+            ->setParameter('askedToLeave', MemberStatusType::ASKED_TO_LEAVE)
+            ->setParameter('yearAgo', new DateTime('-1 year -1 day'))
+            ->setParameter('suspended', MemberStatusType::SUSPENDED)
+            ->setParameter('twoMonthsAgo', new DateTime('-2 months'))
+            ->getQuery()
+            ->execute();
     }
 
     public function applySearchFilters(QueryBuilder $qb, SearchFormRequest $searchRequest): void

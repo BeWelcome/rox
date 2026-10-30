@@ -112,6 +112,9 @@ profile.created:
 profile.finish.setup:
     - Make sure to finish the setup till {deletion_date} (German time) as your account will be deleted otherwise.
     - Information shown on any page as long as the account lacks certain information. {deletion} will be replaced by a date in long format (weekday, day Month year).
+profile.confirm.email.deadline:
+    - Please confirm your email address till {deletion_date} (German time) as your account will be deleted otherwise.
+    - Information shown on any page as long as the member finished the setup but didn't confirm the email address. {deletion_date} will be replaced by a date in long format (weekday, day Month year).
 profile.finish.setup.button:
     - Finish setup
     - Label on the button to finish account setup (part of the flash shown when account lacks information.

@@ -40,6 +40,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\HasLifecycleCallbacks]
 class Member implements Stringable, UserInterface, PasswordHasherAwareInterface, PasswordAuthenticatedUserInterface
 {
+    /** Days a new member has to confirm the email address and finish the setup before the account is removed. */
+    public const int DAYS_TO_FINISH_SIGNUP = 14;
+
+    /** The deadline the banner tells new members: a few days before the removal, so the last ones aren't lost. */
+    public const int DAYS_SHOWN_TO_FINISH_SIGNUP = 10;
+
     public const ROLE_ADMIN_ACCEPTER = 'ROLE_ADMIN_ACCEPTER';
     public const ROLE_ADMIN_ADMIN = 'ROLE_ADMIN_ADMIN';
     public const ROLE_ADMIN_CHECKER = 'ROLE_ADMIN_CHECKER';

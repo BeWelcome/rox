@@ -1,0 +1,11 @@
+{% extends 'emails/email_no_greeting.html.twig' %}
+
+{#
+  members:remind:login: a member who hasn't logged in for a year. The links carry the campaign, so the analytics
+  count the visits it brings.
+#}
+{% block content %}
+    {% apply utm_links('login_reminder', 'reminder') %}
+        {{ 'email.login.reminder.body'|trans({username: receiver.username, gender: receiver.gender})|purify }}
+    {% endapply %}
+{% endblock %}

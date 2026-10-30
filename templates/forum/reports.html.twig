@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="h3">{{ 'forum.reports.title'|trans }}</h1>
+    {% include 'forum/_head.html.twig' with {active: 'reports'} %}
     <p>
         {% for name in ['AllActiveReports', 'MyReportActive', 'AllMyReport'] %}
             <a class="btn btn-sm {{ list == name ? 'btn-primary' : 'btn-outline-primary' }}" href="{{ path('forum_reports', {list: name}) }}">{{ ('forum.reports.' ~ name|lower)|trans }}</a>

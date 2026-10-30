@@ -59,6 +59,7 @@ class ForumPagesController extends AbstractController
         return $this->render('forum/overview.html.twig', [
             'threads' => $threads,
             'onlyMyGroups' => $onlyMyGroups,
+            'ascending' => $this->readsAscending($member),
         ]);
     }
 
@@ -103,16 +104,22 @@ class ForumPagesController extends AbstractController
         $member = $this->getMember();
         $canRead = $this->isGranted(GroupVoter::GROUP_VIEW_FORUM, $group);
 
-        return $this->render('forum/group.html.twig', [
+        $parameters = [
             'group' => $group,
             'canRead' => $canRead,
+            'ascending' => $this->readsAscending($member),
             'threads' => $canRead ? $this->paginate(
                 $this->getThreadRepository()->createLatestQueryBuilder($member, $this->isModerator(), $group),
                 $page_id,
                 $this->getItemsPerPage($member),
             ) : null,
-            'submenu' => ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'],
-        ]);
+        ];
+        // the agora has the forum's tabs, a group's forum the group's menu
+        if (!$group->isBeWelcome()) {
+            $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
+        }
+
+        return $this->render('forum/group.html.twig', $parameters);
     }
 
     #[Route(path: '/forums/s{threadId}', name: 'forum_thread', requirements: ['threadId' => '\d+'], methods: ['GET'])]
@@ -156,7 +163,7 @@ class ForumPagesController extends AbstractController
             return $this->render('forum/thread_hidden.html.twig', ['thread' => $thread], new Response('', Response::HTTP_FORBIDDEN));
         }
 
-        $ascending = 'Yes' === $this->getPreference($member, Preference::FORUM_ORDER_LIST_ASC);
+        $ascending = $this->readsAscending($member);
         if ($reverse) {
             $ascending = !$ascending;
         }
@@ -220,6 +227,14 @@ class ForumPagesController extends AbstractController
         $pager->setCurrentPage(min(max(1, $page), max(1, $pager->getNbPages())));
 
         return $pager;
+    }
+
+    /**
+     * Whether the member reads threads oldest post first.
+     */
+    private function readsAscending(Member $member): bool
+    {
+        return 'Yes' === $this->getPreference($member, Preference::FORUM_ORDER_LIST_ASC);
     }
 
     private function getPreference(Member $member, string $codename): ?string

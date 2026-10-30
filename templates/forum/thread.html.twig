@@ -17,6 +17,7 @@
 {% block content %}
     {% import 'macros/post_button.html.twig' as button %}
     {% set moderator = is_granted('ROLE_ADMIN_FORUMMODERATOR') or is_granted('ROLE_ADMIN_ADMIN') %}
+    {% if thread.agora %}{% include 'forum/_head.html.twig' with {active: 'agora', tabsOnly: true} %}{% endif %}
     <p class="small mb-1">
         <a href="{{ path('forums') }}">{{ 'forum'|trans }}</a> »
         {% if thread.agora %}

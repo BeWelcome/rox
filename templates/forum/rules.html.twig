@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="h3">{{ 'forumrulesshort'|trans }}</h1>
+    {% include 'forum/_head.html.twig' with {active: 'rules'} %}
     <h2 class="h4">{{ 'forumrulesgeneral'|trans|raw }}</h2>
     <h2 class="h4">{{ 'forumrulescharterheadline1'|trans|raw }}</h2>
     <h3 class="h5">{{ 'forumrulescharterheadline2'|trans|raw }}</h3>

@@ -3,7 +3,7 @@
 
 {% block content %}
     {% import 'macros/post_button.html.twig' as button %}
-    <h1 class="h3">{{ 'forumsubscriptions'|trans }}</h1>
+    {% include 'forum/_head.html.twig' with {active: 'subscriptions'} %}
     <p>
         {{ button.post_button(path('subscriptions_disable'), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'forumdisableallnotifications', 'btn btn-outline-secondary btn-sm') }}
         {{ button.post_button(path('subscriptions_enable'), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'forumenableallnotifications', 'btn btn-outline-primary btn-sm') }}

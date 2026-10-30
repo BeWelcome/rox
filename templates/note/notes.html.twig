@@ -124,6 +124,7 @@
 {% endblock main %}
 
 {% block modals %}
+    {% import 'macros/post_button.html.twig' as post %}
     {% for note in notes %}
         {% set preview = note.comment|purify|striptags|trim|truncate(150) %}
         <div class="micromodal-slide p-pe-confirm" id="note-delete-{{ note.id }}" aria-hidden="true">
@@ -134,9 +135,8 @@
                     <p class="p-pe-confirm__text">{{ preview ?: 'profile.notes.delete'|trans }}</p>
                     <div class="p-pe-confirm__actions">
                         <button type="button" class="p-pe-confirm__cancel" data-micromodal-close>{{ 'cancel'|trans }}</button>
-                        <a class="p-pe-confirm__delete" href="{{ url('delete_note', {username: note.member.username}) }}">
-                            <i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'profile.note.delete'|trans }}
-                        </a>
+                        {% set content %}<i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'profile.note.delete'|trans }}{% endset %}
+                        {{ post.post_link(path('delete_note', {username: note.member.username}), 'delete_note', 'p-pe-confirm__delete', content) }}
                     </div>
                 </div>
             </div>

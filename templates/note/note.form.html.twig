@@ -41,17 +41,23 @@
     <div class="p-edit-subpage__actions">
         {% if editing %}
             {% set deleteText = 'profile.note.delete'|trans %}
-            <a class="p-note-form__delete" href="{{ path('delete_note', {username: member.username, embed: 1, back: app.request.query.get('back')}) }}"
+            <button type="submit" form="note-delete" class="o-post-link__button p-note-form__delete"
                title="{{ deleteText }}" aria-label="{{ deleteText }}"
                onclick="return confirm({{ 'profile.notes.delete'|trans|striptags|json_encode|e('html_attr') }});">
                 <i class="fas fa-trash-alt" aria-hidden="true"></i>
-            </a>
+            </button>
         {% endif %}
         <button type="submit" class="o-button">
             <i class="fas fa-check" aria-hidden="true"></i> {{ (editing ? 'profile.note.save' : 'profile.note.save.new')|trans }}
         </button>
     </div>
     {{ form_end(form) }}
+    {% if editing %}
+        {# the delete button above is in the note form: it posts this one #}
+        <form id="note-delete" method="post" action="{{ path('delete_note', {username: member.username, embed: 1, back: app.request.query.get('back')}) }}" hidden>
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_note') }}">
+        </form>
+    {% endif %}
 
     <script>
       // The categories already used: a click puts one in the field (one category per note)

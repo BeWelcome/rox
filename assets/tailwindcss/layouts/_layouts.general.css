@@ -11920,3 +11920,17 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-search-map-member--no img { border-color: #94a3b8; border-width: 3px; }
 .p-search-preview .p-search-preview__picture--yes .p-search-preview__avatar { border: 3px solid #fff; box-shadow: 0 0 0 3px #3fa75a, 0 2px 8px rgba(15, 23, 42, 0.12); }
 .p-search-preview .p-search-preview__picture--no .p-search-preview__avatar { border: 3px solid #fff; box-shadow: 0 0 0 3px #cbd5e1, 0 2px 8px rgba(15, 23, 42, 0.12); }
+
+/* An action in the place of a link (macros/post_button.html.twig post_link): the form doesn't take part in the
+   layout, the button starts out like a link (no specificity, so the link's own class wins). */
+.o-post-link { display: contents; }
+:where(.o-post-link__button) {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}

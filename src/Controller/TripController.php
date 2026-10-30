@@ -179,8 +179,9 @@ class TripController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/trip/{id}/remove', name: 'trip_remove', requirements: ['id' => '\d+'])]
+    #[Route(path: '/trip/{id}/remove', name: 'trip_remove', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsGranted('TRIP_REMOVE', subject: 'trip')]
+    #[IsCsrfTokenValid('trip_remove')]
     public function remove(Trip $trip): RedirectResponse
     {
         $this->tripModel->hideTrip($trip);

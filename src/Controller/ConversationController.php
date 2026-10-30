@@ -25,6 +25,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
@@ -35,6 +36,9 @@ class ConversationController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
+
+    /** The CSRF token id of the actions on a conversation (delete, recover, purge, decline, not spam). */
+    public const string TOKEN = 'conversation';
 
     public function __construct(
         protected ConversationModel $conversationModel,
@@ -99,8 +103,14 @@ class ConversationController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/conversation/{id}/delete', name: 'conversation_delete', requirements: ['id' => '\d+'])]
+    #[Route(
+        path: '/conversation/{id}/delete',
+        name: 'conversation_delete',
+        requirements: ['id' => '\d+'],
+        methods: ['POST'],
+    )]
     #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
+    #[IsCsrfTokenValid(self::TOKEN)]
     public function deleteConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -114,8 +124,14 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversations_deleted');
     }
 
-    #[Route(path: '/conversation/{id}/purge', name: 'conversation_purge', requirements: ['id' => '\d+'])]
+    #[Route(
+        path: '/conversation/{id}/purge',
+        name: 'conversation_purge',
+        requirements: ['id' => '\d+'],
+        methods: ['POST'],
+    )]
     #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
+    #[IsCsrfTokenValid(self::TOKEN)]
     public function purgeConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -129,8 +145,14 @@ class ConversationController extends AbstractController
         return $this->redirectToRoute('conversations_deleted');
     }
 
-    #[Route(path: '/conversation/{id}/recover', name: 'conversation_recover', requirements: ['id' => '\d+'])]
+    #[Route(
+        path: '/conversation/{id}/recover',
+        name: 'conversation_recover',
+        requirements: ['id' => '\d+'],
+        methods: ['POST'],
+    )]
     #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
+    #[IsCsrfTokenValid(self::TOKEN)]
     public function recoverConversation(Message $message): Response
     {
         /** @var Member $member */
@@ -150,8 +172,14 @@ class ConversationController extends AbstractController
         return $this->viewThread($request, $message, false, true);
     }
 
-    #[Route(path: '/conversation/{id}/decline', name: 'conversation_decline', requirements: ['id' => '\d+'])]
+    #[Route(
+        path: '/conversation/{id}/decline',
+        name: 'conversation_decline',
+        requirements: ['id' => '\d+'],
+        methods: ['POST'],
+    )]
     #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
+    #[IsCsrfTokenValid(self::TOKEN)]
     public function decline(Message $message): Response
     {
         if ($message->isMessage()) {
@@ -165,7 +193,9 @@ class ConversationController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/conversation/{id}/nospam', name: 'conversation_mark_nospam')]
+    #[Route(path: '/conversation/{id}/nospam', name: 'conversation_mark_nospam', methods: ['POST'])]
+    #[IsGranted('CONVERSATION_VIEW', subject: 'message')]
+    #[IsCsrfTokenValid(self::TOKEN)]
     public function unmarkAsSpam(Message $message): Response
     {
         /** @var Member $member */

@@ -96,6 +96,7 @@
 {% endblock content %}
 
 {% block modals %}
+  {% import 'macros/post_button.html.twig' as post %}
   {% for trip in trips %}
     <div class="micromodal-slide p-pe-confirm" id="removeTrip-{{ trip.id }}" aria-hidden="true">
       <div class="modal__overlay p-pe-confirm__overlay" tabindex="-1" data-micromodal-close>
@@ -105,9 +106,8 @@
           <div class="p-pe-confirm__text">{{ 'trip.remove.body'|trans|raw }}</div>
           <div class="p-pe-confirm__actions">
             <button type="button" class="p-pe-confirm__cancel" data-micromodal-close>{{ 'trip.remove.close'|trans }}</button>
-            <a class="p-pe-confirm__delete" href="{{ path('trip_remove', { id: trip.id }) }}">
-              <i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'trip.remove.label'|trans }}
-            </a>
+            {% set content %}<i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'trip.remove.label'|trans }}{% endset %}
+            {{ post.post_link(path('trip_remove', { id: trip.id }), 'trip_remove', 'p-pe-confirm__delete', content) }}
           </div>
         </div>
       </div>

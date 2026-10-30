@@ -51,6 +51,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -85,9 +86,19 @@ class ProfileController extends AbstractController
         return $this->renderProfile($member, $loggedInMember, $language, false);
     }
 
-    #[Route(path: '/members/status/set', name: 'profile_set_status', methods: ['POST'])]
+    // before members_profile, which would take 'status' for a username
+    #[Route(path: '/members/status/set', name: 'profile_set_status', methods: ['POST'], priority: 20)]
     public function setMemberStatus(Request $request, EntityManagerInterface $entityManager): Response
     {
+        // the form is only shown to these (ProfileModel::getStatusForm)
+        if (
+            !$this->isGranted(Member::ROLE_ADMIN_ADMIN)
+            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->isGranted(Member::ROLE_ADMIN_PROFILE)
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
         $statusForm = $this->createForm(ProfileStatusFormType::class);
         $statusForm->handleRequest($request);
         $member = null;
@@ -340,7 +351,12 @@ class ProfileController extends AbstractController
         return $this->renderProfile($member, $loggedInMember, $language, true);
     }
 
-    #[Route(path: '/members/{username:member}/delete/language/{language}', name: 'profile_delete_language')]
+    #[Route(
+        path: '/members/{username:member}/delete/language/{language}',
+        name: 'profile_delete_language',
+        methods: ['POST'],
+    )]
+    #[IsCsrfTokenValid('profile_delete_language')]
     public function deleteLanguage(Member $member, string $language): Response
     {
         /** @var Member $loggedInMember */
@@ -537,6 +553,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route(path: '/members/update/field', name: 'profile_update_field', methods: ['POST'], priority: 20)]
+    #[IsCsrfTokenValid('profile_update_field')]
     public function updateField(Request $request): Response
     {
         $form = $this->createFormBuilder(options: ['csrf_protection' => false])
@@ -568,7 +585,7 @@ class ProfileController extends AbstractController
         methods: ['POST'],
         priority: 10,
     )]
-    public function setAccommodation(#[MapRequestPayload] AccommodationDto $payload): Response
+    public function setAccommodation(#[MapRequestPayload(acceptFormat: 'json')] AccommodationDto $payload): Response
     {
         // Result of call will not be communicated to the requestor
         $response = new Response();
@@ -598,7 +615,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route(path: '/members/update/offers', name: 'profile_update_offers', methods: ['POST'], priority: 10)]
-    public function setOffers(#[MapRequestPayload] OffersDto $payload): Response
+    public function setOffers(#[MapRequestPayload(acceptFormat: 'json')] OffersDto $payload): Response
     {
         // Result of call will not be communicated to the requestor
         $response = new Response();
@@ -633,7 +650,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route(path: '/members/update/restrictions', name: 'profile_update_restrictions', methods: ['POST'], priority: 10)]
-    public function setRestrictions(#[MapRequestPayload] RestrictionsDto $payload): Response
+    public function setRestrictions(#[MapRequestPayload(acceptFormat: 'json')] RestrictionsDto $payload): Response
     {
         // Result of call will not be communicated to the requestor
         $response = new Response();
@@ -668,7 +685,7 @@ class ProfileController extends AbstractController
     }
 
     #[Route(path: '/members/update/maxguests', name: 'profile_update_max_guests', methods: ['POST'], priority: 10)]
-    public function setMaxGuests(#[MapRequestPayload] MaxGuestsDto $payload): Response
+    public function setMaxGuests(#[MapRequestPayload(acceptFormat: 'json')] MaxGuestsDto $payload): Response
     {
         // Result of call will not be communicated to the requestor
         $response = new Response();

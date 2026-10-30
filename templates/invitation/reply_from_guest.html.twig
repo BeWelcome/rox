@@ -53,7 +53,7 @@
                         <span class="visually-hidden">{{ 'toggle.dropdown'|trans }}</span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end c-inbox-compose__menu">
-                        <a class="dropdown-item" href="{{ url('conversation_decline', {id: current.id}) }}">{{ 'label.decline.no.message'|trans }}</a>
+                        <button type="submit" form="conversation-decline-{{ current.id }}" class="dropdown-item">{{ 'label.decline.no.message'|trans }}</button>
                     </div>
                 </div>
             {% endif %}
@@ -68,4 +68,8 @@
         </div>
         {{ form_rest(form) }}
     {{ form_end(form) }}
+    {# declining without a message posts its own form (the button above is in the reply form) #}
+    <form id="conversation-decline-{{ current.id }}" method="post" action="{{ url('conversation_decline', {id: current.id}) }}" hidden>
+        <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\ConversationController::TOKEN')) }}">
+    </form>
 {% endblock reply_form %}

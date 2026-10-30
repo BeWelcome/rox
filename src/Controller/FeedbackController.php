@@ -52,7 +52,6 @@ class FeedbackController extends AboutBaseController
             [
                 'categories' => $categories,
                 'member' => $member,
-                'csrf_protection' => false,
                 'allow_extra_fields' => true,
             ]
         );

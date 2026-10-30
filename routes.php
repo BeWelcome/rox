@@ -59,17 +59,6 @@
 
     // places routes: all in App\Controller\PlacesController (countries, country, region, town)
 
-    // searchmembers
-    $this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');
-    $this->addRoute('searchmembers_map', 'search/members/map', 'SearchController', 'searchMembersOnMap');
-    $this->addRoute('searchmembers_map_advanced', 'search/members/map/advanced', 'SearchController', 'searchMembersOnMap');
-    $this->addRoute('searchmembers_text', 'search/members/text', 'SearchController', 'searchMembersText');
-    $this->addRoute('searchmembers_text_advanced', 'search/members/text/advanced', 'SearchController', 'searchMembersText');
-    $this->addRoute('searchmembers_advanced', 'search/members/advanced', 'SearchController', 'loadAdvancedOptions');
-    $this->addRoute('search_places', 'search/locations/:type:', 'SearchController', 'searchSuggestLocations');
-
-    $this->addRoute('searchmembers_username', 'search/members/username', 'SearchController', 'searchMemberUsernames');
-
     // New Members Be Welcome
     $this->addRoute('newmembers', 'admin/newmembers', 'AdminNewMembersController', 'listMembers');
     $this->addRoute('newmembers_pages', 'admin/newmembers/page/:pageno:', 'AdminNewMembersController', 'listMembers');

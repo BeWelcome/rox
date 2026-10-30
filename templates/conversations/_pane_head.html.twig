@@ -4,6 +4,8 @@
   is_spam, show_deleted, back_url and show_actions. meta (optional) is shown after the
   username, e.g. where the member lives.
 #}
+{% import 'macros/post_button.html.twig' as post %}
+{% set token = constant('App\\Controller\\ConversationController::TOKEN') %}
 <header class="c-inbox-head">
     <a class="c-inbox-head__back{{ show_actions ? '' : ' is-always' }}" href="{{ back_url }}">
         <i class="fas fa-chevron-left" aria-hidden="true"></i>
@@ -23,22 +25,19 @@
     {% if show_actions %}
     <div class="c-inbox-head__actions">
         {% if is_spam %}
-            <a class="c-inbox-head__report" href="{{ path('conversation_mark_nospam', { id: current.id }) }}">
-                <i class="far fa-flag" aria-hidden="true"></i><span>{{ 'marknospam'|trans }}</span>
-            </a>
+            {% set content %}<i class="far fa-flag" aria-hidden="true"></i><span>{{ 'marknospam'|trans }}</span>{% endset %}
+            {{ post.post_link(path('conversation_mark_nospam', { id: current.id }), token, 'c-inbox-head__report', content) }}
         {% else %}
             <button type="button" class="c-inbox-head__report js-modal-trigger" data-micromodal-trigger="report-modal" title="{{ 'markspam'|trans }}">
                 <i class="far fa-flag" aria-hidden="true"></i><span>{{ 'conversation.report.short'|trans }}</span>
             </button>
         {% endif %}
         {% if show_deleted %}
-            <a class="c-inbox-head__icon" href="{{ path('conversation_recover', { id: current.id }) }}">
-                <i class="fas fa-inbox" aria-hidden="true"></i><span class="visually-hidden">{{ 'recover'|trans }}</span>
-            </a>
+            {% set content %}<i class="fas fa-inbox" aria-hidden="true"></i><span class="visually-hidden">{{ 'recover'|trans }}</span>{% endset %}
+            {{ post.post_link(path('conversation_recover', { id: current.id }), token, 'c-inbox-head__icon', content) }}
         {% else %}
-            <a class="c-inbox-head__icon" href="{{ path('conversation_delete', { id: current.id }) }}">
-                <i class="fas fa-trash-alt" aria-hidden="true"></i><span class="visually-hidden">{{ 'delete'|trans }}</span>
-            </a>
+            {% set content %}<i class="fas fa-trash-alt" aria-hidden="true"></i><span class="visually-hidden">{{ 'delete'|trans }}</span>{% endset %}
+            {{ post.post_link(path('conversation_delete', { id: current.id }), token, 'c-inbox-head__icon', content) }}
         {% endif %}
     </div>
 
@@ -48,14 +47,17 @@
         </summary>
         <div class="c-inbox-head__menu-list">
             {% if is_spam %}
-                <a href="{{ path('conversation_mark_nospam', { id: current.id }) }}"><i class="far fa-flag fa-fw" aria-hidden="true"></i> {{ 'marknospam'|trans }}</a>
+                {% set content %}<i class="far fa-flag fa-fw" aria-hidden="true"></i> {{ 'marknospam'|trans }}{% endset %}
+                {{ post.post_link(path('conversation_mark_nospam', { id: current.id }), token, '', content) }}
             {% else %}
                 <button type="button" class="js-modal-trigger" data-micromodal-trigger="report-modal"><i class="far fa-flag fa-fw" aria-hidden="true"></i> {{ 'markspam'|trans }}</button>
             {% endif %}
             {% if show_deleted %}
-                <a href="{{ path('conversation_recover', { id: current.id }) }}"><i class="fas fa-inbox fa-fw" aria-hidden="true"></i> {{ 'recover'|trans }}</a>
+                {% set content %}<i class="fas fa-inbox fa-fw" aria-hidden="true"></i> {{ 'recover'|trans }}{% endset %}
+                {{ post.post_link(path('conversation_recover', { id: current.id }), token, '', content) }}
             {% else %}
-                <a class="is-danger" href="{{ path('conversation_delete', { id: current.id }) }}"><i class="fas fa-trash-alt fa-fw" aria-hidden="true"></i> {{ 'delete'|trans }}</a>
+                {% set content %}<i class="fas fa-trash-alt fa-fw" aria-hidden="true"></i> {{ 'delete'|trans }}{% endset %}
+                {{ post.post_link(path('conversation_delete', { id: current.id }), token, 'is-danger', content) }}
             {% endif %}
         </div>
     </details>

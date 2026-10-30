@@ -481,7 +481,8 @@
           </div>
           <div class="u:flex u:flex-row u:w-full u:justify-between">
             <a class="o-button" data-micromodal-close>{{ 'language.delete.no'|trans({}, "messages", profile_language) }}</a>
-            <a class="o-button" href="{{ url('profile_delete_language', {username: member.username, language: profile_language}) }}">{{ 'language.delete.yes'|trans({}, "messages", profile_language) }}</a>
+            {% import 'macros/post_button.html.twig' as post %}
+            {{ post.post_link(path('profile_delete_language', {username: member.username, language: profile_language}), 'profile_delete_language', 'o-button', 'language.delete.yes'|trans({}, "messages", profile_language)) }}
           </div>
         </div>
       </div>

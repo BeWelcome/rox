@@ -805,3 +805,21 @@ profile.in.language:
 profile.contact.conversation:
     - 'Conversation going on'
     - Line next to the Send button of a profile when a conversation with that member already exists, followed by the date of its last message
+profile.reply.rate:
+    - 'Replies to {percent}% of requests'
+    - Pill in the profile head on a computer, share of hosting requests and invitations the member answered in the last 12 months
+profile.reply.rate.short:
+    - '{percent}% reply'
+    - Short reply rate, on the search results and in the profile head on phones
+profile.reply.rate.label:
+    - 'reply rate'
+    - Small words under the percentage in the reply rate tile of the search preview
+profile.reply.rate.sentence:
+    - 'Replies to {percent}% of the hosting requests received in the last 12 months.'
+    - Explanation of the reply rate, a tooltip on a computer and a line under the tile of the search preview on phones
+member.hosting.yes:
+    - 'Can host'
+    - Short hosting status of a member with a house icon (profile head, search preview, places), the member hosts
+member.hosting.no:
+    - 'Cannot host'
+    - Short hosting status of a member with a house icon (profile head, search preview, places), the member does not host now

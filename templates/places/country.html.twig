@@ -81,7 +81,7 @@
                         {% set address = member.activeAddress %}
                         <li>
                             {% set hosting = member.accommodation in ['yes', 'no'] ? member.accommodation : 'unknown' %}
-                            {% set hostingLabel = hosting == 'unknown' ? 'places.member.hosting.unknown'|trans : ('search.accommodation.' ~ hosting)|trans|trim('.') %}
+                            {% set hostingLabel = hosting == 'unknown' ? 'places.member.hosting.unknown'|trans : ('member.hosting.' ~ hosting)|trans %}
                             {% set qualities = comment_counts[member.id] ?? {} %}
                             {% set facts = [] %}
                             {% if member.isAgeVisible and member.age %}{% set facts = facts|merge(['places.member.age'|trans({ age: member.age })]) %}{% endif %}

@@ -10,8 +10,11 @@ use App\Entity\Location;
 use App\Entity\Member;
 use App\Entity\MemberPhoto;
 use App\Entity\MemberTranslation;
+use App\Entity\Message;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Repository\MemberRepository;
+use App\Repository\MessageRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Adapter\AdapterInterface;
@@ -128,7 +131,19 @@ class SearchAdapter implements AdapterInterface
         // Re-apply sorting to the second query to ensure the order is preserved
         $this->applySorting($qb);
 
-        return $qb->getQuery()->getResult();
+        $results = $qb->getQuery()->getResult();
+
+        // The reply rate of the whole page in one query (shown on the cards)
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->entityManager->getRepository(Message::class);
+        $replyRates = $messageRepository->getReplyRates($memberIds, new DateTimeImmutable('-12 months'));
+
+        return array_map(
+            static fn (MemberSearchResult $result): MemberSearchResult => $result->withReplyRate(
+                ($replyRates[$result->member->getId()] ?? null)?->getShownPercentage()
+            ),
+            $results
+        );
     }
 
     /**

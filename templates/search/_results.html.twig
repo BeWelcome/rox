@@ -53,11 +53,8 @@
                     {% endif %}
                     {% if member.name is not empty and member.name != member.username %}<span class="p-search-card__username">{{ member.username }}</span>{% endif %}
                     {% if hosting %}
-                        {# Yes, be welcome / No, sorry as one icon; the words are kept for screen readers. #}
-                        <span class="p-search-card__host p-search-card__host--{{ hosting }}">
-                            <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
-                            <span class="visually-hidden">{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</span>
-                        </span>
+                        {# Hosting shows as the ring around the picture; the words are kept for screen readers. #}
+                        <span class="visually-hidden">{{ ('member.hosting.' ~ hosting)|trans }}</span>
                     {% endif %}
                 </p>
 
@@ -101,6 +98,10 @@
                 </span>
                 <span class="p-search-card__activity{{ lastActive ? '' : ' is-since-only' }}">
                     <i class="far fa-clock" aria-hidden="true"></i>
+                    {%- if (result.replyRate ?? null) is not null -%}
+                        {% include 'profile/_reply_rate.html.twig' with { percent: result.replyRate, variant: 'card' } %}
+                        <span class="p-search-card__dot" aria-hidden="true">·</span>
+                    {%- endif -%}
                     {%- if lastActive %}
                         {# A dot, green when active in the last month #}
                         <span class="p-search-card__online{{ activityDays <= 30 ? ' is-recent' : '' }}" aria-hidden="true"></span>

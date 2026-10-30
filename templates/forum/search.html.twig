@@ -2,8 +2,12 @@
 {% import 'forum/_macros.html.twig' as forum %}
 
 {% block content %}
-    <h1 class="h3">{{ 'search'|trans }}{% if group %}: <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ group.beWelcome ? 'agoraforum'|trans : group.name }}</a>{% endif %}</h1>
-    {% include 'forum/_search_form.html.twig' %}
+    {% if group is null or group.beWelcome %}
+        {% include 'forum/_head.html.twig' with {active: group ? 'agora' : null} %}
+    {% else %}
+        <h1 class="h3">{{ 'search'|trans }}: <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    {% endif %}
+    <div class="p-forum__toolbar">{% include 'forum/_search_form.html.twig' %}</div>
 
     {% if posts is not null %}
         {% if posts.nbResults == 0 %}

@@ -1,21 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
-        <h1 class="h3 mb-0">
-            {% if group.beWelcome %}{{ 'agoraforum'|trans }}{% else %}<a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a> – {{ 'groupdiscussions'|trans }}{% endif %}
-        </h1>
-        {% if is_granted('FORUM_GROUP_POST', group) %}
-            <a class="btn btn-primary" href="{{ group.beWelcome ? path('forums_new') : path('group_new_post', {group_id: group.id}) }}">{{ 'forumnewtopic'|trans }}</a>
-        {% endif %}
-    </div>
-    {% if group.beWelcome %}<div class="mb-3">{{ 'agoratagline'|trans|purify }}</div>{% endif %}
+    {% set newTopicUrl = is_granted('FORUM_GROUP_POST', group) ? (group.beWelcome ? path('forums_new') : path('group_new_post', {group_id: group.id})) : null %}
+    {% if group.beWelcome %}
+        {% include 'forum/_head.html.twig' with {active: 'agora', newTopicUrl: newTopicUrl} %}
+        <div class="mb-3">{{ 'agoratagline'|trans|purify }}</div>
+    {% else %}
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+            <h1 class="h3 mb-0"><a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a> – {{ 'groupdiscussions'|trans }}</h1>
+            {% if newTopicUrl %}
+                <a class="btn btn-primary" href="{{ newTopicUrl }}">{{ 'forumnewtopic'|trans }}</a>
+            {% endif %}
+        </div>
+    {% endif %}
 
-    {% if canRead %}{% include 'forum/_search_form.html.twig' %}{% endif %}
     {% if not canRead %}
         <p>{{ 'groupsnotpublic'|trans }}</p>
     {% else %}
-        {% include 'forum/_threads.html.twig' with {threads: threads} %}
+        <div class="p-forum__toolbar">{% include 'forum/_search_form.html.twig' %}</div>
+        {% include 'forum/_threads.html.twig' with {threads: threads, ascending: ascending} %}
         {% if threads.haveToPaginate %}
             <div class="u:flex u:justify-end u:my-8">
                 {{ pagerfanta(threads, 'rounded_pagination', {routeName: 'group_forum_pages', routeParams: {group_id: group.id}, pageParameter: '[page_id]'}) }}

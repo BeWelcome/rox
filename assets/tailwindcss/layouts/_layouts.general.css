@@ -8603,10 +8603,14 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .p-trips__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .p-trips .p-trips__title { margin: 0; color: #0f172a; font-size: 1.75rem; font-weight: 700; }
 /* Tabs underlined like the home page ones (My trips, Visitors) */
-.p-trips__tabs { display: flex; gap: 1.75rem; overflow-x: auto; border-bottom: 1px solid #e2e8f0; scrollbar-width: none; }
-.p-trips__tabs::-webkit-scrollbar { display: none; }
+.p-trips__tabs,
+.p-forum__tabs { display: flex; gap: 1.75rem; overflow-x: auto; border-bottom: 1px solid #e2e8f0; scrollbar-width: none; }
+.p-trips__tabs::-webkit-scrollbar,
+.p-forum__tabs::-webkit-scrollbar { display: none; }
 .p-trips__tab,
-.p-trips__tab:hover {
+.p-trips__tab:hover,
+.p-forum__tab,
+.p-forum__tab:hover {
   flex-shrink: 0;
   margin-bottom: -1px;
   padding: 0.6rem 0 0.7rem;
@@ -8617,11 +8621,16 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   text-decoration: none;
   white-space: nowrap;
 }
-.p-trips__tab:hover { border-bottom-color: #e2e8f0; color: #334155; }
-.p-trips__tab.is-active { border-bottom-color: #f37000; color: #0f172a; }
-.p-trips__tab:focus-visible { outline: none; box-shadow: inset 0 -3px 0 rgba(243, 112, 0, 0.35); }
+.p-trips__tab:hover,
+.p-forum__tab:hover { border-bottom-color: #e2e8f0; color: #334155; }
+.p-trips__tab.is-active,
+.p-forum__tab.is-active { border-bottom-color: #f37000; color: #0f172a; }
+.p-trips__tab:focus-visible,
+.p-forum__tab:focus-visible { outline: none; box-shadow: inset 0 -3px 0 rgba(243, 112, 0, 0.35); }
 .p-trips__new,
-.p-trips__new:hover {
+.p-trips__new:hover,
+.p-forum__new,
+.p-forum__new:hover {
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
@@ -8634,7 +8643,31 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   font-weight: 700;
   text-decoration: none;
 }
-.p-trips__new:hover { background: #d9661a; }
+.p-trips__new:hover,
+.p-forum__new:hover { background: #d9661a; }
+
+/* Forum pages: a head like the trips pages (title, New topic, tabs), the threads listed like My groups on the home page */
+.p-forum__head { display: flex; flex-direction: column; gap: 0.75rem; margin: 0.5rem 0 1.25rem; }
+.p-forum__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.p-forum__title { margin: 0; color: #0f172a; font-size: 1.75rem; font-weight: 700; }
+.p-forum__tab-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 0.4rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: #f37000;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  vertical-align: 0.1rem;
+}
+.p-forum__toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
+.p-forum__search { display: flex; flex: 1; gap: 0.5rem; max-width: 32rem; margin: 0; }
+.p-forum__list { margin-bottom: 1rem; border-bottom: 1px solid #e2e8f0; }
 .p-trips .alert { margin-bottom: 1rem; border-radius: 0.75rem; }
 
 /* Visitors */

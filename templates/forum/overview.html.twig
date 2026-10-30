@@ -2,20 +2,18 @@
 
 {% block content %}
     {% import 'macros/post_button.html.twig' as button %}
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
-        <h1 class="h3 mb-0">{{ 'forumrecentpostslong'|trans }}</h1>
-        <div>
-            <a class="btn btn-outline-primary btn-sm" href="{{ path('group_forum', {group_id: constant('App\\Entity\\Group::BEWELCOME')}) }}">{{ 'agoraforum'|trans }}</a>
-            {% if onlyMyGroups %}
-                {{ button.post_button(path('forums_groups_all'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowallgroupstopics', 'btn btn-outline-primary btn-sm') }}
-            {% else %}
-                {{ button.post_button(path('forums_groups_only_mine'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowonlymygroupstopics', 'btn btn-outline-primary btn-sm') }}
-            {% endif %}
-        </div>
+    {% include 'forum/_head.html.twig' with {active: 'forums'} %}
+
+    <div class="p-forum__toolbar">
+        {% include 'forum/_search_form.html.twig' with {group: null} %}
+        {% if onlyMyGroups %}
+            {{ button.post_button(path('forums_groups_all'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowallgroupstopics', 'btn btn-outline-primary btn-sm') }}
+        {% else %}
+            {{ button.post_button(path('forums_groups_only_mine'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowonlymygroupstopics', 'btn btn-outline-primary btn-sm') }}
+        {% endif %}
     </div>
 
-    {% include 'forum/_search_form.html.twig' with {group: null} %}
-    {% include 'forum/_threads.html.twig' with {threads: threads, showGroup: true} %}
+    {% include 'forum/_threads.html.twig' with {threads: threads, ascending: ascending} %}
 
     {% if threads.haveToPaginate %}
         <div class="u:flex u:justify-end u:my-8">

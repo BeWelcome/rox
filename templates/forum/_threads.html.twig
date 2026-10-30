@@ -1,40 +1,11 @@
 {#
-  A list of threads: title, group, last post (author and time), replies and views.
-  showGroup: also name the group of each thread (the overview).
+  A list of threads, laid out like My groups on the home page.
+  ascending: the member reads threads oldest post first.
 #}
-{% import 'forum/_macros.html.twig' as forum %}
-<div class="table-responsive">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">{{ 'thread'|trans }}</th>
-                <th scope="col">{{ 'lastpost'|trans }}</th>
-                <th scope="col" class="text-end d-none d-md-table-cell">{{ 'replies'|trans }}</th>
-                <th scope="col" class="text-end d-none d-md-table-cell">{{ 'views'|trans }}</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for thread in threads %}
-                <tr>
-                    <td>
-                        {% if thread.stickyValue > 0 %}<i class="fas fa-thumbtack me-1" title="{{ 'pinnedpost'|trans }}"></i>{% endif %}
-                        <a href="{{ forum.thread_url(thread) }}" class="fw-bold">{{ forum.thread_title(thread, app.request.locale) }}</a>
-                        {% if showGroup|default(false) %}
-                            <br><small class="text-muted">
-                                <a href="{{ thread.agora ? path('group_forum', {group_id: thread.group.id}) : path('group_start', {group_id: thread.group.id}) }}">{{ thread.group.name }}</a>
-                            </small>
-                        {% endif %}
-                    </td>
-                    <td class="small">
-                        <a href="{{ path('members_profile', {username: thread.lastPost.author.username}) }}">{{ thread.lastPost.author.username }}</a><br>
-                        <span class="text-nowrap">{{ thread.lastPost.created|format_datetime('short', 'short') }}</span>
-                    </td>
-                    <td class="text-end d-none d-md-table-cell">{{ thread.replies }}</td>
-                    <td class="text-end d-none d-md-table-cell">{{ thread.views }}</td>
-                </tr>
-            {% else %}
-                <tr><td colspan="4">{{ 'found0threads'|trans }}</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="c-home-list p-forum__list">
+    {% for thread in threads %}
+        {% include 'forum/_thread_item.html.twig' with { thread: thread, ascending: ascending|default(false) } %}
+    {% else %}
+        <p class="c-home-list__empty">{{ 'found0threads'|trans }}</p>
+    {% endfor %}
 </div>

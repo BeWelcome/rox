@@ -13,6 +13,7 @@ use App\Entity\ReportToModerator;
 use App\Service\ForumSearchIndex;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Twig\Attribute\AsTwigFunction;
 
 /**
  * What forum moderators do: a thread's group, pin, visibility and deletion; a post's visibility, deletion and whether
@@ -130,6 +131,16 @@ class ForumModerationModel
         }
 
         return $this->entityManager->getRepository(ReportToModerator::class)->findBy($criteria, ['updated' => 'ASC']);
+    }
+
+    /**
+     * The reports the moderators still have to answer (the number on their tab of the forum pages).
+     */
+    #[AsTwigFunction('forum_open_reports')]
+    public function countOpenReports(): int
+    {
+        return $this->entityManager->getRepository(ReportToModerator::class)
+            ->count(['status' => [ReportStatusType::OPEN, ReportStatusType::IN_DISCUSSION]]);
     }
 
     /**

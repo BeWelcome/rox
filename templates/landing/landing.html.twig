@@ -145,7 +145,7 @@
 </div>
 
 {#
-  The two main blocks: messages and visitors, then forum and activities.
+  The two main blocks: messages and visitors, then groups and activities.
   Each is a card with its tabs on top; the lists are loaded by landing.js.
   The filter pills keep the "active" class landing.js reads when it reloads a list.
 #}
@@ -205,19 +205,13 @@
         </div>
     </section>
 
-    {# forum and activities #}
+    {# groups and activities #}
     <section class="c-home-card">
         <ul class="nav c-home-tabs" role="tablist">
             <li class="nav-item" role="presentation">
                 <a class="nav-link c-home-tabs__link active" aria-controls="groups" href="#groups" role="tab" data-bs-toggle="tab">
                     {{ 'landing.button.mygroups'|trans }}
                     {% if groupsTodayCount %}<span class="c-home-tabs__count" title="{{ 'landing.tab.today'|trans }}">{{ groupsTodayCount }}</span>{% endif %}
-                </a>
-            </li>
-            <li class="nav-item" role="presentation">
-                <a class="nav-link c-home-tabs__link" aria-controls="threads" href="#threads" role="tab" data-bs-toggle="tab">
-                    {{ 'landing.tab.forum'|trans }}
-                    {% if forumTodayCount %}<span class="c-home-tabs__count" title="{{ 'landing.tab.today'|trans }}">{{ forumTodayCount }}</span>{% endif %}
                 </a>
             </li>
             <li class="nav-item" role="presentation">
@@ -233,13 +227,6 @@
                 <div id="groupsdisplay" class="c-home-list">{{ loading }}</div>
                 <div class="c-home-pane__footer c-home-pane__footer--buttons">
                     <a class="c-home-seeall" href="/groups/mygroups">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-                </div>
-            </div>
-
-            <div role="tabpanel" class="tab-pane c-home-pane" id="threads">
-                <div id="threadsdisplay" class="c-home-list">{{ loading }}</div>
-                <div class="c-home-pane__footer c-home-pane__footer--buttons">
-                    <a class="c-home-seeall" href="/forums">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </div>
 

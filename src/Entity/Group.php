@@ -52,6 +52,9 @@ class Group
         self::APPROVED_CLOSED, self::DISMISSED_CLOSED, self::IN_DISCUSSION_CLOSED,
     ];
 
+    /** The group of all members: its forum is the agora. */
+    public const int BEWELCOME = 0;
+
     #[ORM\Column(name: 'name', type: 'string', length: 100, nullable: false)]
     private string $name;
 
@@ -79,6 +82,18 @@ class Group
     #[ORM\Column(name: 'approved', type: 'smallint', nullable: false, options: ['default' => 0])]
     private int $approved = self::NOT_APPROVED;
 
+    /** Where the group is about, if anywhere: a place, region or country (geonames). */
+    #[ORM\ManyToOne(targetEntity: Location::class)]
+    #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'geoname_id', nullable: true, onDelete: 'SET NULL')]
+    private ?Location $location = null;
+
+    /** @var Collection<int, GroupCategory> */
+    #[ORM\ManyToMany(targetEntity: GroupCategory::class)]
+    #[ORM\JoinTable(name: 'group_category_group')]
+    #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'group_category_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    private Collection $categories;
+
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -90,6 +105,48 @@ class Group
     {
         $this->translations = new ArrayCollection();
         $this->groupMemberships = new ArrayCollection();
+        $this->categories = new ArrayCollection();
+    }
+
+    public function isBeWelcome(): bool
+    {
+        return isset($this->id) && self::BEWELCOME === $this->id;
+    }
+
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?Location $location): self
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    /**
+     * @return list<GroupCategory>
+     */
+    public function getCategories(): array
+    {
+        return array_values($this->categories->toArray());
+    }
+
+    public function addCategory(GroupCategory $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(GroupCategory $category): self
+    {
+        $this->categories->removeElement($category);
+
+        return $this;
     }
 
     public function setName(string $name): self

@@ -33,7 +33,8 @@ trait TranslatorTrait
 
         /** @var Translator $translator */
         $translator = $this->getTranslator();
-        $translator->setLocale($language->getShortCode());
+        // members without a preferred language get English
+        $translator->setLocale(null === $language ? 'en' : $language->getShortCode());
 
         $this->translator = $translator;
     }

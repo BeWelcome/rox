@@ -56,14 +56,14 @@ class ReportToModerator
     /**
      * @var ForumPost
      */
-    #[ORM\ManyToOne(targetEntity: ForumPost::class)]
+    /** The reported post's id (no relation: the report stays when the post goes). */
     #[ORM\Column(name: 'IdPost', type: 'integer', nullable: false)]
     private $post;
 
     /**
      * @var ForumThread
      */
-    #[ORM\ManyToOne(targetEntity: ForumThread::class)]
+    /** The reported post's thread id. */
     #[ORM\Column(name: 'IdThread', type: 'integer', nullable: false)]
     private $thread;
 
@@ -227,7 +227,7 @@ class ReportToModerator
         $this->reporter = $reporter;
     }
 
-    public function getModerator(): Member
+    public function getModerator(): ?Member
     {
         return $this->moderator;
     }
@@ -237,29 +237,19 @@ class ReportToModerator
         $this->moderator = $moderator;
     }
 
-    /**
-     * @return ForumPost
-     */
-    public function getPost(): int
+    public function getPostId(): int
     {
-        return $this->post;
+        return (int) $this->post;
     }
 
     public function setPost(ForumPost $post): void
     {
-        $this->post = $post;
+        $this->post = $post->getId();
+        $this->thread = (int) $post->getThread()?->getId();
     }
 
-    /**
-     * @return ForumThread
-     */
-    public function getThread(): int
+    public function getThreadId(): int
     {
-        return $this->thread;
-    }
-
-    public function setThread(ForumThread $thread): void
-    {
-        $this->thread = $thread;
+        return (int) $this->thread;
     }
 }

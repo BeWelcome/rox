@@ -982,7 +982,9 @@ FROM
         // Todo (jyh) : to make it more advanced and consider the visibility of current surfing member
         if (!$this->ForumPostCount)
         {
-            $this->ForumPostCount = $this->createEntity('Post')->getMemberPostCount($this);
+            $result = $this->dao->query("SELECT COUNT(*) AS cnt FROM forum_post WHERE IdWriter = " . (int) $this->id . " AND PostDeleted = 'NotDeleted'");
+            $row = $result ? $result->fetch(PDB::FETCH_OBJ) : null;
+            $this->ForumPostCount = $row ? (int) $row->cnt : 0;
         }
         return($this->ForumPostCount)  ; // Nota: in case a new post was make during the session it will not be considerated, this is a performance compromise
     } // forums_posts_count
@@ -1492,28 +1494,6 @@ SELECT id FROM membersphotos WHERE IdMember = ".$this->id. " ORDER BY SortOrder 
         $set = $line['Type'];
         $set = substr((string) $set, 6, strlen((string) $set) - 8); // Remove "enum(" at start and ");" at end
         return preg_split("/','/", $set); // Split into and array
-    }
-
-    /**
-     * returns array of all post votes the member has cast
-     *
-     * @access public
-     * @return array
-     */
-    public function getAllPostVotes()
-    {
-        return $this->createEntity('PostVote')->getVotesForMember($this);
-    }
-
-    /**
-     * returns array of all thread votes the member has cast
-     *
-     * @access public
-     * @return array
-     */
-    public function getAllThreadVotes()
-    {
-        return $this->createEntity('ThreadVote')->getVotesForMember($this);
     }
 
     /**

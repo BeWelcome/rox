@@ -1,18 +1,18 @@
 {% import 'macros.twig' as macros %}
 {#
-  The latest threads on the home page: the forum in the Forum tab, the member's groups
-  in the My groups tab (displayId and tab say which).
+  The latest threads in the member's groups on the home page (My groups tab), the BeWelcome
+  group's agora included.
   The title opens the thread, the time of the last post jumps to that post.
 #}
-<div id="{{ displayId ?? 'threadsdisplay' }}" class="c-home-list">
+<div id="groupsdisplay" class="c-home-list">
     {% for thread in threads %}
         {% set page = 1 %}
         {% set lastpost = '' %}
         {% if ascending %}
             {% set lastpost = 'post' ~ thread.lastpost.id %}
-            {% set page = thread.replies // constant('\\Forums::CV_POSTS_PER_PAGE') + 1 %}
+            {% set page = thread.replies // constant('App\\Controller\\ForumPagesController::POSTS_PER_PAGE') + 1 %}
         {% endif %}
-        {% if thread.group %}
+        {% if not thread.agora %}
             {% set threadUrl = url('group_forum_thread', { thread: thread.id, group_id: thread.group.id }) %}
             {% set lastUrl = page == 1
                 ? url('group_forum_thread', { thread: thread.id, group_id: thread.group.id, _fragment: lastpost })
@@ -27,8 +27,8 @@
             <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
             <div class="c-home-item__body">
                 <a class="c-home-item__title c-home-item__title--link" href="{{ threadUrl }}">{{ thread.title|striptags }}</a>
-                {# the group's name; forum threads all belong to the one BeWelcome forum, so nothing #}
-                {% if thread.group %}
+                {# the group's name; nothing for the agora #}
+                {% if not thread.agora %}
                     <p class="c-home-item__meta">
                         <i class="fas fa-users" aria-hidden="true"></i>
                         <a href="{{ url('group_start', { group_id: thread.group.id }) }}">{{ thread.group.name }}</a>
@@ -47,6 +47,6 @@
             </a>
         </div>
     {% else %}
-        <p class="c-home-list__empty">{{ (tab ?? '') == 'groups' ? 'landing.groups.empty'|trans : 'landing.threads.empty'|trans }}</p>
+        <p class="c-home-list__empty">{{ 'landing.groups.empty'|trans }}</p>
     {% endfor %}
 </div>

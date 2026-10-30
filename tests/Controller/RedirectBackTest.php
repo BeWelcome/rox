@@ -75,7 +75,10 @@ class RedirectBackTest extends WebTestCase
     {
         $this->client->loginUser($this->member('member-2'));
 
-        $this->client->request('GET', '/forums/show/groups/only-mine');
+        // the switch is a POST with the token of the forum overview's form, here without a referer
+        $crawler = $this->client->request('GET', '/forums');
+        $token = $crawler->filter('form[action$="/forums/show/groups/only-mine"] input[name="_token"]')->attr('value');
+        $this->client->request('POST', '/forums/show/groups/only-mine', ['_token' => $token], [], ['HTTP_REFERER' => '']);
 
         $this->assertResponseRedirects('/forums');
     }

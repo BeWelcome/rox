@@ -48,7 +48,7 @@ class RelatedGroupTest extends KernelTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        // The legacy related groups code (build/relatedgroups) treats deletedby IS NULL as linked
+        // deletedby IS NULL means linked (RelatedGroupController and the log rely on it)
         $deletedBy = $this->entityManager->getConnection()->fetchOne(
             'SELECT deletedby FROM groups_related WHERE id = ?',
             [$link->getId()],
@@ -60,7 +60,12 @@ class RelatedGroupTest extends KernelTestCase
     public function testDeletingAGroupRemovesItsLinks(): void
     {
         $connection = $this->entityManager->getConnection();
-        [$group, $other] = $this->entityManager->getRepository(Group::class)->findBy([], ['id' => 'ASC'], 2);
+        // groups without forum threads: a group with threads can't be deleted this way (GroupModel::delete does it)
+        $ids = $connection->fetchFirstColumn(
+            'SELECT g.id FROM `group` g WHERE NOT EXISTS (SELECT 1 FROM forum_thread t WHERE t.IdGroup = g.id) ORDER BY g.id LIMIT 2'
+        );
+        self::assertCount(2, $ids, 'the fixtures contain two groups without forum threads');
+        [$group, $other] = array_map(fn ($id) => $this->entityManager->find(Group::class, $id), $ids);
         $this->entityManager->persist(new RelatedGroup($group, $other, null));
         $this->entityManager->persist(new RelatedGroup($other, $group, null));
         $this->entityManager->flush();

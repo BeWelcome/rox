@@ -2,9 +2,12 @@
 
 namespace App\Model;
 
+use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\LanguageLevelType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Address;
+use App\Entity\Group;
+use App\Entity\GroupMembership;
 use App\Entity\Language;
 use App\Entity\Location;
 use App\Entity\Member;
@@ -65,6 +68,7 @@ class SignupModel
         }
 
         $this->entityManager->persist($member);
+        $this->joinBeWelcomeGroup($member);
 
         $memberRepository = $this->entityManager->getRepository(Member::class);
         $admin = $memberRepository->findOneBy(['username' => 'bwadmin']);
@@ -221,5 +225,24 @@ class SignupModel
         }
 
         return true;
+    }
+
+    /**
+     * New members are in the BeWelcome group from the start, with notifications on: they get the agora's posts and
+     * can leave the group or unsubscribe from its notifications.
+     */
+    private function joinBeWelcomeGroup(Member $member): void
+    {
+        $beWelcome = $this->entityManager->find(Group::class, Group::BEWELCOME);
+        if (null === $beWelcome) {
+            return;
+        }
+
+        $membership = new GroupMembership()
+            ->setMember($member)
+            ->setGroup($beWelcome)
+            ->setStatus(GroupMembershipStatusType::CURRENT_MEMBER)
+            ->setNotificationsEnabled(true);
+        $this->entityManager->persist($membership);
     }
 }

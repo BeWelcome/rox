@@ -23,6 +23,9 @@ class ForumsController extends AbstractController
     use ItemsPerPageTraits;
     use RedirectBackTrait;
 
+    /** The CSRF token id of the forum overview's switches. */
+    public const string TOKEN = 'forum-overview';
+
     private const int POSTS_DIFF = 3;
     private const int POSTS_MAX = 10;
     private const int POSTS_MIN = 1;
@@ -31,9 +34,10 @@ class ForumsController extends AbstractController
     {
     }
 
-    #[Route(path: '/forums/more/group', name: 'forums_more_group_posts')]
-    public function showMoreGroupPostsAction(): RedirectResponse
+    #[Route(path: '/forums/more/group', name: 'forums_more_group_posts', methods: ['POST'])]
+    public function showMoreGroupPostsAction(Request $request): RedirectResponse
     {
+        $this->checkToken($request);
         /** @var Member $member */
         $member = $this->getUser();
 
@@ -51,9 +55,10 @@ class ForumsController extends AbstractController
         return $this->redirectToRoute('forums');
     }
 
-    #[Route(path: '/forums/less/group', name: 'forums_less_group_posts')]
-    public function showLessGroupPostsAction(): RedirectResponse
+    #[Route(path: '/forums/less/group', name: 'forums_less_group_posts', methods: ['POST'])]
+    public function showLessGroupPostsAction(Request $request): RedirectResponse
     {
+        $this->checkToken($request);
         /** @var Member $member */
         $member = $this->getUser();
 
@@ -63,7 +68,7 @@ class ForumsController extends AbstractController
 
         $memberPreference = $member->getMemberPreference($preference);
         $value = (int) $memberPreference->getValue();
-        $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
+        $value = max($value - self::POSTS_DIFF, self::POSTS_MIN);
         $memberPreference->setValue($value);
         $this->entityManager->persist($memberPreference);
         $this->entityManager->flush();
@@ -71,9 +76,10 @@ class ForumsController extends AbstractController
         return $this->redirectToRoute('forums');
     }
 
-    #[Route(path: '/forums/more/agora', name: 'forums_more_agora_posts')]
-    public function showMoreAgoraPostsAction(): RedirectResponse
+    #[Route(path: '/forums/more/agora', name: 'forums_more_agora_posts', methods: ['POST'])]
+    public function showMoreAgoraPostsAction(Request $request): RedirectResponse
     {
+        $this->checkToken($request);
         /** @var Member $member */
         $member = $this->getUser();
 
@@ -91,9 +97,10 @@ class ForumsController extends AbstractController
         return $this->redirectToRoute('forums');
     }
 
-    #[Route(path: '/forums/less/agora', name: 'forums_less_agora_posts')]
-    public function showLessAgoraPostsAction(): RedirectResponse
+    #[Route(path: '/forums/less/agora', name: 'forums_less_agora_posts', methods: ['POST'])]
+    public function showLessAgoraPostsAction(Request $request): RedirectResponse
     {
+        $this->checkToken($request);
         /** @var Member $member */
         $member = $this->getUser();
 
@@ -103,7 +110,7 @@ class ForumsController extends AbstractController
 
         $memberPreference = $member->getMemberPreference($preference);
         $value = (int) $memberPreference->getValue();
-        $value = min($value - self::POSTS_DIFF, self::POSTS_MIN);
+        $value = max($value - self::POSTS_DIFF, self::POSTS_MIN);
         $memberPreference->setValue($value);
         $this->entityManager->persist($memberPreference);
         $this->entityManager->flush();
@@ -111,9 +118,10 @@ class ForumsController extends AbstractController
         return $this->redirectToRoute('forums');
     }
 
-    #[Route(path: '/forums/show/groups/only-mine', name: 'forums_groups_only_mine')]
+    #[Route(path: '/forums/show/groups/only-mine', name: 'forums_groups_only_mine', methods: ['POST'])]
     public function showOnlyPostsInMyGroups(Request $request): RedirectResponse
     {
+        $this->checkToken($request);
         /** @var Member $member */
         $member = $this->getUser();
 
@@ -129,9 +137,10 @@ class ForumsController extends AbstractController
         return $this->redirectBack($request, 'forums');
     }
 
-    #[Route(path: '/forums/show/groups/all', name: 'forums_groups_all')]
+    #[Route(path: '/forums/show/groups/all', name: 'forums_groups_all', methods: ['POST'])]
     public function showPostsInAllGroups(Request $request): RedirectResponse
     {
+        $this->checkToken($request);
         /** @var Member $member */
         $member = $this->getUser();
 
@@ -212,5 +221,15 @@ class ForumsController extends AbstractController
             'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'forum_posts']),
         ]);
+    }
+
+    /**
+     * The switches of the forum overview are POST requests with a CSRF token.
+     */
+    private function checkToken(Request $request): void
+    {
+        if (!$this->isCsrfTokenValid(self::TOKEN, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
     }
 }

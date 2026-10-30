@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{% import 'forum/_macros.html.twig' as forum %}
+
+{% block content %}
+    {% import 'macros/post_button.html.twig' as button %}
+    <h1 class="h3">{{ 'ForumSubscriptions'|trans }}</h1>
+    <p>
+        {{ button.post_button(path('subscriptions_disable'), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumDisableAllNotifications', 'btn btn-outline-secondary btn-sm') }}
+        {{ button.post_button(path('subscriptions_enable'), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumEnableAllNotifications', 'btn btn-outline-primary btn-sm') }}
+    </p>
+
+    <h2 class="h4 mt-3">{{ 'ForumGroupSubscriptions'|trans }}</h2>
+    <table class="table table-striped" id="group-subscriptions">
+        <tbody>
+            {% for membership in memberships %}
+                <tr>
+                    <td><a href="{{ path('group_start', {group_id: membership.group.id}) }}">{{ membership.group.name }}</a></td>
+                    <td class="text-end">
+                        {% if membership.notificationsEnabled %}
+                            {{ button.post_button(path('group_notifications_disable', {groupId: membership.group.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumDisable', 'btn btn-sm btn-outline-secondary') }}
+                        {% else %}
+                            {{ button.post_button(path('group_notifications_enable', {groupId: membership.group.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumEnable', 'btn btn-sm btn-outline-primary') }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td>{{ 'ForumNoGroups'|trans }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="h4 mt-3">{{ 'ForumThreadSubscriptions'|trans }}</h2>
+    <table class="table table-striped" id="thread-subscriptions">
+        <tbody>
+            {% for subscription in subscriptions %}
+                {% set thread = subscription.thread %}
+                <tr>
+                    <td><a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></td>
+                    <td class="text-end">
+                        {% if subscription.notificationsEnabled %}
+                            {{ button.post_button(path('forum_thread_subscription_disable', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumDisable', 'btn btn-sm btn-outline-secondary') }}
+                        {% else %}
+                            {{ button.post_button(path('forum_thread_subscription_enable', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumEnable', 'btn btn-sm btn-outline-primary') }}
+                        {% endif %}
+                        {{ button.post_button(path('forum_thread_unsubscribe', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumUnsubscribe', 'btn btn-sm btn-outline-danger') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td>{{ 'ForumNoThreadsSubscribed'|trans }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

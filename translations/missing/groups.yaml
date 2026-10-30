@@ -32,3 +32,54 @@ group.picture.missing:
 group.declined.invitation:
     - '{username} has declined the invitation to the {group} group.'
     - Mail to the admins of a group when a member declines the invitation to the group.
+admin.groups.categories:
+    - 'Categories'
+    - Item in the menu of the group admin pages and heading of the page that lists the categories groups can be put in
+admin.group.category.groups:
+    - 'Groups'
+    - Column heading on the group categories admin page; the number of groups in a category
+admin.group.category.name.help:
+    - 'An empty name removes the language. The English name is required.'
+    - Help below the name field when a group admin sets the name of a group category in a language
+admin.group.category.english:
+    - 'A category needs an English name.'
+    - Error when a group admin tries to remove the English name of a group category
+admin.group.category.saved:
+    - 'The category is saved.'
+    - Message after a group admin added a group category or changed one of its names
+admin.group.category.deleted:
+    - 'The category is deleted.'
+    - Message after a group admin deleted a group category
+group.search.category:
+    - 'Category'
+    - Label of the category filter on the group search page
+group.search.category.all:
+    - 'All categories'
+    - First choice of the category filter on the group search page (no filter)
+group.search.no.results:
+    - 'No groups found.'
+    - Shown on the group search page when no group matches the search
+group.membership.notifications:
+    - 'Notify me about new posts in the group''s forum'
+    - Checkbox in a member's settings for a group they're in
+group.member.banned:
+    - 'The member is banned from the group.'
+    - Message after a group admin banned a member from the group
+group.member.ban.failed:
+    - 'The member could not be banned. Admins of the group, BeWelcome admins and forum moderators can''t be banned.'
+    - Error when a group admin couldn't ban a member from the group
+group.admin.add.failed:
+    - 'The member could not be made an admin of the group.'
+    - Error when a group admin couldn't promote a member to admin
+group.admin.resign:
+    - 'Step down as admin'
+    - Button on a group's page for its admins; the last admin of a group can't step down
+group.profile.groups:
+    - 'Groups on my profile'
+    - On the "my groups" page; opens the list of the member's groups to tick the ones their profile shows
+group.profile.groups.saved:
+    - 'Your profile shows the groups you picked.'
+    - Message after a member chose which of their groups their profile shows
+group.profile.shown:
+    - 'Show this group on my profile'
+    - Checkbox in a member's settings for a group they are in

@@ -295,16 +295,16 @@
       {% endif %}
 
       {# ── Groups ── #}
-      {% if member.groups|length > 0 %}
+      {% if member.profileGroups|length > 0 %}
         <section class="p-pro-card">
           <div class="p-pro-card__head">
             <h2 class="p-pro-card__title">{{ 'profile.groups'|trans({}, 'messages', profile_language)|raw }}</h2>
-            {% if member.groups|length > 5 %}
-              <a class="p-pro-card__link" href="{{ url('group_user_all', {username: member.username}) }}">{{ 'groupsallmylink'|trans({}, 'messages', profile_language) }} {{ member.groups|length }}</a>
+            {% if member.profileGroups|length > 5 %}
+              <a class="p-pro-card__link" href="{{ url('group_user_all', {username: member.username}) }}">{{ 'groupsallmylink'|trans({}, 'messages', profile_language) }} {{ member.profileGroups|length }}</a>
             {% endif %}
           </div>
           <ul class="p-pro-groups">
-            {% for group in member.groups|slice(0, 5) %}
+            {% for group in member.profileGroups|slice(0, 5) %}
               <li>
                 <a class="p-pro-group" href="{{ url('group_start', {group_id: group.id}) }}">
                   <img class="p-pro-group__img" width="40" height="40" alt="" src="{{ url('group_thumbimg', {group_id: group.id}) }}">

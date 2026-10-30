@@ -46,6 +46,14 @@ class GroupMembership
     #[ORM\Column(name: 'notifications_enabled', type: 'boolean', nullable: false, options: ['default' => true])]
     private bool $notificationsEnabled = true;
 
+    /** The group is listed on the member's profile. */
+    #[ORM\Column(name: 'shown_on_profile', type: 'boolean', nullable: false, options: ['default' => true])]
+    private bool $shownOnProfile = true;
+
+    /** The member got the notice that they were subscribed to the BeWelcome group (sent with their first notification). */
+    #[ORM\Column(name: 'welcome_notice_sent', type: 'boolean', nullable: false, options: ['default' => false])]
+    private bool $welcomeNoticeSent = false;
+
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;
 
@@ -127,6 +135,30 @@ class GroupMembership
     public function isNotificationsEnabled(): bool
     {
         return $this->notificationsEnabled;
+    }
+
+    public function setShownOnProfile(bool $shownOnProfile): self
+    {
+        $this->shownOnProfile = $shownOnProfile;
+
+        return $this;
+    }
+
+    public function isShownOnProfile(): bool
+    {
+        return $this->shownOnProfile;
+    }
+
+    public function setWelcomeNoticeSent(bool $welcomeNoticeSent): self
+    {
+        $this->welcomeNoticeSent = $welcomeNoticeSent;
+
+        return $this;
+    }
+
+    public function isWelcomeNoticeSent(): bool
+    {
+        return $this->welcomeNoticeSent;
     }
 
     public function setCreated(DateTime $created): self

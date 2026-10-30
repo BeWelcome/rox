@@ -66,6 +66,7 @@ security:
         - { path: ^/suggest, roles: PUBLIC_ACCESS }
         - { path: ^/newsletter, roles: PUBLIC_ACCESS }
         - { path: ^/unsubscribe, roles: PUBLIC_ACCESS }
+        - { path: ^/forums/agora/notifications/off/, roles: PUBLIC_ACCESS }
         - { path: ^/faq, roles: PUBLIC_ACCESS }
         - { path: ^/bod, roles: PUBLIC_ACCESS }
         - { path: ^/bv, roles: PUBLIC_ACCESS }

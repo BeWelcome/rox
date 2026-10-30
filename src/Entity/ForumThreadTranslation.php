@@ -60,4 +60,11 @@ class ForumThreadTranslation extends AbstractPersonalTranslation
     {
         return $this->updatedAt;
     }
+
+    public function setUpdatedAt(?DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
 }

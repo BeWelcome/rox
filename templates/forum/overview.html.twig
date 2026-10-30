@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% import 'macros/post_button.html.twig' as button %}
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+        <h1 class="h3 mb-0">{{ 'ForumRecentPostsLong'|trans }}</h1>
+        <div>
+            <a class="btn btn-outline-primary btn-sm" href="{{ path('group_forum', {group_id: constant('App\\Entity\\Group::BEWELCOME')}) }}">{{ 'AgoraForum'|trans }}</a>
+            {% if onlyMyGroups %}
+                {{ button.post_button(path('forums_groups_all'), constant('App\\Controller\\ForumsController::TOKEN'), 'SwitchShowAllGroupsTopics', 'btn btn-outline-primary btn-sm') }}
+            {% else %}
+                {{ button.post_button(path('forums_groups_only_mine'), constant('App\\Controller\\ForumsController::TOKEN'), 'SwitchShowOnlyMyGroupsTopics', 'btn btn-outline-primary btn-sm') }}
+            {% endif %}
+            {{ button.post_button(path('forums_less_group_posts'), constant('App\\Controller\\ForumsController::TOKEN'), 'ShowLess', 'btn btn-outline-secondary btn-sm') }}
+            {{ button.post_button(path('forums_more_group_posts'), constant('App\\Controller\\ForumsController::TOKEN'), 'ShowMore', 'btn btn-outline-secondary btn-sm') }}
+        </div>
+    </div>
+
+    {% include 'forum/_search_form.html.twig' with {group: null} %}
+    {% include 'forum/_threads.html.twig' with {threads: threads, showGroup: true} %}
+
+    {% if threads.haveToPaginate %}
+        <div class="u:flex u:justify-end u:my-8">
+            {{ pagerfanta(threads, 'rounded_pagination', {routeName: 'forums', pageParameter: '[page]'}) }}
+        </div>
+    {% endif %}
+{% endblock %}

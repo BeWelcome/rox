@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="h3">{{ 'TitleAddRelatedGroupToGroup'|trans }} <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    <ul class="list-unstyled">
+        {% for candidate in candidates %}
+            <li class="mb-2">
+                <form method="post" action="{{ path('relatedgroup_add', {group_id: group.id, related_id: candidate.id}) }}" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('relatedgroup-add-' ~ group.id ~ '-' ~ candidate.id) }}">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">{{ 'AddAsRelatedGroup'|trans }}</button>
+                </form>
+                <a href="{{ path('group_start', {group_id: candidate.id}) }}">{{ candidate.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ path('relatedgroup_selectdelete', {group_id: group.id}) }}">{{ 'RemoveRelatedGroupButton'|trans }}</a>
+{% endblock %}

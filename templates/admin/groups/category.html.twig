@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>{{ category.name(app.request.locale) }}</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped w-100">
+            <thead>
+                <tr>
+                    <th scope="col">{{ 'language'|trans }}</th>
+                    <th scope="col">{{ 'name'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for locale, translation in category.names %}
+                    <tr>
+                        <td>{{ locale }}</td>
+                        <td>{{ translation.content }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {{ form(form) }}
+
+    <form method="post" action="{{ path('admin_groups_category_delete', {id: category.id}) }}" class="mt-4">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete-group-category-' ~ category.id) }}">
+        <button type="submit" class="btn btn-danger">{{ 'delete'|trans }}</button>
+    </form>
+{% endblock %}

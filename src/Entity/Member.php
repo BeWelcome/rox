@@ -891,6 +891,23 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
         );
     }
 
+    /**
+     * The groups the member is in and shows on their profile.
+     *
+     * @return list<Group>
+     */
+    public function getProfileGroups(): array
+    {
+        $groups = [];
+        foreach ($this->groupMemberships as $membership) {
+            if (GroupMembershipStatusType::CURRENT_MEMBER === $membership->getStatus() && $membership->isShownOnProfile()) {
+                $groups[] = $membership->getGroup();
+            }
+        }
+
+        return $groups;
+    }
+
     public function addVolunteerRight(RightVolunteer $volunteerRight): self
     {
         if (!$this->volunteerRights->contains($volunteerRight)) {

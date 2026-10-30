@@ -2,6 +2,11 @@
 
 namespace App\Repository;
 
+use App\Doctrine\ForumDeleteStatusType;
+use App\Doctrine\ForumVisibilityType;
+use App\Doctrine\GroupMembershipStatusType;
+use App\Entity\ForumThread;
+use App\Entity\GroupMembership;
 use App\Entity\Member;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
@@ -11,6 +16,42 @@ use Pagerfanta\Pagerfanta;
 
 class ForumPostRepository extends EntityRepository
 {
+    /**
+     * The posts of a thread the member may read (ForumVoter::POST_VIEW), oldest or newest first.
+     */
+    public function createThreadPostsQueryBuilder(ForumThread $thread, Member $member, bool $moderator, bool $ascending): QueryBuilder
+    {
+        $queryBuilder = $this->createQueryBuilder('fp')
+            ->select('fp', 'a')
+            ->join('fp.author', 'a')
+            ->where('fp.thread = :thread')
+            ->setParameter('thread', $thread)
+            ->orderBy('fp.created', $ascending ? 'ASC' : 'DESC')
+            ->addOrderBy('fp.id', $ascending ? 'ASC' : 'DESC');
+        if ($moderator) {
+            return $queryBuilder;
+        }
+
+        $queryBuilder
+            ->andWhere('fp.deleted = :notDeleted')
+            ->andWhere('fp.postvisibility <> :moderators')
+            ->setParameter('notDeleted', ForumDeleteStatusType::NOT_DELETED)
+            ->setParameter('moderators', ForumVisibilityType::MODERATOR_ONLY);
+
+        $group = $thread->getGroup();
+        if (null !== $group && !$group->isBeWelcome()) {
+            $queryBuilder
+                ->andWhere('fp.postvisibility <> :groupOnly OR EXISTS (SELECT 1 FROM ' . GroupMembership::class . ' gm'
+                    . ' WHERE gm.group = :group AND gm.member = :member AND gm.status = :in)')
+                ->setParameter('groupOnly', ForumVisibilityType::GROUP_ONLY)
+                ->setParameter('group', $group)
+                ->setParameter('member', $member)
+                ->setParameter('in', GroupMembershipStatusType::CURRENT_MEMBER);
+        }
+
+        return $queryBuilder;
+    }
+
     public function getForumPostsByMemberCount(Member $member): int
     {
         return $this->getForumPostsByMemberQueryBuilder($member)

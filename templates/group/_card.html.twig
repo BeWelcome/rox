@@ -1,0 +1,30 @@
+{#
+  One group in a list (search, my groups): picture, name, members, new members and the date of the newest post.
+  row is a result row of GroupRepository: the group (key 0), memberCount, newMemberCount and lastActivity.
+#}
+{% set group = row[0] %}
+<div class="col-12 col-md-6 col-lg-4 pt-2">
+    <div class="d-flex">
+        <a href="{{ path('group_start', {group_id: group.id}) }}" class="flex-shrink-0 me-2">
+            <img class="groupimg framed" width="80" height="80" alt="{{ group.name }}" loading="lazy"
+                 src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+        </a>
+        <div>
+            <h5 class="mb-1"><a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h5>
+            <div class="small">
+                <span title="{{ 'group.member.count'|trans }}" data-member-count="{{ row.memberCount }}"><i class="fa fa-users me-1" aria-hidden="true"></i>{{ row.memberCount }}</span>
+                <span class="ms-3" title="{{ 'GroupsNewMembers'|trans }}"><i class="fa fa-user-plus me-1" aria-hidden="true"></i>{{ row.newMemberCount }}</span>
+            </div>
+            <div class="small">
+                {% if row.lastActivity %}
+                    <span title="{{ 'GroupsLastPost'|trans }}"><i class="far fa-comment me-1" aria-hidden="true"></i><span class="text-nowrap">{{ row.lastActivity|format_date('short') }}</span></span>
+                {% else %}
+                    <i class="far fa-comment me-1" aria-hidden="true"></i><span class="text-nowrap">{{ 'GroupsNoPostYet'|trans }}</span>
+                {% endif %}
+            </div>
+            {% if group.location %}
+                <div class="small text-muted"><i class="fas fa-location-dot me-1" aria-hidden="true"></i>{{ group.location.name }}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>

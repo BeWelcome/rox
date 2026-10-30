@@ -96,12 +96,6 @@ class Params
     /**
      * @var string
      */
-    #[ORM\Column(name: 'RssFeedIsClosed', type: 'string', nullable: false)]
-    private $rssfeedisclosed = 'No';
-
-    /**
-     * @var string
-     */
     #[ORM\Column(name: 'AjaxChatSpecialAllowedList', type: 'text', length: 65535, nullable: false)]
     private $ajaxchatspecialallowedlist;
 
@@ -459,30 +453,6 @@ class Params
     public function getFeaturequicksearchisclosed()
     {
         return $this->featurequicksearchisclosed;
-    }
-
-    /**
-     * Set rssfeedisclosed.
-     *
-     * @param string $rssfeedisclosed
-     *
-     * @return Params
-     */
-    public function setRssfeedisclosed($rssfeedisclosed)
-    {
-        $this->rssfeedisclosed = $rssfeedisclosed;
-
-        return $this;
-    }
-
-    /**
-     * Get rssfeedisclosed.
-     *
-     * @return string
-     */
-    public function getRssfeedisclosed()
-    {
-        return $this->rssfeedisclosed;
     }
 
     /**

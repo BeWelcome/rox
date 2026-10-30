@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1>{{ 'admin.groups.categories'|trans }}</h1>
+
+    {% if categories|length %}
+        <div class="table-responsive">
+            <table class="table table-striped w-100">
+                <thead>
+                    <tr>
+                        <th scope="col">{{ 'name'|trans }}</th>
+                        <th scope="col">{{ 'language'|trans }}</th>
+                        <th scope="col" class="text-end">{{ 'admin.group.category.groups'|trans }}</th>
+                        <th scope="col">{{ 'admin.group.actions'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                        <tr>
+                            <td>{{ category.name(app.request.locale) }}</td>
+                            <td>{{ category.names|keys|sort|join(', ') }}</td>
+                            <td class="text-end">{{ groupCounts[category.id] ?? 0 }}</td>
+                            <td><a href="{{ path('admin_groups_category', {id: category.id}) }}">{{ 'edit'|trans }}</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+    <h2 class="h4 mt-4">{{ 'add'|trans }}</h2>
+    {{ form(form) }}
+{% endblock %}

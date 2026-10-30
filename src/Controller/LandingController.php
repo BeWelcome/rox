@@ -111,58 +111,20 @@ class LandingController extends AbstractController
         ]);
     }
 
+    /**
+     * The threads with the newest posts in the member's groups, for the groups tab on the home page.
+     */
     #[Route(path: '/widget/threads', name: '/widget/threads')]
-    public function getThreads(Request $request): Response
+    public function getThreads(): Response
     {
-        $groups = $request->query->get('groups', '0');
-        $forum = $request->query->get('forum', '0');
-        $following = $request->query->get('following');
-        // The home page has one tab for the forum and one for the member's groups.
-        $tab = $request->query->get('tab');
-
         /** @var Member $member */
         $member = $this->getUser();
-        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
-
-        if ('forum' === $tab || 'groups' === $tab) {
-            $threads = $this->landingModel->getThreads($member, 'groups' === $tab, 'forum' === $tab, false, 5);
-            $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_ORDER_LIST_ASC]);
-
-            return $this->render('landing/widget/forums.html.twig', [
-                'threads' => $threads,
-                'ascending' => 'Yes' === $member->getMemberPreference($preference)->getValue(),
-                'displayId' => 'groups' === $tab ? 'groupsdisplay' : 'threadsdisplay',
-                'tab' => $tab,
-            ]);
-        }
-
-        /** @var Preference $preference */
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
-        $memberPreference = $member->getMemberPreference($preference);
-        $value = '';
-        if ('1' === $groups) {
-            $value = 'Groups';
-        }
-        if ('1' === $forum) {
-            if (!empty($value)) {
-                $value .= 'And';
-            }
-            $value .= 'Forums';
-        }
-        $memberPreference->setValue($value);
-
-        $this->entityManager->persist($memberPreference);
-        $this->entityManager->flush();
-
-        $threads = $this->landingModel->getThreads($member, $groups, $forum, $following, 5);
-
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_ORDER_LIST_ASC]);
-        $memberPreference = $member->getMemberPreference($preference);
-        $ascending = ('Yes' === $memberPreference->getValue());
+        $preference = $this->entityManager->getRepository(Preference::class)
+            ->findOneBy(['codename' => Preference::FORUM_ORDER_LIST_ASC]);
 
         return $this->render('landing/widget/forums.html.twig', [
-            'threads' => $threads,
-            'ascending' => $ascending,
+            'threads' => $this->landingModel->getGroupThreads($member, 5),
+            'ascending' => 'Yes' === $member->getMemberPreference($preference)->getValue(),
         ]);
     }
 
@@ -256,9 +218,6 @@ class LandingController extends AbstractController
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::MESSAGE_AND_REQUEST_FILTER]);
         $messageFilter = $member->getMemberPreferenceValue($preference);
 
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::FORUM_FILTER]);
-        $forumFilter = $member->getMemberPreferenceValue($preference);
-
         $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_ONLINE_ACTIVITIES]);
         $onlineActivities = ('Yes' === $member->getMemberPreferenceValue($preference)) ? 1 : 0;
 
@@ -275,13 +234,11 @@ class LandingController extends AbstractController
             'communityNews' => $latestNews,
             'countries' => $placesModel->getCountriesByContinent($request->getLocale()),
             'messageFilter' => $messageFilter,
-            'forumFilter' => $forumFilter,
             'onlineActivities' => $onlineActivities,
             'notificationCount' => $this->getUncheckedNotificationsCount($member),
             'visitorsCount' => $this->getVisitorsCount($tripModel, $member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
-            'forumTodayCount' => $this->landingModel->getThreadsWithPostsTodayCount($member, false),
-            'groupsTodayCount' => $this->landingModel->getThreadsWithPostsTodayCount($member, true),
+            'groupsTodayCount' => $this->landingModel->getGroupThreadsWithPostsTodayCount($member),
             'requestsToAnswerCount' => $this->getRequestsToAnswerCount($member),
         ]);
 

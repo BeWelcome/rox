@@ -1,0 +1,66 @@
+{#
+  One post of a thread: author, time, visibility, the message in every language it has, and what the viewer can do
+  with it (edit their own, report, moderate).
+#}
+<div class="l-forum-single-post {% if dark %}l-forum-single-post--dark{% endif %}">
+    <div class="c-single-post-user_info">
+        <a id="post{{ post.id }}" style="position: relative; top:-50px;"></a>
+        <div class="d-flex flex-row text-break">
+            <img class="profileimg avatar-48 me-1" width="48" height="48" alt="" loading="lazy" src="{{ path('avatar', {username: post.author.username, size: 48}) }}">
+            <div class="small">
+                <a href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>
+            </div>
+        </div>
+    </div>
+    <div class="c-single-post-post_info">
+        <div class="d-flex flex-column flex-sm-row small">
+            <div class="me-1"><i class="fa fa-comment me-1" title="{{ 'posted'|trans }}"></i>{{ post.created|format_datetime('short', 'short') }}</div>
+            <div class="me-1"><i class="fa fa-eye me-1" title="{{ 'forum_label_visibility'|trans }}"></i>{{ ('forum_edit_vis_' ~ post.postvisibility)|lower|trans }}</div>
+            <div class="ms-sm-auto"><a href="#post{{ post.id }}">{{ 'ForumPermalink'|trans }}</a></div>
+        </div>
+    </div>
+    <div class="c-single-post-content u:flex u:flex-col u:justify-between">
+        <div class="js-highlight">
+            {% set shown = post.messageIn(app.request.locale) %}
+            {% set translations = post.messageTranslations %}
+            <div class="post">
+                {% if post.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}<s>{% endif %}
+                {{ shown.message|purify|forum_lightbox|nl2br }}
+                {% if post.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}</s>{% endif %}
+            </div>
+            {% if translations|length > 1 %}
+                <small class="text-muted">
+                    {%- for locale, translation in translations -%}
+                        {{ translation.language.name }}{% if not loop.last %}, {% endif %}
+                    {%- endfor -%}
+                </small>
+            {% endif %}
+        </div>
+    </div>
+    <div class="c-single-post-edit">
+        {% if is_granted('FORUM_POST_EDIT', post) %}
+            <div class="d-flex justify-content-end text-nowrap">
+                <a href="{{ path('forum_edit', {postId: post.id}) }}" class="btn btn-sm btn-outline-primary ms-1"><i class="fa fa-edit"></i> {{ 'forum_EditUser'|trans }}</a>
+                <a href="{{ path('forum_translate', {postId: post.id}) }}" class="btn btn-sm btn-outline-primary ms-1"><i class="fa fa-language"></i> {{ 'forum_label_lang'|trans }}</a>
+            </div>
+        {% endif %}
+    </div>
+    <div class="c-single-post-moderate">
+        {% if post.author != app.user %}
+            <a href="{{ path('forum_report', {postId: post.id}) }}" class="small"><i class="fa fa-flag"></i> {{ 'ForumMyReportToMod'|trans }}</a>
+        {% endif %}
+    </div>
+    <div class="c-single-post-admin_edit">
+        {% for report in reports|default([]) %}
+            <small class="d-block text-muted">
+                <a href="{{ path('forum_report_member', {postId: post.id, memberId: report.reporter.id}) }}">{{ 'forum.reports.view'|trans }}: {{ report.reporter.username }}</a>
+                ({{ ('forum.report.status.' ~ (report.status == 'OnDiscussion' ? 'discussion' : report.status|lower))|trans }})
+            </small>
+        {% endfor %}
+        {% if moderator %}
+            <div class="d-flex justify-content-end text-nowrap">
+                <a href="{{ path('forum_admin', {postId: post.id}) }}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-edit"></i> {{ 'forum.moderator.edit'|trans }}</a>
+            </div>
+        {% endif %}
+    </div>
+</div>

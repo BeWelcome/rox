@@ -2,6 +2,8 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Group as GroupEntity;
+use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -41,6 +43,32 @@ class SignupControllerTest extends WebTestCase
         // This usually results in a redirect or a 200 OK on the new page.
         // If successful, it might redirect to homepage or profile.
         $this->assertResponseStatusCodeSame(302);
+    }
+
+    public function testNewMembersAreInTheBeWelcomeGroupWithNotifications(): void
+    {
+        $client = static::createClient();
+        $crawler = $client->request('GET', '/signup');
+        $form = $crawler->filter('input[type="submit"]')->form();
+        $username = 'newbie' . substr(uniqid(), -8);
+        $form['signup_form[username]'] = $username;
+        $form['signup_form[email]'] = $username . '@example.com';
+        $form['signup_form[password]'] = 'StrongPassword123!';
+        $form['signup_form[terms_privacy]'] = '1';
+
+        $client->submit($form);
+
+        self::assertResponseRedirects();
+        $connection = static::getContainer()->get(EntityManagerInterface::class)->getConnection();
+        $membership = $connection->fetchAssociative(
+            'SELECT gm.status, gm.notifications_enabled, gm.welcome_notice_sent FROM group_membership gm'
+            . ' JOIN member m ON m.id = gm.member_id WHERE m.Username = ? AND gm.group_id = ?',
+            [$username, GroupEntity::BEWELCOME],
+        );
+        self::assertSame(
+            ['status' => 'In', 'notifications_enabled' => 1, 'welcome_notice_sent' => 0],
+            array_map(static fn ($value) => is_numeric($value) ? (int) $value : $value, (array) $membership),
+        );
     }
 
     public function testSignupSubmitInvalidData(): void

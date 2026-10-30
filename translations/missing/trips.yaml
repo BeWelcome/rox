@@ -213,3 +213,6 @@ trip.details.hint:
 trip.legs.hint:
     - 'Add each place you will stay, with your dates.'
     - Line under the title of the itinerary part of the trip creation form
+trip.leg.location.pick:
+    - Pick the place in the list of suggestions
+    - Error under a stop's place when a name was typed but no suggestion was picked

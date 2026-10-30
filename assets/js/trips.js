@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 
 import L from 'leaflet';
 import 'leaflet.fullscreen';
@@ -27,7 +26,53 @@ function onChange(element, result) {
     geonameId.value = result.id;
     latitude.value = result.latitude;
     longitude.value = result.longitude;
+    clearLocationError(element);
 }
+
+// A place picked: its error under the field goes
+function clearLocationError(element) {
+    const field = element.closest('.p-trips-field');
+    if (field) {
+        field.classList.remove('has-error');
+    }
+    const stop = element.closest('.p-trips-stop');
+    const error = stop ? stop.querySelector('.js-location-error') : null;
+    if (error) {
+        error.remove();
+    }
+}
+
+// Number of travellers: - and + change the hidden value, from data-min to data-max (shown "5+")
+document.addEventListener('click', (event) => {
+    const button = event.target.closest('.js-stepper-step');
+    if (!button) {
+        return;
+    }
+    const stepper = button.closest('.js-stepper');
+    const input = stepper.querySelector('.js-stepper-input');
+    const min = parseInt(stepper.dataset.min, 10);
+    const max = parseInt(stepper.dataset.max, 10);
+    const value = Math.min(max, Math.max(min, (parseInt(input.value, 10) || min) + parseInt(button.dataset.step, 10)));
+    input.value = value;
+    stepper.querySelector('.js-stepper-value').textContent = value >= max ? (max - 1) + '+' : value;
+    stepper.querySelector('[data-step="-1"]').disabled = value <= min;
+    stepper.querySelector('[data-step="1"]').disabled = value >= max;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+});
+
+// Typing again forgets the place picked before: only a suggestion sets it
+document.addEventListener('input', (event) => {
+    if (!event.target.classList || !event.target.classList.contains('js-location-picker')) {
+        return;
+    }
+    const baseId = event.target.id.replace('_location_fullname', '_location_');
+    ['name', 'geoname_id', 'latitude', 'longitude'].forEach((key) => {
+        const hidden = document.getElementById(baseId + key);
+        if (hidden) {
+            hidden.value = '';
+        }
+    });
+});
 
 initializeMultipleAutoCompletes("/suggest/locations/places", 'js-location-picker', onChange);
 
@@ -78,6 +123,15 @@ function initializePicker(value) {
     });
 }
 
+// The latest departure of the stops already in the form (not the one just added)
+function lastStopEnd(holder, newIndex) {
+    return Array.from(holder.querySelectorAll('input[id$="_departure"]'))
+        .filter((input) => input.id !== 'trip_legs_' + newIndex + '_departure' && input.value)
+        .map((input) => input.value)
+        .sort()
+        .pop() || null;
+}
+
 document.addEventListener('click', function(event) {
     const addBtn = event.target.closest('.js-btn-add[data-target]');
     if (addBtn) {
@@ -101,13 +155,13 @@ document.addEventListener('click', function(event) {
         /* enable a search picker on all location fields (including the newly added one */
         initializeMultipleAutoCompletes("/suggest/locations/places", 'js-location-picker', onChange);
 
+        // The new stop starts where the previous one ends: its arrival is preselected and the
+        // calendar waits for the departure
         const duration = document.getElementById('trip_legs_' + counter + '_duration');
-        if (lastEndDateSet != null) {
-            const arrival = document.getElementById('trip_legs_' + counter + '_arrival');
-            arrival.value = lastEndDateSet;
-            const nextDay = dayjs(lastEndDateSet).add(1, 'day');
-            const departure = document.getElementById('trip_legs_' + counter + '_departure');
-            departure.value = nextDay.format('YYYY-MM-DD');
+        const previousEnd = lastStopEnd(collectionHolder, counter) || lastEndDateSet;
+        if (previousEnd) {
+            document.getElementById('trip_legs_' + counter + '_arrival').value = previousEnd;
+            document.getElementById('trip_legs_' + counter + '_departure').value = '';
         }
 
         initializePicker(duration);

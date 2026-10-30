@@ -28,9 +28,15 @@
         {% set form = widget %}
         {% set name = widget.vars.full_name %}
     {% endif %}
+    {# The place's errors (no place, or a typed name not picked from the suggestions) come from the
+       field, its hidden geoname id and the transformer: shown once, under the field #}
+    {% set location_errors = [] %}
+    {% for field in [form.location, form.location.fullname, form.location.geoname_id] %}
+        {% for error in field.vars.errors %}{% set location_errors = location_errors|merge([error.message]) %}{% endfor %}
+    {% endfor %}
     <div data-content="{{ name }}" class="p-trips-stop">
         <div class="p-trips-stop__fields">
-            <div class="p-trips-field p-trips-field--icon">
+            <div class="p-trips-field p-trips-field--icon{{ location_errors is not empty ? ' has-error' }}">
                 <i class="fas fa-location-dot" aria-hidden="true"></i>
                 <div class="auto-search-wrapper max-height">
                     <input type="text" id="{{ form.location.fullname.vars.id }}" name="{{ form.location.fullname.vars.full_name }}"
@@ -54,20 +60,38 @@
                 <i class="fa fa-times" aria-hidden="true"></i>
             </button>
         </div>
+        {% if location_errors is not empty %}
+            <p class="p-trips-stop__error js-location-error">
+                <i class="fas fa-exclamation-circle" aria-hidden="true"></i>
+                {{ form.location.fullname.vars.value ? 'trip.leg.location.pick'|trans : location_errors|first }}
+            </p>
+        {% endif %}
         <div class="p-trips-stop__errors">
-            {{ form_errors(form.location) }}{{ form_errors(form.location.fullname) }}{{ form_errors(form.location.geoname_id) }}
             {{ form_errors(form.duration) }}
             {{ form_errors(form.options) }}
         </div>
+        {# What the traveller looks for at this stop: two pills that light up when picked; below, the
+           private switch (the stop is then hidden from other members) #}
+        {% set option_icons = { LookingForHosts: 'fa-house-user', MeetLocals: 'fa-users', Private: 'fa-lock' } %}
         <div class="p-trips-stop__options" role="group" aria-label="{{ 'trip.leg.options'|trans }}">
-            {% for option in form.options %}
+            {% for option in form.options|filter(option => option.vars.value != 'Private') %}
                 <label class="p-trips-option" for="{{ option.vars.id }}">
-                    <input type="checkbox" id="{{ option.vars.id }}" name="{{ option.vars.full_name }}" value="{{ option.vars.value }}"{% if option.vars.checked %} checked{% endif %}{% if option.vars.disabled %} disabled{% endif %}>
+                    <input type="checkbox" class="p-trips-option__input" id="{{ option.vars.id }}" name="{{ option.vars.full_name }}" value="{{ option.vars.value }}"{% if option.vars.checked %} checked{% endif %}{% if option.vars.disabled %} disabled{% endif %}>
+                    <i class="fas {{ option_icons[option.vars.value] ?? 'fa-check' }} p-trips-option__icon" aria-hidden="true"></i>
                     <span>{{ option.vars.label|trans }}</span>
                 </label>
                 {% do option.setRendered %}
             {% endfor %}
         </div>
+        {% for option in form.options|filter(option => option.vars.value == 'Private') %}
+            <label class="p-trips-private" for="{{ option.vars.id }}">
+                <i class="fas fa-lock p-trips-private__icon" aria-hidden="true"></i>
+                <span class="p-trips-private__text">{{ option.vars.label|trans }}</span>
+                <input type="checkbox" role="switch" class="p-trips-private__input" id="{{ option.vars.id }}" name="{{ option.vars.full_name }}" value="{{ option.vars.value }}"{% if option.vars.checked %} checked{% endif %}{% if option.vars.disabled %} disabled{% endif %}>
+                <span class="p-trips-private__switch" aria-hidden="true"></span>
+            </label>
+            {% do option.setRendered %}
+        {% endfor %}
         {{ form_widget(form.location.name) }} {{ form_widget(form.location.geoname_id) }}
         {{ form_widget(form.location.latitude) }} {{ form_widget(form.location.longitude) }}
         {{ form_widget(form.arrival) }}
@@ -123,8 +147,25 @@
             <div class="p-trips-form__row">
                 {% for field in [form.countOfTravellers, form.additionalInfo, form.invitationRadius] %}
                     <div class="p-trips-field">
-                        <label class="p-trips-label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
-                        {{ form_widget(field, { attr: { class: 'p-trips-select' } }) }}
+                        {% if field.vars.name == 'countOfTravellers' %}
+                            {# The number of travellers with - and + (trips.js): 1 to 5, then "5+" (the form's 6) #}
+                            {% set count = field.vars.value ?: 1 %}
+                            <span class="p-trips-label" id="{{ field.vars.id }}_label">{{ field.vars.label|trans }}</span>
+                            <div class="p-trips-stepper js-stepper" role="group" aria-labelledby="{{ field.vars.id }}_label" data-min="1" data-max="6">
+                                <button type="button" class="p-trips-stepper__btn js-stepper-step" data-step="-1" aria-label="-"{{ count <= 1 ? ' disabled' }}>
+                                    <i class="fas fa-minus" aria-hidden="true"></i>
+                                </button>
+                                <output class="p-trips-stepper__value js-stepper-value" for="{{ field.vars.id }}" aria-live="polite">{{ count >= 6 ? '5+' : count }}</output>
+                                <input type="hidden" id="{{ field.vars.id }}" name="{{ field.vars.full_name }}" value="{{ count }}" class="js-stepper-input">
+                                <button type="button" class="p-trips-stepper__btn js-stepper-step" data-step="1" aria-label="+"{{ count >= 6 ? ' disabled' }}>
+                                    <i class="fas fa-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            {% do field.setRendered %}
+                        {% else %}
+                            <label class="p-trips-label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
+                            {{ form_widget(field, { attr: { class: 'p-trips-select' } }) }}
+                        {% endif %}
                         {{ form_errors(field) }}
                     </div>
                 {% endfor %}

@@ -22,5 +22,5 @@
     <h1 class="h3">{{ 'forum_EditUser'|trans }}
         {% if thread %}: <a href="{{ forum.thread_url(thread) }}#post{{ post.id }}">{{ forum.thread_title(thread, app.request.locale) }}</a>{% endif %}
     </h1>
-    {{ form(form) }}
+    {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
 {% endblock %}

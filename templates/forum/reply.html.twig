@@ -3,5 +3,5 @@
 
 {% block content %}
     <h1 class="h3">{{ 'ForumReply'|trans }}: <a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></h1>
-    {{ form(form) }}
+    {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
 {% endblock %}

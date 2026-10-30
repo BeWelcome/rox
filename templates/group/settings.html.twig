@@ -7,7 +7,7 @@
 
 {% block content %}
     <h1 class="h3">{{ 'GroupsAdministrateGroup'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
-    {{ form_start(form) }}
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
     {{ form_row(form.description) }}
     {{ form_row(form.type) }}
     {{ form_row(form.visiblePosts) }}

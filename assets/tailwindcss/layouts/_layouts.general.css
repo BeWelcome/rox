@@ -10055,9 +10055,11 @@ body.is-embedded { background: #fff; }
 .c-contact-stops__item.is-current { background: #fff4ea; }
 .c-contact-stops__num { position: relative; z-index: 1; display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: #e2e8f0; color: #475569; font-size: 0.75rem; font-weight: 700; }
 .c-contact-stops__item.is-current .c-contact-stops__num { background: #ea7a2e; color: #fff; }
-/* Trip maps (trips.js): the stops as numbered orange dots, the member's home as a green dot */
-.c-trip-pin { display: flex; align-items: center; justify-content: center; border: 2px solid #fff; border-radius: 50%; background: #ea7a2e; color: #fff; font-size: 0.75rem; font-weight: 700; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3); }
-.c-trip-pin--own { background: #3fa75a; }
+/* Trip maps (trips.js): the stops as numbered orange dots; the logged-in member's home (with their
+   search radius) as a smaller green dot. Leaflet's own .leaflet-marker-icon rule sets display: block,
+   hence the longer selector. */
+.leaflet-marker-icon.c-trip-pin { display: flex; box-sizing: border-box; align-items: center; justify-content: center; border: 2px solid #fff; border-radius: 50%; background: #ea7a2e; color: #fff; font-size: 0.8125rem; font-weight: 700; line-height: 1; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3); }
+.leaflet-marker-icon.c-trip-pin--own { border-width: 3px; background: #3fa75a; }
 .c-contact-stops__body { min-width: 0; }
 .c-contact .c-contact-stops__place { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; margin: 0; color: #0f172a; font-size: 0.9375rem; font-weight: 700; }
 .c-contact .c-contact-stops__dates { margin: 0.1rem 0 0; color: #64748b; font-size: 0.8125rem; }

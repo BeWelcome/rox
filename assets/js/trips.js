@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // The stops as numbered dots, as in the itinerary
         const stopIcon = (number) => L.divIcon({
             className: 'c-trip-pin',
-            html: '<span>' + number + '</span>',
+            html: String(number),
             iconSize: [28, 28],
             iconAnchor: [14, 14],
             popupAnchor: [0, -14],
@@ -185,14 +185,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // if not own trip add circle with search radius of current member
         if (trip.own === false && typeof memberInfo !== 'undefined' && memberInfo.latitude !== null) {
-            // Where the member lives: a green dot
+            // Where the logged-in member lives (not the traveller): a green dot, under the stops
             const ownIcon = L.divIcon({
                 className: 'c-trip-pin c-trip-pin--own',
-                iconSize: [18, 18],
-                iconAnchor: [9, 9],
-                popupAnchor: [0, -9],
+                iconSize: [16, 16],
+                iconAnchor: [8, 8],
+                popupAnchor: [0, -8],
             });
-            const marker = L.marker([memberInfo.latitude, memberInfo.longitude], { icon: ownIcon }).addTo(map);
+            const marker = L.marker([memberInfo.latitude, memberInfo.longitude], { icon: ownIcon, zIndexOffset: -1000 }).addTo(map);
             marker.bindPopup("<strong>Your location</strong><br>...and search radius");
 
             L.circle([memberInfo.latitude, memberInfo.longitude], {

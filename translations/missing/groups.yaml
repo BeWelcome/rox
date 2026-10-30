@@ -83,3 +83,48 @@ group.profile.groups.saved:
 group.profile.shown:
     - 'Show this group on my profile'
     - Checkbox in a member's settings for a group they are in
+group.list.title:
+    - 'Groups'
+    - Title of the groups pages (my groups, all groups)
+group.list.create:
+    - 'Create group'
+    - Groups pages, button at the top right that starts a new group
+group.list.create.short:
+    - 'Create'
+    - Groups pages on phones, the same button as group.list.create with less room
+group.list.search:
+    - 'Search groups by name'
+    - Groups pages, grey text in the empty search field
+group.list.mine:
+    - 'My groups'
+    - Groups pages, tab with the groups the member is in; the number of them follows
+group.list.all:
+    - 'All groups'
+    - Groups pages, tab with every group; the number of them follows
+group.list.order.actdesc:
+    - 'Last post'
+    - Groups pages, order of the list, the group with the newest post first
+group.list.order.nameasc:
+    - 'Name'
+    - Groups pages, order of the list, by name from A to Z
+group.list.order.membersdesc:
+    - 'Members'
+    - Groups pages, order of the list, the biggest group first
+group.list.order.createddesc:
+    - 'Newest'
+    - Groups pages, order of the list, the newest group first
+group.list.members:
+    - '{count, plural, one {# member} other {# members}}'
+    - Groups pages, on each group, how many members it has
+group.list.active.today:
+    - 'Active today'
+    - Groups pages, on a group with a post today
+group.list.active.yesterday:
+    - 'Active yesterday'
+    - Groups pages, on a group with a post yesterday
+group.list.last.post:
+    - 'Last post {date}'
+    - Groups pages, on a group, the day of its newest post (Last post Oct 17)
+group.list.joined:
+    - 'Joined'
+    - Groups pages, on a group the member is in

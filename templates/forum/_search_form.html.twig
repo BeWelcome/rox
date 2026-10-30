@@ -1,5 +1,6 @@
 {# The forum search: all forums, or the group's (group set). #}
 <form method="get" action="{{ group ? path('group_search_discussions', {group_id: group.id}) : path('forums_search_form') }}" class="p-forum__search" role="search">
-    <input type="search" class="o-input" name="q" value="{{ keyword|default('') }}" aria-label="{{ 'forum.search.term'|trans }}" placeholder="{{ 'forum.search.term'|trans }}">
-    <button type="submit" class="btn btn-outline-primary">{{ 'search'|trans }}</button>
+    <i class="fas fa-search p-forum__search-icon" aria-hidden="true"></i>
+    <input type="search" class="p-forum__search-input" name="q" value="{{ keyword|default('') }}" aria-label="{{ 'forum.search.term'|trans }}" placeholder="{{ 'forum.search.term'|trans }}">
+    <button type="submit" class="p-forum__btn p-forum__btn--primary">{{ 'search'|trans }}</button>
 </form>

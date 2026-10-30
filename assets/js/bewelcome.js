@@ -32,3 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
 if (document.querySelector('.js-places-preview')) {
     import('./search/preview').then(({initMemberPreview}) => initMemberPreview());
 }
+// A member's preview alone in the side panel (from a trip): Read more and the pictures
+const previewPanel = document.querySelector('.js-preview-panel');
+if (previewPanel) {
+    import('./search/preview').then(({initPreviewContent}) => initPreviewContent(previewPanel));
+}

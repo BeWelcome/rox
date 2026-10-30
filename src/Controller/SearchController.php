@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\GroupMembershipStatusType;
+use App\Doctrine\LegOptionsType;
 use App\Entity\Comment;
 use App\Entity\GalleryImage;
 use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Preference;
+use App\Entity\Subtrip;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Form\SearchFormType;
 use App\Pagerfanta\SearchAdapter;
@@ -196,9 +198,11 @@ class SearchController extends AbstractController
     /**
      * A short view of a member, shown over the search results (a drawer on
      * large screens, a sheet on phones) so the results stay where they are.
+     * With ?embed=1 it is a page of the side panel (from a trip), with a back arrow (?back=);
+     * ?leg= (a stop of that member's trip) shows Invite / Message for it instead of Request stay / Send.
      */
     #[Route(path: '/search/members/{username:member}/preview', name: 'search_member_preview', methods: ['GET'])]
-    public function memberPreview(Member $member): Response
+    public function memberPreview(Request $request, Member $member): Response
     {
         $this->denyAccessUnlessGranted(MemberVoter::MEMBER_VIEW, $member);
 
@@ -207,8 +211,18 @@ class SearchController extends AbstractController
         /** @var GalleryImageRepository $galleryImageRepository */
         $galleryImageRepository = $this->entityManager->getRepository(GalleryImage::class);
 
-        return $this->render('search/_preview.html.twig', [
+        $embed = $request->query->getBoolean('embed');
+        $leg = null;
+        if ($embed && $request->query->getInt('leg') > 0) {
+            $leg = $this->entityManager->getRepository(Subtrip::class)->find($request->query->getInt('leg'));
+            if (null !== $leg && ($leg->getTrip()->getCreator() !== $member || \in_array(LegOptionsType::PRIVATE, $leg->getOptions(), true))) {
+                $leg = null;
+            }
+        }
+
+        return $this->render($embed ? 'search/preview_panel.html.twig' : 'search/_preview.html.twig', [
             'member' => $member,
+            'leg' => $leg,
             'comments_count' => $commentRepository->getCommentsCountMemberByQuality($member),
             'pictures' => $galleryImageRepository->getImagesForMember($member),
         ]);

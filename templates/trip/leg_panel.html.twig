@@ -12,7 +12,6 @@
 {% set myself = app.user %}
 {% set address = myself.activeAddress %}
 {% set lookingForHost = constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
-{% set meetLocals = constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in leg.options %}
 {% set invitation = lookingForHost ? leg.invitationBy(myself) : null %}
 {% set back = app.request.requestUri %}
 {% set from = app.request.query.get('from') ?: 'home' %}
@@ -48,15 +47,18 @@
             </div>
 
             <section class="c-contact-trip c-contact-trip--full">
-                {% if trip.summary %}
-                    <h2 class="c-contact-trip__title">{{ trip.summary }}</h2>
-                {% endif %}
-                <p class="c-contact-trip__chips">
-                    <span class="c-contact-trip__chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) }}</span>
-                    {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != trip.additionalInfo %}
-                        <span class="c-contact-trip__chip"><i class="fa fa-info-circle" aria-hidden="true"></i> {{ ('trip.additional.info.' ~ trip.additionalInfo)|lower|trans }}</span>
+                {# The title and its chips on one line when there is room, the chips under it otherwise #}
+                <div class="c-contact-trip__headline">
+                    {% if trip.summary %}
+                        <h2 class="c-contact-trip__title">{{ trip.summary }}</h2>
                     {% endif %}
-                </p>
+                    <p class="c-contact-trip__chips">
+                        <span class="c-contact-trip__chip"><i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.count.of.travellers'|trans({ countOfTravellers: trip.countOfTravellers }) }}</span>
+                        {% if constant('App\\Doctrine\\TripAdditionalInfoType::NONE') != trip.additionalInfo %}
+                            <span class="c-contact-trip__chip"><i class="fa fa-info-circle" aria-hidden="true"></i> {{ ('trip.additional.info.' ~ trip.additionalInfo)|lower|trans }}</span>
+                        {% endif %}
+                    </p>
+                </div>
                 {% if trip.description %}
                     <div class="c-contact-trip__text is-clamped js-trip-text">{{ trip.description|nl2br }}</div>
                     <button type="button" class="c-contact-trip__more js-trip-more" data-less="{{ 'contact.trip.read.less'|trans }}" hidden>{{ 'contact.trip.read.more'|trans }}</button>
@@ -75,20 +77,25 @@
                         <li class="c-contact-stops__item{% if isThis %} is-current{% endif %}">
                             <span class="c-contact-stops__num">{{ loop.index }}</span>
                             <div class="c-contact-stops__card">
+                                {% set _soon = stop.arrival|date('Y-m-d') == 'today'|date('Y-m-d') ? 'today' : (stop.arrival|date('Y-m-d') == 'tomorrow'|date('Y-m-d') ? 'tomorrow' : null) %}
+                                {% set _thisYear = stop.departure|date('Y') == 'now'|date('Y') %}
                                 <p class="c-contact-stops__place">
                                     {% if stop.location.country %}<span class="c-tip" data-tip="{{ stop.location.country.name }}"><span class="o-flag o-flag--{{ stop.location.countryId|upper }} c-contact-stops__flag" aria-hidden="true"></span></span>{% endif %}
                                     <strong>{{ stop.location.name }}</strong>
                                     {% if stop.location.country %}<span class="c-contact-stops__country">{{ stop.location.country.name }}</span>{% endif %}
-                                    {% if isThis %}<span class="c-contact-stops__near"><i class="fas fa-crosshairs" aria-hidden="true"></i> {{ 'contact.trip.near.you'|trans }}</span>{% endif %}
+                                    {# Today / Tomorrow at the top right #}
+                                    {% if _soon %}<span class="c-contact-stops__when is-soon">{{ ('landing.visitors.' ~ _soon)|trans }}</span>{% endif %}
                                 </p>
                                 <p class="c-contact-stops__dates">
-                                    <i class="far fa-calendar" aria-hidden="true"></i>
-                                    {% if sameDay %}
-                                        {{ stop.arrival|format_date(pattern='MMM d, y') }}
-                                    {% else %}
-                                        {{ stop.arrival|format_date(pattern=sameYear ? 'MMM d' : 'MMM d, y') }} – {{ stop.departure|format_date(pattern='MMM d, y') }}
-                                    {% endif %}
-                                    {% if nights > 0 %}<span class="c-contact-stops__sep" aria-hidden="true">·</span> {{ 'contact.trip.nights'|trans({ count: nights }) }}{% endif %}
+                                    {# The dates, then the nights #}
+                                    <span class="c-contact-stops__when">
+                                        {%- if sameDay -%}
+                                            {{ stop.arrival|format_date(pattern=_thisYear ? 'MMM d' : 'MMM d, y') }}
+                                        {%- else -%}
+                                            {{ stop.arrival|format_date(pattern=sameYear ? 'MMM d' : 'MMM d, y') }} – {{ stop.departure|format_date(pattern=_thisYear ? 'MMM d' : 'MMM d, y') }}
+                                        {%- endif -%}
+                                    </span>
+                                    {% if nights > 0 %}<span class="c-contact-stops__nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>{% endif %}
                                 </p>
                                 {% if constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in stop.options or constant('App\\Doctrine\\LegOptionsType::MEET_LOCALS') in stop.options %}
                                     <p class="c-contact-stops__options">
@@ -109,33 +116,31 @@
                 </ol>
             </section>
 
-            <a class="c-contact-tripview__profile" href="{{ path('members_profile', { username: traveller.username }) }}" target="_top">
+            {# The traveller's preview (as on the search) in the same panel; its back arrow comes back here #}
+            <a class="c-contact-tripview__profile" href="{{ path('search_member_preview', { username: traveller.username, embed: 1, leg: leg.id, from: from, back: back }) }}">
                 <img src="{{ path('avatar', { username: traveller.username, size: 96 }) }}" alt="">
-                <span>{{ 'contact.trip.profile'|trans({ username: traveller.shortNameOrUsername }) }}</span>
+                <span>{{ 'contact.trip.more'|trans({ username: traveller.shortNameOrUsername }) }}</span>
                 <i class="fas fa-chevron-right" aria-hidden="true"></i>
             </a>
         </div>
 
-        {% if lookingForHost or meetLocals %}
-            <div class="c-contact__foot c-contact__foot--row">
-                {% if lookingForHost %}
-                    {% if invitation %}
-                        <a class="c-contact__send c-contact__send--done" href="{{ path('conversation_reply', { id: invitation.messages[0].id }) }}" target="_top">
-                            <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}
-                        </a>
-                    {% else %}
-                        <a class="c-contact__send" href="{{ path('hosting_invitation', { leg: leg.id, embed: 1, from: from, back: back }) }}">
-                            <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'contact.trip.invite'|trans }}
-                        </a>
-                    {% endif %}
-                {% endif %}
-                {% if meetLocals %}
-                    <a class="c-contact__send{% if lookingForHost %} c-contact__send--secondary c-contact__send--side{% endif %}" href="{{ path('message_new', { username: traveller.username, embed: 1, from: from, back: back }) }}" aria-label="{{ 'trip.leg.message'|trans }}">
-                        <i class="fas fa-envelope" aria-hidden="true"></i> <span class="c-contact__send-label">{{ 'trip.leg.message'|trans }}</span>
+        {# Message is always there, also to agree on the dates before inviting #}
+        <div class="c-contact__foot c-contact__foot--row">
+            {% if lookingForHost %}
+                {% if invitation %}
+                    <a class="c-contact__send c-contact__send--done" href="{{ path('conversation_reply', { id: invitation.messages[0].id }) }}" target="_top">
+                        <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}
+                    </a>
+                {% else %}
+                    <a class="c-contact__send" href="{{ path('hosting_invitation', { leg: leg.id, embed: 1, from: from, back: back }) }}">
+                        <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'contact.trip.invite'|trans }}
                     </a>
                 {% endif %}
-            </div>
-        {% endif %}
+            {% endif %}
+            <a class="c-contact__send{% if lookingForHost %} c-contact__send--secondary c-contact__send--side{% endif %}" href="{{ path('message_new', { username: traveller.username, embed: 1, from: from, back: back }) }}" aria-label="{{ 'trip.leg.message'|trans }}">
+                <i class="fas fa-envelope" aria-hidden="true"></i> <span class="c-contact__send-label">{{ 'trip.leg.message'|trans }}</span>
+            </a>
+        </div>
     </div>
 
     <script>

@@ -3,6 +3,7 @@
   (nothing for the agora), who wrote the last post and when, and the number of replies.
   The title opens the thread, the time and the replies jump to the last post.
   ascending: the member reads threads oldest post first, so the last post is on the last page.
+  showGroup: name the group (not on the group's own pages).
 #}
 {% import 'forum/_macros.html.twig' as forum %}
 {% set page = 1 %}
@@ -19,7 +20,7 @@
             {%- if thread.stickyValue > 0 %}<i class="fas fa-thumbtack me-1" title="{{ 'pinnedpost'|trans }}"></i>{% endif -%}
             {{ forum.thread_title(thread, app.request.locale) }}
         </a>
-        {% if not thread.agora %}
+        {% if not thread.agora and (showGroup ?? true) %}
             <p class="c-home-item__meta">
                 <i class="fas fa-users" aria-hidden="true"></i>
                 <a href="{{ path('group_start', { group_id: thread.group.id }) }}">{{ thread.group.name }}</a>

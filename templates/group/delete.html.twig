@@ -1,8 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
-{% block content %}
+{% block group_content %}
     {% import 'macros/post_button.html.twig' as button %}
-    <h1 class="h3">{{ 'groupsdeletegroup'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    <h2 class="h4">{{ 'groupsdeletegroup'|trans }}</h2>
     <p>{{ 'groupsdeleteconsiderations'|trans }}</p>
     {{ button.post_button(path('group_delete_confirmed', {id: group.id}), 'group-delete-' ~ group.id, 'groupsreallydelete', 'btn btn-danger') }}
     <a class="btn btn-outline-primary" href="{{ path('group_start', {group_id: group.id}) }}">{{ 'groupsdontdelete'|trans }}</a>

@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% block content %}
-    <h1>{{ title | title }}</h1>
+{% block group_content %}
+    <h2 class="h4">{{ 'wiki.page.edit'|trans }}</h2>
 
     {{ form(form) }}
 
-{% endblock content %}
+{% endblock group_content %}

@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 {% import 'forum/_macros.html.twig' as forum %}
 
 {% block title %}{{ forum.thread_title(thread, locale) }}{% endblock %}
@@ -14,7 +14,7 @@
     {{ encore_entry_link_tags('highlight') }}
 {% endblock %}
 
-{% block content %}
+{% block group_content %}
     {% import 'macros/post_button.html.twig' as button %}
     {% set moderator = is_granted('ROLE_ADMIN_FORUMMODERATOR') or is_granted('ROLE_ADMIN_ADMIN') %}
     {% if thread.agora %}{% include 'forum/_head.html.twig' with {active: 'agora', tabsOnly: true} %}{% endif %}
@@ -27,7 +27,8 @@
             <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'groupdiscussions'|trans }}</a>
         {% endif %}
     </p>
-    <h1 class="h3">{{ forum.thread_title(thread, locale) }}</h1>
+    {% set heading = submenu is defined ? 'h2' : 'h1' %}
+    <{{ heading }} class="h3">{{ forum.thread_title(thread, locale) }}</{{ heading }}>
     {% if thread.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
         <p class="alert alert-warning">{{ 'threadclosed'|trans }}</p>
     {% endif %}

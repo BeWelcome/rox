@@ -1,7 +1,8 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 {% import 'forum/_macros.html.twig' as forum %}
 
-{% block content %}
-    <h1 class="h3">{{ 'forumreply'|trans }}: <a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></h1>
+{% block group_content %}
+    {% set heading = submenu is defined ? 'h2' : 'h1' %}
+    <{{ heading }} class="h3">{{ 'forumreply'|trans }}: <a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></{{ heading }}>
     {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
 {% endblock %}

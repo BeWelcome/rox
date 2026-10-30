@@ -4,7 +4,7 @@
 #}
 <div class="c-home-list p-forum__list">
     {% for thread in threads %}
-        {% include 'forum/_thread_item.html.twig' with { thread: thread, ascending: ascending|default(false) } %}
+        {% include 'forum/_thread_item.html.twig' with { thread: thread, ascending: ascending|default(false), showGroup: (showGroup ?? true) } %}
     {% else %}
         <p class="c-home-list__empty">{{ 'found0threads'|trans }}</p>
     {% endfor %}

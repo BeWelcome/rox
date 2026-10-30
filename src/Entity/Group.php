@@ -393,7 +393,7 @@ class Group
         $criterion = new Criteria();
         $criterion->where(Criteria::expr()->eq('member', $member));
 
-        return $this->groupMemberships->matching($criterion)->first();
+        return $this->groupMemberships->matching($criterion)->first() ?: null;
     }
 
     /**

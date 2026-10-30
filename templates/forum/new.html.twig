@@ -1,9 +1,10 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
-{% block content %}
-    <h1 class="h3">{{ 'forumnewtopic'|trans }}:
-        {% if group.beWelcome %}<a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'agoraforum'|trans }}</a>
-        {% else %}<a href="{{ path('group_forum', {group_id: group.id}) }}">{{ group.name }}</a>{% endif %}
-    </h1>
+{% block group_content %}
+    {% if group.beWelcome %}
+        <h1 class="h3">{{ 'forumnewtopic'|trans }}: <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'agoraforum'|trans }}</a></h1>
+    {% else %}
+        <h2 class="h4">{{ 'forumnewtopic'|trans }}</h2>
+    {% endif %}
     {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
 {% endblock %}

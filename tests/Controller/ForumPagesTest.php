@@ -212,10 +212,11 @@ final class ForumPagesTest extends WebTestCase
         $crawler = $this->request('GET', '/forums/s' . $this->thread(self::AGORA_THREAD)->getId());
         self::assertSame($forumTabs, $tabs($crawler));
 
-        // a group's forum keeps the group's menu
+        // a group's forum has the group's head and menu
         $crawler = $this->request('GET', '/group/' . $this->thread(self::HIKING_THREAD)->getGroup()->getId() . '/forum');
         self::assertCount(0, $crawler->filter('.p-forum__tabs'));
-        self::assertCount(1, $crawler->filter('#sidebar'));
+        self::assertStringEndsWith('/forum', (string) $crawler->filter('.p-group__tab.is-active')->attr('href'));
+        self::assertCount(0, $crawler->filter('#sidebar'));
     }
 
     public function testTheModeratorsHaveATabForTheReports(): void

@@ -1,7 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
-{% block content %}
-    <h1 class="h3">{{ 'groupsleavenamedgroup'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+{% block group_content %}
+    <h2 class="h4">{{ 'groupsleavenamedgroup'|trans }}</h2>
     <form method="post" action="{{ path('group_left', {group_id: group.id}) }}">
         <input type="hidden" name="_token" value="{{ csrf_token('group-leave-' ~ group.id) }}">
         <button type="submit" class="btn btn-danger">{{ 'groupsleavethegroup'|trans }}</button>

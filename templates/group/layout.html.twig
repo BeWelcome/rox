@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{#
+  The pages of a group: the group's head with its menu as tabs above the page, in place of the sidebar.
+  Pages fill group_content. Pages shared with the agora (the forum's) get the head only when they have the
+  group's menu (submenu).
+#}
+
+{% if submenu is defined %}{% set hide_sidebar = true %}{% endif %}
+
+{% block content %}
+    {% if submenu is defined %}{% include 'group/_head.html.twig' %}{% endif %}
+    {% block group_content %}{% endblock %}
+{% endblock %}

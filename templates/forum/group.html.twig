@@ -1,24 +1,17 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
-{% block content %}
+{% block group_content %}
     {% set newTopicUrl = is_granted('FORUM_GROUP_POST', group) ? (group.beWelcome ? path('forums_new') : path('group_new_post', {group_id: group.id})) : null %}
     {% if group.beWelcome %}
         {% include 'forum/_head.html.twig' with {active: 'agora', newTopicUrl: newTopicUrl} %}
         <div class="mb-3">{{ 'agoratagline'|trans|purify }}</div>
-    {% else %}
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
-            <h1 class="h3 mb-0"><a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a> – {{ 'groupdiscussions'|trans }}</h1>
-            {% if newTopicUrl %}
-                <a class="btn btn-primary" href="{{ newTopicUrl }}">{{ 'forumnewtopic'|trans }}</a>
-            {% endif %}
-        </div>
     {% endif %}
 
     {% if not canRead %}
         <p>{{ 'groupsnotpublic'|trans }}</p>
     {% else %}
         <div class="p-forum__toolbar">{% include 'forum/_search_form.html.twig' %}</div>
-        {% include 'forum/_threads.html.twig' with {threads: threads, ascending: ascending} %}
+        {% include 'forum/_threads.html.twig' with {threads: threads, ascending: ascending, showGroup: false} %}
         {% if threads.haveToPaginate %}
             <div class="u:flex u:justify-end u:my-8">
                 {{ pagerfanta(threads, 'rounded_pagination', {routeName: 'group_forum_pages', routeParams: {group_id: group.id}, pageParameter: '[page_id]'}) }}

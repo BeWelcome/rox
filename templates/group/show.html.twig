@@ -1,126 +1,114 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
-{% block content %}
+{#
+  A group's start page, laid out like an activity: the description next to the members and the admins, then
+  the latest discussions and the related groups.
+#}
+
+{% block group_content %}
     {% set isMember = membershipStatus == constant('App\\Doctrine\\GroupMembershipStatusType::CURRENT_MEMBER') %}
-    <div class="row">
-        <div class="col-12 col-md-8">
-            <div class="d-flex bg-white p-1">
-                {% if group.picture %}
-                    <img class="flex-shrink-0 me-2 mb-2 img-thumbnail" width="100" src="{{ path('group_realimg', {group_id: group.id}) }}" alt="{{ group.name }}">
-                {% endif %}
-                <div class="bg-groupheader p-1 u:break-words w-100">
-                    <h1 class="h3">{{ group.name }}</h1>
-                    {% if group.location or group.categories|length %}
-                        <p class="small mb-2">
-                            {% if group.location %}{% include 'group/_location.html.twig' with {location: group.location} %}{% endif %}
-                            {% for category in group.categories %}
-                                <span class="badge text-bg-secondary ms-1">{{ category.name(app.request.locale) }}</span>
-                            {% endfor %}
-                        </p>
-                    {% endif %}
-                    <div>{{ description|purify|nl2br }}</div>
-                    {% if is_granted('FORUM_GROUP_POST', group) %}
-                        <a href="{{ path('group_new_post', {group_id: group.id}) }}" class="btn btn-primary float-end">{{ 'forumnewtopic'|trans }}</a>
-                    {% endif %}
-                </div>
-            </div>
+    <div class="p-group-layout">
+        <section class="p-group-panel p-group-description">
+            <h2 class="p-group-panel__title">{{ 'groupdescription'|trans }}</h2>
+            <div class="p-group-description__text">{{ description|purify|nl2br }}</div>
+        </section>
 
-            <div class="w-100 mt-3">
-                <h2 class="h3">{{ 'forumrecentpostslong'|trans }}</h2>
-                {% if not canViewForum %}
-                    <p>{{ 'groupsnotpublic'|trans }}</p>
-                {% elseif threads is empty %}
-                    <p>{{ 'groupsnopostyet'|trans }}</p>
-                {% else %}
-                    <ul class="list-unstyled">
-                        {% for thread in threads %}
-                            <li class="mb-2">
-                                <a href="{{ thread.agora ? path('forum_thread', {threadId: thread.id}) : path('group_forum_thread', {group_id: group.id, thread: thread.id}) }}">{{ thread.title|striptags }}</a>
-                                <span class="small text-muted ms-2">{{ thread.lastPost.created|format_datetime('short', 'short') }} · {{ thread.lastPost.author.username }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                    <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'groupdiscussions'|trans }}</a>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="col-12 col-md-4">
+        <div class="p-group-side">
             {% if membershipStatus == constant('App\\Doctrine\\GroupMembershipStatusType::KICKED_FROM_GROUP') %}
-                <p>{{ 'groupsbanned'|trans }}</p>
+                <p class="p-group-panel p-group-notice">{{ 'groupsbanned'|trans }}</p>
             {% elseif membershipStatus == constant('App\\Doctrine\\GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP') %}
-                <p>{{ 'groupsalreadyapplied'|trans }}</p>
-            {% elseif not isMember %}
-                {% if group.type == constant('App\\Doctrine\\GroupType::NEED_ACCEPTANCE') %}
-                    <p>{{ 'groupsjoinneedaccept'|trans }}</p>
-                {% endif %}
-                {% if group.type != constant('App\\Doctrine\\GroupType::INVITE_ONLY') %}
-                    <a class="btn btn-primary w-100 mb-3" href="{{ path('join_group', {groupId: group.id}) }}">{{ 'groupsjointhegroup'|trans }}</a>
-                {% endif %}
+                <p class="p-group-panel p-group-notice">{{ 'groupsalreadyapplied'|trans }}</p>
+            {% elseif not isMember and group.type == constant('App\\Doctrine\\GroupType::NEED_ACCEPTANCE') %}
+                <p class="p-group-panel p-group-notice">{{ 'groupsjoinneedaccept'|trans }}</p>
             {% endif %}
 
-            <h2 class="h4 mb-1">{{ 'groupmembers'|trans }} <span class="small text-muted">({{ memberCount }})</span></h2>
-            <div class="row g-1 mb-2">
-                {% for membership in latestMembers %}
-                    <div class="col-3 text-center">
+            <section class="p-group-panel">
+                <h2 class="p-group-panel__title">{{ 'groupmembers'|trans }} <span class="p-group-panel__count">{{ memberCount }}</span></h2>
+                <div class="p-group-avatars">
+                    {% for membership in latestMembers %}
                         <a href="{{ path('members_profile', {username: membership.member.username}) }}" title="{{ membership.member.username }}">
-                            <img class="rounded" width="50" height="50" loading="lazy" alt="{{ membership.member.username }}"
+                            <img width="48" height="48" loading="lazy" alt="{{ membership.member.username }}"
                                  src="{{ path('avatar', {username: membership.member.username, size: 50}) }}">
                         </a>
-                    </div>
-                {% endfor %}
-            </div>
-            <a href="{{ path('group_members', {group_id: group.id}) }}" class="btn btn-outline-primary w-100 mb-3">{{ 'groupseeallmembers'|trans }}</a>
+                    {% endfor %}
+                </div>
+                <a href="{{ path('group_members', {group_id: group.id}) }}" class="p-group-btn p-group-btn--block">{{ 'groupseeallmembers'|trans }}</a>
+            </section>
 
-            <h2 class="h4">{{ 'groupadmins'|trans }}</h2>
-            <div class="row g-1">
+            <section class="p-group-panel">
+                <h2 class="p-group-panel__title">{{ 'groupadmins'|trans }}</h2>
                 {% for admin in administrators %}
-                    <div class="col-6 mb-1">
-                        <img class="rounded" width="50" height="50" loading="lazy" alt="" src="{{ path('avatar', {username: admin.username, size: 50}) }}">
-                        <br><a href="{{ path('members_profile', {username: admin.username}) }}" class="small">{{ admin.username }}</a>
-                    </div>
+                    <a class="p-group-person" href="{{ path('members_profile', {username: admin.username}) }}">
+                        <img width="40" height="40" loading="lazy" alt="" src="{{ path('avatar', {username: admin.username, size: 50}) }}">
+                        <span>{{ admin.username }}</span>
+                    </a>
                 {% else %}
-                    <p>{{ 'groupnoadmin'|trans }}</p>
+                    <p class="p-group-panel__empty">{{ 'groupnoadmin'|trans }}</p>
                 {% endfor %}
-            </div>
+            </section>
 
-            {% if is_granted('GROUP_ADMINISTER', group) %}
-                <a class="btn btn-outline-primary w-100 mt-3" href="{{ path('group_memberadministration', {group_id: group.id}) }}">{{ 'groupsadministratemembers'|trans }}</a>
-                <a class="btn btn-outline-primary w-100 mt-2" href="{{ path('group_groupsettings', {group_id: group.id}) }}">{{ 'groupsadministrategroup'|trans }}</a>
-                {% if not group.beWelcome %}
-                    <a class="btn btn-outline-danger w-100 mt-2" href="{{ path('group_delete', {group_id: group.id}) }}">{{ 'groupsdeletegroup'|trans }}</a>
-                {% endif %}
-            {% endif %}
-            {% if app.user.id in administrators|map(admin => admin.id) %}
-                <form method="post" action="{{ path('group_resignadmin', {group_id: group.id}) }}" class="mt-2"
-                      onsubmit="return confirm('{{ 'groupsconfirmresignasadmin'|trans|e('js') }}')">
-                    <input type="hidden" name="_token" value="{{ csrf_token('group-resign-' ~ group.id) }}">
-                    <button type="submit" class="btn btn-outline-secondary w-100">{{ 'group.admin.resign'|trans }}</button>
-                </form>
-            {% endif %}
-            {% if isMember %}
-                <a class="btn btn-danger w-100 mt-3" href="{{ path('group_leave', {group_id: group.id}) }}">{{ 'groupsleavethegroup'|trans }}</a>
+            {% set resign = app.user.id in administrators|map(admin => admin.id) %}
+            {% if is_granted('GROUP_ADMINISTER', group) or resign or isMember %}
+                <section class="p-group-panel p-group-tools">
+                    {% if is_granted('GROUP_ADMINISTER', group) %}
+                        <a class="p-group-btn" href="{{ path('group_memberadministration', {group_id: group.id}) }}"><i class="fas fa-users-cog" aria-hidden="true"></i> {{ 'groupsadministratemembers'|trans }}</a>
+                        <a class="p-group-btn" href="{{ path('group_groupsettings', {group_id: group.id}) }}"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'groupsadministrategroup'|trans }}</a>
+                        {% if not group.beWelcome %}
+                            <a class="p-group-btn p-group-btn--danger" href="{{ path('group_delete', {group_id: group.id}) }}"><i class="fas fa-trash" aria-hidden="true"></i> {{ 'groupsdeletegroup'|trans }}</a>
+                        {% endif %}
+                    {% endif %}
+                    {% if resign %}
+                        <form method="post" action="{{ path('group_resignadmin', {group_id: group.id}) }}"
+                              onsubmit="return confirm('{{ 'groupsconfirmresignasadmin'|trans|e('js') }}')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('group-resign-' ~ group.id) }}">
+                            <button type="submit" class="p-group-btn">{{ 'group.admin.resign'|trans }}</button>
+                        </form>
+                    {% endif %}
+                    {% if isMember %}
+                        <a class="p-group-btn p-group-btn--danger" href="{{ path('group_leave', {group_id: group.id}) }}"><i class="fas fa-right-from-bracket" aria-hidden="true"></i> {{ 'groupsleavethegroup'|trans }}</a>
+                    {% endif %}
+                </section>
             {% endif %}
         </div>
     </div>
 
+    <section class="p-group-panel">
+        <div class="p-group-panel__head">
+            <h2 class="p-group-panel__title">{{ 'forumrecentpostslong'|trans }}</h2>
+            {% if canViewForum and threads is not empty %}
+                <a class="p-group-panel__more" href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'groupdiscussions'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            {% endif %}
+        </div>
+        {% if not canViewForum %}
+            <p class="p-group-panel__empty">{{ 'groupsnotpublic'|trans }}</p>
+        {% else %}
+            <div class="c-home-list">
+                {% for thread in threads %}
+                    {% include 'forum/_thread_item.html.twig' with {thread: thread, showGroup: false} %}
+                {% else %}
+                    <p class="c-home-list__empty">{{ 'groupsnopostyet'|trans }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
     {% if relatedGroups is not empty or isMember %}
-        <div class="row mt-5">
-            <div class="col-12 col-md-8"><h2 class="h3">{{ 'relatedgroupstitle'|trans }}</h2></div>
-            <div class="col-12 col-md-4">
+        <section class="p-group-panel">
+            <div class="p-group-panel__head">
+                <h2 class="p-group-panel__title">{{ 'relatedgroupstitle'|trans }}</h2>
                 {% if isMember %}
-                    <a href="{{ path('relatedgroup_select', {group_id: group.id}) }}" class="btn btn-outline-primary w-100">{{ 'addrelatedgroupbutton'|trans }}</a>
+                    <a class="p-group-btn" href="{{ path('relatedgroup_select', {group_id: group.id}) }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'addrelatedgroupbutton'|trans }}</a>
                 {% endif %}
             </div>
-            {% for related in relatedGroups %}
-                <div class="col-12 col-md-6 col-lg-4 pt-2">
-                    <a href="{{ path('group_start', {group_id: related.id}) }}">
-                        <img class="groupimg framed me-1" width="40" height="40" alt="" loading="lazy"
+            <div class="p-group-related">
+                {% for related in relatedGroups %}
+                    <a class="p-group-person" href="{{ path('group_start', {group_id: related.id}) }}">
+                        <img width="40" height="40" alt="" loading="lazy"
                              src="{{ related.picture ? path('group_thumbimg', {group_id: related.id}) : asset('images/icons/group.png') }}">
-                        {{ related.name }}
+                        <span>{{ related.name }}</span>
                     </a>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
+        </section>
     {% endif %}
 {% endblock %}

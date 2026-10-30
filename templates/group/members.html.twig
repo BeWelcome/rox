@@ -1,9 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
-{% block content %}
+{% block group_content %}
     <div class="row">
         <div class="col">
-            <h1 class="h3">{{ 'groupsmembers'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+            <h2 class="h4">{{ 'groupsmembers'|trans }}</h2>
         </div>
     </div>
     <div class="table-responsive">

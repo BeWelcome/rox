@@ -4,7 +4,7 @@
 {% block group_content %}
 
     {% if wikipage %}
-        <div id="wiki" class="u:leading-24">{{ content | raw }}</div>
+        <div id="wiki" class="u:leading-24">{{ content|purify('wiki') }}</div>
 
         <div class="row">
             <div class="col-12 col-sm-6">

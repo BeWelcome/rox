@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 
 class NoteController extends AbstractController
 {
@@ -151,7 +152,8 @@ class NoteController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username:member}/note/delete', name: 'delete_note')]
+    #[Route(path: '/members/{username:member}/note/delete', name: 'delete_note', methods: ['POST'])]
+    #[IsCsrfTokenValid('delete_note')]
     public function delete(Request $request, Member $member): Response
     {
         /** @var Member $loggedInMember */

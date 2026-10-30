@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -483,7 +484,12 @@ class VolunteerToolController extends AbstractController
         );
     }
 
-    #[Route(path: '/admin/tools/login_message/{id}/expire', name: 'admin_tools_login_message_expire')]
+    #[Route(
+        path: '/admin/tools/login_message/{id}/expire',
+        name: 'admin_tools_login_message_expire',
+        methods: ['POST'],
+    )]
+    #[IsCsrfTokenValid('login_message_expire')]
     public function expireLoginMessage(LoginMessage $loginMessage, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted(Member::ROLE_ADMIN_ADMIN)) {

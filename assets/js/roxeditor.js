@@ -298,6 +298,7 @@ async function saveData( editor, lostFocus ) {
         form.append('language', element.dataset.language);
         form.append('username', element.dataset.username);
         form.append('content', editor.getData());
+        form.append('_token', element.dataset.updateToken);
 
         await fetch("/members/update/field", { method: 'POST', body: form })
             .then(() => {

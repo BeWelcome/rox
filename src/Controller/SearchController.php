@@ -22,6 +22,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -39,6 +40,21 @@ class SearchController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
+    }
+
+    /**
+     * The URLs of the legacy member search.
+     */
+    #[Route(path: '/search', name: 'search_legacy', methods: ['GET'])]
+    #[Route(
+        path: '/search/members/{view}',
+        name: 'search_legacy_members',
+        requirements: ['view' => 'text|map|text/advanced|map/advanced|advanced'],
+        methods: ['GET'],
+    )]
+    public function legacySearch(): RedirectResponse
+    {
+        return $this->redirectToRoute('search_locations', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     #[Route(path: '/search/locations', name: 'search_locations')]

@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 
 class FriendshipController extends AbstractController
 {
@@ -121,7 +122,8 @@ class FriendshipController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username:member}/friendship/remove', name: 'remove_friendship')]
+    #[Route(path: '/members/{username:member}/friendship/remove', name: 'remove_friendship', methods: ['POST'])]
+    #[IsCsrfTokenValid('remove_friendship')]
     public function remove(Member $member, EntityManagerInterface $entityManager): Response
     {
         /** @var Member $loggedInMember */

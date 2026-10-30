@@ -7,6 +7,12 @@ exercise_html_purifier:
                 # the charset used by the original contents
                 Core.Encoding: 'UTF-8'
                 # full configuration reference: http://htmlpurifier.org/live/configdoc/plain.html
+        # Wiki pages: the wiki markup's HTML without scripts, event handlers and the like; ids stay for the
+        # headings the table of contents links to
+        wiki:
+            config:
+                Core.Encoding: 'UTF-8'
+                Attr.EnableID: true
         # Plain text such as titles: no markup at all
         text:
             config:

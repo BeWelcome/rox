@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 
 /**
  * Class CommentController.
@@ -30,6 +31,9 @@ class CommentController extends AbstractController
     use RedirectBackTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
+
+    /** The CSRF token id of the actions on a comment (hide, show, to the safety team, checked). */
+    public const string TOKEN = 'admin_comment';
 
     /**
      * CommentController constructor.
@@ -224,7 +228,12 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/admin/comment/{to_member}/{from_member}/safetyteam', name: 'admin_comment_assign_safetyteam')]
+    #[Route(
+        path: '/admin/comment/{to_member}/{from_member}/safetyteam',
+        name: 'admin_comment_assign_safetyteam',
+        methods: ['POST'],
+    )]
+    #[IsCsrfTokenValid(self::TOKEN)]
     public function adminCommentAssignSafetyTeamAction(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
@@ -251,7 +260,12 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/admin/comment/{to_member}/{from_member}/checked', name: 'admin_comment_mark_checked')]
+    #[Route(
+        path: '/admin/comment/{to_member}/{from_member}/checked',
+        name: 'admin_comment_mark_checked',
+        methods: ['POST'],
+    )]
+    #[IsCsrfTokenValid(self::TOKEN)]
     public function adminCommentMarkChecked(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
@@ -281,7 +295,8 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/admin/comment/{to_member}/{from_member}/hide', name: 'admin_comment_hide')]
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/hide', name: 'admin_comment_hide', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
     public function adminCommentHide(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
@@ -311,7 +326,8 @@ class CommentController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/admin/comment/{to_member}/{from_member}/show', name: 'admin_comment_show')]
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/show', name: 'admin_comment_show', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
     public function adminCommentShow(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,

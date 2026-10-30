@@ -128,11 +128,15 @@
         {% do respond.message.setRendered %}
 
         {% if request.status != constant(S ~ 'REQUEST_DECLINED') %}
-            <a class="c-decide__decline-link js-respond-decline-link" href="{{ path('conversation_decline', { id: current.id }|merge(app.request.query.getBoolean('embed') ? { embed: 1 } : {})) }}" hidden>
+            <button type="submit" form="conversation-decline-{{ current.id }}" class="o-post-link__button c-decide__decline-link js-respond-decline-link" hidden>
                 {{ 'label.decline.no.message'|trans }}
-            </a>
+            </button>
         {% endif %}
     </div>
     {% do respond.update.setRendered %}
     {{ form_rest(respond) }}
 {{ form_end(respond) }}
+{# declining without a message posts its own form (the button above is in the reply form) #}
+<form id="conversation-decline-{{ current.id }}" method="post" action="{{ path('conversation_decline', { id: current.id }|merge(app.request.query.getBoolean('embed') ? { embed: 1 } : {})) }}" hidden>
+    <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\ConversationController::TOKEN')) }}">
+</form>

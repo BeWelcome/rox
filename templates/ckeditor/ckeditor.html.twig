@@ -8,7 +8,7 @@
         {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_DECOUPLED') %}
           <div id="form.vars.id ~ '_toolbar'"></div>
         {% endif %}
-        <div {{ block('widget_attributes') }} data-progress="{{ form.vars.id ~ '_progress' }}" data-editor-type="{{ editor_type }}" data-image-upload="{{ image_upload ? 'yes' : 'no' }}" data-include-reply-templates="{{ include_reply_templates ? 'yes' : 'no' }}">
+        <div {{ block('widget_attributes') }} data-progress="{{ form.vars.id ~ '_progress' }}" data-update-token="{{ csrf_token('profile_update_field') }}" data-editor-type="{{ editor_type }}" data-image-upload="{{ image_upload ? 'yes' : 'no' }}" data-include-reply-templates="{{ include_reply_templates ? 'yes' : 'no' }}">
           {{ value|raw }}
         </div>
         {% if editor_type == constant('App\\Form\\CkEditorType::EDITOR_TYPE_INLINE') %}

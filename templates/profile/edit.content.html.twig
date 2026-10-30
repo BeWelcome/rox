@@ -299,9 +299,9 @@
           <p class="p-pe-confirm__text">{{ 'profile.language.delete.blurb'|trans({language: language_name}) }}</p>
           <div class="p-pe-confirm__actions">
             <button type="button" class="p-pe-confirm__cancel" data-micromodal-close>{{ 'cancel'|trans }}</button>
-            <a class="p-pe-confirm__delete" href="{{ url('profile_delete_language', {username: member.username, language: profile_language}) }}">
-              <i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'profile.language.delete.confirm'|trans }}
-            </a>
+            {% import 'macros/post_button.html.twig' as post %}
+            {% set content %}<i class="fas fa-trash-alt" aria-hidden="true"></i> {{ 'profile.language.delete.confirm'|trans }}{% endset %}
+            {{ post.post_link(path('profile_delete_language', {username: member.username, language: profile_language}), 'profile_delete_language', 'p-pe-confirm__delete', content) }}
           </div>
         </div>
       </div>

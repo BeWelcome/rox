@@ -8,3 +8,14 @@
         <button type="submit" class="{{ class }}">{{ label|trans }}</button>
     </form>
 {% endmacro %}
+
+{#
+  An action in the place of a link: the form doesn't take part in the layout and the button looks like the link
+  its class styles. content: the button's HTML (set it with {% set %}...{% endset %}).
+#}
+{% macro post_link(url, tokenId, class, content) %}
+    <form method="post" action="{{ url }}" class="o-post-link">
+        <input type="hidden" name="_token" value="{{ csrf_token(tokenId) }}">
+        <button type="submit" class="o-post-link__button {{ class }}">{{ content }}</button>
+    </form>
+{% endmacro %}

@@ -10,7 +10,7 @@
 
     {% if wikipage %}
         <div id="wiki" class="o-text">
-            {{ content | raw }}
+            {{ content|purify('wiki') }}
         </div>
 
         <div class="row">

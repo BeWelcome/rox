@@ -6,6 +6,8 @@
 {% endblock %}
 
 {% block content %}
+    {% import 'macros/post_button.html.twig' as post %}
+    {% set token = constant('App\\Controller\\Admin\\CommentController::TOKEN') %}
     <h1>{{ headline | trans }}</h1>
     {% if comments.nbResults == 0 %}
         <p>{{ 'admin.comments.no.comments' | trans }}</p>
@@ -45,15 +47,15 @@
                         <td class="text-center">
                             <a href="{{ path('admin_comment', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-edit" title="{{ 'admin.comment.edit' | trans }}"></i></a><br/>
                             {% if comment.showToOtherMembers %}
-                                <a href="{{ path('admin_comment_hide', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-eye-slash" title="{{ 'admin.comment.hide' | trans }}"></i></a>
+                                {% set content %}<i class="fa fa-eye-slash" title="{{ 'admin.comment.hide' | trans }}"></i>{% endset %}{{ post.post_link(path('admin_comment_hide', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }), token, 'text-primary', content) }}
                             {% else %}
-                                <a href="{{ path('admin_comment_show', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-eye" title="{{ 'admin.comment.show' | trans }}"></i></a>
+                                {% set content %}<i class="fa fa-eye" title="{{ 'admin.comment.show' | trans }}"></i>{% endset %}{{ post.post_link(path('admin_comment_show', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }), token, 'text-primary', content) }}
                             {% endif %}<br>
                             {% if comment.adminaction != constant('App\\Doctrine\\CommentAdminActionType::SAFETY_TEAM_CHECK') %}
-                                <a href="{{ path('admin_comment_assign_safetyteam', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-arrow-right" title="{{ 'admin.comment.assign.safety' | trans }}"></i></a><br/>
+                                {% set content %}<i class="fa fa-arrow-right" title="{{ 'admin.comment.assign.safety' | trans }}"></i>{% endset %}{{ post.post_link(path('admin_comment_assign_safetyteam', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }), token, 'text-primary', content) }}<br/>
                             {% endif %}
                             {% if comment.adminaction != constant('App\\Doctrine\\CommentAdminActionType::ADMIN_CHECKED') %}
-                                <a href="{{ path('admin_comment_mark_checked', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }) }}"><i class="fa fa-check" title="{{ 'admin.comment.checked' | trans }}"></i></a>
+                                {% set content %}<i class="fa fa-check" title="{{ 'admin.comment.checked' | trans }}"></i>{% endset %}{{ post.post_link(path('admin_comment_mark_checked', { 'to_member' : comment.toMember.Username, 'from_member' : comment.fromMember.Username }), token, 'text-primary', content) }}
                             {% endif %}
                         </td>
                     </tr>

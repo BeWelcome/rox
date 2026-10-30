@@ -125,7 +125,7 @@ class ForumsController extends PAppController
             if (!isset($request[2])) {
                  die("Need to have a IdPost") ;
             }
-            $IdPost=$request[2] ;
+            $IdPost=(int) $request[2] ;
             if (!$this->BW_Right->HasRight("ForumModerator","Edit")) {
                  MOD_log::get()->write("Trying to edit post #".$IdPost." without proper right", "ForumModerator");
                  die("You miss right ForumModerator") ;
@@ -215,7 +215,7 @@ class ForumsController extends PAppController
                 PRequest::home();
             }
             if ((isset($request[2])) and ($request[2][0]=='u')) {
-                 $IdGroup=substr($request[2],1) ;
+                 $IdGroup=(int) substr($request[2],1) ;
             }
             else {
                 if (!isset($IdGroup)) {
@@ -257,10 +257,10 @@ class ForumsController extends PAppController
 					$this->_view->showReportList($callbackId,$DataPost);
 				}
 				else {
-					$IdPost=$request[2] ;
-					$IdWriter=$this->session->get("IdMember") ;
+					$IdPost=(int) $request[2] ;
+					$IdWriter=(int) $this->session->get("IdMember") ;
 					if ((!empty($request[3])) and ($this->BW_Right->HasRight("ForumModerator"))) {
-						$IdWriter=$request[3] ;
+						$IdWriter=(int) $request[3] ;
 					}
 
 					$DataPost=$this->_model->prepareModeratorEditPost($IdPost, $this->BW_Right->HasRight('ForumModerator')); // We will use the same data as the one used for Moderator edit
@@ -355,7 +355,7 @@ class ForumsController extends PAppController
                 PPHP::PExit();
             }
             if ($request[2]=="thread") {
-                $this->SubscribeThread($request[3]);
+                $this->SubscribeThread((int) $request[3]);
             }
             if ($request[2]=="tag") {
                 $this->SubscribeTag($request[3]);
@@ -380,13 +380,13 @@ class ForumsController extends PAppController
                     if (isset($request[3])) {
                         switch($request[3]) {
                             case 'thread':
-                                $this->EnableThread($request[4]);
+                                $this->EnableThread((int) $request[4]);
                                 break;
                             case 'tag':
                                 $this->EnableTag($request[4]);
                                 break;
                             case 'group':
-                                $this->EnableGroup($request[4]);
+                                $this->EnableGroup((int) $request[4]);
                                 break;
                         }
                     } else {
@@ -400,10 +400,10 @@ class ForumsController extends PAppController
                                 $this->DisableTag($request[4]);
                                 break;
                             case 'thread':
-                                $this->DisableThread($request[4]);
+                                $this->DisableThread((int) $request[4]);
                                 break;
                             case 'group':
-                                $this->DisableGroup($request[4]);
+                                $this->DisableGroup((int) $request[4]);
                                 break;
                         }
                     } else {
@@ -412,7 +412,7 @@ class ForumsController extends PAppController
                     break;
                 case "subscribe":
                     if (isset($request[3]) and ($request[3]=='group')) {
-                        $this->SubscribeGroup($request[4]);
+                        $this->SubscribeGroup((int) $request[4]);
                     }
                     break;
                 case "unsubscribe":
@@ -424,7 +424,7 @@ class ForumsController extends PAppController
                             $this->UnsubscribeTag($request[4],$request[5]);
                             break;
                         case 'group':
-                            $this->UnsubscribeGroup($request[4]);
+                            $this->UnsubscribeGroup((int) $request[4]);
                             break;
                     }
                     break;

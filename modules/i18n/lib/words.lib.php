@@ -951,8 +951,12 @@ WHERE
             }
         }
 
-        $IdOwner = $IdMember;
-        $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
+        // numbers only: some come from forms
+        $IdRecord = (int) $IdRecord;
+        $IdLanguage = (int) $IdLanguage;
+        $IdTrad = (int) $IdTrad;
+        $IdOwner = (int) $IdMember;
+        $IdTranslator = (int) $this->session->get('IdMember'); // the recorded translator will always be the current logged member
         $Sentence = $ss;
         $str = "insert into translations(TableColumn,IdRecord,IdLanguage,IdOwner,IdTrad,IdTranslator,Sentence,created) ";
         $str .= "Values('" . $TableColumn . "'," . $IdRecord . "," . $IdLanguage . "," . $IdOwner . "," . $IdTrad . "," . $IdTranslator . ",\"" . $Sentence . "\",now())";
@@ -988,7 +992,7 @@ WHERE
         if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
             $DefLanguage = $_POST['IdLanguage'];
         }
-        return ($DefLanguage);
+        return ((int) $DefLanguage);
     } // end of GetLanguageChoosen
 
 
@@ -1021,8 +1025,10 @@ WHERE
         if (empty($IdTrad)) {
             return ($this->InsertInFTrad($ss, $TableColumn, $IdRecord, $IdMember, $DefLanguage)); // Create a full new translation
         }
-        $IdTranslator = $this->session->get('IdMember'); // the recorded translator will always be the current logged member
-        $s = $this->_dao->query("SELECT * FROM translations WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . $DefLanguage . " /* in forum->ReplaceInFTrad */");
+        $IdTranslator = (int) $this->session->get('IdMember'); // the recorded translator will always be the current logged member
+        $IdTrad = (int) $IdTrad;
+        $IdRecord = (int) $IdRecord;
+        $s = $this->_dao->query("SELECT * FROM translations WHERE IdTrad=" . $IdTrad . " AND IdLanguage=" . (int) $DefLanguage . " /* in forum->ReplaceInFTrad */");
         if (!$s) {
             throw new PException('Failed in ReplaceInFTrad searching previous IdTrad=#' . $IdTrad . ' for IdLanguage=' . $DefLanguage);
         }

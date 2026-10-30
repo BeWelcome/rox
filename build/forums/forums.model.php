@@ -65,8 +65,18 @@ class Forums extends RoxModelBase
         if (isset($_POST['IdLanguage'])) { // This will allow to consider a Language specified in the form
             $DefLanguage = $_POST['IdLanguage'];
         }
-        return ($DefLanguage);
+        return ((int) $DefLanguage);
     } // end of GetLanguageChoosen
+
+    /**
+     * The visibilities a post or a thread can have; anything else from a form becomes MembersOnly.
+     */
+    private function cleanVisibility($visibility)
+    {
+        $visibilities = ['NoRestriction', 'MembersOnly', 'GroupOnly', 'ModeratorOnly'];
+
+        return in_array($visibility, $visibilities, true) ? $visibility : 'MembersOnly';
+    }
 
 
     /**
@@ -139,7 +149,7 @@ class Forums extends RoxModelBase
      */
     function FindAppropriatedLanguage($IdPost = 0)
     {
-        $ss = "select `IdContent` FROM `forums_posts` WHERE `id`=" . $IdPost;
+        $ss = "select `IdContent` FROM `forums_posts` WHERE `id`=" . (int) $IdPost;
         $q = $this->dao->query($ss);
         $row = $q->fetch(PDB::FETCH_OBJ);
 
@@ -152,7 +162,7 @@ class Forums extends RoxModelBase
         }
 
         // Try IdTrad with current language of the member
-        $query = "SELECT IdLanguage FROM `forum_trads` WHERE `IdTrad`=" . $IdTrad . " and `IdLanguage`=" . $this->session->get("IdLanguage");
+        $query = "SELECT IdLanguage FROM `forum_trads` WHERE `IdTrad`=" . (int) $IdTrad . " and `IdLanguage`=" . (int) $this->session->get("IdLanguage");
         $q = $this->dao->query($query);
         $row = $q->fetch(PDB::FETCH_OBJ);
         if (isset($row->IdLanguage)) {
@@ -695,6 +705,10 @@ WHERE `forums_posts`.`id` = $this->messageId
                 if (!isset($vars['PostVisibility'])) {
                     $vars['PostVisibility'] = 'MembersOnly';
                 }
+                $vars['PostVisibility'] = $this->cleanVisibility($vars['PostVisibility']);
+                if (isset($vars['ThreadVisibility'])) {
+                    $vars['ThreadVisibility'] = $this->cleanVisibility($vars['ThreadVisibility']);
+                }
 
                 $this->editPost($vars, $User->getId());
                 if ($is_topic) {
@@ -780,7 +794,7 @@ WHERE `forums_posts`.`id` = $this->messageId
             $this->ReplaceInFTrad($this->dao->escape($this->cleanupText($vars['topic_title'])), "forums_threads.IdTitle", $rBefore->threadid, $rBefore->IdTitle, $rBefore->IdWriter);
             // case the update concerns the reference language of the threads
             if ($rBefore->thread_IdFirstLanguageUsed == $this->GetLanguageChoosen()) {
-                $groupId = (isset($vars['IdGroup'])) ? $vars['IdGroup'] : 'NULL';
+                $groupId = (isset($vars['IdGroup']) && '' !== $vars['IdGroup']) ? (int) $vars['IdGroup'] : 'NULL';
                 $query = "update forums_threads set IdGroup=" . $groupId . ",title='" . $this->dao->escape($this->cleanupText($vars['topic_title'])) . "' where forums_threads.id=" . $rBefore->threadid;
                 $s = $this->dao->query($query);
             }
@@ -866,7 +880,7 @@ WHERE `id` = '%d' ",
         }
 
         $vars = &PPostHandler::getVars();
-        $IdPost = $vars['IdPost'];
+        $IdPost = (int) $vars['IdPost'];
 
         $ss = "select threadid from forums_posts where id=" . $IdPost;
         $s = $this->dao->query($ss);
@@ -882,7 +896,7 @@ WHERE `id` = '%d' ",
             $Type = 'SeeText';
         }
         if (!empty($vars['IdReporter'])) {
-            $IdReporter = $vars['IdReporter'];
+            $IdReporter = (int) $vars['IdReporter'];
         } else {
             $IdReporter = $this->session->get("IdMember");
         }
@@ -911,7 +925,7 @@ WHERE `id` = '%d' ",
                 $PostComment = $UsernameAddTime . $this->cleanupText($vars['PostComment']);
                 $ss = "
                     insert into reports_to_moderators(PostComment,created,IdPost,IdReporter,Status)
-                        values('" . $this->dao->escape($PostComment) . "',now()," . $IdPost . "," . $this->session->get("IdMember") . ",'" . $Status . "')";
+                        values('" . $this->dao->escape($PostComment) . "',now()," . $IdPost . "," . (int) $this->session->get("IdMember") . ",'" . $this->dao->escape($Status) . "')";
                 $this->dao->query($ss);
             }
         }
@@ -928,6 +942,8 @@ WHERE `id` = '%d' ",
      */
     public function GetReports($IdPost, $IdReporter = 0)
     {
+        $IdPost = (int) $IdPost;
+        $IdReporter = (int) $IdReporter;
         $tt = array();
         if (empty($IdReporter)) {
             $ss = "select reports_to_moderators.*,Username from reports_to_moderators,members where IdPost=" . $IdPost . " and members.id=IdReporter";
@@ -950,7 +966,7 @@ WHERE `id` = '%d' ",
      */
     public function prepareReportPost($IdPost, $IdWriter)
     {
-        $query = "select * from reports_to_moderators where IdPost=" . $IdPost . " and IdReporter=" . $IdWriter;
+        $query = "select * from reports_to_moderators where IdPost=" . (int) $IdPost . " and IdReporter=" . (int) $IdWriter;
         $s = $this->dao->query($query);
         $Report = $s->fetch(PDB::FETCH_OBJ);
         return ($Report);
@@ -973,7 +989,7 @@ WHERE `id` = '%d' ",
 
         $tt = array();
         if (!empty($IdMember)) {
-            $ss = $ss . " and reports_to_moderators.IdModerator=" . $IdMember;
+            $ss = $ss . " and reports_to_moderators.IdModerator=" . (int) $IdMember;
         }
         $ss = $ss . " order by reports_to_moderators.updated";
         $s = $this->dao->query($ss);
@@ -1010,6 +1026,7 @@ WHERE `id` = '%d' ",
      */
     public function prepareModeratorEditPost($IdPost, $moderator = false)
     {
+        $IdPost = (int) $IdPost;
         $DataPost = new StdClass();
         $DataPost->IdPost = $IdPost;
         $DataPost->Error = ""; // This will receive the error sentence if any
@@ -1098,10 +1115,10 @@ WHERE `id` = '%d' ",
         if (isset($vars["submit"]) and ($vars["submit"] == "update thread")) { // if an effective update was chosen for a forum trads
             $IdThread = (int)$vars["IdThread"];
             $IdGroup = (int)$vars["IdGroup"];
-            $ThreadVisibility = $vars["ThreadVisibility"];
-            $ThreadDeleted = $vars["ThreadDeleted"];
-            $WhoCanReply = $vars["WhoCanReply"];
-            $expiredate = "'" . $vars["expiredate"] . "'";
+            $ThreadVisibility = $this->cleanVisibility($vars["ThreadVisibility"]);
+            $ThreadDeleted = $this->dao->escape($vars["ThreadDeleted"]);
+            $WhoCanReply = $this->dao->escape($vars["WhoCanReply"]);
+            $expiredate = "'" . $this->dao->escape($vars["expiredate"]) . "'";
             $stickyvalue = (int)$vars["stickyvalue"];
             if (empty($expiredate)) {
                 $expiredate = "NULL";
@@ -1121,11 +1138,11 @@ WHERE `id` = '%d' ",
 
         if (isset($vars["submit"]) and ($vars["submit"] == "add translated title")) { // if a new translation is to be added for a title
             $IdThread = (int)$vars["IdThread"];
-            $qry = $this->dao->query("select * from forum_trads where IdTrad=" . $vars["IdTrad"] . " and IdLanguage=" . $vars["IdLanguage"]);
+            $qry = $this->dao->query("select * from forum_trads where IdTrad=" . (int) $vars["IdTrad"] . " and IdLanguage=" . (int) $vars["IdLanguage"]);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (empty($rr->id)) { // Only proceed if no such a title exists
-                $ss = $vars["NewTranslatedTitle"];
-                $this->InsertInFTrad($ss, "forums_threads.IdTitle", $IdThread, $this->session->get("IdMember"), $vars["IdLanguage"], $vars["IdTrad"]);
+                $ss = $this->dao->escape($vars["NewTranslatedTitle"]);
+                $this->InsertInFTrad($ss, "forums_threads.IdTitle", $IdThread, $this->session->get("IdMember"), (int) $vars["IdLanguage"], (int) $vars["IdTrad"]);
                 MOD_log::get()->write("Updating Thread=#" . $IdThread . " Adding translation for title in language=[" . $vars["IdLanguage"] . "]", "ForumModerator");
             }
         }
@@ -1133,7 +1150,7 @@ WHERE `id` = '%d' ",
         $IdPost = (int)$vars['IdPost'];
 
         if (isset($vars["submit"]) and ($vars["submit"] == "update post")) { // if an effective update was chosen for a forum trads
-            $OwnerCanStillEdit = "'" . $vars["OwnerCanStillEdit"] . "'";
+            $OwnerCanStillEdit = "'" . $this->dao->escape($vars["OwnerCanStillEdit"]) . "'";
 
             MOD_log::get()->write("Updating Post=#" . $IdPost . " Setting OwnerCanStillEdit=[" . $OwnerCanStillEdit . "]", "ForumModerator");
             $this->dao->query("update forums_posts set OwnerCanStillEdit=" . $OwnerCanStillEdit . " where id=" . $IdPost);
@@ -1141,11 +1158,11 @@ WHERE `id` = '%d' ",
 
         if (isset($vars["submit"]) and ($vars["submit"] == "add translated post")) { // if a new translation is to be added for a title
             $IdPost = (int)$vars["IdPost"];
-            $qry = $this->dao->query("select * from forum_trads where IdTrad=" . $vars["IdTrad"] . " and IdLanguage=" . $vars["IdLanguage"]);
+            $qry = $this->dao->query("select * from forum_trads where IdTrad=" . (int) $vars["IdTrad"] . " and IdLanguage=" . (int) $vars["IdLanguage"]);
             $rr = $qry->fetch(PDB::FETCH_OBJ);
             if (empty($rr->id)) { // Only proceed if no such a post exists
                 $ss = $this->dao->escape($vars["NewTranslatedPost"]);
-                $this->InsertInFTrad($ss, "forums_posts.IdContent", $IdPost, $this->session->get("IdMember"), $vars["IdLanguage"], $vars["IdTrad"]);
+                $this->InsertInFTrad($ss, "forums_posts.IdContent", $IdPost, $this->session->get("IdMember"), (int) $vars["IdLanguage"], (int) $vars["IdTrad"]);
                 MOD_log::get()->write("Updating Post=#" . $IdPost . " Adding translation for title in language=[" . $vars["IdLanguage"] . "]", "ForumModerator");
                 $this->updatePostInManticoreIndex($vars);
             }
@@ -1155,9 +1172,9 @@ WHERE `id` = '%d' ",
 
         if (isset($vars["submit"]) and ($vars["submit"] == "update post")) { // if an effective update was chosen for a forum trads
             $IdThread = (int)$vars["IdThread"];
-            $OwnerCanStillEdit = $vars["OwnerCanStillEdit"];
-            $PostVisibility = $vars["PostVisibility"];
-            $PostDeleted = $vars["PostDeleted"];
+            $OwnerCanStillEdit = $this->dao->escape($vars["OwnerCanStillEdit"]);
+            $PostVisibility = $this->cleanVisibility($vars["PostVisibility"]);
+            $PostDeleted = $this->dao->escape($vars["PostDeleted"]);
 
             MOD_log::get()->write("Updating Post=#" . $IdPost . " Setting OwnerCanStillEdit=[" . $OwnerCanStillEdit . "] PostVisibility=[" . $PostVisibility . "] PostDeleted=[" . $PostDeleted . "] ", "ForumModerator");
             $this->dao->query("update forums_posts set OwnerCanStillEdit='" . $OwnerCanStillEdit . "',PostVisibility='" . $PostVisibility . "',PostDeleted='" . $PostDeleted . "' where id=" . $IdPost);
@@ -1365,7 +1382,7 @@ WHERE `id` = '$topicinfo->threadid'
             $IdGroup = $vars['IdGroup'];
         }
         if (isset($vars['PostVisibility'])) {
-            $postVisibility = $vars['PostVisibility'];
+            $postVisibility = $vars['PostVisibility'] = $this->cleanVisibility($vars['PostVisibility']);
         } else {
             // Someone unchecked the box for group only posts
             $vars['ThreadVisibility'] = $vars['PostVisibility'] = $postVisibility = 'MembersOnly';
@@ -1438,7 +1455,7 @@ WHERE `id` = '$this->threadid'
             $IdGroup = $vars['IdGroup'];
         }
         if (isset($vars['ThreadVisibility'])) {
-            $ThreadVisibility = $vars['ThreadVisibility'];
+            $ThreadVisibility = $vars['ThreadVisibility'] = $this->cleanVisibility($vars['ThreadVisibility']);
         } else {
             // Someone unchecked the box for group only posts
             if (isset($vars['groupOnly']) && ($vars['groupOnly'] === '1')) {
@@ -1779,8 +1796,8 @@ LIMIT %d
             SET
                 notificationsEnabled = '" . ($enable ? 1 : 0) . "'
             WHERE
-            	IdGroup = " . $groupId . "
-                AND IdMember = " . $memberId . "
+            	IdGroup = " . (int) $groupId . "
+                AND IdMember = " . (int) $memberId . "
                 AND IacceptMassMailFromThisGroup = 'Yes'
         ";
         $this->dao->query($query);
@@ -2029,7 +2046,7 @@ AND IdThread=%d
         $key = MD5(rand(100000, 900000));
         $query = "INSERT INTO
                 members_threads_subscribed(IdThread,IdSubscriber,UnSubscribeKey,notificationsEnabled)
-                VALUES(" . $IdThread . "," . $this->session->get("IdMember") . ",'" . $this->dao->escape($key) . "', 1)";
+                VALUES(" . (int) $IdThread . "," . (int) $this->session->get("IdMember") . ",'" . $this->dao->escape($key) . "', 1)";
         $s = $this->dao->query($query);
         if (!$s) {
             throw new PException('Forum->SubscribeThread failed !');
@@ -2060,7 +2077,7 @@ AND IdThread=%d
                 SET
                     notificationsEnabled = '1'
                 WHERE
-                    IdThread = " . $IdThread . "
+                    IdThread = " . (int) $IdThread . "
                     AND IdSubscriber = " . $member->id;
             $this->dao->query($query);
         }
@@ -2090,7 +2107,7 @@ AND IdThread=%d
             SET
                 notificationsEnabled = '0'
             WHERE
-                IdThread = " . $IdThread . "
+                IdThread = " . (int) $IdThread . "
                 AND IdSubscriber = " . $member->id;
         $this->dao->query($query);
     } // end of DisableThread
@@ -2984,7 +3001,7 @@ class Board implements Iterator
         $wherethread = "";
 
         if (count($ids) <> 0) {
-            $wherethread = " AND `forums_threads`.`id` in ('" . implode("', '", $ids) . "') ";
+            $wherethread = " AND `forums_threads`.`id` in (" . implode(', ', array_map('intval', $ids)) . ") ";
             return $wherethread;
         }
 

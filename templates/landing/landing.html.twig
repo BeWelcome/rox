@@ -33,7 +33,14 @@
 					<div class="l-hello__where">
 						{{ form_start(searchLocation, { action: path('search_locations'), attr: { class: 'l-hello__city-form' } }) }}
 						<button type="submit" id="home_updateMap" name="home[updateMap]" class="searchsubmit l-hello__city">
-							<i class="fas fa-location-dot" aria-hidden="true"></i> {{ homeCity }}
+							{% set _homeAddress = app.user.activeAddress %}
+							{% set _homeCountry = _homeAddress and _homeAddress.location ? _homeAddress.location.countryId : null %}
+							{% if _homeCountry %}
+								<span class="c-tip" data-tip="{{ _homeAddress.location.country ? _homeAddress.location.country.name : _homeCountry }}"><span class="o-flag o-flag--{{ _homeCountry|upper }} l-hello__flag" aria-hidden="true"></span></span>
+							{% else %}
+								<i class="fas fa-location-dot" aria-hidden="true"></i>
+							{% endif %}
+							<span>{{ homeCity }}{% if _homeCountry and _homeAddress.location.country %}<span class="l-hello__country">, {{ _homeAddress.location.country.name }}</span>{% endif %}</span>
 						</button>
 						{% do searchLocation.updateMap.setRendered %}
 						<div class="d-none invisible">{{ form_rest(searchLocation) }}</div>

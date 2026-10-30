@@ -64,3 +64,6 @@ places.member.no.comments:
 places.member.age:
     - '{age, plural, one {# year} other {# years}}'
     - Age of a member on a country page, before their town, e.g. "23 years". Copy/paste the English version and translate only the words.
+places.city.clear:
+    - 'Show the whole region instead of {city}'
+    - Label (for screen readers) of the town filter of a country page, its cross goes back to the region

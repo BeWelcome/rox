@@ -7639,6 +7639,9 @@ legend.p-search-options__label { float: none; width: auto; padding: 0; }
   .p-search-card__avatar .p-search-card__host { right: -0.1rem; bottom: -0.1rem; width: 2rem; height: 2rem; font-size: 0.75rem; }
   .p-search-card .p-search-card__occupation { margin-top: 0.15rem; }
   .p-search-card__meta { font-size: 0.875rem; }
+  /* Phones: the flag says the country, the town alone fits on one line */
+  .p-search-card__country,
+  .p-pro__country-part { display: none; }
   .p-search-card__foot { align-self: start; margin-top: 0.3rem; font-size: 0.875rem; }
   .p-search-card__login-label,
   .p-search-card__activity.is-since-only { display: none; }
@@ -8158,6 +8161,9 @@ a.c-place__pager-btn:hover { border-color: #cbd5e1; background: #f8fafc; color: 
 .c-place__title { margin: 1.75rem 0 0.9rem; color: #0f172a; font-size: 1.25rem; font-weight: 700; }
 .c-place__title-place { color: #64748b; font-weight: 600; }
 .c-place__regions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.c-place__city { display: flex; margin-top: 0.9rem; }
+.c-place__city-chip { padding-right: 0.8rem; }
+.c-place__city-chip .c-place__city-clear { margin-left: 0.1rem; font-size: 0.8rem; opacity: 0.8; }
 .c-place__region {
   display: inline-flex;
   align-items: center;
@@ -8544,6 +8550,7 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   .l-hello #welcomeavatar .o-avatar__host-status svg { width: 0.75rem; }
   .l-hello__where { flex-wrap: nowrap; gap: 0.75rem; margin: 0.15rem 0 0; }
   .l-hello .l-hello__city { font-size: 0.9375rem; white-space: nowrap; }
+  .l-hello__country { display: none; }
 
   .l-hello__search { gap: 0.65rem; }
   .l-hello__search-head { flex-wrap: nowrap; gap: 0.4rem; }
@@ -9290,7 +9297,24 @@ main:has(.p-pro) { margin-top: 0 !important; background: #f4f5f7; }
 }
 /* "Berlin, Germany": no gap before the comma */
 .p-pro .p-pro__place { gap: 0.3rem 0; }
-.p-pro__place .p-pro__country { margin-left: 0.3rem; }
+.p-pro__place .p-pro__country { margin-left: 0; }
+/* The country's round flag before the town (profile head, search cards); the name is a tooltip */
+.p-pro__place { align-items: center; gap: 0.45rem; }
+.p-pro__flag.o-flag,
+.p-search-card__flag.o-flag { flex-shrink: 0; width: 1.05em; height: 1.05em; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08); vertical-align: -0.15em; }
+.p-search-card__flag.o-flag { margin-right: 0.15rem; }
+.p-pro__flag.o-flag { margin-right: 0.45rem; }
+.c-contact-stops__flag.o-flag { flex-shrink: 0; width: 1.1rem; height: 1.1rem; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08); }
+.l-hello__flag.o-flag { flex-shrink: 0; width: 1.05em; height: 1.05em; margin-right: 0; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08); vertical-align: -0.15em; }
+/* A small dark tooltip from data-tip, on screens with a mouse only (the flags: the country's name) */
+@media (hover: hover) {
+  .c-tip[data-tip] { position: relative; display: inline-flex; }
+  .c-tip[data-tip]::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 0.45rem); left: 50%; z-index: 30; width: max-content; max-width: 14rem; padding: 0.4rem 0.7rem; border-radius: 0.55rem; background: #0f172a; color: #fff; font-size: 0.8125rem; font-weight: 500; line-height: 1.3; letter-spacing: normal; text-align: center; text-transform: none; white-space: normal; box-shadow: 0 6px 20px rgba(15, 23, 42, 0.2); opacity: 0; pointer-events: none; transform: translate(-50%, 0.25rem); transition: opacity 0.15s ease, transform 0.15s ease; }
+  .c-tip[data-tip]:hover::after { opacity: 1; transform: translate(-50%, 0); }
+  /* The town line of a search card cuts its text: let the tooltip of its flag out */
+  .p-search-card__meta:has(.c-tip) { overflow: visible; }
+}
+.p-pro__place-text { min-width: 0; }
 .p-pro__trust .p-quality-pill { gap: 0.4rem; }
 /* Reply rate: a ring that fills up, the percentage and "reply" (profile/_reply_rate) */
 .c-reply-rate { --reply: #94a3b8; --reply-text: #475569; --reply-bg: #f1f5f9; position: relative; display: inline-flex; align-items: center; gap: 0.45rem; color: var(--reply-text); }
@@ -9500,11 +9524,10 @@ a.p-pro__tile--comments:hover { border-color: #e2e8f0; background: #f8fafc; }
 .p-pro-offer__text { color: #0f172a; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
 .p-pro-offer__text p { margin: 0 0 0.5rem; }
 .p-pro-offer__text p:last-child { margin-bottom: 0; }
-.p-pro-spoken__list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0; padding: 0; list-style: none; }
-.p-pro-spoken__item { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.3rem 1rem 0.3rem 0.3rem; border-radius: 999px; background: #f6f7f9; }
-.p-pro-spoken__code { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 2.05rem; height: 2.05rem; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #334155; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.02em; }
-.p-pro-spoken__name { color: #0f172a; font-size: 1rem; font-weight: 600; }
-.p-pro-spoken__level { color: #64748b; font-size: 0.875rem; }
+.p-pro-spoken__list { display: flex; flex-direction: column; gap: 0.9rem; margin: 0; padding: 0; }
+.p-pro-spoken__group { margin: 0; }
+.p-pro-spoken__level { margin: 0 0 0.15rem; color: #9a3412; font-size: 0.875rem; font-weight: 700; }
+.p-pro-spoken__names { margin: 0; color: #0f172a; font-size: 1.05rem; font-weight: 600; line-height: 1.4; }
 
 /* Accommodation: three tiles, then the details */
 .p-pro-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
@@ -9678,16 +9701,9 @@ a.p-pro-filter__item:hover { background: #fff; }
   .p-pro-about { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 5; }
   .p-pro-about { font-size: 1rem; line-height: 1.65; }
   .p-pro-about__extra { grid-template-columns: minmax(0, 1fr); gap: 1.25rem; margin-top: 1.25rem; padding-top: 1.25rem; }
-  /* Two languages a row, the level under the name: half the lines of the pills */
-  .p-pro-spoken__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; }
-  .p-pro-spoken__item { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.5rem; row-gap: 0; align-content: center; align-items: center; padding: 0.35rem 0.6rem 0.35rem 0.35rem; border-radius: 0.75rem; }
-  .p-pro-spoken__code { grid-row: span 2; width: 1.75rem; height: 1.75rem; font-size: 0.625rem; }
-  .p-pro-spoken__name,
-  .p-pro-spoken__level { overflow: hidden; line-height: 1.25; text-overflow: ellipsis; white-space: nowrap; }
-  .p-pro-spoken__name { font-size: 0.875rem; }
-  .p-pro-spoken__level { margin-top: 0.05rem; font-size: 0.75rem; }
-  .p-pro-spoken__name { align-self: end; }
-  .p-pro-spoken__level { align-self: start; }
+  .p-pro-spoken__list { gap: 0.75rem; }
+  .p-pro-spoken__level { font-size: 0.8125rem; }
+  .p-pro-spoken__names { font-size: 1rem; }
   .p-pro-about.is-open { display: block; }
   .p-pro-stats { gap: 0.45rem; }
   .p-pro-stat { padding: 0.7rem; }

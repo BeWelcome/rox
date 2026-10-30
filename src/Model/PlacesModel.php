@@ -94,6 +94,32 @@ class PlacesModel
     }
 
     /**
+     * A town of the country (a place of geonames), for the town filter of the country page.
+     *
+     * @return array{geonameId: int, name: string, regionCode: ?string, latitude: float, longitude: float}|null
+     */
+    public function getCity(int $geonameId, string $countryCode, string $locale): ?array
+    {
+        $row = $this->connection()->executeQuery("
+            SELECT g.geoname_id, g.admin_1_id, ST_Y(g.coordinates) AS latitude, ST_X(g.coordinates) AS longitude, COALESCE(t.content, g.name) AS name
+            FROM location g
+            LEFT JOIN location_translation t ON t.object_id = g.geoname_id AND t.locale = :locale AND t.field = 'name'
+            WHERE g.geoname_id = :id AND g.country_id = :country
+        ", ['id' => $geonameId, 'country' => strtoupper($countryCode), 'locale' => $locale])->fetchAssociative();
+        if (false === $row) {
+            return null;
+        }
+
+        return [
+            'geonameId' => (int) $row['geoname_id'],
+            'name' => $row['name'],
+            'regionCode' => null === $row['admin_1_id'] ? null : (string) $row['admin_1_id'],
+            'latitude' => (float) $row['latitude'],
+            'longitude' => (float) $row['longitude'],
+        ];
+    }
+
+    /**
      * Regions (first level of the country) that have members, sorted by number of members.
      *
      * @return array<string, array{code: string, name: string, count: int, geonameId: ?int, latitude: ?float, longitude: ?float}>
@@ -140,22 +166,23 @@ class PlacesModel
         return $regions;
     }
 
-    public function countMembers(string $countryCode, ?string $regionCode): int
+    public function countMembers(string $countryCode, ?string $regionCode, ?int $cityId = null): int
     {
-        [$from, $parameters, $types] = $this->membersQuery($countryCode, $regionCode);
+        [$from, $parameters, $types] = $this->membersQuery($countryCode, $regionCode, $cityId);
 
         return (int) $this->connection()->executeQuery('SELECT COUNT(DISTINCT m.id) ' . $from, $parameters, $types)->fetchOne();
     }
 
     /**
-     * One page of the members of a country (or of one of its regions): hosts first, then the most recently active.
+     * One page of the members of a country (or of one of its regions, or of one town): hosts first, then the
+     * most recently active.
      *
      * @return array{total: int, members: list<Member>}
      */
-    public function getMembers(string $countryCode, ?string $regionCode, int $page, int $perPage): array
+    public function getMembers(string $countryCode, ?string $regionCode, int $page, int $perPage, ?int $cityId = null): array
     {
-        $total = $this->countMembers($countryCode, $regionCode);
-        [$from, $parameters, $types] = $this->membersQuery($countryCode, $regionCode);
+        $total = $this->countMembers($countryCode, $regionCode, $cityId);
+        [$from, $parameters, $types] = $this->membersQuery($countryCode, $regionCode, $cityId);
 
         $ids = $this->connection()->executeQuery(
             "SELECT m.id {$from}
@@ -302,13 +329,17 @@ class PlacesModel
     /**
      * @return array{string, array<string, mixed>, array<string, ArrayParameterType>}
      */
-    private function membersQuery(string $countryCode, ?string $regionCode): array
+    private function membersQuery(string $countryCode, ?string $regionCode, ?int $cityId = null): array
     {
         $where = 'm.Status IN (:statuses) AND g.country_id = :country';
         $parameters = ['statuses' => MemberStatusType::ACTIVE_SEARCH_ARRAY, 'country' => $countryCode];
         if (null !== $regionCode) {
             $where .= ' AND g.admin_1_id = :region';
             $parameters['region'] = $regionCode;
+        }
+        if (null !== $cityId) {
+            $where .= ' AND g.geoname_id = :city';
+            $parameters['city'] = $cityId;
         }
 
         return [

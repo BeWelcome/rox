@@ -94,7 +94,7 @@
                     <a class="fp-btn fp-btn--light" href="#how">{{ 'frontpage.how'|trans }}</a>
                 </div>
                 <dl class="fp-hero__facts">
-                    <div><dt>{{ stats.members|format_number }}</dt><dd>{{ 'frontpage.fact.members'|trans }}</dd></div>
+                    <div><dt class="js-fp-count" data-count="{{ stats.members }}">{{ stats.members|format_number }}</dt><dd>{{ 'frontpage.fact.members'|trans }}</dd></div>
                     <div><dt>0 €</dt><dd>{{ 'frontpage.fact.forever'|trans }}</dd></div>
                     <div><dt>{{ 'frontpage.fact.since'|trans }}</dt><dd>{{ 'frontpage.fact.nonprofit'|trans }}</dd></div>
                 </dl>

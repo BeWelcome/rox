@@ -41,6 +41,32 @@ if (frontpageSlots.length && !window.matchMedia('(prefers-reduced-motion: reduce
     }, 2200);
 }
 
+// Front page hero: the member count runs up from 0 in two seconds once it is on screen
+const frontpageCount = document.querySelector('.js-fp-count');
+if (frontpageCount && 'IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const target = parseInt(frontpageCount.dataset.count, 10) || 0;
+    const format = new Intl.NumberFormat(document.documentElement.lang || undefined);
+    const finalText = frontpageCount.textContent;
+    frontpageCount.textContent = format.format(0);
+    const observer = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) {
+            return;
+        }
+        observer.disconnect();
+        const start = performance.now();
+        const step = function (now) {
+            const progress = Math.min((now - start) / 2000, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            frontpageCount.textContent = progress < 1 ? format.format(Math.round(target * eased)) : finalText;
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            }
+        };
+        requestAnimationFrame(step);
+    });
+    observer.observe(frontpageCount);
+}
+
 const frontpageMap = document.querySelector('.js-fp-map');
 if (frontpageMap) {
     import('./home/frontpage-map').then(({ showFrontpageMap }) => showFrontpageMap(frontpageMap));

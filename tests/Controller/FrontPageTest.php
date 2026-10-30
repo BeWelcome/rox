@@ -24,6 +24,7 @@ class FrontPageTest extends WebTestCase
         self::assertCount(1, $crawler->filter('#home-login form#home-login-form input[name="_username"]'));
         self::assertCount(1, $crawler->filter('#home-login input[name="_password"]'));
         self::assertCount(2, $crawler->filter('.fp-hero .js-fp-slot'));
+        self::assertCount(1, $crawler->filter('.fp-hero__facts .js-fp-count[data-count]'));
         self::assertCount(1, $crawler->filter('.js-fp-slot .fp-float--request.is-active'));
         self::assertCount(1, $crawler->filter('.js-fp-slot .fp-float--host.is-active'));
         self::assertGreaterThan(5, $crawler->filter('.js-fp-slot .fp-note')->count());

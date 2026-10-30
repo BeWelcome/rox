@@ -41,6 +41,8 @@ class RoxEntityFactory
         'Note'              => 'build/notify/note.entity',
         'Privilege'         => 'build/rights/privilege.entity',
         'PrivilegeScope'    => 'build/rights/privilegescope.entity',
+        'ProfileNote'       => 'build/members/profilenote.entity',
+        'ProfileVisit'      => 'build/members/profilevisit.entity',
         'Role'              => 'build/rights/role.entity',
         'RolePrivilege'     => 'build/rights/roleprivilege.entity',
         );

@@ -12,7 +12,7 @@
     <span class="p-group-card__main">
         <span class="p-group-card__name">{{ group.name }}</span>
         <span class="p-group-card__meta">
-            <span>{{ 'group.list.members'|trans({count: row.memberCount}) }}</span>
+            <span data-member-count="{{ row.memberCount }}">{{ 'group.list.members'|trans({count: row.memberCount}) }}</span>
             <span class="p-group-card__dot" aria-hidden="true">•</span>
             {% if _last == 'now'|date('Y-m-d') %}
                 <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.today'|trans }}</span>

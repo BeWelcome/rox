@@ -65,7 +65,7 @@
                             </a>
                         {% endfor %}
                         {% if _more > 0 %}
-                            <a class="p-group-stack__item p-group-stack__more" href="{{ path('group_members', {group_id: group.id}) }}">+{{ _more }}</a>
+                            <span class="p-group-stack__item p-group-stack__more">+{{ _more }}</span>
                         {% endif %}
                     </div>
                 </div>

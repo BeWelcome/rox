@@ -40,7 +40,7 @@ final class GroupPagesTest extends WebTestCase
         $crawler = $this->client->request('GET', '/groups/search');
 
         self::assertResponseIsSuccessful();
-        $names = $crawler->filter('h5 a')->each(static fn ($link) => $link->text());
+        $names = $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text());
         self::assertContains('Hiking Enthusiasts', $names);
         self::assertContains('Language Exchange', $names);
         self::assertContains('BeWelcome', $names);
@@ -51,7 +51,7 @@ final class GroupPagesTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/groups/search', ['name' => 'hiking']);
 
-        self::assertSame(['Hiking Enthusiasts'], $crawler->filter('h5 a')->each(static fn ($link) => $link->text()));
+        self::assertSame(['Hiking Enthusiasts'], $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text()));
     }
 
     public function testTheSearchFiltersByCategory(): void
@@ -63,7 +63,7 @@ final class GroupPagesTest extends WebTestCase
 
         $crawler = $this->client->request('GET', '/groups/search', ['category' => $category->getId()]);
 
-        self::assertSame(['Language Exchange'], $crawler->filter('h5 a')->each(static fn ($link) => $link->text()));
+        self::assertSame(['Language Exchange'], $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text()));
     }
 
     public function testTheLocationFilterFindsTheGroupsInPlacesWithinIt(): void
@@ -72,17 +72,17 @@ final class GroupPagesTest extends WebTestCase
         $this->entityManager->flush();
 
         $inGermany = $this->client->request('GET', '/groups/search', ['location' => self::GERMANY]);
-        self::assertSame(['Hiking Enthusiasts'], $inGermany->filter('h5 a')->each(static fn ($link) => $link->text()));
+        self::assertSame(['Hiking Enthusiasts'], $inGermany->filter('.p-group-card__name')->each(static fn ($link) => $link->text()));
 
         $inIndonesia = $this->client->request('GET', '/groups/search', ['location' => self::INDONESIA]);
-        self::assertCount(0, $inIndonesia->filter('h5 a'));
+        self::assertCount(0, $inIndonesia->filter('.p-group-card__name'));
     }
 
     public function testTheSearchOrdersByNumberOfMembers(): void
     {
         $crawler = $this->client->request('GET', '/groups/search', ['order' => 'membersdesc']);
 
-        $names = $crawler->filter('h5 a')->each(static fn ($link) => $link->text());
+        $names = $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text());
         $counts = $crawler->filter('[data-member-count]')->each(static fn ($count) => (int) $count->attr('data-member-count'));
         self::assertNotEmpty($names);
         $sorted = $counts;
@@ -113,7 +113,7 @@ final class GroupPagesTest extends WebTestCase
         $crawler = $this->client->request('GET', '/groups/mygroups');
 
         self::assertResponseIsSuccessful();
-        $names = $crawler->filter('h5 a')->each(static fn ($link) => $link->text());
+        $names = $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text());
         self::assertContains('BeWelcome', $names);
         self::assertContains('Hiking Enthusiasts', $names);
     }
@@ -137,11 +137,13 @@ final class GroupPagesTest extends WebTestCase
         $group = $this->getGroup('Hiking Enthusiasts');
         $groupUrl = '/group/' . $group->getId();
 
-        // member-2 is in the group: the menu's tabs, the description next to the members, a button for a topic
+        // member-2 is in the group: the menu's tabs, the discussions next to the members, a button for a topic
         $crawler = $this->client->request('GET', $groupUrl);
         self::assertCount(0, $crawler->filter('#sidebar'));
         self::assertSame($groupUrl, $crawler->filter('.p-group__tab.is-active')->attr('href'));
-        self::assertCount(1, $crawler->filter('.p-group-layout .p-group-description'));
+        // no description in the fixtures: no description card, the discussions in the main column
+        self::assertCount(0, $crawler->filter('.p-group-layout .p-group-description'));
+        self::assertGreaterThan(0, $crawler->filter('.p-group-main .c-home-item')->count());
         self::assertCount(1, $crawler->filter('.p-group-side a[href="' . $groupUrl . '/members"]'));
         self::assertCount(1, $crawler->filter('.p-group__actions a[href="' . $groupUrl . '/new"]'));
         self::assertCount(0, $crawler->filter('.p-group__actions a[href$="/join"]'));

@@ -111,3 +111,54 @@
   .p-group-form__card { padding: 1.1rem; }
   .p-group-form__foot .p-group-btn { flex: 1; min-width: 0; }
 }
+
+/* A group's members (group/members.html.twig): a row per member, why they joined under the name */
+.p-group-people__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.5rem; margin-top: 0.5rem; }
+.p-group-people__row { position: relative; display: flex; align-items: flex-start; gap: 0.85rem; padding: 0.85rem 0; border-bottom: 1px solid #eef0f3; }
+.p-group-people__avatar { flex-shrink: 0; width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06); }
+.p-group-people__text { flex: 1; min-width: 0; padding-top: 0.15rem; }
+.p-group-people__name,
+.p-group-people__name:hover { color: #0f172a; font-size: 0.9375rem; font-weight: 700; text-decoration: none; }
+/* The whole row opens the profile */
+.p-group-people__name::after { content: ""; position: absolute; inset: 0; }
+.p-group-people__row:hover .p-group-people__name { color: #c2410c; }
+.p-group-people__comment { display: -webkit-box; margin: 0.2rem 0 0; overflow: hidden; color: #64748b; font-size: 0.875rem; line-height: 1.45; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.p-group-people__pages { display: flex; justify-content: center; margin-top: 1.25rem; }
+
+/* A member's settings for the group: a switch per setting in a grey band */
+.p-group-switches { display: flex; flex-direction: column; overflow: hidden; border-radius: 0.9rem; background: #f8fafc; }
+.p-group-switch { display: flex; align-items: center; gap: 0.75rem; margin: 0; padding: 0.85rem 1rem; color: #0f172a; font-size: 0.9375rem; font-weight: 600; cursor: pointer; }
+.p-group-switch + .p-group-switch { border-top: 1px solid #eef0f3; }
+.p-group-switch > i, .p-group-switch > svg { flex-shrink: 0; width: 1rem; color: #94a3b8; font-size: 0.85rem; }
+.p-group-switch__text { flex: 1; min-width: 0; }
+
+/* Related groups: the buttons next to the title, the history, the groups to add or remove */
+.p-group-panel__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.p-group-log,
+.p-group-pick { margin: 0.5rem 0 0; padding: 0; list-style: none; }
+.p-group-log__row { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 0; border-bottom: 1px solid #eef0f3; }
+.p-group-log__row:last-child,
+.p-group-pick__row:last-child { border-bottom: 0; }
+.p-group-log__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 50%; background: #ecfdf5; color: #059669; font-size: 0.75rem; }
+.p-group-log__icon.is-removed { background: #fef2f2; color: #dc2626; }
+.p-group-log__text { flex: 1; min-width: 0; }
+.p-group-log__what { margin: 0; color: #334155; font-size: 0.9375rem; }
+.p-group-log__what a,
+.p-group-log__what a:hover { color: #c2410c; font-weight: 700; text-decoration: none; }
+.p-group-log__meta { margin: 0.15rem 0 0; color: #94a3b8; font-size: 0.8125rem; }
+.p-group-log__meta a,
+.p-group-log__meta a:hover { color: #475569; font-weight: 600; text-decoration: none; }
+.p-group-pick__row { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid #eef0f3; }
+.p-group-pick__row form { flex-shrink: 0; margin: 0; }
+.p-group-pick__group,
+.p-group-pick__group:hover { display: flex; align-items: center; gap: 0.75rem; min-width: 0; color: #0f172a; font-size: 0.9375rem; font-weight: 700; text-decoration: none; }
+.p-group-pick__group:hover span { color: #c2410c; }
+.p-group-pick__group img { flex-shrink: 0; width: 2.5rem; height: 2.5rem; border-radius: 0.65rem; object-fit: cover; background: #fff; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.06); }
+.p-group-pick__group span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 767.98px) {
+  .p-group-people__list { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 540px) {
+  .p-group-pick__row .p-group-btn { padding: 0.45rem 0.8rem; }
+}

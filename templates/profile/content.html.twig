@@ -336,7 +336,7 @@
       {% endif %}
 
       {# ── Groups ──────────────────────────────── #}
-      {% if member.groups|length > 0 or edit %}
+      {% if member.profileGroups|length > 0 or edit %}
       <div class="card">
         <div class="card-header u:flex u:flex-row u:justify-between">
           {{ 'profile.groups'|trans({}, "messages", profile_language)|raw }}
@@ -346,9 +346,9 @@
             <div><a href="{{ edit_link }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
           {%- endif -%}
         </div>
-        {% if member.groups|length > 0 %}
+        {% if member.profileGroups|length > 0 %}
         <div class="card-body">
-          {% for group in member.groups|slice(0, 5) %}
+          {% for group in member.profileGroups|slice(0, 5) %}
             <div class="p-sidebar-card__group-item">
               <a href="{{ url('group_start', {group_id: group.id}) }}">
                 <img width="38" height="38" alt="Group" src="{{ url('group_thumbimg', {group_id: group.id}) }}">
@@ -356,10 +356,10 @@
               <a class="p-sidebar-card__group-name" href="{{ url('group_start', {group_id: group.id}) }}">{{ group.name }}</a>
             </div>
           {% endfor %}
-          {% if member.groups|length > 5 %}
+          {% if member.profileGroups|length > 5 %}
             <a class="p-sidebar-card__more-link" href="{{ url('group_user_all', {username: member.username}) }}">
               {{ 'groupsallmylink'|trans({}, "messages", profile_language) }}
-              <span class="p-sidebar-card__count-badge">{{ member.groups|length }}</span>
+              <span class="p-sidebar-card__count-badge">{{ member.profileGroups|length }}</span>
             </a>
           {% endif %}
         </div>

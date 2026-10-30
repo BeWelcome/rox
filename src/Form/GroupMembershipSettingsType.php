@@ -31,6 +31,10 @@ class GroupMembershipSettingsType extends AbstractType
                 'label' => 'group.membership.notifications',
                 'required' => false,
             ])
+            ->add('shownOnProfile', CheckboxType::class, [
+                'label' => 'group.profile.shown',
+                'required' => false,
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'save',
                 'attr' => ['class' => 'btn btn-primary'],

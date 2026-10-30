@@ -65,6 +65,7 @@ class GroupManagementController extends AbstractController
             'comment' => $membership->getComment(),
             'acceptMassMail' => $membership->isAcceptMassMail(),
             'notificationsEnabled' => $membership->isNotificationsEnabled(),
+            'shownOnProfile' => $membership->isShownOnProfile(),
         ]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -75,6 +76,8 @@ class GroupManagementController extends AbstractController
                 (bool) $data['acceptMassMail'],
                 (bool) $data['notificationsEnabled'],
             );
+            $membership->setShownOnProfile((bool) $data['shownOnProfile']);
+            $this->entityManager->flush();
             $this->addTranslatedFlash('notice', 'GroupMemberSettingsUpdated');
             $this->logger->write("Member #{$member->getId()} changed own member settings for group #{$group->getId()}", 'Group');
 

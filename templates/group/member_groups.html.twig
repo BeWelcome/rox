@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="h3">{{ 'profile.groups'|trans }}: <a href="{{ path('members_profile', {username: member.username}) }}">{{ member.username }}</a></h1>
+    <ul class="list-unstyled" id="member-groups">
+        {% for group in groups %}
+            <li class="mb-2">
+                <a href="{{ path('group_start', {group_id: group.id}) }}">
+                    <img width="38" height="38" alt="" loading="lazy"
+                         src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+                    {{ group.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

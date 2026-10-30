@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Doctrine\GroupMembershipStatusType;
 use App\Dto\GroupSearch;
 use App\Entity\Group;
 use App\Entity\GroupCategory;
+use App\Entity\GroupMembership;
 use App\Entity\Member;
 use App\Entity\RelatedGroup;
 use App\Repository\GroupCategoryRepository;
 use App\Repository\GroupRepository;
 use App\Security\GroupVoter;
+use App\Security\MemberVoter;
 use App\Utilities\GroupSubmenuTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -20,6 +23,10 @@ use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,15 +78,45 @@ class GroupPagesController extends AbstractController
         return $this->redirectToRoute('groups_search', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
-    #[Route(path: '/groups/mygroups', name: 'groups_mygroups', methods: ['GET'])]
+    #[Route(path: '/groups/mygroups', name: 'groups_mygroups', methods: ['GET', 'POST'])]
     public function myGroups(Request $request): Response
     {
         /** @var Member $member */
         $member = $this->getUser();
         $page = max(1, $request->query->getInt('page', 1));
 
+        $profileForm = $this->createProfileGroupsForm($member);
+        $profileForm->handleRequest($request);
+        if ($profileForm->isSubmitted() && $profileForm->isValid()) {
+            $shown = array_map('intval', $profileForm->get('groups')->getData());
+            foreach ($this->getCurrentMemberships($member) as $membership) {
+                $membership->setShownOnProfile(\in_array($membership->getGroup()->getId(), $shown, true));
+            }
+            $this->entityManager->flush();
+            $this->addTranslatedFlash('notice', 'group.profile.groups.saved');
+
+            return $this->redirectToRoute('groups_mygroups');
+        }
+
         return $this->render('group/mygroups.html.twig', [
             'groups' => $this->paginate($this->getGroupRepository()->createMyGroupsQueryBuilder($member), $page, self::GROUPS_PER_PAGE),
+            'profileForm' => $profileForm,
+        ]);
+    }
+
+    /**
+     * The groups a member shows on their profile (the legacy page listed all of them).
+     */
+    #[Route(path: '/members/{username}/groups', name: 'group_user_all', methods: ['GET'])]
+    public function memberGroups(#[MapEntity(mapping: ['username' => 'username'])] Member $member): Response
+    {
+        $this->denyAccessUnlessGranted(MemberVoter::MEMBER_VIEW, $member);
+        $groups = $member->getProfileGroups();
+        usort($groups, static fn (Group $a, Group $b): int => strcasecmp($a->getName(), $b->getName()));
+
+        return $this->render('group/member_groups.html.twig', [
+            'member' => $member,
+            'groups' => $groups,
         ]);
     }
 
@@ -159,6 +196,46 @@ class GroupPagesController extends AbstractController
         #[Autowire('%group_directory%')] string $groupDirectory,
     ): BinaryFileResponse {
         return $this->pictureResponse($groupDirectory, '' === $group->getPicture() ? '' : 'thumb' . $group->getPicture());
+    }
+
+    /**
+     * Which of the member's groups their profile shows: a checkbox per group.
+     */
+    private function createProfileGroupsForm(Member $member): FormInterface
+    {
+        $choices = [];
+        $shown = [];
+        foreach ($this->getCurrentMemberships($member) as $membership) {
+            $group = $membership->getGroup();
+            $choices[$group->getName()] = $group->getId();
+            if ($membership->isShownOnProfile()) {
+                $shown[] = $group->getId();
+            }
+        }
+        ksort($choices, \SORT_NATURAL | \SORT_FLAG_CASE);
+
+        return $this->container->get('form.factory')->createNamedBuilder('profile_groups', FormType::class, ['groups' => $shown])
+            ->add('groups', ChoiceType::class, [
+                'choices' => $choices,
+                'choice_translation_domain' => false,
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
+                'label' => 'group.profile.groups',
+            ])
+            ->add('save', SubmitType::class, ['label' => 'save'])
+            ->getForm();
+    }
+
+    /**
+     * @return list<GroupMembership>
+     */
+    private function getCurrentMemberships(Member $member): array
+    {
+        return $this->entityManager->getRepository(GroupMembership::class)->findBy([
+            'member' => $member,
+            'status' => GroupMembershipStatusType::CURRENT_MEMBER,
+        ]);
     }
 
     private function pictureResponse(string $groupDirectory, string $fileName): BinaryFileResponse

@@ -12,6 +12,13 @@
         </div>
     </div>
 
+    {% if profileForm.groups.children|length > 0 %}
+        <details class="mb-3" id="profile-groups">
+            <summary>{{ 'group.profile.groups'|trans }}</summary>
+            {{ form(profileForm) }}
+        </details>
+    {% endif %}
+
     {% if groups.nbResults > 0 %}
         <div class="row">
             {% for row in groups %}

@@ -74,3 +74,12 @@ group.admin.add.failed:
 group.admin.resign:
     - 'Step down as admin'
     - Button on a group's page for its admins; the last admin of a group can't step down
+group.profile.groups:
+    - 'Groups on my profile'
+    - On the "my groups" page; opens the list of the member's groups to tick the ones their profile shows
+group.profile.groups.saved:
+    - 'Your profile shows the groups you picked.'
+    - Message after a member chose which of their groups their profile shows
+group.profile.shown:
+    - 'Show this group on my profile'
+    - Checkbox in a member's settings for a group they are in

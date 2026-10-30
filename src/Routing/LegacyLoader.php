@@ -55,7 +55,6 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forum_report_member', '/forums/reporttomod/{postId}/{memberId}');
         $this->addRouteDirectly('forum_rules', '/forums/rules');
         $this->addRouteDirectly('forum_posts_member', '/forums/member/{username}');
-        $this->addRouteDirectly('group_user_all', '/members/{username}/groups');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');
         $this->addRouteDirectly('gallery_show_user', '/gallery/show/user/{username}');

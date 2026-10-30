@@ -5,13 +5,13 @@
             <div class="o-avatar o-avatar--m o-avatar--noname  o-avatar--shadow-s u-mr-16">{{ macros.roundedavatarstack(notification.relMember.Username, 72, false) }}</div>
             <div class="u-flex u-flex-col u-h-full u-justify-center u-px-8 u-w-min-0 u-overflow-hidden">
                 {% if notification.Type == "message" %}
-                    {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.TranslationParameters)|raw }}{% endset %}
+                    {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.TranslationParameters)|purify }}{% endset %}
                 {% elseif notification.Type == "profile_comment" %}
-                    {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.relMember.Username)|raw }}{% endset %}
+                    {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.relMember.Username)|purify }}{% endset %}
                 {% else %}
-                    {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.relMember.Username)|raw }}{% endset %}
+                    {% set notificationText %}{{ notification.translationcode|lower|trans|raw|format(notification.relMember.Username)|purify }}{% endset %}
                 {% endif %}
-                <p  class="u-ellipsis"><a href="{{ notification.link }}" title="{{ notificationText }}">{{ notificationText }}</a><br>
+                <p  class="u-ellipsis"><a href="{{ notification.link }}" title="{{ notificationText|striptags }}">{{ notificationText }}</a><br>
                 <p class="u-ellipsis u-font-300 u-text-14" title="{{ notification.created|format_date('medium') }}">{{ notification.created.DiffForHumans }}</p></p>
             </div>
             <div class="ml-auto"><a class="notify" id="notify-{{ notification.id }}" href="#"><i class="fas fa-times"></i></a></div>

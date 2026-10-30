@@ -72,7 +72,8 @@
   {% endif %}
 {% endif %}
 <div id="toasts" class="bw-toasts">
-  {% for label, messages in app.flashes %}
+  {# plausible_event flashes are analytics events (_analytics.html.twig), never a message for the member #}
+  {% for label, messages in app.flashes|filter((messages, label) => label != 'plausible_event') %}
     {% for message in messages %}
       {% if label == 'success' %}{% set toastClass = 'bw-toast--success' %}{% set icon = 'fa-check-circle' %}
       {% elseif label == 'danger' or label == 'error' %}{% set toastClass = 'bw-toast--error' %}{% set icon = 'fa-exclamation-circle' %}

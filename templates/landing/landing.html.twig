@@ -187,7 +187,15 @@
                 {# How far to look: a few quick choices (landing.js reloads the list) #}
                 {% set _radius = radiusForm.radius.vars.value|default('') %}
                 <div class="c-home-radius js-trips-radius" role="group" aria-label="{{ 'trips.radius'|trans }}">
-                    <span class="c-home-radius__label"><i class="fa fa-bullseye" aria-hidden="true"></i> <span class="c-home-radius__text">{{ 'landing.visitors.within'|trans }}</span></span>
+                    {# "Near Berlin" (the member's city), else "Within" #}
+                    <span class="c-home-radius__label">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        {% if homeCity %}
+                            <span class="c-home-radius__text">{{ 'landing.visitors.near'|trans }}</span> <strong class="c-home-radius__city">{{ homeCity }}</strong>
+                        {% else %}
+                            <span class="c-home-radius__text">{{ 'landing.visitors.within'|trans }}</span>
+                        {% endif %}
+                    </span>
                     <span class="c-home-radius__options">
                         {% for choice in radiusForm.radius.vars.choices %}
                             {% if choice.value in ['20', '50', '100'] or choice.value == _radius ~ '' %}
@@ -225,7 +233,7 @@
         <div class="tab-content c-home-card__content">
             <div role="tabpanel" class="tab-pane c-home-pane active" id="groups">
                 <div id="groupsdisplay" class="c-home-list">{{ loading }}</div>
-                <div class="c-home-pane__footer c-home-pane__footer--buttons">
+                <div class="c-home-pane__footer c-home-pane__footer--buttons c-home-pane__footer--end">
                     <a class="c-home-seeall" href="/groups/mygroups">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </div>

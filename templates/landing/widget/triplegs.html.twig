@@ -1,9 +1,17 @@
 {#
-  Members travelling near the member, on the home page (loaded into the Visitors tab).
+  Members travelling near the member, on the home page (loaded into the Visitors tab):
+  the trips of the next 7 days under "This week", the others under "Later" (sorted by arrival).
 #}
 {% block content %}{# the translators' preview renders this block #}
-<div id="legsdisplay" class="c-home-list">
+{% set _weekEnd = date('+7 days')|date('Y-m-d') %}
+<div id="legsdisplay" class="c-home-list c-home-list--legs">
+    {% set _group = null %}
     {% for leg in legs %}
+        {% set _legGroup = leg.arrival|date('Y-m-d') < _weekEnd ? 'this.week' : 'later' %}
+        {% if _legGroup != _group %}
+            {% set _group = _legGroup %}
+            <p class="c-home-list__group">{{ ('landing.visitors.' ~ _group)|trans }}</p>
+        {% endif %}
         {% include 'trip/landing.html.twig' with { leg: leg } %}
     {% else %}
         <p class="c-home-list__empty">{{ 'landing.bevisited.none'|trans }}</p>

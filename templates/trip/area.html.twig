@@ -14,37 +14,48 @@
 
 {% block javascripts %}
   {{ encore_entry_script_tags('trips') }}
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const radius = document.getElementById('trips_radius');
-      if (radius) {
-        radius.addEventListener('change', function () {
-          document.getElementById('trips').requestSubmit();
-        });
-      }
-    });
-
-  </script>
 {% endblock javascripts %}
 
 {% block content %}
+{#
+  Visitors: how far to look (20, 50, 100 km of the member's city, buttons that send the
+  form), how many are coming, then the trips as on the Visitors tab of the home page
+  (trip/landing.html.twig) in one white card, under This week / Later.
+#}
+{% set _radius = radiusForm.radius.vars.value|default('') %}
+{% set _address = app.user.activeAddress %}
+{% set _city = _address is not same as(false) and _address is not null and _address.location ? _address.location.name : null %}
 <section class="p-trips__body">
   <div class="p-trips__toolbar">
     {{ form_start(radiusForm, { attr: { id: 'trips', class: 'p-trips__radius' } }) }}
-      <i class="fa fa-bullseye" aria-hidden="true"></i>
-      {{ form_label(radiusForm.radius, null, { label_attr: { class: 'p-trips__radius-label' } }) }}
-      {{ form_widget(radiusForm.radius, { attr: { class: 'p-trips__radius-select' } }) }}
+      <span class="p-trips__radius-label">{{ 'landing.visitors.within'|trans }}</span>
+      <span class="p-trips__radius-options" role="group" aria-label="{{ 'trips.radius'|trans }}">
+        {% for choice in radiusForm.radius.vars.choices %}
+          {% if choice.value in ['20', '50', '100'] or choice.value == _radius ~ '' %}
+            <button type="submit" class="p-trips__radius-option{% if choice.value == _radius ~ '' %} is-active{% endif %}" name="{{ radiusForm.radius.vars.full_name }}" value="{{ choice.value }}" aria-pressed="{{ choice.value == _radius ~ '' ? 'true' : 'false' }}">{{ choice.label|trans }}</button>
+          {% endif %}
+        {% endfor %}
+      </span>
+      {% if _city %}<span class="p-trips__radius-city">{{ 'trips.visitors.of'|trans }} <strong>{{ _city }}</strong></span>{% endif %}
+      {% do radiusForm.radius.setRendered %}
       {{ form_rest(radiusForm) }}
     {{ form_end(radiusForm) }}
     {% if legs.nbResults != 0 %}
-      <p class="p-trips__count"><i class="fa fa-users" aria-hidden="true"></i> {{ legs.nbResults }}</p>
+      <p class="p-trips__count"><strong>{{ legs.nbResults }}</strong> {{ 'trips.visitors.coming'|trans({ count: legs.nbResults }) }}</p>
     {% endif %}
   </div>
 
   {% if legs.nbResults != 0 %}
-    <div class="p-trips__list">
+    {% set _weekEnd = date('+7 days')|date('Y-m-d') %}
+    {% set _group = null %}
+    <div class="p-trips-visitors c-home-list c-home-list--legs">
       {% for leg in legs %}
-        {% include 'trip/leg.html.twig' with { leg: leg } %}
+        {% set _legGroup = leg.arrival|date('Y-m-d') < _weekEnd ? 'this.week' : 'later' %}
+        {% if _legGroup != _group %}
+          {% set _group = _legGroup %}
+          <p class="c-home-list__group">{{ ('landing.visitors.' ~ _group)|trans }}</p>
+        {% endif %}
+        {% include 'trip/landing.html.twig' with { leg: leg } %}
       {% endfor %}
     </div>
 

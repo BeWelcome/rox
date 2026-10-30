@@ -2,15 +2,20 @@
   My notes: the title with the count and "only you", a search (member or note), one pill
   per category with its count, then a card per note: the member's picture and name, the
   category and date, the note (cut, "Read more" unrolls it), edit (side panel) and delete.
+  A page of its own (not under the profile head), like the Visitors page: the notes in one white card.
 #}
-{% extends 'profile/profile.html.twig' %}
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'profile.notes.mine'|trans }}{% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
+    {# The side panel to edit a note (contact/drawer.js, started by profile.js) #}
+    {{ encore_entry_script_tags('profile/profile') }}
     {{ encore_entry_script_tags('micromodal') }}
 {% endblock javascripts %}
 
-{% block page_content %}
+{% block main %}
+  <main role="main" class="p-notes-page">
     <div class="p-notes">
         <div class="p-notes__head">
             <div>
@@ -46,7 +51,7 @@
             </nav>
         {% endif %}
 
-        <div class="p-notes__list">
+        <div class="p-notes__list{{ notes|length ? '' : ' is-empty' }}">
             {% for note in notes %}
                 {% set noted = note.member %}
                 {% set noteDate = note.updated ?: note.created %}
@@ -80,8 +85,9 @@
                 </article>
             {% else %}
                 <div class="p-notes__empty">
-                    <span class="p-pro-note__mark" aria-hidden="true"></span>
-                    <p>{{ (search or category ? 'profile.notes.none.found' : 'profile.no.notes')|trans }}</p>
+                    <span class="p-notes__empty-icon" aria-hidden="true"><i class="fas fa-lock"></i></span>
+                    <p class="p-notes__empty-title">{{ (search or category ? 'profile.notes.none.found' : 'profile.no.notes')|trans }}</p>
+                    {% if not (search or category) %}<p class="p-notes__empty-hint">{{ 'profile.notes.empty.hint'|trans }}</p>{% endif %}
                 </div>
             {% endfor %}
         </div>
@@ -111,7 +117,11 @@
         window.addEventListener('resize', check);
       });
     </script>
-{% endblock page_content %}
+
+    {% include 'conversations/_contact_drawer.html.twig' with { from: 'notes' } %}
+    {{ block('modals') }}
+  </main>
+{% endblock main %}
 
 {% block modals %}
     {% for note in notes %}

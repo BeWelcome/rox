@@ -2,7 +2,14 @@
   A short view of a member, loaded into the preview panel of the search results
   (see search/locations.js): who they are with their profile picture, hosting,
   comments, the start of "about me", their pictures and languages, the main actions and the full profile.
+  in_panel: shown alone in the side panel (search/preview_panel.html.twig, from a trip): the
+  actions open their form in the same panel and come back here (?back=), the full profile opens in the window.
+  trip_leg: opened from a stop of the member's trip: Invite to stay / Message for that stop
+  (as on the trip) instead of Request stay / Send.
 #}
+{% set _leg = trip_leg ?? null %}
+{% set _panel = in_panel ?? false %}
+{% set _panelParams = _panel ? { embed: 1, from: app.request.query.get('from') ?: 'home', back: app.request.requestUri } : {} %}
 {% set displayName = member.name is empty ? member.username : member.name %}
 {% set translations = member.translations %}
 {# "About me" in the reader's language, else in the first language the member wrote it in
@@ -101,17 +108,37 @@
         <p class="p-search-preview__reply-note">{{ 'profile.reply.rate.sentence'|trans({ percent: replyRate }) }}</p>
     {% endif %}
 
-    {% if app.user != member and member.status != 'PassedAway' %}
+    {% if _leg %}
+        {% set _lookingForHost = constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in _leg.options %}
+        {% set _invitation = _lookingForHost ? _leg.invitationBy(app.user) : null %}
+        {# Message is always there, also to agree on the dates before inviting #}
+        <div class="p-search-preview__actions">
+            {% if _lookingForHost %}
+                {% if _invitation %}
+                    <a class="p-search-preview__btn" href="{{ path('conversation_reply', { id: _invitation.messages[0].id }) }}" target="_top">
+                        <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}
+                    </a>
+                {% else %}
+                    <a class="p-search-preview__btn p-search-preview__btn--primary" href="{{ path('hosting_invitation', { leg: _leg.id }|merge(_panelParams)) }}">
+                        <i class="fas fa-house-user" aria-hidden="true"></i> {{ 'contact.trip.invite'|trans }}
+                    </a>
+                {% endif %}
+            {% endif %}
+            <a class="p-search-preview__btn" href="{{ path('message_new', { username: member.username }|merge(_panelParams)) }}">
+                <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'trip.leg.message'|trans }}
+            </a>
+        </div>
+    {% elseif app.user != member and member.status != 'PassedAway' %}
         <div class="p-search-preview__actions">
             {% if member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
-                <a class="p-search-preview__btn p-search-preview__btn--primary js-search-contact-open" href="{{ url('hosting_request', { username: member.username }) }}"
+                <a class="p-search-preview__btn p-search-preview__btn--primary{{ _panel ? '' : ' js-search-contact-open' }}" href="{{ url('hosting_request', { username: member.username }|merge(_panelParams)) }}"
                    data-title="{{ 'request.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
                     <i class="fas fa-bed" aria-hidden="true"></i> {{ 'profile.request.hosting'|trans }}
                 </a>
             {% endif %}
             {# An existing conversation opens in the panel instead of a new message #}
             {% set existingConversation = app.user ? conversation_with(member) : null %}
-            <a class="p-search-preview__btn js-search-contact-open" href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', { username: member.username }) }}"
+            <a class="p-search-preview__btn{{ _panel ? '' : ' js-search-contact-open' }}" href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }|merge(_panelParams)) : url('message_new', { username: member.username }|merge(_panelParams)) }}"
                data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
                 <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
             </a>
@@ -166,7 +193,7 @@
 </div>
 
 <div class="p-search-preview__foot">
-    <a class="p-search-preview__full" href="{{ profileUrl }}" target="_blank" rel="noopener">
+    <a class="p-search-preview__full" href="{{ profileUrl }}"{% if _panel %} target="_top"{% else %} target="_blank" rel="noopener"{% endif %}>
         {{ 'search.preview.full'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i>
     </a>
 </div>

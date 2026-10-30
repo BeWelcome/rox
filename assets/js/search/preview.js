@@ -156,6 +156,12 @@ function closePreview() {
     }
 }
 
+// The preview alone in the side panel (search/preview_panel.html.twig): Read more and the pictures
+export function initPreviewContent(root) {
+    initPreviewPhotos(root);
+    initPreviewAbout(root);
+}
+
 /**
  * Starts the member preview of the page (the .js-search-preview drawer). Links with
  * .js-search-preview-open and a data-preview URL open it. onOpen(username) runs when a

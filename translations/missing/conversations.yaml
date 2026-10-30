@@ -194,9 +194,12 @@ contact.trip.see:
 contact.head.trip:
     - 'Trip of'
     - Small label above the traveller's name at the top of the side panel showing one of their trips (home page, Visitors)
-contact.trip.profile:
-    - "See {username}'s profile"
-    - Link under the trip shown in the side panel of the home page (Visitors); opens the traveller's profile
+contact.trip.more:
+    - "More about {username}"
+    - Link under the trip shown in the side panel of the home page (Visitors); opens a short view of the traveller in the same panel
+contact.trip.back:
+    - 'Back to the trip'
+    - Label next to the back arrow at the top of the side panel showing a traveller's short profile, opened from their trip
 contact.trip.near.you:
     - 'Near you'
     - Tag on the stop of a trip that is near the member, in the side panel of the home page (Visitors)

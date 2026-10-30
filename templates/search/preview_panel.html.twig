@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+{#
+  The member preview alone in the side panel (?embed=1), opened from a trip in the panel
+  ("More about …"): the back arrow comes back to the trip (?back=), the rest is the preview
+  of the search (search/_preview.html.twig). Read more and the pictures work with search/preview.js.
+  leg: the stop of the trip it comes from; the preview then has Invite to stay / Message for that
+  stop instead of Request stay / Send.
+#}
+{% block title %}{{ member.shortNameOrUsername }}{% endblock title %}
+
+{% block content %}
+    <div class="c-contact c-contact--preview">
+        {% include 'conversations/_contact_head.html.twig' with { member: member, kind: 'preview' } %}
+        <div class="p-search-preview p-search-preview--panel js-preview-panel" aria-labelledby="search-preview-title">
+            <div class="p-search-preview__body">
+                {% include 'search/_preview.html.twig' with { in_panel: true, trip_leg: leg } %}
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}

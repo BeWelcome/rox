@@ -203,7 +203,7 @@ SQL;
             $where .= " AND geonamescountries.country='" . $IdCountry . "'";
         }
         if ($IdCity = $this->GetParam($vars, 'IdCity', 0)) {
-            $where .= ' AND geonames.geonameId=' . $IdCity;
+            $where .= ' AND geonames.geonameId=' . (int) $IdCity;
         }
         if (($g_city = $this->GetParam($vars, 'CityName', '')) || ($g_city = $this->GetParam($vars, 'CityNameOrg', ''))) {
             if ($places = $this->createEntity('Geo')->findLocationsByName($g_city)) {
@@ -220,7 +220,7 @@ SQL;
                 && intval($accuracy) > 1
                 && !isset($WhereCity)) {
 
-            list($long, $lat, $alt) = explode(',', $coordinates);
+            list($long, $lat) = array_map('floatval', array_pad(explode(',', $coordinates), 2, 0));
 
             foreach ($this->createEntity('Geo')->findLocationsByCoordinates(array('long' => $long, 'lat' => $lat)) as $geo)
             {
@@ -356,7 +356,7 @@ SQL;
             // Special case where from the quicksearch the user is looking for a username
             // in this case, if there is a username corresponding to TextToFind, we force to retrieve it
             if (($this->GetParam($vars, 'OrUsername', 0) == 1) && ($this->IdMember($TextToFind) != 0)) {
-                return "Username=' . $this->dao->escape($TextToFind) . '";
+                return "Username='" . $this->dao->escape($TextToFind) . "'";
             }
             else {
                 return "memberstrads.Sentence LIKE '%" . $this->dao->escape($TextToFind) . "%' AND memberstrads.IdOwner=members.id";
@@ -376,7 +376,7 @@ SQL;
     */
     private function generateRegionCond(&$vars) {
         if ($IdRegion = $this->GetParam($vars, 'IdRegion', '')) {
-            return "geonames.admin1 = " . $this->dao->escape($IdRegion);
+            return "geonames.admin1 = '" . $this->dao->escape($IdRegion) . "'";
         }
         return '1=1';
     }
@@ -413,13 +413,13 @@ SQL;
     private function generateAgeCond(&$vars) {
         $operation = '';
         if ($minAge = $this->GetParam($vars, 'MinimumAge', '0')) {
-            $operation .= 'members.BirthDate<=(NOW() - INTERVAL ' . $minAge . ' YEAR)'  ;
+            $operation .= 'members.BirthDate<=(NOW() - INTERVAL ' . (int) $minAge . ' YEAR)'  ;
         }
         if ($maxAge = $this->GetParam($vars, 'MaximumAge', '0')) {
             if ($operation) {
-                $operation .= 'AND members.BirthDate >= (NOW() - INTERVAL ' . $maxAge . ' YEAR)' ;
+                $operation .= ' AND members.BirthDate >= (NOW() - INTERVAL ' . (int) $maxAge . ' YEAR)' ;
             } else {
-                $operation = 'members.BirthDate >= (NOW() - INTERVAL ' . $maxAge . ' YEAR)' ;
+                $operation = 'members.BirthDate >= (NOW() - INTERVAL ' . (int) $maxAge . ' YEAR)' ;
             }
         }
         if($operation) {
@@ -439,7 +439,7 @@ SQL;
     */
     private function generateGroupCond(&$vars) {
         if ($Group = $this->GetParam($vars, 'IdGroup',0)) {
-            return 'membersgroups.IdGroup=' . $Group . "
+            return 'membersgroups.IdGroup=' . (int) $Group . "
                     AND membersgroups.Status='In'
                     AND membersgroups.IdMember=members.id";
         }
@@ -472,7 +472,7 @@ SQL;
     // Note that a numeric username is provided no Username trnslation will be made
     private function IdMember($username) {
         if (is_numeric($username)) { // if already numeric just return it
-            return ($username);
+            return ((int) $username);
         }
         $query = $this->dao->query(
            "
@@ -484,7 +484,7 @@ SELECT SQL_CACHE
 FROM
     members
 WHERE
-    Username='" . mysql_real_escape_string($username) . "'
+    Username='" . $this->dao->escape($username) . "'
             "
         );
         $rr = $query->fetch(PDB::FETCH_OBJ);

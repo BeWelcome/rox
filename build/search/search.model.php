@@ -93,6 +93,9 @@ class SearchModel extends RoxModelBase
     private function getOrderBy($orderBy, $direction)
     {
         $orderType = $orderBy - ($orderBy % 2);
+        if (!isset(self::ORDER_BY[$orderType])) {
+            $orderType = self::ORDER_ACCOM;
+        }
         if (self::ORDER_MEMBERSHIP === $orderBy) {
             $directionType = ' DESC';
         } else {
@@ -306,11 +309,11 @@ LIMIT 1
         if (!empty($adminUnits)) {
             $i = 1;
             foreach ($adminUnits as $adminUnit) {
-                $condition .= "AND g.admin_{$i}_id = '{$adminUnit}' ";
+                $condition .= "AND g.admin_{$i}_id = '" . $this->dao->escape($adminUnit) . "' ";
                 $i++;
             }
         }
-        $condition .= "AND g.country_id = '{$country}'";
+        $condition .= "AND g.country_id = '" . $this->dao->escape($country) . "'";
 
         return $condition;
     }
@@ -318,9 +321,9 @@ LIMIT 1
     private function getLocationConditionLocation($vars): string
     {
         $condition = "AND m.IdCity = g.geonameId ";
-        $distance = $vars['search-distance'];
+        $distance = (int) $vars['search-distance'];
         if ($distance > 0) {
-            $rectangle = $this->_getRectangle($vars['location-latitude'], $vars['location-longitude'], $distance);
+            $rectangle = $this->_getRectangle((float) $vars['location-latitude'], (float) $vars['location-longitude'], $distance);
             // calculate rectangle around place with given distance
             $longne = $rectangle->longne;
             $longsw = $rectangle->longsw;
@@ -331,10 +334,10 @@ LIMIT 1
             // TODO: search around the date line!
 
             // now fetch all location from geonames which are in that given rectangle
-            $condition .= "AND g.latitude BETWEEN {$latsw} AND {$latne}"
-                . "AND g.longitude BETWEEN {$longsw} AND {$longne}";
+            $condition .= 'AND g.latitude BETWEEN ' . (float) $latsw . ' AND ' . (float) $latne
+                . ' AND g.longitude BETWEEN ' . (float) $longsw . ' AND ' . (float) $longne;
         } else {
-            $condition .= " AND m.IdCity = {$vars['location-geoname-id']}";
+            $condition .= ' AND m.IdCity = ' . (int) $vars['location-geoname-id'];
         }
 
         return $condition;
@@ -364,11 +367,11 @@ LIMIT 1
         $minAge = $maxAge = null;
         $condition = "";
         if (isset($vars['search-age-minimum']) && ($vars['search-age-minimum'] != 0)) {
-            $minAge = $vars['search-age-minimum'];
+            $minAge = (int) $vars['search-age-minimum'];
             $condition .= ' AND m.BirthDate <= (NOW() - INTERVAL ' . $minAge . ' YEAR)';
         }
         if (isset($vars['search-age-maximum']) && ($vars['search-age-maximum'] != 0)) {
-            $maxAge = $vars['search-age-maximum'];
+            $maxAge = (int) $vars['search-age-maximum'];
             $condition .= ' AND m.BirthDate >= (NOW() - INTERVAL ' . $maxAge . ' YEAR)';
         }
         if (!empty($condition) && !($minAge == 18 && $maxAge == 120)) {
@@ -410,11 +413,13 @@ LIMIT 1
         $condition = "";
         if (isset($vars['search-groups'])) {
             $groups = array();
-            foreach ($vars['search-groups'] as $group) {
-                $groups[] = $group;
+            foreach ((array) $vars['search-groups'] as $group) {
+                if ((int) $group > 0) {
+                    $groups[] = (int) $group;
+                }
             }
             if (!empty($groups)) {
-                $condition = " AND mg.IdMember = m.id AND mg.IdGroup IN ('" . implode("', '", $groups) . "')";
+                $condition = " AND mg.IdMember = m.id AND mg.IdGroup IN (" . implode(', ', $groups) . ")";
             }
         }
 
@@ -426,11 +431,13 @@ LIMIT 1
         $condition = "";
         if (isset($vars['search-languages'])) {
             $languages = array();
-            foreach ($vars['search-languages'] as $language) {
-                $languages[] = $language;
+            foreach ((array) $vars['search-languages'] as $language) {
+                if ((int) $language > 0) {
+                    $languages[] = (int) $language;
+                }
             }
             if (!empty($languages)) {
-                $condition = " AND mll.IdMember = m.id AND mll.IdLanguage IN ('" . implode("', '", $languages) . "')
+                $condition = " AND mll.IdMember = m.id AND mll.IdLanguage IN (" . implode(', ', $languages) . ")
                     AND mll.Level <> 'HelloOnly'";
             }
         }
@@ -466,11 +473,11 @@ LIMIT 1
         if (isset($vars['search-restrictions'])) {
             $restrictions = [];
             $searchRestrictions = $vars['search-restrictions'];
-            foreach ($searchRestrictions as $value) {
-                if ($value='') {
+            foreach ((array) $searchRestrictions as $value) {
+                if ($value == '') {
                     continue;
                 }
-                $restrictions[] = "m.restrictions LIKE '{$value}'";
+                $restrictions[] = "m.restrictions LIKE '" . $this->dao->escape($value) . "'";
             }
             if (!empty($restrictions)) {
                 $condition = " AND ( " . implode(" AND ", $restrictions) . ") ";
@@ -761,7 +768,7 @@ LIMIT 1
         $this->profileSummaryCondition = $this->getProfileSummaryCondition($vars);
         $this->offersCondition = $this->getTypicalOfferCondition($vars);
         $this->restrictionsCondition = $this->getRestrictionsCondition($vars);
-        $this->maxGuestCondition = "m.MaxGuest >= " . $vars['search-can-host'];
+        $this->maxGuestCondition = "m.MaxGuest >= " . (int) $vars['search-can-host'];
         if (!empty($adminunits) || false !== $country) {
             $this->locationCondition = $this->getLocationConditionAdminUnit($adminUnits, $country);
         } else {
@@ -825,21 +832,24 @@ LIMIT 1
 
     private function getLimitAndOffsetExpression($vars): string
     {
-        $maxItems = $vars['search-number-items'];
-        $firstItemToShow = ($vars['search-page'] - 1) * $maxItems;
+        $maxItems = max(1, (int) $vars['search-number-items']);
+        $firstItemToShow = (max(1, (int) $vars['search-page']) - 1) * $maxItems;
         return "LIMIT {$maxItems} OFFSET {$firstItemToShow}";
     }
 
     private function getOrderByExpression($vars): string
     {
-        return $this->getOrderBy($vars['search-sort-order'], $vars['search-sort-direction']);
+        return $this->getOrderBy((int) $vars['search-sort-order'], (int) $vars['search-sort-direction']);
     }
 
     private function getDistanceExpression($vars): string
     {
+        $latitude = (float) $vars['location-latitude'];
+        $longitude = (float) $vars['location-longitude'];
+
         return
-            "((g.latitude - {$vars['location-latitude']}) * (g.latitude - {$vars['location-latitude']}) + "
-            . "(g.longitude - {$vars['location-longitude']}) * (g.longitude - {$vars['location-longitude']}))"
+            "((g.latitude - {$latitude}) * (g.latitude - {$latitude}) + "
+            . "(g.longitude - {$longitude}) * (g.longitude - {$longitude}))"
             . " AS Distance"
         ;
     }

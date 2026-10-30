@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
 {% macro action(route, group, member, token, label, class, confirm) %}
     <form method="post" action="{{ path(route, {group_id: group.id, member_id: member.id}) }}" class="d-inline"
@@ -8,10 +8,10 @@
     </form>
 {% endmacro %}
 
-{% block content %}
+{% block group_content %}
     {% import 'macros/post_button.html.twig' as button %}
     {% import _self as admin %}
-    <h1 class="h3">{{ 'groupsadministratemembers'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    <h2 class="h4">{{ 'groupsadministratemembers'|trans }}</h2>
 
     <h2 class="h4 mt-3">{{ 'groupsinvitemembers'|trans }}</h2>
     <form method="post" action="{{ path('group_invite_member', {group_id: group.id}) }}" class="d-flex gap-2 mb-3">

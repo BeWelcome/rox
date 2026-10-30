@@ -8604,13 +8604,17 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .p-trips .p-trips__title { margin: 0; color: #0f172a; font-size: 1.75rem; font-weight: 700; }
 /* Tabs underlined like the home page ones (My trips, Visitors) */
 .p-trips__tabs,
-.p-forum__tabs { display: flex; gap: 1.75rem; overflow-x: auto; border-bottom: 1px solid #e2e8f0; scrollbar-width: none; }
+.p-forum__tabs,
+.p-group__tabs { display: flex; gap: 1.75rem; overflow-x: auto; border-bottom: 1px solid #e2e8f0; scrollbar-width: none; }
 .p-trips__tabs::-webkit-scrollbar,
-.p-forum__tabs::-webkit-scrollbar { display: none; }
+.p-forum__tabs::-webkit-scrollbar,
+.p-group__tabs::-webkit-scrollbar { display: none; }
 .p-trips__tab,
 .p-trips__tab:hover,
 .p-forum__tab,
-.p-forum__tab:hover {
+.p-forum__tab:hover,
+.p-group__tab,
+.p-group__tab:hover {
   flex-shrink: 0;
   margin-bottom: -1px;
   padding: 0.6rem 0 0.7rem;
@@ -8622,11 +8626,14 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   white-space: nowrap;
 }
 .p-trips__tab:hover,
-.p-forum__tab:hover { border-bottom-color: #e2e8f0; color: #334155; }
+.p-forum__tab:hover,
+.p-group__tab:hover { border-bottom-color: #e2e8f0; color: #334155; }
 .p-trips__tab.is-active,
-.p-forum__tab.is-active { border-bottom-color: #f37000; color: #0f172a; }
+.p-forum__tab.is-active,
+.p-group__tab.is-active { border-bottom-color: #f37000; color: #0f172a; }
 .p-trips__tab:focus-visible,
-.p-forum__tab:focus-visible { outline: none; box-shadow: inset 0 -3px 0 rgba(243, 112, 0, 0.35); }
+.p-forum__tab:focus-visible,
+.p-group__tab:focus-visible { outline: none; box-shadow: inset 0 -3px 0 rgba(243, 112, 0, 0.35); }
 .p-trips__new,
 .p-trips__new:hover,
 .p-forum__new,
@@ -8665,9 +8672,66 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   font-weight: 700;
   vertical-align: 0.1rem;
 }
-.p-forum__toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 0.5rem; }
-.p-forum__search { display: flex; flex: 1; gap: 0.5rem; max-width: 32rem; margin: 0; }
-.p-forum__list { margin-bottom: 1rem; border-bottom: 1px solid #e2e8f0; }
+.p-forum__toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; }
+/* the search like the activities' one: a pill with a magnifier, the button next to it */
+.p-forum__search { position: relative; display: flex; flex: 1 1 20rem; gap: 0.6rem; min-width: 0; max-width: 36rem; margin: 0; }
+.p-forum__search-icon { position: absolute; top: 50%; left: 1rem; color: #94a3b8; transform: translateY(-50%); pointer-events: none; }
+.p-forum__search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.6rem 1rem 0.6rem 2.6rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  outline: none;
+  background: #fff;
+  color: #0f172a;
+  font-size: 0.9375rem;
+}
+.p-forum__search-input:focus { border-color: #ea7a2e; box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.12); }
+.p-forum__search-input::placeholder { color: #94a3b8; }
+.p-forum__btn,
+.p-forum__btn:hover {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background: #fff;
+  color: #334155;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+}
+.p-forum__btn:hover { border-color: #cbd5e1; background: #f8fafc; color: #0f172a; }
+.p-forum__btn--primary,
+.p-forum__btn--primary:hover { border-color: #ea7a2e; background: #ea7a2e; color: #fff; }
+.p-forum__btn--primary:hover { border-color: #d9661a; background: #d9661a; color: #fff; }
+/* each thread a white card, like the activities */
+.p-forum__list { display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 1rem; }
+.p-forum__list .c-home-item {
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-radius: 1.25rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04);
+}
+/* the forum pages have the room: titles and "last post by" wrap instead of being cut off */
+.p-forum__list .c-home-item__title,
+.p-forum__list .c-home-item__meta,
+.p-group-panel .c-home-item__title,
+.p-group-panel .c-home-item__meta { white-space: normal; overflow-wrap: anywhere; }
+.p-forum__list .c-home-list__empty { border-radius: 1.25rem; background: #fff; }
+@media (max-width: 540px) {
+  .p-forum__toolbar { flex-direction: column; align-items: stretch; }
+  .p-forum__search { flex-basis: auto; max-width: none; }
+  .p-forum__toolbar > form:not(.p-forum__search) .p-forum__btn { width: 100%; }
+  .p-forum__list .c-home-item { gap: 0.75rem; padding: 0.9rem 1rem; }
+}
 .p-trips .alert { margin-bottom: 1rem; border-radius: 0.75rem; }
 
 /* Visitors */

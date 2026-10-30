@@ -1,11 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 {% import 'forum/_macros.html.twig' as forum %}
 
-{% block content %}
+{% block group_content %}
     {% if group is null or group.beWelcome %}
         {% include 'forum/_head.html.twig' with {active: group ? 'agora' : null} %}
     {% else %}
-        <h1 class="h3">{{ 'search'|trans }}: <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+        <h2 class="h4">{{ 'search'|trans }}</h2>
     {% endif %}
     <div class="p-forum__toolbar">{% include 'forum/_search_form.html.twig' %}</div>
 

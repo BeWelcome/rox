@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 {% import 'forum/_macros.html.twig' as forum %}
 
 {% block javascripts %}
@@ -18,9 +18,10 @@
     </script>
 {% endblock %}
 
-{% block content %}
-    <h1 class="h3">{{ 'forum_edituser'|trans }}
+{% block group_content %}
+    {% set heading = submenu is defined ? 'h2' : 'h1' %}
+    <{{ heading }} class="h3">{{ 'forum_edituser'|trans }}
         {% if thread %}: <a href="{{ forum.thread_url(thread) }}#post{{ post.id }}">{{ forum.thread_title(thread, app.request.locale) }}</a>{% endif %}
-    </h1>
+    </{{ heading }}>
     {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
 {% endblock %}

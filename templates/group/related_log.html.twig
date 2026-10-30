@@ -1,7 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
-{% block content %}
-    <h1 class="h3">{{ 'administraterelatedgroupstitle'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+{% block group_content %}
+    <h2 class="h4">{{ 'administraterelatedgroupstitle'|trans }}</h2>
     {% if isMember %}
         <p>
             <a class="btn btn-outline-primary" href="{{ path('relatedgroup_select', {group_id: group.id}) }}">{{ 'addrelatedgroupbutton'|trans }}</a>

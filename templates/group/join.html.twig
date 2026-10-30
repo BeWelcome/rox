@@ -1,8 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 {% import 'macros.twig' as macros %}
 
-{% block content %}
-    <h1>{{ group.name }}</h1>
+{% block group_content %}
     <h5>{{ 'group.join.abstract' | trans }}</h5>
     {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
     {{ form_errors(form) }}
@@ -35,4 +34,4 @@
         </div>
     </div>
     {{ form_end(form) }}
-{% endblock content %}
+{% endblock group_content %}

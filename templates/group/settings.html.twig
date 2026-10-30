@@ -1,12 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
     {{ encore_entry_script_tags('groups/location') }}
 {% endblock %}
 
-{% block content %}
-    <h1 class="h3">{{ 'groupsadministrategroup'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+{% block group_content %}
+    <h2 class="h4">{{ 'groupsadministrategroup'|trans }}</h2>
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
     {{ form_row(form.description) }}
     {{ form_row(form.type) }}

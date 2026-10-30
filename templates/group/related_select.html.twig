@@ -1,7 +1,7 @@
-{% extends 'base.html.twig' %}
+{% extends 'group/layout.html.twig' %}
 
-{% block content %}
-    <h1 class="h3">{{ 'titleaddrelatedgrouptogroup'|trans }} <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+{% block group_content %}
+    <h2 class="h4">{{ 'titleaddrelatedgrouptogroup'|trans }}</h2>
     <ul class="list-unstyled">
         {% for candidate in candidates %}
             <li class="mb-2">

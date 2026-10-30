@@ -132,6 +132,43 @@ final class GroupPagesTest extends WebTestCase
         self::assertStringContainsString('Germany › Land Berlin › Berlin', $crawler->text());
     }
 
+    public function testTheGroupsMenuIsAboveThePageAndJoinIsForThoseWhoMay(): void
+    {
+        $group = $this->getGroup('Hiking Enthusiasts');
+        $groupUrl = '/group/' . $group->getId();
+
+        // member-2 is in the group: the menu's tabs, the description next to the members, a button for a topic
+        $crawler = $this->client->request('GET', $groupUrl);
+        self::assertCount(0, $crawler->filter('#sidebar'));
+        self::assertSame($groupUrl, $crawler->filter('.p-group__tab.is-active')->attr('href'));
+        self::assertCount(1, $crawler->filter('.p-group-layout .p-group-description'));
+        self::assertCount(1, $crawler->filter('.p-group-side a[href="' . $groupUrl . '/members"]'));
+        self::assertCount(1, $crawler->filter('.p-group__actions a[href="' . $groupUrl . '/new"]'));
+        self::assertCount(0, $crawler->filter('.p-group__actions a[href$="/join"]'));
+        // the threads in the group's page don't name the group again
+        self::assertGreaterThan(0, $crawler->filter('.c-home-item')->count());
+        self::assertCount(0, $crawler->filter('.c-home-item a[href="' . $groupUrl . '"]'));
+
+        $connection = $this->entityManager->getConnection();
+        $memberId = $this->getMember('member-2')->getId();
+        $connection->executeStatement(
+            'DELETE FROM group_membership WHERE group_id = ? AND member_id = ?',
+            [$group->getId(), $memberId],
+        );
+        $crawler = $this->client->request('GET', $groupUrl);
+        self::assertCount(1, $crawler->filter('.p-group__actions a[href="' . $groupUrl . '/join"]'));
+
+        // waiting to be let in: no Join
+        $connection->executeStatement(
+            "INSERT INTO group_membership (group_id, member_id, status, created, updated)
+             VALUES (?, ?, 'WantToBeIn', NOW(), NOW())",
+            [$group->getId(), $memberId],
+        );
+        $this->entityManager->clear();
+        $crawler = $this->client->request('GET', $groupUrl);
+        self::assertCount(0, $crawler->filter('.p-group__actions a'));
+    }
+
     public function testMembersOnlyGroupsHideTheirThreadsFromOtherMembers(): void
     {
         $group = $this->getGroup('Hiking Enthusiasts');

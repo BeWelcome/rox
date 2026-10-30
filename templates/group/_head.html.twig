@@ -1,0 +1,41 @@
+{#
+  The head of a group's pages: the group's picture, name, place and categories, the button to join or to start
+  a topic, and the group's menu as tabs.
+  Needs group and submenu (items, active).
+#}
+<header class="p-group__head">
+    <div class="p-group__top">
+        <img class="p-group__picture" width="64" height="64" alt="" loading="lazy"
+             src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+        <div class="p-group__titles">
+            <h1 class="p-group__title"><a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+            {% if group.location or group.categories|length %}
+                <p class="p-group__meta">
+                    {% if group.location %}
+                        <span class="p-group-chip"><i class="fas fa-location-dot" aria-hidden="true"></i> {% include 'group/_location.html.twig' with {location: group.location} %}</span>
+                    {% endif %}
+                    {% for category in group.categories %}
+                        <span class="p-group-chip">{{ category.name(app.request.locale) }}</span>
+                    {% endfor %}
+                </p>
+            {% endif %}
+        </div>
+        <div class="p-group__actions">
+            {# no Join for those banned from the group or waiting to be let in #}
+            {% set status = app.user ? group.membership(app.user).status|default(null) : null %}
+            {% set waiting = status in [constant('App\\Doctrine\\GroupMembershipStatusType::KICKED_FROM_GROUP'), constant('App\\Doctrine\\GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP')] %}
+            {% if submenu.items.join is defined and submenu.active != 'join' and not waiting and group.type != constant('App\\Doctrine\\GroupType::INVITE_ONLY') %}
+                <a class="p-group-btn p-group-btn--primary" href="{{ submenu.items.join.url }}"><i class="fas fa-user-plus" aria-hidden="true"></i> {{ submenu.items.join.key|lower|trans }}</a>
+            {% elseif is_granted('FORUM_GROUP_POST', group) %}
+                <a class="p-group-btn p-group-btn--primary" href="{{ path('group_new_post', {group_id: group.id}) }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'forumnewtopic'|trans }}</a>
+            {% endif %}
+        </div>
+    </div>
+    <nav class="p-group__tabs" aria-label="{{ group.name }}">
+        {% for name, item in submenu.items %}
+            {% if name != 'join' %}
+                <a class="p-group__tab{% if submenu.active == name %} is-active{% endif %}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>{{ item.key|lower|trans }}</a>
+            {% endif %}
+        {% endfor %}
+    </nav>
+</header>

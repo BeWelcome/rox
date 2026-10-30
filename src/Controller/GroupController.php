@@ -493,6 +493,7 @@ class GroupController extends AbstractController
 
         return $this->render('group/wiki.edit.html.twig', [
             'title' => $group->getName(),
+            'group' => $group,
             'submenu' => [
                 'active' => 'wiki',
                 'items' => $this->getSubmenuItems($member, $group),

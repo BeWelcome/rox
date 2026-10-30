@@ -7,9 +7,9 @@
     <div class="p-forum__toolbar">
         {% include 'forum/_search_form.html.twig' with {group: null} %}
         {% if onlyMyGroups %}
-            {{ button.post_button(path('forums_groups_all'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowallgroupstopics', 'btn btn-outline-primary btn-sm') }}
+            {{ button.post_button(path('forums_groups_all'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowallgroupstopics', 'p-forum__btn') }}
         {% else %}
-            {{ button.post_button(path('forums_groups_only_mine'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowonlymygroupstopics', 'btn btn-outline-primary btn-sm') }}
+            {{ button.post_button(path('forums_groups_only_mine'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowonlymygroupstopics', 'p-forum__btn') }}
         {% endif %}
     </div>
 

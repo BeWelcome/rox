@@ -7954,6 +7954,8 @@ a.c-home-item:hover .c-home-item__title,
 }
 .c-home-seeall:hover { border-color: #fdba74; background: #ffedd5; color: #9a3412; }
 .c-home-seeall i, .c-home-seeall svg { font-size: 0.85em; }
+/* Alone (My groups): a button of its own size on the right, not the whole width */
+.c-home-pane__footer--end .c-home-seeall { flex: 0 0 auto; padding-right: 1.4rem; padding-left: 1.4rem; }
 .c-home-seeall--light,
 .c-home-seeall--light:hover { border-color: #e2e8f0; background: #fff; color: #334155; }
 .c-home-seeall--light:hover { border-color: #cbd5e1; background: #f8fafc; color: #0f172a; }

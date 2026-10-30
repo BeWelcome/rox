@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet.fullscreen';
 import 'leaflet.fullscreen/Control.FullScreen.css';
 import 'leaflet/dist/leaflet.css';
+import {addPositronLayer} from './map/positron';
 
 require('leaflet-polylinedecorator');
 import {initializeMultipleAutoCompletes} from './suggest/locations';
@@ -150,12 +151,13 @@ document.addEventListener('DOMContentLoaded', function () {
         let circlesArray = [];
         let locationsArray = [];
 
-        const tripIcon = L.icon({
-            iconUrl: '/images/marker.png',
-            iconRetinaUrl: "/images/marker-2x.png",
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
+        // The stops as numbered dots, as in the itinerary
+        const stopIcon = (number) => L.divIcon({
+            className: 'c-trip-pin',
+            html: '<span>' + number + '</span>',
+            iconSize: [28, 28],
+            iconAnchor: [14, 14],
+            popupAnchor: [0, -14],
         });
 
         for (let i = 0; i < allData.length; i++) {
@@ -168,12 +170,13 @@ document.addEventListener('DOMContentLoaded', function () {
             let countryName = allData[i][3];
             let tripDate = allData[i][4];
 
-            let marker = L.marker([latitude, longitude], { icon: tripIcon }).addTo(map);
+            let marker = L.marker([latitude, longitude], { icon: stopIcon(i + 1) }).addTo(map);
             marker.bindPopup("<strong>" + location + "</strong> (" + countryName + ")<br>" + tripDate);
 
             let circle = L.circle([latitude, longitude], {
-                color: 'rgb(112,0,243)',
-                fillColor: 'rgba(112, 0, 243, 0.1)',
+                color: '#ea7a2e',
+                weight: 1.5,
+                fillColor: 'rgba(234, 122, 46, 0.08)',
                 fillOpacity: 1,
                 radius: trip.radius + .1
             }).addTo(map);
@@ -182,19 +185,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // if not own trip add circle with search radius of current member
         if (trip.own === false && typeof memberInfo !== 'undefined' && memberInfo.latitude !== null) {
-            const ownIcon = L.icon({
-                iconUrl: '/images/trip_marker.png',
-                iconRetinaUrl: "/images/trip_marker-2x.png",
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
+            // Where the member lives: a green dot
+            const ownIcon = L.divIcon({
+                className: 'c-trip-pin c-trip-pin--own',
+                iconSize: [18, 18],
+                iconAnchor: [9, 9],
+                popupAnchor: [0, -9],
             });
             const marker = L.marker([memberInfo.latitude, memberInfo.longitude], { icon: ownIcon }).addTo(map);
             marker.bindPopup("<strong>Your location</strong><br>...and search radius");
 
             L.circle([memberInfo.latitude, memberInfo.longitude], {
-                color: 'rgb(0, 184, 85)',
-                fillColor: 'rgba(0, 184, 85, 0.1)',
+                color: '#3fa75a',
+                weight: 1.5,
+                fillColor: 'rgba(63, 167, 90, 0.08)',
                 fillOpacity: 1,
                 radius: memberInfo.searchRadius * 1000
             }).addTo(map);
@@ -207,17 +211,14 @@ document.addEventListener('DOMContentLoaded', function () {
             map.setView([parseFloat(allData[0][1]), parseFloat(allData[0][2])], 12);
         }
 
-        let journey = L.polyline(locationsArray).addTo(map);
+        let journey = L.polyline(locationsArray, { color: '#ea7a2e', weight: 3, opacity: 0.85 }).addTo(map);
         var arrows = L.polylineDecorator(journey, {
             patterns: [
-                { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({ pixelSize: 15, pathOptions: { fillOpacity: 1, weight: 0 } }) }
+                { offset: 25, repeat: 50, symbol: L.Symbol.arrowHead({ pixelSize: 12, pathOptions: { color: '#ea7a2e', fillOpacity: 1, weight: 0 } }) }
             ]
         }).addTo(map);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="/about/credits#OSM">OpenStreetMap contributors</a>',
-            subdomains: ['a', 'b', 'c']
-        }).addTo(map);
+        addPositronLayer(map);
 
         // detect fullscreen toggling
         map.on('enterFullscreen', function () {

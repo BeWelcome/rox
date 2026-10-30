@@ -37,11 +37,11 @@ class LegacyLoader extends Loader
         // Handle current directory (difference between cache clear and web access)
         $projectDir = realpath(__DIR__ . '/../..');
 
-        // Include legacy routes to ensure firewall kicks in
-        require_once $projectDir . '/routes.php';
+        // Include legacy routes to ensure firewall kicks in. require, not require_once: the route cache can be
+        // rebuilt in a process that loaded the file before, and would then lack the legacy routes.
+        require $projectDir . '/routes.php';
 
         // Forum urls
-        $this->addRouteDirectly('forums_new', '/forums/new');
         $this->addRouteDirectly('forums_reverse', '/forums/reverse');
         $this->addRouteDirectly('forums_search', '/forums/search/{keyword}');
         $this->addRouteDirectly('forums_search_pages', '/forums/search/{keyword}/{page}');
@@ -54,34 +54,7 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forum_report', '/forums/reporttomod/{postId}');
         $this->addRouteDirectly('forum_report_member', '/forums/reporttomod/{postId}/{memberId}');
         $this->addRouteDirectly('forum_rules', '/forums/rules');
-        $this->addRouteDirectly('forum_edit', '/forums/edit/m{postId}');
-        $this->addRouteDirectly('forum_reply', '/forums/s{threadId}/reply');
-        $this->addRouteDirectly('forum_translate', '/forums/translate/m{postId}');
         $this->addRouteDirectly('forum_posts_member', '/forums/member/{username}');
-        $this->addRouteDirectly('forum_thread_subscription_enable', '/forums/subscriptions/enable/thread/{threadId}');
-        $this->addRouteDirectly('forum_thread_subscription_disable', '/forums/subscriptions/disable/thread/{threadId}');
-        $this->addRouteDirectly('forum_thread_subscription', '/forums/subscribe/thread/{threadId}');
-        $this->addRouteDirectly('subscriptions_disable', '/forums/subscriptions/disable');
-        $this->addRouteDirectly('subscriptions_enable', '/forums/subscriptions/enable');
-        $this->addRouteDirectly('subscriptions', '/forums/subscriptions');
-        $this->addRouteDirectly('thread_subscribe', '/forums/subscriptions/subscribe/thread/{threadId}');
-        $this->addRouteDirectly(
-            'thread_unsubscribe',
-            '/forums/subscriptions/unsubscribe/thread/{threadId}/{subscriptionId}'
-        );
-        $this->addRouteDirectly(
-            'thread_notifications_disable',
-            '/forums/subscriptions/disable/thread/{threadId}/{subscriptionId}'
-        );
-        $this->addRouteDirectly(
-            'thread_notifications_enable',
-            '/forums/subscriptions/enable/thread/{threadId}/{subscriptionId}'
-        );
-        $this->addRouteDirectly('group_notifications_enable', '/forums/subscriptions/enable/group/{groupId}');
-        $this->addRouteDirectly('group_notifications_disable', '/forums/subscriptions/disable/group/{groupId}');
-        $this->addRouteDirectly('group_subscribe', '/forums/subscriptions/subscribe/group/{groupId}');
-        $this->addRouteDirectly('group_unsubscribe', '/forums/subscriptions/unsubscribe/group/{groupId}');
-        $this->addRouteDirectly('group_new_topic', '/groups/{groupId}/forum/new');
         $this->addRouteDirectly('group_user_all', '/members/{username}/groups');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');

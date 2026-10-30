@@ -11,3 +11,27 @@ forum.show.less:
 forum.moderator.edit:
     - 'Admin edit'
     - Button on each post of a forum thread for forum moderators; opens the moderator's edit of the post
+forum.post.subscribe:
+    - 'Notify me about replies'
+    - Checkbox below a new forum thread or reply; subscribes the member to the thread
+forum.subscription.subscribed:
+    - 'You will get a mail about new replies.'
+    - Message after a member subscribed to a forum thread
+forum.subscription.unsubscribed:
+    - 'You won''t get mails about this thread any more.'
+    - Message after a member unsubscribed from a forum thread
+forum.subscription.paused:
+    - 'The notifications of this thread are off.'
+    - Message after a member switched off the notifications of a thread they subscribed to
+forum.subscription.group.off:
+    - 'You won''t get mails about this group''s forum any more.'
+    - Message after a member switched off the forum notifications of a group they are in
+forum.agora.welcome.notice:
+    - 'New members get the posts of the BeWelcome forum by mail.'
+    - Shown once, in the first forum notification a new member gets about the BeWelcome forum; followed by forum.agora.welcome.unsubscribe as a link
+forum.agora.welcome.unsubscribe:
+    - 'Stop these mails with one click.'
+    - The link in forum.agora.welcome.notice; switches off the BeWelcome forum's notifications without logging in
+forum.agora.notifications.off:
+    - 'You won''t get mails about the BeWelcome forum any more. You can switch them on again in your forum subscriptions.'
+    - Page after a member clicked the link in forum.agora.welcome.notice

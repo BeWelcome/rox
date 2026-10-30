@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="h3">{{ 'ForumNewTopic'|trans }}:
+        {% if group.beWelcome %}<a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'AgoraForum'|trans }}</a>
+        {% else %}<a href="{{ path('group_forum', {group_id: group.id}) }}">{{ group.name }}</a>{% endif %}
+    </h1>
+    {{ form(form) }}
+{% endblock %}

@@ -584,11 +584,9 @@ class ForumThread
     }
 
     /**
-     * Get idfirstlanguageused.
-     *
-     * @return int
+     * The language the thread was started in.
      */
-    public function getLanguage()
+    public function getLanguage(): ?Language
     {
         return $this->language;
     }

@@ -15,8 +15,6 @@
      */
 
     // group routes
-    $this->addRoute('group_new_post', 'group/:group_id:/new', 'GroupsController', 'newPost');
-    $this->addRoute('group_forum_action','group/:group_id:/forum/:thread:/:action:', 'GroupsController', 'forum');
     $this->addRoute('group_search_discussions','group/:group_id:/search', 'GroupsController', 'searchDiscussions');
     $this->addRoute('group_wiki','group/:group_id:/wiki', 'GroupsController', 'wiki');
 

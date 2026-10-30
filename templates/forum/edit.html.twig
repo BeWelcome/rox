@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% import 'forum/_macros.html.twig' as forum %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // another language: load the post's text in it (or nothing yet, for a translation)
+        document.addEventListener('DOMContentLoaded', () => {
+            const locale = document.getElementById('forum_post_locale');
+            if (locale) {
+                locale.addEventListener('change', () => {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('locale', locale.value);
+                    window.location.href = url.toString();
+                });
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1 class="h3">{{ 'forum_EditUser'|trans }}
+        {% if thread %}: <a href="{{ forum.thread_url(thread) }}#post{{ post.id }}">{{ forum.thread_title(thread, app.request.locale) }}</a>{% endif %}
+    </h1>
+    {{ form(form) }}
+{% endblock %}

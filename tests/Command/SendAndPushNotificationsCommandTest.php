@@ -31,6 +31,7 @@ use ReflectionProperty;
 use RuntimeException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -76,6 +77,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
             ),
             $this->createStub(UrlGeneratorInterface::class),
             $browserPushNotificationProcessor,
+            new UriSigner('test-secret'),
             10
         );
         $tester = new CommandTester($command);
@@ -158,6 +160,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
             ),
             $urlGenerator,
             $browserPushNotificationProcessor,
+            new UriSigner('test-secret'),
             10
         );
         $command->setTranslator(new Translator('en'));
@@ -210,6 +213,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
             ),
             $this->createStub(UrlGeneratorInterface::class),
             $browserPushNotificationProcessor,
+            new UriSigner('test-secret'),
             10
         );
         $tester = new CommandTester($command);
@@ -363,6 +367,7 @@ class SendAndPushNotificationsCommandTest extends TestCase
             ),
             $this->createStub(UrlGeneratorInterface::class),
             $browserPushNotificationProcessor,
+            new UriSigner('test-secret'),
             100,
         );
         $command->setTranslator(new Translator('en'));

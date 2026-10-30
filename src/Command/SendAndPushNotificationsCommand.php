@@ -5,13 +5,17 @@ namespace App\Command;
 use App\Doctrine\MemberStatusType;
 use App\Doctrine\NotificationStatusType;
 use App\Entity\ForumPost;
+use App\Entity\Group;
+use App\Entity\GroupMembership;
 use App\Entity\PostNotification;
+use App\Model\ForumModel;
 use App\Repository\PostNotificationRepository;
 use App\Service\BrowserNotificationPayload;
 use App\Service\BrowserNotificationService;
 use App\Service\BrowserPushNotificationProcessor;
 use App\Service\Mailer;
 use App\Utilities\TranslatorTrait;
+use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -21,6 +25,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Throwable;
@@ -46,6 +51,7 @@ class SendAndPushNotificationsCommand extends Command
         private BrowserNotificationService $browserNotificationService,
         private UrlGeneratorInterface $urlGenerator,
         private BrowserPushNotificationProcessor $browserPushNotificationProcessor,
+        private UriSigner $uriSigner,
         private int $batchSize,
     ) {
         parent::__construct();
@@ -96,6 +102,7 @@ class SendAndPushNotificationsCommand extends Command
                             $scheduled->getId(),
                             strrchr($sender->getAddress(), '@')
                         );
+                        $welcomeMembership = $this->getWelcomeMembership($scheduled);
                         $success = $this->mailer->sendNotificationEmail(
                             $sender,
                             $receiver,
@@ -105,10 +112,20 @@ class SendAndPushNotificationsCommand extends Command
                                 'datesent' => $scheduled->getCreated(),
                                 'messageId' => $messageId,
                                 'previousMessageIds' => $previousMessageIds,
+                                'agoraUnsubscribeUrl' => null === $welcomeMembership ? null : $this->uriSigner->sign(
+                                    $this->urlGenerator->generate(
+                                        'agora_notifications_off',
+                                        ['memberId' => $receiver->getId()],
+                                        UrlGeneratorInterface::ABSOLUTE_URL,
+                                    ),
+                                    // a link in a mail: it may be clicked much later
+                                    new DateInterval('P1Y'),
+                                ),
                             ]
                         );
                         $this->sendBrowserNotification($scheduled);
                         if ($success) {
+                            $welcomeMembership?->setWelcomeNoticeSent(true);
                             $notificationStatus = NotificationStatusType::SENT;
                             $scheduled->setMessageId($messageId);
                             $notificationReferences[$referenceKey][] = $messageId;
@@ -142,6 +159,27 @@ class SendAndPushNotificationsCommand extends Command
         }
 
         return 0;
+    }
+
+    /**
+     * The membership in the BeWelcome group a notification comes from, if the member hasn't been told yet that
+     * new members get the agora's posts and how to stop them (the first agora mail tells them).
+     */
+    private function getWelcomeMembership(PostNotification $notification): ?GroupMembership
+    {
+        if (
+            ForumModel::SUBSCRIPTION_GROUP !== $notification->getTableSubscription()
+            || !$notification->getPost()->getThread()->isAgora()
+        ) {
+            return null;
+        }
+
+        $membership = $this->entityManager->getRepository(GroupMembership::class)->findOneBy([
+            'group' => Group::BEWELCOME,
+            'member' => $notification->getReceiver(),
+        ]);
+
+        return null === $membership || $membership->isWelcomeNoticeSent() ? null : $membership;
     }
 
     private function sendBrowserNotification(PostNotification $notification): void

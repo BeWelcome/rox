@@ -38,9 +38,10 @@
         </div>
     </div>
     <div class="c-single-post-edit">
-        {% if post.author == app.user and post.ownerCanStillEdit == constant('App\\Doctrine\\PostCanStillEditType::CAN_STILL_EDIT') %}
+        {% if is_granted('FORUM_POST_EDIT', post) %}
             <div class="d-flex justify-content-end text-nowrap">
                 <a href="{{ path('forum_edit', {postId: post.id}) }}" class="btn btn-sm btn-outline-primary ms-1"><i class="fa fa-edit"></i> {{ 'forum_EditUser'|trans }}</a>
+                <a href="{{ path('forum_translate', {postId: post.id}) }}" class="btn btn-sm btn-outline-primary ms-1"><i class="fa fa-language"></i> {{ 'forum_label_lang'|trans }}</a>
             </div>
         {% endif %}
     </div>

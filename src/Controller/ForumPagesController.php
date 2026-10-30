@@ -7,6 +7,7 @@ use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Preference;
+use App\Model\ForumModel;
 use App\Repository\ForumPostRepository;
 use App\Repository\ForumThreadRepository;
 use App\Security\ForumVoter;
@@ -37,6 +38,7 @@ class ForumPagesController extends AbstractController
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly ForumModel $forumModel,
     ) {
     }
 
@@ -174,6 +176,7 @@ class ForumPagesController extends AbstractController
             'ascending' => $ascending,
             'reverse' => $reverse,
             'locale' => $request->getLocale(),
+            'subscribed' => $this->forumModel->isSubscribed($thread, $member),
         ];
         if (null !== $group && !$group->isBeWelcome()) {
             $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];

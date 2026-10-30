@@ -14,6 +14,9 @@
     {{ post.message|purify }}
 
     <hr>
+    {% if agoraUnsubscribeUrl is defined and agoraUnsubscribeUrl %}
+        <p>{{ 'forum.agora.welcome.notice'|trans }} <a href="{{ agoraUnsubscribeUrl }}">{{ 'forum.agora.welcome.unsubscribe'|trans }}</a></p>
+    {% endif %}
     <small>
     {{ 'forumunsubscribegroup'|trans }}<br>
     <a href="{{ url('forum_thread_subscription_disable', {'threadId': post.thread.id}) }}">{{ 'mailbotdisablethread'|trans }}</a><br>

@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+{% import 'forum/_macros.html.twig' as forum %}
+
+{% block content %}
+    <h1 class="h3">{{ 'ForumSubscriptions'|trans }}</h1>
+    <p>
+        <a class="btn btn-outline-secondary btn-sm" href="{{ path('subscriptions_disable') }}">{{ 'ForumDisableAllNotifications'|trans }}</a>
+        <a class="btn btn-outline-primary btn-sm" href="{{ path('subscriptions_enable') }}">{{ 'ForumEnableAllNotifications'|trans }}</a>
+    </p>
+
+    <h2 class="h4 mt-3">{{ 'ForumGroupSubscriptions'|trans }}</h2>
+    <table class="table table-striped" id="group-subscriptions">
+        <tbody>
+            {% for membership in memberships %}
+                <tr>
+                    <td><a href="{{ path('group_start', {group_id: membership.group.id}) }}">{{ membership.group.name }}</a></td>
+                    <td class="text-end">
+                        {% if membership.notificationsEnabled %}
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ path('group_notifications_disable', {groupId: membership.group.id}) }}">{{ 'ForumDisable'|trans }}</a>
+                        {% else %}
+                            <a class="btn btn-sm btn-outline-primary" href="{{ path('group_notifications_enable', {groupId: membership.group.id}) }}">{{ 'ForumEnable'|trans }}</a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td>{{ 'ForumNoGroups'|trans }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2 class="h4 mt-3">{{ 'ForumThreadSubscriptions'|trans }}</h2>
+    <table class="table table-striped" id="thread-subscriptions">
+        <tbody>
+            {% for subscription in subscriptions %}
+                {% set thread = subscription.thread %}
+                <tr>
+                    <td><a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></td>
+                    <td class="text-end">
+                        {% if subscription.notificationsEnabled %}
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ path('forum_thread_subscription_disable', {threadId: thread.id}) }}">{{ 'ForumDisable'|trans }}</a>
+                        {% else %}
+                            <a class="btn btn-sm btn-outline-primary" href="{{ path('forum_thread_subscription_enable', {threadId: thread.id}) }}">{{ 'ForumEnable'|trans }}</a>
+                        {% endif %}
+                        <a class="btn btn-sm btn-outline-danger" href="{{ path('forum_thread_unsubscribe', {threadId: thread.id}) }}">{{ 'ForumUnsubscribe'|trans }}</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td>{{ 'ForumNoThreadsSubscribed'|trans }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

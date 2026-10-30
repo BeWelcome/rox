@@ -305,7 +305,7 @@ class ForumPost
      */
     public function setLastEdittime($lastEdittime)
     {
-        $this->lastEdittime = $lastEdittime;
+        $this->updated = $lastEdittime;
 
         return $this;
     }
@@ -317,7 +317,7 @@ class ForumPost
      */
     public function getLastEdittime()
     {
-        return $this->lastEdittime;
+        return $this->updated;
     }
 
     /**

@@ -1,8 +1,109 @@
 {% extends 'group/layout.html.twig' %}
 {% import 'forum/_macros.html.twig' as forum %}
 
+{#
+  Reply to a thread. From the thread page it opens in the side panel (?embed=1, contact/drawer.js): its own
+  head ("Reply to" the thread, a close button), the editor, who can see it, the notifications, then Cancel and
+  Post reply (greyed until something is written). Once sent, the thread opens again at the new post
+  (EmbedFrameListener).
+#}
 {% block group_content %}
-    {% set heading = submenu is defined ? 'h2' : 'h1' %}
-    <{{ heading }} class="h3">{{ 'forumreply'|trans }}: <a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></{{ heading }}>
-    {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
+    {% if not app.request.query.getBoolean('embed') %}
+        {% set heading = submenu is defined ? 'h2' : 'h1' %}
+        <{{ heading }} class="h3">{{ 'forumreply'|trans }}: <a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></{{ heading }}>
+        {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
+    {% else %}
+    <div class="c-contact c-contact--forum">
+        <header class="c-contact-head">
+            <div class="c-contact-head__who">
+                <p class="c-contact-head__kind"><i class="fas fa-reply" aria-hidden="true"></i> {{ 'forum.reply.to'|trans }}</p>
+                <p class="c-contact-head__name">{{ forum.thread_title(thread, app.request.locale) }}</p>
+            </div>
+            <button type="button" class="c-contact-head__back c-contact-head__close js-forum-reply-close" aria-label="{{ 'cancel'|trans }}">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </header>
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'c-contact__form js-forum-reply-form'}}) }}
+            <div class="c-contact__body">
+                {{ form_errors(form) }}
+
+                <div class="c-contact__field c-contact__field--grow p-forum-reply__editor">
+                    <label class="visually-hidden" for="{{ form.text.vars.id }}">{{ form.text.vars.label|trans }}</label>
+                    {{ form_widget(form.text, {attr: {placeholder: 'forum.reply.placeholder'|trans}}) }}
+                    {{ form_errors(form.text) }}
+                </div>
+
+                {% if form.visibility is defined %}
+                    <div class="c-contact__field">
+                        <span class="c-contact__label">{{ 'forum.reply.who.can.see'|trans }}</span>
+                        <div class="p-forum-seg">
+                            {% for choice in form.visibility %}
+                                <input type="radio" class="p-forum-seg__input" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}"{% if choice.vars.checked %} checked{% endif %}>
+                                <label class="p-forum-seg__option" for="{{ choice.vars.id }}">
+                                    <i class="fas {{ choice.vars.value == constant('App\\Doctrine\\ForumVisibilityType::NO_RESTRICTION') or choice.vars.value == constant('App\\Doctrine\\ForumVisibilityType::MEMBERS_ONLY') ? 'fa-globe' : 'fa-lock' }}" aria-hidden="true"></i>
+                                    {{ choice.vars.label|trans }}
+                                </label>
+                                {% do choice.setRendered %}
+                            {% endfor %}
+                        </div>
+                        {{ form_errors(form.visibility) }}
+                    </div>
+                    {% do form.visibility.setRendered %}
+                {% endif %}
+
+                {% if form.subscribe is defined %}
+                    <label class="p-forum-notify" for="{{ form.subscribe.vars.id }}">
+                        <i class="fas fa-bell" aria-hidden="true"></i>
+                        <span class="p-forum-notify__text">{{ form.subscribe.vars.label|trans }}</span>
+                        <input type="checkbox" class="p-preference-toggle__input" id="{{ form.subscribe.vars.id }}" name="{{ form.subscribe.vars.full_name }}" value="{{ form.subscribe.vars.value }}"{% if form.subscribe.vars.checked %} checked{% endif %}>
+                        <span class="p-preference-toggle__track" aria-hidden="true"><span class="p-preference-toggle__thumb"></span></span>
+                    </label>
+                    {% do form.subscribe.setRendered %}
+                {% endif %}
+
+                {% do form.submit.setRendered %}
+                {{ form_rest(form) }}
+            </div>
+
+            <div class="c-contact__foot c-contact__foot--row">
+                <button type="button" class="c-contact__send c-contact__send--secondary c-contact__cancel js-forum-reply-close">{{ 'cancel'|trans }}</button>
+                <button type="submit" name="{{ form.submit.vars.full_name }}" class="c-contact__send js-forum-reply-send">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ 'forum.reply.post'|trans }}
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+    <script>
+        (function () {
+            var parentWindow = window.parent !== window ? window.parent : null;
+            if (parentWindow) {
+                // The page has its own head: the panel hides its own
+                parentWindow.postMessage({ type: 'bw-contact-ready' }, window.location.origin);
+            }
+            document.querySelectorAll('.js-forum-reply-close').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    if (parentWindow) {
+                        parentWindow.postMessage({ type: 'bw-contact-back' }, window.location.origin);
+                    } else {
+                        window.history.back();
+                    }
+                });
+            });
+            // Post reply stays greyed until something is written (text or a picture)
+            var form = document.querySelector('.js-forum-reply-form');
+            var send = form.querySelector('.js-forum-reply-send');
+            var refresh = function () {
+                var editable = form.querySelector('.ck-editor__editable');
+                var filled = editable
+                    ? editable.textContent.trim() !== '' || editable.querySelector('img') !== null
+                    : form.querySelector('textarea').value.trim() !== '';
+                send.disabled = !filled;
+            };
+            new MutationObserver(refresh).observe(form, { childList: true, characterData: true, subtree: true });
+            form.addEventListener('input', refresh);
+            refresh();
+        })();
+    </script>
+    {% endif %}
 {% endblock %}

@@ -3,7 +3,7 @@ import {createContactPanel, onContactLinkClick} from './panel';
 /*
  * The side panel of templates/conversations/_contact_drawer.html.twig: links with
  * js-contact-open (write a message, request a stay, invite) open their form in it.
- * from: "profile", "home" or "visitors" (or the drawer's data-from), tells the
+ * from: "profile", "home", "visitors" or "forum" (or the drawer's data-from), tells the
  * confirmation which way back to offer.
  */
 export function initContactDrawer(from) {

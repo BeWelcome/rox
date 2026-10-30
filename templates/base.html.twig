@@ -42,7 +42,8 @@
 {# inbox_page (messages, requests, invitations): the inbox fills the window, no footer #}
 {% set inbox_page = inbox_page ?? false %}
 <body{% if embedded or inbox_page %} class="{{ embedded ? 'is-embedded' }}{{ embedded and inbox_page ? ' ' }}{{ inbox_page ? 'is-inbox' }}"{% endif %}>
-{% set sidebar = (submenu is defined) %}
+{# No side menu in a frame (?embed=1): the page is in a side panel #}
+{% set sidebar = (submenu is defined) and not embedded %}
 {% if not embedded %}{% include 'menu.html.twig' %}{% endif %}
 {# Account not finished: a strip across the page, between the menu and the content #}
 {% if not embedded and app.user and hide_finish_setup is not defined %}

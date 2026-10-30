@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
 if (document.querySelector('.js-places-preview')) {
     import('./search/preview').then(({initMemberPreview}) => initMemberPreview());
 }
+// Forum thread: Reply opens in a side panel (templates/forum/thread.html.twig)
+if (document.querySelector('.js-contact-drawer[data-from="forum"]')) {
+    import('./contact/drawer').then(({initContactDrawer}) => initContactDrawer('forum'));
+}
 // A member's preview alone in the side panel (from a trip): Read more and the pictures
 const previewPanel = document.querySelector('.js-preview-panel');
 if (previewPanel) {

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+{% import 'forum/_macros.html.twig' as forum %}
+
+{% block content %}
+    <h1 class="h3">{{ 'forum.moderator.edit'|trans }}: <a href="{{ forum.thread_url(thread) }}#post{{ post.id }}">{{ forum.thread_title(thread, app.request.locale) }}</a></h1>
+    <p class="small">
+        <a href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>,
+        {{ post.created|format_datetime('short', 'short') }} ·
+        <a href="{{ path('forum_edit', {postId: post.id}) }}">{{ 'forum_EditUser'|trans }}</a> ·
+        <a href="{{ path('forum_translate', {postId: post.id}) }}">{{ 'forum_label_lang'|trans }}</a> ·
+        <a href="{{ path('forum_reports', {list: 'AllActiveReports'}) }}">{{ 'forum.reports.title'|trans }}</a>
+    </p>
+    <div class="border p-2 mb-3">{{ post.message|purify }}</div>
+
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <h2 class="h4">{{ 'Thread'|trans }}</h2>
+            {{ form(threadForm) }}
+        </div>
+        <div class="col-12 col-md-6">
+            <h2 class="h4">{{ 'forum.moderation.post'|trans }}</h2>
+            {{ form(postForm) }}
+        </div>
+    </div>
+
+    {% if reports is not empty %}
+        <h2 class="h4 mt-3">{{ 'forum.reports.title'|trans }}</h2>
+        <ul id="post-reports">
+            {% for report in reports %}
+                <li>
+                    <a href="{{ path('forum_report_member', {postId: post.id, memberId: report.reporter.id}) }}">{{ report.reporter.username }}</a>
+                    ({{ ('forum.report.status.' ~ (report.status == 'OnDiscussion' ? 'discussion' : report.status|lower))|trans }})
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

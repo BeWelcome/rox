@@ -2,11 +2,11 @@
 {% import 'forum/_macros.html.twig' as forum %}
 
 {% block content %}
-    {% import 'macros/post_button.html.twig' as post %}
+    {% import 'macros/post_button.html.twig' as button %}
     <h1 class="h3">{{ 'ForumSubscriptions'|trans }}</h1>
     <p>
-        {{ post.post_button(path('subscriptions_disable'), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumDisableAllNotifications', 'btn btn-outline-secondary btn-sm') }}
-        {{ post.post_button(path('subscriptions_enable'), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumEnableAllNotifications', 'btn btn-outline-primary btn-sm') }}
+        {{ button.post_button(path('subscriptions_disable'), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumDisableAllNotifications', 'btn btn-outline-secondary btn-sm') }}
+        {{ button.post_button(path('subscriptions_enable'), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumEnableAllNotifications', 'btn btn-outline-primary btn-sm') }}
     </p>
 
     <h2 class="h4 mt-3">{{ 'ForumGroupSubscriptions'|trans }}</h2>
@@ -17,9 +17,9 @@
                     <td><a href="{{ path('group_start', {group_id: membership.group.id}) }}">{{ membership.group.name }}</a></td>
                     <td class="text-end">
                         {% if membership.notificationsEnabled %}
-                            {{ post.post_button(path('group_notifications_disable', {groupId: membership.group.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumDisable', 'btn btn-sm btn-outline-secondary') }}
+                            {{ button.post_button(path('group_notifications_disable', {groupId: membership.group.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumDisable', 'btn btn-sm btn-outline-secondary') }}
                         {% else %}
-                            {{ post.post_button(path('group_notifications_enable', {groupId: membership.group.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumEnable', 'btn btn-sm btn-outline-primary') }}
+                            {{ button.post_button(path('group_notifications_enable', {groupId: membership.group.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumEnable', 'btn btn-sm btn-outline-primary') }}
                         {% endif %}
                     </td>
                 </tr>
@@ -38,11 +38,11 @@
                     <td><a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></td>
                     <td class="text-end">
                         {% if subscription.notificationsEnabled %}
-                            {{ post.post_button(path('forum_thread_subscription_disable', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumDisable', 'btn btn-sm btn-outline-secondary') }}
+                            {{ button.post_button(path('forum_thread_subscription_disable', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumDisable', 'btn btn-sm btn-outline-secondary') }}
                         {% else %}
-                            {{ post.post_button(path('forum_thread_subscription_enable', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumEnable', 'btn btn-sm btn-outline-primary') }}
+                            {{ button.post_button(path('forum_thread_subscription_enable', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumEnable', 'btn btn-sm btn-outline-primary') }}
                         {% endif %}
-                        {{ post.post_button(path('forum_thread_unsubscribe', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumUnsubscribe', 'btn btn-sm btn-outline-danger') }}
+                        {{ button.post_button(path('forum_thread_unsubscribe', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumUnsubscribe', 'btn btn-sm btn-outline-danger') }}
                     </td>
                 </tr>
             {% else %}

@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% import 'forum/_macros.html.twig' as forum %}
+
+{% block content %}
+    <h1 class="h3">{{ 'ForumMyReportToMod'|trans }}
+        {% if post.thread %}: <a href="{{ forum.thread_url(post.thread) }}#post{{ post.id }}">{{ forum.thread_title(post.thread, app.request.locale) }}</a>{% endif %}
+    </h1>
+    <p class="small"><a href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>, {{ post.created|format_datetime('short', 'short') }}</p>
+    <div class="border p-2 mb-3">{{ post.message|purify }}</div>
+
+    {% if report %}
+        <h2 class="h4">{{ 'forum.report.status'|trans }}: {{ ('forum.report.status.' ~ (report.status == 'OnDiscussion' ? 'discussion' : report.status|lower))|trans }}</h2>
+        <div class="border p-2 mb-3" id="report-messages">{{ report.postComment|purify }}</div>
+    {% endif %}
+
+    {{ form(form) }}
+{% endblock %}

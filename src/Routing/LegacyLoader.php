@@ -45,15 +45,9 @@ class LegacyLoader extends Loader
         $this->addRouteDirectly('forums_reverse', '/forums/reverse');
         $this->addRouteDirectly('forums_search', '/forums/search/{keyword}');
         $this->addRouteDirectly('forums_search_pages', '/forums/search/{keyword}/{page}');
-        $this->addRouteDirectly('forum_admin', '/forums/modfulleditpost/{postId}');
-        $this->addRouteDirectly('forum_admin_edit', '/forums/modeditpost/{postId}');
-        $this->addRouteDirectly('forum_admin_edit_trailing', '/forums/modeditpost/{postId}/');
         $this->addRouteDirectly('forum_tag', '/forums/t{tag}');
         $this->addRouteDirectly('forum_tag_detail_1', '/forums/t{tag}/{detail1}');
         $this->addRouteDirectly('forum_tag_detail_2', '/forums/t{tag}/{detail1}/{detail2}');
-        $this->addRouteDirectly('forum_report', '/forums/reporttomod/{postId}');
-        $this->addRouteDirectly('forum_report_member', '/forums/reporttomod/{postId}/{memberId}');
-        $this->addRouteDirectly('forum_rules', '/forums/rules');
         $this->addRouteDirectly('forum_posts_member', '/forums/member/{username}');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');

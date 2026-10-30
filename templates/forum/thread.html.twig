@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-    {% import 'macros/post_button.html.twig' as post %}
+    {% import 'macros/post_button.html.twig' as button %}
     {% set moderator = is_granted('ROLE_ADMIN_FORUMMODERATOR') or is_granted('ROLE_ADMIN_ADMIN') %}
     <p class="small mb-1">
         <a href="{{ path('forums') }}">{{ 'Forum'|trans }}</a> »
@@ -36,9 +36,9 @@
             <a class="btn btn-primary" href="{{ thread.agora ? path('forum_reply', {threadId: thread.id}) : path('group_forum_reply', {group_id: group.id, thread: thread.id}) }}">{{ 'ForumReply'|trans }}</a>
         {% endif %}
         {% if subscribed %}
-            {{ post.post_button(path('forum_thread_unsubscribe', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumUnsubscribe', 'btn btn-outline-primary') }}
+            {{ button.post_button(path('forum_thread_unsubscribe', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumUnsubscribe', 'btn btn-outline-primary') }}
         {% else %}
-            {{ post.post_button(path('forum_thread_subscription', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumSubscribe', 'btn btn-outline-primary') }}
+            {{ button.post_button(path('forum_thread_subscription', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumSubscribe', 'btn btn-outline-primary') }}
         {% endif %}
         <a class="btn btn-outline-secondary" href="{{ thread.agora ? path('forum_reverse', {threadId: thread.id}) : path('group_forum_thread_reverse', {group_id: group.id, thread: thread.id}) }}">
             {{ (ascending ? 'forums.sort.latest.first' : 'forums.sort.oldest.first')|trans }}
@@ -52,7 +52,7 @@
     {% endif %}
 
     {% for post in posts %}
-        {% include 'forum/_post.html.twig' with {post: post, dark: loop.index is even, moderator: moderator} %}
+        {% include 'forum/_post.html.twig' with {post: post, dark: loop.index is even, moderator: moderator, reports: reports[post.id] ?? []} %}
     {% endfor %}
 
     {% if posts.haveToPaginate %}

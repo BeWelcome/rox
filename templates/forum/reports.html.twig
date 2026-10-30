@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    <h1 class="h3">{{ 'forum.reports.title'|trans }}</h1>
+    <p>
+        {% for name in ['AllActiveReports', 'MyReportActive', 'AllMyReport'] %}
+            <a class="btn btn-sm {{ list == name ? 'btn-primary' : 'btn-outline-primary' }}" href="{{ path('forum_reports', {list: name}) }}">{{ ('forum.reports.' ~ name|lower)|trans }}</a>
+        {% endfor %}
+    </p>
+    <table class="table table-striped" id="reports">
+        <tbody>
+            {% for report in reports %}
+                <tr>
+                    <td><a href="{{ path('members_profile', {username: report.reporter.username}) }}">{{ report.reporter.username }}</a></td>
+                    <td>{{ ('forum.report.status.' ~ (report.status == 'OnDiscussion' ? 'discussion' : report.status|lower))|trans }}</td>
+                    <td class="small">{{ (report.updated ?? report.created)|format_datetime('short', 'short') }}</td>
+                    <td><a href="{{ path('forum_report_member', {postId: report.postId, memberId: report.reporter.id}) }}">{{ 'forum.reports.view'|trans }}</a></td>
+                </tr>
+            {% else %}
+                <tr><td>{{ 'forum.reports.none'|trans }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

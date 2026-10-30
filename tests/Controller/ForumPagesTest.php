@@ -138,19 +138,19 @@ final class ForumPagesTest extends WebTestCase
         self::assertCount(0, $crawler->filter('#post' . $postId));
     }
 
-    public function testTheReverseOrderShowsTheNewestPostFirst(): void
+    public function testTheReverseOrderTurnsThePostsAround(): void
     {
         $thread = $this->thread(self::AGORA_THREAD);
-        $ids = array_map('intval', $this->connection->fetchFirstColumn(
-            'SELECT id FROM forum_post WHERE threadid = ? ORDER BY create_time, id',
-            [$thread->getId()],
-        ));
+        $shown = static fn ($crawler): array => $crawler->filter('.c-single-post-user_info a[id^="post"]')
+            ->each(static fn ($anchor) => (int) substr((string) $anchor->attr('id'), 4));
 
-        $crawler = $this->request('GET', '/forums/s' . $thread->getId() . '//reverse');
+        // the member's preferred order, then the other one
+        $normal = $shown($this->request('GET', '/forums/s' . $thread->getId()));
+        $reversed = $shown($this->request('GET', '/forums/s' . $thread->getId() . '//reverse'));
 
         self::assertResponseIsSuccessful();
-        $shown = $crawler->filter('.c-single-post-user_info a[id^="post"]')->each(static fn ($anchor) => (int) substr((string) $anchor->attr('id'), 4));
-        self::assertSame(array_reverse($ids), $shown);
+        self::assertGreaterThan(1, \count($normal));
+        self::assertSame(array_reverse($normal), $reversed);
     }
 
     public function testLegacyOverviewUrlsGoToTheOverview(): void

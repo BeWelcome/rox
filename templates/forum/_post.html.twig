@@ -51,6 +51,12 @@
         {% endif %}
     </div>
     <div class="c-single-post-admin_edit">
+        {% for report in reports|default([]) %}
+            <small class="d-block text-muted">
+                <a href="{{ path('forum_report_member', {postId: post.id, memberId: report.reporter.id}) }}">{{ 'forum.reports.view'|trans }}: {{ report.reporter.username }}</a>
+                ({{ ('forum.report.status.' ~ (report.status == 'OnDiscussion' ? 'discussion' : report.status|lower))|trans }})
+            </small>
+        {% endfor %}
         {% if moderator %}
             <div class="d-flex justify-content-end text-nowrap">
                 <a href="{{ path('forum_admin', {postId: post.id}) }}" class="btn btn-sm btn-outline-secondary"><i class="fa fa-edit"></i> {{ 'forum.moderator.edit'|trans }}</a>

@@ -8,6 +8,7 @@ use App\Entity\Group;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Model\ForumModel;
+use App\Model\ForumModerationModel;
 use App\Repository\ForumPostRepository;
 use App\Repository\ForumThreadRepository;
 use App\Security\ForumVoter;
@@ -39,6 +40,7 @@ class ForumPagesController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly ForumModel $forumModel,
+        private readonly ForumModerationModel $moderationModel,
     ) {
     }
 
@@ -177,6 +179,10 @@ class ForumPagesController extends AbstractController
             'reverse' => $reverse,
             'locale' => $request->getLocale(),
             'subscribed' => $this->forumModel->isSubscribed($thread, $member),
+            // the moderators see the reports about each post
+            'reports' => $this->isModerator() ? $this->moderationModel->findReportsOfPosts(
+                array_map(static fn (ForumPost $post): int => (int) $post->getId(), iterator_to_array($posts->getCurrentPageResults(), false)),
+            ) : [],
         ];
         if (null !== $group && !$group->isBeWelcome()) {
             $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];

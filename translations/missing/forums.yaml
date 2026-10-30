@@ -35,3 +35,63 @@ forum.agora.welcome.unsubscribe:
 forum.agora.notifications.off:
     - 'You won''t get mails about the BeWelcome forum any more. You can switch them on again in your forum subscriptions.'
     - Page after a member clicked the link in forum.agora.welcome.notice
+forum.moderation.sticky:
+    - 'Pinned (the higher, the further up)'
+    - Field on the forum moderator's page of a post; 0 for threads that aren't pinned
+forum.moderation.expiry:
+    - 'Closes on'
+    - Field on the forum moderator's page of a post; the date the thread closes, if any
+forum.moderation.owner.can.edit:
+    - 'The author can still edit the post'
+    - Checkbox on the forum moderator's page of a post
+forum.moderation.post:
+    - 'Post'
+    - Heading of the post's settings on the forum moderator's page of a post
+forum.moderation.save.thread:
+    - 'Save the thread'
+    - Button of the thread's settings on the forum moderator's page of a post
+forum.moderation.save.post:
+    - 'Save the post'
+    - Button of the post's settings on the forum moderator's page of a post
+forum.moderation.saved:
+    - 'Saved.'
+    - Message after a forum moderator changed a thread, a post or a report
+forum.report.comment:
+    - 'Your message to the moderators'
+    - Field when a member reports a forum post to the moderators, or a moderator answers
+forum.report.send:
+    - 'Send'
+    - Button when a member reports a forum post to the moderators, or a moderator answers
+forum.report.sent:
+    - 'The moderators got your message.'
+    - Message after a member reported a forum post to the moderators
+forum.report.status:
+    - 'Status'
+    - Status of a member's report about a forum post
+forum.report.status.open:
+    - 'Open'
+    - Status of a report about a forum post that no moderator has handled yet
+forum.report.status.discussion:
+    - 'In discussion'
+    - Status of a report about a forum post the moderators discuss
+forum.report.status.closed:
+    - 'Closed'
+    - Status of a report about a forum post that is handled
+forum.reports.title:
+    - 'Reports to the moderators'
+    - Heading of the forum moderators' list of reports
+forum.reports.allactivereports:
+    - 'All open reports'
+    - Filter of the forum moderators' list of reports
+forum.reports.myreportactive:
+    - 'My open reports'
+    - Filter of the forum moderators' list of reports; the ones the moderator answered
+forum.reports.allmyreport:
+    - 'All my reports'
+    - Filter of the forum moderators' list of reports; the ones the moderator answered
+forum.reports.view:
+    - 'View'
+    - Link to a report in the forum moderators' list of reports
+forum.reports.none:
+    - 'No reports.'
+    - The forum moderators' list of reports when it is empty

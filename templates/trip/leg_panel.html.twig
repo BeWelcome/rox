@@ -122,6 +122,17 @@
                 <span>{{ 'contact.trip.more'|trans({ username: traveller.shortNameOrUsername }) }}</span>
                 <i class="fas fa-chevron-right" aria-hidden="true"></i>
             </a>
+
+            {# Not for me: hides this trip from my visitors list; the page around the panel reloads without it #}
+            {% if trip.creator != app.user %}
+                <form class="c-contact-trip__hide-form" method="post" action="{{ path('trip_hide', { id: leg.id }) }}" target="_top">
+                    <input type="hidden" name="_token" value="{{ csrf_token('hide_leg') }}">
+                    <input type="hidden" name="redirectTo" value="{{ from == 'visitors' ? 'visitors' : 'homepage' }}">
+                    <button type="submit" class="c-contact-trip__hide">
+                        <i class="fa fa-eye-slash" aria-hidden="true"></i> {{ 'trip.hide'|trans }}
+                    </button>
+                </form>
+            {% endif %}
         </div>
 
         {# Message is always there, also to agree on the dates before inviting #}

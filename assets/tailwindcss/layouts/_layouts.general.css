@@ -10251,6 +10251,11 @@ body.is-embedded { background: #fff; }
 .c-contact .c-contact-tripview__profile:hover { border-color: #fdba74; background: #ffedd5; color: #9a3412; }
 .c-contact-tripview__profile img { width: 2.5rem; height: 2.5rem; border: 2px solid #fff; border-radius: 50%; object-fit: cover; box-shadow: 0 1px 4px rgba(15, 23, 42, 0.15); }
 .c-contact-tripview__profile i, .c-contact-tripview__profile svg { margin-left: auto; color: #ea7a2e; font-size: 0.8rem; }
+/* Under it: hide this trip from my visitors list (a quiet text button) */
+.c-contact .c-contact-trip__hide-form { display: flex; justify-content: center; margin: -0.35rem 0 0; }
+.c-contact-trip__hide { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.75rem; border: 0; border-radius: 999px; background: none; color: #64748b; font-size: 0.875rem; font-weight: 600; cursor: pointer; }
+.c-contact-trip__hide:hover { background: #f1f5f9; color: #0f172a; }
+.c-contact-trip__hide i, .c-contact-trip__hide svg { color: #94a3b8; font-size: 0.8rem; }
 .c-contact__foot--row { display: flex; gap: 0.6rem; }
 .c-contact .c-contact__foot--row .c-contact__send { flex: 1; width: auto; }
 .c-contact .c-contact__foot--row .c-contact__send--side { flex: 0 0 auto; padding: 0 1.4rem; color: #0f172a; }

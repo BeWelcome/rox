@@ -7076,6 +7076,8 @@ body:has(.p-search) footer:has(#footer_content) { display: none; }
 /* The member picked in the list */
 .p-search-map-member.is-focused img,
 .leaflet-container .leaflet-marker-pane .p-search-map-member.is-focused img { width: 44px; height: 44px; margin: -4px; box-shadow: 0 0 0 4px rgba(243, 112, 0, 0.35), 0 6px 16px rgba(15, 23, 42, 0.3); }
+/* The group a member picked in the list is in, when it is too big to spread out */
+.leaflet-marker-icon.p-search-map-cluster.is-focused { z-index: 1000 !important; box-shadow: 0 0 0 6px rgba(243, 112, 0, 0.3), 0 6px 16px rgba(15, 23, 42, 0.3); }
 .p-search-map-place { border: 3px solid #fff; border-radius: 50%; background: #0f172a; box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.15); }
 /* Popup of a member on the map */
 .p-search-map-bubble .leaflet-popup-content-wrapper { padding: 0; border-radius: 1rem; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18); }

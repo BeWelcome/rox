@@ -100,3 +100,6 @@ profile.notes.search:
 profile.notes.none.found:
     - 'No note matches.'
     - My notes page, shown when the search or the category finds no note
+profile.notes.empty.hint:
+    - "Add one from a member's profile, with the note button. Only you will see it."
+    - My notes page, under "There are no notes about other members, yet."; says where notes are written

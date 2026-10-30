@@ -11652,6 +11652,36 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
   .p-notes-card__action,
   .p-notes-card__action:hover { width: 2.25rem; height: 2.25rem; }
 }
+/* My notes as a page of its own (no profile head), like the Visitors page: the notes in one white
+   card, one row each with a line between them; empty: an orange lock and how to add a note */
+.p-notes-page .p-notes { box-sizing: border-box; max-width: 1100px; padding: 1.75rem 1rem 3rem; }
+.p-notes-page .p-notes__search input { height: 2.75rem; }
+.p-notes-page .p-notes__filters { margin: 1.25rem 0 1rem; }
+.p-notes-page .p-notes__filter { padding: 0.4rem 0.95rem; font-size: 0.875rem; }
+.p-notes-page .p-notes__list { gap: 0; padding: 0.25rem 1.5rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
+.p-notes-page .p-notes__list.is-empty { margin-top: 1.25rem; padding: 0; }
+.p-notes-page .p-notes-card { gap: 1rem; padding: 1.1rem 0; border-top: 1px solid #f1f5f9; border-radius: 0; background: none; box-shadow: none; }
+.p-notes-page .p-notes-card:first-child { border-top: 0; }
+.p-notes-page .p-notes-card__avatar img { width: 3.5rem; height: 3.5rem; }
+.p-notes-page .p-notes-card__meta { gap: 0.35rem 0.6rem; margin: 0.1rem 0 0.35rem; }
+.p-notes-page .p-notes-card__name { font-size: 1.05rem; }
+.p-notes-page .p-notes-card__category { padding: 0.15rem 0.55rem; border-radius: 0.5rem; background: #eef2f7; font-size: 0.75rem; }
+.p-notes-page .p-notes-card__date { font-size: 0.8125rem; }
+.p-notes-page .p-notes-card__text { color: #475569; font-size: 0.9375rem; }
+.p-notes-page .p-notes-card__action,
+.p-notes-page .p-notes-card__action:hover { width: 2.25rem; height: 2.25rem; font-size: 0.8rem; }
+.p-notes-page .p-notes-card__action:hover { background: #fff1e6; color: #c2410c; }
+.p-notes-page .p-notes__empty { gap: 0.4rem; padding: 3rem 1.5rem; background: none; }
+.p-notes__empty-icon { display: inline-flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; margin-bottom: 0.4rem; border-radius: 50%; background: #fff1e6; color: #ea7a2e; font-size: 1.1rem; }
+.p-notes__empty .p-notes__empty-title { color: #0f172a; font-size: 1rem; font-weight: 600; }
+.p-notes__empty .p-notes__empty-hint { max-width: 26rem; color: #64748b; font-size: 0.875rem; }
+@media (max-width: 767.98px) {
+  .p-notes-page .p-notes { padding: 1.25rem 0.75rem 2rem; }
+  .p-notes-page .p-notes__list { padding: 0.25rem 1rem; }
+  .p-notes-page .p-notes-card { padding: 1rem 0; }
+  .p-notes-page .p-notes-card__avatar img { width: 3rem; height: 3rem; }
+  .p-notes-page .p-notes-card__actions { top: 0.9rem; right: 0; }
+}
 
 /* Spoken languages: the mother tongue is needed, said while no language is at Native */
 .p-lang-native-hint { display: flex; align-items: center; gap: 0.85rem; margin: 0 0 1.1rem; padding: 1rem 1.15rem; border: 2px solid #f37000; border-radius: 1rem; background: #fff1e6; color: #7c2d12; font-size: 1rem; font-weight: 700; line-height: 1.4; box-shadow: 0 6px 18px rgba(243, 112, 0, 0.15); }

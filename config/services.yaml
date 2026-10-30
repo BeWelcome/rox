@@ -20,6 +20,7 @@ parameters:
     newsletter_image_directory: "%kernel.project_dir%/%env(newsletter_image_directory)%"
     massmail_batch_size: '%env(int:massmail_batch_size)%'
     forum_notification_batch_size: '%env(int:forum_notification_batch_size)%'
+    member_batch_size: '%env(int:member_batch_size)%'
     locales: "%env(csv:LOCALES)%"
     document_locales: "%env(DOCUMENT_LOCALES)%"
     username.pattern: "/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i"
@@ -57,6 +58,7 @@ services:
             $reminderEmailAddress: '%env(MAILER_REMINDER_ADDRESS)%'
             $termsOfUseEmailAddress: '%env(MAILER_TERMS_OF_USE_ADDRESS)%'
             $newsletterEmailAddress: '%env(MAILER_NEWSLETTER_ADDRESS)%'
+            $suspensionBounceAddress: '%env(MAILER_SUSPENSION_BOUNCE_ADDRESS)%'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name

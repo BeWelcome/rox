@@ -47,9 +47,11 @@
 {# Account not finished: a strip across the page, between the menu and the content #}
 {% if not embedded and app.user and hide_finish_setup is not defined %}
   {% set loggedInMember = app.user %}
-  {% if loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::MAIL_CONFIRMED') or
+  {# set up but not confirmed: the confirmation is missing; otherwise the setup #}
+  {% set confirmOnly = loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::ACCOUNT_ACTIVATED') %}
+  {% if confirmOnly or loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::MAIL_CONFIRMED') or
     loggedInMember.status == constant('App\\Doctrine\\MemberStatusType::AWAITING_MAIL_CONFIRMATION') %}
-    {% set deletionDate = app.user.created|date_modify("+7 days")|format_date('long') %}
+    {% set deletionDate = app.user.created|date_modify("+" ~ constant('App\\Entity\\Member::DAYS_SHOWN_TO_FINISH_SIGNUP') ~ " days")|format_date('long') %}
     <div class="setup-banner setup-banner--strip">
       <div class="container-lg setup-banner__inner">
         <div class="setup-banner__body">
@@ -59,10 +61,10 @@
               <polyline points="12 6 12 12 16 14"/>
             </svg>
           </div>
-          <p class="setup-banner__message">{{ 'profile.finish.setup'|trans({deletion_date: deletionDate})|raw }}</p>
+          <p class="setup-banner__message">{{ (confirmOnly ? 'profile.confirm.email.deadline' : 'profile.finish.setup')|trans({deletion_date: deletionDate})|raw }}</p>
         </div>
-        <a class="setup-banner__action" href="{{ url('finish_setup', {username: app.user.Username}) }}">
-          {{ 'profile.finish.setup.button'|trans }}
+        <a class="setup-banner__action" href="{{ confirmOnly ? url('confirm_email', {username: app.user.Username}) : url('finish_setup', {username: app.user.Username}) }}">
+          {{ (confirmOnly ? 'profile.confirm.email.button' : 'profile.finish.setup.button')|trans }}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <polyline points="9 18 15 12 9 6"/>
           </svg>

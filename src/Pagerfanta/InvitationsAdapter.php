@@ -10,7 +10,7 @@ class InvitationsAdapter extends AbstractConversationsAdapter implements Adapter
     {
         return '
             SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             LEFT JOIN `request` r ON `m`.`request_id` = `r`.`id`
             WHERE '
             . $this->getInitiatorCondition() . '
@@ -19,7 +19,7 @@ class InvitationsAdapter extends AbstractConversationsAdapter implements Adapter
             AND `r`.`invite_for_leg` IS NOT NULL
             AND `m`.`id` IN (
                     SELECT max(`m`.`id`)
-                    FROM `messages` m
+                    FROM `message` m
                     WHERE ' . $this->getNotDeletedOrPurgedCondition() . '
                     AND ' . $this->getNotSpamCondition() . '
                     GROUP BY `m`.`subject_id`

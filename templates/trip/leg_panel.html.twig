@@ -76,6 +76,7 @@
                             <span class="c-contact-stops__num">{{ loop.index }}</span>
                             <div class="c-contact-stops__card">
                                 <p class="c-contact-stops__place">
+                                    {% if stop.location.country %}<span class="c-tip" data-tip="{{ stop.location.country.name }}"><span class="o-flag o-flag--{{ stop.location.countryId|upper }} c-contact-stops__flag" aria-hidden="true"></span></span>{% endif %}
                                     <strong>{{ stop.location.name }}</strong>
                                     {% if stop.location.country %}<span class="c-contact-stops__country">{{ stop.location.country.name }}</span>{% endif %}
                                     {% if isThis %}<span class="c-contact-stops__near"><i class="fas fa-crosshairs" aria-hidden="true"></i> {{ 'contact.trip.near.you'|trans }}</span>{% endif %}

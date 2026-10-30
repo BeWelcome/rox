@@ -53,14 +53,14 @@ class ConversationThreadTest extends KernelTestCase
     public function testParentChainThatLoopsEndsInsteadOfRecursingForever(): void
     {
         $parents = array_filter($this->parents());
-        // a message has at most one reply (IdParent is unique), so take the last reply of a chain
+        // take the last reply of a chain: a message nothing replies to
         $lastReplies = array_diff(array_keys($parents), $parents);
         self::assertNotEmpty($lastReplies, 'the test fixtures contain replies');
         $reply = reset($lastReplies);
         $parent = $parents[$reply];
 
         // let the parent reply to its own reply: parent -> reply -> parent
-        $this->connection->executeStatement('UPDATE messages SET IdParent = ? WHERE id = ?', [$reply, $parent]);
+        $this->connection->executeStatement('UPDATE message SET parent_id = ? WHERE id = ?', [$reply, $parent]);
         $this->entityManager->clear();
 
         $thread = $this->conversationThread->getThread($this->entityManager->find(Message::class, $reply));
@@ -77,7 +77,7 @@ class ConversationThreadTest extends KernelTestCase
     private function parents(): array
     {
         $parents = [];
-        foreach ($this->connection->fetchAllNumeric('SELECT id, IdParent FROM messages') as [$id, $parent]) {
+        foreach ($this->connection->fetchAllNumeric('SELECT id, parent_id FROM message') as [$id, $parent]) {
             $parents[(int) $id] = $parent ? (int) $parent : null;
         }
 

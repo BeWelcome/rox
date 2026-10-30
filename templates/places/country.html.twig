@@ -5,13 +5,14 @@
 {% extends 'base.html.twig' %}
 
 {% set hide_sidebar = true %}
-{% set place = active_region ? active_region.name : country.name %}
+{% set place = active_city ? active_city.name : (active_region ? active_region.name : country.name) %}
 
 {# Previous / next page of the members, kept in the address so it can be shared #}
-{% macro pager(country, active_region, page, pages, modifier) %}
+{% macro pager(country, active_region, page, pages, modifier, active_city = null) %}
     {% if pages > 1 %}
         {% set route = { countryname: country.slug, countrycode: country.code } %}
-        {% if active_region %}{% set route = route|merge({ region: active_region.code }) %}{% endif %}
+        {% if active_city %}{% set route = route|merge({ city: active_city.geonameId }) %}
+        {% elseif active_region %}{% set route = route|merge({ region: active_region.code }) %}{% endif %}
         <nav class="c-place__pager c-place__pager--{{ modifier }}" aria-label="{{ 'places.country.members.title'|trans }}">
             <span class="c-place__pager-label">{{ page }} / {{ pages }}</span>
             {% if page > 1 %}
@@ -65,12 +66,22 @@
                 </div>
             {% endif %}
 
+            {% if active_city %}
+                {# A town (from a profile): its members only, the cross goes back to its region #}
+                <div class="c-place__city">
+                    <a class="c-place__region is-active c-place__city-chip" href="{{ path('places_country', { countryname: country.slug, countrycode: country.code }|merge(active_region ? { region: active_region.code } : {})) }}" aria-label="{{ 'places.city.clear'|trans({ city: active_city.name }) }}">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ active_city.name }} <span class="c-place__region-count">{{ members_total|number_format }}</span>
+                        <i class="fas fa-times c-place__city-clear" aria-hidden="true"></i>
+                    </a>
+                </div>
+            {% endif %}
+
             <div class="c-place__members-head">
                 <h2 class="c-place__title">
                     {{ 'places.country.members.title'|trans }}
-                    {% if active_region %}<span class="c-place__title-place">· {{ active_region.name }}</span>{% endif %}
+                    {% if active_city or active_region %}<span class="c-place__title-place">· {{ active_city ? active_city.name : active_region.name }}</span>{% endif %}
                 </h2>
-                {{ places.pager(country, active_region, page, pages, 'top') }}
+                {{ places.pager(country, active_region, page, pages, 'top', active_city) }}
             </div>
 
             {% if members is empty %}
@@ -81,7 +92,7 @@
                         {% set address = member.activeAddress %}
                         <li>
                             {% set hosting = member.accommodation in ['yes', 'no'] ? member.accommodation : 'unknown' %}
-                            {% set hostingLabel = hosting == 'unknown' ? 'places.member.hosting.unknown'|trans : ('search.accommodation.' ~ hosting)|trans|trim('.') %}
+                            {% set hostingLabel = hosting == 'unknown' ? 'places.member.hosting.unknown'|trans : ('member.hosting.' ~ hosting)|trans %}
                             {% set qualities = comment_counts[member.id] ?? {} %}
                             {% set facts = [] %}
                             {% if member.isAgeVisible and member.age %}{% set facts = facts|merge(['places.member.age'|trans({ age: member.age })]) %}{% endif %}
@@ -113,7 +124,7 @@
                         </li>
                     {% endfor %}
                 </ul>
-                {{ places.pager(country, active_region, page, pages, 'bottom') }}
+                {{ places.pager(country, active_region, page, pages, 'bottom', active_city) }}
             {% endif %}
         </div>
     </section>

@@ -1,0 +1,42 @@
+{#
+  How often the member answers hosting requests and invitations (last 12 months): a small ring
+  that fills up, the percentage and "reply". Not shown under ReplyRate::SHOWN_FROM requests
+  received (one unanswered request would say too much). Green from 70%, amber from 40%, grey
+  below: no red, a member who answers little is not singled out.
+  The full sentence is a tooltip on a computer (data-tip, CSS only), written under the tile in
+  the search preview on phones.
+  variant: 'card' (search results: "20% reply" in the activity line), 'chip' (search preview:
+  "20% reply" in a small pill, the reply arrow in the ring) or 'pill' (profile head, the default).
+  Expects member, or percent when already known (search results).
+#}
+{% set _pct = percent is defined ? percent : member_reply_rate(member, '-12 months').shownPercentage %}
+{% if _pct is not null %}
+    {% set _variant = variant ?? 'pill' %}
+    {% set _tone = _pct >= 70 ? 'high' : (_pct >= 40 ? 'mid' : 'low') %}
+    {% set _sentence = 'profile.reply.rate.sentence'|trans({ percent: _pct }) %}
+    {% set _ring %}
+        <svg class="c-reply-ring" viewBox="0 0 20 20" aria-hidden="true">
+            <circle class="c-reply-ring__track" cx="10" cy="10" r="8"></circle>
+            <circle class="c-reply-ring__fill" cx="10" cy="10" r="8" pathLength="100" stroke-dasharray="{{ _pct }} 100"></circle>
+        </svg>
+    {% endset %}
+    {% if _variant == 'card' %}
+        <span class="c-reply-rate c-reply-rate--card c-reply-rate--{{ _tone }}" data-tip="{{ _sentence }}">
+            {{ _ring }}<strong>{{ 'profile.reply.rate.short'|trans({ percent: _pct }) }}</strong>
+            <span class="visually-hidden">{{ _sentence }}</span>
+        </span>
+    {% elseif _variant == 'chip' %}
+        <span class="c-reply-rate c-reply-rate--chip c-reply-rate--{{ _tone }}" data-tip="{{ _sentence }}">
+            <span class="c-reply-rate__gauge">{{ _ring }}<i class="fas fa-reply" aria-hidden="true"></i></span>
+            {{ 'profile.reply.rate.short'|trans({ percent: _pct }) }}
+            <span class="visually-hidden">{{ _sentence }}</span>
+        </span>
+    {% else %}
+        <span class="c-reply-rate c-reply-rate--pill c-reply-rate--{{ _tone }}" data-tip="{{ _sentence }}">
+            {{ _ring }}
+            <span class="c-reply-rate__long">{{ 'profile.reply.rate'|trans({ percent: _pct }) }}</span>
+            <span class="c-reply-rate__short" aria-hidden="true">{{ 'profile.reply.rate.short'|trans({ percent: _pct }) }}</span>
+            <span class="visually-hidden">{{ _sentence }}</span>
+        </span>
+    {% endif %}
+{% endif %}

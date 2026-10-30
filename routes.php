@@ -59,11 +59,7 @@
     $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminMassmailController',
         'massmailUntrigger');
 
-    // places routes (the list of countries and the country page are in App\Controller\PlacesController)
-    $this->addRoute('places_region', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:', 'PlacesController', 'region');
-    $this->addRoute('places_region_page', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:/page/:page:', 'PlacesController', 'region');
-    $this->addRoute('places_city', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:/:cityname:/:citycode:', 'PlacesController', 'city');
-    $this->addRoute('places_city_page', 'places/:countryname:/:countrycode:/:regionname:/:regioncode:/:cityname:/:citycode:/page/:page:', 'PlacesController', 'city');
+    // places routes: all in App\Controller\PlacesController (countries, country, region, town)
 
     // searchmembers
     $this->addRoute('searchmembers', 'search', 'SearchController', 'searchMembers');

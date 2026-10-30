@@ -14,7 +14,7 @@
 {% else %}
     {% set _tone = 'message' %}
 {% endif %}
-{% set _sent = _m.dateSent ?? _m.created %}
+{% set _sent = _m.created %}
 <a class="p-pro-contact-status p-pro-contact-status--{{ _tone }} {{ link_class ?? 'js-contact-open' }}{{ _unread ? ' is-unread' : '' }}{{ place is defined ? ' p-pro-contact-status--' ~ place : '' }}"
    href="{{ path('conversation_view', { id: _m.id }) }}"
    data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">

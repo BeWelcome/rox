@@ -95,7 +95,7 @@
                         </div>
                     {% endif %}
 
-                        <span class="text-muted small">{{ 'message.sentdate'|trans({'%sentDate%': message.dateSent | format_date( 'medium')}) }}</span>
+                        <span class="text-muted small">{{ 'message.sentdate'|trans({'%sentDate%': message.created | format_date( 'medium')}) }}</span>
                         </div>
                     </a>
                 </td>

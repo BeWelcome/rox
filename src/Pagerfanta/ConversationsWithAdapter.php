@@ -59,24 +59,24 @@ class ConversationsWithAdapter implements AdapterInterface
     {
         return '
             SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             WHERE
 				NOT m.subject_id IS NULL
 				AND m.id IN (
 					SELECT max(m.id)
-					FROM messages m
+					FROM message m
                     WHERE
-						((m.IdReceiver = :memberId AND m.IdSender = :partnerId) OR
-						(m.IdReceiver = :partnerId AND m.IdSender = :memberId))
+						((m.receiver_id = :memberId AND m.sender_id = :partnerId) OR
+						(m.receiver_id = :partnerId AND m.sender_id = :memberId))
 					GROUP BY m.subject_id
 				)
 			UNION
             SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             WHERE
 				m.subject_id is null
-				AND	((m.IdReceiver = :memberId AND m.IdSender = :partnerId) OR
-					(m.IdReceiver = :partnerId AND m.IdSender = :memberId))
+				AND	((m.receiver_id = :memberId AND m.sender_id = :partnerId) OR
+					(m.receiver_id = :partnerId AND m.sender_id = :memberId))
         ';
     }
 }

@@ -53,18 +53,22 @@
                     {% endif %}
                     {% if member.name is not empty and member.name != member.username %}<span class="p-search-card__username">{{ member.username }}</span>{% endif %}
                     {% if hosting %}
-                        {# Yes, be welcome / No, sorry as one icon; the words are kept for screen readers. #}
-                        <span class="p-search-card__host p-search-card__host--{{ hosting }}">
-                            <i class="fas {{ hosting == 'yes' ? 'fa-house-circle-check' : 'fa-house-circle-xmark' }}" aria-hidden="true"></i>
-                            <span class="visually-hidden">{{ ('search.accommodation.' ~ hosting)|trans|trim('.') }}</span>
-                        </span>
+                        {# Hosting shows as the ring around the picture; the words are kept for screen readers. #}
+                        <span class="visually-hidden">{{ ('member.hosting.' ~ hosting)|trans }}</span>
                     {% endif %}
                 </p>
 
                 {#- The place is only shown when it is not the place searched for (a nearby town). -#}
                 {%- set searchedPlaceId = searchParams.location_geoname_id ?? null -%}
                 {% if address and address.location and (searchedPlaceId is empty or address.location.geonameId != searchedPlaceId) %}
-                    <p class="p-search-card__meta"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ address.location.name ~ (address.location.country ? ', ' ~ address.location.country.name : '') }}</p>
+                    {% set _country = address.location.country %}
+                    <p class="p-search-card__meta">
+                        {%- if _country -%}
+                            <span class="c-tip" data-tip="{{ _country.name }}"><span class="o-flag o-flag--{{ address.location.countryId|upper }} p-search-card__flag" aria-hidden="true"></span></span>
+                        {%- else -%}
+                            <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        {%- endif %} {{ address.location.name }}{% if _country %}<span class="p-search-card__country">, {{ _country.name }}</span>{% endif -%}
+                    </p>
                 {% endif %}
                 {% if occupation %}
                     <p class="p-search-card__occupation"><i class="fas fa-briefcase" aria-hidden="true"></i> <span class="visually-hidden">{{ 'profile.occupation'|trans }}:</span> {{ occupation }}</p>
@@ -101,6 +105,10 @@
                 </span>
                 <span class="p-search-card__activity{{ lastActive ? '' : ' is-since-only' }}">
                     <i class="far fa-clock" aria-hidden="true"></i>
+                    {%- if (result.replyRate ?? null) is not null -%}
+                        {% include 'profile/_reply_rate.html.twig' with { percent: result.replyRate, variant: 'card' } %}
+                        <span class="p-search-card__dot" aria-hidden="true">·</span>
+                    {%- endif -%}
                     {%- if lastActive %}
                         {# A dot, green when active in the last month #}
                         <span class="p-search-card__online{{ activityDays <= 30 ? ' is-recent' : '' }}" aria-hidden="true"></span>

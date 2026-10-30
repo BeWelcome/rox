@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Dto\ReplyRate;
 use App\Entity\Comment;
 use App\Entity\Group;
 use App\Entity\LoginMessage;
@@ -12,6 +13,7 @@ use App\Repository\LoginMessageRepository;
 use App\Repository\MessageRepository;
 use App\Service\BrowserPushConfig;
 use App\Service\BrowserPushPreferenceService;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Twig\Extension\AbstractExtension;
@@ -141,6 +143,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         return [
             new TwigFunction('member_comments_count', $this->getMemberCommentsCount(...)),
             new TwigFunction('member_comments_by_quality', $this->getMemberCommentsByQuality(...)),
+            new TwigFunction('member_reply_rate', $this->getMemberReplyRate(...)),
         ];
     }
 
@@ -153,6 +156,18 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         $commentRepository = $this->entityManager->getRepository(Comment::class);
 
         return $commentRepository->getVisibleCommentsForMemberCount($member);
+    }
+
+    /**
+     * Hosting requests and invitations the member received and answered, for the reply rate on the profile.
+     * $since (a date string such as '-12 months') counts only the requests sent since then.
+     */
+    public function getMemberReplyRate(Member $member, ?string $since = null): ReplyRate
+    {
+        /** @var MessageRepository $messageRepository */
+        $messageRepository = $this->entityManager->getRepository(Message::class);
+
+        return $messageRepository->getReplyRate($member, null === $since ? null : new DateTimeImmutable($since));
     }
 
     /**

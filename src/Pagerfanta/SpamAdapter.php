@@ -12,27 +12,27 @@ class SpamAdapter extends AbstractConversationsAdapter implements AdapterInterfa
     {
         $sql = '
             SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             WHERE
-            `m`.`IdReceiver` = :memberId
+            `m`.`receiver_id` = :memberId
             AND NOT `m`.`subject_id` IS NULL
             AND ' . $this->getUnreadCondition() . '
-            AND (`m`.`IdReceiver` = :memberId AND `m`.`infolder` = \'' . InFolderType::SPAM . '\')
+            AND (`m`.`receiver_id` = :memberId AND `m`.`infolder` = \'' . InFolderType::SPAM . '\')
             AND ' . $this->getNotDeletedOrPurgedCondition() . '
             AND `m`.`id` in (
                     SELECT max(`m`.`id`)
-                    FROM `messages` m
+                    FROM `message` m
                     WHERE
-                        `m`.`IdReceiver` = :memberId
+                        `m`.`receiver_id` = :memberId
                         AND ' . $this->getNotDeletedOrPurgedCondition() . '
                         AND ' . $this->getSpamCondition() . '
                     GROUP BY `m`.`subject_id`
             )
             UNION
             SELECT `m`.*
-            FROM `messages` m
+            FROM `message` m
             WHERE
-            `m`.`IdReceiver` = :memberId
+            `m`.`receiver_id` = :memberId
             AND subject_id IS NULL
             AND ' . $this->getSpamCondition() . '
          ';
@@ -42,6 +42,6 @@ class SpamAdapter extends AbstractConversationsAdapter implements AdapterInterfa
 
     private function getSpamCondition(): string
     {
-        return '(SpamInfo LIKE \'%' . SpamInfoType::MEMBER_SAYS_SPAM . '%\' OR SpamInfo LIKE \'%' . SpamInfoType::SPAM_BLOCKED_WORD . '%\') AND InFolder = \'' . InFolderType::SPAM . '\'';
+        return '(spam_info LIKE \'%' . SpamInfoType::MEMBER_SAYS_SPAM . '%\' OR spam_info LIKE \'%' . SpamInfoType::SPAM_BLOCKED_WORD . '%\') AND folder = \'' . InFolderType::SPAM . '\'';
     }
 }

@@ -23,14 +23,14 @@ class ConversationThread
             '
                 WITH RECURSIVE
                     ancestors (id, parent) AS (
-                        SELECT id, IdParent FROM messages WHERE id = :message_id
+                        SELECT id, parent_id FROM message WHERE id = :message_id
                         UNION
-                        SELECT m.id, m.IdParent FROM messages m JOIN ancestors a ON m.id = a.parent
+                        SELECT m.id, m.parent_id FROM message m JOIN ancestors a ON m.id = a.parent
                     ),
                     replies (id) AS (
-                        SELECT id FROM messages WHERE id = :message_id
+                        SELECT id FROM message WHERE id = :message_id
                         UNION
-                        SELECT m.id FROM messages m JOIN replies r ON m.IdParent = r.id
+                        SELECT m.id FROM message m JOIN replies r ON m.parent_id = r.id
                     )
                 SELECT id FROM ancestors
                 UNION

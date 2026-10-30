@@ -100,7 +100,7 @@
                         <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
                         <span class="js-gnew-file">{{ 'group.choose.group.image'|trans }}</span>
                     </label>
-                    <input type="file" class="p-gnew__file-input" id="{{ form.picture.vars.id }}" name="{{ form.picture.vars.full_name }}" accept="image/*">
+                    <input type="file" class="p-gnew__file-input{{ form.picture.vars.errors|length ? ' is-invalid' }}" id="{{ form.picture.vars.id }}" name="{{ form.picture.vars.full_name }}" accept="image/*">
                     {% do form.picture.setRendered %}
                     <p class="p-gnew__help">{{ form.picture.vars.help|trans }}</p>
                     {% for _error in form.picture.vars.errors %}<p class="p-gnew__error">{{ _error.message }}</p>{% endfor %}

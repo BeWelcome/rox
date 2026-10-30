@@ -97,7 +97,7 @@ class GroupCreateTest extends WebTestCase
 
         self::assertFalse($this->client->getResponse()->isRedirect());
         self::assertCount(1, $crawler->filter('#group_picture.is-invalid'));
-        self::assertCount(1, $crawler->filter('label[for=group_picture] .form-error-message'));
+        self::assertCount(1, $crawler->filter('.p-gnew__pic .p-gnew__error'));
         self::assertNull(static::getContainer()->get(EntityManagerInterface::class)
             ->getRepository(Group::class)->findOneBy(['name' => self::NAME]));
     }

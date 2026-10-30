@@ -77,7 +77,7 @@
         "symfony/stopwatch": "8.2.*",
         "symfony/translation": "8.2.*",
         "symfony/twig-bundle": "8.2.*",
-        "symfony/ux-translator": "3.5.*",
+        "symfony/ux-translator": "3.x-dev",
         "symfony/validator": "8.2.*",
         "symfony/var-dumper": "8.2.*",
         "symfony/web-link": "8.2.*",

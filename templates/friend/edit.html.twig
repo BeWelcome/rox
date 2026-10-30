@@ -26,6 +26,7 @@
       <p class="p-friend-form__blurb">{{ 'friend.edit.blurb'|trans({username: member.username}) }}</p>
 
       <form method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\FriendshipController::TOKEN')) }}">
         <div class="p-edit-subpage__actions p-edit-subpage__actions--split">
           {# Keeping the friend changes nothing, so it is a plain link back to the friends list. #}
           <a class="p-comment-form__cancel" href="{{ url('friends', {username: app.user.username}) }}">{{ 'profile.edit.friend.keep'|trans }}</a>

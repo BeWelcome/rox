@@ -9,22 +9,29 @@ use App\Repository\FriendRepository;
 use App\Service\Mailer;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
+use App\Utilities\MailLinkTrait;
 use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\SignedUriException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\IsSignatureValid;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 
 class FriendshipController extends AbstractController
 {
     use ItemsPerPageTraits;
+    use MailLinkTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
+
+    /** The CSRF token id of the forms to ask for and to end a friendship. */
+    public const string TOKEN = 'friendship';
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -34,6 +41,7 @@ class FriendshipController extends AbstractController
     }
 
     #[Route(path: '/members/{username:member}/friendship/add', name: 'add_friendship', methods: ['GET', 'POST'])]
+    #[IsCsrfTokenValid(self::TOKEN, methods: ['POST'])]
     public function add(Request $request, Member $member, Mailer $mailer): Response
     {
         /** @var Member $loggedInMember */
@@ -84,6 +92,7 @@ class FriendshipController extends AbstractController
     }
 
     #[Route(path: '/members/{username:member}/friendship/edit', name: 'edit_friendship', methods: ['GET', 'POST'])]
+    #[IsCsrfTokenValid(self::TOKEN, methods: ['POST'])]
     public function edit(Request $request, Member $member): Response
     {
         /** @var Member $loggedInMember */
@@ -148,12 +157,19 @@ class FriendshipController extends AbstractController
         return $this->redirectToRoute('friends', ['username' => $member->getUsername()]);
     }
 
-    #[Route(path: '/members/{left}/friendship/{right}/confirm', name: 'confirm_friendship')]
+    #[Route(path: '/members/{left}/friendship/{right}/confirm', name: 'confirm_friendship', methods: ['GET'])]
+    #[IsSignatureValid]
     public function confirm(
         #[MapEntity(mapping: ['left' => 'username'])] Member $left,
         #[MapEntity(mapping: ['right' => 'username'])] Member $right,
         EntityManagerInterface $entityManager,
+        ?SignedUriException $invalidLink = null,
     ): Response {
+        if (null !== $invalidLink) {
+            // the page can remove the request; the other member can ask again then
+            return $this->rejectMailLink('edit_friendship', ['username' => $right->getUsername()]);
+        }
+
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
         if ($left !== $loggedInMember) {
@@ -175,12 +191,19 @@ class FriendshipController extends AbstractController
         return $this->redirectToRoute('friends', ['username' => $left->getUsername()]);
     }
 
-    #[Route(path: '/members/{left}/friendship/{right}/dismiss', name: 'dismiss_friendship')]
+    #[Route(path: '/members/{left}/friendship/{right}/dismiss', name: 'dismiss_friendship', methods: ['GET'])]
+    #[IsSignatureValid]
     public function dismiss(
         #[MapEntity(mapping: ['left' => 'username'])] Member $left,
         #[MapEntity(mapping: ['right' => 'username'])] Member $right,
         EntityManagerInterface $entityManager,
+        ?SignedUriException $invalidLink = null,
     ): Response {
+        if (null !== $invalidLink) {
+            // the page can remove the request; the other member can ask again then
+            return $this->rejectMailLink('edit_friendship', ['username' => $right->getUsername()]);
+        }
+
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
         if ($left !== $loggedInMember) {

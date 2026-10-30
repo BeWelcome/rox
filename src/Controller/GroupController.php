@@ -20,6 +20,7 @@ use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
 use App\Security\GroupVoter;
 use App\Utilities\GroupSubmenuTrait;
+use App\Utilities\MailLinkTrait;
 use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -31,11 +32,13 @@ use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Exception\SignedUriException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\IsSignatureValid;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Throwable;
@@ -52,6 +55,7 @@ use Throwable;
 class GroupController extends AbstractController
 {
     use GroupSubmenuTrait;
+    use MailLinkTrait;
     use RedirectBackTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
@@ -170,11 +174,17 @@ class GroupController extends AbstractController
      *
      * @return RedirectResponse
      */
-    #[Route(path: '/group/{groupId}/acceptjoin/{memberId}', name: 'group_accept_join')]
+    #[Route(path: '/group/{groupId}/acceptjoin/{memberId}', name: 'group_accept_join', methods: ['GET'])]
+    #[IsSignatureValid]
     public function approveJoin(
         #[MapEntity(id: 'groupId')] Group $group,
         #[MapEntity(id: 'memberId')] Member $member,
+        ?SignedUriException $invalidLink = null,
     ) {
+        if (null !== $invalidLink) {
+            return $this->rejectMailLink('group_memberadministration', ['group_id' => $group->getId()]);
+        }
+
         /** @var Member $admin */
         $admin = $this->getUser();
         if (!$group->isAdmin($admin)) {
@@ -201,11 +211,17 @@ class GroupController extends AbstractController
      *
      * @return RedirectResponse
      */
-    #[Route(path: '/group/{groupId}/declinejoin/{memberId}', name: 'group_decline_join')]
+    #[Route(path: '/group/{groupId}/declinejoin/{memberId}', name: 'group_decline_join', methods: ['GET'])]
+    #[IsSignatureValid]
     public function declineJoin(
         #[MapEntity(id: 'groupId')] Group $group,
         #[MapEntity(id: 'memberId')] Member $member,
+        ?SignedUriException $invalidLink = null,
     ) {
+        if (null !== $invalidLink) {
+            return $this->rejectMailLink('group_memberadministration', ['group_id' => $group->getId()]);
+        }
+
         /** @var Member $admin */
         $admin = $this->getUser();
         if (!$group->isAdmin($admin)) {
@@ -230,11 +246,17 @@ class GroupController extends AbstractController
     /**
      * @return RedirectResponse
      */
-    #[Route(path: '/group/{groupId}/accept/{memberId}', name: 'accept_invite_to_group')]
+    #[Route(path: '/group/{groupId}/accept/{memberId}', name: 'accept_invite_to_group', methods: ['GET'])]
+    #[IsSignatureValid]
     public function acceptInviteToGroup(
         #[MapEntity(id: 'groupId')] Group $group,
         #[MapEntity(id: 'memberId')] Member $member,
+        ?SignedUriException $invalidLink = null,
     ) {
+        if (null !== $invalidLink) {
+            return $this->rejectMailLink('group_start', ['group_id' => $group->getId()]);
+        }
+
         // only the invited member answers the invitation
         if ($this->getUser() !== $member) {
             throw $this->createAccessDeniedException();
@@ -255,11 +277,17 @@ class GroupController extends AbstractController
     /**
      * @return RedirectResponse
      */
-    #[Route(path: '/group/{groupId}/decline/{memberId}', name: 'decline_invite_to_group')]
+    #[Route(path: '/group/{groupId}/decline/{memberId}', name: 'decline_invite_to_group', methods: ['GET'])]
+    #[IsSignatureValid]
     public function declineInviteToGroup(
         #[MapEntity(id: 'groupId')] Group $group,
         #[MapEntity(id: 'memberId')] Member $member,
+        ?SignedUriException $invalidLink = null,
     ) {
+        if (null !== $invalidLink) {
+            return $this->rejectMailLink('group_start', ['group_id' => $group->getId()]);
+        }
+
         // only the invited member answers the invitation
         if ($this->getUser() !== $member) {
             throw $this->createAccessDeniedException();

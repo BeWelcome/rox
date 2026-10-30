@@ -9,6 +9,7 @@ use App\Entity\GroupMembership;
 use App\Entity\Member;
 use App\Entity\RelatedGroup;
 use App\Model\GroupModel;
+use App\Service\MailLinkSigner;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -199,7 +200,12 @@ final class GroupManagementTest extends WebTestCase
         $this->join($this->member('member-5'), $this->group, GroupMembershipStatusType::INVITED_INTO_GROUP);
         $this->client->loginUser($this->member('member-2'));
 
-        $this->client->request('GET', '/group/' . $this->group->getId() . '/accept/' . $this->member('member-5')->getId());
+        // the signed link of member-5's mail
+        $link = static::getContainer()->get(MailLinkSigner::class)->signedUrl('accept_invite_to_group', [
+            'groupId' => $this->group->getId(),
+            'memberId' => $this->member('member-5')->getId(),
+        ]);
+        $this->client->request('GET', $link);
 
         self::assertResponseStatusCodeSame(403);
         self::assertSame(GroupMembershipStatusType::INVITED_INTO_GROUP, $this->membership('member-5')->getStatus());

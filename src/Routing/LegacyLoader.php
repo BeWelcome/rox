@@ -42,12 +42,6 @@ class LegacyLoader extends Loader
         require $projectDir . '/routes.php';
 
         // Forum urls
-        $this->addRouteDirectly('forums_reverse', '/forums/reverse');
-        $this->addRouteDirectly('forums_search', '/forums/search/{keyword}');
-        $this->addRouteDirectly('forums_search_pages', '/forums/search/{keyword}/{page}');
-        $this->addRouteDirectly('forum_tag', '/forums/t{tag}');
-        $this->addRouteDirectly('forum_tag_detail_1', '/forums/t{tag}/{detail1}');
-        $this->addRouteDirectly('forum_tag_detail_2', '/forums/t{tag}/{detail1}/{detail2}');
         $this->addRouteDirectly('forum_posts_member', '/forums/member/{username}');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');

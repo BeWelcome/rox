@@ -11,6 +11,7 @@
     </div>
     {% if group.beWelcome %}<div class="mb-3">{{ 'AgoraTagLine'|trans|purify }}</div>{% endif %}
 
+    {% if canRead %}{% include 'forum/_search_form.html.twig' %}{% endif %}
     {% if not canRead %}
         <p>{{ 'GroupsNotPublic'|trans }}</p>
     {% else %}

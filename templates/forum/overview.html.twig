@@ -16,6 +16,7 @@
         </div>
     </div>
 
+    {% include 'forum/_search_form.html.twig' with {group: null} %}
     {% include 'forum/_threads.html.twig' with {threads: threads, showGroup: true} %}
 
     {% if threads.haveToPaginate %}

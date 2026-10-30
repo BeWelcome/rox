@@ -15,7 +15,6 @@
      */
 
     // group routes
-    $this->addRoute('group_search_discussions','group/:group_id:/search', 'GroupsController', 'searchDiscussions');
     $this->addRoute('group_wiki','group/:group_id:/wiki', 'GroupsController', 'wiki');
 
     // related groups routes

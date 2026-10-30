@@ -146,6 +146,7 @@ final class ForumWritingTest extends WebTestCase
         self::assertResponseRedirects();
 
         $crawler = $this->request('GET', '/forums/translate/m' . $post->getId() . '?locale=de');
+        self::assertResponseIsSuccessful();
         $this->client->submit($crawler->filter('form[name="forum_post"]')->form([
             'forum_post[locale]' => 'de',
             'forum_post[text]' => 'Bearbeiteter Text',

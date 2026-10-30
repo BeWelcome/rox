@@ -95,3 +95,6 @@ forum.reports.view:
 forum.reports.none:
     - 'No reports.'
     - The forum moderators' list of reports when it is empty
+forum.search.term:
+    - 'Search words'
+    - Placeholder of the forum search field (forum overview, a group's forum, a member's forum posts)

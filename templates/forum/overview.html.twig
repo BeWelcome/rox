@@ -11,8 +11,6 @@
             {% else %}
                 {{ button.post_button(path('forums_groups_only_mine'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowonlymygroupstopics', 'btn btn-outline-primary btn-sm') }}
             {% endif %}
-            {{ button.post_button(path('forums_less_group_posts'), constant('App\\Controller\\ForumsController::TOKEN'), 'showless', 'btn btn-outline-secondary btn-sm') }}
-            {{ button.post_button(path('forums_more_group_posts'), constant('App\\Controller\\ForumsController::TOKEN'), 'showmore', 'btn btn-outline-secondary btn-sm') }}
         </div>
     </div>
 

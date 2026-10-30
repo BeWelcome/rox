@@ -177,6 +177,22 @@ final class ForumPagesTest extends WebTestCase
         self::assertSame(array_reverse($normal), $reversed);
     }
 
+    public function testTheListsShowAsManyThreadsAsTheMemberWantsPerPage(): void
+    {
+        $this->connection->executeStatement(
+            "INSERT INTO memberspreferences (IdMember, IdPreference, Value, updated, created)
+             SELECT ?, id, '1', NOW(), NOW() FROM preferences WHERE codename = 'ItemsPerPage'",
+            [$this->member('member-2')->getId()],
+        );
+
+        $crawler = $this->request('GET', '/forums');
+        self::assertCount(1, $crawler->filter('main table tbody tr'));
+        self::assertCount(0, $crawler->filter('form[action$="/forums/more/group"], form[action$="/forums/less/group"]'));
+
+        $crawler = $this->request('GET', '/group/0/forum');
+        self::assertCount(1, $crawler->filter('main table tbody tr'));
+    }
+
     public function testThePermalinkPointsAtThePostOnItsPage(): void
     {
         $thread = $this->thread(self::AGORA_THREAD);

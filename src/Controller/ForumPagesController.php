@@ -14,6 +14,7 @@ use App\Repository\ForumThreadRepository;
 use App\Security\ForumVoter;
 use App\Security\GroupVoter;
 use App\Utilities\GroupSubmenuTrait;
+use App\Utilities\ItemsPerPageTraits;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
@@ -33,9 +34,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class ForumPagesController extends AbstractController
 {
     use GroupSubmenuTrait;
+    use ItemsPerPageTraits;
 
     public const int POSTS_PER_PAGE = 100;
-    private const int THREADS_PER_PAGE = 20;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -52,7 +53,7 @@ class ForumPagesController extends AbstractController
         $threads = $this->paginate(
             $this->getThreadRepository()->createLatestQueryBuilder($member, $this->isModerator(), null, $onlyMyGroups),
             $request->query->getInt('page', 1),
-            $this->getThreadsPerPage($member),
+            $this->getItemsPerPage($member),
         );
 
         return $this->render('forum/overview.html.twig', [
@@ -108,7 +109,7 @@ class ForumPagesController extends AbstractController
             'threads' => $canRead ? $this->paginate(
                 $this->getThreadRepository()->createLatestQueryBuilder($member, $this->isModerator(), $group),
                 $page_id,
-                self::THREADS_PER_PAGE,
+                $this->getItemsPerPage($member),
             ) : null,
             'submenu' => ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'],
         ]);
@@ -219,13 +220,6 @@ class ForumPagesController extends AbstractController
         $pager->setCurrentPage(min(max(1, $page), max(1, $pager->getNbPages())));
 
         return $pager;
-    }
-
-    private function getThreadsPerPage(Member $member): int
-    {
-        $value = (int) $this->getPreference($member, Preference::NUMBER_GROUPS_POSTS);
-
-        return $value > 0 ? $value : self::THREADS_PER_PAGE;
     }
 
     private function getPreference(Member $member, string $codename): ?string

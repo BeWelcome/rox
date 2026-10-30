@@ -246,7 +246,7 @@ final class ForumWritingTest extends WebTestCase
         self::assertResponseStatusCodeSame(405);
         $this->client->request('POST', '/forums/subscribe/thread/' . $thread->getId(), ['_token' => 'wrong']);
         self::assertResponseStatusCodeSame(403);
-        $this->client->request('POST', '/forums/more/group', ['_token' => 'wrong']);
+        $this->client->request('POST', '/forums/show/groups/only-mine', ['_token' => 'wrong']);
         self::assertResponseStatusCodeSame(403);
         self::assertSame(0, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $member->getId()]));
     }

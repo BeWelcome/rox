@@ -18,6 +18,34 @@ import '../scss/home.scss';
 
 window.bootstrap = bootstrap;
 
+// Front page: the real map under the map search drawing, loaded only there
+// Front page hero: each corner of the photo turns through its cards, one corner after the other
+const frontpageSlots = document.querySelectorAll('.js-fp-slot');
+if (frontpageSlots.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let turn = 0;
+    setInterval(function () {
+        if (document.hidden) {
+            return;
+        }
+        const slot = frontpageSlots[turn % frontpageSlots.length];
+        turn += 1;
+        const cards = slot.children;
+        const current = slot.querySelector('.is-active');
+        const next = cards[(Array.prototype.indexOf.call(cards, current) + 1) % cards.length];
+        current.classList.remove('is-active');
+        current.classList.add('is-leaving');
+        next.classList.add('is-active');
+        setTimeout(function () {
+            current.classList.remove('is-leaving');
+        }, 500);
+    }, 2200);
+}
+
+const frontpageMap = document.querySelector('.js-fp-map');
+if (frontpageMap) {
+    import('./home/frontpage-map').then(({ showFrontpageMap }) => showFrontpageMap(frontpageMap));
+}
+
 /* $(".select2").select2({
     theme: 'bootstrap4',
     width: 'auto',
@@ -25,7 +53,7 @@ window.bootstrap = bootstrap;
 });
 */
 
-// ── Home login bottom sheet (mobile only) ──────────────────────────
+// ── Home login panel (sheet on phones, card on desktop) ──────────────────────────
 (function () {
     const aside = document.querySelector('.js-home-login-aside');
     const backdrop = document.querySelector('.js-home-login-backdrop');
@@ -40,25 +68,33 @@ window.bootstrap = bootstrap;
         });
     }
 
+    // On desktop the panel hangs under the sticky top bar, so the page only stops scrolling (a fixed body would
+    // move the top bar away); phones need the fixed body for iOS
+    const desktop = window.matchMedia('(min-width: 768px)');
+    let lockedFixed = false;
+
     function lockBodyScroll() {
         lockedScrollY = window.scrollY || window.pageYOffset || 0;
         document.body.classList.add('home-sheet-open');
+        root.style.overflow = 'hidden';
+        lockedFixed = !desktop.matches;
+        if (!lockedFixed) return;
         document.body.style.position = 'fixed';
         document.body.style.top = `-${lockedScrollY}px`;
         document.body.style.left = '0';
         document.body.style.right = '0';
         document.body.style.width = '100%';
-        root.style.overflow = 'hidden';
     }
 
     function unlockBodyScroll() {
         document.body.classList.remove('home-sheet-open');
+        root.style.overflow = '';
+        if (!lockedFixed) return;
         document.body.style.position = '';
         document.body.style.top = '';
         document.body.style.left = '';
         document.body.style.right = '';
         document.body.style.width = '';
-        root.style.overflow = '';
         window.scrollTo(0, lockedScrollY);
     }
 
@@ -72,8 +108,8 @@ window.bootstrap = bootstrap;
             backdrop.classList.add('is-visible');
         });
         lockBodyScroll();
-        const closeBtn = aside.querySelector('.js-home-login-close');
-        if (closeBtn) closeBtn.focus();
+        const first = desktop.matches ? aside.querySelector('input[name="_username"]') : aside.querySelector('.js-home-login-close');
+        if (first) first.focus();
     }
 
     function closeSheet() {
@@ -90,7 +126,10 @@ window.bootstrap = bootstrap;
     }
 
     triggers.forEach(function (btn) {
-        btn.addEventListener('click', openSheet);
+        btn.addEventListener('click', function (event) {
+            event.preventDefault();
+            openSheet();
+        });
     });
 
     document.querySelectorAll('.js-home-login-close').forEach(function (btn) {

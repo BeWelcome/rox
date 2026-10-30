@@ -38,12 +38,16 @@ class ForumThreadRepository extends EntityRepository
                 ->addOrderBy('p.created', 'DESC');
         }
 
-        // the member is in the thread's group (each use needs its own alias)
-        $isMember = static fn (string $alias): string => 'EXISTS (SELECT 1 FROM ' . GroupMembership::class . " {$alias}"
-            . " WHERE {$alias}.group = t.group AND {$alias}.member = :member AND {$alias}.status = :in)";
-        $queryBuilder
-            ->setParameter('member', $member)
-            ->setParameter('in', GroupMembershipStatusType::CURRENT_MEMBER);
+        // the member is in the thread's group (each use needs its own alias); binds its parameters only when used,
+        // as Doctrine refuses parameters a query doesn't use
+        $isMember = static function (string $alias) use ($queryBuilder, $member): string {
+            $queryBuilder
+                ->setParameter('member', $member)
+                ->setParameter('in', GroupMembershipStatusType::CURRENT_MEMBER);
+
+            return 'EXISTS (SELECT 1 FROM ' . GroupMembership::class . " {$alias}"
+                . " WHERE {$alias}.group = t.group AND {$alias}.member = :member AND {$alias}.status = :in)";
+        };
 
         if ($onlyMyGroups) {
             $queryBuilder->andWhere($isMember('gm1'));

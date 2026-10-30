@@ -124,6 +124,30 @@ final class ForumPagesTest extends WebTestCase
         self::assertResponseIsSuccessful();
     }
 
+    public function testModeratorsSeeTheListsOfThreads(): void
+    {
+        $hiking = $this->thread(self::HIKING_THREAD);
+        $this->connection->executeStatement(
+            'UPDATE forum_thread SET ThreadDeleted = ? WHERE id = ?',
+            [ForumDeleteStatusType::DELETED, $hiking->getId()],
+        );
+        $this->client->loginUser($this->member('member-3'));
+
+        $crawler = $this->request('GET', '/forums');
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString(self::AGORA_THREAD, $crawler->text());
+        self::assertStringNotContainsString(self::HIKING_THREAD, $crawler->text());
+
+        $crawler = $this->request('GET', '/group/0/forum');
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString(self::AGORA_THREAD, $crawler->text());
+
+        // a group's forum shows moderators its deleted threads too
+        $crawler = $this->request('GET', '/group/' . $hiking->getGroup()->getId() . '/forum');
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString(self::HIKING_THREAD, $crawler->text());
+    }
+
     public function testDeletedPostsAreLeftOut(): void
     {
         $thread = $this->thread(self::AGORA_THREAD);

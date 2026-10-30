@@ -24,7 +24,7 @@
 					<p class="u-ellipsis {% if unread %}unread{% endif %}">
 						<a href="{{ path('conversation_view', { id: message.id } ) }}">
 							{% if message.subject %}
-								{{ message.subject.subject|raw }}
+								{{ message.subject.subject|striptags }}
 							{% endif %}
 						</a>
 					</p>

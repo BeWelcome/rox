@@ -1,24 +1,24 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="h3">{{ 'ForumRulesShort'|trans }}</h1>
-    <h2 class="h4">{{ 'ForumRulesGeneral'|trans|raw }}</h2>
-    <h2 class="h4">{{ 'ForumRulesCharterHeadline1'|trans|raw }}</h2>
-    <h3 class="h5">{{ 'ForumRulesCharterHeadline2'|trans|raw }}</h3>
+    <h1 class="h3">{{ 'forumrulesshort'|trans }}</h1>
+    <h2 class="h4">{{ 'forumrulesgeneral'|trans|raw }}</h2>
+    <h2 class="h4">{{ 'forumrulescharterheadline1'|trans|raw }}</h2>
+    <h3 class="h5">{{ 'forumrulescharterheadline2'|trans|raw }}</h3>
     <ol>
-        {% for i in 1..6 %}<li>{{ ('ForumRulesCharterText' ~ i)|trans|raw }}</li>{% endfor %}
+        {% for i in 1..6 %}<li>{{ ('forumruleschartertext' ~ i)|trans|raw }}</li>{% endfor %}
     </ol>
-    <h2 class="h4">{{ 'ForumRulesHeadline1'|trans|raw }}</h2>
-    <h3 class="h5">{{ 'ForumRulesHeadline2'|trans|raw }}</h3>
-    <p>{{ 'ForumRulesText1'|trans|raw }}</p>
+    <h2 class="h4">{{ 'forumrulesheadline1'|trans|raw }}</h2>
+    <h3 class="h5">{{ 'forumrulesheadline2'|trans|raw }}</h3>
+    <p>{{ 'forumrulestext1'|trans|raw }}</p>
     <ol>
-        {% for i in 2..6 %}<li>{{ ('ForumRulesText' ~ i)|trans|raw }}</li>{% endfor %}
+        {% for i in 2..6 %}<li>{{ ('forumrulestext' ~ i)|trans|raw }}</li>{% endfor %}
     </ol>
-    <p>{{ 'ForumRulesText7'|trans|raw }}</p>
+    <p>{{ 'forumrulestext7'|trans|raw }}</p>
     <ol>
-        {% for i in 8..11 %}<li>{{ ('ForumRulesText' ~ i)|trans|raw }}</li>{% endfor %}
+        {% for i in 8..11 %}<li>{{ ('forumrulestext' ~ i)|trans|raw }}</li>{% endfor %}
     </ol>
-    {% for i in 12..15 %}<p>{{ ('ForumRulesText' ~ i)|trans|raw }}</p>{% endfor %}
-    <h3 class="h5" id="groups">{{ 'ForumRulesDiscussionGroups'|trans|raw }}</h3>
-    <p>{{ 'ForumRulesDiscussionGroupsText'|trans|raw }}</p>
+    {% for i in 12..15 %}<p>{{ ('forumrulestext' ~ i)|trans|raw }}</p>{% endfor %}
+    <h3 class="h5" id="groups">{{ 'forumrulesdiscussiongroups'|trans|raw }}</h3>
+    <p>{{ 'forumrulesdiscussiongroupstext'|trans|raw }}</p>
 {% endblock %}

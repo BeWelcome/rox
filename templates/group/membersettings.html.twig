@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="h3">{{ 'GroupsMemberSettings'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    <h1 class="h3">{{ 'groupsmembersettings'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
     {{ form(form) }}
 {% endblock %}

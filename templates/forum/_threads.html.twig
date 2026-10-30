@@ -7,17 +7,17 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th scope="col">{{ 'Thread'|trans }}</th>
-                <th scope="col">{{ 'LastPost'|trans }}</th>
-                <th scope="col" class="text-end d-none d-md-table-cell">{{ 'Replies'|trans }}</th>
-                <th scope="col" class="text-end d-none d-md-table-cell">{{ 'Views'|trans }}</th>
+                <th scope="col">{{ 'thread'|trans }}</th>
+                <th scope="col">{{ 'lastpost'|trans }}</th>
+                <th scope="col" class="text-end d-none d-md-table-cell">{{ 'replies'|trans }}</th>
+                <th scope="col" class="text-end d-none d-md-table-cell">{{ 'views'|trans }}</th>
             </tr>
         </thead>
         <tbody>
             {% for thread in threads %}
                 <tr>
                     <td>
-                        {% if thread.stickyValue > 0 %}<i class="fas fa-thumbtack me-1" title="{{ 'PinnedPost'|trans }}"></i>{% endif %}
+                        {% if thread.stickyValue > 0 %}<i class="fas fa-thumbtack me-1" title="{{ 'pinnedpost'|trans }}"></i>{% endif %}
                         <a href="{{ forum.thread_url(thread) }}" class="fw-bold">{{ forum.thread_title(thread, app.request.locale) }}</a>
                         {% if showGroup|default(false) %}
                             <br><small class="text-muted">
@@ -33,7 +33,7 @@
                     <td class="text-end d-none d-md-table-cell">{{ thread.views }}</td>
                 </tr>
             {% else %}
-                <tr><td colspan="4">{{ 'ForumNoThreads'|trans }}</td></tr>
+                <tr><td colspan="4">{{ 'found0threads'|trans }}</td></tr>
             {% endfor %}
         </tbody>
     </table>

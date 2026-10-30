@@ -1,13 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    <h1 class="h3">{{ 'TitleDeleteRelatedGroupFromGroup'|trans }} <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    <h1 class="h3">{{ 'titledeleterelatedgroupfromgroup'|trans }} <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
     <ul class="list-unstyled">
         {% for other in related %}
             <li class="mb-2">
                 <form method="post" action="{{ path('relatedgroup_delete', {group_id: group.id, related_id: other.id}) }}" class="d-inline">
                     <input type="hidden" name="_token" value="{{ csrf_token('relatedgroup-delete-' ~ group.id ~ '-' ~ other.id) }}">
-                    <button type="submit" class="btn btn-sm btn-outline-danger">{{ 'RemoveRelatedGroupTitle'|trans }}</button>
+                    <button type="submit" class="btn btn-sm btn-outline-danger">{{ 'removerelatedgrouptitle'|trans }}</button>
                 </form>
                 <a href="{{ path('group_start', {group_id: other.id}) }}">{{ other.name }}</a>
             </li>

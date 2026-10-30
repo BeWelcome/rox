@@ -11,17 +11,17 @@
 {% block content %}
     {% import 'macros/post_button.html.twig' as button %}
     {% import _self as admin %}
-    <h1 class="h3">{{ 'GroupsAdministrateMembers'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
+    <h1 class="h3">{{ 'groupsadministratemembers'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
 
-    <h2 class="h4 mt-3">{{ 'GroupsInviteMembers'|trans }}</h2>
+    <h2 class="h4 mt-3">{{ 'groupsinvitemembers'|trans }}</h2>
     <form method="post" action="{{ path('group_invite_member', {group_id: group.id}) }}" class="d-flex gap-2 mb-3">
         <input type="hidden" name="_token" value="{{ csrf_token('group-invite-' ~ group.id) }}">
-        <input type="text" class="o-input" name="username" aria-label="{{ 'Username'|trans }}" required>
-        <button type="submit" class="btn btn-primary">{{ 'GroupsInvite'|trans }}</button>
+        <input type="text" class="o-input" name="username" aria-label="{{ 'username'|trans }}" required>
+        <button type="submit" class="btn btn-primary">{{ 'groupsinvite'|trans }}</button>
     </form>
 
     {% if applicants is not empty %}
-        <h2 class="h4 mt-3">{{ 'GroupsAcceptMember'|trans }}</h2>
+        <h2 class="h4 mt-3">{{ 'groupsacceptmember'|trans }}</h2>
         <table class="table table-striped">
             <tbody>
                 {% for membership in applicants %}
@@ -29,8 +29,8 @@
                         <td><a href="{{ path('members_profile', {username: membership.member.username}) }}">{{ membership.member.username }}</a></td>
                         <td><em>{{ membership.comment|purify }}</em></td>
                         <td class="text-end">
-                            {{ admin.action('group_acceptmember', group, membership.member, 'accept', 'GroupsAcceptMember', 'btn-primary', null) }}
-                            {{ admin.action('group_declinemember', group, membership.member, 'decline', 'GroupsDeclineMember', 'btn-outline-danger', 'GroupsConfirmMemberDecline') }}
+                            {{ admin.action('group_acceptmember', group, membership.member, 'accept', 'groupsacceptmember', 'btn-primary', null) }}
+                            {{ admin.action('group_declinemember', group, membership.member, 'decline', 'groupsdeclinemember', 'btn-outline-danger', 'groupsconfirmmemberdecline') }}
                         </td>
                     </tr>
                 {% endfor %}
@@ -39,18 +39,18 @@
     {% endif %}
 
     {% if invited is not empty %}
-        <h2 class="h4 mt-3">{{ 'GroupsInvitedMembers'|trans }}</h2>
+        <h2 class="h4 mt-3">{{ 'groupsinvitedmembers'|trans }}</h2>
         <ul>
             {% for membership in invited %}
                 <li>
                     <a href="{{ path('members_profile', {username: membership.member.username}) }}">{{ membership.member.username }}</a>
-                    {{ button.post_button(path('withdraw_member_invite_to_group', {groupId: group.id, memberId: membership.member.id}), 'group-withdraw-' ~ group.id ~ '-' ~ membership.member.id, 'GroupsWithdrawInvitation', 'btn btn-sm btn-outline-secondary') }}
+                    {{ button.post_button(path('withdraw_member_invite_to_group', {groupId: group.id, memberId: membership.member.id}), 'group-withdraw-' ~ group.id ~ '-' ~ membership.member.id, 'groupswithdrawinvitation', 'btn btn-sm btn-outline-secondary') }}
                 </li>
             {% endfor %}
         </ul>
     {% endif %}
 
-    <h2 class="h4 mt-3">{{ 'GroupsCurrentMembers'|trans }}</h2>
+    <h2 class="h4 mt-3">{{ 'groupscurrentmembers'|trans }}</h2>
     <table class="table table-striped">
         <tbody>
             {% for membership in members %}
@@ -59,11 +59,11 @@
                     <td><a href="{{ path('members_profile', {username: member.username}) }}" class="username">{{ member.username }}</a></td>
                     <td class="text-end">
                         {% if member.id in administratorIds %}
-                            <span class="badge text-bg-secondary">{{ 'GroupAdmins'|trans }}</span>
+                            <span class="badge text-bg-secondary">{{ 'groupadmins'|trans }}</span>
                         {% else %}
-                            {{ admin.action('group_addadmin', group, member, 'admin', 'GroupsAddAdmin', 'btn-outline-primary', 'GroupsConfirmMemberAsAdmin') }}
-                            {{ admin.action('group_kickmember', group, member, 'kick', 'GroupsKickMember', 'btn-outline-danger', 'GroupsConfirmMemberKick') }}
-                            {{ admin.action('group_banmember', group, member, 'ban', 'GroupsBanMember', 'btn-danger', 'GroupsConfirmMemberBan') }}
+                            {{ admin.action('group_addadmin', group, member, 'admin', 'groupsaddadmin', 'btn-outline-primary', 'groupsconfirmmemberasadmin') }}
+                            {{ admin.action('group_kickmember', group, member, 'kick', 'groupskickmember', 'btn-outline-danger', 'groupsconfirmmemberkick') }}
+                            {{ admin.action('group_banmember', group, member, 'ban', 'groupsbanmember', 'btn-danger', 'groupsconfirmmemberban') }}
                         {% endif %}
                     </td>
                 </tr>

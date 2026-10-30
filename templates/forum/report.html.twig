@@ -2,7 +2,7 @@
 {% import 'forum/_macros.html.twig' as forum %}
 
 {% block content %}
-    <h1 class="h3">{{ 'ForumMyReportToMod'|trans }}
+    <h1 class="h3">{{ 'forummyreporttomod'|trans }}
         {% if post.thread %}: <a href="{{ forum.thread_url(post.thread) }}#post{{ post.id }}">{{ forum.thread_title(post.thread, app.request.locale) }}</a>{% endif %}
     </h1>
     <p class="small"><a href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>, {{ post.created|format_datetime('short', 'short') }}</p>

@@ -3,12 +3,12 @@
 {% block content %}
     <div class="row">
         <div class="col-12 col-md-6 mb-3">
-            <h1 class="h3">{{ 'MyGroups'|trans }}</h1>
-            <a href="{{ path('groups_search') }}">{{ 'GroupsSearchHeading'|trans }}</a>
+            <h1 class="h3">{{ 'mygroups'|trans }}</h1>
+            <a href="{{ path('groups_search') }}">{{ 'groupssearchheading'|trans }}</a>
         </div>
         <div class="col-12 col-md-6 mb-3">
-            <h2 class="h3">{{ 'GroupsCreateHeading'|trans }}</h2>
-            <a class="btn btn-primary" role="button" href="{{ path('new_group') }}">{{ 'GroupsCreateNew'|trans }}</a>
+            <h2 class="h3">{{ 'groupscreateheading'|trans }}</h2>
+            <a class="btn btn-primary" role="button" href="{{ path('new_group') }}">{{ 'groupscreatenew'|trans }}</a>
         </div>
     </div>
 
@@ -31,6 +31,6 @@
             </div>
         {% endif %}
     {% else %}
-        <p>{{ 'GroupsMyGroupsNoResults'|trans|format('<a href="' ~ path('groups_search') ~ '">', '</a>', '<a href="' ~ path('new_group') ~ '">', '</a>')|raw }}</p>
+        <p>{{ 'groupsmygroupsnoresults'|trans|format('<a href="' ~ path('groups_search') ~ '">', '</a>', '<a href="' ~ path('new_group') ~ '">', '</a>')|raw }}</p>
     {% endif %}
 {% endblock %}

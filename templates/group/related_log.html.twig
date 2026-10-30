@@ -1,22 +1,34 @@
 {% extends 'group/layout.html.twig' %}
 
+{# The related groups' history: Add / Remove at the top, then a row per change (who, added or removed, which group, when) #}
+
 {% block group_content %}
-    <h2 class="h4">{{ 'administraterelatedgroupstitle'|trans }}</h2>
-    {% if isMember %}
-        <p>
-            <a class="btn btn-outline-primary" href="{{ path('relatedgroup_select', {group_id: group.id}) }}">{{ 'addrelatedgroupbutton'|trans }}</a>
-            <a class="btn btn-outline-danger" href="{{ path('relatedgroup_selectdelete', {group_id: group.id}) }}">{{ 'removerelatedgroupbutton'|trans }}</a>
-        </p>
-    {% endif %}
-    <ul class="list-unstyled" id="related-group-log">
-        {% for link in links %}
-            <li>
-                <span class="text-muted small">{{ link.updated|format_datetime('short', 'short') }}</span>
+    <section class="p-group-panel">
+        <div class="p-group-panel__head">
+            <h2 class="p-group-panel__title">{{ 'administraterelatedgroupstitle'|trans }}</h2>
+            {% if isMember %}
+                <div class="p-group-panel__actions">
+                    <a class="p-group-btn" href="{{ path('relatedgroup_select', {group_id: group.id}) }}"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'addrelatedgroupbutton'|trans }}</a>
+                    <a class="p-group-btn p-group-btn--danger" href="{{ path('relatedgroup_selectdelete', {group_id: group.id}) }}"><i class="fa fa-minus" aria-hidden="true"></i> {{ 'removerelatedgroupbutton'|trans }}</a>
+                </div>
+            {% endif %}
+        </div>
+        <ul class="p-group-log" id="related-group-log">
+            {% for link in links %}
                 {% set by = link.removed ? link.deletedBy : link.addedBy %}
-                {% if by %}<a href="{{ path('members_profile', {username: by.username}) }}">{{ by.username }}</a>{% endif %}
-                {{ (link.removed ? 'removerelatedgrouptitle' : 'addrelatedgrouptitle')|trans }}:
-                <a href="{{ path('group_start', {group_id: link.relatedGroup.id}) }}">{{ link.relatedGroup.name }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+                <li class="p-group-log__row">
+                    <span class="p-group-log__icon{{ link.removed ? ' is-removed' }}"><i class="fa {{ link.removed ? 'fa-minus' : 'fa-plus' }}" aria-hidden="true"></i></span>
+                    <div class="p-group-log__text">
+                        <p class="p-group-log__what">
+                            {{ (link.removed ? 'removerelatedgrouptitle' : 'addrelatedgrouptitle')|trans }}
+                            <a href="{{ path('group_start', {group_id: link.relatedGroup.id}) }}">{{ link.relatedGroup.name }}</a>
+                        </p>
+                        <p class="p-group-log__meta">
+                            {% if by %}<a href="{{ path('members_profile', {username: by.username}) }}">{{ by.username }}</a> · {% endif %}{{ link.updated|format_datetime('medium', 'short') }}
+                        </p>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
 {% endblock %}

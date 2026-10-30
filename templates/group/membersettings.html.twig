@@ -1,6 +1,45 @@
 {% extends 'group/layout.html.twig' %}
 
+{# A member's settings for the group: why they're in it, then a switch per setting, then Save #}
+
 {% block group_content %}
-    <h2 class="h4">{{ 'groupsmembersettings'|trans }}</h2>
-    {{ form(form) }}
+    <div class="p-group-form">
+        {{ form_start(form, {attr: {class: 'p-group-form__card'}}) }}
+            <div class="p-group-form__head">
+                <span class="p-group-form__icon"><i class="fas fa-cog" aria-hidden="true"></i></span>
+                <div>
+                    <h2 class="p-group-form__title">{{ 'groupsmembersettings'|trans }}</h2>
+                    <p class="p-group-form__sub">{{ group.name }}</p>
+                </div>
+            </div>
+            {% for _error in form.vars.errors %}<p class="p-group-form__error p-group-form__error--box">{{ _error.message }}</p>{% endfor %}
+
+            <div class="p-group-form__field">
+                <label class="p-group-form__label" for="{{ form.comment.vars.id }}">{{ form.comment.vars.label|trans }}</label>
+                <textarea class="p-group-form__input" id="{{ form.comment.vars.id }}" name="{{ form.comment.vars.full_name }}" rows="4">{{ form.comment.vars.value }}</textarea>
+                {% do form.comment.setRendered %}
+                {% for _error in form.comment.vars.errors %}<p class="p-group-form__error">{{ _error.message }}</p>{% endfor %}
+            </div>
+
+            <div class="p-group-switches">
+                {% for _field, _icon in {acceptMassMail: 'fa-envelope', notificationsEnabled: 'fa-bell', shownOnProfile: 'fa-user'} %}
+                    {% set _check = form[_field] %}
+                    <label class="p-group-switch" for="{{ _check.vars.id }}">
+                        <i class="fas {{ _icon }}" aria-hidden="true"></i>
+                        <span class="p-group-switch__text">{{ _check.vars.label|trans }}</span>
+                        <input type="checkbox" class="p-preference-toggle__input" id="{{ _check.vars.id }}" name="{{ _check.vars.full_name }}" value="{{ _check.vars.value }}"{{ _check.vars.checked ? ' checked' }}>
+                        <span class="p-preference-toggle__track" aria-hidden="true"><span class="p-preference-toggle__thumb"></span></span>
+                    </label>
+                    {% do _check.setRendered %}
+                {% endfor %}
+            </div>
+
+            {% do form.submit.setRendered %}
+            {{ form_rest(form) }}
+            <div class="p-group-form__foot">
+                <a class="p-group-btn" href="{{ path('group_start', {group_id: group.id}) }}">{{ 'cancel'|trans }}</a>
+                <button type="submit" class="p-group-btn p-group-btn--primary" name="{{ form.submit.vars.full_name }}">{{ form.submit.vars.label|trans }}</button>
+            </div>
+        {{ form_end(form) }}
+    </div>
 {% endblock %}

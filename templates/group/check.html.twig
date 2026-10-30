@@ -1,8 +1,13 @@
+{# Groups with a name like the one typed on the new group page #}
 {% if groups|length %}
-<p>{{ 'group.create.check.double' | trans }}</p>
-<div class="row g-3">
-{% for group in groups %}
-    <div class="col-12 col-sm-6 col-md-4 mb-3"><a href="/groups/{{ group.id }}" class="btn btn-primary">{{ group.name }}</a></div>
-{% endfor %}
+<div class="p-gnew__similar">
+    <p class="p-gnew__similar-title"><i class="fas fa-info-circle" aria-hidden="true"></i> {{ 'group.create.check.double'|trans }}</p>
+    <div class="p-gnew__similar-list">
+    {% for group in groups %}
+        <a class="p-gnew__similar-item" href="{{ path('group_start', {group_id: group.id}) }}" target="_blank">
+            <i class="fas fa-users" aria-hidden="true"></i> {{ group.name }}
+        </a>
+    {% endfor %}
+    </div>
 </div>
 {% endif %}

@@ -72,9 +72,9 @@ class GroupRepository extends EntityRepository
     /**
      * The groups the member is in, rows as in createSearchQueryBuilder().
      */
-    public function createMyGroupsQueryBuilder(Member $member): QueryBuilder
+    public function createMyGroupsQueryBuilder(Member $member, string $order = 'nameasc'): QueryBuilder
     {
-        return $this->createListQueryBuilder('nameasc')
+        return $this->createListQueryBuilder($order)
             ->join('g.groupMemberships', 'mine', Join::WITH, 'mine.member = :member AND mine.status = :in')
             ->setParameter('member', $member)
             ->setParameter('in', GroupMembershipStatusType::CURRENT_MEMBER);

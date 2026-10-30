@@ -71,7 +71,13 @@ export function createContactPanel(panel, {from, onBack}) {
             onBack('done');
             window.dispatchEvent(new CustomEvent('bw-edit-saved', { detail: { url: target } }));
         } else {
+            const here = new URL(window.location.href);
             window.location.href = url.toString();
+            // Same page, only another #anchor (a forum reply: the thread at the new post):
+            // the browser would just scroll, so load it again
+            if (url.origin === here.origin && url.pathname === here.pathname && url.search === here.search) {
+                window.location.reload();
+            }
         }
     }
 

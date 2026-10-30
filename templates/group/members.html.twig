@@ -1,34 +1,30 @@
 {% extends 'group/layout.html.twig' %}
 
+{# A group's members: one white list, a row per member (avatar, name, why they joined), the row opens the profile #}
+
 {% block group_content %}
-    <div class="row">
-        <div class="col">
-            <h2 class="h4">{{ 'groupsmembers'|trans }}</h2>
+    <section class="p-group-panel p-group-people">
+        <div class="p-group-panel__head">
+            <h2 class="p-group-panel__title">{{ 'groupsmembers'|trans }} <span class="p-group-panel__count">{{ memberships.nbResults }}</span></h2>
         </div>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th colspan="2" class="col-3">{{ 'groupmembers'|trans }}</th>
-                    <th class="col-9">{{ 'groupsmembercomment'|trans }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for membership in memberships %}
-                    {% set member = membership.member %}
-                    <tr>
-                        <td><img class="rounded" width="50" height="50" loading="lazy" alt="" src="{{ path('avatar', {username: member.username, size: 50}) }}"></td>
-                        <td><a href="{{ path('members_profile', {username: member.username}) }}" class="username">{{ member.username }}</a></td>
-                        <td><em>{{ membership.comment|purify|nl2br }}</em></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% if memberships.haveToPaginate %}
-        <div class="u:flex u:justify-end u:my-8">
-            {{ pagerfanta(memberships, 'rounded_pagination', {routeName: 'group_members_paged', routeParams: {group_id: group.id}, pageParameter: '[page_number]'}) }}
+        <div class="p-group-people__list">
+            {% for membership in memberships %}
+                {% set member = membership.member %}
+                <div class="p-group-people__row">
+                    <img class="p-group-people__avatar" width="48" height="48" loading="lazy" alt="" src="{{ path('avatar', {username: member.username, size: 50}) }}">
+                    <div class="p-group-people__text">
+                        <a class="p-group-people__name username" href="{{ path('members_profile', {username: member.username}) }}">{{ member.username }}</a>
+                        {% if membership.comment|striptags|trim %}
+                            <p class="p-group-people__comment">{{ membership.comment|purify|nl2br }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endif %}
+        {% if memberships.haveToPaginate %}
+            <div class="p-group-people__pages">
+                {{ pagerfanta(memberships, 'rounded_pagination', {routeName: 'group_members_paged', routeParams: {group_id: group.id}, pageParameter: '[page_number]'}) }}
+            </div>
+        {% endif %}
+    </section>
 {% endblock %}

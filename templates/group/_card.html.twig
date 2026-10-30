@@ -1,30 +1,31 @@
 {#
-  One group in a list (search, my groups): picture, name, members, new members and the date of the newest post.
+  One group in a list (my groups, all groups): picture, name, members and when its last post was; Joined when
+  the member is in it.
   row is a result row of GroupRepository: the group (key 0), memberCount, newMemberCount and lastActivity.
+  myGroupIds: the groups the member is in.
 #}
 {% set group = row[0] %}
-<div class="col-12 col-md-6 col-lg-4 pt-2">
-    <div class="d-flex">
-        <a href="{{ path('group_start', {group_id: group.id}) }}" class="flex-shrink-0 me-2">
-            <img class="groupimg framed" width="80" height="80" alt="{{ group.name }}" loading="lazy"
-                 src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
-        </a>
-        <div>
-            <h5 class="mb-1"><a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h5>
-            <div class="small">
-                <span title="{{ 'group.member.count'|trans }}" data-member-count="{{ row.memberCount }}"><i class="fa fa-users me-1" aria-hidden="true"></i>{{ row.memberCount }}</span>
-                <span class="ms-3" title="{{ 'groupsnewmembers'|trans }}"><i class="fa fa-user-plus me-1" aria-hidden="true"></i>{{ row.newMemberCount }}</span>
-            </div>
-            <div class="small">
-                {% if row.lastActivity %}
-                    <span title="{{ 'groupslastpost'|trans }}"><i class="far fa-comment me-1" aria-hidden="true"></i><span class="text-nowrap">{{ row.lastActivity|format_date('short') }}</span></span>
-                {% else %}
-                    <i class="far fa-comment me-1" aria-hidden="true"></i><span class="text-nowrap">{{ 'groupsnopostyet'|trans }}</span>
-                {% endif %}
-            </div>
-            {% if group.location %}
-                <div class="small text-muted"><i class="fas fa-location-dot me-1" aria-hidden="true"></i>{{ group.location.name }}</div>
+{% set _last = row.lastActivity ? row.lastActivity|date('Y-m-d') : null %}
+<a class="p-group-card" href="{{ path('group_start', {group_id: group.id}) }}">
+    <img class="p-group-card__picture" width="68" height="68" alt="" loading="lazy"
+         src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+    <span class="p-group-card__main">
+        <span class="p-group-card__name">{{ group.name }}</span>
+        <span class="p-group-card__meta">
+            <span data-member-count="{{ row.memberCount }}">{{ 'group.list.members'|trans({count: row.memberCount}) }}</span>
+            <span class="p-group-card__dot" aria-hidden="true">•</span>
+            {% if _last == 'now'|date('Y-m-d') %}
+                <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.today'|trans }}</span>
+            {% elseif _last == 'yesterday'|date('Y-m-d') %}
+                <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.yesterday'|trans }}</span>
+            {% elseif _last %}
+                <span><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.last.post'|trans({date: row.lastActivity|format_date(pattern: _last|slice(0, 4) == 'now'|date('Y') ? 'MMM d' : 'MMM d, y')}) }}</span>
+            {% else %}
+                <span><i class="far fa-comment" aria-hidden="true"></i> {{ 'groupsnopostyet'|trans }}</span>
             {% endif %}
-        </div>
-    </div>
-</div>
+        </span>
+    </span>
+    {% if group.id in myGroupIds|default([]) %}
+        <span class="p-group-card__joined"><i class="fa fa-check" aria-hidden="true"></i> {{ 'group.list.joined'|trans }}</span>
+    {% endif %}
+</a>

@@ -1,17 +1,27 @@
 {% extends 'group/layout.html.twig' %}
 
+{# Groups the member is in that can be linked to this one: a row per group with Add #}
+
 {% block group_content %}
-    <h2 class="h4">{{ 'titleaddrelatedgrouptogroup'|trans }}</h2>
-    <ul class="list-unstyled">
-        {% for candidate in candidates %}
-            <li class="mb-2">
-                <form method="post" action="{{ path('relatedgroup_add', {group_id: group.id, related_id: candidate.id}) }}" class="d-inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token('relatedgroup-add-' ~ group.id ~ '-' ~ candidate.id) }}">
-                    <button type="submit" class="btn btn-sm btn-outline-primary">{{ 'addasrelatedgroup'|trans }}</button>
-                </form>
-                <a href="{{ path('group_start', {group_id: candidate.id}) }}">{{ candidate.name }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-    <a href="{{ path('relatedgroup_selectdelete', {group_id: group.id}) }}">{{ 'removerelatedgroupbutton'|trans }}</a>
+    <section class="p-group-panel">
+        <div class="p-group-panel__head">
+            <h2 class="p-group-panel__title">{{ 'titleaddrelatedgrouptogroup'|trans }}</h2>
+            <a class="p-group-panel__more" href="{{ path('relatedgroup_selectdelete', {group_id: group.id}) }}">{{ 'removerelatedgroupbutton'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+        <ul class="p-group-pick">
+            {% for candidate in candidates %}
+                <li class="p-group-pick__row">
+                    <a class="p-group-pick__group" href="{{ path('group_start', {group_id: candidate.id}) }}">
+                        <img width="40" height="40" alt="" loading="lazy"
+                             src="{{ candidate.picture ? path('group_thumbimg', {group_id: candidate.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+                        <span>{{ candidate.name }}</span>
+                    </a>
+                    <form method="post" action="{{ path('relatedgroup_add', {group_id: group.id, related_id: candidate.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('relatedgroup-add-' ~ group.id ~ '-' ~ candidate.id) }}">
+                        <button type="submit" class="p-group-btn p-group-btn--primary"><i class="fa fa-plus" aria-hidden="true"></i> {{ 'addasrelatedgroup'|trans }}</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
 {% endblock %}

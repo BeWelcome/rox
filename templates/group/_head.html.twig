@@ -6,7 +6,7 @@
 <header class="p-group__head">
     <div class="p-group__top">
         <img class="p-group__picture" width="64" height="64" alt="" loading="lazy"
-             src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+             src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
         <div class="p-group__titles">
             <h1 class="p-group__title"><a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
             {% if group.location or group.categories|length %}

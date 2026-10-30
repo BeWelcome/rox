@@ -59,13 +59,8 @@ class GroupPagesController extends AbstractController
     {
         $groups = $this->paginate($this->getGroupRepository()->createSearchQueryBuilder($search), $search->page, self::GROUPS_PER_PAGE);
 
-        /** @var GroupCategoryRepository $categoryRepository */
-        $categoryRepository = $this->entityManager->getRepository(GroupCategory::class);
-
-        return $this->render('group/search.html.twig', [
-            'search' => $search,
+        return $this->render('group/search.html.twig', $this->getListParameters($request, $search) + [
             'groups' => $groups,
-            'categories' => $categoryRepository->findAllSortedByName($request->getLocale()),
         ]);
     }
 
@@ -98,8 +93,13 @@ class GroupPagesController extends AbstractController
             return $this->redirectToRoute('groups_mygroups');
         }
 
-        return $this->render('group/mygroups.html.twig', [
-            'groups' => $this->paginate($this->getGroupRepository()->createMyGroupsQueryBuilder($member), $page, self::GROUPS_PER_PAGE),
+        // Newest post first unless another order is asked for
+        $order = (string) $request->query->get('order', 'actdesc');
+        $order = \in_array($order, GroupSearch::ORDERS, true) ? $order : 'actdesc';
+        $groups = $this->paginate($this->getGroupRepository()->createMyGroupsQueryBuilder($member, $order), $page, self::GROUPS_PER_PAGE);
+
+        return $this->render('group/mygroups.html.twig', $this->getListParameters($request, new GroupSearch(order: $order)) + [
+            'groups' => $groups,
             'profileForm' => $profileForm,
         ]);
     }
@@ -225,6 +225,31 @@ class GroupPagesController extends AbstractController
             ])
             ->add('save', SubmitType::class, ['label' => 'save'])
             ->getForm();
+    }
+
+    /**
+     * What both lists (my groups, all groups) show around the groups: the search, the categories, the number of
+     * groups on each tab and the groups the member is in (Joined).
+     *
+     * @return array<string, mixed>
+     */
+    private function getListParameters(Request $request, GroupSearch $search): array
+    {
+        $member = $this->getUser();
+        /** @var GroupCategoryRepository $categoryRepository */
+        $categoryRepository = $this->entityManager->getRepository(GroupCategory::class);
+        $myGroupIds = $member instanceof Member ? array_map(
+            static fn (GroupMembership $membership): int => (int) $membership->getGroup()->getId(),
+            $this->getCurrentMemberships($member),
+        ) : [];
+
+        return [
+            'search' => $search,
+            'categories' => $categoryRepository->findAllSortedByName($request->getLocale()),
+            'myGroupIds' => $myGroupIds,
+            'myCount' => \count($myGroupIds),
+            'allCount' => $this->paginate($this->getGroupRepository()->createSearchQueryBuilder(new GroupSearch()), 1, 1)->getNbResults(),
+        ];
     }
 
     /**

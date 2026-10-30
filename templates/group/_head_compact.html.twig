@@ -1,0 +1,45 @@
+{#
+  The small head of a group's page read in full (a forum thread): the group's picture and name, its menu
+  folded under the active item, and the button to start a topic.
+  Needs group and submenu (items, active).
+#}
+{% set _active = submenu.items[submenu.active] ?? null %}
+{% set _icons = {overview: 'fa-house', forum: 'fa-comments', wiki: 'fa-book', members: 'fa-users', membersettings: 'fa-cog', relatedgroupsettings: 'fa-link', memberadministration: 'fa-user-shield', groupsettings: 'fa-sliders'} %}
+<header class="p-group-mini">
+    <a class="p-group-mini__picture" href="{{ path('group_start', {group_id: group.id}) }}">
+        <img width="56" height="56" alt="" loading="lazy"
+             src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+    </a>
+    <div class="p-group-mini__titles">
+        <a class="p-group-mini__name" href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a>
+        <details class="p-group-mini__menu">
+            <summary>
+                <i class="fas {{ _icons[submenu.active] ?? 'fa-comments' }}" aria-hidden="true"></i>
+                {{ (_active ? _active.key : 'groupdiscussions')|lower|trans }}
+                <i class="fas fa-chevron-down p-group-mini__caret" aria-hidden="true"></i>
+            </summary>
+            <nav class="p-group-mini__items" aria-label="{{ group.name }}">
+                {% for name, item in submenu.items %}
+                    {% if name != 'join' %}
+                        <a class="{{ submenu.active == name ? 'is-active' }}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}><i class="fas fa-fw {{ _icons[name] ?? 'fa-chevron-right' }}" aria-hidden="true"></i> {{ item.key|lower|trans }}</a>
+                    {% endif %}
+                {% endfor %}
+            </nav>
+        </details>
+    </div>
+    {% if is_granted('FORUM_GROUP_POST', group) %}
+        <a class="p-thread-btn p-group-mini__new" href="{{ path('group_new_post', {group_id: group.id}) }}">
+            <i class="fa fa-plus" aria-hidden="true"></i> <span>{{ 'forumnewtopic'|trans }}</span>
+        </a>
+    {% endif %}
+</header>
+<script>
+    // The group's menu (and a post's ··· menu) closes on a click elsewhere
+    document.addEventListener('click', function (event) {
+        document.querySelectorAll('.p-group-mini__menu[open], .p-thread-post__more[open]').forEach(function (menu) {
+            if (!menu.contains(event.target)) {
+                menu.removeAttribute('open');
+            }
+        });
+    });
+</script>

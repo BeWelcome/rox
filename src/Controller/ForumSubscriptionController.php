@@ -74,8 +74,8 @@ class ForumSubscriptionController extends AbstractController
     {
         $this->checkToken($request);
         $this->denyAccessUnlessGranted('FORUM_THREAD_VIEW', $thread);
+        // No toast: the button itself shows the member is subscribed
         $this->forumModel->subscribe($thread, $this->getMember());
-        $this->addTranslatedFlash('notice', 'forum.subscription.subscribed');
 
         return $this->back($request);
     }
@@ -92,7 +92,10 @@ class ForumSubscriptionController extends AbstractController
     {
         $this->checkToken($request);
         $this->forumModel->unsubscribe($thread, $this->getMember());
-        $this->addTranslatedFlash('notice', 'forum.subscription.unsubscribed');
+        // A toast only for the mails' link: on a page the button shows it
+        if ($request->isMethod('GET')) {
+            $this->addTranslatedFlash('notice', 'forum.subscription.unsubscribed');
+        }
 
         return $this->back($request);
     }

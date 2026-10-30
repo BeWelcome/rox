@@ -98,3 +98,45 @@ forum.reports.none:
 forum.search.term:
     - 'Search words'
     - Placeholder of the forum search field (forum overview, a group's forum, a member's forum posts)
+forum.thread.all.discussions:
+    - 'All discussions'
+    - Forum thread page, link above the title back to the list of the group's discussions
+forum.thread.posts:
+    - '{count, plural, one {# post} other {# posts}}'
+    - Forum thread page, under the buttons, how many posts the thread has (5 posts)
+forum.thread.last.reply:
+    - 'last reply {date}'
+    - Forum thread page, after the number of posts, the day of the last post (last reply Oct 17)
+forum.thread.write.reply:
+    - 'Write a reply'
+    - Forum thread page, button under the posts; opens the reply in a side panel
+forum.post.author:
+    - 'Author'
+    - Forum thread page, tag next to the name on the posts of the member who started the thread
+forum.post.you:
+    - 'You'
+    - Forum thread page, tag next to the name on the member's own posts
+forum.post.group.only:
+    - 'Group only'
+    - Forum thread page, next to the day of a post only the group's members can see
+forum.reply.to:
+    - 'Reply to'
+    - Side panel to reply to a forum thread, small line above the thread's title
+forum.reply.placeholder:
+    - 'Write your reply...'
+    - Side panel to reply to a forum thread, grey text in the empty editor
+forum.reply.who.can.see:
+    - 'Who can see it'
+    - Side panel to reply to a forum thread, title above the choice of who can see the reply
+forum.reply.post:
+    - 'Post reply'
+    - Side panel to reply to a forum thread, the button that sends the reply
+forum.thread.subscribed:
+    - 'Subscribed'
+    - Forum thread page, the bell button when the member gets mails about new posts; a click unsubscribes
+forum.thread.order.latest:
+    - 'Latest first'
+    - Forum thread page, link that shows the newest posts first
+forum.thread.order.oldest:
+    - 'Oldest first'
+    - Forum thread page, link that shows the oldest posts first

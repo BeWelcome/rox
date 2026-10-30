@@ -1,36 +1,37 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('groups/location') }}
+{% endblock %}
+
 {% block content %}
-    <div class="row">
-        <div class="col-12 col-md-6 mb-3">
-            <h1 class="h3">{{ 'mygroups'|trans }}</h1>
-            <a href="{{ path('groups_search') }}">{{ 'groupssearchheading'|trans }}</a>
-        </div>
-        <div class="col-12 col-md-6 mb-3">
-            <h2 class="h3">{{ 'groupscreateheading'|trans }}</h2>
-            <a class="btn btn-primary" role="button" href="{{ path('new_group') }}">{{ 'groupscreatenew'|trans }}</a>
-        </div>
-    </div>
-
+    {# The groups the profile shows: a switch per group, then Save; opened by the cog next to Create #}
+    {% set profileBlock %}
     {% if profileForm.groups.children|length > 0 %}
-        <details class="mb-3" id="profile-groups">
-            <summary>{{ 'group.profile.groups'|trans }}</summary>
-            {{ form(profileForm) }}
-        </details>
-    {% endif %}
-
-    {% if groups.nbResults > 0 %}
-        <div class="row">
-            {% for row in groups %}
-                {% include 'group/_card.html.twig' %}
-            {% endfor %}
-        </div>
-        {% if groups.haveToPaginate %}
-            <div class="u:flex u:justify-end u:my-8">
-                {{ pagerfanta(groups, 'rounded_pagination', {routeName: 'groups_mygroups', pageParameter: '[page]'}) }}
+        {{ form_start(profileForm, {attr: {class: 'p-groups__profile', id: 'profile-groups'}}) }}
+            <div class="p-groups__profile-head">
+                <h2 class="p-groups__profile-title"><i class="fas fa-eye" aria-hidden="true"></i> {{ 'group.profile.groups'|trans }}</h2>
+                <p class="p-groups__profile-hint">{{ 'group.profile.groups.hint'|trans }}</p>
             </div>
-        {% endif %}
-    {% else %}
-        <p>{{ 'groupsmygroupsnoresults'|trans|format('<a href="' ~ path('groups_search') ~ '">', '</a>', '<a href="' ~ path('new_group') ~ '">', '</a>')|raw }}</p>
+            <div class="p-groups__profile-list">
+                {% for choice in profileForm.groups %}
+                    <label class="p-groups__profile-row" for="{{ choice.vars.id }}">
+                        <span>{{ choice.vars.label }}</span>
+                        <input type="checkbox" class="p-preference-toggle__input" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}"{% if choice.vars.checked %} checked{% endif %}>
+                        <span class="p-preference-toggle__track" aria-hidden="true"><span class="p-preference-toggle__thumb"></span></span>
+                    </label>
+                    {% do choice.setRendered %}
+                {% endfor %}
+            </div>
+            {% do profileForm.groups.setRendered %}
+            <div class="p-groups__profile-foot">
+                <button type="submit" name="{{ profileForm.save.vars.full_name }}" class="p-groups__apply p-groups__profile-save">{{ 'save'|trans }}</button>
+            </div>
+            {% do profileForm.save.setRendered %}
+        {{ form_end(profileForm) }}
     {% endif %}
+    {% endset %}
+
+    {% include 'group/_list.html.twig' with {tab: 'mine', profileBlock: profileBlock} %}
 {% endblock %}

@@ -1,16 +1,26 @@
 {% extends 'group/layout.html.twig' %}
 
+{# The groups linked to this one: a row per group with Remove #}
+
 {% block group_content %}
-    <h2 class="h4">{{ 'titledeleterelatedgroupfromgroup'|trans }}</h2>
-    <ul class="list-unstyled">
-        {% for other in related %}
-            <li class="mb-2">
-                <form method="post" action="{{ path('relatedgroup_delete', {group_id: group.id, related_id: other.id}) }}" class="d-inline">
-                    <input type="hidden" name="_token" value="{{ csrf_token('relatedgroup-delete-' ~ group.id ~ '-' ~ other.id) }}">
-                    <button type="submit" class="btn btn-sm btn-outline-danger">{{ 'removerelatedgrouptitle'|trans }}</button>
-                </form>
-                <a href="{{ path('group_start', {group_id: other.id}) }}">{{ other.name }}</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <section class="p-group-panel">
+        <div class="p-group-panel__head">
+            <h2 class="p-group-panel__title">{{ 'titledeleterelatedgroupfromgroup'|trans }}</h2>
+        </div>
+        <ul class="p-group-pick">
+            {% for other in related %}
+                <li class="p-group-pick__row">
+                    <a class="p-group-pick__group" href="{{ path('group_start', {group_id: other.id}) }}">
+                        <img width="40" height="40" alt="" loading="lazy"
+                             src="{{ other.picture ? path('group_thumbimg', {group_id: other.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+                        <span>{{ other.name }}</span>
+                    </a>
+                    <form method="post" action="{{ path('relatedgroup_delete', {group_id: group.id, related_id: other.id}) }}">
+                        <input type="hidden" name="_token" value="{{ csrf_token('relatedgroup-delete-' ~ group.id ~ '-' ~ other.id) }}">
+                        <button type="submit" class="p-group-btn p-group-btn--danger"><i class="fa fa-minus" aria-hidden="true"></i> {{ 'removerelatedgrouptitle'|trans }}</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
 {% endblock %}

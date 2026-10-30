@@ -73,7 +73,7 @@ final class ForumPagesTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', self::AGORA_THREAD);
-        self::assertCount($posts, $crawler->filter('.l-forum-single-post'));
+        self::assertCount($posts, $crawler->filter('.p-thread-post'));
         self::assertSame($views + 1, (int) $this->connection->fetchOne('SELECT views FROM forum_thread WHERE id = ?', [$thread->getId()]));
     }
 
@@ -166,7 +166,7 @@ final class ForumPagesTest extends WebTestCase
     public function testTheReverseOrderTurnsThePostsAround(): void
     {
         $thread = $this->thread(self::AGORA_THREAD);
-        $shown = static fn ($crawler): array => $crawler->filter('.c-single-post-user_info a[id^="post"]')
+        $shown = static fn ($crawler): array => $crawler->filter('.p-thread-post[id^="post"]')
             ->each(static fn ($anchor) => (int) substr((string) $anchor->attr('id'), 4));
 
         // the member's preferred order, then the other one

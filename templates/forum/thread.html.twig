@@ -18,12 +18,12 @@
     {% import 'macros/post_button.html.twig' as button %}
     {% set moderator = is_granted('ROLE_ADMIN_FORUMMODERATOR') or is_granted('ROLE_ADMIN_ADMIN') %}
     <p class="small mb-1">
-        <a href="{{ path('forums') }}">{{ 'Forum'|trans }}</a> »
+        <a href="{{ path('forums') }}">{{ 'forum'|trans }}</a> »
         {% if thread.agora %}
-            <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'AgoraForum'|trans }}</a>
+            <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'agoraforum'|trans }}</a>
         {% else %}
             <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a> »
-            <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'GroupDiscussions'|trans }}</a>
+            <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'groupdiscussions'|trans }}</a>
         {% endif %}
     </p>
     <h1 class="h3">{{ forum.thread_title(thread, locale) }}</h1>
@@ -33,12 +33,12 @@
 
     <div class="d-flex flex-wrap gap-2 align-items-center mb-2">
         {% if is_granted('FORUM_THREAD_REPLY', thread) %}
-            <a class="btn btn-primary" href="{{ thread.agora ? path('forum_reply', {threadId: thread.id}) : path('group_forum_reply', {group_id: group.id, thread: thread.id}) }}">{{ 'ForumReply'|trans }}</a>
+            <a class="btn btn-primary" href="{{ thread.agora ? path('forum_reply', {threadId: thread.id}) : path('group_forum_reply', {group_id: group.id, thread: thread.id}) }}">{{ 'forumreply'|trans }}</a>
         {% endif %}
         {% if subscribed %}
-            {{ button.post_button(path('forum_thread_unsubscribe', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumUnsubscribe', 'btn btn-outline-primary') }}
+            {{ button.post_button(path('forum_thread_unsubscribe', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'forumunsubscribe', 'btn btn-outline-primary') }}
         {% else %}
-            {{ button.post_button(path('forum_thread_subscription', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'ForumSubscribe', 'btn btn-outline-primary') }}
+            {{ button.post_button(path('forum_thread_subscription', {threadId: thread.id}), constant('App\\Controller\\ForumSubscriptionController::TOKEN'), 'forumsubscribe', 'btn btn-outline-primary') }}
         {% endif %}
         <a class="btn btn-outline-secondary" href="{{ thread.agora ? path('forum_reverse', {threadId: thread.id}) : path('group_forum_thread_reverse', {group_id: group.id, thread: thread.id}) }}">
             {{ (ascending ? 'forums.sort.latest.first' : 'forums.sort.oldest.first')|trans }}
@@ -62,6 +62,6 @@
     {% endif %}
 
     {% if is_granted('FORUM_THREAD_REPLY', thread) %}
-        <a class="btn btn-primary mt-3" href="{{ thread.agora ? path('forum_reply', {threadId: thread.id}) : path('group_forum_reply', {group_id: group.id, thread: thread.id}) }}">{{ 'ForumReply'|trans }}</a>
+        <a class="btn btn-primary mt-3" href="{{ thread.agora ? path('forum_reply', {threadId: thread.id}) : path('group_forum_reply', {group_id: group.id, thread: thread.id}) }}">{{ 'forumreply'|trans }}</a>
     {% endif %}
 {% endblock %}

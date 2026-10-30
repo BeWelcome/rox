@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="h3">{{ 'forum_EditUser'|trans }}
+    <h1 class="h3">{{ 'forum_edituser'|trans }}
         {% if thread %}: <a href="{{ forum.thread_url(thread) }}#post{{ post.id }}">{{ forum.thread_title(thread, app.request.locale) }}</a>{% endif %}
     </h1>
     {{ form(form, {attr: {novalidate: 'novalidate'}}) }}

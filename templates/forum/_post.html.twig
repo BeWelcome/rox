@@ -16,7 +16,7 @@
         <div class="d-flex flex-column flex-sm-row small">
             <div class="me-1"><i class="fa fa-comment me-1" title="{{ 'posted'|trans }}"></i>{{ post.created|format_datetime('short', 'short') }}</div>
             <div class="me-1"><i class="fa fa-eye me-1" title="{{ 'forum_label_visibility'|trans }}"></i>{{ ('forum_edit_vis_' ~ post.postvisibility)|lower|trans }}</div>
-            <div class="ms-sm-auto"><a href="#post{{ post.id }}">{{ 'ForumPermalink'|trans }}</a></div>
+            <div class="ms-sm-auto"><a href="#post{{ post.id }}">{{ 'forumpermalink'|trans }}</a></div>
         </div>
     </div>
     <div class="c-single-post-content u:flex u:flex-col u:justify-between">
@@ -40,14 +40,14 @@
     <div class="c-single-post-edit">
         {% if is_granted('FORUM_POST_EDIT', post) %}
             <div class="d-flex justify-content-end text-nowrap">
-                <a href="{{ path('forum_edit', {postId: post.id}) }}" class="btn btn-sm btn-outline-primary ms-1"><i class="fa fa-edit"></i> {{ 'forum_EditUser'|trans }}</a>
+                <a href="{{ path('forum_edit', {postId: post.id}) }}" class="btn btn-sm btn-outline-primary ms-1"><i class="fa fa-edit"></i> {{ 'forum_edituser'|trans }}</a>
                 <a href="{{ path('forum_translate', {postId: post.id}) }}" class="btn btn-sm btn-outline-primary ms-1"><i class="fa fa-language"></i> {{ 'forum_label_lang'|trans }}</a>
             </div>
         {% endif %}
     </div>
     <div class="c-single-post-moderate">
         {% if post.author != app.user %}
-            <a href="{{ path('forum_report', {postId: post.id}) }}" class="small"><i class="fa fa-flag"></i> {{ 'ForumMyReportToMod'|trans }}</a>
+            <a href="{{ path('forum_report', {postId: post.id}) }}" class="small"><i class="fa fa-flag"></i> {{ 'forummyreporttomod'|trans }}</a>
         {% endif %}
     </div>
     <div class="c-single-post-admin_edit">

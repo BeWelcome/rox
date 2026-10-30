@@ -2,6 +2,6 @@
 {% import 'forum/_macros.html.twig' as forum %}
 
 {% block content %}
-    <h1 class="h3">{{ 'ForumReply'|trans }}: <a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></h1>
+    <h1 class="h3">{{ 'forumreply'|trans }}: <a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></h1>
     {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
 {% endblock %}

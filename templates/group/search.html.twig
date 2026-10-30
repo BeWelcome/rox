@@ -8,7 +8,7 @@
 {% block content %}
     <div class="row">
         <div class="col-12 col-lg-8 mb-3">
-            <h1 class="h3">{{ 'GroupsSearchHeading'|trans }}</h1>
+            <h1 class="h3">{{ 'groupssearchheading'|trans }}</h1>
             <form action="{{ path('groups_search') }}" method="get" class="js-group-search">
                 <div class="row g-2">
                     <div class="col-12 col-md-4">
@@ -34,26 +34,26 @@
                     </div>
                     <input type="hidden" name="order" value="{{ search.order }}">
                     <div class="col-12">
-                        <button class="btn btn-primary" type="submit">{{ 'GroupsSearchSubmit'|trans }}</button>
+                        <button class="btn btn-primary" type="submit">{{ 'groupssearchsubmit'|trans }}</button>
                     </div>
                 </div>
             </form>
         </div>
         <div class="col-12 col-lg-4 mb-3">
-            <h2 class="h3">{{ 'GroupsCreateHeading'|trans }}</h2>
-            <a class="btn btn-primary" role="button" href="{{ path('new_group') }}">{{ 'GroupsCreateNew'|trans }}</a>
+            <h2 class="h3">{{ 'groupscreateheading'|trans }}</h2>
+            <a class="btn btn-primary" role="button" href="{{ path('new_group') }}">{{ 'groupscreatenew'|trans }}</a>
         </div>
     </div>
 
     <div class="row">
         <div class="col-12 col-md-6">
-            <h2 class="h3">{{ 'GroupsSearchResult'|trans }}</h2>
+            <h2 class="h3">{{ 'groupssearchresult'|trans }}</h2>
         </div>
         <div class="col-12 col-md-6 text-md-end">
-            <span class="fw-bold">{{ 'GroupsSearchOrdered'|trans }}:</span>
+            <span class="fw-bold">{{ 'groupssearchordered'|trans }}:</span>
             {% for orders in [['actdesc', 'actasc'], ['nameasc', 'namedesc'], ['membersdesc', 'membersasc'], ['createddesc', 'createdasc']] %}
                 {% set next = search.order == orders[0] ? orders[1] : orders[0] %}
-                {% set key = next starts with 'created' ? 'GroupsOrderDate' ~ next : 'GroupsOrderBy' ~ next %}
+                {% set key = next starts with 'created' ? 'groupsorderdate' ~ next : 'groupsorderby' ~ next %}
                 <a class="btn btn-sm {{ search.order in orders ? 'btn-primary' : 'btn-outline-primary' }}"
                    href="{{ path('groups_search', search.toQuery(next, 1)) }}">{{ key|trans }}</a>
             {% endfor %}

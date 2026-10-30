@@ -78,7 +78,7 @@ class GroupManagementController extends AbstractController
             );
             $membership->setShownOnProfile((bool) $data['shownOnProfile']);
             $this->entityManager->flush();
-            $this->addTranslatedFlash('notice', 'GroupMemberSettingsUpdated');
+            $this->addTranslatedFlash('notice', 'groupmembersettingsupdated');
             $this->logger->write("Member #{$member->getId()} changed own member settings for group #{$group->getId()}", 'Group');
 
             return $this->redirectToRoute('group_membersettings', ['group_id' => $group->getId()]);
@@ -96,7 +96,7 @@ class GroupManagementController extends AbstractController
     {
         $member = $this->getMember();
         if ($this->groupModel->isAdministrator($group, $member)) {
-            $this->addTranslatedFlash('error', 'GroupLeaveFail_ResignAdminFirst');
+            $this->addTranslatedFlash('error', 'groupleavefail_resignadminfirst');
 
             return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
         }
@@ -113,10 +113,10 @@ class GroupManagementController extends AbstractController
         $this->checkCsrfToken($request, 'group-leave-' . $group->getId());
         $member = $this->getMember();
         if ($this->groupModel->leave($group, $member)) {
-            $this->addTranslatedFlash('notice', 'GroupsLeaveSuccess');
+            $this->addTranslatedFlash('notice', 'groupsleavesuccess');
             $this->logger->write("Member #{$member->getId()} left group #{$group->getId()}", 'Group');
         } else {
-            $this->addTranslatedFlash('error', 'GroupsLeaveFail');
+            $this->addTranslatedFlash('error', 'groupsleavefail');
         }
 
         return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
@@ -156,7 +156,7 @@ class GroupManagementController extends AbstractController
     {
         return $this->administerMember($request, $group, $member, 'accept', function () use ($group, $member): bool {
             return $this->groupModel->acceptJoin($group, $member, $this->getMember());
-        }, 'GroupsMemberAcceptSuccess', 'flash.group.membershipstatus.not.changed');
+        }, 'groupsmemberacceptsuccess', 'flash.group.membershipstatus.not.changed');
     }
 
     #[Route(path: '/group/{group_id}/declinemember/{member_id}', name: 'group_declinemember', requirements: ['group_id' => '\d+', 'member_id' => '\d+'], methods: ['POST'])]
@@ -164,7 +164,7 @@ class GroupManagementController extends AbstractController
     {
         return $this->administerMember($request, $group, $member, 'decline', function () use ($group, $member): bool {
             return $this->groupModel->declineJoin($group, $member, $this->getMember());
-        }, 'GroupsMemberDeclineSuccess', 'flash.group.membershipstatus.not.changed');
+        }, 'groupsmemberdeclinesuccess', 'flash.group.membershipstatus.not.changed');
     }
 
     #[Route(path: '/group/{group_id}/kickmember/{member_id}', name: 'group_kickmember', requirements: ['group_id' => '\d+', 'member_id' => '\d+'], methods: ['POST'])]
@@ -172,7 +172,7 @@ class GroupManagementController extends AbstractController
     {
         return $this->administerMember($request, $group, $member, 'kick', function () use ($group, $member): bool {
             return $this->groupModel->removeMember($group, $member, false);
-        }, 'MemberKickSuccess', 'MemberKickFail');
+        }, 'memberkicksuccess', 'memberkickfail');
     }
 
     #[Route(path: '/group/{group_id}/banmember/{member_id}', name: 'group_banmember', requirements: ['group_id' => '\d+', 'member_id' => '\d+'], methods: ['POST'])]
@@ -188,7 +188,7 @@ class GroupManagementController extends AbstractController
     {
         return $this->administerMember($request, $group, $member, 'admin', function () use ($group, $member): bool {
             return $this->groupModel->addAdministrator($group, $member);
-        }, 'GroupNewAdminSuccess', 'group.admin.add.failed');
+        }, 'groupnewadminsuccess', 'group.admin.add.failed');
     }
 
     #[Route(path: '/group/{group_id}/invite', name: 'group_invite_member', requirements: ['group_id' => '\d+'], methods: ['POST'])]
@@ -202,7 +202,7 @@ class GroupManagementController extends AbstractController
         if (null !== $member && $this->groupModel->inviteMemberToGroup($group, $member, $this->getMember())) {
             $this->addTranslatedFlash('notice', 'GroupsInvitedMember');
         } else {
-            $this->addTranslatedFlash('error', 'GroupsCouldNotInvite');
+            $this->addTranslatedFlash('error', 'groupscouldnotinvite');
         }
 
         return $this->redirectToRoute('group_memberadministration', ['group_id' => $group->getId()]);
@@ -218,10 +218,10 @@ class GroupManagementController extends AbstractController
         }
 
         if ($this->groupModel->removeAdministrator($group, $member)) {
-            $this->addTranslatedFlash('notice', 'GroupAdminResignationSuccess');
+            $this->addTranslatedFlash('notice', 'groupadminresignationsuccess');
             $this->logger->write("Member #{$member->getId()} resigned as admin of group #{$group->getId()}", 'Group');
         } else {
-            $this->addTranslatedFlash('error', 'GroupAdminResignationFailed_LastAdmin');
+            $this->addTranslatedFlash('error', 'groupadminresignationfailed_lastadmin');
         }
 
         return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
@@ -242,7 +242,7 @@ class GroupManagementController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $picture = $settings->picture instanceof UploadedFile ? $this->storePicture($settings->picture, $groupDirectory) : null;
             $this->groupModel->updateSettings($group, $settings, $request->getLocale(), $member, $picture);
-            $this->addTranslatedFlash('notice', 'GroupMemberSettingsUpdated');
+            $this->addTranslatedFlash('notice', 'groupmembersettingsupdated');
             $this->logger->write("Member #{$member->getId()} changed group settings for group #{$group->getId()}", 'Group');
 
             return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);

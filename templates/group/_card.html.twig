@@ -13,13 +13,13 @@
             <h5 class="mb-1"><a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h5>
             <div class="small">
                 <span title="{{ 'group.member.count'|trans }}" data-member-count="{{ row.memberCount }}"><i class="fa fa-users me-1" aria-hidden="true"></i>{{ row.memberCount }}</span>
-                <span class="ms-3" title="{{ 'GroupsNewMembers'|trans }}"><i class="fa fa-user-plus me-1" aria-hidden="true"></i>{{ row.newMemberCount }}</span>
+                <span class="ms-3" title="{{ 'groupsnewmembers'|trans }}"><i class="fa fa-user-plus me-1" aria-hidden="true"></i>{{ row.newMemberCount }}</span>
             </div>
             <div class="small">
                 {% if row.lastActivity %}
-                    <span title="{{ 'GroupsLastPost'|trans }}"><i class="far fa-comment me-1" aria-hidden="true"></i><span class="text-nowrap">{{ row.lastActivity|format_date('short') }}</span></span>
+                    <span title="{{ 'groupslastpost'|trans }}"><i class="far fa-comment me-1" aria-hidden="true"></i><span class="text-nowrap">{{ row.lastActivity|format_date('short') }}</span></span>
                 {% else %}
-                    <i class="far fa-comment me-1" aria-hidden="true"></i><span class="text-nowrap">{{ 'GroupsNoPostYet'|trans }}</span>
+                    <i class="far fa-comment me-1" aria-hidden="true"></i><span class="text-nowrap">{{ 'groupsnopostyet'|trans }}</span>
                 {% endif %}
             </div>
             {% if group.location %}

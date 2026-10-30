@@ -1,15 +1,15 @@
 {#
-  One trip leg near the member, in the Visitors tab of the home page: the traveller and
-  the dates, the trip's title and the start of its text, then tags (looking for a host or
-  already invited, the place, the other stops). The row opens the trip in the side panel,
-  where the member can invite or write.
+  One trip leg near the member, in the Visitors tab of the home page and on the Visitors page: the traveller and the
+  trip's title, the start of its text, then tags (Invited, the nights, the other stops, the travellers when more than one); on
+  the right the arrival as plain text (Today / Tomorrow in orange, else the date). The row opens the trip in
+  the side panel, where the member can invite or write.
 #}
 {% set traveller = leg.trip.creator %}
 {% set invited = leg.invitationBy(app.user) %}
-{% set lookingForHost = constant('App\\Doctrine\\LegOptionsType::LOOKING_FOR_HOST') in leg.options %}
 {% set otherStops = leg.trip.legs|filter(stop => stop.id != leg.id and constant('App\\Doctrine\\LegOptionsType::PRIVATE') not in stop.options)|length %}
-{% set sameDay = leg.arrival|date('Y-m-d') == leg.departure|date('Y-m-d') %}
-{% set sameMonth = leg.arrival|date('Y-m') == leg.departure|date('Y-m') %}
+{% set _arrival = leg.arrival|date('Y-m-d') %}
+{% set _soon = _arrival == 'today'|date('Y-m-d') ? 'today' : (_arrival == 'tomorrow'|date('Y-m-d') ? 'tomorrow' : null) %}
+{% set _nights = date(leg.departure|date('Y-m-d')).diff(date(_arrival)).days %}
 <div class="c-home-item c-dashboard__item c-home-item--leg js-contact-row">
     {# The whole row opens the trip in the side panel (trip/leg_panel.html.twig) #}
     <a class="c-home-item__cover js-contact-open" href="{{ path('trip_leg_panel', { id: leg.id }) }}" data-title="{{ leg.trip.summary ?: leg.location.name }}">
@@ -19,33 +19,35 @@
     <div class="c-home-item__body">
         <span class="c-home-item__top">
             <span class="c-home-item__name">{{ traveller.shortNameOrUsername }}</span>
-            <span class="c-home-item__when">
-                <i class="far fa-calendar" aria-hidden="true"></i>
-                {{ leg.arrival|format_date(pattern='MMM d') }}
-                {%- if not sameDay %} – {{ leg.departure|format_date(pattern=sameMonth ? 'd' : 'MMM d') }}{% endif %}
-            </span>
+            {% if leg.trip.summary %}<span class="c-home-item__title">{{ leg.trip.summary }}</span>{% endif %}
         </span>
-        {% if leg.trip.summary %}
-            <span class="c-home-item__title">{{ leg.trip.summary }}</span>
-        {% endif %}
         {% set _excerpt = leg.trip.description|striptags|trim %}
         {% if _excerpt %}
             <p class="c-home-item__excerpt">{{ _excerpt }}</p>
         {% endif %}
-        <p class="c-home-item__tags">
-            {% if invited %}
-                <span class="c-home-item__tag c-home-item__tag--done"><i class="fa fa-check" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}</span>
-            {% elseif lookingForHost %}
-                <span class="c-home-item__tag">
-                    <i class="fa fa-house-user" aria-hidden="true"></i>
-                    <span class="c-home-item__long">{{ 'trip.option.looking.for.host'|trans }}</span>
-                    <span class="c-home-item__short">{{ 'landing.visitors.host'|trans }}</span>
-                </span>
-            {% endif %}
-            <span class="c-home-item__tag c-home-item__tag--plain"><i class="fas fa-map-marker-alt" aria-hidden="true"></i> {{ leg.location.name }}</span>
-            {% if otherStops > 0 %}
-                <span class="c-home-item__tag c-home-item__tag--plain"><i class="fas fa-route" aria-hidden="true"></i> {{ 'landing.visitors.more.stops'|trans({ count: otherStops }) }}</span>
-            {% endif %}
-        </p>
+        {% set _travellers = leg.trip.countOfTravellers %}
+        {% if invited or _nights > 0 or otherStops > 0 or _travellers > 1 %}
+            <p class="c-home-item__tags">
+                {% if invited %}
+                    <span class="c-home-item__tag c-home-item__tag--done"><i class="fa fa-check" aria-hidden="true"></i> {{ 'trip.leg.invited'|trans }}</span>
+                {% endif %}
+                {% if _nights > 0 %}
+                    <span class="c-home-item__tag c-home-item__tag--nights"><i class="fas fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: _nights }) }}</span>
+                {% endif %}
+                {% if otherStops > 0 %}
+                    <span class="c-home-item__tag c-home-item__tag--plain"><i class="fas fa-route" aria-hidden="true"></i> {{ 'landing.visitors.more.stops'|trans({ count: otherStops }) }}</span>
+                {% endif %}
+                {% if _travellers > 1 %}
+                    <span class="c-home-item__tag c-home-item__tag--plain"><i class="fa fa-users" aria-hidden="true"></i> {{ 'trip.count.of.travellers'|trans({ countOfTravellers: _travellers }) }}</span>
+                {% endif %}
+            </p>
+        {% endif %}
     </div>
+    {# Arrival, then the chevron #}
+    <div class="c-home-item__side">
+        <span class="c-home-item__arrival{{ _soon ? ' is-soon' }}">
+            {{- _soon ? ('landing.visitors.' ~ _soon)|trans : leg.arrival|format_date(pattern='MMM d') -}}
+        </span>
+    </div>
+    <span class="c-home-item__chevron" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
 </div>

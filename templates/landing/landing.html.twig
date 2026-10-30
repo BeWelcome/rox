@@ -187,7 +187,15 @@
                 {# How far to look: a few quick choices (landing.js reloads the list) #}
                 {% set _radius = radiusForm.radius.vars.value|default('') %}
                 <div class="c-home-radius js-trips-radius" role="group" aria-label="{{ 'trips.radius'|trans }}">
-                    <span class="c-home-radius__label"><i class="fa fa-bullseye" aria-hidden="true"></i> <span class="c-home-radius__text">{{ 'landing.visitors.within'|trans }}</span></span>
+                    {# "Near Berlin" (the member's city), else "Within" #}
+                    <span class="c-home-radius__label">
+                        <i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                        {% if homeCity %}
+                            <span class="c-home-radius__text">{{ 'landing.visitors.near'|trans }}</span> <strong class="c-home-radius__city">{{ homeCity }}</strong>
+                        {% else %}
+                            <span class="c-home-radius__text">{{ 'landing.visitors.within'|trans }}</span>
+                        {% endif %}
+                    </span>
                     <span class="c-home-radius__options">
                         {% for choice in radiusForm.radius.vars.choices %}
                             {% if choice.value in ['20', '50', '100'] or choice.value == _radius ~ '' %}

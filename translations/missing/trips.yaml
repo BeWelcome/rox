@@ -216,3 +216,24 @@ trip.legs.hint:
 trip.leg.location.pick:
     - Pick the place in the list of suggestions
     - Error under a stop's place when a name was typed but no suggestion was picked
+landing.visitors.near:
+    - 'Near'
+    - Label before the member's city (e.g. Near Berlin) above the Visitors list of the home page, left of the distance choices
+landing.visitors.this.week:
+    - 'This week'
+    - Small heading over the trips arriving in the next 7 days, in the Visitors list of the home page
+landing.visitors.later:
+    - 'Later'
+    - Small heading over the trips arriving after the next 7 days, in the Visitors list of the home page
+landing.visitors.today:
+    - 'Today'
+    - Badge on a trip of the Visitors list of the home page, when the traveller arrives today
+landing.visitors.tomorrow:
+    - 'Tomorrow'
+    - Badge on a trip of the Visitors list of the home page, when the traveller arrives tomorrow
+trips.visitors.of:
+    - 'of'
+    - Visitors page, between the distance buttons and the member's city (Within 20 km 50 km 100 km of Berlin)
+trips.visitors.coming:
+    - '{count, plural, one {visitor coming} other {visitors coming}}'
+    - Visitors page, after the number of trips near the member (4 visitors coming); the number is shown before it

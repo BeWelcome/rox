@@ -8684,7 +8684,6 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
   background: #fff;
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
 }
-.p-trips-leg--invited { border-color: #bbf7d0; }
 .p-trips-leg__avatar img { display: block; width: 56px; height: 56px; border-radius: 50%; object-fit: cover; }
 .p-trips-leg__body { min-width: 0; }
 .p-trips .p-trips-leg__who { margin: 0; font-size: 0.8125rem; }
@@ -10120,6 +10119,34 @@ body.is-embedded { background: #fff; }
 .c-home-item__tag.c-home-item__tag--plain { background: #eef2f7; color: #475569; font-weight: 600; }
 .c-home-item__tag--plain i, .c-home-item__tag--plain svg { color: #94a3b8; }
 .c-home-item__short { display: none; }
+/* Visitors (home tab and Visitors page): "Near Berlin" and the distances on one line, the trips under
+   This week / Later, the nights as an orange tag, the arrival on the right (a pill when today or tomorrow) */
+.c-home-radius { justify-content: space-between; margin-bottom: 0.25rem; }
+.c-home-radius__label { color: #64748b; font-size: 0.9375rem; font-weight: 500; }
+.c-home-radius__city { color: #0f172a; font-weight: 700; }
+.c-home-list__group { margin: 1rem 0 0.1rem; color: #94a3b8; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.c-home-list--legs > .c-home-list__group:first-child { margin-top: 0.6rem; }
+.c-home-item.c-home-item--leg { align-items: center; gap: 0.9rem; padding-top: 0.8rem; padding-bottom: 0.8rem; }
+.c-home-item--leg .c-home-item__top { justify-content: flex-start; gap: 0.6rem; min-width: 0; }
+.c-home-item--leg .c-home-item__name { flex-shrink: 0; }
+.c-home-item--leg .c-home-item__title { min-width: 0; overflow: hidden; color: #334155; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.05rem; font-weight: 400; text-overflow: ellipsis; white-space: nowrap; }
+.c-home-item.c-home-item--leg .c-home-item__excerpt { margin: 0.1rem 0 0; font-size: 0.9375rem; }
+.c-home-item--leg .c-home-item__tags { margin-top: 0.45rem; }
+.c-home-item--leg .c-home-item__tag.c-home-item__tag--plain { border-radius: 0.5rem; color: #334155; font-weight: 700; }
+.c-home-item__side { display: flex; flex-shrink: 0; flex-direction: column; align-items: flex-end; gap: 0.35rem; }
+.c-home-item__arrival { color: #475569; font-family: var(--font-signika, "Signika", sans-serif); font-size: 0.9375rem; font-weight: 600; white-space: nowrap; }
+.c-home-item__arrival.is-soon { padding: 0.2rem 0.7rem; border-radius: 999px; background: #fff1e6; color: #c2410c; font-weight: 700; }
+.c-home-item__tag.c-home-item__tag--nights { border-radius: 0.5rem; background: #fff1e6; color: #c2410c; font-weight: 700; }
+.c-home-item__tag--nights i, .c-home-item__tag--nights svg { color: #ea7a2e; }
+.c-home-item--leg .c-home-item__chevron { align-self: center; width: 1rem; margin-left: -0.3rem; }
+@media (max-width: 575.98px) {
+  /* Phones: the date goes up on the name line (right), so the text and tags get the whole width */
+  .c-home-item.c-home-item--leg { align-items: flex-start; gap: 0.75rem; }
+  .c-home-item--leg .c-home-item__top { padding-right: 4.5rem; }
+  .c-home-item--leg .c-home-item__side { position: absolute; top: 0.8rem; right: 0.75rem; }
+  .c-home-item--leg .c-home-item__chevron { display: none; }
+  .c-home-item__arrival { font-size: 0.875rem; }
+}
 @media (max-width: 575.98px) {
   .c-home-radius__text { display: none; }
   .c-home-item--leg .c-home-item__avatar { width: 3.25rem; height: 3.25rem; }
@@ -11626,7 +11653,25 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-trips-leg,
 .p-trips-trip { border: 0; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
 .p-trips-leg { padding: 1.4rem 1.5rem; }
-.p-trips-leg--invited { box-shadow: inset 0 0 0 1.5px #bbf7d0, 0 6px 18px rgba(15, 23, 42, 0.04); }
+/* Visitors page: Within [20 | 50 | 100 km] of Berlin, then the trips in one white card,
+   with the rows of the Visitors tab of the home page (trip/landing.html.twig) */
+.p-trips .p-trips__radius { flex-wrap: wrap; gap: 0.6rem; padding: 0; border: 0; background: none; }
+.p-trips .p-trips__radius .p-trips__radius-label { color: #64748b; font-weight: 500; }
+.p-trips__radius-options { display: inline-flex; gap: 0.15rem; padding: 0.25rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; }
+.p-trips__radius-option { padding: 0.4rem 0.95rem; border: 0; border-radius: 999px; background: transparent; color: #334155; font-size: 0.875rem; font-weight: 600; line-height: 1.2; cursor: pointer; }
+.p-trips__radius-option:hover { background: #f1f5f9; color: #0f172a; }
+.p-trips__radius-option.is-active, .p-trips__radius-option.is-active:hover { background: #0f172a; color: #fff; }
+.p-trips__radius-option:focus-visible { outline: 2px solid #f37000; outline-offset: 1px; }
+.p-trips__radius-city { color: #64748b; font-size: 0.875rem; }
+.p-trips__radius-city strong { color: #0f172a; }
+.p-trips .p-trips__count { font-weight: 500; }
+.p-trips .p-trips__count strong { color: #0f172a; font-weight: 700; }
+.p-trips-visitors { padding: 0.5rem 1.5rem 0.75rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
+.p-trips-visitors .c-home-item.c-home-item--leg .c-home-item__excerpt { max-width: 46rem; -webkit-line-clamp: 2; }
+@media (max-width: 575.98px) {
+  .p-trips-visitors { padding: 0.25rem 1rem 0.5rem; }
+  .p-trips-visitors .c-home-item.c-home-item--leg .c-home-item__excerpt { -webkit-line-clamp: 1; }
+}
 .p-trips-leg__avatar img { width: 4rem; height: 4rem; }
 .p-trips__empty { border: 0; border-radius: 1.25rem; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
 

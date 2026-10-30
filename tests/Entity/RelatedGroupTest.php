@@ -48,7 +48,7 @@ class RelatedGroupTest extends KernelTestCase
         $this->entityManager->flush();
         $this->entityManager->clear();
 
-        // The legacy related groups code (build/relatedgroups) treats deletedby IS NULL as linked
+        // deletedby IS NULL means linked (RelatedGroupController and the log rely on it)
         $deletedBy = $this->entityManager->getConnection()->fetchOne(
             'SELECT deletedby FROM groups_related WHERE id = ?',
             [$link->getId()],

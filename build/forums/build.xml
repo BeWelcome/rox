@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<build>
-  <app name="Forums"/>
-  <files>
-    <file class="ForumsController">forums.ctrl.php</file>
-    <file class="Forums">forums.model.php</file>
-    <file class="ForumsView">forums.view.php</file>
-  </files>
-</build>

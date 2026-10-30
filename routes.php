@@ -14,11 +14,6 @@
      *                                              if the method to call is a post callback
      */
 
-    // group routes
-    $this->addRoute('group_wiki','group/:group_id:/wiki', 'GroupsController', 'wiki');
-
-    // related groups routes
-
     // member app routes
     $this->addRoute('members_profile_old', '/members/:username:/old', 'MembersController', 'index');
     $this->addRoute('members_profile_notification', '/members/:username:/:message:', 'MembersController', 'index');

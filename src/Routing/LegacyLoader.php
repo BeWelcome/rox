@@ -41,8 +41,6 @@ class LegacyLoader extends Loader
         // rebuilt in a process that loaded the file before, and would then lack the legacy routes.
         require $projectDir . '/routes.php';
 
-        // Forum urls
-        $this->addRouteDirectly('forum_posts_member', '/forums/member/{username}');
         $this->addRouteDirectly('editmyprofile', '/editmyprofile');
         $this->addRouteDirectly('editmyprofile_locale', '/editmyprofile/{locale}');
         $this->addRouteDirectly('gallery_show_user', '/gallery/show/user/{username}');

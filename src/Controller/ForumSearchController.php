@@ -93,6 +93,15 @@ class ForumSearchController extends AbstractController
         return $this->redirectToRoute('forums', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
+    /**
+     * The legacy forum's list of a member's posts is on the profile now.
+     */
+    #[Route(path: '/forums/member/{username}', name: 'forum_posts_member', methods: ['GET'])]
+    public function memberPosts(string $username): RedirectResponse
+    {
+        return $this->redirectToRoute('profile_forum_posts', ['username' => $username, 'page' => 1], Response::HTTP_MOVED_PERMANENTLY);
+    }
+
     private function findPosts(string $keyword, ?Group $group, int $page): Pagerfanta
     {
         $moderator = $this->isGranted(Member::ROLE_ADMIN_FORUMMODERATOR) || $this->isGranted(Member::ROLE_ADMIN_ADMIN);

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * A group linked to another group as related ("see also"). Unlinking keeps the row and records
  * who removed it (deletedBy), so the related groups log of a group shows both actions.
  *
- * Still written by the legacy related groups code (build/relatedgroups), hence the column names.
+ * The column names are the ones of the legacy related groups code; RelatedGroupController writes it now.
  */
 #[ORM\Table(name: 'groups_related')]
 #[ORM\Entity]

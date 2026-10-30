@@ -37,16 +37,6 @@ class NotifyController extends RoxControllerBase
                 $page->active_page = $this->getPageNumber($request, 2);
                 return $page;
                 break;
-            case 'search':
-                $terms = ($_GET['GroupsSearchInput'] ?? '');
-                $resultpage = ($_GET['Page'] ?? 0);
-                $order = ($_GET['Order'] ?? 'nameasc');
-                $page = new GroupsSearchPage();
-                $page->search_result = $this->_model->findGroups($terms, $resultpage, $order);
-                $page->result_page = $resultpage;
-                $page->result_order = $order;
-                $page->search_terms = $terms;
-                break;
             default:
                 // check wether there's a note with id = $request[1]
                 if ($note = $this->_model->findNote($request[1]))
@@ -78,24 +68,6 @@ class NotifyController extends RoxControllerBase
         return false;
     }
 
-
-    /**
-     * handles showing the group admin page with various options on it
-     *
-     * @param object $group - group entity
-     * @param string $request - action to carry out
-     * @access private
-     * @return object $page
-     */
-    private function admin($group, $request)
-    {
-        if (!$this->_model->getLoggedInMember() || !$this->_model->canAccessGroupAdmin($group))
-        {
-            $this->_redirect('groups/');
-        }
-
-        return new GroupAdminPage();
-    }
 
     private function _redirect($rel_url)
     {

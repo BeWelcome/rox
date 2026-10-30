@@ -177,6 +177,17 @@ final class ForumPagesTest extends WebTestCase
         self::assertSame(array_reverse($normal), $reversed);
     }
 
+    public function testThePermalinkPointsAtThePostOnItsPage(): void
+    {
+        $thread = $this->thread(self::AGORA_THREAD);
+        $postId = (int) $this->connection->fetchOne('SELECT MIN(id) FROM forum_post WHERE threadid = ?', [$thread->getId()]);
+
+        $crawler = $this->request('GET', '/forums/s' . $thread->getId());
+
+        // the pages have a <base href> of the site, so a bare #post link would lead to the start page
+        self::assertCount(1, $crawler->filter('a[href="/forums/s' . $thread->getId() . '#post' . $postId . '"]'));
+    }
+
     public function testLegacyOverviewUrlsGoToTheOverview(): void
     {
         $this->request('GET', '/groups/forums');

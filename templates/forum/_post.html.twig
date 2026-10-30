@@ -16,7 +16,7 @@
         <div class="d-flex flex-column flex-sm-row small">
             <div class="me-1"><i class="fa fa-comment me-1" title="{{ 'posted'|trans }}"></i>{{ post.created|format_datetime('short', 'short') }}</div>
             <div class="me-1"><i class="fa fa-eye me-1" title="{{ 'forum_label_visibility'|trans }}"></i>{{ ('forum_edit_vis_' ~ post.postvisibility)|lower|trans }}</div>
-            <div class="ms-sm-auto"><a href="#post{{ post.id }}">{{ 'forumpermalink'|trans }}</a></div>
+            <div class="ms-sm-auto"><a href="{{ app.request.baseUrl ~ app.request.pathInfo }}#post{{ post.id }}">{{ 'forumpermalink'|trans }}</a></div>
         </div>
     </div>
     <div class="c-single-post-content u:flex u:flex-col u:justify-between">

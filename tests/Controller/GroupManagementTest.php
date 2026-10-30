@@ -205,6 +205,22 @@ final class GroupManagementTest extends WebTestCase
         self::assertSame(GroupMembershipStatusType::INVITED_INTO_GROUP, $this->membership('member-5')->getStatus());
     }
 
+    public function testAnAdminWithdrawsAnInvitation(): void
+    {
+        $invited = $this->member('member-5');
+        $this->join($invited, $this->group, GroupMembershipStatusType::INVITED_INTO_GROUP);
+
+        $this->client->loginUser($this->member('member-2'));
+        $this->client->request('POST', '/group/' . $this->group->getId() . '/withdraw/' . $invited->getId());
+        self::assertResponseStatusCodeSame(403);
+
+        $this->client->loginUser($this->member('member-1'));
+        $crawler = $this->client->request('GET', $this->url('/memberadministration'));
+        $this->client->submit($crawler->filter('form[action$="/withdraw/' . $invited->getId() . '"]')->form());
+
+        self::assertNull($this->membership('member-5'));
+    }
+
     public function testAMemberLinksAndUnlinksARelatedGroup(): void
     {
         $other = $this->entityManager->getRepository(GroupEntity::class)->findOneBy(['name' => 'Language Exchange']);

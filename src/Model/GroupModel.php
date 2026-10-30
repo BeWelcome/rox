@@ -128,7 +128,8 @@ class GroupModel
         try {
             $membership = $this->getMembership($group, $member);
 
-            if ($membership) {
+            // only an invitation is withdrawn, not a membership
+            if ($membership && GroupMembershipStatusType::INVITED_INTO_GROUP === $membership->getStatus()) {
                 $this->entityManager->remove($membership);
                 $this->entityManager->flush();
                 $success = true;

@@ -1,0 +1,10 @@
+{#
+  An action on a page as a POST form with a CSRF token (links are for mails only).
+  confirm: a translation id to ask before sending, if any.
+#}
+{% macro post_button(url, tokenId, label, class = 'btn btn-sm btn-outline-primary', confirm = null) %}
+    <form method="post" action="{{ url }}" class="d-inline"{% if confirm %} onsubmit="return confirm('{{ confirm|trans|e('js') }}')"{% endif %}>
+        <input type="hidden" name="_token" value="{{ csrf_token(tokenId) }}">
+        <button type="submit" class="{{ class }}">{{ label|trans }}</button>
+    </form>
+{% endmacro %}

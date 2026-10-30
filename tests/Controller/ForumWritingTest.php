@@ -195,12 +195,46 @@ final class ForumWritingTest extends WebTestCase
         $member = $this->member('member-2');
         $this->client->loginUser($member);
 
-        $this->request('GET', '/forums/subscribe/thread/' . $thread->getId());
+        $crawler = $this->request('GET', '/forums/s' . $thread->getId());
+        $this->client->submit($crawler->filter('form[action$="/forums/subscribe/thread/' . $thread->getId() . '"]')->form());
         self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ? AND notificationsEnabled = 1', [$thread->getId(), $member->getId()]));
 
         $crawler = $this->request('GET', '/forums/subscriptions');
         self::assertResponseIsSuccessful();
         self::assertStringContainsString(self::AGORA_THREAD, $crawler->filter('#thread-subscriptions')->text());
+        $this->client->submit($crawler->filter('form[action$="/forums/subscriptions/disable/thread/' . $thread->getId() . '"]')->form());
+        self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ? AND notificationsEnabled = 0', [$thread->getId(), $member->getId()]));
+
+        $crawler = $this->request('GET', '/forums/subscriptions');
+        $this->client->submit($crawler->filter('form[action$="/forums/unsubscribe/thread/' . $thread->getId() . '"]')->form());
+        self::assertSame(0, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $member->getId()]));
+    }
+
+    public function testSwitchesOnPagesNeedTheirToken(): void
+    {
+        $thread = $this->thread(self::AGORA_THREAD);
+        $member = $this->member('member-2');
+        $this->client->loginUser($member);
+
+        $this->request('GET', '/forums/subscribe/thread/' . $thread->getId());
+        self::assertResponseStatusCodeSame(405);
+        $this->client->request('POST', '/forums/subscribe/thread/' . $thread->getId(), ['_token' => 'wrong']);
+        self::assertResponseStatusCodeSame(403);
+        $this->client->request('POST', '/forums/more/group', ['_token' => 'wrong']);
+        self::assertResponseStatusCodeSame(403);
+        self::assertSame(0, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $member->getId()]));
+    }
+
+    public function testTheMailLinksStillWork(): void
+    {
+        $thread = $this->thread(self::AGORA_THREAD);
+        $member = $this->member('member-2');
+        $this->connection->executeStatement(
+            "INSERT INTO members_threads_subscribed (IdSubscriber, IdThread, ActionToWatch, UnSubscribeKey, notificationsEnabled, created)
+             VALUES (?, ?, 'replies', 'key', 1, NOW())",
+            [$member->getId(), $thread->getId()],
+        );
+        $this->client->loginUser($member);
 
         $this->request('GET', '/forums/subscriptions/disable/thread/' . $thread->getId());
         self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ? AND notificationsEnabled = 0', [$thread->getId(), $member->getId()]));

@@ -18,6 +18,7 @@ use App\Model\GroupModel;
 use App\Model\WikiModel;
 use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
+use App\Security\GroupVoter;
 use App\Utilities\GroupSubmenuTrait;
 use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
@@ -227,29 +228,6 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @throws AccessDeniedException
-     *
-     * @return JsonResponse
-     */
-    #[Route(path: '/group/{groupId}/invite/{memberId}', name: 'invite_member_to_group')]
-    public function inviteMemberToGroup(
-        #[MapEntity(id: 'groupId')] Group $group,
-        #[MapEntity(id: 'memberId')] Member $member,
-    ) {
-        /** @var Member $admin */
-        $admin = $this->getUser();
-        if (!$group->isAdmin($admin)) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $success = $this->groupModel->inviteMemberToGroup($group, $member, $admin);
-
-        return new JsonResponse([
-            'success' => $success,
-        ]);
-    }
-
-    /**
      * @return RedirectResponse
      */
     #[Route(path: '/group/{groupId}/accept/{memberId}', name: 'accept_invite_to_group')]
@@ -302,12 +280,17 @@ class GroupController extends AbstractController
     /**
      * @return RedirectResponse
      */
-    #[Route(path: '/group/{groupId}/withdraw/{memberId}', name: 'withdraw_member_invite_to_group')]
+    #[Route(path: '/group/{groupId}/withdraw/{memberId}', name: 'withdraw_member_invite_to_group', methods: ['POST'])]
     public function withdrawInviteMemberGroup(
         Request $request,
         #[MapEntity(id: 'groupId')] Group $group,
         #[MapEntity(id: 'memberId')] Member $member,
     ) {
+        $this->denyAccessUnlessGranted(GroupVoter::GROUP_ADMINISTER, $group);
+        if (!$this->isCsrfTokenValid("group-withdraw-{$group->getId()}-{$member->getId()}", (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
         $success = $this->groupModel->withdrawInviteMemberToGroup($group, $member);
 
         if ($success) {
@@ -323,11 +306,15 @@ class GroupController extends AbstractController
         path: '/group/{id}/delete/true',
         name: 'group_delete_confirmed',
         requirements: ['id' => '\\d+'],
-        methods: ['GET'],
+        methods: ['POST'],
         priority: 10,
     )]
-    public function deleteGroup(Group $group, Logger $logger): RedirectResponse
+    public function deleteGroup(Request $request, Group $group, Logger $logger): RedirectResponse
     {
+        if (!$this->isCsrfTokenValid('group-delete-' . $group->getId(), (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
+
         /** @var Member $member */
         $member = $this->getUser();
         $isGroupsAdmin = $this->isGranted(Member::ROLE_ADMIN_GROUP)

@@ -19,13 +19,17 @@ use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * A member's forum notifications: thread subscriptions and the notifications of their group memberships. The URLs are
- * the ones of the legacy forum, including those in the notification mails, so the switches are links.
+ * A member's forum notifications: thread subscriptions and the notifications of their group memberships, at the
+ * URLs of the legacy forum. The links in the notification mails (switching off, unsubscribing) are GET requests; on
+ * pages every switch is a POST with a CSRF token.
  */
 class ForumSubscriptionController extends AbstractController
 {
     use TranslatedFlashTrait;
     use TranslatorTrait;
+
+    /** The CSRF token id of the switches on pages. */
+    public const string TOKEN = 'forum-subscriptions';
 
     public function __construct(
         private readonly ForumModel $forumModel,
@@ -46,26 +50,29 @@ class ForumSubscriptionController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/forums/subscriptions/enable', name: 'subscriptions_enable', methods: ['GET'])]
-    public function enableAll(): RedirectResponse
+    #[Route(path: '/forums/subscriptions/enable', name: 'subscriptions_enable', methods: ['POST'])]
+    public function enableAll(Request $request): RedirectResponse
     {
+        $this->checkToken($request);
         $this->forumModel->setAllThreadNotifications($this->getMember(), true);
 
         return $this->redirectToRoute('subscriptions');
     }
 
-    #[Route(path: '/forums/subscriptions/disable', name: 'subscriptions_disable', methods: ['GET'])]
-    public function disableAll(): RedirectResponse
+    #[Route(path: '/forums/subscriptions/disable', name: 'subscriptions_disable', methods: ['POST'])]
+    public function disableAll(Request $request): RedirectResponse
     {
+        $this->checkToken($request);
         $this->forumModel->setAllThreadNotifications($this->getMember(), false);
 
         return $this->redirectToRoute('subscriptions');
     }
 
-    #[Route(path: '/forums/subscribe/thread/{threadId}', name: 'forum_thread_subscription', requirements: ['threadId' => '\d+'], methods: ['GET'])]
-    #[Route(path: '/forums/subscriptions/subscribe/thread/{threadId}', name: 'thread_subscribe', requirements: ['threadId' => '\d+'], methods: ['GET'])]
+    #[Route(path: '/forums/subscribe/thread/{threadId}', name: 'forum_thread_subscription', requirements: ['threadId' => '\d+'], methods: ['POST'])]
+    #[Route(path: '/forums/subscriptions/subscribe/thread/{threadId}', name: 'thread_subscribe', requirements: ['threadId' => '\d+'], methods: ['POST'])]
     public function subscribe(Request $request, #[MapEntity(id: 'threadId')] ForumThread $thread): RedirectResponse
     {
+        $this->checkToken($request);
         $this->denyAccessUnlessGranted('FORUM_THREAD_VIEW', $thread);
         $this->forumModel->subscribe($thread, $this->getMember());
         $this->addTranslatedFlash('notice', 'forum.subscription.subscribed');
@@ -80,38 +87,42 @@ class ForumSubscriptionController extends AbstractController
         defaults: ['subscriptionId' => ''],
         methods: ['GET'],
     )]
-    #[Route(path: '/forums/unsubscribe/thread/{threadId}', name: 'forum_thread_unsubscribe', requirements: ['threadId' => '\d+'], methods: ['GET'])]
+    #[Route(path: '/forums/unsubscribe/thread/{threadId}', name: 'forum_thread_unsubscribe', requirements: ['threadId' => '\d+'], methods: ['POST'])]
     public function unsubscribe(Request $request, #[MapEntity(id: 'threadId')] ForumThread $thread): RedirectResponse
     {
+        $this->checkToken($request);
         $this->forumModel->unsubscribe($thread, $this->getMember());
         $this->addTranslatedFlash('notice', 'forum.subscription.unsubscribed');
 
         return $this->back($request);
     }
 
-    #[Route(path: '/forums/subscriptions/enable/thread/{threadId}', name: 'forum_thread_subscription_enable', requirements: ['threadId' => '\d+'], methods: ['GET'])]
+    #[Route(path: '/forums/subscriptions/enable/thread/{threadId}', name: 'forum_thread_subscription_enable', requirements: ['threadId' => '\d+'], methods: ['POST'])]
     #[Route(path: '/forums/subscriptions/enable/thread/{threadId}/{subscriptionId}', name: 'thread_notifications_enable', requirements: ['threadId' => '\d+'], methods: ['GET'])]
     public function enableThread(Request $request, #[MapEntity(id: 'threadId')] ForumThread $thread): RedirectResponse
     {
+        $this->checkToken($request);
         $this->forumModel->setThreadNotifications($thread, $this->getMember(), true);
 
         return $this->back($request);
     }
 
-    #[Route(path: '/forums/subscriptions/disable/thread/{threadId}', name: 'forum_thread_subscription_disable', requirements: ['threadId' => '\d+'], methods: ['GET'])]
+    #[Route(path: '/forums/subscriptions/disable/thread/{threadId}', name: 'forum_thread_subscription_disable', requirements: ['threadId' => '\d+'], methods: ['GET', 'POST'])]
     #[Route(path: '/forums/subscriptions/disable/thread/{threadId}/{subscriptionId}', name: 'thread_notifications_disable', requirements: ['threadId' => '\d+'], methods: ['GET'])]
     public function disableThread(Request $request, #[MapEntity(id: 'threadId')] ForumThread $thread): RedirectResponse
     {
+        $this->checkToken($request);
         $this->forumModel->setThreadNotifications($thread, $this->getMember(), false);
         $this->addTranslatedFlash('notice', 'forum.subscription.paused');
 
         return $this->back($request);
     }
 
-    #[Route(path: '/forums/subscriptions/enable/group/{groupId}', name: 'group_notifications_enable', requirements: ['groupId' => '\d+'], methods: ['GET'])]
-    #[Route(path: '/forums/subscriptions/subscribe/group/{groupId}', name: 'group_subscribe', requirements: ['groupId' => '\d+'], methods: ['GET'])]
+    #[Route(path: '/forums/subscriptions/enable/group/{groupId}', name: 'group_notifications_enable', requirements: ['groupId' => '\d+'], methods: ['POST'])]
+    #[Route(path: '/forums/subscriptions/subscribe/group/{groupId}', name: 'group_subscribe', requirements: ['groupId' => '\d+'], methods: ['POST'])]
     public function enableGroup(Request $request, #[MapEntity(id: 'groupId')] Group $group): RedirectResponse
     {
+        $this->checkToken($request);
         if (!$this->forumModel->setGroupNotifications($group, $this->getMember(), true)) {
             // not in the group: joining comes first
             return $this->redirectToRoute('join_group', ['groupId' => $group->getId()]);
@@ -120,10 +131,11 @@ class ForumSubscriptionController extends AbstractController
         return $this->back($request);
     }
 
-    #[Route(path: '/forums/subscriptions/disable/group/{groupId}', name: 'group_notifications_disable', requirements: ['groupId' => '\d+'], methods: ['GET'])]
-    #[Route(path: '/forums/subscriptions/unsubscribe/group/{groupId}', name: 'group_unsubscribe', requirements: ['groupId' => '\d+'], methods: ['GET'])]
+    #[Route(path: '/forums/subscriptions/disable/group/{groupId}', name: 'group_notifications_disable', requirements: ['groupId' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route(path: '/forums/subscriptions/unsubscribe/group/{groupId}', name: 'group_unsubscribe', requirements: ['groupId' => '\d+'], methods: ['GET', 'POST'])]
     public function disableGroup(Request $request, #[MapEntity(id: 'groupId')] Group $group): RedirectResponse
     {
+        $this->checkToken($request);
         $this->forumModel->setGroupNotifications($group, $this->getMember(), false);
         $this->addTranslatedFlash('notice', 'forum.subscription.group.off');
 
@@ -147,6 +159,17 @@ class ForumSubscriptionController extends AbstractController
         }
 
         return $this->render('forum/agora_notifications_off.html.twig');
+    }
+
+    /**
+     * The switches on pages are POST requests with a token; the mails' links are GET requests without one (the
+     * routes that serve them accept only what they're for).
+     */
+    private function checkToken(Request $request): void
+    {
+        if ($request->isMethod('POST') && !$this->isCsrfTokenValid(self::TOKEN, (string) $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Invalid CSRF token.');
+        }
     }
 
     /**

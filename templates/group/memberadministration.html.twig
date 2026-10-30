@@ -9,6 +9,7 @@
 {% endmacro %}
 
 {% block content %}
+    {% import 'macros/post_button.html.twig' as post %}
     {% import _self as admin %}
     <h1 class="h3">{{ 'GroupsAdministrateMembers'|trans }}: <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
 
@@ -43,7 +44,7 @@
             {% for membership in invited %}
                 <li>
                     <a href="{{ path('members_profile', {username: membership.member.username}) }}">{{ membership.member.username }}</a>
-                    (<a href="{{ path('withdraw_member_invite_to_group', {groupId: group.id, memberId: membership.member.id}) }}">{{ 'GroupsWithdrawInvitation'|trans }}</a>)
+                    {{ post.post_button(path('withdraw_member_invite_to_group', {groupId: group.id, memberId: membership.member.id}), 'group-withdraw-' ~ group.id ~ '-' ~ membership.member.id, 'GroupsWithdrawInvitation', 'btn btn-sm btn-outline-secondary') }}
                 </li>
             {% endfor %}
         </ul>

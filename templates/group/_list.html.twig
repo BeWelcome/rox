@@ -9,12 +9,23 @@
 <div class="p-groups">
     <header class="p-groups__top">
         <h1 class="p-groups__title">{{ 'group.list.title'|trans }}</h1>
-        <a class="p-groups__create" href="{{ path('new_group') }}">
-            <i class="fa fa-plus" aria-hidden="true"></i>
-            <span class="p-groups__create-long">{{ 'group.list.create'|trans }}</span>
-            <span class="p-groups__create-short">{{ 'group.list.create.short'|trans }}</span>
-        </a>
+        <div class="p-groups__top-actions">
+            {% if profileBlock|default('')|trim %}
+                <button type="button" class="p-groups__cog js-groups-profile-toggle" aria-expanded="false" aria-controls="profile-groups-panel"
+                        aria-label="{{ 'group.profile.groups'|trans }}">
+                    <i class="fas fa-cog" aria-hidden="true"></i>
+                </button>
+            {% endif %}
+            <a class="p-groups__create" href="{{ path('new_group') }}">
+                <i class="fa fa-plus" aria-hidden="true"></i>
+                <span class="p-groups__create-long">{{ 'group.list.create'|trans }}</span>
+                <span class="p-groups__create-short">{{ 'group.list.create.short'|trans }}</span>
+            </a>
+        </div>
     </header>
+    {% if profileBlock|default('')|trim %}
+        <div class="p-groups__profile-panel" id="profile-groups-panel" hidden>{{ profileBlock }}</div>
+    {% endif %}
 
     {# Searching goes to All groups #}
     <form class="p-groups__search js-group-search" action="{{ path('groups_search') }}" method="get">
@@ -22,6 +33,7 @@
             <i class="fas fa-search" aria-hidden="true"></i>
             <span class="visually-hidden">{{ 'name'|trans }}</span>
             <input type="search" name="name" value="{{ search.name }}" placeholder="{{ 'group.list.search'|trans }}">
+            <button class="p-groups__go" type="submit">{{ 'groupssearchsubmit'|trans }}</button>
         </label>
         <div class="p-groups__filters">
             <label class="p-groups__pill p-groups__pill--select{{ search.category ? ' is-on' }}">
@@ -38,15 +50,14 @@
             <details class="p-groups__place">
                 <summary class="p-groups__pill{{ search.location ? ' is-on' }}">
                     <i class="fas fa-location-dot" aria-hidden="true"></i>
-                    <span>{{ search.location ? search.locationName : 'location'|trans }}</span>
+                    <span>{{ search.location ? (search.locationName|split(',')|first|trim) : 'location'|trans }}</span>
                 </summary>
                 <div class="p-groups__place-panel">
                     <div class="auto-search-wrapper max-height">
                         <input type="text" class="o-input js-location-picker" id="group_search_location_name" name="locationName" data-location-target="#group_search_location"
-                               value="{{ search.locationName }}" autocomplete="off" placeholder="{{ 'location'|trans }}">
+                               value="{{ search.locationName }}" autocomplete="off" placeholder="{{ 'group.list.place.placeholder'|trans }}">
                     </div>
                     <input type="hidden" id="group_search_location" name="location" value="{{ search.location }}">
-                    <button class="p-groups__apply" type="submit">{{ 'groupssearchsubmit'|trans }}</button>
                 </div>
             </details>
         </div>
@@ -99,6 +110,15 @@
     {% endif %}
 </div>
 <script>
+    // The cog opens the groups shown on the profile
+    document.querySelectorAll('.js-groups-profile-toggle').forEach(function (button) {
+        var panel = document.getElementById(button.getAttribute('aria-controls'));
+        button.addEventListener('click', function () {
+            panel.hidden = !panel.hidden;
+            button.setAttribute('aria-expanded', panel.hidden ? 'false' : 'true');
+            button.classList.toggle('is-on', !panel.hidden);
+        });
+    });
     // The order and the place close on a click elsewhere
     document.addEventListener('click', function (event) {
         document.querySelectorAll('.p-groups__order[open], .p-groups__place[open]').forEach(function (menu) {

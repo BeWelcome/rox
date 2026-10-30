@@ -128,3 +128,9 @@ group.list.last.post:
 group.list.joined:
     - 'Joined'
     - Groups pages, on a group the member is in
+group.profile.groups.hint:
+    - 'Pick the groups people see on your profile.'
+    - On the my groups page, under group.profile.groups, above a switch for each of the member's groups
+group.list.place.placeholder:
+    - 'Type a city, region or country'
+    - Groups pages, grey text in the place field; picking a suggestion searches at once

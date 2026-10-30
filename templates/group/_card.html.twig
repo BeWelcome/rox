@@ -8,11 +8,11 @@
 {% set _last = row.lastActivity ? row.lastActivity|date('Y-m-d') : null %}
 <a class="p-group-card" href="{{ path('group_start', {group_id: group.id}) }}">
     <img class="p-group-card__picture" width="68" height="68" alt="" loading="lazy"
-         src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+         src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
     <span class="p-group-card__main">
         <span class="p-group-card__name">{{ group.name }}</span>
         <span class="p-group-card__meta">
-            <span><i class="fa fa-users" aria-hidden="true"></i> {{ 'group.list.members'|trans({count: row.memberCount}) }}</span>
+            <span>{{ 'group.list.members'|trans({count: row.memberCount}) }}</span>
             <span class="p-group-card__dot" aria-hidden="true">•</span>
             {% if _last == 'now'|date('Y-m-d') %}
                 <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.today'|trans }}</span>

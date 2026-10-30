@@ -1,8 +1,9 @@
 import Autocomplete from '@tomickigrzegorz/autocomplete';
 
-export function initializeSingleAutoComplete(url, cssClass = "js-location-picker", onChange = function(){}) {
+// options: extra settings for the autocomplete (for example the clear button's)
+export function initializeSingleAutoComplete(url, cssClass = "js-location-picker", onChange = function(){}, options = {}) {
     const locationSuggests = document.getElementsByClassName(cssClass);
-    return new LocationSuggest(locationSuggests.item(0), url, onChange);
+    return new LocationSuggest(locationSuggests.item(0), url, onChange, options);
 }
 
 export function initializeMultipleAutoCompletes(url, cssClass = "js-location-picker", onChange = function(){}) {
@@ -14,7 +15,7 @@ export function initializeMultipleAutoCompletes(url, cssClass = "js-location-pic
 let lastGroup = '';
 
 class LocationSuggest {
-    constructor(element, url, onChange) {
+    constructor(element, url, onChange, options = {}) {
         this.url = url;
         this.element = element;
         this.onChange = onChange;
@@ -95,6 +96,7 @@ class LocationSuggest {
             // the method presents no results element
             noResults: ({ currentValue, template }) =>
                 template(`<li>No results found: "${currentValue}"</li>`),
+            ...options,
         });
     }
 }

@@ -6,13 +6,32 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'group/_list.html.twig' with {tab: 'mine'} %}
-
-    {# The groups the profile shows #}
+    {# The groups the profile shows: a switch per group, then Save; opened by the cog next to Create #}
+    {% set profileBlock %}
     {% if profileForm.groups.children|length > 0 %}
-        <details class="p-groups__profile" id="profile-groups">
-            <summary>{{ 'group.profile.groups'|trans }}</summary>
-            {{ form(profileForm) }}
-        </details>
+        {{ form_start(profileForm, {attr: {class: 'p-groups__profile', id: 'profile-groups'}}) }}
+            <div class="p-groups__profile-head">
+                <h2 class="p-groups__profile-title"><i class="fas fa-eye" aria-hidden="true"></i> {{ 'group.profile.groups'|trans }}</h2>
+                <p class="p-groups__profile-hint">{{ 'group.profile.groups.hint'|trans }}</p>
+            </div>
+            <div class="p-groups__profile-list">
+                {% for choice in profileForm.groups %}
+                    <label class="p-groups__profile-row" for="{{ choice.vars.id }}">
+                        <span>{{ choice.vars.label }}</span>
+                        <input type="checkbox" class="p-preference-toggle__input" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}"{% if choice.vars.checked %} checked{% endif %}>
+                        <span class="p-preference-toggle__track" aria-hidden="true"><span class="p-preference-toggle__thumb"></span></span>
+                    </label>
+                    {% do choice.setRendered %}
+                {% endfor %}
+            </div>
+            {% do profileForm.groups.setRendered %}
+            <div class="p-groups__profile-foot">
+                <button type="submit" name="{{ profileForm.save.vars.full_name }}" class="p-groups__apply p-groups__profile-save">{{ 'save'|trans }}</button>
+            </div>
+            {% do profileForm.save.setRendered %}
+        {{ form_end(profileForm) }}
     {% endif %}
+    {% endset %}
+
+    {% include 'group/_list.html.twig' with {tab: 'mine', profileBlock: profileBlock} %}
 {% endblock %}

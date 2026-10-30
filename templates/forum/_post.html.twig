@@ -18,7 +18,7 @@
             <a class="p-thread-post__name" href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>
             {% if _isStarter %}<span class="p-thread-post__tag p-thread-post__tag--author">{{ 'forum.post.author'|trans }}</span>{% endif %}
             {% if _isMe %}<span class="p-thread-post__tag">{{ 'forum.post.you'|trans }}</span>{% endif %}
-            <a class="p-thread-post__when" href="#post{{ post.id }}" title="{{ post.created|format_datetime('medium', 'short') }}">{{ post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') }}</a>
+            <a class="p-thread-post__when" href="#post{{ post.id }}">{{ post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') }}</a>
             {% if _vis == constant('App\\Doctrine\\ForumVisibilityType::GROUP_ONLY') %}
                 <span class="p-thread-post__vis"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'forum.post.group.only'|trans }}</span>
             {% elseif _vis == constant('App\\Doctrine\\ForumVisibilityType::MODERATOR_ONLY') %}
@@ -26,7 +26,7 @@
             {% endif %}
             <div class="p-thread-post__tools">
                 {% if replyUrl|default(null) %}
-                    <a class="p-thread-post__tool js-contact-open" href="{{ replyUrl }}" data-title="{{ replyTitle }}" title="{{ 'forumreply'|trans }}" aria-label="{{ 'forumreply'|trans }}">
+                    <a class="p-thread-post__tool js-contact-open" href="{{ replyUrl }}" data-title="{{ replyTitle }}" aria-label="{{ 'forumreply'|trans }}">
                         <i class="fas fa-reply" aria-hidden="true"></i>
                     </a>
                 {% endif %}

@@ -1,7 +1,7 @@
 {#
   One thread in a list (forum pages, My groups on the home page): the starter's avatar, the title, the group
   (nothing for the agora), who wrote the last post and when, and the number of replies.
-  The title opens the thread, the time and the replies jump to the last post.
+  The whole row opens the thread at its last post; only the group's name is a link of its own.
   ascending: the member reads threads oldest post first, so the last post is on the last page.
   showGroup: name the group (not on the group's own pages).
 #}
@@ -13,28 +13,27 @@
     {% set fragment = '#post' ~ thread.lastPost.id %}
 {% endif %}
 {% set lastUrl = forum.thread_url(thread, page) ~ fragment %}
-<div class="c-home-item">
+<div class="c-home-item c-home-item--thread">
     <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
     <div class="c-home-item__body">
-        <a class="c-home-item__title c-home-item__title--link" href="{{ forum.thread_url(thread) }}">
+        <a class="c-home-item__title c-home-item__title--link c-home-item__row-link" href="{{ lastUrl }}">
             {%- if thread.stickyValue > 0 %}<i class="fas fa-thumbtack me-1" title="{{ 'pinnedpost'|trans }}"></i>{% endif -%}
             {{ forum.thread_title(thread, app.request.locale) }}
         </a>
         {% if not thread.agora and (showGroup ?? true) %}
             <p class="c-home-item__meta">
-                <i class="fas fa-users" aria-hidden="true"></i>
-                <a href="{{ path('group_start', { group_id: thread.group.id }) }}">{{ thread.group.name }}</a>
+                <a class="c-home-item__group" href="{{ path('group_start', { group_id: thread.group.id }) }}">{{ thread.group.name }}</a>
             </p>
         {% endif %}
         <p class="c-home-item__meta">
             {{ 'thread.lastpostby'|trans }}
-            <a class="c-home-item__author" href="{{ path('members_profile', { username: thread.lastPost.author.username }) }}">{{ thread.lastPost.author.username }}</a>
-            · <a class="c-home-item__when" href="{{ lastUrl }}" title="{{ thread.lastPost.updated.toDateTimeString }}">{{ thread.lastPost.updated.diffForHumans }}</a>
+            <span class="c-home-item__author">{{ thread.lastPost.author.username }}</span>
+            · <span class="c-home-item__when">{{ thread.lastPost.updated.diffForHumans }}</span>
         </p>
     </div>
     {% set replies = thread.replies|default(0) %}
-    <a class="c-home-item__replies{% if replies > 0 %} has-replies{% endif %}" href="{{ lastUrl }}" title="{{ 'landing.thread.replies'|trans({ count: replies }) }}">
+    <span class="c-home-item__replies{% if replies > 0 %} has-replies{% endif %}" aria-label="{{ 'landing.thread.replies'|trans({ count: replies }) }}">
         <i class="far fa-comment" aria-hidden="true"></i>
         <span>{{ replies }}</span>
-    </a>
+    </span>
 </div>

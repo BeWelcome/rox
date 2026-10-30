@@ -53,13 +53,13 @@
             {% endif %}
             <form method="post" action="{{ subscribed ? path('forum_thread_unsubscribe', {threadId: thread.id}) : path('forum_thread_subscription', {threadId: thread.id}) }}">
                 <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\ForumSubscriptionController::TOKEN')) }}">
-                {# Subscribed: orange; a click unsubscribes (said on hover) #}
-                <button type="submit" class="p-thread-btn{{ subscribed ? ' is-on' }}"{% if subscribed %} title="{{ 'forumunsubscribe'|trans }}"{% endif %}>
+                {# Subscribed: orange; a click unsubscribes #}
+                <button type="submit" class="p-thread-btn{{ subscribed ? ' is-on' }}">
                     <i class="fas fa-bell" aria-hidden="true"></i> {{ (subscribed ? 'forum.thread.subscribed' : 'forumsubscribe')|trans }}
                 </button>
             </form>
             <a class="p-thread__order" href="{{ thread.agora ? path('forum_reverse', {threadId: thread.id}) : path('group_forum_thread_reverse', {group_id: group.id, thread: thread.id}) }}">
-                <i class="fas fa-arrow-down-wide-short" aria-hidden="true"></i> {{ (ascending ? 'forums.sort.latest.first' : 'forums.sort.oldest.first')|trans }}
+                <i class="fas fa-arrow-down-wide-short" aria-hidden="true"></i> {{ (ascending ? 'forum.thread.order.latest' : 'forum.thread.order.oldest')|trans }}
             </a>
         </div>
 

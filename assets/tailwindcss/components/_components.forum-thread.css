@@ -104,9 +104,21 @@ main:has(.p-thread) { margin-top: 0 !important; background: #f4f5f7; }
 .p-thread__write { display: flex; justify-content: center; margin: 1.5rem 0 2rem; }
 
 @media (max-width: 767.98px) {
-  .p-thread__top { margin-bottom: 0.5rem; padding: 1rem 0; }
-  .p-thread .p-thread__title { font-size: 1.75rem; }
-  .p-thread__order { padding: 0.5rem 0.25rem; }
+  /* Less height: smaller head, buttons and the order on one line */
+  .p-thread__top { margin-bottom: 0.5rem; padding: 0.75rem 0 0.85rem; }
+  .p-group-mini { gap: 0.65rem; }
+  .p-group-mini__picture img { width: 2.75rem; height: 2.75rem; border-radius: 0.7rem; }
+  .p-group-mini__name { font-size: 1rem; }
+  .p-group-mini__menu { margin-top: 0; }
+  .p-group-mini__menu summary { font-size: 0.875rem; }
+  .p-group-mini__new, .p-group-mini__new:hover { height: 2.4rem; padding: 0 0.9rem; font-size: 0.875rem; }
+  .p-thread__back { margin-top: 0.75rem; font-size: 0.8125rem; }
+  .p-thread .p-thread__title { margin: 0.35rem 0 0.75rem; font-size: 1.5rem; }
+  .p-thread__actions { flex-wrap: nowrap; gap: 0.5rem; }
+  .p-thread-btn, .p-thread-btn:hover { height: 2.5rem; padding: 0 0.95rem; font-size: 0.875rem; }
+  .p-thread-btn--primary, .p-thread-btn--primary:hover { padding: 0 1.1rem; }
+  .p-thread__order, .p-thread__order:hover { flex-shrink: 0; padding: 0.4rem 0.15rem; font-size: 0.8125rem; }
+  .p-thread .p-thread__meta { margin-top: 0.6rem; font-size: 0.8125rem; }
   /* Posts from edge to edge, just under the top */
   .p-thread__posts { margin: 0 calc(-1 * var(--bs-gutter-x, 1.5rem) * 0.5); border-radius: 0; box-shadow: none; }
   .p-thread-post { gap: 0.75rem; padding: 1.1rem 1.25rem; }
@@ -142,3 +154,26 @@ main:has(.p-thread) { margin-top: 0 !important; background: #f4f5f7; }
 .p-forum-notify__text { flex: 1; }
 .c-contact--forum .c-contact__foot--row .c-contact__send.c-contact__cancel { flex: 0 0 auto; padding: 0 1.4rem; }
 .c-contact--forum .c-contact__foot--row .c-contact__send.c-contact__cancel:hover { border-color: #cbd5e1; background: #f8fafc; color: #0f172a; }
+
+/* New topic (forum/new.html.twig): one white card, its head, the title, the editor, who can see it, the
+   notifications, then Cancel and Create topic */
+.p-forum-new { max-width: 48rem; }
+.p-forum-new__card { display: flex; flex-direction: column; gap: 1.25rem; margin: 0; padding: 1.5rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
+.p-forum-new__head { display: flex; align-items: center; gap: 0.9rem; }
+.p-forum-new__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: #fff7ed; color: #ea7a2e; font-size: 0.95rem; }
+.p-forum-new .p-forum-new__title { margin: 0; color: #0f172a; font-size: 1.25rem; font-weight: 700; }
+.p-forum-new__sub { margin: 0.15rem 0 0; color: #64748b; font-size: 0.875rem; font-weight: 600; }
+.p-forum-new__field { display: flex; flex-direction: column; gap: 0.5rem; }
+.p-forum-new__label { margin: 0; color: #0f172a; font-size: 0.9375rem; font-weight: 700; }
+.p-forum-new__input { width: 100%; height: 3.1rem; padding: 0 1rem; border: 1px solid #e5eaf0; border-radius: 0.9rem; background: #fff; color: #0f172a; font-size: 1.0625rem; font-weight: 600; }
+.p-forum-new__input:focus { outline: none; border-color: #f37000; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.12); }
+.p-forum-new__error { margin: 0; color: #dc2626; font-size: 0.8125rem; font-weight: 600; }
+.p-forum-new__error--box { padding: 0.75rem 1rem; border-radius: 0.9rem; background: #fef2f2; }
+.p-forum-new .p-forum-notify { padding: 0.85rem 1rem; border-radius: 0.9rem; background: #f8fafc; }
+.p-forum-new__foot { display: flex; justify-content: flex-end; gap: 0.6rem; padding-top: 0.25rem; }
+.p-forum-new__foot .p-group-btn { min-width: 7rem; padding: 0.7rem 1.4rem; font-size: 0.9375rem; }
+.p-forum-new__foot .p-group-btn:disabled { border-color: #fed7aa; background: #fed7aa; cursor: default; }
+@media (max-width: 540px) {
+  .p-forum-new__card { padding: 1.1rem; }
+  .p-forum-new__foot .p-group-btn { flex: 1; min-width: 0; }
+}

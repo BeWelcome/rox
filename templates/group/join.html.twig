@@ -1,37 +1,49 @@
 {% extends 'group/layout.html.twig' %}
-{% import 'macros.twig' as macros %}
+
+{#
+  Joining a group: one white card with why the member joins, whether they want the group's mails
+  (Yes / No as a grey pill) and Cancel / Join.
+#}
 
 {% block group_content %}
-    <h5>{{ 'group.join.abstract' | trans }}</h5>
-    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
-    {{ form_errors(form) }}
-    <div class="row">
-        <div class="col-12 col-md-6 mb-1">
-            {{ form_row(form.reason) }}
+    <div class="p-group-form">
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'p-group-form__card'}}) }}
+        <div class="p-group-form__head">
+            <span class="p-group-form__icon"><i class="fas fa-user-plus" aria-hidden="true"></i></span>
+            <div>
+                <h2 class="p-group-form__title">{{ 'group.join.abstract'|trans }}</h2>
+                <p class="p-group-form__sub">{{ group.name }}</p>
+            </div>
         </div>
-        <div class="col-12 col-md-6 mb-1">
-            <label class="">{{ form.notifications.vars.label|trans }}</label>
+        {% for _error in form.vars.errors %}<p class="p-group-form__error p-group-form__error--box">{{ _error.message }}</p>{% endfor %}
 
-            <div class="btn-group w-100" role="group" aria-label="{{ form.notifications.vars.label|trans }}">
+        <div class="p-group-form__field">
+            <label class="p-group-form__label" for="{{ form.reason.vars.id }}">{{ form.reason.vars.label|trans }}</label>
+            <textarea class="p-group-form__input" id="{{ form.reason.vars.id }}" name="{{ form.reason.vars.full_name }}" rows="4" required>{{ form.reason.vars.value }}</textarea>
+            {% do form.reason.setRendered %}
+            {% for _error in form.reason.vars.errors %}<p class="p-group-form__error">{{ _error.message }}</p>{% endfor %}
+        </div>
 
-                {% for key, item in form.notifications.children %}
-                    <input
-                        type="radio"
-                        value="{{ item.vars.value }}"
-                        id="{{ item.vars.id }}"
-                        name="{{ item.vars.full_name }}"
-                        class="btn-check"
-                        {{ item.vars.checked ? 'checked' : '' }}
-                        autocomplete="off"
-                    >
-                    <label for="{{ item.vars.id }}" class="btn btn-outline-primary">{{ item.vars.label | trans }}</label>
+        <div class="p-group-form__field">
+            <span class="p-group-form__label">{{ form.notifications.vars.label|trans }}</span>
+            <div class="p-forum-seg" role="radiogroup" aria-label="{{ form.notifications.vars.label|trans }}">
+                {% for item in form.notifications %}
+                    <input type="radio" class="p-forum-seg__input" value="{{ item.vars.value }}" id="{{ item.vars.id }}"
+                           name="{{ item.vars.full_name }}"{{ item.vars.checked ? ' checked' }}>
+                    <label class="p-forum-seg__option" for="{{ item.vars.id }}">
+                        <i class="fas {{ item.vars.value == 'yes' ? 'fa-envelope' : 'fa-eye-slash' }}" aria-hidden="true"></i>
+                        {{ item.vars.label|trans }}
+                    </label>
                     {% do item.setRendered %}
                 {% endfor %}
             </div>
         </div>
-        <div class="col-12">
-            {{ form_row(form.join, { 'attr': { 'class': 'btn-primary float-end'}}) }}
+
+        <div class="p-group-form__foot">
+            <a class="p-group-btn" href="{{ path('group_start', {group_id: group.id}) }}">{{ 'cancel'|trans }}</a>
+            <button type="submit" class="p-group-btn p-group-btn--primary" id="{{ form.join.vars.id }}" name="{{ form.join.vars.full_name }}">{{ form.join.vars.label|trans }}</button>
+            {% do form.join.setRendered %}
         </div>
+        {{ form_end(form) }}
     </div>
-    {{ form_end(form) }}
 {% endblock group_content %}

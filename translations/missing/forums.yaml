@@ -134,3 +134,9 @@ forum.reply.post:
 forum.thread.subscribed:
     - 'Subscribed'
     - Forum thread page, the bell button when the member gets mails about new posts; a click unsubscribes
+forum.thread.order.latest:
+    - 'Latest first'
+    - Forum thread page, link that shows the newest posts first
+forum.thread.order.oldest:
+    - 'Oldest first'
+    - Forum thread page, link that shows the oldest posts first

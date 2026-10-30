@@ -1,10 +1,89 @@
 {% extends 'group/layout.html.twig' %}
 
+{#
+  New topic in a group's forum (or the agora): one white card with its head (New topic, the forum's name), the
+  title, the editor, who can see it, the notifications, then Cancel and Create topic (greyed until a title and
+  a text are there).
+#}
 {% block group_content %}
-    {% if group.beWelcome %}
-        <h1 class="h3">{{ 'forumnewtopic'|trans }}: <a href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'agoraforum'|trans }}</a></h1>
-    {% else %}
-        <h2 class="h4">{{ 'forumnewtopic'|trans }}</h2>
-    {% endif %}
-    {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
+    <div class="p-forum-new">
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'p-forum-new__card js-forum-new-form'}}) }}
+            <header class="p-forum-new__head">
+                <span class="p-forum-new__icon"><i class="fas fa-pen" aria-hidden="true"></i></span>
+                <div>
+                    <h2 class="p-forum-new__title">{{ 'forumnewtopic'|trans }}</h2>
+                    <p class="p-forum-new__sub">{{ group.beWelcome ? 'agoraforum'|trans : group.name }}</p>
+                </div>
+            </header>
+            {% for _error in form.vars.errors %}<p class="p-forum-new__error p-forum-new__error--box">{{ _error.message }}</p>{% endfor %}
+
+            <div class="p-forum-new__field">
+                <label class="p-forum-new__label" for="{{ form.title.vars.id }}">{{ form.title.vars.label|trans }}</label>
+                {{ form_widget(form.title, {attr: {class: 'p-forum-new__input', autocomplete: 'off'}}) }}
+                {% for _error in form.title.vars.errors %}<p class="p-forum-new__error">{{ _error.message }}</p>{% endfor %}
+            </div>
+
+            <div class="p-forum-new__field p-forum-reply__editor">
+                <label class="p-forum-new__label" for="{{ form.text.vars.id }}">{{ form.text.vars.label|trans }}</label>
+                {{ form_widget(form.text) }}
+                {% for _error in form.text.vars.errors %}<p class="p-forum-new__error">{{ _error.message }}</p>{% endfor %}
+            </div>
+
+            {% if form.visibility is defined %}
+                <div class="p-forum-new__field">
+                    <span class="p-forum-new__label">{{ 'forum.reply.who.can.see'|trans }}</span>
+                    <div class="p-forum-seg">
+                        {% for choice in form.visibility %}
+                            <input type="radio" class="p-forum-seg__input" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}"{% if choice.vars.checked %} checked{% endif %}>
+                            <label class="p-forum-seg__option" for="{{ choice.vars.id }}">
+                                <i class="fas {{ choice.vars.value == constant('App\\Doctrine\\ForumVisibilityType::NO_RESTRICTION') or choice.vars.value == constant('App\\Doctrine\\ForumVisibilityType::MEMBERS_ONLY') ? 'fa-globe' : 'fa-lock' }}" aria-hidden="true"></i>
+                                {{ choice.vars.label|trans }}
+                            </label>
+                            {% do choice.setRendered %}
+                        {% endfor %}
+                    </div>
+                    {% for _error in form.visibility.vars.errors %}<p class="p-forum-new__error">{{ _error.message }}</p>{% endfor %}
+                </div>
+                {% do form.visibility.setRendered %}
+            {% endif %}
+
+            {% if form.subscribe is defined %}
+                <label class="p-forum-notify" for="{{ form.subscribe.vars.id }}">
+                    <i class="fas fa-bell" aria-hidden="true"></i>
+                    <span class="p-forum-notify__text">{{ form.subscribe.vars.label|trans }}</span>
+                    <input type="checkbox" class="p-preference-toggle__input" id="{{ form.subscribe.vars.id }}" name="{{ form.subscribe.vars.full_name }}" value="{{ form.subscribe.vars.value }}"{% if form.subscribe.vars.checked %} checked{% endif %}>
+                    <span class="p-preference-toggle__track" aria-hidden="true"><span class="p-preference-toggle__thumb"></span></span>
+                </label>
+                {% do form.subscribe.setRendered %}
+            {% endif %}
+
+            {% do form.submit.setRendered %}
+            {{ form_rest(form) }}
+
+            <div class="p-forum-new__foot">
+                <a class="p-group-btn" href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'cancel'|trans }}</a>
+                <button type="submit" name="{{ form.submit.vars.full_name }}" class="p-group-btn p-group-btn--primary js-forum-new-send">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ form.submit.vars.label|trans }}
+                </button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+    <script>
+        (function () {
+            // Create topic stays greyed until there is a title and a text (or a picture)
+            var form = document.querySelector('.js-forum-new-form');
+            var send = form.querySelector('.js-forum-new-send');
+            var title = document.getElementById('{{ form.title.vars.id }}');
+            var refresh = function () {
+                var editable = form.querySelector('.ck-editor__editable');
+                var filled = editable
+                    ? editable.textContent.trim() !== '' || editable.querySelector('img') !== null
+                    : form.querySelector('textarea').value.trim() !== '';
+                send.disabled = !filled || title.value.trim() === '';
+            };
+            new MutationObserver(refresh).observe(form, { childList: true, characterData: true, subtree: true });
+            form.addEventListener('input', refresh);
+            refresh();
+        })();
+    </script>
 {% endblock %}

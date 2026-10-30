@@ -1,47 +1,153 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+
+{#
+  New group: a white card per step (picture and name, description, who can join, who sees the posts), then
+  Cancel and Create group. Groups with a name like the one typed show under the name.
+#}
 
 {% block javascripts %}
     <script>
-        var delay = (function(){
+        (function () {
+            // Groups with a similar name, a second after the last key
+            var name = document.getElementById('{{ form.name.vars.id }}');
+            var duplicates = document.getElementById('duplicates');
             var timer = 0;
-            return function(callback, ms, that){
-                clearTimeout (timer);
-                timer = setTimeout(callback.bind(that), ms);
-            };
-        })();
-        $('#group_name').keyup(function() {
-            delay(function(){
-                var name = $('#group_name').val();
+            name.addEventListener('input', function () {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    var body = new FormData();
+                    body.append('name', name.value);
+                    fetch('{{ path('new_group_check') }}', {method: 'POST', body: body})
+                        .then(function (response) { return response.json(); })
+                        .then(function (data) { duplicates.innerHTML = data.html; });
+                }, 1000);
+            });
 
-                $.ajax({
-                    type: 'POST',
-                    url: '/new/group/check',
-                    data: {
-                        name: name
-                    },
-                    success: function(data) {
-                        $('#duplicates').html(data.html);
-                    }
+            // The chosen picture shows in the round frame
+            var picture = document.getElementById('{{ form.picture.vars.id }}');
+            var preview = document.querySelector('.js-gnew-preview');
+            var fileName = document.querySelector('.js-gnew-file');
+            function show(file) {
+                preview.style.backgroundImage = 'url(' + URL.createObjectURL(file) + ')';
+                preview.classList.add('has-picture');
+                fileName.textContent = file.name;
+                picture.closest('.p-gnew__pic').querySelectorAll('.p-gnew__error').forEach(function (error) {
+                    error.remove();
                 });
-            }, 1000, this);
-        });
+            }
+
+            // A picture bigger than 400px is cut to its middle square and made 400x400 here, as group pictures
+            // must be between 200x200 and 400x400
+            picture.addEventListener('change', function () {
+                var file = picture.files[0];
+                if (!file) {
+                    return;
+                }
+                var image = new Image();
+                image.onload = function () {
+                    var side = Math.min(image.naturalWidth, image.naturalHeight);
+                    if (side < 200 || (image.naturalWidth <= 400 && image.naturalHeight <= 400) || typeof DataTransfer === 'undefined') {
+                        show(file);
+                        return;
+                    }
+                    var canvas = document.createElement('canvas');
+                    canvas.width = 400;
+                    canvas.height = 400;
+                    canvas.getContext('2d').drawImage(image, (image.naturalWidth - side) / 2, (image.naturalHeight - side) / 2, side, side, 0, 0, 400, 400);
+                    var type = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                    canvas.toBlob(function (blob) {
+                        var name = file.name.replace(/\.[^.]+$/, '') + (type === 'image/png' ? '.png' : '.jpg');
+                        var resized = new File([blob], name, {type: type});
+                        var list = new DataTransfer();
+                        list.items.add(resized);
+                        picture.files = list.files;
+                        show(resized);
+                    }, type, 0.9);
+                };
+                image.onerror = function () {
+                    show(file);
+                };
+                image.src = URL.createObjectURL(file);
+            });
+        })();
     </script>
-{{ encore_entry_script_tags('bsfileselect') }}
 {% endblock javascripts %}
 
-{% block stylesheets %}
-{% endblock stylesheets %}
-
 {% block content %}
-    <h1>{{ 'group.create' | trans}}</h1>
-    <p>{{ 'group.create.warning'|
-        trans| escape | replace({'%link_start%': '<a href="/forums/rules#groups" target="_blank" class="text-primary">', '%link_end%': '</a>'})|raw }}</p>
-    {{ form_start(form, { 'attr': { 'novalidate': 'novalidate'}}) }}
-    {{ form_row(form.name) }}
+    {% set _typeIcons = {Public: 'fa-globe', NeedAcceptance: 'fa-users', NeedInvitation: 'fa-envelope'} %}
+    {% set _postsIcons = {Yes: 'fa-eye', No: 'fa-lock'} %}
+    <div class="p-gnew">
+        <a class="p-gnew__back" href="{{ path('groups_mygroups') }}">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'group.list.title'|trans }}
+        </a>
+        <h1 class="p-gnew__title">{{ 'group.create'|trans }}</h1>
+        <p class="p-gnew__intro">
+            <i class="fas fa-info-circle" aria-hidden="true"></i>
+            <span>{{ 'group.create.warning'|trans|escape|replace({'%link_start%': '<a href="/forums/rules#groups" target="_blank">', '%link_end%': '</a>'})|raw }}</span>
+        </p>
 
-    <div id="duplicates"></div>
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'p-gnew__form'}}) }}
+        {% for _error in form.vars.errors %}<p class="p-gnew__error p-gnew__error--form">{{ _error.message }}</p>{% endfor %}
 
-    {{ form_rest(form) }}
-    {{ form_end(form) }}
+        <section class="p-gnew__card p-gnew__card--head">
+            <div class="p-gnew__pic">
+                <label class="p-gnew__preview js-gnew-preview" for="{{ form.picture.vars.id }}">
+                    <i class="fas fa-camera" aria-hidden="true"></i>
+                </label>
+                <div class="p-gnew__pic-text">
+                    <span class="p-gnew__label">{{ form.picture.vars.label|trans }}</span>
+                    <label class="p-gnew__file" for="{{ form.picture.vars.id }}">
+                        <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
+                        <span class="js-gnew-file">{{ 'group.choose.group.image'|trans }}</span>
+                    </label>
+                    <input type="file" class="p-gnew__file-input" id="{{ form.picture.vars.id }}" name="{{ form.picture.vars.full_name }}" accept="image/*">
+                    {% do form.picture.setRendered %}
+                    <p class="p-gnew__help">{{ form.picture.vars.help|trans }}</p>
+                    {% for _error in form.picture.vars.errors %}<p class="p-gnew__error">{{ _error.message }}</p>{% endfor %}
+                </div>
+            </div>
+
+            <div class="p-gnew__field">
+                <label class="p-gnew__label" for="{{ form.name.vars.id }}">{{ form.name.vars.label|trans }}</label>
+                {{ form_widget(form.name, {attr: form.name.vars.attr|merge({class: 'p-gnew__input', autocomplete: 'off'})}) }}
+                <p class="p-gnew__help">{{ form.name.vars.help|trans }}</p>
+                {% for _error in form.name.vars.errors %}<p class="p-gnew__error">{{ _error.message }}</p>{% endfor %}
+                <div id="duplicates" class="p-gnew__duplicates"></div>
+            </div>
+        </section>
+
+        <section class="p-gnew__card">
+            <label class="p-gnew__label" for="{{ form.description.vars.id }}">{{ form.description.vars.label|trans }}</label>
+            <p class="p-gnew__help p-gnew__help--top">{{ form.description.vars.help|trans }}</p>
+            <div class="p-gnew__editor">{{ form_widget(form.description) }}</div>
+            {% for _error in form.description.vars.errors %}<p class="p-gnew__error">{{ _error.message }}</p>{% endfor %}
+        </section>
+
+        {% for _field in [form.type, form.membersOnly] %}
+            {% set _icons = _field is same as(form.type) ? _typeIcons : _postsIcons %}
+            <section class="p-gnew__card">
+                <span class="p-gnew__label">{{ _field.vars.label|trans }}</span>
+                <div class="p-gnew__choices">
+                    {% for _choice in _field %}
+                        <input type="radio" class="p-gnew__choice-input" id="{{ _choice.vars.id }}" name="{{ _choice.vars.full_name }}"
+                               value="{{ _choice.vars.value }}"{{ _choice.vars.checked ? ' checked' }}>
+                        <label class="p-gnew__choice" for="{{ _choice.vars.id }}">
+                            <span class="p-gnew__choice-icon"><i class="fas {{ _icons[_choice.vars.value]|default('fa-check') }}" aria-hidden="true"></i></span>
+                            <span class="p-gnew__choice-text">{{ _choice.vars.label|trans }}</span>
+                            <span class="p-gnew__choice-mark"><i class="fas fa-check" aria-hidden="true"></i></span>
+                        </label>
+                        {% do _choice.setRendered %}
+                    {% endfor %}
+                </div>
+                {% for _error in _field.vars.errors %}<p class="p-gnew__error">{{ _error.message }}</p>{% endfor %}
+            </section>
+            {% do _field.setRendered %}
+        {% endfor %}
+
+        <div class="p-gnew__foot">
+            <a class="p-gnew__cancel" href="{{ path('groups_mygroups') }}">{{ 'cancel'|trans }}</a>
+            {{ form_widget(form.submit, {label: 'group.list.create', attr: {class: 'p-gnew__submit'}}) }}
+        </div>
+        {{ form_end(form) }}
+    </div>
 {% endblock content %}

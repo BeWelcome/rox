@@ -1,10 +1,22 @@
 {% extends 'group/layout.html.twig' %}
 
+{# Leaving a group: one white card with Cancel / Leave the group #}
+
 {% block group_content %}
-    <h2 class="h4">{{ 'groupsleavenamedgroup'|trans }}</h2>
-    <form method="post" action="{{ path('group_left', {group_id: group.id}) }}">
-        <input type="hidden" name="_token" value="{{ csrf_token('group-leave-' ~ group.id) }}">
-        <button type="submit" class="btn btn-danger">{{ 'groupsleavethegroup'|trans }}</button>
-        <a class="btn btn-outline-primary" href="{{ path('group_start', {group_id: group.id}) }}">{{ 'cancel'|trans }}</a>
-    </form>
+    <div class="p-group-form">
+        <form class="p-group-form__card" method="post" action="{{ path('group_left', {group_id: group.id}) }}">
+            <div class="p-group-form__head">
+                <span class="p-group-form__icon p-group-form__icon--danger"><i class="fas fa-right-from-bracket" aria-hidden="true"></i></span>
+                <div>
+                    <h2 class="p-group-form__title">{{ 'groupsleavenamedgroup'|trans }}</h2>
+                    <p class="p-group-form__sub">{{ group.name }}</p>
+                </div>
+            </div>
+            <input type="hidden" name="_token" value="{{ csrf_token('group-leave-' ~ group.id) }}">
+            <div class="p-group-form__foot">
+                <a class="p-group-btn" href="{{ path('group_start', {group_id: group.id}) }}">{{ 'cancel'|trans }}</a>
+                <button type="submit" class="p-group-btn p-group-btn--danger-solid">{{ 'groupsleavethegroup'|trans }}</button>
+            </div>
+        </form>
+    </div>
 {% endblock %}

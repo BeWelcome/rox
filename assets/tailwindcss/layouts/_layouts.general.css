@@ -7891,7 +7891,14 @@ a.c-home-item:hover .c-home-item__title,
 .c-home-item__meta i, .c-home-item__meta svg { margin-right: 0.15rem; color: #94a3b8; font-size: 0.75rem; }
 .c-home-item__meta a { color: inherit; text-decoration: none; }
 .c-home-item__meta a:hover { color: #c2410c; }
-.c-home-item__meta .c-home-item__author { color: #c2410c; font-weight: 700; }
+.c-home-item__meta .c-home-item__author { color: #475569; font-weight: 700; }
+.c-home-item__meta .c-home-item__group { color: #c2410c; font-weight: 600; }
+.c-home-item__meta .c-home-item__group:hover { color: #9a3412; }
+/* A thread in a list: the whole row is the title's link, the group's name stays a link above it */
+.c-home-item--thread { position: relative; cursor: pointer; }
+.c-home-item--thread .c-home-item__row-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+.c-home-item--thread .c-home-item__group { position: relative; z-index: 2; }
+.c-home-item--thread:hover .c-home-item__title { color: #c2410c; }
 
 .c-home-item__date {
   display: flex;

@@ -1,0 +1,92 @@
+/* New group (templates/group/create.html.twig): a grey page, white cards for the picture and the name, the
+   description, who can join and who sees the posts, then Cancel and Create group. */
+
+main:has(.p-gnew) { background: #f4f5f7; }
+
+.p-gnew { max-width: 46rem; margin: 1.5rem auto 2.5rem; }
+.p-gnew__back,
+.p-gnew__back:hover { display: inline-flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; color: #64748b; font-size: 0.9375rem; font-weight: 600; text-decoration: none; }
+.p-gnew__back:hover { color: #0f172a; }
+.p-gnew__back i, .p-gnew__back svg { font-size: 0.8rem; }
+.p-gnew .p-gnew__title { margin: 0 0 1rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.25rem; font-weight: 700; line-height: 1.1; }
+.p-gnew__intro { display: flex; gap: 0.65rem; margin: 0 0 1.5rem; padding: 0.9rem 1.1rem; border: 1px solid #fed7aa; border-radius: 1rem; background: #fff7ed; color: #7c2d12; font-size: 0.9375rem; line-height: 1.5; }
+.p-gnew__intro > i, .p-gnew__intro > svg { flex-shrink: 0; margin-top: 0.2rem; color: #ea7a2e; }
+.p-gnew__intro a { color: #c2410c; font-weight: 600; text-decoration: underline; }
+
+.p-gnew__form { display: flex; flex-direction: column; gap: 1rem; }
+.p-gnew__card { padding: 1.5rem; border: 1px solid #e8ebf0; border-radius: 1.25rem; background: #fff; }
+.p-gnew__card--head { display: flex; gap: 1.75rem; }
+.p-gnew__field { flex: 1; min-width: 0; }
+
+.p-gnew__label { display: block; margin: 0 0 0.5rem; color: #0f172a; font-size: 1rem; font-weight: 700; }
+.p-gnew__help { margin: 0.45rem 0 0; color: #64748b; font-size: 0.8125rem; line-height: 1.45; }
+.p-gnew__help--top { margin: -0.25rem 0 0.75rem; }
+.p-gnew__error { margin: 0.4rem 0 0; color: #dc2626; font-size: 0.8125rem; font-weight: 600; line-height: 1.4; }
+.p-gnew__error--form { margin: 0; padding: 0.75rem 1rem; border-radius: 0.9rem; background: #fef2f2; }
+.p-gnew__input { width: 100%; height: 3.25rem; padding: 0 1rem; border: 1px solid #e2e8f0; border-radius: 0.9rem; background: #fff; color: #0f172a; font-size: 1.0625rem; }
+.p-gnew__input::placeholder { color: #94a3b8; }
+.p-gnew__input:focus { outline: none; border-color: #ea7a2e; box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.12); }
+
+/* Picture: a round frame with a camera, the chosen picture inside */
+.p-gnew__pic { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; width: 13rem; flex-shrink: 0; text-align: center; }
+.p-gnew__preview { display: flex; align-items: center; justify-content: center; width: 8rem; height: 8rem; margin: 0; border: 2px dashed #fdba74; border-radius: 50%; background: #fff7ed center / cover no-repeat; color: #ea7a2e; font-size: 1.75rem; cursor: pointer; }
+.p-gnew__preview:hover { border-color: #ea7a2e; }
+.p-gnew__preview.has-picture { border-style: solid; border-color: #fff; box-shadow: 0 0 0 1px #e2e8f0; }
+.p-gnew__preview.has-picture i, .p-gnew__preview.has-picture svg { display: none; }
+.p-gnew__pic-text { display: flex; flex-direction: column; align-items: center; }
+.p-gnew__pic .p-gnew__label { margin-bottom: 0.4rem; font-size: 0.875rem; }
+.p-gnew__file { display: inline-flex; align-items: center; gap: 0.45rem; max-width: 100%; margin: 0; padding: 0.45rem 0.9rem; border: 1px solid #fdba74; border-radius: 999px; background: #fff; color: #c2410c; font-size: 0.8125rem; font-weight: 700; cursor: pointer; }
+.p-gnew__file:hover { background: #fff7ed; }
+.p-gnew__file { line-height: 1.3; text-align: center; }
+.p-gnew__file span { overflow-wrap: anywhere; }
+.p-gnew__file-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.p-gnew__pic .p-gnew__help { font-size: 0.75rem; }
+
+/* Groups with a similar name */
+.p-gnew__similar { margin-top: 0.9rem; padding: 0.85rem 1rem; border-radius: 0.9rem; background: #f8fafc; }
+.p-gnew__similar-title { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.6rem; color: #334155; font-size: 0.875rem; font-weight: 600; }
+.p-gnew__similar-title i, .p-gnew__similar-title svg { color: #ea7a2e; }
+.p-gnew__similar-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.p-gnew__similar-item,
+.p-gnew__similar-item:hover { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.8rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.8125rem; font-weight: 600; text-decoration: none; }
+.p-gnew__similar-item:hover { border-color: #fdba74; color: #c2410c; }
+.p-gnew__similar-item i, .p-gnew__similar-item svg { color: #94a3b8; font-size: 0.75rem; }
+
+/* Description: the editor with round corners */
+.p-gnew__editor .ck.ck-toolbar { border-color: #e2e8f0 !important; border-radius: 0.9rem 0.9rem 0 0 !important; background: #fff !important; }
+.p-gnew__editor .ck.ck-editor__main > .ck-editor__editable { min-height: 12rem; border-color: #e2e8f0 !important; border-radius: 0 0 0.9rem 0.9rem !important; }
+.p-gnew__editor .ck.ck-editor__main > .ck-editor__editable.ck-focused { border-color: #ea7a2e !important; box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.12) !important; }
+
+/* Who can join, who sees the posts: a card per choice, the chosen one orange */
+.p-gnew__choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 0.65rem; }
+.p-gnew__choice-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
+.p-gnew__choice { display: flex; align-items: center; gap: 0.75rem; margin: 0; padding: 0.85rem 1rem; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; color: #334155; font-size: 0.9375rem; font-weight: 600; line-height: 1.35; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease; }
+.p-gnew__choice:hover { border-color: #cbd5e1; }
+.p-gnew__choice-icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: #f1f5f9; color: #64748b; font-size: 0.9rem; }
+.p-gnew__choice-text { flex: 1; min-width: 0; }
+.p-gnew__choice-mark { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 1.35rem; height: 1.35rem; border: 2px solid #cbd5e1; border-radius: 50%; color: transparent; font-size: 0.6rem; }
+.p-gnew__choice-input:checked + .p-gnew__choice { border-color: #fdba74; background: #fff7ed; color: #9a3412; }
+.p-gnew__choice-input:checked + .p-gnew__choice .p-gnew__choice-icon { background: #ffedd5; color: #c2410c; }
+.p-gnew__choice-input:checked + .p-gnew__choice .p-gnew__choice-mark { border-color: #ea7a2e; background: #ea7a2e; color: #fff; }
+.p-gnew__choice-input:focus-visible + .p-gnew__choice { box-shadow: 0 0 0 3px rgba(234, 122, 46, 0.25); }
+
+/* Cancel and Create group */
+.p-gnew__foot { display: flex; align-items: center; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem; }
+.p-gnew__cancel,
+.p-gnew__cancel:hover { display: inline-flex; align-items: center; height: 3rem; padding: 0 1.4rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-weight: 600; text-decoration: none; }
+.p-gnew__cancel:hover { border-color: #cbd5e1; color: #0f172a; }
+.p-gnew .p-gnew__submit { height: 3rem; padding: 0 1.75rem; border: 0; border-radius: 999px; background: #ea7a2e; color: #fff; font-size: 1rem; font-weight: 700; }
+.p-gnew .p-gnew__submit:hover { background: #d9661a; }
+
+@media (max-width: 767.98px) {
+  .p-gnew { margin-top: 1rem; }
+  .p-gnew .p-gnew__title { font-size: 1.75rem; }
+  .p-gnew__intro { padding: 0.75rem 0.9rem; font-size: 0.875rem; }
+  .p-gnew__card { padding: 1.1rem; border-radius: 1rem; }
+  .p-gnew__card--head { flex-direction: column; gap: 1.25rem; }
+  .p-gnew__pic { width: 100%; }
+  .p-gnew__preview { width: 6.5rem; height: 6.5rem; }
+  .p-gnew__choices { grid-template-columns: minmax(0, 1fr); }
+  .p-gnew__foot { position: sticky; bottom: 0; z-index: 5; margin: 0.5rem calc(-1 * var(--bs-gutter-x, 1.5rem) * 0.5) 0; padding: 0.75rem calc(var(--bs-gutter-x, 1.5rem) * 0.5); border-top: 1px solid #e8ebf0; background: #fff; }
+  .p-gnew__cancel, .p-gnew .p-gnew__submit { flex: 1; justify-content: center; }
+}

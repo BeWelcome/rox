@@ -8,7 +8,7 @@
 <header class="p-group-mini">
     <a class="p-group-mini__picture" href="{{ path('group_start', {group_id: group.id}) }}">
         <img width="56" height="56" alt="" loading="lazy"
-             src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+             src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
     </a>
     <div class="p-group-mini__titles">
         <a class="p-group-mini__name" href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a>

@@ -94,11 +94,12 @@ final class ForumSearchTest extends WebTestCase
      */
     private function findPosts(array $posts): object
     {
-        $stub = new class(array_map(static fn (ForumPost $post): int => (int) $post->getId(), $posts)) extends ForumSearch {
+        $stub = new class extends ForumSearch {
             public ?int $groupId = null;
+            /** @var list<int> */
+            public array $postIds = [];
 
-            /** @param list<int> $postIds */
-            public function __construct(private readonly array $postIds)
+            public function __construct()
             {
             }
 
@@ -109,6 +110,7 @@ final class ForumSearchTest extends WebTestCase
                 return $this->postIds;
             }
         };
+        $stub->postIds = array_map(static fn (ForumPost $post): int => (int) $post->getId(), $posts);
         static::getContainer()->set(ForumSearch::class, $stub);
 
         return $stub;

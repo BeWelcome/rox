@@ -10,6 +10,7 @@ use App\Entity\Member;
 use DateInterval;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -187,6 +188,30 @@ final class ForumWritingTest extends WebTestCase
 
         $this->request('GET', '/forums/s' . $this->thread(self::AGORA_THREAD)->getId() . '/reply');
 
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function notActiveYet(): iterable
+    {
+        yield 'mail not confirmed' => ['MailToConfirm'];
+        yield 'mail confirmed' => ['MailConfirmed'];
+        yield 'account activated' => ['Activated'];
+    }
+
+    #[DataProvider('notActiveYet')]
+    public function testMembersWhoseAccountIsntActiveYetDontPost(string $status): void
+    {
+        $member = $this->member('member-2');
+        $this->connection->executeStatement('UPDATE member SET Status = ? WHERE id = ?', [$status, $member->getId()]);
+        $this->joinGroup($member, GroupEntity::BEWELCOME);
+        $this->client->loginUser($this->member('member-2'));
+
+        $this->request('GET', '/forums/new');
+        self::assertResponseStatusCodeSame(403);
+        $this->request('GET', '/forums/s' . $this->thread(self::AGORA_THREAD)->getId() . '/reply');
         self::assertResponseStatusCodeSame(403);
     }
 

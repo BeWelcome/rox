@@ -19,7 +19,7 @@
                         </p>
                     {% endif %}
                     <div>{{ description|purify|nl2br }}</div>
-                    {% if isMember %}
+                    {% if is_granted('FORUM_GROUP_POST', group) %}
                         <a href="{{ path('group_new_post', {group_id: group.id}) }}" class="btn btn-primary float-end">{{ 'ForumNewTopic'|trans }}</a>
                     {% endif %}
                 </div>

@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Doctrine\ForumDeleteStatusType;
 use App\Doctrine\ForumVisibilityType;
 use App\Doctrine\GroupMembershipStatusType;
+use App\Doctrine\MemberStatusType;
 use App\Doctrine\PostCanStillEditType;
 use App\Entity\Flag;
 use App\Entity\FlagMember;
@@ -28,7 +29,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  * members: the group's members only, or moderators only. Deleted threads and posts are for moderators; forum
  * moderators and admins see everything.
  *
- * Writing is closed to members with the NotAllowedToPostInForum flag.
+ * Writing is closed to members with the NotAllowedToPostInForum flag; new threads and replies also to members
+ * whose account isn't active yet (MailToConfirm, MailConfirmed, Activated).
  *
  * @extends Voter<string, ForumThread|ForumPost|Group>
  */
@@ -43,6 +45,13 @@ class ForumVoter extends Voter
     public const string GROUP_POST = 'FORUM_GROUP_POST';
 
     private const string NOT_ALLOWED_TO_POST = 'NotAllowedToPostInForum';
+
+    /** Members who haven't finished the signup or whose account isn't active yet don't post. */
+    private const array NOT_ACTIVE_YET = [
+        MemberStatusType::AWAITING_MAIL_CONFIRMATION,
+        MemberStatusType::MAIL_CONFIRMED,
+        MemberStatusType::ACCOUNT_ACTIVATED,
+    ];
 
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
@@ -68,6 +77,10 @@ class ForumVoter extends Voter
         }
         $writes = \in_array($attribute, [self::THREAD_REPLY, self::POST_EDIT, self::GROUP_POST], true);
         if ($writes && $this->isNotAllowedToPost($member)) {
+            return false;
+        }
+        $posts = \in_array($attribute, [self::THREAD_REPLY, self::GROUP_POST], true);
+        if ($posts && \in_array($member->getStatus(), self::NOT_ACTIVE_YET, true)) {
             return false;
         }
         if ($this->isModerator($token)) {

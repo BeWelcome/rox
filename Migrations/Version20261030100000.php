@@ -17,6 +17,13 @@ final class Version20261030100000 extends AbstractMigration
         return 'Add group_membership.shown_on_profile.';
     }
 
+    #[Override]
+    public function isTransactional(): bool
+    {
+        // ALTER TABLE commits implicitly.
+        return false;
+    }
+
     public function up(Schema $schema): void
     {
         $this->addSql('ALTER TABLE group_membership ADD COLUMN IF NOT EXISTS shown_on_profile TINYINT DEFAULT 1 NOT NULL');

@@ -231,6 +231,20 @@ final class ForumPagesTest extends WebTestCase
         self::assertSame('1', $reports->filter('.p-forum__tab-count')->text());
     }
 
+    public function testTheGroupToolsHaveTabsForThoseWhoMayUseThem(): void
+    {
+        // members see only the forum's tabs (see above); bwadmin is a forum moderator and may approve groups
+        $this->client->loginUser($this->member('bwadmin'));
+        $crawler = $this->request('GET', '/forums');
+        self::assertCount(1, $crawler->filter('.p-forum__tab[href="/admin/logs/groups"]'));
+        self::assertCount(1, $crawler->filter('.p-forum__tab[href="/admin/groups/approval"]'));
+
+        $this->client->click($crawler->filter('.p-forum__tab[href="/admin/groups/approval"]')->link());
+        self::assertResponseIsSuccessful();
+        $this->client->click($crawler->filter('.p-forum__tab[href="/admin/logs/groups"]')->link());
+        self::assertResponseIsSuccessful();
+    }
+
     public function testThePermalinkPointsAtThePostOnItsPage(): void
     {
         $thread = $this->thread(self::AGORA_THREAD);

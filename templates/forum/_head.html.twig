@@ -1,6 +1,7 @@
 {#
   The head of the forum pages: the title, a button to start a topic, and the forum's tabs (recent posts of all
-  groups, the agora, the member's subscriptions, the rules and, for the moderators, the reports).
+  groups, the agora, the member's subscriptions, the rules and, for the moderators, the reports and the groups'
+  log, for the group admins the groups waiting for approval).
   active: the tab of the page, if any.
   newTopicUrl: where the button starts a topic, if the member may.
   tabsOnly: just the tabs, on a page with its own title (an agora thread).
@@ -25,9 +26,16 @@
         {% if moderator %}
             {% set tabs = tabs|merge({reports: {url: path('forum_reports', {list: 'AllActiveReports'}), label: 'forum.reports.title', count: forum_open_reports()}}) %}
         {% endif %}
+        {% if is_granted('ROLE_ADMIN_FORUMMODERATOR') %}
+            {% set tabs = tabs|merge({grouplog: {url: path('admin_groups_logs'), label: 'adminlogs'}}) %}
+        {% endif %}
+        {# the count is there for the group admins who may approve groups #}
+        {% if (groupsInApprovalQueue ?? null) is not null %}
+            {% set tabs = tabs|merge({groupapproval: {url: path('admin_groups_approval'), label: 'label.admin.groups.awaiting.approval', parameters: {groups: groupsInApprovalQueue}}}) %}
+        {% endif %}
         {% for name, tab in tabs %}
             <a class="p-forum__tab{% if active|default(null) == name %} is-active{% endif %}" href="{{ tab.url }}"{% if active|default(null) == name %} aria-current="page"{% endif %}>
-                {{- tab.label|trans -}}
+                {{- tab.label|trans(tab.parameters|default({})) -}}
                 {% if tab.count|default(0) > 0 %}<span class="p-forum__tab-count">{{ tab.count }}</span>{% endif %}
             </a>
         {% endfor %}

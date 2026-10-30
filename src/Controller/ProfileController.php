@@ -169,6 +169,20 @@ class ProfileController extends AbstractController
         return $this->redirectToRoute('profile_edit', ['username' => $member->getUsername()]);
     }
 
+    /**
+     * The legacy profile page of a trip leg's traveller (the leg has its own invitation link).
+     */
+    #[Route(
+        path: '/members/{username}/leg/{id}',
+        name: 'members_profile_invite',
+        requirements: ['id' => '\d+'],
+        priority: 11
+    )]
+    public function redirectLegacyLegProfile(string $username): RedirectResponse
+    {
+        return $this->redirectToRoute('members_profile', ['username' => $username], Response::HTTP_MOVED_PERMANENTLY);
+    }
+
     #[Route(path: '/members/{username:member}/location', name: 'profile_set_location', priority: 11)]
     public function setLocation(
         Request $request,

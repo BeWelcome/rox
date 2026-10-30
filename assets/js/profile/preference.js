@@ -32,7 +32,13 @@ if (browserPushPreference && browserPushControls) {
 
 async function updatePreference(preference, event) {
     const previousBrowserPushValue = preference.dataset.browserPushPreferenceValue || 'No'
-    let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value
+    let value = event.target.value
+    if (event.target.type === 'checkbox') {
+        // The switch sends the value it stands for (on is "Yes"), not true/false.
+        value = event.target.dataset.offValue !== undefined
+            ? (event.target.checked ? event.target.value : event.target.dataset.offValue)
+            : event.target.checked
+    }
     let browserPushPermission = null
     if (isBrowserPushPreference(preference) && getPreferenceValue(preference) === 'Always') {
         browserPushPermission = requestBrowserPushPermission(preference)

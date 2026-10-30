@@ -37,7 +37,7 @@ class NewsletterController extends AbstractController
             ]);
             $languages = [];
             foreach ($translations as $translatedNewsletter) {
-                $languages[] = $translatedNewsletter->getShortCode();
+                $languages[] = $translatedNewsletter->getLanguage()->getShortCode();
             }
             $newsletters[] = [
                 'id' => $id,

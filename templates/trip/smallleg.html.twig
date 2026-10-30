@@ -54,7 +54,7 @@
             {% set username = invitation.messages[0].initiator.Username %}
             {% set url = path('conversation_reply', {id: invitation.messages[0].id}) %}
         {% else %}
-            {% set url = path( 'members_profile_invite', { username: leg.trip.creator.username, id: leg.id }) %}
+            {% set url = path('members_profile', { username: leg.trip.creator.username }) %}
         {% endif %}
         <a href="{{ url }}" class="o-avatar__img-wrapper o-avatar--shadow-s">
             <img class="o-avatar__img" src="{{ url('avatar', { username: leg.trip.creator.username, size: 48 })}}" title="{{ leg.trip.creator.username}}" alt="Profile: {{ leg.trip.creator.username }}">

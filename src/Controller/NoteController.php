@@ -16,6 +16,7 @@ use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -170,6 +171,18 @@ class NoteController extends AbstractController
         $this->entityManager->flush();
 
         return $this->redirectAfterSave($request, $loggedInMember, $member);
+    }
+
+    /**
+     * The legacy URL of my notes.
+     */
+    #[Route(path: '/mynotes', name: 'members_show_all_notes')]
+    public function myNotes(): RedirectResponse
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        return $this->redirectToRoute('notes', ['username' => $member->getUsername()], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     /**

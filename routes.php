@@ -17,7 +17,6 @@
     // member app routes
     $this->addRoute('members_profile_old', '/members/:username:/old', 'MembersController', 'index');
     $this->addRoute('members_profile_notification', '/members/:username:/:message:', 'MembersController', 'index');
-    $this->addRoute('members_profile_invite', '/members/:username:/leg/:id:', 'MembersController', 'index');
     $this->addRoute('edit_my_profile', '/editmyprofile', 'MembersController', 'index');
 
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
@@ -26,7 +25,6 @@
     $this->addRoute('members_reset_password', 'resetpassword' , 'MembersController', 'resetPassword');
     $this->addRoute('members_reset_password_finish', 'login/mypreferences%23password#login-widget' , 'MembersController', 'resetPasswordFinish');
 
-    $this->addRoute('members_show_all_notes', 'mynotes', 'MembersController', 'myNotes');
     $this->addRoute('members_add_note', 'members/:username:/note/add', 'MembersController', 'addNote');
     $this->addRoute('members_update_note', 'members/:username:/note/edit', 'MembersController', 'addNote');
     $this->addRoute('members_delete_note', 'members/:username:/note/delete', 'MembersController', 'deleteNote');

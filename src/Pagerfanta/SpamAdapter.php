@@ -17,7 +17,7 @@ class SpamAdapter extends AbstractConversationsAdapter implements AdapterInterfa
             `m`.`receiver_id` = :memberId
             AND NOT `m`.`subject_id` IS NULL
             AND ' . $this->getUnreadCondition() . '
-            AND (`m`.`receiver_id` = :memberId AND `m`.`infolder` = \'' . InFolderType::SPAM . '\')
+            AND (`m`.`receiver_id` = :memberId AND `m`.`folder` = \'' . InFolderType::SPAM . '\')
             AND ' . $this->getNotDeletedOrPurgedCondition() . '
             AND `m`.`id` in (
                     SELECT max(`m`.`id`)

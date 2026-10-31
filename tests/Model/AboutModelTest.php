@@ -107,7 +107,7 @@ class AboutModelTest extends TestCase
         // Stub repository to return a dummy language
         $language = new Language();
         $repository = $this->createMock(EntityRepository::class);
-        $repository->expects($this->once())->method('find')->with(0)->willReturn($language);
+        $repository->expects($this->once())->method('find')->with('en')->willReturn($language);
         $entityManager->method('getRepository')->willReturn($repository);
 
         $member = new Member();

@@ -191,12 +191,12 @@ class PasswordController extends AbstractController
         ]);
     }
 
-    #[Route(path: 'password/check/', name: 'check_password')]
+    #[Route(path: 'password/check/', name: 'check_password', methods: ['POST'])]
     public function checkPassword(Request $request): JsonResponse
     {
-        $username = $request->request->get('username');
-        $email = $request->request->get('email');
-        $password = $request->request->get('password');
+        $username = $request->request->getString('username');
+        $email = $request->request->getString('email');
+        $password = $request->request->getString('password');
         $result = new Zxcvbn()->passwordStrength($password, [$username, $email, 'BeWelcome', 'bewelcome']);
         $response = new JsonResponse(['score' => $result['score']]);
 

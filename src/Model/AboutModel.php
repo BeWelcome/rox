@@ -51,7 +51,7 @@ class AboutModel
         $feedback->setDiscussion($data['FeedbackQuestion']);
         $feedback->setCategory($data['IdCategory']);
         $languageRepository = $this->entityManager->getRepository(Language::class);
-        $english = $languageRepository->find(0);
+        $english = $languageRepository->find('en');
         $feedback->setLanguage($english);
         $this->entityManager->persist($feedback);
         $this->entityManager->flush();

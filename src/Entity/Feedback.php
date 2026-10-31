@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
  *
  * @SuppressWarnings("PHPMD")
  */
-#[ORM\Table(name: 'feedbacks')]
+#[ORM\Table(name: 'feedback')]
 #[ORM\Entity]
 #[ORM\HasLifecycleCallbacks]
 class Feedback
@@ -37,20 +37,20 @@ class Feedback
     /**
      * @var Member
      */
-    #[ORM\JoinColumn(name: 'IdMember', referencedColumnName: 'id', nullable: true)]
+    #[ORM\JoinColumn(name: 'author_id', referencedColumnName: 'id', nullable: true)]
     #[ORM\ManyToOne(targetEntity: Member::class)]
     private $author;
 
     /**
      * @var string
      */
-    #[ORM\Column(name: 'Discussion', type: 'text', length: 65535, nullable: false)]
+    #[ORM\Column(name: 'discussion', type: 'text', length: 65535, nullable: false)]
     private $discussion;
 
     /**
      * @var Language
      */
-    #[ORM\JoinColumn(name: 'ShortCode', referencedColumnName: 'ShortCode', nullable: false)]
+    #[ORM\JoinColumn(name: 'language', referencedColumnName: 'ShortCode', nullable: false)]
     #[ORM\ManyToOne(targetEntity: Language::class)]
     private $language;
 
@@ -65,8 +65,8 @@ class Feedback
     /**
      * @var FeedbackCategory
      */
-    #[ORM\JoinColumn(name: 'IdFeedbackCategory', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \FeedbackCategory::class)]
+    #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: FeedbackCategory::class)]
     private $category;
 
     /**
@@ -228,6 +228,7 @@ class Feedback
     public function onPrePersist(): void
     {
         $this->created = new DateTime('now');
+        $this->updated = $this->created;
     }
 
     /**

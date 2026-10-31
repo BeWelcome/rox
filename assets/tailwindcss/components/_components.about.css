@@ -1,0 +1,59 @@
+/* The About pages and the FAQ (templates/about/layout.html.twig): the menu in a white card on the left, the page
+   in a white card next to it. On phones the menu is a row of pills above the page. */
+
+main.p-about { background: #f4f5f7; }
+.p-about__wrap { display: grid; grid-template-columns: 15.5rem minmax(0, 1fr); gap: 1.5rem; align-items: start; padding-top: 1.75rem; padding-bottom: 2.5rem; }
+
+/* The menu */
+.p-about__nav { position: sticky; top: calc(var(--bw-topbar-offset, 64px) + 1.25rem); display: flex; flex-direction: column; gap: 0.75rem; padding: 0.75rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
+.p-about__group { display: flex; flex-direction: column; gap: 0.1rem; }
+.p-about__group + .p-about__group { padding-top: 0.75rem; border-top: 1px solid #f1f5f9; }
+.p-about__heading { margin: 0 0 0.3rem; padding: 0 0.75rem; color: #94a3b8; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.p-about__link,
+.p-about__link:hover { display: block; padding: 0.5rem 0.75rem; border-radius: 0.75rem; color: #334155; font-size: 0.9375rem; font-weight: 600; line-height: 1.3; text-decoration: none; }
+.p-about__link:hover { background: #f8fafc; color: #0f172a; }
+.p-about__link.is-active,
+.p-about__link.is-active:hover { background: #fff1e6; color: #c2410c; }
+
+/* The page */
+.p-about__body { min-width: 0; padding: 2rem 2.25rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); color: #334155; font-size: 1rem; line-height: 1.65; }
+.p-about__body h1 { margin: 0 0 1.25rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.25rem; font-weight: 700; line-height: 1.15; }
+.p-about__body h2 { margin: 0 0 1rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
+.p-about__body h3,
+.p-about__body h4,
+.p-about__body .h5 { margin: 1.5rem 0 0.5rem; color: #0f172a; font-size: 1.125rem; font-weight: 700; line-height: 1.35; }
+.p-about__body h4 { font-size: 1rem; }
+.p-about__body h1 + h2,
+.p-about__body h1 + h3,
+.p-about__body h2 + h3 { margin-top: 0; }
+.p-about__body p { margin: 0 0 1rem; }
+.p-about__body a:not(.btn):not(.o-button) { color: #c2410c; text-decoration: underline; text-decoration-color: rgba(194, 65, 12, 0.3); text-underline-offset: 2px; }
+.p-about__body a:not(.btn):not(.o-button):hover { text-decoration-color: currentColor; }
+.p-about__body img { max-width: 100%; height: auto; }
+.p-about__body .carousel { overflow: hidden; border-radius: 1rem; }
+.p-about__body > .row:first-child > [class*="col-"]:first-child > h1:first-child,
+.p-about__body > h1:first-child { margin-top: 0; }
+
+/* The FAQ: each question a row that opens */
+.p-about__body #faqs { margin: 0; }
+.p-about__body #faqs dt { margin: 0; padding: 0.9rem 0; border-top: 1px solid #f1f5f9; cursor: pointer; }
+.p-about__body #faqs dt i,
+.p-about__body #faqs dt svg { margin-right: 0.4rem; color: #ea7a2e; }
+.p-about__body #faqs dd { margin: 0 0 1rem 1.6rem; }
+
+@media (max-width: 767.98px) {
+  .p-about__wrap { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding-top: 1rem; padding-bottom: 1.5rem; }
+  /* the menu: one row of pills that scrolls */
+  .p-about__nav { position: static; flex-direction: row; gap: 0.4rem; margin: 0 calc(-1 * var(--bs-gutter-x, 1.5rem) * 0.5); padding: 0 calc(var(--bs-gutter-x, 1.5rem) * 0.5) 0.25rem; overflow-x: auto; border-radius: 0; background: transparent; box-shadow: none; scrollbar-width: none; }
+  .p-about__nav::-webkit-scrollbar { display: none; }
+  .p-about__group { flex-direction: row; gap: 0.4rem; }
+  .p-about__group + .p-about__group { padding-top: 0; border-top: 0; }
+  .p-about__heading { display: none; }
+  .p-about__link,
+  .p-about__link:hover { padding: 0.45rem 0.9rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; font-size: 0.875rem; white-space: nowrap; }
+  .p-about__link.is-active,
+  .p-about__link.is-active:hover { border-color: #ea7a2e; background: #ea7a2e; color: #fff; }
+  .p-about__body { padding: 1.4rem 1.15rem; border-radius: 1rem; }
+  .p-about__body h1 { font-size: 1.85rem; }
+  .p-about__body h2 { font-size: 1.3rem; }
+}

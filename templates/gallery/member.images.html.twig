@@ -12,7 +12,7 @@
           {% endif %}
         </span>
         {%- if own -%}
-          <a class="p-gallery-manage-btn" href="{{ url('gallery_manage') }}">
+          <a class="p-gallery-manage-btn" href="{{ url('gallery_manage_page') }}">
             <i class="fas fa-edit" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'profile.edit.images'|trans }}</span>
           </a>
         {%- endif -%}
@@ -20,7 +20,7 @@
       <div class="card-body">
         {# Phones: the head above is hidden, the button to manage the gallery comes first #}
         {% if own and pictures|length > 0 %}
-          <a class="p-gallery-manage-btn p-gallery-manage-btn--phone" href="{{ url('gallery_manage') }}">
+          <a class="p-gallery-manage-btn p-gallery-manage-btn--phone" href="{{ url('gallery_manage_page') }}">
             <i class="fas fa-edit" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'profile.edit.images'|trans }}</span>
           </a>
         {% endif %}
@@ -44,7 +44,7 @@
         {% if pictures|length == 0 %}
           {% if own %}
             <div class="p-gallery-empty">
-              <a href="{{ url('gallery_manage') }}" class="p-gallery-empty__btn">
+              <a href="{{ url('gallery_manage_page') }}" class="p-gallery-empty__btn">
                 <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
                 <span>{{ 'galleryupload'|trans }}</span>
               </a>

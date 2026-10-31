@@ -15,21 +15,7 @@
      */
 
     // member app routes
-    $this->addRoute('members_profile_old', '/members/:username:/old', 'MembersController', 'index');
-    $this->addRoute('members_profile_notification', '/members/:username:/:message:', 'MembersController', 'index');
-    $this->addRoute('edit_my_profile', '/editmyprofile', 'MembersController', 'index');
-
     $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
-    $this->addRoute('members_profile_set_active', 'setprofileactive', 'MembersController', 'setactive');
-    $this->addRoute('members_profile_set_inactive', 'setprofileinactive', 'MembersController', 'setinactive');
-    $this->addRoute('members_reset_password', 'resetpassword' , 'MembersController', 'resetPassword');
-    $this->addRoute('members_reset_password_finish', 'login/mypreferences%23password#login-widget' , 'MembersController', 'resetPasswordFinish');
-
-    $this->addRoute('members_add_note', 'members/:username:/note/add', 'MembersController', 'addNote');
-    $this->addRoute('members_update_note', 'members/:username:/note/edit', 'MembersController', 'addNote');
-    $this->addRoute('members_delete_note', 'members/:username:/note/delete', 'MembersController', 'deleteNote');
-
-    $this->addRoute('members_edit_flags', 'members/:username:/flags', 'MembersController', 'editFlags');
 
     // admin app routes: the tools themselves are Symfony pages (/admin/tools, /admin/comment, /admin/translations, ...)
     $this->addRoute('admin_norights', 'admin/norights', 'AdminBaseController', 'noRights');
@@ -65,15 +51,4 @@
     $this->addRoute('newmembers_local_greeting', 'admin/newmembers/local/:username:', 'AdminNewMembersController', 'composeMessage');
     $this->addRoute('newmembers_global_greeting', 'admin/newmembers/global/:username:', 'AdminNewMembersController', 'composeMessage');
 
-    // Data retention (#1885)
-    $this->addRoute('dataretention', 'members/dataretention', 'MembersController', 'dataRetention');
-
     $this->addRoute('admin_subscriptions', 'admin/subscriptions', 'AdminSubscriptionsController', 'manage');
-    $this->addRoute('login_message_close', 'close/:id:', 'LoginController', 'close');
-
-    // Terms of use
-    $this->addRoute('old_terms_french', 'terms/old/fr', 'AboutController', 'termsOfUse');
-    $this->addRoute('old_terms_language', 'terms/old/:locale:', 'AboutController', 'termsOfUse');
-
-    // Language switch (done in new code; dummy to have route available in members.ctrl.php when changing the language preference)
-    $this->addRoute('rox_in_language', 'rox/in/:language:', '', '');

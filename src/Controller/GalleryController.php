@@ -259,7 +259,7 @@ class GalleryController extends AbstractController
     #[Route(path: '/gallery/upload_multiple', name: 'gallery_upload_multiple')]
     public function uploadImagesToGallery(): Response
     {
-        return $this->redirectToRoute('gallery_manage', [], 301);
+        return $this->redirectToRoute('gallery_manage_page', [], 301);
     }
 
     /**

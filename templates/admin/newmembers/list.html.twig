@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block content %}
+  <h1 class="u:text-24">{{ 'adminnewmembers'|trans }}</h1>
+  {% set token = csrf_token(constant('App\\Controller\\Admin\\NewMembersController::TOKEN')) %}
+  {% if members.haveToPaginate %}
+    <div class="d-flex justify-content-end mb-2">{{ pagerfanta(members, 'rox_default') }}</div>
+  {% endif %}
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th colspan="3">{{ 'adminnewmembersmemberdetails'|trans }}</th>
+          <th></th>
+          {% if can_change_status %}<th>{{ 'memberstatus'|trans }}</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for member in members %}
+          <tr class="js-new-member" data-username="{{ member.username }}">
+            <td>
+              {{ macros.avatar(member.username, 50, true) }}<br>
+              <a href="{{ path('members_profile', {username: member.username}) }}">{{ member.username }}</a><br>
+              {{ member.place }}{% if member.country %}, {{ member.country }}{% endif %}<br>
+              ({{ member.created }})
+            </td>
+            <td>
+              {% if all %}{{ member.email }}<br><br>{% endif %}
+              {{ member.summary }}
+            </td>
+            <td>
+              {% for language in member.languages %}
+                {{ ('lang_' ~ language.language)|trans }} ({{ ('language.level.' ~ language.level)|trans }}){% if not loop.last %}<br>{% endif %}
+              {% endfor %}
+            </td>
+            <td>
+              {% for greeting, sent in {local: member.local_greeting_sent, global: member.global_greeting_sent} %}
+                {% if not sent %}
+                  <form method="post" action="{{ path('newmembers_greeting', {username: member.username, greeting: greeting}) }}" target="_blank" class="mb-2">
+                    <input type="hidden" name="_token" value="{{ token }}">
+                    <button type="submit" class="btn btn-sm btn-outline-primary">{{ ('adminnewmembers' ~ greeting ~ 'greeting')|trans }}</button>
+                  </form>
+                {% endif %}
+              {% endfor %}
+            </td>
+            {% if can_change_status %}
+              <td>
+                <form method="post" action="{{ path('newmembers_status', {username: member.username}) }}" class="d-flex gap-2">
+                  <input type="hidden" name="_token" value="{{ token }}">
+                  <input type="hidden" name="page" value="{{ members.currentPage }}">
+                  <select name="status" class="form-select form-select-sm" aria-label="{{ 'memberstatus'|trans }}">
+                    {% for status in statuses %}
+                      <option value="{{ status }}"{% if status == member.status %} selected{% endif %}>{{ ('memberstatus' ~ status|lower)|trans }}</option>
+                    {% endfor %}
+                  </select>
+                  <button type="submit" class="btn btn-sm btn-primary">{{ 'save'|trans }}</button>
+                </form>
+              </td>
+            {% endif %}
+          </tr>
+        {% else %}
+          <tr><td colspan="5">{{ 'admin.newmembers.none'|trans }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if members.haveToPaginate %}
+    <div class="d-flex justify-content-end">{{ pagerfanta(members, 'rox_default') }}</div>
+  {% endif %}
+{% endblock content %}

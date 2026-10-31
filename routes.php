@@ -14,9 +14,6 @@
      *                                              if the method to call is a post callback
      */
 
-    // admin app routes: the tools themselves are Symfony pages (/admin/tools, /admin/comment, /admin/translations, ...)
-    $this->addRoute('admin_norights', 'admin/norights', 'AdminBaseController', 'noRights');
-
     // admin massmailing
     $this->addRoute('admin_massmail', 'admin/massmail', 'AdminMassmailController', 'massmail');
     $this->addRoute('admin_massmail_create', 'admin/massmail/create', 'AdminMassmailController', 'massmailCreate');
@@ -39,13 +36,3 @@
         'massmailTrigger');
     $this->addRoute('admin_massmail_untrigger', 'admin/massmail/untrigger/:id:', 'AdminMassmailController',
         'massmailUntrigger');
-
-    // places routes: all in App\Controller\PlacesController (countries, country, region, town)
-
-    // New Members Be Welcome
-    $this->addRoute('newmembers', 'admin/newmembers', 'AdminNewMembersController', 'listMembers');
-    $this->addRoute('newmembers_pages', 'admin/newmembers/page/:pageno:', 'AdminNewMembersController', 'listMembers');
-    $this->addRoute('newmembers_local_greeting', 'admin/newmembers/local/:username:', 'AdminNewMembersController', 'composeMessage');
-    $this->addRoute('newmembers_global_greeting', 'admin/newmembers/global/:username:', 'AdminNewMembersController', 'composeMessage');
-
-    $this->addRoute('admin_subscriptions', 'admin/subscriptions', 'AdminSubscriptionsController', 'manage');

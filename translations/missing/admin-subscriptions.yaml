@@ -1,0 +1,21 @@
+admin.subscriptions.title:
+  - 'Forum notifications of a member'
+  - Title of the volunteer page (right ManageSubscriptions) that turns all forum notifications of a member on or off.
+admin.subscriptions.info:
+  - 'Turns the mails about all subscribed threads and groups of the member on or off. The subscriptions stay.'
+  - Explanation on the volunteer page to turn forum notifications on or off.
+admin.subscriptions.enable:
+  - 'Turn on'
+  - Button that turns all forum notifications of the member on.
+admin.subscriptions.disable:
+  - 'Turn off'
+  - Button that turns all forum notifications of the member off.
+admin.subscriptions.enabled:
+  - 'The forum notifications of %username% are on.'
+  - Confirmation after turning the forum notifications on. Keep %username%.
+admin.subscriptions.disabled:
+  - 'The forum notifications of %username% are off.'
+  - Confirmation after turning the forum notifications off. Keep %username%.
+admin.subscriptions.unknown:
+  - 'There is no member with this username.'
+  - Error on the volunteer page to turn forum notifications on or off, when the username doesn't exist.

@@ -47,6 +47,23 @@ final class GroupPagesTest extends WebTestCase
         self::assertNotContains('Vegan Travelers', $names, 'groups waiting for approval are left out');
     }
 
+    public function testArchivedGroupsHaveTheirOwnTab(): void
+    {
+        $this->entityManager->getConnection()->executeStatement(
+            "UPDATE `group` SET name = '[Archived] Vegan Travelers', approved = 1 WHERE name = 'Vegan Travelers'"
+        );
+
+        $all = $this->client->request('GET', '/groups/search');
+        self::assertNotContains('Vegan Travelers', $all->filter('.p-group-card__name')->each(static fn ($link) => $link->text()));
+        self::assertCount(1, $all->filter('.p-groups__tab--archived'));
+
+        $archived = $this->client->request('GET', '/groups/search', ['archived' => 1]);
+        self::assertResponseIsSuccessful();
+        self::assertSame(['Vegan Travelers'], $archived->filter('.p-group-card__name')->each(static fn ($link) => $link->text()));
+        self::assertCount(1, $archived->filter('.p-group-card__archived'));
+        self::assertCount(1, $archived->filter('.p-groups__tab--archived.is-active'));
+    }
+
     public function testTheSearchFiltersByName(): void
     {
         $crawler = $this->client->request('GET', '/groups/search', ['name' => 'hiking']);

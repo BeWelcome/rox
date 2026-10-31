@@ -6,5 +6,5 @@
 {% endblock %}
 
 {% block content %}
-    {% include 'group/_list.html.twig' with {tab: 'all'} %}
+    {% include 'group/_list.html.twig' with {tab: search.archived ? 'archived' : 'all'} %}
 {% endblock %}

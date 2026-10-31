@@ -245,7 +245,7 @@ class GroupPagesController extends AbstractController
     }
 
     /**
-     * What both lists (my groups, all groups) show around the groups: the search, the categories, the number of
+     * What the lists (my groups, all groups, archived) show around the groups: the search, the categories, the number of
      * groups on each tab and the groups the member is in (Joined).
      *
      * @return array<string, mixed>
@@ -266,6 +266,7 @@ class GroupPagesController extends AbstractController
             'myGroupIds' => $myGroupIds,
             'myCount' => \count($myGroupIds),
             'allCount' => $this->paginate($this->getGroupRepository()->createSearchQueryBuilder(new GroupSearch()), 1, 1)->getNbResults(),
+            'archivedCount' => $this->paginate($this->getGroupRepository()->createSearchQueryBuilder(new GroupSearch(archived: true)), 1, 1)->getNbResults(),
         ];
     }
 

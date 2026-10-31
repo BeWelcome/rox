@@ -34,12 +34,15 @@ class GroupRepository extends EntityRepository
     /**
      * Approved groups matching the search, each row the group (key 0) with its number of members (memberCount),
      * of members who joined during the last two weeks (newMemberCount) and the time of its newest post (lastActivity).
+     * Archived groups only come when the search asks for them.
      */
     public function createSearchQueryBuilder(GroupSearch $search): QueryBuilder
     {
         $queryBuilder = $this->createListQueryBuilder($search->order)
             ->andWhere('g.approved = :approved')
-            ->setParameter('approved', Group::APPROVED);
+            ->setParameter('approved', Group::APPROVED)
+            ->andWhere($search->archived ? 'g.name LIKE :archived' : 'g.name NOT LIKE :archived')
+            ->setParameter('archived', addcslashes(GroupSearch::ARCHIVED_PREFIX, '%_') . '%');
 
         $nameParts = $search->getNameParts();
         if ([] !== $nameParts) {

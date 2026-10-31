@@ -134,3 +134,21 @@ group.profile.groups.hint:
 group.list.place.placeholder:
     - 'Type a city, region or country'
     - Groups pages, grey text in the place field; picking a suggestion searches at once
+group.list.archived:
+    - 'Archived'
+    - Groups pages, tab after All groups with the archived groups (named "[Archived] ..."); the number of them follows
+group.list.archived.tag:
+    - 'Archived'
+    - Groups pages, small grey tag on the card of an archived group
+group.list.active.days:
+    - 'Active {count, plural, one {# day} other {# days}} ago'
+    - Groups pages, on a group whose newest post is a few days old (2 to 6)
+group.list.active.weeks:
+    - 'Active {count, plural, one {# week} other {# weeks}} ago'
+    - Groups pages, on a group whose newest post is 1 to 4 weeks old
+group.list.active.months:
+    - 'Active {count, plural, one {# month} other {# months}} ago'
+    - Groups pages, on a group whose newest post is 1 to 12 months old
+group.list.active.years:
+    - 'Active {count, plural, one {# year} other {# years}} ago'
+    - Groups pages, on a group whose newest post is a year old or more

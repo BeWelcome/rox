@@ -49,7 +49,7 @@ final class ProfileVisitorsTest extends WebTestCase
         $client->loginUser($this->getMember('member-2'));
         $crawler = $client->request('GET', '/members/member-2/visitors');
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString('member-4', $crawler->text());
+        self::assertStringContainsString('member-4', $crawler->filter('#visitors')->text());
     }
 
     private function getMember(string $username): Member

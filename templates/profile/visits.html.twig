@@ -1,72 +1,47 @@
 {% extends 'profile/profile.html.twig' %}
-{% import 'macros.twig' as macros %}
 
-{% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('readmore') }}
-{% endblock javascripts %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('readmore') }}
-{% endblock stylesheets %}
-
+{# The member's visitors, latest first: a tile per visitor (avatar, name, when), like the friends page. #}
 {% block page_content %}
-    <input type="hidden" id="read.more" value="{{ 'comment.read.more'|trans }}">
-    <input type="hidden" id="show.less" value="{{ 'comment.show.less'|trans }}">
-    {% if visits.haveToPaginate %}
-        {{ pagerfanta( visits, 'rounded_pagination_end') }}
-    {% endif %}
-<div class="u:columns-1 u:sm:columns-2 u:md:columns-3">
-     {% for visit in visits %}
-        {% set visitor = visit.visitor %}
-    <div class="u:bg-white u:break-inside-avoid-column u:p-8 u:mb-8">
-        <div class="u:flex u:flex-col">
-            <div class="u:flex u:flex-row u:mb-8">
-                <div class="o-avatar o-avatar--m o-avatar--noname">{{ macros.roundedavatarstack(visitor.Username, 48) }}</div>
-                <div class="u:text-14 u:ml-8">
-                    <strong>{{ macros.profilelink(visitor.Username) }}</strong>
-                    {%- if visitor.HideBirthDate == 'No' -%}
-                        <br>{{ 'profile.age'|trans }}  {{ visitor.age }}
-                    {%- endif -%}
-                    {%- if visitor.HideBirthDate == 'No' and visitor.HideGender == 'No' %}, {% endif -%}
-                    {%- if visitor.HideBirthDate == 'Yes' and visitor.HideGender == 'No' %}<br>{{ 'profile.gender'|trans }} {% endif -%}
-                    {% if visitor.HideGender == 'No' %}
-                        {{ visitor.gender|trans }}
-                    {% endif %}
-                    <br>{{ 'profile.joined'|trans }}
-                    {% set difference = date(visitor.created).diff(date()) %}
-                    {% if difference.days <= 7 %}
-                        {{ 'lastloginprivacy'| trans }}
-                    {% else %}
-                        {{ visitor.created.diffForHumans }}
-                    {% endif %}
-                    <br>{{ visitor.city.fullname }}
-                </div>
+  <div class="p-friends-page p-visitors-page p-profile-main">
+    <div class="card">
+      <div class="card-header u:flex u:flex-row u:justify-between">
+        <span>
+          {{ 'myvisitors'|trans }}
+          {% if visits.nbResults > 0 %}
+            <span class="p-gallery-footer__count">{{ visits.nbResults }}</span>
+          {% endif %}
+        </span>
+      </div>
+      <div class="card-body">
+        {% if visits.nbResults == 0 %}
+          <div class="p-no-comments">
+            <i class="fas fa-eye" aria-hidden="true"></i>
+            <p>{{ 'profile.visitors.none.visible'|trans }}</p>
+          </div>
+        {% else %}
+          <ul class="p-friends-page__grid" id="visitors">
+            {% for visit in visits %}
+              {% set visitor = visit.visitor %}
+              <li>
+                <a class="p-friends-page__item" href="{{ url('members_profile', {username: visitor.username}) }}">
+                  <span class="o-avatar o-avatar--m">
+                    <span class="o-avatar__img-wrapper o-avatar--shadow-s">
+                      <img class="o-avatar__img" src="{{ path('avatar', {username: visitor.username, size: 72}) }}" alt="" loading="lazy">
+                    </span>
+                  </span>
+                  <span class="p-friends-page__name">{{ visitor.username }}</span>
+                  <span class="p-visitors-page__when">{{ visit.updated.diffForHumans }}</span>
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+          {% if visits.haveToPaginate %}
+            <div class="p-friends-page__pager">
+              {{ pagerfanta(visits, 'rounded_pagination_end') }}
             </div>
-            <div class="u:mb-8 u:break-words js-read-more">
-            {% set fields = visitor.memberFields %}
-                {% if fields|length %}
-                    {% if fields[app.request.locale] is defined %}
-                        {% set profile_summary = fields[app.request.locale]['ProfileSummary'] %}
-                    {% else %}
-                        {% set profile_summary= (fields|first)['ProfileSummary'] %}
-                    {% endif %}
-                    {{ profile_summary|purify }}
-                {% else %}
-                    {{ 'profile.no.about.me'|trans }}
-                {% endif %}
-            </div>
-            <div class="u:text-12 u:self-end">
-                {{ 'profile.visited'|trans }} {{ visit.updated.diffForHumans }}
-            </div>
-        </div>
+          {% endif %}
+        {% endif %}
+      </div>
     </div>
-    {% else %}
-        {{ 'profile.visitors.none.visible'|trans }}
-    {% endfor %}
-</div>
-    {% if visits.haveToPaginate %}
-        {{ pagerfanta( visits, 'rounded_pagination_end') }}
-    {% endif %}
+  </div>
 {% endblock page_content %}

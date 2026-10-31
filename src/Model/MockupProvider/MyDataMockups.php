@@ -260,7 +260,6 @@ class MyDataMockups implements MockupProviderInterface
                     'getToMember' => $parameters['user'],
                     'getFromMember' => $parameters['admin'],
                     'getQuality' => CommentQualityType::POSITIVE,
-                    'getTextWhere' => 'Somewhere over the rainbow',
                     'getComment' => 'I\'m so free',
                     'getCreated' => new Carbon(),
                     'getRelations' => '',

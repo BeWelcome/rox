@@ -44,7 +44,7 @@ class ForumSearchIndex
             'thread_visibility' => (string) $thread->getVisibility(),
             'content' => (string) $post->getMessage(),
             'group' => (int) $thread->getGroup()?->getId(),
-            'author' => (int) $post->getAuthor()->getId(),
+            'author' => (int) $post->getAuthor()?->getId(),
             'locale' => $post->getLanguage()->getShortCode(),
         ];
 

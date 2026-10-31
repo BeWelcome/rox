@@ -188,6 +188,7 @@ class ForumPagesController extends AbstractController
         // Who wrote in the thread, in the order they first did
         $people = $postRepository->createThreadPostsQueryBuilder($thread, $member, $this->isModerator(), true)
             ->select('a.username AS username, MIN(fp.created) AS HIDDEN firstPost')
+            ->andWhere('a.id IS NOT NULL')
             ->resetDQLPart('orderBy')
             ->groupBy('a.id, a.username')
             ->orderBy('firstPost', 'ASC')

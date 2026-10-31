@@ -4,6 +4,7 @@
   The whole row opens the thread at its last post; only the group's name is a link of its own.
   ascending: the member reads threads oldest post first, so the last post is on the last page.
   showGroup: name the group (not on the group's own pages).
+  Posts of members who aren't on BeWelcome any more have no author: the empty avatar and a former member.
 #}
 {% import 'forum/_macros.html.twig' as forum %}
 {% set page = 1 %}
@@ -14,7 +15,11 @@
 {% endif %}
 {% set lastUrl = forum.thread_url(thread, page) ~ fragment %}
 <div class="c-home-item c-home-item--thread">
-    <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
+    {% if thread.firstPost.author %}
+        <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
+    {% else %}
+        <img class="c-home-item__avatar" src="{{ asset('images/empty_avatar_72_72.png') }}" alt="" loading="lazy">
+    {% endif %}
     <div class="c-home-item__body">
         <a class="c-home-item__title c-home-item__title--link c-home-item__row-link" href="{{ lastUrl }}">
             {%- if thread.stickyValue > 0 %}<i class="fas fa-thumbtack me-1" title="{{ 'pinnedpost'|trans }}"></i>{% endif -%}
@@ -27,7 +32,7 @@
         {% endif %}
         <p class="c-home-item__meta">
             {{ 'thread.lastpostby'|trans }}
-            <span class="c-home-item__author">{{ thread.lastPost.author.username }}</span>
+            <span class="c-home-item__author">{{ forum.author(thread.lastPost, false) }}</span>
             · <span class="c-home-item__when">{{ thread.lastPost.updated.diffForHumans }}</span>
         </p>
     </div>

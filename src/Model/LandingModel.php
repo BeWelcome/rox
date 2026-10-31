@@ -7,7 +7,6 @@ use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Entity\Notification;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Repository\ActivityRepository;
@@ -43,31 +42,6 @@ class LandingModel
         $conversations = $messageRepository->getConversations($member, $unread, $limit);
 
         return $conversations;
-    }
-
-    /**
-     * Generates notifications for display on home page
-     * Format: 'title': "Message title #1",
-     *   'text': Depending on type of notification,
-     *   'link': Depending on type of notification,
-     *   'user': 'Member-102',
-     *   'time': '10 minutes ago',.
-     */
-    public function getNotifications(Member $member, $limit = 0): array
-    {
-        $queryBuilder = $this->entityManager->createQueryBuilder();
-        $queryBuilder
-            ->select('n')
-            ->from(Notification::class, 'n')
-            ->where('n.member = :member')
-            ->setParameter('member', $member)
-            ->andWhere('n.checked = 0')
-            ->orderBy('n.created', 'DESC')
-            ->setMaxResults($limit);
-
-        return $queryBuilder
-            ->getQuery()
-            ->getResult();
     }
 
     /**

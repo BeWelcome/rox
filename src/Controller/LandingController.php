@@ -7,7 +7,6 @@ use App\Entity\Activity;
 use App\Entity\HostingRequest;
 use App\Entity\Location;
 use App\Entity\Member;
-use App\Entity\Notification;
 use App\Entity\Preference;
 use App\Entity\Subtrip;
 use App\Form\CustomDataClass\SearchFormRequest;
@@ -19,7 +18,6 @@ use App\Model\LandingModel;
 use App\Model\PlacesModel;
 use App\Model\TripModel;
 use App\Repository\ActivityRepository;
-use App\Repository\NotificationRepository;
 use App\Repository\RequestRepository;
 use App\Repository\SubtripRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -70,21 +68,6 @@ class LandingController extends AbstractController
 
         $content = $this->render('landing/widget/conversations.html.twig', [
             'messages' => $messages,
-        ]);
-
-        return $content;
-    }
-
-    #[Route(path: '/widget/notifications', name: '/widget/notifications')]
-    public function getNotifications(): Response
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $notifications = $this->landingModel->getNotifications($member, 5);
-
-        $content = $this->render('landing/widget/notifications.html.twig', [
-            'notifications' => $notifications,
         ]);
 
         return $content;
@@ -235,7 +218,6 @@ class LandingController extends AbstractController
             'countries' => $placesModel->getCountriesByContinent($request->getLocale()),
             'messageFilter' => $messageFilter,
             'onlineActivities' => $onlineActivities,
-            'notificationCount' => $this->getUncheckedNotificationsCount($member),
             'visitorsCount' => $this->getVisitorsCount($tripModel, $member),
             'activityCount' => $this->getUpcomingAroundLocationCount($member, $onlineActivities),
             'groupsTodayCount' => $this->landingModel->getGroupThreadsWithPostsTodayCount($member),
@@ -243,14 +225,6 @@ class LandingController extends AbstractController
         ]);
 
         return $content;
-    }
-
-    protected function getUncheckedNotificationsCount(Member $member): int
-    {
-        /** @var NotificationRepository $notificationRepository */
-        $notificationRepository = $this->entityManager->getRepository(Notification::class);
-
-        return $notificationRepository->getUncheckedNotificationsCount($member);
     }
 
     protected function getRequestsToAnswerCount(Member $member): int

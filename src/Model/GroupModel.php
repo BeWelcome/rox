@@ -10,7 +10,6 @@ use App\Entity\GroupMembership;
 use App\Entity\Language;
 use App\Entity\Location;
 use App\Entity\Member;
-use App\Entity\Notification;
 use App\Entity\Privilege;
 use App\Entity\PrivilegeScope;
 use App\Entity\Role;
@@ -22,7 +21,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use LogicException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GroupModel
@@ -31,7 +29,6 @@ class GroupModel
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
         private readonly Mailer $mailer,
     ) {
@@ -71,17 +68,6 @@ class GroupModel
             ],
         ];
         $this->mailer->sendGroupNotificationEmail($admin, $member, 'group/invitation', $params);
-
-        $url = $this->urlGenerator->generate('group_start', ['group_id' => $group->getId()]);
-        $note = new Notification();
-        $note->setMember($member);
-        $note->setRelMember($admin);
-        $note->setType('message');
-        $note->setLink($url);
-        $note->setWordCode('');
-        $note->setTranslationparams(serialize(['GroupsInvitedNote', $group->getName()]));
-        $em->persist($note);
-        $em->flush();
 
         return true;
     }

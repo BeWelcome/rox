@@ -35,7 +35,6 @@ class RoxEntityFactory
         'Member'            => 'build/members/member.entity',
         'MemberLanguage'    => 'build/members/memberlanguage.entity',
         'MemberRole'        => 'build/rights/memberrole.entity',
-        'Note'              => 'build/notify/note.entity',
         'Privilege'         => 'build/rights/privilege.entity',
         'PrivilegeScope'    => 'build/rights/privilegescope.entity',
         'ProfileNote'       => 'build/members/profilenote.entity',

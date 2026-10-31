@@ -5,6 +5,7 @@ namespace App\Entity;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
+use Override;
 
 /**
  * The title of a forum thread in one language (Gedmo personal translation, as MemberTranslation). Every language
@@ -17,6 +18,7 @@ class ForumThreadTranslation extends AbstractPersonalTranslation
 {
     #[ORM\ManyToOne(targetEntity: ForumThread::class, inversedBy: 'translations')]
     #[ORM\JoinColumn(name: 'object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Override]
     protected $object;
 
     /** Who wrote or last changed the text in this language (the forum shows "translated by"). */

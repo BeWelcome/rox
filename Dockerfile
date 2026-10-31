@@ -4,7 +4,7 @@
 
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
-ARG PHP_VERSION=8.4.27
+ARG PHP_VERSION=8.5.12
 ARG NGINX_VERSION=1.30.4
 ARG BUN_VERSION=1.4.4
 
@@ -53,7 +53,6 @@ RUN set -eux; \
 	docker-php-ext-install -j$(nproc) \
 		intl \
 		gd \
-		mysqli \
 		pcntl \
 		pdo_mysql \
 		xsl \
@@ -66,7 +65,6 @@ RUN set -eux; \
 	pecl clear-cache; \
 	docker-php-ext-enable \
 		apcu \
-		opcache \
 	; \
 	\
 	runDeps="$( \

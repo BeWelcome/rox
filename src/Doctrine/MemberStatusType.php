@@ -2,6 +2,8 @@
 
 namespace App\Doctrine;
 
+use Override;
+
 class MemberStatusType extends EnumType
 {
     // Possible member statuses
@@ -113,8 +115,10 @@ class MemberStatusType extends EnumType
         'AskToLeave',
     ];
 
+    #[Override]
     protected string $name = 'member_status';
 
+    #[Override]
     protected array $values = [
         self::AWAITING_MAIL_CONFIRMATION,
         self::PENDING,

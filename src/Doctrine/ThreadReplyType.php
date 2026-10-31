@@ -2,14 +2,18 @@
 
 namespace App\Doctrine;
 
+use Override;
+
 class ThreadReplyType extends EnumType
 {
     public const string MEMBERS_ONLY = 'MembersOnly';
     public const string GROUP_ONLY = 'GroupMembersOnly';
     public const string MODERATOR_ONLY = 'Moderators';
 
+    #[Override]
     protected string $name = 'thread_reply';
 
+    #[Override]
     protected array $values = [
         self::MEMBERS_ONLY,
         self::GROUP_ONLY,

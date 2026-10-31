@@ -2,6 +2,8 @@
 
 namespace App\Doctrine;
 
+use Override;
+
 class LanguageLevelType extends EnumType
 {
     public const string MOTHER_TONGUE = 'mother.tongue';
@@ -11,8 +13,10 @@ class LanguageLevelType extends EnumType
     public const string BEGINNER = 'beginner';
     public const string HELLO_ONLY = 'hello.only';
 
+    #[Override]
     protected string $name = 'language_level';
 
+    #[Override]
     protected array $values = [
         self::MOTHER_TONGUE,
         self::EXPERT,

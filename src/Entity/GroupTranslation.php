@@ -5,6 +5,7 @@ namespace App\Entity;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
+use Override;
 
 /**
  * The description of a group in one language (Gedmo personal translation, as ForumThreadTranslation). It belongs
@@ -19,6 +20,7 @@ class GroupTranslation extends AbstractPersonalTranslation
 
     #[ORM\ManyToOne(targetEntity: Group::class, inversedBy: 'translations')]
     #[ORM\JoinColumn(name: 'object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Override]
     protected $object;
 
     /** Who wrote or last changed the text in this language. */

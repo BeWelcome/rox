@@ -2,6 +2,8 @@
 
 namespace App\Doctrine;
 
+use Override;
+
 class DeleteRequestType extends SetType
 {
     public const string SENDER_DELETED = 'senderdeleted';
@@ -9,8 +11,10 @@ class DeleteRequestType extends SetType
     public const string SENDER_PURGED = 'senderpurged';
     public const string RECEIVER_PURGED = 'receiverpurged';
 
+    #[Override]
     protected string $name = 'delete_request';
 
+    #[Override]
     protected array $values = [
         self::SENDER_DELETED,
         self::RECEIVER_DELETED,

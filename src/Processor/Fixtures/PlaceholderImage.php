@@ -20,6 +20,5 @@ final class PlaceholderImage
         $color = imagecolorallocate($image, random_int(60, 220), random_int(60, 220), random_int(60, 220));
         imagefill($image, 0, 0, $color);
         imagejpeg($image, $path, 85);
-        imagedestroy($image);
     }
 }

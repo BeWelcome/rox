@@ -11,8 +11,10 @@ class GroupType extends EnumType
     public const string NEED_ACCEPTANCE = 'NeedAcceptance';
     public const string INVITE_ONLY = 'NeedInvitation';
 
+    #[Override]
     protected string $name = 'group_type';
 
+    #[Override]
     protected array $values = [
         self::PUBLIC,
         self::NEED_ACCEPTANCE,

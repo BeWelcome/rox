@@ -2,6 +2,8 @@
 
 namespace App\Doctrine;
 
+use Override;
+
 class InFolderType extends EnumType
 {
     public const string NORMAL = 'Normal';
@@ -10,8 +12,10 @@ class InFolderType extends EnumType
     public const string DRAFT = 'Draft';
     public const string REQUESTS = 'requests';
 
+    #[Override]
     protected string $name = 'in_folder';
 
+    #[Override]
     protected array $values = [
         self::NORMAL,
         self::JUNK,

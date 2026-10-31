@@ -2,6 +2,8 @@
 
 namespace App\Doctrine;
 
+use Override;
+
 class CommentRelationsType extends SetType
 {
     public const string WAS_GUEST = 'was_my_guest';
@@ -13,10 +15,13 @@ class CommentRelationsType extends SetType
     public const string IS_FRIEND = 'friends';
     public const string ONLINE_COMMUNICATION = 'chatted';
 
+    #[Override]
     protected string $name = 'comment_relations';
 
+    #[Override]
     protected string $translationPrefix = 'profile.comment.relation.';
 
+    #[Override]
     protected array $values = [
         self::WAS_GUEST,
         self::WAS_HOST,

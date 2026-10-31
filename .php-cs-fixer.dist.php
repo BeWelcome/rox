@@ -17,6 +17,7 @@ return new PhpCsFixer\Config()
     ->setRules([
         '@PHP8x3Migration' => true,
         '@PHP8x4Migration' => true,
+        '@PHP8x5Migration' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'array_syntax' => ['syntax' => 'short'],

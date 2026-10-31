@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
+use Override;
 
 /**
  * The name of a group category in one language (Gedmo personal translation, as GroupTranslation).
@@ -17,6 +18,7 @@ class GroupCategoryTranslation extends AbstractPersonalTranslation
 
     #[ORM\ManyToOne(targetEntity: GroupCategory::class, inversedBy: 'translations')]
     #[ORM\JoinColumn(name: 'object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Override]
     protected $object;
 
     public function __construct(string $locale, string $field, string $value)

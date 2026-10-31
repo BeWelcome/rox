@@ -2,6 +2,8 @@
 
 namespace App\Doctrine;
 
+use Override;
+
 class TripAdditionalInfoType extends EnumType
 {
     public const string NONE = 'none';
@@ -11,8 +13,10 @@ class TripAdditionalInfoType extends EnumType
     public const string FRIENDS_SAME = 'friends_same';
     public const string FAMILY = 'family';
 
+    #[Override]
     protected string $name = 'trip_additional_info';
 
+    #[Override]
     protected array $values = [
         self::NONE,
         self::SINGLE,

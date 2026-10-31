@@ -2,6 +2,8 @@
 
 namespace App\Doctrine;
 
+use Override;
+
 class GroupMembershipStatusType extends EnumType
 {
     public const string CURRENT_MEMBER = 'In';
@@ -9,8 +11,10 @@ class GroupMembershipStatusType extends EnumType
     public const string KICKED_FROM_GROUP = 'Kicked';
     public const string INVITED_INTO_GROUP = 'Invited';
 
+    #[Override]
     protected string $name = 'group_membership_status';
 
+    #[Override]
     protected array $values = [
         self::CURRENT_MEMBER,
         self::APPLIED_FOR_MEMBERSHIP,

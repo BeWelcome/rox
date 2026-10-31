@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
+use Override;
 
 #[ORM\Table(name: 'member_translation')]
 #[ORM\Index(name: 'ft_member_translation_content', columns: ['content'], flags: ['fulltext'])]
@@ -13,6 +14,7 @@ class MemberTranslation extends AbstractPersonalTranslation
 {
     #[ORM\ManyToOne(targetEntity: Member::class, inversedBy: 'translations')]
     #[ORM\JoinColumn(name: 'object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Override]
     protected $object;
 
     public function __construct($locale, $field, $value)

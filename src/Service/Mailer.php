@@ -193,7 +193,7 @@ class Mailer
         ];
         $references = $parameters['previousMessageIds'] ?? [];
         if ($references) {
-            $identificationHeaders['In-Reply-To'] = $references[array_key_last($references)];
+            $identificationHeaders['In-Reply-To'] = array_last($references);
             $identificationHeaders['References'] = $references;
         }
 

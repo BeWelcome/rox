@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Translatable\Entity\MappedSuperclass\AbstractPersonalTranslation;
+use Override;
 
 /**
  * The text of a poll choice in one language (Gedmo personal translation, as MemberTranslation).
@@ -15,6 +16,7 @@ class PollChoiceTranslation extends AbstractPersonalTranslation
 {
     #[ORM\ManyToOne(targetEntity: PollChoice::class, inversedBy: 'translations')]
     #[ORM\JoinColumn(name: 'object_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Override]
     protected $object;
 
     public function __construct(string $locale, string $field, string $value)

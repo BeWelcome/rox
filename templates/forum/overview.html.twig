@@ -6,7 +6,9 @@
 
     <div class="p-forum__toolbar">
         {% include 'forum/_search_form.html.twig' with {group: null} %}
-        {% if onlyMyGroups %}
+        {% if mineAsked %}
+            <a class="p-forum__btn" href="{{ path('forums') }}">{{ 'switchshowallgroupstopics'|trans }}</a>
+        {% elseif onlyMyGroups %}
             {{ button.post_button(path('forums_groups_all'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowallgroupstopics', 'p-forum__btn') }}
         {% else %}
             {{ button.post_button(path('forums_groups_only_mine'), constant('App\\Controller\\ForumsController::TOKEN'), 'switchshowonlymygroupstopics', 'p-forum__btn') }}
@@ -17,7 +19,7 @@
 
     {% if threads.haveToPaginate %}
         <div class="u:flex u:justify-end u:my-8">
-            {{ pagerfanta(threads, 'rounded_pagination', {routeName: 'forums', pageParameter: '[page]'}) }}
+            {{ pagerfanta(threads, 'rounded_pagination', {routeName: 'forums', routeParams: mineAsked ? {groups: 'mine'} : {}, pageParameter: '[page]'}) }}
         </div>
     {% endif %}
 {% endblock %}

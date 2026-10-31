@@ -49,7 +49,9 @@ class ForumPagesController extends AbstractController
     public function overview(Request $request): Response
     {
         $member = $this->getMember();
-        $onlyMyGroups = 'Yes' === $this->getPreference($member, Preference::SHOW_MY_GROUP_POSTS_ONLY);
+        // ?groups=mine (the home page's My groups) shows only the member's groups, whatever their preference
+        $mineAsked = 'mine' === $request->query->get('groups');
+        $onlyMyGroups = $mineAsked || 'Yes' === $this->getPreference($member, Preference::SHOW_MY_GROUP_POSTS_ONLY);
         $threads = $this->paginate(
             $this->getThreadRepository()->createLatestQueryBuilder($member, $this->isModerator(), null, $onlyMyGroups),
             $request->query->getInt('page', 1),
@@ -59,6 +61,7 @@ class ForumPagesController extends AbstractController
         return $this->render('forum/overview.html.twig', [
             'threads' => $threads,
             'onlyMyGroups' => $onlyMyGroups,
+            'mineAsked' => $mineAsked,
             'ascending' => $this->readsAscending($member),
         ]);
     }

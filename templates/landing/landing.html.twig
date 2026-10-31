@@ -234,7 +234,7 @@
             <div role="tabpanel" class="tab-pane c-home-pane active" id="groups">
                 <div id="groupsdisplay" class="c-home-list">{{ loading }}</div>
                 <div class="c-home-pane__footer c-home-pane__footer--buttons c-home-pane__footer--end">
-                    <a class="c-home-seeall" href="/groups/mygroups">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <a class="c-home-seeall" href="{{ path('forums', {groups: 'mine'}) }}">{{ 'landing.see.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </div>
 

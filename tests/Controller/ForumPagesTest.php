@@ -52,6 +52,18 @@ final class ForumPagesTest extends WebTestCase
         self::assertStringNotContainsString(self::HIKING_THREAD, $crawler->text());
     }
 
+    public function testMyGroupsOnlyShowsTheThreadsOfTheMembersGroups(): void
+    {
+        $this->leaveHiking();
+
+        $crawler = $this->request('GET', '/forums?groups=mine');
+        self::assertResponseIsSuccessful();
+        self::assertStringNotContainsString(self::HIKING_THREAD, $crawler->text());
+        self::assertCount(1, $crawler->filter('.p-forum__toolbar a.p-forum__btn[href="/forums"]'));
+
+        self::assertStringContainsString(self::HIKING_THREAD, $this->request('GET', '/forums')->text());
+    }
+
     public function testTheAgoraIsTheBeWelcomeGroupsForum(): void
     {
         $this->request('GET', '/forums/bwforum');

@@ -403,6 +403,29 @@ Map.prototype.focusMember = function (username) {
     }
     this.focused = marker;
     marker.setZIndexOffset(1000);
+
+    // Too many members where the member lives to spread them out, even at the closest zoom (as a click on that group):
+    // the map goes to the group and marks it, without spreading it
+    const crowd = marker.__parent;
+    if (crowd && crowd.getChildCount() > GROUP_SPREAD_MAX) {
+        const markGroup = () => {
+            if (this.focused !== marker || this.focusedGroup) {
+                return;
+            }
+            const group = this.markerClusterGroup.getVisibleParent(marker);
+            const element = group ? group.getElement() : null;
+            if (element) {
+                element.classList.add('is-focused');
+                this.focusedGroup = element;
+            }
+        };
+        this.map.once('moveend', markGroup);
+        this.map.setView(crowd.getLatLng(), Math.max(this.map.getZoom(), crowd._zoom));
+        // The map may not move at all when it is already there
+        setTimeout(markGroup, 500);
+        return;
+    }
+
     this.markerClusterGroup.zoomToShowLayer(marker, () => {
         if (this.focused !== marker) {
             return;
@@ -419,6 +442,10 @@ Map.prototype.focusMember = function (username) {
 };
 
 Map.prototype.unfocusMember = function () {
+    if (this.focusedGroup) {
+        this.focusedGroup.classList.remove('is-focused');
+        this.focusedGroup = null;
+    }
     if (this.focused) {
         const element = this.focused.getElement();
         if (element) {

@@ -43,8 +43,6 @@
     "improved-yarn-audit": "^2.3.3",
     "intl-messageformat": "^10.7.18",
     "jarallax": "^1.12.8",
-    "jquery-mousewheel": "^3.2.2",
-    "jquery-ui": "~1.13.3",
     "js-yaml": "^4.3.2",
     "leaflet": "^1.9.4",
     "leaflet-polylinedecorator": "^1.6.0",

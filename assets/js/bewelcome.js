@@ -1,6 +1,5 @@
 import * as bootstrap from 'bootstrap'
 
-import '../../public/script/common/common.js';
 import 'cookieconsent/src/cookieconsent.js';
 
 import '../scss/bewelcome.scss';

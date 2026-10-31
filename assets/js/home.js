@@ -1,4 +1,3 @@
-import 'jquery';
 import '@popperjs/core';
 
 import * as bootstrap from 'bootstrap'
@@ -71,13 +70,6 @@ const frontpageMap = document.querySelector('.js-fp-map');
 if (frontpageMap) {
     import('./home/frontpage-map').then(({ showFrontpageMap }) => showFrontpageMap(frontpageMap));
 }
-
-/* $(".select2").select2({
-    theme: 'bootstrap4',
-    width: 'auto',
-    dropdownAutoWidth: true,
-});
-*/
 
 // ── Home login panel (sheet on phones, card on desktop) ──────────────────────────
 (function () {

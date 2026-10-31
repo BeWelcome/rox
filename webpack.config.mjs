@@ -40,7 +40,6 @@ Encore
     })
     .addEntry('bewelcome', './assets/js/bewelcome.js')
     .addEntry('home', './assets/js/home.js')
-    .addEntry('jquery_ui', './assets/js/jquery_ui.js')
     .addEntry('password/showhide', './assets/js/password/showhide.js')
     .addEntry('password/check', './assets/js/password/check.js')
     .addEntry('signup/finalize', './assets/js/signup/finalize.js')

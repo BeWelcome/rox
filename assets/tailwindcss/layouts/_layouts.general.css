@@ -3139,6 +3139,12 @@ main:has(.p-hero) {
   font-size: 0.8125rem;
 }
 .p-comment__meta > span { white-space: nowrap; }
+/* How the author knows the member: small chips next to the date; hosted or was a guest in orange */
+.p-comment__relations { display: inline-flex; flex-wrap: wrap; gap: 0.3rem; margin: 0; padding: 0; list-style: none; }
+.p-comment__relation { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.1rem 0.5rem; white-space: nowrap; border-radius: 999px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 600; line-height: 1.4; }
+.p-comment__relation i, .p-comment__relation svg { color: #94a3b8; font-size: 0.7rem; }
+.p-comment__relation--stay { background: #fff1e6; color: #c2410c; }
+.p-comment__relation--stay i, .p-comment__relation--stay svg { color: #ea7a2e; }
 .p-comment__meta i.fa-home { font-size: 0.75rem; color: #94a3b8; }
 .p-comment__badge {
   display: inline-flex;
@@ -3163,6 +3169,9 @@ main:has(.p-hero) {
   text-decoration: none;
 }
 .p-comment__report:hover { color: #64748b; }
+.p-comment__edit-icon,
+.p-comment__edit-icon:hover { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 999px; background: #f1f5f9; color: #64748b; font-size: 0.75rem; text-decoration: none; }
+.p-comment__edit-icon:hover { background: #e2e8f0; color: #0f172a; }
 .p-comment__hidden {
   margin-bottom: 0.5rem;
   padding: 0.4rem 0.65rem;
@@ -11641,7 +11650,7 @@ label.p-preference-card__title { margin: 0; }
 }
 
 /* Comments filter of the profile: a white pill with the qualities coloured, as on the search cards */
-.p-pro-filter { gap: 0.3rem; padding: 0.3rem; border: 1px solid #e5e7eb; background: #fff; }
+.p-pro-filter { gap: 0.3rem; padding: 0; border: 0; background: transparent; }
 .p-pro-filter__item,
 .p-pro-filter__item:hover { padding: 0.3rem 0.75rem; font-weight: 700; }
 .p-pro-filter__item.is-all,

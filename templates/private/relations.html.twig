@@ -1,27 +1,30 @@
 {% extends 'private/mydata.html.twig' %}
 
 {% block content %}
-    <h1>{{ 'mydata.relations.headline' | trans }}</h1>
-    <p>{{ 'mydata.relations.abstract' | trans }}</p>
+    <h1>{{ 'mydata.friends.headline'|trans }}</h1>
+    <p>{{ 'mydata.friends.abstract'|trans }}</p>
     {% if relations|length == 0 %}
-        <p>{{ 'mydata.relations.no.comments'|trans }}</p>
+        <p>{{ 'mydata.friends.none'|trans }}</p>
     {% else %}
-        {% for relation in relations %}
-            <div class="row mb-2">
-                {% if relation.left is defined %}
-                    {% include 'private/relation.html.twig' with { 'relation': relation.left, 'background': 'bg-light' } %}
-                {% else %}
-                    <div class="col-6"></div>
-                {% endif %}
-                {% if relation.right is defined %}
-                    {% include 'private/relation.html.twig' with { 'relation': relation.right, 'background': 'bg-white' } %}
-                {% else %}
-                    <div class="col-6"></div>
-                {% endif %}
-            </div>
-            {% if not loop.last %}
-                <hr>
-            {% endif %}
-        {% endfor %}
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>{{ 'mydata.friends.member'|trans }}</th>
+                    <th>{{ 'mydata.friends.requester'|trans }}</th>
+                    <th>{{ 'mydata.friends.created'|trans }}</th>
+                    <th>{{ 'mydata.friends.confirmed'|trans }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for relation in relations %}
+                    <tr>
+                        <td>{{ relation.other.username }}</td>
+                        <td>{{ relation.requester.username }}</td>
+                        <td>{{ relation.created|format_datetime('short', 'short') }}</td>
+                        <td>{{ relation.confirmed ? relation.confirmed|format_datetime('short', 'short') : 'mydata.friends.pending'|trans }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% endif %}
 {% endblock content %}

@@ -1,19 +1,17 @@
 {% extends 'emails/email_no_greeting.html.twig' %}
 
 {% block content %}
-    <p>{{ 'friendship.sender.says.exist'|trans({username:sender.Username}) }}</p>
-  {{ receiver.username }}
-  {{ sender.username }}
+    <p>{{ 'friendship.sender.says.exist'|trans({username: sender.Username}) }}</p>
     <row>
         <columns>
             <center>
-        <button class="rounded" href="{{ signed_url('confirm_friendship', { left: receiver.Username, right: sender.Username }) }}">{{ 'friendship.confirm'|trans }}</button>
+                <button class="rounded" href="{{ signed_url('confirm_friendship', { left: receiver.Username, right: sender.Username }) }}">{{ 'friendship.confirm'|trans }}</button>
             </center>
         </columns>
         <columns>
             <center>
-            <button class="rounded" href="{{ signed_url('dismiss_friendship', { left: receiver.Username, right: sender.Username }) }}">{{ 'friendship.dismiss'|trans }}</button>
-        </center>
+                <button class="rounded" href="{{ signed_url('dismiss_friendship', { left: receiver.Username, right: sender.Username }) }}">{{ 'friendship.dismiss'|trans }}</button>
+            </center>
         </columns>
     </row>
 {% endblock %}

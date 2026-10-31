@@ -5,171 +5,127 @@ namespace App\Repository;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Friend;
 use App\Entity\Member;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Pagerfanta\Adapter\ArrayAdapter;
+use Doctrine\Persistence\ManagerRegistry;
+use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
-class FriendRepository extends EntityRepository
+/**
+ * @extends ServiceEntityRepository<Friend>
+ */
+class FriendRepository extends ServiceEntityRepository
 {
-    public function getFamilyAndFriendsCount(Member $member): int
-    {
-        $qb = $this->createQueryBuilder('f');
+    /** The friends pages show 6 friends a row on large screens. */
+    private const int FRIENDS_PER_ROW = 6;
 
-        return
-            (int) $qb
-                ->select('count(f.left)')
-                ->join('f.left', 'l')
-                ->join('f.right', 'r')
-                ->where(
-                    $qb->expr()->andX(
-                        $qb->expr()->eq('f.leftConfirmed', true),
-                        $qb->expr()->eq('f.rightConfirmed', true)
-                    )
-                )
-                ->andWhere(
-                    $qb->expr()->orX(
-                        $qb->expr()->eq('f.left', ':member'),
-                        $qb->expr()->eq('f.right', ':member')
-                    )
-                )
-                ->andWhere(
-                    $qb->expr()->orX(
-                        $qb->expr()->in('l.status', ':status'),
-                        $qb->expr()->in('r.status', ':status')
-                    )
-                )
-                ->setParameter('member', $member)
-                ->setParameter('status', MemberStatusType::ACTIVE_ALL_ARRAY)
-                ->getQuery()
-                ->getSingleScalarResult()
-        ;
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Friend::class);
     }
 
-    public function getNumberOfFriendsFor(Member $member): int
+    /**
+     * Number of confirmed friends of $member (whose accounts are active).
+     */
+    public function countFriends(Member $member): int
     {
-        $qb = $this->getFriendsForQueryBuilder($member);
-        $qb->select('count(f.left)');
-
-        return $qb->getQuery()->getSingleScalarResult();
-    }
-
-    public function findFriendsFor(Member $member): mixed
-    {
-        $qb = $this->createQueryBuilder('f');
-
-        return $qb
-            ->join('f.left', 'l')
-            ->join('f.right', 'r')
-            ->where(
-                $qb->expr()->andX(
-                    $qb->expr()->eq('f.leftConfirmed', true),
-                    $qb->expr()->eq('f.rightConfirmed', true)
-                )
-            )
-            ->andWhere(
-                $qb->expr()
-                    ->orX(
-                        $qb->expr()->eq('f.left', ':member'),
-                        $qb->expr()->eq('f.right', ':member'),
-                    )
-            )
-            ->andWhere($qb->expr()->in('l.status', ':status'))
-            ->andWhere($qb->expr()->in('r.status', ':status'))
-            ->setParameter('member', $member)
-            ->setParameter('status', MemberStatusType::ACTIVE_ALL_ARRAY)
-            ->orderBy('f.updated', 'DESC')
+        return (int) $this->confirmedFor($member)
+            ->select('COUNT(f.left)')
             ->getQuery()
-            ->getResult()
+            ->getSingleScalarResult()
         ;
     }
 
-    public function findFriendshipBetween(Member $relation1, Member $relation2): ?Friend
+    /**
+     * The confirmed friendships of $member, the latest first.
+     *
+     * @return Friend[]
+     */
+    public function findFriendsFor(Member $member): array
     {
-        $left = $relation1->getId() < $relation2->getId() ? $relation1 : $relation2;
-        $right = $relation1->getId() < $relation2->getId() ? $relation2 : $relation1;
-
-        return
-            $this
-                ->createQueryBuilder('r')
-                ->where('r.left = :left')
-                ->andWhere('r.right = :right')
-                ->setParameter('left', $left)
-                ->setParameter('right', $right)
-                ->getQuery()
-                ->getOneOrNullResult()
-        ;
+        return $this->confirmedFor($member)->getQuery()->getResult();
     }
 
-    public function findUnconfirmedRelationBetween(Member $relation1, Member $relation2): ?Friend
-    {
-        $left = $relation1->getId() < $relation2->getId() ? $relation1 : $relation2;
-        $right = $relation1->getId() < $relation2->getId() ? $relation2 : $relation1;
-
-        $qb = $this->createQueryBuilder('f');
-
-        return
-            $qb
-                ->where('f.left = :left')
-                ->andWhere('f.right = :right')
-                ->andWhere(
-                    $qb->expr()->orX(
-                        $qb->expr()->eq('f.leftConfirmed', 0),
-                        $qb->expr()->eq('f.rightConfirmed', 0)
-                    )
-                )
-                ->setParameter('left', $left)
-                ->setParameter('right', $right)
-                ->getQuery()
-                ->getOneOrNullResult()
-        ;
-    }
-
+    /**
+     * The confirmed friendships of $member as pages. The page size is rounded up to a whole number of rows.
+     *
+     * @return Pagerfanta<Friend>
+     */
     public function getFriends(Member $member, int $page, int $itemsPerPage = 50): Pagerfanta
     {
-        $qb = $this->getFriendsForQueryBuilder($member);
-
-        $query = $qb->getQuery();
-        $results = $query->getResult();
-
-        $friends = new Pagerfanta(new ArrayAdapter($results));
-
-        // $items per page will be 5, 10, 20, 50, 100 here we want a number dividable by 6
-        // as for bigger viewports we use 6 friends per row. We use the next larger number
-        // that is dividable by 6 (6, 12, 24, 54, 102).
-        $itemsPerPage = ($itemsPerPage / 6 + 1) * 6;
-        $friends->setMaxPerPage($itemsPerPage);
+        $friends = new Pagerfanta(new QueryAdapter($this->confirmedFor($member), false));
+        $rows = intdiv(max(1, $itemsPerPage) - 1, self::FRIENDS_PER_ROW) + 1;
+        $friends->setMaxPerPage($rows * self::FRIENDS_PER_ROW);
         $friends->setCurrentPage($page);
 
         return $friends;
     }
 
-    private function getFriendsForQueryBuilder($member): QueryBuilder
+    /**
+     * The friendship of the two members, confirmed or not.
+     */
+    public function findFriendshipBetween(Member $one, Member $other): ?Friend
     {
-        $qb = $this->createQueryBuilder('f');
+        $left = $one->getId() < $other->getId() ? $one : $other;
+        $right = $one->getId() < $other->getId() ? $other : $one;
 
-        return $qb
+        return $this->findOneBy(['left' => $left, 'right' => $right]);
+    }
+
+    /**
+     * The friendships others asked $member to confirm, the latest first.
+     *
+     * @return Friend[]
+     */
+    public function findRequestsFor(Member $member): array
+    {
+        return $this->pendingFor($member)
+            ->andWhere('f.requester <> :member')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * The friendships $member asked for that aren't confirmed yet, the latest first.
+     *
+     * @return Friend[]
+     */
+    public function findSentBy(Member $member): array
+    {
+        return $this->pendingFor($member)
+            ->andWhere('f.requester = :member')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    private function confirmedFor(Member $member): QueryBuilder
+    {
+        return $this->withActiveMembers($member)
+            ->andWhere('f.confirmed IS NOT NULL')
+            ->orderBy('f.confirmed', 'DESC')
+        ;
+    }
+
+    private function pendingFor(Member $member): QueryBuilder
+    {
+        return $this->withActiveMembers($member)
+            ->andWhere('f.confirmed IS NULL')
+            ->orderBy('f.created', 'DESC')
+        ;
+    }
+
+    private function withActiveMembers(Member $member): QueryBuilder
+    {
+        return $this->createQueryBuilder('f')
             ->join('f.left', 'l')
             ->join('f.right', 'r')
-            ->where(
-                $qb->expr()->orX(
-                    $qb->expr()->eq('f.leftConfirmed', ':confirmed'),
-                    $qb->expr()->eq('f.rightConfirmed', ':confirmed')
-                )
-            )
-            ->andWhere(
-                $qb->expr()
-                    ->orX(
-                        $qb->expr()->eq('f.left', ':member'),
-                        $qb->expr()->eq('f.right', ':member'),
-                    )
-            )
-            ->andWhere($qb->expr()->in('l.status', ':status'))
-            ->andWhere($qb->expr()->in('r.status', ':status'))
+            ->where('f.left = :member OR f.right = :member')
+            ->andWhere('l.status IN (:status)')
+            ->andWhere('r.status IN (:status)')
             ->setParameter('member', $member)
-            ->setParameter('confirmed', true)
             ->setParameter('status', MemberStatusType::ACTIVE_ALL_ARRAY)
-            ->orderBy('f.updated', 'DESC')
         ;
     }
 }

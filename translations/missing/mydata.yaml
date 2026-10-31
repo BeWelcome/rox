@@ -180,3 +180,27 @@ mydata.newsletter.no.body:
 mydata.polls.comment:
     - 'Your comment'
     - Data export, polls you contributed to, above the comment you left on the poll.
+mydata.friends.headline:
+    - 'Friends'
+    - Headline of the friendships page in the personal data export
+mydata.friends.abstract:
+    - 'Your friendships on BeWelcome, confirmed or waiting for confirmation.'
+    - Text of the friendships page in the personal data export
+mydata.friends.none:
+    - 'You don''t have any friendships.'
+    - Shown in the personal data export when there are no friendships
+mydata.friends.member:
+    - 'Friend'
+    - Column heading in the personal data export
+mydata.friends.requester:
+    - 'Asked by'
+    - Column heading in the personal data export
+mydata.friends.created:
+    - 'Asked on'
+    - Column heading in the personal data export
+mydata.friends.confirmed:
+    - 'Confirmed on'
+    - Column heading in the personal data export
+mydata.friends.pending:
+    - 'Not yet'
+    - Shown in the personal data export for a friendship that isn''t confirmed

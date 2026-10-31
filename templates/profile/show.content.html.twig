@@ -317,18 +317,18 @@
         </section>
       {% endif %}
 
-      {# ── Family and friends ── #}
+      {# ── Friends ── #}
       {% if friends|length > 0 %}
         <section class="p-pro-card">
           <div class="p-pro-card__head">
-            <h2 class="p-pro-card__title">{{ 'profile.family.and.friends'|trans({}, 'messages', profile_language)|raw }}</h2>
+            <h2 class="p-pro-card__title">{{ 'profile.friends'|trans({}, 'messages', profile_language) }}</h2>
             {% if friends|length > 9 %}
               <a class="p-pro-card__link" href="{{ url('friends', {username: member.username}) }}">{{ 'profile.all.friends'|trans({}, 'messages', profile_language) }} {{ friends|length }}</a>
             {% endif %}
           </div>
           <ul class="p-pro-friends">
             {% for friend in friends|slice(0, 9) %}
-              {% set other = friend.left == member ? friend.right : friend.left %}
+              {% set other = friend.other(member) %}
               <li>
                 <a class="p-pro-friend" href="{{ url('members_profile', {username: other.username}) }}">
                   <img class="p-pro-friend__img" src="{{ url('avatar', {username: other.username, size: 96}) }}" alt="" loading="lazy">

@@ -225,8 +225,8 @@
         <div class="p-pe-rows">
           {{ edit.row('profile.edit.interests.title'|trans, 'profile.edit.hint.interests'|trans, interestsText, url('profile_edit_section', {username: member.username, language: profile_language, section: 'interests'}), { icon: 'heart' }) }}
           {{ edit.row('profile.edit.travels'|trans, 'profile.edit.hint.travels'|trans, travelsText, url('profile_edit_section', {username: member.username, language: profile_language, section: 'travels'}), { icon: 'globe' }) }}
-          {% set friendNames = friends|map(friend => (friend.left == member ? friend.right : friend.left).username)|join(', ') %}
-          <a href="{{ url('friends', {username: member.username}) }}" class="p-pe-row p-pe-row--icon{{ friends|length > 0 ? ' is-filled' }}">
+          {% set friendNames = friends|map(friend => friend.other(member).username)|join(', ') %}
+          <a href="{{ url('friendships', {username: member.username}) }}" class="p-pe-row p-pe-row--icon{{ friends|length > 0 ? ' is-filled' }}">
             <span class="p-pe-row__icon"><i class="fas fa-user-friends" aria-hidden="true"></i></span>
             <span class="p-pe-row__text">
               <strong class="p-pe-row__title">{{ 'profile.edit.friends'|trans }}</strong>

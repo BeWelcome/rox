@@ -3,8 +3,16 @@
 
 {% set hide_sidebar = true %}
 
+{% if friend.confirmed %}
+  {% set state = 'confirmed' %}
+{% elseif friend.isRequester(app.user) %}
+  {% set state = 'sent' %}
+{% else %}
+  {% set state = 'received' %}
+{% endif %}
+
 {% block title %}
-  {{ 'friend.edit.headline'|trans }}
+  {{ ('friend.' ~ state ~ '.headline')|trans }}
 {% endblock title %}
 
 {% block content %}
@@ -17,20 +25,28 @@
       </a>
       <div class="p-edit-subpage__heading">
         <p class="p-edit-subpage__eyebrow">@{{ member.username }}</p>
-        <h1 class="p-edit-subpage__title">{{ 'friend.edit.headline'|trans }}</h1>
+        <h1 class="p-edit-subpage__title">{{ ('friend.' ~ state ~ '.headline')|trans }}</h1>
       </div>
     </header>
 
     <div class="p-edit-subpage__card">
       {{ include('friend/_member.html.twig', {member: member}) }}
-      <p class="p-friend-form__blurb">{{ 'friend.edit.blurb'|trans({username: member.username}) }}</p>
+      <p class="p-friend-form__blurb">{{ ('friend.' ~ state ~ '.blurb')|trans({username: member.username}) }}</p>
 
       <form method="post">
         <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\FriendshipController::TOKEN')) }}">
         <div class="p-edit-subpage__actions p-edit-subpage__actions--split">
-          {# Keeping the friend changes nothing, so it is a plain link back to the friends list. #}
-          <a class="p-comment-form__cancel" href="{{ url('friends', {username: app.user.username}) }}">{{ 'profile.edit.friend.keep'|trans }}</a>
-          <button class="o-button p-friend-form__remove" name="remove_friendship" value="remove" type="submit">{{ 'profile.edit.friend.remove'|trans }}</button>
+          {% if 'accept' in actions %}
+            <button class="o-button o-button--outline" name="friendship" value="decline" type="submit">{{ 'friend.decline'|trans }}</button>
+            <button class="o-button" name="friendship" value="accept" type="submit">{{ 'friend.accept'|trans }}</button>
+          {% elseif 'withdraw' in actions %}
+            <a class="p-comment-form__cancel" href="{{ url('members_profile', {username: member.username}) }}">{{ 'profile.back'|trans }}</a>
+            <button class="o-button p-friend-form__remove" name="friendship" value="withdraw" type="submit">{{ 'friend.withdraw'|trans }}</button>
+          {% elseif 'remove' in actions %}
+            {# Keeping the friend changes nothing, so it is a plain link back to the friends list. #}
+            <a class="p-comment-form__cancel" href="{{ url('friendships', {username: app.user.username}) }}">{{ 'profile.edit.friend.keep'|trans }}</a>
+            <button class="o-button p-friend-form__remove" name="friendship" value="remove" type="submit">{{ 'profile.edit.friend.remove'|trans }}</button>
+          {% endif %}
         </div>
       </form>
     </div>

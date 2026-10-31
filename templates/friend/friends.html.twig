@@ -24,6 +24,11 @@
             <span class="p-gallery-footer__count">{{ friends.nbResults }}</span>
           {% endif %}
         </span>
+        {% if member == app.user %}
+          <a class="p-friends-page__manage" href="{{ url('friendships', {username: member.username}) }}">
+            <i class="fas fa-edit" aria-hidden="true"></i> {{ 'friendships.manage'|trans }}
+          </a>
+        {% endif %}
       </div>
       <div class="card-body">
         {% if friends.nbResults == 0 %}
@@ -34,7 +39,7 @@
         {% else %}
           <ul class="p-friends-page__grid">
             {% for friend in friends %}
-              {% set other = friend.left == member ? friend.right : friend.left %}
+              {% set other = friend.other(member) %}
               <li>
                 <a class="p-friends-page__item" href="{{ url('members_profile', {username: other.username}) }}">
                   <span class="o-avatar o-avatar--m">

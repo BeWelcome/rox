@@ -88,17 +88,38 @@ final class MailLinksTest extends WebTestCase
         self::assertStringContainsString('_hash=', $mail);
         self::assertStringContainsString('_expiration=', $mail);
 
-        // the sender can't confirm their own request by making up the link
+        // the sender can't confirm their own request by making up the link, nor with a signed one
         $parameters = ['left' => 'member-2', 'right' => 'member-3'];
         $this->assertRejected($this->path('confirm_friendship', $parameters), '/members/member-3/friendship/edit');
-        self::assertFalse($this->friendship($sender, $receiver)->getLeftConfirmed());
+        $this->client->request('GET', $this->signed('confirm_friendship', $parameters));
+        self::assertResponseRedirects('/members/member-2/friendships');
+        self::assertFalse($this->friendship($sender, $receiver)->isConfirmed());
 
         $this->client->loginUser($receiver);
         $parameters = ['left' => 'member-3', 'right' => 'member-2'];
         $this->assertRejected($this->expired('confirm_friendship', $parameters), '/members/member-2/friendship/edit');
         $this->client->request('GET', $this->signed('confirm_friendship', $parameters));
-        self::assertResponseRedirects('/members/member-3/friends');
-        self::assertTrue($this->friendship($sender, $receiver)->getLeftConfirmed());
+        self::assertResponseRedirects('/members/member-3/friendships');
+        self::assertTrue($this->friendship($sender, $receiver)->isConfirmed());
+    }
+
+    public function testAFriendshipIsDeclinedWithTheSignedLinkOnly(): void
+    {
+        $receiver = $this->member('member-3');
+        $this->client->loginUser($this->member('member-2'));
+        $crawler = $this->client->request('GET', '/members/member-3/friendship/add');
+        $this->client->submit($crawler->filter('button[name="add_friendship"]')->form());
+
+        $this->client->loginUser($receiver);
+        $parameters = ['left' => 'member-3', 'right' => 'member-2'];
+        $this->assertRejected($this->tampered('dismiss_friendship', $parameters), '/members/member-2/friendship/edit');
+        $this->client->request('GET', $this->signed('dismiss_friendship', $parameters));
+        self::assertResponseRedirects('/members/member-3/friendships');
+        $this->entityManager->clear();
+        self::assertNull($this->entityManager->getRepository(Friend::class)->findFriendshipBetween(
+            $this->member('member-2'),
+            $this->member('member-3'),
+        ));
     }
 
     public function testTheFriendshipFormsNeedTheirToken(): void
@@ -107,7 +128,7 @@ final class MailLinksTest extends WebTestCase
 
         $this->client->request('POST', '/members/member-3/friendship/add', ['add_friendship' => 'add']);
         self::assertResponseStatusCodeSame(403);
-        $this->client->request('POST', '/members/member-3/friendship/edit', ['remove_friendship' => 'remove']);
+        $this->client->request('POST', '/members/member-3/friendship/edit', ['friendship' => 'remove']);
         self::assertResponseStatusCodeSame(403);
     }
 

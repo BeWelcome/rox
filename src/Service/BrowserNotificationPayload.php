@@ -36,12 +36,18 @@ final readonly class BrowserNotificationPayload
         return self::withSender('forum', 'browser.notification.forum.title', $sender, $url);
     }
 
+    public static function friendship(Member $sender, string $url): self
+    {
+        return self::withSender('friendship', 'browser.notification.friendship.title', $sender, $url);
+    }
+
     public static function fromStored(string $type, ?string $senderUsername, string $url): self
     {
         $titleKey = match ($type) {
             'request' => 'browser.notification.request.title',
             'invitation' => 'browser.notification.invitation.title',
             'forum' => 'browser.notification.forum.title',
+            'friendship' => 'browser.notification.friendship.title',
             default => 'browser.notification.message.title',
         };
         $parameters = ['username' => $senderUsername ?? 'BeWelcome'];

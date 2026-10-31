@@ -376,7 +376,7 @@ class MyDataMockups implements MockupProviderInterface
                 $mockEntity = $this->getPrivilege();
                 break;
             case 'relations':
-                $mockEntity = $this->getSpecialRelation();
+                $mockEntity = $this->getFriendship();
                 break;
             case 'rights':
                 // overwrite key as index is different
@@ -603,28 +603,13 @@ class MyDataMockups implements MockupProviderInterface
         ];
     }
 
-    private function getSpecialRelation(): array
+    private function getFriendship(): array
     {
-        $relation = [
-            'owner' => [
-                'username' => 'admin',
-            ],
-            'relation' => [
-                'username' => 'user',
-            ],
-            'type' => 'family',
-            'confirmed' => 'yes',
-            'comments' => [
-                [
-                    'language' => ['wordcode' => 'lang_el'],
-                    'sentence' => 'Comment text',
-                ],
-            ],
-        ];
-
         return [
-            'left' => $relation,
-            'right' => $relation,
+            'other' => ['username' => 'user'],
+            'requester' => ['username' => 'admin'],
+            'created' => new DateTime('-1 week'),
+            'confirmed' => new DateTime(),
         ];
     }
 

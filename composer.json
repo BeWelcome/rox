@@ -56,7 +56,6 @@
         "phpstan/phpdoc-parser": "^2.3",
         "ramsey/uuid-doctrine": "2.*",
         "stof/doctrine-extensions-bundle": "^1.7",
-        "symfony/apache-pack": "^1.0",
         "symfony/asset": "8.2.*",
         "symfony/cache": "8.2.*",
         "symfony/debug-bundle": "8.2.*",

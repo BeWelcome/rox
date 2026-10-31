@@ -14,9 +14,6 @@
      *                                              if the method to call is a post callback
      */
 
-    // member app routes
-    $this->addRoute('members_profile_retired', 'retired', 'MembersController', 'retired');
-
     // admin app routes: the tools themselves are Symfony pages (/admin/tools, /admin/comment, /admin/translations, ...)
     $this->addRoute('admin_norights', 'admin/norights', 'AdminBaseController', 'noRights');
 

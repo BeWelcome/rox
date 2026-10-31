@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\SignedUriException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\IsSignatureValid;
@@ -242,5 +243,23 @@ class FriendshipController extends AbstractController
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'friends']),
         ]);
+    }
+
+    /**
+     * The old URLs of a member's relations: the list, adding one and removing one.
+     */
+    #[Route(path: '/members/{username}/relations', name: 'friends_old', methods: ['GET'], priority: 10)]
+    #[Route(path: '/members/{username}/relations/add', name: 'add_friendship_old', methods: ['GET'], defaults: ['target' => 'add_friendship'])]
+    #[Route(path: '/members/{username}/relations/add/finish', name: 'add_friendship_finish_old', methods: ['GET'], defaults: ['target' => 'add_friendship'])]
+    #[Route(
+        path: '/members/{username}/relations/delete/{relationId}/editprofile',
+        name: 'remove_friendship_old',
+        requirements: ['relationId' => '\d+'],
+        methods: ['GET'],
+        defaults: ['target' => 'edit_friendship'],
+    )]
+    public function redirectLegacyRelations(string $username, string $target = 'friends'): RedirectResponse
+    {
+        return $this->redirectToRoute($target, ['username' => $username], Response::HTTP_MOVED_PERMANENTLY);
     }
 }

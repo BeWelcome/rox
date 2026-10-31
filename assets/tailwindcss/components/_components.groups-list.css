@@ -88,6 +88,14 @@ main:has(.p-groups) { background: #f4f5f7; }
 
 /* The groups: white cards, two by two */
 .p-groups__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+/* Wide screens: three groups a row, the picture a bit smaller */
+@media (min-width: 1200px) {
+  .p-groups__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .p-groups__list .p-group-card, .p-groups__list .p-group-card:hover { gap: 0.85rem; padding: 0.9rem 1rem 0.9rem 0.9rem; }
+  .p-groups__list .p-group-card__picture { width: 3.6rem; height: 3.6rem; }
+  .p-groups__list .p-group-card__name { font-size: 1.0625rem; }
+  .p-groups__list .p-group-card__meta { font-size: 0.875rem; }
+}
 .p-group-card,
 .p-group-card:hover { display: flex; align-items: center; gap: 1rem; min-width: 0; padding: 1rem 1.15rem 1rem 1rem; border-radius: 1.25rem; background: #fff; color: #0f172a; text-decoration: none; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04); transition: box-shadow 0.15s ease; }
 .p-group-card:hover { box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 22px rgba(15, 23, 42, 0.08); }

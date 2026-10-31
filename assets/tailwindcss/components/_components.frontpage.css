@@ -14,7 +14,7 @@ body:has(.fp) { background: #fffaf4; }
 .fp-top__logo { display: flex; align-items: center; }
 .fp-top__logo .bw-header-logo { display: flex; align-items: center; gap: 0.4rem; }
 .fp-top__logo .bw-header-logo__icon { width: 2.1rem; height: 2.1rem; }
-.fp-top__logo .bw-header-logo__text { height: 1.4rem; }
+.fp-top__logo .bw-header-logo__text { height: 38px; width: auto; }
 .fp-top__nav { display: flex; align-items: center; gap: 0.5rem; }
 .fp-top__link,
 .fp-top__link:hover { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.65rem; border: 0; background: transparent; color: #fff; font-size: 0.9375rem; font-weight: 600; text-decoration: none; }

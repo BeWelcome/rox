@@ -99,7 +99,7 @@
             <div class="p-thread__posts">
                 {% set _previousDay = null %}
                 {% for post in posts %}
-                    {% set _isFirst = thread.firstPost and thread.firstPost.id == post.id %}
+                    {% set _isFirst = starter and starter.id == post.id %}
                     {% set _postDay = post.created|date('Y-m-d') %}
                     {% if not _isFirst and _postDay != _previousDay %}
                         <p class="p-thread__day">{{ post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') }}</p>

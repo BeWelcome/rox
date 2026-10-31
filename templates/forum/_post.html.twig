@@ -5,11 +5,11 @@
   Reply and a menu of what the viewer can do with it (link, edit their own, translate, report, moderate).
   The viewer's own posts are cream.
   replyUrl, replyTitle: Reply in the side panel, when the viewer may reply. replies: the number of replies.
+  starter: the thread's oldest post (id, author id), or null.
 #}
 {% set _deleted = post.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
-{% set _firstPost = post.thread ? post.thread.firstPost : null %}
-{% set _starter = _firstPost and _firstPost.id == post.id %}
-{% set _isStarter = _firstPost and _firstPost.author == post.author %}
+{% set _starter = starter and starter.id == post.id %}
+{% set _isStarter = starter and starter.author == post.author.id %}
 {% set _isMe = app.user and post.author == app.user %}
 {% set _vis = post.postvisibility %}
 {% set _day = post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') %}

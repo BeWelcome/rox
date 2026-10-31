@@ -1,3 +1,240 @@
 home.find.location:
     - 'Find members on the map'
     - Used on the landing page as placeholder in the find members input field
+frontpage.join.free:
+    - 'Join free'
+    - Front page top bar, button to sign up
+frontpage.badge:
+    - 'Non-profit · run by volunteers'
+    - Front page, small orange label above the big title
+frontpage.title.stay:
+    - 'Stay with locals.'
+    - Front page big title, first line
+frontpage.title.host:
+    - 'Host travelers.'
+    - Front page big title, second line
+frontpage.title.free:
+    - 'Free, forever.'
+    - Front page big title, third line in orange
+frontpage.lead:
+    - 'BeWelcome is a hospitality community where people open their homes, show their city and meet travelers. No fees, no subscription, no ads.'
+    - Front page, text under the big title
+frontpage.join.button:
+    - "Join BeWelcome, it's free"
+    - Front page, main button to sign up
+frontpage.how:
+    - 'How it works'
+    - Front page, button that scrolls to the How it works part
+frontpage.fact.members:
+    - 'members'
+    - Front page, under the number of members
+frontpage.fact.forever:
+    - 'forever'
+    - Front page, under 0 € (the site costs nothing)
+frontpage.fact.since:
+    - 'Since 2007'
+    - Front page, the year BeWelcome started
+frontpage.fact.nonprofit:
+    - 'non-profit'
+    - Front page, under Since 2007
+frontpage.card.request:
+    - 'Request'
+    - Front page, drawing of a stay request on the photo
+frontpage.card.accept:
+    - 'Accept'
+    - Front page, drawing of a stay request, answer button
+frontpage.card.maybe:
+    - 'Maybe'
+    - Front page, drawing of a stay request, answer button
+frontpage.card.decline:
+    - 'Decline'
+    - Front page, drawing of a stay request, answer button
+frontpage.card.host.in:
+    - 'Host in'
+    - Front page, drawing of a host card, followed by a city (Host in Berlin)
+frontpage.card.references:
+    - '{count, plural, one {# reference} other {# references}}'
+    - Front page, drawing of a host card, how many references the host has
+frontpage.card.quote:
+    - 'The best guide to Kreuzberg!'
+    - Front page, drawing of a host card, a reference left by a guest
+frontpage.free.title:
+    - 'Free.'
+    - Front page dark band, title first word
+frontpage.free.really:
+    - 'Really.'
+    - Front page dark band, title second word in orange
+frontpage.free.sub:
+    - "Hospitality shouldn't come with a price tag."
+    - Front page dark band, text under the title
+frontpage.free.fees:
+    - 'No fees, ever'
+    - Front page dark band, first point
+frontpage.free.fees.text:
+    - 'Messaging, requests, references, everything is free for everyone. No premium plan, no verification fee.'
+    - Front page dark band, text of the first point
+frontpage.free.volunteers:
+    - 'Run by volunteers'
+    - Front page dark band, second point
+frontpage.free.volunteers.text:
+    - 'No company and no investors. Decisions are made by the community, for the community.'
+    - Front page dark band, text of the second point
+frontpage.free.opensource:
+    - 'Open source'
+    - Front page dark band, third point
+frontpage.free.opensource.text:
+    - 'Our code is public and built by members. Your data is never sold.'
+    - Front page dark band, text of the third point
+frontpage.how.eyebrow:
+    - 'How it works'
+    - Front page, small orange title above the five steps
+frontpage.how.title:
+    - 'Everything you need to travel and host, in one place'
+    - Front page, title of the five steps
+frontpage.how.hosting:
+    - 'Hosting'
+    - Front page, drawing of the map search, filter for members who host
+frontpage.how.search:
+    - 'Search the map'
+    - Front page, step 1 title
+frontpage.how.search.text:
+    - 'Type a city, pick your dates and see who hosts around you, with their languages, interests and references.'
+    - Front page, step 1 text
+frontpage.how.trip.name:
+    - "Amara's trip"
+    - Front page, drawing of a trip, its name
+frontpage.how.trip.public:
+    - 'Public'
+    - Front page, drawing of a trip that everyone can see
+frontpage.how.trip.invited:
+    - '3 hosts invited Amara'
+    - Front page, drawing of a trip, hosts who invited the traveller
+frontpage.how.trip:
+    - 'Post a public trip'
+    - Front page, step 2 title
+frontpage.how.trip.text:
+    - "Share where you're going. Hosts along the way can invite you, no need to write to everyone."
+    - Front page, step 2 text
+frontpage.how.request.message:
+    - "Hi Lena! I'm in Berlin for a conference, could you host me?"
+    - Front page, drawing of a stay request, the guest's message
+frontpage.how.request.accepted:
+    - 'Accepted'
+    - Front page, drawing of a stay request, the host's answer
+frontpage.how.request:
+    - 'Request a stay'
+    - Front page, step 3 title
+frontpage.how.request.text:
+    - 'Pick your dates in two taps and say hello. Your host answers Accept, Maybe or Decline.'
+    - Front page, step 3 text
+frontpage.how.meet.picnic:
+    - 'Picnic at Tempelhofer Feld'
+    - Front page, drawing of an activity, its name
+frontpage.how.meet.cafe:
+    - 'Language café'
+    - Front page, drawing of an activity, its name
+frontpage.how.meet.going:
+    - '{count} going'
+    - Front page, drawing of an activity, how many members go
+frontpage.how.meet:
+    - 'Meet locals'
+    - Front page, step 4 title
+frontpage.how.meet.text:
+    - 'Not hosting? Join a picnic, a language café or a hike organised by members near you.'
+    - Front page, step 4 text
+frontpage.how.trust.positive:
+    - 'Positive'
+    - Front page, drawing of a reference, its kind
+frontpage.how.trust.quote:
+    - 'Felt at home from the first minute. We cooked together every night.'
+    - Front page, drawing of a reference, its text
+frontpage.how.trust:
+    - 'Trust each other'
+    - Front page, step 5 title
+frontpage.how.trust.text:
+    - 'Every stay can leave a reference. Read them before you go, and volunteers are here if anything goes wrong.'
+    - Front page, step 5 text
+frontpage.community.eyebrow:
+    - 'A real community'
+    - Front page, small orange title of the community part
+frontpage.community.title:
+    - 'Built by its members, for its members'
+    - Front page, title of the community part
+frontpage.community.lead:
+    - 'No company, no investors. BeWelcome belongs to BeVolunteer, a non-profit. Members translate it, moderate it and write its code, in the open.'
+    - Front page, text of the community part
+frontpage.community.translated:
+    - '<strong>Translated</strong> by members in dozens of languages'
+    - Front page, community part, first point (keep the strong tags)
+frontpage.community.moderated:
+    - '<strong>Moderated</strong> by volunteers who know the community'
+    - Front page, community part, second point (keep the strong tags)
+frontpage.community.activities:
+    - '<strong>Activities</strong> to meet in real life, hosting or not'
+    - Front page, community part, third point (keep the strong tags)
+frontpage.community.volunteer:
+    - 'Become a volunteer'
+    - Front page, link to the page on how to help
+frontpage.last.title:
+    - 'Open your door to'
+    - Front page, last part title, followed by the world in orange
+frontpage.last.world:
+    - 'the world'
+    - Front page, last part title end in orange
+frontpage.last.text:
+    - "Let people stay over or just show them around. It's easy, and it's called hospitality."
+    - Front page, last part text
+frontpage.last.join:
+    - 'Join for free'
+    - Front page, last button to sign up
+frontpage.note.invitation:
+    - '{name} invited you to stay'
+    - Front page, sample notification in the hero, a host invites you
+frontpage.note.message:
+    - 'See you at the station!'
+    - Front page, sample message in the hero
+frontpage.note.message.when:
+    - 'just now'
+    - Front page, sample message in the hero, when it came
+frontpage.note.trip:
+    - '{name} is coming to {place}'
+    - Front page, sample public trip in the hero
+frontpage.note.trip.host:
+    - 'looking for a host'
+    - Front page, sample public trip in the hero, the traveller looks for a host
+frontpage.note.activity:
+    - 'Picnic at Tempelhofer Feld'
+    - Front page, sample activity name in the hero
+frontpage.note.activity.when:
+    - 'Sunday'
+    - Front page, sample activity in the hero, the day
+frontpage.note.reference:
+    - 'New positive reference'
+    - Front page, sample notification in the hero, a new reference
+frontpage.note.reference.from:
+    - 'from {name}'
+    - Front page, sample reference in the hero, who wrote it
+frontpage.note.reference.quote:
+    - 'Felt at home'
+    - Front page, sample reference in the hero, a short quote
+frontpage.note.replies:
+    - 'Usually replies within a day'
+    - Front page, sample profile fact in the hero, how fast the member replies
+frontpage.note.replies.rate:
+    - '{rate}% reply rate'
+    - Front page, sample profile fact in the hero, share of messages answered
+frontpage.note.languages:
+    - 'Speaks {languages}'
+    - Front page, sample profile fact in the hero, spoken languages
+frontpage.note.languages.mother:
+    - 'Mother tongue: {language}'
+    - Front page, sample profile fact in the hero, first language
+frontpage.note.nearby:
+    - '{count} hosts near you'
+    - Front page, sample search result in the hero
+frontpage.note.nearby.within:
+    - 'within {km} km of {place}'
+    - Front page, sample search result in the hero, the distance
+frontpage.note.group:
+    - 'Weekend hiking meetup, {count} replies'
+    - Front page, sample group thread in the hero

@@ -34,153 +34,243 @@
 </head>
 <body>
 {% block content %}
-{% include 'loginbar.html.twig' with { slim_nav: true } %}
+{#
+  The front page for visitors: the top bar (language, Log in, Join free), the hero with a photo and two cards
+  of the site, the dark band on why it's free, how it works in five cards, the community with a photo, then a
+  last call to join. Avatars are letters for now.
+#}
+<header class="fp-top">
+    <div class="fp-wrap fp-top__in">
+        <a class="fp-top__logo" href="{{ url('homepage') }}">{% include 'logo.html.twig' %}</a>
+        <nav class="fp-top__nav">
+            <div class="dropdown">
+                <button type="button" class="fp-top__link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'menu.language.toggle'|trans }}">
+                    <i class="fas fa-globe" aria-hidden="true"></i> {{ language_name(app.request.locale) }}
+                </button>
+                <div class="dropdown-menu dropdown-menu-end fp-top__langs">
+                    {% for lang in locales %}
+                        <a class="dropdown-item{{ lang == app.request.locale ? ' active' }}" href="{{ path('language', {locale: lang}) }}">{{ language_name(lang) }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <a class="fp-top__link js-home-login-open" href="{{ url('security_login') }}" role="button" aria-controls="home-login" aria-expanded="false">{{ 'login'|trans }}</a>
+            <a class="fp-top__join" href="{{ url('signup') }}"><i class="fas fa-user-plus" aria-hidden="true"></i> {{ 'frontpage.join.free'|trans }}</a>
+        </nav>
+    </div>
+</header>
 
-<main class="home-landing">
-    <section class="home-hero" aria-labelledby="home-hero-title">
-        <div class="home-hero__media" aria-hidden="true">
-            <video class="home-hero__video"
-                   autoplay
-                   muted
-                   playsinline
-                   preload="metadata"
-                   poster="{{ asset(images[1].high) }}">
-                <source src="{{ asset('video/hero.mp4') }}" type="video/mp4">
-            </video>
-        </div>
-        <div class="home-hero__body">
-            <div class="container home-hero__container px-3 px-sm-4">
-                <div class="row home-hero__row justify-content-center align-items-start">
-                    <div class="col-12 col-lg-7 col-xl-6 home-hero__copy text-center text-lg-start mb-4 mb-lg-0">
-                        <h1 id="home-hero-title" class="home-heading">
-                            <span class="home-heading__brand">
-                                <img class="home-heading__logo-full" src="{{ asset('images/logo_full_2025.svg') }}" alt="BeWelcome">
-                            </span>
-                            <span class="home-heading__subtitle">the largest free hospitality community</span>
-                        </h1>
-                        <p class="home-hero__abstract text-white">{{ 'home.abstract.bewelcome.cultural' | trans }}</p>
-                        <p class="home-hero__lead text-white">{{ 'home.bewelcome.free' | trans | escape | replace({
-                            '%link_start%': '<a class="home-hero__link" href="' ~ path('wiki_page', { pageTitle: 'Can BeWelcome be sold' }) ~ '">',
-                            '%link_end%': '</a>'
-                        }) | raw }}</p>
-                        <div class="home-hero__actions">
-                            <a href="{{ url('signup') }}" class="btn home-hero__cta">{{ 'home.button.join' | trans }}</a>
-                            <button type="button" class="btn home-hero__login-btn d-lg-none js-home-login-open" aria-controls="home-login" aria-expanded="false">
-                                <i class="fas fa-user" aria-hidden="true"></i>
-                                {{ 'login' | trans }}
-                            </button>
+{# Log in: a card under the top bar on desktop, a sheet from the bottom on phones (home.js opens it) #}
+<div class="fp-login js-home-login-aside">
+    <aside id="home-login" class="fp-login__panel" role="dialog" aria-modal="true" aria-labelledby="home-login-title">
+        <span class="fp-login__grip" aria-hidden="true"></span>
+        <button type="button" class="fp-login__close js-home-login-close" aria-label="{{ 'close'|trans }}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        </button>
+        <h2 class="fp-login__title" id="home-login-title">{{ 'login'|trans }}</h2>
+        {% include 'partials/home_login_form.html.twig' %}
+        <p class="fp-login__signup">{{ 'menu.not.a.member.yet'|trans }}
+            <a href="{{ url('signup') }}">{{ 'navbar.button.signup'|trans }}</a>
+        </p>
+    </aside>
+</div>
+<div class="fp-login__backdrop js-home-login-backdrop" aria-hidden="true"></div>
+
+<main class="fp">
+    <section class="fp-hero">
+        <div class="fp-wrap fp-hero__in">
+            <div class="fp-hero__copy">
+                <p class="fp-badge"><i class="fas fa-heart" aria-hidden="true"></i> {{ 'frontpage.badge'|trans }}</p>
+                <h1 class="fp-hero__title">
+                    <span>{{ 'frontpage.title.stay'|trans }}</span>
+                    <span>{{ 'frontpage.title.host'|trans }}</span>
+                    <span class="fp-orange">{{ 'frontpage.title.free'|trans }}</span>
+                </h1>
+                <p class="fp-hero__lead">{{ 'frontpage.lead'|trans }}</p>
+                <div class="fp-hero__actions">
+                    <a class="fp-btn fp-btn--primary" href="{{ url('signup') }}">{{ 'frontpage.join.button'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <a class="fp-btn fp-btn--light" href="#how">{{ 'frontpage.how'|trans }}</a>
+                </div>
+                <dl class="fp-hero__facts">
+                    <div><dt class="js-fp-count" data-count="{{ stats.members }}">{{ stats.members|format_number }}</dt><dd>{{ 'frontpage.fact.members'|trans }}</dd></div>
+                    <div><dt>0 €</dt><dd>{{ 'frontpage.fact.forever'|trans }}</dd></div>
+                    <div><dt>{{ 'frontpage.fact.since'|trans }}</dt><dd>{{ 'frontpage.fact.nonprofit'|trans }}</dd></div>
+                </dl>
+            </div>
+            <div class="fp-hero__media">
+                <img class="fp-hero__photo" src="{{ asset(images[1].high) }}" srcset="{{ asset(images[1].high) }} 1200w, {{ asset(images[1].low) }} 576w" sizes="(max-width: 900px) 100vw, 50vw" alt="">
+                {# Two corners of the photo show what happens on the site: each one turns through a few cards (home.js) #}
+                <div class="fp-slot fp-slot--a js-fp-slot" aria-hidden="true">
+                    <div class="fp-float fp-float--request is-active">
+                        <span class="fp-av fp-av--big"><img src="{{ asset('images/avatars/1.webp') }}" alt=""></span>
+                        <div class="fp-req__text">
+                            <p class="fp-note__title">Danny</p>
+                            <p class="fp-note__sub">{{ 'frontpage.card.request'|trans }} · Oct 24 – 31</p>
+                        </div>
+                        <span class="fp-req__btn" title="{{ 'frontpage.card.decline'|trans }}"><i class="fas fa-xmark"></i></span>
+                        <span class="fp-req__btn fp-req__btn--yes" title="{{ 'frontpage.card.accept'|trans }}"><i class="fas fa-check"></i></span>
+                    </div>
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-house-circle-check', colour: 'green', title: 'frontpage.note.invitation'|trans({name: 'Lena'}), sub: 'Berlin · Nov 2 – 5'}) }}
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-envelope', colour: 'slate', title: 'Kenji: ' ~ 'frontpage.note.message'|trans, sub: 'frontpage.note.message.when'|trans}) }}
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-route', colour: 'peach', title: 'frontpage.note.trip'|trans({name: 'Amara', place: 'Lisbon'}), sub: 'Nov 12 – 15 · ' ~ 'frontpage.note.trip.host'|trans}) }}
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-calendar-day', colour: 'orange', title: 'frontpage.note.activity'|trans, sub: 'frontpage.note.activity.when'|trans ~ ' · ' ~ 'frontpage.how.meet.going'|trans({count: 12})}) }}
+                </div>
+                <div class="fp-slot fp-slot--b js-fp-slot" aria-hidden="true">
+                    <div class="fp-float fp-float--host is-active">
+                        <span class="fp-av fp-av--green fp-av--big"><img src="{{ asset('images/avatars/2.webp') }}" alt=""><i class="fp-av__dot"></i></span>
+                        <div>
+                            <p class="fp-float__name"><strong>Lena</strong> {{ 'frontpage.card.host.in'|trans }} Berlin</p>
+                            <p class="fp-float__refs"><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span> <span class="fp-tag">− 1</span> {{ 'frontpage.card.references'|trans({count: 14}) }}</p>
+                            <p class="fp-float__quote">“{{ 'frontpage.card.quote'|trans }}”</p>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-5 col-xl-5 home-hero__aside js-home-login-aside">
-                        <aside id="home-login" class="home-login-panel" aria-label="{{ 'login' | trans }}">
-                            <button type="button" class="home-login-panel__close d-lg-none js-home-login-close" aria-label="{{ 'close' | trans }}">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                            </button>
-                            <h2 class="home-login-panel__title">{{ 'login' | trans }}</h2>
-                            {% include 'partials/home_login_form.html.twig' %}
-                            <p class="home-login-panel__signup">{{ 'menu.not.a.member.yet' | trans }}
-                                <a href="{{ url('signup') }}">{{ 'navbar.button.signup' | trans }}</a>
-                            </p>
-                        </aside>
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-thumbs-up', colour: 'green', title: 'frontpage.note.reference'|trans, sub: 'frontpage.note.reference.from'|trans({name: 'Tomás'}) ~ ' · “' ~ 'frontpage.note.reference.quote'|trans ~ '”'}) }}
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-bolt', colour: 'yellow', title: 'frontpage.note.replies'|trans, sub: 'frontpage.note.replies.rate'|trans({rate: 96})}) }}
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-language', colour: 'blue', title: 'frontpage.note.languages'|trans({languages: 'English, French, Italian'}), sub: 'frontpage.note.languages.mother'|trans({language: 'French'})}) }}
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-location-dot', colour: 'peach', title: 'frontpage.note.nearby'|trans({count: 38}), sub: 'frontpage.note.nearby.within'|trans({km: 20, place: 'Paris'})}) }}
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-person-hiking', colour: 'sage', title: 'Hiking Enthusiasts', sub: 'frontpage.note.group'|trans({count: 6})}) }}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="fp-free">
+        <div class="fp-wrap fp-free__in">
+            <div class="fp-free__head">
+                <h2 class="fp-free__title">{{ 'frontpage.free.title'|trans }} <span class="fp-orange">{{ 'frontpage.free.really'|trans }}</span></h2>
+                <p>{{ 'frontpage.free.sub'|trans }}</p>
+            </div>
+            {% for _item in [
+                {icon: 'fa-hand-holding-heart', key: 'fees'},
+                {icon: 'fa-users', key: 'volunteers'},
+                {icon: 'fa-code', key: 'opensource'},
+            ] %}
+                <div class="fp-free__item">
+                    <span class="fp-free__icon"><i class="fas {{ _item.icon }}" aria-hidden="true"></i></span>
+                    <div>
+                        <h3>{{ ('frontpage.free.' ~ _item.key)|trans }}</h3>
+                        <p>{{ ('frontpage.free.' ~ _item.key ~ '.text')|trans }}</p>
                     </div>
                 </div>
-            </div>
-            <div class="home-login-backdrop js-home-login-backdrop" aria-hidden="true"></div>
+            {% endfor %}
         </div>
     </section>
 
-    <section id="about">
-        <div class="container home-about__container">
-            <div class="row justify-content-center">
-                <div class="col-12 text-center mb-4 mb-lg-5">
-                    <h2 class="home-section-title">{{ 'tourpage' | trans }}</h2>
-                </div>
-            </div>
-            <div class="row justify-content-center home-features__row">
-                <div class="col-12 col-md-6 col-lg-3 home-feature-card">
-                    <div class="home-feature-card__icon"><i class="far fa-handshake" aria-hidden="true"></i></div>
-                    <h3 class="home-feature-card__title">{{ 'tour_link_meet' | trans }}</h3>
-                    <p class="home-feature-card__text">{{ 'tourpage_text3' | trans }}</p>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 home-feature-card">
-                    <div class="home-feature-card__icon"><i class="fa fa-map-signs" aria-hidden="true"></i></div>
-                    <h3 class="home-feature-card__title">{{ 'tour_link_travel' | trans }}</h3>
-                    <p class="home-feature-card__text">{{ 'tourpage_text4' | trans }}</p>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 home-feature-card">
-                    <div class="home-feature-card__icon"><i class="fa fa-home" aria-hidden="true"></i></div>
-                    <h3 class="home-feature-card__title">{{ 'tour_link_host' | trans }}</h3>
-                    <p class="home-feature-card__text">{{ 'tourpage_text5' | trans }}</p>
-                </div>
-                <div class="col-12 col-md-6 col-lg-3 home-feature-card">
-                    <div class="home-feature-card__icon"><i class="far fa-heart" aria-hidden="true"></i></div>
-                    <h3 class="home-feature-card__title">{{ 'tour_link_share' | trans }}</h3>
-                    <p class="home-feature-card__text">{{ 'tourpage_text2' | trans }}</p>
-                </div>
+    <section class="fp-how" id="how">
+        <div class="fp-wrap">
+            <p class="fp-eyebrow">{{ 'frontpage.how.eyebrow'|trans }}</p>
+            <h2 class="fp-h2">{{ 'frontpage.how.title'|trans }}</h2>
+
+            <div class="fp-how__grid">
+                <article class="fp-step fp-step--wide">
+                    <div class="fp-step__art fp-map" aria-hidden="true">
+                        <div class="fp-map__tiles js-fp-map"></div>
+                        <div class="fp-map__search"><i class="fas fa-search"></i> <strong>Berlin</strong> · Nov 2–5 <span class="fp-map__chip"><i class="fas fa-home"></i> {{ 'frontpage.how.hosting'|trans }}</span></div>
+                        <span class="fp-pin fp-av fp-av--green" style="left: 18%; top: 38%;"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--brown" style="left: 45%; top: 26%;"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--purple" style="left: 34%; top: 53%;"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--orange" style="left: 59%; top: 59%;"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--slate" style="left: 82%; top: 64%;"><img src="{{ asset('images/avatars/7.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--green" style="left: 72%; top: 40%;"><img src="{{ asset('images/avatars/11.webp') }}" alt=""></span>
+                        <div class="fp-map__card"><span class="fp-av fp-av--green fp-av--big"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><div><strong>Lena</strong><small>Kreuzberg · German, English</small></div><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span></div>
+                    </div>
+                    <div class="fp-step__text">
+                        <h3><span class="fp-num">1</span> {{ 'frontpage.how.search'|trans }}</h3>
+                        <p>{{ 'frontpage.how.search.text'|trans }}</p>
+                    </div>
+                </article>
+
+                <article class="fp-step">
+                    <div class="fp-step__art" aria-hidden="true">
+                        <div class="fp-mini">
+                            <div class="fp-mini__head"><span class="fp-av fp-av--purple fp-av--sm"><img src="{{ asset('images/avatars/5.webp') }}" alt=""></span><strong>{{ 'frontpage.how.trip.name'|trans }}</strong><span class="fp-tag fp-tag--orange"><i class="fas fa-globe"></i> {{ 'frontpage.how.trip.public'|trans }}</span></div>
+                            {% for _leg in [['Berlin', 'Nov 2 – 5'], ['Prague', 'Nov 5 – 8'], ['Vienna', 'Nov 8 – 11']] %}
+                                <div class="fp-mini__leg"><span class="fp-num fp-num--{{ loop.first ? 'on' : 'off' }}">{{ loop.index }}</span><strong>{{ _leg[0] }}</strong><small>{{ _leg[1] }}</small></div>
+                            {% endfor %}
+                        </div>
+                        <p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--sm"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/9.webp') }}" alt=""></span><span class="fp-av fp-av--slate fp-av--sm"><img src="{{ asset('images/avatars/11.webp') }}" alt=""></span></span> {{ 'frontpage.how.trip.invited'|trans }}</p>
+                    </div>
+                    <div class="fp-step__text">
+                        <h3><span class="fp-num">2</span> {{ 'frontpage.how.trip'|trans }}</h3>
+                        <p>{{ 'frontpage.how.trip.text'|trans }}</p>
+                    </div>
+                </article>
+
+                <article class="fp-step">
+                    <div class="fp-step__art" aria-hidden="true">
+                        <div class="fp-mini">
+                            <div class="fp-mini__head"><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span><strong>Tomás</strong><span class="fp-tag fp-tag--orange"><i class="fas fa-bed"></i> Nov 2 – 5 · 3 nights</span></div>
+                            <p class="fp-mini__msg">{{ 'frontpage.how.request.message'|trans }}</p>
+                        </div>
+                        <p class="fp-accepted"><span class="fp-pill-green"><i class="fas fa-check"></i> {{ 'frontpage.how.request.accepted'|trans }}</span><span class="fp-av fp-av--green fp-av--sm"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span></p>
+                    </div>
+                    <div class="fp-step__text">
+                        <h3><span class="fp-num">3</span> {{ 'frontpage.how.request'|trans }}</h3>
+                        <p>{{ 'frontpage.how.request.text'|trans }}</p>
+                    </div>
+                </article>
+
+                <article class="fp-step">
+                    <div class="fp-step__art" aria-hidden="true">
+                        {% for _event in [['2', 'frontpage.how.meet.picnic', 12], ['9', 'frontpage.how.meet.cafe', 7]] %}
+                            <div class="fp-mini fp-event">
+                                <span class="fp-event__date"><small>NOV</small>{{ _event[0] }}</span>
+                                <div><strong>{{ _event[1]|trans }}</strong><p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--xs"><img src="{{ asset('images/avatars/9.webp') }}" alt=""></span><span class="fp-av fp-av--brown fp-av--xs"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span><span class="fp-av fp-av--slate fp-av--xs"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span></span> {{ 'frontpage.how.meet.going'|trans({count: _event[2]}) }}</p></div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="fp-step__text">
+                        <h3><span class="fp-num">4</span> {{ 'frontpage.how.meet'|trans }}</h3>
+                        <p>{{ 'frontpage.how.meet.text'|trans }}</p>
+                    </div>
+                </article>
+
+                <article class="fp-step">
+                    <div class="fp-step__art" aria-hidden="true">
+                        <div class="fp-mini">
+                            <div class="fp-mini__head"><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span><strong>Tomás</strong><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> {{ 'frontpage.how.trust.positive'|trans }}</span></div>
+                            <p class="fp-mini__msg">“{{ 'frontpage.how.trust.quote'|trans }}”</p>
+                        </div>
+                        <p class="fp-center"><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span> <span class="fp-tag">− 1</span></p>
+                    </div>
+                    <div class="fp-step__text">
+                        <h3><span class="fp-num">5</span> {{ 'frontpage.how.trust'|trans }}</h3>
+                        <p>{{ 'frontpage.how.trust.text'|trans }}</p>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
 
-    <section class="home-strip" aria-labelledby="home-strip-hosts-title">
-        <div class="home-strip__media" aria-hidden="true">
-            <img class="home-strip__img"
-                 srcset="{{ asset(images[2].high) }} 1200w, {{ asset(images[2].low) }} 576w"
-                 src="{{ asset(images[2].high) }}"
-                 alt="">
-        </div>
-        <div class="home-strip__body container py-5 text-center">
-            <h2 id="home-strip-hosts-title" class="home-heading">{{ 'home.headline.find.hosts' | trans }}</h2>
-        </div>
-    </section>
-
-    <section id="statistics">
-        <div class="container home-stats__container">
-            <h2 class="home-section-title mb-4 mb-lg-5">{{ 'home.header.statistics' | trans }}</h2>
-            <div class="row justify-content-center home-stats__row">
-                <div class="col-6 col-md-4 col-lg home-stat-item">
-                    <i class="far fa-user home-stat-item__icon" aria-hidden="true"></i>
-                    <div class="home-stat-value">{{ stats.members }}</div>
-                    <div class="home-stat-label">{{ 'home.stats.members' | trans }}</div>
-                </div>
-                <div class="col-6 col-md-4 col-lg home-stat-item">
-                    <i class="far fa-flag home-stat-item__icon" aria-hidden="true"></i>
-                    <div class="home-stat-value">{{ stats.countries }}</div>
-                    <div class="home-stat-label">{{ 'home.stats.countries' | trans }}</div>
-                </div>
-                <div class="col-6 col-md-4 col-lg home-stat-item">
-                    <i class="fa fa-language home-stat-item__icon" aria-hidden="true"></i>
-                    <div class="home-stat-value">{{ stats.languages }}</div>
-                    <div class="home-stat-label">{{ 'home.stats.languages' | trans }}</div>
-                </div>
-                <div class="col-6 col-md-4 col-lg home-stat-item">
-                    <i class="far fa-smile home-stat-item__icon" aria-hidden="true"></i>
-                    <div class="home-stat-value">{{ stats.comments }}</div>
-                    <div class="home-stat-label">{{ 'home.stats.positive_comments' | trans }}</div>
-                </div>
-                <div class="col-6 col-md-4 col-lg home-stat-item">
-                    <i class="far fa-calendar-check home-stat-item__icon" aria-hidden="true"></i>
-                    <div class="home-stat-value">{{ stats.activities }}</div>
-                    <div class="home-stat-label">{{ 'home.stats.activities' | trans }}</div>
-                </div>
+    <section class="fp-community">
+        <div class="fp-wrap fp-community__in">
+            <img class="fp-community__photo" src="{{ asset(images[2].high) }}" srcset="{{ asset(images[2].high) }} 1200w, {{ asset(images[2].low) }} 576w" sizes="(max-width: 900px) 100vw, 50vw" alt="" loading="lazy">
+            <div>
+                <p class="fp-eyebrow">{{ 'frontpage.community.eyebrow'|trans }}</p>
+                <h2 class="fp-h2">{{ 'frontpage.community.title'|trans }}</h2>
+                <p class="fp-community__lead">{{ 'frontpage.community.lead'|trans }}</p>
+                <ul class="fp-community__list">
+                    <li><span class="fp-community__icon"><i class="fas fa-language" aria-hidden="true"></i></span><span>{{ 'frontpage.community.translated'|trans|raw }}</span></li>
+                    <li><span class="fp-community__icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span><span>{{ 'frontpage.community.moderated'|trans|raw }}</span></li>
+                    <li><span class="fp-community__icon"><i class="far fa-calendar-alt" aria-hidden="true"></i></span><span>{{ 'frontpage.community.activities'|trans|raw }}</span></li>
+                </ul>
+                <a class="fp-link" href="{{ path('getactive') }}">{{ 'frontpage.community.volunteer'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
             </div>
         </div>
     </section>
 
-    <section class="home-strip home-strip--cta home-cta" aria-labelledby="home-cta-title">
-        <div class="home-strip__media" aria-hidden="true">
-            <img class="home-strip__img"
-                 srcset="{{ asset(images[3].high) }} 1200w, {{ asset(images[3].low) }} 576w"
-                 src="{{ asset(images[3].high) }}"
-                 alt="">
-        </div>
-        <div class="home-strip__body container">
-            <h2 id="home-cta-title" class="home-cta-heading">{{ 'home.title.onestep' | trans }}</h2>
-            <p class="home-subheading">{{ 'home.title.onestep.sub' | trans }}</p>
-            <div class="text-center">
-                <a href="{{ url('signup') }}" class="btn home-cta__button">{{ 'home.button.join' | trans }}</a>
+    <section class="fp-last">
+        <div class="fp-wrap">
+            <div class="fp-last__card">
+                <div class="fp-last__text">
+                    <span class="fp-stack fp-stack--big" aria-hidden="true"><span class="fp-av fp-av--brown"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><span class="fp-av fp-av--purple"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span><span class="fp-av fp-av--slate"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span><span class="fp-av"><img src="{{ asset('images/avatars/1.webp') }}" alt=""></span><span class="fp-av"><img src="{{ asset('images/avatars/7.webp') }}" alt=""></span></span>
+                    <h2 class="fp-h2">{{ 'frontpage.last.title'|trans }} <span class="fp-orange">{{ 'frontpage.last.world'|trans }}</span></h2>
+                    <p>{{ 'frontpage.last.text'|trans }}</p>
+                    <a class="fp-btn fp-btn--primary" href="{{ url('signup') }}">{{ 'frontpage.last.join'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                </div>
+                <img class="fp-last__photo" src="{{ asset(images[3].high) }}" srcset="{{ asset(images[3].high) }} 1200w, {{ asset(images[3].low) }} 576w" sizes="(max-width: 900px) 100vw, 50vw" alt="" loading="lazy">
             </div>
         </div>
     </section>
@@ -189,7 +279,6 @@
 {% include 'footer.html.twig' %}
 
 {{ encore_entry_script_tags('home') }}
-{{ encore_entry_script_tags('jquery_ui') }}
 {{ encore_entry_script_tags('password/showhide') }}
 <script>
     window.addEventListener("load", function () {

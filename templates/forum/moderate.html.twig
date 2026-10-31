@@ -4,7 +4,7 @@
 {% block content %}
     <h1 class="h3">{{ 'forum.moderator.edit'|trans }}: <a href="{{ forum.thread_url(thread) }}#post{{ post.id }}">{{ forum.thread_title(thread, app.request.locale) }}</a></h1>
     <p class="small">
-        <a href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>,
+        {{ forum.author(post) }},
         {{ post.created|format_datetime('short', 'short') }} ·
         <a href="{{ path('forum_edit', {postId: post.id}) }}">{{ 'forum_edituser'|trans }}</a> ·
         <a href="{{ path('forum_translate', {postId: post.id}) }}">{{ 'forum_label_lang'|trans }}</a> ·

@@ -158,3 +158,6 @@ forum.thread.replies:
 forum.thread.write.placeholder:
     - 'Write a reply…'
     - Forum thread, grey text in the field at the bottom that opens the reply panel
+forum.former.member:
+    - 'Former member'
+    - Forum, instead of the name on posts of members who aren't on BeWelcome any more

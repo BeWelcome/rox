@@ -23,7 +23,8 @@ class ForumPostRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('fp')
             ->select('fp', 'a')
-            ->join('fp.author', 'a')
+            // the author of posts by members who aren't on BeWelcome any more is empty
+            ->leftJoin('fp.author', 'a')
             ->where('fp.thread = :thread')
             ->setParameter('thread', $thread)
             ->orderBy('fp.created', $ascending ? 'ASC' : 'DESC')

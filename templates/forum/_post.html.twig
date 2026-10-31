@@ -6,21 +6,32 @@
   The viewer's own posts are cream.
   replyUrl, replyTitle: Reply in the side panel, when the viewer may reply. replies: the number of replies.
   starter: the thread's oldest post (id, author id), or null.
+  Posts of members who aren't on BeWelcome any more have no author: a former member with the empty avatar.
 #}
 {% set _deleted = post.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
 {% set _starter = starter and starter.id == post.id %}
-{% set _isStarter = starter and starter.author == post.author.id %}
+{% set _isStarter = starter and post.author and starter.author == post.author.id %}
 {% set _isMe = app.user and post.author == app.user %}
 {% set _vis = post.postvisibility %}
 {% set _day = post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') %}
 <article class="p-thread-post{{ _starter ? ' p-thread-post--starter' }}{{ _isMe ? ' is-mine' }}{{ _deleted ? ' is-deleted' }}" id="post{{ post.id }}">
-    <a class="p-thread-post__photo" href="{{ path('members_profile', {username: post.author.username}) }}">
-        <img width="56" height="56" alt="" loading="lazy" src="{{ path('avatar', {username: post.author.username, size: 72}) }}">
-    </a>
+    {% if post.author %}
+        <a class="p-thread-post__photo" href="{{ path('members_profile', {username: post.author.username}) }}">
+            <img width="56" height="56" alt="" loading="lazy" src="{{ path('avatar', {username: post.author.username, size: 72}) }}">
+        </a>
+    {% else %}
+        <span class="p-thread-post__photo">
+            <img width="56" height="56" alt="" loading="lazy" src="{{ asset('images/empty_avatar_72_72.png') }}">
+        </span>
+    {% endif %}
     <div class="p-thread-post__main">
         <div class="p-thread-post__head">
             <div class="p-thread-post__who">
-                <a class="p-thread-post__name" href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>
+                {% if post.author %}
+                    <a class="p-thread-post__name" href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>
+                {% else %}
+                    <span class="p-thread-post__name">{{ 'forum.former.member'|trans }}</span>
+                {% endif %}
                 {% if _starter %}
                     <span class="p-thread-post__tag p-thread-post__tag--author"><i class="fas fa-flag" aria-hidden="true"></i> {{ 'forum.post.started'|trans }}</span>
                 {% elseif _isStarter %}

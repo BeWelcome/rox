@@ -18,7 +18,7 @@
                     <div class="border-bottom py-2">
                         <a href="{{ forum.thread_url(post.thread) }}#post{{ post.id }}" class="fw-bold">{{ forum.thread_title(post.thread, app.request.locale) }}</a>
                         {% if not post.thread.agora %}<small class="text-muted"> · {{ post.thread.group.name }}</small>{% endif %}
-                        <div class="small text-muted">{{ post.author.username }}, {{ post.created|format_datetime('short', 'short') }}</div>
+                        <div class="small text-muted">{{ forum.author(post, false) }}, {{ post.created|format_datetime('short', 'short') }}</div>
                         <div class="js-highlight">{% set text = post.messageIn(app.request.locale).message|striptags|trim %}{{ text|length > 400 ? text|slice(0, 400) ~ '…' : text }}</div>
                     </div>
                 {% endfor %}

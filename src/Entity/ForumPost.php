@@ -553,11 +553,9 @@ class ForumPost
     }
 
     /**
-     * Get author.
-     *
-     * @return Member
+     * Get author; null for posts of members who aren't on BeWelcome any more.
      */
-    public function getAuthor()
+    public function getAuthor(): ?Member
     {
         return $this->author;
     }

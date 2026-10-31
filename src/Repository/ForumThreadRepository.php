@@ -26,7 +26,8 @@ class ForumThreadRepository extends EntityRepository
         $queryBuilder = $this->createQueryBuilder('t')
             ->select('t', 'p', 'a', 'g')
             ->join('t.lastPost', 'p')
-            ->join('p.author', 'a')
+            // the author of posts by members who aren't on BeWelcome any more is empty
+            ->leftJoin('p.author', 'a')
             ->join('t.group', 'g')
             ->orderBy('p.created', 'DESC');
 

@@ -254,6 +254,8 @@ class ForumModel
         $thread = $post->getThread();
         if (
             null === $thread
+            // edits of posts by members who aren't on BeWelcome any more: no one to name as the writer
+            || null === $post->getAuthor()
             || ForumDeleteStatusType::NOT_DELETED !== $post->getDeleted()
             || ForumDeleteStatusType::NOT_DELETED !== $thread->getDeleted()
             || ForumVisibilityType::MODERATOR_ONLY === $post->getPostvisibility()

@@ -1,7 +1,8 @@
 {#
   The groups pages (my groups, all groups): the title and Create group, the search by name with the category and
   the place, the tabs My groups / All groups with their counts and the order, then the groups as cards.
-  tab: 'mine' or 'all'. Needs search, categories, myCount, allCount, myGroupIds and groups.
+  tab: 'mine', 'all' or 'archived' (groups named "[Archived] ...", kept out of All groups).
+  Needs search, categories, myCount, allCount, archivedCount, myGroupIds and groups.
 #}
 {% set _route = tab == 'mine' ? 'groups_mygroups' : 'groups_search' %}
 {% set _orders = {actdesc: 'group.list.order.actdesc', nameasc: 'group.list.order.nameasc', membersdesc: 'group.list.order.membersdesc', createddesc: 'group.list.order.createddesc'} %}
@@ -61,7 +62,8 @@
                 </div>
             </details>
         </div>
-        {% if tab == 'all' %}<input type="hidden" name="order" value="{{ search.order }}">{% endif %}
+        {% if tab != 'mine' %}<input type="hidden" name="order" value="{{ search.order }}">{% endif %}
+        {% if tab == 'archived' %}<input type="hidden" name="archived" value="1">{% endif %}
     </form>
 
     <div class="p-groups__bar">
@@ -72,6 +74,11 @@
             <a class="p-groups__tab{{ tab == 'all' ? ' is-active' }}" href="{{ path('groups_search') }}"{% if tab == 'all' %} aria-current="page"{% endif %}>
                 {{ 'group.list.all'|trans }} <span class="p-groups__count">{{ allCount }}</span>
             </a>
+            {% if archivedCount|default(0) > 0 %}
+                <a class="p-groups__tab p-groups__tab--archived{{ tab == 'archived' ? ' is-active' }}" href="{{ path('groups_search', {archived: 1}) }}"{% if tab == 'archived' %} aria-current="page"{% endif %}>
+                    <i class="fas fa-box-archive" aria-hidden="true"></i> {{ 'group.list.archived'|trans }} <span class="p-groups__count">{{ archivedCount }}</span>
+                </a>
+            {% endif %}
         </nav>
         <details class="p-groups__order">
             <summary>

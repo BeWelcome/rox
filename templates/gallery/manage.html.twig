@@ -10,7 +10,7 @@
   assets/js/gallery/manage.js does the rest without reloading; the texts it needs are in data-* of .p-gm.
 #}
 
-{% block title %}{{ 'gallery.mine.title'|trans }}{% endblock %}
+{% block title %}{{ 'profile.menu.images'|trans }}{% endblock %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('gallery/manage') }}
@@ -56,7 +56,7 @@
                 <i class="fas fa-chevron-left" aria-hidden="true"></i>
             </a>
             <div class="p-gm__heading">
-                <h1 class="p-gm__title">{{ 'gallery.mine.title'|trans }}</h1>
+                <h1 class="p-gm__title">{{ 'profile.menu.images'|trans }}</h1>
                 <p class="p-gm__sub js-gm-count">{{ 'gallery.mine.count'|trans({count: total}) }}</p>
             </div>
             <div class="p-gm__actions">

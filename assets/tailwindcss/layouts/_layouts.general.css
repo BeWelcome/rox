@@ -3553,6 +3553,7 @@ main:has(.p-hero) {
 }
 .p-friends-page__item:hover .p-friends-page__name { color: #c2410c; }
 .p-friends-page__pager { display: flex; justify-content: center; margin-top: 1.25rem; }
+.p-visitors-page__when { margin-top: -0.35rem; color: #94a3b8; font-size: 0.75rem; text-align: center; }
 
 @media (max-width: 576px) {
   .p-friends-page__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }

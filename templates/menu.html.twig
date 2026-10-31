@@ -1,5 +1,5 @@
 {% set loggedInMember = app.user %}
-{% include 'layout/main_navigation.html.twig' %}
+{% include loggedInMember ? 'layout/main_navigation.html.twig' : 'layout/visitor_navigation.html.twig' %}
 {% if loggedInMember %}
 {% if is_granted('ROLE_ADMIN_CHECKER') or is_granted('ROLE_ADMIN_COMMENTS') or is_granted('ROLE_ADMIN_SAFETYTEAM')
     or is_granted('ROLE_ADMIN_GROUP')%}

@@ -32,7 +32,7 @@
   {% include '_analytics.html.twig' %}
 </head>
 <body class="Site">
-{% include 'loginbar.html.twig' %}
+{% include 'layout/visitor_navigation.html.twig' %}
 <main class="site-content">
     <div class="container" style="position: relative; z-index: 2000;">
         {{ form_start(form, {'attr': {'class': 'u:mt-8 search_form', 'onkeypress': 'return event.keyCode != 13;'}}) }}

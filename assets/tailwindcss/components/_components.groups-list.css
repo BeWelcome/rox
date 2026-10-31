@@ -88,6 +88,14 @@ main:has(.p-groups) { background: #f4f5f7; }
 
 /* The groups: white cards, two by two */
 .p-groups__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.9rem; }
+/* Wide screens: three groups a row, the picture a bit smaller */
+@media (min-width: 1200px) {
+  .p-groups__list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .p-groups__list .p-group-card, .p-groups__list .p-group-card:hover { gap: 0.85rem; padding: 0.9rem 1rem 0.9rem 0.9rem; }
+  .p-groups__list .p-group-card__picture { width: 3.6rem; height: 3.6rem; }
+  .p-groups__list .p-group-card__name { font-size: 1.0625rem; }
+  .p-groups__list .p-group-card__meta { font-size: 0.875rem; }
+}
 .p-group-card,
 .p-group-card:hover { display: flex; align-items: center; gap: 1rem; min-width: 0; padding: 1rem 1.15rem 1rem 1rem; border-radius: 1.25rem; background: #fff; color: #0f172a; text-decoration: none; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04); transition: box-shadow 0.15s ease; }
 .p-group-card:hover { box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 8px 22px rgba(15, 23, 42, 0.08); }
@@ -135,8 +143,12 @@ main:has(.p-groups) { background: #f4f5f7; }
   .p-groups__place-panel { right: 0; left: 0; width: auto; }
   .p-groups__field input { padding-right: 6rem; }
   .p-groups__go { padding: 0 1.1rem; font-size: 0.875rem; }
-  .p-groups__tabs { gap: 1.25rem; }
-  .p-groups__tab { font-size: 1rem; }
+  /* The order above on the right, the tabs under it on the whole width (scrolling if they still don't fit) */
+  .p-groups__bar { flex-wrap: wrap; gap: 0.25rem 1rem; }
+  .p-groups__order { order: -1; margin: 0 0 0 auto; }
+  .p-groups__tabs { width: 100%; gap: 1.1rem; margin-bottom: -1px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .p-groups__tabs::-webkit-scrollbar { display: none; }
+  .p-groups__tab, .p-groups__tab:hover { gap: 0.4rem; margin-bottom: 0; font-size: 0.9375rem; }
   .p-groups__order summary { font-size: 0.9375rem; }
   /* The groups: a white list from edge to edge */
   .p-groups__list { grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0 calc(-1 * var(--bs-gutter-x, 1.5rem) * 0.5); background: #fff; }
@@ -148,4 +160,49 @@ main:has(.p-groups) { background: #f4f5f7; }
   .p-group-card__meta { gap: 0.1rem 0.4rem; font-size: 0.8125rem; }
   .p-group-card__meta > span { white-space: nowrap; }
   .p-group-card__joined { padding: 0.3rem 0.6rem; font-size: 0.8125rem; }
+}
+
+/* The groups a member shows on their profile (templates/group/member_groups.html.twig), under the profile head:
+   one white card, the groups inside it two by two, split by thin lines; one column on phones. */
+.p-member-groups { padding-top: 1.5rem; }
+.p-member-groups__head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 1rem 1.25rem; border-bottom: 1px solid #eef2f6; }
+.p-member-groups .p-member-groups__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+.p-member-groups__manage,
+.p-member-groups__manage:hover { display: inline-flex; align-items: center; gap: 0.45rem; height: 2.3rem; padding: 0 1rem; border-radius: 999px; background: #fff4ea; color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.p-member-groups__manage:hover { background: #ffead6; }
+.p-member-groups__manage i, .p-member-groups__manage svg { font-size: 0.8rem; }
+.p-member-groups__body { padding: 0.5rem; }
+.p-member-groups__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem; }
+.p-member-groups .p-group-card { box-shadow: none; }
+.p-member-groups .p-group-card:hover { background: #f8fafc; box-shadow: none; }
+.p-member-groups__empty { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 2.5rem 1rem; color: #64748b; text-align: center; }
+.p-member-groups__empty p { max-width: 24rem; margin: 0; }
+.p-member-groups__empty-icon { display: inline-flex; align-items: center; justify-content: center; width: 3.5rem; height: 3.5rem; border-radius: 50%; background: #f1f5f9; color: #94a3b8; font-size: 1.25rem; }
+
+@media (max-width: 767.98px) {
+  body:has(.p-pro--compact) .p-member-groups { margin: 0 calc(-0.5 * var(--bs-gutter-x, 1.5rem)); padding-top: 0; }
+  body:has(.p-pro--compact) .p-member-groups .card { margin: 0; border-radius: 0; box-shadow: none; }
+  .p-member-groups__head { padding: 0.75rem 1rem; }
+  .p-member-groups__body { padding: 0; }
+  .p-member-groups__list { grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; }
+  .p-member-groups .p-group-card { padding: 0.85rem 1rem; border-radius: 0; }
+}
+
+/* Archived groups (named "[Archived] ..."): their own tab after All groups, a grey tag on the card */
+.p-groups__tab--archived i, .p-groups__tab--archived svg { color: #94a3b8; font-size: 0.85rem; }
+.p-group-card__archived { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.1rem 0.5rem; border-radius: 999px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 700; }
+.p-group-card__meta .p-group-card__archived i, .p-group-card__meta .p-group-card__archived svg { margin: 0; color: #64748b; font-size: 0.65rem; }
+
+/* Members: the number in a pill on the right, like the replies of a thread */
+.p-group-card__members { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; gap: 0.4rem; min-width: 3.4rem; padding: 0.4rem 0.75rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.9375rem; font-weight: 700; box-shadow: inset 0 0 0 1px #fed7aa; }
+.p-group-card__members i, .p-group-card__members svg { font-size: 0.8rem; }
+@media (max-width: 767.98px) {
+  .p-group-card__members { min-width: 2.9rem; padding: 0.3rem 0.6rem; font-size: 0.8125rem; }
+}
+/* Joined: small, next to the name */
+.p-group-card__title { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+.p-group-card__title .p-group-card__joined { gap: 0.2rem; padding: 0 0.35rem; font-size: 0.5625rem; line-height: 1.5; letter-spacing: 0.02em; text-transform: uppercase; }
+.p-group-card__title .p-group-card__joined i, .p-group-card__title .p-group-card__joined svg { font-size: 0.45rem; }
+@media (max-width: 767.98px) {
+  .p-group-card__title .p-group-card__joined { padding: 0 0.3rem; font-size: 0.5625rem; }
 }

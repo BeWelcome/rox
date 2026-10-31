@@ -163,18 +163,18 @@
             <p class="fp-eyebrow">{{ 'frontpage.how.eyebrow'|trans }}</p>
             <h2 class="fp-h2">{{ 'frontpage.how.title'|trans }}</h2>
 
-            <div class="fp-how__grid">
+            <div class="fp-how__grid js-fp-how">
                 <article class="fp-step fp-step--wide">
                     <div class="fp-step__art fp-map" aria-hidden="true">
                         <div class="fp-map__tiles js-fp-map"></div>
-                        <div class="fp-map__search"><i class="fas fa-search"></i> <strong>Berlin</strong> · Nov 2–5 <span class="fp-map__chip"><i class="fas fa-home"></i> {{ 'frontpage.how.hosting'|trans }}</span></div>
-                        <span class="fp-pin fp-av fp-av--green" style="left: 18%; top: 38%;"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span>
-                        <span class="fp-pin fp-av fp-av--brown" style="left: 45%; top: 26%;"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span>
-                        <span class="fp-pin fp-av fp-av--purple" style="left: 34%; top: 53%;"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span>
-                        <span class="fp-pin fp-av fp-av--orange" style="left: 59%; top: 59%;"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span>
-                        <span class="fp-pin fp-av fp-av--slate" style="left: 82%; top: 64%;"><img src="{{ asset('images/avatars/7.webp') }}" alt=""></span>
-                        <span class="fp-pin fp-av fp-av--green" style="left: 72%; top: 40%;"><img src="{{ asset('images/avatars/11.webp') }}" alt=""></span>
-                        <div class="fp-map__card"><span class="fp-av fp-av--green fp-av--big"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><div><strong>Lena</strong><small>Kreuzberg · German, English</small></div><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span></div>
+                        <div class="fp-map__search" data-at="0"><i class="fas fa-search"></i> <strong>Berlin</strong> · Nov 2–5 <span class="fp-map__chip"><i class="fas fa-home"></i> {{ 'frontpage.how.hosting'|trans }}</span></div>
+                        <span data-at="430" class="fp-pin fp-av fp-av--green" style="left: 18%; top: 38%;"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span>
+                        <span data-at="610" class="fp-pin fp-av fp-av--brown" style="left: 45%; top: 26%;"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span>
+                        <span data-at="790" class="fp-pin fp-av fp-av--purple" style="left: 34%; top: 53%;"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span>
+                        <span data-at="970" class="fp-pin fp-av fp-av--orange" style="left: 59%; top: 59%;"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span>
+                        <span data-at="1150" class="fp-pin fp-av fp-av--slate" style="left: 82%; top: 64%;"><img src="{{ asset('images/avatars/7.webp') }}" alt=""></span>
+                        <span data-at="1330" class="fp-pin fp-av fp-av--green" style="left: 72%; top: 40%;"><img src="{{ asset('images/avatars/11.webp') }}" alt=""></span>
+                        <div class="fp-map__card" data-at="1700"><span class="fp-av fp-av--green fp-av--big"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><div><strong>Lena</strong><small>Kreuzberg · German, English</small></div><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span></div>
                     </div>
                     <div class="fp-step__text">
                         <h3><span class="fp-num">1</span> {{ 'frontpage.how.search'|trans }}</h3>
@@ -187,10 +187,10 @@
                         <div class="fp-mini">
                             <div class="fp-mini__head"><span class="fp-av fp-av--purple fp-av--sm"><img src="{{ asset('images/avatars/5.webp') }}" alt=""></span><strong>{{ 'frontpage.how.trip.name'|trans }}</strong><span class="fp-tag fp-tag--orange"><i class="fas fa-globe"></i> {{ 'frontpage.how.trip.public'|trans }}</span></div>
                             {% for _leg in [['Berlin', 'Nov 2 – 5'], ['Prague', 'Nov 5 – 8'], ['Vienna', 'Nov 8 – 11']] %}
-                                <div class="fp-mini__leg"><span class="fp-num fp-num--{{ loop.first ? 'on' : 'off' }}">{{ loop.index }}</span><strong>{{ _leg[0] }}</strong><small>{{ _leg[1] }}</small></div>
+                                <div class="fp-mini__leg" data-at="{{ 300 + loop.index0 * 350 }}"><span class="fp-num fp-num--{{ loop.first ? 'on' : 'off' }}">{{ loop.index }}</span><strong>{{ _leg[0] }}</strong><small>{{ _leg[1] }}</small></div>
                             {% endfor %}
                         </div>
-                        <p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--sm"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/9.webp') }}" alt=""></span><span class="fp-av fp-av--slate fp-av--sm"><img src="{{ asset('images/avatars/11.webp') }}" alt=""></span></span> {{ 'frontpage.how.trip.invited'|trans }}</p>
+                        <p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--sm" data-at="1500"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><span class="fp-av fp-av--brown fp-av--sm" data-at="1700"><img src="{{ asset('images/avatars/9.webp') }}" alt=""></span><span class="fp-av fp-av--slate fp-av--sm" data-at="1900"><img src="{{ asset('images/avatars/11.webp') }}" alt=""></span></span> <span data-at="2100">{{ 'frontpage.how.trip.invited'|trans }}</span></p>
                     </div>
                     <div class="fp-step__text">
                         <h3><span class="fp-num">2</span> {{ 'frontpage.how.trip'|trans }}</h3>
@@ -200,11 +200,19 @@
 
                 <article class="fp-step">
                     <div class="fp-step__art" aria-hidden="true">
-                        <div class="fp-mini">
-                            <div class="fp-mini__head"><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span><strong>Tomás</strong><span class="fp-tag fp-tag--orange"><i class="fas fa-bed"></i> Nov 2 – 5 · 3 nights</span></div>
-                            <p class="fp-mini__msg">{{ 'frontpage.how.request.message'|trans }}</p>
+                        {# A conversation: the request, Tomás writes, Lena answers, accepted; new lines push the old ones up #}
+                        <div class="fp-chat">
+                            <div class="fp-mini fp-chat__card" data-at="0"><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span><strong>Tomás</strong><span class="fp-tag fp-tag--orange"><i class="fas fa-bed"></i> Nov 2 – 5 · 3 nights</span></div>
+                            <div class="fp-chat__row" data-at="500">
+                                <span class="fp-av fp-av--brown fp-av--xs"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span>
+                                <p class="fp-bubble"><span class="fp-typing" data-off="1500"><i></i><i></i><i></i></span><span class="fp-bubble__text" data-at="1500">{{ 'frontpage.how.request.message'|trans }}</span></p>
+                            </div>
+                            <div class="fp-chat__row fp-chat__row--me" data-at="2200">
+                                <p class="fp-bubble fp-bubble--me"><span class="fp-typing" data-off="3100"><i></i><i></i><i></i></span><span class="fp-bubble__text" data-at="3100">{{ 'frontpage.how.request.reply'|trans }}</span></p>
+                                <span class="fp-av fp-av--green fp-av--xs"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span>
+                            </div>
+                            <p class="fp-accepted fp-chat__row" data-at="3700"><span class="fp-pill-green"><i class="fas fa-check"></i> {{ 'frontpage.how.request.accepted'|trans }}</span></p>
                         </div>
-                        <p class="fp-accepted"><span class="fp-pill-green"><i class="fas fa-check"></i> {{ 'frontpage.how.request.accepted'|trans }}</span><span class="fp-av fp-av--green fp-av--sm"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span></p>
                     </div>
                     <div class="fp-step__text">
                         <h3><span class="fp-num">3</span> {{ 'frontpage.how.request'|trans }}</h3>
@@ -215,9 +223,9 @@
                 <article class="fp-step">
                     <div class="fp-step__art" aria-hidden="true">
                         {% for _event in [['2', 'frontpage.how.meet.picnic', 12], ['9', 'frontpage.how.meet.cafe', 7]] %}
-                            <div class="fp-mini fp-event">
+                            <div class="fp-mini fp-event" data-at="{{ loop.index0 * 450 }}">
                                 <span class="fp-event__date"><small>NOV</small>{{ _event[0] }}</span>
-                                <div><strong>{{ _event[1]|trans }}</strong><p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--xs"><img src="{{ asset('images/avatars/9.webp') }}" alt=""></span><span class="fp-av fp-av--brown fp-av--xs"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span><span class="fp-av fp-av--slate fp-av--xs"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span></span> {{ 'frontpage.how.meet.going'|trans({count: _event[2]}) }}</p></div>
+                                <div><strong>{{ _event[1]|trans }}</strong><p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--xs" data-at="{{ 700 + loop.index0 * 450 }}"><img src="{{ asset('images/avatars/9.webp') }}" alt=""></span><span class="fp-av fp-av--brown fp-av--xs" data-at="{{ 850 + loop.index0 * 450 }}"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span><span class="fp-av fp-av--slate fp-av--xs" data-at="{{ 1000 + loop.index0 * 450 }}"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span></span> {{ 'frontpage.how.meet.going'|trans({count: _event[2]}) }}</p></div>
                             </div>
                         {% endfor %}
                     </div>
@@ -229,11 +237,11 @@
 
                 <article class="fp-step">
                     <div class="fp-step__art" aria-hidden="true">
-                        <div class="fp-mini">
-                            <div class="fp-mini__head"><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span><strong>Tomás</strong><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> {{ 'frontpage.how.trust.positive'|trans }}</span></div>
-                            <p class="fp-mini__msg">“{{ 'frontpage.how.trust.quote'|trans }}”</p>
+                        <div class="fp-mini" data-at="0">
+                            <div class="fp-mini__head"><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span><strong>Tomás</strong><span class="fp-tag fp-tag--green" data-at="1300"><i class="fas fa-thumbs-up"></i> {{ 'frontpage.how.trust.positive'|trans }}</span></div>
+                            <p class="fp-mini__msg" data-at="400">“{{ 'frontpage.how.trust.quote'|trans }}”</p>
                         </div>
-                        <p class="fp-center"><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span> <span class="fp-tag">− 1</span></p>
+                        <p class="fp-center" data-at="1000"><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> <span class="js-fp-tick" data-count="13" data-start="1000">13</span></span> <span class="fp-tag">− 1</span></p>
                     </div>
                     <div class="fp-step__text">
                         <h3><span class="fp-num">5</span> {{ 'frontpage.how.trust'|trans }}</h3>

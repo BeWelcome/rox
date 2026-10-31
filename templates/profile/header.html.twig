@@ -29,7 +29,7 @@
 {% set activeItem = submenu.active is defined and submenu.active != '' ? submenu.active : 'profile' %}
 {# Phones, on the other tabs (comments, gallery...): the head shrinks to one orange bar in place of
    the site header (back to the profile, small photo, name, the "more" menu), the tab content comes first #}
-{% set compactHead = activeItem in ['comments', 'gallery', 'friends', 'forum_posts', 'visitors'] and items.profile is defined %}
+{% set compactHead = activeItem in ['comments', 'gallery', 'friends', 'forum_posts', 'visitors', 'groups'] and items.profile is defined %}
 
 <div class="p-pro{% if compactHead %} p-pro--compact{% endif %}">
 

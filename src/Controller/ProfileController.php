@@ -83,6 +83,10 @@ class ProfileController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
+        /** @var ProfileVisitRepository $visitRepository */
+        $visitRepository = $this->entityManager->getRepository(ProfileVisit::class);
+        $visitRepository->recordVisit($member, $loggedInMember);
+
         return $this->renderProfile($member, $loggedInMember, $language, false);
     }
 
@@ -121,7 +125,8 @@ class ProfileController extends AbstractController
             : $this->redirectBack($request, 'members_profile', ['username' => $member->getUsername()]);
     }
 
-    #[Route(path: '/members/{username:member}/visitors/{page}', name: 'profile_visitors')]
+    // before members_profile, which would take 'visitors' for a language
+    #[Route(path: '/members/{username:member}/visitors/{page}', name: 'profile_visitors', priority: 11)]
     public function showMyVisitors(
         Member $member,
         EntityManagerInterface $entityManager,

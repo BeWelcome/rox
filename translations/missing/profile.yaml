@@ -826,3 +826,15 @@ member.hosting.yes:
 member.hosting.no:
     - 'Cannot host'
     - Short hosting status of a member with a house icon (profile head, search preview, places), the member does not host now
+profile.groups.choose:
+    - 'Choose groups shown'
+    - Button on the own groups page of a profile leading to My groups to choose the groups the profile shows
+profile.groups.empty:
+    - '{username} does not show any groups yet.'
+    - Text on the groups page of a profile when the member shows no group
+profile.groups.empty.own:
+    - 'Your profile does not show any groups yet.'
+    - Text on the own groups page of a profile when no group is shown
+profile.groups.find:
+    - 'Find groups'
+    - Button on the own empty groups page of a profile leading to the groups search

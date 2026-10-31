@@ -121,6 +121,9 @@ frontpage.how.request.message:
 frontpage.how.request.accepted:
     - 'Accepted'
     - Front page, drawing of a stay request, the host's answer
+frontpage.how.request.reply:
+    - 'Sure, welcome to Kreuzberg! 🙂'
+    - Front page, drawing of a stay request, the host's reply in the small conversation before Accepted
 frontpage.how.request:
     - 'Request a stay'
     - Front page, step 3 title

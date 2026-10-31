@@ -9,6 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 readonly class GroupSearch
 {
+    /** Archived groups are renamed with this prefix for now. */
+    public const string ARCHIVED_PREFIX = '[Archived]';
+
     public const array ORDERS = [
         'nameasc', 'namedesc', 'membersasc', 'membersdesc', 'actasc', 'actdesc', 'createdasc', 'createddesc',
     ];
@@ -27,6 +30,8 @@ readonly class GroupSearch
         public string $order = 'nameasc',
         #[Assert\Positive]
         public int $page = 1,
+        /** Only the archived groups (their name starts with "[Archived]"); otherwise they are left out. */
+        public bool $archived = false,
     ) {
     }
 
@@ -52,6 +57,7 @@ readonly class GroupSearch
             'locationName' => $this->locationName,
             'order' => $order ?? $this->order,
             'page' => $page ?? $this->page,
+            'archived' => $this->archived ? 1 : null,
         ], static fn ($value) => null !== $value && '' !== $value);
     }
 }

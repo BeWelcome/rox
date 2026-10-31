@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{#
+  The About pages (and the FAQ): the page in a white card, its menu (submenu.items, groups split by
+  separators) in a card on the left. On phones the menu is a row of pills above the page.
+#}
+{% block main %}
+  <main role="main" class="p-about">
+    <div class="container-lg p-about__wrap">
+      {% if submenu is defined %}
+        <nav class="p-about__nav" aria-label="{{ 'aboutuspage'|trans }}">
+          <div class="p-about__group">
+            {% for name, item in submenu.items %}
+              {% if 'separator' in name %}
+                </div>
+                <div class="p-about__group">
+                {% if item.key is defined %}<p class="p-about__heading">{{ item.key|lower|trans }}</p>{% endif %}
+              {% else %}
+                <a class="p-about__link{{ submenu.active == name ? ' is-active' }}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>
+                  {{- item.key|lower|trans -}}
+                </a>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </nav>
+      {% endif %}
+      <article class="p-about__body">
+        {% block content %}{% endblock %}
+      </article>
+    </div>
+  </main>
+{% endblock main %}

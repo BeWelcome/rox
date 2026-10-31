@@ -49,7 +49,9 @@ class ForumPagesController extends AbstractController
     public function overview(Request $request): Response
     {
         $member = $this->getMember();
-        $onlyMyGroups = 'Yes' === $this->getPreference($member, Preference::SHOW_MY_GROUP_POSTS_ONLY);
+        // ?groups=mine (the home page's My groups) shows only the member's groups, whatever their preference
+        $mineAsked = 'mine' === $request->query->get('groups');
+        $onlyMyGroups = $mineAsked || 'Yes' === $this->getPreference($member, Preference::SHOW_MY_GROUP_POSTS_ONLY);
         $threads = $this->paginate(
             $this->getThreadRepository()->createLatestQueryBuilder($member, $this->isModerator(), null, $onlyMyGroups),
             $request->query->getInt('page', 1),
@@ -59,6 +61,7 @@ class ForumPagesController extends AbstractController
         return $this->render('forum/overview.html.twig', [
             'threads' => $threads,
             'onlyMyGroups' => $onlyMyGroups,
+            'mineAsked' => $mineAsked,
             'ascending' => $this->readsAscending($member),
         ]);
     }
@@ -176,6 +179,20 @@ class ForumPagesController extends AbstractController
             self::POSTS_PER_PAGE,
         );
         $this->getThreadRepository()->countView($thread);
+        // The first post (the oldest one shown: the thread's own first post id is not always right) and its author
+        $starter = $postRepository->createThreadPostsQueryBuilder($thread, $member, $this->isModerator(), true)
+            ->select('fp.id AS id, IDENTITY(fp.author) AS author')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+        // Who wrote in the thread, in the order they first did
+        $people = $postRepository->createThreadPostsQueryBuilder($thread, $member, $this->isModerator(), true)
+            ->select('a.username AS username, MIN(fp.created) AS HIDDEN firstPost')
+            ->resetDQLPart('orderBy')
+            ->groupBy('a.id, a.username')
+            ->orderBy('firstPost', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
 
         $group = $thread->getGroup();
 
@@ -187,6 +204,8 @@ class ForumPagesController extends AbstractController
             'reverse' => $reverse,
             'locale' => $request->getLocale(),
             'subscribed' => $this->forumModel->isSubscribed($thread, $member),
+            'people' => array_column($people, 'username'),
+            'starter' => $starter,
             // the moderators see the reports about each post
             'reports' => $this->isModerator() ? $this->moderationModel->findReportsOfPosts(
                 array_map(static fn (ForumPost $post): int => (int) $post->getId(), iterator_to_array($posts->getCurrentPageResults(), false)),

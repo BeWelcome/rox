@@ -1,31 +1,48 @@
 {#
-  One group in a list (my groups, all groups): picture, name, members and when its last post was; Joined when
-  the member is in it.
+  One group in a list (my groups, all groups): picture, name and when its last post was, the number of members
+  in a pill on the right; a small Joined next to the name when the member is in it.
   row is a result row of GroupRepository: the group (key 0), memberCount, newMemberCount and lastActivity.
   myGroupIds: the groups the member is in.
 #}
 {% set group = row[0] %}
 {% set _last = row.lastActivity ? row.lastActivity|date('Y-m-d') : null %}
+{# Archived groups are named "[Archived] ..." for now: the name without it, and a grey Archived tag #}
+{% set _archived = group.name|lower starts with '[archived]' %}
 <a class="p-group-card" href="{{ path('group_start', {group_id: group.id}) }}">
     <img class="p-group-card__picture" width="68" height="68" alt="" loading="lazy"
          src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
     <span class="p-group-card__main">
-        <span class="p-group-card__name">{{ group.name }}</span>
+        <span class="p-group-card__title">
+            <span class="p-group-card__name">{{ _archived ? group.name|slice(10)|trim : group.name }}</span>
+            {% if group.id in myGroupIds|default([]) %}
+                <span class="p-group-card__joined"><i class="fa fa-check" aria-hidden="true"></i> {{ 'group.list.joined'|trans }}</span>
+            {% endif %}
+        </span>
         <span class="p-group-card__meta">
-            <span data-member-count="{{ row.memberCount }}">{{ 'group.list.members'|trans({count: row.memberCount}) }}</span>
-            <span class="p-group-card__dot" aria-hidden="true">•</span>
-            {% if _last == 'now'|date('Y-m-d') %}
-                <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.today'|trans }}</span>
-            {% elseif _last == 'yesterday'|date('Y-m-d') %}
-                <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.yesterday'|trans }}</span>
-            {% elseif _last %}
-                <span><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.last.post'|trans({date: row.lastActivity|format_date(pattern: _last|slice(0, 4) == 'now'|date('Y') ? 'MMM d' : 'MMM d, y')}) }}</span>
+            {% if _archived %}
+                <span class="p-group-card__archived"><i class="fas fa-box-archive" aria-hidden="true"></i> {{ 'group.list.archived.tag'|trans }}</span>
+            {% endif %}
+            {% if row.lastActivity %}
+                {% set _days = date(_last).diff(date('today')).days %}
+                {% if _days == 0 %}
+                    <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.today'|trans }}</span>
+                {% elseif _days == 1 %}
+                    <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.yesterday'|trans }}</span>
+                {% else %}
+                    {% set _ago = _days < 7 ? 'group.list.active.days'|trans({count: _days})
+                        : (_days < 31 ? 'group.list.active.weeks'|trans({count: _days // 7})
+                        : (_days < 365 ? 'group.list.active.months'|trans({count: _days // 30})
+                        : 'group.list.active.years'|trans({count: _days // 365}))) %}
+                    <span{% if _days < 7 %} class="is-recent"{% endif %} title="{{ row.lastActivity|format_date('medium') }}"><i class="far fa-comment" aria-hidden="true"></i> {{ _ago }}</span>
+                {% endif %}
             {% else %}
                 <span><i class="far fa-comment" aria-hidden="true"></i> {{ 'groupsnopostyet'|trans }}</span>
             {% endif %}
         </span>
     </span>
-    {% if group.id in myGroupIds|default([]) %}
-        <span class="p-group-card__joined"><i class="fa fa-check" aria-hidden="true"></i> {{ 'group.list.joined'|trans }}</span>
-    {% endif %}
+    {# The members as a number in a pill on the right, like the replies of a thread #}
+    <span class="p-group-card__members" data-member-count="{{ row.memberCount }}" title="{{ 'group.list.members'|trans({count: row.memberCount}) }}">
+        <i class="fas fa-user-group" aria-hidden="true"></i> {{ row.memberCount }}
+        <span class="visually-hidden">{{ 'group.list.members'|trans({count: row.memberCount}) }}</span>
+    </span>
 </a>

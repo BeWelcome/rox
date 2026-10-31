@@ -57,7 +57,7 @@
                     {% if not loop.first %}<hr class="u:my-8" style="border-top:1px solid gray;">{% endif %}
                     <small class="text-muted">{{ translation.language.name }} ({{ translation.language.shortCode }})</small><br>
                 {% endif %}
-                {{ translation.message | purify | forum_lightbox | nl2br }}
+                {{ translation.message | purify | forum_text | forum_lightbox }}
             </div>
         {% endfor %}
     </div>

@@ -1,0 +1,20 @@
+{# The top bar for visitors (not logged in), as on the front page: the logo, the language, Log in and Join free. #}
+<header class="fp-top bw-visitor-top">
+    <div class="container-lg fp-top__in">
+        <a class="fp-top__logo" href="{{ url('homepage') }}">{% include 'logo.html.twig' %}</a>
+        <nav class="fp-top__nav">
+            <div class="dropdown">
+                <button type="button" class="fp-top__link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'menu.language.toggle'|trans }}">
+                    <i class="fas fa-globe" aria-hidden="true"></i> {{ language_name(app.request.locale) }}
+                </button>
+                <div class="dropdown-menu dropdown-menu-end fp-top__langs">
+                    {% for lang in locales %}
+                        <a class="dropdown-item{{ lang == app.request.locale ? ' active' }}" href="{{ path('language', {locale: lang}) }}">{{ language_name(lang) }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <a class="fp-top__link" href="{{ url('security_login') }}">{{ 'login'|trans }}</a>
+            <a class="fp-top__join" href="{{ url('signup') }}"><i class="fas fa-user-plus" aria-hidden="true"></i> {{ 'frontpage.join.free'|trans }}</a>
+        </nav>
+    </div>
+</header>

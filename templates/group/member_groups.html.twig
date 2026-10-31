@@ -1,16 +1,41 @@
-{% extends 'base.html.twig' %}
+{% extends 'profile/profile.html.twig' %}
 
-{% block content %}
-    <h1 class="h3">{{ 'profile.groups'|trans }}: <a href="{{ path('members_profile', {username: member.username}) }}">{{ member.username }}</a></h1>
-    <ul class="list-unstyled" id="member-groups">
-        {% for group in groups %}
-            <li class="mb-2">
-                <a href="{{ path('group_start', {group_id: group.id}) }}">
-                    <img width="38" height="38" alt="" loading="lazy"
-                         src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
-                    {{ group.name }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-{% endblock %}
+{#
+  The groups a member shows on their profile (GroupPagesController::memberGroups), under the profile head:
+  one card with the title and the number, then the groups as cards (group/_card.html.twig), two by two.
+  On their own page a button leads to My groups, where they choose the groups shown.
+#}
+
+{% block page_content %}
+    {% set own = app.user and app.user.username == member.username %}
+    <div class="p-member-groups p-profile-main">
+        <div class="card">
+            <div class="p-member-groups__head">
+                <h2 class="p-member-groups__title">
+                    {{ 'profile.groups'|trans }}
+                    {% if groups|length %}<span class="p-pro-card__count">{{ groups|length }}</span>{% endif %}
+                </h2>
+                {% if own %}
+                    <a class="p-member-groups__manage" href="{{ path('groups_mygroups') }}"><i class="fas fa-eye" aria-hidden="true"></i> {{ 'profile.groups.choose'|trans }}</a>
+                {% endif %}
+            </div>
+            <div class="p-member-groups__body">
+                {% if groups|length %}
+                    <div class="p-member-groups__list" id="member-groups">
+                        {% for row in groups %}
+                            {% include 'group/_card.html.twig' %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="p-member-groups__empty" id="member-groups">
+                        <span class="p-member-groups__empty-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
+                        <p>{{ own ? 'profile.groups.empty.own'|trans : 'profile.groups.empty'|trans({username: member.username}) }}</p>
+                        {% if own %}
+                            <a class="p-member-groups__manage" href="{{ path('groups_search') }}">{{ 'profile.groups.find'|trans }}</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock page_content %}

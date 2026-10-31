@@ -2,11 +2,12 @@
 {% import 'forum/_macros.html.twig' as forum %}
 
 {#
-  A forum thread: a white top (the group's small head, back to the discussions, the title, Reply, Subscribe and
-  the order), then the posts in one white card and "Write a reply" under it. Reply opens in a side panel
+  A forum thread: a white top (the group and its discussions, the title; on phones who is in it, the order and
+  Subscribe), then the posts on a line (forum/_post.html.twig) with "Write a reply" under them and, on large
+  screens, a side card (Reply, Subscribe, who is in it, the order). Reply opens in a side panel
   (assets/js/contact/drawer.js, loaded by bewelcome.js): forum/reply.html.twig ?embed=1.
 #}
-{# The group's small head is in the thread's white top (group/layout.html.twig leaves it out) #}
+{# The group is in the thread's white top (group/layout.html.twig leaves its head out) #}
 {% set group_head_compact = true %}
 
 {% block title %}{{ forum.thread_title(thread, locale) }}{% endblock %}
@@ -28,78 +29,140 @@
     {% set _replyUrl = thread.agora ? path('forum_reply', {threadId: thread.id}) : path('group_forum_reply', {group_id: group.id, thread: thread.id}) %}
     {% set _replyTitle = forum.thread_title(thread, locale)|striptags %}
     {% set _lastPost = thread.lastPost %}
+    {% set _forumUrl = path('group_forum', {group_id: group.id}) %}
+    {% set _subscribeUrl = subscribed ? path('forum_thread_unsubscribe', {threadId: thread.id}) : path('forum_thread_subscription', {threadId: thread.id}) %}
+    {% set _reverseUrl = thread.agora ? path('forum_reverse', {threadId: thread.id}) : path('group_forum_thread_reverse', {group_id: group.id, thread: thread.id}) %}
+    {% set _normalUrl = thread.agora ? path('forum_thread', {threadId: thread.id}) : path('group_forum_thread', {group_id: group.id, thread: thread.id}) %}
+    {# The order not shown now: the other of the two links #}
+    {% set _otherOrderUrl = reverse ? _normalUrl : _reverseUrl %}
+    {% set _meta %}
+        {{ 'forum.thread.posts'|trans({count: posts.nbResults}) }}
+        {%- if _lastPost and posts.nbResults > 1 %} · {{ 'forum.thread.last.reply'|trans({date: _lastPost.created|format_date(pattern: _lastPost.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y')}) }}{% endif %}
+    {% endset %}
+    {% set _people %}
+        <span class="p-thread__people">
+            {% for _username in people|slice(0, 6) %}
+                <img width="36" height="36" alt="{{ _username }}" title="{{ _username }}" loading="lazy" src="{{ path('avatar', {username: _username, size: 48}) }}">
+            {% endfor %}
+            {% if people|length > 6 %}<span class="p-thread__people-more">+{{ people|length - 6 }}</span>{% endif %}
+        </span>
+    {% endset %}
+    {% set _subscribeToken = csrf_token(constant('App\\Controller\\ForumSubscriptionController::TOKEN')) %}
 
     <div class="p-thread">
     <div class="p-thread__top">
         {% if thread.agora %}
             {% include 'forum/_head.html.twig' with {active: 'agora', tabsOnly: true} %}
-        {% elseif submenu is defined %}
-            {% include 'group/_head_compact.html.twig' %}
+        {% else %}
+            {# Where the thread is: the group, then its discussions #}
+            <nav class="p-thread__crumbs" aria-label="{{ group.name }}">
+                <a class="p-thread__crumb-group" href="{{ path('group_start', {group_id: group.id}) }}">
+                    <img width="36" height="36" alt="" loading="lazy" src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+                    <span>{{ group.name }}</span>
+                </a>
+                <i class="fas fa-chevron-right p-thread__crumb-sep" aria-hidden="true"></i>
+                <a class="p-thread__crumb" href="{{ _forumUrl }}">{{ 'forum.thread.discussions'|trans }}</a>
+            </nav>
         {% endif %}
-
-        <a class="p-thread__back" href="{{ path('group_forum', {group_id: group.id}) }}">
-            <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'forum.thread.all.discussions'|trans }}
-        </a>
         <h1 class="p-thread__title">{{ forum.thread_title(thread, locale) }}</h1>
         {% if thread.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
             <p class="alert alert-warning">{{ 'threadclosed'|trans }}</p>
         {% endif %}
 
-        <div class="p-thread__actions">
-            {% if canReply %}
-                <a class="p-thread-btn p-thread-btn--primary js-contact-open" href="{{ _replyUrl }}" data-title="{{ _replyTitle }}">
-                    <i class="fas fa-reply" aria-hidden="true"></i> {{ 'forumreply'|trans }}
-                </a>
-            {% endif %}
-            <form method="post" action="{{ subscribed ? path('forum_thread_unsubscribe', {threadId: thread.id}) : path('forum_thread_subscription', {threadId: thread.id}) }}">
-                <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\ForumSubscriptionController::TOKEN')) }}">
-                {# Subscribed: orange; a click unsubscribes #}
-                <button type="submit" class="p-thread-btn{{ subscribed ? ' is-on' }}">
-                    <i class="fas fa-bell" aria-hidden="true"></i> {{ (subscribed ? 'forum.thread.subscribed' : 'forumsubscribe')|trans }}
+        {# Phones: who is in it, the numbers, the order and Subscribe on one line (the side card is not shown) #}
+        <div class="p-thread__line">
+            {{ _people }}
+            <span class="p-thread__line-meta">{{ _meta }}</span>
+            <a class="p-thread__round" href="{{ _otherOrderUrl }}" aria-label="{{ (ascending ? 'forum.thread.order.latest' : 'forum.thread.order.oldest')|trans }}" title="{{ (ascending ? 'forum.thread.order.latest' : 'forum.thread.order.oldest')|trans }}">
+                <i class="fas fa-arrow-down-wide-short" aria-hidden="true"></i>
+            </a>
+            <form method="post" action="{{ _subscribeUrl }}">
+                <input type="hidden" name="_token" value="{{ _subscribeToken }}">
+                <button type="submit" class="p-thread__round{{ subscribed ? ' is-on' }}" aria-label="{{ (subscribed ? 'forum.thread.subscribed' : 'forumsubscribe')|trans }}" title="{{ (subscribed ? 'forum.thread.subscribed' : 'forumsubscribe')|trans }}">
+                    <i class="fas {{ subscribed ? 'fa-bell' : 'fa-bell-slash' }}" aria-hidden="true"></i>
                 </button>
             </form>
-            <a class="p-thread__order" href="{{ thread.agora ? path('forum_reverse', {threadId: thread.id}) : path('group_forum_thread_reverse', {group_id: group.id, thread: thread.id}) }}">
-                <i class="fas fa-arrow-down-wide-short" aria-hidden="true"></i> {{ (ascending ? 'forum.thread.order.latest' : 'forum.thread.order.oldest')|trans }}
-            </a>
         </div>
+    </div>
 
-        <p class="p-thread__meta">
-            {{ 'forum.thread.posts'|trans({count: posts.nbResults}) }}
-            {% if _lastPost and posts.nbResults > 1 %}
-                · {{ 'forum.thread.last.reply'|trans({date: _lastPost.created|format_date(pattern: _lastPost.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y')}) }}
+    <div class="p-thread__layout">
+        <div class="p-thread__body">
+            {% if posts.haveToPaginate %}
+                <div class="p-thread__pages">
+                    {{ pagerfanta(posts, 'rounded_pagination', thread.agora
+                        ? {routeName: 'forum_thread_pages', routeParams: {threadId: thread.id}, pageParameter: '[pageId]'}
+                        : {routeName: 'group_forum_thread_pages', routeParams: {group_id: group.id, thread: thread.id}, pageParameter: '[page_id]'}) }}
+                </div>
             {% endif %}
-        </p>
+
+            {# The first post as a card, the others on a line with the day above them when it changes #}
+            <div class="p-thread__posts">
+                {% set _previousDay = null %}
+                {% for post in posts %}
+                    {% set _isFirst = starter and starter.id == post.id %}
+                    {% set _postDay = post.created|date('Y-m-d') %}
+                    {% if not _isFirst and _postDay != _previousDay %}
+                        <p class="p-thread__day">{{ post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') }}</p>
+                    {% endif %}
+                    {% set _previousDay = _postDay %}
+                    {% include 'forum/_post.html.twig' with {post: post, moderator: moderator, reports: reports[post.id] ?? [], replyUrl: canReply ? _replyUrl : null, replyTitle: _replyTitle, replies: posts.nbResults - 1} %}
+                {% endfor %}
+            </div>
+
+            {% if posts.haveToPaginate %}
+                <div class="p-thread__pages">
+                    {{ pagerfanta(posts, 'rounded_pagination', thread.agora
+                        ? {routeName: 'forum_thread_pages', routeParams: {threadId: thread.id}, pageParameter: '[pageId]'}
+                        : {routeName: 'group_forum_thread_pages', routeParams: {group_id: group.id, thread: thread.id}, pageParameter: '[page_id]'}) }}
+                </div>
+            {% endif %}
+
+            {# Write a reply: the member's photo and a field that opens the side panel; stuck to the bottom on phones #}
+            {% if canReply %}
+                <div class="p-thread__write">
+                    <img class="p-thread__write-photo" width="44" height="44" alt="" src="{{ path('avatar', {username: app.user.username, size: 48}) }}">
+                    <a class="p-thread__write-box js-contact-open" href="{{ _replyUrl }}" data-title="{{ _replyTitle }}">
+                        <span class="p-thread__write-hint">{{ 'forum.thread.write.placeholder'|trans }}</span>
+                        <span class="p-thread__write-btn"><i class="fas fa-reply" aria-hidden="true"></i> <span>{{ 'forumreply'|trans }}</span></span>
+                    </a>
+                </div>
+                {% include 'conversations/_contact_drawer.html.twig' with { from: 'forum' } %}
+            {% endif %}
+        </div>
+
+        {# The side card: Reply, Subscribe, who is in it, the numbers and the order #}
+        <aside class="p-thread__side">
+            <div class="p-thread__card">
+                {% if canReply %}
+                    <a class="p-thread-btn p-thread-btn--primary js-contact-open" href="{{ _replyUrl }}" data-title="{{ _replyTitle }}">
+                        <i class="fas fa-reply" aria-hidden="true"></i> {{ 'forumreply'|trans }}
+                    </a>
+                {% endif %}
+                <form method="post" action="{{ _subscribeUrl }}">
+                    <input type="hidden" name="_token" value="{{ _subscribeToken }}">
+                    {# Subscribed: orange; a click unsubscribes #}
+                    <button type="submit" class="p-thread-btn{{ subscribed ? ' is-on' }}">
+                        <i class="fas {{ subscribed ? 'fa-bell' : 'fa-bell-slash' }}" aria-hidden="true"></i> {{ (subscribed ? 'forum.thread.subscribed' : 'forumsubscribe')|trans }}
+                    </button>
+                </form>
+                {% if people|length %}
+                    <p class="p-thread__label">{{ 'forum.thread.people'|trans({count: people|length}) }}</p>
+                    {{ _people }}
+                {% endif %}
+                <p class="p-thread__meta">{{ _meta }}</p>
+                <p class="p-thread__label">{{ 'forum.thread.sort'|trans }}</p>
+                <div class="p-thread__sort">
+                    {% if ascending %}
+                        <span class="is-active">{{ 'forum.thread.order.oldest'|trans }}</span>
+                        <a href="{{ _otherOrderUrl }}">{{ 'forum.thread.order.latest'|trans }}</a>
+                    {% else %}
+                        <a href="{{ _otherOrderUrl }}">{{ 'forum.thread.order.oldest'|trans }}</a>
+                        <span class="is-active">{{ 'forum.thread.order.latest'|trans }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            <a class="p-thread__back" href="{{ _forumUrl }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'forum.thread.all.discussions'|trans }}</a>
+        </aside>
     </div>
-
-    {% if posts.haveToPaginate %}
-        <div class="p-thread__pages">
-            {{ pagerfanta(posts, 'rounded_pagination', thread.agora
-                ? {routeName: 'forum_thread_pages', routeParams: {threadId: thread.id}, pageParameter: '[pageId]'}
-                : {routeName: 'group_forum_thread_pages', routeParams: {group_id: group.id, thread: thread.id}, pageParameter: '[page_id]'}) }}
-        </div>
-    {% endif %}
-
-    <div class="p-thread__posts">
-        {% for post in posts %}
-            {% include 'forum/_post.html.twig' with {post: post, moderator: moderator, reports: reports[post.id] ?? [], replyUrl: canReply ? _replyUrl : null, replyTitle: _replyTitle} %}
-        {% endfor %}
-    </div>
-
-    {% if posts.haveToPaginate %}
-        <div class="p-thread__pages">
-            {{ pagerfanta(posts, 'rounded_pagination', thread.agora
-                ? {routeName: 'forum_thread_pages', routeParams: {threadId: thread.id}, pageParameter: '[pageId]'}
-                : {routeName: 'group_forum_thread_pages', routeParams: {group_id: group.id, thread: thread.id}, pageParameter: '[page_id]'}) }}
-        </div>
-    {% endif %}
-
-    {% if canReply %}
-        <div class="p-thread__write">
-            <a class="p-thread-btn p-thread-btn--soft js-contact-open" href="{{ _replyUrl }}" data-title="{{ _replyTitle }}">
-                <i class="fas fa-reply" aria-hidden="true"></i> {{ 'forum.thread.write.reply'|trans }}
-            </a>
-        </div>
-        {% include 'conversations/_contact_drawer.html.twig' with { from: 'forum' } %}
-    {% endif %}
     </div>
 {% endblock %}

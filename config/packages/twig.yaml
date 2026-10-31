@@ -12,7 +12,6 @@ twig:
         plausible_script_url: '%env(default::PLAUSIBLE_SCRIPT_URL)%'
 
     paths:
-        '%kernel.project_dir%/build': 'build'
         '%kernel.project_dir%/public/images': 'images'
         '%kernel.project_dir%/public': 'public'
 

@@ -25,7 +25,6 @@ docker-compose.override.*
 !docker-compose.override.yml.dist
 composer.phar
 auth.json
-/.vagrant/*
 /db_dumps/*
 /ansible/cert.crt
 /ansible/key.pem
@@ -43,7 +42,7 @@ phploc.xml
 /public/service-worker.js
 /public/service-worker.js.map
 /swagger.json
-/build/logs/
+/reports/
 
 .idea/
 
@@ -83,7 +82,6 @@ npm-debug.log
 /behat.yml
 ###< friends-of-behat/symfony-extension ###
 
-/infection.log
 
 ###> friendsofphp/php-cs-fixer ###
 /.php-cs-fixer.php

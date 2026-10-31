@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use SignupModel;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -10,6 +9,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class ChangeUsernameFormType extends AbstractType
 {
+    /** The usernames members can choose (as the signup checks them), for the browser's check of the field. */
+    public const string PATTERN_USERNAME = '[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]';
+
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
@@ -20,7 +22,7 @@ class ChangeUsernameFormType extends AbstractType
                 'attr' => [
                     'minlength' => 4,
                     'maxlength' => 20,
-                    'pattern' => SignupModel::PATTERN_USERNAME,
+                    'pattern' => self::PATTERN_USERNAME,
                     'placeholder' => 'old.username',
                 ],
             ])
@@ -28,7 +30,7 @@ class ChangeUsernameFormType extends AbstractType
                 'attr' => [
                     'minlength' => 4,
                     'maxlength' => 20,
-                    'pattern' => SignupModel::PATTERN_USERNAME,
+                    'pattern' => self::PATTERN_USERNAME,
                     'placeholder' => 'new.username',
                 ],
             ])

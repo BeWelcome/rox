@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import { Dropdown } from 'bootstrap';
 
 const wideQuery = window.matchMedia('(min-width: 1200px)');
 
@@ -9,16 +9,21 @@ function syncTopbarSheetScrollLock() {
 
 /** Close the top-bar dropdown whose menu contains this close control (profile, search, community full sheets). */
 function hideDropdownFromCloseButton(closeButton) {
-  const $toggle = $(closeButton).closest('ul.dropdown-menu').prev('.dropdown-toggle');
-  if ($toggle.length) {
-    $toggle.dropdown('hide');
+  const menu = closeButton.closest('ul.dropdown-menu');
+  const toggle = menu ? menu.previousElementSibling : null;
+  if (toggle && toggle.classList.contains('dropdown-toggle')) {
+    Dropdown.getOrCreateInstance(toggle).hide();
   }
 }
 
-$(document).on('click', '.member-menu__close', function (e) {
-  e.preventDefault();
-  e.stopPropagation();
-  hideDropdownFromCloseButton(this);
+document.addEventListener('click', (event) => {
+  const closeButton = event.target.closest('.member-menu__close');
+  if (!closeButton) {
+    return;
+  }
+  event.preventDefault();
+  event.stopPropagation();
+  hideDropdownFromCloseButton(closeButton);
 });
 
 /** Close any open #main_menu dropdown when crossing to xl (sheets → compact popovers). */
@@ -26,18 +31,19 @@ function closeMainMenuDropdownsIfWide() {
   if (!wideQuery.matches) {
     return;
   }
-  document.querySelectorAll('#main_menu .nav-item.dropdown.show > .dropdown-toggle').forEach((el) => {
-    $(el).dropdown('hide');
+  document.querySelectorAll('#main_menu .nav-item.dropdown.show > .dropdown-toggle, #main_menu .nav-item.dropdown > .dropdown-toggle.show').forEach((toggle) => {
+    Dropdown.getOrCreateInstance(toggle).hide();
   });
   syncTopbarSheetScrollLock();
 }
 
-$(document).on('shown.bs.dropdown hidden.bs.dropdown', '#main_menu .nav-item.dropdown', function () {
-  syncTopbarSheetScrollLock();
+// Bootstrap fires the dropdown events on the toggle; they bubble up to the document
+['shown.bs.dropdown', 'hidden.bs.dropdown'].forEach((type) => {
+  document.addEventListener(type, (event) => {
+    if (event.target.closest('#main_menu .nav-item.dropdown')) {
+      syncTopbarSheetScrollLock();
+    }
+  });
 });
 
-if (typeof wideQuery.addEventListener === 'function') {
-  wideQuery.addEventListener('change', closeMainMenuDropdownsIfWide);
-} else if (typeof wideQuery.addListener === 'function') {
-  wideQuery.addListener(closeMainMenuDropdownsIfWide);
-}
+wideQuery.addEventListener('change', closeMainMenuDropdownsIfWide);

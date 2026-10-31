@@ -36,7 +36,7 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          pattern='^(Dockerfile|\.dockerignore|docker/|composer\.(json|lock)|symfony\.lock|package\.json|bun\.lock|webpack\.config\.mjs|postcss\.config\.js|tailwind\.config\.js|tsconfig\.json|src/|assets/|build/|config/|lib/|Migrations/|modules/|roxlauncher/|templates/|tools/|public/|bin/|translations/|Mike42/|pthacks/|routes\.php|rox_docker\.ini|\.env$|\.trivyignore|\.github/workflows/(build-image-stage|pr-image-build)\.yml)'
+          pattern='^(Dockerfile|\.dockerignore|docker/|composer\.(json|lock)|symfony\.lock|package\.json|bun\.lock|webpack\.config\.mjs|postcss\.config\.js|tailwind\.config\.js|tsconfig\.json|src/|assets/|config/|Migrations/|templates/|public/|bin/|translations/|Mike42/|\.env$|\.trivyignore|\.github/workflows/(build-image-stage|pr-image-build)\.yml)'
           changed=$(git diff --name-only "$BASE_SHA"...HEAD)
           if printf '%s\n' "$changed" | grep -Eq "$pattern"; then
             echo "image=true" >> "$GITHUB_OUTPUT"

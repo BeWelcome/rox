@@ -9,7 +9,7 @@
     },
     "timeout": 30,
     "logs": {
-        "text": "infection.log"
+        "text": "reports/infection.log"
     },
     "mutators": {
         "@default": true

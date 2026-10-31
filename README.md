@@ -22,7 +22,7 @@ You like the idea? Development is only one way to contribute! Find out how to [g
 
 ## Get your Rox development enviroment :computer:
 
-1. :balloon: [Set up you local development enviroment](INSTALL.md) and fork the repository on Github. The quickest way is the devcontainer: open the repository in VS Code (or a GitHub Codespace) and choose "Reopen in Container". A terminal shows the setup progress; the first start takes a few minutes.
+1. :balloon: Set up your local development environment and fork the repository on Github. The quickest way is the devcontainer: open the repository in VS Code (or a GitHub Codespace) and choose "Reopen in Container". A terminal shows the setup progress; the first start takes a few minutes.
 2. :mag: Pick a [good starter issue](https://github.com/BeWelcome/rox/labels/good%20starter%20issue)
 3. :sparkles: Create a [pull request](https://opensource.guide/how-to-contribute/#opening-a-pull-request) and `@mention` the people from the issue to review
 4. :sun_with_face: Fix the remaining things during review
@@ -30,21 +30,12 @@ You like the idea? Development is only one way to contribute! Find out how to [g
 
 You probably want to get started by checking out the code in `src/`.
 
-`build/` is deprecated and the code needs to be rewritten in `src/`.
-
 To make changes in **Javascript** bear in mind that the Webpack needs to process each change before it reflects on the site.
 It is a good idea to run `bun encore dev --watch` which will keep updating files as you keep saving them.
 
 ## Documentation
 
-Documentation is [in the doc tree](doc/book/) and can be compiled using
-[mkdocs](http://www.mkdocs.org):
-
-```bash
-$ mkdocs build
-```
-
-The result can then be accessed via `doc/html/` in your cloned repository.
+Documentation is [in the doc tree](doc/book/).
 
 ## Procedure
 

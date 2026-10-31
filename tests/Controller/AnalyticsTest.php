@@ -5,7 +5,6 @@ namespace App\Tests\Controller;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
-use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -67,31 +66,6 @@ class AnalyticsTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(404);
         self::assertStringContainsString("plausible('404'", (string) $this->client->getResponse()->getContent());
-    }
-
-    /**
-     * The legacy pages find their files relative to public/ and take the request from $_SERVER, and keep state
-     * in static singletons (see ForumTranslationsTest).
-     */
-    #[RunInSeparateProcess]
-    public function testLegacyPagesLoadTheScript(): void
-    {
-        $this->client->loginUser($this->member('member-2'));
-        $workingDirectory = (string) getcwd();
-        $server = $_SERVER;
-        chdir(__DIR__ . '/../../public');
-        $_SERVER['argc'] = 0;
-        $_SERVER['REQUEST_URI'] = '/forums';
-        $_SERVER['SCRIPT_NAME'] = '/index.php';
-        try {
-            $crawler = $this->client->request('GET', '/forums');
-        } finally {
-            $_SERVER = $server;
-            chdir($workingDirectory);
-        }
-
-        $this->assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('script[src="' . self::SCRIPT . '"]'));
     }
 
     private function member(string $username): Member

@@ -1,2 +1,0 @@
-All the stuff in roxlauncher/ has to be included manually with require_once.
-Stuff in tools/ is loaded automatically using __autoload.

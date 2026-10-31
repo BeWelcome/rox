@@ -143,8 +143,12 @@ main:has(.p-groups) { background: #f4f5f7; }
   .p-groups__place-panel { right: 0; left: 0; width: auto; }
   .p-groups__field input { padding-right: 6rem; }
   .p-groups__go { padding: 0 1.1rem; font-size: 0.875rem; }
-  .p-groups__tabs { gap: 1.25rem; }
-  .p-groups__tab { font-size: 1rem; }
+  /* The order above on the right, the tabs under it on the whole width (scrolling if they still don't fit) */
+  .p-groups__bar { flex-wrap: wrap; gap: 0.25rem 1rem; }
+  .p-groups__order { order: -1; margin: 0 0 0 auto; }
+  .p-groups__tabs { width: 100%; gap: 1.1rem; margin-bottom: -1px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none; }
+  .p-groups__tabs::-webkit-scrollbar { display: none; }
+  .p-groups__tab, .p-groups__tab:hover { gap: 0.4rem; margin-bottom: 0; font-size: 0.9375rem; }
   .p-groups__order summary { font-size: 0.9375rem; }
   /* The groups: a white list from edge to edge */
   .p-groups__list { grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0 calc(-1 * var(--bs-gutter-x, 1.5rem) * 0.5); background: #fff; }

@@ -28,11 +28,7 @@ if (root) {
     };
     const albumOf = (tile) => (tile.dataset.album === '' ? null : parseInt(tile.dataset.album, 10));
     const withId = (url, id) => url.replace(/\/0(?=$|\/)/, '/' + id);
-    const thumb = (id, big) => {
-        const url = new URL(big ? data.urlBig : data.urlThumb, window.location.origin);
-        url.searchParams.set('id', id);
-        return url.pathname + url.search;
-    };
+    const thumb = (id, big) => withId(big ? data.urlBig : data.urlThumb, id);
     const tiles = () => Array.from(grid.querySelectorAll('.js-gm-tile'));
     const ready = () => tiles().filter((tile) => tile.dataset.id && !tile.classList.contains('is-uploading') && !tile.classList.contains('is-failed'));
     const selected = () => tiles().filter((tile) => tile.classList.contains('is-selected'));

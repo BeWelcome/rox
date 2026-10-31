@@ -766,9 +766,14 @@ FROM
      */
     public function getGalleryItemsCount()
     {
-        $gallery = new GalleryModel;
-        $count = $gallery->getUserItemCount($this->id);
-        return $count;
+        if (!$this->isLoaded()) {
+            return 0;
+        }
+
+        $id = intval($this->id);
+        $items = $this->bulkLookup("SELECT COUNT(*) AS count FROM gallery_items WHERE user_id_foreign = $id");
+
+        return (int) $items[0]->count;
     }
 
     /**

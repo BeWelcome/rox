@@ -122,7 +122,7 @@ class MemberPage extends PageWithActiveSkin
             if ($this->myself) {
                 $tt[] = ['gallery', "gallery/manage", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)];
             } else {
-                $tt[] = ['gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)];
+                $tt[] = ['gallery', "members/$username/gallery", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)];
             }
             $tt[] = ['forum', "members/$username/posts", '<i class="far fa-fw fa-comment"></i> ' . $viewForumPosts];
         } else {
@@ -165,7 +165,7 @@ class MemberPage extends PageWithActiveSkin
                 ['profile', "members/$username", '<i class="fa fa-fw fa-user"></i> '  . $ww->MemberPage],
                 ['comments', "members/$username/comments", '<i class="fa fa-fw fa-comments"></i> ' . $ww->ViewComments.' ' . $this->getBadge($comments_count['all'])],
                 ['relations', "members/$username/relations", '<i class="fa fa-fw fa-users"></i> ' . $words->get('profile.relations').' ' . $this->getBadge($relations_count)],
-                ['gallery', "gallery/show/user/$username/pictures", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)],
+                ['gallery', "members/$username/gallery", '<i class="fa fa-fw fa-image"></i> ' . $ww->Gallery . ' ' . $this->getBadge($galleryItemsCount)],
             ]);
             if (MemberStatusType::PASSED_AWAY !== $member->Status) {
                 if ($this->leg) {

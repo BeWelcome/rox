@@ -291,7 +291,7 @@ class ProfileSubmenu
             'key' => 'profile.menu.images',
             'icon' => 'image',
             'count' => $parameters['images_count'] ?? 0,
-            'url' => '/gallery/show/user/' . $username . '/pictures',
+            'url' => $this->routing->generate('member_gallery', ['username' => $username]),
         ]);
         if ($parameters['show_forum_posts']) {
             $this->addSubmenuItem('forum_posts', [

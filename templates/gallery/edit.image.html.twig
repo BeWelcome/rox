@@ -21,17 +21,17 @@
     <div class="row g-4 g-lg-5 align-items-start">
       <div class="col-12 col-lg-5">
         <div class="gallery-edit-preview p-gallery-edit__preview">
-          <a href="{{ url('gallery_image', {id: image.id}) }}"
+          <a href="{{ url('gallery_image_original', {id: image.id}) }}"
              class="p-gallery-edit__preview-link"
              title="{{ image.title|e('html_attr') }}"
              rel="image">
-            <img src="{{ url('gallery_thumbnail', {id: image.id, t: 2}) }}"
+            <img src="{{ url('gallery_image', {id: image.id, size: 'medium'}) }}"
                  class="img-fluid framed"
                  alt="{{ image.title|e }}">
           </a>
         </div>
         <p class="p-gallery-edit__full-link-wrap">
-          <a href="{{ url('gallery_image', {id: image.id}) }}" class="p-gallery-edit__full-link">
+          <a href="{{ url('gallery_image_original', {id: image.id}) }}" class="p-gallery-edit__full-link">
             {{ 'gallery.image.edit.view_full'|trans }}
             <i class="fas fa-external-link-alt fa-xs ms-1" aria-hidden="true"></i>
           </a>

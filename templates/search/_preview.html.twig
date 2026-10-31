@@ -164,7 +164,7 @@
         {% set more = pictures|length - shown|length %}
         {% set images = [] %}
         {% for picture in pictures|slice(0, 40) %}
-            {% set images = images|merge([{ src: url('gallery_thumbnail', { id: picture.id, t: 3 }), title: picture.title }]) %}
+            {% set images = images|merge([{ src: url('gallery_image', {id: picture.id, size: 'large'}), title: picture.title }]) %}
         {% endfor %}
         <section class="p-search-preview__section">
             <h3>{{ 'profile.menu.images'|trans|striptags }}</h3>
@@ -172,7 +172,7 @@
                  data-label-close="{{ 'close'|trans|striptags }}" data-label-previous="{{ 'landing.beinformed.previous'|trans|striptags }}" data-label-next="{{ 'landing.beinformed.next'|trans|striptags }}">
                 {% for picture in shown %}
                     <button type="button" class="p-search-preview__shot js-preview-gallery-open" data-index="{{ loop.index0 }}"
-                            style="background-image: url('{{ url('gallery_thumbnail', { id: picture.id, t: 2 }) }}')"
+                            style="background-image: url('{{ url('gallery_image', {id: picture.id, size: 'medium'}) }}')"
                             aria-label="{{ picture.title ?: 'profile.menu.images'|trans|striptags }}">
                         {% if loop.last and more > 0 %}<span class="p-search-preview__more">+{{ more }}</span>{% endif %}
                     </button>

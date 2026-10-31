@@ -41,8 +41,8 @@
         <p class="p-avatar-edit__gallery-title">{{ 'profile.edit.avatar.from.gallery'|trans }}</p>
         <div class="p-avatar-edit__shots">
           {% for picture in pictures %}
-            <button type="button" class="p-avatar-edit__shot" data-image-id="{{ picture.id }}" aria-label="{{ picture.title }}">
-              <img loading="lazy" src="gallery/thumbimg?id={{ picture.id }}" alt="{{ picture.title }}">
+            <button type="button" class="p-avatar-edit__shot" data-image-id="{{ picture.id }}" data-image-url="{{ path('gallery_image', {id: picture.id, size: 'large'}) }}" aria-label="{{ picture.title }}">
+              <img loading="lazy" src="{{ path('gallery_image', {id: picture.id, size: 'thumbnail'}) }}" alt="{{ picture.title }}">
             </button>
           {% endfor %}
         </div>

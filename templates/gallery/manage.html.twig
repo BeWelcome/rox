@@ -29,8 +29,8 @@
          data-url-move="{{ path('gallery_manage_pictures_move') }}"
          data-url-delete="{{ path('gallery_manage_pictures_delete') }}"
          data-url-page="{{ path('gallery_manage_page') }}"
-         data-url-thumb="{{ path('gallery_thumbnail', {id: 0, t: 2}) }}"
-         data-url-big="{{ path('gallery_thumbnail', {id: 0, t: 3}) }}"
+         data-url-thumb="{{ path('gallery_image', {id: 0, size: 'medium'}) }}"
+         data-url-big="{{ path('gallery_image', {id: 0, size: 'large'}) }}"
          data-t-selected-0="{{ 'gallery.mine.selected'|trans({count: 0}) }}"
          data-t-selected-1="{{ 'gallery.mine.selected'|trans({count: 1}) }}"
          data-t-selected-n="{{ 'gallery.mine.selected'|trans({count: 2})|replace({'2': '{count}'}) }}"
@@ -51,7 +51,7 @@
          data-t-count-n="{{ 'gallery.mine.count'|trans({count: 2})|replace({'2': '{count}'}) }}">
 
         <header class="p-gm__head">
-            <a class="p-gm__back" href="{{ path('gallery_member_images', {username: member.username}) }}" aria-label="{{ 'profile.back'|trans }}">
+            <a class="p-gm__back" href="{{ path('member_gallery', {username: member.username}) }}" aria-label="{{ 'profile.back'|trans }}">
                 <i class="fas fa-chevron-left" aria-hidden="true"></i>
             </a>
             <div class="p-gm__heading">
@@ -70,7 +70,7 @@
         <nav class="p-gm-albums" aria-label="{{ 'gallery.mine.albums'|trans }}">
             <a class="p-gm-albums__item{{ active_album ? '' : ' is-active' }}" href="{{ path('gallery_manage_page') }}">
                 <span class="p-gm-albums__thumb">
-                    {% if latest %}<img src="{{ path('gallery_thumbnail', {id: latest, t: 1}) }}" alt="" loading="lazy">{% endif %}
+                    {% if latest %}<img src="{{ path('gallery_image', {id: latest, size: 'small'}) }}" alt="" loading="lazy">{% endif %}
                     <i class="fas fa-images" aria-hidden="true"></i>
                 </span>
                 <span class="p-gm-albums__name">{{ 'gallery.mine.all'|trans }} <small class="js-gm-total">{{ total }}</small></span>
@@ -78,7 +78,7 @@
             {% for _album in albums %}
                 <a class="p-gm-albums__item{{ active_album and active_album.id == _album.id ? ' is-active' }}" href="{{ path('gallery_manage_page', {album: _album.id}) }}" data-album-id="{{ _album.id }}">
                     <span class="p-gm-albums__thumb">
-                        {% if _album.cover %}<img src="{{ path('gallery_thumbnail', {id: _album.cover, t: 1}) }}" alt="" loading="lazy">{% else %}<i class="fas fa-folder" aria-hidden="true"></i>{% endif %}
+                        {% if _album.cover %}<img src="{{ path('gallery_image', {id: _album.cover, size: 'small'}) }}" alt="" loading="lazy">{% else %}<i class="fas fa-folder" aria-hidden="true"></i>{% endif %}
                     </span>
                     <span class="p-gm-albums__name"><span class="js-gm-album-title">{{ _album.title }}</span> <small class="js-gm-album-count">{{ _album.count }}</small></span>
                 </a>
@@ -111,7 +111,7 @@
             {% for _picture in pictures %}
                 <li class="p-gm-tile js-gm-tile" data-id="{{ _picture.id }}" data-title="{{ _picture.title }}" data-description="{{ _picture.description }}" data-album="{{ _picture.album }}">
                     <button type="button" class="p-gm-tile__open js-gm-open" aria-label="{{ _picture.title ?: 'gallery.mine.edit'|trans }}">
-                        <img src="{{ path('gallery_thumbnail', {id: _picture.id, t: 2}) }}" alt="" loading="lazy">
+                        <img src="{{ path('gallery_image', {id: _picture.id, size: 'medium'}) }}" alt="" loading="lazy">
                     </button>
                     <span class="p-gm-tile__check" aria-hidden="true"><i class="fas fa-check"></i></span>
                     {% if _picture.title %}<span class="p-gm-tile__caption js-gm-caption">{{ _picture.title }}</span>{% endif %}

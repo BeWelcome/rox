@@ -265,8 +265,8 @@
         {% if pictures|length > 0 %}
           <div class="p-pe-gallery">
             {% for picture in pictures|slice(0, 6) %}
-              <a href="{{ url('gallery_thumbnail', {id: picture.id, t: 3}) }}" class="p-pe-gallery__shot"
-                 style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
+              <a href="{{ url('gallery_image', {id: picture.id, size: 'large'}) }}" class="p-pe-gallery__shot"
+                 style="background-image: url('{{ url('gallery_image', {id: picture.id, size: 'medium'}) }}')"
                  data-toggle="lightbox" data-gallery="edit-gallery-{{ profile_language }}" data-type="image"
                  data-caption="{{ picture.title|e('html_attr') }}" aria-label="{{ picture.title|e('html_attr') }}"></a>
             {% endfor %}

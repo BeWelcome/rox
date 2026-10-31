@@ -25,7 +25,8 @@ class LegacyRoutesTest extends KernelTestCase
         yield ['/members/member-2/note/edit', 'edit_note'];
         yield ['/rox/in/de', 'language'];
         yield ['/mypreferences', 'mypreferences_redirect'];
-        yield ['/gallery/show/user/member-2/pictures', 'gallery_member_images'];
+        yield ['/gallery/show/user/member-2/pictures', 'gallery_member_old'];
+        yield ['/members/member-2/gallery', 'member_gallery'];
         yield ['/gallery/manage', 'gallery_manage_page'];
         yield ['/members/member-2/old', 'members_profile'];
     }
@@ -71,7 +72,6 @@ class LegacyRoutesTest extends KernelTestCase
             $this->assertNull($routes->get($name), $name);
         }
         // Still served by the old code
-        $this->assertNotNull($routes->get('gallery_thumbnail'));
         $this->assertNotNull($routes->get('admin_massmail'));
     }
 

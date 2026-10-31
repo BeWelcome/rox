@@ -83,7 +83,7 @@ document.querySelectorAll('[data-image-id]').forEach((image) => {
     image.addEventListener('click', () => {
         document.querySelectorAll('[data-image-id].is-active').forEach((other) => other.classList.remove('is-active'));
         image.classList.add('is-active');
-        bind('gallery/img?id=' + image.dataset.imageId);
+        bind(image.dataset.imageUrl);
     });
 });
 

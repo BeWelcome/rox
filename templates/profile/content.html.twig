@@ -390,21 +390,21 @@
           </div>
         {% else %}
         {# Same target as the "Gallery" tab: own gallery management, or the member's pictures #}
-        {% set _galleryUrl = submenu.items.gallery.url ?? url('gallery_member_images', {username: member.username}) %}
+        {% set _galleryUrl = submenu.items.gallery.url ?? url('member_gallery', {username: member.username}) %}
         <div class="p-gallery-grid">
           {% for picture in pictures|slice(0, 5) %}
             {% set isLast = loop.last and pictures|length > 5 %}
             {% if isLast %}
               <a href="{{ _galleryUrl }}"
                  class="p-gallery-cell p-gallery-cell--more"
-                 style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
+                 style="background-image: url('{{ url('gallery_image', {id: picture.id, size: 'medium'}) }}')"
                  aria-label="{{ picture.title|e('html_attr') }}">
                 <span class="p-gallery-cell__more-label">+{{ pictures|length - 4 }}</span>
               </a>
             {% else %}
-              <a href="{{ url('gallery_thumbnail', {id: picture.id, t: 3}) }}"
+              <a href="{{ url('gallery_image', {id: picture.id, size: 'large'}) }}"
                  class="p-gallery-cell"
-                 style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
+                 style="background-image: url('{{ url('gallery_image', {id: picture.id, size: 'medium'}) }}')"
                  data-toggle="lightbox"
                  data-gallery="profile-gallery"
                  data-type="image"

@@ -1,0 +1,91 @@
+{% extends 'profile/profile.html.twig' %}
+
+{#
+  The member's own friendships: requests to answer, requests sent, friends. Every action posts the edit form
+  of the friendship with the other member.
+#}
+{% macro row(member, friend, buttons) %}
+  {% set other = friend.other(member) %}
+  <li class="p-friendships__row">
+    <a class="p-friendships__member" href="{{ url('members_profile', {username: other.username}) }}">
+      <span class="o-avatar o-avatar--s">
+        <span class="o-avatar__img-wrapper o-avatar--shadow-s">
+          <img class="o-avatar__img" src="{{ path('avatar', {username: other.username, size: 48}) }}" alt="" loading="lazy">
+        </span>
+      </span>
+      <span class="p-friendships__name">{{ other.username }}</span>
+    </a>
+    <form method="post" action="{{ url('edit_friendship', {username: other.username}) }}" class="p-friendships__actions">
+      <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\FriendshipController::TOKEN')) }}">
+      {% for action, button in buttons %}
+        <button type="submit" name="friendship" value="{{ action }}" class="o-button o-button--s {{ button.class }}"
+          {% if button.confirm is defined %}onclick="return confirm('{{ button.confirm|trans({username: other.username})|e('js') }}')"{% endif %}>
+          {{ button.label|trans }}
+        </button>
+      {% endfor %}
+    </form>
+  </li>
+{% endmacro %}
+
+{% block page_content %}
+  {% import _self as friendships %}
+  <div class="p-friends-page p-profile-main">
+    {% if requests is not empty %}
+      <div class="card u:mb-16">
+        <div class="card-header">
+          {{ 'friendships.requests'|trans }} <span class="p-gallery-footer__count">{{ requests|length }}</span>
+        </div>
+        <div class="card-body">
+          <ul class="p-friendships">
+            {% for friend in requests %}
+              {{ friendships.row(member, friend, {
+                decline: {label: 'friend.decline', class: 'o-button--outline'},
+                accept: {label: 'friend.accept', class: ''},
+              }) }}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if sent is not empty %}
+      <div class="card u:mb-16">
+        <div class="card-header">
+          {{ 'friendships.sent'|trans }} <span class="p-gallery-footer__count">{{ sent|length }}</span>
+        </div>
+        <div class="card-body">
+          <ul class="p-friendships">
+            {% for friend in sent %}
+              {{ friendships.row(member, friend, {
+                withdraw: {label: 'friend.withdraw', class: 'o-button--outline'},
+              }) }}
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="card">
+      <div class="card-header">
+        {{ 'profile.friends'|trans }}
+        {% if friends is not empty %}<span class="p-gallery-footer__count">{{ friends|length }}</span>{% endif %}
+      </div>
+      <div class="card-body">
+        {% if friends is empty %}
+          <div class="p-no-comments">
+            <i class="fas fa-user-friends" aria-hidden="true"></i>
+            <p>{{ 'profile.no.friends'|trans }}</p>
+          </div>
+        {% else %}
+          <ul class="p-friendships">
+            {% for friend in friends %}
+              {{ friendships.row(member, friend, {
+                remove: {label: 'profile.edit.friend.remove', class: 'o-button--outline', confirm: 'friendships.remove.confirm'},
+              }) }}
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock page_content %}

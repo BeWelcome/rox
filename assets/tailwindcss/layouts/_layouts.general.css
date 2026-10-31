@@ -3562,6 +3562,25 @@ main:has(.p-hero) {
 }
 .p-friends-page__item:hover .p-friends-page__name { color: #c2410c; }
 .p-friends-page__pager { display: flex; justify-content: center; margin-top: 1.25rem; }
+.p-friends-page__manage { font-size: 0.875rem; font-weight: 600; }
+
+/* ── Own friendships (/members/{username}/friendships): requests, sent, friends ── */
+.p-friendships { margin: 0; padding: 0; list-style: none; }
+.p-friendships__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.p-friendships__row:last-child { border-bottom: 0; }
+.p-friendships__member,
+.p-friendships__member:hover { display: flex; align-items: center; gap: 0.75rem; min-width: 0; color: #1e293b; text-decoration: none; }
+.p-friendships__name { font-weight: 600; overflow-wrap: anywhere; }
+.p-friendships__member:hover .p-friendships__name { color: #c2410c; }
+.p-friendships__actions { display: flex; gap: 0.5rem; margin: 0; }
 .p-visitors-page__when { margin-top: -0.35rem; color: #94a3b8; font-size: 0.75rem; text-align: center; }
 
 @media (max-width: 576px) {

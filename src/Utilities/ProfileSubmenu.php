@@ -103,9 +103,9 @@ class ProfileSubmenu
         $notesCount = $noteRepository->getProfileNotesCount($loggedInMember);
         $memberInfo['notes_count'] = $notesCount;
 
-        /** @var FriendRepository $familyAndFriendsRepository */
-        $familyAndFriendsRepository = $this->entityManager->getRepository(Friend::class);
-        $memberInfo['friends_count'] = $familyAndFriendsRepository->getFamilyAndFriendsCount($member);
+        /** @var FriendRepository $friendRepository */
+        $friendRepository = $this->entityManager->getRepository(Friend::class);
+        $memberInfo['friends_count'] = $friendRepository->countFriends($member);
 
         if (!$ownProfile) {
             $comment = $commentRepository->findOneBy(['fromMember' => $loggedInMember, 'toMember' => $member]);
@@ -114,10 +114,7 @@ class ProfileSubmenu
             $note = $noteRepository->findOneBy(['owner' => $loggedInMember, 'member' => $member]);
             $memberInfo['note'] = null !== $note;
 
-            /** @var FriendRepository $familyAndFriendsRepository */
-            $familyAndFriendsRepository = $this->entityManager->getRepository(Friend::class);
-            $friend = $familyAndFriendsRepository->findFriendshipBetween($loggedInMember, $member);
-            $memberInfo['friend'] = null !== $friend;
+            $memberInfo['friend'] = $friendRepository->findFriendshipBetween($loggedInMember, $member);
 
             /** @var MessageRepository $messageRepository */
             $messageRepository = $this->entityManager->getRepository(Message::class);
@@ -224,17 +221,24 @@ class ProfileSubmenu
             ]);
         }
 
-        if ($parameters['friend']) {
-            $this->addSubmenuItem('friend', [
-                'key' => 'profile.friend.edit',
-                'icon' => 'handshake',
-                'url' => $this->routing->generate('edit_friendship', ['username' => $username]),
-            ]);
-        } else {
+        /** @var Friend|null $friend */
+        $friend = $parameters['friend'];
+        if (null === $friend) {
             $this->addSubmenuItem('friend', [
                 'key' => 'profile.friend.add',
                 'icon' => 'handshake',
                 'url' => $this->routing->generate('add_friendship', ['username' => $username]),
+            ]);
+        } else {
+            $key = match (true) {
+                $friend->isConfirmed() => 'profile.friend.edit',
+                $friend->isRequester($member) => 'profile.friend.answer',
+                default => 'profile.friend.pending',
+            };
+            $this->addSubmenuItem('friend', [
+                'key' => $key,
+                'icon' => 'handshake',
+                'url' => $this->routing->generate('edit_friendship', ['username' => $username]),
             ]);
         }
 

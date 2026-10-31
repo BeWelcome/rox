@@ -225,9 +225,10 @@ class Mailer
     /**
      * Send notification for a friendship request.
      */
-    public function sendFriendshipNotification(Friend $friend, Member $requester): bool
+    public function sendFriendshipNotification(Friend $friend): bool
     {
-        $receiver = $friend->getLeft() === $requester ? $friend->getRight() : $friend->getLeft();
+        $requester = $friend->getRequester();
+        $receiver = $friend->getReceiver();
         $parameters = [];
         $parameters['sender'] = $requester;
         $parameters['receiver'] = $receiver;

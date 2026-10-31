@@ -46,7 +46,6 @@ final class PageActionsTest extends WebTestCase
             'not spam' => ['member-2', '/conversation/1/nospam'],
             'remove a trip' => ['member-2', '/trip/1/remove'],
             'delete a note' => ['member-2', '/members/member-3/note/delete'],
-            'remove a friendship' => ['member-2', '/members/member-3/friendship/remove'],
             'delete a profile language' => ['member-2', '/members/member-2/delete/language/de'],
             'hide a comment' => ['bwadmin', '/admin/comment/member-1/member-2/hide'],
             'show a comment' => ['bwadmin', '/admin/comment/member-1/member-2/show'],

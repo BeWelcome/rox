@@ -35,7 +35,7 @@ flash.friend.confirmed:
     - 'Friendship has been confirmed.'
     - Flash message shown to the user, when a friendship has been confirmed.
 friend.sender.says.exist:
-    - '{username} says you''re friend (or family member).'
+    - '{username} would like to add you as a friend on BeWelcome.'
     - Text in the notification email about a friend request
 friend.confirm:
     - 'Confirm'
@@ -52,16 +52,6 @@ friendship.confirm:
     - '@confirm'
 friendship.dismiss:
     - '@dismiss'
-friend.edit.headline:
-    - 'Edit friends entry'
-    - Headline of the edit friend (family and friends) form
-friend.edit.blurb:
-    - "If you're no longer friends with this member, you can remove the friendship here.
-    
-    Your friend will not be notified about any change but the friend entry on your and their profile
-    will be removed. 
-    "
-    - Added on the 'Add a friend' page to guide members
 profile.edit.friend.keep:
     - 'Keep as friend'
     - Label on keep button on the edit friend form
@@ -76,9 +66,76 @@ friend.add.headline:
     - 'Add friend'
     - Headline of the add friend (family and friends) form
 friend.add.blurb:
-    - "A member you add as a fiend will be asked to confirm that friendship. After that happened the
+    - "A member you add as a friend will be asked to confirm that friendship. After that happened the
       friendship will be visible on your profile and the profile of your friend.
       "
     - Added on the 'Add a friend' page to guide members
 profile.add.friend.confirm:
     - '@confirm'
+email.subject.friendship:
+    - '{username} would like to be your friend on BeWelcome'
+    - Subject of the mail about a friendship request. Keep {username}.
+profile.friend.pending:
+    - 'Friend request sent'
+    - Profile menu entry while the member hasn''t answered your friendship request yet.
+profile.friend.answer:
+    - 'Answer friend request'
+    - Profile menu entry when the member asked you to confirm a friendship.
+friend.confirmed.headline:
+    - 'Your friendship'
+    - Headline of the page about a confirmed friendship
+friend.confirmed.blurb:
+    - "You and {username} are friends. If that's no longer the case, you can remove the friendship. {username}
+      won't be notified, but the friendship disappears from both profiles."
+    - Text on the page about a confirmed friendship. Keep {username}.
+friend.sent.headline:
+    - 'Friend request sent'
+    - Headline of the page about a friendship request you sent
+friend.sent.blurb:
+    - "{username} hasn't confirmed your friendship yet. You can withdraw the request."
+    - Text on the page about a friendship request you sent. Keep {username}.
+friend.received.headline:
+    - 'Friend request'
+    - Headline of the page about a friendship request you received
+friend.received.blurb:
+    - "{username} would like to add you as a friend. Once you accept, the friendship shows on both profiles."
+    - Text on the page about a friendship request you received. Keep {username}.
+friend.accept:
+    - 'Accept'
+    - Button to accept a friendship request
+friend.decline:
+    - 'Decline'
+    - Button to decline a friendship request
+friend.withdraw:
+    - 'Withdraw request'
+    - Button to withdraw a friendship request you sent
+friendships.requests:
+    - 'Friend requests'
+    - Heading of the list of friendship requests waiting for your answer
+friendships.sent:
+    - 'Waiting for confirmation'
+    - Heading of the list of friendship requests you sent that aren''t answered yet
+friendships.manage:
+    - 'Manage friends'
+    - Link to the page with your friend requests and friends
+friendships.remove.confirm:
+    - 'Remove the friendship with {username}?'
+    - Question before removing a friendship. Keep {username}.
+flash.friendship.requested:
+    - '{username} has been asked to confirm your friendship.'
+    - Flash message after sending a friendship request. Keep {username}.
+flash.friendship.confirmed:
+    - 'You and {username} are now friends.'
+    - Flash message after accepting a friendship request. Keep {username}.
+flash.friendship.dismissed:
+    - 'The friend request of {username} has been declined.'
+    - Flash message after declining a friendship request. Keep {username}.
+flash.friendship.withdrawn:
+    - 'Your friend request to {username} has been withdrawn.'
+    - Flash message after withdrawing a friendship request. Keep {username}.
+flash.friendship.removed:
+    - 'The friendship with {username} has been removed.'
+    - Flash message after removing a friendship. Keep {username}.
+flash.friend.not.active:
+    - 'You can add friends once your profile has been checked.'
+    - Flash message when a new member (profile not yet checked) tries to add a friend.

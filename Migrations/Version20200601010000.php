@@ -393,18 +393,23 @@ final class Version20200601010000 extends AbstractMigration
 
     private function migrateFriends(string $statuses): void
     {
+        // One row per pair (A→B and B→A are one friendship), confirmed if either relation was; both members
+        // must be copied too.
         $sql = <<<SQL
                 INSERT IGNORE INTO friend (created, updated, left_confirmed, left_id, right_id, right_confirmed)
                 SELECT
-                    sr.created,
-                    sr.updated,
-                    IF(sr.Confirmed = 'Yes', 1, 0),
+                    MIN(sr.created),
+                    MAX(sr.updated),
+                    MAX(IF(sr.Confirmed = 'Yes', 1, 0)),
                     LEAST(sr.IdOwner, sr.IdRelation),
                     GREATEST(sr.IdOwner, sr.IdRelation),
-                    IF(sr.Confirmed = 'Yes', 1, 0)
+                    MAX(IF(sr.Confirmed = 'Yes', 1, 0))
                 FROM specialrelations sr
-                INNER JOIN members m ON (m.id = sr.IdOwner OR m.id = sr.IdRelation)
-                WHERE m.Status IN ($statuses)
+                INNER JOIN members owner ON owner.id = sr.IdOwner
+                INNER JOIN members relation ON relation.id = sr.IdRelation
+                WHERE owner.Status IN ($statuses) AND relation.Status IN ($statuses)
+                    AND sr.IdOwner <> sr.IdRelation
+                GROUP BY LEAST(sr.IdOwner, sr.IdRelation), GREATEST(sr.IdOwner, sr.IdRelation)
             SQL;
 
         $this->connection->executeStatement($sql);

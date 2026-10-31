@@ -83,6 +83,10 @@ class ProfileController extends AbstractController
         /** @var Member $loggedInMember */
         $loggedInMember = $this->getUser();
 
+        /** @var ProfileVisitRepository $visitRepository */
+        $visitRepository = $this->entityManager->getRepository(ProfileVisit::class);
+        $visitRepository->recordVisit($member, $loggedInMember);
+
         return $this->renderProfile($member, $loggedInMember, $language, false);
     }
 

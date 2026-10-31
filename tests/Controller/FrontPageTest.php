@@ -29,5 +29,7 @@ class FrontPageTest extends WebTestCase
         self::assertCount(1, $crawler->filter('.js-fp-slot .fp-float--host.is-active'));
         self::assertGreaterThan(5, $crawler->filter('.js-fp-slot .fp-note')->count());
         self::assertCount(1, $crawler->filter('.fp-community a[href$="/about/getactive"]'));
+        self::assertCount(5, $crawler->filter('.js-fp-how .fp-step'));
+        self::assertCount(2, $crawler->filter('.js-fp-how .fp-chat .fp-bubble'));
     }
 }

@@ -67,6 +67,69 @@ if (frontpageCount && 'IntersectionObserver' in window && !window.matchMedia('(p
     observer.observe(frontpageCount);
 }
 
+// Front page "How it works": each picture plays once when it comes on screen, in a cascade. Its parts
+// show at the time in their data-at (ms), data-off hides one (the typing dots), .js-fp-tick counts up.
+const frontpageHow = document.querySelector('.js-fp-how');
+if (frontpageHow && 'IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    frontpageHow.classList.add('fp-anim');
+    const tick = function (element) {
+        const target = parseInt(element.dataset.count, 10) || 0;
+        const start = performance.now();
+        const step = function (now) {
+            const progress = Math.min((now - start) / 1200, 1);
+            element.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            }
+        };
+        element.textContent = '0';
+        requestAnimationFrame(step);
+    };
+    const play = function (step) {
+        step.querySelectorAll('[data-at]').forEach(function (part) {
+            setTimeout(function () { part.classList.add('is-on'); }, parseInt(part.dataset.at, 10) || 0);
+        });
+        step.querySelectorAll('[data-off]').forEach(function (part) {
+            setTimeout(function () { part.classList.add('is-off'); }, parseInt(part.dataset.off, 10) || 0);
+        });
+        step.querySelectorAll('.js-fp-tick').forEach(function (counter) {
+            counter.textContent = '0';
+            setTimeout(function () { tick(counter); }, parseInt(counter.dataset.start, 10) || 0);
+        });
+    };
+    // In page order: a picture on screen starts a short moment after the one before it, so a row of three
+    // plays as a cascade instead of all at once (or one waiting for the whole of the other)
+    const queue = [];
+    let playing = false;
+    const next = function () {
+        if (playing || queue.length === 0) {
+            return;
+        }
+        const step = queue.shift();
+        playing = true;
+        play(step);
+        setTimeout(function () {
+            playing = false;
+            next();
+        }, 650);
+    };
+    const stepObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+                stepObserver.unobserve(entry.target);
+                queue.push(entry.target);
+            }
+        });
+        queue.sort(function (a, b) {
+            return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+        });
+        next();
+    }, { threshold: 0.45 });
+    frontpageHow.querySelectorAll('.fp-step').forEach(function (step) {
+        stepObserver.observe(step);
+    });
+}
+
 const frontpageMap = document.querySelector('.js-fp-map');
 if (frontpageMap) {
     import('./home/frontpage-map').then(({ showFrontpageMap }) => showFrontpageMap(frontpageMap));

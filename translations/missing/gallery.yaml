@@ -95,3 +95,123 @@ gallery.photo.deleting:
 gallery.photo.sheet.description.placeholder:
     - 'Add a description…'
     - Placeholder text for the description textarea in the photo edit bottom sheet.
+gallery.mine.title:
+    - 'My photos'
+    - Title of the page where a member manages their own photos and albums
+gallery.mine.count:
+    - '{count, plural, =0 {No photos yet} one {# photo} other {# photos}}'
+    - My photos page, how many photos the member has
+gallery.mine.add:
+    - 'Add photos'
+    - My photos page, button to choose photos to upload
+gallery.mine.albums:
+    - 'Albums'
+    - My photos page, name of the row of album pills (for screen readers)
+gallery.mine.all:
+    - 'All'
+    - My photos page, pill that shows all photos
+gallery.mine.album.new:
+    - 'New album'
+    - My photos page, pill and choice to create an album
+gallery.mine.album.name:
+    - 'Album name'
+    - My photos page, placeholder of the album name field
+gallery.mine.album.create:
+    - 'Create'
+    - My photos page, button that creates the album
+gallery.mine.album.rename:
+    - 'Rename'
+    - My photos page, button to give the album shown a new name
+gallery.mine.album.delete:
+    - 'Delete album'
+    - My photos page, button to delete the album shown
+gallery.mine.album.delete.confirm:
+    - 'Delete this album? Its photos stay in My photos.'
+    - My photos page, question before an album is deleted
+gallery.mine.album.none:
+    - 'No album'
+    - My photos page, choice to take photos out of any album
+gallery.mine.select:
+    - 'Select'
+    - My photos page, button to pick several photos
+gallery.mine.selected:
+    - '{count, plural, =0 {Pick photos} one {# selected} other {# selected}}'
+    - My photos page, bottom bar, how many photos are picked
+gallery.mine.move:
+    - 'Move to album'
+    - My photos page, bottom bar, list of albums to move the picked photos to
+gallery.mine.delete:
+    - 'Delete'
+    - My photos page, button to delete a photo or the picked photos
+gallery.mine.delete.one:
+    - 'Delete this photo?'
+    - My photos page, question before one photo is deleted
+gallery.mine.delete.many:
+    - '{count, plural, one {Delete this photo?} other {Delete these # photos?}}'
+    - My photos page, question before the picked photos are deleted
+gallery.mine.cancel:
+    - 'Cancel'
+    - My photos page, button to close a dialog or stop picking photos
+gallery.mine.edit:
+    - 'Photo'
+    - My photos page, title of the panel of one photo
+gallery.mine.field.title:
+    - 'Title'
+    - My photos page, photo panel, title field
+gallery.mine.field.title.placeholder:
+    - 'Where or what is it?'
+    - My photos page, photo panel, placeholder of the title field
+gallery.mine.field.description:
+    - 'Description'
+    - My photos page, photo panel, description field
+gallery.mine.field.description.placeholder:
+    - 'A few words about this photo'
+    - My photos page, photo panel, placeholder of the description field
+gallery.mine.field.album:
+    - 'Album'
+    - My photos page, photo panel, album choice
+gallery.mine.save:
+    - 'Save'
+    - My photos page, photo panel and rename dialog, save button
+gallery.mine.saved:
+    - 'Saved'
+    - My photos page, photo panel, shown on the button once saved
+gallery.mine.empty.album:
+    - 'This album is empty'
+    - My photos page, title when the album shown has no photos
+gallery.mine.empty.text:
+    - 'Add photos of your home, your city or your travels. You can also drop them on this page.'
+    - My photos page, text when there are no photos
+gallery.mine.drop:
+    - 'Drop your photos to add them'
+    - My photos page, shown while photos are dragged over the page
+gallery.mine.error.size:
+    - 'This photo is too large'
+    - My photos page, error on a photo that is too large to upload
+gallery.mine.error.type:
+    - 'Only JPEG, PNG or GIF'
+    - My photos page, error on a file that is not a supported image
+gallery.mine.error.failed:
+    - 'Something went wrong. Please try again.'
+    - My photos page, error when saving failed
+gallery.mine.add.short:
+    - 'Add'
+    - My photos page, short button in the head to add photos
+gallery.mine.done:
+    - 'Done'
+    - My photos page, button that stops picking photos
+gallery.mine.album.options:
+    - 'Album options'
+    - My photos page, menu button of the album shown (for screen readers)
+gallery.mine.album.new.short:
+    - 'New'
+    - My photos page, chip to create an album while choosing one
+gallery.mine.move.short:
+    - 'Move'
+    - My photos page, bottom bar, button to move the picked photos to an album
+gallery.mine.previous:
+    - 'Previous photo'
+    - My photos page, photo sheet, arrow to the previous photo (for screen readers)
+gallery.mine.next:
+    - 'Next photo'
+    - My photos page, photo sheet, arrow to the next photo (for screen readers)

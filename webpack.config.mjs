@@ -76,6 +76,7 @@ Encore
     .addEntry('updatecounters', './assets/js/updateCounters.js')
     .addEntry('lightbox', './assets/js/lightbox.js')
     .addEntry('gallery', './assets/js/gallery.js')
+    .addEntry('gallery/manage', './assets/js/gallery/manage.js')
     .addEntry('notes_filter', './assets/js/notes/filter.js')
     .addEntry('conversations', './assets/js/conversations.js')
     .addEntry('report', './assets/js/conversations/report.js')

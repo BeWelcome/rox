@@ -155,11 +155,19 @@ class GalleryController extends AbstractController
         }
         $img->save($uploadDirectory . '/thumb' . $fileName);
 
-        $album = $request->request->get('album');
+        $album = (string) $request->request->get('album', '');
+        // The page /gallery/manage gives the album by its id
+        $albumId = $request->request->getInt('albumId');
 
         // Create doctrine entity for image and save to database
         $galleryImage = new GalleryImage();
-        if ('' !== $album) {
+        $gallery = $albumId > 0
+            ? $this->entityManager->getRepository(Gallery::class)->findOneBy(['id' => $albumId, 'owner' => $member])
+            : null;
+        if (null !== $gallery) {
+            $galleryImage->addGallery($gallery);
+            $gallery->addImage($galleryImage);
+        } elseif ('' !== $album) {
             // Check if album exists
             // and if so check if the current member is owner of that album
             $galleryRepository = $this->entityManager->getRepository(Gallery::class);

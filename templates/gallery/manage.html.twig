@@ -1,0 +1,184 @@
+{% extends 'base.html.twig' %}
+
+{% set hide_sidebar = true %}
+
+{#
+  The member's own photos (GalleryManageController): a head with Select and Add, the albums as small cover
+  tiles (All, each album, New album), the album shown with its menu (rename, delete), then one grid that starts
+  with an "Add photos" tile. A photo opens in a sheet (photo, title, text, album chips, delete, save); "Select"
+  shows a ring on each photo and a dark bar at the bottom to move or delete the ones picked.
+  assets/js/gallery/manage.js does the rest without reloading; the texts it needs are in data-* of .p-gm.
+#}
+
+{% block title %}{{ 'gallery.mine.title'|trans }}{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('gallery/manage') }}
+{% endblock javascripts %}
+
+{% block content %}
+    {% set _album_id = active_album ? active_album.id : '' %}
+    <div class="p-gm js-gm"
+         data-token="{{ csrf_token('gallery_manage') }}"
+         data-album="{{ _album_id }}"
+         data-max-upload="{{ max_upload }}"
+         data-url-upload="{{ path('gallery_upload_new') }}"
+         data-url-album-create="{{ path('gallery_manage_album_create') }}"
+         data-url-album="{{ path('gallery_manage_album_rename', {id: 0}) }}"
+         data-url-picture="{{ path('gallery_manage_picture', {id: 0}) }}"
+         data-url-move="{{ path('gallery_manage_pictures_move') }}"
+         data-url-delete="{{ path('gallery_manage_pictures_delete') }}"
+         data-url-page="{{ path('gallery_manage_page') }}"
+         data-url-thumb="{{ path('gallery_thumbnail', {id: 0, t: 2}) }}"
+         data-url-big="{{ path('gallery_thumbnail', {id: 0, t: 3}) }}"
+         data-t-selected-0="{{ 'gallery.mine.selected'|trans({count: 0}) }}"
+         data-t-selected-1="{{ 'gallery.mine.selected'|trans({count: 1}) }}"
+         data-t-selected-n="{{ 'gallery.mine.selected'|trans({count: 2})|replace({'2': '{count}'}) }}"
+         data-t-too-big="{{ 'gallery.mine.error.size'|trans }}"
+         data-t-not-image="{{ 'gallery.mine.error.type'|trans }}"
+         data-t-failed="{{ 'gallery.mine.error.failed'|trans }}"
+         data-t-delete-one="{{ 'gallery.mine.delete.one'|trans }}"
+         data-t-delete-many="{{ 'gallery.mine.delete.many'|trans({count: 2})|replace({'2': '{count}'}) }}"
+         data-t-delete-album="{{ 'gallery.mine.album.delete.confirm'|trans }}"
+         data-t-new-album="{{ 'gallery.mine.album.new'|trans }}"
+         data-t-rename-album="{{ 'gallery.mine.album.rename'|trans }}"
+         data-t-create="{{ 'gallery.mine.album.create'|trans }}"
+         data-t-save="{{ 'gallery.mine.save'|trans }}"
+         data-t-saved="{{ 'gallery.mine.saved'|trans }}"
+         data-t-move-to="{{ 'gallery.mine.move'|trans }}"
+         data-t-count-0="{{ 'gallery.mine.count'|trans({count: 0}) }}"
+         data-t-count-1="{{ 'gallery.mine.count'|trans({count: 1}) }}"
+         data-t-count-n="{{ 'gallery.mine.count'|trans({count: 2})|replace({'2': '{count}'}) }}">
+
+        <header class="p-gm__head">
+            <a class="p-gm__back" href="{{ path('gallery_member_images', {username: member.username}) }}" aria-label="{{ 'profile.back'|trans }}">
+                <i class="fas fa-chevron-left" aria-hidden="true"></i>
+            </a>
+            <div class="p-gm__heading">
+                <h1 class="p-gm__title">{{ 'gallery.mine.title'|trans }}</h1>
+                <p class="p-gm__sub js-gm-count">{{ 'gallery.mine.count'|trans({count: total}) }}</p>
+            </div>
+            <div class="p-gm__actions">
+                <button type="button" class="p-gm-pill p-gm-pill--grey js-gm-select{{ pictures|length == 0 ? ' d-none' }}"><i class="far fa-check-circle" aria-hidden="true"></i> {{ 'gallery.mine.select'|trans }}</button>
+                <label class="p-gm-pill p-gm-pill--orange" for="gm-files"><i class="fas fa-plus" aria-hidden="true"></i> {{ 'gallery.mine.add.short'|trans }}</label>
+                <button type="button" class="p-gm-pill p-gm-pill--dark js-gm-select-done">{{ 'gallery.mine.done'|trans }}</button>
+            </div>
+            <input type="file" id="gm-files" class="p-gm__files js-gm-files" accept="image/jpeg,image/png,image/gif" multiple>
+        </header>
+
+        {# Albums: a small cover each, the name and number under it #}
+        <nav class="p-gm-albums" aria-label="{{ 'gallery.mine.albums'|trans }}">
+            <a class="p-gm-albums__item{{ active_album ? '' : ' is-active' }}" href="{{ path('gallery_manage_page') }}">
+                <span class="p-gm-albums__thumb">
+                    {% if latest %}<img src="{{ path('gallery_thumbnail', {id: latest, t: 1}) }}" alt="" loading="lazy">{% endif %}
+                    <i class="fas fa-images" aria-hidden="true"></i>
+                </span>
+                <span class="p-gm-albums__name">{{ 'gallery.mine.all'|trans }} <small class="js-gm-total">{{ total }}</small></span>
+            </a>
+            {% for _album in albums %}
+                <a class="p-gm-albums__item{{ active_album and active_album.id == _album.id ? ' is-active' }}" href="{{ path('gallery_manage_page', {album: _album.id}) }}" data-album-id="{{ _album.id }}">
+                    <span class="p-gm-albums__thumb">
+                        {% if _album.cover %}<img src="{{ path('gallery_thumbnail', {id: _album.cover, t: 1}) }}" alt="" loading="lazy">{% else %}<i class="fas fa-folder" aria-hidden="true"></i>{% endif %}
+                    </span>
+                    <span class="p-gm-albums__name"><span class="js-gm-album-title">{{ _album.title }}</span> <small class="js-gm-album-count">{{ _album.count }}</small></span>
+                </a>
+            {% endfor %}
+            <button type="button" class="p-gm-albums__item p-gm-albums__item--new js-gm-album-new">
+                <span class="p-gm-albums__thumb"><i class="fas fa-folder-plus" aria-hidden="true"></i></span>
+                <span class="p-gm-albums__name">{{ 'gallery.mine.album.new'|trans }}</span>
+            </button>
+        </nav>
+
+        {% if active_album %}
+            <div class="p-gm-album-bar">
+                <i class="fas fa-folder-open" aria-hidden="true"></i>
+                <h2 class="p-gm-album-bar__title js-gm-album-name">{{ active_album.title }}</h2>
+                <span class="p-gm-album-bar__count js-gm-album-photos">{{ 'gallery.mine.count'|trans({count: pictures|length}) }}</span>
+                <div class="p-gm-menu">
+                    <button type="button" class="p-gm-menu__btn js-gm-menu" aria-haspopup="true" aria-expanded="false" aria-label="{{ 'gallery.mine.album.options'|trans }}"><i class="fas fa-ellipsis-h" aria-hidden="true"></i></button>
+                    <div class="p-gm-menu__list" role="menu">
+                        <button type="button" role="menuitem" class="js-gm-album-rename"><i class="fas fa-pen" aria-hidden="true"></i> {{ 'gallery.mine.album.rename'|trans }}</button>
+                        <button type="button" role="menuitem" class="is-danger js-gm-album-delete"><i class="fas fa-trash" aria-hidden="true"></i> {{ 'gallery.mine.album.delete'|trans }}</button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <ul class="p-gm-grid js-gm-grid">
+            <li class="p-gm-grid__add">
+                <label for="gm-files"><span><i class="fas fa-plus" aria-hidden="true"></i></span> {{ 'gallery.mine.add'|trans }}</label>
+            </li>
+            {% for _picture in pictures %}
+                <li class="p-gm-tile js-gm-tile" data-id="{{ _picture.id }}" data-title="{{ _picture.title }}" data-description="{{ _picture.description }}" data-album="{{ _picture.album }}">
+                    <button type="button" class="p-gm-tile__open js-gm-open" aria-label="{{ _picture.title ?: 'gallery.mine.edit'|trans }}">
+                        <img src="{{ path('gallery_thumbnail', {id: _picture.id, t: 2}) }}" alt="" loading="lazy">
+                    </button>
+                    <span class="p-gm-tile__check" aria-hidden="true"><i class="fas fa-check"></i></span>
+                    {% if _picture.title %}<span class="p-gm-tile__caption js-gm-caption">{{ _picture.title }}</span>{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+        <p class="p-gm-empty js-gm-empty{{ pictures|length > 0 ? ' d-none' }}">{{ active_album ? 'gallery.mine.empty.album'|trans : 'gallery.mine.empty.text'|trans }}</p>
+
+        <div class="p-gm-drop js-gm-drop" aria-hidden="true">
+            <div class="p-gm-drop__box"><i class="fas fa-cloud-upload-alt"></i> {{ 'gallery.mine.drop'|trans }}</div>
+        </div>
+
+        {# Several photos picked: what to do with them #}
+        <div class="p-gm-bar js-gm-bar" aria-hidden="true">
+            <span class="p-gm-bar__count js-gm-selected"></span>
+            <button type="button" class="p-gm-bar__btn js-gm-move"><i class="fas fa-folder" aria-hidden="true"></i> {{ 'gallery.mine.move.short'|trans }}</button>
+            <button type="button" class="p-gm-bar__btn p-gm-bar__btn--danger js-gm-delete-selected"><i class="fas fa-trash" aria-hidden="true"></i> {{ 'gallery.mine.delete'|trans }}</button>
+        </div>
+
+        {# One photo: big on a dark band (arrows and swipe go to the next one), then its title, text and album #}
+        <div class="p-gm-sheet js-gm-panel" aria-hidden="true">
+            <div class="p-gm-sheet__backdrop js-gm-panel-close"></div>
+            <section class="p-gm-sheet__box" role="dialog" aria-modal="true" aria-label="{{ 'gallery.mine.edit'|trans }}">
+                <div class="p-gm-sheet__photo js-gm-panel-photo">
+                    <img class="js-gm-panel-img" src="" alt="">
+                    <span class="p-gm-sheet__counter js-gm-panel-counter"></span>
+                    <button type="button" class="p-gm-sheet__x js-gm-panel-close" aria-label="{{ 'gallery.mine.cancel'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></button>
+                    <button type="button" class="p-gm-sheet__nav p-gm-sheet__nav--prev js-gm-panel-prev" aria-label="{{ 'gallery.mine.previous'|trans }}"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                    <button type="button" class="p-gm-sheet__nav p-gm-sheet__nav--next js-gm-panel-next" aria-label="{{ 'gallery.mine.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                </div>
+                <form class="p-gm-sheet__form js-gm-panel-form">
+                    <input type="text" class="p-gm-sheet__input p-gm-sheet__input--title js-gm-panel-title" maxlength="255" placeholder="{{ 'gallery.mine.field.title.placeholder'|trans }}" aria-label="{{ 'gallery.mine.field.title'|trans }}">
+                    <textarea class="p-gm-sheet__input js-gm-panel-description" rows="3" maxlength="5000" placeholder="{{ 'gallery.mine.field.description.placeholder'|trans }}" aria-label="{{ 'gallery.mine.field.description'|trans }}"></textarea>
+                    <p class="p-gm-sheet__label">{{ 'gallery.mine.field.album'|trans }}</p>
+                    <div class="p-gm-chips js-gm-panel-albums">
+                        <button type="button" class="p-gm-chip" data-album=""><i class="fas fa-ban" aria-hidden="true"></i> {{ 'gallery.mine.album.none'|trans }}</button>
+                        {% for _album in albums %}
+                            <button type="button" class="p-gm-chip" data-album="{{ _album.id }}"><i class="fas fa-folder" aria-hidden="true"></i> {{ _album.title }}</button>
+                        {% endfor %}
+                        <button type="button" class="p-gm-chip p-gm-chip--new" data-album="new"><i class="fas fa-plus" aria-hidden="true"></i> {{ 'gallery.mine.album.new.short'|trans }}</button>
+                    </div>
+                    <div class="p-gm-sheet__foot">
+                        <button type="button" class="p-gm-sheet__delete js-gm-panel-delete" aria-label="{{ 'gallery.mine.delete'|trans }}"><i class="fas fa-trash" aria-hidden="true"></i></button>
+                        <button type="submit" class="p-gm-sheet__save js-gm-panel-save">{{ 'gallery.mine.save'|trans }}</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        {# Small dialog: a name for an album, "are you sure" before deleting, or the album to move photos to #}
+        <div class="p-gm-dialog js-gm-dialog" aria-hidden="true">
+            <div class="p-gm-dialog__backdrop js-gm-dialog-cancel"></div>
+            <form class="p-gm-dialog__box js-gm-dialog-form" role="dialog" aria-modal="true">
+                <p class="p-gm-dialog__text js-gm-dialog-text"></p>
+                <input type="text" class="p-gm-sheet__input js-gm-dialog-input" maxlength="60" placeholder="{{ 'gallery.mine.album.name'|trans }}">
+                <div class="p-gm-chips js-gm-dialog-albums">
+                    {% for _album in albums %}
+                        <button type="button" class="p-gm-chip" data-album="{{ _album.id }}"><i class="fas fa-folder" aria-hidden="true"></i> {{ _album.title }}</button>
+                    {% endfor %}
+                    <button type="button" class="p-gm-chip" data-album=""><i class="fas fa-ban" aria-hidden="true"></i> {{ 'gallery.mine.album.none'|trans }}</button>
+                    <button type="button" class="p-gm-chip p-gm-chip--new" data-album="new"><i class="fas fa-plus" aria-hidden="true"></i> {{ 'gallery.mine.album.new.short'|trans }}</button>
+                </div>
+                <div class="p-gm-dialog__foot">
+                    <button type="button" class="p-gm-pill p-gm-pill--grey js-gm-dialog-cancel">{{ 'gallery.mine.cancel'|trans }}</button>
+                    <button type="submit" class="p-gm-pill p-gm-pill--orange js-gm-dialog-ok"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

@@ -10,7 +10,6 @@
 
 {% block content %}
     {# Not in a side panel (?embed=1): only the page itself there #}
-    {# group_head_compact: the page shows the group's small head itself (a forum thread) #}
-    {% if submenu is defined and not app.request.query.getBoolean('embed') and not (group_head_compact ?? false) %}{% include 'group/_head.html.twig' %}{% endif %}
+    {% if submenu is defined and not app.request.query.getBoolean('embed') %}{% include 'group/_head.html.twig' %}{% endif %}
     {% block group_content %}{% endblock %}
 {% endblock %}

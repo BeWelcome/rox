@@ -5,20 +5,11 @@
 
 main:has(.p-thread) { margin-top: 0 !important; background: #f4f5f7; }
 
-/* The top: white across the whole window */
-.p-thread__top { position: relative; margin-bottom: 2rem; padding: 1.5rem 0 1.75rem; background: #fff; box-shadow: 0 0 0 100vmax #fff; clip-path: inset(0 -100vmax); }
+/* The top: the title under the group's tabs, on the page's grey */
+.p-thread__top { position: relative; margin-bottom: 1.5rem; padding: 0.25rem 0 0; }
 .p-thread__top .p-forum__head { margin-top: 0; }
-.p-thread__crumbs { display: flex; align-items: center; gap: 0.6rem; min-width: 0; font-size: 0.9375rem; font-weight: 600; }
-.p-thread__crumb-group,
-.p-thread__crumb-group:hover { display: inline-flex; align-items: center; gap: 0.6rem; min-width: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-weight: 700; text-decoration: none; }
-.p-thread__crumb-group span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.p-thread__crumb-group:hover { color: #c2410c; }
-.p-thread__crumb-group img { flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 0.6rem; object-fit: cover; background: #f1f5f9; }
-.p-thread__crumb-sep { color: #cbd5e1; font-size: 0.6rem; }
-.p-thread__crumb,
-.p-thread__crumb:hover { color: #475569; text-decoration: none; white-space: nowrap; }
-.p-thread__crumb:hover { color: #c2410c; }
-.p-thread .p-thread__title { margin: 1rem 0 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.25rem; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
+.p-thread__top .p-forum__head + .p-thread__title { margin-top: 1rem; }
+.p-thread .p-thread__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2rem; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
 .p-thread__top .alert { margin: 1rem 0 0; }
 
 /* Phones: who is in it, the numbers, the order and Subscribe under the title */
@@ -177,11 +168,7 @@ main:has(.p-thread) { margin-top: 0 !important; background: #f4f5f7; }
 }
 
 @media (max-width: 767.98px) {
-  .p-thread__top { margin-bottom: 1rem; padding: 0.85rem 0 1rem; }
-  .p-thread__crumbs { font-size: 0.875rem; }
-  .p-thread__crumbs .p-thread__crumb-sep, .p-thread__crumbs .p-thread__crumb { display: none; }
-  .p-thread__crumb-group img { width: 1.9rem; height: 1.9rem; border-radius: 0.5rem; }
-  .p-thread .p-thread__title { margin-top: 0.6rem; font-size: 1.5rem; }
+  .p-thread__top { margin-bottom: 1rem; padding: 0; }
   .p-thread__people img, .p-thread__people-more { width: 2rem; height: 2rem; min-width: 2rem; }
   .p-thread__posts { gap: 0.75rem; }
   .p-thread__posts::before { left: 1.125rem; }

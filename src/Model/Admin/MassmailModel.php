@@ -26,7 +26,7 @@ class MassmailModel
     public const string FAILED = 'failed';
 
     /**
-     * The statuses of a recipient, by the name used in the URLs.
+     * The counts of a mass mail (broadcast_statistics) and the statuses of the messages they count.
      */
     public const array STATUSES = [
         self::ENQUEUED => 'ToApprove',
@@ -98,38 +98,6 @@ class MassmailModel
                 ['broadcast_body_' . strtolower((string) $newsletter->getName())],
             ),
         );
-    }
-
-    public function getRecipients(Newsletter $newsletter, string $status, int $page, int $perPage): Pagerfanta
-    {
-        // send:massmail marks a message it couldn't send as Freeze
-        $parameters = ['newsletter' => $newsletter->getId(), 'statuses' => self::FAILED === $status ? ['Failed', 'Freeze'] : [self::STATUSES[$status]]];
-        $types = ['statuses' => ArrayParameterType::STRING];
-        $pager = new Pagerfanta(new CallbackAdapter(
-            fn (): int => (int) $this->connection->fetchOne(
-                'SELECT COUNT(*) FROM broadcastmessages WHERE IdBroadcast = :newsletter AND Status IN (:statuses)',
-                $parameters,
-                $types,
-            ),
-            fn (int $offset, int $length): array => $this->connection->fetchAllAssociative(
-                "SELECT m.Username AS username, m.Status AS status, c.name AS country, COALESCE(l.Name, 'English') AS language
-                FROM broadcastmessages bm
-                JOIN member m ON m.id = bm.IdReceiver
-                LEFT JOIN address a ON a.member_id = m.id AND a.active = 1
-                LEFT JOIN location g ON g.geoname_id = a.location
-                LEFT JOIN location c ON c.geoname_id = g.country
-                LEFT JOIN language l ON l.ShortCode = m.Locale
-                WHERE bm.IdBroadcast = :newsletter AND bm.Status IN (:statuses)
-                ORDER BY m.Username
-                LIMIT " . $length . ' OFFSET ' . $offset,
-                $parameters,
-                $types,
-            ),
-        ));
-        $pager->setMaxPerPage($perPage);
-        $pager->setCurrentPage(max(1, min($page, $pager->getNbPages())));
-
-        return $pager;
     }
 
     public function wordCodeExists(string $name): bool

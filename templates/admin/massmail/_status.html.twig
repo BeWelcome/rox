@@ -10,11 +10,7 @@
     <tbody>
       <tr>
         {% for status in ['enqueued', 'triggered', 'sent', 'failed'] %}
-          <td class="text-end{% if current|default('') == status %} fw-bold{% endif %}">
-            {% if massmail[status] > 0 %}
-              <a href="{{ path('admin_massmail_recipients', {id: massmail.id, status: status}) }}">{{ massmail[status] }}</a>
-            {% else %}0{% endif %}
-          </td>
+          <td class="text-end">{{ massmail[status] }}</td>
         {% endfor %}
       </tr>
     </tbody>

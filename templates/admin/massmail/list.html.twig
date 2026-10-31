@@ -28,11 +28,7 @@
             <td>{{ (massmail_type_labels[massmail.type] ?? massmail.type)|trans }}</td>
             <td>{{ massmail.created|date('Y-m-d') }}</td>
             {% for status in ['enqueued', 'triggered', 'sent', 'failed'] %}
-              <td class="text-end">
-                {% if massmail[status] > 0 %}
-                  <a href="{{ path('admin_massmail_recipients', {id: massmail.id, status: status}) }}">{{ massmail[status] }}</a>
-                {% else %}0{% endif %}
-              </td>
+              <td class="text-end">{{ massmail[status] }}</td>
             {% endfor %}
           </tr>
         {% endfor %}

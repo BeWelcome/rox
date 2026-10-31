@@ -156,22 +156,6 @@ class MassmailController extends AbstractController
         ]);
     }
 
-    #[Route(
-        path: '/admin/massmail/{id}/recipients/{status}/{page}',
-        name: 'admin_massmail_recipients',
-        requirements: ['id' => '\d+', 'status' => 'enqueued|triggered|sent|failed', 'page' => '\d+'],
-        methods: ['GET'],
-    )]
-    public function recipients(Newsletter $newsletter, string $status, int $page = 1): Response
-    {
-        return $this->render('admin/massmail/recipients.html.twig', [
-            'newsletter' => $newsletter,
-            'massmail' => $this->model->get($newsletter),
-            'status' => $status,
-            'recipients' => $this->model->getRecipients($newsletter, $status, $page, $this->getItemsPerPage($this->volunteer())),
-        ]);
-    }
-
     #[Route(path: '/admin/massmail/{id}/enqueue', name: 'admin_massmail_enqueue', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function enqueue(Request $request, Newsletter $newsletter): Response
     {
@@ -312,14 +296,6 @@ class MassmailController extends AbstractController
      * The URLs of the legacy pages.
      */
     #[Route(path: '/admin/massmail/details/{id}', name: 'admin_massmail_details_old', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[Route(path: '/admin/massmail/edit/{id}', name: 'admin_massmail_edit_old', requirements: ['id' => '\d+'], methods: ['GET'], defaults: ['target' => 'admin_massmail_edit'])]
-    #[Route(path: '/admin/massmail/enqueue/{id}', name: 'admin_massmail_enqueue_old', requirements: ['id' => '\d+'], methods: ['GET'], defaults: ['target' => 'admin_massmail_enqueue'])]
-    #[Route(path: '/admin/massmail/test/{id}', name: 'admin_massmail_test_old', requirements: ['id' => '\d+'], methods: ['GET'], defaults: ['target' => 'admin_massmail_test'])]
-    public function oldPage(int $id, string $target = 'admin_massmail_details'): RedirectResponse
-    {
-        return $this->redirectToRoute($target, ['id' => $id], Response::HTTP_MOVED_PERMANENTLY);
-    }
-
     #[Route(
         path: '/admin/massmail/details/{id}/{status}/{rest}',
         name: 'admin_massmail_recipients_old',
@@ -327,11 +303,12 @@ class MassmailController extends AbstractController
         defaults: ['rest' => ''],
         methods: ['GET'],
     )]
-    public function oldRecipients(int $id, string $status, string $rest = ''): RedirectResponse
+    #[Route(path: '/admin/massmail/edit/{id}', name: 'admin_massmail_edit_old', requirements: ['id' => '\d+'], methods: ['GET'], defaults: ['target' => 'admin_massmail_edit'])]
+    #[Route(path: '/admin/massmail/enqueue/{id}', name: 'admin_massmail_enqueue_old', requirements: ['id' => '\d+'], methods: ['GET'], defaults: ['target' => 'admin_massmail_enqueue'])]
+    #[Route(path: '/admin/massmail/test/{id}', name: 'admin_massmail_test_old', requirements: ['id' => '\d+'], methods: ['GET'], defaults: ['target' => 'admin_massmail_test'])]
+    public function oldPage(int $id, string $target = 'admin_massmail_details'): RedirectResponse
     {
-        $page = (int) substr($rest, 5);
-
-        return $this->redirectToRoute('admin_massmail_recipients', ['id' => $id, 'status' => $status, 'page' => max(1, $page)], Response::HTTP_MOVED_PERMANENTLY);
+        return $this->redirectToRoute($target, ['id' => $id], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     /**

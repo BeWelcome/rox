@@ -94,12 +94,8 @@ class MassmailTest extends WebTestCase
         $this->client->submitForm('members[enqueue]', ['members[members]' => 'usernames', 'members[usernames]' => 'member-3; member-6']);
 
         $this->assertResponseRedirects('/admin/massmail/' . $id . '/details');
-        $crawler = $this->client->request('GET', '/admin/massmail/' . $id . '/recipients/enqueued');
-        $rows = $this->rows($crawler);
-        self::assertSame(['member-3', 'member-6'], array_keys($rows));
-        self::assertSame('Germany', $rows['member-3'][1]);
-        self::assertSame('Indonesia', $rows['member-6'][1]);
-        self::assertSame('English', $rows['member-3'][3]);
+        self::assertSame(['member-3', 'member-6'], $this->enqueued($id));
+        self::assertSame(2, $this->statistics($id)['enqueued']);
     }
 
     public function testNoUsernamesIsAnError(): void
@@ -125,7 +121,7 @@ class MassmailTest extends WebTestCase
         ]);
 
         $this->assertResponseRedirects('/admin/massmail/' . $id . '/details');
-        $usernames = array_keys($this->rows($this->client->request('GET', '/admin/massmail/' . $id . '/recipients/enqueued')));
+        $usernames = $this->enqueued($id);
         self::assertContains('member-6', $usernames);
         self::assertContains('member-7', $usernames);
         self::assertNotContains('member-3', $usernames);
@@ -257,8 +253,8 @@ class MassmailTest extends WebTestCase
 
         $old = [
             '/admin/massmail/details/' . $id => '/admin/massmail/' . $id . '/details',
-            '/admin/massmail/details/' . $id . '/sent' => '/admin/massmail/' . $id . '/recipients/sent',
-            '/admin/massmail/details/' . $id . '/sent/page/2' => '/admin/massmail/' . $id . '/recipients/sent/2',
+            '/admin/massmail/details/' . $id . '/sent' => '/admin/massmail/' . $id . '/details',
+            '/admin/massmail/details/' . $id . '/sent/page/2' => '/admin/massmail/' . $id . '/details',
             '/admin/massmail/edit/' . $id => '/admin/massmail/' . $id . '/edit',
             '/admin/massmail/enqueue/' . $id => '/admin/massmail/' . $id . '/enqueue',
             '/admin/massmail/test/' . $id => '/admin/massmail/' . $id . '/test',
@@ -299,17 +295,15 @@ class MassmailTest extends WebTestCase
     }
 
     /**
-     * @return array<string, list<string>> the cells of each recipient's row by username
+     * @return list<string> the usernames of the enqueued members
      */
-    private function rows(Crawler $crawler): array
+    private function enqueued(int $id): array
     {
-        $rows = [];
-        $crawler->filter('table.js-recipients tbody tr')->each(static function (Crawler $tr) use (&$rows): void {
-            $cells = $tr->filter('td')->each(static fn (Crawler $td): string => trim($td->text()));
-            $rows[$cells[0]] = $cells;
-        });
-
-        return $rows;
+        return $this->connection()->fetchFirstColumn(
+            "SELECT m.Username FROM broadcastmessages bm JOIN member m ON m.id = bm.IdReceiver
+            WHERE bm.IdBroadcast = ? AND bm.Status = 'ToApprove' ORDER BY m.Username",
+            [$id],
+        );
     }
 
     /**

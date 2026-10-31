@@ -14,6 +14,7 @@ use App\Model\GroupModel;
 use App\Repository\GroupRepository;
 use App\Security\GroupVoter;
 use App\Utilities\GroupSubmenuTrait;
+use App\Utilities\MailLinkTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use App\Utilities\UniqueFilenameTrait;
@@ -39,6 +40,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class GroupManagementController extends AbstractController
 {
     use GroupSubmenuTrait;
+    use MailLinkTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
     use UniqueFilenameTrait;
@@ -270,18 +272,18 @@ class GroupManagementController extends AbstractController
     }
 
     /**
-     * The links of old invitation mails.
+     * The links of old invitation mails: they have no signature (MailLinkSigner), so they only lead to the group.
      */
     #[Route(path: '/group/{group_id}/acceptinvitation/{member_id}', name: 'group_acceptinvitation', requirements: ['group_id' => '\d+', 'member_id' => '\d+'], methods: ['GET'])]
-    public function acceptInvitation(int $group_id, int $member_id): RedirectResponse
+    public function acceptInvitation(int $group_id): RedirectResponse
     {
-        return $this->redirectToRoute('accept_invite_to_group', ['groupId' => $group_id, 'memberId' => $member_id]);
+        return $this->rejectMailLink('group_start', ['group_id' => $group_id]);
     }
 
     #[Route(path: '/group/{group_id}/declineinvitation/{member_id}', name: 'group_declineinvitation', requirements: ['group_id' => '\d+', 'member_id' => '\d+'], methods: ['GET'])]
-    public function declineInvitation(int $group_id, int $member_id): RedirectResponse
+    public function declineInvitation(int $group_id): RedirectResponse
     {
-        return $this->redirectToRoute('decline_invite_to_group', ['groupId' => $group_id, 'memberId' => $member_id]);
+        return $this->rejectMailLink('group_start', ['group_id' => $group_id]);
     }
 
     /**

@@ -11,8 +11,8 @@
     <p>
         {{
         'group.accept.decline.join'|trans({
-            'accept': '<a href="' ~ url('group_accept_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'group.email.accept'|trans ~ '</a>',
-            'decline': '<a href="' ~ url('group_decline_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'group.email.decline'|trans ~ '</a>'
+            'accept': '<a href="' ~ signed_url('group_accept_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'group.email.accept'|trans ~ '</a>',
+            'decline': '<a href="' ~ signed_url('group_decline_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'group.email.decline'|trans ~ '</a>'
         })|raw
         }}
     </p>

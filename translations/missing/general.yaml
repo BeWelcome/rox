@@ -99,3 +99,6 @@ browser.notification.body:
 footer.links.toggle:
     - Links and help
     - Button that opens the footer links on small screens
+flash.mail.link.expired:
+    - This link has expired or isn't valid.
+    - Shown when a link from a mail (accept or decline a group invitation or join request, confirm or dismiss a friendship) is older than 30 days or was changed; the member lands on the group's or the friendship's page.

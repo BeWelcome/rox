@@ -26,6 +26,7 @@
       <p class="p-friend-form__blurb">{{ 'friend.add.blurb'|trans({username: member.username}) }}</p>
 
       <form method="post">
+        <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\FriendshipController::TOKEN')) }}">
         <div class="p-edit-subpage__actions p-edit-subpage__actions--split">
           <a class="p-comment-form__cancel" href="{{ url('members_profile', {username: member.username}) }}">{{ 'cancel'|trans }}</a>
           <button class="o-button" name="add_friendship" value="add" type="submit">{{ 'profile.add.friend.confirm'|trans }}</button>

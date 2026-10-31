@@ -58,6 +58,19 @@ final class ProfileGroupsTest extends WebTestCase
         self::assertStringNotContainsString('Hiking Enthusiasts', $groups);
     }
 
+    public function testTheGroupsPageShowsCardsInTheProfileLayout(): void
+    {
+        $this->client->loginUser($this->getMember('member-4'));
+        $crawler = $this->request('/members/member-2/groups');
+        self::assertCount(1, $crawler->filter('.p-pro'));
+        self::assertGreaterThanOrEqual(2, $crawler->filter('#member-groups .p-group-card')->count());
+        self::assertCount(0, $crawler->filter('.p-member-groups__manage'));
+
+        $this->client->loginUser($this->member);
+        $crawler = $this->request('/members/member-2/groups');
+        self::assertCount(1, $crawler->filter('.p-member-groups__manage[href="/groups/mygroups"]'));
+    }
+
     public function testTheGroupsMemberSettingsHaveTheChoiceToo(): void
     {
         $this->client->loginUser($this->member);

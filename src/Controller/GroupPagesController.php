@@ -14,6 +14,7 @@ use App\Repository\GroupRepository;
 use App\Security\GroupVoter;
 use App\Security\MemberVoter;
 use App\Utilities\GroupSubmenuTrait;
+use App\Utilities\ProfileSubmenu;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
@@ -105,18 +106,34 @@ class GroupPagesController extends AbstractController
     }
 
     /**
-     * The groups a member shows on their profile (the legacy page listed all of them).
+     * The groups a member shows on their profile, in the profile layout: a card per group with its members and
+     * last post, Joined on the ones the viewer is in. On their own page a button leads to the groups to choose.
      */
     #[Route(path: '/members/{username}/groups', name: 'group_user_all', methods: ['GET'])]
-    public function memberGroups(#[MapEntity(mapping: ['username' => 'username'])] Member $member): Response
-    {
+    public function memberGroups(
+        #[MapEntity(mapping: ['username' => 'username'])] Member $member,
+        ProfileSubmenu $profileSubmenu,
+    ): Response {
         $this->denyAccessUnlessGranted(MemberVoter::MEMBER_VIEW, $member);
-        $groups = $member->getProfileGroups();
-        usort($groups, static fn (Group $a, Group $b): int => strcasecmp($a->getName(), $b->getName()));
+        /** @var Member $viewer */
+        $viewer = $this->getUser();
+        $ids = array_map(static fn (Group $group): int => (int) $group->getId(), $member->getProfileGroups());
+        $rows = [] === $ids ? [] : $this->getGroupRepository()->createMyGroupsQueryBuilder($member, 'nameasc')
+            ->andWhere('g.id IN (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult();
+        $own = $viewer === $member;
+        $myGroupIds = $own ? [] : array_map(
+            static fn (GroupMembership $membership): int => (int) $membership->getGroup()->getId(),
+            $this->getCurrentMemberships($viewer),
+        );
 
         return $this->render('group/member_groups.html.twig', [
             'member' => $member,
-            'groups' => $groups,
+            'groups' => $rows,
+            'myGroupIds' => $myGroupIds,
+            'submenu' => $profileSubmenu->getSubmenu($viewer, $member, ['active' => 'groups']),
         ]);
     }
 

@@ -1,0 +1,22 @@
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        {% for status in ['enqueued', 'triggered', 'sent', 'failed'] %}
+          <th class="text-end">{{ ('adminmassmail' ~ status)|trans }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {% for status in ['enqueued', 'triggered', 'sent', 'failed'] %}
+          <td class="text-end{% if current|default('') == status %} fw-bold{% endif %}">
+            {% if massmail[status] > 0 %}
+              <a href="{{ path('admin_massmail_recipients', {id: massmail.id, status: status}) }}">{{ massmail[status] }}</a>
+            {% else %}0{% endif %}
+          </td>
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+</div>

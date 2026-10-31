@@ -71,8 +71,6 @@ class LegacyRoutesTest extends KernelTestCase
         foreach ($removed as $name) {
             $this->assertNull($routes->get($name), $name);
         }
-        // Still served by the old code
-        $this->assertNotNull($routes->get('admin_massmail'));
     }
 
     private function router(): RouterInterface

@@ -5,34 +5,16 @@ namespace App\Controller\Admin;
 use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Model\GalleryModel;
-use App\Model\TranslationModel;
 use Hidehalo\Nanoid\Client;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsletterController extends AbstractController
 {
-    /**
-     * Work around to have newsletter directly translated without the need to save it in the
-     * translation module.
-     */
-    #[Route(path: '/admin/massmail/create/finish', name: 'admin_massmail_finish')]
-    public function updateTranslations(TranslationModel $translationModel): RedirectResponse
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_MASSMAIL)) {
-            throw $this->createAccessDeniedException('You need to have Massmail right to access this.');
-        }
-
-        $translationModel->refreshTranslationsCache();
-
-        return $this->redirectToRoute('admin_massmail');
-    }
-
     /**
      * Images added to a newsletter need to be publicly accessible; therefore we need a separate upload function.
      * Uploaded images are stored in /public/images/newsletters. Some checks need to be done to ensure that's safe.

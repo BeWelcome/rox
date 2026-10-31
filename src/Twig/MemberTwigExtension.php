@@ -68,6 +68,11 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             'rights' => [Member::ROLE_ADMIN_MASSMAIL],
             'route' => 'admin_massmail',
         ],
+        'subscriptions' => [
+            'trans' => 'admin.subscriptions.title',
+            'rights' => [Member::ROLE_ADMIN_MANAGESUBSCRIPTIONS],
+            'route' => 'admin_subscriptions',
+        ],
         'treasurer' => [
             'trans' => 'AdminTreasurer',
             'rights' => [Member::ROLE_ADMIN_TREASURER],

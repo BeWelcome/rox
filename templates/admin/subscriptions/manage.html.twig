@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('member/autocomplete') }}
+{% endblock javascripts %}
+
+{% block content %}
+  <h1 class="u:text-24">{{ 'admin.subscriptions.title'|trans }}</h1>
+  <p>{{ 'admin.subscriptions.info'|trans }}</p>
+  <div class="row">
+    <div class="col-12 col-lg-8">
+      {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_row(form.username) }}
+        <div class="d-flex gap-2">
+          {{ form_widget(form.enable) }}
+          {{ form_widget(form.disable) }}
+        </div>
+      {{ form_end(form) }}
+    </div>
+  </div>
+{% endblock content %}

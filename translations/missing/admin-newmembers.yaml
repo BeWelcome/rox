@@ -1,0 +1,6 @@
+admin.newmembers.none:
+  - 'No new members to greet.'
+  - Shown on the volunteer page of new members when the list is empty.
+admin.newmembers.status.changed:
+  - 'The status of %username% is %status% now.'
+  - Confirmation after a volunteer changed the status of a new member. Keep %username% and %status%.

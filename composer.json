@@ -124,15 +124,7 @@
             "App\\": "src/",
             "Rox\\": "Rox/",
             "Mike42\\": "Mike42/"
-        },
-        "classmap": [
-            "modules/",
-            "lib/",
-            "tools/",
-            "pthacks/",
-            "roxlauncher/",
-            "build/"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

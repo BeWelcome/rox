@@ -32,10 +32,6 @@ if [ "$1" = 'php-fpm' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 		update-ca-certificates
 	fi
 
-	if [ "$APP_ENV" != 'prod' ] && [ -f rox_docker.ini ]; then
-		cp rox_docker.ini rox_local.ini
-	fi
-
 	if [ "$APP_ENV" != 'prod' ] && [ ! -f VERSION ]; then
 	    git config --global --add safe.directory /srv/bewelcome
 		git rev-parse --short HEAD > VERSION

@@ -6,7 +6,6 @@ use App\Entity\Location;
 use App\Form\MapSearchFormType;
 use App\Model\StatisticsModel;
 use Doctrine\ORM\EntityManagerInterface;
-use RoxPostHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -47,15 +46,10 @@ class HomeController extends AbstractController
             ->getForm();
 
         $statistics = $statisticsModel->getStatisticsHomepage();
-        $roxPostHandler = new RoxPostHandler();
-        $roxPostHandler->setClasses([
-            'SignupController',
-        ]);
 
         $images = $this->getHomeImages();
 
         return $this->render('home/home.html.twig', [
-            'postHandler' => $roxPostHandler,
             'search' => $searchForm->createView(),
             'images' => $images,
             'username' => $usernameForm->createView(),

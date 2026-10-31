@@ -115,21 +115,13 @@ ARG APP_VERSION_TIMESTAMP=
 # copy only specifically what we need for production
 COPY assets assets/
 COPY bin bin/
-COPY build build/
 COPY config config/
-COPY lib lib/
 COPY Migrations Migrations/
 COPY Mike42 Mike42/
-COPY modules modules/
-COPY pthacks pthacks/
 COPY public public/
-COPY roxlauncher roxlauncher/
 COPY src src/
 COPY templates templates/
-COPY tools tools/
 COPY translations translations/
-COPY routes.php ./
-COPY rox_docker.ini /srv/bewelcome/rox_local.ini
 
 # prevent the reinstallation of vendors at every changes in the source code
 COPY composer.json composer.lock symfony.lock ./

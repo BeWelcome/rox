@@ -161,3 +161,9 @@ profile.comment.relation.friends:
 profile.comment.relation.chatted:
     - 'Chatted online'
     - How you know the member, on the comment form
+comment.relation.shown.was_my_guest:
+    - 'Hosted {username}'
+    - On a comment, next to its date - the author hosted the member the comment is about. Keep {username}.
+comment.relation.shown.hosted_me:
+    - 'Stayed with {username}'
+    - On a comment, next to its date - the author stayed with the member the comment is about. Keep {username}.

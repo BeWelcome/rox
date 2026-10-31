@@ -30,7 +30,12 @@
     {% set linked = author.status in ['Active', 'OutOfRemind'] %}
     {% set qualityIcons = { positive: 'thumbs-up', neutral: 'minus', negative: 'thumbs-down' } %}
     {% set commentDate = (comment.updated is not null and comment.created != comment.updated) ? comment.updated : comment.created %}
-    {% set wasGuestOrHost = 'hewasmyguest' in comment.relations or 'hehostedme' in comment.relations %}
+    {# How the author knows the member (ticked on the comment form), as small chips with the form's icons #}
+    {% set relationIcons = {
+        was_my_guest: 'fa-home', hosted_me: 'fa-house-user', only_once: 'fa-handshake', family: 'fa-users',
+        close_friend: 'fa-heart', travelled_together: 'fa-route', friends: 'fa-user-friends', chatted: 'fa-comments'
+    } %}
+    {% set relations = comment.relations|split(',')|map(r => r|trim|lower)|filter(r => r is not empty) %}
 
     <article class="p-comment{{ isAnswer ? ' p-comment--answer' : '' }}{{ answerHtml ? ' p-comment--thread' : '' }}">
         <div class="p-comment__avatar">
@@ -53,8 +58,16 @@
                 </div>
                 <div class="p-comment__meta">
                     <span title="{{ commentDate|format_datetime() }}">{{ commentDate.diffForHumans }}</span>
-                    {% if wasGuestOrHost %}
-                        <i class="fas fa-home" aria-hidden="true"></i>
+                    {% if relations is not empty %}
+                        <ul class="p-comment__relations">
+                            {% for relation in relations %}
+                                <li class="p-comment__relation{{ relation in ['was_my_guest', 'hosted_me'] ? ' p-comment__relation--stay' }}">
+                                    <i class="fas {{ relationIcons[relation] ?? 'fa-user-friends' }}" aria-hidden="true"></i>
+                                    {#- hosting is said from the reader's side: who hosted whom -#}
+                                    {{ ((relation in ['was_my_guest', 'hosted_me'] ? 'comment.relation.shown.' : 'profile.comment.relation.') ~ relation)|trans({username: comment.toMember.Username}, "messages", language) }}
+                                </li>
+                            {% endfor %}
+                        </ul>
                     {% endif %}
                     {% if isAdmin %}
                         <a class="p-comment__action" href="{{ url('admin_comment', { to_member: comment.toMember.Username, from_member: comment.fromMember.Username }) }}">
@@ -63,6 +76,13 @@
                     {% endif %}
                 </div>
             </div>
+            {% if edit %}
+                {# Editing one's own comment: a small round pencil next to the quality #}
+                <a class="p-comment__edit-icon js-contact-open" href="{{ url('edit_comment', { username: comment.toMember.Username }) }}"
+                   data-title="{{ 'profile.comment.edit.mine'|trans|striptags }}" title="{{ 'profile.comment.edit.mine'|trans({}, "messages", language)|striptags }}">
+                    <i class="fas fa-pen" aria-hidden="true"></i><span class="visually-hidden">{{ 'profile.comment.edit.mine'|trans({}, "messages", language) }}</span>
+                </a>
+            {% endif %}
             {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
                 <span class="p-comment__badge p-comment__badge--{{ quality }}" title="{{ ('comment.quality.' ~ quality)|trans({}, "messages", language) }}">
                     <i class="fas fa-{{ qualityIcons[quality] ?? 'minus' }}" aria-hidden="true"></i>
@@ -88,13 +108,6 @@
                      "more": "{{ 'comment.read.more'|trans({}, "messages", language) }}",
                      "less": "{{ 'comment.show.less'|trans({}, "messages", language) }}" }'>{{ comment.comment|nl2br|purify }}</div>
 
-            {% if edit %}
-                <div class="p-comment__actions">
-                    <a class="p-comment__edit js-contact-open" href="{{ url('edit_comment', { username: comment.toMember.Username }) }}" data-title="{{ 'profile.comment.edit.mine'|trans|striptags }}">
-                        <i class="fas fa-pen" aria-hidden="true"></i> {{ 'profile.comment.edit.mine'|trans({}, "messages", language) }}
-                    </a>
-                </div>
-            {% endif %}
 
             {% if canAnswer %}
                 <div class="p-comment__actions">

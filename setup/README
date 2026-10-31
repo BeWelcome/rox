@@ -1,6 +1,0 @@
-Some things have to be setup to get a fully running Rox based website:
-
-First several cron jobs need to be running to send mails, update the geonames database etc (see cron_job_setup).
-
-Second the sphinx search indices need to be created and the sphinx daemon must be started to serve results for
-queries (see sphinx_setup).

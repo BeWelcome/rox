@@ -94,7 +94,7 @@
 
       {# ── Gallery, under the spoken languages ── #}
       {% if pictures|length > 0 %}
-        {% set _galleryUrl = submenu.items.gallery.url ?? url('gallery_member_images', {username: member.username}) %}
+        {% set _galleryUrl = submenu.items.gallery.url ?? url('member_gallery', {username: member.username}) %}
         <section class="p-pro-card">
           <div class="p-pro-card__head">
             <h2 class="p-pro-card__title">{{ 'profile.menu.images'|trans({}, 'messages', profile_language)|raw }}</h2>
@@ -102,9 +102,9 @@
           </div>
           <div class="p-pro-gallery p-pro-gallery--wide">
             {% for picture in pictures|slice(0, 4) %}
-              <a href="{{ url('gallery_thumbnail', {id: picture.id, t: 3}) }}"
+              <a href="{{ url('gallery_image', {id: picture.id, size: 'large'}) }}"
                  class="p-pro-gallery__item"
-                 style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
+                 style="background-image: url('{{ url('gallery_image', {id: picture.id, size: 'medium'}) }}')"
                  data-toggle="lightbox"
                  data-gallery="profile-gallery-{{ profile_language }}"
                  data-type="image"

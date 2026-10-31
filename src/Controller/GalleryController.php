@@ -26,7 +26,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -75,7 +74,8 @@ class GalleryController extends AbstractController
 
             $this->addTranslatedFlash('notice', 'flash.gallery.information.update');
 
-            return $this->redirectToRoute('gallery_show_image', ['imageId' => $image->getId()]);
+            return $this->redirect($this->generateUrl('member_gallery', ['username' => $image->getOwner()->getUsername()])
+                . '#picture-' . $image->getId());
         }
 
         return $this->render('gallery/edit.image.html.twig', [
@@ -214,17 +214,21 @@ class GalleryController extends AbstractController
     }
 
     /**
-     * Pictures of a member, shown inside the profile layout.
-     *
-     * Takes over the legacy page at the same path (the legacy route keeps the name
-     * gallery_show_user_images, so existing links still end up here).
+     * Pictures of a member, shown inside the profile layout; with an album only the pictures in it.
      */
-    #[Route(path: '/gallery/show/user/{username:member}/pictures', name: 'gallery_member_images')]
+    #[Route(path: '/members/{username:member}/gallery', name: 'member_gallery', methods: ['GET'], priority: 10)]
+    #[Route(
+        path: '/members/{username:member}/gallery/albums/{album}',
+        name: 'member_gallery_album',
+        requirements: ['album' => '\d+'],
+        methods: ['GET'],
+        priority: 10,
+    )]
     public function showMemberImages(
         Member $member,
         ProfileSubmenu $profileSubmenu,
         ChangeProfilePictureGlobals $globals,
-        #[MapQueryParameter] ?int $album = null,
+        ?int $album = null,
     ): Response {
         $this->denyAccessUnlessGranted(MemberVoter::MEMBER_VIEW, $member);
 
@@ -234,13 +238,16 @@ class GalleryController extends AbstractController
         /** @var GalleryImageRepository $galleryImageRepository */
         $galleryImageRepository = $this->entityManager->getRepository(GalleryImage::class);
 
-        // Albums: a filter above the pictures, ?album= shows only the pictures of one of them
+        // Albums: a filter above the pictures
         $albums = $galleryImageRepository->getAlbumsForMember($member);
         $activeAlbum = null;
         foreach ($albums as $candidate) {
             if ($candidate['id'] === $album) {
                 $activeAlbum = $candidate;
             }
+        }
+        if (null !== $album && null === $activeAlbum) {
+            throw $this->createNotFoundException();
         }
 
         return $this->render('gallery/member.images.html.twig', [

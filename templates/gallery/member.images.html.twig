@@ -28,14 +28,14 @@
         {% if albums|length > 0 %}
           {% set allCount = pictures_total ?? pictures|length %}
           <nav class="p-gallery-albums" aria-label="{{ 'profile.menu.images'|trans }}">
-            <a class="p-gallery-albums__item{% if not active_album %} is-active{% endif %}" href="{{ path('gallery_member_images', { username: member.username }) }}"{% if not active_album %} aria-current="page"{% endif %}>
+            <a class="p-gallery-albums__item{% if not active_album %} is-active{% endif %}" href="{{ path('member_gallery', { username: member.username }) }}"{% if not active_album %} aria-current="page"{% endif %}>
               {{ 'landing.button.all'|trans|striptags }} <span>{{ allCount }}</span>
             </a>
             {% for album in albums %}
               {% set current = active_album and active_album.id == album.id %}
-              <a class="p-gallery-albums__item{% if current %} is-active{% endif %}" href="{{ path('gallery_member_images', { username: member.username, album: album.id }) }}"{% if current %} aria-current="page"{% endif %}>
+              <a class="p-gallery-albums__item{% if current %} is-active{% endif %}" href="{{ path('member_gallery_album', { username: member.username, album: album.id }) }}"{% if current %} aria-current="page"{% endif %}>
                 <i class="fas fa-folder" aria-hidden="true"></i>
-                <img class="p-gallery-albums__cover" src="{{ path('gallery_thumbnail', { id: album.cover, t: 2 }) }}" alt="" loading="lazy">
+                <img class="p-gallery-albums__cover" src="{{ path('gallery_image', {id: album.cover, size: 'medium'}) }}" alt="" loading="lazy">
                 {{ album.title }} <span>{{ album.count }}</span>
               </a>
             {% endfor %}
@@ -55,11 +55,11 @@
         {% else %}
           <ul class="p-gallery-page__grid">
             {% for picture in pictures %}
-              <li class="p-gallery-page__item">
+              <li class="p-gallery-page__item" id="picture-{{ picture.id }}">
                 <div class="p-gallery-page__frame">
-                  <a href="{{ url('gallery_thumbnail', {id: picture.id, t: 3}) }}"
+                  <a href="{{ url('gallery_image', {id: picture.id, size: 'large'}) }}"
                      class="p-gallery-cell"
-                     style="background-image: url('{{ url('gallery_thumbnail', {id: picture.id, t: 2}) }}')"
+                     style="background-image: url('{{ url('gallery_image', {id: picture.id, size: 'medium'}) }}')"
                      data-toggle="lightbox"
                      data-gallery="member-gallery"
                      data-type="image"

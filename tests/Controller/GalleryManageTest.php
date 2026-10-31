@@ -45,7 +45,9 @@ class GalleryManageTest extends WebTestCase
         self::assertSame('Our street', $picture->getTitle());
         self::assertSame($album, $picture->getGalleries()->first()->getId());
 
-        $crawler = $this->client->request('GET', '/gallery/manage?album=' . $album);
+        $this->client->request('GET', '/gallery/manage?album=' . $album);
+        $this->assertResponseRedirects('/gallery/manage/albums/' . $album, 301);
+        $crawler = $this->client->request('GET', '/gallery/manage/albums/' . $album);
         self::assertCount(1, $crawler->filter('.js-gm-tile[data-id="' . $photo . '"]'));
         self::assertSame('Zz test trip', trim($crawler->filter('.js-gm-album-name')->text()));
 
@@ -83,6 +85,22 @@ class GalleryManageTest extends WebTestCase
 
         $this->entityManager->remove($this->entityManager->find(GalleryImage::class, $other));
         $this->entityManager->flush();
+    }
+
+    public function testAnotherMembersAlbumIsNotShown(): void
+    {
+        $album = new Gallery();
+        $album->setOwner($this->member('member-2'));
+        $album->setTitle('Zz test other');
+        $album->setFlags('');
+        $album->setDescription('');
+        $this->entityManager->persist($album);
+        $this->entityManager->flush();
+        $this->client->loginUser($this->member('member-3'));
+
+        $this->client->request('GET', '/gallery/manage/albums/' . $album->getId());
+
+        $this->assertResponseStatusCodeSame(404);
     }
 
     public function testCallsNeedThePageToken(): void

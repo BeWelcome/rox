@@ -28,11 +28,7 @@ if (root) {
     };
     const albumOf = (tile) => (tile.dataset.album === '' ? null : parseInt(tile.dataset.album, 10));
     const withId = (url, id) => url.replace(/\/0(?=$|\/)/, '/' + id);
-    const thumb = (id, big) => {
-        const url = new URL(big ? data.urlBig : data.urlThumb, window.location.origin);
-        url.searchParams.set('id', id);
-        return url.pathname + url.search;
-    };
+    const thumb = (id, big) => withId(big ? data.urlBig : data.urlThumb, id);
     const tiles = () => Array.from(grid.querySelectorAll('.js-gm-tile'));
     const ready = () => tiles().filter((tile) => tile.dataset.id && !tile.classList.contains('is-uploading') && !tile.classList.contains('is-failed'));
     const selected = () => tiles().filter((tile) => tile.classList.contains('is-selected'));
@@ -319,7 +315,7 @@ if (root) {
         });
         const item = document.createElement('a');
         item.className = 'p-gm-albums__item';
-        item.href = data.urlPage + '?album=' + album.id;
+        item.href = withId(data.urlPageAlbum, album.id);
         item.dataset.albumId = album.id;
         item.innerHTML = '<span class="p-gm-albums__thumb"><i class="fas fa-folder" aria-hidden="true"></i></span>'
             + '<span class="p-gm-albums__name"><span class="js-gm-album-title"></span> <small class="js-gm-album-count">0</small></span>';
@@ -331,7 +327,7 @@ if (root) {
     root.querySelector('.js-gm-album-new').addEventListener('click', () => {
         newAlbum().then((album) => {
             if (album) {
-                window.location.href = data.urlPage + '?album=' + album.id;
+                window.location.href = withId(data.urlPageAlbum, album.id);
             }
         }).catch(failed);
     });

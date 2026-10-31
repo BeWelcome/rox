@@ -41,24 +41,6 @@ class LegacyLoader extends Loader
         // rebuilt in a process that loaded the file before, and would then lack the legacy routes.
         require $projectDir . '/routes.php';
 
-        $this->addRouteDirectly('gallery_show_user', '/gallery/show/user/{username}');
-        $this->addRouteDirectly('gallery_show_user_images_pages', '/gallery/show/user/{username}/pictures/=page{pageNo}');
-        $this->addRouteDirectly('gallery_show_user_albums', '/gallery/show/user/{username}/sets');
-        $this->addRouteDirectly('gallery_show_user_albums_pages', '/gallery/show/user/{username}/sets/=page{pageNo}');
-        $this->addRouteDirectly('gallery_show_user_latest', '/gallery/show/user/{username}/images');
-        $this->addRouteDirectly('gallery_show_user_latest_pages', '/gallery/show/user/{username}/images/=page{pageNo}');
-        $this->addRouteDirectly('gallery_show_image', '/gallery/show/image/{imageId}');
-        $this->addRouteDirectly('gallery_album_show', '/gallery/show/sets/');
-        $this->addRouteDirectly('gallery_album_new', '/gallery/show/sets/{galleryId}');
-        $this->addRouteDirectly('gallery_album_delete', '/gallery/show/sets/{galleryId}/delete');
-        $this->addRouteDirectly('gallery_album_delete_confirmation', '/gallery/show/sets/{galleryId}/delete/true');
-        $this->addRouteDirectly('gallery_delete_image', '/gallery/show/image/{imageId}/delete');
-        $this->addRouteDirectly('gallery_image', '/gallery/img');
-        $this->addRouteDirectly('gallery_upload_image', '/gallery/upload');
-        $this->addRouteDirectly('gallery_upload_finish', '/gallery/uploaded');
-        $this->addRouteDirectly('gallery_manage_pages', '/gallery/manage/=page{pageNo}');
-        $this->addRouteDirectly('gallery_thumbnail', '/gallery/thumbimg');
-        $this->addRouteDirectly('gallery', '/gallery');
         $this->addRouteDirectly('profile_all_comments', '/members/{username}/comments/');
         $this->addRouteDirectly('comment_add', '/members/{username}/comments/add');
         $this->addRouteDirectly('comment_edit', '/members/{username}/comments/edit');

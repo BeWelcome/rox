@@ -705,6 +705,18 @@ class ProfileController extends AbstractController
         return $response;
     }
 
+    /**
+     * The old URL of the visitors of the own profile.
+     */
+    #[Route(path: '/myvisitors', name: 'profile_visitors_old', methods: ['GET'])]
+    public function redirectLegacyVisitors(): RedirectResponse
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        return $this->redirectToRoute('profile_visitors', ['username' => $member->getUsername()], Response::HTTP_MOVED_PERMANENTLY);
+    }
+
     private function renderProfile(Member $member, Member $loggedInMember, ?string $language, bool $editMode): Response
     {
         /** @var CommentRepository $commentRepository */

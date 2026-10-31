@@ -383,4 +383,15 @@ class CommentController extends AbstractController
             'submenu' => $this->profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'comments']),
         ]);
     }
+
+    /**
+     * The old URLs of a member's comments and of writing or editing a comment.
+     */
+    #[Route(path: '/members/{username}/comments/', name: 'profile_comments_old', methods: ['GET'])]
+    #[Route(path: '/members/{username}/comments/add', name: 'add_comment_old', methods: ['GET'], defaults: ['target' => 'add_comment'])]
+    #[Route(path: '/members/{username}/comments/edit', name: 'edit_comment_old', methods: ['GET'], defaults: ['target' => 'edit_comment'])]
+    public function redirectLegacyComments(string $username, string $target = 'profile_comments'): RedirectResponse
+    {
+        return $this->redirectToRoute($target, ['username' => $username], Response::HTTP_MOVED_PERMANENTLY);
+    }
 }

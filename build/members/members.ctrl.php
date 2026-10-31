@@ -677,19 +677,6 @@ class MembersController extends RoxControllerBase
     }
 
     /**
-     * displays a page with some text about the profile being retired
-     *
-     * @access public
-     * @return RetiredPage
-     */
-    public function retired()
-    {
-        $page = new RetiredProfilePage();
-        $page->model = $this->model;
-        return $page;
-    }
-
-    /**
      * callback to set profile inactive
      *
      * @param stdClass       $args   - all sorts of variables

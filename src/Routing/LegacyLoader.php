@@ -41,34 +41,12 @@ class LegacyLoader extends Loader
         // rebuilt in a process that loaded the file before, and would then lack the legacy routes.
         require $projectDir . '/routes.php';
 
-        $this->addRouteDirectly('profile_all_comments', '/members/{username}/comments/');
-        $this->addRouteDirectly('comment_add', '/members/{username}/comments/add');
-        $this->addRouteDirectly('comment_edit', '/members/{username}/comments/edit');
-        $this->addRouteDirectly('myvisitors', '/myvisitors');
-        // $this->addRouteDirectly('profilecomments', '/about/commentguidelines');
-        $this->addRouteDirectly('profile_addtorelations', '/members/{username}/relations/add');
-        $this->addRouteDirectly('admin_editprofile_finish', '/members/{username}/adminedit/finish');
-        // $this->addRouteDirectly('imprint', '/impressum');
-        $this->addRouteDirectly('add_relation_finish', '/members/{username}/relations/add/finish');
-        $this->addRouteDirectly(
-            'delete_relation_editprofile',
-            '/members/{username}/relations/delete/{relationId}/editprofile'
-        );
-
         return $this->routes;
     }
 
     public function supports(mixed $resource, ?string $type = null): bool
     {
         return 'legacy' === $type;
-    }
-
-    private function addRouteDirectly($name, $path): void
-    {
-        $path = preg_replace('^:(.*?):^', '{\1}', (string) $path);
-        $this->routes->add($name, new Route($path, [
-            '_controller' => 'rox.legacy_controller::showLegacyPage',
-        ], [], [], '', [], ['get', 'post']));
     }
 
     private function addRoute($name, $path, $controller = '', $action = ''): void

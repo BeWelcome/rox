@@ -448,7 +448,10 @@ class ProfileController extends AbstractController
         $loggedInMember = $this->getUser();
 
         if ($member !== $loggedInMember) {
-            return $this->redirectToRoute('profile_edit_languages', ['username' => $loggedInMember->getUsername()]);
+            return $this->redirectToRoute('profile_edit_languages', [
+                'username' => $loggedInMember->getUsername(),
+                'language' => $language,
+            ]);
         }
 
         $languageLevels = new ArrayCollection();

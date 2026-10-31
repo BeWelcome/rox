@@ -36,6 +36,6 @@ final class FriendsExtractor extends AbstractExtractor implements ExtractorInter
             }
         }
 
-        return $this->writePersonalDataFile(['friends' => $friends], 'friends', $tempDir . 'friends.html');
+        return $this->writePersonalDataFile(['relations' => $friends], 'relations', $tempDir . 'relations.html');
     }
 }

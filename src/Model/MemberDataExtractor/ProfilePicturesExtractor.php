@@ -3,7 +3,7 @@
 namespace App\Model\MemberDataExtractor;
 
 use App\Entity\Member;
-use App\Entity\MembersPhoto;
+use App\Entity\MemberPhoto;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class ProfilePicturesExtractor extends AbstractExtractor implements ExtractorInterface
@@ -17,8 +17,8 @@ final class ProfilePicturesExtractor extends AbstractExtractor implements Extrac
         $filesystem = new Filesystem();
         $pictureDir = $tempDir . 'pictures/';
         $filesystem->mkdir($pictureDir);
-        $photoRepository = $this->getRepository(MembersPhoto::class);
-        /** @var MembersPhoto[] $photos */
+        $photoRepository = $this->getRepository(MemberPhoto::class);
+        /** @var MemberPhoto[] $photos */
         $photos = $photoRepository->findBy(['member' => $member]);
         foreach ($photos as $photo) {
             if (is_file($photo->getFilepath())) {

@@ -3,11 +3,11 @@
 namespace App\Repository;
 
 use App\Doctrine\TranslationAllowedType;
+use App\Entity\Member;
 use App\Entity\Word;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
 
 class WordRepository extends EntityRepository
 {
@@ -178,17 +178,11 @@ class WordRepository extends EntityRepository
         foreach ($enabledLocales as $locale) {
             $count = $this->getTranslatableItemsCount($locale);
             $change = $this->getLatestChange($locale);
-            if (null === $change) {
-                $translator = null;
-                $date = null;
-            } else {
-                $translator = $change['translator'];
-                $date = $change['date'];
-            }
             $translationDetails[$locale] = [
                 'count' => $count,
-                'translator' => $translator,
-                'date' => $date,
+                'system' => $change['system'] ?? false,
+                'translator' => $change['translator'] ?? null,
+                'date' => $change['date'] ?? null,
             ];
             uasort($translationDetails, static function ($a, $b) {
                 if ($a['count'] === $b['count']) {
@@ -224,22 +218,29 @@ class WordRepository extends EntityRepository
             ->setMaxResults(1)
         ;
 
-        /** @var Word $details */
+        /** @var Word|null $details */
         $details = $qb
             ->getQuery()
             ->getOneOrNullResult()
         ;
 
-        $date = $details->getUpdated();
-        try {
-            $translator = $details->getAuthor();
-        } catch (Exception) {
-            $translator = null;
+        if (null === $details) {
+            return null;
         }
 
+        // Author 0 is the system, which has no member row. The author is a reference that throws once it's used
+        // when its member doesn't exist (any more); reading its id doesn't load it.
+        $author = $details->getAuthor();
+        $authorId = $author?->getId();
+        $system = 0 === $authorId;
+        $authorExists = null !== $authorId && !$system
+            && 0 < $this->getEntityManager()->getRepository(Member::class)->count(['id' => $authorId]);
+        $translator = $authorExists ? $author : null;
+
         return [
+            'system' => $system,
             'translator' => $translator,
-            'date' => $date,
+            'date' => $details->getUpdated(),
         ];
     }
 

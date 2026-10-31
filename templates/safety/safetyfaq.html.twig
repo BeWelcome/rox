@@ -55,7 +55,7 @@
             </p>
             <h5>{{ 'faqq_dontwanttoreceiveinmyemail' | trans }}</h5>
             <p>{{ 'faqa_dontwanttoreceiveinmyemail' | trans
-                ({ 'faqa_dontwanttoreceiveinmyemail.mypreference' : '<a href="' ~ url('mypreferences') ~ '">' ~ 'faqa_dontwanttoreceiveinmyemail.mypreferences'|trans ~ '</a>',
+                ({ 'faqa_dontwanttoreceiveinmyemail.mypreference' : '<a href="' ~ url('mypreferences_redirect') ~ '">' ~ 'faqa_dontwanttoreceiveinmyemail.mypreferences'|trans ~ '</a>',
                     'faqa_dontwanttoreceiveinmyemail.subscriptions' : '<a href="' ~ url('subscriptions') ~ '">' ~ 'faqa_dontwanttoreceiveinmyemail.subscriptions'|trans ~ '</a>' })
                 | purify }}
             </p>

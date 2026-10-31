@@ -378,19 +378,19 @@
           {{ 'profile.menu.images'|trans({}, "messages", profile_language)|raw }}
           {%- if edit -%}
             {% set edit_text = 'profile.edit.images'|trans({}, 'messages', profile_language) %}
-            <div><a href="{{ url('gallery_manage') }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
+            <div><a href="{{ url('gallery_manage_page') }}"><i class="fas fa-edit" title="{{ edit_text }}" aria-hidden="true"></i><span class="visually-hidden">{{ edit_text }}</span></a></div>
           {%- endif -%}
         </div>
         {% if pictures|length == 0 and edit %}
           <div class="p-gallery-empty">
-            <a href="{{ url('gallery_manage') }}" class="p-gallery-empty__btn">
+            <a href="{{ url('gallery_manage_page') }}" class="p-gallery-empty__btn">
               <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
               <span>{{ 'galleryupload'|trans({}, 'messages', profile_language) }}</span>
             </a>
           </div>
         {% else %}
         {# Same target as the "Gallery" tab: own gallery management, or the member's pictures #}
-        {% set _galleryUrl = submenu.items.gallery.url ?? url('gallery_show_user_images', {username: member.username}) %}
+        {% set _galleryUrl = submenu.items.gallery.url ?? url('gallery_member_images', {username: member.username}) %}
         <div class="p-gallery-grid">
           {% for picture in pictures|slice(0, 5) %}
             {% set isLast = loop.last and pictures|length > 5 %}

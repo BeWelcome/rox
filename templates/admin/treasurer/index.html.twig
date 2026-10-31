@@ -64,7 +64,7 @@
                         <td>{{ donation.created | date('Y-m-d') }}</td>
                         <td>
                             {% if donation.donor %}
-                                <a href="{{ path('members_profile_old', {'username': donation.donor.username}) }}">{{ donation.donor.username }}</a>
+                                <a href="{{ path('members_profile', {'username': donation.donor.username}) }}">{{ donation.donor.username }}</a>
                             {% else %}
                                 {{ donation.nameGiven }}
                             {% endif %}

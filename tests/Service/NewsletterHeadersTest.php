@@ -36,8 +36,6 @@ class NewsletterHeadersTest extends KernelTestCase
 
     public static function transactionalTypes(): iterable
     {
-        yield 'login reminder' => ['RemindToLog'];
-        yield 'suspension' => [Newsletter::SUSPENSION_NOTIFICATION];
         yield 'terms of use' => [Newsletter::TERMS_OF_USE];
     }
 

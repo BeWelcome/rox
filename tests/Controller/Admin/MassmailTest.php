@@ -170,6 +170,34 @@ class MassmailTest extends WebTestCase
         self::assertSame('Created', $this->connection()->fetchOne('SELECT Status FROM broadcast WHERE id = ?', [$id]));
     }
 
+    public function testMembersWhoCantReceiveItAnyLongerAreSkipped(): void
+    {
+        $id = $this->create();
+        $this->client->request('GET', '/admin/massmail/' . $id . '/enqueue');
+        $this->client->submitForm('members[enqueue]', ['members[members]' => 'usernames', 'members[usernames]' => 'member-3;member-6']);
+        $this->client->request('POST', '/admin/massmail/' . $id . '/trigger', ['_token' => $this->token($id)]);
+        // suspended after being enqueued
+        $this->connection()->executeStatement("UPDATE member SET Status = 'SuspendedBeta' WHERE Username = 'member-6'");
+
+        $tester = new CommandTester(new Application(self::$kernel)->find('send:massmail'));
+        $tester->execute(['batchSize' => '10']);
+
+        self::assertSame(1, $this->recipients($id, 'Sent'));
+        self::assertSame(1, $this->recipients($id, 'Skipped'));
+        self::assertSame(0, $this->recipients($id, 'ToSend'));
+        self::assertSame(['enqueued' => 0, 'triggered' => 0, 'sent' => 1, 'failed' => 0], $this->statistics($id));
+    }
+
+    public function testAnOldReminderIsntEnqueued(): void
+    {
+        $id = $this->create();
+        $this->connection()->executeStatement("UPDATE broadcast SET Type = 'RemindToLog' WHERE id = ?", [$id]);
+
+        $this->client->request('GET', '/admin/massmail/' . $id . '/enqueue');
+
+        $this->assertResponseRedirects('/admin/massmail/' . $id . '/details');
+    }
+
     public function testEnqueuedMembersAreRemovedAgain(): void
     {
         $id = $this->create();

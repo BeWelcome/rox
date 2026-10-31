@@ -394,10 +394,13 @@ class MassmailModel
         $done = $row[self::SENT] > 0 || $row[self::FAILED] > 0;
         $triggered = 'Triggered' === $row['status'] || $row[self::TRIGGERED] > 0 || $done;
         $enqueued = $row[self::ENQUEUED] > 0 || $triggered;
+        // the types that were enqueued for reminders and notices (RemindToLog, SuspendAfter5Reminders, ...) are sent
+        // by the member commands now
+        $sendable = \in_array($row['type'] ?? null, [Newsletter::REGULAR_NEWSLETTER, Newsletter::SPECIFIC_NEWSLETTER, Newsletter::TERMS_OF_USE], true);
 
         return $row + [
             'can_edit' => !$enqueued,
-            'can_enqueue' => !$enqueued,
+            'can_enqueue' => !$enqueued && $sendable,
             'can_unqueue' => $enqueued && !$triggered,
             'can_trigger' => $enqueued && !$triggered,
             'can_untrigger' => $triggered && !$done,

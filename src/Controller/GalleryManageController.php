@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -34,11 +33,21 @@ class GalleryManageController extends AbstractController
     }
 
     #[Route(path: '/gallery/manage', name: 'gallery_manage_page', methods: ['GET'], priority: 10)]
-    public function manage(#[MapQueryParameter] ?int $album = null): Response
+    #[Route(path: '/gallery/manage/albums/{album}', name: 'gallery_manage_album', requirements: ['album' => '\d+'], methods: ['GET'], priority: 10)]
+    public function manage(Request $request, ?int $album = null): Response
     {
+        // The album was a query parameter before
+        $oldAlbum = $request->query->getInt('album');
+        if (null === $album && $oldAlbum > 0) {
+            return $this->redirectToRoute('gallery_manage_album', ['album' => $oldAlbum], 301);
+        }
+
         $member = $this->member();
         $albums = $this->gallery->albums($member);
         $activeAlbum = null !== $album ? $this->gallery->album($member, $album) : null;
+        if (null !== $album && null === $activeAlbum) {
+            throw $this->createNotFoundException();
+        }
         $pictures = $this->gallery->pictures($member, $activeAlbum);
         $all = null === $activeAlbum ? $pictures : $this->gallery->pictures($member);
 

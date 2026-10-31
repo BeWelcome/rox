@@ -29,6 +29,7 @@
          data-url-move="{{ path('gallery_manage_pictures_move') }}"
          data-url-delete="{{ path('gallery_manage_pictures_delete') }}"
          data-url-page="{{ path('gallery_manage_page') }}"
+         data-url-page-album="{{ path('gallery_manage_album', {album: 0}) }}"
          data-url-thumb="{{ path('gallery_image', {id: 0, size: 'medium'}) }}"
          data-url-big="{{ path('gallery_image', {id: 0, size: 'large'}) }}"
          data-t-selected-0="{{ 'gallery.mine.selected'|trans({count: 0}) }}"
@@ -76,7 +77,7 @@
                 <span class="p-gm-albums__name">{{ 'gallery.mine.all'|trans }} <small class="js-gm-total">{{ total }}</small></span>
             </a>
             {% for _album in albums %}
-                <a class="p-gm-albums__item{{ active_album and active_album.id == _album.id ? ' is-active' }}" href="{{ path('gallery_manage_page', {album: _album.id}) }}" data-album-id="{{ _album.id }}">
+                <a class="p-gm-albums__item{{ active_album and active_album.id == _album.id ? ' is-active' }}" href="{{ path('gallery_manage_album', {album: _album.id}) }}" data-album-id="{{ _album.id }}">
                     <span class="p-gm-albums__thumb">
                         {% if _album.cover %}<img src="{{ path('gallery_image', {id: _album.cover, size: 'small'}) }}" alt="" loading="lazy">{% else %}<i class="fas fa-folder" aria-hidden="true"></i>{% endif %}
                     </span>

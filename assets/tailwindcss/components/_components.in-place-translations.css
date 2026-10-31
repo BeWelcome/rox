@@ -1,0 +1,27 @@
+/* Translation mode (templates/admin/translations/_in_place.html.twig): the texts the page translated, below the
+   page, grouped; Edit, Translate and Create open the side panel. Texts replaced on the page light up briefly. */
+
+.c-in-place { box-sizing: border-box; max-width: 1100px; margin: 2rem auto; padding: 1.25rem; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; color: #0f172a; text-align: left; }
+.c-in-place .c-in-place__title { display: flex; align-items: center; gap: 0.6rem; margin: 0 0 1rem; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.35rem; font-weight: 700; }
+.c-in-place__locale { padding: 0.1rem 0.55rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.85rem; font-weight: 600; }
+.c-in-place__empty { margin: 0; color: #64748b; }
+
+.c-in-place__group + .c-in-place__group { margin-top: 0.75rem; }
+.c-in-place__heading { padding: 0.5rem 0; color: #334155; font-weight: 700; cursor: pointer; }
+.c-in-place__group--missing .c-in-place__heading { color: #b91c1c; }
+.c-in-place__group--fallback .c-in-place__heading { color: #c2410c; }
+
+.c-in-place__list { margin: 0; padding: 0; list-style: none; }
+.c-in-place__item { display: flex; align-items: flex-start; gap: 1rem; padding: 0.6rem 0.75rem; border-top: 1px solid #eef0f3; border-radius: 0.5rem; }
+.c-in-place__item.is-active { background: #fff7ed; }
+.c-in-place__item.is-reload-needed .c-in-place__text { color: #94a3b8; }
+.c-in-place__body { flex: 1 1 auto; min-width: 0; }
+.c-in-place__code { color: #475569; font-size: 0.8rem; overflow-wrap: anywhere; }
+.c-in-place__meta { margin-left: 0.4rem; color: #94a3b8; font-size: 0.75rem; }
+.c-in-place .c-in-place__text { margin: 0.15rem 0 0; color: #0f172a; font-size: 0.9rem; overflow-wrap: anywhere; }
+.c-in-place__action,
+.c-in-place__action:hover { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.4rem; padding: 0.35rem 0.85rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-size: 0.85rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
+.c-in-place__action:hover { border-color: #f37000; color: #c2410c; }
+
+@keyframes c-in-place-updated { from { background-color: #fed7aa; } to { background-color: transparent; } }
+.is-translation-updated { animation: c-in-place-updated 2.5s ease-out; }

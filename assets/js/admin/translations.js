@@ -1,4 +1,5 @@
-document.getElementById('js-toggle').addEventListener('click', function (e) {
+// Only on rich text translations
+document.getElementById('js-toggle')?.addEventListener('click', function (e) {
     const rawLabel = this.dataset.labelRaw;
     const htmlLabel = this.dataset.labelHtml;
     const englishTextHtml = document.getElementById('englishTextHTML');

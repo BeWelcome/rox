@@ -19,7 +19,7 @@ frontpage.title.free:
 frontpage.lead:
     - 'BeWelcome is a hospitality community where people open their homes, show their city and meet travelers. No fees, no subscription, no ads.'
     - Front page, text under the big title
-frontpage.join:
+frontpage.join.button:
     - "Join BeWelcome, it's free"
     - Front page, main button to sign up
 frontpage.how:

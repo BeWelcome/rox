@@ -90,7 +90,7 @@
                 </h1>
                 <p class="fp-hero__lead">{{ 'frontpage.lead'|trans }}</p>
                 <div class="fp-hero__actions">
-                    <a class="fp-btn fp-btn--primary" href="{{ url('signup') }}">{{ 'frontpage.join'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    <a class="fp-btn fp-btn--primary" href="{{ url('signup') }}">{{ 'frontpage.join.button'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                     <a class="fp-btn fp-btn--light" href="#how">{{ 'frontpage.how'|trans }}</a>
                 </div>
                 <dl class="fp-hero__facts">
@@ -104,9 +104,13 @@
                 {# Two corners of the photo show what happens on the site: each one turns through a few cards (home.js) #}
                 <div class="fp-slot fp-slot--a js-fp-slot" aria-hidden="true">
                     <div class="fp-float fp-float--request is-active">
-                        <div class="fp-float__who"><span class="fp-av fp-av--brown">D</span><strong>Danny</strong></div>
-                        <span class="fp-tag fp-tag--orange"><i class="fas fa-bed"></i> {{ 'frontpage.card.request'|trans }} · Oct 24 – 31</span>
-                        <div class="fp-float__buttons"><span class="is-yes">{{ 'frontpage.card.accept'|trans }}</span><span>{{ 'frontpage.card.maybe'|trans }}</span><span>{{ 'frontpage.card.decline'|trans }}</span></div>
+                        <span class="fp-av fp-av--big"><img src="{{ asset('images/avatars/1.webp') }}" alt=""></span>
+                        <div class="fp-req__text">
+                            <p class="fp-note__title">Danny</p>
+                            <p class="fp-note__sub">{{ 'frontpage.card.request'|trans }} · Oct 24 – 31</p>
+                        </div>
+                        <span class="fp-req__btn" title="{{ 'frontpage.card.decline'|trans }}"><i class="fas fa-xmark"></i></span>
+                        <span class="fp-req__btn fp-req__btn--yes" title="{{ 'frontpage.card.accept'|trans }}"><i class="fas fa-check"></i></span>
                     </div>
                     {{ include('home/_frontpage_note.html.twig', {icon: 'fa-house-circle-check', colour: 'green', title: 'frontpage.note.invitation'|trans({name: 'Lena'}), sub: 'Berlin · Nov 2 – 5'}) }}
                     {{ include('home/_frontpage_note.html.twig', {icon: 'fa-envelope', colour: 'slate', title: 'Kenji: ' ~ 'frontpage.note.message'|trans, sub: 'frontpage.note.message.when'|trans}) }}
@@ -115,7 +119,7 @@
                 </div>
                 <div class="fp-slot fp-slot--b js-fp-slot" aria-hidden="true">
                     <div class="fp-float fp-float--host is-active">
-                        <span class="fp-av fp-av--green fp-av--big">L<i class="fp-av__dot"></i></span>
+                        <span class="fp-av fp-av--green fp-av--big"><img src="{{ asset('images/avatars/2.webp') }}" alt=""><i class="fp-av__dot"></i></span>
                         <div>
                             <p class="fp-float__name"><strong>Lena</strong> {{ 'frontpage.card.host.in'|trans }} Berlin</p>
                             <p class="fp-float__refs"><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span> <span class="fp-tag">− 1</span> {{ 'frontpage.card.references'|trans({count: 14}) }}</p>
@@ -164,13 +168,13 @@
                     <div class="fp-step__art fp-map" aria-hidden="true">
                         <div class="fp-map__tiles js-fp-map"></div>
                         <div class="fp-map__search"><i class="fas fa-search"></i> <strong>Berlin</strong> · Nov 2–5 <span class="fp-map__chip"><i class="fas fa-home"></i> {{ 'frontpage.how.hosting'|trans }}</span></div>
-                        <span class="fp-pin fp-av fp-av--green" style="left: 18%; top: 38%;">L</span>
-                        <span class="fp-pin fp-av fp-av--brown" style="left: 45%; top: 26%;">T</span>
-                        <span class="fp-pin fp-av fp-av--purple" style="left: 34%; top: 53%;">K</span>
-                        <span class="fp-pin fp-av fp-av--orange" style="left: 59%; top: 59%;">A</span>
-                        <span class="fp-pin fp-av fp-av--slate" style="left: 82%; top: 64%;">J</span>
-                        <span class="fp-pin fp-av fp-av--green" style="left: 72%; top: 40%;">M</span>
-                        <div class="fp-map__card"><span class="fp-av fp-av--green fp-av--big">L</span><div><strong>Lena</strong><small>Kreuzberg · German, English</small></div><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span></div>
+                        <span class="fp-pin fp-av fp-av--green" style="left: 18%; top: 38%;"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--brown" style="left: 45%; top: 26%;"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--purple" style="left: 34%; top: 53%;"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--orange" style="left: 59%; top: 59%;"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--slate" style="left: 82%; top: 64%;"><img src="{{ asset('images/avatars/7.webp') }}" alt=""></span>
+                        <span class="fp-pin fp-av fp-av--green" style="left: 72%; top: 40%;"><img src="{{ asset('images/avatars/11.webp') }}" alt=""></span>
+                        <div class="fp-map__card"><span class="fp-av fp-av--green fp-av--big"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><div><strong>Lena</strong><small>Kreuzberg · German, English</small></div><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span></div>
                     </div>
                     <div class="fp-step__text">
                         <h3><span class="fp-num">1</span> {{ 'frontpage.how.search'|trans }}</h3>
@@ -181,12 +185,12 @@
                 <article class="fp-step">
                     <div class="fp-step__art" aria-hidden="true">
                         <div class="fp-mini">
-                            <div class="fp-mini__head"><span class="fp-av fp-av--purple fp-av--sm">A</span><strong>{{ 'frontpage.how.trip.name'|trans }}</strong><span class="fp-tag fp-tag--orange"><i class="fas fa-globe"></i> {{ 'frontpage.how.trip.public'|trans }}</span></div>
+                            <div class="fp-mini__head"><span class="fp-av fp-av--purple fp-av--sm"><img src="{{ asset('images/avatars/5.webp') }}" alt=""></span><strong>{{ 'frontpage.how.trip.name'|trans }}</strong><span class="fp-tag fp-tag--orange"><i class="fas fa-globe"></i> {{ 'frontpage.how.trip.public'|trans }}</span></div>
                             {% for _leg in [['Berlin', 'Nov 2 – 5'], ['Prague', 'Nov 5 – 8'], ['Vienna', 'Nov 8 – 11']] %}
                                 <div class="fp-mini__leg"><span class="fp-num fp-num--{{ loop.first ? 'on' : 'off' }}">{{ loop.index }}</span><strong>{{ _leg[0] }}</strong><small>{{ _leg[1] }}</small></div>
                             {% endfor %}
                         </div>
-                        <p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--sm">L</span><span class="fp-av fp-av--brown fp-av--sm">P</span><span class="fp-av fp-av--slate fp-av--sm">M</span></span> {{ 'frontpage.how.trip.invited'|trans }}</p>
+                        <p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--sm"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/9.webp') }}" alt=""></span><span class="fp-av fp-av--slate fp-av--sm"><img src="{{ asset('images/avatars/11.webp') }}" alt=""></span></span> {{ 'frontpage.how.trip.invited'|trans }}</p>
                     </div>
                     <div class="fp-step__text">
                         <h3><span class="fp-num">2</span> {{ 'frontpage.how.trip'|trans }}</h3>
@@ -197,10 +201,10 @@
                 <article class="fp-step">
                     <div class="fp-step__art" aria-hidden="true">
                         <div class="fp-mini">
-                            <div class="fp-mini__head"><span class="fp-av fp-av--brown fp-av--sm">T</span><strong>Tomás</strong><span class="fp-tag fp-tag--orange"><i class="fas fa-bed"></i> Nov 2 – 5 · 3 nights</span></div>
+                            <div class="fp-mini__head"><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span><strong>Tomás</strong><span class="fp-tag fp-tag--orange"><i class="fas fa-bed"></i> Nov 2 – 5 · 3 nights</span></div>
                             <p class="fp-mini__msg">{{ 'frontpage.how.request.message'|trans }}</p>
                         </div>
-                        <p class="fp-accepted"><span class="fp-pill-green"><i class="fas fa-check"></i> {{ 'frontpage.how.request.accepted'|trans }}</span><span class="fp-av fp-av--green fp-av--sm">L</span></p>
+                        <p class="fp-accepted"><span class="fp-pill-green"><i class="fas fa-check"></i> {{ 'frontpage.how.request.accepted'|trans }}</span><span class="fp-av fp-av--green fp-av--sm"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span></p>
                     </div>
                     <div class="fp-step__text">
                         <h3><span class="fp-num">3</span> {{ 'frontpage.how.request'|trans }}</h3>
@@ -213,7 +217,7 @@
                         {% for _event in [['2', 'frontpage.how.meet.picnic', 12], ['9', 'frontpage.how.meet.cafe', 7]] %}
                             <div class="fp-mini fp-event">
                                 <span class="fp-event__date"><small>NOV</small>{{ _event[0] }}</span>
-                                <div><strong>{{ _event[1]|trans }}</strong><p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--xs"></span><span class="fp-av fp-av--brown fp-av--xs"></span><span class="fp-av fp-av--slate fp-av--xs"></span></span> {{ 'frontpage.how.meet.going'|trans({count: _event[2]}) }}</p></div>
+                                <div><strong>{{ _event[1]|trans }}</strong><p class="fp-stackline"><span class="fp-stack"><span class="fp-av fp-av--green fp-av--xs"><img src="{{ asset('images/avatars/9.webp') }}" alt=""></span><span class="fp-av fp-av--brown fp-av--xs"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span><span class="fp-av fp-av--slate fp-av--xs"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span></span> {{ 'frontpage.how.meet.going'|trans({count: _event[2]}) }}</p></div>
                             </div>
                         {% endfor %}
                     </div>
@@ -226,7 +230,7 @@
                 <article class="fp-step">
                     <div class="fp-step__art" aria-hidden="true">
                         <div class="fp-mini">
-                            <div class="fp-mini__head"><span class="fp-av fp-av--brown fp-av--sm">T</span><strong>Tomás</strong><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> {{ 'frontpage.how.trust.positive'|trans }}</span></div>
+                            <div class="fp-mini__head"><span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span><strong>Tomás</strong><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> {{ 'frontpage.how.trust.positive'|trans }}</span></div>
                             <p class="fp-mini__msg">“{{ 'frontpage.how.trust.quote'|trans }}”</p>
                         </div>
                         <p class="fp-center"><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span> <span class="fp-tag">− 1</span></p>
@@ -261,7 +265,7 @@
         <div class="fp-wrap">
             <div class="fp-last__card">
                 <div class="fp-last__text">
-                    <span class="fp-stack fp-stack--big" aria-hidden="true"><span class="fp-av fp-av--green">L</span><span class="fp-av fp-av--brown">T</span><span class="fp-av fp-av--purple">A</span><span class="fp-av fp-av--slate">K</span></span>
+                    <span class="fp-stack fp-stack--big" aria-hidden="true"><span class="fp-av fp-av--brown"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span><span class="fp-av fp-av--purple"><img src="{{ asset('images/avatars/10.webp') }}" alt=""></span><span class="fp-av fp-av--slate"><img src="{{ asset('images/avatars/8.webp') }}" alt=""></span><span class="fp-av"><img src="{{ asset('images/avatars/1.webp') }}" alt=""></span><span class="fp-av"><img src="{{ asset('images/avatars/7.webp') }}" alt=""></span></span>
                     <h2 class="fp-h2">{{ 'frontpage.last.title'|trans }} <span class="fp-orange">{{ 'frontpage.last.world'|trans }}</span></h2>
                     <p>{{ 'frontpage.last.text'|trans }}</p>
                     <a class="fp-btn fp-btn--primary" href="{{ url('signup') }}">{{ 'frontpage.last.join'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>

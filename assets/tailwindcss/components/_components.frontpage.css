@@ -61,6 +61,7 @@ body:has(.fp) { background: #fffaf4; }
 .fp-av--purple { background: #6b3f8f; }
 .fp-av--orange { background: #f37000; }
 .fp-av--slate { background: #5b7088; }
+.fp-av img { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
 .fp-av__dot { position: absolute; right: -2px; bottom: -2px; width: 0.8rem; height: 0.8rem; border: 2px solid #fff; border-radius: 50%; background: #22c55e; }
 .fp-stack { display: inline-flex; padding-left: 0.4rem; }
 .fp-stack .fp-av { margin-left: -0.4rem; }
@@ -86,11 +87,12 @@ body:has(.fp) { background: #fffaf4; }
 .fp-hero__photo { display: block; width: 100%; aspect-ratio: 19 / 20; border-radius: 1.75rem; object-fit: cover; }
 .fp-float { padding: 0.85rem 1rem; border-radius: 1.1rem; background: #fff; box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16); font-size: 0.8125rem; }
 .fp-float p { margin: 0; }
-.fp-float--request { display: flex; flex-direction: column; gap: 0.45rem; }
-.fp-float__who { display: flex; align-items: center; gap: 0.5rem; }
-.fp-float__buttons { display: flex; gap: 0.4rem; }
-.fp-float__buttons span { padding: 0.35rem 1.1rem; border-radius: 999px; background: #eef2f6; color: #334155; font-weight: 700; }
-.fp-float__buttons .is-yes { background: #4caf50; color: #fff; }
+.fp-float--request { display: flex; align-items: center; gap: 0.75rem; padding: 0.8rem 0.85rem 0.8rem 0.8rem; }
+/* Danny's stay request on one line, like the other cards: photo, name and dates, then
+   round decline and accept buttons */
+.fp-req__text { flex: 1 1 auto; min-width: 0; margin-right: 0.4rem; }
+.fp-req__btn { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: #f1f5f9; color: #64748b; font-size: 0.85rem; }
+.fp-req__btn--yes { background: #3f9b4b; color: #fff; box-shadow: 0 6px 14px -4px rgba(63, 155, 75, 0.6); }
 .fp-float--host { display: flex; align-items: center; gap: 0.75rem; }
 .fp-float__name { color: #64748b; font-size: 0.75rem; }
 .fp-float__name strong { color: #0f172a; font-size: 0.8125rem; }
@@ -226,12 +228,13 @@ body:has(.fp) { background: #fffaf4; }
   .fp-slot--a { top: 0.75rem; right: 0.75rem; left: 0.75rem; }
   .fp-slot--b { right: 0.75rem; bottom: 0.75rem; left: 0.75rem; }
   .fp-float { max-width: 100%; padding: 0.65rem 0.8rem; border-radius: 0.95rem; box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18); }
-  .fp-float__buttons span { padding: 0.3rem 0.8rem; }
   .fp-note { gap: 0.65rem; min-width: 0; padding: 0.6rem 0.9rem 0.6rem 0.65rem; }
   .fp-note__icon { width: 2.1rem; height: 2.1rem; font-size: 0.85rem; }
   .fp .fp-note__title { font-size: 0.875rem; }
   .fp .fp-note__sub { font-size: 0.75rem; }
   .fp-float--host { gap: 0.6rem; }
+  .fp-float--request { gap: 0.6rem; }
+  .fp-req__btn { width: 1.9rem; height: 1.9rem; }
   .fp-float--host .fp-av--big { width: 2.4rem; height: 2.4rem; }
   .fp-free__in { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
   .fp .fp-h2 { font-size: 2rem; }

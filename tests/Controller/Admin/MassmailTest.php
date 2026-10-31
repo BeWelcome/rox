@@ -6,8 +6,10 @@ use App\Entity\Member;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -151,9 +153,12 @@ class MassmailTest extends WebTestCase
         $this->client->submitForm('members[enqueue]', ['members[members]' => 'usernames', 'members[usernames]' => 'member-3;member-6']);
         $token = $this->token($id);
 
+        self::assertSame(['enqueued' => 2, 'triggered' => 0, 'sent' => 0, 'failed' => 0], $this->statistics($id));
+
         $this->client->request('POST', '/admin/massmail/' . $id . '/trigger', ['_token' => $token]);
         $this->assertResponseRedirects('/admin/massmail/' . $id . '/details');
         self::assertSame(2, $this->recipients($id, 'ToSend'));
+        self::assertSame(['enqueued' => 0, 'triggered' => 2, 'sent' => 0, 'failed' => 0], $this->statistics($id));
         self::assertSame('Triggered', $this->connection()->fetchOne('SELECT Status FROM broadcast WHERE id = ?', [$id]));
         // a triggered mass mail isn't edited
         $this->client->request('GET', '/admin/massmail/' . $id . '/edit');
@@ -161,6 +166,7 @@ class MassmailTest extends WebTestCase
 
         $this->client->request('POST', '/admin/massmail/' . $id . '/untrigger', ['_token' => $token]);
         self::assertSame(0, $this->recipients($id));
+        self::assertSame(['enqueued' => 0, 'triggered' => 0, 'sent' => 0, 'failed' => 0], $this->statistics($id));
         self::assertSame('Created', $this->connection()->fetchOne('SELECT Status FROM broadcast WHERE id = ?', [$id]));
     }
 
@@ -170,9 +176,30 @@ class MassmailTest extends WebTestCase
         $this->client->request('GET', '/admin/massmail/' . $id . '/enqueue');
         $this->client->submitForm('members[enqueue]', ['members[members]' => 'usernames', 'members[usernames]' => 'member-3']);
 
+        self::assertSame(1, $this->statistics($id)['enqueued']);
+
         $this->client->request('POST', '/admin/massmail/' . $id . '/unqueue', ['_token' => $this->token($id)]);
 
         self::assertSame(0, $this->recipients($id));
+        self::assertSame(0, $this->statistics($id)['enqueued']);
+    }
+
+    public function testSendingCountsTheSentMails(): void
+    {
+        $id = $this->create();
+        $this->client->request('GET', '/admin/massmail/' . $id . '/enqueue');
+        $this->client->submitForm('members[enqueue]', ['members[members]' => 'usernames', 'members[usernames]' => 'member-3;member-6']);
+        $this->client->request('POST', '/admin/massmail/' . $id . '/trigger', ['_token' => $this->token($id)]);
+
+        $tester = new CommandTester(new Application(self::$kernel)->find('send:massmail'));
+        $tester->execute(['batchSize' => '10']);
+
+        $tester->assertCommandIsSuccessful();
+        self::assertSame(2, $this->recipients($id, 'Sent'));
+        self::assertSame(['enqueued' => 0, 'triggered' => 0, 'sent' => 2, 'failed' => 0], $this->statistics($id));
+        // the list shows the counts
+        $crawler = $this->client->request('GET', '/admin/massmail');
+        self::assertSame('2', trim($crawler->filter('tr.js-massmail[data-id="' . $id . '"] td')->eq(5)->text()));
     }
 
     public function testTheActionsNeedTheToken(): void
@@ -255,6 +282,19 @@ class MassmailTest extends WebTestCase
         });
 
         return $rows;
+    }
+
+    /**
+     * @return array{enqueued: int, triggered: int, sent: int, failed: int}
+     */
+    private function statistics(int $id): array
+    {
+        $row = $this->connection()->fetchAssociative(
+            'SELECT enqueued, triggered, sent, failed FROM broadcast_statistics WHERE broadcast_id = ?',
+            [$id],
+        ) ?: ['enqueued' => 0, 'triggered' => 0, 'sent' => 0, 'failed' => 0];
+
+        return array_map(intval(...), $row);
     }
 
     private function recipients(int $id, ?string $status = null): int

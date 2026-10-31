@@ -6,6 +6,8 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Entity\NewsletterStatistics;
+use App\Repository\NewsletterStatisticsRepository;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -67,6 +69,8 @@ class SendMassmailCommand extends Command
     {
         $sent = 0;
         $lastBroadcastId = 0;
+        // per mass mail: [sent, failed]
+        $statistics = [];
 
         /** @var BroadcastMessage $scheduled */
         foreach ($scheduledBroadcastMessages as $scheduled) {
@@ -84,6 +88,7 @@ class SendMassmailCommand extends Command
 
                 $lastBroadcastId = $scheduled->getNewsletter()->getId();
             }
+            $newsletterId = $scheduled->getNewsletter()->getId();
             $receiver = $scheduled->getReceiver();
             $status = $receiver->getStatus();
 
@@ -106,13 +111,22 @@ class SendMassmailCommand extends Command
                     ->setStatus('Sent')
                     ->setUnsubscribeKey($unsubscribeKey);
                 ++$sent;
+                $statistics[$newsletterId][0] = ($statistics[$newsletterId][0] ?? 0) + 1;
             } catch (Exception $e) {
                 $io->error('Message Frozen: ' . $e->getMessage());
                 $scheduled->setStatus('Freeze');
+                $statistics[$newsletterId][1] = ($statistics[$newsletterId][1] ?? 0) + 1;
             }
             $this->entityManager->persist($scheduled);
         }
         $this->entityManager->flush();
+
+        /** @var NewsletterStatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->entityManager->getRepository(NewsletterStatistics::class);
+        foreach ($statistics as $newsletterId => $counts) {
+            $done = ($counts[0] ?? 0) + ($counts[1] ?? 0);
+            $statisticsRepository->add($newsletterId, triggered: -$done, sent: $counts[0] ?? 0, failed: $counts[1] ?? 0);
+        }
 
         return $sent;
     }

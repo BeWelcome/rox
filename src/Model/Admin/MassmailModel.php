@@ -5,6 +5,7 @@ namespace App\Model\Admin;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Repository\NewsletterStatisticsRepository;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Pagerfanta\Adapter\CallbackAdapter;
@@ -14,7 +15,8 @@ use Pagerfanta\Pagerfanta;
  * Mass mails (table broadcast) and their recipients (broadcastmessages) for the volunteers who send them.
  *
  * A recipient is enqueued (ToApprove), triggered (ToSend), then sent or failed by send:massmail. Subject and text
- * are the words broadcast_title_<name> and broadcast_body_<name>, translated like any other word.
+ * are the words broadcast_title_<name> and broadcast_body_<name>, translated like any other word. The counts per
+ * status are kept in broadcast_statistics, changed with the messages.
  */
 class MassmailModel
 {
@@ -33,8 +35,10 @@ class MassmailModel
         self::FAILED => 'Failed',
     ];
 
-    public function __construct(private readonly Connection $connection)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly NewsletterStatisticsRepository $statistics,
+    ) {
     }
 
     /**
@@ -49,6 +53,7 @@ class MassmailModel
                 $this->connection->fetchAllAssociative(
                     'SELECT b.id, b.Name AS name, b.Type AS type, b.Status AS status, b.created, ' . $this->counts() . '
                     FROM broadcast b
+                    LEFT JOIN broadcast_statistics s ON s.broadcast_id = b.id
                     ORDER BY b.created DESC, b.id DESC
                     LIMIT ' . $length . ' OFFSET ' . $offset,
                 ),
@@ -69,7 +74,9 @@ class MassmailModel
     {
         $row = $this->connection->fetchAssociative(
             'SELECT b.id, b.Name AS name, b.Type AS type, b.Status AS status, b.created, ' . $this->counts() . '
-            FROM broadcast b WHERE b.id = ?',
+            FROM broadcast b
+            LEFT JOIN broadcast_statistics s ON s.broadcast_id = b.id
+            WHERE b.id = ?',
             [$newsletter->getId()],
         );
 
@@ -95,11 +102,14 @@ class MassmailModel
 
     public function getRecipients(Newsletter $newsletter, string $status, int $page, int $perPage): Pagerfanta
     {
-        $parameters = [$newsletter->getId(), self::STATUSES[$status]];
+        // send:massmail marks a message it couldn't send as Freeze
+        $parameters = ['newsletter' => $newsletter->getId(), 'statuses' => self::FAILED === $status ? ['Failed', 'Freeze'] : [self::STATUSES[$status]]];
+        $types = ['statuses' => ArrayParameterType::STRING];
         $pager = new Pagerfanta(new CallbackAdapter(
             fn (): int => (int) $this->connection->fetchOne(
-                'SELECT COUNT(*) FROM broadcastmessages WHERE IdBroadcast = ? AND Status = ?',
+                'SELECT COUNT(*) FROM broadcastmessages WHERE IdBroadcast = :newsletter AND Status IN (:statuses)',
                 $parameters,
+                $types,
             ),
             fn (int $offset, int $length): array => $this->connection->fetchAllAssociative(
                 "SELECT m.Username AS username, m.Status AS status, c.name AS country, COALESCE(l.Name, 'English') AS language
@@ -109,10 +119,11 @@ class MassmailModel
                 LEFT JOIN location g ON g.geoname_id = a.location
                 LEFT JOIN location c ON c.geoname_id = g.country
                 LEFT JOIN language l ON l.ShortCode = m.Locale
-                WHERE bm.IdBroadcast = ? AND bm.Status = ?
+                WHERE bm.IdBroadcast = :newsletter AND bm.Status IN (:statuses)
                 ORDER BY m.Username
                 LIMIT " . $length . ' OFFSET ' . $offset,
                 $parameters,
+                $types,
             ),
         ));
         $pager->setMaxPerPage($perPage);
@@ -207,30 +218,43 @@ class MassmailModel
 
     public function unqueue(Newsletter $newsletter): int
     {
-        return (int) $this->connection->executeStatement(
-            "DELETE FROM broadcastmessages WHERE IdBroadcast = ? AND Status = 'ToApprove'",
-            [$newsletter->getId()],
-        );
+        return $this->connection->transactional(function () use ($newsletter): int {
+            $count = (int) $this->connection->executeStatement(
+                "DELETE FROM broadcastmessages WHERE IdBroadcast = ? AND Status = 'ToApprove'",
+                [$newsletter->getId()],
+            );
+            $this->statistics->add($newsletter, enqueued: -$count);
+
+            return $count;
+        });
     }
 
     public function trigger(Newsletter $newsletter): int
     {
-        $this->connection->executeStatement("UPDATE broadcast SET Status = 'Triggered' WHERE id = ?", [$newsletter->getId()]);
+        return $this->connection->transactional(function () use ($newsletter): int {
+            $this->connection->executeStatement("UPDATE broadcast SET Status = 'Triggered' WHERE id = ?", [$newsletter->getId()]);
+            $count = (int) $this->connection->executeStatement(
+                "UPDATE broadcastmessages SET Status = 'ToSend', updated = NOW() WHERE IdBroadcast = ? AND Status = 'ToApprove'",
+                [$newsletter->getId()],
+            );
+            $this->statistics->add($newsletter, enqueued: -$count, triggered: $count);
 
-        return (int) $this->connection->executeStatement(
-            "UPDATE broadcastmessages SET Status = 'ToSend', updated = NOW() WHERE IdBroadcast = ? AND Status = 'ToApprove'",
-            [$newsletter->getId()],
-        );
+            return $count;
+        });
     }
 
     public function untrigger(Newsletter $newsletter): int
     {
-        $this->connection->executeStatement("UPDATE broadcast SET Status = 'Created' WHERE id = ?", [$newsletter->getId()]);
+        return $this->connection->transactional(function () use ($newsletter): int {
+            $this->connection->executeStatement("UPDATE broadcast SET Status = 'Created' WHERE id = ?", [$newsletter->getId()]);
+            $count = (int) $this->connection->executeStatement(
+                "DELETE FROM broadcastmessages WHERE IdBroadcast = ? AND Status = 'ToSend'",
+                [$newsletter->getId()],
+            );
+            $this->statistics->add($newsletter, triggered: -$count);
 
-        return (int) $this->connection->executeStatement(
-            "DELETE FROM broadcastmessages WHERE IdBroadcast = ? AND Status = 'ToSend'",
-            [$newsletter->getId()],
-        );
+            return $count;
+        });
     }
 
     /**
@@ -311,14 +335,22 @@ class MassmailModel
      * @param array<string, mixed>                     $parameters
      * @param array<string, ArrayParameterType|string> $types
      */
+    /**
+     * Members who already get the mass mail aren't enqueued again.
+     */
     private function enqueue(Newsletter $newsletter, Member $enqueuer, string $from, array $parameters, array $types = []): int
     {
-        return (int) $this->connection->executeStatement(
-            "REPLACE INTO broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
-            SELECT :newsletter, m.id, :enqueuer, 'ToApprove', NOW() " . $from,
-            $parameters + ['newsletter' => $newsletter->getId(), 'enqueuer' => $enqueuer->getId()],
-            $types,
-        );
+        return $this->connection->transactional(function () use ($newsletter, $enqueuer, $from, $parameters, $types): int {
+            $count = (int) $this->connection->executeStatement(
+                "INSERT IGNORE INTO broadcastmessages (IdBroadcast, IdReceiver, IdEnqueuer, Status, updated)
+                SELECT :newsletter, m.id, :enqueuer, 'ToApprove', NOW() " . $from,
+                $parameters + ['newsletter' => $newsletter->getId(), 'enqueuer' => $enqueuer->getId()],
+                $types,
+            );
+            $this->statistics->add($newsletter, enqueued: $count);
+
+            return $count;
+        });
     }
 
     /**
@@ -340,8 +372,8 @@ class MassmailModel
     private function counts(): string
     {
         $counts = [];
-        foreach (self::STATUSES as $name => $status) {
-            $counts[] = "(SELECT COUNT(*) FROM broadcastmessages bm WHERE bm.IdBroadcast = b.id AND bm.Status = '" . $status . "') AS " . $name;
+        foreach (array_keys(self::STATUSES) as $name) {
+            $counts[] = 'COALESCE(s.' . $name . ', 0) AS ' . $name;
         }
 
         return implode(', ', $counts);

@@ -2,13 +2,14 @@
 {% import 'forum/_macros.html.twig' as forum %}
 
 {#
-  A forum thread: a white top (the group and its discussions, the title; on phones who is in it, the order and
+  A forum thread: under the group's head and tabs, a white top (the title; on phones who is in it, the order and
   Subscribe), then the posts on a line (forum/_post.html.twig) with "Write a reply" under them and, on large
   screens, a side card (Reply, Subscribe, who is in it, the order). Reply opens in a side panel
   (assets/js/contact/drawer.js, loaded by bewelcome.js): forum/reply.html.twig ?embed=1.
 #}
-{# The group is in the thread's white top (group/layout.html.twig leaves its head out) #}
-{% set group_head_compact = true %}
+
+{# A group's topic: its title in the group's head, under the group's name (group/_head.html.twig) #}
+{% if not thread.agora %}{% set group_head_topic = forum.thread_title(thread, locale) %}{% endif %}
 
 {% block title %}{{ forum.thread_title(thread, locale) }}{% endblock %}
 
@@ -51,20 +52,11 @@
 
     <div class="p-thread">
     <div class="p-thread__top">
+        {# A group's thread has its title in the group's head, with the tabs (group/layout.html.twig) #}
         {% if thread.agora %}
             {% include 'forum/_head.html.twig' with {active: 'agora', tabsOnly: true} %}
-        {% else %}
-            {# Where the thread is: the group, then its discussions #}
-            <nav class="p-thread__crumbs" aria-label="{{ group.name }}">
-                <a class="p-thread__crumb-group" href="{{ path('group_start', {group_id: group.id}) }}">
-                    <img width="36" height="36" alt="" loading="lazy" src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
-                    <span>{{ group.name }}</span>
-                </a>
-                <i class="fas fa-chevron-right p-thread__crumb-sep" aria-hidden="true"></i>
-                <a class="p-thread__crumb" href="{{ _forumUrl }}">{{ 'forum.thread.discussions'|trans }}</a>
-            </nav>
+            <h1 class="p-thread__title">{{ forum.thread_title(thread, locale) }}</h1>
         {% endif %}
-        <h1 class="p-thread__title">{{ forum.thread_title(thread, locale) }}</h1>
         {% if thread.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
             <p class="alert alert-warning">{{ 'threadclosed'|trans }}</p>
         {% endif %}

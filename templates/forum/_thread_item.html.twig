@@ -1,18 +1,11 @@
 {#
   One thread in a list (forum pages, My groups on the home page): the starter's avatar, the title, the group
   (nothing for the agora), who wrote the last post and when, and the number of replies.
-  The whole row opens the thread at its last post; only the group's name is a link of its own.
-  ascending: the member reads threads oldest post first, so the last post is on the last page.
+  The whole row opens the thread at its top; only the group's name is a link of its own.
   showGroup: name the group (not on the group's own pages).
 #}
 {% import 'forum/_macros.html.twig' as forum %}
-{% set page = 1 %}
-{% set fragment = '' %}
-{% if ascending|default(false) %}
-    {% set page = thread.replies // constant('App\\Controller\\ForumPagesController::POSTS_PER_PAGE') + 1 %}
-    {% set fragment = '#post' ~ thread.lastPost.id %}
-{% endif %}
-{% set lastUrl = forum.thread_url(thread, page) ~ fragment %}
+{% set lastUrl = forum.thread_url(thread) %}
 <div class="c-home-item c-home-item--thread">
     <img class="c-home-item__avatar" src="{{ path('avatar', { username: thread.firstPost.author.username, size: 48 }) }}" alt="" loading="lazy">
     <div class="c-home-item__body">

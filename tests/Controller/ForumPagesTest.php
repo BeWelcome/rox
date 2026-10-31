@@ -64,6 +64,22 @@ final class ForumPagesTest extends WebTestCase
         self::assertStringContainsString(self::HIKING_THREAD, $this->request('GET', '/forums')->text());
     }
 
+    public function testAGroupThreadHasTheGroupsTabsAndListsOpenItAtItsTop(): void
+    {
+        $thread = $this->thread(self::HIKING_THREAD);
+        $uri = '/group/' . $thread->getGroup()->getId() . '/forum/s' . $thread->getId();
+
+        $crawler = $this->request('GET', $uri);
+        self::assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('.p-group__tabs .p-group__tab.is-active'));
+
+        // the lists link to the thread itself, not to its last post
+        $links = $this->request('GET', '/forums')->filter('a.c-home-item__row-link')->each(
+            static fn ($link): string => (string) $link->attr('href'),
+        );
+        self::assertContains($uri, $links);
+    }
+
     public function testTheAgoraIsTheBeWelcomeGroupsForum(): void
     {
         $this->request('GET', '/forums/bwforum');

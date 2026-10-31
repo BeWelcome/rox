@@ -125,7 +125,8 @@ class ProfileController extends AbstractController
             : $this->redirectBack($request, 'members_profile', ['username' => $member->getUsername()]);
     }
 
-    #[Route(path: '/members/{username:member}/visitors/{page}', name: 'profile_visitors')]
+    // before members_profile, which would take 'visitors' for a language
+    #[Route(path: '/members/{username:member}/visitors/{page}', name: 'profile_visitors', priority: 11)]
     public function showMyVisitors(
         Member $member,
         EntityManagerInterface $entityManager,

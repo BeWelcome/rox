@@ -20,12 +20,28 @@ final class ProfileVisitorsTest extends WebTestCase
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $member = $this->getMember('member-2');
         $visitor = $this->getMember('member-4');
-        $entityManager->getConnection()->executeStatement(
+        $connection = $entityManager->getConnection();
+        $connection->executeStatement(
             'DELETE FROM profilesvisits WHERE IdMember = ? AND IdVisitor = ?',
             [$member->getId(), $visitor->getId()],
         );
+        // Visits are kept only when both members show them (the default is No)
+        $preferenceId = $connection->fetchOne(
+            "SELECT id FROM preferences WHERE codeName = 'PreferenceShowProfileVisits'"
+        );
+        foreach ([$member, $visitor] as $who) {
+            $connection->executeStatement(
+                'DELETE FROM memberspreferences WHERE IdMember = ? AND IdPreference = ?',
+                [$who->getId(), $preferenceId],
+            );
+            $connection->executeStatement(
+                "INSERT INTO memberspreferences (IdMember, IdPreference, Value, created, updated) VALUES (?, ?, 'Yes', NOW(), NOW())",
+                [$who->getId(), $preferenceId],
+            );
+        }
+        $entityManager->clear();
 
-        $client->loginUser($visitor);
+        $client->loginUser($this->getMember('member-4'));
         $client->request('GET', '/members/member-2');
         self::assertResponseIsSuccessful();
 

@@ -535,8 +535,6 @@ WHERE
             if (!$TCom || $TCom->DisplayInPublic == 1) {
                 $this->sendCommentNotification($note, $messageWordCode, $messageSubjectWordCode);
             }
-            $noteEntity = $this->createEntity('Note');
-            $noteEntity->createNote($note);
         }
         $this->setCommentGuidelinesRead();
         return $return;
@@ -573,12 +571,6 @@ INSERT INTO
             if(!$qry) $return = false;
             $this->logWrite("Adding relation for ".$mReceiver->Username,"MyRelations");
         } else $return = false;
-        if ($return != false) {
-            // Create a note (member-notification) for this action
-            $note = ['IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_new'];
-            $noteEntity = $this->createEntity('Note');
-            $noteEntity->createNote($note);
-        }
         return $return;
 
     }
@@ -604,12 +596,6 @@ WHERE
             if(!$qry) $return = false;
             $this->logWrite("Updating relation for ".$mReceiver->Username,"MyRelations");
         } else $return = false;
-        if ($return != false) {
-            // Create a note (member-notification) for this action
-            $note = ['IdMember' => $vars['IdRelation'], 'IdRelMember' => $this->session->get('IdMember'), 'Type' => 'relation', 'Link' => 'members/'.$vars['IdOwner'].'/relations/add','WordCode' => 'Notify_relation_update'];
-            $noteEntity = $this->createEntity('Note');
-            $noteEntity->createNote($note);
-        }
         return $return;
 
     }
@@ -636,12 +622,6 @@ WHERE
                 ";
                 $qry = $this->dao->query($str);
                 if(!$qry) $return = false;
-                if ($return != false) {
-                    // Create a note (member-notification) for this action
-                    $note = ['IdMember' => $IdRelation, 'IdRelMember' => $IdOwner, 'Type' => 'relation', 'Link' => 'members/'.$IdOwner.'/relations/add','WordCode' => 'Notify_relation_confirm_'.$vars['confirm']];
-                    $noteEntity = $this->createEntity('Note');
-                    $noteEntity->createNote($note);
-                }
             }
         } else $return = false;
         return $return;
@@ -703,7 +683,7 @@ WHERE
         // Update partner relation if it exists
         if ($partnerRelation) {
             $relationId = $partnerRelation->id;
-            $updateResult = $this->dao->query("
+            $this->dao->query("
                 UPDATE
                     specialrelations
                 SET
@@ -711,23 +691,6 @@ WHERE
                 WHERE
                     id = '$relationId'
             ");
-            // Test if update was successful
-            if ($updateResult != NULL) {
-                // Create a note on partner's start page
-                $member = $this->getMemberWithId(
-                    $relation->IdOwner
-                );
-                $note = [
-                    'IdMember' => $partnerRelation->IdOwner,
-                    'IdRelMember' => $relation->IdOwner,
-                    'Type' => 'relation',
-                    'Link' => 'members/' . $member->Username
-                        . '/relations/',
-                    'WordCode' => 'Notify_relation_delete'
-                ];
-                $noteEntity = $this->createEntity('Note');
-                $noteEntity->createNote($note);
-            }
         }
         return true;
     }

@@ -5,7 +5,7 @@ namespace App\Model;
 use App\Entity\CommunityNews;
 use App\Entity\CommunityNewsComment;
 use App\Repository\CommunityNewsCommentRepository;
-use App\Repository\NotificationRepository;
+use App\Repository\CommunityNewsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Doctrine\Collections\CollectionAdapter;
 use Pagerfanta\Pagerfanta;
@@ -19,7 +19,7 @@ readonly class CommunityNewsModel
 
     public function getPaginator(int $page, int $limit): Pagerfanta
     {
-        /** @var NotificationRepository $repository */
+        /** @var CommunityNewsRepository $repository */
         $repository = $this->entityManager->getRepository(CommunityNews::class);
 
         return $repository->pagePublic($page, $limit);
@@ -27,7 +27,7 @@ readonly class CommunityNewsModel
 
     public function getAdminPaginator(int $page, int $limit): Pagerfanta
     {
-        /** @var NotificationRepository $repository */
+        /** @var CommunityNewsRepository $repository */
         $repository = $this->entityManager->getRepository(CommunityNews::class);
 
         return $repository->pageAll($page, $limit);
@@ -35,7 +35,7 @@ readonly class CommunityNewsModel
 
     public function getLatest(): mixed
     {
-        /** @var NotificationRepository $repository */
+        /** @var CommunityNewsRepository $repository */
         $repository = $this->entityManager->getRepository(CommunityNews::class);
 
         return $repository->getLatest();

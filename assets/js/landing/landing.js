@@ -154,9 +154,6 @@ var Home = {
             case 'messages':
                 return Home.updateMessages();
 
-            case 'notifications':
-                return Home.updateNotifications();
-
             case 'groups':
                 return Home.updateGroups();
 
@@ -190,31 +187,6 @@ var Home = {
                 if (pane) {
                     pane.classList.toggle('is-empty', all === 1 && list.hasAttribute('data-empty'));
                 }
-            });
-    },
-    updateNotifications: function() {
-        fetch('/widget/notifications')
-            .then(response => response.text())
-            .then(notifications => {
-                const display = document.getElementById('notificationsdisplay');
-                if (display) {
-                    display.outerHTML = notifications;
-                }
-
-                // Set click event
-                const notifies = document.querySelectorAll('.notify');
-                notifies.forEach(notify => {
-                    notify.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        const id = this.getAttribute('id');
-                        
-                        fetch('/notify/' + id.replace('notify-', '') + '/check')
-                            .then(() => {
-                                // update the notifications
-                                Home.updateNotifications();
-                            });
-                    });
-                });
             });
     },
     // The My groups tab: threads of the member's groups, the BeWelcome group's agora included.

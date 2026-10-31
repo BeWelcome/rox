@@ -54,7 +54,6 @@ class LegacyLoader extends Loader
             'delete_relation_editprofile',
             '/members/{username}/relations/delete/{relationId}/editprofile'
         );
-        $this->addRouteDirectly('check_notification', '/notify/{notificationId}/check');
 
         return $this->routes;
     }

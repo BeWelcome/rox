@@ -98,14 +98,14 @@ php-code-sniffer:
 	"./vendor/bin/phpcs"  --colors --warning-severity=Error
 
 phpunit:
-	XDEBUG_MODE=coverage "./bin/phpunit" --coverage-text --coverage-xml=build/logs/phpunit/coverage-xml --coverage-clover=build/logs/phpunit/clover.xml --log-junit=build/logs/phpunit/junit.xml --colors=never --order-by=random --exclude-group=integration
+	XDEBUG_MODE=coverage "./bin/phpunit" --coverage-text --coverage-xml=reports/phpunit/coverage-xml --coverage-clover=reports/phpunit/clover.xml --log-junit=reports/phpunit/junit.xml --colors=never --order-by=random --exclude-group=integration
 
 int-test:
-	"./bin/phpunit" --log-junit=build/logs/phpunit/integration.xml --colors=never --order-by=random --group=integration
+	"./bin/phpunit" --log-junit=reports/phpunit/integration.xml --colors=never --order-by=random --group=integration
 
 # Uses the coverage of the last `make phpunit`.
 infection:
-	"./vendor/bin/infection" --skip-initial-tests --coverage=build/logs/phpunit --min-covered-msi=80 --threads=$(INFECTION_THREADS)
+	"./vendor/bin/infection" --skip-initial-tests --coverage=reports/phpunit --min-covered-msi=80 --threads=$(INFECTION_THREADS)
 
 # Fails on security advisories only; abandoned packages are reported but don't fail.
 composer-audit:

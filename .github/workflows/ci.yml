@@ -124,7 +124,7 @@ jobs:
         if: ${{ always() }}
         with:
           name: infection.log
-          path: infection.log
+          path: reports/infection.log
 
   phploc:
     name: PHPLoc

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+  {% set massmail_type_labels = constant('App\\Form\\Admin\\MassmailType::TYPE_LABELS') %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="u:text-24 mb-0">{{ 'adminmassmaillistheader'|trans }}</h1>
+    <a class="btn btn-primary" href="{{ path('admin_massmail_create') }}">{{ 'adminmassmailcreate'|trans }}</a>
+  </div>
+  {% if massmails.haveToPaginate %}
+    <div class="d-flex justify-content-end mb-2">{{ pagerfanta(massmails, 'rox_default') }}</div>
+  {% endif %}
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>{{ 'adminmassmailname'|trans }}</th>
+          <th>{{ 'admin.massmail.type'|trans }}</th>
+          <th>{{ 'admin.massmail.created'|trans }}</th>
+          {% for status in ['enqueued', 'triggered', 'sent', 'failed'] %}
+            <th class="text-end">{{ ('adminmassmail' ~ status)|trans }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for massmail in massmails %}
+          <tr class="js-massmail" data-id="{{ massmail.id }}">
+            <td><a href="{{ path('admin_massmail_details', {id: massmail.id}) }}">{{ massmail.name }}</a></td>
+            <td>{{ (massmail_type_labels[massmail.type] ?? massmail.type)|trans }}</td>
+            <td>{{ massmail.created|date('Y-m-d') }}</td>
+            {% for status in ['enqueued', 'triggered', 'sent', 'failed'] %}
+              <td class="text-end">
+                {% if massmail[status] > 0 %}
+                  <a href="{{ path('admin_massmail_recipients', {id: massmail.id, status: status}) }}">{{ massmail[status] }}</a>
+                {% else %}0{% endif %}
+              </td>
+            {% endfor %}
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if massmails.haveToPaginate %}
+    <div class="d-flex justify-content-end">{{ pagerfanta(massmails, 'rox_default') }}</div>
+  {% endif %}
+{% endblock content %}

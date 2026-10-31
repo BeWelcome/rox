@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+{% import 'macros.twig' as macros %}
+
+{% block content %}
+  <p><a href="{{ path('admin_massmail_details', {id: massmail.id}) }}">{{ massmail.name }}</a></p>
+  <h1 class="u:text-24">{{ ('adminmassmail' ~ status)|trans }}</h1>
+  {% include 'admin/massmail/_status.html.twig' with {current: status} %}
+  {% if recipients.haveToPaginate %}
+    <div class="d-flex justify-content-end mb-2">{{ pagerfanta(recipients, 'rox_default') }}</div>
+  {% endif %}
+  <div class="table-responsive">
+    <table class="table table-striped js-recipients">
+      <thead>
+        <tr>
+          <th>{{ 'label.username'|trans }}</th>
+          <th>{{ 'country'|trans }}</th>
+          <th>{{ 'memberstatus'|trans }}</th>
+          <th>{{ 'language'|trans }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for recipient in recipients %}
+          <tr>
+            <td><a href="{{ path('members_profile', {username: recipient.username}) }}">{{ recipient.username }}</a></td>
+            <td>{{ recipient.country }}</td>
+            <td>{{ ('memberstatus' ~ recipient.status|lower)|trans }}</td>
+            <td>{{ recipient.language }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if recipients.haveToPaginate %}
+    <div class="d-flex justify-content-end">{{ pagerfanta(recipients, 'rox_default') }}</div>
+  {% endif %}
+{% endblock content %}

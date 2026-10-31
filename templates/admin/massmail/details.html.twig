@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+  {% set massmail_type_labels = constant('App\\Form\\Admin\\MassmailType::TYPE_LABELS') %}
+  {% set token = csrf_token(constant('App\\Controller\\Admin\\MassmailController::TOKEN')) %}
+  <p><a href="{{ path('admin_massmail') }}">{{ 'adminmassmaillist'|trans }}</a></p>
+  <h1 class="u:text-24">{{ massmail.name }}</h1>
+  <p>{{ (massmail_type_labels[massmail.type] ?? massmail.type)|trans }}</p>
+
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    {% if massmail.can_edit %}
+      <a class="btn btn-outline-primary" href="{{ path('admin_massmail_edit', {id: massmail.id}) }}">{{ 'adminmassmailedit'|trans }}</a>
+    {% endif %}
+    <a class="btn btn-outline-primary" href="{{ path('admin_massmail_test', {id: massmail.id}) }}">{{ 'admin.massmail.test'|trans }}</a>
+    {% if massmail.can_enqueue %}
+      <a class="btn btn-primary" href="{{ path('admin_massmail_enqueue', {id: massmail.id}) }}">{{ 'adminmassmailenqueue'|trans }}</a>
+    {% endif %}
+    {% for action in ['unqueue', 'trigger', 'untrigger'] %}
+      {% if massmail['can_' ~ action] and (action == 'unqueue' or rights.canTrigger) %}
+        <form method="post" action="{{ path('admin_massmail_' ~ action, {id: massmail.id}) }}">
+          <input type="hidden" name="_token" value="{{ token }}">
+          <button type="submit" class="btn {{ action == 'trigger' ? 'btn-primary' : 'btn-outline-danger' }}">{{ ('adminmassmail' ~ action)|trans }}</button>
+        </form>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% include 'admin/massmail/_status.html.twig' %}
+
+  <p><strong>{{ 'adminmassmailavailablelanguages'|trans }}:</strong>
+    {% for language in languages %}{{ language.name }}{% if not loop.last %}, {% endif %}{% endfor %}
+  </p>
+  <p><strong>{{ 'adminmassmailsubject'|trans }}:</strong>
+    {{ ('broadcast_title_' ~ newsletter.name)|lower|trans({'username': app.user.username}) }}</p>
+  <div class="border p-3">
+    {{ ('broadcast_body_' ~ newsletter.name)|lower|trans({'username': app.user.username})|prepare_newsletter(true) }}
+  </div>
+{% endblock content %}

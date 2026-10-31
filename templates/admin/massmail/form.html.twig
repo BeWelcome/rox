@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+  <h1 class="u:text-24">{{ massmail ? massmail.name : 'adminmassmailcreate'|trans }}</h1>
+  <p class="text-muted">{{ 'admin.massmail.write.english'|trans }}</p>
+  <div class="row">
+    <div class="col-12 col-lg-10">
+      {{ form_start(form) }}
+        <input type="hidden" id="upload_path" value="{{ path('newsletter_add_image') }}">
+        {{ form_errors(form) }}
+        {{ form_row(form.type) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.subject) }}
+        {{ form_row(form.body) }}
+        {{ form_row(form.description) }}
+        <div class="d-flex gap-2">
+          {{ form_widget(form.submit) }}
+          <a class="btn btn-outline-primary" href="{{ massmail ? path('admin_massmail_details', {id: massmail.id}) : path('admin_massmail') }}">{{ 'cancel'|trans }}</a>
+        </div>
+      {{ form_end(form) }}
+    </div>
+  </div>
+{% endblock content %}

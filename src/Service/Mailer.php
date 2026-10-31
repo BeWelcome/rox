@@ -146,7 +146,6 @@ class Mailer
             $parameters,
             [],
             $this->buildNewsletterHeaders($newsletter, $receiver, $parameters),
-            Newsletter::SUSPENSION_NOTIFICATION === $newsletter->getType() ? $this->suspensionBounceAddress : '',
         );
     }
 
@@ -456,13 +455,8 @@ class Mailer
 
     private function buildNewsletterHeaders(Newsletter $newsletter, Member $receiver, array $parameters): array
     {
-        $transactionalTypes = [
-            'RemindToLog',
-            'MailToConfirmReminder',
-            Newsletter::SUSPENSION_NOTIFICATION,
-            Newsletter::TERMS_OF_USE,
-        ];
-        if (\in_array($newsletter->getType(), $transactionalTypes, true)) {
+        // A change of the terms of use goes to all members: it can't be unsubscribed
+        if (Newsletter::TERMS_OF_USE === $newsletter->getType()) {
             return [];
         }
 
@@ -509,7 +503,6 @@ class Mailer
     private function determineSenderForNewsletter($type): Address
     {
         $sender = match ($type) {
-            'RemindToLog', 'MailToConfirmReminder', Newsletter::SUSPENSION_NOTIFICATION => new Address($this->reminderEmailAddress, 'BeWelcome'),
             Newsletter::TERMS_OF_USE => new Address($this->termsOfUseEmailAddress, 'BeWelcome'),
             default => new Address($this->newsletterEmailAddress, 'BeWelcome'),
         };

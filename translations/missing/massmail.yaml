@@ -1,28 +1,50 @@
-massmail.correct.birth.date:
-    - 'Correct Birth Date Notification'
-    - Special type of newsletter. No need to translate.
-    - 'messages+intl-icu'
-    - 'yes'
 newsletter.unsubscribe.local.confirmation:
     - 'You have unsubcribed from local newsletters. If you decide to subscribe again, please set the according preference.'
     - Information text when a member unsubscribes from local newsletters from the unsubscribe link in the newsletter email.
-admin.massmail.suspension.notification.info:
-    - This will send a notification to all members that even after 5 times of receiving a login reminder did not login
-    - Short information for the person enqueueing a massmail of type SuspendAfter5Reminders
-    - 'messages+intl-icu'
-    - 'no'
-admin.massmail.enqueue.suspension.notification:
-    - Suspension Notification
-    - Label for the tab on the admin pages for massmail enqueueing
-    - 'messages+intl-icu'
-    - 'no'
-admin.massmail.suspension.notification.submit:
-    - Submit
-    - Label for the button to enqueue the suspension notification
-    - 'messages+intl-icu'
-    - 'no'
 admin.massmail.test:
     - Test
     - Label for the button that allows to send a test massmail to selected members
     - 'messages+intl-icu'
     - 'no'
+admin.massmail.type:
+    - 'Type'
+    - Label of the type of a mass mail (newsletter, local events, terms of use) on the volunteer page to write it.
+admin.massmail.name.help:
+    - 'The code of the words of the mass mail, without spaces, e.g. newsjuly2026. It can''t be changed later.'
+    - Help below the name of a new mass mail.
+admin.massmail.name.invalid:
+    - 'Use letters, digits, dots, dashes and underscores only.'
+    - Error when the name of a new mass mail has other characters.
+admin.massmail.body.help:
+    - '%username%, if used, is replaced by the username of the recipient.'
+    - Help below the text of a mass mail. Keep %username% as it is.
+admin.massmail.description:
+    - 'Description for the translators'
+    - Label of the description of a mass mail, which the translators see.
+admin.massmail.description.help:
+    - 'The translators see it next to the text. Give them tips if needed. It can''t be changed later.'
+    - Help below the description of a new mass mail.
+admin.massmail.write.english:
+    - 'Please write in English; the mass mail is translated like other texts.'
+    - Hint on the volunteer page to write a mass mail.
+admin.massmail.created:
+    - 'Created'
+    - Column with the date a mass mail was created or last changed.
+admin.massmail.admin.unit:
+    - 'Administrative unit'
+    - Label of the region (state, province) to choose recipients of a mass mail by place.
+admin.massmail.all.admin.units:
+    - 'All administrative units'
+    - First choice of the region to choose recipients of a mass mail by place.
+admin.massmail.place:
+    - 'Place'
+    - Label of the place to choose recipients of a mass mail.
+admin.massmail.all.places:
+    - 'All places'
+    - First choice of the place to choose recipients of a mass mail.
+admin.massmail.usernames.empty:
+    - 'Please enter at least one username.'
+    - Error when recipients of a mass mail are chosen by username and none is given.
+admin.massmail.untriggered:
+    - 'The sending is stopped; %count% messages were removed from the queue.'
+    - Confirmation after a volunteer stopped a triggered mass mail. Keep %count%.

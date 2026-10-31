@@ -18,7 +18,6 @@ class Newsletter
     public const REGULAR_NEWSLETTER = 'Normal';
     public const SPECIFIC_NEWSLETTER = 'Specific';
     public const TERMS_OF_USE = 'TermsOfUse';
-    public const SUSPENSION_NOTIFICATION = 'SuspendAfter5Reminders';
     /**
      * @var Member
      */

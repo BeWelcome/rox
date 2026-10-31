@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('admin/massmail') }}
+{% endblock javascripts %}
+
+{% block content %}
+  <p><a href="{{ path('admin_massmail_details', {id: newsletter.id}) }}">{{ newsletter.name }}</a></p>
+  <h1 class="u:text-24">{{ 'adminmassmailenqueue'|trans }}</h1>
+  {% set labels = {
+      members: 'adminmassmailenqueuemembers',
+      location: 'adminmassmailenqueuelocation',
+      group: 'adminmassmailenqueuegroup',
+      termsofuse: 'adminmassmailenqueuetermsofuse',
+  } %}
+  <ul class="nav nav-tabs mb-3" role="tablist">
+    {% for recipients, form in forms %}
+      <li class="nav-item" role="presentation">
+        <button class="nav-link{% if recipients == active %} active{% endif %}" id="{{ recipients }}-tab" data-bs-toggle="tab"
+                data-bs-target="#{{ recipients }}-pane" type="button" role="tab" aria-controls="{{ recipients }}-pane"
+                aria-selected="{{ recipients == active ? 'true' : 'false' }}">{{ labels[recipients]|trans }}</button>
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="tab-content">
+    {% for recipients, form in forms %}
+      <div class="tab-pane fade{% if recipients == active %} show active{% endif %}" id="{{ recipients }}-pane" role="tabpanel" aria-labelledby="{{ recipients }}-tab">
+        <div class="row">
+          <div class="col-12 col-lg-8">
+            {{ form_start(form) }}
+              {{ form_errors(form) }}
+              {% if recipients == 'location' %}
+                {{ form_row(form.country, {attr: {'data-url-admin-units': path('admin_massmail_adminunits', {country: 'XX'}), 'data-url-places': path('admin_massmail_places', {country: 'XX', adminUnit: 'YY'})}}) }}
+                <div class="mb-3">
+                  {{ form_label(form.adminUnit) }}
+                  <select id="{{ form.adminUnit.vars.id }}" name="{{ form.adminUnit.vars.full_name }}" class="form-select js-massmail-admin-unit" disabled>
+                    <option value="">{{ 'admin.massmail.all.admin.units'|trans }}</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  {{ form_label(form.place) }}
+                  <select id="{{ form.place.vars.id }}" name="{{ form.place.vars.full_name }}" class="form-select js-massmail-place" disabled>
+                    <option value="">{{ 'admin.massmail.all.places'|trans }}</option>
+                  </select>
+                </div>
+                {% do form.adminUnit.setRendered %}
+                {% do form.place.setRendered %}
+              {% elseif recipients == 'termsofuse' %}
+                <p>{{ 'adminmassmailenqueuetermsofuseinfo'|trans }}</p>
+              {% endif %}
+              {{ form_rest(form) }}
+            {{ form_end(form) }}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock content %}

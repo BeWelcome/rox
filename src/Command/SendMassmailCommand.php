@@ -6,6 +6,8 @@ use App\Doctrine\MemberStatusType;
 use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Entity\NewsletterStatistics;
+use App\Repository\NewsletterStatisticsRepository;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -24,6 +26,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class SendMassmailCommand extends Command
 {
+    /** A message to a member who can't receive the mass mail any longer. */
+    public const string SKIPPED = 'Skipped';
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly Mailer $mailer,
@@ -67,6 +72,8 @@ class SendMassmailCommand extends Command
     {
         $sent = 0;
         $lastBroadcastId = 0;
+        // per mass mail: [sent, failed, skipped]
+        $statistics = [];
 
         /** @var BroadcastMessage $scheduled */
         foreach ($scheduledBroadcastMessages as $scheduled) {
@@ -84,12 +91,15 @@ class SendMassmailCommand extends Command
 
                 $lastBroadcastId = $scheduled->getNewsletter()->getId();
             }
+            $newsletterId = $scheduled->getNewsletter()->getId();
             $receiver = $scheduled->getReceiver();
-            $status = $receiver->getStatus();
 
-            // Only send messages to members that are active or have just been suspended RemindersWithoutLogin
-            // is set to 100 on suspension
-            if (!$this->sentToThisMember($receiver, $status)) {
+            // Skipped messages leave the queue, so that they don't take the place of others in the next runs
+            if (!$this->sentToThisMember($receiver, $scheduled->getNewsletter())) {
+                $scheduled->setStatus(self::SKIPPED);
+                $statistics[$newsletterId][2] = ($statistics[$newsletterId][2] ?? 0) + 1;
+                $this->entityManager->persist($scheduled);
+
                 continue;
             }
 
@@ -106,24 +116,36 @@ class SendMassmailCommand extends Command
                     ->setStatus('Sent')
                     ->setUnsubscribeKey($unsubscribeKey);
                 ++$sent;
+                $statistics[$newsletterId][0] = ($statistics[$newsletterId][0] ?? 0) + 1;
             } catch (Exception $e) {
                 $io->error('Message Frozen: ' . $e->getMessage());
                 $scheduled->setStatus('Freeze');
+                $statistics[$newsletterId][1] = ($statistics[$newsletterId][1] ?? 0) + 1;
             }
             $this->entityManager->persist($scheduled);
         }
         $this->entityManager->flush();
 
+        /** @var NewsletterStatisticsRepository $statisticsRepository */
+        $statisticsRepository = $this->entityManager->getRepository(NewsletterStatistics::class);
+        foreach ($statistics as $newsletterId => $counts) {
+            $done = ($counts[0] ?? 0) + ($counts[1] ?? 0) + ($counts[2] ?? 0);
+            $statisticsRepository->add($newsletterId, triggered: -$done, sent: $counts[0] ?? 0, failed: $counts[1] ?? 0);
+        }
+
         return $sent;
     }
 
-    private function sentToThisMember(Member $receiver, string $status): bool
+    /**
+     * The member can still receive the mass mail: enqueued members may have left or been suspended since. A change
+     * of the terms of use goes to all active members, the others to those who get messages.
+     */
+    private function sentToThisMember(Member $receiver, Newsletter $newsletter): bool
     {
-        return !(
-            (MemberStatusType::SUSPENDED === $status && 100 !== $receiver->getRemindersWithOutLogin())
-            && MemberStatusType::ACTIVE !== $status
-            && MemberStatusType::OUT_OF_REMIND !== $status
-            && MemberStatusType::CHOICE_INACTIVE !== $status
-        );
+        $statuses = Newsletter::TERMS_OF_USE === $newsletter->getType()
+            ? MemberStatusType::ACTIVE_ALL_ARRAY
+            : MemberStatusType::ACTIVE_WITH_MESSAGES_ARRAY;
+
+        return \in_array($receiver->getStatus(), $statuses, true);
     }
 }

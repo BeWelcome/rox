@@ -11,7 +11,6 @@ use HtmlTruncator\Truncator;
 use Override;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Translation\DataCollector\TranslationDataCollector;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
 use Twig\Extension\AbstractExtension;
@@ -46,7 +45,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
     {
         return [
             new TwigFunction('ago', $this->ago(...)),
-            new TwigFunction('getTranslations', $this->getTranslations(...)),
             new TwigFunction(
                 'dump_it',
                 $this->dumpIt(...),
@@ -212,16 +210,6 @@ class Extension extends AbstractExtension implements GlobalsInterface
         }
 
         return $source;
-    }
-
-    public function getTranslations(): array
-    {
-        $collector = new TranslationDataCollector($this->translator);
-        $collector->lateCollect();
-
-        return [
-            'collector' => $collector,
-        ];
     }
 
     /**

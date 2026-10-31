@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Doctrine\DomainType;
 use App\Doctrine\TranslationAllowedType;
+use App\Dto\RenderTranslationDto;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\RightVolunteer;
@@ -15,6 +16,7 @@ use App\Form\TranslationFormType;
 use App\Model\TranslationModel;
 use App\Repository\LanguageRepository;
 use App\Repository\WordRepository;
+use App\Service\InPlaceTranslations;
 use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
@@ -28,9 +30,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -67,7 +71,8 @@ class TranslationController extends AbstractController
             ]);
         }
 
-        if (!$request->getSession()->has('originalReferrer')) {
+        // In the side panel of translation mode (?embed=1) the page stays where it is
+        if (!$request->query->getBoolean('embed') && !$request->getSession()->has('originalReferrer')) {
             $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
         }
 
@@ -85,10 +90,10 @@ class TranslationController extends AbstractController
             'language' => $language->getShortCode(),
         ]);
         if (null === $translation) {
-            return $this->redirectToRoute('translation_add', [
+            return $this->redirectToRoute('translation_add', $this->keepEmbed($request, [
                 'code' => $code,
                 'locale' => $language->getShortCode(),
-            ]);
+            ]));
         }
         $translationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
@@ -135,6 +140,9 @@ class TranslationController extends AbstractController
                     $this->translationModel->refreshTranslationsCache();
                 } else {
                     $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+                }
+                if ($request->query->getBoolean('embed')) {
+                    return $this->savedInPanel($original->getCode(), $language->getShortCode());
                 }
                 $this->addTranslatedFlash('notice', 'translation.edit', [
                     'translationId' => $original->getCode(),
@@ -197,10 +205,10 @@ class TranslationController extends AbstractController
 
         if (null !== $englishTranslation) {
             // There already is a translation ID in the database redirect to edit
-            return $this->redirectToRoute('translation_edit', [
+            return $this->redirectToRoute('translation_edit', $this->keepEmbed($request, [
                 'locale' => 'en',
                 'code' => $translationId,
-            ]);
+            ]));
         }
 
         /** @var LanguageRepository $languageRepository */
@@ -237,6 +245,9 @@ class TranslationController extends AbstractController
                     $this->translationModel->refreshTranslationsCacheForLocale($createTranslationRequest->locale);
                 }
                 $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+                if ($request->query->getBoolean('embed')) {
+                    return $this->savedInPanel($translationId, $language->getShortCode());
+                }
                 $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $translationId]);
 
                 return $this->redirectToRoute('translations');
@@ -328,7 +339,8 @@ class TranslationController extends AbstractController
         }
 
         // We want to redirect to the page where the translation was originally missing
-        if (!$request->getSession()->has('originalReferrer')) {
+        // In the side panel of translation mode (?embed=1) the page stays where it is
+        if (!$request->query->getBoolean('embed') && !$request->getSession()->has('originalReferrer')) {
             $request->getSession()->set('originalReferrer', $request->headers->get('referer'));
         }
 
@@ -355,10 +367,10 @@ class TranslationController extends AbstractController
         // Work around a problem in the database
         // Sometimes the word code do not match (case) between translations
         if (null !== $translation) {
-            return $this->redirectToRoute('translation_edit', [
+            return $this->redirectToRoute('translation_edit', $this->keepEmbed($request, [
                 'locale' => $language->getShortCode(),
                 'code' => $code,
-            ]);
+            ]));
         }
 
         $translation = new Word();
@@ -388,6 +400,9 @@ class TranslationController extends AbstractController
                 $this->entityManager->persist($translation);
                 $this->entityManager->flush();
                 $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+                if ($request->query->getBoolean('embed')) {
+                    return $this->savedInPanel($original->getCode(), $language->getShortCode());
+                }
                 $this->addTranslatedFlash('notice', 'translation.add', [
                     'translationId' => $original->getCode(),
                     'locale' => $language->getShortCode(),
@@ -421,6 +436,33 @@ class TranslationController extends AbstractController
     /**
      * @return RedirectResponse
      */
+    /**
+     * Translation mode: the texts of a translation saved in the side panel, rendered with the parameters the page
+     * showed them with, so that the page can show them in place.
+     */
+    #[Route(path: '/admin/translations/render', name: 'translation_render', methods: ['POST'])]
+    public function renderTranslation(
+        #[MapRequestPayload(acceptFormat: 'json')] RenderTranslationDto $payload,
+        InPlaceTranslations $inPlaceTranslations,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        foreach ($payload->parameterSets as $parameters) {
+            foreach ($parameters as $value) {
+                if (null !== $value && !\is_scalar($value)) {
+                    return new JsonResponse(['error' => 'parameters'], Response::HTTP_UNPROCESSABLE_ENTITY);
+                }
+            }
+        }
+
+        $texts = $inPlaceTranslations->render($payload->code, $payload->locale, $payload->parameterSets);
+        if (null === $texts) {
+            return new JsonResponse(['error' => 'not found'], Response::HTTP_NOT_FOUND);
+        }
+
+        return new JsonResponse(['texts' => $texts]);
+    }
+
     #[Route(path: '/admin/translations/mode/{mode}', name: 'translation_mode', requirements: ['mode' => 'on|off'])]
     public function setTranslationMode(Request $request, string $mode)
     {
@@ -695,5 +737,32 @@ class TranslationController extends AbstractController
         }
 
         return $invalidMessage;
+    }
+
+    /**
+     * The route parameters, with ?embed=1 when the page is in the side panel of translation mode.
+     *
+     * @param array<string, mixed> $parameters
+     *
+     * @return array<string, mixed>
+     */
+    private function keepEmbed(Request $request, array $parameters): array
+    {
+        if ($request->query->getBoolean('embed')) {
+            $parameters['embed'] = 1;
+        }
+
+        return $parameters;
+    }
+
+    /**
+     * Saved in the side panel of translation mode: tells the page which text changed.
+     */
+    private function savedInPanel(string $code, string $locale): Response
+    {
+        return $this->render('admin/translations/embed_saved.html.twig', [
+            'code' => $code,
+            'locale' => $locale,
+        ]);
     }
 }

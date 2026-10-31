@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+{#
+  Shown in the side panel of translation mode once a translation is saved: it tells the page which text changed
+  ("bw-translation-saved"), which then shows the new text in place and closes the panel. Opened on its own
+  (not in a frame), it offers the translations.
+#}
+{% block title %}{{ 'translation.saved'|trans }}{% endblock title %}
+
+{% block content %}
+    <div class="c-embed-sent" role="status">
+        <h1 class="c-embed-sent__title">{{ 'translation.saved'|trans }}</h1>
+        <p class="c-embed-sent__text"><code>{{ code }}</code> ({{ locale }})</p>
+        <div class="c-embed-sent__actions">
+            <a class="c-embed-sent__btn" href="{{ path('translations_locale_code', { type: 'all', locale: locale, code: code }) }}" target="_top">
+                {{ 'translations.title'|trans }}
+            </a>
+        </div>
+    </div>
+    <script>
+        (function () {
+            if (window.parent !== window) {
+                window.parent.postMessage({
+                    type: 'bw-translation-saved',
+                    code: {{ code|json_encode|raw }},
+                    locale: {{ locale|json_encode|raw }}
+                }, window.location.origin);
+            }
+        })();
+    </script>
+{% endblock content %}

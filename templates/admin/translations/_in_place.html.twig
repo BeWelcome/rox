@@ -1,0 +1,69 @@
+{#
+  Translation mode (translators with the Words right): the texts the page translated, below the page, in three groups:
+  missing (no English original yet), not translated yet (shown in English) and translated. Each opens the edit, add
+  or create page in the side panel (assets/js/translations/in_place.js); once saved, the page shows the new text in
+  place. Rendered last in the footer: the texts translated after it (the footer's own end) aren't listed.
+#}
+{% set _texts = in_place_translations(app.user) %}
+{% set _groups = [
+    { key: 'missing', state: constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_MISSING') },
+    { key: 'fallback', state: constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_EQUALS_FALLBACK') },
+    { key: 'defined', state: constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') },
+] %}
+<section id="translations" class="c-in-place js-in-place" data-render-url="{{ path('translation_render') }}" aria-labelledby="in-place-title">
+    <h2 class="c-in-place__title" id="in-place-title">{{ 'translation.information'|trans }} <span class="c-in-place__locale">{{ app.request.locale }}</span></h2>
+    {% if _texts is empty %}
+        <p class="c-in-place__empty">{{ 'translation.in.place.empty'|trans }}</p>
+    {% endif %}
+    {% for group in _groups %}
+        {% set _items = _texts|filter(text => text.state == group.state) %}
+        {% if _items is not empty %}
+            <details class="c-in-place__group c-in-place__group--{{ group.key }}" {{ group.key != 'defined' ? 'open' }}>
+                <summary class="c-in-place__heading">{{ ('translation.in.place.' ~ group.key)|trans({ count: _items|length }) }}</summary>
+                <ul class="c-in-place__list">
+                    {% for text in _items %}
+                        <li class="c-in-place__item js-in-place-item"
+                            data-code="{{ text.code }}"
+                            data-locale="{{ text.locale }}"
+                            data-occurrences="{{ text.occurrences|json_encode }}">
+                            <div class="c-in-place__body">
+                                <code class="c-in-place__code">{{ text.code }}</code>
+                                <span class="c-in-place__meta">{{ text.domain }}{{ text.locale != app.request.locale ? ' · ' ~ text.locale }}</span>
+                                {% set _shown = text.text|striptags %}
+                                <p class="c-in-place__text js-in-place-text">{{ _shown|length > 160 ? _shown|slice(0, 160) ~ '…' : _shown }}</p>
+                            </div>
+                            {% if text.action %}
+                                {% set _url = {
+                                    edit: path('translation_edit', { locale: text.locale, code: text.code }),
+                                    add: path('translation_add', { locale: text.locale, code: text.code }),
+                                    create: path('translation_create', { locale: text.locale, translationId: text.code }),
+                                }[text.action] %}
+                                <a class="c-in-place__action js-translation-open" href="{{ _url }}"
+                                   data-title="{{ text.code }}"
+                                   data-edit-url="{{ path('translation_edit', { locale: text.locale, code: text.code }) }}"
+                                   data-edit-label="{{ 'translation.in.place.edit'|trans }}">
+                                    <i class="fas {{ text.action == 'edit' ? 'fa-pen' : 'fa-plus' }}" aria-hidden="true"></i>
+                                    {{ ('translation.in.place.' ~ text.action)|trans }}
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </details>
+        {% endif %}
+    {% endfor %}
+</section>
+
+<div class="p-search-preview__backdrop p-contact-drawer__backdrop js-translation-drawer-close" hidden></div>
+<aside class="p-search-preview p-contact-drawer js-translation-drawer" aria-hidden="true">
+    <div class="p-search-contact js-search-contact" hidden>
+        <div class="p-search-contact__head">
+            <button type="button" class="p-search-contact__back js-search-contact-back" aria-label="{{ 'back'|trans }}">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <h2 class="p-search-contact__title js-search-contact-title"></h2>
+        </div>
+        <iframe class="p-search-contact__frame js-search-contact-frame" title="" src="about:blank"></iframe>
+    </div>
+</aside>
+{{ encore_entry_script_tags('translations_in_place') }}

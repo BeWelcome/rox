@@ -16,3 +16,27 @@ mockups.back:
 mockup.back.feature:
     - 'Back to {feature}'
     - Button label below the mockups for a feature
+translation.in.place.missing:
+    - 'Missing texts ({count})'
+    - Translation mode, list below the page, heading of the texts the page uses that have no English original yet
+translation.in.place.fallback:
+    - 'Not translated yet ({count})'
+    - Translation mode, list below the page, heading of the texts shown in English because they have no translation for the language
+translation.in.place.defined:
+    - 'Translated ({count})'
+    - Translation mode, list below the page, heading of the texts that have a translation for the language
+translation.in.place.empty:
+    - 'This page shows no texts that can be translated.'
+    - Translation mode, list below the page, shown when the page used no translatable texts
+translation.in.place.edit:
+    - 'Edit'
+    - Translation mode, list below the page, button that opens the translation in the side panel
+translation.in.place.add:
+    - 'Translate'
+    - Translation mode, list below the page, button that opens the side panel to add the missing translation
+translation.in.place.create:
+    - 'Create'
+    - Translation mode, list below the page, button that opens the side panel to create the English original of a missing text
+translation.saved:
+    - 'Translation saved'
+    - Translation mode, side panel, shown once a translation is saved (the page then shows the new text)

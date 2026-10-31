@@ -140,3 +140,21 @@ forum.thread.order.latest:
 forum.thread.order.oldest:
     - 'Oldest first'
     - Forum thread page, link that shows the oldest posts first
+forum.post.started:
+    - 'Started the topic'
+    - Forum thread, tag next to the name on the first post
+forum.thread.discussions:
+    - 'Discussions'
+    - Forum thread, at the top after the group's name, link to the group's discussions
+forum.thread.people:
+    - '{count, plural, one {# person in this topic} other {# people in this topic}}'
+    - Forum thread, side card, above the photos of the members who wrote in the thread
+forum.thread.sort:
+    - 'Sort'
+    - Forum thread, side card, above Oldest first / Latest first
+forum.thread.replies:
+    - '{count, plural, =0 {No replies yet} one {# reply} other {# replies}}'
+    - Forum thread, under the first post, next to Reply
+forum.thread.write.placeholder:
+    - 'Write a reply…'
+    - Forum thread, grey text in the field at the bottom that opens the reply panel

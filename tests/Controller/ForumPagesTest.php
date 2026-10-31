@@ -74,6 +74,9 @@ final class ForumPagesTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', self::AGORA_THREAD);
         self::assertCount($posts, $crawler->filter('.p-thread-post'));
+        self::assertCount(1, $crawler->filter('.p-thread-post--starter'), 'the first post is the big card');
+        self::assertGreaterThan(0, $crawler->filter('.p-thread__side .p-thread__people img')->count(), 'who wrote in it');
+        self::assertCount(1, $crawler->filter('.p-thread__side .p-thread__sort .is-active'));
         self::assertSame($views + 1, (int) $this->connection->fetchOne('SELECT views FROM forum_thread WHERE id = ?', [$thread->getId()]));
     }
 

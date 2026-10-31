@@ -1,31 +1,42 @@
 {#
-  One post of a thread, a row of the thread's white card: the author's photo, name and tags (Author: who started
-  the thread, You), the day and who can see it if not everyone; on the right Reply and a menu of what the viewer
-  can do with it (link, edit their own, translate, report, moderate).
-  replyUrl, replyTitle: Reply in the side panel, when the viewer may reply.
+  One post of a thread. The first post is a big white card (photo with a ring, "Started the topic", its day and
+  time, Reply and the number of replies under it); the others hang on the thread's line: the photo on the line,
+  a white card with the name, tags (Author, You), the time and who can see it if not everyone. On the right
+  Reply and a menu of what the viewer can do with it (link, edit their own, translate, report, moderate).
+  The viewer's own posts are cream.
+  replyUrl, replyTitle: Reply in the side panel, when the viewer may reply. replies: the number of replies.
 #}
 {% set _deleted = post.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
 {% set _firstPost = post.thread ? post.thread.firstPost : null %}
+{% set _starter = _firstPost and _firstPost.id == post.id %}
 {% set _isStarter = _firstPost and _firstPost.author == post.author %}
 {% set _isMe = app.user and post.author == app.user %}
 {% set _vis = post.postvisibility %}
-<article class="p-thread-post{{ _deleted ? ' is-deleted' }}" id="post{{ post.id }}">
+{% set _day = post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') %}
+<article class="p-thread-post{{ _starter ? ' p-thread-post--starter' }}{{ _isMe ? ' is-mine' }}{{ _deleted ? ' is-deleted' }}" id="post{{ post.id }}">
     <a class="p-thread-post__photo" href="{{ path('members_profile', {username: post.author.username}) }}">
-        <img width="48" height="48" alt="" loading="lazy" src="{{ path('avatar', {username: post.author.username, size: 48}) }}">
+        <img width="56" height="56" alt="" loading="lazy" src="{{ path('avatar', {username: post.author.username, size: 72}) }}">
     </a>
     <div class="p-thread-post__main">
         <div class="p-thread-post__head">
-            <a class="p-thread-post__name" href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>
-            {% if _isStarter %}<span class="p-thread-post__tag p-thread-post__tag--author">{{ 'forum.post.author'|trans }}</span>{% endif %}
-            {% if _isMe %}<span class="p-thread-post__tag">{{ 'forum.post.you'|trans }}</span>{% endif %}
-            <a class="p-thread-post__when" href="#post{{ post.id }}">{{ post.created|format_date(pattern: post.created|date('Y') == 'now'|date('Y') ? 'MMM d' : 'MMM d, y') }}</a>
-            {% if _vis == constant('App\\Doctrine\\ForumVisibilityType::GROUP_ONLY') %}
-                <span class="p-thread-post__vis"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'forum.post.group.only'|trans }}</span>
-            {% elseif _vis == constant('App\\Doctrine\\ForumVisibilityType::MODERATOR_ONLY') %}
-                <span class="p-thread-post__vis"><i class="fas fa-lock" aria-hidden="true"></i> {{ ('forum_edit_vis_' ~ _vis)|lower|trans }}</span>
-            {% endif %}
+            <div class="p-thread-post__who">
+                <a class="p-thread-post__name" href="{{ path('members_profile', {username: post.author.username}) }}">{{ post.author.username }}</a>
+                {% if _starter %}
+                    <span class="p-thread-post__tag p-thread-post__tag--author"><i class="fas fa-flag" aria-hidden="true"></i> {{ 'forum.post.started'|trans }}</span>
+                {% elseif _isStarter %}
+                    <span class="p-thread-post__tag p-thread-post__tag--author">{{ 'forum.post.author'|trans }}</span>
+                {% endif %}
+                {% if _isMe %}<span class="p-thread-post__tag">{{ 'forum.post.you'|trans }}</span>{% endif %}
+                {# The first post shows its day and time under the name; the others their time, the day is above them #}
+                <a class="p-thread-post__when" href="#post{{ post.id }}" title="{{ post.created|format_datetime('medium', 'short') }}">{{ _starter ? _day ~ ', ' ~ post.created|format_time('short') : post.created|format_time('short') }}</a>
+                {% if _vis == constant('App\\Doctrine\\ForumVisibilityType::GROUP_ONLY') %}
+                    <span class="p-thread-post__vis"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'forum.post.group.only'|trans }}</span>
+                {% elseif _vis == constant('App\\Doctrine\\ForumVisibilityType::MODERATOR_ONLY') %}
+                    <span class="p-thread-post__vis"><i class="fas fa-lock" aria-hidden="true"></i> {{ ('forum_edit_vis_' ~ _vis)|lower|trans }}</span>
+                {% endif %}
+            </div>
             <div class="p-thread-post__tools">
-                {% if replyUrl|default(null) %}
+                {% if replyUrl|default(null) and not _starter %}
                     <a class="p-thread-post__tool js-contact-open" href="{{ replyUrl }}" data-title="{{ replyTitle }}" aria-label="{{ 'forumreply'|trans }}">
                         <i class="fas fa-reply" aria-hidden="true"></i>
                     </a>
@@ -51,7 +62,7 @@
         <div class="p-thread-post__text js-highlight">
             {% set shown = post.messageIn(app.request.locale) %}
             {% if _deleted %}<s>{% endif %}
-            {{ shown.message|purify|forum_lightbox|nl2br }}
+            {{ shown.message|purify|forum_text|forum_lightbox }}
             {% if _deleted %}</s>{% endif %}
         </div>
         {% set translations = post.messageTranslations %}
@@ -69,6 +80,14 @@
                     ({{ ('forum.report.status.' ~ (report.status == 'OnDiscussion' ? 'discussion' : report.status|lower))|trans }}){% if not loop.last %} · {% endif %}
                 {% endfor %}
             </p>
+        {% endif %}
+        {% if _starter %}
+            <div class="p-thread-post__foot">
+                {% if replyUrl|default(null) %}
+                    <a class="p-thread-post__reply js-contact-open" href="{{ replyUrl }}" data-title="{{ replyTitle }}"><i class="fas fa-reply" aria-hidden="true"></i> {{ 'forumreply'|trans }}</a>
+                {% endif %}
+                <span class="p-thread-post__replies">{{ 'forum.thread.replies'|trans({count: replies|default(0)}) }}</span>
+            </div>
         {% endif %}
     </div>
 </article>

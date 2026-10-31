@@ -1,25 +1,56 @@
-/* A forum thread (templates/forum/thread.html.twig): a white top with the group's small head
-   (group/_head_compact.html.twig), back to the discussions, the title and the buttons; the posts in one
-   white card (forum/_post.html.twig); "Write a reply" under it. Reply opens in the side panel:
-   forum/reply.html.twig ?embed=1, at the end of this file. */
+/* A forum thread (templates/forum/thread.html.twig): a white top (the group and its discussions, the title; on
+   phones who is in it, the order and Subscribe), then two columns: the posts on a line (forum/_post.html.twig)
+   with "Write a reply" under them, and a side card (Reply, Subscribe, who is in it, the order). Reply opens
+   in the side panel: forum/reply.html.twig ?embed=1, at the end of this file. */
 
 main:has(.p-thread) { margin-top: 0 !important; background: #f4f5f7; }
 
 /* The top: white across the whole window */
-.p-thread__top { position: relative; margin-bottom: 1.5rem; padding: 1.5rem 0 1.25rem; background: #fff; box-shadow: 0 0 0 100vmax #fff; clip-path: inset(0 -100vmax); }
+.p-thread__top { position: relative; margin-bottom: 2rem; padding: 1.5rem 0 1.75rem; background: #fff; box-shadow: 0 0 0 100vmax #fff; clip-path: inset(0 -100vmax); }
 .p-thread__top .p-forum__head { margin-top: 0; }
+.p-thread__crumbs { display: flex; align-items: center; gap: 0.6rem; min-width: 0; font-size: 0.9375rem; font-weight: 600; }
+.p-thread__crumb-group,
+.p-thread__crumb-group:hover { display: inline-flex; align-items: center; gap: 0.6rem; min-width: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-weight: 700; text-decoration: none; }
+.p-thread__crumb-group span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.p-thread__crumb-group:hover { color: #c2410c; }
+.p-thread__crumb-group img { flex-shrink: 0; width: 2.25rem; height: 2.25rem; border-radius: 0.6rem; object-fit: cover; background: #f1f5f9; }
+.p-thread__crumb-sep { color: #cbd5e1; font-size: 0.6rem; }
+.p-thread__crumb,
+.p-thread__crumb:hover { color: #475569; text-decoration: none; white-space: nowrap; }
+.p-thread__crumb:hover { color: #c2410c; }
+.p-thread .p-thread__title { margin: 1rem 0 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.25rem; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
+.p-thread__top .alert { margin: 1rem 0 0; }
+
+/* Phones: who is in it, the numbers, the order and Subscribe under the title */
+.p-thread__line { display: none; align-items: center; gap: 0.6rem; margin-top: 0.9rem; }
+.p-thread__line form { display: flex; margin: 0; }
+.p-thread__line-meta { flex: 1; min-width: 0; color: #64748b; font-size: 0.8125rem; }
+.p-thread__round { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; padding: 0; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #334155; font-size: 0.85rem; text-decoration: none; }
+.p-thread__round:hover { border-color: #cbd5e1; background: #f8fafc; color: #0f172a; }
+.p-thread__round.is-on { border-color: #fdba74; background: #fff7ed; color: #c2410c; }
+
+/* Who is in it: photos overlapping */
+.p-thread__people { display: inline-flex; flex-shrink: 0; align-items: center; padding-left: 0.4rem; }
+.p-thread__people img { width: 2.25rem; height: 2.25rem; margin-left: -0.45rem; border: 2px solid #fff; border-radius: 50%; object-fit: cover; background: #f1f5f9; }
+.p-thread__people-more { display: inline-flex; align-items: center; justify-content: center; height: 2.25rem; min-width: 2.25rem; margin-left: -0.45rem; padding: 0 0.4rem; border: 2px solid #fff; border-radius: 999px; background: #f1f5f9; color: #475569; font-size: 0.75rem; font-weight: 700; }
+
+/* Two columns: the posts, the side card */
+.p-thread__layout { display: grid; grid-template-columns: minmax(0, 1fr) 19rem; align-items: start; gap: 2.5rem; padding-bottom: 3rem; }
+.p-thread__body { min-width: 0; }
+.p-thread__side { position: sticky; top: calc(var(--bw-topbar-offset, 64px) + 1.5rem); }
+.p-thread__card { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.25rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
+.p-thread__card form { display: flex; margin: 0; }
+.p-thread__card .p-thread-btn { width: 100%; }
+.p-thread .p-thread__label { margin: 0.6rem 0 -0.25rem; color: #94a3b8; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.p-thread .p-thread__meta { margin: 0; color: #64748b; font-size: 0.875rem; }
+.p-thread__sort { display: flex; gap: 0.25rem; padding: 0.25rem; border-radius: 999px; background: #f1f5f9; }
+.p-thread__sort > * { flex: 1; padding: 0.5rem 0.75rem; border-radius: 999px; color: #64748b; font-size: 0.875rem; font-weight: 600; text-align: center; text-decoration: none; white-space: nowrap; }
+.p-thread__sort a:hover { color: #0f172a; }
+.p-thread__sort .is-active { background: #fff; color: #0f172a; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12); }
 .p-thread__back,
-.p-thread__back:hover { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 1.1rem; color: #64748b; font-size: 0.875rem; font-weight: 600; text-decoration: none; }
-.p-thread__back:hover { color: #0f172a; }
-.p-thread__back i, .p-thread__back svg { font-size: 0.75rem; }
-.p-thread .p-thread__title { margin: 0.6rem 0 1.1rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2.25rem; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
-.p-thread__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; }
-.p-thread__actions form { display: flex; margin: 0; }
-.p-thread__order,
-.p-thread__order:hover { display: inline-flex; align-items: center; gap: 0.45rem; margin-left: auto; padding: 0.5rem 0.75rem; border-radius: 999px; color: #334155; font-size: 0.9375rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
-.p-thread__order:hover { background: #f1f5f9; color: #0f172a; }
-.p-thread__order i, .p-thread__order svg { color: #64748b; font-size: 0.8rem; }
-.p-thread .p-thread__meta { margin: 1rem 0 0; color: #94a3b8; font-size: 0.875rem; }
+.p-thread__back:hover { display: inline-flex; align-items: center; gap: 0.45rem; margin: 1rem 0 0 0.25rem; color: #c2410c; font-size: 0.9375rem; font-weight: 700; text-decoration: none; }
+.p-thread__back:hover { color: #9a3412; }
+.p-thread__back i, .p-thread__back svg { font-size: 0.8rem; }
 .p-thread__pages { display: flex; justify-content: flex-end; margin: 0 0 1rem; }
 
 /* Buttons: pills, white with a grey line; orange for Reply; orange line for Write a reply */
@@ -61,28 +92,48 @@ main:has(.p-thread) { margin-top: 0 !important; background: #f4f5f7; }
 .p-group-mini__items a.is-active i, .p-group-mini__items a.is-active svg { color: #ea7a2e; }
 .p-group-mini__new { flex-shrink: 0; }
 
-/* The posts: one white card, a row each */
-.p-thread__posts { overflow: hidden; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
-.p-thread-post { display: flex; gap: 0.9rem; padding: 1.4rem 1.6rem; scroll-margin-top: 5rem; }
-.p-thread-post + .p-thread-post { border-top: 1px solid #f1f5f9; }
-.p-thread-post:target { background: #fffaf5; }
-.p-thread-post__photo { flex-shrink: 0; }
-.p-thread-post__photo img { display: block; width: 3rem; height: 3rem; border-radius: 50%; object-fit: cover; background: #f1f5f9; }
-.p-thread-post__main { flex: 1; min-width: 0; }
-.p-thread-post__head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.55rem; min-height: 2rem; }
+/* The posts on a line: the first one a big card, the others a photo on the line and a card */
+.p-thread__posts { position: relative; display: flex; flex-direction: column; gap: 1rem; }
+.p-thread__posts::before { content: ""; position: absolute; top: 1rem; bottom: 0; left: 1.375rem; width: 2px; background: #e5e7eb; }
+.p-thread-post { position: relative; display: flex; gap: 0.9rem; scroll-margin-top: 5rem; }
+.p-thread-post__photo { position: relative; z-index: 1; flex-shrink: 0; }
+.p-thread-post__photo img { display: block; width: 2.75rem; height: 2.75rem; border-radius: 50%; object-fit: cover; background: #f1f5f9; box-shadow: 0 0 0 3px #f4f5f7; }
+.p-thread-post__main { flex: 1; min-width: 0; padding: 1.1rem 1.25rem 1.2rem; border-radius: 1.1rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 4px 14px rgba(15, 23, 42, 0.04); }
+.p-thread-post.is-mine .p-thread-post__main { background: #fdf6ee; }
+.p-thread-post.is-mine .p-thread-post__photo img { box-shadow: 0 0 0 2px #f4f5f7, 0 0 0 4px #f5b97f; }
+.p-thread-post:target .p-thread-post__main { box-shadow: 0 0 0 2px #fdba74; }
+/* The first post: one big card, its photo inside with a ring */
+.p-thread-post--starter { z-index: 1; gap: 1rem; padding: 1.5rem 1.6rem 1.25rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.05); }
+.p-thread-post--starter .p-thread-post__photo { align-self: flex-start; }
+.p-thread-post--starter .p-thread-post__photo img,
+.p-thread-post--starter.is-mine .p-thread-post__photo img { width: 3.5rem; height: 3.5rem; box-shadow: 0 0 0 3px #fff, 0 0 0 5px #f5b97f; }
+.p-thread-post--starter .p-thread-post__main,
+.p-thread-post--starter.is-mine .p-thread-post__main { padding: 0; border-radius: 0; background: none; box-shadow: none; }
+.p-thread-post--starter:target { box-shadow: 0 0 0 2px #fdba74; }
+.p-thread-post--starter .p-thread-post__when { flex-basis: 100%; margin-top: -0.15rem; }
+.p-thread-post--starter .p-thread-post__text { margin-top: 0.75rem; font-size: 1.0625rem; }
+.p-thread__posts > .p-thread-post--starter:first-child { margin-bottom: 0.25rem; }
+
+/* The day, when it changes */
+.p-thread .p-thread__day { position: relative; margin: 0.25rem 0 -0.35rem 3.65rem; color: #94a3b8; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.p-thread-post__head { display: flex; align-items: flex-start; gap: 0.5rem; }
+.p-thread-post__who { display: flex; flex: 1; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.55rem; min-width: 0; min-height: 2rem; }
 .p-thread-post__name,
 .p-thread-post__name:hover { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1rem; font-weight: 700; text-decoration: none; }
 .p-thread-post__name:hover { color: #c2410c; }
-.p-thread-post__tag { padding: 0.15rem 0.45rem; border-radius: 0.35rem; background: #f1f5f9; color: #334155; font-size: 0.75rem; font-weight: 700; line-height: 1.2; }
+.p-thread-post--starter .p-thread-post__name { font-size: 1.125rem; }
+.p-thread-post__tag { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.15rem 0.45rem; border-radius: 0.35rem; background: #f1f5f9; color: #334155; font-size: 0.75rem; font-weight: 700; line-height: 1.2; }
+.p-thread-post__tag i, .p-thread-post__tag svg { font-size: 0.6rem; }
 .p-thread-post__tag--author { background: #fff1e6; color: #c2410c; }
 .p-thread-post__when,
-.p-thread-post__when:hover { color: #94a3b8; font-size: 0.875rem; text-decoration: none; }
+.p-thread-post__when:hover { color: #94a3b8; font-size: 0.8125rem; text-decoration: none; }
 .p-thread-post__when:hover { color: #64748b; }
 .p-thread-post__vis { display: inline-flex; align-items: center; gap: 0.3rem; color: #64748b; font-size: 0.8125rem; }
 .p-thread-post__vis i, .p-thread-post__vis svg { font-size: 0.7rem; }
-.p-thread-post__tools { display: flex; align-items: center; gap: 0.25rem; margin-left: auto; }
+.p-thread-post__tools { display: flex; flex-shrink: 0; align-items: center; gap: 0.15rem; margin: -0.15rem -0.4rem 0 0; }
 .p-thread-post__tool,
-.p-thread-post__tool:hover { display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 999px; color: #94a3b8; font-size: 0.85rem; text-decoration: none; list-style: none; cursor: pointer; }
+.p-thread-post__tool:hover { display: inline-flex; align-items: center; justify-content: center; width: 2.1rem; height: 2.1rem; border-radius: 999px; color: #94a3b8; font-size: 0.8rem; text-decoration: none; list-style: none; cursor: pointer; }
 .p-thread-post__tool:hover { background: #f1f5f9; color: #334155; }
 .p-thread-post__tool::-webkit-details-marker { display: none; }
 .p-thread-post__more { position: relative; }
@@ -92,7 +143,7 @@ main:has(.p-thread) { margin-top: 0 !important; background: #f4f5f7; }
 .p-thread-post__menu a:hover { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.75rem; border-radius: 0.6rem; color: #334155; font-size: 0.875rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .p-thread-post__menu a:hover { background: #f8fafc; color: #0f172a; }
 .p-thread-post__menu i, .p-thread-post__menu svg { width: 1rem; color: #94a3b8; font-size: 0.8rem; }
-.p-thread-post__text { margin-top: 0.35rem; color: #1e293b; font-size: 1rem; line-height: 1.65; overflow-wrap: anywhere; }
+.p-thread-post__text { margin-top: 0.5rem; color: #1e293b; font-size: 0.9875rem; line-height: 1.65; overflow-wrap: anywhere; }
 .p-thread-post__text p { margin: 0 0 0.75rem; }
 .p-thread-post__text > :last-child, .p-thread-post__text p:last-child { margin-bottom: 0; }
 .p-thread-post__text img { max-width: 100%; height: auto; border-radius: 0.6rem; }
@@ -100,31 +151,56 @@ main:has(.p-thread) { margin-top: 0 !important; background: #f4f5f7; }
 .p-thread-post.is-deleted .p-thread-post__text { color: #94a3b8; }
 .p-thread-post .p-thread-post__langs,
 .p-thread-post .p-thread-post__reports { margin: 0.5rem 0 0; color: #94a3b8; font-size: 0.8125rem; }
+/* Under the first post: Reply and the number of replies */
+.p-thread-post__foot { display: flex; align-items: center; gap: 0.75rem; margin-top: 1rem; }
+.p-thread-post__reply,
+.p-thread-post__reply:hover { display: inline-flex; align-items: center; gap: 0.45rem; height: 2.3rem; padding: 0 1rem; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.875rem; font-weight: 700; text-decoration: none; }
+.p-thread-post__reply:hover { background: #e2e8f0; color: #0f172a; }
+.p-thread-post__reply i, .p-thread-post__reply svg { font-size: 0.75rem; }
+.p-thread-post__replies { color: #94a3b8; font-size: 0.875rem; }
 
-.p-thread__write { display: flex; justify-content: center; margin: 1.5rem 0 2rem; }
+/* Write a reply: the member's photo and a white field with Reply in it */
+.p-thread__write { position: relative; z-index: 1; display: flex; align-items: center; gap: 0.9rem; margin-top: 1rem; }
+.p-thread__write-photo { flex-shrink: 0; width: 2.75rem; height: 2.75rem; border-radius: 50%; object-fit: cover; background: #f1f5f9; box-shadow: 0 0 0 3px #f4f5f7; }
+.p-thread__write-box,
+.p-thread__write-box:hover { display: flex; flex: 1; align-items: center; gap: 0.75rem; min-width: 0; padding: 0.4rem 0.4rem 0.4rem 1.25rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; text-decoration: none; cursor: text; }
+.p-thread__write-box:hover { border-color: #fdba74; }
+.p-thread__write-hint { flex: 1; overflow: hidden; color: #94a3b8; font-size: 0.9375rem; text-overflow: ellipsis; white-space: nowrap; }
+.p-thread__write-btn { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.45rem; height: 2.5rem; padding: 0 1.15rem; border-radius: 999px; background: #ea7a2e; color: #fff; font-size: 0.9375rem; font-weight: 700; }
+.p-thread__write-box:hover .p-thread__write-btn { background: #d9661a; }
+.p-thread__write-btn i, .p-thread__write-btn svg { font-size: 0.8rem; }
+
+@media (max-width: 991.98px) {
+  .p-thread__layout { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .p-thread__side { display: none; }
+  .p-thread__line { display: flex; }
+}
 
 @media (max-width: 767.98px) {
-  /* Less height: smaller head, buttons and the order on one line */
-  .p-thread__top { margin-bottom: 0.5rem; padding: 0.75rem 0 0.85rem; }
-  .p-group-mini { gap: 0.65rem; }
-  .p-group-mini__picture img { width: 2.75rem; height: 2.75rem; border-radius: 0.7rem; }
-  .p-group-mini__name { font-size: 1rem; }
-  .p-group-mini__menu { margin-top: 0; }
-  .p-group-mini__menu summary { font-size: 0.875rem; }
-  .p-group-mini__new, .p-group-mini__new:hover { height: 2.4rem; padding: 0 0.9rem; font-size: 0.875rem; }
-  .p-thread__back { margin-top: 0.75rem; font-size: 0.8125rem; }
-  .p-thread .p-thread__title { margin: 0.35rem 0 0.75rem; font-size: 1.5rem; }
-  .p-thread__actions { flex-wrap: nowrap; gap: 0.5rem; }
-  .p-thread-btn, .p-thread-btn:hover { height: 2.5rem; padding: 0 0.95rem; font-size: 0.875rem; }
-  .p-thread-btn--primary, .p-thread-btn--primary:hover { padding: 0 1.1rem; }
-  .p-thread__order, .p-thread__order:hover { flex-shrink: 0; padding: 0.4rem 0.15rem; font-size: 0.8125rem; }
-  .p-thread .p-thread__meta { margin-top: 0.6rem; font-size: 0.8125rem; }
-  /* Posts from edge to edge, just under the top */
-  .p-thread__posts { margin: 0 calc(-1 * var(--bs-gutter-x, 1.5rem) * 0.5); border-radius: 0; box-shadow: none; }
-  .p-thread-post { gap: 0.75rem; padding: 1.1rem 1.25rem; }
+  .p-thread__top { margin-bottom: 1rem; padding: 0.85rem 0 1rem; }
+  .p-thread__crumbs { font-size: 0.875rem; }
+  .p-thread__crumbs .p-thread__crumb-sep, .p-thread__crumbs .p-thread__crumb { display: none; }
+  .p-thread__crumb-group img { width: 1.9rem; height: 1.9rem; border-radius: 0.5rem; }
+  .p-thread .p-thread__title { margin-top: 0.6rem; font-size: 1.5rem; }
+  .p-thread__people img, .p-thread__people-more { width: 2rem; height: 2rem; min-width: 2rem; }
+  .p-thread__posts { gap: 0.75rem; }
+  .p-thread__posts::before { left: 1.125rem; }
+  .p-thread-post { gap: 0.6rem; }
+  .p-thread-post__photo img { width: 2.25rem; height: 2.25rem; }
+  .p-thread-post__main { padding: 0.9rem 1rem 1rem; }
+  .p-thread-post--starter { gap: 0.75rem; padding: 1.1rem 1.1rem 1rem; }
+  .p-thread-post--starter .p-thread-post__photo img,
+  .p-thread-post--starter.is-mine .p-thread-post__photo img { width: 2.9rem; height: 2.9rem; }
+  .p-thread-post--starter .p-thread-post__text { font-size: 1rem; }
+  .p-thread .p-thread__day { margin-left: 2.85rem; }
   .p-thread__pages { margin: 0.75rem 0; }
-  .p-thread-post__photo img { width: 2.6rem; height: 2.6rem; }
-  .p-thread__write .p-thread-btn--soft { width: 100%; height: 3.1rem; }
+  /* Write a reply: stuck to the bottom of the screen */
+  .p-thread__body { padding-bottom: 4.5rem; }
+  .p-thread__write { position: fixed; z-index: 1030; right: 0; bottom: 0; left: 0; gap: 0.6rem; margin: 0; padding: 0.6rem 0.75rem max(0.6rem, env(safe-area-inset-bottom)); background: #fff; box-shadow: 0 -1px 0 #eef0f3, 0 -6px 18px rgba(15, 23, 42, 0.06); }
+  .p-thread__write-photo { width: 2.4rem; height: 2.4rem; box-shadow: none; }
+  .p-thread__write-box, .p-thread__write-box:hover { padding-left: 1rem; border-color: transparent; background: #f1f5f9; }
+  .p-thread__write-btn { width: 2.4rem; height: 2.4rem; justify-content: center; padding: 0; }
+  .p-thread__write-btn > span { display: none; }
 }
 
 /* Reply in the side panel (forum/reply.html.twig ?embed=1): the panel is wider for the editor */

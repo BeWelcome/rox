@@ -176,6 +176,14 @@ class ForumPagesController extends AbstractController
             self::POSTS_PER_PAGE,
         );
         $this->getThreadRepository()->countView($thread);
+        // Who wrote in the thread, in the order they first did
+        $people = $postRepository->createThreadPostsQueryBuilder($thread, $member, $this->isModerator(), true)
+            ->select('a.username AS username, MIN(fp.created) AS HIDDEN firstPost')
+            ->resetDQLPart('orderBy')
+            ->groupBy('a.id, a.username')
+            ->orderBy('firstPost', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
 
         $group = $thread->getGroup();
 
@@ -187,6 +195,7 @@ class ForumPagesController extends AbstractController
             'reverse' => $reverse,
             'locale' => $request->getLocale(),
             'subscribed' => $this->forumModel->isSubscribed($thread, $member),
+            'people' => array_column($people, 'username'),
             // the moderators see the reports about each post
             'reports' => $this->isModerator() ? $this->moderationModel->findReportsOfPosts(
                 array_map(static fn (ForumPost $post): int => (int) $post->getId(), iterator_to_array($posts->getCurrentPageResults(), false)),

@@ -199,7 +199,3 @@ Please read [Useful hints](#useful-hints) section below.
     ```
 
 * Production OS is Debian GNU/Linux Strech.
-
-## Create documentation
-
-If you need documentation check out [MKDocs](https://www.mkdocs.org/).

@@ -25,7 +25,6 @@ docker-compose.override.*
 !docker-compose.override.yml.dist
 composer.phar
 auth.json
-/.vagrant/*
 /db_dumps/*
 /ansible/cert.crt
 /ansible/key.pem

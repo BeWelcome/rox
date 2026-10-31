@@ -37,14 +37,7 @@ It is a good idea to run `bun encore dev --watch` which will keep updating files
 
 ## Documentation
 
-Documentation is [in the doc tree](doc/book/) and can be compiled using
-[mkdocs](http://www.mkdocs.org):
-
-```bash
-$ mkdocs build
-```
-
-The result can then be accessed via `doc/html/` in your cloned repository.
+Documentation is [in the doc tree](doc/book/).
 
 ## Procedure
 

@@ -76,9 +76,6 @@ build:
 phpdox: phploc phpmd php-code-sniffer phpunit
 	"./vendor/bin/phpdox"
 
-mkdocs:
-	mkdocs build
-
 phpcpd:
 	"./vendor/bin/phpcpd" $(SRC_DIR_NO_TESTS) --exclude=src/Entity --exclude=src/Repository
 

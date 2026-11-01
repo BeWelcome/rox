@@ -285,6 +285,14 @@
           <i class="fas fa-chevron-right"></i>
         </button>
       </div>
+      {# The active tab in the middle of the row before the page shows (phones, where the tabs scroll): done later by
+         profile.js, the row jumped after every switch #}
+      <script>
+        (function (tabs) {
+          var active = tabs && tabs.querySelector('.p-hero__tab--active');
+          if (active) { tabs.scrollLeft = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2; }
+        })(document.currentScript.parentNode.querySelector('.p-hero__tabs'));
+      </script>
     </div>
   </div>
 

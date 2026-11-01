@@ -17,13 +17,7 @@ document.querySelectorAll('[data-tabs-scroller]').forEach(scroller => {
         scroller.classList.toggle('can-scroll-next', tabs.scrollLeft < maxScroll - 1);
     };
 
-    const active = tabs.querySelector('.p-hero__tab--active');
-    if (active) {
-        tabs.scrollTo({
-            left: active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2,
-            behavior: 'instant',
-        });
-    }
+    // the active tab is centred by the script after the tabs (profile/header.html.twig), before the page shows
 
     scroller.querySelectorAll('[data-tabs-scroll]').forEach(arrow => {
         arrow.addEventListener('click', () => {

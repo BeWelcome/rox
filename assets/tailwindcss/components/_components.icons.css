@@ -1,0 +1,11 @@
+/* Font Awesome draws its icons with JavaScript (assets/js/bewelcome.js): an SVG takes the place of each <i> once the
+   page's scripts ran. Until then the <i> keeps the icon's room, so the text next to an icon doesn't jump when it
+   appears (fixed-width icons a little wider, as Font Awesome makes them). */
+i.fa:not([hidden]),
+i.fas:not([hidden]),
+i.far:not([hidden]),
+i.fab:not([hidden]),
+i.fa-solid:not([hidden]),
+i.fa-regular:not([hidden]),
+i.fa-brands:not([hidden]) { display: inline-block; width: 1em; height: 1em; vertical-align: -0.125em; }
+i.fa-fw:not([hidden]) { width: 1.25em; }

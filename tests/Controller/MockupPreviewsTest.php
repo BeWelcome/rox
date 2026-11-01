@@ -120,8 +120,8 @@ class MockupPreviewsTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         self::assertCount(1, $crawler->filter('.p-tr-mockup__broken[role=alert]'));
-        // reported in the translators' group, linked below the preview
-        self::assertSame('/group/60', $crawler->filter('.p-tr-mockup__report a')->attr('href'));
+        // reported in a new topic of the translators' group, linked below the preview
+        self::assertSame('/group/60/forum/new', $crawler->filter('.p-tr-mockup__report a')->attr('href'));
         // the page is whole: its header and the site's footer
         self::assertCount(1, $crawler->filter('.p-tr-tool__title'));
         self::assertCount(1, $crawler->filter('#footer_content'));

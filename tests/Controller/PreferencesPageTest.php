@@ -32,7 +32,6 @@ class PreferencesPageTest extends WebTestCase
         $crawler = $this->client->request('GET', '/members/member-2/preferences');
 
         $this->assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('section.p-edit-subpage.p-edit-subpage--preferences'));
         self::assertStringContainsString('fa-cog', (string) $crawler->filter('.p-edit-subpage__eyebrow')->html());
         $this->assertBrowserNotifications($crawler);
     }
@@ -43,7 +42,6 @@ class PreferencesPageTest extends WebTestCase
         $panel = $this->client->request('GET', '/members/member-2/preferences?embed=1');
 
         $this->assertResponseIsSuccessful();
-        self::assertCount(1, $panel->filter('section.p-ped.p-edit-subpage--preferences'));
         self::assertSame(
             $page->filter('.p-preference-card__title')->each(static fn (Crawler $title): string => $title->text()),
             $panel->filter('.p-preference-card__title')->each(static fn (Crawler $title): string => $title->text()),

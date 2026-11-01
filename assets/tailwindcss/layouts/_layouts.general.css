@@ -2276,16 +2276,7 @@ main:has(.p-hero) {
   }
 }
 
-/* The preferences page looks like its side panel on the edit page: a narrow column, each setting above its
-   control */
-.p-edit-subpage--preferences {
-  max-width: 600px;
-}
-
-.p-edit-subpage--preferences .p-edit-subpage__card {
-  padding: 1.25rem;
-}
-
+/* The preferences page looks like its side panel on the edit page: each setting above its control */
 .p-preferences-list .p-preference-card {
   grid-template-columns: minmax(0, 1fr);
   align-items: start;

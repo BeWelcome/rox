@@ -21,12 +21,10 @@
 {% block drawer_intro %}{% endblock %}
 {% block drawer_options %}{% endblock %}
 {% block drawer_avatar %}{% endblock %}
-{# Further classes of the page's section, such as a narrow layout #}
-{% block subpage_class %}{% endblock %}
 
 {% block content %}
   {% set embedded = app.request.query.getBoolean('embed') %}
-  <section class="p-edit-subpage{{ embedded ? ' p-edit-subpage--embed p-ped' }}{{ block('subpage_class')|trim ? ' ' ~ block('subpage_class')|trim }}"
+  <section class="p-edit-subpage{{ embedded ? ' p-edit-subpage--embed p-ped' }}"
     {%- if embedded %}
       data-track="{{ 'track' in block('drawer_options') ? '1' : '0' }}"
       data-cancel="{{ 'cancel'|trans }}"

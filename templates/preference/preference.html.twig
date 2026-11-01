@@ -6,9 +6,8 @@
 {% endblock javascripts %}
 
 {% block drawer_eyebrow %}<i class="fas fa-cog" aria-hidden="true"></i> {{ 'profile.edit.settings'|trans }}{% endblock %}
-{# The page looks like the side panel of the edit page: a narrow column, each setting above its control #}
+{# The page has the heading of the side panel of the edit page #}
 {% block subpage_eyebrow %}{{ block('drawer_eyebrow') }}{% endblock %}
-{% block subpage_class %}p-edit-subpage--preferences{% endblock %}
 
 {% block subpage_title -%}
   {{ 'profile.preferences'|trans }}

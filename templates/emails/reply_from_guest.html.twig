@@ -1,25 +1,3 @@
-{% extends 'emails/request.template.html.twig' %}
-
-{% block message %}
-    <p>{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.guest{% endtrans %}</p>
-    <p></p>
-    <callout class="secondary">
-        {{ message.message|purify('custom') }}
-    </callout>
-{% endblock message %}
-
-{% block request%}
-    {% if changed %}<callout class="warning"><p>{{ 'request.details.changed'|trans }}</p></callout>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_OPEN') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.guest.open{% endtrans %}<br>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_CANCELLED') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.guest.cancelled{% endtrans %}<br>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_DECLINED') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.guest.declined{% endtrans %}<br>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_ACCEPTED') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.guest.accepted{% endtrans %}<br>{% endif %}
-    {% if request.status == constant('App\\Entity\\HostingRequest::REQUEST_TENTATIVELY_ACCEPTED') %}{% trans with {'%username%': sender.Username, 'gender': sender.Gender} %}email.request.reply.guest.tentatively{% endtrans %}<br>{% endif %}
-    <br>
-    {{ 'request.arrival' | trans }}:<br>
-    {{ request.arrival|format_date('full', locale=receiverLocale) }}<br>
-    {% if request.departure %}{{ 'request.departure' | trans }}:<br>
-        {{ request.departure|format_date('full', locale=receiverLocale) }}<br>{% endif %}
-    {% if request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
-    {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
-{% endblock request %}
+{% extends 'emails/stay.template.html.twig' %}
+{# The guest answered in a hosting request, maybe with other dates (changed), to the host. #}
+{% set title_key = 'email.request.reply.guest' %}

@@ -1,0 +1,12 @@
+{#
+  Text of the mail: a paragraph, or a translated text that brings its own paragraphs (div: true).
+  html: translated and purified by the caller; muted: smaller and grey; div: true for a text with <p>s.
+#}
+{% set _style = (muted ?? false)
+    ? 'margin:0 0 14px;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;color:#64748b;mso-line-height-rule:exactly;'
+    : 'margin:0 0 14px;font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:24px;color:#334155;mso-line-height-rule:exactly;' %}
+{% if div ?? false %}
+<div style="{{ _style }}">{{ html|raw }}</div>
+{% else %}
+<p style="{{ _style }}">{{ html|raw }}</p>
+{% endif %}

@@ -4,8 +4,11 @@
   Blocks: preheader (the line mail programs show after the subject, about 85 characters), content (the card),
   footer_extra (a line above the footer, e.g. why the mail came and how to stop it).
   The pieces of the card are in emails/_partials/. Expects receiver (the mailer passes it) and email.
+  utm_campaign (and utm_source, default 'newsletter'), set by a mail: every link to bewelcome.org carries them, so
+  the analytics count the visits the mail brings.
 #}
 {% apply inline_css(encore_entry_css_source('email')) %}
+{% set _mail %}
 <!doctype html>
 <html lang="{{ receiverLocale ?? 'en' }}" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -39,4 +42,6 @@
 </td></tr></table>
 </body>
 </html>
+{% endset %}
+{{- (utm_campaign is defined and utm_campaign ? _mail|utm_links(utm_campaign, utm_source ?? 'newsletter') : _mail)|raw -}}
 {% endapply %}

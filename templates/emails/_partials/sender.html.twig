@@ -1,22 +1,37 @@
 {#
   Who the mail is about: the avatar (a tile with the first letter for a group), the name, a line about them and the
   positive comments they got.
-  member (a Member) or group (a Group); meta: the line under the name (default for a member: where they live);
-  references: the number of positive comments, or null for none shown.
+  member (a Member) or of_group (a Group, or { name }: its tile); meta: the line under the name (default for a member: where they
+  live, and with since: true how long they've been a member); references: true for the member's positive comments,
+  or a number. Texts in receiverLocale.
 #}
-{% set _name = group is defined and group ? group.name : member.username %}
+{% set _group = of_group ?? null %}
+{% set _name = _group ? _group.name : member.username %}
 {% if meta is not defined or meta is null %}
-    {% set _address = group is defined and group ? null : member.activeAddress %}
-    {% set meta = _address and _address.location ? _address.location.name ~ (_address.location.country ? ', ' ~ _address.location.country.name) : '' %}
+    {% set _parts = [] %}
+    {% if not _group %}
+        {% set _address = member.activeAddress %}
+        {% if _address and _address.location %}
+            {% set _parts = _parts|merge([_address.location.name ~ (_address.location.country ? ', ' ~ _address.location.country.name)]) %}
+        {% endif %}
+        {% if since ?? false %}
+            {% set _parts = _parts|merge(['profile.member.for'|trans({ duration: member.created.copy().locale((receiverLocale ?? 'en')|replace({'-': '_'})).diffForHumans({ syntax: 1 }) })]) %}
+        {% endif %}
+    {% endif %}
+    {% set meta = _parts|join(' · ') %}
+{% endif %}
+{% set references = references ?? null %}
+{% if references is same as(true) %}
+    {% set references = _group ? null : member_comments_by_quality(member)[constant('App\\Doctrine\\CommentQualityType::POSITIVE')] ?? 0 %}
 {% endif %}
 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 14px;"><tr>
-{% if group is defined and group %}
+{% if _group %}
 <td width="64" valign="middle" style="width:64px;padding-right:12px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="52" height="52" align="center" valign="middle" style="width:52px;height:52px;border-radius:14px;background:#fde6d2;font-family:Helvetica, Arial, sans-serif;font-size:22px;font-weight:bold;color:#c2410c;text-align:center;vertical-align:middle;">{{ _name|first|upper }}</td></tr></table></td>
 {% else %}
 <td width="64" valign="middle" style="width:64px;padding-right:12px;vertical-align:middle;"><img src="{{ absolute_url(path('avatar', { username: member.username, size: 96 })) }}" width="52" height="52" alt="{{ _name }}" style="display:block;width:52px;height:52px;border-radius:26px;border:0;"></td>
 {% endif %}
 <td valign="middle" style="font-family:Helvetica, Arial, sans-serif;vertical-align:middle;"><div style="font-size:18px;line-height:22px;font-weight:bold;color:#0f172a;">{{ _name }}</div>
-{%- if meta or (references is defined and references) -%}
-<div style="font-size:14px;line-height:20px;color:#64748b;">{{ meta }}{% if references is defined and references %} &nbsp;<span style="display:inline-block;padding:3px 10px;border-radius:999px;background:#e7f5e1;color:#3f7a2f;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:18px;font-weight:bold;white-space:nowrap;">&#128077; {{ references }}</span>{% endif %}</div>
+{%- if meta or references -%}
+<div style="font-size:14px;line-height:20px;color:#64748b;">{{ meta }}{% if references %} &nbsp;<span style="display:inline-block;padding:3px 10px;border-radius:999px;background:#e7f5e1;color:#3f7a2f;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:18px;font-weight:bold;white-space:nowrap;">&#128077; {{ references }}</span>{% endif %}</div>
 {%- endif -%}
 </td></tr></table>

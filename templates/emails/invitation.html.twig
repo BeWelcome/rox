@@ -1,19 +1,4 @@
-{% extends 'emails/request.template.html.twig' %}
-
-{% block message %}
-    <p>{{ 'email.invitation.to.stay'|trans({'username': sender.Username, 'gender': sender.Gender} ) }}</p>
-    <callout class="secondary">
-        {{ message.message|purify('custom') }}
-    </callout>
-{% endblock message %}
-
-{% block request%}
-    {{ 'email.invitation.reply.guest.open'|trans({'%username%': sender.Username, 'gender': sender.Gender}) }}<br>
-    <br>
-    {{ 'request.arrival' | trans }}:<br>
-    {{ request.arrival|format_date('full', locale=receiverLocale) }}<br>
-    {% if request.departure %}{{ 'request.departure' | trans }}:<br>
-        {{ request.departure|format_date('full', locale=receiverLocale) }}<br>{% endif %}
-    {% if request.flexible %}{{ 'request.flexible' | trans }}<br>{% endif %}
-    {{ 'request.number_of_travellers' | trans}}: {{ request.numberOfTravellers }}<br>
-{% endblock request %}
+{% extends 'emails/stay.template.html.twig' %}
+{# An invitation to stay, to the guest; the stay card names the trip it's for. #}
+{% set title_key = 'email.invitation.to.stay' %}
+{% set kind = 'invitation.card.title'|trans %}

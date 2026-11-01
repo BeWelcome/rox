@@ -251,12 +251,13 @@ class WordRepository extends EntityRepository
             return null;
         }
 
-        // Author 0 is the system, which has no member row. The author is a reference that throws once it's used
-        // when its member doesn't exist (any more); reading its id doesn't load it.
+        // No author (texts translations:add:missing added) or author 0 (older imports) is the system, which has no
+        // member row. The author is a reference that throws once it's used when its member doesn't exist (any
+        // more); reading its id doesn't load it.
         $author = $details->getAuthor();
         $authorId = $author?->getId();
-        $system = 0 === $authorId;
-        $authorExists = null !== $authorId && !$system
+        $system = null === $authorId || 0 === $authorId;
+        $authorExists = !$system
             && 0 < $this->getEntityManager()->getRepository(Member::class)->count(['id' => $authorId]);
         $translator = $authorExists ? $author : null;
 

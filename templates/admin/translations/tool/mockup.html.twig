@@ -4,14 +4,15 @@
   the mail or the page's content. Its texts are in the list for translation below the page.
   preview.styles are the mail's own style elements (the site's page styles them from its stylesheets).
   locale, languageMenu, feature, name, mockup ({type, template, url?, description?}), variants ({label, parameters}),
-  variant (the one shown, or null), preview ({html, stylesheets, styles}).
+  variant (the one shown, or null), preview ({html, stylesheets, styles}, or null when the mockup is broken: a hint to
+  report it instead).
 #}
 {% set tab = 'mockups' %}
 {% set _type = mockup.type == 'email' ? 'mail' : (mockup.type == 'template' ? 'template' : 'page') %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {% for href in preview.stylesheets %}<link rel="stylesheet" href="{{ href }}">{% endfor %}
+    {% for href in preview ? preview.stylesheets : [] %}<link rel="stylesheet" href="{{ href }}">{% endfor %}
 {% endblock %}
 
 {% block tool %}
@@ -46,7 +47,16 @@
         {% endif %}
 
         <div class="p-tr-mockup__stage p-tr-mockup__stage--{{ _type }}">
-            {% if _type == 'mail' %}
+            {% if preview is null %}
+                <div class="p-tr-mockup__broken" role="alert">
+                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    <div>
+                        <p class="p-tr-mockup__broken-title">{{ 'translation.tool.mockups.broken'|trans }}</p>
+                        <p>{{ 'translation.tool.mockups.broken.report'|trans }}</p>
+                        <a class="p-tr-button p-tr-button--primary" href="{{ path('feedback', {IdCategory: 1, RequestURI: app.request.uri}) }}">{{ 'translation.tool.mockups.broken.action'|trans }}</a>
+                    </div>
+                </div>
+            {% elseif _type == 'mail' %}
                 {# in a shadow root: only its own styles, as in a mail program (in_place.js replaces texts in it too) #}
                 <div class="p-tr-mockup__mail js-in-place-shadow">
                     <template shadowrootmode="open">

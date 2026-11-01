@@ -180,6 +180,10 @@ a.p-tr-legend__item:hover { color: #c2410c; }
 .p-tr-mockup__stage { padding: 16px; border-radius: 16px; background: repeating-linear-gradient(135deg, #f4f5f7 0 10px, #eceef2 10px 20px); }
 .p-tr-mockup__page { overflow: hidden; padding: 16px 0; border-radius: 10px; background: #fff; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12); }
 .p-tr-mockup__mail { overflow-x: auto; border-radius: 10px; }
+.p-tr-mockup__broken { display: flex; gap: 14px; max-width: 640px; margin: 24px auto; padding: 20px 22px; border-radius: 12px; background: #fff; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12); }
+.p-tr-mockup__broken > i { margin-top: 3px; color: #e0a10b; font-size: 1.2rem; }
+.p-tr-tool .p-tr-mockup__broken p { margin: 0 0 10px; }
+.p-tr-tool .p-tr-mockup__broken .p-tr-mockup__broken-title { font-weight: 700; }
 
 /* Previous and next in the side panel's head */
 .p-tr-steps { display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: auto; }

@@ -30,12 +30,14 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Mockery;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Throwable;
 
 /**
  * Class TranslationController.
@@ -97,6 +99,7 @@ class MockupController extends TranslationController
         string $name,
         TranslationTool $translationTool,
         MockupPreview $mockupPreview,
+        LoggerInterface $logger,
     ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
@@ -110,11 +113,23 @@ class MockupController extends TranslationController
         $variants = $this->getVariants($feature, $name, $request->getLocale());
         $variant = $this->getVariant($request, $variants);
 
-        $parameters = array_merge(['name' => $name], $variant['parameters'] ?? [], $this->getGeneralMockupParameters());
-        $variables = $this->providers[$feature]->getMockupVariables($parameters);
-        if ('email' === $mockup['type']) {
-            // the mailer's wrapped email: images are links to the site instead of attachments
-            $variables['email'] = new MockupExtension();
+        // a broken mockup (its test data or its template) shows as such: the translator can report it
+        $preview = null;
+        try {
+            $parameters = array_merge(['name' => $name], $variant['parameters'] ?? [], $this->getGeneralMockupParameters());
+            $variables = $this->providers[$feature]->getMockupVariables($parameters);
+            if ('email' === $mockup['type']) {
+                // the mailer's wrapped email: images are links to the site instead of attachments
+                $variables['email'] = new MockupExtension();
+            }
+            $preview = $mockupPreview->render($mockup['template'], $variables);
+        } catch (Throwable $exception) {
+            $logger->error('Mockup {feature}/{name} failed: {message}', [
+                'feature' => $feature,
+                'name' => $name,
+                'message' => $exception->getMessage(),
+                'exception' => $exception,
+            ]);
         }
 
         return $this->render('admin/translations/tool/mockup.html.twig', [
@@ -125,7 +140,7 @@ class MockupController extends TranslationController
             'mockup' => $mockup,
             'variants' => $variants,
             'variant' => $variant,
-            'preview' => $mockupPreview->render($mockup['template'], $variables),
+            'preview' => $preview,
         ]);
     }
 

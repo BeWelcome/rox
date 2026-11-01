@@ -352,3 +352,15 @@ translation.tool.mockups.variants:
     text: 'Variants'
     description: 'Translation tool, preview of a mail or page: label of the list of its variants (for screen readers)'
     format: plain
+translation.tool.mockups.broken:
+    text: 'This preview can''t be shown.'
+    description: 'Translation tool, preview of a mail or page: shown instead of it when its template or test data is broken'
+    format: plain
+translation.tool.mockups.broken.report:
+    text: 'Its template or its test data is broken. Please report it so that it can be fixed.'
+    description: 'Translation tool, preview of a mail or page: below "This preview can''t be shown."'
+    format: plain
+translation.tool.mockups.broken.action:
+    text: 'Report the broken preview'
+    description: 'Translation tool, preview of a mail or page: button that opens the form to report a bug'
+    format: plain

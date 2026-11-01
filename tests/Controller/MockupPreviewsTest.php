@@ -4,12 +4,16 @@ namespace App\Tests\Controller;
 
 use App\Entity\Member;
 use App\Entity\Newsletter;
+use App\Model\Translation\MockupPreview;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 
 /**
  * The translators' previews of mails and pages (/admin/translations/mockups) that failed on develop: pages without a
@@ -102,5 +106,22 @@ class MockupPreviewsTest extends WebTestCase
         self::assertContains('email.greeting', $codes);
         // the tool page keeps the site's styles
         self::assertGreaterThan(0, $crawler->filter('head link[rel=stylesheet][href*="tailwind"]')->count());
+    }
+
+    public function testABrokenPreviewAsksToReportIt(): void
+    {
+        // a template that can't be rendered
+        static::getContainer()->set(MockupPreview::class, new MockupPreview(
+            new Environment(new ArrayLoader(['emails/signup.html.twig' => '{{ zztest_broken() }}'])),
+            static::getContainer()->get(EntrypointLookupInterface::class),
+        ));
+        $crawler = $this->client->request('GET', '/admin/translate/mockup/signups/' . rawurlencode('Confirm Email Address'));
+
+        $this->assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('.p-tr-mockup__broken[role=alert]'));
+        self::assertStringStartsWith('/feedback?IdCategory=1', (string) $crawler->filter('.p-tr-mockup__broken a')->attr('href'));
+        // the page is whole: its header and the site's footer
+        self::assertCount(1, $crawler->filter('.p-tr-tool__title'));
+        self::assertCount(1, $crawler->filter('#footer_content'));
     }
 }

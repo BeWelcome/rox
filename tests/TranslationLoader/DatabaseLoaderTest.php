@@ -103,7 +103,7 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([$english]);
+            ->willReturn(self::rows([$english]));
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -132,7 +132,7 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([$english]);
+            ->willReturn(self::rows([$english]));
 
         $entityManagerStub = $this->createStub(EntityManager::class);
         $entityManagerStub
@@ -170,7 +170,7 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([$englishEn], [$englishDe])
+            ->willReturn(self::rows([$englishEn]), self::rows([$englishDe]))
         ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
@@ -208,7 +208,7 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([$englishEn], [$englishDe])
+            ->willReturn(self::rows([$englishEn]), self::rows([$englishDe]))
         ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
@@ -255,7 +255,7 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([$englishEn, $germanEn], [$englishDe, $germanDe])
+            ->willReturn(self::rows([$englishEn, $germanEn]), self::rows([$englishDe, $germanDe]))
         ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
@@ -296,7 +296,7 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([$englishEn], [$englishDe])
+            ->willReturn(self::rows([$englishEn]), self::rows([$englishDe]))
         ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
@@ -334,7 +334,7 @@ class DatabaseLoaderTest extends TestCase
         $repositoryStub = $this->createStub(WordRepository::class);
         $repositoryStub
             ->method('getTranslationsForLocale')
-            ->willReturn([$englishEn], [$englishDe])
+            ->willReturn(self::rows([$englishEn]), self::rows([$englishDe]))
         ;
 
         $entityManagerStub = $this->createStub(EntityManager::class);
@@ -349,5 +349,23 @@ class DatabaseLoaderTest extends TestCase
         $translation = $result->get('english');
 
         $this->assertSame('English', $translation);
+    }
+
+    /**
+     * The words as the repository gives them to the loader.
+     *
+     * @param list<Word> $words
+     *
+     * @return list<array<string, mixed>>
+     */
+    private static function rows(array $words): array
+    {
+        return array_map(static fn (Word $word): array => [
+            'code' => $word->getCode(),
+            'sentence' => $word->getSentence(),
+            'updated' => $word->getUpdated(),
+            'majorUpdate' => $word->getMajorUpdate(),
+            'translationAllowed' => $word->getTranslationAllowed(),
+        ], $words);
     }
 }

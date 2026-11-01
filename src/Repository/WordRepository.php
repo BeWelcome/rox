@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Member;
 use App\Entity\Word;
+use DateTimeInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -122,10 +123,19 @@ class WordRepository extends EntityRepository
         return $count;
     }
 
-    public function getTranslationsForLocale(string $locale, string $domain)
+    /**
+     * The texts of a language in a domain for its catalogue (DatabaseLoader): not archived, except broadcasts.
+     * Only the columns the catalogue needs: the cache is warmed before the migrations of a deployment run, and the
+     * catalogue doesn't depend on columns they add.
+     *
+     * @return list<array{code: string, sentence: string, updated: ?DateTimeInterface, majorUpdate: ?DateTimeInterface,
+     *     translationAllowed: string}>
+     */
+    public function getTranslationsForLocale(string $locale, string $domain): array
     {
         $qb = $this->createQueryBuilder('t');
         $qb
+            ->select('t.code AS code', 't.sentence AS sentence', 't.updated AS updated', 't.majorUpdate AS majorUpdate', 't.translationAllowed AS translationAllowed')
             ->where('t.language = :locale')
             ->andWhere(
                 $qb->expr()->orX(
@@ -137,11 +147,7 @@ class WordRepository extends EntityRepository
             ->setParameter('locale', $locale)
             ->setParameter('domain', $domain);
 
-        $translations = $qb
-            ->getQuery()
-            ->getResult();
-
-        return $translations;
+        return $qb->getQuery()->getResult();
     }
 
     /**

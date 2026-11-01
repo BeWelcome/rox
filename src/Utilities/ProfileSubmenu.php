@@ -92,7 +92,12 @@ class ProfileSubmenu
 
         /** @var ForumPostRepository $postsRepository */
         $postsRepository = $this->entityManager->getRepository(ForumPost::class);
-        $memberInfo['posts_count'] = $postsRepository->getForumPostsByMemberCount($member);
+        // the posts the logged in member may read in the forum, as the posts page lists them
+        $memberInfo['posts_count'] = $postsRepository->getForumPostsByMemberCount(
+            $member,
+            $loggedInMember,
+            $this->hasRole($roles, Member::ROLE_ADMIN_FORUMMODERATOR) || $this->hasRole($roles, Member::ROLE_ADMIN_ADMIN),
+        );
 
         /** @var GalleryImageRepository $imageRepository */
         $imageRepository = $this->entityManager->getRepository(GalleryImage::class);

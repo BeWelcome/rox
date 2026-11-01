@@ -24,8 +24,11 @@
                         <img class="profileimg avatar-48 mr-1" width="48" height="48" src="{{ url('avatar', {username: post.author.Username, size: 48}) }}">
                         <div class="small">
                             <a href="{{ url('members_profile', {username: post.author.Username}) }}">{{ post.author.Username }}</a>
-                            <br>{{ post.author.city.name }}
-                            <br>{{ post.author.city.country.name }}
+                            {% set address = post.author.activeAddress %}
+                            {% if address %}
+                                <br>{{ address.location.name }}
+                                <br>{{ address.location.country.name|default('') }}
+                            {% endif %}
                         </div>
                     </div>
                 </div>

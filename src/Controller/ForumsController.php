@@ -123,7 +123,9 @@ class ForumsController extends AbstractController
         $postsRepository = $this->entityManager->getRepository(ForumPost::class);
 
         $itemsPerPage = $this->getItemsPerPage($member);
-        $posts = $postsRepository->getForumPostsByMember($member, $search, $page, $itemsPerPage);
+        // what the logged in member may read in the forum; forum moderators and admins see all
+        $moderator = $this->isGranted(Member::ROLE_ADMIN_FORUMMODERATOR) || $this->isGranted(Member::ROLE_ADMIN_ADMIN);
+        $posts = $postsRepository->getForumPostsByMember($member, $loggedInMember, $moderator, $search, $page, $itemsPerPage);
 
         return $this->render('profile/forum.posts.html.twig', [
             'search_form' => $searchForm->createView(),

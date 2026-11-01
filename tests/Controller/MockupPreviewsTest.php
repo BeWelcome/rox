@@ -126,4 +126,32 @@ class MockupPreviewsTest extends WebTestCase
         self::assertCount(1, $crawler->filter('.p-tr-tool__title'));
         self::assertCount(1, $crawler->filter('#footer_content'));
     }
+
+    /**
+     * Every preview the mockup pages offer, each variant: none is broken. Their test data are entities with test
+     * values, not mocks: the mocking library is a dev package, which the servers don't install.
+     */
+    public function testEveryPreviewRenders(): void
+    {
+        $crawler = $this->client->request('GET', '/admin/translations/mockups');
+        $features = $crawler->filter('.p-tr-features__item')->each(static fn ($link) => (string) $link->attr('href'));
+        self::assertNotEmpty($features);
+
+        $broken = [];
+        $count = 0;
+        foreach ($features as $feature) {
+            $previews = $this->client->request('GET', $feature)->filter('.p-tr-preview a.p-tr-button')
+                ->each(static fn ($link) => (string) $link->attr('href'));
+            foreach ($previews as $preview) {
+                ++$count;
+                $page = $this->client->request('GET', $preview);
+                if (200 !== $this->client->getResponse()->getStatusCode() || \count($page->filter('.p-tr-mockup__broken')) > 0) {
+                    $broken[] = rawurldecode($preview);
+                }
+            }
+        }
+
+        self::assertGreaterThan(50, $count);
+        self::assertSame([], $broken);
+    }
 }

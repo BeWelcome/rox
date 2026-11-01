@@ -11,12 +11,13 @@ use App\Form\HostingRequestHost;
 use App\Form\ReportSpamType;
 use App\Service\InboxFolders;
 use Carbon\Carbon;
-use Mockery;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestMockups implements MockupProviderInterface
 {
+    use MockupEntities;
+
     private const array MOCKUPS = [
         'intial request (guest)' => [
             'type' => 'page',
@@ -151,7 +152,7 @@ class RequestMockups implements MockupProviderInterface
             'form' => $form->createView(),
             'is_spam' => false,
             'show_deleted' => false,
-        ];
+        ] + $this->inboxFolders->getContext($this->requestStack->getCurrentRequest(), $parameters['user'], 'requests');
     }
 
     private function getVariablesForViewHost(array $parameters): array
@@ -170,54 +171,43 @@ class RequestMockups implements MockupProviderInterface
             'form' => $form->createView(),
             'is_spam' => false,
             'show_deleted' => false,
-        ];
+        ] + $this->inboxFolders->getContext($this->requestStack->getCurrentRequest(), $parameters['user'], 'requests');
     }
 
+    /**
+     * The request and a reply, the newest first.
+     *
+     * @return list<Message>
+     */
     private function getThread(Member $host, Member $guest, int $status, int $numberOfNights): array
     {
-        $mockSubject = Mockery::mock(Subject::class, [
-            'getSubject' => 'Subject',
-        ]);
-        $mockRequest = Mockery::mock(HostingRequest::class, [
-            'getId' => 1,
-            'getArrival' => new Carbon(),
-            'getDeparture' => new Carbon()->addDays($numberOfNights), // use number of replies to change number of nights
-            'getNumberOfTravellers' => 2,
-            'getFlexible' => true,
-            'getStatus' => $status,
-            'getInviteForLeg' => null,
-        ]);
+        $subject = new Subject()->setSubject('Subject');
+        $request = self::withId(new HostingRequest(), 1)
+            ->setArrival(new Carbon())
+            // the number of nights differs between the previews
+            ->setDeparture(new Carbon()->addDays($numberOfNights))
+            ->setNumberOfTravellers(2)
+            ->setFlexible(true)
+            ->setStatus($status);
 
-        $mockMessageParent = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Initial request',
-        ]);
-        $mockMessageParent->shouldReceive('getSubject')->andReturn($mockSubject);
-        $mockMessageParent->shouldReceive('getCreated')->andReturn(new Carbon());
-        $mockMessageParent->shouldReceive('getSender')->andReturn($host);
-        $mockMessageParent->shouldReceive('getInitiator')->andReturn($host);
-        $mockMessageParent->shouldReceive('getReceiver')->andReturn($guest);
-        $mockMessageParent->shouldReceive('getRequest')->andReturn($mockRequest);
-        $mockMessageParent->shouldReceive('isDeletedByMember')->andReturn(false);
-        $mockMessageParent->shouldReceive('isPurgedByMember')->andReturn(false);
+        $parent = self::withId(new Message(), 1)
+            ->setMessage('Initial request')
+            ->setSubject($subject)
+            ->setRequest($request)
+            ->setSender($host)
+            ->setReceiver($guest)
+            ->setInitiator($host)
+            ->setCreated(new Carbon());
+        $reply = self::withId(new Message(), 2)
+            ->setMessage('Reply')
+            ->setParent($parent)
+            ->setSubject($subject)
+            ->setRequest($request)
+            ->setSender($guest)
+            ->setReceiver($host)
+            ->setInitiator($host)
+            ->setCreated(new Carbon());
 
-        $mockMessageReply = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Reply',
-            'getParent' => $mockMessageParent,
-        ]);
-
-        $mockMessageReply->shouldReceive('getSubject')->andReturn($mockSubject);
-        $mockMessageReply->shouldReceive('getCreated')->andReturn(new Carbon());
-        $mockMessageReply->shouldReceive('getSender')->andReturn($guest);
-        $mockMessageReply->shouldReceive('getInitiator')->andReturn($host);
-        $mockMessageReply->shouldReceive('getReceiver')->andReturn($host);
-        $mockMessageReply->shouldReceive('getRequest')->andReturn($mockRequest);
-        $mockMessageReply->shouldReceive('isDeletedByMember')->andReturn(false);
-        $mockMessageReply->shouldReceive('isPurgedByMember')->andReturn(false);
-
-        $mockThread = [$mockMessageReply, $mockMessageParent];
-
-        return $mockThread;
+        return [$reply, $parent];
     }
 }

@@ -8,10 +8,11 @@ use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery;
 
 class GroupMockups implements MockupProviderInterface
 {
+    use MockupEntities;
+
     private const array MOCKUPS = [
         'group invitation' => [
             'type' => 'email',
@@ -75,18 +76,12 @@ class GroupMockups implements MockupProviderInterface
 
         /** @var Member $user */
         $user = $parameters['user'];
-        $mockThread = Mockery::mock(ForumThread::class, [
-            'getId' => 1,
-            'getGroup' => $group,
-            'isAgora' => false,
-            'getTitle' => 'Thread title',
-        ]);
-
-        $mockPost = Mockery::mock(ForumPost::class, [
-            'getId' => 1,
-            'getMessage' => 'Post text',
-            'getThread' => $mockThread,
-        ]);
+        $thread = self::withId(new ForumThread(), 1)
+            ->setTitle('Thread title')
+            ->setGroup($group);
+        $post = self::withId(new ForumPost(), 1)
+            ->setMessage('Post text')
+            ->setThread($thread);
 
         if ('group post (subscribed)' === $parameters['name']) {
             $subscription = 123456;
@@ -103,7 +98,7 @@ class GroupMockups implements MockupProviderInterface
             'reason' => 'I just want to be a member of something.',
             'username' => $user->getUsername(),
             'notification' => [
-                'post' => $mockPost,
+                'post' => $post,
                 'subscription' => $subscription,
             ],
         ];

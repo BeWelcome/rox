@@ -7,7 +7,9 @@ use App\Form\InvitationGuest;
 use App\Form\InvitationHost;
 use App\Form\InvitationType;
 use App\Form\ReportSpamType;
+use App\Service\InboxFolders;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class InvitationMockups implements MockupProviderInterface
 {
@@ -64,8 +66,11 @@ class InvitationMockups implements MockupProviderInterface
     ];
     private readonly InvitationUtility $invitationUtility;
 
-    public function __construct(private readonly FormFactoryInterface $formFactory)
-    {
+    public function __construct(
+        private readonly FormFactoryInterface $formFactory,
+        private readonly InboxFolders $inboxFolders,
+        private readonly RequestStack $requestStack,
+    ) {
         $this->invitationUtility = new InvitationUtility();
     }
 
@@ -125,7 +130,7 @@ class InvitationMockups implements MockupProviderInterface
         $host = $parameters['user'];
         $guest = $parameters['admin'];
 
-        $leg = $this->invitationUtility->getLeg($parameters);
+        $leg = $this->invitationUtility->getLeg($host);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
 
         $form = $this->formFactory->create(InvitationGuest::class, $thread[4]);
@@ -144,7 +149,7 @@ class InvitationMockups implements MockupProviderInterface
         $host = $parameters['user'];
         $guest = $parameters['admin'];
 
-        $leg = $this->invitationUtility->getLeg($parameters);
+        $leg = $this->invitationUtility->getLeg($host);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
 
         $form = $this->formFactory->create(InvitationHost::class, $thread[4]);
@@ -164,7 +169,7 @@ class InvitationMockups implements MockupProviderInterface
         $host = $parameters['admin'];
         $guest = $parameters['user'];
 
-        $leg = $this->invitationUtility->getLeg($parameters);
+        $leg = $this->invitationUtility->getLeg($host);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
         $form = $this->formFactory->create(ReportSpamType::class);
 
@@ -176,7 +181,7 @@ class InvitationMockups implements MockupProviderInterface
             'form' => $form->createView(),
             'is_spam' => false,
             'show_deleted' => false,
-        ];
+        ] + $this->inboxFolders->getContext($this->requestStack->getCurrentRequest(), $parameters['user'], 'invitations');
     }
 
     private function getVariablesForViewHost(array $parameters): array
@@ -184,7 +189,7 @@ class InvitationMockups implements MockupProviderInterface
         $host = $parameters['user'];
         $guest = $parameters['admin'];
 
-        $leg = $this->invitationUtility->getLeg($parameters);
+        $leg = $this->invitationUtility->getLeg($host);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, $parameters['status'], 4);
         $form = $this->formFactory->create(ReportSpamType::class);
 
@@ -196,6 +201,6 @@ class InvitationMockups implements MockupProviderInterface
             'form' => $form->createView(),
             'is_spam' => false,
             'show_deleted' => false,
-        ];
+        ] + $this->inboxFolders->getContext($this->requestStack->getCurrentRequest(), $parameters['user'], 'invitations');
     }
 }

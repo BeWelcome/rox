@@ -13,62 +13,40 @@ use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
 use DateTime;
-use Mockery;
 
 class InvitationUtility
 {
+    use MockupEntities;
+
     /**
-     * @SuppressWarnings("PHPMD.StaticAccess")
+     * The invitation and its replies, the newest first.
+     *
+     * @return list<Message>
      */
     public function getThread(Member $host, Member $guest, Subtrip $leg, int $status, int $replies): array
     {
-        $subject = Mockery::mock(Subject::class, [
-            'getSubject' => 'Subject',
-        ]);
-        $today = new Carbon();
-        $someDaysAhead = new Carbon();
-        $someDaysAhead->addDays($replies);
-        $request = Mockery::mock(HostingRequest::class, [
-            'getId' => 1,
-            'getArrival' => $today,
-            'getDeparture' => $someDaysAhead,
-            'getNumberOfTravellers' => 2,
-            'getFlexible' => true,
-            'getStatus' => $status,
-            'getInviteForLeg' => $leg,
-        ]);
-        $request->shouldReceive('getStatus')->andReturn($status);
+        $subject = new Subject()->setSubject('Subject');
+        $request = self::withId(new HostingRequest(), 1)
+            ->setArrival(new Carbon())
+            ->setDeparture(new Carbon()->addDays($replies))
+            ->setNumberOfTravellers(2)
+            ->setFlexible(true)
+            ->setStatus($status)
+            ->setInviteForLeg($leg);
 
-        $parent = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Initial invitation',
-        ]);
-        $parent->shouldReceive('getSubject')->andReturn($subject);
-        $parent->shouldReceive('getCreated')->andReturn(new Carbon());
-        $parent->shouldReceive('getSender')->andReturn($host);
-        $parent->shouldReceive('getInitiator')->andReturn($host);
-        $parent->shouldReceive('getReceiver')->andReturn($guest);
-        $parent->shouldReceive('getRequest')->andReturn($request);
-        $parent->shouldReceive('isDeletedByMember')->andReturn(false);
-        $parent->shouldReceive('isPurgedByMember')->andReturn(false);
+        $parent = $this->message(1, 'Initial invitation', $subject, $request, $host, $guest, $host);
 
-        $thread = [];
-        $thread[] = $parent;
+        $thread = [$parent];
         $lastMessage = $parent;
         for ($i = 1; $i <= $replies; ++$i) {
             $lastMessage = $this->getReply($lastMessage, $subject, $request, $guest, $host, $i);
-            $temp = $host;
-            $host = $guest;
-            $guest = $temp;
+            [$host, $guest] = [$guest, $host];
             $thread[] = $lastMessage;
         }
 
         return array_reverse($thread);
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.StaticAccess")
-     */
     public function getReply(
         Message $parent,
         Subject $subject,
@@ -77,50 +55,47 @@ class InvitationUtility
         Member $host,
         int $number,
     ): Message {
-        $reply = Mockery::mock(Message::class, [
-            'getId' => 1,
-            'getMessage' => 'Reply ' . $number,
-            'getParent' => $parent,
-        ]);
-
-        $reply->shouldReceive('getSubject')->andReturn($subject);
-        $reply->shouldReceive('getCreated')->andReturn(new Carbon());
-        $reply->shouldReceive('getSender')->andReturn($guest);
-        $reply->shouldReceive('getInitiator')->andReturn($parent->getInitiator());
-        $reply->shouldReceive('getReceiver')->andReturn($host);
-        $reply->shouldReceive('getRequest')->andReturn($request);
-        $reply->shouldReceive('isDeletedByMember')->andReturn(false);
-        $reply->shouldReceive('isPurgedByMember')->andReturn(false);
-
-        return $reply;
+        return $this->message($number + 1, 'Reply ' . $number, $subject, $request, $guest, $host, $parent->getInitiator())
+            ->setParent($parent);
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.StaticAccess")
-     */
-    public function getLeg($host): Subtrip
+    public function getLeg(Member $host): Subtrip
     {
-        $trip = Mockery::mock(Trip::class, [
-            'getId' => 1,
-            'getCreator' => $host,
-            'getSummary' => 'Mocking Bird',
-            'getDescription' => 'Mocking description',
-            'getCountOfTravellers' => 2,
-            'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new DateTime(),
-        ]);
+        $trip = self::withId(new Trip(), 1)
+            ->setCreator($host)
+            ->setSummary('Mocking Bird')
+            ->setDescription('Mocking description')
+            ->setCountOfTravellers(2)
+            ->setAdditionalInfo(TripAdditionalInfoType::NONE)
+            ->setCreated(new DateTime());
         $location = new Location();
         $location->setName('Mock');
-        $leg = Mockery::mock(Subtrip::class, [
-            'getId' => 1,
-            'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
-            'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
-            'getOptions' => [LegOptionsType::MEET_LOCALS],
-            'getLocation' => $location,
-            'getTrip' => $trip,
-            'getInvitedBy' => $host,
-        ]);
 
-        return $leg;
+        return self::withId(new Subtrip(), 1)
+            ->setArrival(new Carbon('2021-02-22'))
+            ->setDeparture(new Carbon('2021-02-24'))
+            ->setOptions([LegOptionsType::MEET_LOCALS])
+            ->setLocation($location)
+            ->setTrip($trip)
+            ->setInvitedBy($host);
+    }
+
+    private function message(
+        int $id,
+        string $text,
+        Subject $subject,
+        HostingRequest $request,
+        Member $sender,
+        Member $receiver,
+        Member $initiator,
+    ): Message {
+        return self::withId(new Message(), $id)
+            ->setMessage($text)
+            ->setSubject($subject)
+            ->setRequest($request)
+            ->setSender($sender)
+            ->setReceiver($receiver)
+            ->setInitiator($initiator)
+            ->setCreated(new Carbon());
     }
 }

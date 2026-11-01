@@ -4,10 +4,11 @@ namespace App\Model\MockupProvider;
 
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
-use Mockery;
 
 class ForumMockups implements MockupProviderInterface
 {
+    use MockupEntities;
+
     private const array MOCKUPS = [
         'forum post (subscribed)' => [
             'type' => 'email',
@@ -31,18 +32,11 @@ class ForumMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        $mockThread = Mockery::mock(ForumThread::class, [
-            'getId' => 1,
-            'getGroup' => null,
-            'isAgora' => true,
-            'getTitle' => 'Thread title',
-        ]);
-
-        $mockPost = Mockery::mock(ForumPost::class, [
-            'getId' => 1,
-            'getMessage' => 'Post text',
-            'getThread' => $mockThread,
-        ]);
+        $thread = self::withId(new ForumThread(), 1)
+            ->setTitle('Thread title');
+        $post = self::withId(new ForumPost(), 1)
+            ->setMessage('Post text')
+            ->setThread($thread);
 
         if ('forum post (subscribed)' === $parameters['name']) {
             $subscription = 123456;
@@ -52,7 +46,7 @@ class ForumMockups implements MockupProviderInterface
 
         return [
             'notification' => [
-                'post' => $mockPost,
+                'post' => $post,
                 'subscription' => $subscription,
             ],
         ];

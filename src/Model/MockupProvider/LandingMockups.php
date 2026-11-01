@@ -10,10 +10,11 @@ use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
 use DateTime;
-use Mockery;
 
 class LandingMockups implements MockupProviderInterface
 {
+    use MockupEntities;
+
     private const array MOCKUPS = [
         'be visited|none' => [
             'type' => 'template',
@@ -59,43 +60,29 @@ class LandingMockups implements MockupProviderInterface
 
     private function getTripsWidgetTwoLegs(Member $user): array
     {
-        $trip = Mockery::mock(Trip::class, [
-            'getId' => 1,
-            'getCreator' => $user,
-            'getSummary' => 'Mocking Bird',
-            'getDescription' => 'Mocking description',
-            'getCountOfTravellers' => 2,
-            'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new DateTime(),
-        ]);
+        $trip = self::withId(new Trip(), 1)
+            ->setCreator($user)
+            ->setSummary('Mocking Bird')
+            ->setDescription('Mocking description')
+            ->setCountOfTravellers(2)
+            ->setAdditionalInfo(TripAdditionalInfoType::NONE)
+            ->setCreated(new DateTime());
         $location = new Location();
         $location->setName('Mock');
-        $leg1 = Mockery::mock(Subtrip::class, [
-            'getId' => 1,
-            'getArrival' => new Carbon(),
-            'getDeparture' => new Carbon(),
-            'getOptions' => [LegOptionsType::MEET_LOCALS],
-            'getLocation' => $location,
-            'getTrip' => $trip,
-            'getInvitedBy' => $user,
-            'getInvitationBy' => null,
-        ]);
-        $leg2 = Mockery::mock(Subtrip::class, [
-            'getId' => 2,
-            'getArrival' => new Carbon(),
-            'getDeparture' => new Carbon(),
-            'getOptions' => [LegOptionsType::LOOKING_FOR_HOST],
-            'getLocation' => $location,
-            'getTrip' => $trip,
-            'getInvitedBy' => $user,
-            'getInvitationBy' => null,
-        ]);
+        $legs = [];
+        foreach ([1 => LegOptionsType::MEET_LOCALS, 2 => LegOptionsType::LOOKING_FOR_HOST] as $id => $option) {
+            $leg = self::withId(new Subtrip(), $id)
+                ->setArrival(new Carbon())
+                ->setDeparture(new Carbon())
+                ->setOptions([$option])
+                ->setLocation($location)
+                ->setInvitedBy($user);
+            $trip->addLeg($leg);
+            $legs[] = $leg;
+        }
 
         return [
-            'legs' => [
-                $leg1,
-                $leg2,
-            ],
+            'legs' => $legs,
             'radius' => 10,
         ];
     }

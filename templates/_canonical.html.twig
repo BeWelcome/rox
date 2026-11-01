@@ -1,0 +1,7 @@
+{# The page's own address without query string (?gclid= and the like made duplicates for search engines), built from
+   the route so that defaults give one address (/faq/1 and /faq). Error pages have no route and get none.
+   Include in the <head> of every full-page layout. #}
+{% set canonical_route = app.request.attributes.get('_route') %}
+{% if canonical_route %}
+<link rel="canonical" href="{{ url(canonical_route, app.request.attributes.get('_route_params', {})) }}">
+{% endif %}

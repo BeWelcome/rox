@@ -15,10 +15,14 @@ class FaqController extends AbstractController
     {
     }
 
+    /**
+     * The old address of the FAQ, kept for links from elsewhere and bookmarks. Permanent, so search engines move it
+     * to /faq instead of keeping both.
+     */
     #[Route(path: '/about/faq', name: 'about_faq')]
     public function showAboutFAQ(): Response
     {
-        return $this->redirectToRoute('faqs_overview', ['categoryId' => 1]);
+        return $this->redirectToRoute('faqs_overview', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     #[Route(path: '/faq/{category}', name: 'faqs_overview', requirements: ['category' => '\d+'], defaults: ['category' => '1'])]

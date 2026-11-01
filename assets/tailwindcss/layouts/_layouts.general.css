@@ -3651,7 +3651,14 @@ main:has(.p-hero) {
 }
 .p-friends-page__item:hover .p-friends-page__name { color: #c2410c; }
 .p-friends-page__pager { display: flex; justify-content: center; margin-top: 1.25rem; }
-.p-friends-page__manage { font-size: 0.875rem; font-weight: 600; }
+/* The pages of the profile's tabs: their action sits in the head's flow (not the profile cards' corner button), so
+   the head has the same padding on both sides */
+.p-gallery-page .card-header,
+.p-comments-page .card-header,
+.p-friends-page .card-header,
+.p-member-posts-page .card-header,
+.p-notes-page .card-header,
+.p-member-groups .card-header { align-items: center; padding-right: 1.25rem !important; }
 
 /* ── Own friendships (/members/{username}/friendships): requests, sent, friends ── */
 .p-friendships { margin: 0; padding: 0; list-style: none; }

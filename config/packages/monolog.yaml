@@ -30,6 +30,10 @@ when@test:
                 level: debug
 
 when@prod:
+    # Production logs go to stderr (docker logs, shipped to VictoriaLogs). The records of a request are buffered and
+    # only written when it logs an error, so normal requests produce no lines. Warnings are written as they happen.
+    # Deprecations are off unless DEPRECATION_LOG is set (e.g. php://stderr on stage); it's read at runtime, so a
+    # container restart picks a change up.
     monolog:
         handlers:
             main:
@@ -44,12 +48,28 @@ when@prod:
                 path: php://stderr
                 level: debug
                 formatter: monolog.formatter.json
+            # Only the warning level, without a buffer: warnings often point at a problem before it becomes an error.
+            # Errors stay with "main", so they aren't written twice.
+            warnings:
+                type: filter
+                handler: warnings_stream
+                min_level: warning
+                max_level: warning
+                channels: ["!deprecation"]
+            warnings_stream:
+                type: stream
+                path: php://stderr
+                formatter: monolog.formatter.json
+                nested: true
             console:
                 type: console
                 process_psr_3_messages: false
-                channels: ["!event", "!doctrine"]
+                channels: ["!event", "!doctrine", "!deprecation"]
             deprecation:
                 type: stream
                 channels: [deprecation]
-                path: php://stderr
+                path: '%env(DEPRECATION_LOG)%'
                 formatter: monolog.formatter.json
+
+    parameters:
+        env(DEPRECATION_LOG): /dev/null

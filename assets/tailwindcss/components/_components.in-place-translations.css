@@ -1,27 +1,54 @@
 /* Translation mode (templates/admin/translations/_in_place.html.twig): the texts the page translated, below the
-   page, grouped; Edit, Translate and Create open the side panel. Texts replaced on the page light up briefly. */
+   page, a box per group (missing, not translated yet, translated) with up to ten texts in view; Edit, Translate and
+   Create open the side panel. Texts replaced on the page light up briefly. */
 
-.c-in-place { box-sizing: border-box; max-width: 1100px; margin: 2rem auto; padding: 1.25rem; border: 1px solid #e2e8f0; border-radius: 1rem; background: #fff; color: #0f172a; text-align: left; }
+.c-in-place { --c-in-place-row: 3.75rem; box-sizing: border-box; max-width: 1110px; margin: 2rem auto; padding: 0 15px; color: #0f172a; text-align: left; }
 .c-in-place .c-in-place__title { display: flex; align-items: center; gap: 0.6rem; margin: 0 0 1rem; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.35rem; font-weight: 700; }
 .c-in-place__locale { padding: 0.1rem 0.55rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.85rem; font-weight: 600; }
-.c-in-place__empty { margin: 0; color: #64748b; }
 
-.c-in-place__group + .c-in-place__group { margin-top: 0.75rem; }
-.c-in-place__heading { padding: 0.5rem 0; color: #334155; font-weight: 700; cursor: pointer; }
-.c-in-place__group--missing .c-in-place__heading { color: #b91c1c; }
-.c-in-place__group--fallback .c-in-place__heading { color: #c2410c; }
+/* The boxes, like the forum's cards */
+.c-in-place__groups { display: flex; flex-direction: column; gap: 1rem; }
+.c-in-place__group { padding: 1rem 1.25rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
+.c-in-place .c-in-place__heading { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.5rem; color: #0f172a; font-size: 1rem; font-weight: 700; }
+.c-in-place__heading::before { content: ''; width: 0.6rem; height: 0.6rem; border-radius: 999px; background: #16a34a; }
+.c-in-place__group--missing .c-in-place__heading::before { background: #dc2626; }
+.c-in-place__group--fallback .c-in-place__heading::before { background: #f59e0b; }
+.c-in-place .c-in-place__empty { margin: 0; color: #94a3b8; font-size: 0.875rem; }
+.c-in-place__empty[hidden] { display: none; }
 
-.c-in-place__list { margin: 0; padding: 0; list-style: none; }
-.c-in-place__item { display: flex; align-items: flex-start; gap: 1rem; padding: 0.6rem 0.75rem; border-top: 1px solid #eef0f3; border-radius: 0.5rem; }
+/* Ten rows in view, then a scroll bar */
+.c-in-place__list { max-height: calc(10 * var(--c-in-place-row)); margin: 0 -0.5rem; padding: 0; overflow-y: auto; overscroll-behavior: contain; list-style: none; }
+.c-in-place__list:empty { display: none; }
+.c-in-place__item { box-sizing: border-box; display: flex; align-items: center; gap: 1rem; height: var(--c-in-place-row); padding: 0 0.5rem; border-top: 1px solid #f1f5f9; border-radius: 0.6rem; }
+.c-in-place__item:first-child { border-top-color: transparent; }
+.c-in-place__item:hover { background: #f8fafc; }
 .c-in-place__item.is-active { background: #fff7ed; }
 .c-in-place__item.is-reload-needed .c-in-place__text { color: #94a3b8; }
-.c-in-place__body { flex: 1 1 auto; min-width: 0; }
-.c-in-place__code { color: #475569; font-size: 0.8rem; overflow-wrap: anywhere; }
-.c-in-place__meta { margin-left: 0.4rem; color: #94a3b8; font-size: 0.75rem; }
-.c-in-place .c-in-place__text { margin: 0.15rem 0 0; color: #0f172a; font-size: 0.9rem; overflow-wrap: anywhere; }
+.c-in-place__body { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; }
+.c-in-place__code { overflow: hidden; color: #475569; font-size: 0.78rem; text-overflow: ellipsis; white-space: nowrap; }
+.c-in-place__meta { display: none; }
+.c-in-place .c-in-place__text { margin: 0.1rem 0 0; overflow: hidden; color: #0f172a; font-size: 0.9rem; text-overflow: ellipsis; white-space: nowrap; }
 .c-in-place__action,
 .c-in-place__action:hover { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.4rem; padding: 0.35rem 0.85rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-size: 0.85rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
 .c-in-place__action:hover { border-color: #f37000; color: #c2410c; }
 
 @keyframes c-in-place-updated { from { background-color: #fed7aa; } to { background-color: transparent; } }
 .is-translation-updated { animation: c-in-place-updated 2.5s ease-out; }
+
+/* The side panel's forms (admin/translations/edit.html.twig, _create_drawer_form.html.twig), in the cards of the
+   edit page's panels */
+.p-tr-form__head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.p-tr-form__toggle { padding: 0.25rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
+.p-tr-form__toggle:hover { border-color: #f37000; color: #c2410c; }
+.p-tr-form__original { max-height: 14rem; padding: 0.75rem 0.9rem; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 0.75rem; background: #fff; color: #0f172a; font-size: 0.95rem; line-height: 1.55; overflow-wrap: anywhere; }
+.p-tr-form .p-tr-form__description { margin: 0.25rem 0 0; }
+.p-tr-form .p-tr-form__spaced { margin-top: 0.75rem; }
+.p-tr-form textarea.o-input { min-height: 9rem; resize: vertical; }
+.p-tr-form__flags .mb-3 { margin-bottom: 0.35rem !important; }
+.p-tr-form__flags .mb-3:last-child { margin-bottom: 0 !important; }
+
+/* What changed in the English text since the translation was written (_english_change.html.twig) */
+.p-tr-diff .p-tr-diff__help { margin: 0 0 0.35rem; }
+.p-tr-diff__text { max-height: 14rem; padding: 0.75rem 0.9rem; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 0.75rem; background: #fff; color: #334155; font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.p-tr-diff__removed { padding: 0 0.1rem; border-radius: 0.25rem; background: #fee2e2; color: #991b1b; text-decoration: line-through; }
+.p-tr-diff__added { padding: 0 0.1rem; border-radius: 0.25rem; background: #dcfce7; color: #166534; text-decoration: none; }

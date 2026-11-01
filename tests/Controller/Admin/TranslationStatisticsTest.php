@@ -44,13 +44,16 @@ class TranslationStatisticsTest extends WebTestCase
         $translator = static::getContainer()->get(TranslatorInterface::class);
         self::assertStringContainsString($admin->getUsername(), $this->row($crawler, 'en')->text());
         self::assertStringContainsString($translator->trans('system'), $this->row($crawler, 'de')->text());
-        self::assertStringContainsString($translator->trans('translation.unknown.member'), $this->row($crawler, 'fr')->text());
+        self::assertStringContainsString($translator->trans('translation.tool.stats.unknown'), $this->row($crawler, 'fr')->text());
     }
 
     private function row(Crawler $crawler, string $locale): Crawler
     {
-        return $crawler->filter('tr')->reduce(
-            static fn (Crawler $row): bool => str_contains($row->text(), '(' . $locale . ')')
+        $row = $crawler->filter('.p-tr-stat')->reduce(
+            static fn (Crawler $row): bool => str_ends_with(trim($row->filter('.p-tr-stat__native')->text()), '· ' . $locale)
         );
+        self::assertCount(1, $row, $locale);
+
+        return $row;
     }
 }

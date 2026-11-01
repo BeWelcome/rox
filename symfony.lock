@@ -575,6 +575,18 @@
     "symfony/intl": {
         "version": "v5.3.8"
     },
+    "symfony/lock": {
+        "version": "8.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "8.2",
+            "ref": "472277fb1c5d4445a9f474a9c2dd66c9b59a3167"
+        },
+        "files": [
+            "config/packages/lock.yaml"
+        ]
+    },
     "symfony/mailer": {
         "version": "7.3",
         "recipe": {

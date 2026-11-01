@@ -5,7 +5,9 @@ namespace App\Tests\Model;
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Language;
 use App\Entity\Word;
-use App\Model\TranslationModel;
+use App\Model\Translation\TranslationTool;
+use App\Pagerfanta\WordListAdapter;
+use App\Repository\WordRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Pagerfanta\Pagerfanta;
@@ -13,32 +15,34 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * The lists of the translation tool (/admin/translations/{type}/{locale}), read from word (not main's words table).
+ * The views of the translation tool's list (/admin/translations/{type}/{locale}), read from word (not main's words
+ * table): WordRepository::toolList() and what TranslationTool makes of its rows.
  */
 #[Group('integration')]
 class TranslationListsTest extends KernelTestCase
 {
     private EntityManagerInterface $entityManager;
-    private TranslationModel $translationModel;
+    private TranslationTool $translationTool;
 
     protected function setUp(): void
     {
         self::bootKernel();
         $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
-        $this->translationModel = static::getContainer()->get(TranslationModel::class);
+        $this->translationTool = static::getContainer()->get(TranslationTool::class);
     }
 
-    public function testAllShowsTheTextInTheLocaleOrElseInEnglish(): void
+    public function testAllShowsTheTranslationOrThatItIsMissing(): void
     {
         $this->word('zztest.list.both', 'en', 'English text');
         $this->word('zztest.list.both', 'fr', 'Texte français');
         $this->word('zztest.list.english', 'en', 'Only in English');
 
-        $rows = $this->rows('all', 'fr', 'zztest.list.');
+        $texts = $this->texts('all', 'fr', 'zztest.list.');
+        ksort($texts);
 
         self::assertSame(
-            ['zztest.list.both' => ['fr', 'Texte français'], 'zztest.list.english' => ['en', 'Only in English']],
-            $this->bySentence($rows)
+            ['zztest.list.both' => ['ok', 'Texte français'], 'zztest.list.english' => ['missing', null]],
+            array_map(static fn (array $text): array => [$text['state'], $text['translation']], $texts)
         );
     }
 
@@ -50,10 +54,10 @@ class TranslationListsTest extends KernelTestCase
         $this->word('zztest.list.archived', 'en', 'Old', archived: true);
         $this->word('zztest.list.fixed', 'en', 'BeWelcome', allowed: false);
 
-        self::assertSame(['zztest.list.missing'], $this->codes($this->rows('missing', 'fr', 'zztest.list.')));
+        self::assertSame(['zztest.list.missing'], array_keys($this->texts('missing', 'fr', 'zztest.list.')));
     }
 
-    public function testUpdateListsTranslationsOlderThanTheirEnglishText(): void
+    public function testUpdateListsTranslationsOlderThanTheirEnglishTextMajorChangesFirst(): void
     {
         $this->word('zztest.list.changed', 'en', 'Changed text');
         $this->word('zztest.list.changed', 'fr', 'Texte ancien');
@@ -72,16 +76,10 @@ class TranslationListsTest extends KernelTestCase
             "UPDATE word SET majorupdate = NOW() WHERE code = 'zztest.list.major' AND ShortCode = 'en'"
         );
 
-        $rows = array_filter(
-            $this->rows('update', 'fr'),
-            static fn (array $row): bool => str_starts_with($row['code'], 'zztest.list.')
-        );
+        $texts = $this->texts('update', 'fr', 'zztest.list.');
 
-        self::assertSame(
-            ['zztest.list.major' => 1, 'zztest.list.changed' => 0],
-            array_column(array_values($rows), 'majorUpdate', 'code')
-        );
-        self::assertSame(['fr'], array_values(array_unique(array_column($rows, 'shortCode'))));
+        self::assertSame(['zztest.list.major', 'zztest.list.changed'], array_keys($texts));
+        self::assertSame(['update'], array_values(array_unique(array_column($texts, 'state'))));
     }
 
     public function testArchivedAndDoNotTranslateListTheirEnglishTexts(): void
@@ -89,10 +87,23 @@ class TranslationListsTest extends KernelTestCase
         $this->word('zztest.list.archived', 'en', 'Old', archived: true);
         $this->word('zztest.list.fixed', 'en', 'BeWelcome', allowed: false);
 
-        self::assertContains('zztest.list.archived', $this->codes($this->rows('archived', 'en')));
-        self::assertNotContains('zztest.list.fixed', $this->codes($this->rows('archived', 'en')));
-        self::assertContains('zztest.list.fixed', $this->codes($this->rows('donottranslate', 'en')));
-        self::assertNotContains('zztest.list.archived', $this->codes($this->rows('donottranslate', 'en')));
+        self::assertSame(['zztest.list.archived'], array_keys($this->texts('archived', 'fr', 'zztest.list.')));
+        self::assertSame(['zztest.list.fixed'], array_keys($this->texts('donottranslate', 'fr', 'zztest.list.')));
+        self::assertSame(['archived'], array_column($this->texts('archived', 'fr', 'zztest.list.'), 'state'));
+        self::assertSame(['dnt'], array_column($this->texts('donottranslate', 'fr', 'zztest.list.'), 'state'));
+    }
+
+    public function testTheCountsOfTheViews(): void
+    {
+        $this->word('zztest.list.missing', 'en', 'Translate me');
+        $this->word('zztest.list.done', 'en', 'Done already');
+        $this->word('zztest.list.done', 'fr', 'Déjà fait');
+        $this->word('zztest.list.archived', 'en', 'Old', archived: true);
+
+        $summary = $this->translationTool->summary('fr', 'zztest.list.');
+
+        self::assertSame(['missing' => 1, 'update' => 0, 'all' => 2, 'donottranslate' => 0, 'archived' => 1], $summary['counts']);
+        self::assertSame(50.0, $summary['share']);
     }
 
     public function testPagesCountEachCodeOnce(): void
@@ -102,12 +113,19 @@ class TranslationListsTest extends KernelTestCase
             $this->word('zztest.list.page.' . $suffix, 'fr', 'Français ' . $suffix);
         }
 
-        $pages = new Pagerfanta($this->translationModel->getAdapter('all', 'fr', 'zztest.list.page.'));
+        /** @var WordRepository $words */
+        $words = $this->entityManager->getRepository(Word::class);
+        $pages = new Pagerfanta(new WordListAdapter($words->toolList('all', 'fr', 'zztest.list.page.')));
         $pages->setMaxPerPage(2);
 
         self::assertSame(3, $pages->getNbResults());
         self::assertSame(2, $pages->getNbPages());
         self::assertCount(2, iterator_to_array($pages->getCurrentPageResults()));
+    }
+
+    public function testTheListShowsTextsWithoutMarkup(): void
+    {
+        self::assertSame('Read the rules now. Fish & chips', TranslationTool::plain("<p>Read the <a href=\"/r\">rules</a>\nnow.</p><p>Fish &amp;&nbsp;chips</p>"));
     }
 
     private function word(string $code, string $locale, string $sentence, bool $archived = false, bool $allowed = true): void
@@ -125,38 +143,18 @@ class TranslationListsTest extends KernelTestCase
     }
 
     /**
-     * @return list<array<string, mixed>>
-     */
-    private function rows(string $type, string $locale, string $code = ''): array
-    {
-        $adapter = $this->translationModel->getAdapter($type, $locale, $code);
-
-        return array_values(iterator_to_array($adapter->getSlice(0, 1000)));
-    }
-
-    /**
-     * @param list<array<string, mixed>> $rows
+     * The texts of a view as the list shows them, by code, in the list's order.
      *
-     * @return array<string, array{string, string}>
+     * @return array<string, array<string, mixed>>
      */
-    private function bySentence(array $rows): array
+    private function texts(string $view, string $locale, string $code): array
     {
-        $result = [];
-        foreach ($rows as $row) {
-            $result[$row['code']] = [$row['shortCode'], $row['sentence']];
+        $texts = [];
+        foreach ($this->translationTool->texts($view, $locale, $code, 1)->getCurrentPageResults() as $row) {
+            $text = $this->translationTool->text($row, $view);
+            $texts[$text['code']] = $text;
         }
-        ksort($result);
 
-        return $result;
-    }
-
-    /**
-     * @param list<array<string, mixed>> $rows
-     *
-     * @return list<string>
-     */
-    private function codes(array $rows): array
-    {
-        return array_column($rows, 'code');
+        return $texts;
     }
 }

@@ -1,0 +1,54 @@
+{#
+  Create the English text of a missing code (and its translation, for another language), in the side panel of
+  translation mode: laid out like the panels of the edit page. The code and the language are in the panel's head.
+#}
+{{ form_start(form, {attr: {class: 'p-account-form p-tr-form'}}) }}
+{{ form_errors(form) }}
+{% if form.wordCode.vars.attr.readonly is defined %}
+    {{ form_widget(form.wordCode, {type: 'hidden'}) }}
+{% else %}
+    <section class="p-account-section">
+        <label class="p-account-section__label" for="{{ form.wordCode.vars.id }}">{{ form.wordCode.vars.label|trans }}</label>
+        {{ form_widget(form.wordCode) }}
+        {{ form_errors(form.wordCode) }}
+    </section>
+{% endif %}
+{% if form.locale is defined %}
+    {{ form_widget(form.locale, {type: 'hidden'}) }}
+{% endif %}
+
+<section class="p-account-section">
+    <label class="p-account-section__label" for="{{ form.englishText.vars.id }}">{{ form.englishText.vars.label|trans }}</label>
+    {{ form_widget(form.englishText, {attr: {autofocus: true}}) }}
+    {{ form_errors(form.englishText) }}
+</section>
+
+{% if form.translatedText is defined %}
+    <section class="p-account-section">
+        <label class="p-account-section__label" for="{{ form.translatedText.vars.id }}">{{ 'label.admin.translation'|trans }} ({{ form.locale.vars.value }})</label>
+        {{ form_widget(form.translatedText) }}
+        {{ form_errors(form.translatedText) }}
+    </section>
+{% endif %}
+
+<section class="p-account-section">
+    <label class="p-account-section__label" for="{{ form.description.vars.id }}">{{ form.description.vars.label|trans }}</label>
+    {{ form_widget(form.description) }}
+    {{ form_errors(form.description) }}
+    {% if form.domain.vars.attr.readonly is defined %}
+        {{ form_widget(form.domain, {type: 'hidden'}) }}
+    {% else %}
+        <label class="p-account-section__label p-tr-form__spaced" for="{{ form.domain.vars.id }}">{{ form.domain.vars.label|trans }}</label>
+        {{ form_widget(form.domain) }}
+        {{ form_errors(form.domain) }}
+    {% endif %}
+    <label class="p-account-section__label p-tr-form__spaced" for="{{ form.format.vars.id }}">{{ form.format.vars.label|trans }}</label>
+    {{ form_widget(form.format) }}
+    {{ form_errors(form.format) }}
+    {{ form_help(form.format, {help_attr: {class: 'p-account-section__help'}}) }}
+</section>
+
+<div class="p-edit-subpage__actions">
+    {{ form_widget(form.create) }}
+</div>
+{{ form_end(form) }}

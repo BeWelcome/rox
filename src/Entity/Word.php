@@ -9,6 +9,7 @@
 namespace App\Entity;
 
 use App\Doctrine\TranslationAllowedType;
+use App\Doctrine\TranslationFormat;
 use App\Repository\WordRepository;
 use Carbon\Carbon;
 use DateTime;
@@ -65,6 +66,17 @@ class Word
     #[ORM\Column(name: 'isarchived', type: 'boolean', nullable: true)]
     private ?bool $isArchived = null;
 
+    /** On the English text: its text before the last change, and when that was (setSentence()) */
+    #[ORM\Column(name: 'previous_sentence', type: 'text', length: 65535, nullable: true)]
+    private ?string $previousSentence = null;
+
+    #[ORM\Column(name: 'sentence_changed', type: 'datetime', nullable: true)]
+    private ?DateTime $sentenceChanged = null;
+
+    /** On the English text: how it is used on the page; null: detected from the text (getEffectiveFormat()) */
+    #[ORM\Column(name: 'format', type: 'string', length: 6, nullable: true, enumType: TranslationFormat::class)]
+    private ?TranslationFormat $format = null;
+
     public function setCode(string $code): self
     {
         $this->code = $code;
@@ -89,11 +101,48 @@ class Word
         return $this->language;
     }
 
+    /**
+     * A change of an English text keeps the text it had (getPreviousSentence()), so that translators see what changed.
+     */
     public function setSentence(string $sentence): self
     {
+        if (
+            '' !== $this->sentence
+            && $sentence !== $this->sentence
+            && isset($this->language)
+            && 'en' === $this->language->getShortCode()
+        ) {
+            $this->previousSentence = $this->sentence;
+            $this->sentenceChanged = new DateTime();
+        }
         $this->sentence = $sentence;
 
         return $this;
+    }
+
+    /**
+     * On an English text: the text before its last change, null if it never changed.
+     */
+    public function getPreviousSentence(): ?string
+    {
+        return $this->previousSentence;
+    }
+
+    public function getSentenceChanged(): ?Carbon
+    {
+        return null === $this->sentenceChanged ? null : Carbon::instance($this->sentenceChanged);
+    }
+
+    /**
+     * Whether this translation was last written before the last change of its English text, which it may not follow
+     * yet (the English text's change is getPreviousSentence() to getSentence()).
+     */
+    public function isOlderThanTheChangeOf(self $original): bool
+    {
+        $written = $this->updated ?? $this->created ?? null;
+
+        return null !== $original->sentenceChanged && null !== $original->previousSentence
+            && (null === $written || $written < $original->sentenceChanged);
     }
 
     public function getSentence(): string
@@ -199,6 +248,26 @@ class Word
     public function getIsArchived(): ?bool
     {
         return $this->isArchived;
+    }
+
+    public function setFormat(?TranslationFormat $format): self
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    public function getFormat(): ?TranslationFormat
+    {
+        return $this->format;
+    }
+
+    /**
+     * The format set on this text, or the one its text shows.
+     */
+    public function getEffectiveFormat(): TranslationFormat
+    {
+        return $this->format ?? TranslationFormat::detect($this->sentence);
     }
 
     public function getDomain(): string

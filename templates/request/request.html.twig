@@ -17,7 +17,6 @@
 {% endblock title %}
 
 {% block content %}
-    {# imported in the block: the translators' preview renders only this block #}
     {% import 'conversations/_inbox.macros.twig' as inbox %}
     {% import 'request/_request.macros.twig' as stay %}
     {% set address = host.activeAddress %}

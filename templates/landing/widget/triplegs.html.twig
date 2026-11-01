@@ -2,7 +2,7 @@
   Members travelling near the member, on the home page (loaded into the Visitors tab):
   the trips of the next 7 days under "This week", the others under "Later" (sorted by arrival).
 #}
-{% block content %}{# the translators' preview renders this block #}
+{% block content %}
 {% set _weekEnd = date('+7 days')|date('Y-m-d') %}
 <div id="legsdisplay" class="c-home-list c-home-list--legs">
     {% set _group = null %}

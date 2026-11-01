@@ -1,0 +1,30 @@
+{% extends 'emails/base.html.twig' %}
+{#
+  A comment on the receiver's profile, new or changed: who wrote it, its quality and the comment; write a comment
+  back, see the comments, report it.
+  A mail sets title_key (its subject). The mailer passes sender, receiver, comment.
+#}
+{% set _qualities = {
+    positive: { background: '#dcfce7', color: '#15803d', icon: '&#128077;' },
+    neutral: { background: '#f1f5f9', color: '#334155', icon: '&#8212;' },
+    negative: { background: '#fee2e2', color: '#b91c1c', icon: '&#128078;' },
+} %}
+{% set _quality = comment.quality|lower %}
+{% set _pill = _qualities[_quality] ?? _qualities.neutral %}
+
+{% block preheader %}{{ title_key|trans({ username: sender.username }) }}: {{ comment.comment|striptags|truncate(70) }}{% endblock %}
+
+{% block content %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'comments'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: title_key|trans({ username: sender.username }) } %}
+    {% include 'emails/_partials/sender.html.twig' with { member: sender, references: true } %}
+    <p style="margin:0 0 10px;"><span style="display:inline-block;padding:3px 10px;border-radius:999px;background:{{ _pill.background }};color:{{ _pill.color }};font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:18px;font-weight:bold;white-space:nowrap;">{{ _pill.icon|raw }} {{ ('comment.quality.' ~ _quality)|trans }}</span></p>
+    {% include 'emails/_partials/quote.html.twig' with { html: comment.comment|purify } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'commentaddcomment'|trans, url: url('add_comment', { username: sender.username }) },
+        secondary: { label: 'comments'|trans, url: url('profile_comments', { username: receiver.username }) },
+    } %}
+    {% include 'emails/_partials/small_links.html.twig' with {
+        links: [{ label: 'feedbackname_comment_issue'|trans, url: url('report_comment', { to_member: receiver.username, from_member: sender.username }) }],
+    } %}
+{% endblock content %}

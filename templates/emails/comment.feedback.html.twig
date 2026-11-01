@@ -1,7 +1,16 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  To the volunteers who check comments (English only): a member gave feedback on a comment about them.
+  comment, feedback.
+#}
+{% block preheader %}{{ comment.toMember.username }} gave feedback on the comment from {{ comment.fromMember.username }}{% endblock %}
 
-{% block content%}
-    <p>The user {{ comment.toMember.username }} provided feedback for a comment:</p>
-    <p>{{ feedback }}</p>
-    <p>Please check the comment here: <a href="{{ url('admin_comment', { to_member: comment.toMember.username, from_member: comment.fromMember.username}) }}">Comment from {{ comment.fromMember.username }}</a></p>
+{% block content %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'For volunteers', tone: 'volunteer' } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'Feedback on a comment' } %}
+    {% include 'emails/_partials/text.html.twig' with { html: ('The member <strong style="color:#0f172a;">' ~ comment.toMember.username|e ~ '</strong> gave feedback on the comment from <strong style="color:#0f172a;">' ~ comment.fromMember.username|e ~ '</strong>:') } %}
+    {% include 'emails/_partials/box.html.twig' with { html: feedback|e|nl2br } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'Check the comment', url: url('admin_comment', { to_member: comment.toMember.username, from_member: comment.fromMember.username }) },
+    } %}
 {% endblock content %}

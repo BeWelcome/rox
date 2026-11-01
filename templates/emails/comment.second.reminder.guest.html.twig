@@ -1,15 +1,5 @@
-{% extends 'emails/email_no_greeting.html.twig' %}
-
-{% block content %}
-    {{ 'comment.second.reminder.guest.body'|trans(
-        {
-            host: host,
-            guest: guest,
-            report_start: report_start,
-            report_end: report_end,
-            comment_start: comment_start,
-            comment_end: comment_end,
-        }
-        )|purify
-    }}
-{% endblock %}
+{% extends 'emails/comment.reminder.template.html.twig' %}
+{# The last reminder to the guest to write about the stay with the host. #}
+{% set title_key = 'comment.reminder.guest.subject' %}
+{% set body_key = 'comment.second.reminder.guest.body' %}
+{% set about = host %}

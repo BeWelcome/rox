@@ -1,19 +1,21 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  A member wants to join a group that needs approval, to its admins: who, why; accept or decline with the signed
+  links.
+  group, reason, sender (the member), receiver (an admin).
+#}
+{% block preheader %}{{ 'group.wants.in'|trans({ username: sender.username, group: group.name }) }}{% endblock %}
 
 {% block content %}
-    <p>
-        {{ 'group.wants.in'|trans({
-            'username': '<a href="' ~ url('members_profile', {'username': sender.Username}) ~ '">' ~ sender.Username ~ '</a>',
-            'group': '<a href="' ~ url('group_start', {'group_id': group.id}) ~ '">' ~ group.Name ~ '</a>'})|raw
-        }}
-    </p>
-    <p>{{ 'group.join.reason'|trans }} {{ reason }}</p>
-    <p>
-        {{
-        'group.accept.decline.join'|trans({
-            'accept': '<a href="' ~ signed_url('group_accept_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'group.email.accept'|trans ~ '</a>',
-            'decline': '<a href="' ~ signed_url('group_decline_join', {'groupId': group.id, 'memberId': sender.id}) ~ '">' ~ 'group.email.decline'|trans ~ '</a>'
-        })|raw
-        }}
-    </p>
-{% endblock %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'group'|trans ~ ' · ' ~ group.name } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'group.wants.in'|trans({ username: sender.username, group: group.name }) } %}
+    {% include 'emails/_partials/sender.html.twig' with { member: sender, since: true, references: true } %}
+    {% if reason %}
+        {% include 'emails/_partials/text.html.twig' with { html: 'group.join.reason'|trans|e, muted: true } %}
+        {% include 'emails/_partials/box.html.twig' with { html: reason|e|nl2br } %}
+    {% endif %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'groupsacceptmember'|trans, url: signed_url('group_accept_join', { groupId: group.id, memberId: sender.id }) },
+        secondary: { label: 'groupsdeclinemember'|trans, url: signed_url('group_decline_join', { groupId: group.id, memberId: sender.id }) },
+    } %}
+{% endblock content %}

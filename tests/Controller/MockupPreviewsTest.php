@@ -96,7 +96,7 @@ class MockupPreviewsTest extends WebTestCase
         $crawler = $this->client->request('GET', '/admin/translate/mockup/signups/' . rawurlencode('Confirm Email Address'));
 
         $this->assertResponseIsSuccessful();
-        // the mail whole: its layout with the greeting and the inlined styles, its images from the site
+        // the mail whole: its layout and the inlined styles, its images from the site
         self::assertGreaterThan(0, $crawler->filter('.p-tr-mockup__mail table[style]')->count());
         self::assertGreaterThan(0, $crawler->filter('.p-tr-mockup__mail img[src="/images/logo_email_2025.png"]')->count());
         // in a shadow root, with its own styles only
@@ -104,7 +104,7 @@ class MockupPreviewsTest extends WebTestCase
         // and its texts in the list for translation
         $codes = $crawler->filter('.js-in-place-item')->each(static fn ($item) => $item->attr('data-code'));
         self::assertContains('signup.thank.you', $codes);
-        self::assertContains('email.greeting', $codes);
+        self::assertContains('email.footer.free', $codes);
         // the tool page keeps the site's styles
         self::assertGreaterThan(0, $crawler->filter('head link[rel=stylesheet][href*="tailwind"]')->count());
     }

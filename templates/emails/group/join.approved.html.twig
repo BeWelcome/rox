@@ -1,11 +1,14 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  The member's request to join a group was approved, to the member. group, admin.
+#}
+{% block preheader %}{{ 'group.join.approved'|trans({ admin: admin.username, group: group.name }) }}{% endblock %}
 
 {% block content %}
-    <p>
-        {{ 'group.join.approved'| trans({
-            'admin': '<a href="' ~ url('members_profile', {'username': admin.Username}) ~ '">' ~ admin.Username ~ '</a>',
-            'group': '<a href="' ~ url('group_start', {'group_id': group.id}) ~ '">' ~ group.Name ~ '</a>'
-        })|raw
-        }}
-    </p>
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'group'|trans ~ ' · ' ~ group.name } %}
+    {% include 'emails/_partials/title.html.twig' with { text: group.name } %}
+    {% include 'emails/_partials/notice.html.twig' with { html: 'group.join.approved'|trans({ admin: admin.username, group: group.name })|e, tone: 'success' } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'email.group.open'|trans, url: url('group_start', { group_id: group.id }) },
+    } %}
 {% endblock content %}

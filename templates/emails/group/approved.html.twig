@@ -1,7 +1,14 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  The member's new group was approved, to its creator. group, admin (who approved it).
+#}
+{% block preheader %}{{ 'group.admin.approved'|trans({ admin: admin.username, group: group.name }) }}{% endblock %}
 
 {% block content %}
-    <p>
-        {{ 'group.admin.approved'|trans({'admin': admin.Username, 'group': '<a href="' ~ url('group_start', { 'group_id': group.id}) ~ '">' ~ group.Name ~ '</a>'})|raw }}
-    </p>
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'group'|trans ~ ' · ' ~ group.name } %}
+    {% include 'emails/_partials/title.html.twig' with { text: group.name } %}
+    {% include 'emails/_partials/notice.html.twig' with { html: 'group.admin.approved'|trans({ admin: admin.username, group: group.name })|e, tone: 'success' } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'email.group.open'|trans, url: url('group_start', { group_id: group.id }) },
+    } %}
 {% endblock content %}

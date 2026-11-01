@@ -1,9 +1,18 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  A member changed their email address: confirm the new one with the link, or with the key.
+  username, email_address (the new address), key.
+#}
+{% block preheader %}{{ 'email.change.confirm.link'|trans({ email_address: email_address }) }}{% endblock %}
 
-{% block content%}
-    <p>{{ 'email.change'|trans }}</p>
-    <p>{{ 'email.change.confirm.link'|trans({'email_address': email_address}) }}</p>
-    <p><a href="{{ url('change_email', { username: username, registrationKey: key }) }}">{{ 'email.change.confirm.email.address'|trans }}</a></p>
-    <p>{{ 'email.change.confirm.key'|trans }}</p>
-    <p><button>{{ key }}</button></p>
+{% block content %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'email.account'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'email.change.confirm.email.address'|trans } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'email.change'|trans|e } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'email.change.confirm.link'|trans({ email_address: email_address })|e } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'email.change.confirm.email.address'|trans, url: url('change_email', { username: username, registrationKey: key }) },
+    } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'email.change.confirm.key'|trans|e, muted: true } %}
+    {% include 'emails/_partials/code.html.twig' with { code: key } %}
 {% endblock content %}

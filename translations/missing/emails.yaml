@@ -103,3 +103,27 @@ email.footer.settings:
     text: 'Email settings'
     description: 'Footer of every email: link to the preferences, where members choose which emails they get'
     format: plain
+email.account:
+    text: 'Your account'
+    description: 'Small heading above the title of the emails about the account (signup, password, email address, reminders)'
+    format: plain
+email.group.open:
+    text: 'Go to the group'
+    description: 'Button in the emails about groups'
+    format: plain
+email.change:
+    text: 'You changed the email address of your BeWelcome account.'
+    description: 'Email to confirm a new email address'
+    format: plain
+email.change.confirm.link:
+    text: 'Please use the following link to confirm your new email address ({email_address}):'
+    description: 'Email to confirm a new email address; email_address is the new address'
+    format: plain
+email.change.confirm.email.address:
+    text: 'Confirm new email address'
+    description: 'Email to confirm a new email address: its title and button'
+    format: plain
+email.change.confirm.key:
+    text: 'If the link does not work, enter this key on the confirmation page:'
+    description: 'Email to confirm a new email address, above the key'
+    format: plain

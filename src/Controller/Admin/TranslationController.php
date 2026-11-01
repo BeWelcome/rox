@@ -139,11 +139,11 @@ class TranslationController extends AbstractController
                 if ($originalDomain !== $translation->getDomain()) {
                     $this->translationModel->updateDomainOfTranslations($translation);
                 }
-                if ('en' === $language->getShortCode()) {
-                    $this->translationModel->refreshTranslationsCache();
-                } else {
-                    $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
-                }
+                // a new domain moved the text in every language
+                $this->translationModel->updateCachedText(
+                    $original->getCode(),
+                    $originalDomain !== $translation->getDomain() ? 'en' : $language->getShortCode()
+                );
                 if ($request->query->getBoolean('embed')) {
                     return $this->savedInPanel($original->getCode(), $language->getShortCode());
                 }
@@ -253,12 +253,8 @@ class TranslationController extends AbstractController
                     $em->persist($translation);
                 }
                 $em->flush();
-                if ('en' === $createTranslationRequest->locale) {
-                    $this->translationModel->refreshTranslationsCache();
-                } else {
-                    $this->translationModel->refreshTranslationsCacheForLocale($createTranslationRequest->locale);
-                }
-                $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+                // a new English text: in every language's catalogue (with the translation if there is one)
+                $this->translationModel->updateCachedText($original->getCode(), 'en');
                 if ($request->query->getBoolean('embed')) {
                     return $this->savedInPanel($translationId, $language->getShortCode());
                 }
@@ -319,7 +315,7 @@ class TranslationController extends AbstractController
                 $newTranslatableItem = $this->generateTranslatableItem($data, $translator, $english);
                 $em->persist($newTranslatableItem);
                 $em->flush();
-                $this->translationModel->refreshTranslationsCache();
+                $this->translationModel->updateCachedText($newTranslatableItem->getCode(), 'en');
                 $this->addTranslatedFlash('notice', 'flash.added.translatable.item', ['%code%' => $data->wordCode]);
 
                 return $this->redirectToRoute('translations');
@@ -413,7 +409,7 @@ class TranslationController extends AbstractController
                 $translation->setDescription('');
                 $this->entityManager->persist($translation);
                 $this->entityManager->flush();
-                $this->translationModel->refreshTranslationsCacheForLocale($language->getShortCode());
+                $this->translationModel->updateCachedText($original->getCode(), $language->getShortCode());
                 if ($request->query->getBoolean('embed')) {
                     return $this->savedInPanel($original->getCode(), $language->getShortCode());
                 }

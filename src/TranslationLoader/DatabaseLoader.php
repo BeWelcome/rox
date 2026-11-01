@@ -4,6 +4,7 @@ namespace App\TranslationLoader;
 
 use App\Doctrine\TranslationAllowedType;
 use App\Entity\Word;
+use DateTimeInterface;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Translation\Loader\LoaderInterface;
@@ -35,6 +36,28 @@ class DatabaseLoader implements LoaderInterface
         return $this->loadTranslationsForLocale($locale, $domain);
     }
 
+    /**
+     * The text a language shows for a code it has a translation of: the English one when the translation is older
+     * than the last major change of the English text, or when the text isn't to be translated (except broadcasts).
+     * Also used to update a single text in the cached catalogues (TranslationModel::updateCachedText()).
+     */
+    public static function shownText(
+        string $code,
+        string $english,
+        ?DateTimeInterface $majorUpdate,
+        ?string $translationAllowed,
+        Word $translation,
+    ): string {
+        if ($translation->getUpdated() < $majorUpdate) {
+            return $english;
+        }
+        if (TranslationAllowedType::TRANSLATION_ALLOWED === $translationAllowed || str_starts_with($code, 'broadcast_')) {
+            return $translation->getSentence();
+        }
+
+        return $english;
+    }
+
     private function getTranslationsForLocale($locale, $domain)
     {
         try {
@@ -63,18 +86,14 @@ class DatabaseLoader implements LoaderInterface
             foreach ($translations as $translation) {
                 $code = $translation->getCode();
                 if ($originals->has($code, $domain)) {
-                    $majorUpdate = $originals->getMetadata($code, $domain)['majorUpdate'];
-                    if ($translation->getUpdated() < $majorUpdate) {
-                        $catalogue->set($code, $originals->get($code, $domain), $domain);
-                    } else {
-                        $translationAllowedRaw = $originals->getMetadata($code, $domain)['translationAllowed'];
-                        $translationAllowed = TranslationAllowedType::TRANSLATION_ALLOWED === $translationAllowedRaw;
-                        if ($translationAllowed || str_starts_with($code, 'broadcast_')) {
-                            $catalogue->set($code, $translation->getSentence(), $domain);
-                        } else {
-                            $catalogue->set($code, $originals->get($code, $domain), $domain);
-                        }
-                    }
+                    $metadata = $originals->getMetadata($code, $domain);
+                    $catalogue->set($code, self::shownText(
+                        $code,
+                        $originals->get($code, $domain),
+                        $metadata['majorUpdate'],
+                        $metadata['translationAllowed'],
+                        $translation,
+                    ), $domain);
                 }
             }
         }

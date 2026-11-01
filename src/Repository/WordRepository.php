@@ -144,6 +144,35 @@ class WordRepository extends EntityRepository
         return $translations;
     }
 
+    /**
+     * The texts of a code in every language as the catalogues load them (getTranslationsForLocale()): not archived,
+     * except broadcasts.
+     *
+     * @return array<string, Word> by locale
+     */
+    public function getCatalogueTexts(string $code): array
+    {
+        $qb = $this->createQueryBuilder('t');
+        $words = $qb
+            ->where('t.code = :code')
+            ->andWhere(
+                $qb->expr()->orX(
+                    't.isArchived = 0 OR t.isArchived IS NULL',
+                    't.isArchived = 1 AND t.code LIKE \'broadcast%\''
+                )
+            )
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getResult();
+
+        $texts = [];
+        foreach ($words as $word) {
+            $texts[$word->getLanguage()->getShortCode()] = $word;
+        }
+
+        return $texts;
+    }
+
     public function getTranslatableItemsForLocale(string $locale, string $domain)
     {
         $translatableItems =

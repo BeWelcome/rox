@@ -19,6 +19,12 @@ class RequestMockups implements MockupProviderInterface
     use MockupEntities;
 
     private const array MOCKUPS = [
+        'request (mail)' => [
+            'type' => 'email',
+            'with_parameters' => true,
+            'template' => 'emails/request.html.twig',
+            'description' => 'Mail to the host about a new hosting request.',
+        ],
         'intial request (guest)' => [
             'type' => 'page',
             'template' => 'request/request.html.twig',
@@ -82,6 +88,7 @@ class RequestMockups implements MockupProviderInterface
     public function getMockupVariables(array $parameters): array
     {
         return match ($parameters['name']) {
+            'request (mail)' => $this->getVariablesForRequestMail($parameters),
             'intial request (guest)' => $this->getVariablesForInitialRequest($parameters),
             'request reply (guest)' => $this->getVariablesForReplyGuest($parameters),
             'request reply (host)' => $this->getVariablesForReplyHost($parameters),
@@ -89,6 +96,27 @@ class RequestMockups implements MockupProviderInterface
             'view request (host)' => $this->getVariablesForViewHost($parameters),
             default => [],
         };
+    }
+
+    /**
+     * The mail to the host: the guest (the translator) asks bwadmin to stay.
+     */
+    private function getVariablesForRequestMail(array $parameters): array
+    {
+        $guest = $parameters['user'];
+        $host = $parameters['admin'];
+        [, $request] = $this->getThread($guest, $host, (int) $parameters['status'], 2);
+        $request->setMessage('<p>Hi! I\'ll be passing through your town on my way south. Could you host me for two nights? I\'m happy to cook something from home.</p>');
+
+        return [
+            'sender' => $guest,
+            'receiver' => $host,
+            'host' => $host,
+            'message' => $request,
+            'request' => $request->getRequest(),
+            'changed' => false,
+            'subject' => 'Subject',
+        ];
     }
 
     private function getVariablesForInitialRequest(array $parameters): array

@@ -10545,6 +10545,7 @@ body.is-embedded { background: #fff; }
 .c-stay-card--maybe { --stay-tone: #b45309; --stay-tone-bg: #fef3c7; }
 .c-stay-card--success { --stay-tone: #15803d; --stay-tone-bg: #dcfce7; }
 .c-stay-card--danger { --stay-tone: #b91c1c; --stay-tone-bg: #fee2e2; }
+.c-stay-card--expired { --stay-tone: #64748b; --stay-tone-bg: #eef2f7; }
 .c-stay-card__top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .c-stay-card .c-stay-card__kind { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0; color: #c2410c; font-size: 0.9375rem; font-weight: 700; }
 .c-stay-card__status { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.8rem; border-radius: 999px; background: var(--stay-tone-bg); color: var(--stay-tone); font-size: 0.875rem; font-weight: 700; white-space: nowrap; }
@@ -12093,6 +12094,10 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .c-req-pill--closed { background: #f1f5f9; color: #94a3b8; }
 .c-req-pill--closed .c-req-pill__dates { text-decoration: line-through; }
 .c-req-kind--closed { background: #cbd5e1; }
+/* Expired (no answer before the arrival): slate grey, the dates crossed out */
+.c-req-pill--expired { background: #eef2f7; color: #64748b; }
+.c-req-pill--expired .c-req-pill__dates { text-decoration: line-through; }
+.c-req-kind--expired { background: #64748b; }
 /* Declined or cancelled: the whole row fades */
 .c-inbox-item.is-closed .c-inbox-avatar,
 .c-home-item.is-closed .c-home-item__avatar { filter: grayscale(1); opacity: 0.6; }
@@ -12117,6 +12122,7 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .c-req-tip--maybe .c-req-tip__title::before { background: #f59e0b; }
 .c-req-tip--success .c-req-tip__title::before { background: #4ade80; }
 .c-req-tip--closed .c-req-tip__title::before { background: #64748b; }
+.c-req-tip--expired .c-req-tip__title::before { background: #cbd5e1; }
 .c-req-tip__dates { color: #e2e8f0; }
 .c-req-tip__stay { color: #94a3b8; font-size: 0.75rem; }
 /* The request's state in words, under its date pill */
@@ -12126,3 +12132,4 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .c-req-status--maybe { color: #a16207; }
 .c-req-status--success { color: #3f8a4a; }
 .c-req-status--closed { color: #94a3b8; }
+.c-req-status--expired { color: #64748b; }

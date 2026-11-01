@@ -20,8 +20,11 @@
             {# A plain text box: the text is sent as paragraphs (contact/plain_text.js) #}
             <div class="c-contact__field c-contact__field--grow">
                 <label class="c-contact__label" for="{{ form.message.vars.id }}">{{ form.message.vars.label|trans }}</label>
-                <textarea class="c-contact__input c-contact__text js-plain-message js-contact-required" id="{{ form.message.vars.id }}" name="{{ form.message.vars.full_name }}" rows="9"
-                          placeholder="{{ 'contact.message.placeholder'|trans({ username: receiver.shortNameOrUsername }) }}" data-html="{{ form.message.vars.value }}"></textarea>
+                <div class="c-photo-box">
+                    <textarea class="c-contact__input c-contact__text js-plain-message js-contact-required" id="{{ form.message.vars.id }}" name="{{ form.message.vars.full_name }}" rows="9"
+                              placeholder="{{ 'contact.message.placeholder'|trans({ username: receiver.shortNameOrUsername }) }}" data-html="{{ form.message.vars.value }}"></textarea>
+                    {% include 'conversations/_photo_attach.html.twig' with { part: 'box', name: receiver.shortNameOrUsername } only %}
+                </div>
                 {% do form.message.setRendered %}
                 {{ form_errors(form.message) }}
             </div>
@@ -35,9 +38,14 @@
         </div>
 
         <div class="c-contact__foot">
-            <button type="submit" class="c-contact__send js-contact-send">
-                <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ 'contact.send.message'|trans }}
-            </button>
+            {# The camera next to Send, as in the conversation; the photos show in the text box #}
+            <div class="c-contact__actions">
+                {% include 'conversations/_photo_attach.html.twig' with { part: 'button' } only %}
+                <button type="submit" class="c-contact__send js-contact-send">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                    <span class="js-photo-send-label" data-one="{{ 'message.photo.send.one'|trans }}" data-many="{{ 'message.photo.send.many'|trans({ count: '{count}' }) }}">{{ 'contact.send.message'|trans }}</span>
+                </button>
+            </div>
             <p class="c-contact__hint js-contact-hint">{{ 'contact.send.hint.message'|trans }}</p>
         </div>
     {{ form_end(form) }}

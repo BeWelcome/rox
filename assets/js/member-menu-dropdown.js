@@ -3,7 +3,7 @@ import { Dropdown } from 'bootstrap';
 const wideQuery = window.matchMedia('(min-width: 1200px)');
 
 function syncTopbarSheetScrollLock() {
-  const shouldLock = !wideQuery.matches && document.querySelector('#main_menu .dropdown-menu.show');
+  const shouldLock = !wideQuery.matches && document.querySelector('#main_menu .dropdown-menu.show:not(.c-topbar-notices)');
   document.body.classList.toggle('topbar-sheet-open', Boolean(shouldLock));
 }
 

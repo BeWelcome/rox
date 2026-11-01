@@ -1,3 +1,5 @@
+import {hasPhotos, photosHtml} from './photos';
+
 /*
  * Plain text box for a new message or stay request (no rich editor): it grows with the
  * text, and on submit the text is sent as paragraphs, since messages are stored as HTML
@@ -42,13 +44,14 @@ export function initPlainTextFields() {
 
         const form = textarea.form;
         form.addEventListener('submit', () => {
-            if (textarea.value.trim() === '') {
+            if (textarea.value.trim() === '' && !hasPhotos(form)) {
                 return;
             }
             const html = document.createElement('input');
             html.type = 'hidden';
             html.name = textarea.name;
-            html.value = toHtml(textarea.value);
+            // The photos picked with the camera button (contact/photos.js) come after the text.
+            html.value = toHtml(textarea.value) + photosHtml(form);
             textarea.removeAttribute('name');
             form.appendChild(html);
         });

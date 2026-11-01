@@ -838,3 +838,18 @@ profile.groups.empty.own:
 profile.groups.find:
     - 'Find groups'
     - Button on the own empty groups page of a profile leading to the groups search
+notices.title:
+    - 'Notifications'
+    - Top bar, the bell with things to do on the account (only shown when there is one), its title
+notices.email.change.title:
+    - 'Confirm your new email address'
+    - Top bar notifications, a new email address was entered on the change email page and is not confirmed yet
+notices.email.change.text:
+    - 'We sent a code to {email}. Your current address stays in use until you confirm.'
+    - Top bar notifications, text under the title, email is the new address
+notices.finish.setup.title:
+    - 'Finish setting up your account'
+    - Top bar notifications, the signup isn't finished yet (the account is removed after a while otherwise)
+notices.confirm.email.title:
+    - 'Confirm your email address'
+    - Top bar notifications, the signup is done but the email address isn't confirmed yet (the account is removed after a while otherwise)

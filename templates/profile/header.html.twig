@@ -24,6 +24,8 @@
 {% set canContact = not own and not app.user is null and not passedAway %}
 {# Already talking with this member: "Send" opens that conversation instead of a new message. #}
 {% set existingConversation = canContact ? conversation_with(member) : null %}
+{# Send opens a plain conversation only, never the other member's hosting request or invitation #}
+{% set existingMessages = canContact ? conversation_with(member, true) : null %}
 {% set canRequest = canContact and member.Accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
 
 {% set activeItem = submenu.active is defined and submenu.active != '' ? submenu.active : 'profile' %}
@@ -130,7 +132,7 @@
           {# No settings menu here: account, preferences and my data are in the settings of the
              edit page, my notes in the top menu #}
         {% elseif canContact %}
-          <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-hero__btn p-pro__btn p-pro__btn--message"
+          <a href="{{ existingMessages ? path('conversation_view', { id: existingMessages.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-hero__btn p-pro__btn p-pro__btn--message"
             data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
             <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
           </a>
@@ -291,7 +293,7 @@
       {% if existingConversation %}
         {% include 'profile/_contact_status.html.twig' with { conversation: existingConversation, place: 'bar' } %}
       {% endif %}
-      <a href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-pro__btn p-pro__btn--message"
+      <a href="{{ existingMessages ? path('conversation_view', { id: existingMessages.id }) : url('message_new', {username: member.Username}) }}" class="js-contact-open p-pro__btn p-pro__btn--message"
             data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
         <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
       </a>

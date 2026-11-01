@@ -122,11 +122,11 @@
                         <span class="fp-av fp-av--green fp-av--big"><img src="{{ asset('images/avatars/2.webp') }}" alt=""><i class="fp-av__dot"></i></span>
                         <div>
                             <p class="fp-float__name"><strong>Lena</strong> {{ 'frontpage.card.host.in'|trans }} Berlin</p>
-                            <p class="fp-float__refs"><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span> <span class="fp-tag">− 1</span> {{ 'frontpage.card.references'|trans({count: 14}) }}</p>
+                            <p class="fp-float__refs"><span class="fp-tag fp-tag--green"><i class="fas fa-thumbs-up"></i> 13</span> <span class="fp-tag">− 1</span> {{ 'frontpage.card.comments'|trans({count: 14}) }}</p>
                             <p class="fp-float__quote">“{{ 'frontpage.card.quote'|trans }}”</p>
                         </div>
                     </div>
-                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-thumbs-up', colour: 'green', title: 'frontpage.note.reference'|trans, sub: 'frontpage.note.reference.from'|trans({name: 'Tomás'}) ~ ' · “' ~ 'frontpage.note.reference.quote'|trans ~ '”'}) }}
+                    {{ include('home/_frontpage_note.html.twig', {icon: 'fa-thumbs-up', colour: 'green', title: 'frontpage.note.comment'|trans, sub: 'frontpage.note.reference.from'|trans({name: 'Tomás'}) ~ ' · “' ~ 'frontpage.note.reference.quote'|trans ~ '”'}) }}
                     {{ include('home/_frontpage_note.html.twig', {icon: 'fa-bolt', colour: 'yellow', title: 'frontpage.note.replies'|trans, sub: 'frontpage.note.replies.rate'|trans({rate: 96})}) }}
                     {{ include('home/_frontpage_note.html.twig', {icon: 'fa-language', colour: 'blue', title: 'frontpage.note.languages'|trans({languages: 'English, French, Italian'}), sub: 'frontpage.note.languages.mother'|trans({language: 'French'})}) }}
                     {{ include('home/_frontpage_note.html.twig', {icon: 'fa-location-dot', colour: 'peach', title: 'frontpage.note.nearby'|trans({count: 38}), sub: 'frontpage.note.nearby.within'|trans({km: 20, place: 'Paris'})}) }}
@@ -143,7 +143,7 @@
                 <p>{{ 'frontpage.free.sub'|trans }}</p>
             </div>
             {% for _item in [
-                {icon: 'fa-hand-holding-heart', key: 'fees'},
+                {icon: 'fa-hand-holding-heart', key: 'fees', text: 'frontpage.free.fees.with.comments'},
                 {icon: 'fa-users', key: 'volunteers'},
                 {icon: 'fa-code', key: 'opensource'},
             ] %}
@@ -151,7 +151,7 @@
                     <span class="fp-free__icon"><i class="fas {{ _item.icon }}" aria-hidden="true"></i></span>
                     <div>
                         <h3>{{ ('frontpage.free.' ~ _item.key)|trans }}</h3>
-                        <p>{{ ('frontpage.free.' ~ _item.key ~ '.text')|trans }}</p>
+                        <p>{{ (_item.text ?? ('frontpage.free.' ~ _item.key ~ '.text'))|trans }}</p>
                     </div>
                 </div>
             {% endfor %}
@@ -178,7 +178,7 @@
                     </div>
                     <div class="fp-step__text">
                         <h3><span class="fp-num">1</span> {{ 'frontpage.how.search'|trans }}</h3>
-                        <p>{{ 'frontpage.how.search.text'|trans }}</p>
+                        <p>{{ 'frontpage.how.search.with.comments'|trans }}</p>
                     </div>
                 </article>
 
@@ -245,7 +245,7 @@
                     </div>
                     <div class="fp-step__text">
                         <h3><span class="fp-num">5</span> {{ 'frontpage.how.trust'|trans }}</h3>
-                        <p>{{ 'frontpage.how.trust.text'|trans }}</p>
+                        <p>{{ 'frontpage.how.trust.with.comments'|trans }}</p>
                     </div>
                 </article>
             </div>

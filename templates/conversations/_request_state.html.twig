@@ -1,0 +1,51 @@
+{#
+  Where a hosting request or invitation stands, in the conversation lists (conversations/_inbox.macros.twig,
+  landing/widget/conversations.html.twig), in two parts:
+  - part 'kind': the round icon on the avatar;
+  - part 'pill': the dates in a pill of the same colour, on the right (no icon, the avatar has it);
+  - part 'status': the state in words under the pill (Waiting, Maybe, Accepted, Declined, Cancelled; nothing while new and unread).
+  New (not read yet): orange with the bed (or handshake for an invitation); waiting: grey hourglass;
+  maybe: amber ?; accepted: green ✓; declined or cancelled: light grey ×, the dates crossed out.
+  On a computer, hovering the pill names the kind and where it stands (Request, Pending).
+  Expects request, unread (bool) and part.
+#}
+{% set _status = { 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[request.status] ?? 'open' %}
+{% set _isInvitation = request.inviteForLeg is not null %}
+{% set _look = {
+    open: unread
+        ? { tone: 'new', icon: _isInvitation ? 'fas fa-handshake' : 'fas fa-bed' }
+        : { tone: 'pending', icon: 'fas fa-hourglass-half' },
+    tentatively: { tone: 'maybe', icon: 'fas fa-question' },
+    accepted: { tone: 'success', icon: 'fas fa-check' },
+    declined: { tone: 'closed', icon: 'fas fa-times' },
+    cancelled: { tone: 'closed', icon: 'fas fa-times' },
+}[_status] %}
+{% set _label = (_isInvitation ? 'conversations.invitation' : 'conversations.request')|trans ~ ' · ' ~ ('request.status.' ~ _status)|trans %}
+{% set _word = _status == 'open' ? 'conversations.state.waiting' : 'request.status.' ~ _status %}
+{% if part == 'status' %}
+    {# Not for a new one: the unread background says it already #}
+    {% if not (_status == 'open' and unread) %}<span class="c-req-status c-req-status--{{ _look.tone }}">{{ _word|trans }}</span>{% endif %}
+{% elseif part == 'kind' %}
+    <span class="c-req-kind c-req-kind--{{ _look.tone }}"><i class="{{ _look.icon }}" aria-hidden="true"></i><span class="visually-hidden">{{ _label }}</span></span>
+{% else %}
+    {% set _from = request.arrival %}
+    {% set _to = request.departure %}
+    {# What the icon and the dates mean, in a dark bubble above the pill on a computer (assets/js/request-tip.js,
+       no native tooltip): the kind and where it stands, the full dates, the nights and the people #}
+    {% set _nights = _to ? date(_to|date('Y-m-d')).diff(date(_from|date('Y-m-d'))).days : null %}
+    {% set _sameYear = _to is null or _from|date('Y') == _to|date('Y') %}
+    <span class="c-req-pill c-req-pill--{{ _look.tone }}"
+          data-tip-title="{{ _label }}"
+          data-tip-dates="{{ _from|format_date(pattern=_sameYear ? 'EEE d MMM' : 'EEE d MMM y') }}{% if _to %} → {{ _to|format_date(pattern='EEE d MMM y') }}{% endif %}"
+          data-tip-stay="{% if _nights is not null %}{{ 'contact.trip.nights'|trans({ count: _nights }) }} · {% endif %}{{ 'request.card.persons'|trans({ count: request.numberOfTravellers }) }}">
+        <span class="c-req-pill__dates">
+            {%- if _to is null -%}
+                {{ _from|format_date(pattern='d MMM') }}
+            {%- elseif _from|date('Y-m') == _to|date('Y-m') -%}
+                {{ _from|format_date(pattern='d') }}–{{ _to|format_date(pattern='d MMM') }}
+            {%- else -%}
+                {{ _from|format_date(pattern='d MMM') }} – {{ _to|format_date(pattern='d MMM') }}
+            {%- endif -%}
+        </span>
+    </span>
+{% endif %}

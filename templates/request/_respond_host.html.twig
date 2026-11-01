@@ -104,16 +104,17 @@
         {% if respond.message.vars.errors|length > 0 %}
             <div class="c-inbox-compose__error">{{ form_errors(respond.message) }}</div>
         {% endif %}
-        {# One line: the "^" menu (templates), the message, Send #}
+        {# One line: the camera, the message, Send (templates: the "⋯" menu of the stay card, request/_card_menu.html.twig) #}
+        {% include 'conversations/_photo_attach.html.twig' with { part: 'tray', name: guestName } only %}
         <div class="c-decide__foot c-decide__foot--inline">
-            {% include 'conversations/_compose_tools.html.twig' with { editor_id: respond.message.vars.id } only %}
+            {% include 'conversations/_photo_attach.html.twig' with { part: 'button' } only %}
             {# A plain text field (turned into paragraphs on send) instead of the rich editor: it takes less room. #}
-            <textarea class="c-decide__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="{{ awaitingAnswer ? 3 : 1 }}"
+            <textarea class="c-decide__text js-respond-text" id="{{ respond.message.vars.id }}" name="{{ respond.message.vars.full_name }}" rows="1"
                       aria-label="{{ respond.message.vars.label|trans }}"
                       placeholder="{{ 'request.decide.placeholder.reply'|trans({ username: guestName }) }}"
-                      data-placeholder-accept="{{ (texts ~ 'placeholder.accept')|trans({ username: guestName }) }}"
-                      data-placeholder-maybe="{{ (texts ~ 'placeholder.maybe')|trans({ username: guestName }) }}"
-                      data-placeholder-decline="{{ (texts ~ 'placeholder.decline')|trans({ username: guestName }) }}"
+                      data-placeholder-accept="{{ (texts ~ 'placeholder.accept.short')|trans({ username: guestName }) }}"
+                      data-placeholder-maybe="{{ (texts ~ 'placeholder.maybe.short')|trans({ username: guestName }) }}"
+                      data-placeholder-decline="{{ (texts ~ 'placeholder.decline.short')|trans({ username: guestName }) }}"
                       data-placeholder-reply="{{ 'request.decide.placeholder.reply'|trans({ username: guestName }) }}">
                 {{- respond.message.vars.value|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim -}}
             </textarea>

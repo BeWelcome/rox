@@ -38,6 +38,8 @@
     {% elseif reply_form %}
         <div class="c-contact__foot c-contact__foot--reply">
             {{ form_start(reply_form, { attr: { class: 'c-inbox-reply js-inbox-reply', novalidate: 'novalidate' } }) }}
+                {% include 'conversations/_photo_attach.html.twig' with { part: 'tray', name: correspondent.username } only %}
+                {% include 'conversations/_photo_attach.html.twig' with { part: 'button' } only %}
                 <textarea class="c-inbox-reply__field js-inbox-reply-text" name="{{ reply_form.message.vars.full_name }}" rows="1"
                           placeholder="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}"
                           aria-label="{{ 'conversation.reply.to'|trans({ username: correspondent.username }) }}" required></textarea>

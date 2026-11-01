@@ -1,0 +1,54 @@
+{#
+  The "⋯" menu at the top of the stay card (request/header.html.twig, invitation/header.html.twig),
+  for the member who can answer under the thread (request_form): Change dates (the guest of a
+  hosting request, until the host declined), the reply templates, and Cancel request / Cancel
+  invitation (the guest of a request, the member who invited). It works on the answer form under
+  the thread (requests.js): the templates fill its message, Change dates opens its dates card, and
+  Cancel submits it (form="js-respond-form", after the confirm dialog of assets/js/confirm.js,
+  which asks for the reason and writes it into the message).
+  Expects stay (the HostingRequest), confirm (the question before cancelling) and dates (bool).
+#}
+{% set rf = request_form ?? null %}
+{% set S = 'App\\Entity\\HostingRequest::' %}
+{% if rf and rf.message is defined %}
+    {% set closed = stay.status in [constant(S ~ 'REQUEST_CANCELLED'), constant(S ~ 'REQUEST_DECLINED')] %}
+    {% set canCancel = rf.cancel is defined and not closed %}
+    {% set conversation_templates = [
+        { label: 'conversation.reply.template.interested.label', body: 'conversation.reply.template.interested.body', icon: 'fa-check' },
+        { label: 'conversation.reply.template.need_details.label', body: 'conversation.reply.template.need_details.body', icon: 'fa-question' },
+        { label: 'conversation.reply.template.not_available.label', body: 'conversation.reply.template.not_available.body', icon: 'fa-times' }
+    ] %}
+    <div class="c-stay-card__menu dropdown">
+        <button type="button" class="c-stay-card__more" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                aria-label="{{ 'conversation.compose.tools'|trans }}">
+            <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+        </button>
+        <div class="dropdown-menu dropdown-menu-end c-compose-tools__menu">
+            {% if dates and stay.status != constant(S ~ 'REQUEST_DECLINED') %}
+                <button type="button" class="dropdown-item c-compose-tools__item js-respond-stay-toggle" aria-expanded="false">
+                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                    <span>{{ 'request.respond.change'|trans }}</span>
+                </button>
+                <div class="dropdown-divider"></div>
+            {% endif %}
+            <h6 class="dropdown-header c-compose-tools__header"><i class="far fa-file-alt" aria-hidden="true"></i> {{ 'conversation.reply.templates'|trans }}</h6>
+            {% for template in conversation_templates %}
+                <button type="button" class="dropdown-item c-compose-tools__item js-conversation-template"
+                        data-conversation-template-editor-id="{{ rf.message.vars.id }}"
+                        data-conversation-template="{{ template.body|trans|e('html_attr') }}">
+                    <i class="fa {{ template.icon }}" aria-hidden="true"></i>
+                    <span>{{ template.label|trans }}</span>
+                </button>
+            {% endfor %}
+            {% if canCancel %}
+                <div class="dropdown-divider"></div>
+                <button type="submit" form="js-respond-form" name="{{ rf.cancel.vars.full_name }}" class="dropdown-item c-compose-tools__item c-compose-tools__item--danger"
+                        data-confirm="{{ confirm|trans }}" data-confirm-ok="{{ rf.cancel.vars.label|trans }}" data-confirm-close="{{ 'modal.close'|trans }}"
+                        data-confirm-field="{{ rf.message.vars.id }}" data-confirm-field-placeholder="{{ 'request.cancel.reason'|trans }}">
+                    <i class="fas fa-ban" aria-hidden="true"></i>
+                    <span>{{ rf.cancel.vars.label|trans }}</span>
+                </button>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

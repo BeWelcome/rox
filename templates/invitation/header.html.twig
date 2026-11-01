@@ -24,6 +24,7 @@
         {% if status.key %}
             <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ status.key)|trans }}</span>
         {% endif %}
+        {% include 'request/_card_menu.html.twig' with { stay: invitation, confirm: 'invitation.confirm.cancel', dates: false } %}
     </div>
     <div class="c-stay-card__dates">
         <p class="c-stay-card__date">
@@ -38,9 +39,7 @@
     </div>
     <ul class="c-stay-card__facts">
         <li><i class="fa fa-users" aria-hidden="true"></i> {{ 'request.card.persons'|trans({ count: invitation.numberOfTravellers }) }}</li>
-        {% include 'request/_card_cancel.html.twig' with { stay: invitation, place: 'facts', confirm: 'invitation.confirm.cancel' } %}
     </ul>
-    {% include 'request/_card_cancel.html.twig' with { stay: invitation, place: 'side', confirm: 'invitation.confirm.cancel' } %}
     {% if invitation.status != constant(S ~ 'REQUEST_ACCEPTED') and (invitation.arrival|date('Y-m-d') != leg.arrival|date('Y-m-d') or invitation.departure|date('Y-m-d') != leg.departure|date('Y-m-d')) %}
         <p class="c-stay-card__warning"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> {{ 'trip.leg.not.matched'|trans }}</p>
     {% endif %}

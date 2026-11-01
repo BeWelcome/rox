@@ -236,3 +236,54 @@ contact.conversations.all:
 conversation.compose.tools:
     - 'Templates and more'
     - Tooltip of the round arrow button left of the message field in a conversation, it opens the reply templates (and Change dates)
+message.photo.add:
+    - 'Add photos'
+    - Camera button to attach photos to a message, hosting request or invitation
+message.photo.add.short:
+    - 'Add'
+    - Dashed tile after the photos picked for a new message, to add another one
+message.photo.remove:
+    - 'Remove this photo'
+    - Small cross on a photo picked for a message, before it is sent
+message.photo.error:
+    - 'This photo could not be uploaded'
+    - Shown on a photo picked for a message when its upload failed
+message.photo.preview:
+    - 'Photo'
+    - In the list of conversations, for a last message that only has photos
+message.photo.private:
+    - 'Only {username} can see your photos'
+    - Under the photos picked for a new message, hosting request or invitation
+message.photo.private.short:
+    - 'Only {username} sees them'
+    - Next to the title of the photos picked for an answer in a conversation
+message.photo.ready.one:
+    - '1 photo ready to send'
+    - Title above the photo picked for an answer in a conversation
+message.photo.ready.many:
+    - '{count} photos ready to send'
+    - Title above the photos picked for an answer in a conversation (2 to 5)
+message.photo.send.one:
+    - 'Send with 1 photo'
+    - Send button of a new message with one photo
+message.photo.send.many:
+    - 'Send with {count} photos'
+    - Send button of a new message with several photos (2 to 5)
+message.photo.open:
+    - 'Open the photo'
+    - Label for screen readers of a photo in a conversation, which opens it large
+message.photo.download:
+    - 'Download'
+    - Button in the photo viewer of a conversation, to save the photo
+message.photo.close:
+    - 'Close'
+    - Button in the photo viewer of a conversation
+contact.request.message.placeholder:
+    - 'Introduce yourself and tell {username} when and how you plan to arrive.'
+    - Placeholder of the message field of a stay request in the side panel (the safety note under it says not to share contact details)
+contact.invitation.message.placeholder:
+    - 'Introduce yourself and tell {username} why you would like to host them.'
+    - Placeholder of the message field of an invitation in the side panel (the safety note under it says not to share contact details)
+conversations.state.waiting:
+    - 'Waiting'
+    - Conversation list, under the dates of a hosting request or invitation that has no answer yet

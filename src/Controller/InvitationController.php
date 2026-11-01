@@ -173,8 +173,6 @@ class InvitationController extends BaseRequestAndInvitationController
                 ]);
             }
 
-            $this->addTranslatedFlash('notice', 'flash.request.invitation.sent');
-
             return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
         }
 

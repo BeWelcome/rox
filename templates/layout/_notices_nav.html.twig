@@ -1,0 +1,55 @@
+{#
+  Things the member still has to do with their account, as a bell in the top bar (main_navigation),
+  instead of a banner above the page. Only shown when there is one:
+  - the signup isn't finished (before members:remove:notconfirmed removes the account): the setup,
+    or for those who did it the email confirmation, with the date to do it by;
+  - a new email address waiting for its confirmation (Member::newEmail, set by the change email page).
+  The setup one is left out on the pages that do it (hide_finish_setup).
+  Expects loggedInMember.
+#}
+{% set notices = [] %}
+{% set S = 'App\\Doctrine\\MemberStatusType::' %}
+{% set confirmOnly = loggedInMember.status == constant(S ~ 'ACCOUNT_ACTIVATED') %}
+{% if hide_finish_setup is not defined and (confirmOnly or loggedInMember.status in [constant(S ~ 'MAIL_CONFIRMED'), constant(S ~ 'AWAITING_MAIL_CONFIRMATION')]) %}
+    {% set deletionDate = loggedInMember.created|date_modify('+' ~ constant('App\\Entity\\Member::DAYS_SHOWN_TO_FINISH_SIGNUP') ~ ' days')|format_date('long') %}
+    {% set notices = notices|merge([{
+        icon: confirmOnly ? 'fa-envelope' : 'fa-user-check',
+        tone: 'urgent',
+        title: (confirmOnly ? 'notices.confirm.email.title' : 'notices.finish.setup.title')|trans,
+        text: (confirmOnly ? 'profile.confirm.email.deadline' : 'profile.finish.setup')|trans({ deletion_date: deletionDate }),
+        action: (confirmOnly ? 'profile.confirm.email.button' : 'profile.finish.setup.button')|trans,
+        href: confirmOnly ? url('confirm_email', { username: loggedInMember.username }) : url('finish_setup', { username: loggedInMember.username })
+    }]) %}
+{% endif %}
+{% if loggedInMember.newEmail is not null %}
+    {% set notices = notices|merge([{
+        icon: 'fa-envelope',
+        title: 'notices.email.change.title'|trans,
+        text: 'notices.email.change.text'|trans({ email: loggedInMember.newEmail }),
+        action: 'profile.confirm.email.button'|trans,
+        href: url('change_email', { username: loggedInMember.username })
+    }]) %}
+{% endif %}
+{% if notices is not empty %}
+    <li class="nav-item dropdown topbar-notices">
+        <a id="notices_menu_toggle" href="#notices_menu" class="nav-link dropdown-toggle topbar-icon-dropdown"
+           data-bs-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
+           aria-label="{{ 'notices.title'|trans }}">
+            <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-bell"></i></span>
+            <span class="topbar-notices__badge">{{ notices|length }}</span>
+        </a>
+        <div id="notices_menu" class="dropdown-menu dropdown-menu-end c-topbar-notices">
+            <p class="c-topbar-notices__title">{{ 'notices.title'|trans }}</p>
+            {% for notice in notices %}
+                <div class="c-topbar-notices__item{{ notice.tone is defined ? ' c-topbar-notices__item--' ~ notice.tone }}">
+                    <span class="c-topbar-notices__icon" aria-hidden="true"><i class="fas {{ notice.icon }}"></i></span>
+                    <div class="c-topbar-notices__body">
+                        <p class="c-topbar-notices__head">{{ notice.title }}</p>
+                        <p class="c-topbar-notices__text">{{ notice.text|striptags }}</p>
+                        <a class="c-topbar-notices__action" href="{{ notice.href }}">{{ notice.action }}</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </li>
+{% endif %}

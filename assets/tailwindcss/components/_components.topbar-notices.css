@@ -1,0 +1,50 @@
+/* Account to-dos in the top bar (layout/_notices_nav.html.twig): a bell with a count, and a small card
+   under it with what to do (confirm a new email address). Only there when there is something. */
+#main_menu .topbar-notices .topbar-icon-dropdown { position: relative; }
+#main_menu .topbar-notices__badge {
+  position: absolute;
+  top: -0.12rem;
+  right: -0.08rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.15rem;
+  height: 1.15rem;
+  padding: 0 0.28rem;
+  border: 1px solid rgba(255, 255, 255, 0.95);
+  border-radius: 999px;
+  background: #3781eb;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 80, 160, 0.35);
+}
+#main_menu .c-topbar-notices.dropdown-menu {
+  width: min(22rem, calc(100vw - 1.5rem));
+  margin-top: 0.5rem !important;
+  padding: 0.5rem;
+  border: 1px solid #e4e4e7;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+}
+.c-topbar-notices__title { margin: 0; padding: 0.35rem 0.6rem 0.5rem; color: #71717a; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.c-topbar-notices__item { display: flex; gap: 0.75rem; padding: 0.6rem; border-radius: 0.75rem; }
+.c-topbar-notices__item + .c-topbar-notices__item { border-top: 1px solid #f4f4f5; }
+.c-topbar-notices__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: #fff7ed; color: #ea580c; }
+.c-topbar-notices__icon i, .c-topbar-notices__icon svg { font-size: 0.95rem; }
+.c-topbar-notices__body { min-width: 0; }
+.c-topbar-notices__head { margin: 0; color: #18181b; font-size: 0.9375rem; font-weight: 700; }
+.c-topbar-notices__text { margin: 0.15rem 0 0.6rem; color: #52525b; font-size: 0.8125rem; overflow-wrap: anywhere; }
+#main_menu .c-topbar-notices__action { display: inline-flex; align-items: center; padding: 0.4rem 0.9rem; border-radius: 999px; background: #f37000; color: #fff; font-size: 0.8125rem; font-weight: 700; text-decoration: none; }
+#main_menu .c-topbar-notices__action:hover, #main_menu .c-topbar-notices__action:focus { background: #c2410c; color: #fff; }
+/* The account will be removed if this isn't done: in red */
+.c-topbar-notices__item--urgent .c-topbar-notices__icon { background: #fef2f2; color: #dc2626; }
+/* Phones: the bell is far from the right edge, so the card hangs from the right of the whole icon
+   row (#static_menu) instead of from the bell, and stays inside the screen */
+@media (max-width: 767.98px) {
+  #main_menu .topbar-notices.nav-item { position: static; }
+  #main_menu #static_menu { position: relative; }
+  #main_menu .c-topbar-notices.dropdown-menu { position: absolute; top: 100%; right: 0; left: auto; width: min(22rem, calc(100vw - 1.5rem)); }
+}

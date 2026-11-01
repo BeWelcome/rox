@@ -138,3 +138,21 @@ invitation.decide.placeholder.decline:
 request.cancel.reason:
     - 'A few words to say why (required)'
     - Placeholder of the message field in the dialog that confirms cancelling a hosting request or an invitation, the message is sent to the other member
+request.decide.placeholder.accept.short:
+    - 'Welcome {username}...'
+    - Placeholder of the message when the host accepts a hosting request (short, one line on phones)
+request.decide.placeholder.maybe.short:
+    - 'Ask {username} a question...'
+    - Placeholder of the message when the host answers maybe to a hosting request (short, one line on phones)
+request.decide.placeholder.decline.short:
+    - 'Tell {username} why...'
+    - Placeholder of the message when the host declines a hosting request (short, one line on phones)
+invitation.decide.placeholder.accept.short:
+    - 'Thank {username}...'
+    - Placeholder of the message when the guest accepts an invitation (short, one line on phones)
+invitation.decide.placeholder.maybe.short:
+    - 'Ask {username} a question...'
+    - Placeholder of the message when the guest answers maybe to an invitation (short, one line on phones)
+invitation.decide.placeholder.decline.short:
+    - 'Tell {username} why...'
+    - Placeholder of the message when the guest declines an invitation (short, one line on phones)

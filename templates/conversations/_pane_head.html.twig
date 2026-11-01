@@ -28,7 +28,7 @@
             {% set content %}<i class="far fa-flag" aria-hidden="true"></i><span>{{ 'marknospam'|trans }}</span>{% endset %}
             {{ post.post_link(path('conversation_mark_nospam', { id: current.id }), token, 'c-inbox-head__report', content) }}
         {% else %}
-            <button type="button" class="c-inbox-head__report js-modal-trigger" data-micromodal-trigger="report-modal" title="{{ 'markspam'|trans }}">
+            <button type="button" class="c-inbox-head__report js-modal-trigger" data-micromodal-trigger="report-modal" aria-label="{{ 'markspam'|trans }}">
                 <i class="far fa-flag" aria-hidden="true"></i><span>{{ 'conversation.report.short'|trans }}</span>
             </button>
         {% endif %}

@@ -226,7 +226,7 @@ class MessageController extends AbstractController
                 'subject' => $subjectText,
                 'body' => $body,
             ]);
-            $this->browserNotificationService->queue(
+            $this->browserNotificationService->queueAndSendAfterResponse(
                 $receiver,
                 BrowserNotificationPayload::message(
                     $sender,

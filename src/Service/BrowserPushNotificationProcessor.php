@@ -21,13 +21,18 @@ class BrowserPushNotificationProcessor
     ) {
     }
 
-    public function process(int $batchSize): void
+    /**
+     * Sends up to $batchSize scheduled notifications, the oldest first; with $notificationIds only those.
+     *
+     * @param int[]|null $notificationIds
+     */
+    public function process(int $batchSize, ?array $notificationIds = null): void
     {
         /** @var BrowserPushNotificationRepository $notificationQueue */
         $notificationQueue = $this->entityManager->getRepository(BrowserPushNotification::class);
         /** @var BrowserPushNotificationDeliveryRepository $deliveryQueue */
         $deliveryQueue = $this->entityManager->getRepository(BrowserPushNotificationDelivery::class);
-        $scheduledNotifications = $notificationQueue->claimScheduledNotifications($batchSize);
+        $scheduledNotifications = $notificationQueue->claimScheduledNotifications($batchSize, $notificationIds);
 
         foreach ($scheduledNotifications as $index => $notification) {
             $notificationQueue->renewProcessingLease(array_map(

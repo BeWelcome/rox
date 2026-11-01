@@ -9,6 +9,7 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 use Throwable;
 
 class BrowserPushNotificationRepository extends EntityRepository
@@ -16,10 +17,20 @@ class BrowserPushNotificationRepository extends EntityRepository
     private const int PROCESSING_LEASE_MINUTES = 30;
 
     /**
+     * Marks up to $batchSize scheduled notifications as processing, the oldest first, and returns them. With
+     * $notificationIds only those (the ones queued by a request, sent after its response); rows another process
+     * claimed or locks are skipped, so a notification is sent once.
+     *
+     * @param int[]|null $notificationIds
+     *
      * @return BrowserPushNotification[]
      */
-    public function claimScheduledNotifications(int $batchSize): array
+    public function claimScheduledNotifications(int $batchSize, ?array $notificationIds = null): array
     {
+        if ([] === $notificationIds) {
+            return [];
+        }
+
         $connection = $this->getEntityManager()->getConnection();
         $connection->beginTransaction();
         try {
@@ -29,12 +40,17 @@ class BrowserPushNotificationRepository extends EntityRepository
                     SELECT id
                     FROM browser_push_notification
                     WHERE status = ?
+                    ' . (null === $notificationIds ? '' : 'AND id IN (?)') . '
                     ORDER BY created ASC, id ASC
                     LIMIT ?
                     FOR UPDATE SKIP LOCKED
                 ',
-                [BrowserPushNotification::STATUS_SCHEDULED, $batchSize],
-                [ParameterType::STRING, ParameterType::INTEGER]
+                null === $notificationIds
+                    ? [BrowserPushNotification::STATUS_SCHEDULED, $batchSize]
+                    : [BrowserPushNotification::STATUS_SCHEDULED, array_map('intval', $notificationIds), $batchSize],
+                null === $notificationIds
+                    ? [ParameterType::STRING, ParameterType::INTEGER]
+                    : [ParameterType::STRING, ArrayParameterType::INTEGER, ParameterType::INTEGER]
             );
 
             if ([] !== $ids) {
@@ -56,11 +72,14 @@ class BrowserPushNotificationRepository extends EntityRepository
             return [];
         }
 
+        // Refreshed: notifications queued in this request are already loaded, still with the status they had before
+        // the update above
         return $this->createQueryBuilder('n')
             ->where('n.id IN (:ids)')
             ->setParameter('ids', $ids)
             ->orderBy('n.created', 'asc')
             ->getQuery()
+            ->setHint(Query::HINT_REFRESH, true)
             ->getResult()
         ;
     }

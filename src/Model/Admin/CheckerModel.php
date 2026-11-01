@@ -134,6 +134,6 @@ class CheckerModel
         } else {
             $payload = BrowserNotificationPayload::request($message->getSender(), $url);
         }
-        $this->browserNotificationService->queue($message->getReceiver(), $payload);
+        $this->browserNotificationService->queueAndSendAfterResponse($message->getReceiver(), $payload);
     }
 }

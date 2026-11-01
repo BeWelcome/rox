@@ -22,19 +22,37 @@ final readonly class BrowserNotificationService
         private LoggerInterface $logger,
         private BrowserPushPreferenceService $browserPushPreferenceService,
         private bool $enabled = true,
+        private ?BrowserPushAfterResponse $afterResponse = null,
     ) {
     }
 
-    public function queue(Member $receiver, BrowserNotificationPayload $payload): void
+    /**
+     * Queues the notification and sends it right after the response (messages, requests, invitations,
+     * friendships); send:notifications sends what is still queued then.
+     */
+    public function queueAndSendAfterResponse(Member $receiver, BrowserNotificationPayload $payload): void
+    {
+        $notification = $this->queue($receiver, $payload);
+        if (null !== $notification && null !== $this->afterResponse) {
+            $this->afterResponse->add($notification->getId());
+        }
+    }
+
+    /**
+     * Queues the notification for send:notifications. Returns it if it is to be pushed (the receiver wants
+     * notifications always and has a subscription), null if not (none wanted, shown by the open site only, or
+     * queueing failed).
+     */
+    public function queue(Member $receiver, BrowserNotificationPayload $payload): ?BrowserPushNotification
     {
         if (!$this->enabled || !$this->browserPushConfig->isConfigured()) {
-            return;
+            return null;
         }
 
         try {
             $preferenceValue = $this->browserPushPreferenceService->getValue($receiver);
             if (BrowserPushPreferenceService::VALUE_NO === $preferenceValue) {
-                return;
+                return null;
             }
 
             $notification = new BrowserPushNotification()
@@ -49,12 +67,12 @@ final readonly class BrowserNotificationService
                 $this->entityManager->persist($notification);
                 $this->entityManager->flush();
 
-                return;
+                return null;
             }
 
             $subscriptions = $this->findSubscriptions($receiver);
             if ([] === $subscriptions) {
-                return;
+                return null;
             }
 
             $this->entityManager->persist($notification);
@@ -66,10 +84,14 @@ final readonly class BrowserNotificationService
                 $this->entityManager->persist($delivery);
             }
             $this->entityManager->flush();
+
+            return $notification;
         } catch (Throwable $throwable) {
             $this->logger->warning('Browser push notification queueing failed.', [
                 'exception' => $throwable,
             ]);
+
+            return null;
         }
     }
 

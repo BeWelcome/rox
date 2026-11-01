@@ -12780,3 +12780,9 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-comments-filter .p-comments-filter__toggle.p-comments-filter__toggle--negative { background: #fee2e2; color: #b91c1c; }
 .p-comments-filter__toggle:hover, .p-comments-filter__toggle[aria-expanded="true"] { filter: brightness(0.96); }
 .p-comments-filter__toggle i, .p-comments-filter__toggle svg { color: inherit; }
+/* Large screens: the right column no wider than its buttons (its lines wrap inside), so the middle keeps the room */
+@media (min-width: 768px) {
+  .p-pro .p-pro__actions { width: max-content; max-width: 30rem; }
+  .p-pro .p-pro__trust,
+  .p-pro .p-pro__facts { min-width: 0; }
+}

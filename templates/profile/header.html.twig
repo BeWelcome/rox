@@ -44,6 +44,8 @@
 
     <div class="p-pro__head">
       {% if compactHead %}
+        {# Phones: a tap anywhere on the bar (photo, name) goes back to the profile; the "more" menu stays above it #}
+        <a class="p-pro__head-link" href="{{ items.profile.url }}" tabindex="-1" aria-hidden="true"></a>
         <a class="p-pro__back" href="{{ items.profile.url }}">
           <i class="fas fa-chevron-left" aria-hidden="true"></i>
           <span class="visually-hidden">{{ items.profile.key|lower|trans }}</span>
@@ -83,7 +85,9 @@
               {{ member.visibleName != '' ? member.visibleName : member.Username }}
             {%- endif -%}
           </h1>
-          {% if member.visibleName != '' %}<span class="p-pro__username">@{{ member.Username }}</span>{% endif %}
+          {# The occupation next to the name (the username says nothing more than the name) #}
+          {% set _occupation = (memberfields.Occupation ?? '')|striptags|trim %}
+          {% if _occupation %}<span class="p-pro__username p-pro__occupation">{{ _occupation }}</span>{% endif %}
         </div>
 
         {# Place and activity: one line on large screens, two on phones #}

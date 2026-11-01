@@ -26,23 +26,36 @@
           {{ 'profile.comments'|trans }}
           {% if comments_count.total %}<span class="p-pro-card__count">{{ comments_count.total }}</span>{% endif %}
         </h2>
-        {% if comments_count.total > 0 %}
-          <nav class="p-pro-filter" aria-label="{{ 'profile.comments'|trans }}">
-            {% for filter in filters %}
-              {% set active = type == filter.type %}
-              {% set filterUrl = filter.type == 'all' ? url('profile_comments', {username: member.username}) : url('profile_comments', {username: member.username, type: filter.type}) %}
-              {% set classes = 'p-pro-filter__item' ~ (filter.type != 'all' ? ' p-pro-filter__item--' ~ filter.type : ' is-all') ~ (active ? ' is-active' : '') %}
-              {% if filter.count > 0 %}
-                <a href="{{ filterUrl }}" class="{{ classes }}"{% if active %} aria-current="page"{% endif %}>
-              {% else %}
-                <span class="{{ classes }} is-empty">
-              {% endif %}
-                {% if filter.icon %}<i class="fas fa-{{ filter.icon }}" aria-hidden="true"></i>{% endif %}
-                <span class="p-pro-filter__label">{{ filter.label|striptags }}</span>
-                <span class="p-pro-filter__count">{{ filter.count }}</span>
-              {% if filter.count > 0 %}</a>{% else %}</span>{% endif %}
-            {% endfor %}
-          </nav>
+        {# The filter only when the comments are of more than one kind; kinds without comments are left out #}
+        {% set _kinds = filters|filter(f => f.type != 'all' and f.count > 0)|length %}
+        {% if _kinds > 1 %}
+          {# The filter as a small dropdown: the picked one on the button, all four in the menu (greyed when empty) #}
+          {% set current = (filters|filter(f => f.type == type)|first) ?: filters|first %}
+          <div class="dropdown p-comments-filter">
+            <button type="button" class="p-comments-filter__toggle p-comments-filter__toggle--{{ current.type }}" data-bs-toggle="dropdown" aria-expanded="false">
+              {% if current.icon %}<i class="fas fa-{{ current.icon }} p-comments-filter__icon--{{ current.type }}" aria-hidden="true"></i>{% endif %}
+              <span>{{ current.label|striptags }}</span>
+              <span class="p-comments-filter__count">{{ current.count }}</span>
+              <i class="fas fa-chevron-down p-comments-filter__chevron" aria-hidden="true"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end p-comments-filter__menu">
+              {% for filter in filters|filter(f => f.count > 0) %}
+                {% set active = filter.type == current.type %}
+                {% set filterUrl = filter.type == 'all' ? url('profile_comments', {username: member.username}) : url('profile_comments', {username: member.username, type: filter.type}) %}
+                <li>
+                  {% if filter.count > 0 %}
+                    <a class="dropdown-item p-comments-filter__item p-comments-filter__item--{{ filter.type }}{{ active ? ' is-active' : '' }}" href="{{ filterUrl }}"{% if active %} aria-current="page"{% endif %}>
+                  {% else %}
+                    <span class="dropdown-item p-comments-filter__item p-comments-filter__item--{{ filter.type }} is-empty">
+                  {% endif %}
+                    <i class="fas fa-fw fa-{{ filter.icon ?: 'comments' }} p-comments-filter__icon--{{ filter.type }}" aria-hidden="true"></i>
+                    <span>{{ filter.label|striptags }}</span>
+                    <span class="p-comments-filter__count">{{ filter.count }}</span>
+                  {% if filter.count > 0 %}</a>{% else %}</span>{% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
         {% endif %}
       </div>
       <div class="card-body">

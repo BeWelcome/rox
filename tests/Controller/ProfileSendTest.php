@@ -48,8 +48,8 @@ class ProfileSendTest extends WebTestCase
         $this->assertResponseIsSuccessful();
         $send = $crawler->filter('a.p-pro__btn--message');
         self::assertGreaterThan(0, $send->count());
-        foreach ($send as $link) {
-            self::assertStringNotContainsString('/conversation/' . $message->getId(), $link->getAttribute('href'));
+        foreach ($send->each(static fn ($link): string => (string) $link->attr('href')) as $href) {
+            self::assertStringNotContainsString('/conversation/' . $message->getId(), $href);
         }
     }
 }

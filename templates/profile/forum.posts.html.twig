@@ -1,7 +1,8 @@
 {% extends 'profile/profile.html.twig' %}
 {#
   A member's forum posts, newest first, laid out like the forum's lists (/group/0/forum): the search, then a white
-  card per post with its thread, its group and when it was written, and the text.
+  card per post with its thread, its group and when it was written, and the text. Only the posts the viewer may read
+  in the forum (ForumPostRepository::getForumPostsByMember()).
 #}
 {% import 'forum/_macros.html.twig' as forum %}
 
@@ -34,7 +35,9 @@
         {% for post in posts %}
             {% set thread = post.thread %}
             {% set visibility = post.postVisibility %}
-            <article class="p-member-post" id="post{{ post.id }}">
+            {# only forum moderators and admins get deleted posts #}
+            {% set deleted = post.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
+            <article class="p-member-post{{ deleted ? ' is-deleted' }}" id="post{{ post.id }}">
                 <header class="p-member-post__head">
                     <a class="c-home-item__title c-home-item__title--link" href="{{ forum.thread_url(thread) }}#post{{ post.id }}">{{ forum.thread_title(thread, app.request.locale) }}</a>
                     <p class="c-home-item__meta">
@@ -51,7 +54,9 @@
                 </header>
                 {# As on the thread page: the text in the reader's language if there is one, then the languages it is in #}
                 <div class="p-member-post__text js-highlight">
+                    {% if deleted %}<s>{% endif %}
                     {{ post.messageIn(app.request.locale).message|purify|forum_text|forum_lightbox }}
+                    {% if deleted %}</s>{% endif %}
                 </div>
                 {% set translations = post.messageTranslations %}
                 {% if translations|length > 1 %}

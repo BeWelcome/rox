@@ -14,9 +14,11 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * A member's forum posts on their profile: a card per post with its thread, linked to the post, and its text. The
- * page read the town of the author from a field members don't have, which failed with strict variables (dev) and
- * showed nothing in production.
+ * A member's forum posts on their profile: a card per post with its thread, linked to the post, and its text, only
+ * those the viewer may read in the forum. The page read the town of the author from a field members don't have,
+ * which failed with strict variables (dev) and showed nothing in production; it listed deleted posts and those for a
+ * group's members or moderators only to everybody.
+ * In the fixtures member-1 wrote posts 1 and 3 in the agora and 5 in Hiking Enthusiasts (members: member-1 to 5).
  */
 #[Group('integration')]
 class MemberForumPostsTest extends WebTestCase
@@ -69,19 +71,97 @@ class MemberForumPostsTest extends WebTestCase
 
     public function testOthersAreSentToTheProfileWhenThePostsAreHidden(): void
     {
-        $member = $this->member('member-1');
-        $connection = static::getContainer()->get(Connection::class);
-        $preferenceId = $connection->fetchOne('SELECT id FROM preferences WHERE codeName = ?', [Preference::SHOW_FORUMS_POSTS]);
-        $connection->executeStatement('DELETE FROM memberspreferences WHERE IdMember = ? AND IdPreference = ?', [$member->getId(), $preferenceId]);
-        $connection->executeStatement(
-            "INSERT INTO memberspreferences (IdMember, IdPreference, Value, created, updated) VALUES (?, ?, 'No', NOW(), NOW())",
-            [$member->getId(), $preferenceId]
-        );
+        $this->showPostsToOthers('No');
         $this->client->loginUser($this->member('member-2'));
 
         $this->client->request('GET', '/members/member-1/posts');
 
         $this->assertResponseRedirects('/members/member-1');
+    }
+
+    public function testOthersSeeOnlyThePostsTheyMayReadInTheForum(): void
+    {
+        $this->showPostsToOthers('Yes');
+        $this->setPost(3, 'PostDeleted', 'Deleted');
+        $this->setPost(5, 'PostVisibility', 'GroupOnly');
+
+        // not in Hiking Enthusiasts
+        self::assertSame([1], $this->shownTo('member-6'));
+        self::assertSame(1, $this->tabCount());
+        // in it
+        self::assertSame([5, 1], $this->shownTo('member-2'));
+        self::assertSame(2, $this->tabCount());
+    }
+
+    public function testThePostsOfAMembersOnlyGroupAreForItsMembers(): void
+    {
+        $this->showPostsToOthers('Yes');
+        static::getContainer()->get(Connection::class)
+            ->executeStatement("UPDATE `group` SET members_only = 1 WHERE name = 'Hiking Enthusiasts'");
+
+        self::assertSame([3, 1], $this->shownTo('member-6'));
+        self::assertSame([5, 3, 1], $this->shownTo('member-2'));
+    }
+
+    public function testPostsForModeratorsAreForModeratorsOnly(): void
+    {
+        $this->showPostsToOthers('Yes');
+        $this->setPost(1, 'PostVisibility', 'ModeratorOnly');
+        $this->setPost(3, 'PostDeleted', 'Deleted');
+
+        self::assertSame([5], $this->shownTo('member-2'));
+        // the author too reads them in the forum as the others do
+        self::assertSame([5], $this->shownTo('member-1'));
+        // bwadmin is a forum moderator in the fixtures: all of them, the deleted one struck through
+        self::assertSame([5, 3, 1], $this->shownTo('bwadmin'));
+        self::assertSame(3, $this->tabCount());
+        self::assertCount(1, $this->client->getCrawler()->filter('#post3.is-deleted s'));
+    }
+
+    /**
+     * @return list<int> the ids of the posts on member-1's posts page, as the viewer sees it
+     */
+    private function shownTo(string $viewer): array
+    {
+        $this->client->loginUser($this->member($viewer));
+        $crawler = $this->client->request('GET', '/members/member-1/posts');
+        $this->assertResponseIsSuccessful();
+
+        return $crawler->filter('.p-member-post')->each(
+            static fn (Crawler $card): int => (int) substr((string) $card->attr('id'), \strlen('post'))
+        );
+    }
+
+    /**
+     * The number in the profile's "Forum posts" tab.
+     */
+    private function tabCount(): int
+    {
+        $tab = $this->client->getCrawler()->filter('a[href$="/members/member-1/posts"]')->reduce(
+            static fn (Crawler $link): bool => 1 === preg_match('/\d/', $link->text())
+        );
+        self::assertGreaterThan(0, $tab->count());
+        preg_match('/(\d+)\s*$/', $tab->first()->text(), $matches);
+
+        return (int) ($matches[1] ?? -1);
+    }
+
+    private function showPostsToOthers(string $value): void
+    {
+        $member = $this->member('member-1');
+        $connection = static::getContainer()->get(Connection::class);
+        $preferenceId = $connection->fetchOne('SELECT id FROM preferences WHERE codeName = ?', [Preference::SHOW_FORUMS_POSTS]);
+        $connection->executeStatement('DELETE FROM memberspreferences WHERE IdMember = ? AND IdPreference = ?', [$member->getId(), $preferenceId]);
+        $connection->executeStatement(
+            'INSERT INTO memberspreferences (IdMember, IdPreference, Value, created, updated) VALUES (?, ?, ?, NOW(), NOW())',
+            [$member->getId(), $preferenceId, $value]
+        );
+    }
+
+    private function setPost(int $id, string $column, string $value): void
+    {
+        static::getContainer()->get(Connection::class)
+            ->executeStatement(\sprintf('UPDATE forum_post SET %s = ? WHERE id = ?', $column), [$value, $id]);
     }
 
     /**
@@ -92,7 +172,9 @@ class MemberForumPostsTest extends WebTestCase
         /** @var ForumPostRepository $repository */
         $repository = $this->entityManager->getRepository(ForumPost::class);
 
-        return array_values(iterator_to_array($repository->getForumPostsByMember($member, '', 1, 100)->getCurrentPageResults()));
+        return array_values(iterator_to_array(
+            $repository->getForumPostsByMember($member, $member, false, '', 1, 100)->getCurrentPageResults()
+        ));
     }
 
     /**

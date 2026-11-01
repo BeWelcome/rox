@@ -6,6 +6,7 @@ use App\Doctrine\ForumDeleteStatusType;
 use App\Doctrine\ForumVisibilityType;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Entity\ForumThread;
+use App\Entity\Group;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
 use Doctrine\DBAL\ParameterType;
@@ -53,18 +54,30 @@ class ForumPostRepository extends EntityRepository
         return $queryBuilder;
     }
 
-    public function getForumPostsByMemberCount(Member $member): int
+    /**
+     * How many of the member's posts the viewer may read (see getForumPostsByMemberQueryBuilder()).
+     */
+    public function getForumPostsByMemberCount(Member $member, Member $viewer, bool $moderator): int
     {
-        return $this->getForumPostsByMemberQueryBuilder($member)
+        return (int) $this->getForumPostsByMemberQueryBuilder($member, $viewer, $moderator)
             ->select('count(fp.id)')
             ->getQuery()
             ->getSingleScalarResult()
         ;
     }
 
-    public function getForumPostsByMember(Member $member, string $search, int $page, int $itemsPerPage): Pagerfanta
-    {
-        $queryBuilder = $this->getForumPostsByMemberQueryBuilder($member);
+    /**
+     * The member's posts the viewer may read, newest first; with $search those with all its words.
+     */
+    public function getForumPostsByMember(
+        Member $member,
+        Member $viewer,
+        bool $moderator,
+        string $search,
+        int $page,
+        int $itemsPerPage,
+    ): Pagerfanta {
+        $queryBuilder = $this->getForumPostsByMemberQueryBuilder($member, $viewer, $moderator);
         if (!empty($search)) {
             $parts = explode(' ', $search);
             foreach ($parts as $part) {
@@ -139,14 +152,41 @@ class ForumPostRepository extends EntityRepository
         ], $rows);
     }
 
-    private function getForumPostsByMemberQueryBuilder(Member $member): QueryBuilder
+    /**
+     * The member's posts the viewer may read in the forum (ForumVoter::POST_VIEW), as the thread lists check it
+     * (ForumThreadRepository::createLatestQueryBuilder()): not deleted, in a thread that isn't deleted, of a group
+     * whose forum the viewer may read (members-only groups for their members), and, when a thread or post is for the
+     * group's members only, the viewer is one (everybody is in the agora). Posts for moderators only are left out.
+     * Forum moderators and admins see all of them.
+     */
+    private function getForumPostsByMemberQueryBuilder(Member $member, Member $viewer, bool $moderator): QueryBuilder
     {
-        $qb = $this->createQueryBuilder('fp');
-        $qb
+        $queryBuilder = $this->createQueryBuilder('fp')
+            ->join('fp.thread', 't')
+            ->join('t.group', 'g')
             ->where('fp.author = :member')
             ->setParameter('member', $member)
         ;
+        if ($moderator) {
+            return $queryBuilder;
+        }
 
-        return $qb;
+        // the viewer is in the thread's group (each use needs its own alias)
+        $isMember = static fn (string $alias): string => 'EXISTS (SELECT 1 FROM ' . GroupMembership::class . " {$alias}"
+            . " WHERE {$alias}.group = t.group AND {$alias}.member = :viewer AND {$alias}.status = :in)";
+
+        return $queryBuilder
+            ->andWhere('fp.deleted = :notDeleted')
+            ->andWhere('t.deleted = :notDeleted')
+            ->andWhere('g.membersOnly = false OR ' . $isMember('gm1'))
+            ->andWhere('t.visibility IN (:forAll) OR (t.visibility = :groupOnly AND (g.id = :beWelcome OR ' . $isMember('gm2') . '))')
+            ->andWhere('fp.postvisibility IN (:forAll) OR (fp.postvisibility = :groupOnly AND (g.id = :beWelcome OR ' . $isMember('gm3') . '))')
+            ->setParameter('viewer', $viewer)
+            ->setParameter('in', GroupMembershipStatusType::CURRENT_MEMBER)
+            ->setParameter('notDeleted', ForumDeleteStatusType::NOT_DELETED)
+            // an empty visibility (old rows) counts as for all members, as in ForumVoter
+            ->setParameter('forAll', [ForumVisibilityType::NO_RESTRICTION, ForumVisibilityType::MEMBERS_ONLY, ''])
+            ->setParameter('groupOnly', ForumVisibilityType::GROUP_ONLY)
+            ->setParameter('beWelcome', Group::BEWELCOME);
     }
 }

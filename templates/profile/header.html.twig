@@ -265,8 +265,9 @@
         </button>
         <nav class="p-hero__tabs">
           {# Gallery third: photos matter. On someone else's profile an empty tab is hidden
-             (unless it is the page being shown); the owner keeps them all, to add content. #}
-          {% for key in ['profile', 'comments', 'gallery', 'friends', 'forum_posts', 'visitors'] %}
+             (unless it is the page being shown); the owner keeps them all, to add content.
+             My notes and the visitors are the owner's only (the submenu has them on the own profile). #}
+          {% for key in ['profile', 'comments', 'gallery', 'friends', 'forum_posts', 'mynotes', 'visitors'] %}
             {% set _empty = items[key] is defined and items[key].count is defined and items[key].count == 0 %}
             {% if items[key] is defined and not (_empty and not own and activeItem != key) %}
               <a href="{{ items[key].url }}"

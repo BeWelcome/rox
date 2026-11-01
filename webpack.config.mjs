@@ -89,6 +89,7 @@ Encore
     .addEntry('faq', './assets/js/faq.js')
     .addEntry('translations', './assets/js/admin/translations.js')
     .addEntry('translations_in_place', './assets/js/translations/in_place.js')
+    .addEntry('translations_tool', './assets/js/translations/tool.js')
     .addEntry('readmore', './assets/js/readmore.js')
     .addEntry('searchresults', './assets/js/searchresults.js')
     .addEntry('admin/tools/login_message', './assets/js/admin/tools/login_message.ts')

@@ -1,0 +1,155 @@
+{% extends 'admin/translations/tool/_layout.html.twig' %}
+{#
+  The texts of a language: the share translated, the views (missing first) with their counts, the search by code,
+  a row per text. A row opens the text in the side panel.
+  view, locale, code (the search), texts (Pagerfanta), rows (TranslationTool::text()), summary (with the search),
+  overview (without it), languages.
+#}
+{% set tab = 'texts' %}
+{% set languageMenu = languages %}
+{% set _views = {
+    missing: 'translation.tool.view.missing',
+    update: 'translation.tool.view.update',
+    all: 'translation.tool.view.all',
+    donottranslate: 'translation.tool.view.donottranslate',
+    archived: 'translation.tool.view.archived',
+} %}
+
+{% block tool %}
+    {% if code is empty and locale != 'en' %}
+        <section class="p-tr-summary" aria-label="{{ 'translation.tool.summary'|trans }}">
+            <div class="p-tr-summary__share">
+                <b>{{ overview.share|round(0, 'floor') }}%</b>
+                <span>{{ 'translation.tool.translated.of'|trans({done: overview.total - overview.missing, total: overview.total}) }}</span>
+            </div>
+            <div class="p-tr-summary__detail">
+                {% set _total = max(overview.total, 1) %}
+                <div class="p-tr-bar" role="img" aria-label="{{ 'translation.tool.translated.of'|trans({done: overview.total - overview.missing, total: overview.total}) }}">
+                    <span class="p-tr-bar__ok" style="width: {{ overview.upToDate / _total * 100 }}%"></span>
+                    <span class="p-tr-bar__update" style="width: {{ overview.outdated / _total * 100 }}%"></span>
+                </div>
+                <p class="p-tr-legend">
+                    <span class="p-tr-legend__item p-tr-legend__item--ok">{{ 'translation.tool.state.ok'|trans }} <b>{{ overview.upToDate|format_number }}</b></span>
+                    <a class="p-tr-legend__item p-tr-legend__item--update" href="{{ path('translations_locale_code', {type: 'update', locale: locale}) }}">{{ 'translation.tool.state.update'|trans }} <b>{{ overview.outdated|format_number }}</b> <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                    <a class="p-tr-legend__item p-tr-legend__item--missing" href="{{ path('translations_locale_code', {type: 'missing', locale: locale}) }}">{{ 'translation.tool.state.missing'|trans }} <b>{{ overview.missing|format_number }}</b> <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                </p>
+            </div>
+        </section>
+    {% endif %}
+
+    <div class="p-tr-filters">
+        <nav class="p-tr-chips" aria-label="{{ 'translation.tool.views'|trans }}">
+            {% for key, label in _views %}
+                <a class="p-tr-chip{{ key == view ? ' is-active' }}" href="{{ path('translations_locale_code', {type: key, locale: locale, code: code}) }}"{{ key == view ? ' aria-current="page"' }}>
+                    {{ label|trans }} <span class="p-tr-chip__count">{{ summary.counts[key]|format_number }}</span>
+                </a>
+            {% endfor %}
+        </nav>
+        <form class="p-tr-search" method="get" action="{{ path('translations_locale_code', {type: view, locale: locale}) }}" role="search">
+            <i class="fas fa-search p-tr-search__icon" aria-hidden="true"></i>
+            <input class="p-tr-search__input" type="search" name="q" value="{{ code }}" id="translation-search"
+                   placeholder="{{ 'translation.tool.search'|trans }}" aria-label="{{ 'translation.tool.search'|trans }}">
+            {% if code %}
+                <a class="p-tr-search__clear" href="{{ path('translations_locale_code', {type: view, locale: locale}) }}" aria-label="{{ 'translation.tool.search.clear'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></a>
+            {% endif %}
+        </form>
+    </div>
+
+    {% if rows is empty %}
+        <section class="p-tr-empty">
+            {% if code %}
+                <h2 class="p-tr-empty__title">{{ 'translation.tool.empty.search'|trans({view: _views[view]|trans, code: code}) }}</h2>
+                <p class="p-tr-empty__text">{{ 'translation.tool.empty.search.help'|trans }}</p>
+                <div class="p-tr-empty__actions">
+                    {% for key, label in _views|filter((label, key) => key != view and summary.counts[key] > 0) %}
+                        <a class="p-tr-button p-tr-button--primary" href="{{ path('translations_locale_code', {type: key, locale: locale, code: code}) }}">
+                            {{ 'translation.tool.empty.show.in'|trans({view: label|trans, count: summary.counts[key]}) }}
+                        </a>
+                    {% endfor %}
+                    <a class="p-tr-button" href="{{ path('translations_locale_code', {type: view, locale: locale}) }}">{{ 'translation.tool.search.clear'|trans }}</a>
+                </div>
+            {% else %}
+                <h2 class="p-tr-empty__title">{{ ('translation.tool.empty.' ~ view)|trans }}</h2>
+            {% endif %}
+        </section>
+    {% else %}
+        <section class="p-tr-list js-translation-list" data-locale="{{ locale }}" data-render-url="{{ path('translation_render') }}"
+                 data-label-translated="{{ 'translation.tool.state.ok'|trans }}"
+                 data-label-translated-on="{{ 'translation.tool.date.ok'|trans({date: '%date%'}) }}">
+            <div class="p-tr-list__head" aria-hidden="true">
+                <span>{{ 'translation.tool.column.english'|trans }}</span>
+                <span>{{ language_name_translated(locale, app.request.locale) }}</span>
+                <span>{{ 'translation.tool.column.state'|trans }}</span>
+            </div>
+            <ol class="p-tr-list__rows">
+                {% for row in rows %}
+                    {% set _url = {
+                        add: path('translation_add', {locale: locale, code: row.code}),
+                        edit: path('translation_edit', {locale: locale, code: row.code}),
+                    }[row.action]|default('') %}
+                    <li class="p-tr-row p-tr-row--{{ row.state }}{{ _url ? ' js-translation-row' }}" data-code="{{ row.code }}">
+                        <div class="p-tr-row__english">
+                            <p class="p-tr-row__code">
+                                {% if _url %}
+                                    <a class="p-tr-row__link js-tool-open" href="{{ _url }}" data-title="{{ row.code }}">{{ row.code }}</a>
+                                {% else %}
+                                    <span>{{ row.code }}</span>
+                                {% endif %}
+                                <span class="p-tr-format">{{ ('translation.tool.format.' ~ row.format.value)|trans }}</span>
+                            </p>
+                            <p class="p-tr-row__text">
+                                {%- if row.change -%}
+                                    {%- for part in text_diff(row.change.before, row.change.after) -%}
+                                        {%- if part.type == 'removed' -%}<del class="p-tr-diff__removed">{{ part.text }}</del>
+                                        {%- elseif part.type == 'added' -%}<ins class="p-tr-diff__added">{{ part.text }}</ins>
+                                        {%- else -%}{{ part.text }}{%- endif -%}
+                                    {%- endfor -%}
+                                {%- else -%}
+                                    {{ row.english }}
+                                {%- endif -%}
+                            </p>
+                            {% if row.description and row.description != 'No description given.' %}
+                                <p class="p-tr-row__description">{{ row.description }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="p-tr-row__translation">
+                            <span class="p-tr-row__locale" aria-hidden="true">{{ locale }}</span>
+                            {% if row.state == 'missing' %}
+                                <p class="p-tr-row__none">{{ 'translation.tool.not.translated'|trans }}</p>
+                            {% elseif row.state == 'dnt' %}
+                                <p class="p-tr-row__none">{{ 'translation.tool.stays.english'|trans }}</p>
+                            {% else %}
+                                <p class="p-tr-row__text js-translation-text">{{ row.translation }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="p-tr-row__state">
+                            <span class="p-tr-state p-tr-state--{{ row.state }} js-translation-state">{{ ('translation.tool.state.' ~ row.state)|trans }}</span>
+                            <span class="p-tr-row__date js-translation-date">
+                                {{- ('translation.tool.date.' ~ row.state)|trans({date: row.date ? row.date|format_date('medium') : ''}) -}}
+                            </span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ol>
+            <footer class="p-tr-list__foot">
+                <span>{{ 'translation.tool.range'|trans({from: texts.currentPageOffsetStart, to: texts.currentPageOffsetEnd, total: texts.nbResults}) }}</span>
+                {% if texts.haveToPaginate %}
+                    <span class="p-tr-pager">
+                        {% set _page = {type: view, locale: locale, code: code} %}
+                        {% if texts.hasPreviousPage %}
+                            <a class="p-tr-pager__step" href="{{ path('translations_locale_code', _page|merge({page: texts.previousPage})) }}" aria-label="{{ 'translation.tool.previous'|trans }}"><i class="fas fa-chevron-left" aria-hidden="true"></i></a>
+                        {% else %}
+                            <span class="p-tr-pager__step is-disabled" aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
+                        {% endif %}
+                        <span class="p-tr-pager__page">{{ texts.currentPage }} / {{ texts.nbPages }}</span>
+                        {% if texts.hasNextPage %}
+                            <a class="p-tr-pager__step" href="{{ path('translations_locale_code', _page|merge({page: texts.nextPage})) }}" aria-label="{{ 'translation.tool.next'|trans }}"><i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                        {% else %}
+                            <span class="p-tr-pager__step is-disabled" aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+                        {% endif %}
+                    </span>
+                {% endif %}
+            </footer>
+        </section>
+    {% endif %}
+{% endblock tool %}

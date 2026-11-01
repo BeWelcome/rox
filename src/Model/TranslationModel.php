@@ -3,8 +3,6 @@
 namespace App\Model;
 
 use App\Entity\Word;
-use App\Pagerfanta\WordListAdapter;
-use App\Repository\WordRepository;
 use App\Service\NativeLanguageNames;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -34,24 +32,6 @@ class TranslationModel
         foreach ($this->locales as $locale) {
             $this->removeAndWarmupCache($locale);
         }
-    }
-
-    public function getAdapter(string $type, string $locale, ?string $code): ?WordListAdapter
-    {
-        /** @var WordRepository $words */
-        $words = $this->entityManager->getRepository(Word::class);
-        $code ??= '';
-
-        $list = match ($type) {
-            'missing' => $words->missingList($locale, $code),
-            'update' => $words->updateList($locale),
-            'all' => $words->allList($locale, $code),
-            'archived' => $words->archivedList(),
-            'donottranslate' => $words->doNotTranslateList(),
-            default => null,
-        };
-
-        return null === $list ? null : new WordListAdapter($list);
     }
 
     public function updateDomainOfTranslations(Word $updatedTranslation): void

@@ -21,6 +21,7 @@ use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Form\SearchFormType;
 use App\Model\MockupProvider\MockupProviderInterface;
+use App\Model\Translation\TranslationTool;
 use App\Model\TranslationModel;
 use App\Twig\MockupExtension;
 use Carbon\Carbon;
@@ -62,49 +63,26 @@ class MockupController extends TranslationController
         }
     }
 
+    /**
+     * The features with their mails and pages, the first one open.
+     */
     #[Route(path: '/admin/translations/mockups', name: 'translations_mockups')]
-    public function selectMockup(Request $request): Response
+    public function selectMockup(Request $request, TranslationTool $translationTool): Response
     {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
-        /** @var Member $translator */
-        $translator = $this->getUser();
-        if (!$translator->hasRightsForLocale($request->getLocale())) {
-            return $this->redirectToRoute('translations_no_permissions');
-        }
-
-        return $this->render('admin/translations/mockups.html.twig', [
-            'features' => array_keys($this->mockups),
-            'submenu' => [
-                'active' => 'mockups',
-                'items' => $this->getSubmenuItems($request->getLocale()),
-            ],
-        ]);
+        return $this->showMockups($request, $translationTool, null);
     }
 
+    /**
+     * The features, this one open: its mails and pages, each to preview in the site's language.
+     */
     #[Route(path: '/admin/translations/mockups/{feature}', name: 'translations_mockups_feature')]
-    public function selectMockupsFeature(Request $request, string $feature): Response
+    public function selectMockupsFeature(Request $request, string $feature, TranslationTool $translationTool): Response
     {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
         if (!\array_key_exists($feature, $this->providers)) {
             return $this->redirectToRoute('translations_mockups');
         }
 
-        /** @var Member $translator */
-        $translator = $this->getUser();
-        if (!$translator->hasRightsForLocale($request->getLocale())) {
-            return $this->redirectToRoute('translations_no_permissions');
-        }
-
-        return $this->render('admin/translations/feature.html.twig', [
-            'feature' => $feature,
-            'provider' => $this->providers[$feature],
-            'submenu' => [
-                'active' => 'mockups',
-                'items' => $this->getSubmenuItems($request->getLocale()),
-            ],
-        ]);
+        return $this->showMockups($request, $translationTool, $feature);
     }
 
     /**
@@ -134,6 +112,32 @@ class MockupController extends TranslationController
         $parameters = $request->request->all();
 
         return $this->renderMockup($feature, $name, $request->getLocale(), $parameters);
+    }
+
+    private function showMockups(Request $request, TranslationTool $translationTool, ?string $feature): Response
+    {
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+
+        /** @var Member $translator */
+        $translator = $this->getUser();
+        if (!$translator->hasRightsForLocale($request->getLocale())) {
+            return $this->redirectToRoute('translations_no_permissions');
+        }
+
+        $features = array_keys($this->providers);
+        sort($features);
+        $feature ??= $features[0];
+
+        return $this->render('admin/translations/tool/mockups.html.twig', [
+            'locale' => $this->getToolLocale($request, $translator),
+            'languageMenu' => $this->getToolLanguages($translationTool, $translator),
+            'features' => array_map(fn (string $name): array => [
+                'name' => $name,
+                'count' => \count($this->providers[$name]->getMockups()),
+            ], $features),
+            'feature' => $feature,
+            'provider' => $this->providers[$feature],
+        ]);
     }
 
     private function getMockTemplateParams($template, $name = null): array

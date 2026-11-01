@@ -14,9 +14,9 @@ use App\Form\CustomDataClass\Translation\EditTranslationRequest;
 use App\Form\CustomDataClass\Translation\TranslationRequest;
 use App\Form\EditTranslationFormType;
 use App\Form\TranslationFormType;
+use App\Model\Translation\TranslationTool;
 use App\Model\TranslationModel;
 use App\Repository\LanguageRepository;
-use App\Repository\WordRepository;
 use App\Service\InPlaceTranslations;
 use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
@@ -25,11 +25,8 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use MessageFormatter;
-use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,7 +34,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Class TranslationController.
@@ -520,11 +516,14 @@ class TranslationController extends AbstractController
     {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        $locale = $request->getLocale();
+        /** @var Member $translator */
+        $translator = $this->getUser();
+        $locale = $this->getToolLocale($request, $translator);
 
+        // what is left to do first; English has nothing missing
         return $this->redirectToRoute('translations_locale_code', [
             'locale' => $locale,
-            'type' => 'all',
+            'type' => 'en' === $locale ? 'all' : 'missing',
         ]);
     }
 
@@ -534,92 +533,76 @@ class TranslationController extends AbstractController
         #[MapEntity(mapping: ['locale' => 'shortCode'])] Language $language,
         string $type,
         string $code,
+        TranslationTool $translationTool,
     ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
         /** @var Member $translator */
         $translator = $this->getUser();
-        if (!$translator->hasRightsForLocale($language->getShortCode())) {
+        $locale = $language->getShortCode();
+        if (!$translator->hasRightsForLocale($locale)) {
             return $this->redirectToRoute('translations_no_permissions');
         }
 
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 20);
-
-        $locale = $language->getShortCode();
-
-        $form = $this->createFormBuilder(['wordCode' => $code])
-            ->setMethod('GET')
-            ->add('wordCode', TextType::class, [
-                'label' => 'translation.id',
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('search', SubmitType::class, [
-                'label' => 'search',
-            ])
-            ->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $newCode = $data['wordCode'];
-            if ($code !== $newCode) {
-                $page = 1;
-                $code = $newCode;
-            }
+        // the search field: the code goes into the address, as links to a search have it
+        if ($request->query->has('q')) {
+            return $this->redirectToRoute('translations_locale_code', [
+                'type' => $type,
+                'locale' => $locale,
+                'code' => trim($request->query->getString('q')),
+            ]);
         }
 
-        $translationAdapter = $this->translationModel->getAdapter($type, $locale, $code);
+        $texts = $translationTool->texts($type, $locale, $code, $request->query->getInt('page', 1));
+        $summary = $translationTool->summary($locale, $code);
 
-        $translations = new Pagerfanta($translationAdapter);
-        $translations->setMaxPerPage($limit);
-        $translations->setCurrentPage($page);
-
-        /** @var WordRepository $translationRepository */
-        $translationRepository = $this->entityManager->getRepository(Word::class);
-        $countAll = $translationRepository->getTranslatableItemsCount('en');
-        $countTranslated = $translationRepository->getTranslatableItemsCount($language->getShortCode());
-
-        return $this->render('admin/translations/list.html.twig', [
-            'type' => $type,
-            'form' => $form->createView(),
-            'code' => $code,
+        return $this->render('admin/translations/tool/list.html.twig', [
+            'view' => $type,
             'locale' => $locale,
-            'count_all' => $countAll,
-            'count_translated' => $countTranslated,
-            'routeName' => 'translations_locale_code',
-            'routeParams' => array_merge(
-                ['type' => $type, 'code' => $code, 'locale' => $locale],
-                $request->query->all()
+            'code' => $code,
+            'texts' => $texts,
+            'rows' => array_map(
+                static fn (array $row): array => $translationTool->text($row, $type),
+                iterator_to_array($texts->getCurrentPageResults(), false)
             ),
-            'translations' => $translations,
-            'submenu' => [
-                'active' => $type,
-                'items' => $this->getSubmenuItems($locale),
-            ],
+            'summary' => $summary,
+            // without the search: the share of the language
+            'overview' => '' === $code ? $summary : $translationTool->summary($locale),
+            'languages' => $this->getToolLanguages($translationTool, $translator),
         ]);
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/admin/translate/statistics', name: 'translation_statistics')]
-    public function statistics(Request $request, EntityManagerInterface $entityManager)
+    public function statistics(Request $request, TranslationTool $translationTool): Response
     {
-        /** @var WordRepository $translationRepository */
-        $translationRepository = $entityManager->getRepository(Word::class);
-        $countAll = $translationRepository->getTranslatableItemsCount('en');
-        $translationDetails = $translationRepository->getTranslationDetails($this->locales);
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        return $this->render('admin/translations/statistics.html.twig', [
-            'count_all' => $countAll,
-            'details' => $translationDetails,
-            'submenu' => [
-                'active' => 'statistics',
-                'items' => $this->getSubmenuItems($request->getLocale(), 'statistics'),
-            ],
+        /** @var Member $translator */
+        $translator = $this->getUser();
+        $sort = $request->query->getString('sort', 'share');
+        $languages = $translationTool->statistics();
+        if ('name' === $sort) {
+            usort($languages, static fn (array $a, array $b): int => strcmp($a['locale'], $b['locale']));
+        } elseif ('recent' === $sort) {
+            usort($languages, static fn (array $a, array $b): int => ($b['date'] ?? 0) <=> ($a['date'] ?? 0));
+        } else {
+            $sort = 'share';
+        }
+        $rank = [];
+        foreach ($translationTool->statistics() as $position => $statistics) {
+            $rank[$statistics['locale']] = $position + 1;
+        }
+        $yours = $translationTool->languagesOf($translator) ?? [];
+
+        return $this->render('admin/translations/tool/statistics.html.twig', [
+            'locale' => $this->getToolLocale($request, $translator),
+            'sort' => $sort,
+            'languages' => $languages,
+            'rank' => $rank,
+            'yours' => array_values(array_filter($languages, static fn (array $language): bool => \in_array($language['locale'], $yours, true))),
+            'yourLocales' => $yours,
+            'total' => $translationTool->summary('en')['total'],
+            'languageMenu' => $this->getToolLanguages($translationTool, $translator),
         ]);
     }
 
@@ -705,6 +688,42 @@ class TranslationController extends AbstractController
         }
 
         return $submenuItems;
+    }
+
+    /**
+     * The language the tool opens in: the site's language if the member translates it, else their first one.
+     */
+    protected function getToolLocale(Request $request, Member $translator): string
+    {
+        $locale = $request->getLocale();
+        if ($translator->hasRightsForLocale($locale)) {
+            return $locale;
+        }
+
+        foreach ($this->locales as $candidate) {
+            if ($translator->hasRightsForLocale($candidate)) {
+                return $candidate;
+            }
+        }
+
+        return $locale;
+    }
+
+    /**
+     * The languages of the language menu: the member's, with the share translated.
+     *
+     * @return list<array{locale: string, share: float}>
+     */
+    protected function getToolLanguages(TranslationTool $translationTool, Member $translator): array
+    {
+        $languages = [];
+        foreach ($translationTool->statistics() as $statistics) {
+            if ($translator->hasRightsForLocale($statistics['locale'])) {
+                $languages[] = ['locale' => $statistics['locale'], 'share' => $statistics['share']];
+            }
+        }
+
+        return $languages;
     }
 
     /**

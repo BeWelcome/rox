@@ -8,108 +8,104 @@ use App\Entity\Word;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use InvalidArgumentException;
 
 class WordRepository extends EntityRepository
 {
-    // The lists of the translation tool. Each row: code, domain, shortCode, sentence, created (and majorUpdate for
-    // updateList()); one row per code, so WordListAdapter counts the distinct codes of the root alias.
+    /** The views of the translation tool's list (toolList()) */
+    public const array TOOL_VIEWS = ['missing', 'update', 'all', 'donottranslate', 'archived'];
 
     /**
-     * Every code, with its text in the locale or else in English. Optionally only codes or texts containing $term.
+     * A view of the translation tool's list: the English texts with their translation in the locale, if any.
+     * Optionally only codes containing $term. Every row has the same columns, see the select below; one row per code,
+     * so WordListAdapter counts the codes.
+     * - missing: to translate, no translation yet, the newest first;
+     * - update: to translate, the English text changed since the translation (a major update first);
+     * - all: to translate, the last changed first;
+     * - donottranslate: texts that stay English;
+     * - archived: texts no longer used.
      */
-    public function allList(string $locale, string $term = ''): QueryBuilder
+    public function toolList(string $view, string $locale, string $term = ''): QueryBuilder
     {
-        $qb = $this->createQueryBuilder('w')
-            ->select('DISTINCT w.code AS code')
-            ->addSelect('COALESCE(IDENTITY(lang.language), IDENTITY(dflt.language)) AS shortCode')
-            ->addSelect('COALESCE(lang.domain, dflt.domain) AS domain')
-            ->addSelect('COALESCE(lang.sentence, dflt.sentence) AS sentence')
-            ->addSelect('COALESCE(lang.created, dflt.created) AS created')
-            ->addSelect('dflt.sentence AS english')
-            ->leftJoin(
-                Word::class,
-                'dflt',
-                Join::WITH,
-                "dflt.code = w.code AND IDENTITY(dflt.language) = 'en' AND (dflt.isArchived IS NULL OR dflt.isArchived = false)"
-                . ' AND dflt.translationAllowed = :allowed'
-            )
-            ->leftJoin(
-                Word::class,
-                'lang',
-                Join::WITH,
-                'lang.code = w.code AND IDENTITY(lang.language) = :locale AND (lang.isArchived IS NULL OR lang.isArchived = false)'
-            )
-            ->setParameter('allowed', TranslationAllowedType::TRANSLATION_ALLOWED)
-            ->setParameter('locale', $locale)
-            ->orderBy('created', 'DESC');
+        $qb = $this->createQueryBuilder('en')
+            ->select('en.code AS code, en.domain AS domain, en.sentence AS english, en.description AS description')
+            ->addSelect('en.format AS format, en.previousSentence AS previousSentence, en.sentenceChanged AS sentenceChanged')
+            ->addSelect('en.created AS created, en.updated AS updated, en.majorUpdate AS majorUpdate')
+            ->addSelect('en.isArchived AS isArchived, en.translationAllowed AS translationAllowed')
+            ->addSelect('tr.sentence AS translation, tr.created AS translationCreated, tr.updated AS translationUpdated')
+            ->leftJoin(Word::class, 'tr', Join::WITH, 'tr.code = en.code AND IDENTITY(tr.language) = :locale')
+            ->where("IDENTITY(en.language) = 'en'")
+            ->setParameter('locale', $locale);
+
+        $current = '(en.isArchived IS NULL OR en.isArchived = false)';
+        $toTranslate = $current . ' AND en.translationAllowed = :allowed';
+        $outdated = '(en.majorUpdate > tr.updated OR en.updated > tr.updated)';
+        match ($view) {
+            'missing' => $qb->andWhere($toTranslate)->andWhere('tr.code IS NULL')
+                ->orderBy('en.created', 'DESC'),
+            'update' => $qb->andWhere($toTranslate)->andWhere('tr.code IS NOT NULL')->andWhere($outdated)
+                ->addSelect('CASE WHEN en.majorUpdate > tr.updated THEN 1 ELSE 0 END AS HIDDEN major')
+                ->orderBy('major', 'DESC')->addOrderBy('en.updated', 'DESC'),
+            'all' => $qb->andWhere($toTranslate)->orderBy('en.updated', 'DESC'),
+            'donottranslate' => $qb->andWhere($current)->andWhere('en.translationAllowed = :notAllowed')
+                ->setParameter('notAllowed', TranslationAllowedType::TRANSLATION_NOT_ALLOWED)
+                ->orderBy('en.updated', 'DESC'),
+            'archived' => $qb->andWhere('en.isArchived = true')->orderBy('en.updated', 'DESC'),
+            default => throw new InvalidArgumentException('Unknown view ' . $view),
+        };
+        if (\in_array($view, ['missing', 'update', 'all'], true)) {
+            $qb->setParameter('allowed', TranslationAllowedType::TRANSLATION_ALLOWED);
+        }
+        // texts of the same date by code, so that every page has the same order
+        $qb->addOrderBy('en.code', 'ASC');
         if ('' !== $term) {
-            $qb->where('w.code LIKE :term OR w.sentence LIKE :term')->setParameter('term', '%' . $term . '%');
+            $qb->andWhere('en.code LIKE :term')->setParameter('term', '%' . addcslashes($term, '%_\\') . '%');
         }
 
         return $qb;
     }
 
     /**
-     * English texts to translate that have no text in the locale yet. Optionally only codes containing $term.
+     * How many texts each view of the translation tool's list has.
+     *
+     * @return array<string, int> by view (TOOL_VIEWS)
      */
-    public function missingList(string $locale, string $term = ''): QueryBuilder
+    public function toolCounts(string $locale, string $term = ''): array
     {
-        $translated = $this->createQueryBuilder('translated')
-            ->select('translated.code')
-            ->where('IDENTITY(translated.language) = :locale');
-        $qb = $this->englishRows('w')
-            ->andWhere('(w.isArchived IS NULL OR w.isArchived = false)')
-            ->andWhere('w.translationAllowed = :allowed')
-            ->andWhere('w.code NOT IN (' . $translated->getDQL() . ')')
-            ->setParameter('allowed', TranslationAllowedType::TRANSLATION_ALLOWED)
-            ->setParameter('locale', $locale)
-            ->orderBy('w.created', 'DESC');
-        if ('' !== $term) {
-            $qb->andWhere('w.code LIKE :term')->setParameter('term', '%' . $term . '%');
+        $counts = [];
+        foreach (self::TOOL_VIEWS as $view) {
+            $counts[$view] = (int) $this->toolList($view, $locale, $term)
+                ->select('COUNT(en.code)')
+                ->resetDQLPart('orderBy')
+                ->getQuery()
+                ->getSingleScalarResult();
         }
 
-        return $qb;
+        return $counts;
     }
 
     /**
-     * Texts in the locale whose English text changed since; majorUpdate is 1 for a major change.
+     * For every language: how many of the texts to translate it has, and how many of them changed in English since.
+     *
+     * @return array<string, array{translated: int, outdated: int}> by locale
      */
-    public function updateList(string $locale): QueryBuilder
+    public function toolLanguageCounts(): array
     {
-        return $this->createQueryBuilder('w')
-            ->select('w.code AS code, w.domain AS domain, IDENTITY(w.language) AS shortCode, w.sentence AS sentence')
-            ->addSelect('w.created AS created, en.sentence AS english')
-            ->addSelect('CASE WHEN en.majorUpdate > w.updated THEN 1 ELSE 0 END AS majorUpdate')
-            ->innerJoin(Word::class, 'en', Join::WITH, "en.code = w.code AND IDENTITY(en.language) = 'en'")
-            ->where('IDENTITY(w.language) = :locale')
-            ->andWhere('(en.isArchived IS NULL OR en.isArchived = false)')
-            ->andWhere('en.translationAllowed = :allowed')
-            ->andWhere('en.majorUpdate > w.updated OR en.updated > w.updated')
-            ->setParameter('locale', $locale)
-            ->setParameter('allowed', TranslationAllowedType::TRANSLATION_ALLOWED)
-            ->orderBy('majorUpdate', 'DESC')
-            ->addOrderBy('en.updated', 'DESC');
-    }
+        $rows = $this->getEntityManager()->getConnection()->fetchAllAssociative(
+            "SELECT tr.ShortCode AS locale, COUNT(*) AS translated,
+                    SUM(CASE WHEN en.majorupdate > tr.updated OR en.updated > tr.updated THEN 1 ELSE 0 END) AS outdated
+             FROM word en
+             JOIN word tr ON tr.code = en.code AND tr.ShortCode <> 'en'
+             WHERE en.ShortCode = 'en' AND (en.isarchived IS NULL OR en.isarchived = 0) AND en.donottranslate = ?
+             GROUP BY tr.ShortCode",
+            [TranslationAllowedType::TRANSLATION_ALLOWED]
+        );
+        $counts = [];
+        foreach ($rows as $row) {
+            $counts[(string) $row['locale']] = ['translated' => (int) $row['translated'], 'outdated' => (int) $row['outdated']];
+        }
 
-    /**
-     * Archived English texts, last updated first.
-     */
-    public function archivedList(): QueryBuilder
-    {
-        return $this->englishRows('w')
-            ->andWhere('w.isArchived = true')
-            ->orderBy('w.updated', 'DESC');
-    }
-
-    /**
-     * English texts that must not be translated, last updated first.
-     */
-    public function doNotTranslateList(): QueryBuilder
-    {
-        return $this->englishRows('w')
-            ->andWhere('w.translationAllowed = :notAllowed')
-            ->setParameter('notAllowed', TranslationAllowedType::TRANSLATION_NOT_ALLOWED)
-            ->orderBy('w.updated', 'DESC');
+        return $counts;
     }
 
     public function getTranslatableItemsCount($locale)
@@ -196,14 +192,6 @@ class WordRepository extends EntityRepository
         }
 
         return $translationDetails;
-    }
-
-    private function englishRows(string $alias): QueryBuilder
-    {
-        return $this->createQueryBuilder($alias)
-            ->select("{$alias}.code AS code, {$alias}.domain AS domain, IDENTITY({$alias}.language) AS shortCode")
-            ->addSelect("{$alias}.sentence AS sentence, {$alias}.created AS created, {$alias}.sentence AS english")
-            ->where("IDENTITY({$alias}.language) = 'en'");
     }
 
     private function getLatestChange(string $locale): ?array

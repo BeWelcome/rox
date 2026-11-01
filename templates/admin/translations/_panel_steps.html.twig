@@ -1,0 +1,26 @@
+{#
+  In the side panel of the translation tool's list (?position=&total=): the previous and the next text of the list.
+  The list opens them (assets/js/translations/tool.js, "bw-translation-step").
+#}
+{% set _position = app.request.query.getInt('position') %}
+{% set _total = app.request.query.getInt('total') %}
+{% if _total > 0 %}
+    <div class="p-tr-steps">
+        <button type="button" class="p-tr-steps__step js-translation-step" data-step="-1" aria-label="{{ 'translation.tool.previous'|trans }}"{{ _position <= 1 ? ' disabled' }}>
+            <i class="fas fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <span class="p-tr-steps__position">{{ 'translation.tool.position'|trans({position: _position, total: _total}) }}</span>
+        <button type="button" class="p-tr-steps__step js-translation-step" data-step="1" aria-label="{{ 'translation.tool.next'|trans }}"{{ _position >= _total ? ' disabled' }}>
+            <i class="fas fa-chevron-right" aria-hidden="true"></i>
+        </button>
+    </div>
+    <script>
+        document.querySelectorAll('.js-translation-step').forEach(function (button) {
+            button.addEventListener('click', function () {
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: 'bw-translation-step', step: Number(button.dataset.step) }, window.location.origin);
+                }
+            });
+        });
+    </script>
+{% endif %}

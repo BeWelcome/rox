@@ -20,6 +20,11 @@
 {% block drawer_eyebrow %}<i class="fas fa-language" aria-hidden="true"></i> {{ 'translations.headline'|trans }}{% endblock %}
 {% block subpage_title %}{{ form.wordCode.vars.value }}{% endblock %}
 {% block drawer_intro %}{{ form.locale.vars.value }} · {{ form.domain.vars.value }}{% endblock %}
+{# Opened from the list of the translation tool: previous and next (?position=&total=) instead of closing #}
+{% set _position = app.request.query.getInt('position') %}
+{% set _total = app.request.query.getInt('total') %}
+{% block drawer_options %}{{ _total > 0 ? 'noclose' }}{% endblock %}
+{% block drawer_tools %}{% include 'admin/translations/_panel_steps.html.twig' %}{% endblock %}
 
 {% block content %}
     {% if app.request.query.getBoolean('embed') %}
@@ -142,7 +147,8 @@
     {% endif %}
 
     <div class="p-edit-subpage__actions">
-        {{ form_widget(form.update) }}
+        {# from the list, saving opens the next text #}
+        {{ form_widget(form.update, _position > 0 and _position < _total ? {label: 'translation.tool.save.next'} : {}) }}
     </div>
     {{ form_end(form) }}
 {% endblock subpage_body %}

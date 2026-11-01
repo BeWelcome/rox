@@ -46,19 +46,25 @@ class DatabaseLoader implements LoaderInterface
         string $english,
         ?DateTimeInterface $majorUpdate,
         ?string $translationAllowed,
-        Word $translation,
+        string $translation,
+        ?DateTimeInterface $translationUpdated,
     ): string {
-        if ($translation->getUpdated() < $majorUpdate) {
+        // a translation without a date is as new as can be (Word::getUpdated())
+        if (null !== $translationUpdated && null !== $majorUpdate && $translationUpdated < $majorUpdate) {
             return $english;
         }
         if (TranslationAllowedType::TRANSLATION_ALLOWED === $translationAllowed || str_starts_with($code, 'broadcast_')) {
-            return $translation->getSentence();
+            return $translation;
         }
 
         return $english;
     }
 
-    private function getTranslationsForLocale($locale, $domain)
+    /**
+     * @return list<array{code: string, sentence: string, updated: ?DateTimeInterface, majorUpdate: ?DateTimeInterface,
+     *     translationAllowed: string}>
+     */
+    private function getTranslationsForLocale(string $locale, string $domain): array
     {
         try {
             return $this->em->getRepository(Word::class)->getTranslationsForLocale($locale, $domain);
@@ -79,22 +85,18 @@ class DatabaseLoader implements LoaderInterface
 
         $catalogue = new MessageCatalogue($locale);
 
-        /** @var Word[] $translations */
-        $translations = $this->getTranslationsForLocale($locale, $domain);
-
-        if (null !== $translations) {
-            foreach ($translations as $translation) {
-                $code = $translation->getCode();
-                if ($originals->has($code, $domain)) {
-                    $metadata = $originals->getMetadata($code, $domain);
-                    $catalogue->set($code, self::shownText(
-                        $code,
-                        $originals->get($code, $domain),
-                        $metadata['majorUpdate'],
-                        $metadata['translationAllowed'],
-                        $translation,
-                    ), $domain);
-                }
+        foreach ($this->getTranslationsForLocale($locale, $domain) as $translation) {
+            $code = $translation['code'];
+            if ($originals->has($code, $domain)) {
+                $metadata = $originals->getMetadata($code, $domain);
+                $catalogue->set($code, self::shownText(
+                    $code,
+                    $originals->get($code, $domain),
+                    $metadata['majorUpdate'],
+                    $metadata['translationAllowed'],
+                    $translation['sentence'],
+                    $translation['updated'],
+                ), $domain);
             }
         }
 
@@ -108,20 +110,12 @@ class DatabaseLoader implements LoaderInterface
         }
         $catalogue = $this->originals[$domain];
 
-        /** @var Word[] $translations */
-        $translations = $this->getTranslationsForLocale('en', $domain);
-
-        if (null !== $translations) {
-            foreach ($translations as $translation) {
-                $code = $translation->getCode();
-                $sentence = $translation->getSentence();
-                $catalogue->set($code, $sentence, $domain);
-                $metaData = [
-                    'majorUpdate' => $translation->getMajorUpdate(),
-                    'translationAllowed' => $translation->getTranslationAllowed(),
-                ];
-                $catalogue->setMetadata($code, $metaData, $domain);
-            }
+        foreach ($this->getTranslationsForLocale('en', $domain) as $translation) {
+            $catalogue->set($translation['code'], $translation['sentence'], $domain);
+            $catalogue->setMetadata($translation['code'], [
+                'majorUpdate' => $translation['majorUpdate'],
+                'translationAllowed' => $translation['translationAllowed'],
+            ], $domain);
         }
 
         return $catalogue;

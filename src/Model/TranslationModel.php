@@ -174,7 +174,8 @@ class TranslationModel
                 $english->getSentence(),
                 $english->getMajorUpdate(),
                 $english->getTranslationAllowed(),
-                $translation,
+                $translation->getSentence(),
+                $translation->getUpdated(),
             ),
         };
         // the database is a resource of the domains that have a file for the locale (translations/messages.de.db)

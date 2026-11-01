@@ -2,11 +2,10 @@
 
 namespace App\Command;
 
-use App\Entity\Language;
-use App\Entity\Member;
-use App\Entity\Word;
 use App\Model\Translation\MissingTranslation;
-use Doctrine\ORM\EntityManagerInterface;
+use DateTime;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Types\Types;
 use InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -25,7 +24,7 @@ use Symfony\Component\Yaml\Yaml;
 )]
 class TranslationsAddMissingCommand extends Command
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(private readonly Connection $connection)
     {
         parent::__construct();
     }
@@ -44,15 +43,15 @@ class TranslationsAddMissingCommand extends Command
         $count = 0;
         $lastFile = '';
 
+        // Plain SQL with the columns the word table has: at the start of a container the texts are added before the
+        // migrations of a deployment ran (docker/php/docker-entrypoint.sh), which may add columns to word.
+        $connection = $this->connection;
+        $hasFormat = \array_key_exists('format', $connection->createSchemaManager()->listTableColumns('word'));
+        // bwadmin is the author (without loading the ORM's metadata, which the cache:clear below warms)
+        $adminId = (int) $connection->fetchOne('SELECT id FROM member WHERE id = 1');
+        $format = $hasFormat ? ', format' : '';
+
         foreach ($files as $file) {
-            $memberRepository = $this->entityManager->getRepository(Member::class);
-            $admin = $memberRepository->find(1);
-
-            $languageRepository = $this->entityManager->getRepository(Language::class);
-            $english = $languageRepository->findOneBy(['shortCode' => 'en']);
-
-            $translationRepository = $this->entityManager->getRepository(Word::class);
-
             $missing = Yaml::parseFile($file);
             foreach ($missing as $translationId => $entry) {
                 // a list (text, description, domain, do not translate) or a map that can also give the format
@@ -65,59 +64,55 @@ class TranslationsAddMissingCommand extends Command
                 }
                 $sentence = $missingTranslation->text;
 
-                $translation = $translationRepository->findOneBy(['code' => $translationId]);
-                if (null === $translation) {
-                    if ($lastFile !== $file) {
-                        $io->section(\sprintf('Importing missing translations from file: %s', $file));
-                        $lastFile = $file;
-                    }
+                if (false !== $connection->fetchOne('SELECT 1 FROM word WHERE code = ? LIMIT 1', [$translationId])) {
+                    continue;
+                }
 
-                    ++$count;
-                    if ('@' === $sentence[0]) {
-                        $offset = ('-' === $sentence[1]) ? 2 : 1;
-                        $reusedTranslationId = substr((string) $sentence, $offset);
-                        $io->note(\sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
-                        $connection = $this->entityManager->getConnection();
-                        $statement = $connection->prepare('
-                            INSERT INTO word (code, domain, ShortCode, Sentence, donottranslate, Description, author_id, updated, created, TranslationPriority, isarchived, majorupdate, format)
-                            SELECT :translationId, domain, ShortCode, Sentence, donottranslate, Description, :admin, updated, created, TranslationPriority, isarchived, majorupdate, format
-                            FROM word
-                            WHERE code = :reusedTranslationId
-                        ');
-                        $statement->bindValue(':translationId', $translationId);
-                        $statement->bindValue(':reusedTranslationId', $reusedTranslationId);
-                        $statement->bindValue(':admin', $admin->getId());
-                        $statement->executeQuery();
+                if ($lastFile !== $file) {
+                    $io->section(\sprintf('Importing missing translations from file: %s', $file));
+                    $lastFile = $file;
+                }
 
-                        // We had a translation id that started with @-.
-                        if (2 === $offset) {
-                            $io->note(\sprintf('Deleting %s.', $reusedTranslationId));
-                            // Delete existing translations, so that missing translations can be found
-                            $statement = $connection->prepare('
-                                DELETE FROM word WHERE code = :reusedTranslationId
-                            ');
-                            $statement->bindValue(':reusedTranslationId', $reusedTranslationId);
-                            $statement->executeStatement();
-                        }
-                    } else {
-                        $io->note(\sprintf('Adding %s: %s', $translationId, $sentence));
+                ++$count;
+                if ('@' === $sentence[0]) {
+                    $offset = ('-' === $sentence[1]) ? 2 : 1;
+                    $reusedTranslationId = substr((string) $sentence, $offset);
+                    $io->note(\sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
+                    $connection->executeStatement(
+                        'INSERT INTO word (code, domain, ShortCode, Sentence, donottranslate, Description, author_id, updated, created, TranslationPriority, isarchived, majorupdate' . $format . ')
+                         SELECT :translationId, domain, ShortCode, Sentence, donottranslate, Description, :admin, updated, created, TranslationPriority, isarchived, majorupdate' . $format . '
+                         FROM word
+                         WHERE code = :reusedTranslationId',
+                        ['translationId' => $translationId, 'reusedTranslationId' => $reusedTranslationId, 'admin' => $adminId]
+                    );
 
-                        $translation = new Word();
-                        $translation->setCode($translationId);
-                        $translation->setDescription($missingTranslation->description);
-                        $translation->setSentence($sentence);
-                        $translation->setDomain($missingTranslation->domain);
-                        $translation->setLanguage($english);
-                        $translation->setTranslationAllowed($missingTranslation->translationAllowed);
-                        // null: detected from the text
-                        $translation->setFormat($missingTranslation->format);
-                        $translation->setIsArchived(false);
-                        $translation->setAuthor($admin);
-
-                        $this->entityManager->persist($translation);
+                    // We had a translation id that started with @-.
+                    if (2 === $offset) {
+                        $io->note(\sprintf('Deleting %s.', $reusedTranslationId));
+                        // Delete existing translations, so that missing translations can be found
+                        $connection->executeStatement('DELETE FROM word WHERE code = ?', [$reusedTranslationId]);
                     }
                 } else {
-                    $this->entityManager->detach($translation);
+                    $io->note(\sprintf('Adding %s: %s', $translationId, $sentence));
+
+                    $values = [
+                        'code' => $translationId,
+                        'ShortCode' => 'en',
+                        'Sentence' => $sentence,
+                        'Description' => $missingTranslation->description,
+                        'domain' => $missingTranslation->domain,
+                        'donottranslate' => $missingTranslation->translationAllowed,
+                        'author_id' => $adminId,
+                        'created' => new DateTime(),
+                        'updated' => new DateTime(),
+                        'TranslationPriority' => 5,
+                        'isarchived' => 0,
+                    ];
+                    if ($hasFormat) {
+                        // null: detected from the text
+                        $values['format'] = $missingTranslation->format?->value;
+                    }
+                    $connection->insert('word', $values, ['created' => Types::DATETIME_MUTABLE, 'updated' => Types::DATETIME_MUTABLE]);
                 }
             }
         }
@@ -128,8 +123,6 @@ class TranslationsAddMissingCommand extends Command
             return Command::SUCCESS;
         }
 
-        $this->entityManager->flush();
-
         $io->success('Finished importing the translations into the database');
 
         $command = $this->getApplication()->find('cache:clear');
@@ -137,7 +130,13 @@ class TranslationsAddMissingCommand extends Command
         $clearCache = new ArrayInput([]);
 
         $io->note('clearing cache to force update of translations');
+        $result = $command->run($clearCache, new NullOutput());
 
-        return $command->run($clearCache, new NullOutput());
+        if (!filter_var(\ini_get('opcache.validate_timestamps'), \FILTER_VALIDATE_BOOL) && filter_var(\ini_get('opcache.enable'), \FILTER_VALIDATE_BOOL)) {
+            // PHP-FPM keeps the catalogues it compiled; it doesn't look at the new files (production)
+            $io->warning('PHP does not check its compiled files for changes here (opcache.validate_timestamps is off): restart the php container so that the site shows the new texts.');
+        }
+
+        return $result;
     }
 }

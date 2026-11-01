@@ -1,13 +1,15 @@
 {% extends 'admin/translations/tool/_layout.html.twig' %}
 {#
   A mail or a page with test data, as members get it (MockupPreview): what it is, where it shows, its variants, and
-  the mail or the page's content. Its texts are in the list for translation below the page.
+  the mail or the page's content. Its texts are in the list for translation below the page, translation mode on or
+  off (in_place_always).
   preview.styles are the mail's own style elements (the site's page styles them from its stylesheets).
   locale, languageMenu, feature, name, mockup ({type, template, url?, description?}), variants ({label, parameters}),
   variant (the one shown, or null), preview ({html, stylesheets, styles}, or null when the mockup is broken: a hint to
   report it instead).
 #}
 {% set tab = 'mockups' %}
+{% set in_place_always = true %}
 {% set _type = mockup.type == 'email' ? 'mail' : (mockup.type == 'template' ? 'template' : 'page') %}
 
 {% block stylesheets %}

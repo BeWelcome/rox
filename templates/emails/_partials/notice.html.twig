@@ -1,0 +1,9 @@
+{# A short note with an icon. html: translated (and purified) by the caller; tone: 'info' (default), 'warn', 'success' or 'danger'. #}
+{% set _tones = {
+    info: { background: '#eef2f7', color: '#334155', icon: '&#9432;' },
+    warn: { background: '#fef3c7', color: '#92400e', icon: '!' },
+    success: { background: '#dcfce7', color: '#166534', icon: '&#10003;' },
+    danger: { background: '#fee2e2', color: '#991b1b', icon: '!' },
+} %}
+{% set _tone = _tones[tone ?? 'info'] ?? _tones.info %}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 18px;"><tr><td width="28" valign="top" style="width:28px;padding:12px 0 12px 14px;background:{{ _tone.background }};border-radius:12px 0 0 12px;font-family:Helvetica, Arial, sans-serif;font-size:15px;line-height:20px;font-weight:bold;color:{{ _tone.color }};vertical-align:top;">{{ _tone.icon|raw }}</td><td style="padding:12px 14px 12px 6px;background:{{ _tone.background }};border-radius:0 12px 12px 0;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;color:{{ _tone.color }};">{{ html|raw }}</td></tr></table>

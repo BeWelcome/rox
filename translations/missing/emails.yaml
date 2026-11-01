@@ -95,3 +95,11 @@ email.suspension.notice.body:
         <p>Best regards,<br>
             The BeWelcome Team</p>
     - Body of the automated suspension notice email
+email.footer.free:
+    text: 'BeWelcome is free, non-profit and run by volunteers.'
+    description: 'Footer of every email, under the card'
+    format: plain
+email.footer.settings:
+    text: 'Email settings'
+    description: 'Footer of every email: link to the preferences, where members choose which emails they get'
+    format: plain

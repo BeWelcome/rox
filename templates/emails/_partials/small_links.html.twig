@@ -1,0 +1,7 @@
+{# Small links under the buttons ("Report to BeWelcome"). links: [{ label, url }] #}
+<p style="margin:8px 0 0;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;">
+{%- for link in links -%}
+{%- if not loop.first %} &nbsp;&middot;&nbsp; {% endif -%}
+<a href="{{ link.url }}" style="color:#64748b;font-weight:normal;text-decoration:underline;">{{ link.label }}</a>
+{%- endfor -%}
+</p>

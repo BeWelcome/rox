@@ -15,6 +15,10 @@
     (constant(S ~ 'REQUEST_CANCELLED')): { key: 'cancelled', tone: 'danger', icon: 'fa fa-times' },
 } %}
 {% set status = statuses[invitation.status] ?? { key: null, tone: 'pending', icon: '' } %}
+{# Still waiting (or maybe) when the arrival has passed: nobody can answer any more (BaseRequestModel::hasExpired) #}
+{% if invitation.status in [constant(S ~ 'REQUEST_OPEN'), constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED')] and invitation.arrival|date('Y-m-d') < 'now'|date('Y-m-d') %}
+    {% set status = { key: 'expired', tone: 'expired', icon: 'fas fa-calendar-xmark' } %}
+{% endif %}
 {% set nights = date(invitation.departure|date('Y-m-d')).diff(date(invitation.arrival|date('Y-m-d'))).days %}
 {% set sameYear = invitation.arrival|date('Y') == invitation.departure|date('Y') %}
 

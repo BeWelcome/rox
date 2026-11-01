@@ -68,4 +68,43 @@ class RequestStateListTest extends WebTestCase
         self::assertCount(1, $item->filter('.c-req-pill--closed'));
         self::assertCount(1, $crawler->filter('.c-inbox-item.is-closed .c-inbox-item__link[href*="/conversation/' . $message->getId() . '"]'));
     }
+
+    public function testARequestWithoutAnswerBeforeItsArrivalIsExpired(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $members = $entityManager->getRepository(Member::class);
+        $host = $members->findOneBy(['username' => 'member-2']);
+        $guest = $members->findOneBy(['username' => 'member-5']);
+
+        $request = new HostingRequest()
+            ->setArrival(new DateTime('-3 days'))
+            ->setDeparture(new DateTime('-1 day'));
+        $subject = new Subject()->setSubject('zztest expired subject');
+        $message = new Message()
+            ->setSender($guest)
+            ->setReceiver($host)
+            ->setInitiator($guest)
+            ->setSubject($subject)
+            ->setRequest($request)
+            ->setMessage('zztest expired')
+            ->setStatus(MessageStatusType::SENT)
+            ->setFolder(InFolderType::NORMAL);
+        $entityManager->persist($request);
+        $entityManager->persist($subject);
+        $entityManager->persist($message);
+        $entityManager->flush();
+
+        $client->loginUser($host);
+        $item = $client->request('GET', '/conversations/')
+            ->filter('.c-inbox-item__link[href*="/conversation/' . $message->getId() . '"]');
+        self::assertCount(1, $item->filter('.c-req-kind--expired'));
+        self::assertCount(1, $item->filter('.c-req-pill--expired'));
+        self::assertStringContainsString('request.status.expired', $item->filter('.c-req-status--expired')->text());
+
+        $crawler = $client->request('GET', '/conversation/' . $message->getId());
+        $this->assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('.c-stay-card--expired'));
+        self::assertStringContainsString('request.status.expired', $crawler->filter('.c-stay-card__status')->text());
+    }
 }

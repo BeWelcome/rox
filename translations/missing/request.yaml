@@ -156,3 +156,6 @@ invitation.decide.placeholder.maybe.short:
 invitation.decide.placeholder.decline.short:
     - 'Tell {username} why...'
     - Placeholder of the message when the guest declines an invitation (short, one line on phones)
+request.status.expired:
+    - 'Expired'
+    - Status of a hosting request or invitation that got no answer before the arrival date (it can't be answered any more)

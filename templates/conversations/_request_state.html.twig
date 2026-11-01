@@ -3,13 +3,16 @@
   landing/widget/conversations.html.twig), in two parts:
   - part 'kind': the round icon on the avatar;
   - part 'pill': the dates in a pill of the same colour, on the right (no icon, the avatar has it);
-  - part 'status': the state in words under the pill (Waiting, Maybe, Accepted, Declined, Cancelled; nothing while new and unread).
+  - part 'status': the state in words under the pill (Waiting, Maybe, Accepted, Declined, Cancelled, Expired; nothing while new and unread).
   New (not read yet): orange with the bed (or handshake for an invitation); waiting: grey hourglass;
-  maybe: amber ?; accepted: green ✓; declined or cancelled: light grey ×, the dates crossed out.
+  maybe: amber ?; accepted: green ✓; declined or cancelled: light grey ×, the dates crossed out;
+  expired (no answer before the arrival): grey calendar ×.
   On a computer, hovering the pill names the kind and where it stands (Request, Pending).
   Expects request, unread (bool) and part.
 #}
 {% set _status = { 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[request.status] ?? 'open' %}
+{# Waiting (or maybe) once the arrival has passed: nobody can answer any more (BaseRequestModel::hasExpired) #}
+{% if _status in ['open', 'tentatively'] and request.arrival|date('Y-m-d') < 'now'|date('Y-m-d') %}{% set _status = 'expired' %}{% endif %}
 {% set _isInvitation = request.inviteForLeg is not null %}
 {% set _look = {
     open: unread
@@ -19,6 +22,7 @@
     accepted: { tone: 'success', icon: 'fas fa-check' },
     declined: { tone: 'closed', icon: 'fas fa-times' },
     cancelled: { tone: 'closed', icon: 'fas fa-times' },
+    expired: { tone: 'expired', icon: 'fas fa-calendar-xmark' },
 }[_status] %}
 {% set _label = (_isInvitation ? 'conversations.invitation' : 'conversations.request')|trans ~ ' · ' ~ ('request.status.' ~ _status)|trans %}
 {% set _word = _status == 'open' ? 'conversations.state.waiting' : 'request.status.' ~ _status %}

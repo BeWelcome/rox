@@ -357,10 +357,10 @@ translation.tool.mockups.broken:
     description: 'Translation tool, preview of a mail or page: shown instead of it when its template or test data is broken'
     format: plain
 translation.tool.mockups.broken.report:
-    text: 'Its template or its test data is broken. Please report it so that it can be fixed.'
+    text: 'Its template or its test data is broken. Please report it in the translators group so that it can be fixed.'
     description: 'Translation tool, preview of a mail or page: below "This preview can''t be shown."'
     format: plain
 translation.tool.mockups.broken.action:
-    text: 'Report the broken preview'
-    description: 'Translation tool, preview of a mail or page: button that opens the form to report a bug'
+    text: 'Report it in the translators group'
+    description: 'Translation tool, preview of a mail or page that can''t be shown: link to the translators group, below it'
     format: plain

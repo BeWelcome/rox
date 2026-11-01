@@ -5,8 +5,8 @@
   off (in_place_always).
   preview.styles are the mail's own style elements (the site's page styles them from its stylesheets).
   locale, languageMenu, feature, name, mockup ({type, template, url?, description?}), variants ({label, parameters}),
-  variant (the one shown, or null), preview ({html, stylesheets, styles}, or null when the mockup is broken: a hint to
-  report it instead).
+  variant (the one shown, or null), preview ({html, stylesheets, styles}, or null when the mockup is broken: a hint instead,
+  and a link to the translators' group to report it).
 #}
 {% set tab = 'mockups' %}
 {% set in_place_always = true %}
@@ -51,11 +51,10 @@
         <div class="p-tr-mockup__stage p-tr-mockup__stage--{{ _type }}">
             {% if preview is null %}
                 <div class="p-tr-mockup__broken" role="alert">
-                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
+                    <span class="p-tr-mockup__broken-icon" aria-hidden="true"><i class="fas fa-exclamation-triangle"></i></span>
                     <div>
                         <p class="p-tr-mockup__broken-title">{{ 'translation.tool.mockups.broken'|trans }}</p>
                         <p>{{ 'translation.tool.mockups.broken.report'|trans }}</p>
-                        <a class="p-tr-button p-tr-button--primary" href="{{ path('feedback', {IdCategory: 1, RequestURI: app.request.uri}) }}">{{ 'translation.tool.mockups.broken.action'|trans }}</a>
                     </div>
                 </div>
             {% elseif _type == 'mail' %}
@@ -70,5 +69,10 @@
                 <div class="p-tr-mockup__page">{{ preview.html|raw }}</div>
             {% endif %}
         </div>
+        {% if preview is null %}
+            <p class="p-tr-mockup__report">
+                <a class="p-tr-button p-tr-button--primary" href="{{ path('group_start', {group_id: 60}) }}">{{ 'translation.tool.mockups.broken.action'|trans }}</a>
+            </p>
+        {% endif %}
     </div>
 {% endblock tool %}

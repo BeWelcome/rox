@@ -52,12 +52,12 @@ frontpage.card.decline:
 frontpage.card.host.in:
     - 'Host in'
     - Front page, drawing of a host card, followed by a city (Host in Berlin)
-frontpage.card.references:
-    - '{count, plural, one {# reference} other {# references}}'
-    - Front page, drawing of a host card, how many references the host has
+frontpage.card.comments:
+    - '{count, plural, one {# comment} other {# comments}}'
+    - Front page, drawing of a host card, how many comments the host has
 frontpage.card.quote:
     - 'The best guide to Kreuzberg!'
-    - Front page, drawing of a host card, a reference left by a guest
+    - Front page, drawing of a host card, a comment left by a guest
 frontpage.free.title:
     - 'Free.'
     - Front page dark band, title first word
@@ -70,8 +70,8 @@ frontpage.free.sub:
 frontpage.free.fees:
     - 'No fees, ever'
     - Front page dark band, first point
-frontpage.free.fees.text:
-    - 'Messaging, requests, references, everything is free for everyone. No premium plan, no verification fee.'
+frontpage.free.fees.with.comments:
+    - 'Messaging, requests, comments, everything is free for everyone. No premium plan, no verification fee.'
     - Front page dark band, text of the first point
 frontpage.free.volunteers:
     - 'Run by volunteers'
@@ -97,8 +97,8 @@ frontpage.how.hosting:
 frontpage.how.search:
     - 'Search the map'
     - Front page, step 1 title
-frontpage.how.search.text:
-    - 'Type a city, pick your dates and see who hosts around you, with their languages, interests and references.'
+frontpage.how.search.with.comments:
+    - 'Type a city, pick your dates and see who hosts around you, with their languages, interests and comments.'
     - Front page, step 1 text
 frontpage.how.trip.name:
     - "Amara's trip"
@@ -147,15 +147,15 @@ frontpage.how.meet.text:
     - Front page, step 4 text
 frontpage.how.trust.positive:
     - 'Positive'
-    - Front page, drawing of a reference, its kind
+    - Front page, drawing of a comment, its kind
 frontpage.how.trust.quote:
     - 'Felt at home from the first minute. We cooked together every night.'
-    - Front page, drawing of a reference, its text
+    - Front page, drawing of a comment, its text
 frontpage.how.trust:
     - 'Trust each other'
     - Front page, step 5 title
-frontpage.how.trust.text:
-    - 'Every stay can leave a reference. Read them before you go, and volunteers are here if anything goes wrong.'
+frontpage.how.trust.with.comments:
+    - 'Every stay can leave a comment. Read them before you go, and volunteers are here if anything goes wrong.'
     - Front page, step 5 text
 frontpage.community.eyebrow:
     - 'A real community'
@@ -211,15 +211,15 @@ frontpage.note.activity:
 frontpage.note.activity.when:
     - 'Sunday'
     - Front page, sample activity in the hero, the day
-frontpage.note.reference:
-    - 'New positive reference'
-    - Front page, sample notification in the hero, a new reference
+frontpage.note.comment:
+    - 'New positive comment'
+    - Front page, sample notification in the hero, a new comment
 frontpage.note.reference.from:
     - 'from {name}'
-    - Front page, sample reference in the hero, who wrote it
+    - Front page, sample comment in the hero, who wrote it
 frontpage.note.reference.quote:
     - 'Felt at home'
-    - Front page, sample reference in the hero, a short quote
+    - Front page, sample comment in the hero, a short quote
 frontpage.note.replies:
     - 'Usually replies within a day'
     - Front page, sample profile fact in the hero, how fast the member replies

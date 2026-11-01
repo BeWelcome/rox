@@ -44,6 +44,8 @@
                 </ul>
             </li>
             {% endif %}
+            {# Account to-dos (new email to confirm): a bell, only when there is one #}
+            {% include 'layout/_notices_nav.html.twig' %}
             {# Search: straight to the search page #}
             <li class="nav-item">
                 <a id="search_menu_toggle" href="{{ url('search_locations') }}" class="nav-link topbar-icon-dropdown"

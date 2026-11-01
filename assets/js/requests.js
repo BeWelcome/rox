@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import Litepicker from 'litepicker';
 import {disableButtonOnSubmit} from './submit_button_disable';
 import {initPlainTextFields} from './contact/plain_text';
+import {hasPhotos, initBubblePhotos, initMessagePhotos, photosHtml} from './contact/photos';
 import {initContactSendState} from './contact/send_state';
 import {initStayDates} from './contact/stay_dates';
 
@@ -207,8 +208,19 @@ document.querySelectorAll('.js-respond').forEach((form) => {
         });
         resize();
 
-        form.querySelectorAll('.js-conversation-template').forEach((button) => {
+        // The reply templates are in the "⋯" menu of the stay card (request/_card_menu.html.twig),
+        // outside this form: they name the field. The host still choosing gets "Just reply".
+        document.querySelectorAll('.js-conversation-template').forEach((button) => {
+            if (button.dataset.conversationTemplateEditorId !== text.id) {
+                return;
+            }
             button.addEventListener('click', () => {
+                if (write && write.hidden) {
+                    const reply = form.querySelector('.js-decide-pick[data-choice="reply"]');
+                    if (reply) {
+                        reply.click();
+                    }
+                }
                 const holder = document.createElement('div');
                 holder.innerHTML = button.dataset.conversationTemplate
                     .replace(/<\/p>\s*/gi, '\n\n')
@@ -232,7 +244,7 @@ document.querySelectorAll('.js-respond').forEach((form) => {
             .join('');
 
         form.addEventListener('submit', (event) => {
-            if (text.value.trim() === '') {
+            if (text.value.trim() === '' && !hasPhotos(form)) {
                 // A message is needed (the server would refuse it anyway).
                 event.preventDefault();
                 event.stopImmediatePropagation();
@@ -243,19 +255,22 @@ document.querySelectorAll('.js-respond').forEach((form) => {
             const html = document.createElement('input');
             html.type = 'hidden';
             html.name = text.name;
-            html.value = toHtml(text.value);
+            html.value = toHtml(text.value) + photosHtml(form);
             text.removeAttribute('name');
             form.appendChild(html);
         });
     }
 
-    // The guest opens the dates and travellers on demand.
-    const toggle = form.querySelector('.js-respond-stay-toggle');
+    // The guest opens the dates and travellers on demand, from the "⋯" menu of the stay card.
+    const toggle = form.querySelector('.js-respond-stay-toggle') || document.querySelector('.js-respond-stay-toggle');
     const stay = form.querySelector('.js-respond-stay');
     if (toggle && stay) {
         const show = (open) => {
             stay.hidden = !open;
             toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (open) {
+                stay.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
         };
         toggle.addEventListener('click', () => show(stay.hidden));
         const close = stay.querySelector('.js-respond-stay-close');
@@ -267,5 +282,7 @@ document.querySelectorAll('.js-respond').forEach((form) => {
 
 disableButtonOnSubmit();
 
+initMessagePhotos();
+initBubblePhotos();
 initPlainTextFields();
 initContactSendState();

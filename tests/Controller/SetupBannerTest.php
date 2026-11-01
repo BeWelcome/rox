@@ -10,8 +10,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
- * New members who haven't finished the signup see on every page until when they have to, before
- * members:remove:notconfirmed removes the account: the setup, or for those who did it the email confirmation.
+ * New members who haven't finished the signup see in the bell of the top bar, on every page, until when
+ * they have to, before members:remove:notconfirmed removes the account: the setup, or for those who did it
+ * the email confirmation.
  */
 #[Group('integration')]
 final class SetupBannerTest extends WebTestCase
@@ -32,18 +33,18 @@ final class SetupBannerTest extends WebTestCase
 
         $setStatus(MemberStatusType::MAIL_CONFIRMED);
         $crawler = $client->request('GET', '/forums');
-        self::assertSelectorTextContains('.setup-banner__message', 'profile.finish.setup');
+        self::assertSelectorTextContains('#notices_menu .c-topbar-notices__text', 'profile.finish.setup');
         self::assertStringEndsWith('/members/member-2/finalize', $this->action($crawler));
 
         // set up, but the email address isn't confirmed
         $setStatus(MemberStatusType::ACCOUNT_ACTIVATED);
         $crawler = $client->request('GET', '/forums');
-        self::assertSelectorTextContains('.setup-banner__message', 'profile.confirm.email.deadline');
+        self::assertSelectorTextContains('#notices_menu .c-topbar-notices__text', 'profile.confirm.email.deadline');
         self::assertStringEndsWith('/members/member-2/confirm', $this->action($crawler));
 
         $setStatus(MemberStatusType::ACTIVE);
         $crawler = $client->request('GET', '/forums');
-        self::assertCount(0, $crawler->filter('.setup-banner'));
+        self::assertCount(0, $crawler->filter('#notices_menu'));
     }
 
     public function testTheBannerNamesADeadlineBeforeTheRemoval(): void
@@ -53,6 +54,6 @@ final class SetupBannerTest extends WebTestCase
 
     private function action(Crawler $crawler): string
     {
-        return (string) $crawler->filter('.setup-banner__action')->attr('href');
+        return (string) $crawler->filter('#notices_menu .c-topbar-notices__action')->attr('href');
     }
 }

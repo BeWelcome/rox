@@ -23,7 +23,7 @@
 {% set answer = request ? (answers[request.status] ?? null) : null %}
 {% set answerShown = false %}
 
-<div id="message_thread" class="c-inbox-thread">
+<div id="message_thread" class="c-inbox-thread" data-label-download="{{ 'message.photo.download'|trans }}" data-label-close="{{ 'message.photo.close'|trans }}">
     {% for message in visible %}
         {% set own = message.sender == myself %}
         {% set deleted = message.isDeletedByMember(myself) %}
@@ -35,16 +35,41 @@
             {% set byGuest = message.sender == message.initiator %}
             {% set withAnswer = answer and not answerShown and (answer.key == 'cancelled' ? byGuest : not byGuest) %}
             {% if withAnswer %}{% set answerShown = true %}{% endif %}
-            {% set read = message.firstRead is not null and message.firstRead != '0000-00-00 00:00.00' %}
-            <div class="c-bubble{{ own ? ' c-bubble--own' : '' }}{{ deleted ? ' is-deleted' : '' }}">
-                {% if withAnswer %}
-                    <span class="c-bubble__answer c-bubble__answer--{{ answer.tone }}"><i class="{{ answer.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ answer.key)|trans }}</span>
-                {% endif %}
-                <div class="c-bubble__text">{{ message.message|purify('custom')|url_update }}</div>
-                <time class="c-bubble__time" datetime="{{ message.created|date('c') }}">
+            {# Photos (camera of the message forms) as pictures above the text, the time on the last one #}
+            {% set _parts = message_photos(message.message|purify('custom')|url_update) %}
+            {% set _time %}
+                <time class="{{ _parts.photos ? 'c-bubble-photos__time' : 'c-bubble__time' }}" datetime="{{ message.created|date('c') }}">
+                    {#- No read receipt: the sender doesn't see whether the message was read (safety) -#}
                     {{- message.created|format_time('short') -}}
-                    {%- if own %} · <i class="fas {{ read ? 'fa-check-double' : 'fa-check' }}" aria-hidden="true"></i>{% endif -%}
                 </time>
+            {% endset %}
+            <div class="c-bubble-stack{{ own ? ' is-own' : '' }}">
+                {% if _parts.photos %}
+                    {% set _count = _parts.photos|length %}
+                    {# Who, when and the text, for the viewer that opens on a click (contact/photos.js) #}
+                    <div class="c-bubble-photos c-bubble-photos--{{ _count > 2 ? 'grid' : _count }}{{ deleted ? ' is-deleted' : '' }}"
+                         data-author="{{ own ? 'you'|trans|capitalize : message.sender.username }}"
+                         data-avatar="{{ path('avatar', { username: message.sender.username, size: 96 }) }}"
+                         data-when="{{ message.created|date('c') }}"
+                         data-caption="{{ _parts.text|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim }}">
+                        {% for src in _parts.photos %}
+                            <button type="button" class="c-bubble-photos__item" aria-label="{{ 'message.photo.open'|trans }}">
+                                {# Two or more: each photo fills its tile (inline, so no page rule can undo it) #}
+                                <img class="c-bubble-photos__img" src="{{ src }}" alt="" loading="lazy"{% if _count > 1 %} style="position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover;"{% endif %}>
+                            </button>
+                        {% endfor %}
+                        {{ _time }}
+                    </div>
+                {% endif %}
+                {% if _parts.text is not empty or withAnswer or not _parts.photos %}
+                    <div class="c-bubble{{ own ? ' c-bubble--own' : '' }}{{ deleted ? ' is-deleted' : '' }}">
+                        {% if withAnswer %}
+                            <span class="c-bubble__answer c-bubble__answer--{{ answer.tone }}"><i class="{{ answer.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ answer.key)|trans }}</span>
+                        {% endif %}
+                        {% if _parts.text is not empty or not _parts.photos %}<div class="c-bubble__text">{{ _parts.text|raw }}</div>{% endif %}
+                        {% if not _parts.photos %}{{ _time }}{% endif %}
+                    </div>
+                {% endif %}
             </div>
         </div>
 

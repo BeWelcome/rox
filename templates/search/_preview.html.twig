@@ -138,7 +138,8 @@
             {% endif %}
             {# An existing conversation opens in the panel instead of a new message #}
             {% set existingConversation = app.user ? conversation_with(member) : null %}
-            <a class="p-search-preview__btn{{ _panel ? '' : ' js-search-contact-open' }}" href="{{ existingConversation ? path('conversation_view', { id: existingConversation.id }|merge(_panelParams)) : url('message_new', { username: member.username }|merge(_panelParams)) }}"
+            {% set existingMessages = app.user ? conversation_with(member, true) : null %}
+            <a class="p-search-preview__btn{{ _panel ? '' : ' js-search-contact-open' }}" href="{{ existingMessages ? path('conversation_view', { id: existingMessages.id }|merge(_panelParams)) : url('message_new', { username: member.username }|merge(_panelParams)) }}"
                data-title="{{ 'message.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
                 <i class="fas fa-envelope" aria-hidden="true"></i> {{ 'message.send'|trans }}
             </a>

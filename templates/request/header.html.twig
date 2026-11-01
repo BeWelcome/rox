@@ -24,6 +24,7 @@
         {% if status.key %}
             <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ status.key)|trans }}</span>
         {% endif %}
+        {% include 'request/_card_menu.html.twig' with { stay: request, confirm: 'request.confirm.cancel', dates: side == 'guest' } %}
     </div>
     <div class="c-stay-card__dates">
         <p class="c-stay-card__date">
@@ -43,7 +44,5 @@
         {% else %}
             <li><i class="fas fa-lock" aria-hidden="true"></i> {{ 'request.card.not.flexible'|trans }}</li>
         {% endif %}
-        {% include 'request/_card_cancel.html.twig' with { stay: request, place: 'facts', confirm: 'request.confirm.cancel' } %}
     </ul>
-    {% include 'request/_card_cancel.html.twig' with { stay: request, place: 'side', confirm: 'request.confirm.cancel' } %}
 </section>

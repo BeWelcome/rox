@@ -103,17 +103,19 @@ class InboxFolders
     /**
      * The latest message between the logged-in member and $other that is still in the inbox
      * (a plain conversation, a hosting request or an invitation), or null when there is none
-     * (Twig: conversation_with(member), for the "Send" button of a profile).
+     * (Twig: conversation_with(member), for the status strip of a profile). With $messagesOnly,
+     * only a plain conversation (conversation_with(member, true), for the "Send" button: Send
+     * writes a message, it doesn't open the other member's hosting request).
      */
     #[AsTwigFunction('conversation_with')]
-    public function getConversationWith(Member $other): ?Message
+    public function getConversationWith(Member $other, bool $messagesOnly = false): ?Message
     {
         $member = $this->security->getUser();
         if (!$member instanceof Member || $member === $other) {
             return null;
         }
 
-        return $this->entityManager->createQueryBuilder()
+        $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('m')
             ->from(Message::class, 'm')
             ->where('(m.sender = :member AND m.receiver = :other AND m.deleteRequest NOT LIKE :senderDeleted AND m.deleteRequest NOT LIKE :senderPurged)'
@@ -127,9 +129,12 @@ class InboxFolders
             ->setParameter('receiverPurged', '%' . DeleteRequestType::RECEIVER_PURGED . '%')
             ->setParameter('spam', InFolderType::SPAM)
             ->orderBy('m.id', 'DESC')
-            ->setMaxResults(1)
-            ->getQuery()
-            ->getOneOrNullResult();
+            ->setMaxResults(1);
+        if ($messagesOnly) {
+            $queryBuilder->andWhere('m.request IS NULL');
+        }
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     /**

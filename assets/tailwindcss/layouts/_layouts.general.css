@@ -5647,6 +5647,13 @@ main:has(.p-hero) {
   white-space: nowrap;
 }
 .c-inbox-item__dot { flex-shrink: 0; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #f37000; }
+/* Direction of the last message: small arrow, up-right grey sent, down-left orange received */
+.c-inbox-item__dir { display: inline-block; width: 0.6rem; height: 0.6rem; margin-right: 0.4rem; vertical-align: 0; }
+.c-inbox-item__dir--sent { color: #94a3b8; }
+.c-inbox-item__dir--received { color: #f37000; }
+/* Unread: a light warm background, lighter than the open conversation */
+.c-inbox-item.is-unread:not(.is-active) { background: #fff4e8; }
+.c-inbox-item.is-unread:not(.is-active):hover { background: #ffeedd; }
 
 /* Action bar in selection mode */
 .c-inbox-actions {
@@ -7977,7 +7984,7 @@ a.c-home-item:hover .c-home-item__title,
 .c-home-item__text--strong:hover { color: #c2410c; }
 .c-home-item__badge { align-self: flex-start; margin: 0.05rem 0; }
 /* Unread message: light orange background, orange dot by the time, bold texts */
-.c-home-item.is-unread { margin: 0 -0.75rem; padding-right: 0.75rem; padding-left: 0.75rem; border-radius: 0.9rem; background: #fff7ed; }
+.c-home-item.is-unread { margin: 0 -0.75rem; padding-right: 0.75rem; padding-left: 0.75rem; border-radius: 0.9rem; background: #fff4e8; }
 /* a read message keeps its subject in regular weight, only unread ones are bold */
 #conversationsdisplay .c-home-item__title { font-weight: 400; }
 .c-home-item.is-unread .c-home-item__name,
@@ -10871,16 +10878,27 @@ body.is-embedded { background: #fff; }
 .c-inbox-item__state--danger { background: #fee2e2; color: #b91c1c; }
 .c-inbox-item__kind--maybe { background: #d97706; }
 
-/* "Cancel request / invitation" in the stay card: at the end of the facts row on phones,
-   on the right of the strip on a computer */
-.c-stay-card .c-stay-card__action--facts { margin-left: auto; }
-.c-stay-card__action--side { display: none; }
-.c-stay-card__cancel { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.75rem; border: 1px solid #fecaca; border-radius: 999px; background: #fff; color: #b91c1c; font-size: 0.8125rem; font-weight: 700; white-space: nowrap; cursor: pointer; }
-.c-stay-card__cancel:hover { border-color: #fca5a5; background: #fef2f2; }
-.c-stay-card__cancel i, .c-stay-card__cancel svg { margin: 0; color: inherit; font-size: 0.7rem; }
+/* The "⋯" menu of the stay card (request/_card_menu.html.twig): Change dates, the reply templates,
+   Cancel. At the end of the top line; on the right of the strip on a computer. */
+.c-stay-card { position: relative; }
+.c-stay-card__top .c-stay-card__status { margin-left: auto; }
+.c-stay-card__menu { position: relative; z-index: 2; flex-shrink: 0; }
+.c-stay-card__more { display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; padding: 0; border: 1px solid #e2e8f0; border-radius: 50%; background: #fff; color: #475569; cursor: pointer; }
+.c-stay-card__more:hover,
+.c-stay-card__more[aria-expanded="true"] { border-color: #fdba74; background: #fff7ed; color: #c2410c; }
+.c-stay-card__menu .c-compose-tools__menu { z-index: 1060; }
+/* Cancel: apart from the templates, as a soft red button across the menu */
+.c-stay-card__menu .c-compose-tools__item.c-compose-tools__item--danger { justify-content: center; margin: 0.15rem 0 0; padding: 0.6rem 0.75rem; border: 1px solid #fecaca; border-radius: 999px; background: #fef2f2; color: #b91c1c; font-weight: 700; }
+.c-stay-card__menu .c-compose-tools__item.c-compose-tools__item--danger i,
+.c-stay-card__menu .c-compose-tools__item.c-compose-tools__item--danger svg { width: auto; color: #dc2626; }
+.c-stay-card__menu .c-compose-tools__item.c-compose-tools__item--danger:hover,
+.c-stay-card__menu .c-compose-tools__item.c-compose-tools__item--danger:focus { border-color: #fca5a5; background: #fee2e2; color: #991b1b; }
+.c-stay-card__menu .c-compose-tools__item.c-compose-tools__item--danger:hover i,
+.c-stay-card__menu .c-compose-tools__item.c-compose-tools__item--danger:hover svg { color: #b91c1c; }
 @container inbox-pane (min-width: 640px) {
-  .c-stay-card .c-stay-card__action--facts { display: none; }
-  .c-stay-card .c-stay-card__action--side { display: block; margin-left: auto; }
+  .c-inbox__pane:has(.c-stay-card) .c-inbox-pane__extra > .c-stay-card.c-stay-card { padding-right: 4.5rem; }
+  .c-stay-card .c-stay-card__menu { position: absolute; top: 50%; right: 1.25rem; transform: translateY(-50%); }
+  .c-stay-card__top .c-stay-card__status { margin-left: 0; }
 }
 
 /* Home Messages tab: the request's status icon on the avatar, as in the inbox list */
@@ -11127,24 +11145,6 @@ body.is-embedded { background: #fff; }
 .p-pro-admin-tools__link:hover .p-pro-admin-tools__go { color: #cbd5e1; }
 @media (max-width: 767.98px) {
   .p-pro-admin-tools { border-radius: 0; }
-}
-
-/* Account not finished: a strip across the page under the menu (base.html.twig) */
-.setup-banner.setup-banner--strip { display: block; margin: 0; padding: 0; border: 0; border-bottom: 1px solid #dbe6f6; border-radius: 0; background: #eef4fd; }
-.setup-banner--strip .setup-banner__inner { display: flex; align-items: center; gap: 1rem; padding-top: 0.6rem; padding-bottom: 0.6rem; }
-.setup-banner--strip .setup-banner__body { gap: 0.65rem; }
-.setup-banner--strip .setup-banner__icon { width: auto; height: auto; background: none; color: #93b4ec; }
-.setup-banner--strip .setup-banner__message { color: #1e3a8a; font-size: 0.9375rem; font-weight: 500; }
-.setup-banner--strip .setup-banner__action,
-.setup-banner--strip .setup-banner__action:hover,
-.setup-banner--strip .setup-banner__action:focus { padding: 0.45rem 1.05rem; background: #2563eb; box-shadow: none; font-size: 0.9375rem; letter-spacing: 0; filter: none; }
-.setup-banner--strip .setup-banner__action:hover { background: #1d4ed8; }
-@media (max-width: 576px) {
-  .setup-banner--strip .setup-banner__inner { flex-wrap: wrap; gap: 0.5rem; }
-  .setup-banner--strip .setup-banner__body { flex: 0 0 100%; }
-  .setup-banner--strip .setup-banner__action,
-  .setup-banner--strip .setup-banner__action:hover,
-  .setup-banner--strip .setup-banner__action:focus { flex: 0 0 auto; justify-content: center; margin-left: auto; padding: 0.3rem 0.85rem; font-size: 0.8125rem; }
 }
 
 /* Admins: the bar under the main menu (templates/menu.html.twig) */
@@ -12073,3 +12073,56 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
   text-align: inherit;
   cursor: pointer;
 }
+
+/* Conversation lists (inbox and home): where a request or invitation stands
+   (conversations/_request_state.html.twig). The pill colours set the avatar icon too:
+   new orange, waiting grey, maybe amber, accepted green, declined or cancelled light grey. */
+.c-inbox-item__middle { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; min-width: 0; }
+.c-inbox-item__middle .c-inbox-item__subject { flex: 1; min-width: 0; }
+.c-req-pill { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.3rem; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.75rem; font-weight: 700; line-height: 1.5; white-space: nowrap; }
+.c-req-pill i, .c-req-pill svg { font-size: 0.65rem; }
+.c-req-kind { position: absolute; right: -0.3rem; bottom: -0.2rem; display: inline-flex; align-items: center; justify-content: center; width: 1.35rem; height: 1.35rem; border: 2px solid #fff; border-radius: 50%; color: #fff; font-size: 0.6rem; }
+.c-req-pill--new { background: #fdeedd; color: #c2410c; }
+.c-req-kind--new { background: #ea7a2e; }
+.c-req-pill--pending { background: #eef2f7; color: #475569; }
+.c-req-kind--pending { background: #94a3b8; }
+.c-req-pill--maybe { background: #fdf1c5; color: #a16207; }
+.c-req-kind--maybe { background: #d97706; }
+.c-req-pill--success { background: #e3f6ea; color: #3f8a4a; }
+.c-req-kind--success { background: #3f8a4a; }
+.c-req-pill--closed { background: #f1f5f9; color: #94a3b8; }
+.c-req-pill--closed .c-req-pill__dates { text-decoration: line-through; }
+.c-req-kind--closed { background: #cbd5e1; }
+/* Declined or cancelled: the whole row fades */
+.c-inbox-item.is-closed .c-inbox-avatar,
+.c-home-item.is-closed .c-home-item__avatar { filter: grayscale(1); opacity: 0.6; }
+.c-inbox-item.is-closed .c-inbox-item__name,
+.c-inbox-item.is-closed .c-inbox-item__subject,
+.c-inbox-item.is-closed .c-inbox-item__preview,
+.c-home-item.is-closed .c-home-item__name,
+.c-home-item.is-closed .c-home-item__title,
+.c-home-item.is-closed .c-home-item__text { color: #94a3b8; }
+/* Home: the subject line with the pill on the right */
+.c-home-item__middle { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; min-width: 0; }
+.c-home-item__middle .c-home-item__title { flex: 1; }
+.c-home-item__bottom { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; min-width: 0; }
+.c-home-item__bottom .c-home-item__text { flex: 1; }
+.c-home-item__bottom .c-home-item__dot { flex-shrink: 0; margin-left: 0; }
+/* On a computer, the bubble above a request's date pill (assets/js/request-tip.js) */
+.c-req-tip { position: fixed; z-index: 2000; display: flex; flex-direction: column; gap: 0.1rem; max-width: 18rem; padding: 0.55rem 0.75rem; border-radius: 0.65rem; background: #1e293b; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25); color: #fff; font-size: 0.8125rem; line-height: 1.35; opacity: 0; pointer-events: none; transform: translateY(0.2rem); transition: opacity 0.12s ease, transform 0.12s ease; }
+.c-req-tip.is-shown { opacity: 1; transform: none; }
+.c-req-tip__title { font-weight: 700; }
+.c-req-tip__title::before { content: ""; display: inline-block; width: 0.5rem; height: 0.5rem; margin-right: 0.4rem; border-radius: 50%; background: #94a3b8; vertical-align: 0.05rem; }
+.c-req-tip--new .c-req-tip__title::before { background: #ea7a2e; }
+.c-req-tip--maybe .c-req-tip__title::before { background: #f59e0b; }
+.c-req-tip--success .c-req-tip__title::before { background: #4ade80; }
+.c-req-tip--closed .c-req-tip__title::before { background: #64748b; }
+.c-req-tip__dates { color: #e2e8f0; }
+.c-req-tip__stay { color: #94a3b8; font-size: 0.75rem; }
+/* The request's state in words, under its date pill */
+.c-req-status { flex-shrink: 0; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.c-req-status--new { color: #c2410c; }
+.c-req-status--pending { color: #475569; }
+.c-req-status--maybe { color: #a16207; }
+.c-req-status--success { color: #3f8a4a; }
+.c-req-status--closed { color: #94a3b8; }

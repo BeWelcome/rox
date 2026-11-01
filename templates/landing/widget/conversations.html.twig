@@ -1,26 +1,18 @@
 {#
   The latest messages received, on the home page (loaded into the Messages tab).
-  A hosting request or invitation shows its kind and dates instead of a subject, and
-  where it stands as an icon on the avatar, like in the inbox.
+  A hosting request or invitation shows its dates in a pill next to the subject and where it
+  stands as an icon on the avatar, like in the inbox (conversations/_request_state.html.twig).
 #}
 <div id="conversationsdisplay" class="c-home-list"{% if messages is empty %} data-empty{% endif %}>
     {% for message in messages %}
         {% set unread = (message.firstRead is null) or (message.firstRead == '0000-00-00 00:00.00') %}
         {% set request = message.request %}
-        {# Where a request or invitation stands, with the decision's icon on the avatar (as in the inbox list) #}
-        {% set states = {
-            open: { icon: 'fas fa-clock', tone: 'pending' },
-            tentatively: { icon: 'fa fa-question', tone: 'maybe' },
-            accepted: { icon: 'fa fa-check', tone: 'success' },
-            declined: { icon: 'fa fa-times', tone: 'danger' },
-            cancelled: { icon: 'fa fa-times', tone: 'danger' },
-        } %}
-        {% set requestState = request ? ({ 0: 'open', 1: 'cancelled', 2: 'declined', 4: 'tentatively', 8: 'accepted' }[request.status] ?? 'open') : null %}
-        <a class="c-home-item{% if unread %} is-unread{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}">
+        {% set closed = request and request.status in [1, 2] %}
+        <a class="c-home-item{% if unread %} is-unread{% endif %}{% if closed %} is-closed{% endif %}" href="{{ path('conversation_view', { id: message.id }) }}">
             {% if message.sender %}
                 <span class="c-home-item__avatar-wrap">
                     <img class="c-home-item__avatar" src="{{ path('avatar', { username: message.sender.username, size: 48 }) }}" alt="" loading="lazy">
-                    {% if request %}<span class="c-inbox-item__kind c-inbox-item__kind--{{ states[requestState].tone }}" title="{{ ('request.status.' ~ requestState)|trans }}"><i class="{{ states[requestState].icon }}" aria-hidden="true"></i><span class="visually-hidden">{{ ('request.status.' ~ requestState)|trans }}</span></span>{% endif %}
+                    {% if request %}{% include 'conversations/_request_state.html.twig' with { request: request, unread: unread, part: 'kind' } only %}{% endif %}
                 </span>
             {% else %}
                 <span class="c-home-item__avatar c-home-item__avatar--icon" aria-hidden="true"><i class="fas fa-envelope"></i></span>
@@ -28,21 +20,22 @@
             <span class="c-home-item__body">
                 <span class="c-home-item__top">
                     <span class="c-home-item__name">{{ message.sender ? message.sender.username : 'BeWelcome' }}</span>
-                    <span class="c-home-item__time" title="{{ message.created.toDateTimeString }}">{{ message.created.diffForHumans }}{% if unread %}<span class="c-home-item__dot" aria-label="{{ 'conversations.unread'|trans }}"></span>{% endif %}</span>
+                    <span class="c-home-item__time">{{ message.created.diffForHumans }}</span>
                 </span>
                 {% if request %}
-                    {% set kindIcon = request.inviteForLeg is null ? 'fa-bed' : 'fa-handshake' %}
-                    <span class="c-inbox-item__badge c-home-item__badge">
-                        <span><i class="fas {{ kindIcon }}" aria-hidden="true"></i> {{ request.inviteForLeg is null ? 'conversations.request'|trans : 'conversations.invitation'|trans }}</span>
-                        <span class="c-inbox-item__badge-dates">
-                            {{- request.arrival|format_date(pattern='MMM d') }}
-                            {%- if request.departure %} - {{ request.departure|format_date(pattern='MMM d y') }}{% endif -%}
-                        </span>
+                    {# The subject, and the dates on the right coloured by where the request stands #}
+                    <span class="c-home-item__middle">
+                        <span class="c-home-item__title">{{ message.subject ? message.subject.subject|striptags }}</span>
+                        {% include 'conversations/_request_state.html.twig' with { request: request, unread: unread, part: 'pill' } only %}
                     </span>
                 {% elseif message.subject %}
                     <span class="c-home-item__title">{{ message.subject.subject|striptags }}</span>
                 {% endif %}
-                <span class="c-home-item__text">{{ message.message|striptags|truncate(90) }}</span>
+                {# The message, and for a request its state in words on the right #}
+                <span class="c-home-item__bottom">
+                    <span class="c-home-item__text">{{ message.message|striptags|truncate(90) }}</span>
+                    {% if request %}{% include 'conversations/_request_state.html.twig' with { request: request, unread: unread, part: 'status' } only %}{% endif %}
+                </span>
             </span>
         </a>
     {% else %}

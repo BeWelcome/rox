@@ -1,0 +1,55 @@
+{#
+  Photos in a message (contact/photos.js). `name` is the other member (only they see the photos).
+  - part 'box': under the text of the bigger forms (new message, request, invitation), inside the
+    text box (.c-photo-box around the field), once there are photos: the photos with an Add tile,
+    then "Only X can see your photos" and the count. The camera is next to Send (part 'button').
+  - part 'tray': above the one-line answers, the picked photos with "N photos ready to send".
+  - part 'button': the round camera (next to the field of the answers, next to Send in the bigger forms).
+#}
+{% set _max = 5 %}
+{% if part == 'button' %}
+    <button type="button" class="c-photo-attach js-photo-attach" aria-label="{{ 'message.photo.add'|trans }}">
+        <i class="fas fa-camera" aria-hidden="true"></i>
+    </button>
+{% else %}
+    <input type="file" class="js-photo-input" accept="image/*" multiple hidden
+           data-upload-url="{{ path('gallery_upload_ckeditor') }}"
+           data-max="{{ _max }}"
+           data-label-remove="{{ 'message.photo.remove'|trans }}"
+           data-label-error="{{ 'message.photo.error'|trans }}">
+    {% set _strip %}
+        <div class="c-photo-strip js-photo-strip">
+            <button type="button" class="c-photo-strip__add js-photo-attach" aria-label="{{ 'message.photo.add'|trans }}">
+                {% if part == 'box' %}
+                    <i class="fas fa-camera" aria-hidden="true"></i>
+                    <span>{{ 'message.photo.add.short'|trans }}</span>
+                {% else %}
+                    <i class="fas fa-plus" aria-hidden="true"></i>
+                {% endif %}
+            </button>
+        </div>
+    {% endset %}
+    {% if part == 'box' %}
+        <div class="c-photo-box__tray js-photo-tray" hidden>{{ _strip }}</div>
+        <div class="c-photo-box__foot js-photo-tray" hidden>
+            <span class="c-photo-box__private">
+                <i class="fas fa-lock" aria-hidden="true"></i>
+                {{ 'message.photo.private'|trans({ username: name }) }}
+            </span>
+            <span class="c-photo-box__count"><span class="js-photo-count">0</span> / {{ _max }}</span>
+        </div>
+    {% else %}
+        <div class="c-photo-tray js-photo-tray" hidden>
+            <div class="c-photo-tray__head">
+                <strong class="c-photo-tray__title js-photo-ready"
+                        data-one="{{ 'message.photo.ready.one'|trans }}"
+                        data-many="{{ 'message.photo.ready.many'|trans({ count: '{count}' }) }}"></strong>
+                <span class="c-photo-tray__private">
+                    <i class="fas fa-lock" aria-hidden="true"></i>
+                    {{ 'message.photo.private.short'|trans({ username: name }) }}
+                </span>
+            </div>
+            {{ _strip }}
+        </div>
+    {% endif %}
+{% endif %}

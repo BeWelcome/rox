@@ -1,3 +1,5 @@
+import {hasPhotos, initBubblePhotos, initMessagePhotos, photosHtml} from './contact/photos';
+
 // Conversation lists: "Select" switches the list into selection mode (checkboxes and
 // the action bar), "Select all" ticks every conversation on the page.
 const form = document.querySelector('.js-inbox-form');
@@ -119,24 +121,28 @@ if (replyForm) {
 
     const update = () => {
         resize();
-        button.disabled = textarea.value.trim() === '';
+        button.disabled = textarea.value.trim() === '' && !hasPhotos(replyForm);
     };
 
     textarea.addEventListener('input', update);
+    replyForm.addEventListener('photos:change', update);
     update();
 
     replyForm.addEventListener('submit', (event) => {
-        if (textarea.value.trim() === '') {
+        if (textarea.value.trim() === '' && !hasPhotos(replyForm)) {
             event.preventDefault();
             return;
         }
         const html = document.createElement('input');
         html.type = 'hidden';
         html.name = textarea.name;
-        html.value = toHtml(textarea.value);
+        html.value = toHtml(textarea.value) + photosHtml(replyForm);
         textarea.removeAttribute('name');
         textarea.readOnly = true;
         replyForm.appendChild(html);
         button.disabled = true;
     });
 }
+
+initMessagePhotos();
+initBubblePhotos();

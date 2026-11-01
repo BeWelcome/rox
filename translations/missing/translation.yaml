@@ -25,9 +25,9 @@ translation.in.place.fallback:
 translation.in.place.defined:
     - 'Translated ({count})'
     - Translation mode, list below the page, heading of the texts that have a translation for the language
-translation.in.place.empty:
-    - 'This page shows no texts that can be translated.'
-    - Translation mode, list below the page, shown when the page used no translatable texts
+translation.in.place.none:
+    - 'None on this page.'
+    - Translation mode, list below the page, shown in a group (missing, not translated yet, translated) that has no texts on this page
 translation.in.place.edit:
     - 'Edit'
     - Translation mode, list below the page, button that opens the translation in the side panel

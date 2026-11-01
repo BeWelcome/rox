@@ -1,14 +1,30 @@
-{% extends 'base.html.twig' %}
+{#
+  Edit or add a translation. As a page: the form, with the translation tools' menu. In the side panel of translation
+  mode (?embed=1): laid out like the panels of the edit page (profile/edit_subpage.html.twig), the English text and
+  the translation first, Save at the bottom next to Cancel.
+#}
+{% extends app.request.query.getBoolean('embed') ? 'profile/edit_subpage.html.twig' : 'base.html.twig' %}
+
+{# The panel's layout goes back to the member's edit page when it is opened on its own, outside of a panel #}
+{% set member = app.user %}
 
 {% block title %}
     {{ 'translations.edit.title' | trans }}
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ encore_entry_script_tags('translations') }}
 {% endblock %}
 
+{% block drawer_eyebrow %}<i class="fas fa-language" aria-hidden="true"></i> {{ 'translations.headline'|trans }}{% endblock %}
+{% block subpage_title %}{{ form.wordCode.vars.value }}{% endblock %}
+{% block drawer_intro %}{{ form.locale.vars.value }} · {{ form.domain.vars.value }}{% endblock %}
+
 {% block content %}
+    {% if app.request.query.getBoolean('embed') %}
+        {{ parent() }}
+    {% else %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     {{ form_start(form) }}
     <input type="hidden" id="upload_path" value="{{ url('newsletter_add_image') }}">
@@ -47,4 +63,73 @@
     {% endif %}
     {{ form_row(form.update) }}
     {{ form_end(form) }}
+    {% endif %}
 {% endblock content %}
+
+{# The side panel #}
+{% block subpage_body %}
+    {% set english = form.locale.vars.value == 'en' %}
+    {{ form_start(form, {attr: {class: 'p-account-form p-tr-form'}}) }}
+    {{ form_errors(form) }}
+    <input type="hidden" id="upload_path" value="{{ url('newsletter_add_image') }}">
+    {# code and language are in the panel's head; the domain is sent along unless it can be changed here #}
+    {% do form.wordCode.setRendered %}
+    {% do form.locale.setRendered %}
+    {{ form_widget(form.englishText) }}
+    {% if not english %}
+        {{ form_widget(form.domain, {type: 'hidden'}) }}
+        {% do form.description.setRendered %}
+    {% endif %}
+
+    {% if not english %}
+        <section class="p-account-section">
+            <div class="p-tr-form__head">
+                <span class="p-account-section__label">{{ form.englishText.vars.label|trans }}</span>
+                {% if richtext %}
+                    <button id="js-toggle" type="button" class="p-tr-form__toggle"
+                            data-label-raw="{{ 'raw'|trans }}"
+                            data-label-html="{{ 'html'|trans }}">{{ 'html'|trans }}</button>
+                {% endif %}
+            </div>
+            {% if richtext %}
+                <div id="englishTextHTML" class="d-none p-tr-form__original">{{ form.englishText.vars.value|purify('custom') }}</div>
+            {% endif %}
+            <div id="englishTextRaw" class="d-block p-tr-form__original">{{ form.englishText.vars.value|nl2br }}</div>
+            {% if form.description.vars.value %}
+                <p class="p-account-section__help p-tr-form__description">{{ form.description.vars.value }}</p>
+            {% endif %}
+        </section>
+    {% endif %}
+
+    <section class="p-account-section">
+        <label class="p-account-section__label" for="{{ form.translatedText.vars.id }}">
+            {{- english ? form.englishText.vars.label|trans : form.translatedText.vars.label|trans ~ ' (' ~ form.locale.vars.value ~ ')' -}}
+        </label>
+        {{ form_widget(form.translatedText, {attr: {autofocus: true}}) }}
+        {{ form_errors(form.translatedText) }}
+        {{ form_help(form.translatedText, {help_attr: {class: 'p-account-section__help'}}) }}
+    </section>
+
+    {% if english %}
+        <section class="p-account-section">
+            <label class="p-account-section__label" for="{{ form.description.vars.id }}">{{ form.description.vars.label|trans }}</label>
+            {{ form_widget(form.description) }}
+            {{ form_errors(form.description) }}
+            <label class="p-account-section__label p-tr-form__spaced" for="{{ form.domain.vars.id }}">{{ form.domain.vars.label|trans }}</label>
+            {{ form_widget(form.domain) }}
+            {{ form_errors(form.domain) }}
+        </section>
+        <section class="p-account-section p-tr-form__flags">
+            {% for flag in ['isMajorUpdate', 'isArchived', 'translationAllowed'] %}
+                {% if attribute(form, flag) is defined %}
+                    {{ form_row(attribute(form, flag)) }}
+                {% endif %}
+            {% endfor %}
+        </section>
+    {% endif %}
+
+    <div class="p-edit-subpage__actions">
+        {{ form_widget(form.update) }}
+    </div>
+    {{ form_end(form) }}
+{% endblock subpage_body %}

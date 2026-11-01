@@ -9,16 +9,14 @@ import {createContactPanel, onContactLinkClick} from '../contact/panel';
  */
 const IGNORED = 'script, style, noscript, template, textarea, .js-in-place, .js-translation-drawer';
 const ATTRIBUTES = ['placeholder', 'title', 'aria-label', 'alt', 'value', 'data-title'];
-const SHOWN = 160;
 
 const normalize = (text) => String(text).replace(/\s+/g, ' ').trim();
 
 function shownText(text) {
     const element = document.createElement('div');
     element.innerHTML = text;
-    const plain = normalize(element.textContent);
-
-    return plain.length > SHOWN ? plain.slice(0, SHOWN) + '…' : plain;
+    // the list cuts it off to one line (CSS); the whole text is its title
+    return normalize(element.textContent);
 }
 
 function isIgnored(node) {
@@ -134,8 +132,30 @@ async function showSaved(list, item) {
     const text = item.querySelector('.js-in-place-text');
     if (text) {
         text.textContent = shownText(texts[0]);
+        text.title = text.textContent;
         mark(text);
     }
+}
+
+/*
+ * Saved: the text is translated now. It moves to the top of the "translated" box; the boxes count their texts again.
+ */
+function moveToTranslated(list, item) {
+    const translated = list.querySelector('.js-in-place-group[data-group="defined"] .js-in-place-list');
+    if (translated && item.parentElement !== translated) {
+        translated.prepend(item);
+    }
+    list.querySelectorAll('.js-in-place-group').forEach((group) => {
+        const count = group.querySelectorAll('.js-in-place-item').length;
+        const heading = group.querySelector('.js-in-place-heading');
+        if (heading && group.dataset.heading) {
+            heading.textContent = group.dataset.heading.replace('%count%', String(count));
+        }
+        const empty = group.querySelector('.js-in-place-empty');
+        if (empty) {
+            empty.hidden = count > 0;
+        }
+    });
 }
 
 function offerEdit(item) {
@@ -201,6 +221,7 @@ export function initInPlaceTranslations() {
             return;
         }
         offerEdit(item);
+        moveToTranslated(list, item);
         showSaved(list, item).catch(() => {
             // The new text shows after the next reload
             item.classList.add('is-reload-needed');

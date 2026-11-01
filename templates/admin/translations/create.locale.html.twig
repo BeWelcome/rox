@@ -1,10 +1,25 @@
-{% extends 'base.html.twig' %}
+{#
+  Create the English text of a code (and its translation, for another language). As a page: the form, with the
+  translation tools' menu. In the side panel of translation mode (?embed=1): laid out like the panels of the edit
+  page (_create_drawer_form.html.twig).
+#}
+{% extends app.request.query.getBoolean('embed') ? 'profile/edit_subpage.html.twig' : 'base.html.twig' %}
+
+{# The panel's layout goes back to the member's edit page when it is opened on its own, outside of a panel #}
+{% set member = app.user %}
 
 {% block title %}
     {{ 'translations.create.title' | trans }}
 {% endblock %}
 
+{% block drawer_eyebrow %}<i class="fas fa-language" aria-hidden="true"></i> {{ 'translations.headline'|trans }}{% endblock %}
+{% block subpage_title %}{{ form.wordCode.vars.value }}{% endblock %}
+{% block drawer_intro %}{{ form.locale is defined ? form.locale.vars.value : 'en' }}{% endblock %}
+
 {% block content %}
+    {% if app.request.query.getBoolean('embed') %}
+        {{ parent() }}
+    {% else %}
     <h1>{{ 'translations.headline' | trans }}</h1>
     {{ form_start(form) }}
     {{ form_row(form.wordCode, {'attr':{'autofocus':true}}) }}
@@ -15,4 +30,9 @@
     {{ form_row(form.translatedText) }}
     {{ form_row(form.create) }}
     {{ form_end(form) }}
+    {% endif %}
 {% endblock content %}
+
+{% block subpage_body %}
+    {% include 'admin/translations/_create_drawer_form.html.twig' %}
+{% endblock subpage_body %}

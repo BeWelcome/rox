@@ -9,7 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * The tabs under the profile's head: on the own profile they include My notes (with the number of notes) and, for
- * members who show profile visits, the profile views after it; nobody else sees them.
+ * members who show profile visits, the profile views after it; nobody else sees them. The notes are a tab of the
+ * profile, under its head; the member menu doesn't have them any more.
  */
 #[Group('integration')]
 final class ProfileTabsTest extends WebTestCase
@@ -25,6 +26,13 @@ final class ProfileTabsTest extends WebTestCase
         $tab = $crawler->filter('.p-hero__tabs a[href$="/members/member-2/notes"]');
         self::assertCount(1, $tab);
         self::assertCount(1, $tab->filter('i.fa-sticky-note'));
+        // only the tab links to them
+        self::assertCount(1, $crawler->filter('a[href$="/members/member-2/notes"]'));
+
+        // the notes page is a tab of the profile
+        $crawler = $client->request('GET', '/members/member-2/notes');
+        self::assertResponseIsSuccessful();
+        self::assertStringEndsWith('/members/member-2/notes', (string) $crawler->filter('.p-hero__tab--active')->attr('href'));
 
         $client->loginUser($this->getMember('member-4'));
         $crawler = $client->request('GET', '/members/member-2');

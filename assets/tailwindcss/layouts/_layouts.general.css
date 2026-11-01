@@ -8853,6 +8853,16 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .p-group-panel .c-home-item__title,
 .p-group-panel .c-home-item__meta { white-space: normal; overflow-wrap: anywhere; }
 .p-forum__list .c-home-list__empty { border-radius: 1.25rem; background: #fff; }
+/* A member's forum posts (profile/forum.posts.html.twig): a card per post like the forum's thread cards, with the text */
+.p-member-post { padding: 1rem 1.25rem 1.1rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
+.p-member-post__head { display: flex; flex-direction: column; gap: 0.2rem; margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid #f1f5f9; }
+.p-member-post__head .c-home-item__title,
+.p-member-post__head .c-home-item__meta { white-space: normal; overflow-wrap: anywhere; }
+.p-member-post__text { color: #334155; font-size: 0.9375rem; line-height: 1.6; overflow-wrap: anywhere; }
+.p-member-post__text > :last-child { margin-bottom: 0; }
+.p-member-post__text img { max-width: 100%; height: auto; }
+.p-member-post .p-member-post__languages { margin: 0.75rem 0 0; color: #94a3b8; font-size: 0.8125rem; }
+.p-member-posts__toolbar { margin-top: 1.25rem; }
 @media (max-width: 540px) {
   .p-forum__toolbar { flex-direction: column; align-items: stretch; }
   .p-forum__search { flex-basis: auto; max-width: none; }

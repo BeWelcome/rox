@@ -1,0 +1,62 @@
+{% extends 'admin/translations/tool/_layout.html.twig' %}
+{#
+  A mail or a page with test data, as members get it (MockupPreview): what it is, where it shows, its variants, and
+  the mail or the page's content. Its texts are in the list for translation below the page.
+  preview.styles are the mail's own style elements (the site's page styles them from its stylesheets).
+  locale, languageMenu, feature, name, mockup ({type, template, url?, description?}), variants ({label, parameters}),
+  variant (the one shown, or null), preview ({html, stylesheets, styles}).
+#}
+{% set tab = 'mockups' %}
+{% set _type = mockup.type == 'email' ? 'mail' : (mockup.type == 'template' ? 'template' : 'page') %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% for href in preview.stylesheets %}<link rel="stylesheet" href="{{ href }}">{% endfor %}
+{% endblock %}
+
+{% block tool %}
+    <div class="p-tr-mockup">
+        <a class="p-tr-mockup__back" href="{{ path('translations_mockups_feature', {feature: feature}) }}">
+            <i class="fas fa-arrow-left" aria-hidden="true"></i> {{ feature|humanize }}
+        </a>
+
+        <header class="p-tr-mockup__head">
+            <div class="p-tr-mockup__about">
+                <span class="p-tr-format">{{ ('translation.tool.mockups.type.' ~ _type)|trans }}</span>
+                <h2 class="p-tr-mockup__title">{{ name|capitalize }}</h2>
+                {% if mockup.description is defined and mockup.description != '' %}
+                    <p class="p-tr-mockup__description">{{ mockup.description }}</p>
+                {% endif %}
+                <dl class="p-tr-mockup__facts">
+                    {% if mockup.url is defined and mockup.url != '' %}
+                        <div><dt>{{ 'translation.tool.mockups.url'|trans }}</dt><dd><code>/{{ mockup.url|trim('/', 'left') }}</code></dd></div>
+                    {% endif %}
+                    <div><dt>{{ 'translation.tool.mockups.template'|trans }}</dt><dd><code>{{ mockup.template }}</code></dd></div>
+                </dl>
+            </div>
+        </header>
+
+        {% if variants is not empty %}
+            <nav class="p-tr-mockup__variants" aria-label="{{ 'translation.tool.mockups.variants'|trans }}">
+                {% for item in variants %}
+                    {% set _active = variant and item.label == variant.label %}
+                    <a class="p-tr-chip{{ _active ? ' is-active' }}" href="{{ path('translation_mockup', {feature: feature, name: name}|merge(item.parameters)) }}"{{ _active ? ' aria-current="page"' }}>{{ item.label }}</a>
+                {% endfor %}
+            </nav>
+        {% endif %}
+
+        <div class="p-tr-mockup__stage p-tr-mockup__stage--{{ _type }}">
+            {% if _type == 'mail' %}
+                {# in a shadow root: only its own styles, as in a mail program (in_place.js replaces texts in it too) #}
+                <div class="p-tr-mockup__mail js-in-place-shadow">
+                    <template shadowrootmode="open">
+                        <style>{{ preview.styles|raw }} @keyframes c-in-place-updated { from { background-color: #fed7aa; } to { background-color: transparent; } } .is-translation-updated { animation: c-in-place-updated 2.5s ease-out; }</style>
+                        {{ preview.html|raw }}
+                    </template>
+                </div>
+            {% else %}
+                <div class="p-tr-mockup__page">{{ preview.html|raw }}</div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock tool %}

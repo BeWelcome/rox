@@ -2,16 +2,14 @@
 
 namespace App\Twig;
 
+/**
+ * The email variable of the translators' previews of mails (MockupController::mockupFrame()): images the mailer
+ * attaches (email.image('@images/...')) are links to the site's images instead.
+ */
 class MockupExtension
 {
-    public function image($image)
+    public function image(string $image): string
     {
-        // This is only used for the mockups
-        // so we replace inline images with the logo
-        if ('logo_index_top' !== $image) {
-            $image = 'logo_index_top';
-        }
-
-        return '/images/' . $image . '.png';
+        return '/images/' . ltrim(preg_replace('~^@images/~', '', $image), '/');
     }
 }

@@ -161,7 +161,25 @@ a.p-tr-legend__item:hover { color: #c2410c; }
 .p-tr-preview__body { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px 16px 16px; }
 .p-tr-tool .p-tr-preview__title { margin: 0; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
 .p-tr-preview__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
-.p-tr-preview__actions form { margin: 0; }
+
+/* A preview: what it is, its variants, and the mail or the page's content as members get it */
+.p-tr-mockup { display: flex; flex-direction: column; gap: 16px; }
+.p-tr-mockup__back,
+.p-tr-mockup__back:hover { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; color: var(--tr-muted); font-size: 0.9rem; font-weight: 600; text-decoration: none; }
+.p-tr-mockup__back:hover { color: var(--tr-ink); }
+.p-tr-mockup__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px 24px; padding: 20px 22px; border-radius: 16px; background: #fff; }
+.p-tr-mockup__about { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 0; }
+.p-tr-tool .p-tr-mockup__title { margin: 0; font: 700 1.6rem var(--font-signika, "Signika", sans-serif); overflow-wrap: anywhere; }
+.p-tr-tool .p-tr-mockup__description { margin: 0; color: var(--tr-muted); }
+.p-tr-mockup__facts { display: flex; flex-wrap: wrap; gap: 4px 20px; margin: 4px 0 0; font-size: 0.85rem; }
+.p-tr-mockup__facts div { display: flex; gap: 6px; }
+.p-tr-mockup__facts dt { color: var(--tr-muted); font-weight: 400; }
+.p-tr-mockup__facts dd { margin: 0; }
+.p-tr-mockup__facts code { color: var(--tr-ink); font-family: var(--tr-mono); font-size: 0.85rem; overflow-wrap: anywhere; }
+.p-tr-mockup__variants { display: flex; flex-wrap: wrap; gap: 8px; }
+.p-tr-mockup__stage { padding: 16px; border-radius: 16px; background: repeating-linear-gradient(135deg, #f4f5f7 0 10px, #eceef2 10px 20px); }
+.p-tr-mockup__page { overflow: hidden; padding: 16px 0; border-radius: 10px; background: #fff; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.12); }
+.p-tr-mockup__mail { overflow-x: auto; border-radius: 10px; }
 
 /* Previous and next in the side panel's head */
 .p-tr-steps { display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-left: auto; }

@@ -126,6 +126,12 @@ async function showSaved(list, item) {
     known.forEach((occurrence, index) => {
         replaceOnPage(document.head, occurrence.text, texts[index]);
         replaceOnPage(document.body, occurrence.text, texts[index]);
+        // previews of mails show them in a shadow root (admin/translations/tool/mockup.html.twig)
+        document.querySelectorAll('.js-in-place-shadow').forEach((host) => {
+            if (host.shadowRoot) {
+                replaceOnPage(host.shadowRoot, occurrence.text, texts[index]);
+            }
+        });
         occurrence.text = texts[index];
     });
     item.dataset.occurrences = JSON.stringify(occurrences);

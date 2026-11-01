@@ -21,6 +21,7 @@ use App\Form\ResetPasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use App\Form\SearchFormType;
 use App\Model\MockupProvider\MockupProviderInterface;
+use App\Model\Translation\MockupPreview;
 use App\Model\Translation\TranslationTool;
 use App\Model\TranslationModel;
 use App\Twig\MockupExtension;
@@ -86,32 +87,46 @@ class MockupController extends TranslationController
     }
 
     /**
-     * @return Response
+     * A mail or a page with test data, as members get it, its texts listed for translation below it. Variants are
+     * picked by their parameter in the query (?count=2).
      */
-    #[Route(path: '/admin/translate/mockup/{feature}/{name}', name: 'translation_mockup', requirements: ['template' => '.+'])]
-    public function translateMockup(Request $request, string $feature, string $name)
-    {
+    #[Route(path: '/admin/translate/mockup/{feature}/{name}', name: 'translation_mockup', methods: ['GET'])]
+    public function translateMockup(
+        Request $request,
+        string $feature,
+        string $name,
+        TranslationTool $translationTool,
+        MockupPreview $mockupPreview,
+    ): Response {
         $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
 
-        return $this->renderMockup($feature, $name, $request->getLocale(), ['name' => $name]);
-    }
-
-    /**
-     * @return Response
-     */
-    #[Route(path: '/admin/translate/mockup/{feature}/with_params', name: 'translation_mockup_with_parameters', methods: ['POST'], priority: 1)]
-    public function translateMockupWithParameters(Request $request, string $feature)
-    {
-        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
-
-        $name = $request->request->get('name');
-        if (null === $name) {
-            $this->redirectToRoute('translations_mockups');
+        $mockup = $this->mockups[$feature][$name] ?? null;
+        if (null === $mockup) {
+            return $this->redirectToRoute('translations_mockups_feature', ['feature' => $feature]);
         }
 
-        $parameters = $request->request->all();
+        /** @var Member $translator */
+        $translator = $this->getUser();
+        $variants = $this->getVariants($feature, $name, $request->getLocale());
+        $variant = $this->getVariant($request, $variants);
 
-        return $this->renderMockup($feature, $name, $request->getLocale(), $parameters);
+        $parameters = array_merge(['name' => $name], $variant['parameters'] ?? [], $this->getGeneralMockupParameters());
+        $variables = $this->providers[$feature]->getMockupVariables($parameters);
+        if ('email' === $mockup['type']) {
+            // the mailer's wrapped email: images are links to the site instead of attachments
+            $variables['email'] = new MockupExtension();
+        }
+
+        return $this->render('admin/translations/tool/mockup.html.twig', [
+            'locale' => $this->getToolLocale($request, $translator),
+            'languageMenu' => $this->getToolLanguages($translationTool, $translator),
+            'feature' => $feature,
+            'name' => $name,
+            'mockup' => $mockup,
+            'variants' => $variants,
+            'variant' => $variant,
+            'preview' => $mockupPreview->render($mockup['template'], $variables),
+        ]);
     }
 
     private function showMockups(Request $request, TranslationTool $translationTool, ?string $feature): Response
@@ -513,39 +528,46 @@ class MockupController extends TranslationController
         ];
     }
 
-    private function renderMockup(string $feature, string $name, string $language, array $parameters): Response
+    /**
+     * The variants of a mockup with parameters: a label and the parameters of each.
+     *
+     * @return list<array{label: string, parameters: array<string, string>}>
+     */
+    private function getVariants(string $feature, string $name, string $locale): array
     {
-        $mockup = $this->mockups[$feature][$name] ?? null;
-        if (null === $mockup) {
-            return $this->redirectToRoute('translations_mockups');
+        if (true !== ($this->mockups[$feature][$name]['with_parameters'] ?? false)) {
+            return [];
         }
 
-        $url = $mockup['url'] ?? '';
-        $template = $mockup['template'];
-        $description = $mockup['description'] ?? '';
+        $variants = [];
+        foreach ($this->providers[$feature]->getMockupParameter($locale, $name) as $parameter => $values) {
+            foreach ($values as $label => $value) {
+                $variants[] = [
+                    'label' => ucfirst((string) $parameter) . ': ' . $label,
+                    'parameters' => [$parameter => (string) $value],
+                ];
+            }
+        }
 
-        $parameters = array_merge($parameters, $this->getGeneralMockupParameters());
-        $variables = $this->providers[$feature]->getMockupVariables($parameters);
+        return $variants;
+    }
 
-        return $this->render(
-            'admin/translations/mockup.page_with_parameters.html.twig',
-            array_merge(
-                $variables,
-                [
-                    'url' => $url,
-                    'name' => $parameters['fullname'] ?? $name,
-                    'feature' => $feature,
-                    'description' => $description,
-                    'template' => $template,
-                    'html_template' => $template,
-                    'email' => new MockupExtension(),
-                    'language' => $language,
-                    'submenu' => [
-                        'active' => 'mockups',
-                        'items' => $this->getSubmenuItems($language, 'mockup', $name),
-                    ],
-                ]
-            )
-        );
+    /**
+     * The variant the query asks for, the first one otherwise; null for a mockup without variants.
+     *
+     * @param list<array{label: string, parameters: array<string, string>}> $variants
+     *
+     * @return array{label: string, parameters: array<string, string>}|null
+     */
+    private function getVariant(Request $request, array $variants): ?array
+    {
+        foreach ($variants as $variant) {
+            $asked = array_intersect_key($request->query->all(), $variant['parameters']);
+            if ($asked === $variant['parameters']) {
+                return $variant;
+            }
+        }
+
+        return $variants[0] ?? null;
     }
 }

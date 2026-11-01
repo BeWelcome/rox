@@ -340,3 +340,15 @@ translation.tool.mockups.type.template:
     text: 'Template'
     description: 'Translation tool, mockups: kind of a preview'
     format: plain
+translation.tool.mockups.url:
+    text: 'Address'
+    description: 'Translation tool, preview of a mail or page: label of the address the page has on the site'
+    format: plain
+translation.tool.mockups.template:
+    text: 'Template'
+    description: 'Translation tool, preview of a mail or page: label of the file it is made from'
+    format: plain
+translation.tool.mockups.variants:
+    text: 'Variants'
+    description: 'Translation tool, preview of a mail or page: label of the list of its variants (for screen readers)'
+    format: plain

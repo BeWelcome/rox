@@ -136,18 +136,20 @@ class MyDataMockups implements MockupProviderInterface
     public function getMockupVariables(array $parameters): array
     {
         $name = $parameters['name'];
+        // every page of the export has the date in its footer
+        $generated = ['date_generated' => new DateTime()];
         if ('post (thread)' === $name) {
-            return $this->getPostInForum($parameters);
+            return array_merge($generated, $this->getPostInForum($parameters));
         }
         if ('post (group)' === $name) {
-            return $this->getPostInGroup($parameters);
+            return array_merge($generated, $this->getPostInGroup($parameters));
         }
         if ('message' === $name || 'request' === $name || 'invitation' === $name) {
-            return $this->getMessage($parameters);
+            return array_merge($generated, $this->getMessage($parameters));
         }
 
         if (isset($parameters['count'])) {
-            return $this->getMockEntities($parameters);
+            return array_merge($generated, $this->getMockEntities($parameters));
         }
 
         $extracted = $this->getExtractedEntities();

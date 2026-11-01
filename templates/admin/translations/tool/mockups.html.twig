@@ -1,7 +1,7 @@
 {% extends 'admin/translations/tool/_layout.html.twig' %}
 {#
   Mails and pages of each feature, to preview with test data in the site's language: the features on the left, the
-  chosen one's previews as cards. Previews with variants (parameters) have a button per variant.
+  chosen one's previews as cards. Previews with variants (parameters) have a link per variant.
   locale, languageMenu, features ({name, count}), feature (the open one), provider (its MockupProvider).
 #}
 {% set tab = 'mockups' %}
@@ -34,12 +34,7 @@
                                 {% if mockup.with_parameters is defined and mockup.with_parameters == true %}
                                     {% for parameter_name, parameter in provider.mockupParameter(app.request.locale, name) %}
                                         {% for key, value in parameter %}
-                                            <form action="{{ path('translation_mockup_with_parameters', {feature: feature}) }}" method="post">
-                                                <input type="hidden" name="name" value="{{ name }}">
-                                                <input type="hidden" name="fullname" value="{{ name|capitalize }}: {{ parameter_name|capitalize }} - {{ key }}">
-                                                <input type="hidden" name="{{ parameter_name }}" value="{{ value }}">
-                                                <button type="submit" class="p-tr-button">{{ parameter_name|capitalize }}: {{ key }}</button>
-                                            </form>
+                                            <a class="p-tr-button" href="{{ path('translation_mockup', {feature: feature, name: name, (parameter_name): value}) }}">{{ parameter_name|capitalize }}: {{ key }}</a>
                                         {% endfor %}
                                     {% endfor %}
                                 {% else %}

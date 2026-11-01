@@ -9,6 +9,7 @@ use App\Entity\Member;
 use App\Entity\Message;
 use App\Entity\Subject;
 use DateTime;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -59,8 +60,9 @@ class RequestStateListTest extends WebTestCase
         self::assertCount(1, $item->filter('.c-req-kind--pending'));
         self::assertCount(1, $item->filter('.c-req-pill--pending'));
 
-        $request->setStatus(HostingRequest::REQUEST_DECLINED);
-        $entityManager->flush();
+        // The browser rebooted the kernel, which cleared the entity manager: change the row directly
+        static::getContainer()->get(Connection::class)
+            ->executeStatement('UPDATE request SET status = ? WHERE id = ?', [HostingRequest::REQUEST_DECLINED, $request->getId()]);
         $crawler = $client->request('GET', '/conversations/');
         $item = $crawler->filter('.c-inbox-item__link[href*="/conversation/' . $message->getId() . '"]');
         self::assertCount(1, $item->filter('.c-req-pill--closed'));

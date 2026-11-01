@@ -46,3 +46,9 @@
 .p-tr-form textarea.o-input { min-height: 9rem; resize: vertical; }
 .p-tr-form__flags .mb-3 { margin-bottom: 0.35rem !important; }
 .p-tr-form__flags .mb-3:last-child { margin-bottom: 0 !important; }
+
+/* What changed in the English text since the translation was written (_english_change.html.twig) */
+.p-tr-diff .p-tr-diff__help { margin: 0 0 0.35rem; }
+.p-tr-diff__text { max-height: 14rem; padding: 0.75rem 0.9rem; overflow-y: auto; border: 1px solid #e2e8f0; border-radius: 0.75rem; background: #fff; color: #334155; font-size: 0.9rem; line-height: 1.6; white-space: pre-wrap; overflow-wrap: anywhere; }
+.p-tr-diff__removed { padding: 0 0.1rem; border-radius: 0.25rem; background: #fee2e2; color: #991b1b; text-decoration: line-through; }
+.p-tr-diff__added { padding: 0 0.1rem; border-radius: 0.25rem; background: #dcfce7; color: #166534; text-decoration: none; }

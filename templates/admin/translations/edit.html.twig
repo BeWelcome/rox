@@ -53,6 +53,7 @@
             {{ form.englishText.vars.value|nl2br }}
         </div>
     </div>
+    <div class="mb-3">{% include 'admin/translations/_english_change.html.twig' %}</div>
 
     {{ form_row(form.translatedText, {'attr':{'autofocus':true}}) }}
     {% if form.isMajorUpdate is defined %}
@@ -102,6 +103,7 @@
                 <p class="p-account-section__help p-tr-form__description">{{ form.description.vars.value }}</p>
             {% endif %}
         </section>
+        {% include 'admin/translations/_english_change.html.twig' %}
     {% endif %}
 
     <section class="p-account-section">

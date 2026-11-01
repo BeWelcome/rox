@@ -172,6 +172,12 @@ class TranslationController extends AbstractController
             'richtext' => $format->usesEditor(),
             'format' => $format,
             'isMajorUpdate' => $translationRequest->isMajorUpdate,
+            // the last change of the English text, if the translation was written before it
+            'englishChange' => 'en' !== $language->getShortCode() && $translation->isOlderThanTheChangeOf($original) ? [
+                'before' => $original->getPreviousSentence(),
+                'after' => $original->getSentence(),
+                'changed' => $original->getSentenceChanged(),
+            ] : null,
             'submenu' => [
                 'active' => 'edit',
                 'items' => $this->getSubmenuItems(

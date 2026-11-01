@@ -72,3 +72,11 @@ translation.format.used:
     text: 'Format: {format}'
     description: Translation tool, under the field of a translation, how the text is used on the page (one of the formats)
     format: plain
+translation.change.title:
+    text: 'What changed in the English text'
+    description: Translation tool, title of the box that shows the last change of the English text when the translation was written before it
+    format: plain
+translation.change.help:
+    text: 'The English text changed on {date}, after this translation was written. Struck out: removed; marked green: added.'
+    description: Translation tool, under the title of the box that shows the last change of the English text; date is the day it changed
+    format: plain

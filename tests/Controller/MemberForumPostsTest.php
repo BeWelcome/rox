@@ -89,7 +89,7 @@ class MemberForumPostsTest extends WebTestCase
         self::assertSame([1], $this->shownTo('member-6'));
         self::assertSame(1, $this->tabCount());
         // in it
-        self::assertSame([5, 1], $this->shownTo('member-2'));
+        self::assertSame([1, 5], $this->shownTo('member-2'));
         self::assertSame(2, $this->tabCount());
     }
 
@@ -99,8 +99,8 @@ class MemberForumPostsTest extends WebTestCase
         static::getContainer()->get(Connection::class)
             ->executeStatement("UPDATE `group` SET members_only = 1 WHERE name = 'Hiking Enthusiasts'");
 
-        self::assertSame([3, 1], $this->shownTo('member-6'));
-        self::assertSame([5, 3, 1], $this->shownTo('member-2'));
+        self::assertSame([1, 3], $this->shownTo('member-6'));
+        self::assertSame([1, 3, 5], $this->shownTo('member-2'));
     }
 
     public function testPostsForModeratorsAreForModeratorsOnly(): void
@@ -113,13 +113,14 @@ class MemberForumPostsTest extends WebTestCase
         // the author too reads them in the forum as the others do
         self::assertSame([5], $this->shownTo('member-1'));
         // bwadmin is a forum moderator in the fixtures: all of them, the deleted one struck through
-        self::assertSame([5, 3, 1], $this->shownTo('bwadmin'));
+        self::assertSame([1, 3, 5], $this->shownTo('bwadmin'));
         self::assertSame(3, $this->tabCount());
         self::assertCount(1, $this->client->getCrawler()->filter('#post3.is-deleted s'));
     }
 
     /**
-     * @return list<int> the ids of the posts on member-1's posts page, as the viewer sees it
+     * @return list<int> the ids of the posts on member-1's posts page as the viewer sees it, sorted: the page lists
+     *                   them newest first, and the fixtures give the posts random dates
      */
     private function shownTo(string $viewer): array
     {
@@ -127,9 +128,12 @@ class MemberForumPostsTest extends WebTestCase
         $crawler = $this->client->request('GET', '/members/member-1/posts');
         $this->assertResponseIsSuccessful();
 
-        return $crawler->filter('.p-member-post')->each(
+        $ids = $crawler->filter('.p-member-post')->each(
             static fn (Crawler $card): int => (int) substr((string) $card->attr('id'), \strlen('post'))
         );
+        sort($ids);
+
+        return $ids;
     }
 
     /**

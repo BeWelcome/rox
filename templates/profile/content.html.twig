@@ -175,7 +175,8 @@
 
             {% if not edit and app.user != member and member.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
               <div class="p-accom-cta">
-                <a href="{{ url('hosting_request', {username: member.username}) }}" class="p-hero__btn p-hero__btn--primary">
+                <a href="{{ url('hosting_request', {username: member.username}) }}" class="js-contact-open p-hero__btn p-hero__btn--primary"
+                   data-title="{{ 'request.write_to'|trans|format(member.shortNameOrUsername)|striptags }}">
                   <i class="fas fa-bed"></i> {{ 'profile.request.hosting'|trans({}, "messages", profile_language) }}
                 </a>
               </div>

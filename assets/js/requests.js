@@ -128,10 +128,9 @@ document.querySelectorAll('.js-request-stepper').forEach((stepper) => {
 // The host's answer (request/_respond_host.html.twig): Accept, Maybe or Decline picked
 // in the stay card, then the message. Send submits as the picked button (a plain
 // message without a pick); "Change" goes back to a plain message. The dates (flexible guest) show for Accept
-// and Maybe; "Decline without message" for Decline.
+// and Maybe; Decline may be sent without a message.
 document.querySelectorAll('.js-respond').forEach((form) => {
     const send = form.querySelector('.js-respond-send');
-    const declineLink = form.querySelector('.js-respond-decline-link');
     const steps = form.querySelectorAll('.js-decide-step');
     const write = form.querySelector('.js-decide-step[data-step="write"]');
     const stayDates = form.querySelector('.js-decide-stay');
@@ -152,6 +151,14 @@ document.querySelectorAll('.js-respond').forEach((form) => {
             input.dispatchEvent(new Event('change', { bubbles: true }));
         });
     };
+    const datesButton = form.querySelector('.js-decide-dates');
+    if (datesButton && stayDates) {
+        datesButton.addEventListener('click', () => {
+            const open = stayDates.hidden;
+            stayDates.hidden = !open;
+            datesButton.setAttribute('aria-expanded', String(open));
+        });
+    }
     const choose = (choice, button) => {
         if (write) {
             write.dataset.choice = choice;
@@ -162,15 +169,17 @@ document.querySelectorAll('.js-respond').forEach((form) => {
         if (send && (button || send.dataset.button)) {
             send.name = button || send.dataset.button;
         }
-        if (declineLink) {
-            declineLink.hidden = choice !== 'decline';
-        }
         if (stayDates) {
+            // Other dates only on "Change dates" (accept or maybe)
             const withDates = choice === 'accept' || choice === 'maybe';
             if (!withDates) {
                 resetStay();
             }
-            stayDates.hidden = !withDates;
+            stayDates.hidden = true;
+            if (datesButton) {
+                datesButton.hidden = !withDates;
+                datesButton.setAttribute('aria-expanded', 'false');
+            }
         }
         if (message) {
             message.placeholder = message.dataset['placeholder' + choice.charAt(0).toUpperCase() + choice.slice(1)] || message.placeholder;
@@ -179,44 +188,37 @@ document.querySelectorAll('.js-respond').forEach((form) => {
 
     // Accept, Maybe and Decline are in the stay card above the messages (request/_stay_answer.html.twig)
     const stayAnswer = document.querySelector('.js-stay-answer');
-    const stayChoices = stayAnswer ? stayAnswer.querySelector('.js-stay-choices') : null;
-    const stayAgain = stayAnswer ? stayAnswer.querySelector('.js-stay-again') : null;
-    const resetStayAnswer = () => {
-        if (!stayAnswer) {
-            return;
-        }
-        stayAnswer.hidden = false;
-        if (stayAgain && stayChoices) {
-            stayChoices.hidden = true;
-            stayAgain.hidden = false;
+    const stayPicks = document.querySelectorAll('.js-stay-pick');
+    // Phones: the stay card folds to its line once an answer is picked; its chevron shows the answers again
+    const foldStay = (folded) => {
+        const card = stayAnswer ? stayAnswer.closest('.c-stay-card') : null;
+        const strip = card ? card.querySelector('.js-stay-strip') : null;
+        if (card && strip) {
+            card.classList.toggle('is-collapsed', folded);
+            strip.setAttribute('aria-expanded', String(!folded));
         }
     };
-    if (stayAgain && stayChoices) {
-        stayAgain.addEventListener('click', () => {
-            stayAgain.hidden = true;
-            stayChoices.hidden = false;
-        });
-    }
-    document.querySelectorAll('.js-stay-pick').forEach((pick) => {
+    const resetStayAnswer = () => {
+        stayPicks.forEach((other) => other.classList.remove('is-picked'));
+    };
+    stayPicks.forEach((pick) => {
         pick.addEventListener('click', () => {
             choose(pick.dataset.choice, pick.dataset.button);
             show('write');
-            if (stayAnswer) {
-                stayAnswer.hidden = true;
-            }
+            stayPicks.forEach((other) => other.classList.toggle('is-picked', other === pick));
+            foldStay(true);
             if (message) {
                 message.focus();
             }
         });
     });
-    // "Change": back to a plain message, the answers show again in the stay card
-    const change = form.querySelector('.js-decide-change');
-    if (change) {
+    // The cross on the picked answer: back to a plain message
+    form.querySelectorAll('.js-decide-change').forEach((change) => {
         change.addEventListener('click', () => {
             choose('reply');
             resetStayAnswer();
         });
-    }
+    });
     if (write) {
         choose(write.dataset.choice);
     }
@@ -266,6 +268,14 @@ document.querySelectorAll('.js-respond').forEach((form) => {
 
         form.addEventListener('submit', (event) => {
             if (text.value.trim() === '' && !hasPhotos(form)) {
+                // Decline without a message: its own form (request/_respond_host.html.twig)
+                const declineForm = form.parentElement.querySelector('.js-respond-decline-form');
+                if (write && write.dataset.choice === 'decline' && declineForm) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    declineForm.submit();
+                    return;
+                }
                 // A message is needed (the server would refuse it anyway).
                 event.preventDefault();
                 event.stopImmediatePropagation();
@@ -307,3 +317,13 @@ initMessagePhotos();
 initBubblePhotos();
 initPlainTextFields();
 initContactSendState();
+
+// Phones: the chevron of the stay card's line (request/_stay_strip.html.twig) hides or shows the answer buttons
+document.querySelectorAll('.js-stay-strip').forEach((strip) => {
+    strip.addEventListener('click', () => {
+        const card = strip.closest('.c-stay-card');
+        const collapsed = !card.classList.contains('is-collapsed');
+        card.classList.toggle('is-collapsed', collapsed);
+        strip.setAttribute('aria-expanded', String(!collapsed));
+    });
+});

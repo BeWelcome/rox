@@ -97,5 +97,8 @@
     </div>
 
     {% include 'conversations/report.html.twig' with { 'message': thread|first, 'myself': app.user } %}
+    {# The member's preview, opened from their face or name at the top (search/preview.js, loaded by bewelcome.js) #}
+    <div class="js-places-preview" hidden></div>
+    {{ include('search/_preview_drawer.html.twig') }}
     {% endif %}
 {% endblock content %}

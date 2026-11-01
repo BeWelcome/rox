@@ -13,11 +13,21 @@
     </a>
     {# The person first: face with the hosting ring (as on the home page), name, positive comments, where they live and the subject #}
     {% set hosting = correspondent.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
-    <img class="c-inbox-avatar c-inbox-avatar--l c-inbox-head__avatar{{ hosting ? ' is-hosting' : '' }}" src="{{ path('avatar', { username: correspondent.username, size: 72 }) }}" alt="" loading="lazy">
+    {# Face and name open the member's preview in a drawer, as on the search (search/preview.js) #}
+    {# in: the kind of conversation, so the drawer leaves out what would start the same one again (search/_preview.html.twig) #}
+    {% set _current = current ?? null %}
+    {% set _in = _current is null ? 'request' : (_current.request ? (_current.request.inviteForLeg ? 'invitation' : 'request') : 'message') %}
+    {% set _preview = linked ? path('search_member_preview', { username: correspondent.username, in: _in }) : null %}
+    {% set _avatar %}<img class="c-inbox-avatar c-inbox-avatar--l c-inbox-head__avatar{{ hosting ? ' is-hosting' : '' }}" src="{{ path('avatar', { username: correspondent.username, size: 72 }) }}" alt="" loading="lazy">{% endset %}
+    {% if _preview %}
+        <a class="c-inbox-head__face js-search-preview-open" href="{{ path('members_profile', { username: correspondent.username }) }}" data-preview="{{ _preview }}" tabindex="-1" aria-hidden="true">{{ _avatar }}</a>
+    {% else %}
+        {{ _avatar }}
+    {% endif %}
     <div class="c-inbox-head__who">
         <div class="c-inbox-head__line">
             {% if linked %}
-                <a class="c-inbox-head__name" href="{{ path('members_profile', { username: correspondent.username }) }}">{{ correspondent.username }}</a>
+                <a class="c-inbox-head__name js-search-preview-open" href="{{ path('members_profile', { username: correspondent.username }) }}" data-preview="{{ _preview }}">{{ correspondent.username }}</a>
             {% else %}
                 <span class="c-inbox-head__name">{{ correspondent.username }}</span>
             {% endif %}
@@ -60,6 +70,9 @@
             <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
         </summary>
         <div class="c-inbox-head__menu-list">
+            {% if linked %}
+                <a href="{{ path('members_profile', { username: correspondent.username }) }}"><i class="far fa-user fa-fw" aria-hidden="true"></i> {{ 'conversation.view.profile'|trans }}</a>
+            {% endif %}
             {% if is_spam %}
                 {% set content %}<i class="far fa-flag fa-fw" aria-hidden="true"></i> {{ 'marknospam'|trans }}{% endset %}
                 {{ post.post_link(path('conversation_mark_nospam', { id: current.id }), token, '', content) }}

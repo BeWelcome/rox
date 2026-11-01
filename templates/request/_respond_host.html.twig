@@ -30,18 +30,25 @@
 
     {# The message, with the answer picked in the stay card (request/_stay_answer.html.twig) on top #}
     <div class="c-decide__step c-decide__write js-decide-step" data-step="write" data-choice="reply">
-        {# The picked answer and "Change" (hidden while no answer is picked: then Send posts a plain message) #}
+        {# The picked answer, with a cross back to a plain message, and "Change dates" when the guest is
+           flexible (hidden while no answer is picked: then Send posts a plain message). Another answer is
+           picked in the stay card above. #}
         <div class="c-decide__top">
             {% for key, icon in { accept: 'fa fa-check', maybe: 'fa fa-question', decline: 'fa fa-times' } %}
                 <span class="c-decide__picked c-decide__picked--{{ key }} js-decide-picked" data-choice="{{ key }}" hidden>
                     <i class="{{ icon }}" aria-hidden="true"></i> {{ ('request.decide.' ~ key)|trans }}
+                    <button type="button" class="c-decide__unpick js-decide-change" aria-label="{{ 'request.decide.change'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></button>
                 </span>
             {% endfor %}
-            <button type="button" class="c-decide__change js-decide-change">{{ 'request.decide.change'|trans }}</button>
+            {% if flexible %}
+                <button type="button" class="c-decide__change js-decide-dates" aria-expanded="false" hidden>
+                    <i class="fa fa-calendar" aria-hidden="true"></i> {{ 'request.respond.change'|trans }}
+                </button>
+            {% endif %}
         </div>
 
         {% if flexible %}
-            {# The guest is flexible: when accepting (or maybe), the host may suggest other dates. #}
+            {# The guest is flexible: when accepting (or maybe), the host may suggest other dates ("Change dates"). #}
             <div class="c-inbox-respond__stay c-decide__stay js-decide-stay" hidden>
                 {{ stay.dates(fields) }}
                 <div class="c-request-line">
@@ -86,16 +93,11 @@
         </div>
         {% do respond.message.setRendered %}
 
-        {% if request.status != constant(S ~ 'REQUEST_DECLINED') %}
-            <button type="submit" form="conversation-decline-{{ current.id }}" class="o-post-link__button c-decide__decline-link js-respond-decline-link" hidden>
-                {{ 'label.decline.no.message'|trans }}
-            </button>
-        {% endif %}
     </div>
     {% do respond.update.setRendered %}
     {{ form_rest(respond) }}
 {{ form_end(respond) }}
-{# declining without a message posts its own form (the button above is in the reply form) #}
-<form id="conversation-decline-{{ current.id }}" method="post" action="{{ path('conversation_decline', { id: current.id }|merge(app.request.query.getBoolean('embed') ? { embed: 1 } : {})) }}" hidden>
+{# Decline picked and no message: Send posts this form instead (requests.js) #}
+<form id="conversation-decline-{{ current.id }}" class="js-respond-decline-form" method="post" action="{{ path('conversation_decline', { id: current.id }|merge(app.request.query.getBoolean('embed') ? { embed: 1 } : {})) }}" hidden>
     <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\ConversationController::TOKEN')) }}">
 </form>

@@ -299,3 +299,6 @@ conversation.write.to:
 conversation.answer.placeholder:
     - 'Add a message to your answer…'
     - Placeholder of the message field at the bottom of a hosting request or invitation once Accept, Maybe or Decline is picked
+conversation.view.profile:
+    - 'View profile'
+    - On phones, item of the "⋯" menu at the top of a conversation that opens the other member's profile

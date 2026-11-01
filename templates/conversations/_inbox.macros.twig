@@ -126,6 +126,7 @@
                         {{ preview|truncate(140) }}
                     </span>
                     {% if message.request %}{% include 'conversations/_request_state.html.twig' with { request: message.request, unread: unread, part: 'status' } only %}{% endif %}
+                    {%- if unread %}<span class="c-inbox-item__dot" aria-hidden="true"></span>{% endif %}
                 </div>
             </div>
         </a>
@@ -219,9 +220,13 @@
     {% if titles[folder] is defined or initiator != 2 %}
         {# Where the list stands when it isn't one of the three types: a folder of the "⋯" menu or who started it #}
         <p class="c-inbox-list__where">
-            {% if titles[folder] is defined %}<span>{{ titles[folder]|trans }}</span>{% endif %}
-            {% if initiator != 2 %}<span>{{ (initiator == 1 ? 'started.by.me' : 'started.by.someone.else')|trans }}</span>{% endif %}
-            <a href="{{ inbox.folder_url('conversations') }}" aria-label="{{ 'conversations.filter.all'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></a>
+            {% set titleIcons = { spam: 'fas fa-flag', deleted: 'fas fa-trash', messages: 'fas fa-envelope' } %}
+            {# One pill: the icon and name of each filter, then the cross that clears them #}
+            <span class="c-inbox-list__chip">
+                {% if titles[folder] is defined %}<span><i class="{{ titleIcons[folder] }}" aria-hidden="true"></i> {{ titles[folder]|trans }}</span>{% endif %}
+                {% if initiator != 2 %}<span><i class="fas {{ initiator == 1 ? 'fa-paper-plane' : 'fa-inbox' }}" aria-hidden="true"></i> {{ (initiator == 1 ? 'started.by.me' : 'started.by.someone.else')|trans }}</span>{% endif %}
+                <a href="{{ inbox.folder_url('conversations') }}" aria-label="{{ 'conversations.filter.all'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></a>
+            </span>
         </p>
     {% endif %}
 

@@ -171,3 +171,6 @@ request.status.waiting.host:
 request.status.waiting.guest:
     - 'Waiting for an answer'
     - Status on the stay card of a hosting request or invitation that the other member has not answered yet
+request.strip.your.answer:
+    - 'Your answer'
+    - On phones, short state in the folded stay card of a hosting request or invitation you have not answered yet

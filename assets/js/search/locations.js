@@ -581,3 +581,22 @@ initializeTomSelects();
 
 // The radius and the sort: a menu in the site's look instead of the browser's list
 document.querySelectorAll('.p-search .p-search-select--radius, .p-search .p-search-select--small').forEach(prettySelect);
+
+// A loader over the results while the next page of results loads
+const loading = document.querySelector('.js-search-loading');
+if (form && loading) {
+    const showLoading = (shown) => {
+        loading.hidden = !shown;
+        loading.closest('.p-search-results').classList.toggle('is-loading', shown);
+    };
+    form.addEventListener('submit', (event) => {
+        if (!event.defaultPrevented) {
+            showLoading(true);
+        }
+    });
+    document.querySelectorAll('.p-search-results__foot a[href]').forEach((link) => {
+        link.addEventListener('click', () => showLoading(true));
+    });
+    // Back to this page from the browser's history: no loader left over
+    window.addEventListener('pageshow', () => showLoading(false));
+}

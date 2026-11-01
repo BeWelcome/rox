@@ -14,6 +14,28 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class InvitationMockups implements MockupProviderInterface
 {
     private const array MOCKUPS = [
+        'invitation (mail)' => [
+            'type' => 'email',
+            'template' => 'emails/invitation.html.twig',
+            'description' => 'Mail to the guest about an invitation to stay.',
+        ],
+        'invitation reply from guest (mail)' => [
+            'type' => 'email',
+            'with_parameters' => true,
+            'template' => 'emails/invitation_reply_from_guest.html.twig',
+            'description' => 'Mail to the host when the guest answered the invitation.',
+        ],
+        'invitation reply from host (mail)' => [
+            'type' => 'email',
+            'with_parameters' => true,
+            'template' => 'emails/invitation_reply_from_host.html.twig',
+            'description' => 'Mail to the guest when the host wrote about the invitation.',
+        ],
+        'invitation decline from guest (mail)' => [
+            'type' => 'email',
+            'template' => 'emails/invitation_decline_from_guest.html.twig',
+            'description' => 'Mail to the host when the guest declined the invitation.',
+        ],
         'intial invitation (host)' => [
             'type' => 'page',
             'template' => 'invitation/invite.html.twig',
@@ -103,6 +125,12 @@ class InvitationMockups implements MockupProviderInterface
     public function getMockupVariables(array $parameters): array
     {
         return match ($parameters['name']) {
+            'invitation (mail)' => $this->getVariablesForInvitationMail($parameters, fromHost: true),
+            'invitation reply from guest (mail)' => $this->getVariablesForInvitationMail($parameters),
+            'invitation reply from host (mail)' => $this->getVariablesForInvitationMail($parameters, fromHost: true),
+            'invitation decline from guest (mail)' => $this->getVariablesForInvitationMail(
+                ['status' => HostingRequest::REQUEST_DECLINED] + $parameters,
+            ),
             'intial invitation (host)' => $this->getVariablesForInitialInvitation($parameters),
             'invitation reply (guest)' => $this->getVariablesForReplyGuest($parameters),
             'invitation reply (host)' => $this->getVariablesForReplyHost($parameters),
@@ -110,6 +138,29 @@ class InvitationMockups implements MockupProviderInterface
             'view invitation (host)' => $this->getVariablesForViewHost($parameters),
             default => [],
         };
+    }
+
+    /**
+     * The mails about an invitation: the host (bwadmin) invites the guest (the translator), or the guest answers.
+     */
+    private function getVariablesForInvitationMail(array $parameters, bool $fromHost = false): array
+    {
+        $host = $parameters['admin'];
+        $guest = $parameters['user'];
+        $leg = $this->invitationUtility->getLeg($host);
+        $status = (int) ($parameters['status'] ?? HostingRequest::REQUEST_OPEN);
+        // the newest first: the invitation is from the host, the reply from the guest
+        [$reply, $invitation] = $this->invitationUtility->getThread($host, $guest, $leg, $status, 1);
+        $message = $fromHost ? $invitation : $reply;
+
+        return [
+            'sender' => $fromHost ? $host : $guest,
+            'receiver' => $fromHost ? $guest : $host,
+            'message' => $message,
+            'request' => $message->getRequest(),
+            'changed' => false,
+            'subject' => 'Subject',
+        ];
     }
 
     private function getVariablesForInitialInvitation(array $parameters): array

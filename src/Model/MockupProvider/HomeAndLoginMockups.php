@@ -12,6 +12,16 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 class HomeAndLoginMockups implements MockupProviderInterface
 {
     private const array MOCKUPS = [
+        'login reminder (email)' => [
+            'type' => 'email',
+            'template' => 'emails/login.reminder.html.twig',
+            'description' => 'To members who haven\'t logged in for a year.',
+        ],
+        'suspension notice (email)' => [
+            'type' => 'email',
+            'template' => 'emails/suspension.notice.html.twig',
+            'description' => 'To members who didn\'t come back despite the reminders: when their profile will be deleted.',
+        ],
         'homepage' => [
             'type' => 'page',
             'url' => '/',
@@ -97,6 +107,10 @@ class HomeAndLoginMockups implements MockupProviderInterface
                     'member_expired' => false,
                     'member_not_allowed_to_login' => false,
                 ];
+            case 'login reminder (email)':
+                return ['receiver' => $parameters['user']];
+            case 'suspension notice (email)':
+                return ['receiver' => $parameters['user'], 'deletion_date' => strtotime('+2 months')];
             default:
                 return [];
         }

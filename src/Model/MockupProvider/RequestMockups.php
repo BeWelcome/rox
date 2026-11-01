@@ -25,6 +25,23 @@ class RequestMockups implements MockupProviderInterface
             'template' => 'emails/request.html.twig',
             'description' => 'Mail to the host about a new hosting request.',
         ],
+        'reply from guest (mail)' => [
+            'type' => 'email',
+            'with_parameters' => true,
+            'template' => 'emails/reply_from_guest.html.twig',
+            'description' => 'Mail to the host when the guest answered, here with changed details.',
+        ],
+        'reply from host (mail)' => [
+            'type' => 'email',
+            'with_parameters' => true,
+            'template' => 'emails/reply_from_host.html.twig',
+            'description' => 'Mail to the guest when the host answered.',
+        ],
+        'decline from host (mail)' => [
+            'type' => 'email',
+            'template' => 'emails/decline_from_host.html.twig',
+            'description' => 'Mail to the guest when the host declined.',
+        ],
         'intial request (guest)' => [
             'type' => 'page',
             'template' => 'request/request.html.twig',
@@ -89,6 +106,12 @@ class RequestMockups implements MockupProviderInterface
     {
         return match ($parameters['name']) {
             'request (mail)' => $this->getVariablesForRequestMail($parameters),
+            'reply from guest (mail)' => $this->getVariablesForRequestMail($parameters, changed: true),
+            'reply from host (mail)' => $this->getVariablesForRequestMail($parameters, fromHost: true),
+            'decline from host (mail)' => $this->getVariablesForRequestMail(
+                ['status' => HostingRequest::REQUEST_DECLINED] + $parameters,
+                fromHost: true,
+            ),
             'intial request (guest)' => $this->getVariablesForInitialRequest($parameters),
             'request reply (guest)' => $this->getVariablesForReplyGuest($parameters),
             'request reply (host)' => $this->getVariablesForReplyHost($parameters),
@@ -99,22 +122,24 @@ class RequestMockups implements MockupProviderInterface
     }
 
     /**
-     * The mail to the host: the guest (the translator) asks bwadmin to stay.
+     * The mails about a request: from the guest (the translator) to the host (bwadmin), or the host's answer.
      */
-    private function getVariablesForRequestMail(array $parameters): array
+    private function getVariablesForRequestMail(array $parameters, bool $fromHost = false, bool $changed = false): array
     {
         $guest = $parameters['user'];
         $host = $parameters['admin'];
-        [, $request] = $this->getThread($guest, $host, (int) $parameters['status'], 2);
+        [$reply, $request] = $this->getThread($guest, $host, (int) ($parameters['status'] ?? HostingRequest::REQUEST_OPEN), 2);
         $request->setMessage('<p>Hi! I\'ll be passing through your town on my way south. Could you host me for two nights? I\'m happy to cook something from home.</p>');
+        $reply->setMessage('<p>You\'re welcome! I live a ten-minute walk from the station; I\'ll send you the address closer to the date.</p>');
+        $message = $fromHost ? $reply : $request;
 
         return [
-            'sender' => $guest,
-            'receiver' => $host,
+            'sender' => $fromHost ? $host : $guest,
+            'receiver' => $fromHost ? $guest : $host,
             'host' => $host,
-            'message' => $request,
-            'request' => $request->getRequest(),
-            'changed' => false,
+            'message' => $message,
+            'request' => $message->getRequest(),
+            'changed' => $changed,
             'subject' => 'Subject',
         ];
     }

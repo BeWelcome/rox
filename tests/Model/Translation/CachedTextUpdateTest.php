@@ -11,6 +11,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -127,7 +128,7 @@ class CachedTextUpdateTest extends KernelTestCase
     /**
      * The translator of the next request: it reads the cached catalogues.
      */
-    private function freshTranslator(): TranslatorInterface
+    private function freshTranslator(): TranslatorInterface&TranslatorBagInterface
     {
         self::ensureKernelShutdown();
         self::bootKernel();

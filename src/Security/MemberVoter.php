@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use App\Doctrine\MemberStatusType;
 use App\Entity\Member;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -51,7 +50,7 @@ class MemberVoter extends Voter
             return true;
         }
 
-        if ($member->isBrowsable() && !\in_array($member->getStatus(), MemberStatusType::SIGNUP_UNFINISHED, true)) {
+        if ($member->isVisibleToMembers()) {
             return true;
         }
 

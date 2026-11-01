@@ -63,7 +63,8 @@ class RequestMailTest extends KernelTestCase
         self::assertCount(1, $crawler->filter('td.bw-card'));
         self::assertCount(1, $crawler->filter('a[href$="/members/member-3/preferences"]'));
         // who: the avatar from the site
-        self::assertCount(1, $crawler->filter('img[src$="/members/avatar/member-2/96"]'));
+        // the avatar, signed for the mail program
+        self::assertCount(1, $crawler->filter('img[src*="/members/avatar/member-2/96?"][src*="_hash="]'));
         self::assertCount(1, $crawler->filter('img[alt="member-2"]'));
         // the stay: 2 nights, struck through as it was declined
         self::assertStringContainsString('12 Nov', $html);

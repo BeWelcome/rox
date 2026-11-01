@@ -1079,6 +1079,15 @@ class Member implements Stringable, UserInterface, PasswordHasherAwareInterface,
         return $scope;
     }
 
+    /**
+     * Whether members may see this member's profile (and picture): browsable, and the signup finished. MemberVoter
+     * for other members, and the signed avatar links in mails.
+     */
+    public function isVisibleToMembers(): bool
+    {
+        return $this->isBrowsable() && !\in_array($this->status, MemberStatusType::SIGNUP_UNFINISHED, true);
+    }
+
     public function isBrowsable(): bool
     {
         if (\in_array(

@@ -79,7 +79,8 @@ class Extension extends AbstractExtension implements GlobalsInterface
 
     public function languageNameTranslated(string $locale, string $display): string
     {
-        return $this->translator->trans(strtolower('lang_' . $locale), [], null, $display);
+        // trimmed: some language names were stored with a space at the end, which showed in the dropdowns
+        return trim($this->translator->trans(strtolower('lang_' . $locale), [], null, $display));
     }
 
     public function ago(Carbon $carbon): string

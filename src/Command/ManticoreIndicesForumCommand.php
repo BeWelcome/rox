@@ -34,6 +34,9 @@ class ManticoreIndicesForumCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        // the rebuild needs more than the container's 512 MB
+        ini_set('memory_limit', '-1');
+
         $this->io = new SymfonyStyle($input, $output);
         $this->io->note('Creating manticore forum real-time index.');
         $this->io->newLine();

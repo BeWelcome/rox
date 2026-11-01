@@ -38,6 +38,9 @@ class ManticoreIndicesGeonamesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        // the rebuild needs more than the container's 512 MB
+        ini_set('memory_limit', '-1');
+
         $this->io = new SymfonyStyle($input, $output);
         $this->io->note('Creating manticore geonames real-time index.');
         $this->io->newLine();
@@ -48,6 +51,8 @@ class ManticoreIndicesGeonamesCommand extends Command
         }
 
         $this->addGeonamesDocuments($index, $output);
+
+        $this->optimizeGeonamesIndex();
 
         $this->addAlternateNamesDocuments($index, $output);
 
@@ -105,6 +110,25 @@ class ManticoreIndicesGeonamesCommand extends Command
         }
 
         return $index;
+    }
+
+    /**
+     * Merges the disk chunks of the places into one before the translations are added: otherwise Manticore's
+     * auto-optimize starts in the middle of adding them, and Manticore closes the connection.
+     */
+    private function optimizeGeonamesIndex(): void
+    {
+        $this->io->note('Optimizing ' . self::GEONAMES_INDEX . ' (merging disk chunks before adding the translations).');
+        $client = new Client(['host' => $this->manticoreHost, 'port' => $this->manticorePort]);
+        try {
+            // raw: the /sql endpoint only takes DDL raw; the client can't parse OPTIMIZE's empty answer
+            $client->sql('OPTIMIZE TABLE ' . self::GEONAMES_INDEX . ' OPTION cutoff=1, sync=1', true);
+        } catch (Exception $exception) {
+            if ('' !== $exception->getMessage()) {
+                throw $exception;
+            }
+        }
+        $this->io->note('Optimized.');
     }
 
     private function addGeonamesDocuments(Table $index, OutputInterface $output): void

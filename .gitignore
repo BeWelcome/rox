@@ -12,6 +12,9 @@ rox_local.ini
 /upload/*
 !upload/images/.gitkeep
 google*.html
+# Google Search Console ownership files for bewelcome.org, served from public/
+!/public/google842bc9393a58153c.html
+!/public/googled8d91860c601b562.html
 tools/testenv/images/status.csv
 components/*
 revision.txt

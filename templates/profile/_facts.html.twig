@@ -18,7 +18,7 @@
   {% set _days = _last.diffInDays %}
   <p class="p-pro__facts">
     {% if _gender %}<span class="p-pro__fact"><span class="p-pro__fact-label">{{ 'profile.facts.gender'|trans }}: </span>{{ _gender|trans }}</span>{% endif %}
-    {% if _age %}<span class="p-pro__fact"><span class="p-pro__fact-label">{{ 'profile.facts.age'|trans }}: </span>{{ _age }}</span>{% endif %}
+    {% if _age %}<span class="p-pro__fact">{{ 'places.member.age'|trans({ age: _age }) }}</span>{% endif %}
     <span class="p-pro__fact">
       {{- 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) -}}
       {%- if _admin %} ({{ member.created|format_datetime() }}){% endif -%}

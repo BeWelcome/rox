@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class LocaleController extends AbstractController
 {
@@ -49,7 +50,8 @@ class LocaleController extends AbstractController
         $redirect = $request->headers->get('referer');
 
         if (!$redirect) {
-            $redirect = $this->redirectToRoute('homepage');
+            // without a referrer (a typed or bookmarked address): the home page
+            $redirect = $this->generateUrl('homepage', referenceType: UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $locale = $language->getShortCode();

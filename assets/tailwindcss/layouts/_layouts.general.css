@@ -8870,6 +8870,14 @@ main:has(.l-hello) { margin-top: 0 !important; margin-bottom: 0; padding-bottom:
 .p-member-post__text img { max-width: 100%; height: auto; }
 .p-member-post .p-member-post__languages { margin: 0.75rem 0 0; color: #94a3b8; font-size: 0.8125rem; }
 .p-member-posts__toolbar { margin-top: 1.25rem; }
+/* In the card of the profile's tabs, like the gallery and the friends: the posts as rows, a line between them */
+.p-member-posts-page { padding-top: 1.5rem; }
+.p-member-posts-page .card-header .p-gallery-footer__count { margin-left: 0.4rem; letter-spacing: 0; }
+.p-member-posts-page .p-member-posts__toolbar { margin-top: 0; }
+.p-member-posts-page .p-forum__list { gap: 0; margin-bottom: 0; }
+.p-member-posts-page .p-member-post { padding: 1rem 0; border-top: 1px solid #f1f5f9; border-radius: 0; box-shadow: none; }
+.p-member-posts-page .p-member-post:first-child { border-top: 0; }
+.p-member-posts-page .p-member-post.is-deleted { border: 0; border-top: 1px solid #f1f5f9; opacity: 0.7; }
 .p-member-post.is-deleted { border: 1px dashed #cbd5e1; box-shadow: none; }
 .p-member-post.is-deleted .p-member-post__text { color: #94a3b8; }
 @media (max-width: 540px) {
@@ -10060,14 +10068,23 @@ a.p-pro-filter__item:hover { background: #fff; }
   body:has(.p-pro--compact),
   body:has(.p-pro--compact) main { background: #fff; }
   body:has(.p-pro--compact) .p-gallery-page,
-  body:has(.p-pro--compact) .p-comments-page { margin: 0 calc(-0.5 * var(--bs-gutter-x, 1.5rem)); padding-top: 0; }
+  body:has(.p-pro--compact) .p-comments-page,
+  body:has(.p-pro--compact) .p-friends-page,
+  body:has(.p-pro--compact) .p-member-posts-page,
+  body:has(.p-pro--compact) .p-notes-page { margin: 0 calc(-0.5 * var(--bs-gutter-x, 1.5rem)); padding-top: 0; }
   body:has(.p-pro--compact) .p-gallery-page .card,
-  body:has(.p-pro--compact) .p-comments-page .card { margin: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  body:has(.p-pro--compact) .p-comments-page .card,
+  body:has(.p-pro--compact) .p-friends-page .card,
+  body:has(.p-pro--compact) .p-member-posts-page .card,
+  body:has(.p-pro--compact) .p-notes-page .card { margin: 0; border-radius: 0; background: transparent; box-shadow: none; }
+  body:has(.p-pro--compact) .p-friends-page .card-header,
+  body:has(.p-pro--compact) .p-member-posts-page .card-header,
+  body:has(.p-pro--compact) .p-notes-page .card-header,
   body:has(.p-pro--compact) .p-gallery-page .card-header,
-  body:has(.p-pro--compact) .p-comments-page .p-comments-page__title { display: none; }
+  body:has(.p-pro--compact) .p-comments-page .card-header { display: none; }
 
   /* Comments: the same filter as on large screens, a bit tighter; plain comments split by lines */
-  body:has(.p-pro--compact) .p-comments-page .p-comments-page__head { padding: 0.75rem 1rem; border-radius: 0; }
+  body:has(.p-pro--compact) .p-comments-page .p-comments-page__filter { margin: 0.75rem 0; }
   body:has(.p-pro--compact) .p-comments-page .p-pro-filter { display: inline-flex; width: auto; max-width: 100%; padding: 0.15rem; }
   body:has(.p-pro--compact) .p-comments-page .p-pro-filter__item,
   body:has(.p-pro--compact) .p-comments-page .p-pro-filter__item:hover { flex: none; padding: 0.25rem 0.65rem; font-size: 0.75rem; }
@@ -11052,8 +11069,7 @@ body.is-embedded { background: #fff; }
 
 /* Comments page: the profile's comment filter, the chosen one in white */
 .p-pro-filter__item.is-active { background: #fff; color: #0f172a; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08); }
-.p-comments-page .p-comments-page__head { margin-bottom: 0; padding: 1rem 1.25rem; border-bottom: 1px solid #eef2f6; border-radius: 1rem 1rem 0 0; background: #fff; }
-.p-comments-page .p-comments-page__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+.p-comments-page .p-comments-page__filter { margin: 0 0 1rem; }
 /* Profile: my private note about the member, a yellow sticky note (profile/_note.html.twig) */
 .p-pro-note { position: relative; padding: 1.2rem 1.35rem 1.25rem; border-radius: 0.35rem 1.5rem 0.35rem 0.35rem; background: #fffbea; box-shadow: 0 1px 2px rgba(120, 90, 20, 0.08), 0 8px 20px rgba(120, 90, 20, 0.07); }
 .p-pro-note::after { content: ''; position: absolute; top: 0; right: 0; width: 1.6rem; height: 1.6rem; border-radius: 0 0 0 0.35rem; background: linear-gradient(225deg, #f5f0e6 50%, #efe2b4 50%); }
@@ -11893,14 +11909,17 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
   .p-notes-card__action,
   .p-notes-card__action:hover { width: 2.25rem; height: 2.25rem; }
 }
-/* My notes as a page of its own (no profile head), like the Visitors page: the notes in one white
-   card, one row each with a line between them; empty: an orange lock and how to add a note */
-.p-notes-page .p-notes { box-sizing: border-box; max-width: 1100px; padding: 1.75rem 1rem 3rem; }
+/* My notes in the card of the profile's tabs, like the gallery and the friends: "only you" in the head, then the
+   search, the categories and one row per note with a line between them; empty: an orange lock and how to add one */
+.p-notes-page { padding-top: 1.5rem; }
+.p-notes-page .card-header .p-gallery-footer__count { margin-left: 0.4rem; letter-spacing: 0; }
+.p-notes-page .card-header .p-notes__private { margin: 0; color: #64748b; font-size: 0.8125rem; font-weight: 400; letter-spacing: 0; text-transform: none; }
+.p-notes-page .p-notes { max-width: none; margin: 0; }
+.p-notes-page .p-notes__search { display: block; max-width: 27rem; margin: 0 0 1rem; }
 .p-notes-page .p-notes__search input { height: 2.75rem; }
-.p-notes-page .p-notes__filters { margin: 1.25rem 0 1rem; }
+.p-notes-page .p-notes__filters { margin: 0 0 0.5rem; }
 .p-notes-page .p-notes__filter { padding: 0.4rem 0.95rem; font-size: 0.875rem; }
-.p-notes-page .p-notes__list { gap: 0; padding: 0.25rem 1.5rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.04); }
-.p-notes-page .p-notes__list.is-empty { margin-top: 1.25rem; padding: 0; }
+.p-notes-page .p-notes__list { gap: 0; }
 .p-notes-page .p-notes-card { gap: 1rem; padding: 1.1rem 0; border-top: 1px solid #f1f5f9; border-radius: 0; background: none; box-shadow: none; }
 .p-notes-page .p-notes-card:first-child { border-top: 0; }
 .p-notes-page .p-notes-card__avatar img { width: 3.5rem; height: 3.5rem; }
@@ -11917,8 +11936,6 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-notes__empty .p-notes__empty-title { color: #0f172a; font-size: 1rem; font-weight: 600; }
 .p-notes__empty .p-notes__empty-hint { max-width: 26rem; color: #64748b; font-size: 0.875rem; }
 @media (max-width: 767.98px) {
-  .p-notes-page .p-notes { padding: 1.25rem 0.75rem 2rem; }
-  .p-notes-page .p-notes__list { padding: 0.25rem 1rem; }
   .p-notes-page .p-notes-card { padding: 1rem 0; }
   .p-notes-page .p-notes-card__avatar img { width: 3rem; height: 3rem; }
   .p-notes-page .p-notes-card__actions { top: 0.9rem; right: 0; }

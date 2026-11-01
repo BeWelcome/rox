@@ -18,14 +18,21 @@ final class Version20261101110000 extends AbstractMigration
         return 'Add word.previous_sentence and word.sentence_changed.';
     }
 
+    #[Override]
+    public function isTransactional(): bool
+    {
+        // ALTER TABLE commits implicitly.
+        return false;
+    }
+
     public function up(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE word ADD previous_sentence TEXT DEFAULT NULL, ADD sentence_changed DATETIME DEFAULT NULL');
+        $this->addSql('ALTER TABLE word ADD COLUMN IF NOT EXISTS previous_sentence TEXT DEFAULT NULL, ADD COLUMN IF NOT EXISTS sentence_changed DATETIME DEFAULT NULL');
     }
 
     #[Override]
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE word DROP previous_sentence, DROP sentence_changed');
+        $this->addSql('ALTER TABLE word DROP COLUMN IF EXISTS previous_sentence, DROP COLUMN IF EXISTS sentence_changed');
     }
 }

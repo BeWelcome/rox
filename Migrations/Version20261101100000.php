@@ -18,14 +18,21 @@ final class Version20261101100000 extends AbstractMigration
         return 'Add word.format.';
     }
 
+    #[Override]
+    public function isTransactional(): bool
+    {
+        // ALTER TABLE commits implicitly.
+        return false;
+    }
+
     public function up(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE word ADD format VARCHAR(6) DEFAULT NULL');
+        $this->addSql('ALTER TABLE word ADD COLUMN IF NOT EXISTS format VARCHAR(6) DEFAULT NULL');
     }
 
     #[Override]
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE word DROP format');
+        $this->addSql('ALTER TABLE word DROP COLUMN IF EXISTS format');
     }
 }

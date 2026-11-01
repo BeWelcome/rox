@@ -64,6 +64,6 @@ class RequestStateListTest extends WebTestCase
         $crawler = $client->request('GET', '/conversations/');
         $item = $crawler->filter('.c-inbox-item__link[href*="/conversation/' . $message->getId() . '"]');
         self::assertCount(1, $item->filter('.c-req-pill--closed'));
-        self::assertCount(1, $item->closest('.c-inbox-item.is-closed'));
+        self::assertCount(1, $crawler->filter('.c-inbox-item.is-closed .c-inbox-item__link[href*="/conversation/' . $message->getId() . '"]'));
     }
 }

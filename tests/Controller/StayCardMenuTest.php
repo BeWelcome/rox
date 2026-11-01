@@ -7,6 +7,7 @@ use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Entity\Subject;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
@@ -30,7 +31,11 @@ class StayCardMenuTest extends WebTestCase
         $request = new HostingRequest()
             ->setArrival(new DateTime('+20 days'))
             ->setDeparture(new DateTime('+23 days'));
+        // A request always has a subject: without one the answer form is the first message's form
+        $subject = new Subject()->setSubject('zztest stay card menu subject');
+        $entityManager->persist($subject);
         $message = new Message()
+            ->setSubject($subject)
             ->setSender($guest)
             ->setReceiver($host)
             ->setInitiator($guest)

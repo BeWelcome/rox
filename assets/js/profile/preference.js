@@ -97,11 +97,14 @@ async function renderBrowserPushState(state = null) {
         return part.charAt(0).toUpperCase() + part.slice(1)
     }).join('')
     status.textContent = browserPushControls.dataset[messageKey] || browserPushControls.dataset.statusError
+    browserPushControls.dataset.state = currentState
 
+    // Enable only while it would turn the notifications on in this browser: not when they are on already, off,
+    // blocked by the browser or not supported
     const preferenceValue = getPreferenceValue(browserPushPreference)
     const canEnable = ['Always', 'OpenOnly'].includes(preferenceValue)
         && !['active', 'open_only', 'denied', 'unsupported'].includes(currentState)
-    enableButton.hidden = preferenceValue === 'No'
+    enableButton.hidden = !canEnable
     enableButton.disabled = !canEnable
 }
 

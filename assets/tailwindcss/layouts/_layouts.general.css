@@ -2276,6 +2276,104 @@ main:has(.p-hero) {
   }
 }
 
+/* The preferences page looks like its side panel on the edit page: a narrow column, each setting above its
+   control */
+.p-edit-subpage--preferences {
+  max-width: 600px;
+}
+
+.p-edit-subpage--preferences .p-edit-subpage__card {
+  padding: 1.25rem;
+}
+
+.p-preferences-list .p-preference-card {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 0.85rem;
+}
+
+.p-preferences-list .p-preference-card__control {
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+/* Browser notifications: what this browser does, and Enable while it would turn them on here */
+.p-preference-push {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.p-preference-push .p-preference-push__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  color: #475569;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+.p-preference-push__status:empty {
+  display: none;
+}
+
+.p-preference-push__status::before {
+  content: '';
+  flex-shrink: 0;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+
+.p-preference-push[data-state='active'] .p-preference-push__status::before,
+.p-preference-push[data-state='open_only'] .p-preference-push__status::before {
+  background: #16a34a;
+}
+
+.p-preference-push[data-state='inactive'] .p-preference-push__status::before,
+.p-preference-push[data-state='error'] .p-preference-push__status::before {
+  background: #f59e0b;
+}
+
+.p-preference-push[data-state='denied'] .p-preference-push__status::before,
+.p-preference-push[data-state='unsupported'] .p-preference-push__status::before {
+  background: #dc2626;
+}
+
+.p-preference-push__enable {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.1rem;
+  border: 0;
+  border-radius: 999px;
+  background: #f37000;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.p-preference-push__enable:hover {
+  background: #d9661c;
+}
+
+.p-preference-push__enable:disabled {
+  background: #f6c3a0;
+  cursor: default;
+}
+
+.p-preference-push__enable[hidden] {
+  display: none;
+}
+
 .p-profile-secondary {
   min-width: 0;
   align-self: start;

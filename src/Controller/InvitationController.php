@@ -173,7 +173,6 @@ class InvitationController extends BaseRequestAndInvitationController
                 ]);
             }
 
-
             return $this->redirectToRoute('members_profile', ['username' => $guest->getUsername()]);
         }
 

@@ -16,16 +16,16 @@ use App\Entity\GroupMembership;
 use App\Entity\HostingRequest;
 use App\Entity\Location;
 use App\Entity\Log;
+use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\Poll;
 use App\Entity\PollChoice;
 use App\Entity\Right;
+use App\Entity\RightVolunteer;
 use App\Entity\Subtrip;
 use App\Entity\Trip;
 use Carbon\Carbon;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Mockery;
 
 /**
  * Utility class for the translation interface mockup section.
@@ -36,6 +36,8 @@ use Mockery;
  */
 class MyDataMockups implements MockupProviderInterface
 {
+    use MockupEntities;
+
     private const array MOCKUPS = [
         'start page' => [
             'type' => 'template',
@@ -239,52 +241,34 @@ class MyDataMockups implements MockupProviderInterface
         $count = $parameters['count'] ?? -1;
         switch ($key) {
             case 'activities':
-                $mockEntity = Mockery::mock(Activity::class, [
-                    'getTitle' => 'Activity Title',
-                    'getDescription' => 'Activity description',
-                ]);
+                $mockEntity = new Activity();
+                $mockEntity->setTitle('Activity Title');
+                $mockEntity->setDescription('Activity description');
                 break;
             case 'broadcasts':
-                $mockNewsletter = Mockery::mock(Newsletter::class, [
-                    'getTitle' => 'Newsletter Title',
-                    'getText' => 'Newsletter text',
-                    'getTranslations' => ['en', 'de', 'zh-hant'],
-                ]);
-                $mockEntity = Mockery::mock(BroadcastMessage::class, [
-                    'getNewsletter' => $mockNewsletter,
-                    'getTitle' => 'Broadcast Title',
-                    'getDescription' => 'Broadcast description',
-                    'getUpdated' => new Carbon(),
-                ]);
+                $mockEntity = new BroadcastMessage()
+                    ->setNewsletter($this->newsletter())
+                    ->setUpdated(new Carbon());
                 break;
             case 'comments':
-                $mockComment = Mockery::mock(Comment::class, [
-                    'getToMember' => $parameters['user'],
-                    'getFromMember' => $parameters['admin'],
-                    'getQuality' => CommentQualityType::POSITIVE,
-                    'getComment' => 'I\'m so free',
-                    'getCreated' => new Carbon(),
-                    'getRelations' => '',
-                ]);
+                $mockComment = new Comment()
+                    ->setToMember($parameters['user'])
+                    ->setFromMember($parameters['admin'])
+                    ->setQuality(CommentQualityType::POSITIVE)
+                    ->setComment('I\'m so free')
+                    ->setCreated(new Carbon())
+                    ->setRelations('');
                 $mockEntity = [
                     'to' => $mockComment,
                     'from' => $mockComment,
                 ];
                 break;
             case 'communitynews':
-                $mockEntity = Mockery::mock(CommunityNews::class, [
-                    'getId' => 1,
-                    'getTitle' => 'Community News',
-                    'getText' => 'Community News text',
-                ]);
+                $mockEntity = $this->communityNews();
                 break;
             case 'communitynews_comments':
                 $key = 'newsAndComments';
-                $news = Mockery::mock(CommunityNews::class, [
-                    'getId' => 1,
-                    'getTitle' => 'Community News',
-                    'getText' => 'Community News text',
-                ]);
+                $news = $this->communityNews();
                 $mockEntity = [
                     'news' => $news,
                     'comments' => [
@@ -297,15 +281,14 @@ class MyDataMockups implements MockupProviderInterface
                 break;
             case 'donations':
                 // Twig reads donation.money through getMoney(): the getters need the values
-                $mockEntity = Mockery::mock(Donation::class, [
-                    'getMoney' => '€',
-                    'getAmount' => '100.00',
-                    'getNameGiven' => 'donor',
-                    'getReferencePaypal' => 'paypal',
-                    'getSystemComment' => 'system comment',
-                    'getMemberComment' => 'member comment',
-                    'getStatusPrivate' => 1 === $parameters['count'] % 2 ? 'showamountonly' : 'showall',
-                ]);
+                $mockEntity = new Donation()
+                    ->setMoney('€')
+                    ->setAmount('100.00')
+                    ->setNameGiven('donor')
+                    ->setReferencePaypal('paypal')
+                    ->setSystemComment('system comment')
+                    ->setMemberComment('member comment')
+                    ->setStatusPrivate(1 === $parameters['count'] % 2 ? 'showamountonly' : 'showall');
                 break;
             case 'gallery':
                 $key = 'hrefs';
@@ -314,37 +297,13 @@ class MyDataMockups implements MockupProviderInterface
             case 'groups':
                 return ['groupmemberships' => $this->getGroupMemberships($parameters['count'])];
             case 'logs':
-                $mockEntity = Mockery::mock(Log::class, [
-                    'getType' => 'log',
-                    'getLogMessage' => 'logged message',
-                    'getCreated' => new Carbon(),
-                ]);
+                $mockEntity = new Log();
+                $mockEntity->setType('log');
+                $mockEntity->setLogMessage('logged message');
+                $mockEntity->setCreated(new Carbon());
                 break;
             case 'newsletters':
-                $mockEntity = Mockery::mock(Newsletter::class, [
-                    'getTitle' => 'Newsletter Title',
-                    'getText' => 'Newsletter text',
-                    'getId' => 1,
-                    'getCreated' => new Carbon(),
-                    'getTranslations' => [
-                        [
-                            'locale' => 'en',
-                            'author' => $parameters['user'],
-                            'title' => 'Title - en',
-                            'body' => 'Body - en',
-                        ],
-                        [
-                            'locale' => 'zh-hant',
-                            'author' => $parameters['user'],
-                            'title' => 'Title - zh-hant',
-                        ],
-                        [
-                            'locale' => 'de',
-                            'author' => $parameters['user'],
-                            'body' => 'Body - de',
-                        ],
-                    ],
-                ]);
+                $mockEntity = $this->newsletter();
                 break;
             case 'pictures':
                 // Nothing to do here; included twig template will show the needed amount of
@@ -383,15 +342,14 @@ class MyDataMockups implements MockupProviderInterface
             case 'rights':
                 // overwrite key as index is different
                 $key = 'volunteerrights';
-                $mockEntity = Mockery::mock(Right::class, [
-                    'right' => [
-                        'name' => 'distinct right',
-                    ],
-                    'scope' => 'All',
-                    'level' => '10',
-                    'getCreated' => new Carbon(),
-                    'getDescription' => 'Right Description',
-                ]);
+                $right = new Right()
+                    ->setName('distinct right')
+                    ->setDescription('Right Description');
+                $mockEntity = new RightVolunteer();
+                $mockEntity->setRight($right);
+                $mockEntity->setScope('All');
+                $mockEntity->setLevel(10);
+                $mockEntity->setCreated(new Carbon());
                 break;
             case 'subscriptions':
                 return $this->getSubscriptions($count);
@@ -413,71 +371,57 @@ class MyDataMockups implements MockupProviderInterface
         ];
     }
 
-    private function getTrip($host): Trip
+    private function getTrip(Member $host): Trip
     {
-        $mockTrip = Mockery::mock(Trip::class, [
-            'getId' => 1,
-            'getCreator' => $host,
-            'getSummary' => 'Mocking Bird',
-            'getDescription' => 'Mocking description',
-            'getCountOfTravellers' => 2,
-            'getAdditionalInfo' => TripAdditionalInfoType::NONE,
-            'getCreated' => new DateTime(),
-        ]);
-        $country = Mockery::mock(Location::class, [
-            'getId' => 1,
-            'getName' => 'Mocking Republic',
-        ]);
-        $location = Mockery::mock(Location::class, [
-            'getId' => 1,
-            'getName' => 'Mock',
-            'getCountry' => $country,
-        ]);
+        $trip = self::withId(new Trip(), 1)
+            ->setCreator($host)
+            ->setSummary('Mocking Bird')
+            ->setDescription('Mocking description')
+            ->setCountOfTravellers(2)
+            ->setAdditionalInfo(TripAdditionalInfoType::NONE)
+            ->setCreated(new DateTime());
+        $country = new Location()->setGeonameId(2)->setName('Mocking Republic');
+        $location = new Location()->setGeonameId(1)->setName('Mock')->setCountry($country);
+        $trip->addLeg(
+            self::withId(new Subtrip(), 1)
+                ->setArrival(new Carbon('2021-02-22'))
+                ->setDeparture(new Carbon('2021-02-24'))
+                ->setOptions([LegOptionsType::MEET_LOCALS])
+                ->setLocation($location)
+                ->setInvitedBy($host)
+        );
 
-        $leg = Mockery::mock(Subtrip::class, [
-            'getId' => 1,
-            'getArrival' => Carbon::instance(new DateTime('2021-02-22')),
-            'getDeparture' => Carbon::instance(new DateTime('2021-02-24')),
-            'getOptions' => [LegOptionsType::MEET_LOCALS],
-            'getLocation' => $location,
-            'getTrip' => $mockTrip,
-            'getInvitedBy' => $host,
-        ]);
-        $mockTrip->shouldReceive('addLeg')
-            ->once()
-            ->with($leg)
-            ->andReturn($mockTrip);
-        $mockTrip->addLeg($leg);
-        $mockTrip
-            ->shouldReceive('getLegs')
-            ->andReturn(new ArrayCollection([$leg]));
-
-        return $mockTrip;
+        return $trip;
     }
 
     private function getPoll(): Poll
     {
-        return Mockery::mock(Poll::class, [
-            'getId' => 1,
-            'getTitles' => ['title'],
-            'getDescriptions' => [
-                'en' => 'description',
-                'fr' => 'description',
-            ],
-            'getGroups' => new ArrayCollection([
-                Mockery::mock(Group::class, [
-                    'getName' => 'group',
-                ]),
-            ]),
-            'getChoices' => new ArrayCollection([
-                Mockery::mock(PollChoice::class, [
-                    'getTexts' => [
-                        'en' => 'English',
-                        'fr' => 'French',
-                    ],
-                ]),
-            ]),
-        ]);
+        $group = new Group();
+        $group->setName('group');
+        $choice = new PollChoice();
+        $choice->setText('English');
+
+        return self::withId(new Poll(), 1)
+            ->setTitle('title')
+            ->setDescription('description')
+            ->addGroup($group)
+            ->addChoice($choice);
+    }
+
+    private function newsletter(): Newsletter
+    {
+        $newsletter = self::withId(new Newsletter(), 1);
+        $newsletter->setName('Newsletter Title');
+        $newsletter->setCreated(new Carbon());
+
+        return $newsletter;
+    }
+
+    private function communityNews(): CommunityNews
+    {
+        return self::withId(new CommunityNews(), 1)
+            ->setTitle('Community News')
+            ->setText('Community News text');
     }
 
     private function postsData($count): array
@@ -580,7 +524,7 @@ class MyDataMockups implements MockupProviderInterface
         $host = $parameters['user'];
         $guest = $parameters['admin'];
 
-        $leg = $this->invitationUtility->getLeg($parameters);
+        $leg = $this->invitationUtility->getLeg($host);
         $thread = $this->invitationUtility->getThread($host, $guest, $leg, HostingRequest::REQUEST_TENTATIVELY_ACCEPTED, 4);
 
         return [
@@ -673,16 +617,14 @@ class MyDataMockups implements MockupProviderInterface
     {
         $groupMemberships = [];
         for ($index = 0; $index < $count; ++$index) {
-            $groupMemberships[] = Mockery::mock(GroupMembership::class, [
-                'getGroup' => Mockery::mock(Group::class, [
-                    'getName' => 'group #' . ($index + 1),
-                    'getId' => ($index + 1),
-                ]),
-                'getCreated' => Carbon::now(),
-                'getStatus' => GroupMembershipStatusType::CURRENT_MEMBER,
-                'getComment' => 'Why I am in this group',
-                'getUpdated' => Carbon::now(),
-            ]);
+            $group = self::withId(new Group(), $index + 1);
+            $group->setName('group #' . ($index + 1));
+            $groupMemberships[] = new GroupMembership()
+                ->setGroup($group)
+                ->setStatus(GroupMembershipStatusType::CURRENT_MEMBER)
+                ->setComment('Why I am in this group')
+                ->setCreated(Carbon::now())
+                ->setUpdated(Carbon::now());
         }
 
         return $groupMemberships;

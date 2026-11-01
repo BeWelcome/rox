@@ -4,8 +4,6 @@ namespace App\Model\MockupProvider;
 
 use App\Doctrine\CommentQualityType;
 use App\Entity\Comment;
-use App\Entity\Member;
-use Mockery;
 
 class CommentMockups implements MockupProviderInterface
 {
@@ -74,19 +72,17 @@ class CommentMockups implements MockupProviderInterface
 
     public function getMockupVariables(array $parameters): array
     {
-        $receiver = Mockery::mock(Member::class, [
-            'getUsername' => 'Receiver',
-        ]);
-        $sender = Mockery::mock(Member::class, [
-            'getUsername' => 'Sender',
-        ]);
-        $mockComment = Mockery::mock(Comment::class, [
-            'getQuality' => $parameters['quality'] ?? CommentQualityType::NEUTRAL,
-            'getComment' => 'A comment.',
-        ]);
+        // stored members: the mails greet the receiver by name
+        $receiver = $parameters['user'];
+        $sender = $parameters['admin'];
+        $comment = new Comment()
+            ->setQuality($parameters['quality'] ?? CommentQualityType::NEUTRAL)
+            ->setComment('A comment.')
+            ->setFromMember($sender)
+            ->setToMember($receiver);
 
         return [
-            'comment' => $mockComment,
+            'comment' => $comment,
             'receiver' => $receiver,
             'sender' => $sender,
             'host' => 'host',

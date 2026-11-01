@@ -20,11 +20,45 @@ class TranslationsAddMissingCommandTest extends KernelTestCase
 {
     public function testAddsAMissingTextAsNotArchived(): void
     {
-        $kernel = self::bootKernel();
-        $connection = static::getContainer()->get(Connection::class);
+        $connection = $this->connection();
         $connection->executeStatement("DELETE FROM word WHERE code = 'activities.empty.near'");
 
-        $application = new Application($kernel);
+        self::assertSame(Command::SUCCESS, $this->addMissing());
+        self::assertSame(
+            ['ShortCode' => 'en', 'isarchived' => 0, 'domain' => 'messages+intl-icu'],
+            $connection->fetchAssociative(
+                "SELECT ShortCode, isarchived, domain FROM word WHERE code = 'activities.empty.near'"
+            )
+        );
+    }
+
+    /**
+     * translations/missing/translation.yaml gives translation.format.inline with names and "format: plain";
+     * translation.in.place.edit is a list: its format is detected from the text.
+     */
+    public function testAddsTheFormatOfATextGivenWithNames(): void
+    {
+        $connection = $this->connection();
+        $connection->executeStatement("DELETE FROM word WHERE code IN ('translation.format.inline', 'translation.in.place.edit')");
+
+        self::assertSame(Command::SUCCESS, $this->addMissing());
+        self::assertSame(
+            ['Sentence' => 'Inline HTML: links or bold within a line, no paragraph', 'format' => 'plain'],
+            $connection->fetchAssociative("SELECT Sentence, format FROM word WHERE code = 'translation.format.inline'")
+        );
+        self::assertNull($connection->fetchOne("SELECT format FROM word WHERE code = 'translation.in.place.edit'"));
+    }
+
+    private function connection(): Connection
+    {
+        self::bootKernel();
+
+        return static::getContainer()->get(Connection::class);
+    }
+
+    private function addMissing(): int
+    {
+        $application = new Application(self::$kernel);
         $command = $application->find('translations:add:missing'); // registers the bundles' commands first
         // The command clears the cache after adding texts; in a test that deletes the running test container
         $application->addCommand(new #[AsCommand(name: 'cache:clear')] class extends Command {
@@ -35,12 +69,6 @@ class TranslationsAddMissingCommandTest extends KernelTestCase
         });
         $tester = new CommandTester($command);
 
-        self::assertSame(Command::SUCCESS, $tester->execute([]));
-        self::assertSame(
-            ['ShortCode' => 'en', 'isarchived' => 0, 'domain' => 'messages+intl-icu'],
-            $connection->fetchAssociative(
-                "SELECT ShortCode, isarchived, domain FROM word WHERE code = 'activities.empty.near'"
-            )
-        );
+        return $tester->execute([]);
     }
 }

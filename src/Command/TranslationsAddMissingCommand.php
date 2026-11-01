@@ -5,7 +5,9 @@ namespace App\Command;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Word;
+use App\Model\Translation\MissingTranslation;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -52,13 +54,16 @@ class TranslationsAddMissingCommand extends Command
             $translationRepository = $this->entityManager->getRepository(Word::class);
 
             $missing = Yaml::parseFile($file);
-            foreach ($missing as $translationId => $missingTranslation) {
-                $sentence = $missingTranslation[0];
-                $description = $missingTranslation[1] ?? 'No description given.';
-                $domain = $missingTranslation[2] ?? 'messages+intl-icu';
-                // This matches up with the do not translated column;
-                // So logic is reversed.
-                $allowTranslation = $missingTranslation[3] ?? 'no';
+            foreach ($missing as $translationId => $entry) {
+                // a list (text, description, domain, do not translate) or a map that can also give the format
+                try {
+                    $missingTranslation = MissingTranslation::fromYaml((string) $translationId, $entry);
+                } catch (InvalidArgumentException $exception) {
+                    $io->error(\sprintf('%s: %s', $file, $exception->getMessage()));
+
+                    return Command::FAILURE;
+                }
+                $sentence = $missingTranslation->text;
 
                 $translation = $translationRepository->findOneBy(['code' => $translationId]);
                 if (null === $translation) {
@@ -74,8 +79,8 @@ class TranslationsAddMissingCommand extends Command
                         $io->note(\sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
                         $connection = $this->entityManager->getConnection();
                         $statement = $connection->prepare('
-                            INSERT INTO word (code, domain, ShortCode, Sentence, donottranslate, Description, author_id, updated, created, TranslationPriority, isarchived, majorupdate)
-                            SELECT :translationId, domain, ShortCode, Sentence, donottranslate, Description, :admin, updated, created, TranslationPriority, isarchived, majorupdate
+                            INSERT INTO word (code, domain, ShortCode, Sentence, donottranslate, Description, author_id, updated, created, TranslationPriority, isarchived, majorupdate, format)
+                            SELECT :translationId, domain, ShortCode, Sentence, donottranslate, Description, :admin, updated, created, TranslationPriority, isarchived, majorupdate, format
                             FROM word
                             WHERE code = :reusedTranslationId
                         ');
@@ -99,11 +104,13 @@ class TranslationsAddMissingCommand extends Command
 
                         $translation = new Word();
                         $translation->setCode($translationId);
-                        $translation->setDescription($description);
+                        $translation->setDescription($missingTranslation->description);
                         $translation->setSentence($sentence);
-                        $translation->setDomain($domain);
+                        $translation->setDomain($missingTranslation->domain);
                         $translation->setLanguage($english);
-                        $translation->setTranslationAllowed($allowTranslation);
+                        $translation->setTranslationAllowed($missingTranslation->translationAllowed);
+                        // null: detected from the text
+                        $translation->setFormat($missingTranslation->format);
                         $translation->setIsArchived(false);
                         $translation->setAuthor($admin);
 

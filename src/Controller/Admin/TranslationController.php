@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Doctrine\DomainType;
 use App\Doctrine\TranslationAllowedType;
+use App\Doctrine\TranslationFormat;
 use App\Dto\RenderTranslationDto;
 use App\Entity\Language;
 use App\Entity\Member;
@@ -97,9 +98,10 @@ class TranslationController extends AbstractController
         }
         $translationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
-        $richtext = ($original->getSentence() !== strip_tags($original->getSentence()));
+        // how the English text is used on the page decides the field and how the text is stored
+        $format = $original->getEffectiveFormat();
         $editForm = $this->createForm(EditTranslationFormType::class, $translationRequest, [
-            'richtext' => $richtext,
+            'format' => $format,
         ]);
 
         $editForm->handleRequest($request);
@@ -115,7 +117,12 @@ class TranslationController extends AbstractController
                 // Make sure the ID of the translations match
                 $translation->setCode($original->getCode());
                 $translation->setDomain($data->domain);
-                $translation->setSentence($data->translatedText);
+                if ('en' === $language->getShortCode()) {
+                    // the English text sets the format; not set, it is detected from the new text
+                    $translation->setFormat(TranslationFormat::tryFrom((string) $data->format));
+                    $format = $translation->getFormat() ?? TranslationFormat::detect((string) $data->translatedText);
+                }
+                $translation->setSentence($format->prepare((string) $data->translatedText));
                 $translation->setUpdated(new DateTime());
                 $translation->setAuthor($translator);
                 if ('en' === $language->getShortCode()) {
@@ -162,7 +169,8 @@ class TranslationController extends AbstractController
 
         return $this->render('admin/translations/edit.html.twig', [
             'form' => $editForm->createView(),
-            'richtext' => $richtext,
+            'richtext' => $format->usesEditor(),
+            'format' => $format,
             'isMajorUpdate' => $translationRequest->isMajorUpdate,
             'submenu' => [
                 'active' => 'edit',
@@ -235,7 +243,11 @@ class TranslationController extends AbstractController
                 $original = $this->generateTranslatableItem($data, $translator, $english);
                 $em->persist($original);
                 if ('en' !== $createTranslationRequest->locale) {
+                    // the translation if one was written, the English text else (as before)
                     $translation = $this->generateTranslatableItem($data, $translator, $language);
+                    if ('' !== trim((string) $data->translatedText)) {
+                        $translation->setSentence($original->getEffectiveFormat()->prepare((string) $data->translatedText));
+                    }
                     $em->persist($translation);
                 }
                 $em->flush();
@@ -379,9 +391,9 @@ class TranslationController extends AbstractController
 
         $addTranslationRequest = EditTranslationRequest::fromTranslations($original, $translation);
 
-        $richtext = ($original->getSentence() !== strip_tags($original->getSentence()));
+        $format = $original->getEffectiveFormat();
         $addForm = $this->createForm(EditTranslationFormType::class, $addTranslationRequest, [
-            'richtext' => $richtext,
+            'format' => $format,
         ]);
 
         $addForm->handleRequest($request);
@@ -391,7 +403,7 @@ class TranslationController extends AbstractController
             $invalidMessage = $this->checkIfICUFormatIsValid($data, $data->translatedText);
             if ('' === $invalidMessage) {
                 $translation->setDomain($original->getDomain());
-                $translation->setSentence($data->translatedText);
+                $translation->setSentence($format->prepare((string) $data->translatedText));
                 $translation->setLanguage($language);
                 $translation->setCreated(new DateTime());
                 $translation->setAuthor($translator);
@@ -421,7 +433,8 @@ class TranslationController extends AbstractController
 
         return $this->render('admin/translations/edit.html.twig', [
             'form' => $addForm->createView(),
-            'richtext' => $richtext,
+            'richtext' => $format->usesEditor(),
+            'format' => $format,
             'submenu' => [
                 'active' => 'add',
                 'items' => $this->getSubmenuItems(
@@ -711,16 +724,23 @@ class TranslationController extends AbstractController
         return $scope;
     }
 
-    private function generateTranslatableItem(TranslationRequest $data, Member $translator, Language $english): Word
+    /**
+     * A new text for the code in the language with the English text; the English one gets the format.
+     */
+    private function generateTranslatableItem(TranslationRequest $data, Member $translator, Language $language): Word
     {
+        $format = TranslationFormat::tryFrom((string) $data->format);
         $original = new Word();
         $original->setCode($data->wordCode);
         $original->setDomain($data->domain);
         $original->setDescription($data->description);
-        $original->setSentence($data->englishText);
+        $original->setSentence(($format ?? TranslationFormat::detect((string) $data->englishText))->prepare((string) $data->englishText));
+        if ('en' === $language->getShortCode()) {
+            $original->setFormat($format);
+        }
         $original->setCreated(new DateTime());
         $original->setAuthor($translator);
-        $original->setLanguage($english);
+        $original->setLanguage($language);
 
         return $original;
     }

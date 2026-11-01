@@ -2,6 +2,7 @@
 
 namespace App\Tests\TranslationLoader;
 
+use App\Model\Translation\MissingTranslation;
 use MessageFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -23,13 +24,28 @@ class MissingTranslationsFormatTest extends TestCase
     {
         foreach (glob(__DIR__ . '/../../translations/missing/*.yaml') as $file) {
             foreach (Yaml::parseFile($file) ?? [] as $key => $value) {
-                $text = \is_array($value) ? $value[0] : $value;
-                $domain = \is_array($value) ? ($value[2] ?? 'messages+intl-icu') : 'messages+intl-icu';
-                if (\is_string($text) && str_contains($text, '{') && str_ends_with($domain, '+intl-icu')) {
-                    yield basename($file) . ' ' . $key => [$text];
+                $entry = MissingTranslation::fromYaml((string) $key, $value);
+                if (str_contains($entry->text, '{') && str_ends_with($entry->domain, '+intl-icu')) {
+                    yield basename($file) . ' ' . $key => [$entry->text];
                 }
             }
         }
+    }
+
+    /**
+     * A list or a map with known names and a known format, as translations:add:missing reads them.
+     */
+    public function testEveryEntryCanBeRead(): void
+    {
+        $count = 0;
+        foreach (glob(__DIR__ . '/../../translations/missing/*.yaml') as $file) {
+            foreach (Yaml::parseFile($file) ?? [] as $key => $value) {
+                MissingTranslation::fromYaml(basename($file) . ' ' . $key, $value);
+                ++$count;
+            }
+        }
+
+        self::assertGreaterThan(0, $count);
     }
 
     #[DataProvider('texts')]

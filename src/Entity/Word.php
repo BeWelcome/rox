@@ -9,6 +9,7 @@
 namespace App\Entity;
 
 use App\Doctrine\TranslationAllowedType;
+use App\Doctrine\TranslationFormat;
 use App\Repository\WordRepository;
 use Carbon\Carbon;
 use DateTime;
@@ -64,6 +65,10 @@ class Word
 
     #[ORM\Column(name: 'isarchived', type: 'boolean', nullable: true)]
     private ?bool $isArchived = null;
+
+    /** On the English text: how it is used on the page; null: detected from the text (getEffectiveFormat()) */
+    #[ORM\Column(name: 'format', type: 'string', length: 6, nullable: true, enumType: TranslationFormat::class)]
+    private ?TranslationFormat $format = null;
 
     public function setCode(string $code): self
     {
@@ -199,6 +204,26 @@ class Word
     public function getIsArchived(): ?bool
     {
         return $this->isArchived;
+    }
+
+    public function setFormat(?TranslationFormat $format): self
+    {
+        $this->format = $format;
+
+        return $this;
+    }
+
+    public function getFormat(): ?TranslationFormat
+    {
+        return $this->format;
+    }
+
+    /**
+     * The format set on this text, or the one its text shows.
+     */
+    public function getEffectiveFormat(): TranslationFormat
+    {
+        return $this->format ?? TranslationFormat::detect($this->sentence);
     }
 
     public function getDomain(): string

@@ -40,3 +40,35 @@ translation.in.place.create:
 translation.saved:
     - 'Translation saved'
     - Translation mode, side panel, shown once a translation is saved (the page then shows the new text)
+translation.format:
+    text: 'Format'
+    description: Translation tool, label of the choice how the English text is used on the page
+    format: plain
+translation.format.detect:
+    text: 'Detect from the English text'
+    description: Translation tool, the format choice when no format is set; it is then detected from the English text
+    format: plain
+translation.format.html:
+    text: 'HTML: paragraphs, lists'
+    description: Translation tool, format of a text that is a block of HTML, written with the rich text editor
+    format: plain
+translation.format.inline:
+    text: 'Inline HTML: links or bold within a line, no paragraph'
+    description: Translation tool, format of a text that is part of a line in the page, written with the rich text editor; the paragraph it adds is taken off
+    format: plain
+translation.format.plain:
+    text: 'Plain text: no formatting'
+    description: Translation tool, format of a text without any markup, written in a plain text field
+    format: plain
+translation.format.help:
+    text: 'How the text is used on the page, so that translations fit into their place. Not set, it is detected from the English text: {detected}.'
+    description: Translation tool, help under the format choice of an English text; detected is the format its text shows
+    format: plain
+translation.format.help.create:
+    text: 'How the text is used on the page, so that translations fit into their place. Not set, it is detected from the English text when it is saved.'
+    description: Translation tool, help under the format choice when creating a text
+    format: plain
+translation.format.used:
+    text: 'Format: {format}'
+    description: Translation tool, under the field of a translation, how the text is used on the page (one of the formats)
+    format: plain

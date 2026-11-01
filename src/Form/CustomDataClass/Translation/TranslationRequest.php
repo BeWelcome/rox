@@ -47,4 +47,9 @@ class TranslationRequest
      * @var string
      */
     public $translatedText;
+
+    /**
+     * How the English text is used on the page (App\Doctrine\TranslationFormat value); null: detected from it.
+     */
+    public ?string $format = null;
 }

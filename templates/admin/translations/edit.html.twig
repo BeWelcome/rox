@@ -31,6 +31,9 @@
     {{ form_row(form.wordCode) }}
     {{ form_row(form.locale) }}
     {{ form_row(form.domain) }}
+    {% if form.format is defined %}
+        {{ form_row(form.format) }}
+    {% endif %}
     {{ form_row(form.description) }}
     {{ form_row(form.englishText) }}
 
@@ -108,6 +111,10 @@
         {{ form_widget(form.translatedText, {attr: {autofocus: true}}) }}
         {{ form_errors(form.translatedText) }}
         {{ form_help(form.translatedText, {help_attr: {class: 'p-account-section__help'}}) }}
+        {% if not english %}
+            {# how the text is used on the page, as set on (or detected from) the English text #}
+            <p class="p-account-section__help p-tr-form__format">{{ 'translation.format.used'|trans({format: ('translation.format.' ~ format.value)|trans}) }}</p>
+        {% endif %}
     </section>
 
     {% if english %}
@@ -118,6 +125,10 @@
             <label class="p-account-section__label p-tr-form__spaced" for="{{ form.domain.vars.id }}">{{ form.domain.vars.label|trans }}</label>
             {{ form_widget(form.domain) }}
             {{ form_errors(form.domain) }}
+            <label class="p-account-section__label p-tr-form__spaced" for="{{ form.format.vars.id }}">{{ form.format.vars.label|trans }}</label>
+            {{ form_widget(form.format) }}
+            {{ form_errors(form.format) }}
+            {{ form_help(form.format, {help_attr: {class: 'p-account-section__help'}}) }}
         </section>
         <section class="p-account-section p-tr-form__flags">
             {% for flag in ['isMajorUpdate', 'isArchived', 'translationAllowed'] %}

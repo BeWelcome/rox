@@ -42,6 +42,10 @@
         {{ form_widget(form.domain) }}
         {{ form_errors(form.domain) }}
     {% endif %}
+    <label class="p-account-section__label p-tr-form__spaced" for="{{ form.format.vars.id }}">{{ form.format.vars.label|trans }}</label>
+    {{ form_widget(form.format) }}
+    {{ form_errors(form.format) }}
+    {{ form_help(form.format, {help_attr: {class: 'p-account-section__help'}}) }}
 </section>
 
 <div class="p-edit-subpage__actions">

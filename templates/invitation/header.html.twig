@@ -26,7 +26,7 @@
     <div class="c-stay-card__top">
         <p class="c-stay-card__kind"><i class="fas fa-house-user" aria-hidden="true"></i> {{ 'invitation.card.title'|trans }}</p>
         {% if status.key %}
-            <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ status.key)|trans }}</span>
+            <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ (status.key == 'open' ? 'request.status.waiting.' ~ (side == 'guest' ? 'host' : 'guest') : 'request.status.' ~ status.key)|trans }}</span>
         {% endif %}
         {% include 'request/_card_menu.html.twig' with { stay: invitation, confirm: 'invitation.confirm.cancel', dates: false } %}
     </div>
@@ -47,4 +47,6 @@
     {% if invitation.status != constant(S ~ 'REQUEST_ACCEPTED') and (invitation.arrival|date('Y-m-d') != leg.arrival|date('Y-m-d') or invitation.departure|date('Y-m-d') != leg.departure|date('Y-m-d')) %}
         <p class="c-stay-card__warning"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> {{ 'trip.leg.not.matched'|trans }}</p>
     {% endif %}
+    {# The answer of the member who decides (Accept, Maybe, Decline): it picks the answer of the form at the bottom #}
+    {% if status.key != 'expired' %}{% include 'request/_stay_answer.html.twig' with { stay: invitation } %}{% endif %}
 </section>

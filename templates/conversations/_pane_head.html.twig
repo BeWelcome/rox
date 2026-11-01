@@ -11,15 +11,29 @@
         <i class="fas fa-chevron-left" aria-hidden="true"></i>
         <span class="visually-hidden">{{ 'back'|trans }}</span>
     </a>
-    <img class="c-inbox-avatar c-inbox-avatar--l" src="{{ path('avatar', { username: correspondent.username, size: 72 }) }}" alt="" loading="lazy">
+    {# The person first: face with the hosting ring (as on the home page), name, positive comments, where they live and the subject #}
+    {% set hosting = correspondent.accommodation == constant('App\\Doctrine\\AccommodationType::YES') %}
+    <img class="c-inbox-avatar c-inbox-avatar--l c-inbox-head__avatar{{ hosting ? ' is-hosting' : '' }}" src="{{ path('avatar', { username: correspondent.username, size: 72 }) }}" alt="" loading="lazy">
     <div class="c-inbox-head__who">
-        <h1 class="c-inbox-head__subject">{{ subject|striptags }}</h1>
-        {% if linked %}
-            <a class="c-inbox-head__name" href="{{ path('members_profile', { username: correspondent.username }) }}">{{ correspondent.username }}</a>
-        {% else %}
-            <span class="c-inbox-head__name">{{ correspondent.username }}</span>
+        <div class="c-inbox-head__line">
+            {% if linked %}
+                <a class="c-inbox-head__name" href="{{ path('members_profile', { username: correspondent.username }) }}">{{ correspondent.username }}</a>
+            {% else %}
+                <span class="c-inbox-head__name">{{ correspondent.username }}</span>
+            {% endif %}
+            {% set positive = member_positive_comments(correspondent) %}
+            {% if positive > 0 %}
+                <span class="c-inbox-head__refs"><i class="fas fa-thumbs-up" aria-hidden="true"></i> {{ positive }}<span class="visually-hidden"> {{ 'comment.quality.positive'|trans }}</span></span>
+            {% endif %}
+        </div>
+        {% if meta is not defined %}
+            {% set _address = correspondent.activeAddress %}
+            {% set meta = (_address and _address.location) ? _address.location.name ~ (_address.location.country ? ', ' ~ _address.location.country.name : '') : '' %}
         {% endif %}
-        {% if meta ?? false %}<span class="c-inbox-head__meta"> · {{ meta }}</span>{% endif %}
+        <h1 class="c-inbox-head__subject">
+            {%- if meta -%}<span class="c-inbox-head__meta">{{ meta }} · </span>{%- endif -%}
+            {{ subject|striptags }}
+        </h1>
     </div>
 
     {% if show_actions %}

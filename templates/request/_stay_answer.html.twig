@@ -1,0 +1,48 @@
+{#
+  Accept, Maybe and Decline in the stay card, for the member who decides (the host of a
+  hosting request, the invited member of an invitation). A pick sends nothing: it sets the
+  answer of the form at the bottom (request/_respond_host.html.twig, requests.js), whose
+  Send then reads "Send & accept"… Once answered, "Change my answer" shows them again.
+  Expects stay (the request), and request_form (view page) or form (reply page).
+#}
+{% set respond = request_form ?? form ?? null %}
+{% if respond and respond.decline is defined %}
+    {% set current = current ?? thread|first %}
+    {% set S = 'App\\Entity\\HostingRequest::' %}
+    {% set asker = current.initiator %}
+    {% set askerName = asker.shortNameOrUsername ?? asker.username %}
+    {% set choices = [] %}
+    {% if stay.status != constant(S ~ 'REQUEST_ACCEPTED') and respond.accept is defined %}
+        {% set choices = choices|merge([{ key: 'accept', button: respond.accept, icon: 'fa fa-check' }]) %}
+    {% endif %}
+    {% if stay.status != constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED') and respond.tentatively is defined %}
+        {% set choices = choices|merge([{ key: 'maybe', button: respond.tentatively, icon: 'fa fa-question' }]) %}
+    {% endif %}
+    {% if stay.status != constant(S ~ 'REQUEST_DECLINED') %}
+        {% set choices = choices|merge([{ key: 'decline', button: respond.decline, icon: 'fa fa-times' }]) %}
+    {% endif %}
+    {% set awaiting = stay.status == constant(S ~ 'REQUEST_OPEN') %}
+
+    {% if choices|length > 0 and stay.status != constant(S ~ 'REQUEST_CANCELLED') %}
+        <div class="c-stay-answer js-stay-answer{{ awaiting ? '' : ' is-answered' }}">
+            {% if not awaiting %}
+                <button type="button" class="c-stay-answer__again js-stay-again">
+                    <i class="fas fa-undo" aria-hidden="true"></i> {{ 'request.decide.change.answer'|trans }}
+                </button>
+            {% endif %}
+            <div class="c-stay-answer__row js-stay-choices"{{ awaiting ? '' : ' hidden' }}>
+                <span class="c-stay-answer__q">{{ ((stay.inviteForLeg ? 'invitation' : 'request') ~ '.decide.prompt')|trans({ username: askerName }) }}</span>
+                <div class="c-stay-answer__picks">
+                    {% for choice in choices %}
+                        <button type="button" class="c-stay-answer__pick c-stay-answer__pick--{{ choice.key }} js-stay-pick"
+                                data-choice="{{ choice.key }}" data-button="{{ choice.button.vars.full_name }}"
+                                aria-label="{{ ('request.decide.' ~ choice.key)|trans }}">
+                            <i class="{{ choice.icon }}" aria-hidden="true"></i>
+                            <span class="c-stay-answer__label">{{ ('request.decide.' ~ choice.key)|trans }}</span>
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

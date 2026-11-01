@@ -42,7 +42,7 @@ final readonly class FriendshipModel
         $this->entityManager->flush();
 
         $this->mailer->sendFriendshipNotification($friend);
-        $this->browserNotificationService->queue(
+        $this->browserNotificationService->queueAndSendAfterResponse(
             $receiver,
             BrowserNotificationPayload::friendship(
                 $requester,

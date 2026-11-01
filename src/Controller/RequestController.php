@@ -440,7 +440,7 @@ class RequestController extends BaseRequestAndInvitationController
             'request' => $request->getRequest(),
             'changed' => $requestChanged,
         ]);
-        $this->browserNotificationService->queue(
+        $this->browserNotificationService->queueAndSendAfterResponse(
             $receiver,
             BrowserNotificationPayload::request(
                 $sender,

@@ -477,7 +477,7 @@ class InvitationController extends BaseRequestAndInvitationController
             'changed' => $requestChanged,
             'leg' => $leg,
         ]);
-        $this->browserNotificationService->queue(
+        $this->browserNotificationService->queueAndSendAfterResponse(
             $receiver,
             BrowserNotificationPayload::invitation(
                 $sender,

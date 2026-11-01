@@ -271,6 +271,10 @@ profile.edit.relations:
 profile.menu.friends:
     - 'Friends'
     - Entry in the profile submenu
+profile.menu.views:
+    text: 'Profile views'
+    description: 'Entry in the profile submenu and tab of the own profile, and the title of its page: the members who looked at the profile'
+    format: plain
 profile.edit.accommodation:
     - 'Edit accommodation info'
     - Tooltip and screen reader text on 'Edit profile'.

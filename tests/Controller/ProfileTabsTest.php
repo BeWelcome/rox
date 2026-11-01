@@ -8,8 +8,8 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * The tabs under the profile's head: on the own profile they include My notes (with the number of notes), which
- * nobody else sees.
+ * The tabs under the profile's head: on the own profile they include My notes (with the number of notes) and, for
+ * members who show profile visits, the profile views after it; nobody else sees them.
  */
 #[Group('integration')]
 final class ProfileTabsTest extends WebTestCase
@@ -30,6 +30,31 @@ final class ProfileTabsTest extends WebTestCase
         $crawler = $client->request('GET', '/members/member-2');
         self::assertResponseIsSuccessful();
         self::assertCount(0, $crawler->filter('.p-hero__tabs a[href*="/notes"]'));
+    }
+
+    public function testTheProfileViewsComeAfterMyNotesWithAnEye(): void
+    {
+        $client = static::createClient();
+        $member = $this->getMember('member-2');
+        $connection = static::getContainer()->get(EntityManagerInterface::class)->getConnection();
+        $preferenceId = $connection->fetchOne("SELECT id FROM preferences WHERE codeName = 'PreferenceShowProfileVisits'");
+        $connection->executeStatement('DELETE FROM memberspreferences WHERE IdMember = ? AND IdPreference = ?', [$member->getId(), $preferenceId]);
+        $connection->executeStatement(
+            "INSERT INTO memberspreferences (IdMember, IdPreference, Value, created, updated) VALUES (?, ?, 'Yes', NOW(), NOW())",
+            [$member->getId(), $preferenceId],
+        );
+        static::getContainer()->get(EntityManagerInterface::class)->clear();
+
+        $client->loginUser($this->getMember('member-2'));
+        $crawler = $client->request('GET', '/members/member-2');
+
+        self::assertResponseIsSuccessful();
+        $links = $crawler->filter('.p-hero__tabs a')->each(static fn ($tab): string => (string) $tab->attr('href'));
+        $notes = array_search(true, array_map(static fn (string $href): bool => str_ends_with($href, '/members/member-2/notes'), $links), true);
+        $views = array_search(true, array_map(static fn (string $href): bool => str_contains($href, '/members/member-2/visitors'), $links), true);
+        self::assertIsInt($notes);
+        self::assertSame($notes + 1, $views, 'the profile views right after My notes');
+        self::assertCount(1, $crawler->filter('.p-hero__tabs a[href*="/visitors"] i.fa-eye'));
     }
 
     private function getMember(string $username): Member

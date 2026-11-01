@@ -47,8 +47,6 @@ class TranslationsAddMissingCommand extends Command
         // migrations of a deployment ran (docker/php/docker-entrypoint.sh), which may add columns to word.
         $connection = $this->connection;
         $hasFormat = \array_key_exists('format', $connection->createSchemaManager()->listTableColumns('word'));
-        // bwadmin is the author (without loading the ORM's metadata, which the cache:clear below warms)
-        $adminId = (int) $connection->fetchOne('SELECT id FROM member WHERE id = 1');
         $format = $hasFormat ? ', format' : '';
 
         foreach ($files as $file) {
@@ -80,10 +78,10 @@ class TranslationsAddMissingCommand extends Command
                     $io->note(\sprintf('Adding %s: Reusing %s', $translationId, $reusedTranslationId));
                     $connection->executeStatement(
                         'INSERT INTO word (code, domain, ShortCode, Sentence, donottranslate, Description, author_id, updated, created, TranslationPriority, isarchived, majorupdate' . $format . ')
-                         SELECT :translationId, domain, ShortCode, Sentence, donottranslate, Description, :admin, updated, created, TranslationPriority, isarchived, majorupdate' . $format . '
+                         SELECT :translationId, domain, ShortCode, Sentence, donottranslate, Description, NULL, updated, created, TranslationPriority, isarchived, majorupdate' . $format . '
                          FROM word
                          WHERE code = :reusedTranslationId',
-                        ['translationId' => $translationId, 'reusedTranslationId' => $reusedTranslationId, 'admin' => $adminId]
+                        ['translationId' => $translationId, 'reusedTranslationId' => $reusedTranslationId]
                     );
 
                     // We had a translation id that started with @-.
@@ -102,7 +100,8 @@ class TranslationsAddMissingCommand extends Command
                         'Description' => $missingTranslation->description,
                         'domain' => $missingTranslation->domain,
                         'donottranslate' => $missingTranslation->translationAllowed,
-                        'author_id' => $adminId,
+                        // no author: the system added it (the statistics show it as such)
+                        'author_id' => null,
                         'created' => new DateTime(),
                         'updated' => new DateTime(),
                         'TranslationPriority' => 5,

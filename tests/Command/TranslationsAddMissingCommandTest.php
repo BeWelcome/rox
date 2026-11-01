@@ -25,9 +25,10 @@ class TranslationsAddMissingCommandTest extends KernelTestCase
 
         self::assertSame(Command::SUCCESS, $this->addMissing());
         self::assertSame(
-            ['ShortCode' => 'en', 'isarchived' => 0, 'domain' => 'messages+intl-icu'],
+            // no author: added by the system
+            ['ShortCode' => 'en', 'isarchived' => 0, 'domain' => 'messages+intl-icu', 'author_id' => null],
             $connection->fetchAssociative(
-                "SELECT ShortCode, isarchived, domain FROM word WHERE code = 'activities.empty.near'"
+                "SELECT ShortCode, isarchived, domain, author_id FROM word WHERE code = 'activities.empty.near'"
             )
         );
     }

@@ -11,8 +11,8 @@ use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * The translation statistics show who changed each language last: the system (author 0, which has no member row), a
- * member, or nobody known (a member that doesn't exist any more).
+ * The translation statistics show who changed each language last: the system (no author, as translations:add:missing
+ * adds texts, or author 0, which has no member row), a member, or nobody known (a member that doesn't exist any more).
  */
 #[Group('integration')]
 class TranslationStatisticsTest extends WebTestCase
@@ -26,7 +26,7 @@ class TranslationStatisticsTest extends WebTestCase
 
         // word.author_id references member; author 0 and deleted members are only there in copied data
         $connection->executeStatement('SET FOREIGN_KEY_CHECKS=0');
-        foreach ([['en', $admin->getId()], ['de', 0], ['fr', 999999]] as [$locale, $authorId]) {
+        foreach ([['en', $admin->getId()], ['de', 0], ['fr', 999999], ['es', null]] as [$locale, $authorId]) {
             $connection->executeStatement(
                 "INSERT INTO word (code, domain, Sentence, created, updated, donottranslate, Description,
                     TranslationPriority, isarchived, ShortCode, author_id)
@@ -45,6 +45,7 @@ class TranslationStatisticsTest extends WebTestCase
         self::assertStringContainsString($admin->getUsername(), $this->row($crawler, 'en')->text());
         self::assertStringContainsString($translator->trans('system'), $this->row($crawler, 'de')->text());
         self::assertStringContainsString($translator->trans('translation.tool.stats.unknown'), $this->row($crawler, 'fr')->text());
+        self::assertStringContainsString($translator->trans('system'), $this->row($crawler, 'es')->text());
     }
 
     private function row(Crawler $crawler, string $locale): Crawler

@@ -6,6 +6,8 @@
 {% endblock javascripts %}
 
 {% block drawer_eyebrow %}<i class="fas fa-cog" aria-hidden="true"></i> {{ 'profile.edit.settings'|trans }}{% endblock %}
+{# The page has the heading of the side panel of the edit page #}
+{% block subpage_eyebrow %}{{ block('drawer_eyebrow') }}{% endblock %}
 
 {% block subpage_title -%}
   {{ 'profile.preferences'|trans }}
@@ -68,22 +70,24 @@
               {{ form_widget(child, {attr: control_attr}) }}
             {% endif %}
             {{ form_errors(child) }}
-            {% if is_browser_push_preference %}
-              <div class="u:mt-4" data-browser-push-device-controls
-                   data-status-active="{{ 'browser.notifications.device.active'|trans }}"
-                   data-status-inactive="{{ 'browser.notifications.device.inactive'|trans }}"
-                   data-status-open-only="{{ 'browser.notifications.device.open_only'|trans }}"
-                   data-status-off="{{ 'browser.notifications.device.off'|trans }}"
-                   data-status-denied="{{ 'browser.notifications.device.denied'|trans }}"
-                   data-status-unsupported="{{ 'browser.notifications.device.unsupported'|trans }}"
-                   data-status-error="{{ 'browser.notifications.device.error'|trans }}">
-                <button type="button" class="o-button" data-browser-push-enable>
-                  {{ 'browser.notifications.device.enable'|trans }}
-                </button>
-                <span class="u:ml-4" role="status" aria-live="polite" data-browser-push-status></span>
-              </div>
-            {% endif %}
           </div>
+          {% if is_browser_push_preference %}
+            {# What this browser does, under the choice; Enable only while it would turn them on here
+               (assets/js/profile/preference.js) #}
+            <div class="p-preference-push" data-browser-push-device-controls
+                 data-status-active="{{ 'browser.notifications.device.active'|trans }}"
+                 data-status-inactive="{{ 'browser.notifications.device.inactive'|trans }}"
+                 data-status-open-only="{{ 'browser.notifications.device.open_only'|trans }}"
+                 data-status-off="{{ 'browser.notifications.device.off'|trans }}"
+                 data-status-denied="{{ 'browser.notifications.device.denied'|trans }}"
+                 data-status-unsupported="{{ 'browser.notifications.device.unsupported'|trans }}"
+                 data-status-error="{{ 'browser.notifications.device.error'|trans }}">
+              <p class="p-preference-push__status" role="status" aria-live="polite" data-browser-push-status></p>
+              <button type="button" class="p-preference-push__enable" data-browser-push-enable hidden>
+                <i class="fas fa-bell" aria-hidden="true"></i> {{ 'browser.notifications.device.enable'|trans }}
+              </button>
+            </div>
+          {% endif %}
         </section>
       {% endif %}
     {% endfor %}

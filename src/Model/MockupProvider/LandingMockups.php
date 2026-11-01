@@ -24,6 +24,11 @@ class LandingMockups implements MockupProviderInterface
             'type' => 'template',
             'template' => 'landing/widget/triplegs.html.twig',
         ],
+        'trip near you (mail)' => [
+            'type' => 'email',
+            'template' => 'emails/trip.notification.new.html.twig',
+            'description' => 'Mail to members near a leg of a new trip.',
+        ],
     ];
 
     public function getFeature(): string
@@ -41,6 +46,7 @@ class LandingMockups implements MockupProviderInterface
         return match ($parameters['name']) {
             'be visited|none' => $this->getTripsWidgetEmpty(),
             'be visited|two legs' => $this->getTripsWidgetTwoLegs($parameters['user']),
+            'trip near you (mail)' => $this->getTripMail($parameters['admin'], $parameters['user']),
             default => [],
         };
     }
@@ -55,6 +61,22 @@ class LandingMockups implements MockupProviderInterface
         return [
             'legs' => null,
             'radius' => 10,
+        ];
+    }
+
+    /**
+     * The traveller (bwadmin) passes near the receiver (the translator).
+     */
+    private function getTripMail(Member $traveller, Member $receiver): array
+    {
+        $legs = $this->getTripsWidgetTwoLegs($traveller)['legs'];
+
+        return [
+            'sender' => $traveller,
+            'receiver' => $receiver,
+            'trip' => $legs[0]->getTrip(),
+            'leg' => $legs[0],
+            'subject' => 'Subject',
         ];
     }
 

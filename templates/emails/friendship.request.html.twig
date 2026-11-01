@@ -1,17 +1,17 @@
-{% extends 'emails/email_no_greeting.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  A friendship request, to the receiver: who says they know each other; confirm or dismiss with the signed links.
+  sender, receiver.
+#}
+{% block preheader %}{{ 'friendship.sender.says.exist'|trans({ username: sender.username }) }}{% endblock %}
 
 {% block content %}
-    <p>{{ 'friendship.sender.says.exist'|trans({username: sender.Username}) }}</p>
-    <row>
-        <columns>
-            <center>
-                <button class="rounded" href="{{ signed_url('confirm_friendship', { left: receiver.Username, right: sender.Username }) }}">{{ 'friendship.confirm'|trans }}</button>
-            </center>
-        </columns>
-        <columns>
-            <center>
-                <button class="rounded" href="{{ signed_url('dismiss_friendship', { left: receiver.Username, right: sender.Username }) }}">{{ 'friendship.dismiss'|trans }}</button>
-            </center>
-        </columns>
-    </row>
-{% endblock %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'friend.received.headline'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'email.subject.friendship'|trans({ username: sender.username }) } %}
+    {% include 'emails/_partials/sender.html.twig' with { member: sender, since: true, references: true } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'friendship.sender.says.exist'|trans({ username: sender.username })|e } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'friendship.confirm'|trans, url: signed_url('confirm_friendship', { left: receiver.username, right: sender.username }) },
+        secondary: { label: 'friendship.dismiss'|trans, url: signed_url('dismiss_friendship', { left: receiver.username, right: sender.username }) },
+    } %}
+{% endblock content %}

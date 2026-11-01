@@ -3,6 +3,8 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Member;
+use App\Service\MailLinkSigner;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -13,6 +15,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 /**
  * Regression tests for BeWelcome/rox#533: the avatar route answered 500 instead of the empty avatar
  * when the avatar file of a member was not a readable regular file.
+ * The pictures in mails are signed links: mail programs load them without logging in.
  *
  * @infection-ignore-all
  */
@@ -75,6 +78,68 @@ class AvatarControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $this->assertServedFileStartsWith($client, $this->memberId . '_48_48');
+    }
+
+    public function testWithoutLoginTheEmptyAvatarIsServed(): void
+    {
+        $client = $this->createAnonymousClient();
+        imagepng(imagecreatetruecolor(96, 96), $this->avatarFile('96_96'));
+
+        $client->request('GET', '/members/avatar/member-5/96');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertServedFileStartsWith($client, 'empty_avatar_');
+    }
+
+    public function testASignedLinkFromAMailServesThePictureWithoutLogin(): void
+    {
+        $client = $this->createAnonymousClient();
+        imagepng(imagecreatetruecolor(96, 96), $this->avatarFile('96_96'));
+        $url = $this->mailAvatarUrl('member-5');
+
+        $client->request('GET', $url);
+        $this->assertResponseIsSuccessful();
+        $this->assertServedFileStartsWith($client, $this->memberId . '_96_96');
+
+        // a changed signature, or the link of another member's picture
+        $client->request('GET', preg_replace('/_hash=[^&]+/', '_hash=zztest', $url));
+        $this->assertServedFileStartsWith($client, 'empty_avatar_');
+        $client->request('GET', str_replace('/member-5/', '/member-6/', $url));
+        $this->assertServedFileStartsWith($client, 'empty_avatar_');
+    }
+
+    public function testASignedLinkShowsNoPictureOfAMemberOthersCantSee(): void
+    {
+        $client = $this->createAnonymousClient();
+        imagepng(imagecreatetruecolor(96, 96), $this->avatarFile('96_96'));
+        $url = $this->mailAvatarUrl('member-5');
+        static::getContainer()->get(Connection::class)
+            ->executeStatement("UPDATE member SET Status = 'Banned' WHERE id = ?", [$this->memberId]);
+        static::getContainer()->get('doctrine.orm.entity_manager')->clear();
+
+        $client->request('GET', $url);
+
+        $this->assertServedFileStartsWith($client, 'empty_avatar_');
+    }
+
+    private function createAnonymousClient(): KernelBrowser
+    {
+        $client = static::createClient();
+        $member = static::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Member::class)
+            ->findOneBy(['username' => 'member-5']);
+        $this->assertInstanceOf(Member::class, $member);
+        $this->memberId = $member->getId();
+        $this->removeAvatarFiles();
+
+        return $client;
+    }
+
+    private function mailAvatarUrl(string $username): string
+    {
+        $member = static::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Member::class)
+            ->findOneBy(['username' => $username]);
+
+        return static::getContainer()->get(MailLinkSigner::class)->mailAvatarUrl($member, 96);
     }
 
     private function createLoggedInClient(): KernelBrowser

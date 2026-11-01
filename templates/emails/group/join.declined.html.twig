@@ -1,11 +1,14 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  The member's request to join a group was declined, to the member; other groups to find. group, admin.
+#}
+{% block preheader %}{{ 'group.join.declined'|trans({ admin: admin.username, group: group.name }) }}{% endblock %}
 
 {% block content %}
-    <p>
-        {{ 'group.join.declined'| trans({
-            'admin': '<a href="' ~ url('members_profile', {'username': admin.Username}) ~ '">' ~ admin.Username ~ '</a>',
-            'group': '<a href="' ~ url('group_start', {'group_id': group.id}) ~ '">' ~ group.Name ~ '</a>'
-            })|raw
-        }}
-    </p>
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'group'|trans ~ ' · ' ~ group.name } %}
+    {% include 'emails/_partials/title.html.twig' with { text: group.name } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'group.join.declined'|trans({ admin: admin.username, group: group.name })|e } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'groupsallfeaturedlink'|trans, url: url('groups_featured') },
+    } %}
 {% endblock content %}

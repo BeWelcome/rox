@@ -1,8 +1,30 @@
-{% extends 'emails/email_no_greeting.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  A message, to its receiver: who wrote, the subject and the message as a bubble; reply, the profile, report it.
+  sender, message, receiverLocale.
+#}
+{% set _locale = receiverLocale ?? 'en' %}
+
+{% block preheader -%}
+    {{ 'browser.notification.message.title'|trans({ username: sender.username }) }}: {{ message.message|striptags|truncate(70) }}
+{%- endblock %}
 
 {% block content %}
-    <p>{{ message.message|purify('custom') }}</p>
-
-    {% include 'emails/_buttons.html.twig' with {'message': message} %}
-
-{% endblock %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'forum_label_text'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'browser.notification.message.title'|trans({ username: sender.username }) } %}
+    {% include 'emails/_partials/sender.html.twig' with { member: sender, references: true } %}
+    {% if message.subject and message.subject.subject %}
+        <p style="margin:0 0 12px;font-family:Helvetica, Arial, sans-serif;font-size:15px;line-height:20px;font-weight:bold;color:#0f172a;">{{ message.subject.subject }}</p>
+    {% endif %}
+    {% include 'emails/_partials/bubble.html.twig' with {
+        html: message.message|purify('custom'),
+        time: message.created ? message.created|format_datetime(pattern='d MMM, HH:mm', locale=_locale) : null,
+    } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'reply'|trans, url: url('conversation_reply', { id: message.id }) },
+        secondary: { label: 'message.profile'|trans({ username: sender.username }), url: url('members_profile', { username: sender.username }) },
+    } %}
+    {% include 'emails/_partials/small_links.html.twig' with {
+        links: [{ label: 'message.report'|trans, url: url('conversation_report_spam', { id: message.id }) }],
+    } %}
+{% endblock content %}

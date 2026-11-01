@@ -32,6 +32,12 @@ class CommentMockups implements MockupProviderInterface
                 ],
             ],
         ],
+        'comment feedback (volunteers)' => [
+            'type' => 'email',
+            'template' => 'emails/comment.feedback.html.twig',
+            'with_parameters' => false,
+            'description' => 'To the volunteers who check comments, when a member gives feedback on a comment (English only).',
+        ],
         'comment reminder_guest (first)' => [
             'type' => 'email',
             'template' => 'emails/comment.first.reminder.guest.html.twig',
@@ -93,6 +99,7 @@ class CommentMockups implements MockupProviderInterface
             'profile_end' => '</a>',
             'report_start' => '<a href="/feedback?IdCategory=2&username=host">',
             'report_end' => '</a>',
+            'feedback' => 'The comment is about another member, not about me.',
         ];
     }
 }

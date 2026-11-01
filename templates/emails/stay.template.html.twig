@@ -1,0 +1,45 @@
+{% extends 'emails/base.html.twig' %}
+{#
+  The mails about a hosting request or an invitation: who wrote, the stay as a card with where it stands, the
+  message, and the actions (reply and the profile by default, the report link).
+  A mail sets: title_key (a translation getting %username%/username and gender, its final period dropped); kind
+  (default 'Hosting request'); with_message (default true); primary, secondary (buttons, { label, url }); report
+  (default true). The mailer passes sender, message, request, changed and receiverLocale.
+#}
+{% set kind = kind ?? 'request.card.title'|trans %}
+{% set _locale = receiverLocale ?? 'en' %}
+{% set _names = { '%username%': sender.username, 'username': sender.username, 'gender': sender.gender } %}
+{% set _nights = date(request.departure|date('Y-m-d')).diff(date(request.arrival|date('Y-m-d'))).days %}
+
+{% block preheader -%}
+    {{ kind }}: {{ request.arrival|format_date(pattern='d MMM', locale=_locale) }} – {{ request.departure|format_date(pattern='d MMM', locale=_locale) }} · {{ 'contact.trip.nights'|trans({ count: _nights }) }} · {{ 'request.card.persons'|trans({ count: request.numberOfTravellers }) }}
+{%- endblock %}
+
+{% block content %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: kind } %}
+    {% include 'emails/_partials/title.html.twig' with { text: title_key|trans(_names)|trim('.', 'right') } %}
+    {% include 'emails/_partials/sender.html.twig' with { member: sender, since: true, references: true } %}
+    {% if changed ?? false %}
+        {% include 'emails/_partials/notice.html.twig' with { html: 'request.details.changed'|trans|e, tone: 'warn' } %}
+    {% endif %}
+    {% include 'emails/_partials/stay.html.twig' with {
+        request: request,
+        kind: kind,
+        facts: request.inviteForLeg and request.inviteForLeg.trip and request.inviteForLeg.trip.summary ? [request.inviteForLeg.trip.summary] : [],
+    } %}
+    {% if (with_message ?? true) and message.message %}
+        {% include 'emails/_partials/bubble.html.twig' with {
+            html: message.message|purify('custom'),
+            time: message.created ? message.created|format_datetime(pattern='d MMM, HH:mm', locale=_locale) : null,
+        } %}
+    {% endif %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: primary ?? { label: 'reply'|trans, url: url('conversation_reply', { id: message.id }) },
+        secondary: secondary ?? { label: 'message.profile'|trans({ username: sender.username }), url: url('members_profile', { username: sender.username }) },
+    } %}
+    {% if report ?? true %}
+        {% include 'emails/_partials/small_links.html.twig' with {
+            links: [{ label: 'message.report'|trans, url: url('conversation_report_spam', { id: message.id }) }],
+        } %}
+    {% endif %}
+{% endblock content %}

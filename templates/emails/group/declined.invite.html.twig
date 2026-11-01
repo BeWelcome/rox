@@ -1,7 +1,14 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  A member declined the invitation into a group, to its admins. group, invitee.
+#}
+{% block preheader %}{{ 'group.declined.invitation'|trans({ username: invitee.username, group: group.name }) }}{% endblock %}
 
 {% block content %}
-    <p>
-        {{ 'group.declined.invitation'|trans({'username': invitee.Username, 'group': '<a href="' ~ url('group_start', {'group_id': group.id}) ~ '">' ~ group.Name ~ '</a>'})|raw }}
-    </p>
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'group'|trans ~ ' · ' ~ group.name } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'group.declined.invitation'|trans({ username: invitee.username, group: group.name }) } %}
+    {% include 'emails/_partials/sender.html.twig' with { member: invitee } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'email.group.open'|trans, url: url('group_start', { group_id: group.id }) },
+    } %}
 {% endblock content %}

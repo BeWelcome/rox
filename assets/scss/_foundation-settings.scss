@@ -14,17 +14,18 @@
 
 
 // 1. Global
+// The mails' design (templates/emails/base.html.twig): cream page, slate text, warm links, round buttons.
 // ---------
 
 $primary-color: #f37000;
-$secondary-color: #777777;
+$secondary-color: #64748b;
 $success-color: #3adb76;
 $warning-color: #ffae00;
 $alert-color: #ec5840;
-$light-gray: #f3f3f3;
+$light-gray: #fffaf4;
 $medium-gray: #cacaca;
 $dark-gray: #8a8a8a;
-$black: #0a0a0a;
+$black: #0f172a;
 $white: #fefefe;
 $pre-color: #ff6908;
 $global-width: 580px;
@@ -35,7 +36,7 @@ $body-background: $light-gray;
 $container-background: $white;
 $global-padding: 16px;
 $global-margin: 16px;
-$global-radius: 3px;
+$global-radius: 16px;
 $global-rounded: 500px;
 $global-breakpoint: $global-width + $global-gutter;
 
@@ -55,11 +56,11 @@ $block-grid-gutter: $global-gutter;
 // 4. Typography
 // -------------
 
-$global-font-color: $black;
+$global-font-color: #334155;
 $body-font-family: Helvetica, Arial, sans-serif;
 $global-font-weight: normal;
 $header-color: inherit;
-$global-line-height: 130%;
+$global-line-height: 150%;
 $global-font-size: 16px;
 $body-line-height: $global-line-height;
 $header-font-family: $body-font-family;
@@ -73,7 +74,7 @@ $h6-font-size: floor($global-font-size * 1.125);
 $header-margin-bottom: 10px;
 $paragraph-margin-bottom: 10px;
 $small-font-size: 80%;
-$small-font-color: $medium-gray;
+$small-font-color: #64748b;
 $lead-font-size: $global-font-size * 1.25;
 $lead-line-height: 160%;
 $text-padding: 10px;
@@ -87,7 +88,7 @@ $hr-border: 1px solid $black;
 $hr-margin: 20px;
 $hr-align: center;
 $anchor-text-decoration: none;
-$anchor-color: $primary-color;
+$anchor-color: #c2410c;
 $anchor-color-visited: $anchor-color;
 $anchor-color-hover: darken($primary-color, 10%);
 $anchor-color-active: $anchor-color-hover;
@@ -100,8 +101,8 @@ $remove-ios-blue: true;
 $button-padding: (
   tiny: 4px 8px 4px 8px,
   small: 5px 10px 5px 10px,
-  default: 8px 16px 8px 16px,
-  large: 10px 20px 10px 20px,
+  default: 13px 26px 13px 26px,
+  large: 14px 28px 14px 28px,
 );
 $button-font-size: (
   tiny: 10px,
@@ -115,18 +116,18 @@ $button-font-weight: bold;
 $button-margin: 0 0 $global-margin 0;
 $button-background: $primary-color;
 $button-border: 2px solid $button-background;
-$button-radius: $global-radius;
+$button-radius: $global-rounded;
 $button-rounded: $global-rounded;
 
 // 6. Callout
 // ----------
 
-$callout-background: $white;
+$callout-background: #f1f5f9;
 $callout-background-fade: 85%;
 $callout-padding: 10px;
 $callout-padding-small: $callout-padding;
 $callout-margin-bottom: $global-margin;
-$callout-border: 1px solid darken($callout-background, 20%);
+$callout-border: 0;
 $callout-border-primary: 1px solid darken($primary-color, 20%);
 $callout-border-secondary: 1px solid darken($secondary-color, 20%);
 $callout-border-success: 1px solid darken($success-color, 20%);

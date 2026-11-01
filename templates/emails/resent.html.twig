@@ -1,8 +1,15 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  The confirmation link again, for members who had trouble with the first one. username, email_address, key.
+#}
+{% block preheader %}{{ 'signup.confirm.link'|trans({ email_address: email_address }) }}{% endblock %}
 
-{% block content%}
-    <p>{{ 'signup.resent.sorry'|trans }}<br>
-       {{ 'signup.resent.reason'|trans }}</p>
-    <p>{{ 'signup.confirm.link'|trans({'email_address': email_address}) }}<p>
-    <p><a href="{{ url('confirm_email', { username: username, registrationKey: key }) }}">{{ 'signup.confirm.email.address'|trans }}</a></p>
+{% block content %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'email.account'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'signup.confirm.email'|trans } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'signup.resent.sorry'|trans|e ~ ' ' ~ 'signup.resent.reason'|trans|e } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'signup.confirm.link'|trans({ email_address: email_address })|e } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'signup.confirm.email.address'|trans, url: url('confirm_email', { username: username, registrationKey: key }) },
+    } %}
 {% endblock content %}

@@ -1,0 +1,2 @@
+{# The small uppercase line above the title: what kind of mail it is. text; tone: 'warm' (default) or 'volunteer'. #}
+<p style="margin:0 0 6px;font-family:Helvetica, Arial, sans-serif;font-size:12px;line-height:16px;font-weight:bold;letter-spacing:1.4px;text-transform:uppercase;color:{{ (tone ?? 'warm') == 'volunteer' ? '#475569' : '#c2410c' }};">{{ text }}</p>

@@ -16,6 +16,11 @@ class SignupMockups implements MockupProviderInterface
             'description' => 'Email containing the link to confirm email address.',
             'setup' => 'getSignupParameters',
         ],
+        'Confirm New Email Address' => [
+            'type' => 'email',
+            'template' => 'emails/newemail.html.twig',
+            'description' => 'Email containing the link to confirm a changed email address.',
+        ],
         'Confirm Email Address Resent' => [
             'type' => 'email',
             'template' => 'emails/resent.html.twig',

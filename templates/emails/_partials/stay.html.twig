@@ -1,0 +1,57 @@
+{#
+  The stay a request or an invitation is about, as the site's stay card: what it is and where it stands, arrival and
+  departure with the nights between, then the people and whether the dates are flexible. Declined and cancelled
+  stays have their dates struck through.
+  request (a HostingRequest) or leg (a trip's Subtrip: its place as label, the travellers and the trip's summary as
+  facts, no status pill unless status is given); kind: the label (default 'Hosting request'); status, tone: override
+  the pill's text and colour ('pending', 'maybe', 'success', 'danger'); struck: override the strike-through; facts:
+  more facts at the end (e.g. the trip). Dates in receiverLocale.
+#}
+{% set request = request ?? null %}
+{% set leg = leg ?? null %}
+{% set _stay = request ?? leg %}
+{% set _S = 'App\\Entity\\HostingRequest::' %}
+{% set _statuses = {
+    (constant(_S ~ 'REQUEST_OPEN')): { key: 'open', tone: 'pending' },
+    (constant(_S ~ 'REQUEST_TENTATIVELY_ACCEPTED')): { key: 'tentatively', tone: 'maybe' },
+    (constant(_S ~ 'REQUEST_ACCEPTED')): { key: 'accepted', tone: 'success' },
+    (constant(_S ~ 'REQUEST_DECLINED')): { key: 'declined', tone: 'danger' },
+    (constant(_S ~ 'REQUEST_CANCELLED')): { key: 'cancelled', tone: 'danger' },
+} %}
+{% set _status = request ? (_statuses[request.status] ?? { key: 'open', tone: 'pending' }) : { key: null, tone: 'pending' } %}
+{% set _tone = tone ?? _status.tone %}
+{% set _pills = {
+    pending: { background: '#fef3c7', color: '#b45309', icon: '&#9203; ' },
+    maybe: { background: '#fef3c7', color: '#b45309', icon: '? ' },
+    success: { background: '#dcfce7', color: '#15803d', icon: '&#10003; ' },
+    danger: { background: '#fee2e2', color: '#b91c1c', icon: '&#10005; ' },
+} %}
+{% set _pill = _pills[_tone] ?? _pills.pending %}
+{% set _struck = struck ?? (_status.tone == 'danger') %}
+{% set _locale = receiverLocale ?? app.request.locale ?? 'en' %}
+{% set _nights = date(_stay.departure|date('Y-m-d')).diff(date(_stay.arrival|date('Y-m-d'))).days %}
+{% if request %}
+    {% set _facts = [
+        'request.card.persons'|trans({ count: request.numberOfTravellers }),
+        (request.flexible ? 'request.card.flexible' : 'request.card.not.flexible')|trans,
+    ]|merge(facts ?? []) %}
+{% else %}
+    {% set _facts = ['request.card.persons'|trans({ count: leg.trip.countOfTravellers })]
+        |merge(leg.trip.summary ? [leg.trip.summary] : [])|merge(facts ?? []) %}
+{% endif %}
+{% set _showStatus = request or status is defined and status %}
+{% set _kind = kind ?? (request ? 'request.card.title'|trans : (leg.location ? leg.location.name : 'request.card.title'|trans)) %}
+{% set _dateStyle = _struck ? 'text-decoration:line-through;color:#94a3b8;' : '' %}
+{% macro day(label, day, locale, align, dateStyle) %}
+<td width="40%" valign="middle" align="{{ align }}" style="width:40%;font-family:Helvetica, Arial, sans-serif;text-align:{{ align }};vertical-align:middle;"><div style="font-size:12px;line-height:16px;font-weight:bold;color:#64748b;">{{ label|trans }} &middot; {{ day|format_date(pattern='EEE', locale=locale) }}</div><div style="font-size:20px;line-height:26px;font-weight:bold;color:#0f172a;{{ dateStyle }}">{{ day|format_date(pattern='d MMM', locale=locale) }} <span style="font-weight:normal;color:#94a3b8;">{{ day|date('Y') }}</span></div></td>
+{% endmacro %}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin:0 0 20px;border-collapse:separate;"><tr><td style="padding:16px 18px 12px;background:#ffffff;border:1px solid #f3e8dc;border-radius:16px;">
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+<td style="font-family:Helvetica, Arial, sans-serif;font-size:15px;line-height:20px;font-weight:bold;color:#0f172a;vertical-align:middle;"><span style="color:#ea7a2e;">&#9679;</span>&nbsp; {{ _kind }}</td>
+<td align="right" style="text-align:right;vertical-align:middle;">{% if _showStatus %}<span style="display:inline-block;padding:3px 10px;border-radius:999px;background:{{ _pill.background }};color:{{ _pill.color }};font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:18px;font-weight:bold;white-space:nowrap;">{{ _pill.icon|raw }}{{ status ?? ('request.status.' ~ _status.key)|trans }}</span>{% endif %}</td></tr></table>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:12px;border-bottom:1px solid #f1f5f9;"><tr>
+{{ _self.day('request.card.arrival', _stay.arrival, _locale, 'left', _dateStyle) }}
+<td width="20%" align="center" valign="middle" style="width:20%;padding:0 6px 12px;text-align:center;vertical-align:middle;"><span style="display:inline-block;padding:3px 10px;border-radius:999px;background:#f1f5f9;color:#334155;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:18px;font-weight:bold;white-space:nowrap;">{{ 'contact.trip.nights'|trans({ count: _nights }) }}</span></td>
+{{ _self.day('request.card.departure', _stay.departure, _locale, 'right', _dateStyle) }}</tr><tr><td colspan="3" height="12" style="height:12px;font-size:0;line-height:0;">&nbsp;</td></tr></table>
+<p style="margin:10px 0 0;font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;color:#475569;">{{ _facts|map(fact => fact|e)|join(' &nbsp;·&nbsp; ')|raw }}</p>
+</td></tr></table>

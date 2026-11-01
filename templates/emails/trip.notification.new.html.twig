@@ -1,13 +1,22 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  A member travels near the receiver: who, the leg near them as a stay card; the trip, the profile. Below the card
+  how to change these mails.
+  sender (the traveller), trip, leg, receiver.
+#}
+{% block preheader %}{{ 'trip.notification.new.email'|trans({ username: sender.username }) }}{% endblock %}
 
 {% block content %}
-    <p>{{ 'trip.notification.new.email'|trans({'username': sender.username}) }}</p>
-    <row>
-        <columns>
-            <center>
-                <button class="rounded" href="{{ url('trip_show', {id: trip.id}) }}">{{ 'trip.show'|trans }}</button>
-            </center>
-        </columns>
-    </row>
-    <p><a href="{{ url('preferences', {username: receiver.username}) }}">{{ 'trip.notification.preference.link'|trans }}</a></p>
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'mydata.trips.headline'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'trip.notification.new.email'|trans({ username: sender.username })|trim('.', 'right') } %}
+    {% include 'emails/_partials/sender.html.twig' with { member: sender, references: true } %}
+    {% include 'emails/_partials/stay.html.twig' with { leg: leg } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'contact.trip.see'|trans, url: url('trip_show', { id: trip.id }) },
+        secondary: { label: 'message.profile'|trans({ username: sender.username }), url: url('members_profile', { username: sender.username }) },
+    } %}
+{% endblock content %}
+
+{% block footer_extra %}
+<p style="margin:0 0 10px;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;text-align:center;"><a href="{{ url('preferences', { username: receiver.username }) }}" style="color:#64748b;font-weight:normal;text-decoration:underline;">{{ 'trip.notification.preference.link'|trans }}</a></p>
 {% endblock %}

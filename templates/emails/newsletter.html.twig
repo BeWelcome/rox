@@ -1,52 +1,34 @@
-{# utm_links: every bewelcome.org link carries the newsletter as campaign, so Plausible
-   can attribute visits, signups and donations to it (#540). #}
-{% block content %}{% apply inky_to_html|utm_links('newsletter-' ~ newsletter.id)|inline_css(encore_entry_css_source('email')) %}
-    <wrapper class="header">
-        <container>
-            <row class="collapse">
-                <columns small="12" valign="middle">
-                    <a href="{{ url('homepage') }}">
-                        <img src="{{ email.image('@images/logo_email_2025.png') }}">
-                    </a>
-                </columns>
-            </row>
-        </container>
-    </wrapper>
+{% extends 'emails/base.html.twig' %}
+{#
+  A newsletter (regular, local events, terms of use): its text in the card, below it why the member gets it and how
+  to unsubscribe. Every bewelcome.org link carries the newsletter as campaign, so the analytics can attribute
+  visits, signups and donations to it.
+  newsletter, wordcode (its text), language, has_images (a link to the web version first), unsubscribe_key, receiver.
+#}
+{% set utm_campaign = 'newsletter-' ~ newsletter.id %}
 
-    <container class="secondary">
-        <spacer size="16"></spacer>
-        {% if has_images is defined %}
-        <row>
-            <columns small="12" valign="middle">
-                <a href="{{ url('newsletter_single', {'id': newsletter.id, 'language': language}) }}">{{ 'newsletter.images.not.shown'|trans }}</a>
-            </columns>
-        </row>
+{% block content %}
+    {% if has_images is defined %}
+        {% include 'emails/_partials/text.html.twig' with {
+            html: '<a href="' ~ url('newsletter_single', { id: newsletter.id, language: language }) ~ '" style="color:#64748b;font-weight:normal;text-decoration:underline;">' ~ 'newsletter.images.not.shown'|trans|e ~ '</a>',
+            muted: true,
+        } %}
+    {% endif %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'adminmassmailedittypegeneral'|trans } %}
+    {% include 'emails/_partials/text.html.twig' with { html: wordcode|trans({ gender: receiver.gender, username: receiver.username })|prepare_newsletter, div: true } %}
+{% endblock content %}
 
-        {% endif %}
-        <row>
-            <columns>
-                {{ wordcode|trans({'gender': receiver.gender, 'username': receiver.username})|prepare_newsletter }}
-            </columns>
-        </row>
-
-        <wrapper>
-            <spacer size="16"></spacer>
-            <row>
-                <columns>
-                    <p>{{ 'newsletter.receive'|trans }}</p>
-                    <p>
-                    {% if constant('\\App\\Entity\\Newsletter::SPECIFIC_NEWSLETTER') == newsletter.type  %}
-                        <a href="{{ url('local_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.local.unsubscribe'|trans }}</a>
-                    {% elseif constant('\\App\\Entity\\Newsletter::REGULAR_NEWSLETTER') == newsletter.type %}
-                        <a href="{{ url('regular_newsletter_unsubscribe', {'username': receiver.username, 'unsubscribeKey': unsubscribe_key }) }}">{{ 'newsletter.regular.unsubscribe'|trans }}</a>
-                    {% else %}
-                        {{ 'newsletter.no.unsubscribe'|trans }}
-                    {% endif %}
-                    </p>
-                    <p>{{ "now" | date("Y") }} - <a href="{{ url('homepage') }}" target="_blank">BeWelcome</a></p>
-                </columns>
-            </row>
-        </wrapper>
-    </container>
-{% endapply %}
+{% block footer_extra %}
+{% set _p = 'margin:0 0 10px;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;text-align:center;' %}
+{% set _link = 'color:#64748b;font-weight:normal;text-decoration:underline;' %}
+<p style="{{ _p }}">{{ 'newsletter.receive'|trans }}</p>
+<p style="{{ _p }}">
+{%- if constant('\\App\\Entity\\Newsletter::SPECIFIC_NEWSLETTER') == newsletter.type -%}
+    <a href="{{ url('local_newsletter_unsubscribe', { username: receiver.username, unsubscribeKey: unsubscribe_key }) }}" style="{{ _link }}">{{ 'newsletter.local.unsubscribe'|trans }}</a>
+{%- elseif constant('\\App\\Entity\\Newsletter::REGULAR_NEWSLETTER') == newsletter.type -%}
+    <a href="{{ url('regular_newsletter_unsubscribe', { username: receiver.username, unsubscribeKey: unsubscribe_key }) }}" style="{{ _link }}">{{ 'newsletter.regular.unsubscribe'|trans }}</a>
+{%- else -%}
+    {{ 'newsletter.no.unsubscribe'|trans }}
+{%- endif -%}
+</p>
 {% endblock %}

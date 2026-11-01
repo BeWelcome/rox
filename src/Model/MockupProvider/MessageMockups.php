@@ -10,6 +10,11 @@ class MessageMockups implements MockupProviderInterface
     use MockupEntities;
 
     private const array MOCKUPS = [
+        'friendship request (email)' => [
+            'type' => 'email',
+            'template' => 'emails/friendship.request.html.twig',
+            'description' => 'A member says they know the receiver: confirm or dismiss the friendship.',
+        ],
         'message (email)' => [
             'type' => 'email',
             'template' => 'emails/message.html.twig',

@@ -1,0 +1,47 @@
+{#
+  The layout of every mail: a cream page, the orange header with the logo, one white card with the content, and the
+  footer under it. Tables with inline styles, as mail programs need them (Outlook gets square corners).
+  Blocks: preheader (the line mail programs show after the subject, about 85 characters), content (the card),
+  footer_extra (a line above the footer, e.g. why the mail came and how to stop it).
+  The pieces of the card are in emails/_partials/. Expects receiver (the mailer passes it) and email.
+  utm_campaign (and utm_source, default 'newsletter'), set by a mail: every link to bewelcome.org carries them, so
+  the analytics count the visits the mail brings.
+#}
+{% apply inline_css(encore_entry_css_source('email')) %}
+{% set _mail %}
+<!doctype html>
+<html lang="{{ receiverLocale ?? 'en' }}" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="supported-color-schemes" content="light dark">
+<title>BeWelcome</title>
+<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->
+<style>
+@media (max-width:620px){.bw-card{padding:22px 18px !important}.bw-pad{padding-left:16px !important;padding-right:16px !important}}
+@media (prefers-color-scheme:dark){.bw-bg{background:#1c1b1f !important}}
+</style>
+</head>
+<body style="margin:0;padding:0;background:#fffaf4;-webkit-text-size-adjust:100%;">
+<span style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;mso-hide:all;">{% block preheader %}{% endblock %}&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;&nbsp;&#847;</span>
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" class="bw-bg" style="background:#fffaf4;"><tr><td align="center" class="bw-pad" style="padding:28px 12px;text-align:center;">
+<!--[if mso]><table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0"><tr><td><![endif]-->
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:600px;margin:0 auto;border-collapse:separate;">
+<tr><td bgcolor="#f37000" style="padding:18px 28px;background:#f37000;border-radius:20px 20px 0 0;text-align:left;"><a href="{{ url('homepage') }}"><img src="{{ email.image('@images/logo_email_2025.png') }}" width="184" height="35" alt="BeWelcome" style="display:block;width:184px;height:35px;border:0;"></a></td></tr>
+<tr><td class="bw-card" bgcolor="#ffffff" style="padding:30px 32px 26px;background:#ffffff;border:1px solid #f1e8de;border-top:0;border-radius:0 0 20px 20px;text-align:left;">
+{% block content %}{% endblock %}
+</td></tr>
+<tr><td align="center" style="padding:22px 28px 0;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;text-align:center;">
+{% block footer_extra %}{% endblock %}
+<p style="margin:0 0 6px;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;text-align:center;">{{ 'email.footer.free'|trans }}</p>
+<p style="margin:0;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;text-align:center;">&copy; {{ 'now'|date('Y') }} <a href="{{ url('homepage') }}" style="color:#64748b;font-weight:normal;text-decoration:underline;">BeWelcome</a> &nbsp;&middot;&nbsp; <a href="{{ receiver is defined ? url('preferences', { username: receiver.username }) : url('mypreferences_redirect') }}" style="color:#64748b;font-weight:normal;text-decoration:underline;">{{ 'email.footer.settings'|trans }}</a></p>
+</td></tr>
+</table>
+<!--[if mso]></td></tr></table><![endif]-->
+</td></tr></table>
+</body>
+</html>
+{% endset %}
+{{- (utm_campaign is defined and utm_campaign ? _mail|utm_links(utm_campaign, utm_source ?? 'newsletter') : _mail)|raw -}}
+{% endapply %}

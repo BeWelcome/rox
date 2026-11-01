@@ -1,32 +1,39 @@
-{% extends 'emails/email_no_greeting.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  A new post in a forum or group thread the receiver follows: the thread as title, the group (or the forum) above
+  it, who wrote and the post; reply. Below the card why the mail came and how to stop it.
+  notification (its post and subscription), agoraUnsubscribeUrl (new members get the forum's posts), receiver.
+#}
+{% set post = notification.post %}
+{% set thread = post.thread %}
+{% set _inGroup = not thread.agora %}
+{% set _threadUrl = _inGroup ? url('group_forum_thread', { thread: thread.id, group_id: thread.group.id }) : url('forum_thread', { threadId: thread.id }) %}
+{% set _replyUrl = _inGroup ? _threadUrl ~ '/reply' : url('forum_reply', { threadId: thread.id }) %}
+
+{% block preheader %}{{ thread.title|striptags }}: {{ post.message|striptags|truncate(70) }}{% endblock %}
 
 {% block content %}
-    {% set post = notification.post %}
-    <p>{% if not post.thread.agora %}
-            <a href="{{ url('group_forum_thread', {'thread': post.thread.id, 'group_id': post.thread.group.id}) }}">{{ post.thread.title|striptags }} [{{ post.thread.group.name }}]</a>
-            (<a href="{{ url('group_forum_thread', {'thread': post.thread.id, 'group_id': post.thread.group.id}) }}/reply">{{ 'reply'|trans }}</a>)
-        {% else %}
-            <a href="{{ url('forum_thread', {'threadId': post.thread.id}) }}">{{ post.thread.title|striptags }}</a>
-            (<a href="{{ url('forum_reply', {'threadId': post.thread.id}) }}">{{ 'reply'|trans }}</a>)
-        {% endif %}
-    </p>
-
-    {{ post.message|purify }}
-
-    <hr>
-    {% if agoraUnsubscribeUrl is defined and agoraUnsubscribeUrl %}
-        <p>{{ 'forum.agora.welcome.notice'|trans }} <a href="{{ agoraUnsubscribeUrl }}">{{ 'forum.agora.welcome.unsubscribe'|trans }}</a></p>
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: _inGroup ? 'group'|trans ~ ' · ' ~ thread.group.name : 'forumtitle'|trans } %}
+    <h1 style="margin:0 0 16px;font-family:Helvetica, Arial, sans-serif;font-size:26px;line-height:32px;font-weight:bold;color:#0f172a;mso-line-height-rule:exactly;"><a href="{{ _threadUrl }}" style="color:#0f172a;font-weight:bold;text-decoration:none;">{{ thread.title|striptags }}</a></h1>
+    {% if post.author %}
+        {% include 'emails/_partials/sender.html.twig' with { member: post.author, meta: post.created ? post.created|format_datetime(pattern='d MMM, HH:mm', locale=receiverLocale ?? 'en') : '' } %}
     {% endif %}
-    <small>
-    {{ 'forumunsubscribegroup'|trans }}<br>
-    <a href="{{ url('forum_thread_subscription_disable', {'threadId': post.thread.id}) }}">{{ 'mailbotdisablethread'|trans }}</a><br>
-    {% if notification.subscription == 0 and post.thread.group %}
-        <a href="{{ url('group_notifications_disable', {'groupId': post.thread.group.id}) }}">{{ 'mailbotdisablegroup'|trans }}</a><br>
-        <a href="{{ url('group_unsubscribe', {'groupId': post.thread.group.id}) }}">{{ 'mailbotunsubscribegroup'|trans }}</a><br>
-    {% else %}
-        <a href="{{ url('thread_unsubscribe', {'threadId': post.thread.id, 'subscriptionId': notification.subscription }) }}">{{ 'mailbotunsubscribethread'|trans }}</a><br>
-    {% endif %}
-    <br>
-    {{ 'mailfootermessage'|trans({'year':'now'|date('Y')})|purify }}
-    </small>
+    {% include 'emails/_partials/box.html.twig' with { html: post.message|purify } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'reply'|trans, url: _replyUrl },
+    } %}
+{% endblock content %}
+
+{% block footer_extra %}
+{% set _link = 'color:#64748b;font-weight:normal;text-decoration:underline;' %}
+{% set _p = 'margin:0 0 10px;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:20px;color:#64748b;text-align:center;' %}
+{% if agoraUnsubscribeUrl is defined and agoraUnsubscribeUrl %}
+<p style="{{ _p }}">{{ 'forum.agora.welcome.notice'|trans }} <a href="{{ agoraUnsubscribeUrl }}" style="{{ _link }}">{{ 'forum.agora.welcome.unsubscribe'|trans }}</a></p>
+{% endif %}
+<p style="{{ _p }}">{{ 'forumunsubscribegroup'|trans }}</p>
+<p style="{{ _p }}"><a href="{{ url('forum_thread_subscription_disable', { threadId: thread.id }) }}" style="{{ _link }}">{{ 'mailbotdisablethread'|trans }}</a>
+{%- if notification.subscription == 0 and thread.group %} &nbsp;&middot;&nbsp; <a href="{{ url('group_notifications_disable', { groupId: thread.group.id }) }}" style="{{ _link }}">{{ 'mailbotdisablegroup'|trans }}</a> &nbsp;&middot;&nbsp; <a href="{{ url('group_unsubscribe', { groupId: thread.group.id }) }}" style="{{ _link }}">{{ 'mailbotunsubscribegroup'|trans }}</a>
+{%- else %} &nbsp;&middot;&nbsp; <a href="{{ url('thread_unsubscribe', { threadId: thread.id, subscriptionId: notification.subscription }) }}" style="{{ _link }}">{{ 'mailbotunsubscribethread'|trans }}</a>
+{%- endif %}</p>
+<p style="{{ _p }}">{{ 'mailfootermessage'|trans({ year: 'now'|date('Y') })|purify }}</p>
 {% endblock %}

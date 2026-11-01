@@ -15,6 +15,7 @@ use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
@@ -34,6 +35,7 @@ class AvatarController extends AbstractController
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
+        private readonly UriSigner $uriSigner,
     ) {
     }
 
@@ -69,13 +71,15 @@ class AvatarController extends AbstractController
         requirements: ['size' => '\d+|original'],
         defaults: ['size' => '48']
     )]
-    public function showAvatar(Member $member, string $size): BinaryFileResponse
+    public function showAvatar(Request $request, Member $member, string $size): BinaryFileResponse
     {
-        if (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
-            return $this->emptyAvatar($size);
-        }
-
-        if (!$this->isGranted(MemberVoter::MEMBER_VIEW, $member)) {
+        // a link from a mail (MailLinkSigner::mailAvatarUrl()): the receiver is a member, the mail program isn't
+        // logged in; the picture shows as long as members may see the profile
+        if ($this->uriSigner->checkRequest($request)) {
+            if (!$member->isVisibleToMembers()) {
+                return $this->emptyAvatar($size);
+            }
+        } elseif (!$this->isGranted('IS_AUTHENTICATED_REMEMBERED') || !$this->isGranted(MemberVoter::MEMBER_VIEW, $member)) {
             return $this->emptyAvatar($size);
         }
 

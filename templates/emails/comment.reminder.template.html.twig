@@ -1,0 +1,26 @@
+{% extends 'emails/base.html.twig' %}
+{#
+  Reminders to write a comment about a stay: the subject as title, the reminder's text (which brings its own links),
+  and the button to write the comment.
+  A mail sets: title_key (its subject, getting the username), body_key (the text, getting host, guest and the link
+  tags) and about (the username of the member the comment is about). The mailer passes host, guest and the
+  comment_/profile_/report_ start and end tags.
+#}
+{% set _parameters = {
+    host: host, guest: guest,
+    comment_start: comment_start, comment_end: comment_end,
+    profile_start: profile_start, profile_end: profile_end,
+    report_start: report_start ?? '', report_end: report_end ?? '',
+} %}
+
+{% block preheader %}{{ title_key|trans({ username: about }) }}{% endblock %}
+
+{% block content %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'comments'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: title_key|trans({ username: about }) } %}
+    {% include 'emails/_partials/text.html.twig' with { html: body_key|trans(_parameters)|purify, div: true } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'commentaddcomment'|trans, url: url('add_comment', { username: about }) },
+        secondary: { label: 'message.profile'|trans({ username: about }), url: url('members_profile', { username: about }) },
+    } %}
+{% endblock content %}

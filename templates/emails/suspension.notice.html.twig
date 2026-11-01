@@ -1,11 +1,19 @@
-{% extends 'emails/email_no_greeting.html.twig' %}
-
+{% extends 'emails/base.html.twig' %}
 {#
-  members:suspend:notification: a member who didn't come back despite the reminders. The links carry the
-  campaign, so the analytics count the visits it brings.
+  members:suspend:notification: a member who didn't come back despite the reminders, with the date the profile will
+  be deleted; logging in keeps it. The links carry the campaign, so the analytics count the visits it brings.
+  receiver, deletion_date (a timestamp).
 #}
+{% set utm_campaign = 'suspension_notice' %}
+{% set utm_source = 'reminder' %}
+
+{% block preheader %}{{ 'email.suspension.notice.subject'|trans({ deletion_date: deletion_date }) }}{% endblock %}
+
 {% block content %}
-    {% apply utm_links('suspension_notice', 'reminder') %}
-        {{ 'email.suspension.notice.body'|trans({username: receiver.username, gender: receiver.gender, deletion_date: deletion_date})|purify }}
-    {% endapply %}
-{% endblock %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'email.account'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'email.suspension.notice.subject'|trans({ deletion_date: deletion_date }) } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'email.suspension.notice.body'|trans({ username: receiver.username, gender: receiver.gender, deletion_date: deletion_date })|purify, div: true } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'indexpageloginsubmit'|trans, url: url('login') },
+    } %}
+{% endblock content %}

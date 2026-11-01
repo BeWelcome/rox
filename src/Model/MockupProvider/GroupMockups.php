@@ -7,6 +7,7 @@ use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Group;
 use App\Entity\Member;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
 class GroupMockups implements MockupProviderInterface
@@ -37,6 +38,16 @@ class GroupMockups implements MockupProviderInterface
         'join declined' => [
             'type' => 'email',
             'template' => 'emails/group/join.declined.html.twig',
+        ],
+        'group approved' => [
+            'type' => 'email',
+            'template' => 'emails/group/approved.html.twig',
+            'description' => 'To the creator of a group that was approved.',
+        ],
+        'new group (volunteers)' => [
+            'type' => 'email',
+            'template' => 'emails/new.group.html.twig',
+            'description' => 'To the volunteers who approve groups (English only).',
         ],
         'group post (subscribed)' => [
             'type' => 'email',
@@ -81,7 +92,9 @@ class GroupMockups implements MockupProviderInterface
             ->setGroup($group);
         $post = self::withId(new ForumPost(), 1)
             ->setMessage('Post text')
-            ->setThread($thread);
+            ->setThread($thread)
+            ->setAuthor($parameters['admin'])
+            ->setCreated(new DateTime());
 
         if ('group post (subscribed)' === $parameters['name']) {
             $subscription = 123456;
@@ -97,6 +110,10 @@ class GroupMockups implements MockupProviderInterface
             'subject' => 'group.invitation',
             'reason' => 'I just want to be a member of something.',
             'username' => $user->getUsername(),
+            // the member who joins, was invited or created the group
+            'member' => $user,
+            'invitee' => $user,
+            'creator' => $user,
             'notification' => [
                 'post' => $post,
                 'subscription' => $subscription,

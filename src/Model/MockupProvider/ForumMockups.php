@@ -4,6 +4,7 @@ namespace App\Model\MockupProvider;
 
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
+use DateTime;
 
 class ForumMockups implements MockupProviderInterface
 {
@@ -36,7 +37,9 @@ class ForumMockups implements MockupProviderInterface
             ->setTitle('Thread title');
         $post = self::withId(new ForumPost(), 1)
             ->setMessage('Post text')
-            ->setThread($thread);
+            ->setThread($thread)
+            ->setAuthor($parameters['admin'])
+            ->setCreated(new DateTime());
 
         if ('forum post (subscribed)' === $parameters['name']) {
             $subscription = 123456;

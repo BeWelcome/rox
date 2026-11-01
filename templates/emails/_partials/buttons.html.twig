@@ -1,0 +1,16 @@
+{#
+  The mail's actions: one primary button (orange) and at most one secondary (white). Outlook gets VML buttons of
+  the same size, as it can't round a link.
+  primary: { label, url }; secondary: { label, url } or null.
+#}
+{% macro button(button, primary) %}
+{% set _width = max(140, button.label|length * 10 + 48) %}
+<td style="padding:0 8px 8px 0;"><table role="presentation" cellpadding="0" cellspacing="0" border="0" style="border-collapse:separate;"><tr><td align="center" bgcolor="{{ primary ? '#f37000' : '#ffffff' }}" style="border-radius:999px;{{ primary ? '' : 'border:1px solid #e2e8f0;' }}text-align:center;">
+<!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" href="{{ button.url }}" style="height:46px;v-text-anchor:middle;width:{{ _width }}px;" arcsize="50%" {{ primary ? 'fillcolor="#f37000" stroke="f"' : 'fillcolor="#ffffff" strokecolor="#e2e8f0"' }}><center style="color:{{ primary ? '#ffffff' : '#0f172a' }};font-family:Helvetica, Arial, sans-serif;font-size:16px;font-weight:bold;">{{ button.label }}</center></v:roundrect><![endif]-->
+<!--[if !mso]><!--><a href="{{ button.url }}" style="display:block;padding:13px 26px;font-family:Helvetica, Arial, sans-serif;font-size:16px;line-height:20px;font-weight:bold;color:{{ primary ? '#ffffff' : '#0f172a' }};text-decoration:none;border-radius:999px;">{{ button.label }}</a><!--<![endif]-->
+</td></tr></table></td>
+{% endmacro %}
+<table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+{{- _self.button(primary, true) -}}
+{%- if secondary is defined and secondary -%}{{ _self.button(secondary, false) }}{%- endif -%}
+</tr></table>

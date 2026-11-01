@@ -1,9 +1,18 @@
-{% extends 'emails/email.html.twig' %}
+{% extends 'emails/base.html.twig' %}
+{#
+  After the signup: confirm the email address with the link, or with the key on the confirmation page.
+  username, email_address, key.
+#}
+{% block preheader %}{{ 'signup.confirm.link'|trans({ email_address: email_address }) }}{% endblock %}
 
-{% block content%}
-    <p>{{ 'signup.thank.you'|trans }}</p>
-    <p>{{ 'signup.confirm.link'|trans({'email_address': email_address}) }}</p>
-    <p><a href="{{ url('confirm_email', { username: username, registrationKey: key }) }}">{{ 'signup.confirm.email.address'|trans }}</a></p>
-    <p>{{ 'signup.confirm.key'|trans }}</p>
-    <p><button>{{ key }}</button></p>
+{% block content %}
+    {% include 'emails/_partials/eyebrow.html.twig' with { text: 'email.account'|trans } %}
+    {% include 'emails/_partials/title.html.twig' with { text: 'signup.confirm.email'|trans } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'signup.thank.you'|trans|e } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'signup.confirm.link'|trans({ email_address: email_address })|e } %}
+    {% include 'emails/_partials/buttons.html.twig' with {
+        primary: { label: 'signup.confirm.email.address'|trans, url: url('confirm_email', { username: username, registrationKey: key }) },
+    } %}
+    {% include 'emails/_partials/text.html.twig' with { html: 'signup.confirm.key'|trans|e, muted: true } %}
+    {% include 'emails/_partials/code.html.twig' with { code: key } %}
 {% endblock content %}

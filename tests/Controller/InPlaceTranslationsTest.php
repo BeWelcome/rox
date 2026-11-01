@@ -42,6 +42,14 @@ class InPlaceTranslationsTest extends WebTestCase
         $crawler = $this->client->request('GET', '/forums');
         self::assertCount(1, $crawler->filter('#translations'));
         self::assertCount(1, $crawler->filter('.js-translation-drawer'));
+        // a box per group, the empty ones say so
+        self::assertSame(['missing', 'fallback', 'defined'], $crawler->filter('#translations .js-in-place-group')->each(
+            static fn (Crawler $group): string => (string) $group->attr('data-group')
+        ));
+        $crawler->filter('#translations .js-in-place-group')->each(static function (Crawler $group): void {
+            $empty = 0 === $group->filter('.js-in-place-item')->count();
+            self::assertSame($empty, null === $group->filter('.js-in-place-empty')->attr('hidden'), (string) $group->attr('data-group'));
+        });
 
         $this->client->request('GET', '/admin/translations/mode/off');
         self::assertCount(0, $this->client->request('GET', '/forums')->filter('#translations'));
@@ -104,6 +112,10 @@ class InPlaceTranslationsTest extends WebTestCase
         $crawler = $this->client->request('GET', '/admin/translations/edit/de/zztest.edit?embed=1');
         $this->assertResponseIsSuccessful();
         self::assertCount(0, $crawler->filter('footer'), 'the page alone, for the panel');
+        // laid out like the edit page's panels: the code in the head, Save at the bottom
+        self::assertSame('zztest.edit', trim($crawler->filter('.p-ped .p-ped-head__title')->text()));
+        self::assertCount(1, $crawler->filter('.p-ped .p-edit-subpage__actions button[type=submit]'));
+        self::assertSame('messages', $crawler->filter('input[type=hidden][name="edit_translation_form[domain]"]')->attr('value'));
         $this->client->submit($crawler->filter('form[name=edit_translation_form]')->form([
             'edit_translation_form[translatedText]' => 'Guten Morgen',
         ]));
@@ -132,6 +144,8 @@ class InPlaceTranslationsTest extends WebTestCase
     {
         $crawler = $this->client->request('GET', '/admin/translations/create/en/zztest.create?embed=1');
         $this->assertResponseIsSuccessful();
+        self::assertSame('zztest.create', trim($crawler->filter('.p-ped .p-ped-head__title')->text()));
+        self::assertSame('zztest.create', $crawler->filter('input[type=hidden][name$="[wordCode]"]')->attr('value'));
         $form = $crawler->filter('form')->reduce(static fn (Crawler $form): bool => $form->filter('[name$="[englishText]"]')->count() > 0)->form();
         $prefix = substr((string) $crawler->filter('[name$="[englishText]"]')->attr('name'), 0, -\strlen('[englishText]'));
         $this->client->submit($form, [

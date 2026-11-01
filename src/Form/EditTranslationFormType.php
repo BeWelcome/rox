@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Doctrine\DomainType;
+use App\Doctrine\TranslationFormat;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,9 +16,14 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EditTranslationFormType extends AbstractType
 {
+    public function __construct(private readonly TranslatorInterface $translator)
+    {
+    }
+
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
@@ -44,18 +50,24 @@ class EditTranslationFormType extends AbstractType
                 'label' => 'label.admin.translation.englishtext',
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $form = $event->getForm();
-            $richtext = $form->getConfig()->getOption('richtext');
+            /** @var TranslationFormat $format */
+            $format = $form->getConfig()->getOption('format');
             $translationRequest = $event->getData();
-            if ($richtext) {
-                $fieldType = CkEditorType::class;
-            } else {
-                $fieldType = TextareaType::class;
-            }
+            // the rich text editor for HTML (inline HTML loses the paragraph it adds when saved), else plain text
+            $fieldType = $format->usesEditor() ? CkEditorType::class : TextareaType::class;
             $translatedTextHelp = null;
             if ('en' === $translationRequest->locale) {
                 $form
+                    ->add('format', TranslationFormatChoiceType::class, [
+                        'help' => 'translation.format.help',
+                        'help_translation_parameters' => [
+                            'detected' => $this->translator->trans(
+                                'translation.format.' . TranslationFormat::detect((string) $translationRequest->englishText)->value
+                            ),
+                        ],
+                    ])
                     ->add('isMajorUpdate', CheckboxType::class, [
                         'label' => 'translation.is.major.update',
                         'required' => false,
@@ -121,7 +133,8 @@ class EditTranslationFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'richtext' => false,
+            'format' => TranslationFormat::Plain,
         ]);
+        $resolver->setAllowedTypes('format', TranslationFormat::class);
     }
 }

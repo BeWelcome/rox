@@ -43,8 +43,7 @@ class TranslationToolTest extends WebTestCase
         $this->client->request('GET', '/admin/translations/all/en/zztest.broken');
 
         $this->assertResponseIsSuccessful();
-        // the list shortens texts to 50 characters
-        $this->assertSelectorTextContains('table', '{radius, plural, =0 {Nothing here.}');
+        $this->assertSelectorTextContains('.p-tr-list', self::BROKEN);
     }
 
     public function testATranslatorCorrectsTheText(): void

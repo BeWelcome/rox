@@ -26,6 +26,10 @@ class TranslationFormType extends AbstractType
             ->add('englishText', TextareaType::class, [
                 'label' => 'label.admin.translation.englishtext',
             ])
+            // empty: detected from the English text when it is saved
+            ->add('format', TranslationFormatChoiceType::class, [
+                'help' => 'translation.format.help.create',
+            ])
         ;
         $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
             $translationRequest = $event->getData();

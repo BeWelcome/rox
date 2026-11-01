@@ -1,0 +1,77 @@
+{% extends 'admin/translations/tool/_layout.html.twig' %}
+{#
+  Every language with its share translated (up to date and to update), what is missing, and the last change; the
+  member's own languages pinned on top. Sorted by share (with the rank), name or last change.
+  locale, sort, languages (TranslationTool::statistics(), sorted), rank, yours (the member's languages, or none when
+  they translate all), total, languageMenu.
+#}
+{% set tab = 'statistics' %}
+
+{% macro language(language, rank, yourLocales) %}
+    <li class="p-tr-stat">
+        <span class="p-tr-stat__rank">{{ rank[language.locale] }}</span>
+        <div class="p-tr-stat__name">
+            <b>{{ language_name_translated(language.locale, app.request.locale) }}</b>
+            {% if language.locale in yourLocales %}<span class="p-tr-stat__yours">{{ 'translation.tool.stats.you'|trans }}</span>{% endif %}
+            <span class="p-tr-stat__native"><bdi>{{ language_name(language.locale) }}</bdi> · {{ language.locale }}</span>
+        </div>
+        <div class="p-tr-stat__bar">
+            <div class="p-tr-bar p-tr-bar--thin" aria-hidden="true">
+                <span class="p-tr-bar__ok" style="width: {{ language.upToDate }}%"></span>
+                <span class="p-tr-bar__update" style="width: {{ language.outdatedShare }}%"></span>
+            </div>
+            <span class="p-tr-stat__counts">
+                {%- if language.locale == 'en' -%}
+                    {{ 'translation.tool.stats.source'|trans }}
+                {%- else -%}
+                    {{ 'translation.tool.stats.counts'|trans({missing: language.missing, outdated: language.outdated}) }}
+                {%- endif -%}
+            </span>
+        </div>
+        <span class="p-tr-stat__share">{{ language.share|round }}%</span>
+        <div class="p-tr-stat__last">
+            {% if language.system %}
+                <span class="p-tr-stat__nobody">{{ 'system'|trans }}</span>
+            {% elseif language.translator %}
+                <a href="{{ path('members_profile', {username: language.translator.username}) }}">{{ language.translator.username }}</a>
+            {% else %}
+                <span class="p-tr-stat__nobody">{{ 'translation.tool.stats.unknown'|trans }}</span>
+            {% endif %}
+            {% if language.date %}<span class="p-tr-stat__date">{{ language.date|format_date('medium') }}</span>{% endif %}
+        </div>
+    </li>
+{% endmacro %}
+
+{% block tool %}
+    <div class="p-tr-stats-head">
+        <div>
+            <p class="p-tr-intro">{{ 'translation.tool.stats.intro'|trans({total: total}) }}</p>
+            <p class="p-tr-legend">
+                <span class="p-tr-legend__item p-tr-legend__item--ok">{{ 'translation.tool.state.ok'|trans }}</span>
+                <span class="p-tr-legend__item p-tr-legend__item--update">{{ 'translation.tool.state.update'|trans }}</span>
+                <span class="p-tr-legend__item p-tr-legend__item--missing">{{ 'translation.tool.state.missing'|trans }}</span>
+            </p>
+        </div>
+        <nav class="p-tr-segments" aria-label="{{ 'translation.tool.sort'|trans }}">
+            {% for key in ['share', 'name', 'recent'] %}
+                <a class="p-tr-segments__item{{ key == sort ? ' is-active' }}" href="{{ path('translation_statistics', {sort: key}) }}"{{ key == sort ? ' aria-current="page"' }}>{{ ('translation.tool.sort.' ~ key)|trans }}</a>
+            {% endfor %}
+        </nav>
+    </div>
+
+    {% if yours is not empty %}
+        <section class="p-tr-stats">
+            <h2 class="p-tr-stats__title">{{ 'translation.tool.stats.yours'|trans }}</h2>
+            <ol class="p-tr-stats__list">
+                {% for language in yours %}{{ _self.language(language, rank, yourLocales) }}{% endfor %}
+            </ol>
+        </section>
+    {% endif %}
+
+    <section class="p-tr-stats">
+        <h2 class="p-tr-stats__title">{{ 'translation.tool.stats.all'|trans({count: languages|length}) }}</h2>
+        <ol class="p-tr-stats__list">
+            {% for language in languages %}{{ _self.language(language, rank, yourLocales) }}{% endfor %}
+        </ol>
+    </section>
+{% endblock tool %}

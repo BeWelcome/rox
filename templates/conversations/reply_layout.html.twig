@@ -13,7 +13,6 @@
 {% endblock title %}
 
 {% block content %}
-    {# imported in the block: the translators' preview renders only this block #}
     {% import 'conversations/_inbox.macros.twig' as inbox %}
     {% set myself = app.user %}
     {% set newest = thread|first %}

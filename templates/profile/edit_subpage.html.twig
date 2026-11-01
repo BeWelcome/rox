@@ -21,6 +21,8 @@
 {% block drawer_intro %}{% endblock %}
 {% block drawer_options %}{% endblock %}
 {% block drawer_avatar %}{% endblock %}
+{# More buttons in the head, before the close button (such as previous and next) #}
+{% block drawer_tools %}{% endblock %}
 
 {% block content %}
   {% set embedded = app.request.query.getBoolean('embed') %}
@@ -42,6 +44,7 @@
           <p class="p-ped-head__eyebrow">{{ block('drawer_eyebrow') }}</p>
           <h1 class="p-ped-head__title">{{ block('drawer_title') }}</h1>
         </div>
+        {{ block('drawer_tools') }}
         {% if 'noclose' not in block('drawer_options') %}
         <button type="button" class="p-ped-head__close js-ped-close" aria-label="{{ 'close'|trans }}">
           <i class="fas fa-times" aria-hidden="true"></i>

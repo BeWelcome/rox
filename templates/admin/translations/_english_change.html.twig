@@ -1,0 +1,22 @@
+{#
+  What changed in the English text since the translation was written (its last change only: the text before it is
+  kept, Word::getPreviousSentence()), word by word, the markup as written.
+  englishChange: {before, after, changed} or null.
+#}
+{% if englishChange|default(null) %}
+    <section class="p-account-section p-tr-diff">
+        <span class="p-account-section__label">{{ 'translation.change.title'|trans }}</span>
+        <p class="p-account-section__help p-tr-diff__help">{{ 'translation.change.help'|trans({date: englishChange.changed|format_date('medium')}) }}</p>
+        <div class="p-tr-diff__text">
+            {%- for part in text_diff(englishChange.before, englishChange.after) -%}
+                {%- if part.type == 'removed' -%}
+                    <del class="p-tr-diff__removed">{{ part.text }}</del>
+                {%- elseif part.type == 'added' -%}
+                    <ins class="p-tr-diff__added">{{ part.text }}</ins>
+                {%- else -%}
+                    {{ part.text }}
+                {%- endif -%}
+            {%- endfor -%}
+        </div>
+    </section>
+{% endif %}

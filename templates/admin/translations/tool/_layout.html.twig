@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+{#
+  The translation tool's pages: the title with the language menu (and "New text" for members who translate English),
+  the tabs Texts, Statistics and Mockups, the links to the translators' group and wiki. Editing opens in the side panel
+  (assets/js/translations/tool.js).
+  locale: the language the tool shows; tab: texts, statistics or mockups; languageMenu: the member's languages with
+  their share translated.
+#}
+{% block title %}{{ 'translation.tool.title'|trans }}{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('translations_tool') }}
+{% endblock %}
+
+{% block content %}
+<div class="p-tr-tool">
+    <header class="p-tr-tool__head">
+        <div class="p-tr-tool__top">
+            <h1 class="p-tr-tool__title">{{ 'translation.tool.title'|trans }}</h1>
+            <div class="p-tr-tool__actions">
+                {% if languageMenu|length > 1 %}
+                    <details class="p-tr-lang">
+                        <summary class="p-tr-tool__button">
+                            {{ language_name(locale) }} <span class="p-tr-lang__code">{{ locale }}</span>
+                            <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                        </summary>
+                        <div class="p-tr-lang__menu">
+                            <p class="p-tr-lang__heading">{{ 'translation.tool.languages'|trans }}</p>
+                            {# the same view in another language; English has nothing missing or to update #}
+                            {% set _view = tab == 'texts' ? view : 'missing' %}
+                            {% for language in languageMenu %}
+                                {% set _target = language.locale == 'en' and _view in ['missing', 'update'] ? 'all' : _view %}
+                                <a class="p-tr-lang__item{{ language.locale == locale ? ' is-active' }}"
+                                   href="{{ path('translations_locale_code', {type: _target, locale: language.locale}) }}">
+                                    <span><b>{{ language_name(language.locale) }}</b> <span class="p-tr-lang__code">{{ language.locale }}</span></span>
+                                    <span class="p-tr-lang__share">{{ language.share|round }}%</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </details>
+                {% else %}
+                    <span class="p-tr-tool__button is-static">{{ language_name(locale) }} <span class="p-tr-lang__code">{{ locale }}</span></span>
+                {% endif %}
+                {% if app.user.hasRightsForLocale('en') %}
+                    <a class="p-tr-tool__button js-tool-open" href="{{ path('translation_create_direct') }}"
+                       data-title="{{ 'translation.tool.new'|trans }}">
+                        <i class="fas fa-plus" aria-hidden="true"></i> {{ 'translation.tool.new'|trans }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <nav class="p-tr-tool__nav" aria-label="{{ 'translation.tool.title'|trans }}">
+            <div class="p-tr-tabs">
+                <a class="p-tr-tabs__tab{{ tab == 'texts' ? ' is-active' }}" href="{{ path('translations_locale_code', {type: locale == 'en' ? 'all' : 'missing', locale: locale}) }}"{{ tab == 'texts' ? ' aria-current="page"' }}>{{ 'translation.tool.tab.texts'|trans }}</a>
+                <a class="p-tr-tabs__tab{{ tab == 'statistics' ? ' is-active' }}" href="{{ path('translation_statistics') }}"{{ tab == 'statistics' ? ' aria-current="page"' }}>{{ 'translation.tool.tab.statistics'|trans }}</a>
+                <a class="p-tr-tabs__tab{{ tab == 'mockups' ? ' is-active' }}" href="{{ path('translations_mockups') }}"{{ tab == 'mockups' ? ' aria-current="page"' }}>{{ 'translation.tool.tab.mockups'|trans }}</a>
+            </div>
+            <div class="p-tr-tool__links">
+                <a href="{{ path('group_start', {group_id: 60}) }}">{{ 'translation.tool.group'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                <a href="{{ path('group_wiki_page', {id: 60}) }}">{{ 'translation.tool.wiki'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+            </div>
+        </nav>
+    </header>
+
+    {% block tool %}{% endblock %}
+</div>
+
+{# The side panel: edit, translate and create without leaving the page #}
+<div class="p-search-preview__backdrop p-contact-drawer__backdrop js-tool-drawer-close" hidden></div>
+<aside class="p-search-preview p-contact-drawer js-tool-drawer" aria-hidden="true">
+    <div class="p-search-contact js-search-contact" hidden>
+        <div class="p-search-contact__head">
+            <button type="button" class="p-search-contact__back js-search-contact-back" aria-label="{{ 'back'|trans }}">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
+            </button>
+            <h2 class="p-search-contact__title js-search-contact-title"></h2>
+        </div>
+        <iframe class="p-search-contact__frame js-search-contact-frame" title="" src="about:blank"></iframe>
+    </div>
+</aside>
+{% endblock content %}

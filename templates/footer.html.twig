@@ -133,7 +133,8 @@
             </div>
         </div>
     </div>
-    {% if is_granted('ROLE_ADMIN_WORDS') and app.session.get('translation_mode') == 'on' %}
+    {# always on the translation tool's previews of mails and pages (in_place_always) #}
+    {% if is_granted('ROLE_ADMIN_WORDS') and (app.session.get('translation_mode') == 'on' or in_place_always ?? false) %}
         {% include 'admin/translations/_in_place.html.twig' %}
     {% endif %}
 </footer>

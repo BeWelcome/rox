@@ -25,9 +25,9 @@ translation.in.place.fallback:
 translation.in.place.defined:
     - 'Translated ({count})'
     - Translation mode, list below the page, heading of the texts that have a translation for the language
-translation.in.place.empty:
-    - 'This page shows no texts that can be translated.'
-    - Translation mode, list below the page, shown when the page used no translatable texts
+translation.in.place.none:
+    - 'None on this page.'
+    - Translation mode, list below the page, shown in a group (missing, not translated yet, translated) that has no texts on this page
 translation.in.place.edit:
     - 'Edit'
     - Translation mode, list below the page, button that opens the translation in the side panel
@@ -40,3 +40,327 @@ translation.in.place.create:
 translation.saved:
     - 'Translation saved'
     - Translation mode, side panel, shown once a translation is saved (the page then shows the new text)
+translation.format:
+    text: 'Format'
+    description: Translation tool, label of the choice how the English text is used on the page
+    format: plain
+translation.format.detect:
+    text: 'Detect from the English text'
+    description: Translation tool, the format choice when no format is set; it is then detected from the English text
+    format: plain
+translation.format.html:
+    text: 'HTML: paragraphs, lists'
+    description: Translation tool, format of a text that is a block of HTML, written with the rich text editor
+    format: plain
+translation.format.inline:
+    text: 'Inline HTML: links or bold within a line, no paragraph'
+    description: Translation tool, format of a text that is part of a line in the page, written with the rich text editor; the paragraph it adds is taken off
+    format: plain
+translation.format.plain:
+    text: 'Plain text: no formatting'
+    description: Translation tool, format of a text without any markup, written in a plain text field
+    format: plain
+translation.format.help:
+    text: 'How the text is used on the page, so that translations fit into their place. Not set, it is detected from the English text: {detected}.'
+    description: Translation tool, help under the format choice of an English text; detected is the format its text shows
+    format: plain
+translation.format.help.create:
+    text: 'How the text is used on the page, so that translations fit into their place. Not set, it is detected from the English text when it is saved.'
+    description: Translation tool, help under the format choice when creating a text
+    format: plain
+translation.format.used:
+    text: 'Format: {format}'
+    description: Translation tool, under the field of a translation, how the text is used on the page (one of the formats)
+    format: plain
+translation.change.title:
+    text: 'What changed in the English text'
+    description: Translation tool, title of the box that shows the last change of the English text when the translation was written before it
+    format: plain
+translation.change.help:
+    text: 'The English text changed on {date}, after this translation was written. Struck out: removed; marked green: added.'
+    description: Translation tool, under the title of the box that shows the last change of the English text; date is the day it changed
+    format: plain
+translation.tool.title:
+    text: 'Translations'
+    description: 'Translation tool, title of its pages'
+    format: plain
+translation.tool.tab.texts:
+    text: 'Texts'
+    description: 'Translation tool, tab with the list of texts'
+    format: plain
+translation.tool.tab.statistics:
+    text: 'Statistics'
+    description: 'Translation tool, tab with the statistics of all languages'
+    format: plain
+translation.tool.tab.mockups:
+    text: 'Mockups'
+    description: 'Translation tool, tab with the previews of mails and pages'
+    format: plain
+translation.tool.group:
+    text: 'Translators group'
+    description: 'Translation tool, link to the group of the translators'
+    format: plain
+translation.tool.wiki:
+    text: 'Translators wiki'
+    description: 'Translation tool, link to the wiki of the translators'
+    format: plain
+translation.tool.new:
+    text: 'New text'
+    description: 'Translation tool, button to create a new English text (members with rights for English)'
+    format: plain
+translation.tool.languages:
+    text: 'Your languages'
+    description: 'Translation tool, heading of the language menu'
+    format: plain
+translation.tool.summary:
+    text: 'Your language at a glance'
+    description: 'Translation tool, label of the summary box (for screen readers)'
+    format: plain
+translation.tool.translated.of:
+    text: 'translated · {done, number} of {total, number}'
+    description: 'Translation tool, below the share translated of a language'
+    format: plain
+translation.tool.views:
+    text: 'Views'
+    description: 'Translation tool, label of the views (missing, needs update, …) for screen readers'
+    format: plain
+translation.tool.view.missing:
+    text: 'Missing'
+    description: 'Translation tool, view of the texts without translation'
+    format: plain
+translation.tool.view.update:
+    text: 'Needs update'
+    description: 'Translation tool, view of the translations whose English text changed since'
+    format: plain
+translation.tool.view.all:
+    text: 'All'
+    description: 'Translation tool, view of all texts to translate'
+    format: plain
+translation.tool.view.donottranslate:
+    text: 'Do not translate'
+    description: 'Translation tool, view of the texts that stay English'
+    format: plain
+translation.tool.view.archived:
+    text: 'Archived'
+    description: 'Translation tool, view of the texts no longer used'
+    format: plain
+translation.tool.state.missing:
+    text: 'Missing'
+    description: 'Translation tool, state of a text without translation'
+    format: plain
+translation.tool.state.update:
+    text: 'Needs update'
+    description: 'Translation tool, state of a translation whose English text changed since'
+    format: plain
+translation.tool.state.ok:
+    text: 'Up to date'
+    description: 'Translation tool, state of a translation that follows its English text'
+    format: plain
+translation.tool.state.dnt:
+    text: 'Do not translate'
+    description: 'Translation tool, state of a text that stays English'
+    format: plain
+translation.tool.state.archived:
+    text: 'Archived'
+    description: 'Translation tool, state of a text no longer used'
+    format: plain
+translation.tool.date.missing:
+    text: 'Added {date}'
+    description: 'Translation tool, below the state of a missing text: when the English text was added'
+    format: plain
+translation.tool.date.update:
+    text: 'English changed {date}'
+    description: 'Translation tool, below the state of an outdated translation: when the English text changed'
+    format: plain
+translation.tool.date.ok:
+    text: 'Translated {date}'
+    description: 'Translation tool, below the state of a translation: when it was written'
+    format: plain
+translation.tool.date.dnt:
+    text: 'Stays English'
+    description: 'Translation tool, below the state of a text that is not translated'
+    format: plain
+translation.tool.date.archived:
+    text: 'Archived {date}'
+    description: 'Translation tool, below the state of an archived text'
+    format: plain
+translation.tool.search:
+    text: 'Search by code, e.g. profile.avatar'
+    description: 'Translation tool, placeholder of the search field'
+    format: plain
+translation.tool.search.clear:
+    text: 'Clear search'
+    description: 'Translation tool, button that removes the search'
+    format: plain
+translation.tool.column.english:
+    text: 'English'
+    description: 'Translation tool, heading of the column with the English texts'
+    format: plain
+translation.tool.column.state:
+    text: 'State'
+    description: 'Translation tool, heading of the column with the state of a text'
+    format: plain
+translation.tool.not.translated:
+    text: 'Not translated. The page shows the English text.'
+    description: 'Translation tool, in place of the translation of a missing text'
+    format: plain
+translation.tool.stays.english:
+    text: 'Stays English everywhere.'
+    description: 'Translation tool, in place of the translation of a text that is not translated'
+    format: plain
+translation.tool.format.html:
+    text: 'HTML'
+    description: 'Translation tool, short name of the format of a text: paragraphs and lists'
+    format: plain
+translation.tool.format.inline:
+    text: 'Inline HTML'
+    description: 'Translation tool, short name of the format of a text: links or bold within a line'
+    format: plain
+translation.tool.format.plain:
+    text: 'Plain text'
+    description: 'Translation tool, short name of the format of a text without markup'
+    format: plain
+translation.tool.range:
+    text: '{from, number}–{to, number} of {total, number}'
+    description: 'Translation tool, which texts of the view the page shows'
+    format: plain
+translation.tool.previous:
+    text: 'Previous'
+    description: 'Translation tool, button to the previous page or text'
+    format: plain
+translation.tool.next:
+    text: 'Next'
+    description: 'Translation tool, button to the next page or text'
+    format: plain
+translation.tool.position:
+    text: '{position, number} of {total, number}'
+    description: 'Translation tool, side panel: which text of the list is open'
+    format: plain
+translation.tool.save.next:
+    text: 'Save and next'
+    description: 'Translation tool, side panel: saves the translation and opens the next text of the list'
+    format: plain
+translation.tool.empty.search:
+    text: 'No text in “{view}” has “{code}” in its code'
+    description: 'Translation tool, title when the search finds nothing in the view'
+    format: plain
+translation.tool.empty.search.help:
+    text: 'The search looks at codes only.'
+    description: 'Translation tool, below the title when the search finds nothing'
+    format: plain
+translation.tool.empty.show.in:
+    text: 'Show in {view} ({count, number})'
+    description: 'Translation tool, button to another view that has texts for the search'
+    format: plain
+translation.tool.empty.missing:
+    text: 'Nothing is missing. Every text is translated.'
+    description: 'Translation tool, the view of missing texts when there are none'
+    format: plain
+translation.tool.empty.update:
+    text: 'Every translation follows its English text.'
+    description: 'Translation tool, the view of outdated translations when there are none'
+    format: plain
+translation.tool.empty.all:
+    text: 'There are no texts to translate.'
+    description: 'Translation tool, the view of all texts when there are none'
+    format: plain
+translation.tool.empty.donottranslate:
+    text: 'No text stays English.'
+    description: 'Translation tool, the view of texts that are not translated when there are none'
+    format: plain
+translation.tool.empty.archived:
+    text: 'No text is archived.'
+    description: 'Translation tool, the view of archived texts when there are none'
+    format: plain
+translation.tool.sort:
+    text: 'Sort'
+    description: 'Translation tool, statistics: label of the sort switch for screen readers'
+    format: plain
+translation.tool.sort.share:
+    text: 'Share translated'
+    description: 'Translation tool, statistics: sort by the share translated'
+    format: plain
+translation.tool.sort.name:
+    text: 'Name'
+    description: 'Translation tool, statistics: sort by the language'
+    format: plain
+translation.tool.sort.recent:
+    text: 'Last change'
+    description: 'Translation tool, statistics: sort by the last change'
+    format: plain
+translation.tool.stats.intro:
+    text: 'Share of the {total, number} English texts translated in each language. Archived texts are not counted.'
+    description: 'Translation tool, statistics: text above the list of languages'
+    format: plain
+translation.tool.stats.yours:
+    text: 'Your languages'
+    description: 'Translation tool, statistics: heading of the languages the member translates'
+    format: plain
+translation.tool.stats.all:
+    text: 'All {count, number} languages'
+    description: 'Translation tool, statistics: heading of the list of all languages'
+    format: plain
+translation.tool.stats.you:
+    text: 'You translate'
+    description: 'Translation tool, statistics: mark of a language the member translates'
+    format: plain
+translation.tool.stats.counts:
+    text: '{missing, number} missing · {outdated, number} to update'
+    description: 'Translation tool, statistics: below the bar of a language'
+    format: plain
+translation.tool.stats.source:
+    text: 'Source language'
+    description: 'Translation tool, statistics: below the bar of English'
+    format: plain
+translation.tool.stats.unknown:
+    text: 'Translator not recorded'
+    description: 'Translation tool, statistics: the last translator of a language is not known'
+    format: plain
+translation.tool.mockups.intro:
+    text: 'Mails and pages of each feature, shown in {language} with test data.'
+    description: 'Translation tool, mockups: text above the features; language is the language the site is shown in'
+    format: plain
+translation.tool.mockups.count:
+    text: '{count, plural, one {# preview} other {# previews}}'
+    description: 'Translation tool, mockups: how many previews a feature has'
+    format: plain
+translation.tool.mockups.preview:
+    text: 'Preview'
+    description: 'Translation tool, mockups: button that shows a mail or a page'
+    format: plain
+translation.tool.mockups.type.mail:
+    text: 'Mail'
+    description: 'Translation tool, mockups: kind of a preview'
+    format: plain
+translation.tool.mockups.type.page:
+    text: 'Page'
+    description: 'Translation tool, mockups: kind of a preview'
+    format: plain
+translation.tool.mockups.type.template:
+    text: 'Template'
+    description: 'Translation tool, mockups: kind of a preview'
+    format: plain
+translation.tool.mockups.url:
+    text: 'Address'
+    description: 'Translation tool, preview of a mail or page: label of the address the page has on the site'
+    format: plain
+translation.tool.mockups.template:
+    text: 'Template'
+    description: 'Translation tool, preview of a mail or page: label of the file it is made from'
+    format: plain
+translation.tool.mockups.variants:
+    text: 'Variants'
+    description: 'Translation tool, preview of a mail or page: label of the list of its variants (for screen readers)'
+    format: plain
+translation.tool.mockups.broken:
+    text: 'This preview can''t be shown.'
+    description: 'Translation tool, preview of a mail or page: shown instead of it when its template or test data is broken'
+    format: plain
+translation.tool.mockups.broken.report:
+    text: 'Its template or its test data is broken. Please start a topic about it in the translators group, with the address of this page, so that it can be fixed.'
+    description: 'Translation tool, preview of a mail or page: below "This preview can''t be shown."'
+    format: plain
+translation.tool.mockups.broken.action:
+    text: 'Start a topic about it in the translators group'
+    description: 'Translation tool, preview of a mail or page that can''t be shown: link to a new topic in the translators group, below it'
+    format: plain

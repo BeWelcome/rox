@@ -1,6 +1,7 @@
 {#
-  Translation mode (translators with the Words right): the texts the page translated, below the page, in three groups:
-  missing (no English original yet), not translated yet (shown in English) and translated. Each opens the edit, add
+  Translation mode (translators with the Words right): the texts the page translated, below the page, in a box per
+  group: missing (no English original yet), not translated yet (shown in English) and translated, each with up to ten
+  texts in view. Each opens the edit, add
   or create page in the side panel (assets/js/translations/in_place.js); once saved, the page shows the new text in
   place. Rendered last in the footer: the texts translated after it (the footer's own end) aren't listed.
 #}
@@ -12,16 +13,16 @@
 ] %}
 <section id="translations" class="c-in-place js-in-place" data-render-url="{{ path('translation_render') }}" aria-labelledby="in-place-title">
     <h2 class="c-in-place__title" id="in-place-title">{{ 'translation.information'|trans }} <span class="c-in-place__locale">{{ app.request.locale }}</span></h2>
-    {% if _texts is empty %}
-        <p class="c-in-place__empty">{{ 'translation.in.place.empty'|trans }}</p>
-    {% endif %}
-    {% for group in _groups %}
-        {% set _items = _texts|filter(text => text.state == group.state) %}
-        {% if _items is not empty %}
-            <details class="c-in-place__group c-in-place__group--{{ group.key }}" {{ group.key != 'defined' ? 'open' }}>
-                <summary class="c-in-place__heading">{{ ('translation.in.place.' ~ group.key)|trans({ count: _items|length }) }}</summary>
-                <ul class="c-in-place__list">
+    {# A box per group, up to ten texts in view, the others by scrolling #}
+    <div class="c-in-place__groups">
+        {% for group in _groups %}
+            {% set _items = _texts|filter(text => text.state == group.state) %}
+            <section class="c-in-place__group c-in-place__group--{{ group.key }} js-in-place-group" data-group="{{ group.key }}"
+                     data-heading="{{ ('translation.in.place.' ~ group.key)|trans({ count: '%count%' }) }}">
+                <h3 class="c-in-place__heading js-in-place-heading">{{ ('translation.in.place.' ~ group.key)|trans({ count: _items|length }) }}</h3>
+                <ul class="c-in-place__list js-in-place-list">
                     {% for text in _items %}
+                        {% set _shown = text.text|striptags %}
                         <li class="c-in-place__item js-in-place-item"
                             data-code="{{ text.code }}"
                             data-locale="{{ text.locale }}"
@@ -29,8 +30,7 @@
                             <div class="c-in-place__body">
                                 <code class="c-in-place__code">{{ text.code }}</code>
                                 <span class="c-in-place__meta">{{ text.domain }}{{ text.locale != app.request.locale ? ' · ' ~ text.locale }}</span>
-                                {% set _shown = text.text|striptags %}
-                                <p class="c-in-place__text js-in-place-text">{{ _shown|length > 160 ? _shown|slice(0, 160) ~ '…' : _shown }}</p>
+                                <p class="c-in-place__text js-in-place-text" title="{{ _shown }}">{{ _shown }}</p>
                             </div>
                             {% if text.action %}
                                 {% set _url = {
@@ -49,9 +49,10 @@
                         </li>
                     {% endfor %}
                 </ul>
-            </details>
-        {% endif %}
-    {% endfor %}
+                <p class="c-in-place__empty js-in-place-empty"{{ _items is not empty ? ' hidden' }}>{{ 'translation.in.place.none'|trans }}</p>
+            </section>
+        {% endfor %}
+    </div>
 </section>
 
 <div class="p-search-preview__backdrop p-contact-drawer__backdrop js-translation-drawer-close" hidden></div>

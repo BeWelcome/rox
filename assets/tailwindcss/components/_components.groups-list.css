@@ -165,17 +165,10 @@ main:has(.p-groups) { background: #f4f5f7; }
 /* The groups a member shows on their profile (templates/group/member_groups.html.twig), under the profile head:
    one white card, the groups inside it two by two, split by thin lines; one column on phones. */
 .p-member-groups { padding-top: 1.5rem; }
-.p-member-groups__manage,
-.p-member-groups__manage:hover { display: inline-flex; align-items: center; gap: 0.45rem; height: 2.3rem; padding: 0 1rem; border-radius: 999px; background: #fff4ea; color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
-.p-member-groups__manage:hover { background: #ffead6; }
-.p-member-groups__manage i, .p-member-groups__manage svg { font-size: 0.8rem; }
 .p-member-groups .card-header .p-gallery-footer__count { margin-left: 0.4rem; letter-spacing: 0; }
 .p-member-groups__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.25rem; }
 .p-member-groups .p-group-card { box-shadow: none; }
 .p-member-groups .p-group-card:hover { background: #f8fafc; box-shadow: none; }
-.p-member-groups__empty { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 2.5rem 1rem; color: #64748b; text-align: center; }
-.p-member-groups__empty p { max-width: 24rem; margin: 0; }
-.p-member-groups__empty-icon { display: inline-flex; align-items: center; justify-content: center; width: 3.5rem; height: 3.5rem; border-radius: 50%; background: #f1f5f9; color: #94a3b8; font-size: 1.25rem; }
 
 @media (max-width: 767.98px) {
   body:has(.p-pro--compact) .p-member-groups { margin: 0 calc(-0.5 * var(--bs-gutter-x, 1.5rem)); padding-top: 0; }

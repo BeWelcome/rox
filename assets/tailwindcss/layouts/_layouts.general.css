@@ -3658,7 +3658,7 @@ main:has(.p-hero) {
 .p-friends-page .card-header,
 .p-member-posts-page .card-header,
 .p-notes-page .card-header,
-.p-member-groups .card-header { align-items: center; padding-right: 1.25rem !important; }
+.p-member-groups .card-header { align-items: center; min-height: 4.25rem; padding-right: 1.25rem !important; }
 
 /* ── Own friendships (/members/{username}/friendships): requests, sent, friends ── */
 .p-friendships { margin: 0; padding: 0; list-style: none; }
@@ -11901,9 +11901,6 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-notes-card__action,
 .p-notes-card__action:hover { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; border-radius: 999px; background: #f8fafc; color: #334155; font-size: 0.85rem; text-decoration: none; cursor: pointer; }
 .p-notes-card__action:hover { background: #f1f5f9; color: #0f172a; }
-.p-notes__empty { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; padding: 2.5rem 1rem; border-radius: 1.25rem; background: #fff; color: #64748b; text-align: center; }
-.p-notes__empty p { margin: 0; }
-.p-notes__empty .p-pro-note__mark { width: 1.6rem; height: 1.6rem; }
 @media (max-width: 767.98px) {
   .p-notes { padding: 1.25rem 0.75rem 2rem; }
   .p-notes .p-notes__title { font-size: 1.6rem; }
@@ -11938,10 +11935,6 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
 .p-notes-page .p-notes-card__action,
 .p-notes-page .p-notes-card__action:hover { width: 2.25rem; height: 2.25rem; font-size: 0.8rem; }
 .p-notes-page .p-notes-card__action:hover { background: #fff1e6; color: #c2410c; }
-.p-notes-page .p-notes__empty { gap: 0.4rem; padding: 3rem 1.5rem; background: none; }
-.p-notes__empty-icon { display: inline-flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; margin-bottom: 0.4rem; border-radius: 50%; background: #fff1e6; color: #ea7a2e; font-size: 1.1rem; }
-.p-notes__empty .p-notes__empty-title { color: #0f172a; font-size: 1rem; font-weight: 600; }
-.p-notes__empty .p-notes__empty-hint { max-width: 26rem; color: #64748b; font-size: 0.875rem; }
 @media (max-width: 767.98px) {
   .p-notes-page .p-notes-card { padding: 1rem 0; }
   .p-notes-page .p-notes-card__avatar img { width: 3rem; height: 3rem; }

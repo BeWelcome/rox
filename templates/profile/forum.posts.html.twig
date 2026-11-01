@@ -28,6 +28,7 @@
             </div>
             <div class="card-body">
                 <input type="hidden" id="keyword" name="keyword" value="{{ search }}">
+                {% if posts.nbResults > 0 or search %}
                 <div class="p-forum__toolbar p-member-posts__toolbar">
                     {{ form_start(search_form, {attr: {class: 'p-forum__search', role: 'search'}}) }}
                         <i class="fas fa-search p-forum__search-icon" aria-hidden="true"></i>
@@ -39,6 +40,7 @@
                         <button type="submit" class="p-forum__btn p-forum__btn--primary">{{ 'search'|trans }}</button>
                     {{ form_end(search_form) }}
                 </div>
+                {% endif %}
 
                 <div class="p-forum__list">
                     {% for post in posts %}
@@ -77,7 +79,7 @@
                             {% endif %}
                         </article>
                     {% else %}
-                        <p class="c-home-list__empty">{{ 'profile.forum.posts.none'|trans }}</p>
+                        {% include 'profile/_tab_empty.html.twig' with { icon: 'comment', text: (search ? 'select.no.results' : 'profile.forum.posts.none')|trans } only %}
                     {% endfor %}
                 </div>
                 {% if posts.haveToPaginate %}

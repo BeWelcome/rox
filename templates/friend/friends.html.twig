@@ -38,10 +38,7 @@
           </a>
         {% endif %}
         {% if friends.nbResults == 0 %}
-          <div class="p-no-comments">
-            <i class="fas fa-user-friends" aria-hidden="true"></i>
-            <p>{{ 'profile.no.friends'|trans }}</p>
-          </div>
+          {% include 'profile/_tab_empty.html.twig' with { icon: 'user-friends', text: 'profile.no.friends'|trans } only %}
         {% else %}
           <ul class="p-friends-page__grid">
             {% for friend in friends %}

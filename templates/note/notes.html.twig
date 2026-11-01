@@ -83,11 +83,11 @@
                     </div>
                 </article>
             {% else %}
-                <div class="p-notes__empty">
-                    <span class="p-notes__empty-icon" aria-hidden="true"><i class="fas fa-lock"></i></span>
-                    <p class="p-notes__empty-title">{{ (search or category ? 'profile.notes.none.found' : 'profile.no.notes')|trans }}</p>
-                    {% if not (search or category) %}<p class="p-notes__empty-hint">{{ 'profile.notes.empty.hint'|trans }}</p>{% endif %}
-                </div>
+                {% include 'profile/_tab_empty.html.twig' with {
+                    icon: 'sticky-note',
+                    text: (search or category ? 'profile.notes.none.found' : 'profile.no.notes')|trans,
+                    hint: search or category ? null : 'profile.notes.empty.hint'|trans,
+                } only %}
             {% endfor %}
         </div>
 

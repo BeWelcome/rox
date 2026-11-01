@@ -56,10 +56,7 @@
             {% endif %}
           {% endfor %}
           {% if shown == 0 %}
-            <div class="p-no-comments">
-              <i class="fas fa-comment-slash" aria-hidden="true"></i>
-              <p>{{ 'profile.no.comments'|trans }}</p>
-            </div>
+            {% include 'profile/_tab_empty.html.twig' with { icon: 'comment-slash', text: 'profile.no.comments'|trans } only %}
           {% endif %}
         </div>
 
@@ -72,7 +69,8 @@
           </div>
         {% endif %}
 
-        {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') %}
+        {# the guidelines for those who write a comment, not on the member's own comments #}
+        {% if member.Status != constant('\\App\\Doctrine\\MemberStatusType::PASSED_AWAY') and app.user != member %}
           <p class="p-comments-page__guidelines"><i class="fas fa-info-circle" aria-hidden="true"></i> <span>{{ 'commentguidlineslink'|trans|raw }}</span></p>
         {% endif %}
       </div>

@@ -42,16 +42,11 @@
           </nav>
         {% endif %}
         {% if pictures|length == 0 %}
-          {% if own %}
-            <div class="p-gallery-empty">
-              <a href="{{ url('gallery_manage_page') }}" class="p-gallery-empty__btn">
-                <i class="fas fa-cloud-upload-alt" aria-hidden="true"></i>
-                <span>{{ 'galleryupload'|trans }}</span>
-              </a>
-            </div>
-          {% else %}
-            <p class="p-profile-empty-hint">{{ 'gallery.no.latest.images'|trans }}</p>
-          {% endif %}
+          {% include 'profile/_tab_empty.html.twig' with {
+            icon: 'image',
+            text: (own ? 'gallery.manage.empty.title' : 'gallery.no.latest.images')|trans,
+            action: own ? { label: 'galleryupload'|trans, url: url('gallery_manage_page'), icon: 'cloud-upload-alt' } : null,
+          } only %}
         {% else %}
           <ul class="p-gallery-page__grid">
             {% for picture in pictures %}

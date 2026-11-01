@@ -31,13 +31,12 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <div class="p-member-groups__empty" id="member-groups">
-                        <span class="p-member-groups__empty-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
-                        <p>{{ own ? 'profile.groups.empty.own'|trans : 'profile.groups.empty'|trans({username: member.username}) }}</p>
-                        {% if own %}
-                            <a class="p-member-groups__manage" href="{{ path('groups_search') }}">{{ 'profile.groups.find'|trans }}</a>
-                        {% endif %}
-                    </div>
+                    {% include 'profile/_tab_empty.html.twig' with {
+                        id: 'member-groups',
+                        icon: 'users',
+                        text: own ? 'profile.groups.empty.own'|trans : 'profile.groups.empty'|trans({username: member.username}),
+                        action: own ? { label: 'profile.groups.find'|trans, url: path('groups_search'), icon: 'search' } : null,
+                    } only %}
                 {% endif %}
             </div>
         </div>

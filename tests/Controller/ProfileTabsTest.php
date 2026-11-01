@@ -65,6 +65,28 @@ final class ProfileTabsTest extends WebTestCase
         self::assertCount(1, $crawler->filter('.p-hero__tabs a[href*="/visitors"] i.fa-eye'));
     }
 
+    /**
+     * An empty tab shows the same box on every tab (profile/_tab_empty.html.twig), with the tab's own text and action.
+     */
+    public function testEmptyTabsShowTheSameBox(): void
+    {
+        $client = static::createClient();
+        $member = $this->getMember('member-2');
+        $connection = static::getContainer()->get(EntityManagerInterface::class)->getConnection();
+        $connection->executeStatement('DELETE FROM mycontacts WHERE IdMember = ?', [$member->getId()]);
+        $connection->executeStatement('DELETE FROM friend WHERE left_id = ? OR right_id = ?', [$member->getId(), $member->getId()]);
+        $connection->executeStatement('DELETE gig FROM gallery_items_to_gallery gig JOIN gallery_items i ON i.id = gig.item_id_foreign WHERE i.user_id_foreign = ?', [$member->getId()]);
+        $connection->executeStatement('DELETE FROM gallery_items WHERE user_id_foreign = ?', [$member->getId()]);
+
+        $client->loginUser($member);
+        foreach (['notes' => 0, 'friends' => 0, 'gallery' => 1] as $tab => $actions) {
+            $crawler = $client->request('GET', '/members/member-2/' . $tab);
+            self::assertResponseIsSuccessful();
+            self::assertCount(1, $crawler->filter('.p-profile-main .p-tab-empty'), $tab);
+            self::assertCount($actions, $crawler->filter('.p-tab-empty .p-tab-empty__action'), $tab);
+        }
+    }
+
     private function getMember(string $username): Member
     {
         $member = static::getContainer()->get(EntityManagerInterface::class)

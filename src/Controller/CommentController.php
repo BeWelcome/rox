@@ -105,7 +105,7 @@ class CommentController extends AbstractController
 
                     $this->addTranslatedFlash('notice', 'flash.feedback.safetyteam');
 
-                    return $this->redirectToRoute('profile_all_comments', ['username' => $member->getUsername()]);
+                    return $this->redirectToRoute('profile_comments', ['username' => $member->getUsername()]);
                 }
 
                 $this->addTranslatedFlash('error', 'flash.feedback.not.sent');

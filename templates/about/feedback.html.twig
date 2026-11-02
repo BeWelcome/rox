@@ -9,19 +9,15 @@
 {% endblock stylesheets %}
 
 {% block javascripts %}
+    {# opens the report hint below when it is there (data-micromodal-open) #}
     {{ encore_entry_script_tags('micromodal') }}
-    <script type="application/javascript">
-        {% if no_modal == false%}
-            MicroModal.show('report-modal');
-        {% endif %}
-    </script>
 {% endblock javascripts %}
 
 {% block content %}
     {# Modal block needs to come before o-text due to css specificity of o-text h2 #}
     {% if form.vars.valid and form.IdCategory.vars.value == 2 and no_modal == false %}
         {% if messageId != null %}
-            <div class="modal micromodal-slide" id="report-modal" aria-hidden="false">
+            <div class="modal micromodal-slide" id="report-modal" aria-hidden="true" data-micromodal-open>
                 <div class="modal__overlay" tabindex="-1" data-micromodal-close>
                     <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
                         <header id="modal-header" class="modal__header">
@@ -44,7 +40,7 @@
                 </div>
             </div>
         {% else %}
-            <div class="modal micromodal-slide" id="report-modal" aria-hidden="false">
+            <div class="modal micromodal-slide" id="report-modal" aria-hidden="true" data-micromodal-open>
                 <div class="modal__overlay" tabindex="-1" data-micromodal-close>
                     <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
                         <header id="modal-header" class="modal__header">

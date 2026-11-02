@@ -45,6 +45,28 @@ class FeedbackTest extends WebTestCase
         $this->assertSelectorTextContains('table', 'zztest feedback question');
     }
 
+    /**
+     * The hint to report a member opens by itself through the micromodal script (assets/js/micromodal.js), not
+     * through an inline script that called a MicroModal the page doesn't have; a plain visit has no hint.
+     */
+    public function testTheReportHintOpensOnlyWhenThereIsOne(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $client->loginUser($entityManager->getRepository(Member::class)->findOneBy(['username' => 'member-2']));
+        $safety = $entityManager->getRepository(FeedbackCategory::class)->findOneBy(['name' => 'safety_and_abuse']);
+
+        $crawler = $client->request('GET', '/feedback');
+        $this->assertResponseIsSuccessful();
+        self::assertCount(0, $crawler->filter('.modal[data-micromodal-open]'));
+        self::assertStringNotContainsString('MicroModal.show', (string) $client->getResponse()->getContent());
+
+        $crawler = $client->request('GET', '/feedback?IdCategory=' . $safety->getId() . '&username=member-3');
+        $this->assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('#report-modal[data-micromodal-open]'));
+        self::assertStringNotContainsString('MicroModal.show', (string) $client->getResponse()->getContent());
+    }
+
     private function loginChecker(KernelBrowser $client): void
     {
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);

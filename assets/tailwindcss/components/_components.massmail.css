@@ -199,8 +199,8 @@ a.c-massmail-list__row:focus-visible { background: #f8fafc; color: #334155; text
 
 /* Test: the usernames next to the button */
 .c-massmail-block { margin-bottom: 1.5rem; }
-.c-massmail-test { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem; padding: 1.5rem 1.75rem; }
-.c-massmail-test__field { flex: 1 1 22rem; min-width: 0; }
-.c-massmail-test__field .o-form-group { margin: 0; }
-.c-massmail-test__field .form-text { display: block; margin-top: 0.3rem; color: #64748b; font-size: 80%; }
-.c-massmail-test__send { padding-bottom: 1.6rem; }
+.c-massmail-test { padding: 1.5rem 1.75rem; }
+.c-massmail-test .o-form-group { margin: 0; }
+.c-massmail-test .form-text { display: block; margin-top: 0.3rem; color: #64748b; font-size: 80%; }
+.c-massmail-test__row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; }
+.c-massmail-test__row .o-input { flex: 1 1 22rem; width: auto; min-width: 0; }

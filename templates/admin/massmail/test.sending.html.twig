@@ -21,11 +21,15 @@
 
     <section class="c-home-card c-massmail-block">
       {{ form_start(form, {attr: {class: 'c-massmail-test'}}) }}
-        <div class="c-massmail-test__field">
-          {{ form_row(form.members) }}
-        </div>
-        <div class="c-massmail-test__send">
-          <button type="submit" class="o-button"><i class="far fa-paper-plane" aria-hidden="true"></i>{{ 'admin.massmail.test.send'|trans }}</button>
+        {# the input and the button in one row, centred on each other; help and errors below #}
+        <div class="o-form-group">
+          {{ form_label(form.members) }}
+          <div class="c-massmail-test__row">
+            {{ form_widget(form.members, {attr: {'aria-describedby': form.members.vars.id ~ '_help'}}) }}
+            <button type="submit" class="o-button"><i class="far fa-paper-plane" aria-hidden="true"></i>{{ 'admin.massmail.test.send'|trans }}</button>
+          </div>
+          {{ form_help(form.members) }}
+          {{ form_errors(form.members) }}
         </div>
       {{ form_end(form) }}
     </section>

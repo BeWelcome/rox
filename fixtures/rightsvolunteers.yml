@@ -87,6 +87,86 @@ App\Entity\RightVolunteer:
         Comment: Granted by the System
         updated: '<dateTime()>'
         created: '<dateTime()>'
+    Admin_bwadmin:
+        member: '@bwadmin'
+        right: '@Admin'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    CommunityNews_bwadmin:
+        member: '@bwadmin'
+        right: '@CommunityNews'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Flags_bwadmin:
+        member: '@bwadmin'
+        right: '@Flags'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Logs_bwadmin:
+        member: '@bwadmin'
+        right: '@Logs'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    ManageSubscriptions_bwadmin:
+        member: '@bwadmin'
+        right: '@ManageSubscriptions'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Profile_bwadmin:
+        member: '@bwadmin'
+        right: '@Profile'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Treasurer_bwadmin:
+        member: '@bwadmin'
+        right: '@Treasurer'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Wiki_bwadmin:
+        member: '@bwadmin'
+        right: '@Wiki'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Accepter_bwadmin:
+        member: '@bwadmin'
+        right: '@Accepter'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    SqlForVolunteers_bwadmin:
+        member: '@bwadmin'
+        right: '@SqlForVolunteers'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
     MembersBeWelcome_member_2:
         member: '@member_2'
         right: '@MembersBeWelcome'
@@ -125,5 +205,173 @@ App\Entity\RightVolunteer:
         level: '10'
         scope: '"All"'
         Comment: Granted by the BW Admin
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Admin_volunteer_admin:
+        member: '@volunteer_admin'
+        right: '@Admin'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Words_volunteer_words:
+        member: '@volunteer_words'
+        right: '@Words'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Group_volunteer_group:
+        member: '@volunteer_group'
+        right: '@Group'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Rights_volunteer_rights:
+        member: '@volunteer_rights'
+        right: '@Rights'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Checker_volunteer_checker:
+        member: '@volunteer_checker'
+        right: '@Checker'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Logs_volunteer_logs:
+        member: '@volunteer_logs'
+        right: '@Logs'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Comments_volunteer_comments:
+        member: '@volunteer_comments'
+        right: '@Comments'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Faq_volunteer_faqs:
+        member: '@volunteer_faqs'
+        right: '@Faq'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Flags_volunteer_flags:
+        member: '@volunteer_flags'
+        right: '@Flags'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    MassMail_volunteer_massmail:
+        member: '@volunteer_massmail'
+        right: '@MassMail'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Treasurer_volunteer_treasurer:
+        member: '@volunteer_treasurer'
+        right: '@Treasurer'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    ForumModerator_volunteer_forummoderator:
+        member: '@volunteer_forummoderator'
+        right: '@ForumModerator'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    SafetyTeam_volunteer_safetyteam:
+        member: '@volunteer_safetyteam'
+        right: '@SafetyTeam'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Poll_volunteer_poll:
+        member: '@volunteer_poll'
+        right: '@Poll'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Wiki_volunteer_wiki:
+        member: '@volunteer_wiki'
+        right: '@Wiki'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Profile_volunteer_profile:
+        member: '@volunteer_profile'
+        right: '@Profile'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    CommunityNews_volunteer_communitynews:
+        member: '@volunteer_communitynews'
+        right: '@CommunityNews'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    MembersBeWelcome_volunteer_newmembersbewelcome:
+        member: '@volunteer_newmembersbewelcome'
+        right: '@MembersBeWelcome'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    ManageSubscriptions_volunteer_managesubscriptions:
+        member: '@volunteer_managesubscriptions'
+        right: '@ManageSubscriptions'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    Accepter_volunteer_accepter:
+        member: '@volunteer_accepter'
+        right: '@Accepter'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
+        updated: '<dateTime()>'
+        created: '<dateTime()>'
+    SqlForVolunteers_volunteer_sqlforvolunteers:
+        member: '@volunteer_sqlforvolunteers'
+        right: '@SqlForVolunteers'
+        level: '10'
+        scope: '"All"'
+        Comment: Granted by the System
         updated: '<dateTime()>'
         created: '<dateTime()>'

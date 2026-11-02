@@ -19,7 +19,8 @@ final class AdminFlagsControllerTest extends WebTestCase
     public function testAccessIsDeniedWithoutFlagsManagementRight(): void
     {
         $client = static::createClient();
-        $this->login($client, 'bwadmin');
+        // member-5 has no rights; bwadmin has them all
+        $this->login($client, 'member-5');
 
         $client->request('GET', '/admin/flags');
 

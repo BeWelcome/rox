@@ -137,3 +137,21 @@ App\Entity\Right:
         Name: 'ManageSubscriptions'
         Description: >-
             'Members with this right can change subscriptionssettings for a member. Level = 1, Scope = \"All\"'
+    Accepter:
+        created: <datetime('2009-05-29 00:00:00')>
+        Name: 'Accepter'
+        Description: >-
+            This is the required right for being able to accept people
+            The level 1 at least is needed
+            This give access to adminaccepter to the updatemandatory of other members
+            This right is for now also used by abuse team since this is the only way to look to the whole data of a member
+            The Scope value allow for defining either Accepting possibility in all countries or accepting in a list of
+            countries (in this case the Name of the countries must be indicated between double quotes and comma separated)
+            As an alternative the id of the country can replace the name, but it must be between double quotes
+    SqlForVolunteers:
+        created: <datetime('2008-06-11 00:00:00')>
+        Name: 'SqlForVolunteers'
+        Description: >-
+            This allow the user to execute some specific query using adminquery page.
+            The Scope can be "All" for all queries or "1";"3";"6" if the user has only rights to execute the specific
+            1 3 and 6 queries.

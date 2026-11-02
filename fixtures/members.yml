@@ -117,3 +117,235 @@ App\Entity\Member:
         Accommodation: 'no'
         MaxGuests: 1
         Gender: 'female'
+    # A volunteer for each right, named like it (faqs: usernames have at least 4 characters)
+    volunteer_admin:
+        Username: 'admin'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'admin\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Admin volunteer'
+        ShortName: 'Admin'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_words:
+        Username: 'words'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'words\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Words volunteer'
+        ShortName: 'Words'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_group:
+        Username: 'group'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'group\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Group volunteer'
+        ShortName: 'Group'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_rights:
+        Username: 'rights'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'rights\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Rights volunteer'
+        ShortName: 'Rights'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_checker:
+        Username: 'checker'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'checker\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Checker volunteer'
+        ShortName: 'Checker'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_logs:
+        Username: 'logs'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'logs\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Logs volunteer'
+        ShortName: 'Logs'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_comments:
+        Username: 'comments'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'comments\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Comments volunteer'
+        ShortName: 'Comments'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_faqs:
+        Username: 'faqs'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'faqs\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Faq volunteer'
+        ShortName: 'Faq'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_flags:
+        Username: 'flags'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'flags\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Flags volunteer'
+        ShortName: 'Flags'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_massmail:
+        Username: 'massmail'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'massmail\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'MassMail volunteer'
+        ShortName: 'MassMail'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_treasurer:
+        Username: 'treasurer'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'treasurer\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Treasurer volunteer'
+        ShortName: 'Treasurer'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_forummoderator:
+        Username: 'forummoderator'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'forummoderator\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'ForumModerator volunteer'
+        ShortName: 'ForumModerator'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_safetyteam:
+        Username: 'safetyteam'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'safetyteam\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'SafetyTeam volunteer'
+        ShortName: 'SafetyTeam'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_poll:
+        Username: 'poll'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'poll\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Poll volunteer'
+        ShortName: 'Poll'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_wiki:
+        Username: 'wiki'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'wiki\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'wiki volunteer'
+        ShortName: 'wiki'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_profile:
+        Username: 'profile'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'profile\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Profile volunteer'
+        ShortName: 'Profile'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_communitynews:
+        Username: 'communitynews'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'communitynews\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'CommunityNews volunteer'
+        ShortName: 'CommunityNews'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_newmembersbewelcome:
+        Username: 'newmembersbewelcome'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'newmembersbewelcome\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'NewMembersBeWelcome volunteer'
+        ShortName: 'NewMembersBeWelcome'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_managesubscriptions:
+        Username: 'managesubscriptions'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'managesubscriptions\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'ManageSubscriptions volunteer'
+        ShortName: 'ManageSubscriptions'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_accepter:
+        Username: 'accepter'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'accepter\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'Accepter volunteer'
+        ShortName: 'Accepter'
+        Gender: 'other'
+        Accommodation: 'no'
+    volunteer_sqlforvolunteers:
+        Username: 'sqlforvolunteers'
+        BirthDate: <dateTime('1980-01-01')>
+        Email: 'sqlforvolunteers\@bewelcome.org'
+        Status: 'Active'
+        RemindersWithoutLogin: 0
+        HideAttribute: 0
+        Name: 'SqlForVolunteers volunteer'
+        ShortName: 'SqlForVolunteers'
+        Gender: 'other'
+        Accommodation: 'no'

@@ -24,7 +24,7 @@ class SuggestLocationController extends AbstractController
 
         $this->logSearchInfo(__METHOD__, $searchTerms);
 
-        $result = $model->getSuggestionsForPlacesExact($searchTerms);
+        $result = [] === $searchTerms ? ['locations' => []] : $model->getSuggestionsForPlacesExact($searchTerms);
         $response->setData($result);
 
         return $response;
@@ -38,7 +38,7 @@ class SuggestLocationController extends AbstractController
 
         $this->logSearchInfo(__METHOD__, $searchTerms);
 
-        $result = $model->getSuggestionsForPlaces($searchTerms);
+        $result = [] === $searchTerms ? ['locations' => []] : $model->getSuggestionsForPlaces($searchTerms);
         $response->setData($result);
 
         return $response;
@@ -52,7 +52,7 @@ class SuggestLocationController extends AbstractController
 
         $this->logSearchInfo(__METHOD__, $searchTerms);
 
-        $result = $model->getSuggestionsForLocations($searchTerms);
+        $result = [] === $searchTerms ? ['locations' => []] : $model->getSuggestionsForLocations($searchTerms);
         $response->setData($result);
 
         return $response;
@@ -64,8 +64,11 @@ class SuggestLocationController extends AbstractController
         $this->logger->debug($function, ['locale' => $this->translator->getLocale(), 'searchTerms' => $searchTerms]);
     }
 
+    /**
+     * The model searches the place in the first term, so the terms are reindexed: ', Berlin' gives ['Berlin'].
+     */
     private function splitElements(string $searchTerm): array
     {
-        return array_filter(array_map(trim(...), explode(',', $searchTerm)), strlen(...));
+        return array_values(array_filter(array_map(trim(...), explode(',', $searchTerm)), strlen(...)));
     }
 }

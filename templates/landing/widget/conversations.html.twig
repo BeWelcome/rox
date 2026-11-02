@@ -36,6 +36,7 @@
                     {# Received (this list only has those): the small orange arrow, as in the inbox list #}
                     <span class="c-home-item__text"><svg class="c-inbox-item__dir c-inbox-item__dir--received" viewBox="0 0 10 10" aria-hidden="true"><path d="M8 2 2 8M6.5 8H2V3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>{{ message.message|striptags|truncate(90) }}</span>
                     {% if request %}{% include 'conversations/_request_state.html.twig' with { request: request, unread: unread, part: 'status' } only %}{% endif %}
+                    {%- if unread %}<span class="c-home-item__dot" aria-hidden="true"></span>{% endif %}
                 </span>
             </span>
         </a>

@@ -159,3 +159,18 @@ invitation.decide.placeholder.decline.short:
 request.status.expired:
     - 'Expired'
     - Status of a hosting request or invitation that got no answer before the arrival date (it can't be answered any more)
+request.decide.prompt:
+    - 'Will you host {username}?'
+    - Question in the stay card of a hosting request, before the Accept, Maybe and Decline buttons (only the host sees it)
+invitation.decide.prompt:
+    - 'Will you stay with {username}?'
+    - Question in the stay card of an invitation, before the Accept, Maybe and Decline buttons (only the invited member sees it)
+request.status.waiting.host:
+    - 'Waiting for your answer'
+    - Status on the stay card of a hosting request or invitation that you have not answered yet
+request.status.waiting.guest:
+    - 'Waiting for an answer'
+    - Status on the stay card of a hosting request or invitation that the other member has not answered yet
+request.strip.your.answer:
+    - 'Your answer'
+    - On phones, short state in the folded stay card of a hosting request or invitation you have not answered yet

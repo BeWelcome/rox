@@ -146,6 +146,11 @@
     {# Results and map #}
     <div class="p-search__body">
         <section class="p-search-results">
+            {# Shown while the next results load (search/locations.js) #}
+            <div class="p-search-loading js-search-loading" hidden>
+                <span class="p-search-loading__spinner" aria-hidden="true"></span>
+                <span>{{ 'search.loading'|trans }}</span>
+            </div>
             {% if hasResults %}
                 <div class="p-search-results__head">
                     <h1 class="p-search-results__count">
@@ -196,10 +201,23 @@
                 <input type="hidden" name="{{ form.direction.vars.full_name }}" value="{{ form.direction.vars.value }}">
                 <input type="hidden" name="{{ form.items.vars.full_name }}" value="{{ form.items.vars.value }}">
                 {% do form.direction.setRendered %}
-                <div class="p-search-results__empty">
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                    <p>{{ pager is not null ? 'search.no.members'|trans : 'search.locations.help'|trans|striptags }}</p>
-                </div>
+                {% if pager is not null %}
+                    <div class="p-search-results__empty">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <p>{{ 'search.no.members'|trans }}</p>
+                    </div>
+                {% else %}
+                    {# Before the first search: what to do, in three short steps #}
+                    <div class="p-search-start">
+                        <span class="p-search-start__icon"><i class="fas fa-map-marked-alt" aria-hidden="true"></i></span>
+                        <h2 class="p-search-start__title">{{ 'search.start.title'|trans }}</h2>
+                        <ul class="p-search-start__tips">
+                            <li><i class="fas fa-map-marker-alt fa-fw" aria-hidden="true"></i><span>{{ 'search.start.place'|trans }}</span></li>
+                            <li><i class="fas fa-clock fa-fw" aria-hidden="true"></i><span>{{ 'search.start.active'|trans }}</span></li>
+                            <li><i class="fas fa-sliders-h fa-fw" aria-hidden="true"></i><span>{{ 'search.start.options'|trans }}</span></li>
+                        </ul>
+                    </div>
+                {% endif %}
             {% endif %}
         </section>
 

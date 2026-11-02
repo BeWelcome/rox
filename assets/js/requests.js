@@ -125,13 +125,12 @@ document.querySelectorAll('.js-request-stepper').forEach((stepper) => {
     refresh();
 });
 
-// The host's answer, in two steps (request/_respond_host.html.twig): pick Accept,
-// Maybe, Decline or "Just reply", then write the message. Send submits as the picked
-// button; "Change" goes back to the choice. The dates (flexible guest) show for Accept
-// and Maybe; "Decline without message" for Decline.
+// The host's answer (request/_respond_host.html.twig): Accept, Maybe or Decline picked
+// in the stay card, then the message. Send submits as the picked button (a plain
+// message without a pick); "Change" goes back to a plain message. The dates (flexible guest) show for Accept
+// and Maybe; Decline may be sent without a message.
 document.querySelectorAll('.js-respond').forEach((form) => {
     const send = form.querySelector('.js-respond-send');
-    const declineLink = form.querySelector('.js-respond-decline-link');
     const steps = form.querySelectorAll('.js-decide-step');
     const write = form.querySelector('.js-decide-step[data-step="write"]');
     const stayDates = form.querySelector('.js-decide-stay');
@@ -152,6 +151,14 @@ document.querySelectorAll('.js-respond').forEach((form) => {
             input.dispatchEvent(new Event('change', { bubbles: true }));
         });
     };
+    const datesButton = form.querySelector('.js-decide-dates');
+    if (datesButton && stayDates) {
+        datesButton.addEventListener('click', () => {
+            const open = stayDates.hidden;
+            stayDates.hidden = !open;
+            datesButton.setAttribute('aria-expanded', String(open));
+        });
+    }
     const choose = (choice, button) => {
         if (write) {
             write.dataset.choice = choice;
@@ -162,34 +169,56 @@ document.querySelectorAll('.js-respond').forEach((form) => {
         if (send && (button || send.dataset.button)) {
             send.name = button || send.dataset.button;
         }
-        if (declineLink) {
-            declineLink.hidden = choice !== 'decline';
-        }
         if (stayDates) {
+            // Other dates only on "Change dates" (accept or maybe)
             const withDates = choice === 'accept' || choice === 'maybe';
             if (!withDates) {
                 resetStay();
             }
-            stayDates.hidden = !withDates;
+            stayDates.hidden = true;
+            if (datesButton) {
+                datesButton.hidden = !withDates;
+                datesButton.setAttribute('aria-expanded', 'false');
+            }
         }
         if (message) {
             message.placeholder = message.dataset['placeholder' + choice.charAt(0).toUpperCase() + choice.slice(1)] || message.placeholder;
         }
     };
 
-    form.querySelectorAll('.js-decide-pick').forEach((pick) => {
+    // Accept, Maybe and Decline are in the stay card above the messages (request/_stay_answer.html.twig)
+    const stayAnswer = document.querySelector('.js-stay-answer');
+    const stayPicks = document.querySelectorAll('.js-stay-pick');
+    // Phones: the stay card folds to its line once an answer is picked; its chevron shows the answers again
+    const foldStay = (folded) => {
+        const card = stayAnswer ? stayAnswer.closest('.c-stay-card') : null;
+        const strip = card ? card.querySelector('.js-stay-strip') : null;
+        if (card && strip) {
+            card.classList.toggle('is-collapsed', folded);
+            strip.setAttribute('aria-expanded', String(!folded));
+        }
+    };
+    const resetStayAnswer = () => {
+        stayPicks.forEach((other) => other.classList.remove('is-picked'));
+    };
+    stayPicks.forEach((pick) => {
         pick.addEventListener('click', () => {
             choose(pick.dataset.choice, pick.dataset.button);
             show('write');
+            stayPicks.forEach((other) => other.classList.toggle('is-picked', other === pick));
+            foldStay(true);
             if (message) {
                 message.focus();
             }
         });
     });
-    const change = form.querySelector('.js-decide-change');
-    if (change) {
-        change.addEventListener('click', () => show('decide'));
-    }
+    // The cross on the picked answer: back to a plain message
+    form.querySelectorAll('.js-decide-change').forEach((change) => {
+        change.addEventListener('click', () => {
+            choose('reply');
+            resetStayAnswer();
+        });
+    });
     if (write) {
         choose(write.dataset.choice);
     }
@@ -209,18 +238,12 @@ document.querySelectorAll('.js-respond').forEach((form) => {
         resize();
 
         // The reply templates are in the "⋯" menu of the stay card (request/_card_menu.html.twig),
-        // outside this form: they name the field. The host still choosing gets "Just reply".
+        // outside this form: they name the field.
         document.querySelectorAll('.js-conversation-template').forEach((button) => {
             if (button.dataset.conversationTemplateEditorId !== text.id) {
                 return;
             }
             button.addEventListener('click', () => {
-                if (write && write.hidden) {
-                    const reply = form.querySelector('.js-decide-pick[data-choice="reply"]');
-                    if (reply) {
-                        reply.click();
-                    }
-                }
                 const holder = document.createElement('div');
                 holder.innerHTML = button.dataset.conversationTemplate
                     .replace(/<\/p>\s*/gi, '\n\n')
@@ -245,6 +268,14 @@ document.querySelectorAll('.js-respond').forEach((form) => {
 
         form.addEventListener('submit', (event) => {
             if (text.value.trim() === '' && !hasPhotos(form)) {
+                // Decline without a message: its own form (request/_respond_host.html.twig)
+                const declineForm = form.parentElement.querySelector('.js-respond-decline-form');
+                if (write && write.dataset.choice === 'decline' && declineForm) {
+                    event.preventDefault();
+                    event.stopImmediatePropagation();
+                    declineForm.submit();
+                    return;
+                }
                 // A message is needed (the server would refuse it anyway).
                 event.preventDefault();
                 event.stopImmediatePropagation();
@@ -286,3 +317,13 @@ initMessagePhotos();
 initBubblePhotos();
 initPlainTextFields();
 initContactSendState();
+
+// Phones: the chevron of the stay card's line (request/_stay_strip.html.twig) hides or shows the answer buttons
+document.querySelectorAll('.js-stay-strip').forEach((strip) => {
+    strip.addEventListener('click', () => {
+        const card = strip.closest('.c-stay-card');
+        const collapsed = !card.classList.contains('is-collapsed');
+        card.classList.toggle('is-collapsed', collapsed);
+        strip.setAttribute('aria-expanded', String(!collapsed));
+    });
+});

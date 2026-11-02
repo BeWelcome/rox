@@ -126,6 +126,7 @@
                         {{ preview|truncate(140) }}
                     </span>
                     {% if message.request %}{% include 'conversations/_request_state.html.twig' with { request: message.request, unread: unread, part: 'status' } only %}{% endif %}
+                    {%- if unread %}<span class="c-inbox-item__dot" aria-hidden="true"></span>{% endif %}
                 </div>
             </div>
         </a>
@@ -141,11 +142,18 @@
     {% set options = { form: null, current: null, initiator: 2, unreadOnly: false, linkBase: null }|merge(options) %}
     {% set form = options.form %}
     {% set member = app.user %}
-    {% set titles = { spam: 'conversations.spam', deleted: 'conversations.deleted' } %}
     {% set initiator = options.initiator|default(2) * 1 %}
     {% set filterParams = {} %}
     {% if initiator != 2 %}{% set filterParams = filterParams|merge({ initiator: initiator }) %}{% endif %}
     {% if options.unreadOnly %}{% set filterParams = filterParams|merge({ unread_only: 1 }) %}{% endif %}
+
+    {% set linkBase = options.linkBase %}
+    {% set segments = { conversations: 'conversations.filter.all', requests: 'requests', invitations: 'invitations' } %}
+    {% set titles = { spam: 'conversations.spam', deleted: 'conversations.deleted', messages: 'conversations.folder.messages' } %}
+    {% set meParams = initiator == 1 ? filterParams|filter((v, k) => k != 'initiator') : filterParams|merge({ initiator: 1 }) %}
+    {% set otherParams = initiator == 3 ? filterParams|filter((v, k) => k != 'initiator') : filterParams|merge({ initiator: 3 }) %}
+    {% set unreadParams = options.unreadOnly ? filterParams|filter((v, k) => k != 'unread_only') : filterParams|merge({ unread_only: 1 }) %}
+    {% set unreadCounts = inbox_unread_counts() %}
 
     <div class="c-inbox-list__head">
         {# On mobile the site header is hidden on the inbox, so this leads back to the home page. #}
@@ -153,37 +161,73 @@
             <i class="fas fa-chevron-left" aria-hidden="true"></i>
             <span class="visually-hidden">{{ 'back'|trans }}</span>
         </a>
-        {# Below 992px the title opens the folder list; on desktop the folders are in the left column. #}
-        <details class="c-inbox-folders">
-            <summary class="c-inbox-list__title">
-                <h2>{{ (titles[folder] ?? folder)|trans }}</h2>
-                <span class="c-inbox-folders__chevron" aria-hidden="true"></span>
-            </summary>
-            {{ inbox.nav(folder, 'menu') }}
-        </details>
-        {% if form and conversations.nbResults > 0 %}
-            <button type="button" class="c-inbox-list__select js-inbox-select" aria-pressed="false"
-                    aria-label="{{ 'select'|trans }}"
-                    data-label-select="{{ 'select'|trans }}" data-label-done="{{ 'conversations.select.done'|trans }}">
-                <i class="fas fa-list-ul c-inbox-list__select-on" aria-hidden="true"></i>
-                <i class="fas fa-times c-inbox-list__select-off" aria-hidden="true"></i>
-            </button>
-        {% endif %}
+        <h2 class="c-inbox-list__title">{{ 'messages'|trans }}</h2>
+        <div class="c-inbox-list__tools">
+            {% if form and conversations.nbResults > 0 %}
+                <button type="button" class="c-inbox-list__select js-inbox-select" aria-pressed="false"
+                        aria-label="{{ 'select'|trans }}"
+                        data-label-select="{{ 'select'|trans }}" data-label-done="{{ 'conversations.select.done'|trans }}">
+                    <i class="fas fa-list-ul c-inbox-list__select-on" aria-hidden="true"></i>
+                    <i class="fas fa-times c-inbox-list__select-off" aria-hidden="true"></i>
+                </button>
+            {% endif %}
+            {# Everything that isn't a type of conversation: unread (phones), plain messages, spam, deleted and who started it #}
+            <details class="c-inbox-more">
+                <summary class="c-inbox-list__select c-inbox-more__toggle" aria-label="{{ 'conversations.more'|trans }}">
+                    <i class="fas fa-ellipsis-h" aria-hidden="true"></i>
+                </summary>
+                <div class="c-inbox-more__menu">
+                    {% if folder not in ['spam', 'deleted'] %}
+                        <a class="c-inbox-more__item c-inbox-more__item--unread{{ options.unreadOnly ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, unreadParams, linkBase) }}">
+                            <i class="fas fa-circle fa-fw" aria-hidden="true"></i> {{ 'conversations.unread'|trans }}
+                        </a>
+                    {% endif %}
+                    {% for key, item in { messages: { label: 'conversations.folder.messages', icon: 'fas fa-envelope' }, spam: { label: 'conversations.spam', icon: 'fas fa-flag' }, deleted: { label: 'conversations.deleted', icon: 'fas fa-trash' } } %}
+                        <a class="c-inbox-more__item{{ folder == key ? ' is-active' : '' }}" href="{{ inbox.folder_url(key) }}"{% if folder == key %} aria-current="page"{% endif %}>
+                            <i class="{{ item.icon }} fa-fw" aria-hidden="true"></i> {{ item.label|trans }}
+                            {% if (unreadCounts[key] ?? 0) > 0 %}<span class="c-inbox-more__count">{{ unreadCounts[key] }}</span>{% endif %}
+                        </a>
+                    {% endfor %}
+                    {% if folder not in ['spam', 'deleted'] %}
+                        <hr class="c-inbox-more__sep">
+                        <a class="c-inbox-more__item{{ initiator == 1 ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, meParams, linkBase) }}">
+                            <i class="fas fa-paper-plane fa-fw" aria-hidden="true"></i> {{ 'started.by.me'|trans }}
+                        </a>
+                        <a class="c-inbox-more__item{{ initiator == 3 ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, otherParams, linkBase) }}">
+                            <i class="fas fa-inbox fa-fw" aria-hidden="true"></i> {{ 'started.by.someone.else'|trans }}
+                        </a>
+                    {% endif %}
+                </div>
+            </details>
+        </div>
     </div>
 
-    {% if folder not in ['spam', 'deleted'] %}
-        {% set meParams = initiator == 1 ? filterParams|filter((v, k) => k != 'initiator') : filterParams|merge({ initiator: 1 }) %}
-        {% set otherParams = initiator == 3 ? filterParams|filter((v, k) => k != 'initiator') : filterParams|merge({ initiator: 3 }) %}
-        {% set unreadParams = options.unreadOnly ? filterParams|filter((v, k) => k != 'unread_only') : filterParams|merge({ unread_only: 1 }) %}
-        {% set allActive = initiator == 2 and not options.unreadOnly %}
-        <div class="c-inbox-filters">
-            <a class="c-inbox-filters__pill c-inbox-filters__pill--all{{ allActive ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, {}, options.linkBase) }}"{% if allActive %} aria-current="true"{% endif %}>{{ 'conversations.filter.all'|trans }}</a>
-            <a class="c-inbox-filters__pill{{ options.unreadOnly ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, unreadParams, options.linkBase) }}"{% if options.unreadOnly %} aria-current="true"{% endif %}>
-                <span class="c-inbox-filters__dot" aria-hidden="true"></span>{{ 'conversations.unread'|trans }}
-            </a>
-            <a class="c-inbox-filters__pill{{ initiator == 1 ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, meParams, options.linkBase) }}"{% if initiator == 1 %} aria-current="true"{% endif %}>{{ 'started.by.me'|trans }}</a>
-            <a class="c-inbox-filters__pill{{ initiator == 3 ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, otherParams, options.linkBase) }}"{% if initiator == 3 %} aria-current="true"{% endif %}>{{ 'started.by.someone.else'|trans }}</a>
-        </div>
+    {# All · Requests · Invitations, and Unread. Plain messages, spam and deleted are in the "⋯" menu. #}
+    <div class="c-inbox-filters">
+        <nav class="c-inbox-seg" aria-label="{{ 'messages'|trans }}">
+            {% for key, label in segments %}
+                <a class="c-inbox-seg__item{{ folder == key ? ' is-active' : '' }}" href="{{ inbox.filter_url(key, folder in ['spam', 'deleted'] ? {} : filterParams, linkBase) }}"
+                   {% if folder == key %}aria-current="page"{% endif %}>
+                    {{- label|trans -}}
+                    {% if key != 'conversations' and (unreadCounts[key] ?? 0) > 0 %}<span class="c-inbox-seg__count">{{ unreadCounts[key] }}</span>{% endif %}
+                </a>
+            {% endfor %}
+        </nav>
+        {% if folder not in ['spam', 'deleted'] %}
+            <a class="c-inbox-filters__pill c-inbox-filters__unread{{ options.unreadOnly ? ' is-active' : '' }}" href="{{ inbox.filter_url(folder, unreadParams, linkBase) }}"{% if options.unreadOnly %} aria-current="true"{% endif %}>{{ 'conversations.unread'|trans }}</a>
+        {% endif %}
+    </div>
+    {% if titles[folder] is defined or initiator != 2 %}
+        {# Where the list stands when it isn't one of the three types: a folder of the "⋯" menu or who started it #}
+        <p class="c-inbox-list__where">
+            {% set titleIcons = { spam: 'fas fa-flag', deleted: 'fas fa-trash', messages: 'fas fa-envelope' } %}
+            {# One pill: the icon and name of each filter, then the cross that clears them #}
+            <span class="c-inbox-list__chip">
+                {% if titles[folder] is defined %}<span><i class="{{ titleIcons[folder] }}" aria-hidden="true"></i> {{ titles[folder]|trans }}</span>{% endif %}
+                {% if initiator != 2 %}<span><i class="fas {{ initiator == 1 ? 'fa-paper-plane' : 'fa-inbox' }}" aria-hidden="true"></i> {{ (initiator == 1 ? 'started.by.me' : 'started.by.someone.else')|trans }}</span>{% endif %}
+                <a href="{{ inbox.folder_url('conversations') }}" aria-label="{{ 'conversations.filter.all'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></a>
+            </span>
+        </p>
     {% endif %}
 
     {% if conversations.nbResults == 0 %}

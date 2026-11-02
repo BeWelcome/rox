@@ -12,8 +12,31 @@
 {% set _admin = is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_SAFETYTEAM'))
   or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_PROFILE'))
   or is_granted(constant('App\\Entity\\Member::ROLE_ADMIN_ADMIN')) %}
-{% set _class = _head ? 'p-pro__facts' : 'p-pro-card p-pro-facts' %}
-<section class="{{ _class }}">
+{% if _head %}
+  {# Large screens: one grey line, the facts split by dots, ending with the last activity #}
+  {% set _last = member.lastActive == null ? member.created : member.lastActive %}
+  {% set _days = _last.diffInDays %}
+  <p class="p-pro__facts">
+    {% if _gender %}<span class="p-pro__fact"><span class="p-pro__fact-label">{{ 'profile.facts.gender'|trans }}: </span>{{ _gender|trans }}</span>{% endif %}
+    {% if _age %}<span class="p-pro__fact">{{ 'places.member.age'|trans({ age: _age }) }}</span>{% endif %}
+    <span class="p-pro__fact">
+      {{- 'profile.member.for'|trans({ duration: member.created.diffForHumans({ syntax: 1 }) }) -}}
+      {%- if _admin %} ({{ member.created|format_datetime() }}){% endif -%}
+    </span>
+    <span class="p-pro__fact p-pro__status{% if _days <= 7 %} is-active{% elseif _days <= 30 %} is-recent{% endif %}">
+      <span class="p-pro__online" aria-hidden="true"></span>
+      {% if _days <= 7 %}
+        {{ 'profile.active.week'|trans }}
+      {% elseif _days <= 30 %}
+        {{ 'profile.active.month'|trans }}
+      {% else %}
+        {{ 'profile.last.activity'|trans }} {{ _last.diffForHumans }}
+      {% endif %}
+      {%- if _admin %} ({{ _last|format_datetime() }}){% endif -%}
+    </span>
+  </p>
+{% else %}
+<section class="p-pro-card p-pro-facts">
   {% if _occupation|length > 0 %}
     <div class="p-pro-facts__row">
       <span class="p-pro-facts__label">{{ 'profile.facts.occupation'|trans({}, 'messages', _language) }}</span>
@@ -38,3 +61,4 @@
     {%- if _admin %} ({{ member.created|format_datetime() }}){% endif %}
   </p>
 </section>
+{% endif %}

@@ -1,0 +1,61 @@
+{#
+  Accept, Maybe and Decline in the stay card, for the member who decides (the host of a
+  hosting request, the invited member of an invitation). A pick sends nothing: it sets the
+  answer of the form at the bottom (request/_respond_host.html.twig, requests.js), whose
+  Send then reads "Send & accept"… Once answered, phones start with them folded: the
+  chevron of the stay line shows them (request/_stay_strip.html.twig).
+  Expects stay (the request), and request_form (view page) or form (reply page).
+#}
+{% set respond = request_form ?? form ?? null %}
+{% if respond and respond.decline is defined %}
+    {% set current = current ?? thread|first %}
+    {% set S = 'App\\Entity\\HostingRequest::' %}
+    {% set asker = current.initiator %}
+    {% set askerName = asker.shortNameOrUsername ?? asker.username %}
+    {% set choices = [] %}
+    {% if stay.status != constant(S ~ 'REQUEST_ACCEPTED') and respond.accept is defined %}
+        {% set choices = choices|merge([{ key: 'accept', button: respond.accept, icon: 'fa fa-check' }]) %}
+    {% endif %}
+    {% if stay.status != constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED') and respond.tentatively is defined %}
+        {% set choices = choices|merge([{ key: 'maybe', button: respond.tentatively, icon: 'fa fa-question' }]) %}
+    {% endif %}
+    {% if stay.status != constant(S ~ 'REQUEST_DECLINED') %}
+        {% set choices = choices|merge([{ key: 'decline', button: respond.decline, icon: 'fa fa-times' }]) %}
+    {% endif %}
+    {% set awaiting = stay.status == constant(S ~ 'REQUEST_OPEN') %}
+
+    {% if choices|length > 0 and stay.status != constant(S ~ 'REQUEST_CANCELLED') %}
+        <div class="c-stay-answer js-stay-answer{{ awaiting ? '' : ' is-answered' }}">
+            <div class="c-stay-answer__row js-stay-choices">
+                <span class="c-stay-answer__q">{{ ((stay.inviteForLeg ? 'invitation' : 'request') ~ '.decide.prompt')|trans({ username: askerName }) }}</span>
+                <div class="c-stay-answer__picks">
+                    {% for choice in choices %}
+                        <button type="button" class="c-stay-answer__pick c-stay-answer__pick--{{ choice.key }} js-stay-pick"
+                                data-choice="{{ choice.key }}" data-button="{{ choice.button.vars.full_name }}"
+                                aria-label="{{ ('request.decide.' ~ choice.key)|trans }}">
+                            <i class="{{ choice.icon }}" aria-hidden="true"></i>
+                            <span class="c-stay-answer__label">{{ ('request.decide.' ~ choice.key)|trans }}</span>
+                        </button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% elseif respond and respond.cancel is defined and respond.message is defined %}
+    {# The member who asked (the guest of a request, the member who invited): on phones the chevron of the stay line shows Cancel (on a computer it is in the card's "⋯" menu) #}
+    {% set S = 'App\\Entity\\HostingRequest::' %}
+    {% if stay.status not in [constant(S ~ 'REQUEST_CANCELLED'), constant(S ~ 'REQUEST_DECLINED')] %}
+        <div class="c-stay-answer c-stay-answer--cancel">
+            <div class="c-stay-answer__row">
+                <div class="c-stay-answer__picks">
+                    <button type="submit" form="js-respond-form" name="{{ respond.cancel.vars.full_name }}" class="c-stay-answer__pick c-stay-answer__pick--decline"
+                            data-confirm="{{ (stay.inviteForLeg ? 'invitation.confirm.cancel' : 'request.confirm.cancel')|trans }}" data-confirm-ok="{{ respond.cancel.vars.label|trans }}" data-confirm-close="{{ 'modal.close'|trans }}"
+                            data-confirm-field="{{ respond.message.vars.id }}" data-confirm-field-placeholder="{{ 'request.cancel.reason'|trans }}">
+                        <i class="fas fa-ban" aria-hidden="true"></i>
+                        <span class="c-stay-answer__label">{{ respond.cancel.vars.label|trans }}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

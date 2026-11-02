@@ -287,3 +287,18 @@ contact.invitation.message.placeholder:
 conversations.state.waiting:
     - 'Waiting'
     - Conversation list, under the dates of a hosting request or invitation that has no answer yet
+conversations.folder.messages:
+    - 'Messages only'
+    - Item of the "⋯" menu above the conversation list, shows only plain messages (no hosting requests or invitations)
+conversations.more:
+    - 'More'
+    - Hidden label of the "⋯" button above the conversation list (unread, messages only, spam, deleted, who started it)
+conversation.write.to:
+    - 'Write to {username}…'
+    - Placeholder of the message field at the bottom of a conversation
+conversation.answer.placeholder:
+    - 'Add a message to your answer…'
+    - Placeholder of the message field at the bottom of a hosting request or invitation once Accept, Maybe or Decline is picked
+conversation.view.profile:
+    - 'View profile'
+    - On phones, item of the "⋯" menu at the top of a conversation that opens the other member's profile

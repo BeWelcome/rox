@@ -22,11 +22,14 @@
 {% set nights = date(request.departure|date('Y-m-d')).diff(date(request.arrival|date('Y-m-d'))).days %}
 {% set sameYear = request.arrival|date('Y') == request.departure|date('Y') %}
 
-<section class="c-stay-card c-stay-card--{{ status.tone }}">
+<section class="c-stay-card c-stay-card--{{ status.tone }}{{ status.key != 'open' or side == 'guest' ? ' is-collapsed' }}">
+    {# Phones: the card as one line (dates, nights, where it stands) #}
+    {% include 'request/_stay_strip.html.twig' with { stay: request, kind_icon: 'fas fa-bed', kind_title: 'request.card.title', decider: side == 'host' } %}
+    <div class="c-stay-card__body">
     <div class="c-stay-card__top">
         <p class="c-stay-card__kind"><i class="fas fa-bed" aria-hidden="true"></i> {{ 'request.card.title'|trans }}</p>
         {% if status.key %}
-            <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ ('request.status.' ~ status.key)|trans }}</span>
+            <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ (status.key == 'open' ? 'request.status.waiting.' ~ (side == 'host' ? 'host' : 'guest') : 'request.status.' ~ status.key)|trans }}</span>
         {% endif %}
         {% include 'request/_card_menu.html.twig' with { stay: request, confirm: 'request.confirm.cancel', dates: side == 'guest' } %}
     </div>
@@ -49,4 +52,7 @@
             <li><i class="fas fa-lock" aria-hidden="true"></i> {{ 'request.card.not.flexible'|trans }}</li>
         {% endif %}
     </ul>
+    </div>
+    {# The answer of the member who decides (Accept, Maybe, Decline): it picks the answer of the form at the bottom #}
+    {% if status.key != 'expired' %}{% include 'request/_stay_answer.html.twig' with { stay: request } %}{% endif %}
 </section>

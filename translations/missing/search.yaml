@@ -40,3 +40,18 @@ search.countries:
 search.view.list:
     - 'List'
     - Button on the search results (phones) that shows the results as a list instead of the map
+search.start.title:
+    - 'Where are you going?'
+    - Title on the search page before the first search, above three short tips
+search.start.place:
+    - 'Type a city or a region, then pick it from the list. Add the country if your place is missing.'
+    - First tip on the search page before the first search, about the place field
+search.start.active:
+    - 'You see members who logged in during the last two years.'
+    - Second tip on the search page before the first search, about which members are shown
+search.start.options:
+    - 'Filters and sort order are in Search options. They are kept until you reset them.'
+    - Third tip on the search page before the first search, about the Search options panel
+search.loading:
+    - 'Searching…'
+    - Shown over the search results while new results load

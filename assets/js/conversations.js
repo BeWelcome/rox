@@ -6,7 +6,7 @@ const form = document.querySelector('.js-inbox-form');
 
 // The folder drop-down under the list title closes when clicking elsewhere.
 document.addEventListener('click', (event) => {
-    document.querySelectorAll('details.c-inbox-folders[open], details.c-inbox-head__menu[open]').forEach((menu) => {
+    document.querySelectorAll('details.c-inbox-folders[open], details.c-inbox-more[open], details.c-inbox-head__menu[open]').forEach((menu) => {
         if (!menu.contains(event.target)) {
             menu.removeAttribute('open');
         }

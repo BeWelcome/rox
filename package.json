@@ -115,6 +115,7 @@
   },
   "resolutions": {
     "@types/minimatch": "5.1.2",
-    "postcss-selector-parser": "^7.1.6"
+    "postcss-selector-parser": "^7.1.6",
+    "postcss-url/minimatch": "^11.0.1"
   }
 }

@@ -67,6 +67,25 @@ class FeedbackTest extends WebTestCase
         self::assertStringNotContainsString('MicroModal.show', (string) $client->getResponse()->getContent());
     }
 
+    /**
+     * Sending a report without adding to the prefilled text keeps the member on the page with one error at the
+     * message, not the same error twice.
+     */
+    public function testAnUnchangedReportShowsItsErrorOnce(): void
+    {
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $client->loginUser($entityManager->getRepository(Member::class)->findOneBy(['username' => 'member-2']));
+        $safety = $entityManager->getRepository(FeedbackCategory::class)->findOneBy(['name' => 'safety_and_abuse']);
+
+        $crawler = $client->request('GET', '/feedback?IdCategory=' . $safety->getId() . '&username=member-3');
+        $crawler = $client->submit($crawler->selectButton('submit')->form());
+
+        $this->assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('.form-error-message'));
+        self::assertCount(1, $crawler->filter('label[for="FeedbackQuestion"] .form-error-message'));
+    }
+
     private function loginChecker(KernelBrowser $client): void
     {
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);

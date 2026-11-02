@@ -41,6 +41,12 @@ main.p-about { background: #f4f5f7; }
 .p-about__body #faqs dt svg { margin-right: 0.4rem; color: #ea7a2e; }
 .p-about__body #faqs dd { margin: 0 0 1rem 1.6rem; }
 
+/* Form errors: only the message (the theme's "Error" badge has no colours with Bootstrap 5 and only leaves a gap),
+   on as many lines as it needs (the theme gives each error a fixed height) */
+.p-about .form-error-icon { display: none; }
+.p-about .invalid-feedback { margin: 0.2rem 0 0; }
+.p-about .invalid-feedback > span { height: auto; line-height: 1.4; }
+
 /* The hint of the feedback page for a safety report: a white card over the page, like the confirm dialogs of the
    other pages. The micromodal classes (modal__overlay, modal__container) only bring the opening animation. */
 .p-about-hint .p-about-hint__overlay { padding: 1rem; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }

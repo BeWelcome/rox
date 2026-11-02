@@ -48,7 +48,7 @@
                             <i class="fa fa-calendar" aria-hidden="true"></i> <span class="c-decide__change-label">{{ 'request.respond.change'|trans }}</span>
                         </button>
                     {% endif %}
-                    <button type="button" class="c-decide__unpick js-decide-change" aria-label="{{ 'request.decide.change'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></button>
+                    <button type="button" class="c-decide__unpick c-decide__unpick--quiet js-decide-change" aria-label="{{ 'request.decide.change'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></button>
                 </div>
             {% endfor %}
         </div>
@@ -86,6 +86,7 @@
                       data-placeholder-accept="{{ 'conversation.answer.placeholder'|trans }}"
                       data-placeholder-maybe="{{ 'conversation.answer.placeholder'|trans }}"
                       data-placeholder-decline="{{ 'conversation.answer.placeholder'|trans }}"
+                      data-placeholder-short="{{ 'conversation.answer.placeholder.short'|trans }}"
                       data-placeholder-reply="{{ 'conversation.write.to'|trans({ username: guestName }) }}">
                 {{- respond.message.vars.value|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim -}}
             </textarea>

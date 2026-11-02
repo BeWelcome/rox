@@ -302,3 +302,6 @@ conversation.answer.placeholder:
 conversation.view.profile:
     - 'View profile'
     - On phones, item of the "⋯" menu at the top of a conversation that opens the other member's profile
+conversation.answer.placeholder.short:
+    - 'Add a message…'
+    - Placeholder of the message on phones once the host picked Accept, Maybe or Decline (short, one line)

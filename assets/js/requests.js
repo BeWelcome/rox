@@ -185,7 +185,9 @@ document.querySelectorAll('.js-respond').forEach((form) => {
             });
         }
         if (message) {
-            message.placeholder = message.dataset['placeholder' + choice.charAt(0).toUpperCase() + choice.slice(1)] || message.placeholder;
+            // Phones: a short placeholder once an answer is picked, so it stays on one line
+            const short = choice !== 'reply' && window.matchMedia('(max-width: 767.98px)').matches ? message.dataset.placeholderShort : null;
+            message.placeholder = short || message.dataset['placeholder' + choice.charAt(0).toUpperCase() + choice.slice(1)] || message.placeholder;
         }
     };
 

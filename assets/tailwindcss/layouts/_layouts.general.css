@@ -13041,3 +13041,30 @@ body:has(.l-hello) main { background: #fffaf4; }
   .c-stay2 .c-stay2__question { font-size: 0.9375rem; }
   .c-stay2 .c-stay2__pick { padding: 0.45rem 1rem; font-size: 0.875rem; }
 }
+
+/* An answer picked: the whole answer area takes its light colour, the band loses its own box (compact) */
+.c-inbox-compose--respond:has(.c-decide__write[data-choice="accept"]),
+.c-inbox__pane .c-inbox-compose--respond:has(.c-decide__write[data-choice="accept"]) { background: #e3f7e8; border-top-color: #cdebd5; transition: background 0.25s ease; }
+.c-inbox-compose--respond:has(.c-decide__write[data-choice="maybe"]),
+.c-inbox__pane .c-inbox-compose--respond:has(.c-decide__write[data-choice="maybe"]) { background: #fdf3cd; border-top-color: #f8e3a3; transition: background 0.25s ease; }
+.c-inbox-compose--respond:has(.c-decide__write[data-choice="decline"]),
+.c-inbox__pane .c-inbox-compose--respond:has(.c-decide__write[data-choice="decline"]) { background: #fee2e2; border-top-color: #fecaca; transition: background 0.25s ease; }
+.c-decide__write .c-decide__top { margin: 0 0 0.5rem; }
+.c-decide__write .c-decide__picked--accept, .c-decide__write .c-decide__picked--maybe, .c-decide__write .c-decide__picked--decline { gap: 0.65rem; padding: 0; background: none; }
+.c-decide__picked-icon { width: 2rem; height: 2rem; font-size: 0.85rem; }
+.c-decide__picked-text { flex-direction: row; flex-wrap: wrap; align-items: baseline; column-gap: 0.5rem; }
+.c-decide__picked-text strong { font-size: 0.9375rem; }
+.c-decide__write .c-decide__picked .c-decide__unpick { width: 2rem; height: 2rem; background: rgba(255, 255, 255, 0.8); font-size: 0.8rem; }
+.c-decide__write .c-decide__picked .c-decide__change { padding: 0.25rem 0.6rem; border-radius: 999px; background: rgba(255, 255, 255, 0.8); }
+.c-decide__write:not([data-choice="reply"]) .c-decide__text,
+.c-inbox__pane .c-decide .c-decide__write:not([data-choice="reply"]) .c-decide__foot--inline .c-decide__text { background: #fff; }
+@media (max-width: 767.98px) {
+  .c-decide__write .c-decide__picked--accept, .c-decide__write .c-decide__picked--maybe, .c-decide__write .c-decide__picked--decline { padding: 0; }
+  .c-decide__picked-icon { width: 1.8rem; height: 1.8rem; }
+  .c-decide__picked-text { flex-direction: column; }
+  .c-decide__write .c-decide__picked .c-decide__unpick, .c-decide__write .c-decide__picked .c-decide__change { width: 1.9rem; height: 1.9rem; padding: 0; }
+}
+/* Picked: the colour reaches both sides of the pane; back to a plain message is a small grey cross */
+.c-inbox-compose--respond:has(.c-decide__write:not([data-choice="reply"])) { margin-right: 0; margin-left: 0; border-radius: 0; }
+.c-decide__write .c-decide__picked .c-decide__unpick--quiet { width: 1.75rem; height: 1.75rem; padding: 0; border-radius: 50%; background: none; color: #94a3b8; font-size: 0.8rem; transform: none; }
+.c-decide__write .c-decide__picked .c-decide__unpick--quiet:hover { background: rgba(15, 23, 42, 0.06); color: #475569; transform: none; }

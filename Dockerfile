@@ -5,7 +5,7 @@
 
 # https://docs.docker.com/engine/reference/builder/#understand-how-arg-and-from-interact
 ARG PHP_VERSION=8.3.36
-ARG NGINX_VERSION=1.30.4
+ARG NGINX_VERSION=1.30.6
 
 
 # "php" stage

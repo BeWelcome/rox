@@ -47,7 +47,6 @@
     "autoprefixer": "^10.4.12",
     "bootstrap": "^4.6.2",
     "bootstrap-autohidingnavbar": "github:istvan-ujjmeszaros/bootstrap-autohidingnavbar",
-    "bootstrap4": "0.0.1-security",
     "bs-custom-file-input": "^1.3.4",
     "chart.js": "^3.9.1",
     "circle-flags": "^2.8.3",
@@ -116,6 +115,7 @@
   },
   "resolutions": {
     "@types/minimatch": "5.1.2",
-    "postcss-selector-parser": "^7.1.6"
+    "postcss-selector-parser": "^7.1.6",
+    "postcss-url/minimatch": "^11.0.1"
   }
 }

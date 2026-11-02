@@ -25,17 +25,20 @@
           {% endif %}
         </span>
         {% if member == app.user %}
-          <a class="p-friends-page__manage" href="{{ url('friendships', {username: member.username}) }}">
-            <i class="fas fa-edit" aria-hidden="true"></i> {{ 'friendships.manage'|trans }}
+          <a class="p-gallery-manage-btn" href="{{ url('friendships', {username: member.username}) }}">
+            <i class="fas fa-edit" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'friendships.manage'|trans }}</span>
           </a>
         {% endif %}
       </div>
       <div class="card-body">
+        {# Phones: the head above is hidden, the button to manage the friendships comes first #}
+        {% if member == app.user %}
+          <a class="p-gallery-manage-btn p-gallery-manage-btn--phone" href="{{ url('friendships', {username: member.username}) }}">
+            <i class="fas fa-edit" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'friendships.manage'|trans }}</span>
+          </a>
+        {% endif %}
         {% if friends.nbResults == 0 %}
-          <div class="p-no-comments">
-            <i class="fas fa-user-friends" aria-hidden="true"></i>
-            <p>{{ 'profile.no.friends'|trans }}</p>
-          </div>
+          {% include 'profile/_tab_empty.html.twig' with { icon: 'user-friends', text: 'profile.no.friends'|trans } only %}
         {% else %}
           <ul class="p-friends-page__grid">
             {% for friend in friends %}

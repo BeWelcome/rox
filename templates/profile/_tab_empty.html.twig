@@ -1,0 +1,17 @@
+{#
+  What a tab of the profile shows when it has nothing (no comments, pictures, friends, posts, notes, groups, views):
+  the same box on every tab, as tall on each, with an icon in a circle, the text, a hint and an action, if any.
+  icon (Font Awesome name, without fa-), text, hint (optional), action ({ label, url, icon }, optional),
+  id (optional, the box's id).
+#}
+<div class="p-tab-empty"{% if id is defined and id %} id="{{ id }}"{% endif %}>
+    <span class="p-tab-empty__icon" aria-hidden="true"><i class="fas fa-{{ icon }}"></i></span>
+    <p class="p-tab-empty__text">{{ text }}</p>
+    {% if hint is defined and hint %}<p class="p-tab-empty__hint">{{ hint }}</p>{% endif %}
+    {% if action is defined and action %}
+        <a class="p-tab-empty__action" href="{{ action.url }}">
+            {% if action.icon is defined %}<i class="fas fa-{{ action.icon }}" aria-hidden="true"></i>{% endif %}
+            {{ action.label }}
+        </a>
+    {% endif %}
+</div>

@@ -64,11 +64,12 @@ final class ProfileGroupsTest extends WebTestCase
         $crawler = $this->request('/members/member-2/groups');
         self::assertCount(1, $crawler->filter('.p-pro'));
         self::assertGreaterThanOrEqual(2, $crawler->filter('#member-groups .p-group-card')->count());
-        self::assertCount(0, $crawler->filter('.p-member-groups__manage'));
+        self::assertCount(0, $crawler->filter('.p-member-groups a[href="/groups/mygroups"]'));
 
+        // the member chooses the groups shown from the card's head, like managing the gallery
         $this->client->loginUser($this->member);
         $crawler = $this->request('/members/member-2/groups');
-        self::assertCount(1, $crawler->filter('.p-member-groups__manage[href="/groups/mygroups"]'));
+        self::assertCount(1, $crawler->filter('.p-member-groups .card-header a[href="/groups/mygroups"]'));
     }
 
     public function testTheGroupsMemberSettingsHaveTheChoiceToo(): void

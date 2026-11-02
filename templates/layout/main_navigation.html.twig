@@ -99,8 +99,6 @@
                                               class="dropdown-item text-left">{{ 'profile.menu.edit.profile' | trans }}</a></li>
                     <li><a href="{{ path('preferences', {'username': loggedInMember.username}) }}"
                                               class="dropdown-item text-left">{{ 'profile.menu.preferences' | trans }}</a></li>
-                    <li><a href="{{ path('notes', {'username': loggedInMember.username}) }}"
-                                              class="dropdown-item text-left">{{ 'profile.menu.my.notes' | trans }}</a></li>
                     <li><a href="{{ url('trips') }}" class="dropdown-item text-left">{{ 'trips.mytrips' | trans }}</a></li>
                     <li><a href="{{ path('change_password', {'username': loggedInMember.username}) }}"
                                               class="dropdown-item text-left">{{ 'profile.change.password.menu' | trans }}</a></li>

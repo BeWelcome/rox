@@ -12,6 +12,13 @@
   {{ parent() }}
   {{ encore_entry_link_tags('lightbox') }}
   {{ encore_entry_link_tags('leaflet') }}
+  {# Between the profile's pages (its tabs) the browser keeps the head and the tabs in place and fades the content,
+     instead of showing a new page (browsers with cross-document view transitions; the others load the page as before) #}
+  <style>
+    @view-transition { navigation: auto; }
+    .p-pro { view-transition-name: profile-head; }
+    .p-pro__tabs-wrap { view-transition-name: profile-tabs; }
+  </style>
 {% endblock %}
 
 {% block main %}

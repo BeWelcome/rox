@@ -162,8 +162,8 @@ class ProfileSubmenu
         ]);
         if ($parameters['show_visitors']) {
             $this->addSubmenuItem('visitors', [
-                'key' => 'myvisitors',
-                'icon' => '',
+                'key' => 'profile.menu.views',
+                'icon' => 'eye',
                 'url' => $this->routing->generate('profile_visitors', ['username' => $username]),
             ]);
         }

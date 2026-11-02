@@ -1,8 +1,8 @@
 {% extends 'profile/profile.html.twig' %}
 {#
-  A member's forum posts, newest first, laid out like the forum's lists (/group/0/forum): the search, then a white
-  card per post with its thread, its group and when it was written, and the text. Only the posts the viewer may read
-  in the forum (ForumPostRepository::getForumPostsByMember()).
+  A member's forum posts, newest first, in the card of the profile's tabs (like the gallery and the friends): the
+  search, then a row per post with its thread, its group and when it was written, and the text. Only the posts the
+  viewer may read in the forum (ForumPostRepository::getForumPostsByMember()).
 #}
 {% import 'forum/_macros.html.twig' as forum %}
 
@@ -18,62 +18,76 @@
 {% endblock stylesheets %}
 
 {% block page_content %}
-    <input type="hidden" id="keyword" name="keyword" value="{{ search }}">
-    <div class="p-forum__toolbar p-member-posts__toolbar">
-        {{ form_start(search_form, {attr: {class: 'p-forum__search', role: 'search'}}) }}
-            <i class="fas fa-search p-forum__search-icon" aria-hidden="true"></i>
-            {{ form_widget(search_form.q, {attr: {
-                class: 'p-forum__search-input',
-                placeholder: 'forum.search.term'|trans,
-                'aria-label': 'forum.search.term'|trans,
-            }}) }}
-            <button type="submit" class="p-forum__btn p-forum__btn--primary">{{ 'search'|trans }}</button>
-        {{ form_end(search_form) }}
-    </div>
-
-    <div class="p-forum__list">
-        {% for post in posts %}
-            {% set thread = post.thread %}
-            {% set visibility = post.postVisibility %}
-            {# only forum moderators and admins get deleted posts #}
-            {% set deleted = post.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
-            <article class="p-member-post{{ deleted ? ' is-deleted' }}" id="post{{ post.id }}">
-                <header class="p-member-post__head">
-                    <a class="c-home-item__title c-home-item__title--link" href="{{ forum.thread_url(thread) }}#post{{ post.id }}">{{ forum.thread_title(thread, app.request.locale) }}</a>
-                    <p class="c-home-item__meta">
-                        {% if not thread.agora %}
-                            <a class="c-home-item__group" href="{{ path('group_start', {group_id: thread.group.id}) }}">{{ thread.group.name }}</a> ·
-                        {% endif %}
-                        <time datetime="{{ post.created|date('c') }}" title="{{ post.created|format_datetime('medium', 'short') }}">{{ post.created.diffForHumans }}</time>
-                        {% if visibility == constant('App\\Doctrine\\ForumVisibilityType::GROUP_ONLY') %}
-                            · <i class="fas fa-lock" aria-hidden="true"></i> {{ 'forum.post.group.only'|trans }}
-                        {% elseif visibility == constant('App\\Doctrine\\ForumVisibilityType::MODERATOR_ONLY') %}
-                            · <i class="fas fa-lock" aria-hidden="true"></i> {{ ('forum_edit_vis_' ~ visibility)|lower|trans }}
-                        {% endif %}
-                    </p>
-                </header>
-                {# As on the thread page: the text in the reader's language if there is one, then the languages it is in #}
-                <div class="p-member-post__text js-highlight">
-                    {% if deleted %}<s>{% endif %}
-                    {{ post.messageIn(app.request.locale).message|purify|forum_text|forum_lightbox }}
-                    {% if deleted %}</s>{% endif %}
+    <div class="p-member-posts-page p-profile-main">
+        <div class="card">
+            <div class="card-header u:flex u:flex-row u:justify-between">
+                <span>
+                    {{ 'profile.menu.forum.posts'|trans }}
+                    {% if posts.nbResults > 0 %}<span class="p-gallery-footer__count">{{ posts.nbResults }}</span>{% endif %}
+                </span>
+            </div>
+            <div class="card-body">
+                <input type="hidden" id="keyword" name="keyword" value="{{ search }}">
+                {% if posts.nbResults > 0 or search %}
+                <div class="p-forum__toolbar p-member-posts__toolbar">
+                    {{ form_start(search_form, {attr: {class: 'p-forum__search', role: 'search'}}) }}
+                        <i class="fas fa-search p-forum__search-icon" aria-hidden="true"></i>
+                        {{ form_widget(search_form.q, {attr: {
+                            class: 'p-forum__search-input',
+                            placeholder: 'forum.search.term'|trans,
+                            'aria-label': 'forum.search.term'|trans,
+                        }}) }}
+                        <button type="submit" class="p-forum__btn p-forum__btn--primary">{{ 'search'|trans }}</button>
+                    {{ form_end(search_form) }}
                 </div>
-                {% set translations = post.messageTranslations %}
-                {% if translations|length > 1 %}
-                    <p class="p-member-post__languages">
-                        {%- for translation in translations -%}
-                            {{ translation.language.name }}{% if not loop.last %}, {% endif %}
-                        {%- endfor -%}
-                    </p>
                 {% endif %}
-            </article>
-        {% else %}
-            <p class="c-home-list__empty">{{ 'profile.forum.posts.none'|trans }}</p>
-        {% endfor %}
-    </div>
-    {% if posts.haveToPaginate %}
-        <div class="u:flex u:justify-end u:my-8">
-            {{ pagerfanta(posts, 'rounded_pagination') }}
+
+                <div class="p-forum__list">
+                    {% for post in posts %}
+                        {% set thread = post.thread %}
+                        {% set visibility = post.postVisibility %}
+                        {# only forum moderators and admins get deleted posts #}
+                        {% set deleted = post.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
+                        <article class="p-member-post{{ deleted ? ' is-deleted' }}" id="post{{ post.id }}">
+                            <header class="p-member-post__head">
+                                <a class="c-home-item__title c-home-item__title--link" href="{{ forum.thread_url(thread) }}#post{{ post.id }}">{{ forum.thread_title(thread, app.request.locale) }}</a>
+                                <p class="c-home-item__meta">
+                                    {% if not thread.agora %}
+                                        <a class="c-home-item__group" href="{{ path('group_start', {group_id: thread.group.id}) }}">{{ thread.group.name }}</a> ·
+                                    {% endif %}
+                                    <time datetime="{{ post.created|date('c') }}" title="{{ post.created|format_datetime('medium', 'short') }}">{{ post.created.diffForHumans }}</time>
+                                    {% if visibility == constant('App\\Doctrine\\ForumVisibilityType::GROUP_ONLY') %}
+                                        · <i class="fas fa-lock" aria-hidden="true"></i> {{ 'forum.post.group.only'|trans }}
+                                    {% elseif visibility == constant('App\\Doctrine\\ForumVisibilityType::MODERATOR_ONLY') %}
+                                        · <i class="fas fa-lock" aria-hidden="true"></i> {{ ('forum_edit_vis_' ~ visibility)|lower|trans }}
+                                    {% endif %}
+                                </p>
+                            </header>
+                            {# As on the thread page: the text in the reader's language if there is one, then the languages it is in #}
+                            <div class="p-member-post__text js-highlight">
+                                {% if deleted %}<s>{% endif %}
+                                {{ post.messageIn(app.request.locale).message|purify|forum_text|forum_lightbox }}
+                                {% if deleted %}</s>{% endif %}
+                            </div>
+                            {% set translations = post.messageTranslations %}
+                            {% if translations|length > 1 %}
+                                <p class="p-member-post__languages">
+                                    {%- for translation in translations -%}
+                                        {{ translation.language.name }}{% if not loop.last %}, {% endif %}
+                                    {%- endfor -%}
+                                </p>
+                            {% endif %}
+                        </article>
+                    {% else %}
+                        {% include 'profile/_tab_empty.html.twig' with { icon: 'comment', text: (search ? 'select.no.results' : 'profile.forum.posts.none')|trans } only %}
+                    {% endfor %}
+                </div>
+                {% if posts.haveToPaginate %}
+                    <div class="u:flex u:justify-end u:my-8">
+                        {{ pagerfanta(posts, 'rounded_pagination') }}
+                    </div>
+                {% endif %}
+            </div>
         </div>
-    {% endif %}
+    </div>
 {% endblock page_content %}

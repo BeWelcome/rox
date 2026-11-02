@@ -28,3 +28,13 @@
   padding-top: 8px;
   padding-bottom: 16px;
 }
+
+/* An empty tab of the profile (profile/_tab_empty.html.twig): the same box on every tab, as tall on each, an icon in
+   a circle, the text, a hint and an action */
+.p-tab-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; min-height: 15rem; padding: 2rem 1rem; text-align: center; }
+.p-tab-empty__icon { display: inline-flex; align-items: center; justify-content: center; width: 3rem; height: 3rem; margin-bottom: 0.4rem; border-radius: 50%; background: #fff1e6; color: #ea7a2e; font-size: 1.1rem; }
+.p-profile-main .p-tab-empty .p-tab-empty__text { max-width: 28rem; margin: 0; color: #0f172a; font-size: 1rem; font-weight: 600; line-height: 1.4; }
+.p-profile-main .p-tab-empty .p-tab-empty__hint { max-width: 26rem; margin: 0; color: #64748b; font-size: 0.875rem; line-height: 1.5; }
+.p-tab-empty__action,
+.p-tab-empty__action:hover { display: inline-flex; align-items: center; gap: 0.45rem; margin-top: 0.6rem; padding: 0.55rem 1.2rem; border-radius: 999px; background: #f37000; color: #fff; font-size: 0.875rem; font-weight: 700; text-decoration: none; }
+.p-tab-empty__action:hover { background: #e06600; color: #fff; }

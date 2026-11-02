@@ -6,7 +6,7 @@
     <div class="card">
       <div class="card-header u:flex u:flex-row u:justify-between">
         <span>
-          {{ 'myvisitors'|trans }}
+          {{ 'profile.menu.views'|trans }}
           {% if visits.nbResults > 0 %}
             <span class="p-gallery-footer__count">{{ visits.nbResults }}</span>
           {% endif %}
@@ -14,10 +14,7 @@
       </div>
       <div class="card-body">
         {% if visits.nbResults == 0 %}
-          <div class="p-no-comments">
-            <i class="fas fa-eye" aria-hidden="true"></i>
-            <p>{{ 'profile.visitors.none.visible'|trans }}</p>
-          </div>
+          {% include 'profile/_tab_empty.html.twig' with { icon: 'eye', text: 'profile.visitors.none.visible'|trans } only %}
         {% else %}
           <ul class="p-friends-page__grid" id="visitors">
             {% for visit in visits %}

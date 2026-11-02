@@ -1,25 +1,29 @@
 {% extends 'profile/profile.html.twig' %}
 
 {#
-  The groups a member shows on their profile (GroupPagesController::memberGroups), under the profile head:
-  one card with the title and the number, then the groups as cards (group/_card.html.twig), two by two.
-  On their own page a button leads to My groups, where they choose the groups shown.
+  The groups a member shows on their profile (GroupPagesController::memberGroups), under the profile head, in the
+  card of the profile's tabs (like the gallery and the friends): the title and the number, then the groups as cards
+  (group/_card.html.twig), two by two. On their own page a button leads to My groups, where they choose the groups
+  shown (on phones, where the card's head is hidden, at the top of the list).
 #}
 
 {% block page_content %}
     {% set own = app.user and app.user.username == member.username %}
     <div class="p-member-groups p-profile-main">
         <div class="card">
-            <div class="p-member-groups__head">
-                <h2 class="p-member-groups__title">
+            <div class="card-header u:flex u:flex-row u:justify-between">
+                <span>
                     {{ 'profile.groups'|trans }}
-                    {% if groups|length %}<span class="p-pro-card__count">{{ groups|length }}</span>{% endif %}
-                </h2>
+                    {% if groups|length %}<span class="p-gallery-footer__count">{{ groups|length }}</span>{% endif %}
+                </span>
                 {% if own %}
-                    <a class="p-member-groups__manage" href="{{ path('groups_mygroups') }}"><i class="fas fa-eye" aria-hidden="true"></i> {{ 'profile.groups.choose'|trans }}</a>
+                    <a class="p-gallery-manage-btn" href="{{ path('groups_mygroups') }}"><i class="fas fa-eye" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'profile.groups.choose'|trans }}</span></a>
                 {% endif %}
             </div>
-            <div class="p-member-groups__body">
+            <div class="card-body p-member-groups__body">
+                {% if own and groups|length %}
+                    <a class="p-gallery-manage-btn p-gallery-manage-btn--phone" href="{{ path('groups_mygroups') }}"><i class="fas fa-eye" aria-hidden="true"></i> <span class="p-gallery-manage-btn__label">{{ 'profile.groups.choose'|trans }}</span></a>
+                {% endif %}
                 {% if groups|length %}
                     <div class="p-member-groups__list" id="member-groups">
                         {% for row in groups %}
@@ -27,13 +31,12 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    <div class="p-member-groups__empty" id="member-groups">
-                        <span class="p-member-groups__empty-icon"><i class="fas fa-users" aria-hidden="true"></i></span>
-                        <p>{{ own ? 'profile.groups.empty.own'|trans : 'profile.groups.empty'|trans({username: member.username}) }}</p>
-                        {% if own %}
-                            <a class="p-member-groups__manage" href="{{ path('groups_search') }}">{{ 'profile.groups.find'|trans }}</a>
-                        {% endif %}
-                    </div>
+                    {% include 'profile/_tab_empty.html.twig' with {
+                        id: 'member-groups',
+                        icon: 'users',
+                        text: own ? 'profile.groups.empty.own'|trans : 'profile.groups.empty'|trans({username: member.username}),
+                        action: own ? { label: 'profile.groups.find'|trans, url: path('groups_search'), icon: 'search' } : null,
+                    } only %}
                 {% endif %}
             </div>
         </div>

@@ -1,39 +1,38 @@
 {#
-  My notes: the title with the count and "only you", a search (member or note), one pill
-  per category with its count, then a card per note: the member's picture and name, the
-  category and date, the note (cut, "Read more" unrolls it), edit (side panel) and delete.
-  A page of its own (not under the profile head), like the Visitors page: the notes in one white card.
+  My notes, a tab of the own profile in the card of the profile's tabs (like the gallery and the friends): the title
+  with the count and "only you", a search (member or note), one pill per category with its count, then a row per
+  note: the member's picture and name, the category and date, the note (cut, "Read more" unrolls it), edit (side
+  panel) and delete.
 #}
-{% extends 'base.html.twig' %}
+{% extends 'profile/profile.html.twig' %}
 
 {% block title %}{{ 'profile.notes.mine'|trans }}{% endblock %}
 
 {% block javascripts %}
-    {# The side panel to edit a note (contact/drawer.js, started by profile.js) #}
-    {{ encore_entry_script_tags('profile/profile') }}
+    {# profile.js starts the side panel to edit a note (contact/drawer.js) #}
+    {{ parent() }}
     {{ encore_entry_script_tags('micromodal') }}
 {% endblock javascripts %}
 
-{% block main %}
-  <main role="main" class="p-notes-page">
-    <div class="p-notes">
-        <div class="p-notes__head">
-            <div>
-                <h1 class="p-notes__title">
-                    {{ 'profile.notes.mine'|trans }}
-                    {% if notes_total %}<span class="p-notes__total">{{ notes_total }}</span>{% endif %}
-                </h1>
-                <p class="p-notes__private"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'profile.notes.only.you'|trans }}</p>
-            </div>
-            {% if notes_total %}
-                <form class="p-notes__search" method="get" action="{{ path('notes', {username: member.username}) }}" role="search">
-                    <i class="fas fa-search" aria-hidden="true"></i>
-                    <label class="visually-hidden" for="notes-search">{{ 'profile.notes.search'|trans }}</label>
-                    <input type="search" id="notes-search" name="q" value="{{ search }}" placeholder="{{ 'profile.notes.search'|trans }}">
-                    {% if category %}<input type="hidden" name="category" value="{{ category }}">{% endif %}
-                </form>
-            {% endif %}
-        </div>
+{% block page_content %}
+  <div class="p-notes-page p-profile-main">
+    <div class="card">
+      <div class="card-header u:flex u:flex-row u:justify-between">
+        <span>
+          {{ 'profile.notes.mine'|trans }}
+          {% if notes_total %}<span class="p-gallery-footer__count">{{ notes_total }}</span>{% endif %}
+        </span>
+        <span class="p-notes__private"><i class="fas fa-lock" aria-hidden="true"></i> {{ 'profile.notes.only.you'|trans }}</span>
+      </div>
+      <div class="card-body p-notes">
+        {% if notes_total %}
+            <form class="p-notes__search" method="get" action="{{ path('notes', {username: member.username}) }}" role="search">
+                <i class="fas fa-search" aria-hidden="true"></i>
+                <label class="visually-hidden" for="notes-search">{{ 'profile.notes.search'|trans }}</label>
+                <input type="search" id="notes-search" name="q" value="{{ search }}" placeholder="{{ 'profile.notes.search'|trans }}">
+                {% if category %}<input type="hidden" name="category" value="{{ category }}">{% endif %}
+            </form>
+        {% endif %}
 
         {% if category_counts|length > 0 %}
             <nav class="p-notes__filters" aria-label="{{ 'profile.note.categories'|trans }}">
@@ -84,17 +83,18 @@
                     </div>
                 </article>
             {% else %}
-                <div class="p-notes__empty">
-                    <span class="p-notes__empty-icon" aria-hidden="true"><i class="fas fa-lock"></i></span>
-                    <p class="p-notes__empty-title">{{ (search or category ? 'profile.notes.none.found' : 'profile.no.notes')|trans }}</p>
-                    {% if not (search or category) %}<p class="p-notes__empty-hint">{{ 'profile.notes.empty.hint'|trans }}</p>{% endif %}
-                </div>
+                {% include 'profile/_tab_empty.html.twig' with {
+                    icon: 'sticky-note',
+                    text: (search or category ? 'profile.notes.none.found' : 'profile.no.notes')|trans,
+                    hint: search or category ? null : 'profile.notes.empty.hint'|trans,
+                } only %}
             {% endfor %}
         </div>
 
         {% if notes.haveToPaginate %}
             {{ pagerfanta(notes, 'rounded_pagination_end') }}
         {% endif %}
+      </div>
     </div>
 
     <script>
@@ -119,9 +119,8 @@
     </script>
 
     {% include 'conversations/_contact_drawer.html.twig' with { from: 'notes' } %}
-    {{ block('modals') }}
-  </main>
-{% endblock main %}
+  </div>
+{% endblock page_content %}
 
 {% block modals %}
     {% import 'macros/post_button.html.twig' as post %}

@@ -227,7 +227,7 @@ class NoteController extends AbstractController
             'category' => $category,
             'search' => $search,
             'globals_js_json' => $this->globals->getGlobalsJsAsJson($member, $member),
-            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'notes']),
+            'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'mynotes']),
         ]);
     }
 

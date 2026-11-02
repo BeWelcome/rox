@@ -36,7 +36,7 @@ class Comment
     private string $comment;
 
     #[ORM\Column(name: 'updated', type: 'datetime', nullable: true)]
-    private ?DateTime $updated;
+    private ?DateTime $updated = null;
 
     #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     private DateTime $created;

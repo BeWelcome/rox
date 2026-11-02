@@ -6,6 +6,7 @@ use App\Doctrine\CommentAdminActionType;
 use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
 use App\Entity\Comment;
+use App\Entity\CommentReport;
 use App\Entity\Member;
 use App\Entity\Preference;
 use App\Form\CommentType;
@@ -100,6 +101,8 @@ class CommentController extends AbstractController
 
                 if ($success) {
                     $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
+                    // the volunteers read it in the comments tool next to the comment
+                    $entityManager->persist(new CommentReport($comment, $member, $feedback));
                     $entityManager->persist($comment);
                     $entityManager->flush();
 

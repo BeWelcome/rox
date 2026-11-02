@@ -106,12 +106,12 @@ final class PageActionsTest extends WebTestCase
         );
         $this->client->loginUser($admin);
 
-        $this->submit('/admin/comment', '/admin/comment/member-1/member-2/hide');
         $comment = $this->entityManager->getRepository(Comment::class)->findOneBy([
             'toMember' => $this->member('member-1'),
             'fromMember' => $this->member('member-2'),
         ]);
-        self::assertFalse($comment->getShowToOtherMembers());
+        $this->submit('/admin/comment?selected=' . $comment->getId(), '/admin/comment/member-1/member-2/hide');
+        self::assertFalse($this->find(Comment::class, $comment->getId())->getShowToOtherMembers());
 
         $message = new LoginMessage()
             ->setMessage('Hello')

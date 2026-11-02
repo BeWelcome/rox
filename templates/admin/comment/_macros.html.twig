@@ -1,0 +1,56 @@
+{# The parts of the comments tool (comments.html.twig) #}
+
+{# A button that posts an action on the comment, with the page to come back to (ctx: return, queue, next) #}
+{% macro action(route, comment, ctx, class, content, attributes = '') %}
+  <form method="post" class="c-cadmin-form" action="{{ path(route, { to_member: comment.toMember.username, from_member: comment.fromMember.username }) }}">
+    <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\Admin\\CommentController::TOKEN')) }}">
+    <input type="hidden" name="return" value="{{ ctx.return }}">
+    <input type="hidden" name="queue" value="{{ ctx.queue }}">
+    {% if ctx.next %}<input type="hidden" name="next" value="{{ ctx.next }}">{% endif %}
+    <button type="submit" class="{{ class }}"{{ attributes|raw }}>{{ content }}</button>
+  </form>
+{% endmacro %}
+
+{# A switch: posts the route that turns it to the other side #}
+{% macro switch(route, comment, ctx, on, label, help) %}
+  {% set content %}
+    <span class="c-cadmin-switch__track" aria-hidden="true"></span>
+    <span class="c-cadmin-switch__text">
+      <span class="c-cadmin-switch__label">{{ label }}</span>
+      <span class="c-cadmin-switch__help">{{ help }}</span>
+    </span>
+  {% endset %}
+  {{ _self.action(route, comment, ctx, 'c-cadmin-switch' ~ (on ? ' is-on'), content, ' role="switch" aria-checked="' ~ (on ? 'true' : 'false') ~ '"') }}
+{% endmacro %}
+
+{% macro quality(quality) %}
+  {% set icon = { positive: 'fa-thumbs-up', neutral: 'fa-circle', negative: 'fa-thumbs-down' }[quality] ?? 'fa-circle' %}
+  {% set tone = { positive: ' c-tag--green', negative: ' c-tag--orange' }[quality] ?? '' %}
+  <span class="c-tag{{ tone }}"><i class="{{ quality == 'neutral' ? 'far' : 'fas' }} {{ icon }}" aria-hidden="true"></i>{{ ('comment.quality.' ~ quality)|trans }}</span>
+{% endmacro %}
+
+{% macro status(action) %}
+  {% set status = {
+    'AdminCommentMustCheck': ['fa-flag', 'admin.comments.status.check'],
+    'AdminAbuserMustCheck': ['fa-shield-halved', 'admin.comments.status.safetyteam'],
+    'Checked': ['fa-check', 'admin.comments.status.checked'],
+  }[action] ?? [null, 'admin.comments.status.nothing'] %}
+  <span class="c-tag">{% if status[0] %}<i class="fas {{ status[0] }}" aria-hidden="true"></i>{% endif %}{{ status[1]|trans }}</span>
+{% endmacro %}
+
+{# The writer or the receiver in the head of the comment #}
+{% macro person(member, caption) %}
+  <a class="c-cadmin-person" href="{{ path('members_profile', { username: member.username }) }}">
+    <img class="c-cadmin-person__avatar" src="{{ path('avatar', { username: member.username, size: 96 }) }}" alt="" width="48" height="48" loading="lazy">
+    <span class="c-cadmin-person__text">
+      <span class="c-cadmin-person__caption">{{ caption|trans }}</span>
+      <span class="c-cadmin-person__name">{{ member.username }}</span>
+    </span>
+  </a>
+{% endmacro %}
+
+{% macro relations(comment) %}
+  {%- for relation in comment.relations|split(',')|filter(r => r is not empty) -%}
+    {{ loop.first ? '' : ' · ' }}{{ ('profile.comment.relation.' ~ relation)|lower|trans({ username: comment.toMember.username }) }}
+  {%- endfor -%}
+{% endmacro %}

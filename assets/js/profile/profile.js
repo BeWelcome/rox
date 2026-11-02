@@ -1,6 +1,7 @@
 import { Toast } from 'bootstrap';
 import {initContactDrawer} from '../contact/drawer';
 import {addPositronLayer} from '../map/positron';
+import {initTabsScrollers} from '../tabs-scroller';
 
 // Send / Request stay: the form in a side panel (bottom sheet on phones).
 // First in the file, so that an error in the code below cannot leave the buttons dead.
@@ -8,27 +9,9 @@ initContactDrawer(document.querySelector('.js-contact-drawer')?.dataset.from || 
 
 document.querySelectorAll('.p-toast[data-bs-autohide="true"]').forEach(el => new Toast(el).show());
 
-// Profile tabs: horizontal slider with arrows when the tabs don't fit (mobile)
-document.querySelectorAll('[data-tabs-scroller]').forEach(scroller => {
-    const tabs = scroller.querySelector('.p-hero__tabs');
-    const update = () => {
-        const maxScroll = tabs.scrollWidth - tabs.clientWidth;
-        scroller.classList.toggle('can-scroll-prev', tabs.scrollLeft > 1);
-        scroller.classList.toggle('can-scroll-next', tabs.scrollLeft < maxScroll - 1);
-    };
-
-    // the active tab is centred by the script after the tabs (profile/header.html.twig), before the page shows
-
-    scroller.querySelectorAll('[data-tabs-scroll]').forEach(arrow => {
-        arrow.addEventListener('click', () => {
-            tabs.scrollBy({left: Number(arrow.dataset.tabsScroll) * tabs.clientWidth * 0.7});
-        });
-    });
-
-    tabs.addEventListener('scroll', update, {passive: true});
-    window.addEventListener('resize', update);
-    update();
-});
+// Profile tabs: horizontal slider with arrows when the tabs don't fit (mobile). The active tab is centred by the
+// script after the tabs (profile/header.html.twig), before the page shows.
+initTabsScrollers();
 
 const L = require("leaflet");
 

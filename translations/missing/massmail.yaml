@@ -286,3 +286,7 @@ admin.massmail.text:
 admin.massmail.text.help:
     - 'Start with "Hello {username},": every member sees their own username there. Keep {username} as it is.'
     - 'Help below the text of a mass mail. {username} is a placeholder in the text of the mass mail; keep it as it is.'
+admin.massmail.estimate:
+    - 'About {count, plural, one {# member} other {# members}}'
+    - 'Next to the button that enqueues a mass mail: how many members the chosen recipients are. Keep the {...} parts and #.'
+    - 'messages+intl-icu'

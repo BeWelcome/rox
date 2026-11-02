@@ -126,59 +126,35 @@ class MassmailModel
      */
     public function enqueueMembers(Newsletter $newsletter, Member $enqueuer, array $usernames, int $limit): int
     {
-        $where = '';
-        $parameters = [];
-        $types = [];
-        if ([] !== $usernames) {
-            $where = ' AND m.Username IN (:usernames)';
-            $parameters['usernames'] = $usernames;
-            $types['usernames'] = ArrayParameterType::STRING;
-        }
+        return $this->enqueue($newsletter, $enqueuer, ...$this->members($newsletter, $usernames, $limit));
+    }
 
-        return $this->enqueue(
-            $newsletter,
-            $enqueuer,
-            'FROM member m ' . $this->preferenceJoin($newsletter) . ' WHERE ' . $this->accepts() . $where
-                . ($limit > 0 ? ' LIMIT ' . $limit : ''),
-            $parameters,
-            $types,
-        );
+    /**
+     * @param list<string> $usernames
+     */
+    public function countMembers(Newsletter $newsletter, array $usernames, int $limit): int
+    {
+        return $this->count(...$this->members($newsletter, $usernames, $limit));
     }
 
     public function enqueueLocation(Newsletter $newsletter, Member $enqueuer, string $country, ?string $adminUnit, ?int $place): int
     {
-        $where = ' AND g.country_id = :country';
-        $parameters = ['country' => $country];
-        if (null !== $adminUnit) {
-            $where .= ' AND g.admin_1_id = :adminUnit';
-            $parameters['adminUnit'] = $adminUnit;
-        }
-        if (null !== $place) {
-            $where .= ' AND g.geoname_id = :place';
-            $parameters['place'] = $place;
-        }
+        return $this->enqueue($newsletter, $enqueuer, ...$this->location($newsletter, $country, $adminUnit, $place));
+    }
 
-        return $this->enqueue(
-            $newsletter,
-            $enqueuer,
-            'FROM member m
-            JOIN address a ON a.member_id = m.id AND a.active = 1
-            JOIN location g ON g.geoname_id = a.location
-            ' . $this->preferenceJoin($newsletter) . ' WHERE ' . $this->accepts() . $where,
-            $parameters,
-        );
+    public function countLocation(Newsletter $newsletter, string $country, ?string $adminUnit, ?int $place): int
+    {
+        return $this->count(...$this->location($newsletter, $country, $adminUnit, $place));
     }
 
     public function enqueueGroup(Newsletter $newsletter, Member $enqueuer, int $group): int
     {
-        return $this->enqueue(
-            $newsletter,
-            $enqueuer,
-            'FROM group_membership gm
-            JOIN member m ON m.id = gm.member_id
-            ' . $this->preferenceJoin($newsletter) . " WHERE gm.group_id = :group AND gm.status = 'In' AND " . $this->accepts(),
-            ['group' => $group],
-        );
+        return $this->enqueue($newsletter, $enqueuer, ...$this->group($newsletter, $group));
+    }
+
+    public function countGroup(Newsletter $newsletter, int $group): int
+    {
+        return $this->count(...$this->group($newsletter, $group));
     }
 
     /**
@@ -186,13 +162,12 @@ class MassmailModel
      */
     public function enqueueTermsOfUse(Newsletter $newsletter, Member $enqueuer): int
     {
-        return $this->enqueue(
-            $newsletter,
-            $enqueuer,
-            'FROM member m WHERE m.Status IN (:statuses)',
-            ['statuses' => MemberStatusType::ACTIVE_ALL_ARRAY],
-            ['statuses' => ArrayParameterType::STRING],
-        );
+        return $this->enqueue($newsletter, $enqueuer, ...$this->termsOfUse());
+    }
+
+    public function countTermsOfUse(): int
+    {
+        return $this->count(...$this->termsOfUse());
     }
 
     public function unqueue(Newsletter $newsletter): int
@@ -318,11 +293,98 @@ class MassmailModel
     }
 
     /**
+     * The recipients of each way to choose them: the FROM part of a query of their m.id, its parameters and types.
+     * Enqueueing inserts them, the estimate on the page counts them.
+     *
+     * @param list<string> $usernames
+     *
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, ArrayParameterType>}
+     */
+    private function members(Newsletter $newsletter, array $usernames, int $limit): array
+    {
+        $where = '';
+        $parameters = [];
+        $types = [];
+        if ([] !== $usernames) {
+            $where = ' AND m.Username IN (:usernames)';
+            $parameters['usernames'] = $usernames;
+            $types['usernames'] = ArrayParameterType::STRING;
+        }
+
+        return [
+            'FROM member m ' . $this->preferenceJoin($newsletter) . ' WHERE ' . $this->accepts() . $where
+                . ($limit > 0 ? ' LIMIT ' . $limit : ''),
+            $parameters,
+            $types,
+        ];
+    }
+
+    /**
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, ArrayParameterType>}
+     */
+    private function location(Newsletter $newsletter, string $country, ?string $adminUnit, ?int $place): array
+    {
+        $where = ' AND g.country_id = :country';
+        $parameters = ['country' => $country];
+        if (null !== $adminUnit) {
+            $where .= ' AND g.admin_1_id = :adminUnit';
+            $parameters['adminUnit'] = $adminUnit;
+        }
+        if (null !== $place) {
+            $where .= ' AND g.geoname_id = :place';
+            $parameters['place'] = $place;
+        }
+
+        return [
+            'FROM member m
+            JOIN address a ON a.member_id = m.id AND a.active = 1
+            JOIN location g ON g.geoname_id = a.location
+            ' . $this->preferenceJoin($newsletter) . ' WHERE ' . $this->accepts() . $where,
+            $parameters,
+            [],
+        ];
+    }
+
+    /**
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, ArrayParameterType>}
+     */
+    private function group(Newsletter $newsletter, int $group): array
+    {
+        return [
+            'FROM group_membership gm
+            JOIN member m ON m.id = gm.member_id
+            ' . $this->preferenceJoin($newsletter) . " WHERE gm.group_id = :group AND gm.status = 'In' AND " . $this->accepts(),
+            ['group' => $group],
+            [],
+        ];
+    }
+
+    /**
+     * @return array{0: string, 1: array<string, mixed>, 2: array<string, ArrayParameterType>}
+     */
+    private function termsOfUse(): array
+    {
+        return [
+            'FROM member m WHERE m.Status IN (:statuses)',
+            ['statuses' => MemberStatusType::ACTIVE_ALL_ARRAY],
+            ['statuses' => ArrayParameterType::STRING],
+        ];
+    }
+
+    /**
      * @param array<string, mixed>                     $parameters
      * @param array<string, ArrayParameterType|string> $types
      */
+    private function count(string $from, array $parameters, array $types = []): int
+    {
+        return (int) $this->connection->fetchOne('SELECT COUNT(*) FROM (SELECT m.id ' . $from . ') recipients', $parameters, $types);
+    }
+
     /**
      * Members who already get the mass mail aren't enqueued again.
+     *
+     * @param array<string, mixed>                     $parameters
+     * @param array<string, ArrayParameterType|string> $types
      */
     private function enqueue(Newsletter $newsletter, Member $enqueuer, string $from, array $parameters, array $types = []): int
     {

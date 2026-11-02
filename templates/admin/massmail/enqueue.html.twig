@@ -77,6 +77,8 @@
                     <i class="fas fa-user-plus" aria-hidden="true"></i>{{ form.enqueue.vars.label|trans }}
                   </button>
                   {% do form.enqueue.setRendered %}
+                  <span class="c-massmail-tabs__estimate js-massmail-estimate" aria-live="polite"
+                        data-url="{{ path('admin_massmail_estimate', {id: newsletter.id}) }}" data-recipients="{{ recipients }}"></span>
                 </div>
               {{ form_end(form) }}
             </div>

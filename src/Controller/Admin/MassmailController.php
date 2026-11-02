@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Doctrine\DomainType;
 use App\Doctrine\TranslationAllowedType;
+use App\Dto\MassmailEstimate;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Newsletter;
@@ -26,6 +27,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -213,6 +215,40 @@ class MassmailController extends AbstractController
         ]);
     }
 
+    /**
+     * How many members the recipients chosen on the enqueue page are, for the estimate next to its button. Only the
+     * ways, countries and groups the volunteer may choose.
+     */
+    #[Route(path: '/admin/massmail/{id}/estimate', name: 'admin_massmail_estimate', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function estimate(
+        Newsletter $newsletter,
+        #[MapQueryString(validationFailedStatusCode: Response::HTTP_BAD_REQUEST)] MassmailEstimate $estimate = new MassmailEstimate(),
+    ): JsonResponse {
+        $rights = $this->rights();
+        $termsOfUse = MassmailRights::TERMS_OF_USE === $estimate->recipients;
+        if (
+            !$rights->canChoose($estimate->recipients)
+            || ($termsOfUse && Newsletter::TERMS_OF_USE !== $newsletter->getType())
+            || (null !== $estimate->country && [] !== $rights->countries && !\in_array($estimate->country, $rights->countries, true))
+            || (null !== $estimate->group && [] !== $rights->groups && !\in_array($estimate->group, $rights->groups, true))
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $count = match ($estimate->recipients) {
+            MassmailRights::MEMBERS => $this->countMembers($newsletter, $estimate),
+            MassmailRights::LOCATION => null === $estimate->country ? 0
+                : $this->model->countLocation($newsletter, $estimate->country, $estimate->adminUnit, $estimate->place),
+            MassmailRights::GROUP => null === $estimate->group ? 0 : $this->model->countGroup($newsletter, $estimate->group),
+            default => $this->model->countTermsOfUse(),
+        };
+
+        return $this->json([
+            'count' => $count,
+            'text' => $this->translator->trans('admin.massmail.estimate', ['count' => $count]),
+        ]);
+    }
+
     #[Route(path: '/admin/massmail/{id}/unqueue', name: 'admin_massmail_unqueue', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsCsrfTokenValid(self::TOKEN)]
     public function unqueue(Newsletter $newsletter): RedirectResponse
@@ -364,6 +400,19 @@ class MassmailController extends AbstractController
             default:
                 return $this->model->enqueueTermsOfUse($newsletter, $volunteer);
         }
+    }
+
+    private function countMembers(Newsletter $newsletter, MassmailEstimate $estimate): int
+    {
+        $usernames = [];
+        if (MassmailRecipientsType::USERNAMES === $estimate->members) {
+            $usernames = $this->usernames((string) $estimate->usernames);
+            if ([] === $usernames) {
+                return 0;
+            }
+        }
+
+        return $this->model->countMembers($newsletter, $usernames, (int) $estimate->limit);
     }
 
     /**

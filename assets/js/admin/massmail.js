@@ -61,3 +61,46 @@ document.querySelectorAll('.js-massmail-recipients').forEach((form) => {
         enable();
     }
 });
+
+// "About N members" next to Enqueue: the server counts the members the chosen recipients are
+document.querySelectorAll('.js-massmail-estimate').forEach((estimate) => {
+    const form = estimate.closest('form');
+    const { recipients, url } = estimate.dataset;
+    let timer = null;
+    let latest = 0;
+
+    const update = () => {
+        const query = new URLSearchParams({ recipients });
+        Array.from(form.elements).forEach((field) => {
+            const name = (field.name || '').match(new RegExp(`^${recipients}\\[(\\w+)\\]$`));
+            if (!name || ['_token', 'enqueue'].includes(name[1]) || field.value === '') {
+                return;
+            }
+            if (field.type === 'radio' && !field.checked) {
+                return;
+            }
+            query.set(name[1], field.value);
+        });
+        latest += 1;
+        const request = latest;
+        fetch(`${url}?${query}`, { credentials: 'same-origin', headers: { Accept: 'application/json' } })
+            .then((response) => (response.ok ? response.json() : null))
+            .then((result) => {
+                // only the answer to the latest question counts
+                if (request === latest) {
+                    estimate.textContent = result && result.count > 0 ? result.text : '';
+                }
+            })
+            .catch(() => {
+                estimate.textContent = '';
+            });
+    };
+    const later = () => {
+        clearTimeout(timer);
+        timer = setTimeout(update, 300);
+    };
+
+    form.addEventListener('input', later);
+    form.addEventListener('change', later);
+    update();
+});

@@ -133,6 +133,40 @@ class MassmailTest extends WebTestCase
         self::assertNotContains('member-3', $usernames);
     }
 
+    public function testTheEstimateIsWhatEnqueueingAdds(): void
+    {
+        $id = $this->create();
+        $estimate = fn (array $query): array => $this->estimate($id, $query);
+
+        self::assertSame(2, $estimate(['recipients' => 'members', 'members' => 'usernames', 'usernames' => 'member-3, member-6, nobody-here'])['count']);
+        self::assertSame(0, $estimate(['recipients' => 'members', 'members' => 'usernames'])['count']);
+        self::assertSame(1, $estimate(['recipients' => 'members', 'members' => 'all', 'limit' => '1'])['count']);
+        self::assertGreaterThan(2, $estimate(['recipients' => 'members', 'members' => 'all'])['count']);
+        self::assertSame(0, $estimate(['recipients' => 'location'])['count']);
+        $place = $estimate(['recipients' => 'location', 'country' => 'ID', 'adminUnit' => '36']);
+        self::assertGreaterThanOrEqual(2, $place['count']);
+        self::assertIsString($place['text']);
+
+        // enqueueing the same place adds as many
+        $this->client->request('GET', '/admin/massmail/' . $id . '/enqueue');
+        $form = $this->client->getCrawler()->selectButton('location[enqueue]')->form();
+        $this->client->request('POST', '/admin/massmail/' . $id . '/enqueue', [
+            'location' => ['country' => 'ID', 'adminUnit' => '36', 'place' => '', '_token' => $form['location[_token]']->getValue(), 'enqueue' => ''],
+        ]);
+        self::assertSame($place['count'], $this->statistics($id)['enqueued']);
+    }
+
+    public function testTheEstimateRefusesWhatCantBeChosen(): void
+    {
+        $id = $this->create();
+
+        $this->client->request('GET', '/admin/massmail/' . $id . '/estimate?recipients=everybody');
+        $this->assertResponseStatusCodeSame(400);
+        // the terms of use tab is only there for a mass mail of that type
+        $this->client->request('GET', '/admin/massmail/' . $id . '/estimate?recipients=termsofuse');
+        $this->assertResponseStatusCodeSame(403);
+    }
+
     public function testTheEnqueuePageListsCountriesRegionsAndPlaces(): void
     {
         $id = $this->create();
@@ -409,6 +443,19 @@ class MassmailTest extends WebTestCase
             'massmail[body]' => '<p>The body</p>',
             'massmail[description]' => 'For the test',
         ];
+    }
+
+    /**
+     * @param array<string, string> $query
+     *
+     * @return array<string, mixed> count and text
+     */
+    private function estimate(int $id, array $query): array
+    {
+        $this->client->request('GET', '/admin/massmail/' . $id . '/estimate?' . http_build_query($query));
+        $this->assertResponseIsSuccessful();
+
+        return json_decode((string) $this->client->getResponse()->getContent(), true, 512, \JSON_THROW_ON_ERROR);
     }
 
     private function testButton(): string

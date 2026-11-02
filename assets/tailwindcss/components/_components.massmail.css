@@ -195,6 +195,7 @@ a.c-massmail-list__row:focus-visible { background: #f8fafc; color: #334155; text
 .c-massmail-tabs__limit { max-width: 16rem; }
 .c-massmail-tabs__info { margin: 0; color: #334155; font-size: 1rem; line-height: 1.55; text-wrap: pretty; }
 .c-massmail-tabs__submit { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding-top: 0.4rem; }
+.c-massmail-tabs__estimate { color: #64748b; font-size: 0.875rem; }
 
 /* Test: the usernames next to the button */
 .c-massmail-block { margin-bottom: 1.5rem; }

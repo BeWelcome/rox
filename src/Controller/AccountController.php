@@ -46,7 +46,7 @@ class AccountController extends AbstractController
         $form = $this->createForm(AccountEditFormType::class, [
             'name' => $member->getName(),
             'show_name' => $member->isNameVisible(),
-            'short_name' => $member->getUsername(),
+            'short_name' => $member->getShortName(),
             'gender' => $member->getGender(),
             'show_gender' => $member->isGenderVisible(),
             'birthdate' => $member->getBirthdate(),

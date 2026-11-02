@@ -38,7 +38,7 @@
     {% do form.show_name.setRendered %}
   </section>
 
-  {# Short name (username) #}
+  {# Short name: shown instead of the username when set (empty: none) #}
   <section class="p-account-section">
     <label class="p-account-section__label" for="{{ form.short_name.vars.id }}">{{ form.short_name.vars.label|trans }}</label>
     {{ form_widget(form.short_name) }}

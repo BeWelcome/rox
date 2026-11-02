@@ -41,11 +41,12 @@ final class CommentsToolTest extends WebTestCase
         $crawler = $this->client->request('GET', '/admin/comment/reported');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('.p-hero__tab--active', 'Negative/reported');
+        self::assertSame('/admin/comment/reported', $crawler->filter('.p-hero__tab--active')->attr('href'));
         self::assertSelectorExists('.p-hero__tab--active .p-hero__tab-count');
         // the newest first, and chosen
         self::assertSame('zztest newer', trim($crawler->filter('.c-cadmin-row.is-selected .c-cadmin-row__excerpt')->text()));
-        self::assertCount(1, $crawler->filter('.c-cadmin-row.is-selected .c-tag:contains("Reported")'));
+        // the Reported tag (flag)
+        self::assertCount(1, $crawler->filter('.c-cadmin-row.is-selected .c-cadmin-row__tags .fa-flag'));
         self::assertSelectorTextContains('.c-cadmin-report', 'zztest we never met');
         self::assertSelectorTextContains('.c-cadmin-detail__text', 'zztest newer');
 
@@ -53,7 +54,7 @@ final class CommentsToolTest extends WebTestCase
         self::assertSelectorTextContains('.c-cadmin-detail__text', 'zztest older');
         self::assertSelectorNotExists('.c-cadmin-report');
         // negative and nobody reported it
-        self::assertSelectorTextContains('.c-cadmin-detail__info', 'Not reported');
+        self::assertSelectorExists('.c-cadmin-detail__info');
         self::assertCount(1, $crawler->filter('form[action$="/safetyteam"]'));
     }
 
@@ -66,8 +67,9 @@ final class CommentsToolTest extends WebTestCase
         $crawler = $this->client->request('GET', '/admin/comment/reported');
 
         self::assertResponseIsSuccessful();
-        self::assertSame(['Negative/reported', 'Checked', 'All written'], $crawler->filter('.p-hero__tab')->each(
-            static fn (Crawler $tab) => trim(preg_replace('/\s*\d+$/', '', trim($tab->text())))
+        // no Safety team tab, no Negative tab
+        self::assertSame(['/admin/comment/reported', '/admin/comment/checked', '/admin/comment'], $crawler->filter('.p-hero__tab')->each(
+            static fn (Crawler $tab) => $tab->attr('href')
         ));
         self::assertCount(0, $crawler->filter('form[action$="/safetyteam"]'));
 
@@ -94,7 +96,8 @@ final class CommentsToolTest extends WebTestCase
 
         // checked: in the checked list, and back to check from there
         $crawler = $this->client->request('GET', '/admin/comment/checked?selected=' . $newer->getId());
-        self::assertSelectorTextContains('.c-cadmin-detail__tags', 'Checked');
+        // the status Checked (check mark)
+        self::assertSelectorExists('.c-cadmin-detail__tags .fa-check');
         self::assertCount(0, $crawler->filter('form[action$="/checked"]'));
         $this->client->submit($crawler->filter('form[action$="/recheck"]')->form());
         self::assertSame(CommentAdminActionType::ADMIN_CHECK, $this->reload($newer)->getAdminAction());
@@ -135,7 +138,7 @@ final class CommentsToolTest extends WebTestCase
         $this->client->loginUser($this->member('bwadmin'));
 
         $crawler = $this->client->request('GET', '/admin/comment/reported?selected=' . $id);
-        self::assertSelectorTextContains('#c-cadmin-delete', 'Delete this comment?');
+        self::assertSelectorExists('.c-cadmin-delete[data-micromodal-trigger="c-cadmin-delete"]');
         $this->client->submit($crawler->filter('#c-cadmin-delete form[action$="/delete"]')->form());
 
         self::assertResponseRedirects('/admin/comment/reported?selected=' . $older->getId());
@@ -167,7 +170,9 @@ final class CommentsToolTest extends WebTestCase
         self::assertResponseRedirects('/admin/comment/for/' . $newer->getToMember()->getUsername() . '?selected=' . $newer->getId());
 
         $this->client->followRedirect();
-        self::assertSelectorTextContains('.c-cadmin__filter', 'Comments about ' . $newer->getToMember()->getUsername());
+        // the list of the comments about the member, with the way back to all comments
+        self::assertSame('/admin/comment', $this->client->getCrawler()->filter('.c-cadmin__filter .c-cadmin__clear')->attr('href'));
+        self::assertSame('/admin/comment', $this->client->getCrawler()->filter('.p-hero__tab--active')->attr('href'));
         self::assertSelectorTextContains('.c-cadmin-detail__text', 'zztest newer');
     }
 

@@ -48,3 +48,241 @@ admin.massmail.usernames.empty:
 admin.massmail.untriggered:
     - 'The sending is stopped; %count% messages were removed from the queue.'
     - Confirmation after a volunteer stopped a triggered mass mail. Keep %count%.
+admin.massmail.title:
+    - 'Mass mails'
+    - 'Heading of the volunteer page that lists the mass mails (newsletters, local events, terms of use).'
+admin.massmail.create:
+    - 'Create mass mail'
+    - 'Button and heading to write a new mass mail.'
+admin.massmail.status:
+    - 'Status'
+    - 'Column with the stage of a mass mail (draft, enqueued, sending, sent, ...) in the list of mass mails.'
+admin.massmail.stage.draft:
+    - 'Draft'
+    - 'Stage of a mass mail that was written but has no recipients yet.'
+admin.massmail.stage.enqueued:
+    - 'Enqueued'
+    - 'Stage of a mass mail whose recipients wait in the queue; nothing is sent yet.'
+admin.massmail.stage.triggered:
+    - 'Triggered'
+    - 'Stage of a mass mail whose sending was started; nothing is sent yet.'
+admin.massmail.stage.sending:
+    - 'Sending'
+    - 'Stage of a mass mail that is being sent in the background.'
+admin.massmail.stage.stopped:
+    - 'Stopped'
+    - 'Stage of a mass mail whose sending a volunteer stopped; the rest waits in the queue.'
+admin.massmail.stage.sent:
+    - 'Sent'
+    - 'Stage of a mass mail that went out to all its recipients.'
+admin.massmail.back:
+    - 'All mass mails'
+    - 'Link back to the list of mass mails.'
+admin.massmail.test.send:
+    - 'Send test'
+    - 'Button that sends a mass mail as a test to a few members.'
+admin.massmail.step.written:
+    - 'Written'
+    - 'First step of a mass mail on its page: it was written.'
+admin.massmail.step.draft.saved:
+    - 'Draft saved'
+    - 'Note under the date in the step "Written" of a mass mail.'
+admin.massmail.step.done:
+    - 'Done'
+    - 'Value of a step of a mass mail that is finished (e.g. all enqueued members moved on to sending).'
+admin.massmail.step.waiting:
+    - 'members waiting'
+    - 'Note under the number of enqueued members of a mass mail.'
+admin.massmail.step.moved.on:
+    - 'moved on to sending'
+    - 'Note under "Done" in the step "Enqueued" of a mass mail.'
+admin.massmail.step.nobody:
+    - 'nobody yet'
+    - 'Note in the step "Enqueued" of a mass mail without recipients.'
+admin.massmail.step.to.send:
+    - 'to send · about {duration} left'
+    - 'Note under the number of messages being sent. {duration} is e.g. "3 h 27 min"; keep {duration}.'
+    - 'messages+intl-icu'
+admin.massmail.step.handed:
+    - 'all handed to the mail queue'
+    - 'Note under "Done" in the step "Triggered" of a mass mail.'
+admin.massmail.step.not.yet:
+    - 'not yet'
+    - 'Note in a step of a mass mail that has not started.'
+admin.massmail.step.failed:
+    - '{count, number} failed'
+    - 'Note under the number of sent messages of a mass mail. Keep {count, number}.'
+    - 'messages+intl-icu'
+admin.massmail.step.none.failed:
+    - 'none failed'
+    - 'Note under the number of sent messages of a mass mail when all went out.'
+admin.massmail.duration:
+    - '{hours, plural, =0 {{minutes, number} min} other {{hours, number} h {minutes, number} min}}'
+    - 'How long the sending of a mass mail takes, e.g. "3 h 27 min" or "12 min". Keep the {...} parts; translate h (hours) and min (minutes).'
+    - 'messages+intl-icu'
+admin.massmail.next.draft:
+    - 'Nobody gets this mass mail yet. Send yourself a test, then choose the recipients.'
+    - 'What to do next with a mass mail that has no recipients yet.'
+admin.massmail.next.enqueued:
+    - '{count, plural, one {# member is waiting.} other {# members are waiting.}} Trigger the sending once you have checked the test mail. It runs in the background, about {perMinute, number} a minute (roughly {duration}).'
+    - 'What to do next with an enqueued mass mail, for a volunteer who may trigger it. Keep the {...} parts.'
+    - 'messages+intl-icu'
+admin.massmail.next.enqueued.level:
+    - '{count, plural, one {# member is waiting.} other {# members are waiting.}} A volunteer with level 5 triggers the sending.'
+    - 'What happens next with an enqueued mass mail, for a volunteer who may not trigger it. Keep {count, number}.'
+    - 'messages+intl-icu'
+admin.massmail.next.triggered:
+    - '{count, plural, one {# message goes} other {# messages go}} out in the background, about {perMinute, number} a minute. Done in about {duration}.'
+    - 'State of a mass mail whose sending was started. Keep the {...} parts.'
+    - 'messages+intl-icu'
+admin.massmail.next.sending:
+    - 'Sending in the background, about {perMinute, number} a minute: {sent, number} sent, {count, number} to go, done in about {duration}. Stopping keeps the sent ones, so nobody gets it twice.'
+    - 'State of a mass mail that is being sent. Keep the {...} parts.'
+    - 'messages+intl-icu'
+admin.massmail.next.stopped:
+    - 'The sending is stopped. {sent, plural, one {# member already got it} other {# members already got it}}; {count, plural, one {# waits} other {# wait}} in the queue. Resuming sends only to those waiting.'
+    - 'State of a mass mail whose sending was stopped, for a volunteer who may resume it. Keep the {...} parts.'
+    - 'messages+intl-icu'
+admin.massmail.next.stopped.level:
+    - 'The sending is stopped. {sent, plural, one {# member already got it} other {# members already got it}}; {count, plural, one {# waits} other {# wait}} for a volunteer with level 5 to resume it.'
+    - 'State of a stopped mass mail, for a volunteer who may not resume it. Keep the {...} parts.'
+    - 'messages+intl-icu'
+admin.massmail.next.sent:
+    - '{sent, plural, one {Sent to # member.} other {Sent to # members.}}{failed, plural, =0 {} one { # message could not be delivered.} other { # messages could not be delivered.}}'
+    - 'State of a mass mail that went out. Keep the {...} parts.'
+    - 'messages+intl-icu'
+admin.massmail.choose.recipients:
+    - 'Choose recipients'
+    - 'Button and heading to choose the members who get a mass mail.'
+admin.massmail.unqueue:
+    - 'Remove from queue'
+    - 'Button that removes the waiting recipients of a mass mail from the queue.'
+admin.massmail.trigger:
+    - 'Trigger sending'
+    - 'Button that starts the sending of a mass mail.'
+admin.massmail.resume:
+    - 'Resume sending'
+    - 'Button that starts the sending of a stopped mass mail again.'
+admin.massmail.stop:
+    - 'Stop sending'
+    - 'Button that stops the sending of a mass mail; the sent messages stay sent.'
+admin.massmail.preview:
+    - 'Preview'
+    - 'Heading of the preview of a mass mail.'
+admin.massmail.preview.note:
+    - 'English · as {username} sees it'
+    - 'Note next to the preview of a mass mail: it is shown in English, with the volunteer as recipient. Keep {username}.'
+    - 'messages+intl-icu'
+admin.massmail.translations:
+    - 'Translations'
+    - 'Heading of the languages a mass mail is translated into.'
+admin.massmail.translations.count:
+    - 'The text is translated into {count, plural, one {# language} other {# languages}}.'
+    - 'How many languages a mass mail is translated into. Keep the {...} parts and #.'
+    - 'messages+intl-icu'
+admin.massmail.created.on:
+    - 'Created {date}'
+    - 'When a mass mail was written or last changed. Keep {date}.'
+    - 'messages+intl-icu'
+admin.massmail.edit.title:
+    - 'Edit mass mail'
+    - 'Small heading above the name of a mass mail that is being edited.'
+admin.massmail.save:
+    - 'Save changes'
+    - 'Button that saves an edited mass mail.'
+admin.massmail.name.fixed:
+    - 'The name can''t be changed.'
+    - 'Help below the name of a mass mail that is being edited.'
+admin.massmail.description.fixed:
+    - 'The description can''t be changed.'
+    - 'Help below the description of a mass mail that is being edited.'
+admin.massmail.choose.type:
+    - 'Choose a type'
+    - 'First choice of the type of a new mass mail.'
+admin.massmail.usernames.help:
+    - 'Separate the usernames with commas or spaces.'
+    - 'Help below the usernames that get a mass mail.'
+admin.massmail.limit:
+    - 'Maximum number of messages'
+    - 'Label of the highest number of members a mass mail is enqueued for.'
+admin.massmail.limit.help:
+    - 'Leave empty to enqueue everyone.'
+    - 'Help below the maximum number of messages of a mass mail.'
+admin.massmail.group.help:
+    - 'Members of the group who accept mass mails.'
+    - 'Help below the group whose members get a mass mail.'
+admin.massmail.choose.country:
+    - 'Choose a country'
+    - 'First choice of the country whose members get a mass mail.'
+admin.massmail.choose.group:
+    - 'Choose a group'
+    - 'First choice of the group whose members get a mass mail.'
+admin.massmail.termsofuse.info:
+    - 'A change of the terms of use goes to all active members, whatever their preferences say.'
+    - 'Explanation on the tab to enqueue a change of the terms of use.'
+admin.massmail.enqueue.all:
+    - 'Enqueue all members'
+    - 'Button that enqueues a change of the terms of use for all active members.'
+admin.massmail.who:
+    - 'Who gets it'
+    - 'Heading of the box that says which members get a mass mail.'
+admin.massmail.who.general:
+    - 'Members who accept news by mail in their preferences.'
+    - 'Who gets a newsletter.'
+admin.massmail.who.specific:
+    - 'Members who want to hear about local events in their preferences.'
+    - 'Who gets a mass mail about local events.'
+admin.massmail.who.termsofuse:
+    - 'All active members, whatever their preferences say.'
+    - 'Who gets a change of the terms of use.'
+admin.massmail.who.note:
+    - 'Members already in the queue aren''t added twice. Nothing is sent until the sending is triggered.'
+    - 'Note in the box that says which members get a mass mail.'
+admin.massmail.test.title:
+    - 'Send a test'
+    - 'Heading of the page to send a mass mail as a test.'
+admin.massmail.test.hint:
+    - 'The test goes out right away to the email address of each member, in the language set in their preferences. Nobody is enqueued and the counts of the mass mail don''t change.'
+    - 'Explanation on the page to send a mass mail as a test.'
+admin.massmail.test.members:
+    - 'Members'
+    - 'Label of the usernames that get a mass mail as a test.'
+admin.massmail.test.preview.note:
+    - 'Each member gets it in the language set in their preferences'
+    - 'Note next to the preview on the page to send a mass mail as a test.'
+admin.massmail.test.sent:
+    - 'Test sent directly to {usernames}, each in their own language. Nothing was enqueued.'
+    - 'Confirmation after a mass mail was sent as a test. Keep {usernames}.'
+    - 'messages+intl-icu'
+admin.massmail.test.nobody:
+    - 'None of these usernames belongs to a member.'
+    - 'Error when a mass mail is sent as a test to usernames that don''t exist.'
+admin.massmail.stopped:
+    - 'The sending is stopped. {waiting, plural, one {# message waits} other {# messages wait}} in the queue{sent, plural, =0 {.} one {; the member who got it won''t get it again.} other {; the # members who got it won''t get it again.}}'
+    - 'Confirmation after a volunteer stopped the sending of a mass mail. Keep the {...} parts.'
+    - 'messages+intl-icu'
+admin.massmail.created.flash:
+    - 'The mass mail was created.'
+    - 'Confirmation after a mass mail was written.'
+admin.massmail.updated:
+    - 'The mass mail was updated.'
+    - 'Confirmation after a mass mail was edited.'
+admin.massmail.enqueued:
+    - '{name} is enqueued for {count, plural, one {# member} other {# members}}.'
+    - 'Confirmation after recipients were chosen for a mass mail. Keep the {...} parts and #.'
+    - 'messages+intl-icu'
+admin.massmail.unqueued:
+    - 'The members were removed from the queue.'
+    - 'Confirmation after the waiting recipients of a mass mail were removed.'
+admin.massmail.triggered:
+    - 'The sending is triggered.'
+    - 'Confirmation after the sending of a mass mail was started.'
+admin.massmail.none:
+    - 'There are no mass mails yet.'
+    - 'Shown instead of the list of mass mails when none was written yet.'
+admin.massmail.text:
+    - 'Text'
+    - 'Label of the text of a mass mail on the volunteer page to write it.'
+admin.massmail.text.help:
+    - 'Start with "Hello {username},": every member sees their own username there. Keep {username} as it is.'
+    - 'Help below the text of a mass mail. {username} is a placeholder in the text of the mass mail; keep it as it is.'

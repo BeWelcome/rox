@@ -46,6 +46,8 @@
 {# No side menu in a frame (?embed=1): the page is in a side panel #}
 {% set sidebar = (submenu is defined) and not embedded %}
 {% if not embedded %}{% include 'menu.html.twig' %}{% endif %}
+{# inline_notices: the page shows its notice flashes itself (inline_notice_messages), the others stay toasts #}
+{% set inline_notice_messages = (inline_notices ?? false) ? app.flashes('notice') : [] %}
 <div id="toasts" class="bw-toasts">
   {# plausible_event flashes are analytics events (_analytics.html.twig), never a message for the member #}
   {% for label, messages in app.flashes|filter((messages, label) => label != 'plausible_event') %}

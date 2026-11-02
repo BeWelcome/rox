@@ -1,0 +1,8 @@
+{# The notices of the mass mail pages, in the page (base.html.twig: inline_notices) #}
+{% for message in inline_notice_messages ?? [] %}
+  <div class="c-inline-flash" role="status">
+    <span class="c-inline-flash__icon"><i class="fas fa-check" aria-hidden="true"></i></span>
+    <span class="c-inline-flash__text">{{ message }}</span>
+    <button type="button" class="c-inline-flash__close" aria-label="{{ 'modal.close'|trans }}" onclick="this.closest('.c-inline-flash').remove()"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+  </div>
+{% endfor %}

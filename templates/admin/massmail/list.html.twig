@@ -1,41 +1,53 @@
 {% extends 'base.html.twig' %}
+{% set inline_notices = true %}
 
 {% block content %}
-  {% set massmail_type_labels = constant('App\\Form\\Admin\\MassmailType::TYPE_LABELS') %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h1 class="u:text-24 mb-0">{{ 'adminmassmaillistheader'|trans }}</h1>
-    <a class="btn btn-primary" href="{{ path('admin_massmail_create') }}">{{ 'adminmassmailcreate'|trans }}</a>
-  </div>
-  {% if massmails.haveToPaginate %}
-    <div class="d-flex justify-content-end mb-2">{{ pagerfanta(massmails, 'rox_default') }}</div>
-  {% endif %}
-  <div class="table-responsive">
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>{{ 'adminmassmailname'|trans }}</th>
-          <th>{{ 'admin.massmail.type'|trans }}</th>
-          <th>{{ 'admin.massmail.created'|trans }}</th>
-          {% for status in ['enqueued', 'triggered', 'sent', 'failed'] %}
-            <th class="text-end">{{ ('adminmassmail' ~ status)|trans }}</th>
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for massmail in massmails %}
-          <tr class="js-massmail" data-id="{{ massmail.id }}">
-            <td><a href="{{ path('admin_massmail_details', {id: massmail.id}) }}">{{ massmail.name }}</a></td>
-            <td>{{ (massmail_type_labels[massmail.type] ?? massmail.type)|trans }}</td>
-            <td>{{ massmail.created|date('Y-m-d') }}</td>
-            {% for status in ['enqueued', 'triggered', 'sent', 'failed'] %}
-              <td class="text-end">{{ massmail[status] }}</td>
+  {% import 'admin/massmail/_macros.html.twig' as mm %}
+  <div class="c-massmail">
+    {% include 'admin/massmail/_flash.html.twig' %}
+    <div class="c-page-head">
+      <div class="c-page-head__main">
+        <p class="c-page-head__eyebrow">{{ 'volunteertools'|trans }}</p>
+        <h1 class="c-page-head__title">{{ 'admin.massmail.title'|trans }}</h1>
+      </div>
+      <div class="c-page-head__actions">
+        <a class="o-button" href="{{ path('admin_massmail_create') }}"><i class="fas fa-plus" aria-hidden="true"></i>{{ 'admin.massmail.create'|trans }}</a>
+      </div>
+    </div>
+
+    <section class="c-home-card">
+      {% if massmails.nbResults == 0 %}
+        <p class="c-massmail-list__empty">{{ 'admin.massmail.none'|trans }}</p>
+      {% else %}
+        <div class="c-massmail-list">
+          <div class="c-massmail-list__table">
+            <div class="c-massmail-list__row c-massmail-list__row--head" aria-hidden="true">
+              <span>{{ 'adminmassmailname'|trans }}</span>
+              <span>{{ 'admin.massmail.type'|trans }}</span>
+              <span>{{ 'admin.massmail.created'|trans }}</span>
+              <span>{{ 'admin.massmail.status'|trans }}</span>
+              {% for status in ['enqueued', 'triggered', 'sent', 'failed'] %}
+                <span class="c-massmail-list__count">{{ ('adminmassmail' ~ status)|trans }}</span>
+              {% endfor %}
+            </div>
+            {% for massmail in massmails %}
+              <a class="c-massmail-list__row js-massmail" data-id="{{ massmail.id }}" data-stage="{{ massmail.stage }}" href="{{ path('admin_massmail_details', {id: massmail.id}) }}">
+                <span class="c-massmail-list__name">{{ massmail.name }}</span>
+                <span><span class="c-tag c-tag--type">{{ mm.type_label(massmail.type) }}</span></span>
+                <span class="c-massmail-list__date">{{ massmail.created|format_date(pattern='d MMM y') }}</span>
+                <span>{{ mm.stage_tag(massmail.stage) }}</span>
+                {{ mm.count(massmail.enqueued) }}
+                {{ mm.count(massmail.triggered) }}
+                {{ mm.count(massmail.sent) }}
+                {{ mm.count(massmail.failed, true) }}
+              </a>
             {% endfor %}
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+          </div>
+        </div>
+        {% if massmails.haveToPaginate %}
+          <div class="c-massmail-list__pager">{{ pagerfanta(massmails, 'rox_default') }}</div>
+        {% endif %}
+      {% endif %}
+    </section>
   </div>
-  {% if massmails.haveToPaginate %}
-    <div class="d-flex justify-content-end">{{ pagerfanta(massmails, 'rox_default') }}</div>
-  {% endif %}
 {% endblock content %}

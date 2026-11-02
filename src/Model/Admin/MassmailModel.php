@@ -25,6 +25,17 @@ class MassmailModel
     public const string SENT = 'sent';
     public const string FAILED = 'failed';
 
+    /** About how many mails the cron sends per minute (send:massmail every minute); the pages estimate with it */
+    public const int PER_MINUTE = 200;
+
+    /** The stages of a mass mail (withState) */
+    public const string STAGE_DRAFT = 'draft';
+    public const string STAGE_ENQUEUED = 'enqueued';
+    public const string STAGE_TRIGGERED = 'triggered';
+    public const string STAGE_SENDING = 'sending';
+    public const string STAGE_STOPPED = 'stopped';
+    public const string STAGE_SENT = 'sent';
+
     /**
      * The counts of a mass mail (broadcast_statistics) and the statuses of the messages they count.
      */
@@ -211,15 +222,22 @@ class MassmailModel
         });
     }
 
+    /**
+     * Stops the sending: the messages still waiting go back to the queue, the sent ones stay. Triggering again
+     * (resume) sends only to those waiting, so nobody gets the mass mail twice. A message send:massmail is sending
+     * right now is locked; the update waits for it and leaves it out once it is sent.
+     *
+     * @return int the number of messages moved back to the queue
+     */
     public function untrigger(Newsletter $newsletter): int
     {
         return $this->connection->transactional(function () use ($newsletter): int {
             $this->connection->executeStatement("UPDATE broadcast SET Status = 'Created' WHERE id = ?", [$newsletter->getId()]);
             $count = (int) $this->connection->executeStatement(
-                "DELETE FROM broadcastmessages WHERE IdBroadcast = ? AND Status = 'ToSend'",
+                "UPDATE broadcastmessages SET Status = 'ToApprove', updated = NOW() WHERE IdBroadcast = ? AND Status = 'ToSend'",
                 [$newsletter->getId()],
             );
-            $this->statistics->add($newsletter, triggered: -$count);
+            $this->statistics->add($newsletter, enqueued: $count, triggered: -$count);
 
             return $count;
         });
@@ -348,7 +366,9 @@ class MassmailModel
     }
 
     /**
-     * What can be done next: a triggered mass mail was enqueued as well.
+     * The stage of a mass mail and what can be done next. A stopped mass mail sent some messages and has others in
+     * the queue again; resuming it triggers those. A mass mail whose recipients were all skipped by send:massmail
+     * (left or suspended since) has no counts but the status Triggered: it counts as sent.
      *
      * @param array<string, mixed> $row
      *
@@ -360,18 +380,46 @@ class MassmailModel
             $row[$name] = (int) ($row[$name] ?? 0);
         }
         $done = $row[self::SENT] > 0 || $row[self::FAILED] > 0;
-        $triggered = 'Triggered' === $row['status'] || $row[self::TRIGGERED] > 0 || $done;
-        $enqueued = $row[self::ENQUEUED] > 0 || $triggered;
+        $stage = match (true) {
+            $row[self::TRIGGERED] > 0 => $done ? self::STAGE_SENDING : self::STAGE_TRIGGERED,
+            $row[self::ENQUEUED] > 0 => $done ? self::STAGE_STOPPED : self::STAGE_ENQUEUED,
+            $done, 'Triggered' === ($row['status'] ?? null) => self::STAGE_SENT,
+            default => self::STAGE_DRAFT,
+        };
         // the types that were enqueued for reminders and notices (RemindToLog, SuspendAfter5Reminders, ...) are sent
         // by the member commands now
         $sendable = \in_array($row['type'] ?? null, [Newsletter::REGULAR_NEWSLETTER, Newsletter::SPECIFIC_NEWSLETTER, Newsletter::TERMS_OF_USE], true);
+        $waiting = \in_array($stage, [self::STAGE_ENQUEUED, self::STAGE_STOPPED], true);
+        $sending = \in_array($stage, [self::STAGE_TRIGGERED, self::STAGE_SENDING], true);
 
         return $row + [
-            'can_edit' => !$enqueued,
-            'can_enqueue' => !$enqueued && $sendable,
-            'can_unqueue' => $enqueued && !$triggered,
-            'can_trigger' => $enqueued && !$triggered,
-            'can_untrigger' => $triggered && !$done,
+            'stage' => $stage,
+            'progress' => $this->progress($stage, $row),
+            // the messages the next step sends: those waiting in the queue, or those being sent
+            'remaining' => $sending ? $row[self::TRIGGERED] : ($waiting ? $row[self::ENQUEUED] : 0),
+            'can_edit' => self::STAGE_DRAFT === $stage,
+            'can_enqueue' => self::STAGE_DRAFT === $stage && $sendable,
+            'can_unqueue' => $waiting,
+            'can_trigger' => $waiting,
+            'can_untrigger' => $sending,
         ];
+    }
+
+    /**
+     * How far the mass mail is, in percent: a quarter per step; while sending (or stopped), the sent share of the
+     * last quarter.
+     *
+     * @param array<string, mixed> $row
+     */
+    private function progress(string $stage, array $row): int
+    {
+        if (\in_array($stage, [self::STAGE_SENDING, self::STAGE_STOPPED], true)) {
+            $done = $row[self::SENT] + $row[self::FAILED];
+            $all = $done + $row[self::TRIGGERED] + $row[self::ENQUEUED];
+
+            return 62 + intdiv(38 * $done, max(1, $all));
+        }
+
+        return [self::STAGE_DRAFT => 12, self::STAGE_ENQUEUED => 37, self::STAGE_TRIGGERED => 62][$stage] ?? 100;
     }
 }

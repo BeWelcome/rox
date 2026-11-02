@@ -1,58 +1,94 @@
 {% extends 'base.html.twig' %}
+{% set inline_notices = true %}
 
 {% block javascripts %}
   {{ encore_entry_script_tags('admin/massmail') }}
 {% endblock javascripts %}
 
 {% block content %}
-  <p><a href="{{ path('admin_massmail_details', {id: newsletter.id}) }}">{{ newsletter.name }}</a></p>
-  <h1 class="u:text-24">{{ 'adminmassmailenqueue'|trans }}</h1>
   {% set labels = {
       members: 'adminmassmailenqueuemembers',
-      location: 'adminmassmailenqueuelocation',
+      location: 'admin.massmail.place',
       group: 'adminmassmailenqueuegroup',
       termsofuse: 'adminmassmailenqueuetermsofuse',
   } %}
-  <ul class="nav nav-tabs mb-3" role="tablist">
-    {% for recipients, form in forms %}
-      <li class="nav-item" role="presentation">
-        <button class="nav-link{% if recipients == active %} active{% endif %}" id="{{ recipients }}-tab" data-bs-toggle="tab"
-                data-bs-target="#{{ recipients }}-pane" type="button" role="tab" aria-controls="{{ recipients }}-pane"
-                aria-selected="{{ recipients == active ? 'true' : 'false' }}">{{ labels[recipients]|trans }}</button>
-      </li>
-    {% endfor %}
-  </ul>
-  <div class="tab-content">
-    {% for recipients, form in forms %}
-      <div class="tab-pane fade{% if recipients == active %} show active{% endif %}" id="{{ recipients }}-pane" role="tabpanel" aria-labelledby="{{ recipients }}-tab">
-        <div class="row">
-          <div class="col-12 col-lg-8">
-            {{ form_start(form) }}
-              {{ form_errors(form) }}
-              {% if recipients == 'location' %}
-                {{ form_row(form.country, {attr: {'data-url-admin-units': path('admin_massmail_adminunits', {country: 'XX'}), 'data-url-places': path('admin_massmail_places', {country: 'XX', adminUnit: 'YY'})}}) }}
-                <div class="mb-3">
-                  {{ form_label(form.adminUnit) }}
-                  <select id="{{ form.adminUnit.vars.id }}" name="{{ form.adminUnit.vars.full_name }}" class="form-select js-massmail-admin-unit" disabled>
-                    <option value="">{{ 'admin.massmail.all.admin.units'|trans }}</option>
-                  </select>
-                </div>
-                <div class="mb-3">
-                  {{ form_label(form.place) }}
-                  <select id="{{ form.place.vars.id }}" name="{{ form.place.vars.full_name }}" class="form-select js-massmail-place" disabled>
-                    <option value="">{{ 'admin.massmail.all.places'|trans }}</option>
-                  </select>
-                </div>
-                {% do form.adminUnit.setRendered %}
-                {% do form.place.setRendered %}
-              {% elseif recipients == 'termsofuse' %}
-                <p>{{ 'adminmassmailenqueuetermsofuseinfo'|trans }}</p>
-              {% endif %}
-              {{ form_rest(form) }}
-            {{ form_end(form) }}
-          </div>
-        </div>
+  {# matches MassmailModel::preferenceJoin: who accepts which type #}
+  {% set who = {
+      (constant('App\\Entity\\Newsletter::SPECIFIC_NEWSLETTER')): 'admin.massmail.who.specific',
+      (constant('App\\Entity\\Newsletter::TERMS_OF_USE')): 'admin.massmail.who.termsofuse',
+  }[newsletter.type] ?? 'admin.massmail.who.general' %}
+  <div class="c-massmail">
+    {% include 'admin/massmail/_flash.html.twig' %}
+    <a class="c-page-head__back" href="{{ path('admin_massmail_details', {id: newsletter.id}) }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ newsletter.name }}</a>
+    <div class="c-page-head">
+      <div class="c-page-head__main">
+        <p class="c-page-head__eyebrow">{{ newsletter.name }}</p>
+        <h1 class="c-page-head__title">{{ 'admin.massmail.choose.recipients'|trans }}</h1>
       </div>
-    {% endfor %}
+    </div>
+
+    <div class="c-massmail-grid c-massmail-grid--form">
+      <section class="c-home-card c-massmail-grid__wide">
+        <ul class="nav c-home-tabs" role="tablist">
+          {% for recipients, form in forms %}
+            <li class="nav-item" role="presentation">
+              <a class="nav-link c-home-tabs__link{% if recipients == active %} active{% endif %}" id="{{ recipients }}-tab" href="#{{ recipients }}-pane"
+                 data-bs-toggle="tab" role="tab" aria-controls="{{ recipients }}-pane" aria-selected="{{ recipients == active ? 'true' : 'false' }}">{{ labels[recipients]|trans }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="tab-content c-massmail-tabs__body">
+          {% for recipients, form in forms %}
+            {% form_theme form 'admin/massmail/_form_theme.html.twig' %}
+            <div class="tab-pane{% if recipients == active %} show active{% endif %}" id="{{ recipients }}-pane" role="tabpanel" aria-labelledby="{{ recipients }}-tab">
+              {{ form_start(form, {attr: {class: 'c-massmail-tabs__form js-massmail-recipients'}}) }}
+                {{ form_errors(form) }}
+                {% if recipients == 'members' %}
+                  {{ form_row(form.members) }}
+                  {{ form_row(form.usernames, {row_attr: {class: 'js-massmail-usernames'}}) }}
+                  {{ form_row(form.limit, {attr: {class: 'o-input'}, row_attr: {class: 'c-massmail-tabs__limit'}}) }}
+                {% elseif recipients == 'location' %}
+                  {{ form_row(form.country, {attr: {
+                      class: 'js-tom-select js-massmail-required',
+                      'data-url-admin-units': path('admin_massmail_adminunits', {country: 'XX'}),
+                      'data-url-places': path('admin_massmail_places', {country: 'XX', adminUnit: 'YY'}),
+                  }}) }}
+                  <div class="o-form-group">
+                    {{ form_label(form.adminUnit) }}
+                    <select id="{{ form.adminUnit.vars.id }}" name="{{ form.adminUnit.vars.full_name }}" class="o-input js-massmail-admin-unit" disabled>
+                      <option value="">{{ 'admin.massmail.all.admin.units'|trans }}</option>
+                    </select>
+                  </div>
+                  <div class="o-form-group">
+                    {{ form_label(form.place) }}
+                    <select id="{{ form.place.vars.id }}" name="{{ form.place.vars.full_name }}" class="o-input js-massmail-place" disabled>
+                      <option value="">{{ 'admin.massmail.all.places'|trans }}</option>
+                    </select>
+                  </div>
+                  {% do form.adminUnit.setRendered %}
+                  {% do form.place.setRendered %}
+                {% elseif recipients == 'group' %}
+                  {{ form_row(form.group, {attr: {class: 'js-tom-select js-massmail-required'}}) }}
+                {% else %}
+                  <p class="c-massmail-tabs__info">{{ 'admin.massmail.termsofuse.info'|trans }}</p>
+                {% endif %}
+                <div class="c-massmail-tabs__submit">
+                  <button type="submit" id="{{ form.enqueue.vars.id }}" name="{{ form.enqueue.vars.full_name }}" class="o-button js-massmail-enqueue">
+                    <i class="fas fa-user-plus" aria-hidden="true"></i>{{ form.enqueue.vars.label|trans }}
+                  </button>
+                  {% do form.enqueue.setRendered %}
+                </div>
+              {{ form_end(form) }}
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+      <aside class="c-hint c-hint--stacked">
+        <span class="c-hint__icon"><i class="fas fa-envelope-open-text" aria-hidden="true"></i></span>
+        <p class="c-hint__title">{{ 'admin.massmail.who'|trans }}</p>
+        <p class="c-hint__text">{{ who|trans }}</p>
+        <p class="c-hint__muted">{{ 'admin.massmail.who.note'|trans }}</p>
+      </aside>
+    </div>
   </div>
 {% endblock content %}

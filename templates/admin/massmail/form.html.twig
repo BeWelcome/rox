@@ -1,23 +1,45 @@
 {% extends 'base.html.twig' %}
+{% set inline_notices = true %}
 
 {% block content %}
-  <h1 class="u:text-24">{{ massmail ? massmail.name : 'adminmassmailcreate'|trans }}</h1>
-  <p class="text-muted">{{ 'admin.massmail.write.english'|trans }}</p>
-  <div class="row">
-    <div class="col-12 col-lg-10">
-      {{ form_start(form) }}
-        <input type="hidden" id="upload_path" value="{{ path('newsletter_add_image') }}">
-        {{ form_errors(form) }}
-        {{ form_row(form.type) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.subject) }}
-        {{ form_row(form.body) }}
-        {{ form_row(form.description) }}
-        <div class="d-flex gap-2">
-          {{ form_widget(form.submit) }}
-          <a class="btn btn-outline-primary" href="{{ massmail ? path('admin_massmail_details', {id: massmail.id}) : path('admin_massmail') }}">{{ 'cancel'|trans }}</a>
-        </div>
-      {{ form_end(form) }}
+  {% form_theme form 'admin/massmail/_form_theme.html.twig' %}
+  <div class="c-massmail">
+    {% include 'admin/massmail/_flash.html.twig' %}
+    {% if massmail %}
+      <a class="c-page-head__back" href="{{ path('admin_massmail_details', {id: massmail.id}) }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ massmail.name }}</a>
+    {% else %}
+      <a class="c-page-head__back" href="{{ path('admin_massmail') }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'admin.massmail.back'|trans }}</a>
+    {% endif %}
+    <div class="c-page-head">
+      <div class="c-page-head__main">
+        <p class="c-page-head__eyebrow">{{ (massmail ? 'admin.massmail.edit.title' : 'admin.massmail.title')|trans }}</p>
+        <h1 class="c-page-head__title">{{ massmail ? massmail.name : 'admin.massmail.create'|trans }}</h1>
+      </div>
+    </div>
+
+    <div class="c-massmail-grid c-massmail-grid--form">
+      <section class="c-home-card c-massmail-grid__wide">
+        {{ form_start(form, {attr: {class: 'c-massmail-form'}}) }}
+          <input type="hidden" id="upload_path" value="{{ path('newsletter_add_image') }}">
+          {{ form_errors(form) }}
+          <div class="c-massmail-form__pair">
+            {{ form_row(form.type) }}
+            {{ form_row(form.name) }}
+          </div>
+          {{ form_row(form.subject) }}
+          {{ form_row(form.body) }}
+          {{ form_row(form.description) }}
+          <div class="c-massmail-form__actions">
+            <button type="submit" id="{{ form.submit.vars.id }}" name="{{ form.submit.vars.full_name }}" class="o-button">{{ form.submit.vars.label|trans }}</button>
+            {% do form.submit.setRendered %}
+            <a class="o-button o-button--outline" href="{{ massmail ? path('admin_massmail_details', {id: massmail.id}) : path('admin_massmail') }}">{{ 'cancel'|trans }}</a>
+          </div>
+        {{ form_end(form) }}
+      </section>
+      <aside class="c-hint">
+        <span class="c-hint__icon"><i class="fas fa-language" aria-hidden="true"></i></span>
+        <p class="c-hint__text">{{ 'admin.massmail.write.english'|trans }}</p>
+      </aside>
     </div>
   </div>
 {% endblock content %}

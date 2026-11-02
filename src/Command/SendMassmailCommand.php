@@ -7,6 +7,7 @@ use App\Entity\BroadcastMessage;
 use App\Entity\Member;
 use App\Entity\Newsletter;
 use App\Entity\NewsletterStatistics;
+use App\Repository\NewsletterRepository;
 use App\Repository\NewsletterStatisticsRepository;
 use App\Service\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,6 +18,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Throwable;
 
 #[AsCommand(
     name: 'send:massmail',
@@ -68,72 +70,95 @@ class SendMassmailCommand extends Command
         return 0;
     }
 
+    /**
+     * Each message is sent in its own transaction, which locks its row while it is still ToSend: a volunteer who
+     * stops the sending moves the waiting messages back to the queue meanwhile (MassmailModel::untrigger), and two
+     * runs at the same time don't send a message twice. The counts change with the message.
+     *
+     * @param BroadcastMessage[] $scheduledBroadcastMessages
+     */
     private function sendMassmail(array $scheduledBroadcastMessages, SymfonyStyle $io): int
     {
+        $connection = $this->entityManager->getConnection();
+        /** @var NewsletterStatisticsRepository $statistics */
+        $statistics = $this->entityManager->getRepository(NewsletterStatistics::class);
         $sent = 0;
-        $lastBroadcastId = 0;
-        // per mass mail: [sent, failed, skipped]
-        $statistics = [];
+        // per mass mail: whether its text has images
+        $hasImages = [];
 
-        /** @var BroadcastMessage $scheduled */
         foreach ($scheduledBroadcastMessages as $scheduled) {
-            $parameters = [];
-            if ($lastBroadcastId !== $scheduled->getNewsletter()->getId()) {
-                // Check if the current newsletter contains images and set the parameter
-                $newsletterRepository = $this->entityManager->getRepository(Newsletter::class);
-                $newsletterTranslations = $newsletterRepository->getTranslations($scheduled->getNewsletter());
-                $anyNewsletter = reset($newsletterTranslations);
+            $newsletter = $scheduled->getNewsletter();
+            $receiver = $scheduled->getReceiver();
+            $key = ['newsletter' => $newsletter->getId(), 'receiver' => $receiver->getId()];
 
-                $hasImages = str_contains((string) $anyNewsletter['body'], '<figure');
-                if ($hasImages) {
-                    $parameters['has_images'] = true;
+            $connection->beginTransaction();
+            try {
+                $waiting = $connection->fetchOne(
+                    "SELECT 1 FROM broadcastmessages WHERE IdBroadcast = :newsletter AND IdReceiver = :receiver AND Status = 'ToSend' FOR UPDATE",
+                    $key,
+                );
+                if (false === $waiting) {
+                    // stopped or sent by another run since the batch was read
+                    $connection->rollBack();
+
+                    continue;
                 }
 
-                $lastBroadcastId = $scheduled->getNewsletter()->getId();
+                // Skipped messages leave the queue, so that they don't take the place of others in the next runs
+                if (!$this->sentToThisMember($receiver, $newsletter)) {
+                    $this->setStatus($key, self::SKIPPED);
+                    $statistics->add($newsletter, triggered: -1);
+                    $connection->commit();
+
+                    continue;
+                }
+
+                $parameters = ['unsubscribe_key' => bin2hex(random_bytes(32))];
+                $hasImages[$newsletter->getId()] ??= $this->hasImages($newsletter);
+                if ($hasImages[$newsletter->getId()]) {
+                    $parameters['has_images'] = true;
+                }
+                try {
+                    $this->mailer->sendNewsletterEmail($newsletter, $receiver, $parameters);
+                    $this->setStatus($key, 'Sent', $parameters['unsubscribe_key']);
+                    $statistics->add($newsletter, triggered: -1, sent: 1);
+                    ++$sent;
+                } catch (Exception $e) {
+                    $io->error('Message Frozen: ' . $e->getMessage());
+                    $this->setStatus($key, 'Freeze');
+                    $statistics->add($newsletter, triggered: -1, failed: 1);
+                }
+                $connection->commit();
+            } catch (Throwable $e) {
+                $connection->rollBack();
+
+                throw $e;
             }
-            $newsletterId = $scheduled->getNewsletter()->getId();
-            $receiver = $scheduled->getReceiver();
-
-            // Skipped messages leave the queue, so that they don't take the place of others in the next runs
-            if (!$this->sentToThisMember($receiver, $scheduled->getNewsletter())) {
-                $scheduled->setStatus(self::SKIPPED);
-                $statistics[$newsletterId][2] = ($statistics[$newsletterId][2] ?? 0) + 1;
-                $this->entityManager->persist($scheduled);
-
-                continue;
-            }
-
-            try {
-                $unsubscribeKey = bin2hex(random_bytes(32));
-                $parameters['unsubscribe_key'] = $unsubscribeKey;
-                $this->mailer->sendNewsletterEmail(
-                    $scheduled->getNewsletter(),
-                    $receiver,
-                    $parameters
-                );
-
-                $scheduled
-                    ->setStatus('Sent')
-                    ->setUnsubscribeKey($unsubscribeKey);
-                ++$sent;
-                $statistics[$newsletterId][0] = ($statistics[$newsletterId][0] ?? 0) + 1;
-            } catch (Exception $e) {
-                $io->error('Message Frozen: ' . $e->getMessage());
-                $scheduled->setStatus('Freeze');
-                $statistics[$newsletterId][1] = ($statistics[$newsletterId][1] ?? 0) + 1;
-            }
-            $this->entityManager->persist($scheduled);
-        }
-        $this->entityManager->flush();
-
-        /** @var NewsletterStatisticsRepository $statisticsRepository */
-        $statisticsRepository = $this->entityManager->getRepository(NewsletterStatistics::class);
-        foreach ($statistics as $newsletterId => $counts) {
-            $done = ($counts[0] ?? 0) + ($counts[1] ?? 0) + ($counts[2] ?? 0);
-            $statisticsRepository->add($newsletterId, triggered: -$done, sent: $counts[0] ?? 0, failed: $counts[1] ?? 0);
         }
 
         return $sent;
+    }
+
+    /**
+     * @param array{newsletter: int, receiver: int} $key
+     */
+    private function setStatus(array $key, string $status, ?string $unsubscribeKey = null): void
+    {
+        $this->entityManager->getConnection()->executeStatement(
+            'UPDATE broadcastmessages SET Status = :status, unsubscribe_key = COALESCE(:unsubscribeKey, unsubscribe_key), updated = NOW()
+            WHERE IdBroadcast = :newsletter AND IdReceiver = :receiver',
+            $key + ['status' => $status, 'unsubscribeKey' => $unsubscribeKey],
+        );
+    }
+
+    private function hasImages(Newsletter $newsletter): bool
+    {
+        /** @var NewsletterRepository $newsletters */
+        $newsletters = $this->entityManager->getRepository(Newsletter::class);
+        $translations = $newsletters->getTranslations($newsletter);
+        $any = reset($translations);
+
+        return false !== $any && str_contains((string) $any['body'], '<figure');
     }
 
     /**

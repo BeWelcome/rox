@@ -1,0 +1,205 @@
+/*
+ * The mass mail pages of the volunteers (templates/admin/massmail), in the look of the dashboard (c-home-card,
+ * c-home-tabs, l-hello). The page head, hint box, tags, inline notice and the quiet danger button are generic.
+ */
+
+/* Page head: back link, eyebrow, title and the actions on the right */
+.c-page-head__back {
+  display: flex;
+  width: max-content;
+  max-width: 100%;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1rem;
+  color: #c2410c;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.c-page-head__back:hover,
+.c-page-head__back:focus { color: #9a3412; text-decoration: none; }
+.c-page-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
+.c-page-head__main { min-width: 0; }
+.c-page-head__eyebrow { margin: 0 0 0.25rem; color: #c2410c; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; overflow-wrap: anywhere; }
+.c-page-head__title { margin: 0; color: #0f172a; font-family: Signika, sans-serif; font-size: 2.25rem; font-weight: 700; line-height: 1.1; overflow-wrap: anywhere; }
+.c-page-head__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+/* Card head: a title and a note on the right, over a c-home-card */
+.c-card-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.25rem 1rem; padding: 1rem 1.75rem; border-bottom: 1px solid #e2e8f0; }
+.c-card-head__title { margin: 0; color: #0f172a; font-family: Signika, sans-serif; font-size: 1.25rem; font-weight: 700; }
+.c-card-head__note { color: #64748b; font-size: 0.8125rem; }
+
+/* Hint box: a cream aside with an icon tile */
+.c-hint { display: flex; gap: 0.85rem; padding: 1.25rem 1.5rem; border: 1px solid #f3e8dc; border-radius: 1.25rem; background: #fff9f3; }
+.c-hint--inline { align-items: center; margin-bottom: 1rem; padding: 1rem 1.25rem; }
+.c-hint--stacked { flex-direction: column; }
+.c-hint__icon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; background: #fde6d2; color: #c2410c; }
+.c-hint__title { margin: 0; color: #0f172a; font-family: Signika, sans-serif; font-size: 1.125rem; font-weight: 700; }
+.c-hint__text { margin: 0; color: #334155; font-size: 0.9375rem; line-height: 1.5; text-wrap: pretty; }
+.c-hint__muted { margin: 0; color: #64748b; font-size: 0.875rem; line-height: 1.5; }
+
+/* Tags: stages, types and languages */
+.c-tag { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.7rem; border-radius: 999px; background: #f1f5f9; color: #475569; font-size: 0.8125rem; font-weight: 700; line-height: 1.2; white-space: nowrap; }
+.c-tag i { font-size: 0.75rem; }
+.c-tag--orange { background: #fdebdc; color: #c2410c; }
+.c-tag--green { background: #dcfce7; color: #15803d; }
+.c-tag--type { border-radius: 0.5rem; background: #eef2f7; color: #334155; }
+
+/* Notice shown in the page instead of a toast (base.html.twig: inline_notices) */
+.c-inline-flash {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+  padding: 0.9rem 1.1rem 0.9rem 1rem;
+  border-radius: 0.9rem;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 20px rgba(15, 23, 42, 0.04);
+}
+.c-inline-flash__icon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 0.75rem; background: #dcfce7; color: #15803d; }
+.c-inline-flash__text { flex: 1; min-width: 0; color: #0f172a; font-size: 0.9375rem; }
+.c-inline-flash__close { flex-shrink: 0; width: 2rem; height: 2rem; border: 0; border-radius: 999px; background: transparent; color: #64748b; cursor: pointer; transition: background 0.15s ease; }
+.c-inline-flash__close:hover,
+.c-inline-flash__close:focus-visible { background: #f1f5f9; }
+
+/* A quiet danger pill next to o-button: remove, stop */
+.c-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 40px;
+  padding: 0 1.25rem;
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  background: #fff;
+  color: #b91c1c;
+  font-family: Signika, sans-serif;
+  font-size: 1rem;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.c-btn-danger:hover,
+.c-btn-danger:focus-visible { border-color: #fca5a5; background: #fef2f2; color: #b91c1c; }
+
+.c-massmail .o-button { gap: 0.5rem; white-space: nowrap; text-decoration: none; }
+.c-massmail .o-input::placeholder { color: #94a3b8; font-weight: 400; }
+.c-massmail .o-input:hover:not(:disabled) { border-color: #94a3b8; }
+.c-massmail .o-input:disabled { border-color: #cbd5e1; background: #f8fafc; color: #94a3b8; cursor: not-allowed; }
+.c-massmail input[type=radio] { accent-color: #f37000; }
+.c-massmail form { margin: 0; }
+
+/* Two-column grids: a wide card and an aside */
+.c-massmail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1.5rem; align-items: start; }
+.c-massmail-grid--form { grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); }
+.c-massmail-grid__wide { grid-column: span 2; min-width: 0; }
+@media (max-width: 47.99rem) {
+  .c-massmail-grid__wide { grid-column: auto; }
+}
+
+/* List: a grid table, the whole row links to the mass mail */
+.c-massmail-list { overflow-x: auto; }
+.c-massmail-list__table { min-width: 880px; }
+.c-massmail-list__row {
+  display: grid;
+  grid-template-columns: minmax(11rem, 2fr) 8.5rem 6.5rem 9rem repeat(4, 5.25rem);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.95rem 1.75rem;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  font-size: 0.9375rem;
+  text-decoration: none;
+}
+a.c-massmail-list__row:hover,
+a.c-massmail-list__row:focus-visible { background: #f8fafc; color: #334155; text-decoration: none; }
+.c-massmail-list__row--head { padding: 0.9rem 1.75rem; border-bottom-color: #e2e8f0; color: #64748b; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.c-massmail-list__name { min-width: 0; overflow: hidden; color: #0f172a; font-family: Signika, sans-serif; font-size: 1.0625rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.c-massmail-list__date { color: #64748b; }
+.c-massmail-list__count { text-align: right; font-variant-numeric: tabular-nums; }
+.c-massmail-list__count--none { color: #cbd5e1; }
+.c-massmail-list__count--failed { color: #b91c1c; }
+.c-massmail-list__pager { display: flex; justify-content: flex-end; padding: 1rem 1.75rem; }
+.c-massmail-list__empty { margin: 0; padding: 1.5rem 1.75rem; color: #64748b; }
+
+/* Details: the status card with its steps and the next step */
+.c-massmail-status {
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border: 1px solid #eef0f3;
+  border-radius: 1.5rem;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 8px 28px rgba(15, 23, 42, 0.06);
+}
+.c-massmail-status__bar { height: 4px; background: #f1f5f9; }
+.c-massmail-status__fill { height: 100%; background: #ea7a2e; transition: width 0.35s ease; }
+.c-massmail-status__steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+.c-massmail-step { display: flex; flex-direction: column; gap: 0.35rem; padding: 1.4rem 1.75rem; border-right: 1px solid #f1f5f9; }
+.c-massmail-step__label { display: flex; align-items: center; gap: 0.55rem; color: #64748b; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.c-massmail-step__mark {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid #cbd5e1;
+  border-radius: 999px;
+  background: #fff;
+  color: #fff;
+  font-size: 0.625rem;
+}
+.c-massmail-step--done .c-massmail-step__mark { border: 0; background: #f37000; }
+.c-massmail-step--current .c-massmail-step__mark { border: 4px solid #f37000; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.2); }
+.c-massmail-step__value { color: #0f172a; font-family: Signika, sans-serif; font-size: 1.75rem; font-weight: 700; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.c-massmail-step__note { color: #64748b; font-size: 0.8125rem; }
+.c-massmail-next { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.5rem; padding: 1.1rem 1.75rem; border-top: 1px solid #f3e8dc; background: #fff9f3; }
+.c-massmail-next__icon { display: flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 0.75rem; background: #fde6d2; color: #c2410c; font-size: 1.05rem; }
+.c-massmail-next__text { flex: 1 1 18rem; margin: 0; color: #334155; font-size: 0.9375rem; line-height: 1.45; text-wrap: pretty; }
+.c-massmail-next__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+/* Preview of subject and text */
+.c-massmail-preview { padding: 1.5rem 1.75rem 2rem; }
+.c-massmail-preview__label { margin: 0 0 0.3rem; color: #64748b; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.c-massmail-preview__subject { margin: 0 0 1.5rem; color: #0f172a; font-family: Signika, sans-serif; font-size: 1.375rem; font-weight: 700; line-height: 1.3; overflow-wrap: anywhere; }
+.c-massmail-preview__body { padding: 1.5rem; border-radius: 0.9rem; background: #f8fafc; color: #334155; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
+.c-massmail-preview__body > :last-child { margin-bottom: 0; }
+.c-massmail-preview__body img { max-width: 100%; height: auto; }
+
+/* Translations */
+.c-massmail-langs { padding: 1.25rem 1.75rem 1.5rem; }
+.c-massmail-langs__title { margin: 0 0 0.25rem; color: #0f172a; font-family: Signika, sans-serif; font-size: 1.25rem; font-weight: 700; }
+.c-massmail-langs__count { margin: 0 0 1rem; color: #64748b; font-size: 0.875rem; }
+.c-massmail-langs__list { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.c-massmail-langs__created { margin: 1.25rem 0 0; padding-top: 1rem; border-top: 1px solid #f1f5f9; color: #64748b; font-size: 0.8125rem; line-height: 1.5; }
+
+/* Forms: fields stacked, labels above, help and errors below */
+.c-massmail-form { display: flex; flex-direction: column; gap: 1.1rem; padding: 1.75rem; }
+.c-massmail-form .o-form-group { margin: 0; }
+.c-massmail-form .form-text { display: block; margin-top: 0.3rem; color: #64748b; font-size: 80%; }
+.c-massmail-form__pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr)); gap: 1.1rem; }
+.c-massmail-form__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; padding-top: 0.5rem; }
+.c-massmail-form__errors { margin: 0.3rem 0 0; padding: 0; color: #dc3545; font-size: 0.875rem; list-style: none; }
+.c-massmail-form .ck.ck-editor { overflow: hidden; border: 1px solid #475569; border-radius: 8px; }
+.c-massmail-form .ck.ck-editor__top .ck-toolbar { border: 0; border-bottom: 1px solid #e2e8f0; background: #f8fafc; }
+.c-massmail-form .ck.ck-editor__main > .ck-editor__editable { border: 0; }
+
+/* Enqueue: dashboard tabs over the forms */
+.c-massmail-tabs__body { padding: 1rem 1.75rem 1.4rem; }
+.c-massmail-tabs__form { display: flex; flex-direction: column; gap: 1.1rem; max-width: 34rem; padding: 0.6rem 0 0.2rem; }
+.c-massmail-tabs__form .o-form-group { margin: 0; }
+.c-massmail-tabs__form .form-text { display: block; margin-top: 0.3rem; color: #64748b; font-size: 80%; }
+.c-massmail-tabs__form .o-radio-button { margin: 0 0 0.35rem; }
+.c-massmail-tabs__limit { max-width: 16rem; }
+.c-massmail-tabs__info { margin: 0; color: #334155; font-size: 1rem; line-height: 1.55; text-wrap: pretty; }
+.c-massmail-tabs__submit { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding-top: 0.4rem; }
+
+/* Test: the usernames next to the button */
+.c-massmail-block { margin-bottom: 1.5rem; }
+.c-massmail-test { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem; padding: 1.5rem 1.75rem; }
+.c-massmail-test__field { flex: 1 1 22rem; min-width: 0; }
+.c-massmail-test__field .o-form-group { margin: 0; }
+.c-massmail-test__field .form-text { display: block; margin-top: 0.3rem; color: #64748b; font-size: 80%; }
+.c-massmail-test__send { padding-bottom: 1.6rem; }

@@ -36,3 +36,28 @@ if (country && adminUnit && place) {
         }
     });
 }
+
+// Members tab: the usernames only count for "Selected members"
+document.querySelectorAll('.js-massmail-recipients').forEach((form) => {
+    const usernames = form.querySelector('.js-massmail-usernames');
+    const choices = form.querySelectorAll('input[type=radio][name$="[members]"]');
+    if (usernames && choices.length > 0) {
+        const show = () => {
+            const chosen = form.querySelector('input[type=radio][name$="[members]"]:checked');
+            usernames.hidden = chosen !== null && chosen.value !== 'usernames';
+        };
+        choices.forEach((choice) => choice.addEventListener('change', show));
+        show();
+    }
+
+    // Place and group: Enqueue once the country or group is chosen
+    const required = form.querySelector('select.js-massmail-required');
+    const submit = form.querySelector('.js-massmail-enqueue');
+    if (required && submit) {
+        const enable = () => {
+            submit.disabled = required.value === '';
+        };
+        required.addEventListener('change', enable);
+        enable();
+    }
+});

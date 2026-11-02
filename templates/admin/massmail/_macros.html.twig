@@ -1,0 +1,26 @@
+{# The stage of a mass mail as a tag (MassmailModel::STAGE_*) #}
+{% macro stage_tag(stage) %}
+  {%- set tags = {
+      draft: ['', 'fas fa-pen'],
+      enqueued: ['c-tag--orange', 'fas fa-hourglass-half'],
+      triggered: ['c-tag--orange', 'fas fa-paper-plane'],
+      sending: ['c-tag--orange', 'fas fa-paper-plane'],
+      stopped: ['', 'fas fa-pause'],
+      sent: ['c-tag--green', 'fas fa-check'],
+  } -%}
+  <span class="c-tag {{ tags[stage][0] }}"><i class="{{ tags[stage][1] }}" aria-hidden="true"></i> {{ ('admin.massmail.stage.' ~ stage)|trans }}</span>
+{%- endmacro %}
+
+{# The type of a mass mail: Newsletter, Local events, Terms of use #}
+{% macro type_label(type) %}
+  {{- (constant('App\\Form\\Admin\\MassmailType::TYPE_LABELS')[type] ?? type)|trans -}}
+{% endmacro %}
+
+{# A count of the list: a dash for none, failed ones in red #}
+{% macro count(number, failed = false) %}
+  {%- if number > 0 -%}
+    <span class="c-massmail-list__count{{ failed ? ' c-massmail-list__count--failed' }}">{{ number|format_number }}</span>
+  {%- else -%}
+    <span class="c-massmail-list__count c-massmail-list__count--none">–</span>
+  {%- endif -%}
+{% endmacro %}

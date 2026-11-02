@@ -97,14 +97,8 @@ final class PageActionsTest extends WebTestCase
 
     public function testTheAdminPagesPostTheirActionsWithTheToken(): void
     {
-        $admin = $this->member('bwadmin');
-        // the login messages are for the admins
-        $this->entityManager->getConnection()->executeStatement(
-            "INSERT INTO rightsvolunteers (IdMember, IdRight, Level, Scope, Comment, created, updated)
-             SELECT ?, id, 10, '\"All\"', '', NOW(), NOW() FROM rights WHERE Name = 'Admin'",
-            [$admin->getId()],
-        );
-        $this->client->loginUser($admin);
+        // the login messages are for the admins: bwadmin has every right (fixtures/rightsvolunteers.yml)
+        $this->client->loginUser($this->member('bwadmin'));
 
         $this->submit('/admin/comment', '/admin/comment/member-1/member-2/hide');
         $comment = $this->entityManager->getRepository(Comment::class)->findOneBy([

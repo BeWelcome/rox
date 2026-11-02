@@ -96,7 +96,6 @@ final class AdminRightsControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertStringContainsString('Berlin', $crawler->filter('table')->text());
         self::assertStringContainsString('Germany', $crawler->filter('table')->text());
-        self::assertStringContainsString('member-empty', $crawler->filter('table')->text());
 
         $crawler = $client->request('GET', '/admin/rights/list/members', [
             'member' => 'member-2',

@@ -11,3 +11,87 @@ App\Entity\MemberLanguageLevel:
         Member:  '@member_<current()>'
         Language: '@language_en'
         Level: '<randomElement(["Expert", "MotherLanguage", "Intermediate", "Beginner"])>'
+    volunteer_admin_english_mother_tongue:
+        Member: '@volunteer_admin'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_words_english_mother_tongue:
+        Member: '@volunteer_words'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_group_english_mother_tongue:
+        Member: '@volunteer_group'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_rights_english_mother_tongue:
+        Member: '@volunteer_rights'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_checker_english_mother_tongue:
+        Member: '@volunteer_checker'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_logs_english_mother_tongue:
+        Member: '@volunteer_logs'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_comments_english_mother_tongue:
+        Member: '@volunteer_comments'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_faqs_english_mother_tongue:
+        Member: '@volunteer_faqs'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_flags_english_mother_tongue:
+        Member: '@volunteer_flags'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_massmail_english_mother_tongue:
+        Member: '@volunteer_massmail'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_treasurer_english_mother_tongue:
+        Member: '@volunteer_treasurer'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_forummoderator_english_mother_tongue:
+        Member: '@volunteer_forummoderator'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_safetyteam_english_mother_tongue:
+        Member: '@volunteer_safetyteam'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_poll_english_mother_tongue:
+        Member: '@volunteer_poll'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_wiki_english_mother_tongue:
+        Member: '@volunteer_wiki'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_profile_english_mother_tongue:
+        Member: '@volunteer_profile'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_communitynews_english_mother_tongue:
+        Member: '@volunteer_communitynews'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_newmembersbewelcome_english_mother_tongue:
+        Member: '@volunteer_newmembersbewelcome'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_managesubscriptions_english_mother_tongue:
+        Member: '@volunteer_managesubscriptions'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_accepter_english_mother_tongue:
+        Member: '@volunteer_accepter'
+        Language: '@language_en'
+        Level: 'MotherLanguage'
+    volunteer_sqlforvolunteers_english_mother_tongue:
+        Member: '@volunteer_sqlforvolunteers'
+        Language: '@language_en'
+        Level: 'MotherLanguage'

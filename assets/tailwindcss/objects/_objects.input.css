@@ -286,3 +286,62 @@ textarea.o-input::placeholder {
 .o-input--nofull {
   width: initial
 }
+
+/*
+ * Dropdowns: select.o-input, e.g. every ChoiceType of rox_form_theme. :where() keeps the rules at the lowest
+ * specificity, so the variants and page styles of a select still win.
+ * The browser draws the list of a native select outside the page, where the web font isn't available: without a
+ * fallback it was serif. A chevron shows that it opens. Browsers with the customizable select
+ * (appearance: base-select) draw the list in the page, styled below; the others keep their own list.
+ */
+:where(select.o-input) {
+  padding-right: 2.25rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5l4.5 4.5 4.5-4.5' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-position: right 0.9rem center;
+  background-repeat: no-repeat;
+  background-size: 0.75rem 0.5rem;
+  font-family: Signika, sans-serif;
+  cursor: pointer;
+}
+@supports (appearance: base-select) {
+  /* the chevron is the picker icon below */
+  :where(select.o-input) { background-image: none; }
+  :where(select.o-input),
+  :where(select.o-input)::picker(select) { appearance: base-select; }
+  :where(select.o-input) { display: flex; align-items: center; gap: 0.5rem; padding: 0 0.85rem 0 16px; color: #0f172a; cursor: pointer; }
+  /* a chevron (the icons are SVG from JavaScript, there is no icon font to use here) */
+  :where(select.o-input)::picker-icon {
+    content: '';
+    width: 0.75rem;
+    height: 0.5rem;
+    background: #64748b;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1.5 1.5l4.5 4.5 4.5-4.5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+    transition: rotate 0.2s ease;
+  }
+  :where(select.o-input):open::picker-icon { rotate: 180deg; }
+  :where(select.o-input):focus-visible { outline: none; border-color: #f37000; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.2); }
+  :where(select.o-input)::picker(select) {
+    margin-top: 0.35rem;
+    padding: 0.35rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 12px 32px rgba(15, 23, 42, 0.12);
+  }
+  :where(select.o-input) option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.5rem;
+    color: #334155;
+    font-family: Signika, sans-serif;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  :where(select.o-input) option:hover,
+  :where(select.o-input) option:focus-visible { outline: none; background: #f1f5f9; color: #0f172a; }
+  :where(select.o-input) option:checked { background: #fff7ed; color: #c2410c; font-weight: 600; }
+  :where(select.o-input) option::checkmark { order: 1; margin-left: auto; color: #f37000; }
+  :where(select.o-input) option:disabled { color: #94a3b8; cursor: default; }
+}

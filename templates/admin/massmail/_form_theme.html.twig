@@ -1,0 +1,27 @@
+{# Mass mail forms: errors once, under the field (the site theme also puts them into the label). The messages of the
+   constraints are words of the messages domain: the validator, which looks in validators, leaves them untranslated. #}
+
+{% block form_label_errors %}{% endblock form_label_errors %}
+
+{% block form_row -%}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~ '_help'}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr|merge({class: (row_attr.class|default('') ~ ' o-form-group')|trim})} %}{{ block('attributes') }}{% endwith %}>
+    {{- form_label(form) -}}
+    {{- form_widget(form, widget_attr) -}}
+    {{- form_help(form) -}}
+    {{- form_errors(form) -}}
+    </div>
+{%- endblock form_row %}
+
+{% block form_errors %}
+  {%- if errors|length > 0 -%}
+    <ul class="c-massmail-form__errors">
+      {%- for error in errors -%}
+        <li class="form-error-message">{{ error.message == error.messageTemplate ? error.messageTemplate|trans(error.messageParameters) : error.message }}</li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+{% endblock form_errors %}

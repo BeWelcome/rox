@@ -1,38 +1,135 @@
 {% extends 'base.html.twig' %}
+{% set inline_notices = true %}
 
 {% block content %}
-  {% set massmail_type_labels = constant('App\\Form\\Admin\\MassmailType::TYPE_LABELS') %}
+  {% import 'admin/massmail/_macros.html.twig' as mm %}
   {% set token = csrf_token(constant('App\\Controller\\Admin\\MassmailController::TOKEN')) %}
-  <p><a href="{{ path('admin_massmail') }}">{{ 'adminmassmaillist'|trans }}</a></p>
-  <h1 class="u:text-24">{{ massmail.name }}</h1>
-  <p>{{ (massmail_type_labels[massmail.type] ?? massmail.type)|trans }}</p>
+  {% set m = massmail %}
+  {# where the mass mail is: 0 written, 1 enqueued (or stopped), 2 triggered, 3 sending, 4 sent #}
+  {% set at = {draft: 0, enqueued: 1, stopped: 1, triggered: 2, sending: 3, sent: 4}[m.stage] %}
+  {% set eta = 'admin.massmail.duration'|trans({hours: duration.hours, minutes: duration.minutes}) %}
+  {% set done = 'admin.massmail.step.done'|trans %}
+  {% set steps = [
+      {
+          label: 'admin.massmail.step.written'|trans,
+          value: m.created|format_date(pattern='d MMM y'),
+          note: 'admin.massmail.step.draft.saved'|trans,
+      },
+      {
+          label: 'adminmassmailenqueued'|trans,
+          value: m.enqueued > 0 ? m.enqueued|format_number : (at > 1 ? done : '–'),
+          note: m.enqueued > 0 ? 'admin.massmail.step.waiting'|trans : (at > 1 ? 'admin.massmail.step.moved.on'|trans : 'admin.massmail.step.nobody'|trans),
+      },
+      {
+          label: 'adminmassmailtriggered'|trans,
+          value: m.triggered > 0 ? m.triggered|format_number : (at > 2 ? done : '–'),
+          note: m.triggered > 0 ? 'admin.massmail.step.to.send'|trans({duration: eta}) : (at > 2 ? 'admin.massmail.step.handed'|trans : 'admin.massmail.step.not.yet'|trans),
+      },
+      {
+          label: 'adminmassmailsent'|trans,
+          value: m.sent > 0 ? m.sent|format_number : '–',
+          note: m.failed > 0 ? 'admin.massmail.step.failed'|trans({count: m.failed}) : (m.sent > 0 ? 'admin.massmail.step.none.failed'|trans : 'admin.massmail.step.not.yet'|trans),
+      },
+  ] %}
+  {% set rate = {count: m.remaining, sent: m.sent, failed: m.failed, perMinute: per_minute, duration: eta} %}
 
-  <div class="d-flex flex-wrap gap-2 mb-3">
-    {% if massmail.can_edit %}
-      <a class="btn btn-outline-primary" href="{{ path('admin_massmail_edit', {id: massmail.id}) }}">{{ 'adminmassmailedit'|trans }}</a>
-    {% endif %}
-    <a class="btn btn-outline-primary" href="{{ path('admin_massmail_test', {id: massmail.id}) }}">{{ 'admin.massmail.test'|trans }}</a>
-    {% if massmail.can_enqueue %}
-      <a class="btn btn-primary" href="{{ path('admin_massmail_enqueue', {id: massmail.id}) }}">{{ 'adminmassmailenqueue'|trans }}</a>
-    {% endif %}
-    {% for action in ['unqueue', 'trigger', 'untrigger'] %}
-      {% if massmail['can_' ~ action] and (action == 'unqueue' or rights.canTrigger) %}
-        <form method="post" action="{{ path('admin_massmail_' ~ action, {id: massmail.id}) }}">
-          <input type="hidden" name="_token" value="{{ token }}">
-          <button type="submit" class="btn {{ action == 'trigger' ? 'btn-primary' : 'btn-outline-danger' }}">{{ ('adminmassmail' ~ action)|trans }}</button>
-        </form>
-      {% endif %}
-    {% endfor %}
-  </div>
+  <div class="c-massmail">
+    {% include 'admin/massmail/_flash.html.twig' %}
+    <a class="c-page-head__back" href="{{ path('admin_massmail') }}"><i class="fas fa-arrow-left" aria-hidden="true"></i> {{ 'admin.massmail.back'|trans }}</a>
+    <div class="c-page-head">
+      <div class="c-page-head__main">
+        <p class="c-page-head__eyebrow">{{ mm.type_label(m.type) }}</p>
+        <h1 class="c-page-head__title">{{ m.name }}</h1>
+      </div>
+      <div class="c-page-head__actions">
+        {% if m.can_edit %}
+          <a class="o-button o-button--outline" href="{{ path('admin_massmail_edit', {id: m.id}) }}"><i class="fas fa-pen" aria-hidden="true"></i>{{ 'adminmassmailedit'|trans }}</a>
+        {% endif %}
+        <a class="o-button o-button--outline" href="{{ path('admin_massmail_test', {id: m.id}) }}"><i class="far fa-paper-plane" aria-hidden="true"></i>{{ 'admin.massmail.test.send'|trans }}</a>
+      </div>
+    </div>
 
-  {% include 'admin/massmail/_status.html.twig' %}
+    <section class="c-massmail-status js-massmail-status" data-stage="{{ m.stage }}" aria-label="{{ 'admin.massmail.status'|trans }}"
+             data-enqueued="{{ m.enqueued }}" data-triggered="{{ m.triggered }}" data-sent="{{ m.sent }}" data-failed="{{ m.failed }}">
+      <div class="c-massmail-status__bar"><div class="c-massmail-status__fill" style="width: {{ m.progress }}%"></div></div>
+      <div class="c-massmail-status__steps">
+        {% for step in steps %}
+          {% set i = loop.index0 %}
+          {% set state = i == 0 or i < at or (i == 3 and at == 4) ? 'done' : (i == at ? 'current' : 'todo') %}
+          <div class="c-massmail-step c-massmail-step--{{ state }}">
+            <div class="c-massmail-step__label">
+              <span class="c-massmail-step__mark">{% if state == 'done' %}<i class="fas fa-check" aria-hidden="true"></i>{% endif %}</span>
+              <span>{{ step.label }}</span>
+            </div>
+            <span class="c-massmail-step__value">{{ step.value }}</span>
+            <span class="c-massmail-step__note">{{ step.note }}</span>
+          </div>
+        {% endfor %}
+      </div>
 
-  <p><strong>{{ 'adminmassmailavailablelanguages'|trans }}:</strong>
-    {% for language in languages %}{{ language.name }}{% if not loop.last %}, {% endif %}{% endfor %}
-  </p>
-  <p><strong>{{ 'adminmassmailsubject'|trans }}:</strong>
-    {{ ('broadcast_title_' ~ newsletter.name)|lower|trans({'username': app.user.username}) }}</p>
-  <div class="border p-3">
-    {{ ('broadcast_body_' ~ newsletter.name)|lower|trans({'username': app.user.username})|prepare_newsletter(true) }}
+      <div class="c-massmail-next">
+        {% set can_trigger = rights.canTrigger %}
+        {% if m.stage == 'draft' %}
+          {% set icon, text = 'fas fa-user-plus', 'admin.massmail.next.draft'|trans %}
+        {% elseif m.stage == 'enqueued' %}
+          {% set icon = can_trigger ? 'fas fa-paper-plane' : 'fas fa-hourglass-half' %}
+          {% set text = (can_trigger ? 'admin.massmail.next.enqueued' : 'admin.massmail.next.enqueued.level')|trans(rate) %}
+        {% elseif m.stage == 'stopped' %}
+          {% set icon = 'fas fa-pause' %}
+          {% set text = (can_trigger ? 'admin.massmail.next.stopped' : 'admin.massmail.next.stopped.level')|trans(rate) %}
+        {% elseif m.stage == 'triggered' %}
+          {% set icon, text = 'fas fa-paper-plane', 'admin.massmail.next.triggered'|trans(rate) %}
+        {% elseif m.stage == 'sending' %}
+          {% set icon, text = 'fas fa-paper-plane', 'admin.massmail.next.sending'|trans(rate) %}
+        {% else %}
+          {% set icon, text = 'fas fa-check', 'admin.massmail.next.sent'|trans(rate) %}
+        {% endif %}
+        <span class="c-massmail-next__icon"><i class="{{ icon }}" aria-hidden="true"></i></span>
+        <p class="c-massmail-next__text">{{ text }}</p>
+        <div class="c-massmail-next__actions">
+          {% if m.can_unqueue %}
+            <form method="post" action="{{ path('admin_massmail_unqueue', {id: m.id}) }}">
+              <input type="hidden" name="_token" value="{{ token }}">
+              <button type="submit" class="c-btn-danger"><i class="fas fa-rotate-left" aria-hidden="true"></i>{{ 'admin.massmail.unqueue'|trans }}</button>
+            </form>
+          {% endif %}
+          {% if m.can_untrigger and can_trigger %}
+            <form method="post" action="{{ path('admin_massmail_untrigger', {id: m.id}) }}">
+              <input type="hidden" name="_token" value="{{ token }}">
+              <button type="submit" class="c-btn-danger"><i class="fas fa-hand" aria-hidden="true"></i>{{ 'admin.massmail.stop'|trans }}</button>
+            </form>
+          {% endif %}
+          {% if m.can_enqueue %}
+            <a class="o-button" href="{{ path('admin_massmail_enqueue', {id: m.id}) }}"><i class="fas fa-user-plus" aria-hidden="true"></i>{{ 'admin.massmail.choose.recipients'|trans }}</a>
+          {% endif %}
+          {% if m.can_trigger and can_trigger %}
+            <form method="post" action="{{ path('admin_massmail_trigger', {id: m.id}) }}">
+              <input type="hidden" name="_token" value="{{ token }}">
+              <button type="submit" class="o-button"><i class="fas fa-paper-plane" aria-hidden="true"></i>{{ (m.stage == 'stopped' ? 'admin.massmail.resume' : 'admin.massmail.trigger')|trans }}</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    <div class="c-massmail-grid">
+      <section class="c-home-card c-massmail-grid__wide">
+        <div class="c-card-head">
+          <h2 class="c-card-head__title">{{ 'admin.massmail.preview'|trans }}</h2>
+          <span class="c-card-head__note">{{ 'admin.massmail.preview.note'|trans({username: app.user.username}) }}</span>
+        </div>
+        {% include 'admin/massmail/_preview.html.twig' with {label: true} %}
+      </section>
+      <section class="c-home-card c-massmail-langs">
+        <h2 class="c-massmail-langs__title">{{ 'admin.massmail.translations'|trans }}</h2>
+        <p class="c-massmail-langs__count">{{ 'admin.massmail.translations.count'|trans({count: languages|length}) }}</p>
+        <ul class="c-massmail-langs__list">
+          {% for language in languages %}
+            <li class="c-tag">{{ language.name }}</li>
+          {% endfor %}
+        </ul>
+        <p class="c-massmail-langs__created">{{ 'admin.massmail.created.on'|trans({date: m.created|format_date('long')}) }}</p>
+      </section>
+    </div>
   </div>
 {% endblock content %}

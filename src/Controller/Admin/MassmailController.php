@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Doctrine\DomainType;
 use App\Doctrine\TranslationAllowedType;
+use App\Dto\MassmailEstimate;
 use App\Entity\Language;
 use App\Entity\Member;
 use App\Entity\Newsletter;
@@ -26,9 +27,11 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -66,7 +69,7 @@ class MassmailController extends AbstractController
     public function create(Request $request): Response
     {
         $rights = $this->rights();
-        $form = $this->createForm(MassmailType::class, null, ['types' => $rights->types]);
+        $form = $this->createForm(MassmailType::class, ['body' => MassmailType::BODY_TEMPLATE], ['types' => $rights->types]);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $name = strtolower((string) $form->get('name')->getData());
@@ -86,7 +89,7 @@ class MassmailController extends AbstractController
                 $this->entityManager->persist($this->word('broadcast_body_' . $name, (string) $form->get('body')->getData(), $description));
                 $this->entityManager->flush();
                 $this->translationModel->refreshTranslationsCache();
-                $this->addFlash('notice', $this->translator->trans('adminmassmailsuccesscreate'));
+                $this->addFlash('notice', $this->translator->trans('admin.massmail.created.flash'));
 
                 return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
             }
@@ -134,7 +137,7 @@ class MassmailController extends AbstractController
             }
             $this->entityManager->flush();
             $this->translationModel->refreshTranslationsCache();
-            $this->addFlash('notice', $this->translator->trans('adminmassmailsuccessedit'));
+            $this->addFlash('notice', $this->translator->trans('admin.massmail.updated'));
 
             return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
         }
@@ -148,11 +151,17 @@ class MassmailController extends AbstractController
     #[Route(path: '/admin/massmail/{id}/details', name: 'admin_massmail_details', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function details(Newsletter $newsletter): Response
     {
+        $massmail = $this->model->get($newsletter);
+        $minutes = (int) ceil($massmail['remaining'] / MassmailModel::PER_MINUTE);
+
         return $this->render('admin/massmail/details.html.twig', [
             'newsletter' => $newsletter,
-            'massmail' => $this->model->get($newsletter),
+            'massmail' => $massmail,
             'languages' => $this->model->getLanguages($newsletter),
             'rights' => $this->rights(),
+            'per_minute' => MassmailModel::PER_MINUTE,
+            // how long sending the remaining messages takes
+            'duration' => ['hours' => intdiv($minutes, 60), 'minutes' => $minutes % 60],
         ]);
     }
 
@@ -189,11 +198,10 @@ class MassmailController extends AbstractController
             if ($form->isValid()) {
                 $count = $this->enqueueRecipients($newsletter, $recipients, $form);
                 if (null !== $count) {
-                    $this->addFlash('notice', \sprintf(
-                        $this->translator->trans('adminmassmailsuccessenqueue'),
-                        $newsletter->getName(),
-                        $count,
-                    ));
+                    $this->addFlash('notice', $this->translator->trans('admin.massmail.enqueued', [
+                        'name' => $newsletter->getName(),
+                        'count' => $count,
+                    ]));
 
                     return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
                 }
@@ -207,13 +215,47 @@ class MassmailController extends AbstractController
         ]);
     }
 
+    /**
+     * How many members the recipients chosen on the enqueue page are, for the estimate next to its button. Only the
+     * ways, countries and groups the volunteer may choose.
+     */
+    #[Route(path: '/admin/massmail/{id}/estimate', name: 'admin_massmail_estimate', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function estimate(
+        Newsletter $newsletter,
+        #[MapQueryString(validationFailedStatusCode: Response::HTTP_BAD_REQUEST)] MassmailEstimate $estimate = new MassmailEstimate(),
+    ): JsonResponse {
+        $rights = $this->rights();
+        $termsOfUse = MassmailRights::TERMS_OF_USE === $estimate->recipients;
+        if (
+            !$rights->canChoose($estimate->recipients)
+            || ($termsOfUse && Newsletter::TERMS_OF_USE !== $newsletter->getType())
+            || (null !== $estimate->country && [] !== $rights->countries && !\in_array($estimate->country, $rights->countries, true))
+            || (null !== $estimate->group && [] !== $rights->groups && !\in_array($estimate->group, $rights->groups, true))
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $count = match ($estimate->recipients) {
+            MassmailRights::MEMBERS => $this->countMembers($newsletter, $estimate),
+            MassmailRights::LOCATION => null === $estimate->country ? 0
+                : $this->model->countLocation($newsletter, $estimate->country, $estimate->adminUnit, $estimate->place),
+            MassmailRights::GROUP => null === $estimate->group ? 0 : $this->model->countGroup($newsletter, $estimate->group),
+            default => $this->model->countTermsOfUse(),
+        };
+
+        return $this->json([
+            'count' => $count,
+            'text' => $this->translator->trans('admin.massmail.estimate', ['count' => $count]),
+        ]);
+    }
+
     #[Route(path: '/admin/massmail/{id}/unqueue', name: 'admin_massmail_unqueue', requirements: ['id' => '\d+'], methods: ['POST'])]
     #[IsCsrfTokenValid(self::TOKEN)]
     public function unqueue(Newsletter $newsletter): RedirectResponse
     {
         if ($this->model->get($newsletter)['can_unqueue']) {
             $this->model->unqueue($newsletter);
-            $this->addFlash('notice', $this->translator->trans('adminmassmailsuccessunqueue'));
+            $this->addFlash('notice', $this->translator->trans('admin.massmail.unqueued'));
         }
 
         return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
@@ -226,7 +268,7 @@ class MassmailController extends AbstractController
         $this->denyUnlessCanTrigger();
         if ($this->model->get($newsletter)['can_trigger']) {
             $this->model->trigger($newsletter);
-            $this->addFlash('notice', $this->translator->trans('adminmassmailsuccesstrigger'));
+            $this->addFlash('notice', $this->translator->trans('admin.massmail.triggered'));
         }
 
         return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
@@ -238,8 +280,11 @@ class MassmailController extends AbstractController
     {
         $this->denyUnlessCanTrigger();
         if ($this->model->get($newsletter)['can_untrigger']) {
-            $count = $this->model->untrigger($newsletter);
-            $this->addFlash('notice', $this->translator->trans('admin.massmail.untriggered', ['%count%' => $count]));
+            $waiting = $this->model->untrigger($newsletter);
+            $this->addFlash('notice', $this->translator->trans('admin.massmail.stopped', [
+                'waiting' => $waiting,
+                'sent' => $this->model->get($newsletter)[MassmailModel::SENT],
+            ]));
         }
 
         return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
@@ -263,27 +308,36 @@ class MassmailController extends AbstractController
     }
 
     /**
-     * Sends the mass mail to some members, without enqueueing it.
+     * Sends the mass mail to some members right away, each in the language of their preferences, without enqueueing
+     * it: the counts don't change.
      */
     #[Route(path: '/admin/massmail/{id}/test', name: 'admin_massmail_test', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function test(Request $request, Newsletter $newsletter, MemberRepository $memberRepository, Mailer $mailer): Response
     {
         $form = $this->createFormBuilder()
             ->add('members', TextType::class, [
+                'label' => 'admin.massmail.test.members',
                 'help' => 'Use a list of usernames separated by commas. E. g. polyglot, gbenouville, shevek',
-                'required' => true,
+                'constraints' => [new NotBlank(message: 'admin.massmail.usernames.empty')],
             ])
             ->getForm();
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $usernames = $this->usernames((string) $form->get('members')->getData());
-            foreach ($memberRepository->findBy(['username' => $usernames]) as $member) {
-                $mailer->sendNewsletterEmail($newsletter, $member, [
-                    'unsubscribe_key' => 'ebe4add6264a01e54cb4f1bb774f36886bbf11d236f03444072760cf4ee3e2dd',
-                ]);
-            }
+            $members = $memberRepository->findBy(['username' => $this->usernames((string) $form->get('members')->getData())]);
+            if ([] === $members) {
+                $form->get('members')->addError(new FormError($this->translator->trans('admin.massmail.test.nobody')));
+            } else {
+                foreach ($members as $member) {
+                    $mailer->sendNewsletterEmail($newsletter, $member, [
+                        'unsubscribe_key' => 'ebe4add6264a01e54cb4f1bb774f36886bbf11d236f03444072760cf4ee3e2dd',
+                    ]);
+                }
+                $this->addFlash('notice', $this->translator->trans('admin.massmail.test.sent', [
+                    'usernames' => implode(', ', array_map(static fn (Member $member): string => (string) $member->getUsername(), $members)),
+                ]));
 
-            return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
+                return $this->redirectToRoute('admin_massmail_details', ['id' => $newsletter->getId()]);
+            }
         }
 
         return $this->render('admin/massmail/test.sending.html.twig', [
@@ -346,6 +400,19 @@ class MassmailController extends AbstractController
             default:
                 return $this->model->enqueueTermsOfUse($newsletter, $volunteer);
         }
+    }
+
+    private function countMembers(Newsletter $newsletter, MassmailEstimate $estimate): int
+    {
+        $usernames = [];
+        if (MassmailRecipientsType::USERNAMES === $estimate->members) {
+            $usernames = $this->usernames((string) $estimate->usernames);
+            if ([] === $usernames) {
+                return 0;
+            }
+        }
+
+        return $this->model->countMembers($newsletter, $usernames, (int) $estimate->limit);
     }
 
     /**

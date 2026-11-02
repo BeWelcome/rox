@@ -1,0 +1,9 @@
+{# Subject and text of a mass mail in English, with the volunteer as recipient (details and test page) #}
+{% set name = newsletter.name|lower %}
+<div class="c-massmail-preview">
+  {% if label|default(false) %}<p class="c-massmail-preview__label">{{ 'adminmassmailsubject'|trans }}</p>{% endif %}
+  <p class="c-massmail-preview__subject">{{ ('broadcast_title_' ~ name)|trans({username: app.user.username}, null, 'en') }}</p>
+  <div class="c-massmail-preview__body">
+    {{ ('broadcast_body_' ~ name)|trans({username: app.user.username}, null, 'en')|prepare_newsletter(true) }}
+  </div>
+</div>

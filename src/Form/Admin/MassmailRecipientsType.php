@@ -39,11 +39,13 @@ class MassmailRecipientsType extends AbstractType
                     ])
                     ->add('usernames', TextType::class, [
                         'label' => 'adminmassmailenqueueusernames',
-                        'help' => 'adminmassmailenqueueusernamesinfo',
+                        'help' => 'admin.massmail.usernames.help',
                         'required' => false,
+                        'attr' => ['placeholder' => 'polyglot, gbenouville, shevek'],
                     ])
                     ->add('limit', IntegerType::class, [
-                        'label' => 'adminmassmailenqueuemaxmessages',
+                        'label' => 'admin.massmail.limit',
+                        'help' => 'admin.massmail.limit.help',
                         'required' => false,
                         'constraints' => [new GreaterThanOrEqual(0)],
                     ]);
@@ -53,7 +55,7 @@ class MassmailRecipientsType extends AbstractType
                     ->add('country', ChoiceType::class, [
                         'label' => 'country',
                         'choices' => $options['countries'],
-                        'placeholder' => '',
+                        'placeholder' => 'admin.massmail.choose.country',
                         'attr' => ['class' => 'js-tom-select'],
                         'constraints' => [new NotBlank()],
                     ])
@@ -72,7 +74,8 @@ class MassmailRecipientsType extends AbstractType
                 $builder->add('group', ChoiceType::class, [
                     'label' => 'adminmassmailenqueuegroup',
                     'choices' => $options['groups'],
-                    'placeholder' => '',
+                    'placeholder' => 'admin.massmail.choose.group',
+                    'help' => 'admin.massmail.group.help',
                     'attr' => ['class' => 'js-tom-select'],
                     'constraints' => [new NotBlank()],
                 ]);
@@ -80,7 +83,7 @@ class MassmailRecipientsType extends AbstractType
         }
 
         $builder->add('enqueue', SubmitType::class, [
-            'label' => MassmailRights::TERMS_OF_USE === $options['recipients'] ? 'adminmassmailenqueuesubmittermsofuse' : 'adminmassmailenqueue',
+            'label' => MassmailRights::TERMS_OF_USE === $options['recipients'] ? 'admin.massmail.enqueue.all' : 'adminmassmailenqueue',
             'attr' => ['class' => 'btn-primary'],
         ]);
     }

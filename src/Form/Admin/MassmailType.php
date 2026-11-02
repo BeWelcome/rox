@@ -26,6 +26,9 @@ class MassmailType extends AbstractType
         Newsletter::TERMS_OF_USE => 'adminmassmailedittypetermsofuse',
     ];
 
+    /** The start of the text of a new mass mail: the greeting with the recipient's username and the signature */
+    public const string BODY_TEMPLATE = '<p>Hello {username},</p><p>&nbsp;</p><p>Regards,<br>The BeWelcome Volunteers</p>';
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $types = [];
@@ -37,13 +40,14 @@ class MassmailType extends AbstractType
             ->add('type', ChoiceType::class, [
                 'label' => 'admin.massmail.type',
                 'choices' => $types,
-                'placeholder' => 'adminmassmaileditselecttype',
+                'placeholder' => 'admin.massmail.choose.type',
                 'disabled' => $options['edit'] && !$options['change_type'],
                 'constraints' => [new NotBlank(message: 'adminmassmailchooseatype')],
             ])
             ->add('name', TextType::class, [
                 'label' => 'adminmassmailname',
-                'help' => 'admin.massmail.name.help',
+                'help' => $options['edit'] ? 'admin.massmail.name.fixed' : 'admin.massmail.name.help',
+                'attr' => ['placeholder' => 'newsjuly2026'],
                 'disabled' => $options['edit'],
                 'constraints' => [
                     new NotBlank(message: 'adminmassmailnameempty'),
@@ -55,20 +59,22 @@ class MassmailType extends AbstractType
                 'constraints' => [new NotBlank(message: 'adminmassmailsubjectempty')],
             ])
             ->add('body', CkEditorType::class, [
-                'label' => 'adminmassmailbody',
-                'help' => 'admin.massmail.body.help',
+                'label' => 'admin.massmail.text',
+                'help' => 'admin.massmail.text.help',
                 'attr' => ['class' => 'editor mb-1'],
+                // the editor hides the textarea: the browser can't send the form while a hidden field is required
+                'required' => false,
                 'constraints' => [new NotBlank(message: 'adminmassmailbodyempty')],
             ])
             ->add('description', TextareaType::class, [
                 'label' => 'admin.massmail.description',
-                'help' => 'admin.massmail.description.help',
+                'help' => $options['edit'] ? 'admin.massmail.description.fixed' : 'admin.massmail.description.help',
                 'attr' => ['rows' => 3],
                 'disabled' => $options['edit'],
                 'constraints' => [new NotBlank(message: 'adminmassmaildescriptionempty')],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => $options['edit'] ? 'adminmassmailupdate' : 'adminmassmailcreate',
+                'label' => $options['edit'] ? 'admin.massmail.save' : 'admin.massmail.create',
                 'attr' => ['class' => 'btn-primary'],
             ])
         ;

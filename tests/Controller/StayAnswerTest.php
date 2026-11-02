@@ -32,7 +32,7 @@ class StayAnswerTest extends WebTestCase
         self::assertSelectorTextContains('.c-stay-card__status', 'request.status.waiting.host');
         self::assertSelectorTextContains('.c-stay-answer__q', 'request.decide.prompt');
         $picks = $crawler->filter('.c-stay-card .js-stay-pick');
-        self::assertSame(['accept', 'maybe', 'decline'], $picks->each(fn ($pick) => $pick->attr('data-choice')));
+        self::assertSame(['accept', 'maybe', 'decline'], $picks->each(static fn ($pick) => $pick->attr('data-choice')));
         // The big decision panel under the messages is gone
         self::assertCount(0, $crawler->filter('.js-decide-step[data-step="decide"]'));
 

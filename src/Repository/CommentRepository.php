@@ -54,7 +54,8 @@ class CommentRepository extends EntityRepository
     public function queryAll(): QueryBuilder
     {
         $qb = $this->createQueryBuilder('c')
-            ->orderBy('c.created', 'desc');
+            ->orderBy('c.created', 'desc')
+            ->addOrderBy('c.id', 'desc');
 
         return $qb;
     }
@@ -129,6 +130,16 @@ class CommentRepository extends EntityRepository
             ->setParameter('action', $action);
 
         return $qb;
+    }
+
+    public function countByAdminAction(string $action): int
+    {
+        return (int) $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.adminAction = :action')
+            ->setParameter('action', $action)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function getReportedCommentsCount(): int

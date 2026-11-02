@@ -37,6 +37,7 @@ class CommentCardsTest extends WebTestCase
         // bwadmin has the Comments right in the fixtures
         $client->loginUser($this->member('bwadmin'));
         $client->request('GET', '/admin/comment/' . $receiver->getUsername() . '/' . $writer->getUsername());
+        $client->followRedirect();
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('main', 'zztest comment');

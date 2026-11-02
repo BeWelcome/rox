@@ -3,41 +3,38 @@
 namespace App\Controller\Admin;
 
 use App\Doctrine\CommentAdminActionType;
-use App\Doctrine\CommentQualityType;
 use App\Entity\Comment;
 use App\Entity\Member;
-use App\Form\AdminCommentFormType;
 use App\Model\Admin\CommentModel;
-use App\Utilities\RedirectBackTrait;
+use App\Model\Admin\CommentQueue;
 use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 
 /**
- * Class CommentController.
+ * The comments tool of the volunteers (Comments right) and the Safety Team: a list of comments (the tabs, or all
+ * comments about or by a member) and the chosen comment with everything that can be done to it. Every action posts
+ * the page it came from (return), the list (queue) and the comment after it (next): back on the page, a comment
+ * that left the list makes room for the next one.
  *
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
 class CommentController extends AbstractController
 {
-    use RedirectBackTrait;
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    /** The CSRF token id of the actions on a comment (hide, show, to the safety team, checked). */
+    /** The CSRF token id of the actions on a comment. */
     public const string TOKEN = 'admin_comment';
 
-    /**
-     * CommentController constructor.
-     */
     public function __construct(
         private readonly CommentModel $commentModel,
         private readonly EntityManagerInterface $entityManager,
@@ -47,27 +44,7 @@ class CommentController extends AbstractController
     #[Route(path: '/admin/comment', name: 'admin_comment_overview')]
     public function adminCommentOverview(Request $request): Response
     {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('You need to have Comment right to access this.');
-        }
-
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-
-        $comments = $this->commentModel->getComments($page, $limit);
-
-        return $this->render('admin/comment/overview.html.twig', [
-            'headline' => 'admin.comments.all',
-            'route' => 'admin_comment_overview',
-            'comments' => $comments,
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'overview',
-            ],
-        ]);
+        return $this->queue($request, CommentQueue::All);
     }
 
     #[Route(path: '/admin/comment/safetyteam', name: 'admin_abuser_overview')]
@@ -77,155 +54,102 @@ class CommentController extends AbstractController
             throw $this->createAccessDeniedException('You need to have SafetyTeam right to access this.');
         }
 
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-
-        $comments = $this->commentModel->getCommentsByAdminAction(
-            CommentAdminActionType::SAFETY_TEAM_CHECK,
-            $page,
-            $limit
-        );
-
-        return $this->render('admin/comment/overview.html.twig', [
-            'headline' => 'admin.comment.safetyteam',
-            'route' => 'admin_abuser_overview',
-            'comments' => $comments,
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'abusermustcheck',
-            ],
-        ]);
+        return $this->queue($request, CommentQueue::SafetyTeam);
     }
 
     #[Route(path: '/admin/comment/reported', name: 'admin_comment_reported_overview')]
     public function adminReportedOverview(Request $request): Response
     {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
-
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-
-        $comments = $this->commentModel->getCommentsByAdminAction(CommentAdminActionType::ADMIN_CHECK, $page, $limit);
-
-        return $this->render('admin/comment/overview.html.twig', [
-            'headline' => 'admin.comment.reported',
-            'route' => 'admin_reported_overview',
-            'comments' => $comments,
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'reportedcomment',
-            ],
-        ]);
+        return $this->queue($request, CommentQueue::Reported);
     }
 
     #[Route(path: '/admin/comment/negative', name: 'admin_negative_overview')]
     public function adminNegativeOverview(Request $request): Response
     {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-
-        $comments = $this->commentModel->getCommentsByQuality(CommentQualityType::NEGATIVE, $page, $limit);
-
-        return $this->render('admin/comment/overview.html.twig', [
-            'headline' => 'admin.comment.negative',
-            'route' => 'admin_negative_overview',
-            'comments' => $comments,
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'negativecomment',
-            ],
-        ]);
+        return $this->queue($request, CommentQueue::Negative);
     }
 
     #[Route(path: '/admin/comment/checked', name: 'admin_checked_overview')]
     public function adminCheckedOverview(Request $request): Response
     {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
+        return $this->queue($request, CommentQueue::Checked);
+    }
 
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
+    #[Route(path: '/admin/comment/for/{username:member}', name: 'admin_comments_for_member', priority: 10)]
+    public function showAllCommentsForMember(Request $request, Member $member): Response
+    {
+        return $this->queue($request, CommentQueue::About, $member);
+    }
 
-        $comments = $this->commentModel->getCommentsByAdminAction(CommentAdminActionType::ADMIN_CHECKED, $page, $limit);
+    #[Route(path: '/admin/comment/from/{username:member}', name: 'admin_comments_from_member', priority: 10)]
+    public function showAllCommentsFromMember(Request $request, Member $member): Response
+    {
+        return $this->queue($request, CommentQueue::By, $member);
+    }
 
-        return $this->render('admin/comment/overview.html.twig', [
-            'headline' => 'admin.comment.checked.headline',
-            'route' => 'admin_checked_overview',
-            'comments' => $comments,
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'checkedcomment',
-            ],
+    /**
+     * One comment, as the mails and the profiles link to it: the comments about the member with this one chosen.
+     */
+    #[Route(path: '/admin/comment/{to_member}/{from_member}', name: 'admin_comment', methods: ['GET'])]
+    public function adminComment(
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+    ): Response {
+        $this->denyUnlessVolunteer();
+        $comment = $this->comment($toMember, $fromMember);
+
+        return $this->redirectToRoute('admin_comments_for_member', [
+            'username' => $toMember->getUsername(),
+            'selected' => $comment->getId(),
         ]);
     }
 
-    #[Route(path: '/admin/comment/{to_member}/{from_member}', name: 'admin_comment')]
-    public function adminComment(
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/hide', name: 'admin_comment_hide', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function adminCommentHide(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('error.access.comment');
-        }
+        return $this->act($request, $toMember, $fromMember, 'flash.admin.comment.hidden', static function (Comment $comment) {
+            $comment->setShowToOtherMembers(false);
+        });
+    }
 
-        $commentRepository = $this->entityManager->getRepository(Comment::class);
-        $comment = $commentRepository->findOneBy([
-            'toMember' => $toMember,
-            'fromMember' => $fromMember,
-        ]);
-        $reply = $commentRepository->findOneBy([
-            'toMember' => $fromMember,
-            'fromMember' => $toMember,
-        ]);
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/show', name: 'admin_comment_show', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function adminCommentShow(
+        Request $request,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+    ): Response {
+        return $this->act($request, $toMember, $fromMember, 'flash.admin.comment.visible', static function (Comment $comment) {
+            $comment->setShowToOtherMembers(true);
+        });
+    }
 
-        /** @var Form $form */
-        $form = $this->createForm(AdminCommentFormType::class, $comment);
-        $form->handleRequest($request);
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/lock', name: 'admin_comment_lock', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function adminCommentLock(
+        Request $request,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+    ): Response {
+        return $this->act($request, $toMember, $fromMember, 'flash.admin.comment.locked', static function (Comment $comment) {
+            $comment->setEditingAllowed(false);
+        });
+    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $clickedButton = $form->getClickedButton()->getName();
-            if ('deleteComment' === $clickedButton) {
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.deleted');
-                $this->entityManager->remove($comment);
-                $this->entityManager->flush();
-
-                return $this->redirectToRoute('admin_comment_overview');
-            }
-            $this->handleClickedButton($clickedButton, $comment);
-            $this->entityManager->persist($comment);
-            $this->entityManager->flush();
-
-            // Redirect to self to ensure buttons are correctly labeled after update
-            return $this->redirectToRoute('admin_comment', [
-                'to_member' => $toMember->getUsername(),
-                'from_member' => $fromMember->getUsername(),
-            ]);
-        }
-
-        return $this->render('admin/comment/comment.html.twig', [
-            'form' => $form->createView(),
-            'comment' => $comment,
-            'reply' => $reply,
-        ]);
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/unlock', name: 'admin_comment_unlock', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function adminCommentUnlock(
+        Request $request,
+        #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
+        #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
+    ): Response {
+        return $this->act($request, $toMember, $fromMember, 'flash.admin.comment.editable', static function (Comment $comment) {
+            $comment->setEditingAllowed(true);
+        });
     }
 
     #[Route(
@@ -239,25 +163,14 @@ class CommentController extends AbstractController
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
+        // the Safety Team's list is theirs: only they move comments into it
         if (!$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
-            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
+            throw $this->createAccessDeniedException('You need to have SafetyTeam right to access this.');
         }
 
-        $commentRepository = $this->entityManager->getRepository(Comment::class);
-        $comment = $commentRepository->findOneBy([
-            'toMember' => $toMember,
-            'fromMember' => $fromMember,
-        ]);
-        $comment->setAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK);
-        $this->entityManager->persist($comment);
-        $this->entityManager->flush();
-
-        $this->addTranslatedFlash('notice', 'flash.admin.comment.safetyteam');
-
-        return $this->redirectBack($request, 'admin_comment', [
-            'to_member' => $toMember->getUsername(),
-            'from_member' => $fromMember->getUsername(),
-        ]);
+        return $this->act($request, $toMember, $fromMember, 'flash.admin.comment.safetyteam', static function (Comment $comment) {
+            $comment->setAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK);
+        });
     }
 
     #[Route(
@@ -271,232 +184,162 @@ class CommentController extends AbstractController
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
-        }
-
-        $commentRepository = $this->entityManager->getRepository(Comment::class);
-        $comment = $commentRepository->findOneBy([
-            'toMember' => $toMember,
-            'fromMember' => $fromMember,
-        ]);
-        $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECKED);
-        $this->entityManager->persist($comment);
-        $this->entityManager->flush();
-
-        $this->addTranslatedFlash('notice', 'flash.admin.comment.checked');
-
-        return $this->redirectBack($request, 'admin_comment', [
-            'to_member' => $toMember->getUsername(),
-            'from_member' => $fromMember->getUsername(),
-        ]);
+        return $this->act($request, $toMember, $fromMember, 'flash.admin.comment.checked', static function (Comment $comment) {
+            $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECKED);
+        });
     }
 
-    #[Route(path: '/admin/comment/{to_member}/{from_member}/hide', name: 'admin_comment_hide', methods: ['POST'])]
+    #[Route(
+        path: '/admin/comment/{to_member}/{from_member}/recheck',
+        name: 'admin_comment_check_again',
+        methods: ['POST'],
+    )]
     #[IsCsrfTokenValid(self::TOKEN)]
-    public function adminCommentHide(
+    public function adminCommentCheckAgain(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
-        }
-
-        $commentRepository = $this->entityManager->getRepository(Comment::class);
-        $comment = $commentRepository->findOneBy([
-            'toMember' => $toMember,
-            'fromMember' => $fromMember,
-        ]);
-        $comment->setShowToOtherMembers(false);
-        $this->entityManager->persist($comment);
-        $this->entityManager->flush();
-
-        $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
-
-        return $this->redirectBack($request, 'admin_comment', [
-            'to_member' => $toMember->getUsername(),
-            'from_member' => $fromMember->getUsername(),
-        ]);
+        return $this->act($request, $toMember, $fromMember, 'flash.admin.comment.recheck', static function (Comment $comment) {
+            $comment->setAdminAction(CommentAdminActionType::ADMIN_CHECK);
+        });
     }
 
-    #[Route(path: '/admin/comment/{to_member}/{from_member}/show', name: 'admin_comment_show', methods: ['POST'])]
+    #[Route(path: '/admin/comment/{to_member}/{from_member}/delete', name: 'admin_comment_delete', methods: ['POST'])]
     #[IsCsrfTokenValid(self::TOKEN)]
-    public function adminCommentShow(
+    public function adminCommentDelete(
         Request $request,
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('You need to have either Comments right or be a member of the Safety Team to access this.');
-        }
-
-        $commentRepository = $this->entityManager->getRepository(Comment::class);
-        $comment = $commentRepository->findOneBy([
-            'toMember' => $toMember,
-            'fromMember' => $fromMember,
-        ]);
-        $comment->setShowToOtherMembers(true);
-        $this->entityManager->persist($comment);
+        $this->denyUnlessVolunteer();
+        $comment = $this->comment($toMember, $fromMember);
+        // its reports go with it (comment_report: ON DELETE CASCADE)
+        $this->entityManager->remove($comment);
         $this->entityManager->flush();
+        $this->addTranslatedFlash('notice', 'flash.admin.comment.deleted');
 
-        $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
+        return $this->back($request, $toMember, null);
+    }
 
-        return $this->redirectBack($request, 'admin_comment', [
-            'to_member' => $toMember->getUsername(),
-            'from_member' => $fromMember->getUsername(),
-        ]);
+    private function queue(Request $request, CommentQueue $queue, ?Member $member = null): Response
+    {
+        $this->denyUnlessVolunteer();
+
+        $comments = $this->commentModel->getQueue($queue, $request->query->getInt('page', 1), $member);
+        $list = iterator_to_array($comments->getCurrentPageResults(), false);
+
+        // the chosen comment (also when it isn't on this page, e.g. from a mail), else the first one
+        $selectedId = $request->query->getInt('selected');
+        $selected = (0 < $selectedId ? $this->commentModel->find($selectedId) : null) ?? ($list[0] ?? null);
+
+        return $this->render('admin/comment/comments.html.twig', [
+            'queue' => $queue,
+            'member' => $member,
+            'comments' => $comments,
+            'selected' => $selected,
+            'next' => $this->nextAfter($selected, $list),
+            'counts' => $this->commentModel->getCountsToCheck(),
+            'tabs' => $this->getTabs(),
+            'safety_team' => $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM),
+        ] + $this->commentModel->getDetails($selected, $list));
     }
 
     /**
-     * @throws AccessDeniedException
+     * The comment to show when the chosen one leaves the list: the one after it, at the end the one before it.
      *
-     * @return Response
+     * @param list<Comment> $list
      */
-    #[Route(path: '/admin/comment/for/{username:member}', name: 'admin_comments_for_member', priority: 10)]
-    public function showAllCommentsForMember(Request $request, Member $member)
+    private function nextAfter(?Comment $selected, array $list): ?Comment
     {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
+        $index = array_search($selected, $list, true);
+        if (false === $index) {
+            return null;
         }
 
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-
-        $comments = $this->commentModel->getCommentsForMember($member, $page, $limit);
-
-        return $this->render('admin/comment/overview.html.twig', [
-            'headline' => 'admin.comment.all',
-            'route' => 'admin_comments_for_member',
-            'comments' => $comments,
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'overview',
-            ],
-        ]);
+        return $list[$index + 1] ?? $list[$index - 1] ?? null;
     }
 
     /**
-     * @throws AccessDeniedException
-     *
-     * @return Response
+     * @param callable(Comment): void $change
      */
-    #[Route(path: '/admin/comment/from/{username:member}', name: 'admin_comments_from_member', priority: 10)]
-    public function showAllCommentsFromMember(Request $request, Member $member)
+    private function act(Request $request, Member $toMember, Member $fromMember, string $flash, callable $change): Response
     {
-        if (
-            !$this->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-        ) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
+        $this->denyUnlessVolunteer();
+        $comment = $this->comment($toMember, $fromMember);
+        $change($comment);
+        $this->entityManager->flush();
+        $this->addTranslatedFlash('notice', $flash);
 
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
-
-        $comments = $this->commentModel->getCommentsFromMember($member, $page, $limit);
-
-        return $this->render('admin/comment/overview.html.twig', [
-            'headline' => 'admin.comment.all',
-            'route' => 'admin_comments_from_member',
-            'comments' => $comments,
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'overview',
-            ],
-        ]);
+        return $this->back($request, $toMember, $comment);
     }
 
-    private function getSubMenuItems(): array
+    /**
+     * Back to the page the action came from, with the comment still chosen; with the next one if it left the list
+     * (or was deleted). Only pages of the comments tool are allowed as return.
+     */
+    private function back(Request $request, Member $toMember, ?Comment $comment): RedirectResponse
     {
-        $subMenuSafetyTeam = [];
+        $return = $request->request->getString('return');
+        if (!preg_match('~^/admin/comment(?:/[^?#]*)?(?:\?[^#]*)?$~', $return) || str_contains($return, '\\')) {
+            $return = $this->generateUrl('admin_comments_for_member', ['username' => $toMember->getUsername()]);
+        }
+
+        $path = (string) parse_url($return, \PHP_URL_PATH);
+        parse_str((string) parse_url($return, \PHP_URL_QUERY), $query);
+
+        $queue = CommentQueue::tryFrom($request->request->getString('queue'));
+        $stays = null !== $comment && (null === $queue || $queue->contains($comment));
+        $next = $request->request->getInt('next');
+        unset($query['selected']);
+        if ($stays) {
+            $query['selected'] = $comment->getId();
+        } elseif (0 < $next) {
+            $query['selected'] = $next;
+        }
+
+        return $this->redirect($path . ([] === $query ? '' : '?' . http_build_query($query)));
+    }
+
+    private function comment(Member $toMember, Member $fromMember): Comment
+    {
+        return $this->commentModel->findBetween($toMember, $fromMember)
+            ?? throw $this->createNotFoundException('No such comment.');
+    }
+
+    private function denyUnlessVolunteer(): void
+    {
+        if (!$this->isGranted(Member::ROLE_ADMIN_COMMENTS) && !$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
+            throw $this->createAccessDeniedException('You need to have the Comments right or be a member of the Safety Team to access this.');
+        }
+    }
+
+    /**
+     * The tabs, by right: the Safety Team's first.
+     *
+     * @return array<string, array{key: string, url: string}> by CommentQueue value
+     */
+    private function getTabs(): array
+    {
+        $tabs = [];
         if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
-            $subMenuSafetyTeam = $this->addSafetyTeamItems();
+            $tabs[CommentQueue::SafetyTeam->value] = $this->tab('admin.comments.tab.safetyteam', 'admin_abuser_overview');
         }
-
-        $subMenuComments = [];
-        if ($this->isGranted(Member::ROLE_ADMIN_COMMENTS)) {
-            $subMenuComments = $this->addCommentRoleItems();
+        $tabs[CommentQueue::Reported->value] = $this->tab('admin.comments.tab.reported', 'admin_comment_reported_overview');
+        if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
+            $tabs[CommentQueue::Negative->value] = $this->tab('admin.comments.tab.negative', 'admin_negative_overview');
         }
+        $tabs[CommentQueue::Checked->value] = $this->tab('admin.comments.tab.checked', 'admin_checked_overview');
+        $tabs[CommentQueue::All->value] = $this->tab('admin.comments.tab.all', 'admin_comment_overview');
 
-        return array_merge($subMenuComments, $subMenuSafetyTeam);
+        return $tabs;
     }
 
-    private function addCommentRoleItems(): array
+    /**
+     * @return array{key: string, url: string}
+     */
+    private function tab(string $key, string $route): array
     {
-        return [
-            'reportedcomment' => [
-                'key' => 'AdminReportedComment',
-                'url' => $this->generateUrl('admin_comment_reported_overview'),
-            ],
-            'checkedcomment' => [
-                'key' => 'AdminCheckedComment',
-                'url' => $this->generateUrl('admin_checked_overview'),
-            ],
-            'overview' => [
-                'key' => 'AdminComment',
-                'url' => $this->generateUrl('admin_comment_overview'),
-            ],
-        ];
-    }
-
-    private function handleClickedButton($clickedButton, Comment &$comment): void
-    {
-        switch ($clickedButton) {
-            case 'hideComment':
-                $comment->setShowToOtherMembers(false);
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.hidden');
-                break;
-            case 'showComment':
-                $comment->setShowToOtherMembers(true);
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.visible');
-                break;
-            case 'allowEditing':
-                $comment->setEditingAllowed(true);
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.editable');
-                break;
-            case 'disableEditing':
-                $comment->setEditingAllowed(false);
-                $this->addTranslatedFlash('notice', 'flash.admin.comment.locked');
-                break;
-        }
-    }
-
-    private function addSafetyTeamItems(): array
-    {
-        return [
-            'abusermustcheck' => [
-                'key' => 'AdminAbuserMustCheck',
-                'url' => $this->generateUrl('admin_abuser_overview'),
-            ],
-            'reportedcomment' => [
-                'key' => 'AdminReportedComment',
-                'url' => $this->generateUrl('admin_comment_reported_overview'),
-            ],
-            'negativecomment' => [
-                'key' => 'AdminNegativeComment',
-                'url' => $this->generateUrl('admin_negative_overview'),
-            ],
-            'checkedcomment' => [
-                'key' => 'AdminCheckedComment',
-                'url' => $this->generateUrl('admin_checked_overview'),
-            ],
-            'overview' => [
-                'key' => 'AdminComment',
-                'url' => $this->generateUrl('admin_comment_overview'),
-            ],
-        ];
+        return ['key' => $key, 'url' => $this->generateUrl($route)];
     }
 }

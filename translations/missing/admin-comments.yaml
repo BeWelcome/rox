@@ -1,0 +1,120 @@
+admin.comments.title:
+    - Comments
+    - Title of the comments tool of the volunteers (Comments right) and the Safety Team.
+admin.comments.tab.safetyteam:
+    - 'Safety team'
+    - Tab of the comments tool for the Safety Team, with the comments sent to them.
+admin.comments.tab.reported:
+    - 'Negative/reported'
+    - Tab of the comments tool with the comments to check (negative ones and reported ones).
+admin.comments.tab.negative:
+    - Negative
+    - Tab of the comments tool with all negative comments (Safety Team only).
+admin.comments.tab.checked:
+    - Checked
+    - Tab of the comments tool with the comments a volunteer marked as checked.
+admin.comments.tab.all:
+    - 'All written'
+    - Tab of the comments tool with all comments.
+admin.comments.empty:
+    - 'Nothing left in this queue.'
+    - Shown in the comments tool when a list has no comments.
+admin.comments.filter.about:
+    - 'Comments about {username}'
+    - Heading of the list in the comments tool when it shows all comments about one member. Keep {username} as it is.
+admin.comments.filter.by:
+    - 'Comments by {username}'
+    - Heading of the list in the comments tool when it shows all comments one member wrote. Keep {username} as it is.
+admin.comments.filter.clear:
+    - Clear
+    - Button next to "Comments about/by {username}" in the comments tool, back to all comments.
+admin.comments.written.by:
+    - 'Written by'
+    - Small caption above the writer of a comment in the comments tool.
+admin.comments.about:
+    - About
+    - Small caption above the member a comment is about, in the comments tool.
+admin.comments.status.check:
+    - 'To check'
+    - Status of a comment in the comments tool, a volunteer has to check it.
+admin.comments.status.safetyteam:
+    - 'With safety team'
+    - Status of a comment in the comments tool, it was sent to the Safety Team.
+admin.comments.status.checked:
+    - Checked
+    - Status of a comment in the comments tool, a volunteer checked it.
+admin.comments.status.nothing:
+    - 'No action needed'
+    - Status of a comment in the comments tool, nothing to check.
+admin.comments.tag.reported:
+    - Reported
+    - Tag on a comment in the list of the comments tool, the member it is about reported it.
+admin.comments.hidden:
+    - 'Hidden from other members'
+    - Tooltip of the icon on a hidden comment in the list of the comments tool.
+admin.comments.locked:
+    - 'Editing locked'
+    - Tooltip of the icon on a comment the writer can't change, in the list of the comments tool.
+admin.comments.reported.by:
+    - 'Reported by {username} · {date}'
+    - Heading of a member's report above a comment in the comments tool. Keep {username} and {date} as they are.
+admin.comments.not.reported:
+    - 'Not reported. Negative comments are queued for a check and locked automatically.'
+    - Note in the comments tool on a negative comment to check that nobody reported.
+admin.comments.written.on:
+    - 'Written {date}'
+    - When a comment was written, in the comments tool. Keep {date} as it is.
+admin.comments.updated.on:
+    - 'Updated {date}'
+    - When a comment was last changed, in the comments tool. Keep {date} as it is.
+admin.comments.reply:
+    - '{to}’s comment about {from} · {quality} · {date}'
+    - Heading of the comment back by the other member, in the comments tool. Keep {to}, {from}, {quality} and {date} as they are.
+admin.comments.visible:
+    - 'Visible to other members'
+    - Switch in the comments tool that shows or hides a comment.
+admin.comments.visible.on:
+    - 'Shown on {to}’s profile to everyone.'
+    - Help below the switch "Visible to other members" when it is on. Keep {to} as it is.
+admin.comments.visible.off:
+    - 'Hidden from other members.'
+    - Help below the switch "Visible to other members" when it is off.
+admin.comments.editable:
+    - 'Writer can edit'
+    - Switch in the comments tool that allows or locks changes by the writer of a comment.
+admin.comments.editable.on:
+    - '{from} can still change the text.'
+    - Help below the switch "Writer can edit" when it is on. Keep {from} as it is.
+admin.comments.editable.off:
+    - '{from} can’t change the text until you unlock it.'
+    - Help below the switch "Writer can edit" when it is off. Keep {from} as it is.
+admin.comments.safetyteam:
+    - 'Send to safety team'
+    - Button in the comments tool that hands a comment to the Safety Team.
+admin.comments.check.again:
+    - 'Check again'
+    - Button in the comments tool that puts a checked comment back in the list to check.
+admin.comments.all.about:
+    - 'All comments about {username}'
+    - Link in the comments tool. Keep {username} as it is.
+admin.comments.all.by:
+    - 'All comments by {username}'
+    - Link in the comments tool. Keep {username} as it is.
+admin.comments.delete:
+    - 'Delete comment'
+    - Button in the comments tool that deletes a comment (asks first).
+admin.comments.delete.title:
+    - 'Delete this comment?'
+    - Title of the dialog that asks before a comment is deleted in the comments tool.
+admin.comments.delete.text:
+    - 'The comment by {from} about {to} will be removed for good. Hiding it keeps it available to volunteers.'
+    - Text of the dialog that asks before a comment is deleted. Keep {from} and {to} as they are.
+admin.comments.delete.hide:
+    - 'Hide instead'
+    - Button in the delete dialog of the comments tool that hides the comment instead of deleting it.
+admin.comments.delete.confirm:
+    - Delete
+    - Button in the delete dialog of the comments tool that deletes the comment.
+flash.admin.comment.recheck:
+    - 'The comment is back in the list to check.'
+    - Notice after a volunteer put a checked comment back in the list to check.

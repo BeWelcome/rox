@@ -1,0 +1,183 @@
+{% extends 'base.html.twig' %}
+{#
+  The comments tool of the volunteers (Admin\CommentController): the tabs in a band at the top, then one card with
+  the list on the left and the chosen comment with its actions on the right (below each other on phones).
+#}
+{% import 'admin/comment/_macros.html.twig' as cm %}
+
+{% block title %}{{ 'admin.comments.title'|trans }}{% endblock %}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('admin/comments') }}
+{% endblock javascripts %}
+
+{% block main %}
+  {% set ctx = { return: app.request.requestUri, queue: queue.value, next: next ? next.id : null } %}
+  <main role="main" class="c-cadmin">
+    <div class="p-pro__tabs-wrap c-cadmin__band">
+      <div class="container-lg c-cadmin__band-inner">
+        <h1 class="c-cadmin__title">{{ 'admin.comments.title'|trans }}</h1>
+        <div class="p-hero__tabs-scroller" data-tabs-scroller>
+          <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--prev" data-tabs-scroll="-1" tabindex="-1" aria-hidden="true"><i class="fas fa-chevron-left"></i></button>
+          <nav class="p-hero__tabs" aria-label="{{ 'admin.comments.title'|trans }}">
+            {% for name, tab in tabs %}
+              {% set active = queue.tab.value == name %}
+              <a href="{{ tab.url }}" class="p-hero__tab{{ active ? ' p-hero__tab--active' }}"{% if active %} aria-current="page"{% endif %}>
+                {{ tab.key|trans }}
+                {% if (counts[name] ?? 0) > 0 %}<span class="p-hero__tab-count">{{ counts[name] }}</span>{% endif %}
+              </a>
+            {% endfor %}
+          </nav>
+          <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--next" data-tabs-scroll="1" tabindex="-1" aria-hidden="true"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        {# the active tab in view before the page shows (phones) #}
+        <script>
+          (function (tabs) {
+            var active = tabs && tabs.querySelector('.p-hero__tab--active');
+            if (active) { tabs.scrollLeft = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2; }
+          })(document.currentScript.parentNode.querySelector('.p-hero__tabs'));
+        </script>
+      </div>
+    </div>
+
+    <div class="container-lg c-cadmin__body">
+      <div class="c-cadmin__card">
+        <section class="c-cadmin__list" aria-label="{{ 'admin.comments.title'|trans }}">
+          {% if member %}
+            <div class="c-cadmin__filter">
+              <span class="c-cadmin__filter-label">{{ (queue.value == 'about' ? 'admin.comments.filter.about' : 'admin.comments.filter.by')|trans({ 'username': member.username }) }}</span>
+              <a class="c-cadmin__clear" href="{{ path('admin_comment_overview') }}"><i class="fas fa-xmark" aria-hidden="true"></i>{{ 'admin.comments.filter.clear'|trans }}</a>
+            </div>
+          {% endif %}
+
+          {% if comments.nbResults == 0 %}
+            <p class="c-cadmin__empty"><i class="fas fa-circle-check" aria-hidden="true"></i>{{ 'admin.comments.empty'|trans }}</p>
+          {% else %}
+            <ul class="c-cadmin__rows">
+              {% for comment in comments %}
+                {% set is_selected = selected and selected.id == comment.id %}
+                <li>
+                  <a class="c-cadmin-row{{ is_selected ? ' is-selected' }}"{% if is_selected %} aria-current="true"{% endif %}
+                     href="{{ path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge(app.request.query.all)|merge({ selected: comment.id })) }}">
+                    <img class="c-cadmin-row__avatar" src="{{ path('avatar', { username: comment.fromMember.username, size: 48 }) }}" alt="" width="32" height="32" loading="lazy">
+                    <span class="c-cadmin-row__main">
+                      <span class="c-cadmin-row__head">
+                        <span class="c-cadmin-row__names">{{ comment.fromMember.username }} <span class="c-cadmin-row__arrow" aria-hidden="true">→</span><span class="u:sr-only">{{ 'admin.comments.about'|trans }}</span> {{ comment.toMember.username }}</span>
+                        <span class="c-cadmin-row__date">{{ comment.created|format_date(pattern: 'MMM d') }}</span>
+                      </span>
+                      <span class="c-cadmin-row__excerpt">{{ comment.comment|striptags|slice(0, 240) }}</span>
+                      <span class="c-cadmin-row__tags">
+                        {{ cm.quality(comment.quality) }}
+                        {% if reported[comment.id] is defined and comment.adminAction != 'Checked' %}
+                          <span class="c-tag"><i class="fas fa-flag" aria-hidden="true"></i>{{ 'admin.comments.tag.reported'|trans }}</span>
+                        {% endif %}
+                        {% if not comment.showToOtherMembers %}<i class="fas fa-eye-slash c-cadmin-row__icon" title="{{ 'admin.comments.hidden'|trans }}" aria-label="{{ 'admin.comments.hidden'|trans }}"></i>{% endif %}
+                        {% if not comment.editingAllowed %}<i class="fas fa-lock c-cadmin-row__icon" title="{{ 'admin.comments.locked'|trans }}" aria-label="{{ 'admin.comments.locked'|trans }}"></i>{% endif %}
+                      </span>
+                    </span>
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+            {% if comments.haveToPaginate %}
+              <div class="c-cadmin__pager">{{ pagerfanta(comments, 'rox_default') }}</div>
+            {% endif %}
+          {% endif %}
+        </section>
+
+        {% if selected %}
+          {% set from = selected.fromMember.username %}
+          {% set to = selected.toMember.username %}
+          <section class="c-cadmin__detail" aria-labelledby="c-cadmin-detail-title">
+            <div class="c-cadmin-detail__people" id="c-cadmin-detail-title">
+              {{ cm.person(selected.fromMember, 'admin.comments.written.by') }}
+              <i class="fas fa-arrow-right c-cadmin-detail__arrow" aria-hidden="true"></i>
+              {{ cm.person(selected.toMember, 'admin.comments.about') }}
+            </div>
+            <div class="c-cadmin-detail__tags">
+              {{ cm.quality(selected.quality) }}
+              {{ cm.status(selected.adminAction) }}
+            </div>
+
+            {% for report in reports %}
+              <div class="c-cadmin-report">
+                <p class="c-cadmin-report__head"><i class="fas fa-flag" aria-hidden="true"></i>{{ 'admin.comments.reported.by'|trans({ 'username': report.reporter.username, 'date': report.created|format_date('medium') }) }}</p>
+                <p class="c-cadmin-report__text">“{{ report.text }}”</p>
+              </div>
+            {% else %}
+              {% if selected.quality == 'negative' and selected.adminAction == 'AdminCommentMustCheck' %}
+                <p class="c-cadmin-detail__info"><i class="fas fa-circle-info" aria-hidden="true"></i>{{ 'admin.comments.not.reported'|trans }}</p>
+              {% endif %}
+            {% endfor %}
+
+            <p class="c-cadmin-detail__meta">
+              {{ cm.relations(selected) }}{% if selected.relations is not empty %} · {% endif %}{{ 'admin.comments.written.on'|trans({ 'date': selected.created|format_date('medium') }) }}
+              {%- if selected.updated and selected.updated != selected.created %} · {{ 'admin.comments.updated.on'|trans({ 'date': selected.updated|format_date('medium') }) }}{% endif %}
+            </p>
+            <div class="c-cadmin-detail__text">{{ selected.comment|nl2br|purify }}</div>
+
+            {% if reply %}
+              <div class="c-cadmin-reply">
+                <p class="c-cadmin-reply__head">{{ 'admin.comments.reply'|trans({ 'to': to, 'from': from, 'quality': ('comment.quality.' ~ reply.quality)|trans, 'date': reply.created|format_date('medium') }) }}</p>
+                <div class="c-cadmin-reply__text">{{ reply.comment|nl2br|purify }}</div>
+              </div>
+            {% endif %}
+
+            <div class="c-cadmin-detail__switches">
+              {{ cm.switch(selected.showToOtherMembers ? 'admin_comment_hide' : 'admin_comment_show', selected, ctx, selected.showToOtherMembers,
+                'admin.comments.visible'|trans,
+                (selected.showToOtherMembers ? 'admin.comments.visible.on' : 'admin.comments.visible.off')|trans({ 'to': to, 'from': from })) }}
+              {{ cm.switch(selected.editingAllowed ? 'admin_comment_lock' : 'admin_comment_unlock', selected, ctx, selected.editingAllowed,
+                'admin.comments.editable'|trans,
+                (selected.editingAllowed ? 'admin.comments.editable.on' : 'admin.comments.editable.off')|trans({ 'to': to, 'from': from })) }}
+            </div>
+
+            <div class="c-cadmin-detail__actions">
+              {% set checked = selected.adminAction == 'Checked' %}
+              {% if not checked %}
+                {% set content %}<i class="fas fa-check" aria-hidden="true"></i>{{ 'admin.comment.checked'|trans }}{% endset %}
+                {{ cm.action('admin_comment_mark_checked', selected, ctx, 'c-cadmin-btn c-cadmin-btn--primary', content) }}
+              {% endif %}
+              {# only the Safety Team moves a comment into their list #}
+              {% if safety_team and selected.adminAction == 'AdminCommentMustCheck' %}
+                {% set content %}<i class="fas fa-shield-halved" aria-hidden="true"></i>{{ 'admin.comments.safetyteam'|trans }}{% endset %}
+                {{ cm.action('admin_comment_assign_safetyteam', selected, ctx, 'c-cadmin-btn c-cadmin-btn--outline', content) }}
+              {% endif %}
+              {% if checked %}
+                {% set content %}<i class="fas fa-rotate-left" aria-hidden="true"></i>{{ 'admin.comments.check.again'|trans }}{% endset %}
+                {{ cm.action('admin_comment_check_again', selected, ctx, 'c-cadmin-btn c-cadmin-btn--quiet', content) }}
+              {% endif %}
+            </div>
+
+            <div class="c-cadmin-detail__footer">
+              <div class="c-cadmin-detail__links">
+                <a href="{{ path('admin_comments_for_member', { username: to }) }}">{{ 'admin.comments.all.about'|trans({ 'username': to }) }}</a>
+                <a href="{{ path('admin_comments_from_member', { username: from }) }}">{{ 'admin.comments.all.by'|trans({ 'username': from }) }}</a>
+              </div>
+              <button type="button" class="c-cadmin-delete" data-micromodal-trigger="c-cadmin-delete"><i class="far fa-trash-can" aria-hidden="true"></i>{{ 'admin.comments.delete'|trans }}</button>
+            </div>
+          </section>
+
+          {# Delete asks first; hiding keeps the comment for the volunteers #}
+          <div class="micromodal-slide p-pe-confirm" id="c-cadmin-delete" aria-hidden="true">
+            <div class="modal__overlay p-pe-confirm__overlay" tabindex="-1" data-micromodal-close>
+              <div class="modal__container p-pe-confirm__box" role="dialog" aria-modal="true" aria-labelledby="c-cadmin-delete-title">
+                <span class="p-pe-confirm__icon" aria-hidden="true"><i class="far fa-trash-can"></i></span>
+                <h2 class="p-pe-confirm__title" id="c-cadmin-delete-title">{{ 'admin.comments.delete.title'|trans }}</h2>
+                <p class="p-pe-confirm__text">{{ 'admin.comments.delete.text'|trans({ 'from': from, 'to': to }) }}</p>
+                <div class="p-pe-confirm__actions">
+                  {% if selected.showToOtherMembers %}
+                    {{ cm.action('admin_comment_hide', selected, ctx, 'p-pe-confirm__cancel', 'admin.comments.delete.hide'|trans) }}
+                  {% else %}
+                    <button type="button" class="p-pe-confirm__cancel" data-micromodal-close>{{ 'cancel'|trans }}</button>
+                  {% endif %}
+                  {{ cm.action('admin_comment_delete', selected, ctx, 'p-pe-confirm__delete', 'admin.comments.delete.confirm'|trans) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+{% endblock main %}

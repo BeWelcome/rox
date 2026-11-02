@@ -1,0 +1,114 @@
+/*
+ * The comments tool of the volunteers (templates/admin/comment/comments.html.twig): a white band with the title and
+ * the tabs (the pill tabs of the profile, .p-pro__tabs-wrap), then one card with the list and the chosen comment.
+ * Tags: .c-tag (_components.massmail.css). The delete dialog: .p-pe-confirm.
+ */
+
+main.c-cadmin { background: #f0f0f0; }
+
+/* Band: title and tabs, stuck under the top bar */
+.p-pro__tabs-wrap.c-cadmin__band { position: sticky; top: var(--bw-topbar-offset, 64px); z-index: 20; border-top: 0; border-bottom: 1px solid #eef0f3; }
+.p-pro__tabs-wrap.c-cadmin__band .c-cadmin__band-inner { display: flex; flex-direction: column; gap: 1rem; padding: 1.25rem 0.75rem 0.5rem; }
+.c-cadmin__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 2rem; font-weight: 700; line-height: 1.1; }
+.p-pro__tabs-wrap.c-cadmin__band .p-hero__tab,
+.p-pro__tabs-wrap.c-cadmin__band .p-hero__tab:first-child { min-width: 0; padding: 0.65rem 1.25rem; }
+.p-pro__tabs-wrap.c-cadmin__band .p-hero__tab-count { min-width: 1.6rem; height: 1.6rem; padding: 0 0.45rem; border-radius: 999px; background: #e2e8f0; color: #475569; font-size: 0.8125rem; font-weight: 700; }
+.p-pro__tabs-wrap.c-cadmin__band .p-hero__tab--active .p-hero__tab-count { background: #f37000; color: #fff; }
+
+/* The card: list left, comment right; below each other when there is no room */
+.c-cadmin__body { padding: 1.5rem 0.75rem 4rem; }
+.c-cadmin__card { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 1.5rem; padding: 1.25rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 20px rgba(15, 23, 42, 0.04); }
+.c-cadmin__list { min-width: 0; }
+.c-cadmin__detail { min-width: 0; padding-left: 1.5rem; border-left: 1px solid #e2e8f0; }
+@media (max-width: 767.98px) {
+  .c-cadmin__card { grid-template-columns: minmax(0, 1fr); padding: 1rem; }
+  .c-cadmin__detail { padding: 1.5rem 0 0; border-top: 1px solid #e2e8f0; border-left: 0; }
+}
+
+/* The list */
+.c-cadmin__filter { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin: 0 0 0.75rem; padding: 0 0.75rem; }
+.c-cadmin__filter-label { color: #0f172a; font-size: 0.875rem; font-weight: 700; overflow-wrap: anywhere; }
+.c-cadmin__clear,
+.c-cadmin__clear:hover { display: inline-flex; flex: none; align-items: center; gap: 0.4rem; padding: 0.3rem 0.75rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-size: 0.8125rem; font-weight: 600; text-decoration: none; }
+.c-cadmin__clear:hover { background: #f8fafc; }
+.c-cadmin__rows { display: flex; flex-direction: column; gap: 0.25rem; margin: 0; padding: 0; list-style: none; }
+.c-cadmin-row,
+.c-cadmin-row:hover { display: flex; gap: 0.75rem; padding: 0.85rem 0.75rem; border-radius: 0.9rem; color: inherit; text-decoration: none; }
+.c-cadmin-row:hover { background: #f8fafc; }
+.c-cadmin-row.is-selected { background: #fff7ed; }
+.c-cadmin-row:focus-visible { outline: 2px solid #f37000; outline-offset: 2px; }
+.c-cadmin-row__avatar { flex: none; width: 32px; height: 32px; border-radius: 999px; object-fit: cover; }
+.c-cadmin-row__main { display: flex; flex: 1; flex-direction: column; gap: 0.3rem; min-width: 0; }
+.c-cadmin-row__head { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; }
+.c-cadmin-row__names { min-width: 0; color: #0f172a; font-size: 0.875rem; font-weight: 700; overflow-wrap: anywhere; }
+.c-cadmin-row__arrow { color: #94a3b8; font-weight: 400; }
+.c-cadmin-row__date { flex: none; color: #64748b; font-size: 0.75rem; }
+.c-cadmin-row__excerpt { display: -webkit-box; overflow: hidden; color: #475569; font-size: 0.8125rem; line-height: 1.45; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
+.c-cadmin-row__tags { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+.c-cadmin-row__tags .c-tag { padding: 0.15rem 0.5rem; font-size: 0.75rem; }
+.c-cadmin-row__icon { color: #94a3b8; font-size: 0.8rem; }
+.c-cadmin__empty { display: flex; flex-direction: column; align-items: center; gap: 0.75rem; margin: 0; padding: 3rem 1rem; color: #64748b; text-align: center; }
+.c-cadmin__empty i,
+.c-cadmin__empty svg { color: #3fa45b; font-size: 2rem; }
+.c-cadmin__pager { margin-top: 1rem; }
+
+/* The comment */
+.c-cadmin-detail__people { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem; margin-bottom: 1rem; }
+.c-cadmin-person,
+.c-cadmin-person:hover { display: inline-flex; align-items: center; gap: 0.75rem; min-width: 0; color: inherit; text-decoration: none; }
+.c-cadmin-person__avatar { flex: none; width: 48px; height: 48px; border-radius: 999px; object-fit: cover; }
+.c-cadmin-person__text { display: flex; flex-direction: column; min-width: 0; }
+.c-cadmin-person__caption { color: #64748b; font-size: 0.75rem; }
+.c-cadmin-person__name { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.125rem; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; }
+.c-cadmin-person:hover .c-cadmin-person__name { color: #c2410c; }
+.c-cadmin-detail__arrow { color: #cbd5e1; }
+.c-cadmin-detail__tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.25rem; }
+.c-cadmin-report { margin-bottom: 1rem; padding: 1rem 1.15rem; border-radius: 0.9rem; background: #fff7ed; }
+.c-cadmin-report__head { display: flex; align-items: center; gap: 0.45rem; margin: 0 0 0.4rem; color: #c2410c; font-size: 0.8125rem; font-weight: 700; }
+.c-cadmin-report__text { margin: 0; color: #1e293b; font-size: 0.9375rem; line-height: 1.55; white-space: pre-line; overflow-wrap: anywhere; }
+.c-cadmin-detail__info { display: flex; align-items: flex-start; gap: 0.5rem; margin: 0 0 1rem; color: #64748b; font-size: 0.8125rem; line-height: 1.45; }
+.c-cadmin-detail__info i,
+.c-cadmin-detail__info svg { flex: none; margin-top: 0.2rem; color: #94a3b8; }
+.c-cadmin-detail__meta { margin: 0 0 0.5rem; color: #64748b; font-size: 0.8125rem; }
+.c-cadmin-detail__text { color: #1e293b; font-size: 1rem; line-height: 1.6; overflow-wrap: anywhere; }
+.c-cadmin-detail__text p:last-child { margin-bottom: 0; }
+.c-cadmin-reply { margin-top: 1.25rem; padding: 1rem 1.15rem; border-radius: 0.9rem; background: #f8fafc; }
+.c-cadmin-reply__head { margin: 0 0 0.4rem; color: #64748b; font-size: 0.8125rem; font-weight: 700; }
+.c-cadmin-reply__text { color: #334155; font-size: 0.9375rem; line-height: 1.55; overflow-wrap: anywhere; }
+.c-cadmin-reply__text p:last-child { margin-bottom: 0; }
+
+/* Switches: a form each, the whole row is the button */
+.c-cadmin-form { display: contents; }
+.c-cadmin-detail__switches { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 1rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0; }
+.c-cadmin-switch { display: flex; align-items: flex-start; gap: 0.75rem; margin: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.c-cadmin-switch__track { position: relative; flex: none; width: 2.25rem; height: 1.3rem; margin-top: 0.05rem; border-radius: 999px; background: #cbd5e1; transition: background 0.15s ease; }
+.c-cadmin-switch__track::after { content: ''; position: absolute; top: 0.15rem; left: 0.15rem; width: 1rem; height: 1rem; border-radius: 999px; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.2); transition: transform 0.15s ease; }
+.c-cadmin-switch.is-on .c-cadmin-switch__track { background: #f37000; }
+.c-cadmin-switch.is-on .c-cadmin-switch__track::after { transform: translateX(0.95rem); }
+.c-cadmin-switch:focus-visible { outline: 2px solid #f37000; outline-offset: 3px; border-radius: 0.5rem; }
+.c-cadmin-switch__text { display: flex; flex-direction: column; gap: 0.15rem; }
+.c-cadmin-switch__label { color: #0f172a; font-size: 0.875rem; font-weight: 700; }
+.c-cadmin-switch__help { color: #64748b; font-size: 0.8125rem; line-height: 1.4; }
+
+/* Actions */
+.c-cadmin-detail__actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+.c-cadmin-btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; min-height: 2.75rem; margin: 0; padding: 0.5rem 1.25rem; border: 1.5px solid #f37000; border-radius: 999px; background: #fff; color: #c2410c; font-size: 0.9375rem; font-weight: 700; line-height: 1.2; cursor: pointer; }
+.c-cadmin-btn:hover { background: #fff7ed; }
+.c-cadmin-btn--primary { background: #f37000; color: #fff; }
+.c-cadmin-btn--primary:hover { border-color: #e06000; background: #e06000; }
+.c-cadmin-btn--quiet { border-color: #e2e8f0; color: #334155; }
+.c-cadmin-btn--quiet:hover { border-color: #cbd5e1; background: #f8fafc; }
+.c-cadmin-btn:focus-visible,
+.c-cadmin-delete:focus-visible { outline: 2px solid #f37000; outline-offset: 2px; }
+
+/* Footer: the member's other comments, delete */
+.c-cadmin-detail__footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.25rem; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0; }
+.c-cadmin-detail__links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; }
+.c-cadmin-detail__links a { color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; }
+.c-cadmin-detail__links a:hover { text-decoration: underline; }
+.c-cadmin-delete { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.75rem; border: 0; border-radius: 999px; background: none; color: #b91c1c; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.c-cadmin-delete:hover { background: #fef2f2; }
+
+/* The delete dialog: its buttons are forms */
+.p-pe-confirm__actions .c-cadmin-form { display: flex; flex: 1 1 0; }
+.p-pe-confirm__actions .c-cadmin-form > button { width: 100%; }

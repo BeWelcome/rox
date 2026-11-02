@@ -21,7 +21,8 @@ class PoliciesController extends AbstractController
     {
         $locale = $this->ensureLocaleAllowed($locale, $request);
 
-        return $this->render('policies/terms.new.' . $locale . '.html.twig');
+        // No new terms at the moment, show the old ones.
+        return $this->render('policies/terms.' . $locale . '.html.twig');
     }
 
     #[Route(path: ' /terms/{locale}', name: 'terms_of_use')]

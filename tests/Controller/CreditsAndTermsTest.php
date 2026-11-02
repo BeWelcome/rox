@@ -33,4 +33,20 @@ class CreditsAndTermsTest extends WebTestCase
             self::assertStringContainsString('W353003546', (string) $client->getResponse()->getContent(), $locale);
         }
     }
+
+    /**
+     * There are no new terms at the moment: their page shows the current ones.
+     */
+    public function testTheNewTermsShowTheCurrentOnes(): void
+    {
+        $client = static::createClient();
+        foreach (['en', 'fr'] as $locale) {
+            $client->request('GET', '/terms/' . $locale);
+            $current = $client->getCrawler()->filter('main')->html();
+            $client->request('GET', '/terms/new/' . $locale);
+
+            $this->assertResponseIsSuccessful();
+            self::assertSame($current, $client->getCrawler()->filter('main')->html(), $locale);
+        }
+    }
 }

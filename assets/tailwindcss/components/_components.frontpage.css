@@ -321,3 +321,52 @@ body:has(.fp) { background: #fffaf4; }
 @keyframes fp-chat-in { from { max-height: 0; opacity: 0; transform: translateY(0.5rem); } to { max-height: 8rem; opacity: 1; transform: none; } }
 @keyframes fp-fade-in { from { opacity: 0; } }
 @keyframes fp-typing { 0%, 100% { opacity: 0.3; transform: translateY(0); } 50% { opacity: 0.9; transform: translateY(-0.15rem); } }
+
+/* How a stay request looks: text on the left, the stay card of the conversations on the right (home/_frontpage_stay) */
+.fp-stay { padding: 5rem 0; }
+.fp-stay__in { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 3.5rem; align-items: center; }
+.fp-stay .fp-h2 { margin-bottom: 1.25rem; }
+.fp-stay .fp-community__list { margin-bottom: 0; }
+.fp-stay__art { position: relative; padding: 1.75rem; border-radius: 1.75rem; background: #f4f4f5; }
+.fp-stay__who { display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.75rem; color: #64748b; font-size: 0.875rem; }
+.fp-stay__who strong { color: #0f172a; }
+.fp-stay__card { box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08), 0 0 0 1px #eceef1; }
+.fp-stay__card .c-stay2__pick { cursor: default; }
+/* Before the tap (the general stay card styles load after this file, so these say .fp-stay__art first) */
+.fp-stay__art .fp-stay__status--done, .fp-stay__art .fp-stay__band { display: none; }
+.fp-stay__reply { display: flex; align-items: flex-end; justify-content: flex-end; gap: 0.4rem; margin: 0.85rem 0 0; }
+.fp-stay__reply .fp-bubble { font-size: 0.875rem; }
+.fp-stay__accept { position: relative; }
+.fp-stay__tap { position: absolute; top: 50%; left: 50%; width: 2.4rem; height: 2.4rem; margin: -1.2rem 0 0 -1.2rem; border-radius: 50%; background: rgba(15, 23, 42, 0.18); opacity: 0; pointer-events: none; }
+
+/* The play (home.js): p1 the card comes in, p2 the line draws, p3 nights and chips, p4 the question,
+   p5 a tap on Accept, p6 Accept picked, p7 "Lena accepted", p8 her reply */
+.fp-stay__art.fp-anim .fp-stay__card { opacity: 0; transform: translateY(16px); transition: opacity 0.45s ease, transform 0.45s ease; }
+.fp-stay__art.fp-anim .c-stay2__rule { transform: scaleX(0); transform-origin: left; transition: transform 0.5s ease; }
+.fp-stay__art.fp-anim .c-stay2__nights + .c-stay2__rule { transition-delay: 0.25s; }
+.fp-stay__art.fp-anim .c-stay2__dot, .fp-stay__art.fp-anim .c-stay2__nights, .fp-stay__art.fp-anim .c-stay2__facts li { opacity: 0; transform: scale(0.6); transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.fp-stay__art.fp-anim .c-stay2__facts li:nth-child(2) { transition-delay: 0.12s; }
+.fp-stay__art.fp-anim .fp-stay__answer, .fp-stay__art.fp-anim .fp-stay__reply { opacity: 0; transform: translateY(8px); transition: opacity 0.35s ease, transform 0.35s ease; }
+.fp-stay__art.fp-anim.p1 .fp-stay__card { opacity: 1; transform: none; }
+.fp-stay__art.fp-anim.p2 .c-stay2__rule { transform: none; }
+.fp-stay__art.fp-anim.p2 .c-stay2__dot, .fp-stay__art.fp-anim.p3 .c-stay2__nights, .fp-stay__art.fp-anim.p3 .c-stay2__facts li { opacity: 1; transform: none; }
+.fp-stay__art.fp-anim.p4 .fp-stay__answer { opacity: 1; transform: none; }
+.fp-stay__art.fp-anim.p5 .fp-stay__tap { animation: fp-stay-tap 0.5s ease-out; }
+.fp-stay__art.fp-anim.p6 .fp-stay__accept { border-color: #3fa75a; background: #3fa75a; color: #fff; box-shadow: 0 0 0 3px #cdebd5; animation: c-stay2-pick 0.35s ease-out; }
+.fp-stay__art.fp-anim.p6 .fp-stay__accept i, .fp-stay__art.fp-anim.p6 .fp-stay__accept svg { color: #fff; }
+.fp-stay__art.fp-anim.p6 .c-stay2__pick:not(.fp-stay__accept) { opacity: 0.55; }
+.fp-stay__art.p7 .fp-stay__answer { display: none; }
+.fp-stay__art.p7 .fp-stay__band { display: flex; animation: c-decide-band 0.35s ease-out; }
+.fp-stay__art.p7 .fp-stay__status--open { display: none; }
+.fp-stay__art.p7 .fp-stay__status--done { display: inline-flex; background: #e3f7e8; color: #2f7a43; animation: c-stay2-pick 0.35s ease-out; }
+.fp-stay__art.p7 .c-stay2__band.fp-stay__band { background: #e3f7e8; color: #2f7a43; }
+.fp-stay__art.fp-anim.p8 .fp-stay__reply { opacity: 1; transform: none; }
+@keyframes fp-stay-tap { 0% { opacity: 0.7; transform: scale(0.3); } 100% { opacity: 0; transform: scale(1.6); } }
+
+@media (max-width: 991.98px) {
+  .fp-stay__in { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+}
+@media (max-width: 767.98px) {
+  .fp-stay { padding: 3rem 0; }
+  .fp-stay__art { margin: 0 -0.25rem; padding: 1rem; border-radius: 1.25rem; }
+}

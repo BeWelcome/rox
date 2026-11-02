@@ -5,7 +5,7 @@
   - part 'pill': the dates in a pill of the same colour, on the right (no icon, the avatar has it);
   - part 'status': the state in words under the pill (Waiting, Maybe, Accepted, Declined, Cancelled, Expired; nothing while new and unread).
   New (not read yet): orange with the bed (or handshake for an invitation); waiting: grey hourglass;
-  maybe: amber ?; accepted: green ✓; declined or cancelled: light grey ×, the dates crossed out;
+  maybe: amber ?; accepted: green ✓; declined: light red ×, the dates crossed out; cancelled: light grey ×, the dates crossed out;
   expired (no answer before the arrival): grey calendar ×.
   On a computer, hovering the pill names the kind and where it stands (Request, Pending).
   Expects request, unread (bool) and part.
@@ -20,7 +20,7 @@
         : { tone: 'pending', icon: 'fas fa-hourglass-half' },
     tentatively: { tone: 'maybe', icon: 'fas fa-question' },
     accepted: { tone: 'success', icon: 'fas fa-check' },
-    declined: { tone: 'closed', icon: 'fas fa-times' },
+    declined: { tone: 'declined', icon: 'fas fa-times' },
     cancelled: { tone: 'closed', icon: 'fas fa-times' },
     expired: { tone: 'expired', icon: 'fas fa-calendar-xmark' },
 }[_status] %}

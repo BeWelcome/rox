@@ -225,3 +225,20 @@ if (frontpageMap) {
         }
     });
 }());
+
+// Front page stay request: the card plays once, the first time it is on screen (home/_frontpage_stay.html.twig), p1 to p8 in turn
+const frontpageStay = document.querySelector('.js-fp-stay');
+if (frontpageStay && 'IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const phases = [['p1', 100], ['p2', 600], ['p3', 1150], ['p4', 1700], ['p5', 2800], ['p6', 3150], ['p7', 3900], ['p8', 4700]];
+    frontpageStay.classList.add('fp-anim');
+    const stayObserver = new IntersectionObserver(function (entries) {
+        if (!entries[0].isIntersecting) {
+            return;
+        }
+        stayObserver.disconnect();
+        phases.forEach(function (phase) {
+            setTimeout(function () { frontpageStay.classList.add(phase[0]); }, phase[1]);
+        });
+    }, { threshold: 0.4 });
+    stayObserver.observe(frontpageStay);
+}

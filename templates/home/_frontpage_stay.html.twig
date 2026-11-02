@@ -1,0 +1,67 @@
+{#
+  Front page: how a stay request looks, with the stay card of the conversations (request/_stay_card.html.twig,
+  .c-stay2 in _layouts.general.css) drawn for Tomás asking Lena. It plays once when it comes on screen (home.js): the card
+  comes in, the dotted line draws, the nights and the chips pop, a tap on Accept, then "You accepted".
+#}
+<section class="fp-stay">
+    <div class="fp-wrap fp-stay__in">
+        <div>
+            <p class="fp-eyebrow">{{ 'frontpage.stay.eyebrow'|trans }}</p>
+            <h2 class="fp-h2">{{ 'frontpage.stay.title'|trans }}</h2>
+            <p class="fp-community__lead">{{ 'frontpage.stay.lead'|trans }}</p>
+            <ul class="fp-community__list">
+                <li><span class="fp-community__icon"><i class="far fa-calendar" aria-hidden="true"></i></span><span>{{ 'frontpage.stay.dates'|trans }}</span></li>
+                <li><span class="fp-community__icon"><i class="fas fa-hand-pointer" aria-hidden="true"></i></span><span>{{ 'frontpage.stay.tap'|trans }}</span></li>
+                <li><span class="fp-community__icon"><i class="fas fa-comments" aria-hidden="true"></i></span><span>{{ 'frontpage.stay.talk'|trans }}</span></li>
+            </ul>
+        </div>
+
+        <div class="fp-stay__art js-fp-stay" aria-hidden="true">
+            <div class="fp-stay__who">
+                <span class="fp-av fp-av--brown fp-av--sm"><img src="{{ asset('images/avatars/3.webp') }}" alt=""></span>
+                <span><strong>Tomás</strong> → <strong>Lena</strong></span>
+            </div>
+            <section class="c-stay2 fp-stay__card">
+                <div class="c-stay2__top">
+                    <span class="c-stay2__icon"><i class="fas fa-bed"></i></span>
+                    <p class="c-stay2__kind"><strong>{{ 'request.card.title'|trans }}</strong><span class="c-stay2__subject"><span class="c-stay2__sep"> · </span>“{{ 'frontpage.stay.subject'|trans }}”</span></p>
+                    <span class="c-stay2__status fp-stay__status fp-stay__status--open"><i class="fas fa-clock"></i> {{ 'request.status.to.answer'|trans }}</span>
+                    <span class="c-stay2__status fp-stay__status fp-stay__status--done"><i class="fas fa-check"></i> {{ 'request.status.accepted'|trans }}</span>
+                </div>
+                <div class="c-stay2__dates">
+                    <p class="c-stay2__date">
+                        <span class="c-stay2__label">{{ 'request.card.arrival'|trans }} · {{ '2026-11-10'|format_date(pattern='EEE') }}</span>
+                        <strong>{{ '2026-11-10'|format_date(pattern='d MMM') }}</strong>
+                    </p>
+                    <span class="c-stay2__line">
+                        <span class="c-stay2__dot"></span>
+                        <span class="c-stay2__rule"></span>
+                        <span class="c-stay2__nights"><i class="far fa-moon"></i> {{ 'contact.trip.nights'|trans({ count: 3 }) }}</span>
+                        <span class="c-stay2__rule"></span>
+                        <span class="c-stay2__dot"></span>
+                    </span>
+                    <p class="c-stay2__date c-stay2__date--end">
+                        <span class="c-stay2__label">{{ 'request.card.departure'|trans }} · {{ '2026-11-13'|format_date(pattern='EEE') }}</span>
+                        <strong>{{ '2026-11-13'|format_date(pattern='d MMM') }}</strong>
+                    </p>
+                </div>
+                <ul class="c-stay2__facts">
+                    <li><i class="fas fa-user"></i> {{ 'request.card.persons'|trans({ count: 1 }) }}</li>
+                    <li><i class="far fa-calendar"></i> {{ 'request.card.flexible'|trans }}</li>
+                </ul>
+                <div class="c-stay2__answer fp-stay__answer">
+                    <div class="c-stay2__ask">
+                        <p class="c-stay2__question">{{ 'request.decide.prompt'|trans({ username: 'Tomás' }) }}</p>
+                        <div class="c-stay2__picks">
+                            <span class="c-stay2__pick c-stay2__pick--accept fp-stay__accept"><i class="fa fa-check"></i><span>{{ 'request.decide.accept'|trans }}</span><i class="fp-stay__tap"></i></span>
+                            <span class="c-stay2__pick c-stay2__pick--maybe"><i class="fa fa-question"></i><span>{{ 'request.decide.maybe'|trans }}</span></span>
+                            <span class="c-stay2__pick c-stay2__pick--decline"><i class="fa fa-times"></i><span>{{ 'request.decide.decline'|trans }}</span></span>
+                        </div>
+                    </div>
+                </div>
+                <p class="c-stay2__band fp-stay__band"><i class="fa fa-check"></i><span>{{ 'request.event.other.accepted'|trans({ username: 'Lena' }) }}</span></p>
+            </section>
+            <p class="fp-stay__reply"><span class="fp-bubble fp-bubble--me">{{ 'frontpage.how.request.reply'|trans }}</span><span class="fp-av fp-av--green fp-av--sm"><img src="{{ asset('images/avatars/2.webp') }}" alt=""></span></p>
+        </div>
+    </div>
+</section>

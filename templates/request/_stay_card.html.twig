@@ -1,0 +1,63 @@
+{#
+  The stay card above the messages of a hosting request or an invitation, on computers and phones:
+  the kind and the subject with where it stands, arrival and departure with the nights on a dotted
+  line, the travellers and the dates' flexibility, then Accept, Maybe and Decline for the member who
+  decides (request/_stay_answer.html.twig), hidden once answered behind an edit button next to the status.
+  Expects stay (the HostingRequest), status (key, tone, icon), nights, kind ('request' or
+  'invitation'), decider (bool: the viewer answers), other (the other member), subject, menu
+  (the card's "⋯" menu, request/_card_menu.html.twig, as HTML) and warning (optional HTML).
+#}
+{% set S = 'App\\Entity\\HostingRequest::' %}
+{% set sameYear = stay.arrival|date('Y') == stay.departure|date('Y') %}
+{% set statusLabel = status.key == 'open' ? (decider ? 'request.status.to.answer' : 'request.status.waiting.guest') : (status.key ? 'request.status.' ~ status.key : null) %}
+{% set statusIcon = status.key == 'open' ? 'fas fa-clock' : status.icon %}
+
+<section class="c-stay2 c-stay2--{{ status.tone }}">
+    <div class="c-stay2__top">
+        <span class="c-stay2__icon"><i class="fas {{ kind == 'invitation' ? 'fa-house-user' : 'fa-bed' }}" aria-hidden="true"></i></span>
+        <p class="c-stay2__kind">
+            <strong>{{ (kind ~ '.card.title')|trans }}</strong>
+            {%- if subject|striptags|trim %}<span class="c-stay2__subject"><span class="c-stay2__sep"> · </span>“{{ subject|striptags|trim }}”</span>{% endif -%}
+        </p>
+        {% if statusLabel %}
+            <span class="c-stay2__status"><i class="{{ statusIcon }}" aria-hidden="true"></i> {{ statusLabel|trans }}</span>
+        {% endif %}
+        {% if decider and status.key in ['tentatively', 'accepted', 'declined'] %}
+            {# Answered: no coloured line, just this to answer again (requests.js) #}
+            <button type="button" class="c-stay2__edit js-stay-change" aria-expanded="false"><i class="fas fa-pen" aria-hidden="true"></i> <span>{{ 'request.decide.change'|trans }}</span></button>
+        {% endif %}
+        {{ menu|default('')|raw }}
+    </div>
+
+    <div class="c-stay2__dates">
+        <p class="c-stay2__date">
+            <span class="c-stay2__label">{{ 'request.card.arrival'|trans }} · {{ stay.arrival|format_date(pattern='EEE') }}</span>
+            <strong>{{ stay.arrival|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}</strong>
+        </p>
+        <span class="c-stay2__line">
+            <span class="c-stay2__dot" aria-hidden="true"></span>
+            <span class="c-stay2__rule" aria-hidden="true"></span>
+            <span class="c-stay2__nights"><i class="far fa-moon" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>
+            <span class="c-stay2__rule" aria-hidden="true"></span>
+            <span class="c-stay2__dot" aria-hidden="true"></span>
+        </span>
+        <p class="c-stay2__date c-stay2__date--end">
+            <span class="c-stay2__label">{{ 'request.card.departure'|trans }} · {{ stay.departure|format_date(pattern='EEE') }}</span>
+            <strong>{{ stay.departure|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}</strong>
+        </p>
+    </div>
+
+    <ul class="c-stay2__facts">
+        <li><i class="fas fa-user" aria-hidden="true"></i> {{ 'request.card.persons'|trans({ count: stay.numberOfTravellers }) }}</li>
+        {% if kind == 'request' %}
+            <li><i class="far fa-calendar" aria-hidden="true"></i> {{ (stay.flexible ? 'request.card.flexible' : 'request.card.not.flexible')|trans }}</li>
+        {% endif %}
+    </ul>
+    {{ warning|default('')|raw }}
+
+    {% if status.key not in ['expired', 'cancelled'] and decider %}
+        {# Accept, Maybe, Decline (hidden once answered: the edit button next to the status shows them).
+           Nothing for the member who asked: the status says where it stands. #}
+        {% include 'request/_stay_answer.html.twig' with { stay: stay, answer_label: null, collapsed: status.key in ['tentatively', 'accepted', 'declined'] } %}
+    {% endif %}
+</section>

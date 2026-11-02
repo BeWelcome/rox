@@ -40,9 +40,15 @@
             {% set _address = correspondent.activeAddress %}
             {% set meta = (_address and _address.location) ? _address.location.name ~ (_address.location.country ? ', ' ~ _address.location.country.name : '') : '' %}
         {% endif %}
+        {# A hosting request or an invitation shows its subject in the stay card under the head (request/_stay_card.html.twig) #}
+        {% set _subjectInCard = (current ?? null) and current.request and meta %}
         <h1 class="c-inbox-head__subject">
-            {%- if meta -%}<span class="c-inbox-head__meta">{{ meta }} · </span>{%- endif -%}
-            {{ subject|striptags }}
+            {%- if _subjectInCard -%}
+                <span class="c-inbox-head__meta">{{ meta }}</span><span class="visually-hidden"> · {{ subject|striptags }}</span>
+            {%- else -%}
+                {%- if meta -%}<span class="c-inbox-head__meta">{{ meta }} · </span>{%- endif -%}
+                {{ subject|striptags }}
+            {%- endif -%}
         </h1>
     </div>
 

@@ -13000,3 +13000,18 @@ body:has(.l-hello) main { background: #fffaf4; }
 .c-req-kind--declined { background: #f07a7a; }
 .c-req-status--declined { color: #e05d5d; }
 .c-req-tip--declined .c-req-tip__title::before { background: #f87171; }
+
+/* Stay card on phones: compact top, dates and chips */
+@media (max-width: 767.98px) {
+  .c-stay2 { padding: 0.8rem 1rem 1rem; }
+  .c-stay2__top { gap: 0.55rem; }
+  .c-stay2__icon { width: 2rem; height: 2rem; font-size: 0.85rem; }
+  .c-stay2__status { padding: 0.25rem 0.6rem; font-size: 0.8125rem; }
+  .c-stay2 .c-stay2__dates { gap: 0.4rem; margin-top: 0.6rem; }
+  .c-stay2 .c-stay2__label { font-size: 0.75rem; }
+  .c-stay2 .c-stay2__date strong { font-size: 1.15rem; }
+  .c-stay2 .c-stay2__nights { padding: 0.15rem 0.55rem; font-size: 0.75rem; }
+  .c-stay2 .c-stay2__facts { gap: 0.35rem; margin-top: 0.6rem; }
+  .c-stay2 .c-stay2__facts li { padding: 0.2rem 0.6rem; font-size: 0.75rem; }
+  .c-stay2 .c-stay2__answer { margin-top: 0.75rem; padding-top: 0.75rem; }
+}

@@ -58,7 +58,7 @@ class FeedbackTest extends WebTestCase
 
         $crawler = $client->request('GET', '/feedback');
         $this->assertResponseIsSuccessful();
-        self::assertCount(0, $crawler->filter('.modal[data-micromodal-open]'));
+        self::assertCount(0, $crawler->filter('[data-micromodal-open]'));
         self::assertStringNotContainsString('MicroModal.show', (string) $client->getResponse()->getContent());
 
         $crawler = $client->request('GET', '/feedback?IdCategory=' . $safety->getId() . '&username=member-3');

@@ -14,53 +14,30 @@
 {% endblock javascripts %}
 
 {% block content %}
-    {# Modal block needs to come before o-text due to css specificity of o-text h2 #}
+    {# The hint for a safety report, opened on load by assets/js/micromodal.js (data-micromodal-open). Coming from a
+       message (messageId), it offers to report that message instead. #}
     {% if form.vars.valid and form.IdCategory.vars.value == 2 and no_modal == false %}
-        {% if messageId != null %}
-            <div class="modal micromodal-slide" id="report-modal" aria-hidden="true" data-micromodal-open>
-                <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-                    <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
-                        <header id="modal-header" class="modal__header">
-                            <h2 class="modal__title">
-                                {{ 'feedback.profile.title'|trans }}
-                            </h2>
-                            <button class="modal__close" aria-label="{{ 'modal.close'|trans }}" data-micromodal-close></button>
-                        </header>
-                        <div id="modal-content-content" class="modal-content-content">
-                            <div id="modal-content" class="modal__content">
-                                {{ 'feedback.profile.report.message' | trans | purify | nl2br }}
-                            </div>
-                            <footer id="modal-footer" class="modal__footer u:flex u:flex-row u:justify-between">
-                                <button class="o-button" data-micromodal-close aria-label="{{ 'modal.continue'|trans }}">
-                                    {{ 'modal.continue'|trans }}</button>
-                                <a href="{{ url('conversation_report_spam', {'id': messageId }) }}" class="o-button" data-bs-dismiss="modal">{{ 'conversation.report.message'|trans }}</a>
-                            </footer>
-                        </div>
+        <div class="micromodal-slide p-about-hint" id="report-modal" aria-hidden="true" data-micromodal-open>
+            <div class="modal__overlay p-about-hint__overlay" tabindex="-1" data-micromodal-close>
+                <div class="modal__container p-about-hint__box" role="dialog" aria-modal="true" aria-labelledby="report-modal-title">
+                    <div class="p-about-hint__head">
+                        <span class="p-about-hint__icon" aria-hidden="true"><i class="fas fa-shield-alt"></i></span>
+                        <h2 class="p-about-hint__title" id="report-modal-title">{{ 'feedback.profile.title'|trans }}</h2>
+                    </div>
+                    <div class="p-about-hint__text">
+                        {{ (messageId != null ? 'feedback.profile.report.message' : 'feedback.profile.report.addinfo')|trans|purify|nl2br }}
+                    </div>
+                    <div class="p-about-hint__actions">
+                        {% if messageId != null %}
+                            <button type="button" class="p-about-hint__btn p-about-hint__btn--secondary" data-micromodal-close>{{ 'modal.continue'|trans }}</button>
+                            <a href="{{ url('conversation_report_spam', {'id': messageId}) }}" class="p-about-hint__btn p-about-hint__btn--primary">{{ 'conversation.report.message'|trans }}</a>
+                        {% else %}
+                            <button type="button" class="p-about-hint__btn p-about-hint__btn--primary" data-micromodal-close>{{ 'feedback.understood'|trans }}</button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-        {% else %}
-            <div class="modal micromodal-slide" id="report-modal" aria-hidden="true" data-micromodal-open>
-                <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-                    <div id="modal-container" class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
-                        <header id="modal-header" class="modal__header">
-                            <h2 class="modal__title">
-                                {{ 'feedback.profile.title'|trans }}
-                            </h2>
-                            <button class="modal__close" aria-label="{{ 'modal.close'|trans }}" data-micromodal-close></button>
-                        </header>
-                        <div id="modal-content-content" class="modal-content-content">
-                            <div id="modal-content" class="modal__content">
-                                {{ 'feedback.profile.report.addinfo' | trans | purify | nl2br }}
-                            </div>
-                            <footer id="modal-footer" class="modal__footer u:flex u:flex-row u:justify-end">
-                                <button type="button" class="o-button" data-micromodal-close aria-label="{{ 'feedback.understood'|trans }}">{{ 'feedback.understood'|trans }}</button>
-                            </footer>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% endif %}
+        </div>
     {% endif %}
     <div class="o-text">
         <h1>{{ 'contactus' | trans }}</h1>

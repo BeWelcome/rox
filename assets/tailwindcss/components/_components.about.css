@@ -41,6 +41,25 @@ main.p-about { background: #f4f5f7; }
 .p-about__body #faqs dt svg { margin-right: 0.4rem; color: #ea7a2e; }
 .p-about__body #faqs dd { margin: 0 0 1rem 1.6rem; }
 
+/* The hint of the feedback page for a safety report: a white card over the page, like the confirm dialogs of the
+   other pages. The micromodal classes (modal__overlay, modal__container) only bring the opening animation. */
+.p-about-hint .p-about-hint__overlay { padding: 1rem; background: rgba(15, 23, 42, 0.55); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+.p-about-hint .p-about-hint__box { position: relative; width: 100%; max-width: 34rem; height: auto; max-height: calc(100vh - 2rem); padding: 1.75rem 1.75rem 1.5rem; overflow-y: auto; border-radius: 1.25rem; background: #fff; box-shadow: 0 24px 64px rgba(15, 23, 42, 0.28); color: #334155; font-family: inherit; }
+.p-about-hint__head { display: flex; align-items: center; gap: 0.85rem; margin: 0 0 1rem; }
+.p-about-hint__icon { display: inline-flex; flex: none; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; background: #fff1e6; color: #c2410c; font-size: 1.05rem; }
+.p-about__body .p-about-hint__title { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.3rem; font-weight: 700; line-height: 1.3; }
+.p-about-hint__text { margin: 0 0 1.5rem; color: #475569; font-size: 0.9375rem; line-height: 1.6; }
+.p-about-hint__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0.6rem; }
+.p-about-hint .p-about-hint__btn,
+.p-about__body a.p-about-hint__btn.p-about-hint__btn { display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; margin: 0; padding: 0.5rem 1.25rem; border: 1.5px solid #e2e8f0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.9375rem; font-weight: 700; line-height: 1.2; text-decoration: none; }
+.p-about-hint .p-about-hint__btn:hover,
+.p-about__body a.p-about-hint__btn.p-about-hint__btn:hover { border-color: #cbd5e1; background: #f8fafc; }
+.p-about-hint .p-about-hint__btn--primary,
+.p-about__body a.p-about-hint__btn.p-about-hint__btn--primary { border-color: #f37000; background: #f37000; color: #fff; }
+.p-about-hint .p-about-hint__btn--primary:hover,
+.p-about__body a.p-about-hint__btn.p-about-hint__btn--primary:hover { border-color: #e06000; background: #e06000; color: #fff; }
+.p-about-hint .p-about-hint__btn:focus-visible { outline: 2px solid #f37000; outline-offset: 2px; }
+
 @media (max-width: 767.98px) {
   .p-about__wrap { grid-template-columns: minmax(0, 1fr); gap: 1rem; padding-top: 1rem; padding-bottom: 1.5rem; }
   /* the menu: one row of pills that scrolls */
@@ -56,4 +75,6 @@ main.p-about { background: #f4f5f7; }
   .p-about__body { padding: 1.4rem 1.15rem; border-radius: 1rem; }
   .p-about__body h1 { font-size: 1.85rem; }
   .p-about__body h2 { font-size: 1.3rem; }
+  .p-about-hint .p-about-hint__box { padding: 1.4rem 1.25rem 1.25rem; }
+  .p-about-hint__actions > * { flex: 1 1 auto; }
 }

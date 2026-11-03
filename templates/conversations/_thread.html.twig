@@ -15,6 +15,18 @@
     {% set currentFlexible = request.flexible %}{% set currentTravelers = request.numberOfTravellers %}
 {% endif %}
 {% set requestChanged = false %}
+{# Where the request stands, as a small centred line after the newest message of who answered (or cancelled) #}
+{% set S = 'App\\Entity\\HostingRequest::' %}
+{% set _event = null %}
+{% if request %}
+    {% set _event = {
+        (constant(S ~ 'REQUEST_ACCEPTED')): { key: 'accepted', icon: 'fa fa-check', tone: 'success' },
+        (constant(S ~ 'REQUEST_TENTATIVELY_ACCEPTED')): { key: 'tentatively', icon: 'fa fa-question', tone: 'maybe' },
+        (constant(S ~ 'REQUEST_DECLINED')): { key: 'declined', icon: 'fa fa-times', tone: 'danger' },
+        (constant(S ~ 'REQUEST_CANCELLED')): { key: 'cancelled', icon: 'fa fa-ban', tone: 'danger' },
+    }[request.status] ?? null %}
+{% endif %}
+{% set _eventShown = false %}
 
 <div id="message_thread" class="c-inbox-thread" data-label-download="{{ 'message.photo.download'|trans }}" data-label-close="{{ 'message.photo.close'|trans }}">
     {% for message in visible %}
@@ -22,6 +34,11 @@
         {% set deleted = message.isDeletedByMember(myself) %}
         {% set older = visible[loop.index] ?? null %}
 
+        {% set _byAsker = message.sender == newest.initiator %}
+        {% if _event and not _eventShown and (_event.key == 'cancelled' ? _byAsker : not _byAsker) %}
+            {% set _eventShown = true %}
+            <p class="c-inbox-event c-inbox-event--{{ _event.tone }}"><span><i class="{{ _event.icon }}" aria-hidden="true"></i> {{ ('request.event.' ~ (own ? 'mine.' : 'other.') ~ _event.key)|trans({ username: message.sender.shortNameOrUsername ?? message.sender.username }) }}</span></p>
+        {% endif %}
         <div class="c-bubble-row{{ own ? ' is-own' : '' }}">
             {# The other member's face next to their messages (shown on a computer) #}
             {% if not own %}<img class="c-bubble__avatar" src="{{ path('avatar', { username: message.sender.username, size: 48 }) }}" alt="" loading="lazy">{% endif %}

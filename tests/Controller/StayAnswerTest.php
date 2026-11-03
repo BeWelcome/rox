@@ -29,9 +29,9 @@ class StayAnswerTest extends WebTestCase
         $crawler = $client->request('GET', '/conversation/' . $message->getId());
 
         $this->assertResponseIsSuccessful();
-        self::assertSelectorTextContains('.c-stay-card__status', 'request.status.waiting.host');
-        self::assertSelectorTextContains('.c-stay-answer__q', 'request.decide.prompt');
-        $picks = $crawler->filter('.c-stay-card .js-stay-pick');
+        self::assertSelectorTextContains('.c-stay2__status', 'request.status.to.answer');
+        self::assertSelectorTextContains('.c-stay2__question', 'request.decide.prompt');
+        $picks = $crawler->filter('.c-stay2 .js-stay-pick');
         self::assertSame(['accept', 'maybe', 'decline'], $picks->each(static fn ($pick) => $pick->attr('data-choice')));
         // The big decision panel under the messages is gone
         self::assertCount(0, $crawler->filter('.js-decide-step[data-step="decide"]'));
@@ -59,7 +59,7 @@ class StayAnswerTest extends WebTestCase
         $crawler = $client->request('GET', '/conversation/' . $message->getId());
 
         $this->assertResponseIsSuccessful();
-        self::assertSelectorTextContains('.c-stay-card__status', 'request.status.waiting.guest');
+        self::assertSelectorTextContains('.c-stay2__status', 'request.status.waiting.guest');
         self::assertCount(0, $crawler->filter('.js-stay-pick'));
     }
 

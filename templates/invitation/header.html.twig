@@ -20,37 +20,15 @@
     {% set status = { key: 'expired', tone: 'expired', icon: 'fas fa-calendar-xmark' } %}
 {% endif %}
 {% set nights = date(invitation.departure|date('Y-m-d')).diff(date(invitation.arrival|date('Y-m-d'))).days %}
-{% set sameYear = invitation.arrival|date('Y') == invitation.departure|date('Y') %}
 
-<section class="c-stay-card c-stay-card--{{ status.tone }}{{ status.key != 'open' or side == 'host' ? ' is-collapsed' }}">
-    {# Phones: the card as one line (dates, nights, where it stands) #}
-    {% include 'request/_stay_strip.html.twig' with { stay: invitation, kind_icon: 'fas fa-house-user', kind_title: 'invitation.card.title', decider: side == 'guest' } %}
-    <div class="c-stay-card__body">
-    <div class="c-stay-card__top">
-        <p class="c-stay-card__kind"><i class="fas fa-house-user" aria-hidden="true"></i> {{ 'invitation.card.title'|trans }}</p>
-        {% if status.key %}
-            <span class="c-stay-card__status"><i class="{{ status.icon }}" aria-hidden="true"></i> {{ (status.key == 'open' ? 'request.status.waiting.' ~ (side == 'guest' ? 'host' : 'guest') : 'request.status.' ~ status.key)|trans }}</span>
-        {% endif %}
-        {% include 'request/_card_menu.html.twig' with { stay: invitation, confirm: 'invitation.confirm.cancel', dates: false } %}
-    </div>
-    <div class="c-stay-card__dates">
-        <p class="c-stay-card__date">
-            <span class="c-stay-card__label">{{ 'request.card.arrival'|trans }} · {{ invitation.arrival|format_date(pattern='EEE') }}</span>
-            <strong>{{ invitation.arrival|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}{% if sameYear %}<span class="c-stay-card__y"> {{ invitation.arrival|date('Y') }}</span>{% endif %}</strong>
-        </p>
-        <span class="c-stay-card__nights"><i class="fas fa-moon c-stay-card__moon" aria-hidden="true"></i><i class="fas fa-arrow-right c-stay-card__arrow" aria-hidden="true"></i> {{ 'contact.trip.nights'|trans({ count: nights }) }}</span>
-        <p class="c-stay-card__date c-stay-card__date--end">
-            <span class="c-stay-card__label">{{ 'request.card.departure'|trans }} · {{ invitation.departure|format_date(pattern='EEE') }}</span>
-            <strong>{{ invitation.departure|format_date(pattern=sameYear ? 'd MMM' : 'd MMM y') }}{% if sameYear %}<span class="c-stay-card__y"> {{ invitation.departure|date('Y') }}</span>{% endif %}</strong>
-        </p>
-    </div>
-    <ul class="c-stay-card__facts">
-        <li><i class="fa fa-users" aria-hidden="true"></i> {{ 'request.card.persons'|trans({ count: invitation.numberOfTravellers }) }}</li>
-    </ul>
+{% set _menu %}{% include 'request/_card_menu.html.twig' with { stay: invitation, confirm: 'invitation.confirm.cancel', dates: false } %}{% endset %}
+{% set _warning %}
     {% if invitation.status != constant(S ~ 'REQUEST_ACCEPTED') and (invitation.arrival|date('Y-m-d') != leg.arrival|date('Y-m-d') or invitation.departure|date('Y-m-d') != leg.departure|date('Y-m-d')) %}
-        <p class="c-stay-card__warning"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> {{ 'trip.leg.not.matched'|trans }}</p>
+        <p class="c-stay2__warning"><i class="fas fa-exclamation-triangle" aria-hidden="true"></i> {{ 'trip.leg.not.matched'|trans }}</p>
     {% endif %}
-    </div>
-    {# The answer of the member who decides (Accept, Maybe, Decline): it picks the answer of the form at the bottom #}
-    {% if status.key != 'expired' %}{% include 'request/_stay_answer.html.twig' with { stay: invitation } %}{% endif %}
-</section>
+{% endset %}
+{% include 'request/_stay_card.html.twig' with {
+    stay: invitation, status: status, nights: nights, kind: 'invitation', decider: side == 'guest',
+    other: original.Initiator == myself ? original.Receiver : original.Initiator,
+    subject: original.subject.subject ?? '', menu: _menu, warning: _warning
+} %}

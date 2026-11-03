@@ -171,6 +171,51 @@ request.status.waiting.host:
 request.status.waiting.guest:
     - 'Waiting for an answer'
     - Status on the stay card of a hosting request or invitation that the other member has not answered yet
-request.strip.your.answer:
-    - 'Your answer'
-    - On phones, short state in the folded stay card of a hosting request or invitation you have not answered yet
+request.status.to.answer:
+    - 'To answer'
+    - Status pill of the stay card when you still have to answer the hosting request or invitation
+request.event.mine.accepted:
+    - 'You accepted'
+    - In the stay card and under your message once you accepted a hosting request or invitation
+request.event.mine.tentatively:
+    - 'You answered maybe'
+    - In the stay card and under your message once you answered maybe to a hosting request or invitation
+request.event.mine.declined:
+    - 'You declined'
+    - In the stay card and under your message once you declined a hosting request or invitation
+request.event.mine.cancelled:
+    - 'You cancelled'
+    - In the stay card and under your message once you cancelled your hosting request or invitation
+request.event.other.accepted:
+    - '{username} accepted'
+    - In the stay card and under their message once the other member accepted your hosting request or invitation
+request.event.other.tentatively:
+    - '{username} answered maybe'
+    - In the stay card and under their message once the other member answered maybe
+request.event.other.declined:
+    - '{username} declined'
+    - In the stay card and under their message once the other member declined your hosting request or invitation
+request.event.other.cancelled:
+    - '{username} cancelled'
+    - In the stay card and under their message once the other member cancelled the hosting request or invitation
+request.decide.picked.accept:
+    - 'Accepting'
+    - Above the message once the host picked Accept in the stay card, followed by the dates
+request.decide.picked.maybe:
+    - 'Answering maybe'
+    - Above the message once the host picked Maybe in the stay card
+request.decide.picked.decline:
+    - 'Declining'
+    - Above the message once the host picked Decline in the stay card
+request.decide.picked.write:
+    - 'Add a few words below'
+    - Under the picked answer (Accepting, Answering maybe, Declining) above the message
+request.decide.send.short.accept:
+    - 'Accept'
+    - Send button once the host picked Accept in the stay card
+request.decide.send.short.maybe:
+    - 'Send maybe'
+    - Send button once the host picked Maybe in the stay card
+request.decide.send.short.decline:
+    - 'Decline'
+    - Send button once the host picked Decline in the stay card

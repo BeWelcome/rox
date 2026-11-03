@@ -241,3 +241,24 @@ frontpage.note.nearby.within:
 frontpage.note.group:
     - 'Weekend hiking meetup, {count} replies'
     - Front page, sample group thread in the hero
+frontpage.stay.eyebrow:
+    - 'Asking for a stay'
+    - Front page, small title above the block showing a stay request card
+frontpage.stay.title:
+    - 'One card, one tap to answer'
+    - Front page, title of the block showing a stay request card
+frontpage.stay.lead:
+    - 'Every request shows the dates, the nights and who is coming. Your host answers in one tap, and can suggest other dates.'
+    - Front page, text under the title of the stay request block
+frontpage.stay.dates:
+    - 'Dates and nights at a glance'
+    - Front page, stay request block, first line of the list
+frontpage.stay.tap:
+    - 'Accept, Maybe or Decline in one tap'
+    - Front page, stay request block, second line of the list
+frontpage.stay.talk:
+    - 'Then talk it through in the conversation'
+    - Front page, stay request block, third line of the list
+frontpage.stay.subject:
+    - 'Three nights in Berlin?'
+    - Front page, subject of the drawn stay request from Tomás to Lena

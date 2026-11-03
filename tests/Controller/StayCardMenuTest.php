@@ -52,7 +52,7 @@ class StayCardMenuTest extends WebTestCase
         $crawler = $client->request('GET', '/conversation/' . $message->getId());
 
         $this->assertResponseIsSuccessful();
-        $menu = $crawler->filter('.c-stay-card .c-stay-card__menu');
+        $menu = $crawler->filter('.c-stay2 .c-stay-card__menu');
         self::assertCount(1, $menu);
         self::assertCount(1, $menu->filter('.js-respond-stay-toggle'));
         self::assertCount(3, $menu->filter('.js-conversation-template'));

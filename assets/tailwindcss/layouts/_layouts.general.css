@@ -12803,3 +12803,268 @@ a.p-quality-pill:hover .p-quality-pill__item { filter: brightness(0.96); }
   .p-pro .p-pro__trust,
   .p-pro .p-pro__facts { min-width: 0; }
 }
+/* Try-out: the dashboard (home for members) on the light orange of the visitor front page */
+body:has(.l-hello),
+body:has(.l-hello) main { background: #fffaf4; }
+
+/* ── Stay card (request/_stay_card.html.twig), computers and phones: a white card on the grey of the
+   conversation, the dates on a dotted line, the answer under a thin rule ── */
+.c-inbox__pane:has(.c-stay2) .c-inbox-pane__extra { position: relative; z-index: 1; padding: 1.25rem 1.5rem 0.25rem; border: 0; background: #f4f4f5; }
+.c-inbox__pane:has(.c-stay2) .c-inbox-pane__extra::after { display: none; }
+.c-inbox__pane:has(.c-stay2) .c-inbox-thread { background: #f4f4f5; }
+.c-inbox__pane:has(.c-stay2) .c-bubble:not(.c-bubble--own):not(.is-deleted) { background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05); }
+.c-stay2 { padding: 1.1rem 1.5rem 1.25rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 0 0 1px #eceef1; color: #0f172a; }
+.c-stay2__top { display: flex; align-items: center; gap: 0.65rem; min-width: 0; }
+.c-stay2__icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: #fdeee0; color: #ea7a2e; font-size: 0.9rem; }
+.c-stay2__kind { flex: 1; min-width: 0; margin: 0; overflow: hidden; font-size: 1rem; text-overflow: ellipsis; white-space: nowrap; }
+.c-stay2__kind strong { font-family: Signika, sans-serif; font-weight: 700; }
+.c-stay2__subject { color: #94a3b8; font-size: 0.875rem; }
+.c-stay2__status { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.4rem; padding: 0.35rem 0.8rem; border-radius: 999px; background: #fdeee0; color: #c2410c; font-size: 0.8125rem; font-weight: 700; white-space: nowrap; }
+.c-stay2--maybe .c-stay2__status { background: #fdf3cd; color: #a16207; }
+.c-stay2--success .c-stay2__status { background: #e3f7e8; color: #2f7a43; }
+.c-stay2--danger .c-stay2__status { background: #fee2e2; color: #b91c1c; }
+.c-stay2--expired .c-stay2__status { background: #f1f5f9; color: #64748b; }
+.c-stay2 .c-stay-card__menu { position: relative; top: auto; right: auto; flex-shrink: 0; transform: none; }
+.c-stay2 .c-stay-card__more { width: 2rem; height: 2rem; border: 0; background: transparent; }
+.c-stay2 .c-stay-card__more:hover, .c-stay2 .c-stay-card__more[aria-expanded="true"] { background: #f1f5f9; color: #0f172a; }
+
+.c-stay2__dates { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: end; gap: 1rem; margin: 1.1rem 0 0; }
+.c-stay2__date { display: flex; flex-direction: column; gap: 0.15rem; margin: 0; }
+.c-stay2__date--end { align-items: flex-end; text-align: right; }
+.c-stay2__label { color: #94a3b8; font-size: 0.8125rem; font-weight: 600; }
+.c-stay2__date strong { font-family: Signika, sans-serif; font-size: 1.85rem; font-weight: 700; line-height: 1.1; white-space: nowrap; }
+.c-stay2__line { display: flex; align-items: center; min-width: 0; margin-bottom: 0.55rem; }
+.c-stay2__dot { flex-shrink: 0; width: 0.55rem; height: 0.55rem; border-radius: 50%; background: #ea7a2e; }
+.c-stay2__rule { flex: 1; min-width: 0.75rem; border-top: 2px dashed #f6b77f; }
+.c-stay2__nights { display: inline-flex; flex-shrink: 0; align-items: center; gap: 0.4rem; padding: 0.3rem 0.85rem; border: 1.5px solid #f6b77f; border-radius: 999px; background: #fff; color: #c2410c; font-size: 0.875rem; font-weight: 700; white-space: nowrap; }
+
+.c-stay2__facts { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0 0; padding: 0; list-style: none; }
+.c-stay2__facts li { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.4rem 0.8rem; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 0.8125rem; font-weight: 600; }
+.c-stay2__facts i, .c-stay2__facts svg { color: #94a3b8; font-size: 0.75rem; }
+.c-stay2__warning { display: flex; align-items: center; gap: 0.5rem; margin: 0.85rem 0 0; color: #b45309; font-size: 0.8125rem; font-weight: 600; }
+
+/* The answer: the question and Accept (solid green), Maybe and Decline (outlined) */
+.c-stay2__answer { margin-top: 1.1rem; padding-top: 1.1rem; border-top: 1px solid #f1f5f9; }
+.c-stay2__ask { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1rem; }
+.c-stay2__ask[hidden] { display: none; }
+.c-stay2__question { margin: 0; font-size: 0.9375rem; font-weight: 700; }
+.c-stay2__picks { display: flex; gap: 0.5rem; }
+.c-stay2__pick { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; padding: 0.6rem 1.15rem; border: 1.5px solid #e2e8f0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.9375rem; font-weight: 700; line-height: 1.2; white-space: nowrap; cursor: pointer; transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease; }
+.c-stay2__pick:hover { border-color: #cbd5e1; background: #f8fafc; }
+.c-stay2__pick--accept i, .c-stay2__pick--accept svg { color: #3fa75a; }
+.c-stay2__pick--maybe i, .c-stay2__pick--maybe svg { color: #d97706; }
+.c-stay2__pick--decline i, .c-stay2__pick--decline svg { color: #dc2626; }
+.c-stay2__pick:focus-visible { outline: 0; box-shadow: 0 0 0 0.25rem rgba(243, 112, 0, 0.25); }
+.c-stay2__pick.is-picked { box-shadow: 0 0 0 3px #fde6d2; }
+.c-stay2__pick--accept.is-picked, .c-stay2__pick--accept.is-picked:hover { border-color: #3fa75a; background: #3fa75a; color: #fff; box-shadow: 0 0 0 3px #cdebd5; }
+.c-stay2__pick--accept.is-picked i, .c-stay2__pick--accept.is-picked svg { color: #fff; }
+.c-stay2__pick--maybe.is-picked { border-color: #d97706; background: #fffbeb; }
+.c-stay2__pick--decline.is-picked { border-color: #dc2626; background: #fef2f2; }
+.c-stay2__picks:has(.is-picked) .c-stay2__pick:not(.is-picked) { opacity: 0.55; }
+
+/* Answered: a coloured line with what was answered, "Change" on its right */
+.c-stay2__band { display: flex; align-items: center; gap: 0.6rem; margin: 1.1rem 0 0; padding: 0.55rem 0.55rem 0.55rem 1rem; border-radius: 1rem; background: #fdeee0; color: #c2410c; font-size: 0.9375rem; font-weight: 700; }
+.c-stay2__answer .c-stay2__band { margin-top: 0; }
+.c-stay2__answer:has(.c-stay2__band:not([hidden])) { padding-top: 0; border-top: 0; }
+.c-stay2__band[hidden] { display: none; }
+.c-stay2__band > span { flex: 1; min-width: 0; padding: 0.3rem 0; }
+.c-stay2--maybe .c-stay2__band { background: #fdf3cd; color: #a16207; }
+.c-stay2--success .c-stay2__band { background: #e3f7e8; color: #2f7a43; }
+.c-stay2--danger .c-stay2__band { background: #fee2e2; color: #b91c1c; }
+.c-stay2__change { flex-shrink: 0; padding: 0.45rem 1.05rem; border: 0; border-radius: 999px; background: #fff; color: #0f172a; font-size: 0.875rem; font-weight: 700; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08); cursor: pointer; }
+.c-stay2__change:hover { background: #f8fafc; }
+
+/* In the thread: where the request stands, a small centred pill after the answer */
+.c-inbox-event { display: flex; justify-content: center; margin: 0.35rem 0 0.6rem; }
+.c-inbox-event > span { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.85rem; border-radius: 999px; background: #fdeee0; color: #c2410c; font-size: 0.8125rem; font-weight: 700; }
+.c-inbox-event--maybe > span { background: #fdf3cd; color: #a16207; }
+.c-inbox-event--success > span { background: #e3f7e8; color: #2f7a43; }
+.c-inbox-event--danger > span { background: #fee2e2; color: #b91c1c; }
+
+@media (max-width: 767.98px) {
+  .c-inbox__pane:has(.c-stay2) .c-inbox-pane__extra { padding: 0.75rem 0.75rem 0.25rem; }
+  .c-stay2 { padding: 1rem 1.1rem 1.1rem; border-radius: 1.1rem; }
+  .c-stay2__kind { font-size: 0.9375rem; }
+  /* Phones: the subject alone, the kind is already told by the icon */
+  .c-stay2__kind:has(.c-stay2__subject) strong,
+  .c-stay2__sep { display: none; }
+  .c-stay2__subject { color: #1f2937; font-family: Signika, sans-serif; font-size: 0.9375rem; font-weight: 600; }
+  .c-stay2__status { padding: 0.3rem 0.65rem; font-size: 0.75rem; }
+  .c-stay2__dates { gap: 0.5rem; margin-top: 0.9rem; }
+  .c-stay2__date strong { font-size: 1.4rem; }
+  .c-stay2__label { font-size: 0.75rem; }
+  .c-stay2__line { margin-bottom: 0.4rem; }
+  .c-stay2__nights { padding: 0.25rem 0.65rem; font-size: 0.8125rem; }
+  .c-stay2__facts { margin-top: 0.85rem; }
+  .c-stay2__ask { flex-direction: column; align-items: stretch; }
+  .c-stay2__picks { width: 100%; }
+  .c-stay2__pick { flex: 1 1 0; min-width: 0; padding: 0.6rem 0.5rem; font-size: 0.875rem; }
+  .c-stay2__band { font-size: 0.875rem; }
+}
+
+/* The picked answer pops in, its icon with a little bounce */
+@keyframes c-stay2-pick { 0% { transform: scale(1); } 40% { transform: scale(1.08); } 70% { transform: scale(0.97); } 100% { transform: scale(1); } }
+@keyframes c-stay2-pick-icon { 0% { transform: scale(0.4) rotate(-20deg); } 60% { transform: scale(1.3) rotate(8deg); } 100% { transform: scale(1) rotate(0); } }
+.c-stay2__pick { transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease; }
+.c-stay2__pick.is-picked { animation: c-stay2-pick 0.35s ease-out; }
+.c-stay2__pick.is-picked i, .c-stay2__pick.is-picked svg { animation: c-stay2-pick-icon 0.45s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .c-stay2__pick.is-picked, .c-stay2__pick.is-picked i, .c-stay2__pick.is-picked svg { animation: none; }
+}
+
+/* The answer picked in the stay card, above the message: a tinted band with a round icon,
+   what is sent and a hint, "Change dates" and a cross; the field and Send take its colour */
+.c-decide__write .c-decide__top { display: block; margin: 0 0 0.6rem; }
+.c-decide__write .c-decide__picked { display: flex; align-items: center; gap: 0.85rem; padding: 0.7rem 0.7rem 0.7rem 0.75rem; border-radius: 1.1rem; font-size: 0.9375rem; font-weight: 400; animation: c-decide-band 0.3s ease-out; }
+.c-decide__write .c-decide__picked[hidden] { display: none; }
+.c-decide__picked-icon { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; color: #fff; font-size: 1rem; animation: c-stay2-pick-icon 0.45s 0.08s ease-out both; }
+.c-decide__picked-text { display: flex; flex: 1; flex-direction: column; min-width: 0; line-height: 1.3; }
+.c-decide__picked-text strong { overflow: hidden; font-family: Signika, sans-serif; font-size: 1rem; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.c-decide__picked-text span { color: #64748b; font-size: 0.8125rem; }
+.c-decide__write .c-decide__picked .c-decide__change { flex: 0 0 auto; color: inherit; font-size: 0.8125rem; }
+.c-decide__write .c-decide__picked .c-decide__unpick { flex: 0 0 auto; width: 2.4rem; height: 2.4rem; margin: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.75); color: #334155; font-size: 0.9rem; opacity: 1; transition: background 0.15s ease, transform 0.15s ease; }
+.c-decide__write .c-decide__picked .c-decide__unpick:hover { background: #fff; transform: rotate(90deg); }
+.c-decide__write .c-decide__picked--accept { background: #e3f7e8; color: #2f7a43; }
+.c-decide__write .c-decide__picked--accept .c-decide__picked-icon { background: #3fa75a; }
+.c-decide__write .c-decide__picked--maybe { background: #fdf3cd; color: #92400e; }
+.c-decide__write .c-decide__picked--maybe .c-decide__picked-icon { background: #d97706; }
+.c-decide__write .c-decide__picked--decline { background: #fee2e2; color: #b91c1c; }
+.c-decide__write .c-decide__picked--decline .c-decide__picked-icon { background: #dc2626; }
+@keyframes c-decide-band { from { opacity: 0; transform: translateY(8px) scale(0.98); } to { opacity: 1; transform: none; } }
+
+.c-inbox__pane .c-decide .c-decide__write[data-choice="accept"] .c-decide__foot--inline .c-decide__text,
+.c-decide .c-decide__write[data-choice="accept"] .c-decide__text { border: 1.5px solid #3fa75a; }
+.c-inbox__pane .c-decide .c-decide__write[data-choice="maybe"] .c-decide__foot--inline .c-decide__text,
+.c-decide .c-decide__write[data-choice="maybe"] .c-decide__text { border: 1.5px solid #d97706; }
+.c-inbox__pane .c-decide .c-decide__write[data-choice="decline"] .c-decide__foot--inline .c-decide__text,
+.c-decide .c-decide__write[data-choice="decline"] .c-decide__text { border: 1.5px solid #dc2626; }
+.c-inbox__pane .c-decide__write[data-choice="accept"] .c-decide__send,
+.c-decide__write[data-choice="accept"] .c-decide__send { background: #3fa75a; box-shadow: 0 4px 12px rgba(63, 167, 90, 0.25); }
+.c-inbox__pane .c-decide__write[data-choice="accept"] .c-decide__send:hover,
+.c-decide__write[data-choice="accept"] .c-decide__send:hover { background: #2f8a4a; }
+.c-inbox__pane .c-decide__write[data-choice="maybe"] .c-decide__send,
+.c-decide__write[data-choice="maybe"] .c-decide__send { background: #d97706; box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25); }
+.c-inbox__pane .c-decide__write[data-choice="maybe"] .c-decide__send:hover,
+.c-decide__write[data-choice="maybe"] .c-decide__send:hover { background: #b45309; }
+.c-inbox__pane .c-decide__write[data-choice="decline"] .c-decide__send,
+.c-decide__write[data-choice="decline"] .c-decide__send { background: #dc2626; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
+.c-inbox__pane .c-decide__write[data-choice="decline"] .c-decide__send:hover,
+.c-decide__write[data-choice="decline"] .c-decide__send:hover { background: #b91c1c; }
+.c-decide__write:not([data-choice="reply"]) .c-decide__send { animation: c-stay2-pick 0.35s ease-out; }
+@media (max-width: 767.98px) {
+  .c-decide__write .c-decide__picked { gap: 0.65rem; padding: 0.55rem; }
+  .c-decide__picked-icon { width: 2.2rem; height: 2.2rem; }
+  .c-decide__picked-text strong { font-size: 0.9375rem; }
+  .c-decide__write .c-decide__picked .c-decide__unpick { width: 2.1rem; height: 2.1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .c-decide__write .c-decide__picked, .c-decide__picked-icon, .c-decide__write .c-decide__send { animation: none !important; }
+}
+
+/* "Change dates": the dates float over the messages, above the picked answer, instead of pushing the field down */
+.c-decide__write { position: relative; }
+.c-decide__write .c-decide__stay,
+.c-inbox__pane .c-decide__write .c-decide__stay { position: absolute; right: 0; bottom: calc(100% + 0.6rem); left: 0; z-index: 20; margin: 0; padding: 1rem 1.1rem; border-radius: 1.1rem; background: #fff; box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16), 0 0 0 1px #e2e8f0; transform-origin: bottom center; animation: c-decide-pop 0.22s ease-out; }
+.c-decide__write .c-decide__stay[hidden] { display: none; }
+@keyframes c-decide-pop { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .c-decide__write .c-decide__stay { animation: none; }
+}
+
+/* Phones: "Change dates" is a round calendar button next to the cross, the hint stays on one line */
+@media (max-width: 767.98px) {
+  .c-decide__write .c-decide__picked .c-decide__change { position: relative; justify-content: center; width: 2.1rem; height: 2.1rem; padding: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.75); font-size: 0.9rem; }
+  .c-decide__write .c-decide__picked .c-decide__change[aria-expanded="true"] { background: #fff; box-shadow: 0 0 0 2px currentColor; }
+  .c-decide__change-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .c-decide__picked-text span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .c-decide__write .c-decide__picked { gap: 0.5rem; }
+}
+/* The answer area scrolls (overflow auto), which cut off the floating dates: let them out while open, above the messages */
+.c-inbox-compose--respond:has(.c-decide__stay:not([hidden])),
+.c-inbox__pane .c-inbox-compose--respond:has(.c-decide__stay:not([hidden])) { position: relative; z-index: 30; overflow: visible; }
+
+/* Answered (accepted, maybe, declined): no coloured line, an edit button next to the status shows the answers again */
+.c-stay2__edit { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 0.4rem; padding: 0.3rem 0.75rem; border: 1.5px solid #e2e8f0; border-radius: 999px; background: #fff; color: #475569; font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+.c-stay2__edit:hover, .c-stay2__edit[aria-expanded="true"] { border-color: #cbd5e1; background: #f8fafc; color: #0f172a; }
+.c-stay2__edit i, .c-stay2__edit svg { font-size: 0.8rem; }
+.c-stay2__answer:not(:has(.c-stay2__band)):has(.js-stay-choices[hidden]) { display: none; }
+.c-stay2__answer:not(:has(.c-stay2__band)) .c-stay2__ask:not([hidden]) { animation: c-decide-band 0.3s ease-out; }
+@media (max-width: 767.98px) {
+  .c-stay2__edit { width: 2rem; height: 2rem; justify-content: center; padding: 0; }
+  .c-stay2__edit span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+}
+
+/* Conversation lists: declined in light red like accepted in green (cancelled stays grey) */
+.c-req-pill--declined { background: #fdecec; color: #e05d5d; }
+.c-req-pill--declined .c-req-pill__dates { text-decoration: line-through; }
+.c-req-kind--declined { background: #f07a7a; }
+.c-req-status--declined { color: #e05d5d; }
+.c-req-tip--declined .c-req-tip__title::before { background: #f87171; }
+
+/* Stay card on phones: compact top, dates and chips */
+@media (max-width: 767.98px) {
+  .c-stay2 { padding: 0.8rem 1rem 1rem; }
+  .c-stay2__top { gap: 0.55rem; }
+  .c-stay2__icon { width: 2rem; height: 2rem; font-size: 0.85rem; }
+  .c-stay2__status { padding: 0.25rem 0.6rem; font-size: 0.8125rem; }
+  .c-stay2 .c-stay2__dates { gap: 0.4rem; margin-top: 0.6rem; }
+  .c-stay2 .c-stay2__label { font-size: 0.75rem; }
+  .c-stay2 .c-stay2__date strong { font-size: 1.15rem; }
+  .c-stay2 .c-stay2__nights { padding: 0.15rem 0.55rem; font-size: 0.75rem; }
+  .c-stay2 .c-stay2__facts { gap: 0.35rem; margin-top: 0.6rem; }
+  .c-stay2 .c-stay2__facts li { padding: 0.2rem 0.6rem; font-size: 0.75rem; }
+  .c-stay2 .c-stay2__answer { margin-top: 0.75rem; padding-top: 0.75rem; }
+}
+
+/* Phones: no reply templates in the stay card's ⋯ menu (one divider between Change dates and Cancel) */
+@media (max-width: 767.98px) {
+  .c-compose-tools__templates { display: none; }
+  .c-compose-tools__after-dates:has(+ .c-compose-tools__templates) { display: none; }
+  .c-compose-tools__menu > .c-compose-tools__templates:first-child + .c-compose-tools__before-cancel { display: none; }
+  /* Only the templates in it: no ⋯ button at all */
+  .c-stay-card__menu:has(> .c-compose-tools__menu > .c-compose-tools__templates:only-child) { display: none; }
+}
+
+/* Stay card on computers: a bit more compact */
+@media (min-width: 768px) {
+  .c-stay2 { padding: 0.85rem 1.25rem 0.95rem; }
+  .c-stay2__icon { width: 2rem; height: 2rem; font-size: 0.8rem; }
+  .c-stay2__kind { font-size: 0.9375rem; }
+  .c-stay2__status { padding: 0.25rem 0.7rem; }
+  .c-stay2 .c-stay2__dates { gap: 0.85rem; margin-top: 0.7rem; }
+  .c-stay2 .c-stay2__label { font-size: 0.75rem; }
+  .c-stay2 .c-stay2__date strong { font-size: 1.4rem; }
+  .c-stay2 .c-stay2__nights { padding: 0.2rem 0.7rem; font-size: 0.8125rem; }
+  .c-stay2 .c-stay2__facts { gap: 0.4rem; margin-top: 0.65rem; }
+  .c-stay2 .c-stay2__facts li { padding: 0.25rem 0.7rem; font-size: 0.8125rem; }
+  .c-stay2 .c-stay2__answer { margin-top: 0.75rem; padding-top: 0.75rem; }
+  .c-stay2 .c-stay2__question { font-size: 0.9375rem; }
+  .c-stay2 .c-stay2__pick { padding: 0.45rem 1rem; font-size: 0.875rem; }
+}
+
+/* An answer picked: the whole answer area takes its light colour, the band loses its own box (compact) */
+.c-inbox-compose--respond:has(.c-decide__write[data-choice="accept"]),
+.c-inbox__pane .c-inbox-compose--respond:has(.c-decide__write[data-choice="accept"]) { background: #e3f7e8; border-top-color: #cdebd5; transition: background 0.25s ease; }
+.c-inbox-compose--respond:has(.c-decide__write[data-choice="maybe"]),
+.c-inbox__pane .c-inbox-compose--respond:has(.c-decide__write[data-choice="maybe"]) { background: #fdf3cd; border-top-color: #f8e3a3; transition: background 0.25s ease; }
+.c-inbox-compose--respond:has(.c-decide__write[data-choice="decline"]),
+.c-inbox__pane .c-inbox-compose--respond:has(.c-decide__write[data-choice="decline"]) { background: #fee2e2; border-top-color: #fecaca; transition: background 0.25s ease; }
+.c-decide__write .c-decide__top { margin: 0 0 0.5rem; }
+.c-decide__write .c-decide__picked--accept, .c-decide__write .c-decide__picked--maybe, .c-decide__write .c-decide__picked--decline { gap: 0.65rem; padding: 0; background: none; }
+.c-decide__picked-icon { width: 2rem; height: 2rem; font-size: 0.85rem; }
+.c-decide__picked-text { flex-direction: row; flex-wrap: wrap; align-items: baseline; column-gap: 0.5rem; }
+.c-decide__picked-text strong { font-size: 0.9375rem; }
+.c-decide__write .c-decide__picked .c-decide__unpick { width: 2rem; height: 2rem; background: rgba(255, 255, 255, 0.8); font-size: 0.8rem; }
+.c-decide__write .c-decide__picked .c-decide__change { padding: 0.25rem 0.6rem; border-radius: 999px; background: rgba(255, 255, 255, 0.8); }
+.c-decide__write:not([data-choice="reply"]) .c-decide__text,
+.c-inbox__pane .c-decide .c-decide__write:not([data-choice="reply"]) .c-decide__foot--inline .c-decide__text { background: #fff; }
+@media (max-width: 767.98px) {
+  .c-decide__write .c-decide__picked--accept, .c-decide__write .c-decide__picked--maybe, .c-decide__write .c-decide__picked--decline { padding: 0; }
+  .c-decide__picked-icon { width: 1.8rem; height: 1.8rem; }
+  .c-decide__picked-text { flex-direction: column; }
+  .c-decide__write .c-decide__picked .c-decide__unpick, .c-decide__write .c-decide__picked .c-decide__change { width: 1.9rem; height: 1.9rem; padding: 0; }
+}
+/* Picked: the colour reaches both sides of the pane; back to a plain message is a small grey cross */
+.c-inbox-compose--respond:has(.c-decide__write:not([data-choice="reply"])) { margin-right: 0; margin-left: 0; border-radius: 0; }
+.c-decide__write .c-decide__picked .c-decide__unpick--quiet { width: 1.75rem; height: 1.75rem; padding: 0; border-radius: 50%; background: none; color: #94a3b8; font-size: 0.8rem; transform: none; }
+.c-decide__write .c-decide__picked .c-decide__unpick--quiet:hover { background: rgba(15, 23, 42, 0.06); color: #475569; transform: none; }

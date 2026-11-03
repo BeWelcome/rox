@@ -151,12 +151,15 @@ document.querySelectorAll('.js-respond').forEach((form) => {
             input.dispatchEvent(new Event('change', { bubbles: true }));
         });
     };
-    const datesButton = form.querySelector('.js-decide-dates');
-    if (datesButton && stayDates) {
-        datesButton.addEventListener('click', () => {
-            const open = stayDates.hidden;
-            stayDates.hidden = !open;
-            datesButton.setAttribute('aria-expanded', String(open));
+    // "Change dates" sits in the picked accept and maybe bands
+    const datesButtons = form.querySelectorAll('.js-decide-dates');
+    if (stayDates) {
+        datesButtons.forEach((datesButton) => {
+            datesButton.addEventListener('click', () => {
+                const open = stayDates.hidden;
+                stayDates.hidden = !open;
+                datesButtons.forEach((other) => other.setAttribute('aria-expanded', String(open)));
+            });
         });
     }
     const choose = (choice, button) => {
@@ -176,37 +179,35 @@ document.querySelectorAll('.js-respond').forEach((form) => {
                 resetStay();
             }
             stayDates.hidden = true;
-            if (datesButton) {
+            datesButtons.forEach((datesButton) => {
                 datesButton.hidden = !withDates;
                 datesButton.setAttribute('aria-expanded', 'false');
-            }
+            });
         }
         if (message) {
-            message.placeholder = message.dataset['placeholder' + choice.charAt(0).toUpperCase() + choice.slice(1)] || message.placeholder;
+            // Phones: a short placeholder once an answer is picked, so it stays on one line
+            const short = choice !== 'reply' && window.matchMedia('(max-width: 767.98px)').matches ? message.dataset.placeholderShort : null;
+            message.placeholder = short || message.dataset['placeholder' + choice.charAt(0).toUpperCase() + choice.slice(1)] || message.placeholder;
         }
     };
 
     // Accept, Maybe and Decline are in the stay card above the messages (request/_stay_answer.html.twig)
     const stayAnswer = document.querySelector('.js-stay-answer');
     const stayPicks = document.querySelectorAll('.js-stay-pick');
-    // Phones: the stay card folds to its line once an answer is picked; its chevron shows the answers again
-    const foldStay = (folded) => {
-        const card = stayAnswer ? stayAnswer.closest('.c-stay-card') : null;
-        const strip = card ? card.querySelector('.js-stay-strip') : null;
-        if (card && strip) {
-            card.classList.toggle('is-collapsed', folded);
-            strip.setAttribute('aria-expanded', String(!folded));
-        }
-    };
     const resetStayAnswer = () => {
         stayPicks.forEach((other) => other.classList.remove('is-picked'));
     };
     stayPicks.forEach((pick) => {
         pick.addEventListener('click', () => {
+            // A second click on the picked answer takes it back: a plain message again
+            if (pick.classList.contains('is-picked')) {
+                choose('reply');
+                resetStayAnswer();
+                return;
+            }
             choose(pick.dataset.choice, pick.dataset.button);
             show('write');
             stayPicks.forEach((other) => other.classList.toggle('is-picked', other === pick));
-            foldStay(true);
             if (message) {
                 message.focus();
             }
@@ -318,12 +319,22 @@ initBubblePhotos();
 initPlainTextFields();
 initContactSendState();
 
-// Phones: the chevron of the stay card's line (request/_stay_strip.html.twig) hides or shows the answer buttons
-document.querySelectorAll('.js-stay-strip').forEach((strip) => {
-    strip.addEventListener('click', () => {
-        const card = strip.closest('.c-stay-card');
-        const collapsed = !card.classList.contains('is-collapsed');
-        card.classList.toggle('is-collapsed', collapsed);
-        strip.setAttribute('aria-expanded', String(!collapsed));
+// Answered: "Change" in the stay card shows Accept, Maybe and Decline again (request/_stay_answer.html.twig)
+// Declined: the edit button next to the status does it (a second click hides them again)
+document.querySelectorAll('.js-stay-change').forEach((change) => {
+    change.addEventListener('click', () => {
+        const answer = change.closest('.c-stay2').querySelector('.js-stay-answer');
+        if (!answer) {
+            return;
+        }
+        const band = answer.querySelector('.js-stay-band');
+        const choices = answer.querySelector('.js-stay-choices');
+        if (band) {
+            band.hidden = true;
+            choices.hidden = false;
+            return;
+        }
+        choices.hidden = !choices.hidden;
+        change.setAttribute('aria-expanded', String(!choices.hidden));
     });
 });

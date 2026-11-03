@@ -2,8 +2,9 @@
   Accept, Maybe and Decline in the stay card, for the member who decides (the host of a
   hosting request, the invited member of an invitation). A pick sends nothing: it sets the
   answer of the form at the bottom (request/_respond_host.html.twig, requests.js), whose
-  Send then reads "Send & accept"… Once answered, phones start with them folded: the
-  chevron of the stay line shows them (request/_stay_strip.html.twig).
+  Send then reads "Send & accept"… Once answered, a coloured line says what was answered
+  (answer_label, answer_icon) and "Change" shows the answers again; with collapsed (declined)
+  there is no line, the answers stay hidden until the edit button next to the status in the card.
   Expects stay (the request), and request_form (view page) or form (reply page).
 #}
 {% set respond = request_form ?? form ?? null %}
@@ -25,35 +26,25 @@
     {% set awaiting = stay.status == constant(S ~ 'REQUEST_OPEN') %}
 
     {% if choices|length > 0 and stay.status != constant(S ~ 'REQUEST_CANCELLED') %}
-        <div class="c-stay-answer js-stay-answer{{ awaiting ? '' : ' is-answered' }}">
-            <div class="c-stay-answer__row js-stay-choices">
-                <span class="c-stay-answer__q">{{ ((stay.inviteForLeg ? 'invitation' : 'request') ~ '.decide.prompt')|trans({ username: askerName }) }}</span>
-                <div class="c-stay-answer__picks">
+        <div class="c-stay2__answer js-stay-answer{{ awaiting ? '' : ' is-answered' }}">
+            {% if not awaiting and answer_label ?? null %}
+                {# Answered: what was answered, and "Change" shows the answers again (requests.js) #}
+                <div class="c-stay2__band js-stay-band">
+                    <i class="{{ answer_icon ?? '' }}" aria-hidden="true"></i>
+                    <span>{{ answer_label|trans({ username: askerName }) }}</span>
+                    <button type="button" class="c-stay2__change js-stay-change">{{ 'request.decide.change'|trans }}</button>
+                </div>
+            {% endif %}
+            <div class="c-stay2__ask js-stay-choices"{{ not awaiting and ((answer_label ?? null) or (collapsed ?? false)) ? ' hidden' : '' }}>
+                <p class="c-stay2__question">{{ ((stay.inviteForLeg ? 'invitation' : 'request') ~ '.decide.prompt')|trans({ username: askerName }) }}</p>
+                <div class="c-stay2__picks">
                     {% for choice in choices %}
-                        <button type="button" class="c-stay-answer__pick c-stay-answer__pick--{{ choice.key }} js-stay-pick"
-                                data-choice="{{ choice.key }}" data-button="{{ choice.button.vars.full_name }}"
-                                aria-label="{{ ('request.decide.' ~ choice.key)|trans }}">
+                        <button type="button" class="c-stay2__pick c-stay2__pick--{{ choice.key }} js-stay-pick"
+                                data-choice="{{ choice.key }}" data-button="{{ choice.button.vars.full_name }}">
                             <i class="{{ choice.icon }}" aria-hidden="true"></i>
-                            <span class="c-stay-answer__label">{{ ('request.decide.' ~ choice.key)|trans }}</span>
+                            <span>{{ ('request.decide.' ~ choice.key)|trans }}</span>
                         </button>
                     {% endfor %}
-                </div>
-            </div>
-        </div>
-    {% endif %}
-{% elseif respond and respond.cancel is defined and respond.message is defined %}
-    {# The member who asked (the guest of a request, the member who invited): on phones the chevron of the stay line shows Cancel (on a computer it is in the card's "⋯" menu) #}
-    {% set S = 'App\\Entity\\HostingRequest::' %}
-    {% if stay.status not in [constant(S ~ 'REQUEST_CANCELLED'), constant(S ~ 'REQUEST_DECLINED')] %}
-        <div class="c-stay-answer c-stay-answer--cancel">
-            <div class="c-stay-answer__row">
-                <div class="c-stay-answer__picks">
-                    <button type="submit" form="js-respond-form" name="{{ respond.cancel.vars.full_name }}" class="c-stay-answer__pick c-stay-answer__pick--decline"
-                            data-confirm="{{ (stay.inviteForLeg ? 'invitation.confirm.cancel' : 'request.confirm.cancel')|trans }}" data-confirm-ok="{{ respond.cancel.vars.label|trans }}" data-confirm-close="{{ 'modal.close'|trans }}"
-                            data-confirm-field="{{ respond.message.vars.id }}" data-confirm-field-placeholder="{{ 'request.cancel.reason'|trans }}">
-                        <i class="fas fa-ban" aria-hidden="true"></i>
-                        <span class="c-stay-answer__label">{{ respond.cancel.vars.label|trans }}</span>
-                    </button>
                 </div>
             </div>
         </div>

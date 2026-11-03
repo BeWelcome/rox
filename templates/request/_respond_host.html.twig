@@ -34,17 +34,23 @@
            flexible (hidden while no answer is picked: then Send posts a plain message). Another answer is
            picked in the stay card above. #}
         <div class="c-decide__top">
+            {% set _sameMonth = request.arrival|date('Ym') == request.departure|date('Ym') %}
+            {% set _dates = request.arrival|format_date(pattern='EEE d' ~ (_sameMonth ? '' : ' MMM')) ~ ' – ' ~ request.departure|format_date(pattern='EEE d MMM') %}
             {% for key, icon in { accept: 'fa fa-check', maybe: 'fa fa-question', decline: 'fa fa-times' } %}
-                <span class="c-decide__picked c-decide__picked--{{ key }} js-decide-picked" data-choice="{{ key }}" hidden>
-                    <i class="{{ icon }}" aria-hidden="true"></i> {{ ('request.decide.' ~ key)|trans }}
-                    <button type="button" class="c-decide__unpick js-decide-change" aria-label="{{ 'request.decide.change'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></button>
-                </span>
+                <div class="c-decide__picked c-decide__picked--{{ key }} js-decide-picked" data-choice="{{ key }}" hidden>
+                    <span class="c-decide__picked-icon"><i class="{{ icon }}" aria-hidden="true"></i></span>
+                    <span class="c-decide__picked-text">
+                        <strong>{{ ('request.decide.picked.' ~ key)|trans }}{% if key == 'accept' %} · {{ _dates }}{% endif %}</strong>
+                        <span>{{ 'request.decide.picked.write'|trans }}</span>
+                    </span>
+                    {% if flexible and key != 'decline' %}
+                        <button type="button" class="c-decide__change js-decide-dates" aria-expanded="false" hidden>
+                            <i class="fa fa-calendar" aria-hidden="true"></i> <span class="c-decide__change-label">{{ 'request.respond.change'|trans }}</span>
+                        </button>
+                    {% endif %}
+                    <button type="button" class="c-decide__unpick c-decide__unpick--quiet js-decide-change" aria-label="{{ 'request.decide.change'|trans }}"><i class="fas fa-times" aria-hidden="true"></i></button>
+                </div>
             {% endfor %}
-            {% if flexible %}
-                <button type="button" class="c-decide__change js-decide-dates" aria-expanded="false" hidden>
-                    <i class="fa fa-calendar" aria-hidden="true"></i> {{ 'request.respond.change'|trans }}
-                </button>
-            {% endif %}
         </div>
 
         {% if flexible %}
@@ -80,6 +86,7 @@
                       data-placeholder-accept="{{ 'conversation.answer.placeholder'|trans }}"
                       data-placeholder-maybe="{{ 'conversation.answer.placeholder'|trans }}"
                       data-placeholder-decline="{{ 'conversation.answer.placeholder'|trans }}"
+                      data-placeholder-short="{{ 'conversation.answer.placeholder.short'|trans }}"
                       data-placeholder-reply="{{ 'conversation.write.to'|trans({ username: guestName }) }}">
                 {{- respond.message.vars.value|replace({'</p>': '\n\n', '<br>': '\n', '<br />': '\n'})|striptags|trim -}}
             </textarea>
@@ -87,7 +94,7 @@
                     class="c-decide__send js-respond-send" data-button="{{ respond.update.vars.full_name }}">
                 <i class="fas fa-paper-plane" aria-hidden="true"></i>
                 {% for key in ['accept', 'maybe', 'decline', 'reply'] %}
-                    <span class="js-decide-send" data-choice="{{ key }}"{{ key == 'reply' ? '' : ' hidden' }}>{{ (key == 'reply' ? 'label.message.button.send' : 'request.decide.send.' ~ key)|trans }}</span>
+                    <span class="js-decide-send" data-choice="{{ key }}"{{ key == 'reply' ? '' : ' hidden' }}>{{ (key == 'reply' ? 'label.message.button.send' : 'request.decide.send.short.' ~ key)|trans }}</span>
                 {% endfor %}
             </button>
         </div>

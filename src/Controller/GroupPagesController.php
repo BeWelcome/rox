@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Doctrine\GroupMembershipStatusType;
 use App\Dto\GroupSearch;
+use App\Entity\Address;
 use App\Entity\Group;
 use App\Entity\GroupCategory;
 use App\Entity\GroupMembership;
+use App\Entity\Location;
 use App\Entity\Member;
+use App\Entity\MemberThreadSubscription;
 use App\Entity\RelatedGroup;
+use App\Model\ForumModel;
 use App\Repository\GroupCategoryRepository;
 use App\Repository\GroupRepository;
 use App\Security\GroupVoter;
@@ -49,6 +53,7 @@ class GroupPagesController extends AbstractController
     private const int MEMBERS_PER_PAGE = 20;
     private const int LATEST_THREADS = 10;
     private const int SIDEBAR_MEMBERS = 12;
+    private const int NEAR_GROUPS = 3;
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -97,11 +102,36 @@ class GroupPagesController extends AbstractController
         // Newest post first unless another order is asked for
         $order = (string) $request->query->get('order', 'actdesc');
         $order = \in_array($order, GroupSearch::ORDERS, true) ? $order : 'actdesc';
-        $groups = $this->paginate($this->getGroupRepository()->createMyGroupsQueryBuilder($member, $order), $page, self::GROUPS_PER_PAGE);
+        $groups = $this->paginate($this->getGroupRepository()->createMyGroupsQueryBuilder($member, $order, false), $page, self::GROUPS_PER_PAGE);
 
         return $this->render('group/mygroups.html.twig', $this->getListParameters($request, new GroupSearch(order: $order)) + [
             'groups' => $groups,
             'profileForm' => $profileForm,
+        ]);
+    }
+
+    /**
+     * The member's subscriptions as the third tab of the groups page: the topics they follow (unread ones first) or
+     * the groups whose new posts they get by mail. Replaces the subscriptions page of the forums.
+     */
+    #[Route(path: '/groups/subscriptions', name: 'groups_subscriptions', methods: ['GET'])]
+    public function subscriptions(Request $request, ForumModel $forumModel): Response
+    {
+        /** @var Member $member */
+        $member = $this->getUser();
+        $view = 'groups' === $request->query->get('view') ? 'groups' : 'topics';
+        $topics = $forumModel->getSubscriptions($member);
+        usort($topics, static fn (MemberThreadSubscription $a, MemberThreadSubscription $b): int => [$b->isUnread(), $b->getThread()->getLastPost()?->getCreated()]
+            <=> [$a->isUnread(), $a->getThread()->getLastPost()?->getCreated()]);
+        $notifiedGroups = array_values(array_filter(
+            $this->getCurrentMemberships($member),
+            static fn (GroupMembership $membership): bool => $membership->isNotificationsEnabled(),
+        ));
+
+        return $this->render('group/subscriptions.html.twig', $this->getListParameters($request, new GroupSearch()) + [
+            'view' => $view,
+            'topics' => $topics,
+            'notifiedGroups' => $notifiedGroups,
         ]);
     }
 
@@ -260,14 +290,42 @@ class GroupPagesController extends AbstractController
             $this->getCurrentMemberships($member),
         ) : [];
 
+        $agora = $this->entityManager->find(Group::class, Group::BEWELCOME);
+        $repository = $this->getGroupRepository();
+
         return [
             'search' => $search,
             'categories' => $categoryRepository->findAllSortedByName($request->getLocale()),
+            'categoryCounts' => $categoryRepository->countGroups(),
             'myGroupIds' => $myGroupIds,
-            'myCount' => \count($myGroupIds),
-            'allCount' => $this->paginate($this->getGroupRepository()->createSearchQueryBuilder(new GroupSearch()), 1, 1)->getNbResults(),
-            'archivedCount' => $this->paginate($this->getGroupRepository()->createSearchQueryBuilder(new GroupSearch(archived: true)), 1, 1)->getNbResults(),
+            // the agora is pinned above the lists, not counted in them
+            'myCount' => \count(array_diff($myGroupIds, [Group::BEWELCOME])),
+            'allCount' => $this->paginate($repository->createSearchQueryBuilder(new GroupSearch()), 1, 1)->getNbResults(),
+            'archivedCount' => $this->paginate($repository->createSearchQueryBuilder(new GroupSearch(archived: true)), 1, 1)->getNbResults(),
+            'agora' => $agora,
+            'agoraDescription' => $agora?->getDescription($request->getLocale()),
+            'agoraThread' => null === $agora ? null : ($repository->findLatestThreads($agora, 1)[0] ?? null),
+            'near' => $member instanceof Member ? $this->findGroupsNear($member) : null,
+            'newSubscriptions' => $member instanceof Member ? \count(array_filter(
+                $this->entityManager->getRepository(MemberThreadSubscription::class)->findBy(['subscriber' => $member]),
+                static fn (MemberThreadSubscription $subscription): bool => $subscription->isUnread(),
+            )) : 0,
         ];
+    }
+
+    /**
+     * Groups near the member's place (their address), for "Groups near you".
+     *
+     * @return array{area: Location, groups: list<array<int|string, mixed>>, country: ?Location, countryCount: int}|null
+     */
+    private function findGroupsNear(Member $member): ?array
+    {
+        $address = $member->getActiveAddress();
+        if (!$address instanceof Address) {
+            return null;
+        }
+
+        return $this->getGroupRepository()->findNear($address->getLocation(), self::NEAR_GROUPS);
     }
 
     /**

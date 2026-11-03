@@ -179,6 +179,7 @@ class ForumPagesController extends AbstractController
             self::POSTS_PER_PAGE,
         );
         $this->getThreadRepository()->countView($thread);
+        $this->forumModel->markRead($thread, $member);
         // The first post (the oldest one shown: the thread's own first post id is not always right) and its author
         $starter = $postRepository->createThreadPostsQueryBuilder($thread, $member, $this->isModerator(), true)
             ->select('fp.id AS id, IDENTITY(fp.author) AS author')

@@ -152,3 +152,54 @@ group.list.active.months:
 group.list.active.years:
     - 'Active {count, plural, one {# year} other {# years}} ago'
     - Groups pages, on a group whose newest post is a year old or more
+group.official:
+    - Official
+    - Badge next to the name of the BeWelcome Agora (the group of the whole community).
+group.agora.open:
+    - Open
+    - Button on the BeWelcome Agora's card above the group lists, leads to it.
+group.agora.latest:
+    - 'Latest: “{title}”'
+    - The newest topic of the BeWelcome Agora on its card above the group lists. Keep {title} as it is.
+group.near.eyebrow:
+    - Near you
+    - Small heading above the groups near the member's place on the groups page.
+group.near.title:
+    - 'Groups around {place}'
+    - Title of the groups near the member's place (their city, region or country). Keep {place} as it is.
+group.near.see.all:
+    - 'See all {count} in {country}'
+    - Link to all groups in the member's country. Keep {count} and {country} as they are.
+group.categories.eyebrow:
+    - Browse
+    - Small heading above the group categories on the groups page.
+group.categories.title:
+    - By category
+    - Title of the group categories (tiles) on the groups page.
+group.list.subscriptions:
+    - Subscriptions
+    - Tab of the groups page with the topics the member follows and the groups whose posts they get by mail.
+group.list.subscriptions.new:
+    - '{count} new'
+    - Count on the Subscriptions tab of the groups page, topics with posts the member hasn't seen. Keep {count} as it is.
+group.subscriptions.topics:
+    - Topics
+    - The topics the member follows, on the Subscriptions tab of the groups page.
+group.subscriptions.groups:
+    - Groups
+    - The groups whose new posts the member gets by mail, on the Subscriptions tab of the groups page.
+group.subscriptions.notify:
+    - Notify me about new posts
+    - Switch next to a group on the Subscriptions tab; switching it off stops the mails about the group's posts.
+group.subscriptions.no.topics:
+    - 'You follow no topics. Subscribe to a topic to find it here.'
+    - Shown on the Subscriptions tab of the groups page when the member follows no topic.
+group.subscriptions.no.groups:
+    - 'You get no mails about the posts of any group.'
+    - Shown on the Subscriptions tab (groups) when the member gets mails about no group.
+group.subscriptions.unread:
+    - New posts
+    - Hidden text for screen readers next to a followed topic with posts the member hasn't seen.
+group.categories.too.many:
+    - 'A group can have at most 3 categories.'
+    - Error when more than 3 categories are chosen for a group.

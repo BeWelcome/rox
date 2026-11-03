@@ -19,6 +19,7 @@ use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\ORM\Event\PostLoadEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A group (`group`). main's table `groups` is App\Entity\Groups; Version20261029100000 copied it into this one.
@@ -55,6 +56,9 @@ class Group
     /** The group of all members: its forum is the agora. */
     public const int BEWELCOME = 0;
 
+    /** A group is in at most this many categories (forms, the category admin, validation). */
+    public const int MAX_CATEGORIES = 3;
+
     #[ORM\Column(name: 'name', type: 'string', length: 100, nullable: false)]
     private string $name;
 
@@ -87,11 +91,12 @@ class Group
     #[ORM\JoinColumn(name: 'location_id', referencedColumnName: 'geoname_id', nullable: true, onDelete: 'SET NULL')]
     private ?Location $location = null;
 
-    /** @var Collection<int, GroupCategory> */
+    /** @var Collection<int, GroupCategory> at most MAX_CATEGORIES */
     #[ORM\ManyToMany(targetEntity: GroupCategory::class)]
     #[ORM\JoinTable(name: 'group_category_group')]
     #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'group_category_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[Assert\Count(max: self::MAX_CATEGORIES, maxMessage: 'group.categories.too.many')]
     private Collection $categories;
 
     #[ORM\Column(name: 'id', type: 'integer')]
@@ -131,6 +136,19 @@ class Group
     public function getCategories(): array
     {
         return array_values($this->categories->toArray());
+    }
+
+    public function hasCategory(GroupCategory $category): bool
+    {
+        return $this->categories->contains($category);
+    }
+
+    /**
+     * Whether another category can be added (at most MAX_CATEGORIES).
+     */
+    public function canTakeCategory(): bool
+    {
+        return $this->categories->count() < self::MAX_CATEGORIES;
     }
 
     public function addCategory(GroupCategory $category): self

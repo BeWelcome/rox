@@ -2,10 +2,13 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\ForumThread;
 use App\Entity\Group as GroupEntity;
 use App\Entity\GroupCategory;
 use App\Entity\Location;
 use App\Entity\Member;
+use App\Model\ForumModel;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -43,8 +46,10 @@ final class GroupPagesTest extends WebTestCase
         $names = $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text());
         self::assertContains('Hiking Enthusiasts', $names);
         self::assertContains('Language Exchange', $names);
-        self::assertContains('BeWelcome', $names);
         self::assertNotContains('Vegan Travelers', $names, 'groups waiting for approval are left out');
+        // the agora is pinned above the list, not in it
+        self::assertNotContains('BeWelcome Agora', $names);
+        self::assertSelectorTextContains('.p-groups-agora__title', 'BeWelcome Agora');
     }
 
     public function testArchivedGroupsHaveTheirOwnTab(): void
@@ -131,8 +136,10 @@ final class GroupPagesTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         $names = $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text());
-        self::assertContains('BeWelcome', $names);
+        self::assertNotContains('BeWelcome Agora', $names, 'the agora is pinned above the list');
         self::assertContains('Hiking Enthusiasts', $names);
+        // the count leaves the agora out too
+        self::assertSame((string) \count($names), $crawler->filter('.p-groups__tab.is-active .p-groups__count')->text());
     }
 
     public function testTheGroupPageShowsTheGroupAndItsLatestThreads(): void
@@ -246,6 +253,78 @@ final class GroupPagesTest extends WebTestCase
         // the BeWelcome group has no picture
         $this->client->request('GET', '/group/thumbimg/' . GroupEntity::BEWELCOME);
         self::assertResponseStatusCodeSame(404);
+    }
+
+    public function testASearchFindsTheAgoraLikeAnyGroup(): void
+    {
+        $crawler = $this->client->request('GET', '/groups/search', ['name' => 'Agora']);
+
+        self::assertSame(['BeWelcome Agora'], $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text()));
+        self::assertSelectorNotExists('.p-groups-agora', 'a search shows no pinned agora');
+    }
+
+    public function testTheGroupsNearTheMembersPlaceAreShown(): void
+    {
+        // member-2 lives in Berlin (fixtures/address.yml)
+        $this->getGroup('Hiking Enthusiasts')->setLocation($this->entityManager->find(Location::class, self::BERLIN));
+        $this->entityManager->flush();
+
+        $crawler = $this->client->request('GET', '/groups/search');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('#groups-near-title', 'Berlin');
+        self::assertSame(['Hiking Enthusiasts'], $crawler->filter('.p-groups-near__name')->each(static fn ($name) => $name->text()));
+    }
+
+    public function testNoGroupsNearAreShownWithoutAny(): void
+    {
+        $this->client->request('GET', '/groups/search');
+
+        self::assertSelectorNotExists('.p-groups-near');
+    }
+
+    public function testTheCategoriesAreTilesAndChips(): void
+    {
+        $category = new GroupCategory()->setName('en', 'Outdoors')->setIcon('person-hiking');
+        $this->entityManager->persist($category);
+        $hiking = $this->getGroup('Hiking Enthusiasts');
+        $hiking->addCategory($category);
+        $hiking->setLocation($this->entityManager->find(Location::class, self::BERLIN));
+        $this->entityManager->flush();
+
+        $crawler = $this->client->request('GET', '/groups/search');
+
+        $tile = $crawler->filter('.p-groups-categories__tile')->reduce(static fn ($node) => str_contains($node->text(), 'Outdoors'));
+        self::assertCount(1, $tile);
+        self::assertSame('/groups/search?category=' . $category->getId(), $tile->attr('href'));
+        self::assertCount(1, $tile->filter('.fa-person-hiking'));
+        self::assertSame('1', $tile->filter('.p-groups-categories__count')->text());
+        $card = $crawler->filter('.p-group-card')->reduce(static fn ($node) => str_contains($node->text(), 'Hiking Enthusiasts'));
+        self::assertSame(['Berlin', 'Outdoors'], $card->filter('.c-group-chip')->each(static fn ($chip) => trim($chip->text())));
+    }
+
+    public function testTheSubscriptionsTabListsTheFollowedTopicsUnreadFirst(): void
+    {
+        $member = $this->getMember('member-2');
+        $forumModel = static::getContainer()->get(ForumModel::class);
+        $thread = $this->entityManager->getRepository(ForumThread::class)->findOneBy(['deleted' => 'NotDeleted'], ['id' => 'ASC']);
+        self::assertInstanceOf(ForumThread::class, $thread);
+        $forumModel->subscribe($thread, $member)->setSubscribed(new DateTime('-10 years'));
+        $this->entityManager->flush();
+
+        $crawler = $this->client->request('GET', '/groups/subscriptions');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists('.p-groups__tab.is-active .fa-bell');
+        $row = $crawler->filter('.p-groups-subs__row')->first();
+        self::assertStringContainsString('is-unread', (string) $row->attr('class'), 'a post newer than the subscription is unread');
+        self::assertSelectorTextContains('.p-groups__count--new', '1 new');
+
+        // opening the thread reads it
+        $this->client->request('GET', $row->filter('a.c-home-item__title')->attr('href'));
+        $crawler = $this->client->request('GET', '/groups/subscriptions');
+        self::assertStringNotContainsString('is-unread', (string) $crawler->filter('.p-groups-subs__row')->first()->attr('class'));
+        self::assertSelectorNotExists('.p-groups__count--new');
     }
 
     private function join(Member $member, int $groupId): void

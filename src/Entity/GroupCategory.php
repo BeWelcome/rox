@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: \App\Repository\GroupCategoryRepository::class)]
 class GroupCategory
 {
+    public const string DEFAULT_ICON = 'folder';
     #[ORM\Column(name: 'id', type: 'integer')]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -22,6 +23,14 @@ class GroupCategory
 
     #[ORM\Column(name: 'created', type: 'datetime_immutable', nullable: false)]
     private DateTimeImmutable $created;
+
+    /** A Font Awesome name without the prefix (person-hiking), one of the group_category_icons; null: the folder. */
+    #[ORM\Column(name: 'icon', type: 'string', length: 40, nullable: true)]
+    private ?string $icon = null;
+
+    /** @var list<string> lower-cased words: a group whose name or description has one gets the category suggested */
+    #[ORM\Column(name: 'keywords', type: 'json', nullable: true)]
+    private ?array $keywords = null;
 
     /** @var Collection<int, GroupCategoryTranslation> the name in every language it was entered in */
     #[ORM\OneToMany(targetEntity: GroupCategoryTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -41,6 +50,50 @@ class GroupCategory
     public function getCreated(): DateTimeImmutable
     {
         return $this->created;
+    }
+
+    public function getIcon(): string
+    {
+        return $this->icon ?? self::DEFAULT_ICON;
+    }
+
+    public function hasIcon(): bool
+    {
+        return null !== $this->icon;
+    }
+
+    public function setIcon(?string $icon): self
+    {
+        $this->icon = '' === (string) $icon ? null : $icon;
+
+        return $this;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getKeywords(): array
+    {
+        return $this->keywords ?? [];
+    }
+
+    /**
+     * Keeps each word once, trimmed and lower-cased; empty ones are left out.
+     *
+     * @param iterable<string> $keywords
+     */
+    public function setKeywords(iterable $keywords): self
+    {
+        $words = [];
+        foreach ($keywords as $keyword) {
+            $word = mb_strtolower(trim((string) $keyword));
+            if ('' !== $word && !\in_array($word, $words, true)) {
+                $words[] = $word;
+            }
+        }
+        $this->keywords = [] === $words ? null : $words;
+
+        return $this;
     }
 
     /**

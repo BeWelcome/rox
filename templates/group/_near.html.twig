@@ -1,0 +1,35 @@
+{#
+  Groups near the member's place (GroupRepository::findNear): in their place, else their region, else their
+  country, the most members first; a link to all groups in the country. Needs near.
+#}
+{% import 'group/_macros.html.twig' as groups %}
+<section class="p-groups-section" aria-labelledby="groups-near-title">
+    <div class="p-groups-section__head">
+        <div>
+            <p class="p-groups-section__eyebrow">{{ 'group.near.eyebrow'|trans }}</p>
+            <h2 class="p-groups-section__title" id="groups-near-title">{{ 'group.near.title'|trans({place: near.area.name}) }}</h2>
+        </div>
+        {% if near.country and near.countryCount > near.groups|length %}
+            <a class="p-groups-section__more" href="{{ path('groups_search', {location: near.country.geonameId, locationName: near.country.name}) }}">
+                {{ 'group.near.see.all'|trans({count: near.countryCount, country: near.country.name}) }} <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            </a>
+        {% endif %}
+    </div>
+    <div class="p-groups-near">
+        {% for row in near.groups %}
+            {% set group = row[0] %}
+            <a class="p-groups-near__card" href="{{ path('group_start', {group_id: group.id}) }}">
+                <img class="p-groups-near__cover" alt="" loading="lazy"
+                     src="{{ group.picture ? path('group_realimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+                <span class="p-groups-near__body">
+                    <span class="p-groups-near__name">{{ group.name }}</span>
+                    <span class="p-groups-near__meta">
+                        {% if group.location %}<span class="p-groups-near__place"><i class="fas fa-location-dot" aria-hidden="true"></i> {{ group.location.name }}</span>{% endif %}
+                        <span title="{{ 'group.list.members'|trans({count: row.memberCount}) }}"><i class="fas fa-user-group" aria-hidden="true"></i> {{ row.memberCount }}</span>
+                        {{ groups.categories(group, false, 1) }}
+                    </span>
+                </span>
+            </a>
+        {% endfor %}
+    </div>
+</section>

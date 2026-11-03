@@ -1,11 +1,11 @@
 {#
-  One group in a list (my groups, all groups): picture, name and when its last post was, the number of members
-  in a pill on the right; a small Joined next to the name when the member is in it.
+  One group in a list (my groups, all groups): picture, name and when its last post was, its place and categories as
+  chips, the number of members in a pill on the right; a small Joined next to the name when the member is in it.
   row is a result row of GroupRepository: the group (key 0), memberCount, newMemberCount and lastActivity.
   myGroupIds: the groups the member is in.
 #}
+{% import 'group/_macros.html.twig' as groups %}
 {% set group = row[0] %}
-{% set _last = row.lastActivity ? row.lastActivity|date('Y-m-d') : null %}
 {# Archived groups are named "[Archived] ..." for now: the name without it, and a grey Archived tag #}
 {% set _archived = group.name|lower starts with '[archived]' %}
 <a class="p-group-card" href="{{ path('group_start', {group_id: group.id}) }}">
@@ -22,23 +22,11 @@
             {% if _archived %}
                 <span class="p-group-card__archived"><i class="fas fa-box-archive" aria-hidden="true"></i> {{ 'group.list.archived.tag'|trans }}</span>
             {% endif %}
-            {% if row.lastActivity %}
-                {% set _days = date(_last).diff(date('today')).days %}
-                {% if _days == 0 %}
-                    <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.today'|trans }}</span>
-                {% elseif _days == 1 %}
-                    <span class="is-recent"><i class="far fa-comment" aria-hidden="true"></i> {{ 'group.list.active.yesterday'|trans }}</span>
-                {% else %}
-                    {% set _ago = _days < 7 ? 'group.list.active.days'|trans({count: _days})
-                        : (_days < 31 ? 'group.list.active.weeks'|trans({count: _days // 7})
-                        : (_days < 365 ? 'group.list.active.months'|trans({count: _days // 30})
-                        : 'group.list.active.years'|trans({count: _days // 365}))) %}
-                    <span{% if _days < 7 %} class="is-recent"{% endif %} title="{{ row.lastActivity|format_date('medium') }}"><i class="far fa-comment" aria-hidden="true"></i> {{ _ago }}</span>
-                {% endif %}
-            {% else %}
-                <span><i class="far fa-comment" aria-hidden="true"></i> {{ 'groupsnopostyet'|trans }}</span>
-            {% endif %}
+            {{ groups.activity(row.lastActivity) }}
         </span>
+        {% if group.location or group.categories is not empty %}
+            <span class="p-group-card__chips">{{ groups.place(group) }}{{ groups.categories(group) }}</span>
+        {% endif %}
     </span>
     {# The members as a number in a pill on the right, like the replies of a thread #}
     <span class="p-group-card__members" data-member-count="{{ row.memberCount }}" title="{{ 'group.list.members'|trans({count: row.memberCount}) }}">

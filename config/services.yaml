@@ -29,6 +29,28 @@ parameters:
     web_push_vapid_subject: '%env(WEB_PUSH_VAPID_SUBJECT)%'
     web_push_vapid_public_key: '%env(WEB_PUSH_VAPID_PUBLIC_KEY)%'
     web_push_vapid_private_key: '%env(WEB_PUSH_VAPID_PRIVATE_KEY)%'
+    # The icons the group admin team can give a group category (Font Awesome 6 Free, solid, without the prefix)
+    group_category_icons:
+        - person-hiking
+        - route
+        - house-user
+        - language
+        - utensils
+        - music
+        - hand-holding-heart
+        - calendar-day
+        - camera
+        - bicycle
+        - futbol
+        - book
+        - users
+        - earth-europe
+        - leaf
+        - paw
+        - laptop
+        - graduation-cap
+        - heart
+        - comments
 
 services:
     # default configuration for services in *this* file

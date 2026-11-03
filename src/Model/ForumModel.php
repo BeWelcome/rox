@@ -144,6 +144,19 @@ class ForumModel
         }
     }
 
+    /**
+     * Notes that the member has seen the thread's posts, when they are subscribed to it (the unread ones in their
+     * subscriptions).
+     */
+    public function markRead(ForumThread $thread, Member $member): void
+    {
+        $subscription = $this->findSubscription($thread, $member);
+        if (null !== $subscription) {
+            $subscription->setLastRead(new DateTime());
+            $this->entityManager->flush();
+        }
+    }
+
     public function isSubscribed(ForumThread $thread, Member $member): bool
     {
         return null !== $this->findSubscription($thread, $member);

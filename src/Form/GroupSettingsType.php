@@ -2,18 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\GroupCategory;
 use App\Form\CustomDataClass\GroupSettingsRequest;
-use App\Repository\GroupCategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -23,6 +17,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class GroupSettingsType extends AbstractType
 {
+    use GroupCategoriesAndPlaceTrait;
+
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
     ) {
@@ -35,6 +31,8 @@ class GroupSettingsType extends AbstractType
             ->add('description', CkEditorType::class, [
                 'label' => 'label.group.description',
                 'attr' => ['class' => 'editor mb-1'],
+                // an emptied description is refused by the validation (NotBlank), not by a type error
+                'empty_data' => '',
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
@@ -58,35 +56,12 @@ class GroupSettingsType extends AbstractType
                 'help' => 'group.picture.help',
                 'required' => false,
             ])
-            ->add('categories', EntityType::class, [
-                'class' => GroupCategory::class,
-                'choices' => $this->getCategoryRepository()->findAllSortedByName($locale),
-                'choice_label' => static fn (GroupCategory $category): string => $category->getName($locale),
-                'choice_translation_domain' => false,
-                'multiple' => true,
-                'expanded' => true,
-                'required' => false,
-                'label' => 'group.search.category',
-            ])
-            ->add('locationName', TextType::class, [
-                'label' => 'location',
-                'required' => false,
-                'attr' => [
-                    'class' => 'js-location-picker',
-                    'autocomplete' => 'off',
-                    'data-location-target' => '#group_settings_location',
-                ],
-            ])
-            ->add('location', HiddenType::class)
             ->add('submit', SubmitType::class, [
                 'label' => 'save',
                 'attr' => ['class' => 'btn btn-primary'],
             ]);
 
-        $builder->get('location')->addModelTransformer(new CallbackTransformer(
-            static fn (?int $geonameId): string => null === $geonameId ? '' : (string) $geonameId,
-            static fn (?string $geonameId): ?int => ctype_digit((string) $geonameId) ? (int) $geonameId : null,
-        ));
+        $this->addCategoriesAndPlace($builder, $locale, 'group_settings_location', $options['with_categories']);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -94,20 +69,15 @@ class GroupSettingsType extends AbstractType
         $resolver->setDefaults([
             'data_class' => GroupSettingsRequest::class,
             'locale' => 'en',
+            // GroupVoter::EDIT_CATEGORIES
+            'with_categories' => true,
         ]);
         $resolver->setAllowedTypes('locale', 'string');
+        $resolver->setAllowedTypes('with_categories', 'bool');
     }
 
     public function getBlockPrefix(): string
     {
         return 'group_settings';
-    }
-
-    private function getCategoryRepository(): GroupCategoryRepository
-    {
-        /** @var GroupCategoryRepository $repository */
-        $repository = $this->entityManager->getRepository(GroupCategory::class);
-
-        return $repository;
     }
 }

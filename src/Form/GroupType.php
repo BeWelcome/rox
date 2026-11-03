@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -10,8 +11,18 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * A new group: its name, description, who may join, who sees the posts, the picture, the categories and the place.
+ */
 class GroupType extends AbstractType
 {
+    use GroupCategoriesAndPlaceTrait;
+
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
+    }
+
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
@@ -86,12 +97,15 @@ class GroupType extends AbstractType
                 ],
             ])
         ;
+        $this->addCategoriesAndPlace($builder, $options['locale'], 'group_location', true);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'allowInvitationOnly' => false,
+            'locale' => 'en',
         ]);
+        $resolver->setAllowedTypes('locale', 'string');
     }
 }

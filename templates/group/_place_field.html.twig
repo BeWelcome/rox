@@ -1,0 +1,23 @@
+{#
+  Where a group is: anywhere, or tied to a place (a town, region or country picked by name). Anywhere empties the
+  place (assets/js/groups/form.js). Needs name (the place's name field), location (the hidden geonames id) and
+  locationId (its id, for the location picker).
+#}
+{% set _tied = location.vars.value is not empty %}
+<div class="c-place-picker js-place-picker">
+    <span class="p-gnew__label">{{ 'group.place.label'|trans }}</span>
+    <div class="c-seg" role="radiogroup" aria-label="{{ 'group.place.label'|trans }}">
+        <input type="radio" class="c-seg__input js-place-mode" id="{{ locationId }}_anywhere" name="_place_mode" value="anywhere"{{ _tied ? '' : ' checked' }}>
+        <label class="c-seg__option" for="{{ locationId }}_anywhere"><i class="fas fa-globe" aria-hidden="true"></i> {{ 'group.place.anywhere'|trans }}</label>
+        <input type="radio" class="c-seg__input js-place-mode" id="{{ locationId }}_tied" name="_place_mode" value="tied"{{ _tied ? ' checked' }}>
+        <label class="c-seg__option" for="{{ locationId }}_tied"><i class="fas fa-location-dot" aria-hidden="true"></i> {{ 'group.place.tied'|trans }}</label>
+    </div>
+    <div class="c-place-picker__fields js-place-fields"{{ _tied ? '' : ' hidden' }}>
+        <label class="visually-hidden" for="{{ name.vars.id }}">{{ name.vars.label|trans }}</label>
+        <div class="auto-search-wrapper max-height">
+            {{ form_widget(name, {attr: name.vars.attr|merge({class: name.vars.attr.class ~ ' p-gnew__input', placeholder: 'group.place.placeholder'|trans})}) }}
+        </div>
+        {{ form_widget(location, {id: locationId}) }}
+        <p class="p-gnew__help">{{ 'group.place.hint'|trans }}</p>
+    </div>
+</div>

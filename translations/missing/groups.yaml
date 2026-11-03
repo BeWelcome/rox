@@ -260,3 +260,42 @@ forum.rules.short.5:
 group.no.description:
     - 'No description yet.'
     - In the About card of a group's overview when the group has no description
+group.categories.label:
+    - 'Categories'
+    - Label of the categories of a group in the forms to create and edit a group
+group.categories.count:
+    - '{count} of {max}'
+    - Next to the categories label in the group forms; how many categories are picked of the most allowed
+group.categories.suggested:
+    - 'Suggested from your text:'
+    - Before the categories suggested from the name and description typed in the group forms
+group.categories.missing:
+    - 'Missing a category? Ask the group admin team; only they can add new ones.'
+    - Help under the categories in the group forms
+group.place.label:
+    - 'Place'
+    - Label of the place of a group in the forms to create and edit a group
+group.place.anywhere:
+    - 'Anywhere'
+    - Option of the place of a group: not tied to a place
+group.place.tied:
+    - 'Tied to a place'
+    - Option of the place of a group: about a town, region or country
+group.place.where:
+    - 'Town, region or country'
+    - Label of the field for the place of a group
+group.place.placeholder:
+    - 'Search a town, region or country'
+    - Placeholder of the field for the place of a group
+group.place.hint:
+    - 'Members living in or near this place see the group under Groups near you, and searching for the place finds it.'
+    - Help under the place of a group in the group forms
+group.create.rules:
+    - 'Groups follow the forum rules.'
+    - Line above the buttons of the form for a new group
+group.edit.admin.team:
+    - "<b>Group admin team:</b> you're not an admin of this group. Changes are logged."
+    - Note on Edit group for the group admin team at a group they aren't admins of; keep the <b></b>
+group.edit.save:
+    - 'Save changes'
+    - Button of the form to edit a group

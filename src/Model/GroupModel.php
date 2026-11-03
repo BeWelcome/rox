@@ -191,7 +191,11 @@ class GroupModel
             ->setType($data->type)
             ->setMembersOnly('No' === $data->visiblePosts)
             ->setPicture($groupPicture ?? '')
+            ->setLocation(null === $data->location ? null : $em->find(Location::class, $data->location))
         ;
+        foreach ($data->categories as $category) {
+            $group->addCategory($category);
+        }
         $em->persist($group);
         $em->flush();
 

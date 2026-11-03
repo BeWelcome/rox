@@ -15,6 +15,9 @@ main:has(.p-gnew) { background: #f4f5f7; }
 
 .p-gnew__form { display: flex; flex-direction: column; gap: 1rem; }
 .p-gnew__card { padding: 1.5rem; border: 1px solid #e8ebf0; border-radius: 1.25rem; background: #fff; }
+.p-gnew__rules { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin: 0; color: #475569; font-size: 0.875rem; }
+.p-gnew__rules > svg, .p-gnew__rules > i { color: #ea7a2e; }
+.p-gnew__rules a, .p-gnew__rules a:hover { color: #c2410c; font-weight: 700; }
 .p-gnew__card--head { display: flex; gap: 1.75rem; }
 .p-gnew__field { flex: 1; min-width: 0; }
 

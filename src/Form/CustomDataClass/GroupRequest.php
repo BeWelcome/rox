@@ -2,6 +2,8 @@
 
 namespace App\Form\CustomDataClass;
 
+use App\Entity\Group;
+use App\Entity\GroupCategory;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -29,4 +31,13 @@ class GroupRequest
     public ?File $picture = null;
 
     public bool $comments = false;
+
+    /** @var list<GroupCategory> */
+    #[Assert\Count(max: Group::MAX_CATEGORIES, maxMessage: 'group.categories.too.many')]
+    public array $categories = [];
+
+    /** A geonames id: a place, region or country; none for a group about something anywhere. */
+    public ?int $location = null;
+
+    public ?string $locationName = null;
 }

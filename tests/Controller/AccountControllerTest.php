@@ -133,6 +133,48 @@ class AccountControllerTest extends WebTestCase
         $this->assertNull($member->getRegistrationKey());
     }
 
+    /**
+     * The short name field shows the member's short name, so saving the page as it is keeps it.
+     */
+    public function testSavingTheAccountPageKeepsTheShortName(): void
+    {
+        $client = static::createClient();
+        $member = $this->reloadMember('bwadmin');
+        $member->setShortName('Zezi');
+        $this->getEntityManager()->flush();
+        $client->loginUser($member);
+
+        $crawler = $client->request('GET', '/members/bwadmin/account');
+        $this->assertResponseIsSuccessful();
+        $this->assertSame('Zezi', $crawler->filter('#account_edit_form_short_name')->attr('value'));
+
+        $client->submit($crawler->filter('input[type="submit"]')->form());
+
+        $this->assertResponseRedirects('/members/bwadmin');
+        $this->assertSame('Zezi', $this->reloadMember('bwadmin')->getShortName());
+    }
+
+    /**
+     * A member without a short name gets none (not their username) by saving the account page.
+     */
+    public function testSavingTheAccountPageAddsNoShortName(): void
+    {
+        $client = static::createClient();
+        $member = $this->reloadMember('bwadmin');
+        $member->setShortName(null);
+        $this->getEntityManager()->flush();
+        $client->loginUser($member);
+
+        $crawler = $client->request('GET', '/members/bwadmin/account');
+        $this->assertResponseIsSuccessful();
+        $this->assertSame('', (string) $crawler->filter('#account_edit_form_short_name')->attr('value'));
+
+        $client->submit($crawler->filter('input[type="submit"]')->form());
+
+        $this->assertResponseRedirects('/members/bwadmin');
+        $this->assertNull($this->reloadMember('bwadmin')->getShortName());
+    }
+
     public function testLegacyEditProfileRedirectsToModernProfileEdit(): void
     {
         $client = static::createClient();

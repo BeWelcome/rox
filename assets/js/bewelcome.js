@@ -32,6 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
 if (document.querySelector('.js-places-preview')) {
     import('./search/preview').then(({initMemberPreview}) => initMemberPreview());
 }
+// A group's head (templates/group/_head.html.twig): its tabs scroll sideways on phones
+if (document.querySelector('.p-group-head [data-tabs-scroller]')) {
+    import('./tabs-scroller').then(({initTabsScrollers}) => initTabsScrollers(document.querySelector('.p-group-head')));
+}
 // Forum thread: Reply opens in a side panel (templates/forum/thread.html.twig)
 if (document.querySelector('.js-contact-drawer[data-from="forum"]')) {
     import('./contact/drawer').then(({initContactDrawer}) => initContactDrawer('forum'));

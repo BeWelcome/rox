@@ -153,7 +153,7 @@ final class GroupPagesTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Hiking Enthusiasts');
         self::assertStringContainsString('Weekend hiking meetup - who is in?', $crawler->text());
-        self::assertStringContainsString('Germany › Land Berlin › Berlin', $crawler->text());
+        self::assertStringContainsString('Berlin, Germany', $crawler->text());
     }
 
     public function testTheGroupsMenuIsAboveThePageAndJoinIsForThoseWhoMay(): void
@@ -164,13 +164,21 @@ final class GroupPagesTest extends WebTestCase
         // member-2 is in the group: the menu's tabs, the discussions next to the members, a button for a topic
         $crawler = $this->client->request('GET', $groupUrl);
         self::assertCount(0, $crawler->filter('#sidebar'));
-        self::assertSame($groupUrl, $crawler->filter('.p-group__tab.is-active')->attr('href'));
-        // no description in the fixtures: no description card, the discussions in the main column
+        self::assertSame($groupUrl, $crawler->filter('.p-group-head .p-hero__tab--active')->attr('href'));
+        // no description in the fixtures: no description text, the discussions in the main column
         self::assertCount(0, $crawler->filter('.p-group-layout .p-group-description'));
         self::assertGreaterThan(0, $crawler->filter('.p-group-main .c-home-item')->count());
         self::assertCount(1, $crawler->filter('.p-group-side a[href="' . $groupUrl . '/members"]'));
-        self::assertCount(1, $crawler->filter('.p-group__actions a[href="' . $groupUrl . '/new"]'));
-        self::assertCount(0, $crawler->filter('.p-group__actions a[href$="/join"]'));
+        self::assertCount(1, $crawler->filter('.p-group-head__actions a[href="' . $groupUrl . '/new"]'));
+        self::assertCount(0, $crawler->filter('.p-group-head__actions a[href$="/join"]'));
+        // the member's settings and Leave are in the "…" menu, Delete only for the admins
+        self::assertCount(1, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="' . $groupUrl . '/membersettings"]'));
+        self::assertCount(1, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="' . $groupUrl . '/leave"]'));
+        self::assertCount(0, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="' . $groupUrl . '/delete"]'));
+        self::assertSame(
+            [$groupUrl, $groupUrl . '/forum', $groupUrl . '/rules', $groupUrl . '/wiki', $groupUrl . '/members'],
+            $crawler->filter('.p-group-head .p-hero__tab')->each(static fn ($tab): string => (string) $tab->attr('href')),
+        );
         // the threads in the group's page don't name the group again
         self::assertGreaterThan(0, $crawler->filter('.c-home-item')->count());
         self::assertCount(0, $crawler->filter('.c-home-item a[href="' . $groupUrl . '"]'));
@@ -182,7 +190,8 @@ final class GroupPagesTest extends WebTestCase
             [$group->getId(), $memberId],
         );
         $crawler = $this->client->request('GET', $groupUrl);
-        self::assertCount(1, $crawler->filter('.p-group__actions a[href="' . $groupUrl . '/join"]'));
+        self::assertCount(1, $crawler->filter('.p-group-head__actions a[href="' . $groupUrl . '/join"]'));
+        self::assertCount(0, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="' . $groupUrl . '/leave"]'));
 
         // waiting to be let in: no Join
         $connection->executeStatement(
@@ -192,7 +201,7 @@ final class GroupPagesTest extends WebTestCase
         );
         $this->entityManager->clear();
         $crawler = $this->client->request('GET', $groupUrl);
-        self::assertCount(0, $crawler->filter('.p-group__actions a'));
+        self::assertCount(0, $crawler->filter('.p-group-head__actions a'));
     }
 
     public function testMembersOnlyGroupsHideTheirThreadsFromOtherMembers(): void

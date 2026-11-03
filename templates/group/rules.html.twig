@@ -1,0 +1,53 @@
+{% extends 'group/layout.html.twig' %}
+
+{#
+  The Rules tab of a group: the forum rules, the same in every group (in short, the charter, the forum rules and
+  those for discussion groups), and on the side how to report a post.
+#}
+
+{% block title %}{{ 'group.rules'|trans }} · {{ group.name }}{% endblock %}
+
+{% block group_content %}
+    <div class="p-group-rules">
+        <article class="p-group-panel p-group-rules__main">
+            <p class="p-group-rules__info"><i class="fas fa-scale-balanced" aria-hidden="true"></i> {{ 'group.rules.info'|trans }}</p>
+
+            <section class="p-group-rules__section">
+                <h2>{{ 'group.rules.in.short'|trans }}</h2>
+                {% include 'group/_rules_short.html.twig' %}
+            </section>
+
+            <section class="p-group-rules__section">
+                <h2>{{ 'group.rules.charter'|trans }}</h2>
+                <h3>{{ 'forumrulescharterheadline2'|trans|raw }}</h3>
+                <ol>
+                    {% for i in 1..6 %}<li>{{ ('forumruleschartertext' ~ i)|trans|raw }}</li>{% endfor %}
+                </ol>
+            </section>
+
+            <section class="p-group-rules__section">
+                <h2>{{ 'group.rules.forum'|trans }}</h2>
+                <h3>{{ 'forumrulesheadline2'|trans|raw }}</h3>
+                <p>{{ 'forumrulestext1'|trans|raw }}</p>
+                <ol>
+                    {% for i in 2..6 %}<li>{{ ('forumrulestext' ~ i)|trans|raw }}</li>{% endfor %}
+                </ol>
+                <p>{{ 'forumrulestext7'|trans|raw }}</p>
+                <ol>
+                    {% for i in 8..11 %}<li>{{ ('forumrulestext' ~ i)|trans|raw }}</li>{% endfor %}
+                </ol>
+                {% for i in 12..15 %}<p>{{ ('forumrulestext' ~ i)|trans|raw }}</p>{% endfor %}
+            </section>
+
+            <section class="p-group-rules__section" id="groups">
+                <h2>{{ 'forumrulesdiscussiongroups'|trans|raw }}</h2>
+                <p>{{ 'forumrulesdiscussiongroupstext'|trans|raw }}</p>
+            </section>
+        </article>
+
+        <aside class="p-group-panel p-group-rules__side">
+            <h2 class="p-group-panel__title">{{ 'group.rules.report.title'|trans }}</h2>
+            <p>{{ 'group.rules.report.text'|trans }}</p>
+        </aside>
+    </div>
+{% endblock %}

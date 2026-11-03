@@ -72,11 +72,9 @@ class ForumSearchController extends AbstractController
             'posts' => '' === $keyword ? null : $this->findPosts($keyword, $group, max(1, $request->query->getInt('page', 1))),
             'group' => $group,
         ];
-        if (!$group->isBeWelcome()) {
-            /** @var Member $member */
-            $member = $this->getUser();
-            $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
-        }
+        /** @var Member $member */
+        $member = $this->getUser();
+        $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
 
         return $this->render('forum/search.html.twig', $parameters);
     }

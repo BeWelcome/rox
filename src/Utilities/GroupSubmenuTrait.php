@@ -7,61 +7,55 @@ use App\Entity\Member;
 use App\Security\GroupVoter;
 
 /**
- * The submenu of a group's pages (overview, forum, wiki, members, ...).
+ * The menu of a group's pages: the tabs (overview, discussions, rules, wiki, members; the agora has no wiki and no
+ * members tab), the entries of the head's "…" menu (menu: true) and join, the head's button for those not in it.
  */
 trait GroupSubmenuTrait
 {
     /**
-     * @return array<string, array{key: string, url: string}>
+     * @return array<string, array{key: string, url: string, icon: string, menu?: bool, danger?: bool, count?: string}>
      */
     private function getSubmenuItems(?Member $member, Group $group): array
     {
         $groupId = $group->getId();
-        $submenuItems = [
-            'overview' => [
-                'key' => 'GroupOverview',
-                'url' => $this->generateUrl('group_start', ['group_id' => $groupId]),
-            ],
-            'forum' => [
-                'key' => 'GroupDiscussions',
-                'url' => $this->generateUrl('group_forum', ['group_id' => $groupId]),
-            ],
-            'wiki' => [
-                'key' => 'GroupWiki',
-                'url' => $this->generateUrl('group_wiki_page', ['id' => $groupId]),
-            ],
-            'members' => [
-                'key' => 'GroupMembers',
-                'url' => $this->generateUrl('group_members', ['group_id' => $groupId]),
-            ],
+        $agora = $group->isBeWelcome();
+        $url = fn (string $route): string => $this->generateUrl($route, ['group_id' => $groupId]);
+
+        $items = [
+            'overview' => ['key' => 'GroupOverview', 'url' => $url('group_start'), 'icon' => 'house'],
+            'forum' => ['key' => 'GroupDiscussions', 'url' => $url('group_forum'), 'icon' => 'comments', 'count' => 'threads'],
+            'rules' => ['key' => 'group.rules', 'url' => $url('group_rules'), 'icon' => 'scale-balanced'],
         ];
-        if (null !== $member && $group->isMember($member)) {
-            $submenuItems['membersettings'] = [
-                'key' => 'GroupMembersettings',
-                'url' => $this->generateUrl('group_membersettings', ['group_id' => $groupId]),
-            ];
-            $submenuItems['relatedgroupsettings'] = [
-                'key' => 'GroupRelatedGroups',
-                'url' => $this->generateUrl('relatedgroup_log', ['group_id' => $groupId]),
-            ];
+        if (!$agora) {
+            $items['wiki'] = ['key' => 'GroupWiki', 'url' => $this->generateUrl('group_wiki_page', ['id' => $groupId]), 'icon' => 'book'];
+            $items['members'] = ['key' => 'GroupMembers', 'url' => $url('group_members'), 'icon' => 'user-group', 'count' => 'members'];
+        }
+
+        $isMember = null !== $member && $group->isMember($member);
+        if ($isMember) {
+            $items['membersettings'] = ['key' => 'group.menu.settings', 'url' => $url('group_membersettings'), 'icon' => 'bell', 'menu' => true];
+            if (!$agora) {
+                $items['relatedgroupsettings'] = ['key' => 'GroupRelatedGroups', 'url' => $url('relatedgroup_log'), 'icon' => 'link', 'menu' => true];
+            }
         } else {
-            $submenuItems['join'] = [
-                'key' => 'group.join',
-                'url' => $this->generateUrl('join_group', ['groupId' => $groupId]),
-            ];
+            $items['join'] = ['key' => 'group.join', 'url' => $this->generateUrl('join_group', ['groupId' => $groupId]), 'icon' => 'user-plus'];
         }
 
         if ($this->isGranted(GroupVoter::GROUP_ADMINISTER, $group)) {
-            $submenuItems['memberadministration'] = [
-                'key' => 'GroupsAdministrateMembers',
-                'url' => $this->generateUrl('group_memberadministration', ['group_id' => $groupId]),
-            ];
-            $submenuItems['groupsettings'] = [
-                'key' => 'GroupsAdministrateGroup',
-                'url' => $this->generateUrl('group_groupsettings', ['group_id' => $groupId]),
-            ];
+            $items['memberadministration'] = ['key' => 'GroupsAdministrateMembers', 'url' => $url('group_memberadministration'), 'icon' => 'users-gear', 'menu' => true];
+            $items['groupsettings'] = ['key' => 'group.menu.edit', 'url' => $url('group_groupsettings'), 'icon' => 'pen', 'menu' => true];
+        }
+        // the forum moderators reach the reports about posts from the agora
+        if ($agora && ($this->isGranted(Member::ROLE_ADMIN_FORUMMODERATOR) || $this->isGranted(Member::ROLE_ADMIN_ADMIN))) {
+            $items['reports'] = ['key' => 'forum.reports.title', 'url' => $this->generateUrl('forum_reports', ['list' => 'AllActiveReports']), 'icon' => 'flag', 'menu' => true];
+        }
+        if ($isMember) {
+            $items['leave'] = ['key' => 'groupsleavethegroup', 'url' => $url('group_leave'), 'icon' => 'right-from-bracket', 'menu' => true, 'danger' => true];
+        }
+        if (!$agora && $this->isGranted(GroupVoter::GROUP_ADMINISTER, $group)) {
+            $items['delete'] = ['key' => 'groupsdeletegroup', 'url' => $url('group_delete'), 'icon' => 'trash', 'menu' => true, 'danger' => true];
         }
 
-        return $submenuItems;
+        return $items;
     }
 }

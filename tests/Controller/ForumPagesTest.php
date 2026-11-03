@@ -50,7 +50,7 @@ final class ForumPagesTest extends WebTestCase
 
         $crawler = $this->request('GET', $uri);
         self::assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('.p-group__tabs .p-group__tab.is-active'));
+        self::assertCount(1, $crawler->filter('.p-group-head .p-hero__tab--active'));
 
         // the lists link to the thread itself, not to its last post
         $links = $this->request('GET', '/group/' . $thread->getGroup()->getId() . '/forum')->filter('a.c-home-item__row-link')->each(
@@ -192,55 +192,39 @@ final class ForumPagesTest extends WebTestCase
         self::assertCount(1, $crawler->filter('.p-forum__list .c-home-item'));
     }
 
-    public function testTheForumPagesHaveTheForumsTabs(): void
+    public function testTheAgoraHasTheGroupsHeadWithItsOwnTabs(): void
     {
-        $tabs = static fn ($crawler): array => $crawler->filter('.p-forum__tabs a')->each(static fn ($tab) => $tab->attr('href'));
-        $forumTabs = ['/group/0/forum', '/groups/subscriptions', '/forums/rules'];
+        $tabs = static fn ($crawler): array => $crawler->filter('.p-group-head .p-hero__tab')->each(static fn ($tab) => $tab->attr('href'));
+        $agoraTabs = ['/group/0', '/group/0/forum', '/group/0/rules'];
 
-        foreach (['/group/0/forum', '/forums/rules'] as $url) {
+        // no wiki and no members tab (every member is in it); its threads have the head too
+        foreach (['/group/0', '/group/0/forum', '/group/0/rules', '/forums/s' . $this->thread(self::AGORA_THREAD)->getId()] as $url) {
             $crawler = $this->request('GET', $url);
             self::assertResponseIsSuccessful();
-            self::assertSame($forumTabs, $tabs($crawler), $url);
+            self::assertSame($agoraTabs, $tabs($crawler), $url);
+            self::assertCount(0, $crawler->filter('#sidebar'), $url);
         }
+        self::assertCount(1, $crawler->filter('.p-group-head .c-group-official, .p-group-head__eyebrow'));
 
-        // the agora has the forum's tabs, not the BeWelcome group's menu; its threads have the tabs too
-        $crawler = $this->request('GET', '/group/0/forum');
-        self::assertSame('/group/0/forum', $crawler->filter('.p-forum__tab.is-active')->attr('href'));
-        self::assertCount(0, $crawler->filter('#sidebar'));
-        $crawler = $this->request('GET', '/forums/s' . $this->thread(self::AGORA_THREAD)->getId());
-        self::assertSame($forumTabs, $tabs($crawler));
-
-        // a group's forum has the group's head and menu
+        // a group's forum has the group's head with the Discussions tab active
         $crawler = $this->request('GET', '/group/' . $this->thread(self::HIKING_THREAD)->getGroup()->getId() . '/forum');
-        self::assertCount(0, $crawler->filter('.p-forum__tabs'));
-        self::assertStringEndsWith('/forum', (string) $crawler->filter('.p-group__tab.is-active')->attr('href'));
-        self::assertCount(0, $crawler->filter('#sidebar'));
+        self::assertStringEndsWith('/forum', (string) $crawler->filter('.p-group-head .p-hero__tab--active')->attr('href'));
     }
 
-    public function testTheModeratorsHaveATabForTheReports(): void
+    public function testTheModeratorsReachTheReportsFromTheAgorasMenu(): void
     {
         $post = $this->thread(self::AGORA_THREAD)->getFirstPost();
         static::getContainer()->get(ForumModerationModel::class)->report($post, $this->member('member-2'), 'Please have a look.');
+
+        $crawler = $this->request('GET', '/group/0');
+        self::assertCount(0, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="/forums/reporttomod/AllActiveReports"]'));
+
         $this->client->loginUser($this->member('member-3'));
-
-        $crawler = $this->request('GET', '/group/0/forum');
-
-        $reports = $crawler->filter('.p-forum__tab[href="/forums/reporttomod/AllActiveReports"]');
+        $crawler = $this->request('GET', '/group/0');
+        $reports = $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="/forums/reporttomod/AllActiveReports"]');
         self::assertCount(1, $reports);
-        self::assertSame('1', $reports->filter('.p-forum__tab-count')->text());
-    }
-
-    public function testTheGroupToolsHaveTabsForThoseWhoMayUseThem(): void
-    {
-        // members see only the forum's tabs (see above); bwadmin is a forum moderator and may approve groups
-        $this->client->loginUser($this->member('bwadmin'));
-        $crawler = $this->request('GET', '/group/0/forum');
-        self::assertCount(1, $crawler->filter('.p-forum__tab[href="/admin/logs/groups"]'));
-        self::assertCount(1, $crawler->filter('.p-forum__tab[href="/admin/groups/approval"]'));
-
-        $this->client->click($crawler->filter('.p-forum__tab[href="/admin/groups/approval"]')->link());
-        self::assertResponseIsSuccessful();
-        $this->client->click($crawler->filter('.p-forum__tab[href="/admin/logs/groups"]')->link());
+        self::assertSame('1', $reports->filter('.p-group-head__badge')->text());
+        $this->client->click($reports->link());
         self::assertResponseIsSuccessful();
     }
 

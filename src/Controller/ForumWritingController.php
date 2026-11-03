@@ -209,7 +209,7 @@ class ForumWritingController extends AbstractController
     {
         $parameters['form'] = $form;
         $parameters['group'] = $group;
-        if (null !== $group && !$group->isBeWelcome()) {
+        if (null !== $group) {
             $parameters['submenu'] = ['items' => $this->getSubmenuItems($this->getMember(), $group), 'active' => 'forum'];
         }
 

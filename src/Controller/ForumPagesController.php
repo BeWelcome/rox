@@ -108,10 +108,7 @@ class ForumPagesController extends AbstractController
                 $this->getItemsPerPage($member),
             ) : null,
         ];
-        // the agora has the forum's tabs, a group's forum the group's menu
-        if (!$group->isBeWelcome()) {
-            $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
-        }
+        $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
 
         return $this->render('forum/group.html.twig', $parameters);
     }
@@ -204,7 +201,7 @@ class ForumPagesController extends AbstractController
                 array_map(static fn (ForumPost $post): int => (int) $post->getId(), iterator_to_array($posts->getCurrentPageResults(), false)),
             ) : [],
         ];
-        if (null !== $group && !$group->isBeWelcome()) {
+        if (null !== $group) {
             $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
         }
 

@@ -38,9 +38,14 @@ final class ForumModerationTest extends WebTestCase
     {
         $this->client->loginUser($this->member('member-2'));
 
+        // a tab of every group; the old URL is the agora's
         $this->request('GET', '/forums/rules');
+        self::assertResponseRedirects('/group/0/rules', 301);
 
+        $crawler = $this->request('GET', '/group/0/rules');
         self::assertResponseIsSuccessful();
+        self::assertCount(5, $crawler->filter('.p-group-rules__short li'));
+        self::assertSame('/group/0/rules', $crawler->filter('.p-group-head .p-hero__tab--active')->attr('href'));
     }
 
     public function testOnlyModeratorsModerate(): void

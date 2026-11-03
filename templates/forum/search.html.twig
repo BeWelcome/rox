@@ -2,8 +2,8 @@
 {% import 'forum/_macros.html.twig' as forum %}
 
 {% block group_content %}
-    {% if group is null or group.beWelcome %}
-        {% include 'forum/_head.html.twig' with {active: group ? 'agora' : null} %}
+    {% if group is null %}
+        <h1 class="p-forum__title">{{ 'search'|trans }}</h1>
     {% else %}
         <h2 class="h4">{{ 'search'|trans }}</h2>
     {% endif %}

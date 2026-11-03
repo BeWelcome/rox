@@ -203,3 +203,60 @@ group.subscriptions.unread:
 group.categories.too.many:
     - 'A group can have at most 3 categories.'
     - Error when more than 3 categories are chosen for a group.
+group.rules:
+    - 'Rules'
+    - Tab of a group's pages with the forum rules
+group.menu.more:
+    - 'More'
+    - Label of the "…" button in a group's head that opens the menu with the settings and the admin tools
+group.menu.settings:
+    - 'My settings for this group'
+    - Entry of the "…" menu in a group's head, leads to the member's settings for the group (mails about new posts)
+group.menu.edit:
+    - 'Edit group'
+    - Entry of the "…" menu in a group's head for the group's admins, leads to the group's settings
+group.place.everywhere:
+    - 'Everywhere'
+    - In a group's head instead of a place when the group isn't tied to one
+group.about:
+    - 'About'
+    - Heading of the card with the group's description on its overview
+group.discussions.all:
+    - 'All discussions'
+    - Link from the recent posts on a group's overview to its Discussions tab
+group.rules.info:
+    - 'These rules apply to every group on BeWelcome, including the Agora.'
+    - Strip at the top of the Rules tab of a group
+group.rules.in.short:
+    - 'In short'
+    - Heading of the short list of rules on the Rules tab of a group
+group.rules.forum:
+    - 'Forum rules'
+    - Heading of the forum rules on the Rules tab of a group
+group.rules.charter:
+    - 'Charter'
+    - Heading of the forum charter on the Rules tab of a group
+group.rules.report.title:
+    - 'Something breaks the rules?'
+    - Heading of the side card on the Rules tab of a group
+group.rules.report.text:
+    - 'Report the post from its menu. Forum moderators look at every report; group admins can also remove posts in their group.'
+    - Side card on the Rules tab of a group
+forum.rules.short.1:
+    - 'Be friendly and respectful, also when you disagree. No personal attacks.'
+    - First line of the forum rules in short (Rules tab of a group, new topic page)
+forum.rules.short.2:
+    - 'Stay on the topic of the group and post in the right place.'
+    - Second line of the forum rules in short
+forum.rules.short.3:
+    - 'No spam, advertising or commercial offers.'
+    - Third line of the forum rules in short
+forum.rules.short.4:
+    - "Don't post other people's personal details."
+    - Fourth line of the forum rules in short
+forum.rules.short.5:
+    - "Follow the moderators' advice, and report posts that break the rules."
+    - Fifth line of the forum rules in short
+group.no.description:
+    - 'No description yet.'
+    - In the About card of a group's overview when the group has no description

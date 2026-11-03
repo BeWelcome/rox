@@ -1,0 +1,4 @@
+{# The forum rules in short (the Rules tab, the new topic page) #}
+<ol class="p-group-rules__short">
+    {% for i in 1..5 %}<li>{{ ('forum.rules.short.' ~ i)|trans }}</li>{% endfor %}
+</ol>

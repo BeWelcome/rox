@@ -229,6 +229,28 @@ class GroupPagesController extends AbstractController
         ]);
     }
 
+    /**
+     * The forum rules, the same in every group.
+     */
+    #[Route(path: '/group/{group_id}/rules', name: 'group_rules', requirements: ['group_id' => '\d+'], methods: ['GET'])]
+    public function rules(#[MapEntity(id: 'group_id')] Group $group): Response
+    {
+        if (!$this->isGranted(GroupVoter::GROUP_VIEW, $group)) {
+            return $this->redirectToRoute('groups_search');
+        }
+
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        return $this->render('group/rules.html.twig', [
+            'group' => $group,
+            'submenu' => [
+                'items' => $this->getSubmenuItems($member, $group),
+                'active' => 'rules',
+            ],
+        ]);
+    }
+
     #[Route(path: '/group/realimg/{group_id}', name: 'group_realimg', requirements: ['group_id' => '\d+'], methods: ['GET'])]
     public function picture(
         #[MapEntity(id: 'group_id')] Group $group,

@@ -8,6 +8,7 @@ use App\Dto\GroupSearch;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Group;
+use App\Entity\GroupCategory;
 use App\Entity\GroupMembership;
 use App\Entity\Location;
 use App\Entity\Member;
@@ -211,6 +212,68 @@ class GroupRepository extends EntityRepository
         return $qb
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * The groups in a category, by name.
+     *
+     * @return list<Group>
+     */
+    public function findInCategory(GroupCategory $category): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join('g.categories', 'c')
+            ->where('c = :category')
+            ->setParameter('category', $category)
+            ->orderBy('g.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * The approved groups not in a category, by name, with their categories (to tell those that are full).
+     *
+     * @return list<Group>
+     */
+    public function findApprovedNotInCategory(GroupCategory $category): array
+    {
+        return $this->createQueryBuilder('g')
+            ->select('g', 'c')
+            ->leftJoin('g.categories', 'c')
+            ->where('g.approved = :approved')
+            ->andWhere(':category NOT MEMBER OF g.categories')
+            ->setParameter('approved', Group::APPROVED)
+            ->setParameter('category', $category)
+            ->orderBy('g.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param list<Group> $groups
+     *
+     * @return array<int, int> the number of current members of each group, by group id
+     */
+    public function countMembersOfGroups(array $groups): array
+    {
+        if ([] === $groups) {
+            return [];
+        }
+        $rows = $this->getEntityManager()->createQueryBuilder()
+            ->select('IDENTITY(gm.group) AS groupId', 'COUNT(gm.id) AS members')
+            ->from(GroupMembership::class, 'gm')
+            ->join('gm.member', 'm')
+            ->where('gm.group IN (:groups)')
+            ->andWhere('gm.status = :in')
+            ->andWhere('m.status IN (:active)')
+            ->setParameter('groups', $groups)
+            ->setParameter('in', GroupMembershipStatusType::CURRENT_MEMBER)
+            ->setParameter('active', MemberStatusType::ACTIVE_ALL_ARRAY)
+            ->groupBy('gm.group')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_column(array_map(static fn (array $row): array => [(int) $row['groupId'], (int) $row['members']], $rows), 1, 0);
     }
 
     private function createListQueryBuilder(string $order): QueryBuilder

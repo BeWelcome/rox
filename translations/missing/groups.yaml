@@ -277,10 +277,10 @@ group.place.label:
     - Label of the place of a group in the forms to create and edit a group
 group.place.anywhere:
     - 'Anywhere'
-    - Option of the place of a group: not tied to a place
+    - 'Option of the place of a group, not tied to a place'
 group.place.tied:
     - 'Tied to a place'
-    - Option of the place of a group: about a town, region or country
+    - 'Option of the place of a group, about a town, region or country'
 group.place.where:
     - 'Town, region or country'
     - Label of the field for the place of a group
@@ -299,3 +299,90 @@ group.edit.admin.team:
 group.edit.save:
     - 'Save changes'
     - Button of the form to edit a group
+admin.groups.title:
+    - 'Groups administration'
+    - Title of the group admin team's pages (approval, archival, categories, ...)
+admin.group.category:
+    - 'Category'
+    - Column of the list of group categories
+admin.group.category.languages:
+    - 'Languages'
+    - Column of the list of group categories, the languages the category has a name in
+admin.group.category.none:
+    - 'No categories yet.'
+    - The list of group categories when there are none
+admin.group.category.add:
+    - 'Add a category'
+    - Heading of the card to add a group category
+admin.group.category.name.en:
+    - 'Name in English'
+    - Label of the field for a new group category's name
+admin.group.category.add.hint:
+    - "Icon, other languages and keywords are set on the category's page next."
+    - Help under the field for a new group category
+admin.group.category.delete:
+    - 'Delete category'
+    - Button on a group category's page
+admin.group.category.delete.confirm:
+    - 'Delete {name}? {count, plural, one {# group loses} other {# groups lose}} this category.'
+    - Question before a group category is deleted
+admin.group.category.names:
+    - 'Names'
+    - Heading of the names per language on a group category's page
+admin.group.category.required:
+    - 'required'
+    - Tag next to the English name of a group category
+admin.group.category.icon:
+    - 'Icon'
+    - Heading of the icons to choose from on a group category's page
+admin.group.category.keywords:
+    - 'Keywords for suggestions'
+    - Heading of the keywords on a group category's page
+admin.group.category.keywords.help:
+    - "When a group's name or description contains one of these words, {name} is suggested while creating or editing the group. Words in any language; separate several with commas."
+    - Help of the keywords on a group category's page
+admin.group.category.keyword.add:
+    - 'Add a word…'
+    - Placeholder of the field to add keywords to a group category
+admin.group.category.keyword.remove:
+    - 'Remove {word}'
+    - Label of the × of a keyword of a group category
+admin.group.category.groups.in:
+    - 'Groups in this category'
+    - Heading of the groups on a group category's page
+admin.group.category.add.group:
+    - 'Add a group to {name}…'
+    - Field to add a group to a group category
+admin.group.category.no.group:
+    - 'No group found'
+    - When no group matches in the field to add a group to a category
+admin.group.category.full:
+    - 'already has 3 categories'
+    - After a group in the field to add a group to a category when the group can't take another one
+admin.group.category.remove.group:
+    - 'Remove from this category'
+    - Button next to a group on a group category's page
+admin.group.category.no.groups:
+    - 'No groups in this category yet.'
+    - A group category's page when no group is in the category
+admin.group.category.show.all:
+    - 'Show all {count}'
+    - Link under the first groups of a group category
+admin.group.category.max:
+    - "A group can have at most 3 categories; groups that already have 3 can't be added here."
+    - Footnote under the groups of a group category
+admin.groups.approval:
+    - 'Approval'
+    - Tab of the group admin team's pages, the groups waiting for approval
+admin.groups.archival:
+    - 'Archival'
+    - Tab of the group admin team's pages, archiving groups
+admin.groups.unarchival:
+    - 'Unarchival'
+    - Tab of the group admin team's pages, groups to take out of the archive
+admin.groups.rename:
+    - 'Rename'
+    - Tab of the group admin team's pages, renaming a group
+admin.groups.logs:
+    - 'Logs'
+    - Tab of the group admin team's pages, the log of the changes to groups

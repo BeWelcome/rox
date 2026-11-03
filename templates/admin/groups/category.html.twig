@@ -1,31 +1,110 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/groups/_layout.html.twig' %}
+
+{#
+  A group category (A2): its names per language (a row picks the language in the form), its icon (saved on click),
+  the keywords that suggest it in the group forms, and the groups in it (add one, remove one; a group has at most
+  three categories). Delete asks first.
+#}
+
+{% block title %}{{ category.name(app.request.locale) }} · {{ 'admin.groups.categories'|trans }}{% endblock %}
 
 {% block content %}
-    <h1>{{ category.name(app.request.locale) }}</h1>
-
-    <div class="table-responsive">
-        <table class="table table-striped w-100">
-            <thead>
-                <tr>
-                    <th scope="col">{{ 'language'|trans }}</th>
-                    <th scope="col">{{ 'name'|trans }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for locale, translation in category.names %}
-                    <tr>
-                        <td>{{ locale }}</td>
-                        <td>{{ translation.content }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    {% set _token = csrf_token('group-category-' ~ category.id) %}
+    {% set _name = category.name(app.request.locale) %}
+    {% set _max = constant('App\\Entity\\Group::MAX_CATEGORIES') %}
+    <div class="p-gadmin__title-row">
+        <a class="p-forum-new__back" href="{{ path('admin_groups_categories') }}"><i class="fas fa-chevron-left" aria-hidden="true"></i> {{ 'admin.groups.categories'|trans }}</a>
+        <h2 class="p-gadmin__category"><span class="c-group-icon"><i class="fas fa-{{ category.icon }}" aria-hidden="true"></i></span> {{ _name }}</h2>
+        <form method="post" action="{{ path('admin_groups_category_delete', {id: category.id}) }}"
+              onsubmit="return confirm('{{ 'admin.group.category.delete.confirm'|trans({name: _name, count: groupCount})|e('js') }}')">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete-group-category-' ~ category.id) }}">
+            <button type="submit" class="p-gadmin__delete"><i class="far fa-trash-can" aria-hidden="true"></i> {{ 'admin.group.category.delete'|trans }}</button>
+        </form>
     </div>
 
-    {{ form(form) }}
+    <div class="p-gadmin__halves">
+        <div class="p-gadmin__stack">
+            <section class="p-group-panel">
+                <h3 class="p-group-panel__title">{{ 'admin.group.category.names'|trans }}</h3>
+                <div class="p-gadmin__names">
+                    {% for locale, translation in category.names %}
+                        <a class="p-gadmin__name-row" href="{{ path('admin_groups_category', {id: category.id, locale: locale}) }}#names">
+                            <span class="p-gadmin__lang">{{ language_name(locale) }}</span>
+                            <span class="p-gadmin__value">{{ translation.content }}</span>
+                            {% if locale == 'en' %}<span class="p-gadmin__required">{{ 'admin.group.category.required'|trans }}</span>{% endif %}
+                            <i class="fas fa-pen" aria-hidden="true"></i>
+                        </a>
+                    {% endfor %}
+                </div>
+                <div id="names">{{ form(form) }}</div>
+            </section>
 
-    <form method="post" action="{{ path('admin_groups_category_delete', {id: category.id}) }}" class="mt-4">
-        <input type="hidden" name="_token" value="{{ csrf_token('delete-group-category-' ~ category.id) }}">
-        <button type="submit" class="btn btn-danger">{{ 'delete'|trans }}</button>
-    </form>
+            <section class="p-group-panel">
+                <h3 class="p-group-panel__title">{{ 'admin.group.category.icon'|trans }}</h3>
+                <form method="post" action="{{ path('admin_groups_category_icon', {id: category.id}) }}" class="p-gadmin__icons">
+                    <input type="hidden" name="_token" value="{{ _token }}">
+                    {% for icon in icons %}
+                        <button type="submit" name="icon" value="{{ icon }}" class="p-gadmin__icon{{ category.hasIcon and category.icon == icon ? ' is-on' }}" title="{{ icon }}" aria-label="{{ icon }}" aria-pressed="{{ category.hasIcon and category.icon == icon ? 'true' : 'false' }}">
+                            <i class="fas fa-{{ icon }}" aria-hidden="true"></i>
+                        </button>
+                    {% endfor %}
+                </form>
+            </section>
+
+            <section class="p-group-panel" id="keywords">
+                <h3 class="p-group-panel__title">{{ 'admin.group.category.keywords'|trans }}</h3>
+                <p class="p-gadmin__hint">{{ 'admin.group.category.keywords.help'|trans({name: _name}) }}</p>
+                <form method="post" action="{{ path('admin_groups_category_keywords', {id: category.id}) }}" class="p-gadmin__tags">
+                    <input type="hidden" name="_token" value="{{ _token }}">
+                    {% for keyword in category.keywords %}
+                        <span class="p-gadmin__tag">{{ keyword }}
+                            <button type="submit" name="remove" value="{{ keyword }}" aria-label="{{ 'admin.group.category.keyword.remove'|trans({word: keyword}) }}"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+                        </span>
+                    {% endfor %}
+                    <input type="text" name="add" class="p-gadmin__tag-input" placeholder="{{ 'admin.group.category.keyword.add'|trans }}" aria-label="{{ 'admin.group.category.keyword.add'|trans }}" maxlength="200" autocomplete="off">
+                </form>
+            </section>
+        </div>
+
+        <section class="p-group-panel" id="groups">
+            <h3 class="p-group-panel__title">{{ 'admin.group.category.groups.in'|trans }} <span class="p-group-panel__count">{{ groupCount }}</span></h3>
+            <form method="post" action="{{ path('admin_groups_category_add_group', {id: category.id}) }}" class="p-gadmin__add-group">
+                <input type="hidden" name="_token" value="{{ _token }}">
+                <select name="group" class="js-tom-select" data-no-results-text="{{ 'admin.group.category.no.group'|trans }}" aria-label="{{ 'admin.group.category.add.group'|trans({name: _name}) }}" onchange="this.form.requestSubmit()">
+                    <option value="">{{ 'admin.group.category.add.group'|trans({name: _name}) }}</option>
+                    {% for candidate in candidates %}
+                        {% set _full = candidate.categories|length >= _max %}
+                        <option value="{{ candidate.id }}"{{ _full ? ' disabled' }}>{{ candidate.name }}{% if _full %} ({{ 'admin.group.category.full'|trans }}){% endif %}</option>
+                    {% endfor %}
+                </select>
+            </form>
+            <div class="p-gadmin__groups">
+                {% for group in groups %}
+                    {% set _others = group.categories|filter(other => other.id != category.id) %}
+                    <div class="p-gadmin__group">
+                        <img width="40" height="40" alt="" loading="lazy" src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+                        <div class="p-gadmin__group-text">
+                            <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a>
+                            <span>
+                                {{- _others|map(other => other.name(app.request.locale))|join(', ') -}}
+                                {%- if _others is not empty %} · {% endif -%}
+                                {{- 'group.list.members'|trans({count: memberCounts[group.id] ?? 0}) -}}
+                            </span>
+                        </div>
+                        {% if group.categories|length >= _max %}<span class="p-gadmin__full">{{ 'group.categories.count'|trans({count: _max, max: _max}) }}</span>{% endif %}
+                        <form method="post" action="{{ path('admin_groups_category_remove_group', {id: category.id, groupId: group.id}) }}">
+                            <input type="hidden" name="_token" value="{{ _token }}">
+                            <button type="submit" class="p-gadmin__remove" title="{{ 'admin.group.category.remove.group'|trans }}" aria-label="{{ 'admin.group.category.remove.group'|trans }}"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+                        </form>
+                    </div>
+                {% else %}
+                    <p class="p-group-panel__empty">{{ 'admin.group.category.no.groups'|trans }}</p>
+                {% endfor %}
+            </div>
+            {% if groups|length < groupCount %}
+                <a class="p-group-panel__more" href="{{ path('admin_groups_category', {id: category.id, all: 1}) }}#groups">{{ 'admin.group.category.show.all'|trans({count: groupCount}) }}</a>
+            {% endif %}
+            <p class="p-gadmin__hint">{{ 'admin.group.category.max'|trans }}</p>
+        </section>
+    </div>
 {% endblock %}

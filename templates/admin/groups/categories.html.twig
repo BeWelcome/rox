@@ -1,33 +1,45 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/groups/_layout.html.twig' %}
+
+{#
+  The group categories (A1): a table (icon, name, languages, number of groups; a row leads to the category) next to
+  a card to add one by its English name.
+#}
+
+{% block title %}{{ 'admin.groups.categories'|trans }}{% endblock %}
 
 {% block content %}
-    <h1>{{ 'admin.groups.categories'|trans }}</h1>
+    <div class="p-gadmin__cols">
+        <section class="p-group-panel p-gadmin__table">
+            <div class="p-gadmin__row p-gadmin__row--head" role="row">
+                <span>{{ 'admin.group.category'|trans }}</span>
+                <span>{{ 'admin.group.category.languages'|trans }}</span>
+                <span class="p-gadmin__num">{{ 'admin.group.category.groups'|trans }}</span>
+                <span></span>
+            </div>
+            {% for category in categories %}
+                {% set _locales = category.names|keys|sort %}
+                <a class="p-gadmin__row" href="{{ path('admin_groups_category', {id: category.id}) }}">
+                    <span class="p-gadmin__name"><span class="c-group-icon"><i class="fas fa-{{ category.icon }}" aria-hidden="true"></i></span> {{ category.name(app.request.locale) }}</span>
+                    <span class="p-gadmin__locales">
+                        {% for _locale in _locales|slice(0, 4) %}<span class="c-group-chip">{{ _locale }}</span>{% endfor %}
+                        {% if _locales|length > 4 %}<span class="c-group-chip">+{{ _locales|length - 4 }}</span>{% endif %}
+                    </span>
+                    <span class="p-gadmin__num">{{ groupCounts[category.id] ?? 0 }}</span>
+                    <i class="fas fa-chevron-right p-gadmin__go" aria-hidden="true"></i>
+                </a>
+            {% else %}
+                <p class="p-group-panel__empty p-gadmin__empty">{{ 'admin.group.category.none'|trans }}</p>
+            {% endfor %}
+        </section>
 
-    {% if categories|length %}
-        <div class="table-responsive">
-            <table class="table table-striped w-100">
-                <thead>
-                    <tr>
-                        <th scope="col">{{ 'name'|trans }}</th>
-                        <th scope="col">{{ 'language'|trans }}</th>
-                        <th scope="col" class="text-end">{{ 'admin.group.category.groups'|trans }}</th>
-                        <th scope="col">{{ 'admin.group.actions'|trans }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for category in categories %}
-                        <tr>
-                            <td>{{ category.name(app.request.locale) }}</td>
-                            <td>{{ category.names|keys|sort|join(', ') }}</td>
-                            <td class="text-end">{{ groupCounts[category.id] ?? 0 }}</td>
-                            <td><a href="{{ path('admin_groups_category', {id: category.id}) }}">{{ 'edit'|trans }}</a></td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% endif %}
-
-    <h2 class="h4 mt-4">{{ 'add'|trans }}</h2>
-    {{ form(form) }}
+        <section class="p-group-panel">
+            <h2 class="p-group-panel__title">{{ 'admin.group.category.add'|trans }}</h2>
+            {{ form_start(form, {attr: {class: 'p-gadmin__add'}}) }}
+                {{ form_row(form.name, {label: 'admin.group.category.name.en', attr: {class: 'p-forum-new__input'}}) }}
+                <p class="p-gadmin__hint">{{ 'admin.group.category.add.hint'|trans }}</p>
+                {{ form_widget(form.save, {attr: {class: 'p-group-head__primary'}}) }}
+                {{ form_rest(form) }}
+            {{ form_end(form) }}
+        </section>
+    </div>
 {% endblock %}

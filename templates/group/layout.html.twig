@@ -3,10 +3,11 @@
 {#
   The pages of a group: the group's head with its tabs across the page (as a member's profile), the page under it.
   Pages fill group_content. Pages that also serve without a group (the forum search) get the head only when they
-  have the group's menu (submenu); in a side panel (?embed=1) there is only the page itself.
+  have the group's menu (submenu); in a side panel (?embed=1) there is only the page itself, and pages with their
+  own head (a new topic) set group_head_hidden.
 #}
 
-{% set _with_head = submenu is defined and not app.request.query.getBoolean('embed') %}
+{% set _with_head = submenu is defined and not app.request.query.getBoolean('embed') and not (group_head_hidden ?? false) %}
 {% if submenu is defined %}{% set hide_sidebar = true %}{% endif %}
 
 {% block main %}

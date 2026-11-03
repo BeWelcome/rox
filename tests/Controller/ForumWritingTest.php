@@ -235,6 +235,30 @@ final class ForumWritingTest extends WebTestCase
         self::assertSame(0, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $member->getId()]));
     }
 
+    public function testTheRulesAreThereWhenWriting(): void
+    {
+        $thread = $this->thread(self::AGORA_THREAD);
+        $this->client->loginUser($this->member('member-2'));
+
+        // a new topic: the rules in short next to the form, a link to all of them
+        $crawler = $this->request('GET', '/forums/new');
+        self::assertCount(5, $crawler->filter('.js-forum-rules .p-group-rules__short li'));
+        self::assertCount(1, $crawler->filter('.js-forum-rules a[href="/group/0/rules"]'));
+
+        // a reply: the strip above the editor, in the side panel too
+        foreach (['', '?embed=1'] as $query) {
+            $crawler = $this->request('GET', '/forums/s' . $thread->getId() . '/reply' . $query);
+            self::assertCount(1, $crawler->filter('.p-forum-rules-strip a[href="/group/0/rules"]'), $query);
+        }
+
+        // the thread's head subscribes
+        $crawler = $this->request('GET', '/forums/s' . $thread->getId());
+        $this->client->submit($crawler->filter('.p-group-head__actions form[action$="/forums/subscribe/thread/' . $thread->getId() . '"]')->form());
+        self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $this->member('member-2')->getId()]));
+        $crawler = $this->request('GET', '/forums/s' . $thread->getId());
+        self::assertCount(1, $crawler->filter('.p-group-head__actions .p-group-head__subscribe.is-on'));
+    }
+
     public function testSwitchesOnPagesNeedTheirToken(): void
     {
         $thread = $this->thread(self::AGORA_THREAD);

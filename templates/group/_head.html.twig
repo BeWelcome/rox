@@ -27,6 +27,21 @@
     {% set _action = {url: _agora ? path('forums_new') : path('group_new_post', {group_id: group.id}), label: 'forumnewtopic', icon: 'plus'} %}
 {% endif %}
 
+{# A topic: Subscribed (a switch) in place of the button #}
+{% set _subscribe = null %}
+{% if _topic and thread is defined and subscribed is defined %}
+    {% set _action = null %}
+    {% set _subscribe %}
+        <form method="post" action="{{ subscribed ? path('forum_thread_unsubscribe', {threadId: thread.id}) : path('forum_thread_subscription', {threadId: thread.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\ForumSubscriptionController::TOKEN')) }}">
+            <button type="submit" class="p-group-head__subscribe{{ subscribed ? ' is-on' }}" aria-pressed="{{ subscribed ? 'true' : 'false' }}" title="{{ (subscribed ? 'forum.thread.subscribed' : 'forumsubscribe')|trans }}">
+                <i class="{{ subscribed ? 'fas fa-bell' : 'far fa-bell' }}" aria-hidden="true"></i>
+                <span>{{ (subscribed ? 'forum.thread.subscribed' : 'forumsubscribe')|trans }}</span>
+            </button>
+        </form>
+    {% endset %}
+{% endif %}
+
 {% set _tabs = submenu.items|filter((item, name) => name != 'join' and not (item.menu ?? false)) %}
 {% set _menu = submenu.items|filter(item => item.menu ?? false) %}
 {% set _resign = app.user and not _agora and group.isAdmin(app.user) %}
@@ -71,11 +86,12 @@
     {# Phones, every tab but the overview: a small orange bar with the group's picture and name #}
     <div class="p-group-head__bar">
         <a class="p-group-head__back" href="{{ _topic ? path('group_forum', {group_id: group.id}) : path('group_start', {group_id: group.id}) }}" aria-label="{{ 'back'|trans }}"><i class="fas fa-chevron-left" aria-hidden="true"></i></a>
-        <img class="p-group-head__bar-picture{{ _agora ? ' is-agora' }}" width="34" height="34" alt="" src="{{ _picture }}">
+        <span class="p-group-head__bar-picture{{ _agora ? ' is-agora' }}"><img width="34" height="34" alt="" src="{{ _picture }}"></span>
         <span class="p-group-head__bar-name">
             {% if _topic %}<small>{{ group.name }}</small>{% endif %}
             {{ _topic ?: group.name }}
         </span>
+        {{ _subscribe }}
         {{ _more }}
     </div>
 
@@ -117,6 +133,7 @@
                 {% endif %}
             </div>
             <div class="p-group-head__actions">
+                {{ _subscribe }}
                 {% if _action %}
                     <a class="p-group-head__primary" href="{{ _action.url }}"><i class="fas fa-{{ _action.icon }}" aria-hidden="true"></i> {{ _action.label|trans }}</a>
                 {% endif %}

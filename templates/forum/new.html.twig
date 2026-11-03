@@ -1,20 +1,36 @@
 {% extends 'group/layout.html.twig' %}
 
 {#
-  New topic in a group's forum (or the agora): one white card with its head (New topic, the forum's name), the
-  title, the editor, who can see it, the notifications, then Cancel and Create topic (greyed until a title and
-  a text are there).
+  New topic in a group's forum (or the agora): a head with the group's picture, a link back to it and New topic;
+  then the form card (the title, the editor, who can see it, the notifications, Cancel and Post topic, greyed until
+  a title and a text are there) next to the forum rules in short. On phones the rules are a panel above the form
+  that the member can fold (remembered in the browser) and Post topic sits at the bottom of the screen.
 #}
+{% set group_head_hidden = true %}
+
 {% block group_content %}
+    {% set _picture = group.beWelcome ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png')) %}
     <div class="p-forum-new">
+        <header class="p-forum-new__page-head">
+            <span class="p-forum-new__picture{{ group.beWelcome ? ' is-agora' }}"><img width="64" height="64" alt="" src="{{ _picture }}"></span>
+            <div>
+                <a class="p-forum-new__back" href="{{ path('group_forum', {group_id: group.id}) }}"><i class="fas fa-chevron-left" aria-hidden="true"></i> {{ group.name }}</a>
+                <h1 class="p-forum-new__title">{{ 'forumnewtopic'|trans }}</h1>
+            </div>
+        </header>
+
+        <div class="p-forum-new__layout">
+        <details class="p-forum-rules-aside js-forum-rules" open>
+            <summary class="p-forum-rules-aside__head">
+                <span class="p-forum-rules-aside__icon"><i class="fas fa-scale-balanced" aria-hidden="true"></i></span>
+                <h2>{{ 'forum.rules.in.short'|trans }}</h2>
+                <i class="fas fa-chevron-up p-forum-rules-aside__caret" aria-hidden="true"></i>
+            </summary>
+            {% include 'group/_rules_short.html.twig' %}
+            <a class="p-forum-rules-aside__more" href="{{ path('group_rules', {group_id: group.id}) }}">{{ 'forum.rules.read.all'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </details>
+
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'p-forum-new__card js-forum-new-form'}}) }}
-            <header class="p-forum-new__head">
-                <span class="p-forum-new__icon"><i class="fas fa-pen" aria-hidden="true"></i></span>
-                <div>
-                    <h2 class="p-forum-new__title">{{ 'forumnewtopic'|trans }}</h2>
-                    <p class="p-forum-new__sub">{{ group.beWelcome ? 'agoraforum'|trans : group.name }}</p>
-                </div>
-            </header>
             {% for _error in form.vars.errors %}<p class="p-forum-new__error p-forum-new__error--box">{{ _error.message }}</p>{% endfor %}
 
             <div class="p-forum-new__field">
@@ -63,10 +79,11 @@
             <div class="p-forum-new__foot">
                 <a class="p-group-btn" href="{{ path('group_forum', {group_id: group.id}) }}">{{ 'cancel'|trans }}</a>
                 <button type="submit" name="{{ form.submit.vars.full_name }}" class="p-group-btn p-group-btn--primary js-forum-new-send">
-                    <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ form.submit.vars.label|trans }}
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i> {{ 'forum.post.topic'|trans }}
                 </button>
             </div>
         {{ form_end(form) }}
+        </div>
     </div>
     <script>
         (function () {
@@ -84,6 +101,23 @@
             new MutationObserver(refresh).observe(form, { childList: true, characterData: true, subtree: true });
             form.addEventListener('input', refresh);
             refresh();
+
+            // The rules: open unless the member folded them (phones; on larger screens they are always open)
+            var rules = document.querySelector('.js-forum-rules');
+            var key = 'bw.forum.rules.folded';
+            var phone = window.matchMedia('(max-width: 540px)');
+            try {
+                if (phone.matches && localStorage.getItem(key) === '1') {
+                    rules.open = false;
+                }
+            } catch (e) {}
+            rules.addEventListener('toggle', function () {
+                if (!phone.matches) {
+                    rules.open = true;
+                    return;
+                }
+                try { localStorage.setItem(key, rules.open ? '0' : '1'); } catch (e) {}
+            });
         })();
     </script>
 {% endblock %}

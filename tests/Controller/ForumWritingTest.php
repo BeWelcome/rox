@@ -225,13 +225,12 @@ final class ForumWritingTest extends WebTestCase
         $this->client->submit($crawler->filter('form[action$="/forums/subscribe/thread/' . $thread->getId() . '"]')->form());
         self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ? AND notificationsEnabled = 1', [$thread->getId(), $member->getId()]));
 
-        $crawler = $this->request('GET', '/forums/subscriptions');
+        // the subscriptions are a tab of the groups page, where the member unsubscribes
+        $this->request('GET', '/forums/subscriptions');
+        self::assertResponseRedirects('/groups/subscriptions', 301);
+        $crawler = $this->request('GET', '/groups/subscriptions');
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString(self::AGORA_THREAD, $crawler->filter('#thread-subscriptions')->text());
-        $this->client->submit($crawler->filter('form[action$="/forums/subscriptions/disable/thread/' . $thread->getId() . '"]')->form());
-        self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ? AND notificationsEnabled = 0', [$thread->getId(), $member->getId()]));
-
-        $crawler = $this->request('GET', '/forums/subscriptions');
+        self::assertStringContainsString(self::AGORA_THREAD, $crawler->filter('.p-groups-subs')->text());
         $this->client->submit($crawler->filter('form[action$="/forums/unsubscribe/thread/' . $thread->getId() . '"]')->form());
         self::assertSame(0, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $member->getId()]));
     }
@@ -245,8 +244,6 @@ final class ForumWritingTest extends WebTestCase
         $this->request('GET', '/forums/subscribe/thread/' . $thread->getId());
         self::assertResponseStatusCodeSame(405);
         $this->client->request('POST', '/forums/subscribe/thread/' . $thread->getId(), ['_token' => 'wrong']);
-        self::assertResponseStatusCodeSame(403);
-        $this->client->request('POST', '/forums/show/groups/only-mine', ['_token' => 'wrong']);
         self::assertResponseStatusCodeSame(403);
         self::assertSame(0, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $member->getId()]));
     }
@@ -278,7 +275,7 @@ final class ForumWritingTest extends WebTestCase
 
         $this->request('GET', '/forums/subscriptions/disable/group/' . $hiking->getId());
 
-        self::assertResponseRedirects('/forums/subscriptions');
+        self::assertResponseRedirects('/groups/subscriptions');
         self::assertSame(1, $this->countRows('group_membership', 'group_id = ? AND member_id = ? AND notifications_enabled = 0', [$hiking->getId(), $member->getId()]));
     }
 

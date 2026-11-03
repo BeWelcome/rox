@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\ForumThread;
 use App\Entity\Group;
-use App\Entity\GroupMembership;
 use App\Entity\Member;
 use App\Model\ForumModel;
 use App\Utilities\TranslatedFlashTrait;
@@ -37,17 +36,13 @@ class ForumSubscriptionController extends AbstractController
     ) {
     }
 
+    /**
+     * The subscriptions are a tab of the groups page now.
+     */
     #[Route(path: '/forums/subscriptions', name: 'subscriptions', methods: ['GET'])]
-    public function overview(): Response
+    public function overview(): RedirectResponse
     {
-        $member = $this->getMember();
-
-        return $this->render('forum/subscriptions.html.twig', [
-            'subscriptions' => $this->forumModel->getSubscriptions($member),
-            'memberships' => $this->entityManager->getRepository(GroupMembership::class)->findBy(
-                ['member' => $member, 'status' => 'In'],
-            ),
-        ]);
+        return $this->redirectToRoute('groups_subscriptions', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     #[Route(path: '/forums/subscriptions/enable', name: 'subscriptions_enable', methods: ['POST'])]
@@ -56,7 +51,7 @@ class ForumSubscriptionController extends AbstractController
         $this->checkToken($request);
         $this->forumModel->setAllThreadNotifications($this->getMember(), true);
 
-        return $this->redirectToRoute('subscriptions');
+        return $this->redirectToRoute('groups_subscriptions');
     }
 
     #[Route(path: '/forums/subscriptions/disable', name: 'subscriptions_disable', methods: ['POST'])]
@@ -65,7 +60,7 @@ class ForumSubscriptionController extends AbstractController
         $this->checkToken($request);
         $this->forumModel->setAllThreadNotifications($this->getMember(), false);
 
-        return $this->redirectToRoute('subscriptions');
+        return $this->redirectToRoute('groups_subscriptions');
     }
 
     #[Route(path: '/forums/subscribe/thread/{threadId}', name: 'forum_thread_subscription', requirements: ['threadId' => '\d+'], methods: ['POST'])]
@@ -186,7 +181,7 @@ class ForumSubscriptionController extends AbstractController
             return $this->redirect($referer);
         }
 
-        return $this->redirectToRoute('subscriptions');
+        return $this->redirectToRoute('groups_subscriptions');
     }
 
     private function getMember(): Member

@@ -45,44 +45,35 @@ class ForumPagesController extends AbstractController
     ) {
     }
 
+    /**
+     * The forums overview is gone: the groups page has the agora, the member's groups and their subscriptions.
+     * ?groups=mine (the home page's link to the posts of the member's groups) goes to My groups.
+     */
     #[Route(path: '/forums', name: 'forums', methods: ['GET'])]
-    public function overview(Request $request): Response
+    public function overview(Request $request): RedirectResponse
     {
-        $member = $this->getMember();
-        // ?groups=mine (the home page's My groups) shows only the member's groups, whatever their preference
-        $mineAsked = 'mine' === $request->query->get('groups');
-        $onlyMyGroups = $mineAsked || 'Yes' === $this->getPreference($member, Preference::SHOW_MY_GROUP_POSTS_ONLY);
-        $threads = $this->paginate(
-            $this->getThreadRepository()->createLatestQueryBuilder($member, $this->isModerator(), null, $onlyMyGroups),
-            $request->query->getInt('page', 1),
-            $this->getItemsPerPage($member),
-        );
-
-        return $this->render('forum/overview.html.twig', [
-            'threads' => $threads,
-            'onlyMyGroups' => $onlyMyGroups,
-            'mineAsked' => $mineAsked,
-            'ascending' => $this->readsAscending($member),
-        ]);
+        return 'mine' === $request->query->get('groups')
+            ? $this->redirectToRoute('groups_mygroups', [], Response::HTTP_MOVED_PERMANENTLY)
+            : $this->redirectToRoute('groups_redirect', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     /**
      * The legacy overview had a page of group threads and one of agora threads.
      */
     #[Route(path: '/forums/page{groupsPage}/page{bwforumsPage}/', name: 'forums_pages', requirements: ['groupsPage' => '\d+', 'bwforumsPage' => '\d+'], methods: ['GET'])]
-    public function overviewPages(int $groupsPage): RedirectResponse
+    public function overviewPages(): RedirectResponse
     {
-        return $this->redirectToRoute('forums', ['page' => $groupsPage], Response::HTTP_MOVED_PERMANENTLY);
+        return $this->redirectToRoute('groups_redirect', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     /**
-     * The legacy overview of the groups' threads; the forum overview shows them all now.
+     * The legacy overview of the groups' threads; the groups page has them now.
      */
     #[Route(path: '/groups/forums', name: 'groups_forums_overview', methods: ['GET'])]
     #[Route(path: '/groups/forums/{page_number}', name: 'groups_forums_overview_paged', requirements: ['page_number' => '\d+'], methods: ['GET'])]
     public function groupsOverview(): RedirectResponse
     {
-        return $this->redirectToRoute('forums', [], Response::HTTP_MOVED_PERMANENTLY);
+        return $this->redirectToRoute('groups_redirect', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     #[Route(path: '/forums/bwforum', name: 'bwforum', methods: ['GET'])]

@@ -82,7 +82,7 @@ final class ForumSearchTest extends WebTestCase
 
         $this->client->request('GET', '/forums/t12-travel');
 
-        self::assertResponseRedirects('/forums', 301);
+        self::assertResponseRedirects('/groups/', 301);
 
         // not a tag: the translate page answers
         $this->client->request('GET', '/forums/translate/m14');

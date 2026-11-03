@@ -47,7 +47,7 @@ class ForumSearchController extends AbstractController
         $keyword = trim((string) $request->query->get('q'));
 
         return '' === $keyword
-            ? $this->redirectToRoute('forums')
+            ? $this->redirectToRoute('groups_redirect')
             : $this->redirectToRoute('forums_search', ['keyword' => $keyword]);
     }
 
@@ -90,7 +90,7 @@ class ForumSearchController extends AbstractController
     #[Route(path: '/forums/reverse', name: 'forums_reverse', methods: ['GET'])]
     public function legacyOverviews(): RedirectResponse
     {
-        return $this->redirectToRoute('forums', [], Response::HTTP_MOVED_PERMANENTLY);
+        return $this->redirectToRoute('groups_redirect', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     /**

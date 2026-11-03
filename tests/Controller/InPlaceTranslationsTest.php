@@ -35,11 +35,11 @@ class InPlaceTranslationsTest extends WebTestCase
 
     public function testTheListIsOnlyShownInTranslationMode(): void
     {
-        $crawler = $this->client->request('GET', '/forums');
+        $crawler = $this->client->request('GET', '/groups/search');
         self::assertCount(0, $crawler->filter('#translations'));
 
         $this->client->request('GET', '/admin/translations/mode/on');
-        $crawler = $this->client->request('GET', '/forums');
+        $crawler = $this->client->request('GET', '/groups/search');
         self::assertCount(1, $crawler->filter('#translations'));
         self::assertCount(1, $crawler->filter('.js-translation-drawer'));
         // a box per group, the empty ones say so
@@ -52,7 +52,7 @@ class InPlaceTranslationsTest extends WebTestCase
         });
 
         $this->client->request('GET', '/admin/translations/mode/off');
-        self::assertCount(0, $this->client->request('GET', '/forums')->filter('#translations'));
+        self::assertCount(0, $this->client->request('GET', '/groups/search')->filter('#translations'));
     }
 
     public function testAMissingTextIsCreated(): void
@@ -163,7 +163,7 @@ class InPlaceTranslationsTest extends WebTestCase
         $server = ['HTTP_ACCEPT_LANGUAGE' => $locale];
         $this->client->request('GET', '/admin/translations/mode/on', [], [], $server);
 
-        return $this->client->request('GET', '/forums', [], [], $server);
+        return $this->client->request('GET', '/groups/search', [], [], $server);
     }
 
     private function item(Crawler $crawler, string $group): Crawler

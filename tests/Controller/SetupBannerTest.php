@@ -32,18 +32,18 @@ final class SetupBannerTest extends WebTestCase
         };
 
         $setStatus(MemberStatusType::MAIL_CONFIRMED);
-        $crawler = $client->request('GET', '/forums');
+        $crawler = $client->request('GET', '/groups/search');
         self::assertSelectorTextContains('#notices_menu .c-topbar-notices__text', 'profile.finish.setup');
         self::assertStringEndsWith('/members/member-2/finalize', $this->action($crawler));
 
         // set up, but the email address isn't confirmed
         $setStatus(MemberStatusType::ACCOUNT_ACTIVATED);
-        $crawler = $client->request('GET', '/forums');
+        $crawler = $client->request('GET', '/groups/search');
         self::assertSelectorTextContains('#notices_menu .c-topbar-notices__text', 'profile.confirm.email.deadline');
         self::assertStringEndsWith('/members/member-2/confirm', $this->action($crawler));
 
         $setStatus(MemberStatusType::ACTIVE);
-        $crawler = $client->request('GET', '/forums');
+        $crawler = $client->request('GET', '/groups/search');
         self::assertCount(0, $crawler->filter('#notices_menu'));
     }
 

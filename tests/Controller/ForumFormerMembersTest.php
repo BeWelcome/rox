@@ -42,9 +42,9 @@ final class ForumFormerMembersTest extends WebTestCase
         $this->client->loginUser($this->member('member-2'));
     }
 
-    public function testTheGroupsForumAndTheOverviewListTheThread(): void
+    public function testTheGroupsForumListsTheThread(): void
     {
-        foreach (['/group/' . $this->thread->getGroup()->getId() . '/forum', '/forums'] as $url) {
+        foreach (['/group/' . $this->thread->getGroup()->getId() . '/forum'] as $url) {
             $crawler = $this->request($url);
 
             self::assertResponseIsSuccessful();

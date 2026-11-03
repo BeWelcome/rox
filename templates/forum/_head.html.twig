@@ -18,9 +18,8 @@
     {% endif %}
     <nav class="p-forum__tabs" aria-label="{{ 'forum'|trans }}">
         {% set tabs = {
-            forums: {url: path('forums'), label: 'forumrecentposts'},
             agora: {url: path('group_forum', {group_id: constant('App\\Entity\\Group::BEWELCOME')}), label: 'agoraforum'},
-            subscriptions: {url: path('subscriptions'), label: 'forumsubscriptions'},
+            subscriptions: {url: path('groups_subscriptions'), label: 'forumsubscriptions'},
             rules: {url: path('forum_rules'), label: 'forumrulesshort'},
         } %}
         {% if moderator %}

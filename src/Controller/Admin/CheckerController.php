@@ -4,7 +4,6 @@ namespace App\Controller\Admin;
 
 use App\Entity\Member;
 use App\Form\SpamActivitiesIndexFormType;
-use App\Form\SpamCommunityNewsCommentsIndexFormType;
 use App\Form\SpamMessagesIndexFormType;
 use App\Model\ActivityModel;
 use App\Model\Admin\CheckerModel;
@@ -18,10 +17,14 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CheckerController extends AbstractController
 {
     use ItemsPerPageTraits;
+
+    /** The CSRF token id of keeping and deleting reported community news comments. */
+    public const string COMMUNITY_NEWS_TOKEN = 'checker_community_news';
 
     private const int MESSAGES_REPORTED = 1;
     private const int MESSAGES_PROCESSED = 2;
@@ -31,6 +34,7 @@ class CheckerController extends AbstractController
     public function __construct(
         private readonly CheckerModel $checkerModel,
         private readonly EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -100,6 +104,10 @@ class CheckerController extends AbstractController
         ]);
     }
 
+    /**
+     * The community news comments members reported: Keep clears a comment's reports, Delete removes it (one with
+     * replies stays as "Comment removed"), also for the selected ones.
+     */
     #[Route(path: '/admin/spam/communitynews', name: 'admin_spam_community_news')]
     public function showCommunityNewsComments(Request $request, CommunityNewsModel $communityNewsModel): Response
     {
@@ -110,35 +118,30 @@ class CheckerController extends AbstractController
             throw $this->createAccessDeniedException('You need to have Checker right to access this.');
         }
 
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 10);
+        if ($request->isMethod('POST')) {
+            if (!$this->isCsrfTokenValid(self::COMMUNITY_NEWS_TOKEN, $request->request->getString('_token'))) {
+                throw $this->createAccessDeniedException('Invalid CSRF token.');
+            }
+            $keep = $request->request->getInt('keep');
+            $delete = $request->request->getInt('delete');
+            $selected = array_values(array_filter(array_map('intval', $request->request->all('ids'))));
+            if (0 < $keep) {
+                $communityNewsModel->keep([$keep]);
+                $this->addFlash('notice', $this->translate('admin.checker.communitynews.kept', ['count' => 1]));
+            } elseif (0 < $delete || [] !== $selected) {
+                $ids = 0 < $delete ? [$delete] : $selected;
+                $communityNewsModel->deleteAsSpamByChecker($ids);
+                $this->addFlash('notice', $this->translate('admin.checker.communitynews.deleted', ['count' => \count($ids)]));
+            }
 
-        $latestComments = $communityNewsModel->getLatestCommunityNewsComments($page, $limit);
-        $commentIds = [];
-        foreach ($latestComments->getIterator() as $key => $val) {
-            $commentIds[$key] = $val->getId();
-        }
-
-        $form = $this->createForm(SpamCommunityNewsCommentsIndexFormType::class, null, [
-            'ids' => $commentIds,
-        ]);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $communityNewsModel->deleteAsSpamByChecker($data['spamComments']);
-            $this->addFlash('notice', 'deleted spam community news comment');
-
-            return $this->redirectToRoute('admin_spam_community_news');
+            return $this->redirectToRoute('admin_spam_community_news', array_filter(['page' => $request->query->getInt('page')]));
         }
 
         return $this->render('admin/checker/communitynews.html.twig', [
-            'form' => $form->createView(),
-            'reported' => $latestComments,
-            'submenu' => [
-                'active' => 'community_news',
-                'items' => $this->getSubmenuItems(),
-            ],
+            'reported' => $communityNewsModel->getReportedComments($request->query->getInt('page', 1), 20),
+            'open' => $communityNewsModel->countReportedComments(),
+            'menu' => $this->getSubmenuItems(),
+            'active' => 'community_news',
         ]);
     }
 
@@ -174,31 +177,45 @@ class CheckerController extends AbstractController
         return [$active, $messages];
     }
 
+    /**
+     * @param array<string, int|string> $parameters
+     */
+    private function translate(string $key, array $parameters = []): string
+    {
+        return $this->translator->trans($key, $parameters);
+    }
+
     private function getSubmenuItems(): array
     {
         return [
             'messages' => [
                 'key' => 'reported.messages',
+                'icon' => 'envelope',
                 'url' => $this->generateUrl('admin_spam_messages'),
             ],
             'processed_messages' => [
                 'key' => 'reported.messages.processed',
+                'icon' => 'envelope-circle-check',
                 'url' => $this->generateUrl('admin_spam_messages_processed'),
             ],
             'blocked_words' => [
                 'key' => 'block.words.messages',
+                'icon' => 'ban',
                 'url' => $this->generateUrl('admin_spam_messages_block_words'),
             ],
             'processed_blocked_words' => [
                 'key' => 'block.words.processed',
+                'icon' => 'circle-check',
                 'url' => $this->generateUrl('admin_spam_messages_block_words_processed'),
             ],
             'activities' => [
                 'key' => 'activities',
+                'icon' => 'calendar-days',
                 'url' => $this->generateUrl('admin_spam_activities'),
             ],
             'community_news' => [
                 'key' => 'community_news',
+                'icon' => 'newspaper',
                 'url' => $this->generateUrl('admin_spam_community_news'),
             ],
         ];

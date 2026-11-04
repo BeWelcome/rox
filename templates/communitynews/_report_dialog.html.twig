@@ -1,0 +1,41 @@
+{#
+  The report dialog of a comment (communitynews/show.html.twig). A Report button fills it (assets/js/communitynews.js):
+  the form's action and the comment's author, avatar and text. Report needs a reason, and a note for "Something else".
+#}
+<div class="micromodal-slide c-cnews-report" id="c-cnews-report" aria-hidden="true">
+  <div class="modal__overlay c-cnews-report__overlay" tabindex="-1" data-micromodal-close>
+    <div class="modal__container c-cnews-report__box" role="dialog" aria-modal="true" aria-labelledby="c-cnews-report-title">
+      <header class="c-cnews-report__head">
+        <h2 class="c-cnews-report__title" id="c-cnews-report-title">{{ 'communitynews.report.title'|trans }}</h2>
+        <button type="button" class="c-cnews-report__close" aria-label="{{ 'modal.close'|trans }}" data-micromodal-close><i class="fas fa-xmark" aria-hidden="true"></i></button>
+      </header>
+      {{ form_start(report_form, {attr: {class: 'c-cnews-report__form', novalidate: 'novalidate', 'data-report-form': ''}}) }}
+        <div class="c-cnews-report__content">
+          <p class="c-cnews-report__comment">
+            <img src="" alt="" width="28" height="28" data-report-avatar>
+            <strong data-report-name></strong> · <span data-report-text></span>
+          </p>
+          <fieldset class="c-cnews-report__reasons">
+            <legend class="c-cnews-report__label">{{ 'communitynews.report.reason'|trans }}</legend>
+            {% for choice in report_form.reason %}
+              <label class="c-cnews-report__reason">
+                {{ form_widget(choice, {attr: {'data-report-reason': ''}}) }}
+                <span>{{ choice.vars.label|trans }}</span>
+              </label>
+            {% endfor %}
+          </fieldset>
+          <div>
+            <label class="c-cnews-report__label" for="{{ report_form.note.vars.id }}" data-report-note-label
+                   data-optional="{{ 'communitynews.report.note'|trans }}" data-required="{{ 'communitynews.report.note.required'|trans }}">{{ 'communitynews.report.note'|trans }}</label>
+            {{ form_widget(report_form.note, {attr: {class: 'o-input', 'data-report-note': ''}}) }}
+          </div>
+          <p class="c-cnews-report__help">{{ 'communitynews.report.help'|trans }}</p>
+        </div>
+        <div class="c-cnews-report__actions">
+          <button type="button" class="o-button o-button--outline-gray" data-micromodal-close>{{ 'cancel'|trans }}</button>
+          <button type="submit" class="o-button" data-report-submit disabled><i class="fas fa-flag" aria-hidden="true"></i> {{ 'communitynews.report'|trans }}</button>
+        </div>
+      {{ form_end(report_form) }}
+    </div>
+  </div>
+</div>

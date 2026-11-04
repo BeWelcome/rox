@@ -79,7 +79,7 @@ class CommunityNews
      * One news has many comments.
      */
     #[ORM\OneToMany(targetEntity: CommunityNewsComment::class, mappedBy: 'communityNews', fetch: 'EXTRA_LAZY')]
-    #[ORM\OrderBy(['created' => 'DESC'])]
+    #[ORM\OrderBy(['created' => 'ASC', 'id' => 'ASC'])]
     private $comments;
 
     public function __construct()

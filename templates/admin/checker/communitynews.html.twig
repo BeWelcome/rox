@@ -1,65 +1,95 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{#
+  The checkers' community news comments (Admin\CheckerController::showCommunityNewsComments): the comments members
+  reported, the most reported first, with the reasons and notes. Keep clears a comment's reports, Delete removes it,
+  Delete selected the ticked ones. The checker's pages on the left.
+#}
+{% import 'communitynews/_macros.html.twig' as cn %}
+{% set inline_notices = true %}
 
-{% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
+{% block title %}{{ 'admin.checker.communitynews.title'|trans }}{% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('checkAllDelete').addEventListener('click', function () {
-            document.querySelectorAll('input:checkbox.checkableDelete').forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
-    });
-</script>
-{% endblock %}
+  {{ encore_entry_script_tags('communitynews') }}
+{% endblock javascripts %}
 
-{% block content %}
-    {% if reported.nbResults == 0 %}
-        <div class="alert alert-warning">{{ 'admin.checker.no.communitynews.comments' | trans }}</div>
-    {% else %}
-        {{ form_start(form) }}
-        {{ form_errors(form) }}
-        {% if reported.haveToPaginate %}
-            <div class="float-start">
-                {{ pagerfanta( reported, 'rox_default') }}
-            </div>
-        {% endif %}
-        <table class="table table-striped table-hover">
+{% block main %}
+  <main role="main" class="c-cnews">
+    <div class="container-lg c-cnews__admin">
+      <header class="c-cnews-head">
+        <p class="c-page-head__eyebrow">{{ 'admin.checker.eyebrow'|trans }}</p>
+        <h1 class="c-page-head__title">{{ 'admin.checker.communitynews.title'|trans }}</h1>
+      </header>
 
-            <tr>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Created</th>
-                <th>{{ 'delete' | trans }}</th>
-            </tr>
-            <tr>
-                <th colspan="3"></th>
-                <th><input type="checkbox" id="checkAllDelete"></th>
-            </tr>
-        {% for comment in reported.currentPageResults %}
-            <tr>
-                <td><a href="{{ url('communitynews_show', {'id': comment.id}) }}">{{ comment.title|purify }}</a><br><small>{{ comment.text|truncate(50) }}</small></td>
-                <td class="u:flex u:flex-col u:place-items-center">{{ macros.roundedavatarstack(comment.author.username) }}</td>
-                <td>{{ comment.created | format_datetime('short', 'short') }}</td>
-                <td>{{ form_widget(form.spamComments[loop.index0], {'attr': {'class': 'checkableDelete'}}) }}</td>
-            </tr>
-        {% endfor %}
-        </table>
-        <div class="row">
-            <div class="col-12 text-end">
-                <button type="submit" class="btn btn-primary">{{ 'button.delete' | trans }}</button>
+      <div class="c-cnews-checker">
+        <nav class="c-cnews-card c-cnews-menu" aria-label="{{ 'admin.checker.eyebrow'|trans }}">
+          <p class="c-cnews-eyebrow">{{ 'admin.checker.eyebrow'|trans }}</p>
+          <ul>
+            {% for key, item in menu %}
+              <li>
+                <a class="c-cnews-menu__item{{ key == active ? ' is-active' }}" href="{{ item.url }}"{% if key == active %} aria-current="page"{% endif %}>
+                  <i class="fas fa-{{ item.icon }} fa-fw" aria-hidden="true"></i><span>{{ item.key|trans }}</span>
+                  {% if key == 'community_news' and open > 0 %}<span class="c-cnews-menu__count">{{ open }}</span>{% endif %}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        </nav>
+
+        <section class="c-cnews-checker__main">
+          {% include 'admin/massmail/_flash.html.twig' %}
+          <p class="c-cnews-checker__intro">{{ 'admin.checker.communitynews.intro'|trans }}</p>
+          {% if reported.nbResults == 0 %}
+            <div class="c-cnews-card c-cnews-empty">
+              <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-flag"></i></span>
+              <p class="c-cnews-empty__title">{{ 'admin.checker.communitynews.none'|trans }}</p>
+              <p class="c-cnews-empty__text">{{ 'admin.checker.communitynews.none.text'|trans }}</p>
             </div>
-        </div>
-        {% if reported.haveToPaginate %}
-            <div class="float-start">
-                {{ pagerfanta( reported, 'rox_default') }}
-            </div>
-        {% endif %}
-        {{ form_rest(form) }}
-        {{ form_end(form) }}
-    {% endif %}
-{% endblock %}
+          {% else %}
+            <form method="post" class="c-cnews-card c-cnews-reported" data-select-form>
+              <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\Admin\\CheckerController::COMMUNITY_NEWS_TOKEN')) }}">
+              <div class="c-cnews-reported__bar">
+                <label class="c-cnews-reported__all">
+                  <input type="checkbox" data-select-all>
+                  <span data-select-label data-none="{{ 'admin.checker.communitynews.select.all'|trans }}" data-some="{{ 'admin.checker.communitynews.selected'|trans({count: '#'}) }}">{{ 'admin.checker.communitynews.select.all'|trans }}</span>
+                </label>
+                <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small" data-select-submit disabled><i class="fas fa-trash" aria-hidden="true"></i>{{ 'admin.checker.communitynews.delete.selected'|trans }}</button>
+              </div>
+              <ul class="c-cnews-reported__rows">
+                {% for comment in reported %}
+                  {% set _reasons = {} %}
+                  {% for report in comment.reports %}{% set _reasons = _reasons|merge({(report.reason): (_reasons[report.reason] ?? 0) + 1}) %}{% endfor %}
+                  {% set _notes = comment.reports|filter(r => r.note)|map(r => r.note) %}
+                  <li class="c-cnews-reported__row">
+                    <input type="checkbox" name="ids[]" value="{{ comment.id }}" aria-label="{{ 'admin.checker.communitynews.select'|trans }}" data-select-one>
+                    <img class="c-cnews-comment__avatar" src="{{ path('avatar', {username: comment.author.username, size: 96}) }}" alt="" width="52" height="52" loading="lazy">
+                    <div class="c-cnews-reported__main">
+                      <p class="c-cnews-comment__head">
+                        <a class="c-cnews-comment__author" href="{{ path('members_profile', {username: comment.author.username}) }}">{{ comment.author.username }}</a>
+                        · <span class="c-cnews-comment__date">{{ comment.created.diffForHumans }}</span>
+                        <span class="c-tag c-tag--orange c-cnews-reported__count"><i class="fas fa-flag" aria-hidden="true"></i>{{ 'admin.checker.communitynews.reports'|trans({count: comment.reports|length}) }}</span>
+                      </p>
+                      <div class="c-cnews-comment__text">{{ cn.text(comment.text) }}</div>
+                      <p class="c-cnews-reported__reasons"><strong>{{ 'admin.checker.communitynews.reason'|trans }}</strong>
+                        {% for reason, count in _reasons %}{{ ('communitynews.report.reason.' ~ reason)|trans }}{% if count > 1 %} ({{ count }}){% endif %}{{ not loop.last ? ', ' }}{% endfor %}
+                      </p>
+                      {% for note in _notes %}<p class="c-cnews-reported__note">“{{ note }}”</p>{% endfor %}
+                      <p class="c-cnews-reported__on">{{ 'admin.checker.communitynews.on'|trans }} <a href="{{ path('communitynews_show', {id: comment.communityNews.id}) }}#comment-{{ comment.id }}">{{ comment.communityNews.title }}</a></p>
+                    </div>
+                    <div class="c-cnews-reported__actions">
+                      <button type="submit" name="keep" value="{{ comment.id }}" class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small"><i class="fas fa-check" aria-hidden="true"></i>{{ 'admin.checker.communitynews.keep'|trans }}</button>
+                      <button type="submit" name="delete" value="{{ comment.id }}" class="c-cadmin-btn c-cnews-btn-small"><i class="fas fa-trash" aria-hidden="true"></i>{{ 'admin.checker.communitynews.delete'|trans }}</button>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </form>
+            {% if reported.haveToPaginate %}
+              <div class="c-cadmin__pager">{{ pagerfanta(reported, 'rox_default') }}</div>
+            {% endif %}
+          {% endif %}
+        </section>
+      </div>
+    </div>
+  </main>
+{% endblock main %}

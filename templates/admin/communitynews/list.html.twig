@@ -1,69 +1,71 @@
-{% import 'macros.twig' as macros %}
 {% extends 'base.html.twig' %}
+{#
+  The news admin's list (Admin\CommunityNewsController::showOverviewAction): the news as cards, filtered by All,
+  Published and Hidden, with Edit and Hide or Publish. Reported comments are the checkers' (CheckerController).
+#}
+{% set inline_notices = true %}
+{% set _filters = {all: 'admin.communitynews.filter.all', published: 'admin.communitynews.filter.published', hidden: 'admin.communitynews.filter.hidden'} %}
 
-{% block title %}
-    {{ 'bewelcome_news.header.all' | trans }}
-{% endblock %}
+{% block title %}{{ 'admin.communitynews.title'|trans }}{% endblock %}
 
-{% block content %}
-    <h1>{{ 'bewelcome_news.header' | trans }}</h1>
+{% block main %}
+  <main role="main" class="c-cnews">
+    <div class="container-lg c-cnews__admin">
+      <header class="c-cnews-head">
+        <p class="c-page-head__eyebrow">{{ 'admin.communitynews.eyebrow'|trans }}</p>
+        <h1 class="c-page-head__title">{{ 'admin.communitynews.title'|trans }}</h1>
+      </header>
+      {% include 'admin/massmail/_flash.html.twig' %}
 
-    <div class="u:flex u:justify-end u:mb-24 u:me-16">
-        <a class="o-button" href="{{ path('admin_communitynews_create') }}">{{ 'create' | trans }}</a>
+      <div class="c-cnews-toolbar">
+        <nav class="c-cnews-segments" aria-label="{{ 'admin.communitynews.title'|trans }}">
+          {% for key, label in _filters %}
+            <a class="c-cnews-segments__item{{ filter == key ? ' is-active' }}" href="{{ path('admin_communitynews_overview', key == 'all' ? {} : {show: key}) }}"{% if filter == key %} aria-current="page"{% endif %}>{{ label|trans({count: counts[key]}) }}</a>
+          {% endfor %}
+        </nav>
+        <a class="c-cadmin-btn c-cadmin-btn--primary" href="{{ path('admin_communitynews_create') }}"><i class="fas fa-plus" aria-hidden="true"></i>{{ 'admin.communitynews.create'|trans }}</a>
+      </div>
+
+      {% if communityNews.nbResults == 0 %}
+        <p class="c-cnews-card c-cadmin__empty"><i class="fas fa-newspaper" aria-hidden="true"></i>{{ 'admin.communitynews.none'|trans }}</p>
+      {% else %}
+        <ul class="c-cnews-posts">
+          {% for news in communityNews %}
+            <li class="c-cnews-card c-cnews-post{{ news.public ? '' : ' is-hidden' }}">
+              <div class="c-cnews-post__main">
+                {% if news.public %}
+                  <span class="c-tag c-tag--green"><i class="fas fa-eye" aria-hidden="true"></i>{{ 'admin.communitynews.published.tag'|trans }}</span>
+                {% else %}
+                  <span class="c-tag"><i class="fas fa-eye-slash" aria-hidden="true"></i>{{ 'admin.communitynews.hidden.tag'|trans }}</span>
+                {% endif %}
+                <h2 class="c-cnews-post__title"><a href="{{ path('communitynews_show', {id: news.id}) }}">{{ news.title }}</a></h2>
+                <p class="c-cnews-post__excerpt">{{ news.text|striptags|replace({'&nbsp;': ' '})|slice(0, 400) }}</p>
+                <p class="c-cnews-post__meta">
+                  {% if news.createdBy %}
+                    <img src="{{ path('avatar', {username: news.createdBy.username, size: 48}) }}" alt="" width="24" height="24" loading="lazy">
+                    <a href="{{ path('members_profile', {username: news.createdBy.username}) }}">{{ news.createdBy.username }}</a> ·
+                  {% endif %}
+                  {% if news.createdAt %}{{ news.createdAt.diffForHumans }} · {% endif %}
+                  <span><i class="far fa-comment" aria-hidden="true"></i> {{ 'communitynews.comments.count'|trans({count: comments[news.id] ?? 0}) }}</span>
+                </p>
+              </div>
+              <div class="c-cnews-post__actions">
+                <a class="c-cadmin-btn c-cnews-btn-small" href="{{ path('admin_communitynews_edit', {id: news.id}) }}"><i class="fas fa-pen" aria-hidden="true"></i>{{ 'admin.communitynews.edit'|trans }}</a>
+                <form method="post" action="{{ path(news.public ? 'admin_communitynews_hide' : 'admin_communitynews_unhide', {id: news.id}) }}">
+                  <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\Admin\\CommunityNewsController::TOKEN')) }}">
+                  <input type="hidden" name="return" value="{{ app.request.requestUri }}">
+                  <button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small">
+                    <i class="fas fa-{{ news.public ? 'eye-slash' : 'eye' }}" aria-hidden="true"></i>{{ (news.public ? 'admin.communitynews.hide' : 'admin.communitynews.publish')|trans }}
+                  </button>
+                </form>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+        {% if communityNews.haveToPaginate %}
+          <div class="c-cadmin__pager">{{ pagerfanta(communityNews, 'rox_default') }}</div>
+        {% endif %}
+      {% endif %}
     </div>
-
-    {% if communityNews.haveToPaginate %}
-        <div class="u:flex u:justify-end u:my-8">
-            {{ pagerfanta( communityNews, 'rounded_pagination', { routeName: 'admin_communitynews_overview' }) }}
-        </div>
-    {% endif %}
-
-
-    {% for news in communityNews %}
-    <div class="u:flex u:justify-between u:bg-gray-5 u:p-16 u:rounded-8 u:my-16">
-        <div>
-            <div class="u:flex u:justify-start u:items-center">
-                <div class="o-avatar o-avatar--m u:mt-8 u:me-16">
-                    {{ macros.roundedavatarstack( news.createdBy.Username, 72) }}
-                </div>
-                <div class="u:place-self-center u:w-full">
-                    <p class="u:text-20 u:md:text-28 u:font-700"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ news.title }}</a></p>
-                    <small class="u:mb-8 u:text-gray-65">
-                        <i class="fa fa-fw fa-clock u:me-2"></i>
-                        {{ news.createdAt.DiffForHumans }}
-                        {% if news.updatedBy and news.updatedBy.Username != news.createdBy.Username %}
-                            <br><i class="fa fa-fw fa-pen u:me-2"></i>{{ 'bewelcome_news.lastupdater' | trans}}
-                            {{ macros.profilelink( news.updatedBy.Username ) }}
-                            {{ news.updatedAt.DiffForHumans }}
-                        {% endif %}
-                    </small>
-                </div>
-            </div>    
-            <div class="u:ms-8 u:my-16 u:me-16">
-                {{ news.text | truncate(50) | raw }}
-            </div>        
-            <p class="u:ms-8 u:my-16 u:me-16"><a href="{{ url('communitynews_show', { id: news.id} ) }}">{{ 'label.read.more' | trans }}</a> (<span class="text-muted">{% trans with {'%commentsCount%': news.comments|length} %}bewelcome_news.nrcomments{% endtrans %}</span>)
-            </p>
-        </div>
-        <div>
-            <div class="u:flex u:flex-col u:justify-end u:ps-4">
-                <a class="o-button u:mb-8" href="{{ path('admin_communitynews_edit', { id: news.id }) }}"><i class="fa fa-pencil-alt" title="{{ 'button.edit' | trans }}"></i>
-                </a>
-                {%- if news.public == true -%}
-                    <a class="o-button" href="{{ path('admin_communitynews_hide', { id: news.id }) }}"><i class="fa fa-check" title="{{ 'admin.checker.communitynews.hide' | trans }}"></i>
-                    </a>
-                {%- else -%}
-                    <a class="o-button o-button--outline" href="{{ path('admin_communitynews_unhide', { id: news.id }) }}"><i class="fa fa-ban" title="{{ 'admin.checker.communitynews.show' | trans }}"></i>
-                    </a>
-                {%- endif -%}
-            </div>
-        </div>
-    </div>
-    {% endfor %}
-
-    {% if communityNews.haveToPaginate %}
-        <div class="u:flex u:justify-end u:my-8">
-            {{ pagerfanta( communityNews, 'rounded_pagination', { routeName: 'admin_communitynews_overview' }) }}
-        </div>
-    {% endif %}
-{% endblock content %}
+  </main>
+{% endblock main %}

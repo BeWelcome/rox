@@ -11,6 +11,8 @@ namespace App\Entity;
 use App\Repository\CommunityNewsCommentRepository;
 use Carbon\Carbon;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -65,6 +67,31 @@ class CommunityNewsComment
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     private $id;
+
+    /** A reply's comment; null for a comment on the news itself. */
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'replies')]
+    #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    private ?CommunityNewsComment $parent = null;
+
+    /** @var Collection<int, CommunityNewsComment> */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
+    #[ORM\OrderBy(['created' => 'ASC', 'id' => 'ASC'])]
+    private Collection $replies;
+
+    /** When a checker removed the comment; it stays, without its text, for its replies. */
+    #[ORM\Column(name: 'deleted', type: 'datetime', nullable: true)]
+    private ?DateTime $deleted = null;
+
+    /** @var Collection<int, CommunityNewsCommentReport> */
+    #[ORM\OneToMany(targetEntity: CommunityNewsCommentReport::class, mappedBy: 'comment')]
+    #[ORM\OrderBy(['created' => 'ASC'])]
+    private Collection $reports;
+
+    public function __construct()
+    {
+        $this->replies = new ArrayCollection();
+        $this->reports = new ArrayCollection();
+    }
 
     /**
      * Get created.
@@ -167,6 +194,56 @@ class CommunityNewsComment
         $this->author = $author;
 
         return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommunityNewsComment>
+     */
+    public function getReplies(): Collection
+    {
+        return $this->replies;
+    }
+
+    public function getDeleted(): ?DateTime
+    {
+        return $this->deleted;
+    }
+
+    public function isDeleted(): bool
+    {
+        return null !== $this->deleted;
+    }
+
+    /**
+     * Removes the comment but keeps its place for its replies: no text, no title.
+     */
+    public function markDeleted(): self
+    {
+        $this->deleted = new DateTime();
+        $this->title = '';
+        $this->text = '';
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CommunityNewsCommentReport>
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
     }
 
     /**

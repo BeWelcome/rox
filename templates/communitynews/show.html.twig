@@ -1,97 +1,93 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{#
+  A community news with its comments (CommunityNewsController::showAction): the article, the comment form, the
+  threads (CommunityNewsModel::getThread: replies right after their comment, indented up to two levels, deeper ones
+  name whom they answer), one reply box the script moves under the comment answered, and the report dialog.
+#}
+{% import 'communitynews/_macros.html.twig' as cn %}
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
+{% block title %}{{ communityNews.title }} · {{ 'communitynews.eyebrow'|trans }}{% endblock %}
 
-{% block title %}
-    {{ 'bewelcome_news.header' | trans }}
-{% endblock %}
+{% block javascripts %}
+  {{ encore_entry_script_tags('communitynews') }}
+{% endblock javascripts %}
 
-{% block content %}
-    <div class="community-news-wrapper u:bg-gray-5 u:p-16 u:rounded-8 u:my-16">
-        <div class="u:flex u:justify-start u:items-center">
-            <div class="u:ms-auto u:shrink-0 u:me-16">
-                <a href="{{ url( 'communitynews' ) }}">
-                    <i class="fa fa-chevron-left"></i>
-                </a>
+{% block main %}
+  <main role="main" class="c-cnews">
+    <div class="c-cnews__narrow">
+      <a class="c-cnews__back" href="{{ path('communitynews') }}"><i class="fas fa-arrow-left" aria-hidden="true"></i>{{ 'communitynews.back'|trans }}</a>
+      {% include 'communitynews/_article.html.twig' with {news: communityNews} %}
+
+      <section class="c-cnews-comments" aria-labelledby="c-cnews-comments-title">
+        <h2 class="c-cnews-comments__title" id="c-cnews-comments-title">{{ 'communitynews.comments.count'|trans({count: comments_count}) }}</h2>
+
+        {{ form_start(form, {attr: {class: 'c-cnews-card c-cnews-write', novalidate: 'novalidate', 'data-comment-form': ''}}) }}
+          <img class="c-cnews-write__avatar" src="{{ path('avatar', {username: app.user.username, size: 96}) }}" alt="" width="40" height="40">
+          <div class="c-cnews-write__main">
+            <label class="u:sr-only" for="{{ form.text.vars.id }}">{{ 'communitynews.comment.label'|trans }}</label>
+            {{ form_widget(form.text, {attr: {class: 'o-input', 'data-needs-text': ''}}) }}
+            {% for error in form.text.vars.errors %}<p class="c-massmail-form__errors">{{ error.message|trans }}</p>{% endfor %}
+            {{ form_widget(form.parent) }}
+            <div class="c-cnews-write__actions">
+              <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small" data-needs-text-button>{{ 'communitynews.comment.post'|trans }}</button>
             </div>
+          </div>
+        {{ form_end(form) }}
 
-            <div class="o-avatar o-avatar--m u:mt-8 u:me-16">
-                {{ macros.roundedavatarstack( communityNews.createdBy.Username, 72) }}
-            </div>
-            <div class="u:place-self-center u:w-full">
-                <p class="u:text-20 u:md:text-28 u:font-700">{{ communityNews.title }}</p>
-                <small class="u:mb-8 u:text-gray-65">
-                    <i class="fa fa-fw fa-clock u:me-2"></i>
-                    {{ communityNews.createdAt.DiffForHumans }}
-                    {% if communityNews.updatedBy and communityNews.updatedBy.Username != communityNews.createdBy.Username %}<br>
-                        <i class="fa fa-fw fa-pen u:me-2"></i>
-                        {{ 'bewelcome_news.lastupdater' | trans}}
-                        {{ macros.profilelink( communityNews.updatedBy.Username ) }}
-                        {{ communityNews.updatedAt.DiffForHumans }}
+        {% if thread is not empty %}
+          <ol class="c-cnews-card c-cnews-thread">
+            {% for item in thread %}
+              {% set comment = item.comment %}
+              <li class="c-cnews-comment{{ item.depth == 0 ? ' is-top' : ' is-reply' }} c-cnews-comment--indent-{{ item.indent }}" id="comment-{{ comment.id }}">
+                {% if comment.deleted %}
+                  <p class="c-cnews-comment__removed"><i class="fas fa-comment-slash" aria-hidden="true"></i>{{ 'communitynews.comment.removed'|trans }}</p>
+                {% else %}
+                  {% set _author = comment.author.username %}
+                  <img class="c-cnews-comment__avatar" src="{{ path('avatar', {username: _author, size: 96}) }}" alt="" width="40" height="40" loading="lazy">
+                  <div class="c-cnews-comment__main">
+                    <p class="c-cnews-comment__head">
+                      <a class="c-cnews-comment__author" href="{{ path('members_profile', {username: _author}) }}">{{ _author }}</a>
+                      · <span class="c-cnews-comment__date">{{ comment.created.diffForHumans }}</span>
+                    </p>
+                    {% if item.depth > item.indent and comment.parent and not comment.parent.deleted %}
+                      <p class="c-cnews-comment__to"><i class="fas fa-reply fa-rotate-180" aria-hidden="true"></i>{{ 'communitynews.comment.to'|trans }} <a href="#comment-{{ comment.parent.id }}">{{ comment.parent.author.username }}</a></p>
                     {% endif %}
-                </small>
-            </div>
-        </div>
-
-        <div class="u:ms-24 u:my-16 u:me-16">
-            {{ communityNews.text| raw }}
-        </div>
-        <div class="u:ms-24 u:me-16">
-            <h4 class="font-weight-bold">{% set commentsCount = communityNews.comments | length %}{% trans %}%commentsCount% comments{% endtrans %}</h4>
-        </div>
+                    <div class="c-cnews-comment__text">{{ cn.text(comment.text) }}</div>
+                    <div class="c-cnews-comment__actions">
+                      <button type="button" class="c-cnews-action c-cnews-action--reply" data-reply-to="{{ comment.id }}" data-reply-name="{{ _author }}"><i class="fas fa-reply" aria-hidden="true"></i>{{ 'communitynews.comment.reply'|trans }}</button>
+                      {% if comment.author != app.user %}
+                        {% if reported[comment.id] is defined %}
+                          <span class="c-cnews-action c-cnews-action--reported"><i class="fas fa-flag" aria-hidden="true"></i>{{ 'communitynews.report.thanks'|trans }}</span>
+                        {% else %}
+                          <button type="button" class="c-cnews-action c-cnews-action--report" data-report="{{ path('communitynews_comment_report', {id: comment.id}) }}" data-report-name="{{ _author }}" data-report-text="{{ comment.text|striptags|slice(0, 140) }}{{ comment.text|striptags|length > 140 ? '…' }}" data-report-avatar="{{ path('avatar', {username: _author, size: 48}) }}"><i class="far fa-flag" aria-hidden="true"></i>{{ 'communitynews.report'|trans }}</button>
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                  </div>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ol>
+        {% endif %}
+      </section>
     </div>
 
-
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        <div>
-            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-            <div class="u:mb-24 u:relative">
-                {{ form_widget(form.title) }}
-                <div class="u:block">{{ form_errors(form.title) }}</div>
-            </div>
-            <div class="u:mb-24 u:relative">
-                {{ form_widget(form.text) }}
-                <div class="u:block">{{ form_errors(form.text) }}</div>
-            </div>
-            {{ form_end(form) }}
+    {# the reply box: the script moves it under the comment answered and sets the parent #}
+    <form method="post" action="{{ path('communitynews_show', {id: communityNews.id}) }}" class="c-cnews-reply" hidden data-reply-form novalidate>
+      <input type="hidden" name="{{ form._token.vars.full_name }}" value="{{ form._token.vars.value }}">
+      <input type="hidden" name="{{ form.parent.vars.full_name }}" value="" data-reply-parent>
+      <img class="c-cnews-reply__avatar" src="{{ path('avatar', {username: app.user.username, size: 96}) }}" alt="" width="36" height="36">
+      <div class="c-cnews-reply__main">
+        <p class="c-cnews-reply__to">{{ 'communitynews.reply.to'|trans }} <strong data-reply-name></strong></p>
+        <label class="u:sr-only" for="c-cnews-reply-text">{{ 'communitynews.reply.placeholder'|trans }}</label>
+        <textarea class="o-input" id="c-cnews-reply-text" name="{{ form.text.vars.full_name }}" rows="2" placeholder="{{ 'communitynews.reply.placeholder'|trans }}" data-needs-text></textarea>
+        <div class="c-cnews-write__actions">
+          <button type="button" class="o-button o-button--outline-gray o-button--s" data-reply-cancel>{{ 'cancel'|trans }}</button>
+          <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small" data-needs-text-button>{{ 'communitynews.comment.reply'|trans }}</button>
         </div>
+      </div>
+    </form>
 
-        {% if comments.haveToPaginate %}
-            <div class="u:flex u:justify-end u:my-8">
-                {{ pagerfanta( comments, 'rounded_pagination') }}
-            </div>
-        {% endif %}
-
-        {% for comment in comments.currentPageResults %}
-            <div class="u:bg-gray-5 u:p-16 u:rounded-8 u:my-24">
-                <div class="u:flex u:justify-start u:items-center">
-                    <div class="o-avatar o-avatar--s o-avatar--noname u:me-16">
-                        {{ macros.roundedavatarstack( comment.author.Username, 50) }}
-                    </div>
-                    <div class="u:place-self-center u:w-full">
-                        <p class="u:text-20 u:md:text-28 u:font-700">{{ comment.title }}</p>
-                        <small class="u:mb-8 u:text-gray-65">
-                            {{ macros.profilelink( comment.author.Username ) }}
-                            <i class="fa fa-fw fa-clock u:me-2"></i>
-                            {{ comment.created.DiffForHumans | trans }}
-
-                        </small>
-                    </div>
-                </div>
-                <div class="u:my-16 u:me-16 u:ms-4">
-                    {{ comment.text | raw }}
-                </div>
-            </div>
-        {% endfor %}
-
-        {% if comments.haveToPaginate %}
-            <div class="u:flex u:justify-end u:my-8">
-                {{ pagerfanta( comments, 'rounded_pagination') }}
-            </div>
-        {% endif %}
-
-    {% endif %}
-{% endblock content %}
+    {% include 'communitynews/_report_dialog.html.twig' %}
+  </main>
+{% endblock main %}

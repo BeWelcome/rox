@@ -1,0 +1,23 @@
+{#
+  A community news as members read it: the article card (communitynews/show.html.twig, and the editor's preview,
+  which fills it from the form: admin/communitynews/editcreate.html.twig).
+  news: the CommunityNews, or null for the preview's empty card
+#}
+<article class="c-cnews-article">
+  <p class="c-page-head__eyebrow">{{ 'communitynews.eyebrow'|trans }}</p>
+  <h1 class="c-cnews-article__title" data-preview-title>{{ news ? news.title }}</h1>
+  <div class="c-cnews-article__byline">
+    {% set _author = news and news.createdBy ? news.createdBy.username : app.user.username %}
+    <img class="c-cnews-article__avatar" src="{{ path('avatar', {username: _author, size: 96}) }}" alt="" width="48" height="48">
+    <div>
+      <p class="c-cnews-article__by">
+        <a class="c-cnews-article__author" href="{{ path('members_profile', {username: _author}) }}">{{ _author }}</a>
+        · <span>{{ news and news.createdAt ? news.createdAt.diffForHumans : 'communitynews.just.now'|trans }}</span>
+      </p>
+      {% if news and news.updatedBy and news.updatedAt and news.updatedBy != news.createdBy %}
+        <p class="c-cnews-article__updated">{{ 'communitynews.updated.by'|trans({username: news.updatedBy.username, date: news.updatedAt.diffForHumans}) }}</p>
+      {% endif %}
+    </div>
+  </div>
+  <div class="c-cnews-article__body" data-preview-text>{{ news ? news.text|purify('news') }}</div>
+</article>

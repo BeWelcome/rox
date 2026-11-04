@@ -44,8 +44,6 @@ class ForumVoter extends Voter
     /** Start a thread in a group's forum. */
     public const string GROUP_POST = 'FORUM_GROUP_POST';
 
-    private const string NOT_ALLOWED_TO_POST = 'NotAllowedToPostInForum';
-
     /** Members who haven't finished the signup or whose account isn't active yet don't post. */
     private const array NOT_ACTIVE_YET = [
         MemberStatusType::AWAITING_MAIL_CONFIRMATION,
@@ -160,7 +158,7 @@ class ForumVoter extends Voter
 
     private function isNotAllowedToPost(Member $member): bool
     {
-        $flag = $this->entityManager->getRepository(Flag::class)->findOneBy(['name' => self::NOT_ALLOWED_TO_POST]);
+        $flag = $this->entityManager->getRepository(Flag::class)->findOneBy(['name' => Flag::NOT_ALLOWED_TO_POST_IN_FORUM]);
         if (null === $flag) {
             return false;
         }

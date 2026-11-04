@@ -1,29 +1,37 @@
 {% extends 'base.html.twig' %}
+{# The rights tool, Overview (Admin\RightsController::overview): the rights the volunteer manages, with their holders #}
+{% set inline_notices = true %}
 
-{% block content %}
-  <h1 class="u:text-24">{{ 'admin.rights.overview'|trans }}</h1>
-  <div class="table-responsive">
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>{{ 'admin.rights.name'|trans }}</th>
-          <th>{{ 'admin.rights.description'|trans }}</th>
-        </tr>
-      </thead>
-      <tbody>
+{% block title %}{{ 'admin.rights.title'|trans }}{% endblock %}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('admin/assignments') }}
+{% endblock javascripts %}
+
+{% block main %}
+  <main role="main" class="c-cadmin">
+    {% include 'admin/rights/_band.html.twig' %}
+
+    <div class="container-lg c-cadmin__body">
+      {% include 'admin/massmail/_flash.html.twig' %}
+      <section class="c-home-card c-radmin-table-card" aria-labelledby="c-radmin-overview-title">
+        <div class="c-card-head">
+          <h2 class="c-card-head__title" id="c-radmin-overview-title">{{ 'admin.rights.title'|trans }}</h2>
+          <span class="c-card-head__note">{{ 'admin.rights.in.scope'|trans }}</span>
+        </div>
         {% for right in rights %}
-          <tr>
-            <td>
-              <a href="{{ url('admin_rights_right', {id: right.id}) }}">{{ right.name }}</a>
-            </td>
-            <td>{{ right.description }}</td>
-          </tr>
+          <a class="c-radmin-overview" href="{{ path('admin_rights_right', {id: right.id}) }}">
+            <span class="c-radmin-overview__text">
+              <span class="c-radmin-overview__name">{{ right.name }}</span>
+              <span class="c-radmin-overview__description">{{ right.description }}</span>
+            </span>
+            <span class="c-tag c-tag--orange" title="{{ 'admin.rights.holders'|trans }}"><i class="fas fa-user" aria-hidden="true"></i>{{ holders[right.id] ?? 0 }}</span>
+            <i class="fas fa-chevron-right c-radmin-overview__go" aria-hidden="true"></i>
+          </a>
         {% else %}
-          <tr>
-            <td colspan="2">{{ 'admin.assignments.none'|trans }}</td>
-          </tr>
+          <p class="c-cadmin__empty c-radmin-empty"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>{{ 'admin.assignments.none'|trans }}</p>
         {% endfor %}
-      </tbody>
-    </table>
-  </div>
-{% endblock content %}
+      </section>
+    </div>
+  </main>
+{% endblock main %}

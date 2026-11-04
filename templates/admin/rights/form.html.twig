@@ -1,29 +1,77 @@
 {% extends 'base.html.twig' %}
+{#
+  The rights tool, Assign and Edit (Admin\RightsController): the member is fixed when the form was opened for them or
+  edits an assignment, the right when it edits one. Errors under their fields; the hint shows the chosen right.
+#}
+{% set inline_notices = true %}
+
+{% block title %}{{ 'admin.rights.title'|trans }}{% endblock %}
 
 {% block javascripts %}
-  {% if autocomplete|default(false) %}
-    {{ encore_entry_script_tags('member/autocomplete') }}
-  {% endif %}
+  {{ encore_entry_script_tags('admin/assignments') }}
 {% endblock javascripts %}
 
-{% block content %}
-  <h1 class="u:text-24">{{ headline|trans }}</h1>
-  <div class="row">
-    <div class="col-12 col-lg-8">
-      {{ form_start(form) }}
-        {{ form_errors(form) }}
-        {% if form.username is defined %}
-          {{ form_row(form.username) }}
-          {{ form_row(form.right) }}
-          {{ form_row(form.level) }}
-          {{ form_row(form.scope) }}
-          {{ form_row(form.comment) }}
-        {% else %}
-          {{ form_row(form.name) }}
-          {{ form_row(form.description) }}
-        {% endif %}
-        {{ form_row(form.submit) }}
-      {{ form_end(form) }}
-    </div>
+{# A field: label, input, help and its errors (translated here: the keys of RightAssignmentType and the controller) #}
+{% macro field(field) %}
+  <div class="o-form-group">
+    {{ form_label(field) }}
+    {{ form_widget(field, {attr: field.vars.attr|merge({class: ((field.vars.attr.class ?? '') ~ ' o-input')|trim})}) }}
+    {{ form_help(field) }}
+    {% if field.vars.errors|length > 0 %}
+      <ul class="c-massmail-form__errors">
+        {% for error in field.vars.errors %}<li>{{ error.message|trans }}</li>{% endfor %}
+      </ul>
+    {% endif %}
   </div>
-{% endblock content %}
+{% endmacro %}
+
+{% block main %}
+  <main role="main" class="c-cadmin">
+    {% include 'admin/rights/_band.html.twig' with {tab_member: member ? member.username : null} %}
+
+    <div class="container-lg c-cadmin__body">
+      {% include 'admin/massmail/_flash.html.twig' %}
+      {% if member and return %}
+        <a class="c-page-head__back" href="{{ return }}"><i class="fas fa-arrow-left" aria-hidden="true"></i>{{ member.username }}</a>
+      {% endif %}
+      <section class="c-home-card c-radmin-form-card" aria-labelledby="c-radmin-form-title">
+        <div class="c-card-head">
+          <h2 class="c-card-head__title" id="c-radmin-form-title">{{ (editing ? 'admin.rights.edit' : 'admin.rights.assign.title')|trans }}</h2>
+        </div>
+        {{ form_start(form, {attr: {class: 'c-massmail-form', novalidate: 'novalidate'}}) }}
+          {% if editing %}<input type="hidden" name="return" value="{{ return }}">{% endif %}
+          {{ form_errors(form) }}
+          <div class="c-massmail-form__pair">
+            {{ _self.field(form.username) }}
+            {% if editing %}
+              {# the right can't change: its name, not the select #}
+              <div class="o-form-group">
+                <label class="form-label" for="c-radmin-right">{{ 'admin.rights.right'|trans }}</label>
+                <input type="text" id="c-radmin-right" class="o-input" value="{{ right.name }}" disabled>
+              </div>
+              {% do form.right.setRendered() %}
+            {% else %}
+              {{ _self.field(form.right) }}
+            {% endif %}
+          </div>
+          <div class="c-radmin-form__level">
+            {{ _self.field(form.level) }}
+            {{ _self.field(form.scope) }}
+          </div>
+          {{ _self.field(form.comment) }}
+          <div class="c-hint c-radmin-hint"{% if not right %} hidden{% endif %} data-right-hint>
+            <span class="c-hint__icon" aria-hidden="true"><i class="fas fa-circle-info"></i></span>
+            <span>
+              <span class="c-hint__title" data-right-hint-name>{{ right ? right.name }}</span>
+              <span class="c-hint__muted" data-right-hint-text>{{ right ? right.description }}</span>
+            </span>
+          </div>
+          <div class="c-massmail-form__actions">
+            <button type="submit" class="o-button">{{ (editing ? 'admin.rights.save' : 'admin.rights.assign.button')|trans }}</button>
+            <a class="o-button o-button--outline-gray" href="{{ return ?? path('admin_rights_members') }}">{{ 'cancel'|trans }}</a>
+          </div>
+        {{ form_end(form) }}
+      </section>
+    </div>
+  </main>
+{% endblock main %}

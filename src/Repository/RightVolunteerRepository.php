@@ -46,19 +46,129 @@ class RightVolunteerRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string[] $allowedRightNames
+     * The assignments of the rights tool's By right view: by right, then username; with the removed ones (level 0)
+     * when $includeHistory.
+     *
+     * @param string[] $allowedRightNames the rights the volunteer manages
      */
     public function paginateAssignments(
         array $allowedRightNames,
         ?string $username,
         ?int $rightId,
         bool $includeHistory,
-        bool $memberFirst,
         int $page,
         int $itemsPerPage,
     ): Pagerfanta {
-        $connection = $this->getEntityManager()->getConnection();
-        $query = $connection->createQueryBuilder()
+        $query = $this->assignmentsQuery($allowedRightNames)
+            ->orderBy('r.Name', 'ASC')
+            ->addOrderBy('m.Username', 'ASC');
+        if (null !== $username && '' !== $username) {
+            $query->andWhere('m.Username LIKE :username')
+                ->setParameter('username', '%' . addcslashes($username, '%_\\') . '%');
+        }
+        if (null !== $rightId) {
+            $query->andWhere('r.id = :rightId')
+                ->setParameter('rightId', $rightId);
+        }
+        if (!$includeHistory) {
+            $query->andWhere('rv.Level <> 0');
+        }
+
+        return $this->paginate($query, 'COUNT(DISTINCT rv.id)', $page, $itemsPerPage);
+    }
+
+    /**
+     * The members of the rights tool's By member view: everyone with an assignment of a right the volunteer manages
+     * (also removed ones), by username. With a right, only its current holders.
+     *
+     * @param string[] $allowedRightNames
+     *
+     * @return Pagerfanta<array<string, mixed>> member_id, username, status, last_active, place_name, country_name
+     */
+    public function paginateMembers(
+        array $allowedRightNames,
+        ?string $username,
+        ?int $rightId,
+        int $page,
+        int $itemsPerPage,
+    ): Pagerfanta {
+        $query = $this->assignmentsQuery($allowedRightNames)
+            ->select(
+                'm.id AS member_id',
+                'm.Username AS username',
+                'm.Status AS status',
+                'm.LastActive AS last_active',
+                'place.name AS place_name',
+                'country.name AS country_name',
+            )
+            ->groupBy('m.id', 'm.Username', 'm.Status', 'm.LastActive', 'place.name', 'country.name')
+            ->orderBy('m.Username', 'ASC');
+        if (null !== $username && '' !== $username) {
+            $query->andWhere('m.Username LIKE :username')
+                ->setParameter('username', '%' . addcslashes($username, '%_\\') . '%');
+        }
+        if (null !== $rightId) {
+            $query->andWhere('r.id = :rightId AND rv.Level <> 0')
+                ->setParameter('rightId', $rightId);
+        }
+
+        return $this->paginate($query, 'COUNT(DISTINCT m.id)', $page, $itemsPerPage);
+    }
+
+    /**
+     * Every assignment of the given members, of the rights the volunteer manages: by member, current ones first,
+     * then by right.
+     *
+     * @param string[] $allowedRightNames
+     * @param int[]    $memberIds
+     *
+     * @return list<array<string, mixed>> the columns of assignmentsQuery()
+     */
+    public function findAssignmentsOfMembers(array $allowedRightNames, array $memberIds): array
+    {
+        if ([] === $memberIds) {
+            return [];
+        }
+
+        return $this->assignmentsQuery($allowedRightNames)
+            ->andWhere('m.id IN (:members)')
+            ->setParameter('members', $memberIds, ArrayParameterType::INTEGER)
+            ->orderBy('m.Username', 'ASC')
+            ->addOrderBy('rv.Level = 0', 'ASC')
+            ->addOrderBy('r.Name', 'ASC')
+            ->executeQuery()
+            ->fetchAllAssociative();
+    }
+
+    /**
+     * @param string[] $allowedRightNames
+     *
+     * @return array<int, int> the current holders (active members) per right id
+     */
+    public function countHoldersByRight(array $allowedRightNames): array
+    {
+        $rows = $this->assignmentsQuery($allowedRightNames)
+            ->select('r.id AS right_id', 'COUNT(DISTINCT m.id) AS holders')
+            ->andWhere('rv.Level <> 0')
+            ->groupBy('r.id')
+            ->executeQuery()
+            ->fetchAllAssociative();
+
+        return array_combine(
+            array_map(static fn (array $row): int => (int) $row['right_id'], $rows),
+            array_map(static fn (array $row): int => (int) $row['holders'], $rows),
+        );
+    }
+
+    /**
+     * The assignments with their member (and the member's place) and right, of active members and of the rights the
+     * volunteer manages.
+     *
+     * @param string[] $allowedRightNames
+     */
+    private function assignmentsQuery(array $allowedRightNames): QueryBuilder
+    {
+        $query = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select(
                 'rv.id AS assignment_id',
                 'm.id AS member_id',
@@ -100,35 +210,17 @@ class RightVolunteerRepository extends ServiceEntityRepository
             $query->andWhere('r.Name IN (:rights)')
                 ->setParameter('rights', $allowedRightNames, ArrayParameterType::STRING);
         }
-        if (null !== $username && '' !== $username) {
-            $query->andWhere('m.Username = :username')
-                ->setParameter('username', $username);
-        }
-        if (null !== $rightId) {
-            $query->andWhere('r.id = :rightId')
-                ->setParameter('rightId', $rightId);
-        }
-        if (!$includeHistory) {
-            $query->andWhere('rv.Level <> 0');
-        }
 
-        if ($memberFirst) {
-            $query->orderBy('m.Username', 'ASC')
-                ->addOrderBy('r.Name', 'ASC');
-        } else {
-            $query->orderBy('r.Name', 'ASC')
-                ->addOrderBy('m.Username', 'ASC');
-        }
-
-        return $this->paginate($query, $page, $itemsPerPage);
+        return $query;
     }
 
-    private function paginate(QueryBuilder $query, int $page, int $itemsPerPage): Pagerfanta
+    private function paginate(QueryBuilder $query, string $count, int $page, int $itemsPerPage): Pagerfanta
     {
         $adapter = new QueryAdapter(
             $query,
             static fn (QueryBuilder $countQuery): QueryBuilder => $countQuery
-                ->select('COUNT(DISTINCT rv.id)')
+                ->select($count)
+                ->resetGroupBy()
                 ->resetOrderBy(),
         );
         $pager = new Pagerfanta($adapter);

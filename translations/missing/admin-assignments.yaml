@@ -22,3 +22,6 @@ admin.assignments.edit:
 admin.assignments.remove:
   - 'Remove assignment'
   - 'Accessible label for an assignment removal link.'
+admin.assignments.removed:
+  - Removed
+  - 'Tag of a removed right or flag assignment in the rights and flags tools.'

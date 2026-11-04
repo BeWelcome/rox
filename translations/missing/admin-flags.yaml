@@ -1,57 +1,60 @@
-admin.flags.edit:
-  - 'Edit flag assignment'
-  - 'Heading for editing a member flag.'
-admin.flags.created:
-  - 'Flag %flag% created.'
-  - 'Confirmation after creating a flag. Keep %flag%.'
-admin.flags.assigned:
-  - 'Assigned %flag% to %username%.'
-  - 'Confirmation after assigning a flag. Keep %flag% and %username%.'
-admin.flags.removed:
-  - 'Removed %flag% from %username%.'
-  - 'Confirmation after removing a flag. Keep %flag% and %username%.'
-admin.flags.remove.confirm:
-  - 'Remove %flag% from %username%? The assignment remains in history.'
-  - 'Flag removal confirmation. Keep %flag% and %username%.'
-admin.flags.relevance:
-  - Relevance
-  - 'Column heading for flag relevance.'
-admin.flags.superseded:
-  - Superseded
-  - 'Label for an older flag assignment cycle.'
-admin.flags.list.members:
-  - '@-AdminFlagsListMembers'
-admin.flags.list.flags:
-  - '@-AdminFlagsListFlags'
-admin.flags.member:
-  - '@-AdminFlagsMember'
-admin.flags.flag:
-  - '@-AdminFlagsFlag'
-admin.flags.history:
-  - '@-AdminFlagsHistory'
-admin.flags.level:
-  - '@-AdminFlagsLevel'
-admin.flags.scope:
-  - '@-AdminFlagsScope'
-admin.flags.comment:
-  - '@-AdminFlagsComment'
-admin.flags.overview:
-  - '@-AdminFlagsOverview'
-admin.flags.name:
-  - '@-AdminFlagsName'
-admin.flags.description:
-  - '@-AdminFlagsDescription'
-admin.flags.remove:
-  - '@-AdminFlagsRemove'
-admin.flags.flag.exists:
-  - '@-AdminFlagsFlagExists'
-admin.flags.create:
-  - '@-AdminFlagsCreate'
-admin.flags.flag.edited:
-  - '@-AdminFlagsFlagEdited'
-admin.flags.username.not.existing:
-  - '@-AdminFlagsUsernameNotExisting'
-admin.flags.already.assigned:
-  - '@-AdminFlagsAlreadyAssigned'
-admin.flags.assign:
-  - '@-AdminFlagsAssign'
+admin.flags.title:
+  - Flags
+  - 'Title of the flags list, and its link in the volunteer menu.'
+admin.flags.note:
+  - 'Every {flag} flag ever set. Flags are set and removed in the Admin box of the member''s profile.'
+  - 'Flags list: the note under the title. Keep {flag}.'
+admin.flags.count:
+  - '{count, plural, one {# flag} other {# flags}} · {current} current'
+  - 'Flags list: how many flags the search found and how many of them are current. Keep {count} and {current}.'
+admin.flags.set:
+  - Set
+  - 'Flags list: column heading, when the flag was set.'
+admin.flags.removed.on:
+  - Removed
+  - 'Flags list: column heading, when the flag was removed.'
+admin.flags.remove.title:
+  - 'Remove flag?'
+  - 'Title of the dialog that asks before removing a flag.'
+admin.flags.remove.question:
+  - 'Remove {flag} from {username}? The assignment remains in history.'
+  - 'Text of the dialog that asks before removing a flag. Keep {flag} and {username}.'
+admin.flags.remove.button:
+  - Remove
+  - 'Button that removes a flag (in the dialog, which asks first).'
+admin.flags.block.label:
+  - 'Block forum posting'
+  - 'Admin box of the profile: the switch that blocks the member from writing in forums and groups.'
+admin.flags.blocked.since:
+  - 'Blocked since {date}'
+  - 'Admin box of the profile: the member is blocked from forum posting. Keep {date}.'
+admin.flags.not.blocked:
+  - 'Can write in forums and groups'
+  - 'Admin box of the profile: the member isn''t blocked from forum posting.'
+admin.flags.history.link:
+  - 'Flag history ({count} earlier)'
+  - 'Admin box of the profile: link to the member''s earlier flags. Keep {count}.'
+admin.flags.all:
+  - 'All flags'
+  - 'Admin box of the profile: link to the flags list (the member has no earlier flags).'
+admin.flags.block.title:
+  - 'Block forum posting?'
+  - 'Title of the dialog that blocks a member from forum posting.'
+admin.flags.block.text:
+  - '{username} will be able to read but not write in forums and groups until the flag is removed.'
+  - 'Text of the dialog that blocks a member from forum posting. Keep {username}.'
+admin.flags.block.help:
+  - 'Why the flag is set. Shown to volunteers in the flag list.'
+  - 'Help of the comment field of the dialog that blocks forum posting.'
+admin.flags.block.button:
+  - Block
+  - 'Button of the dialog that blocks a member from forum posting.'
+admin.flags.block.comment.missing:
+  - 'Please say why the flag is set.'
+  - 'Error when blocking forum posting without a comment.'
+admin.flags.assigned.notice:
+  - 'Assigned {flag} to {username}.'
+  - 'Notice after blocking a member from forum posting. Keep {flag} and {username}.'
+admin.flags.removed.notice:
+  - 'Removed {flag} from {username}.'
+  - 'Notice after removing a flag. Keep {flag} and {username}.'

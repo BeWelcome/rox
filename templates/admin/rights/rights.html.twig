@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+{#
+  The rights tool, By right (Admin\RightsController::byRight): the assignments as a table, grouped by right, with the
+  removed ones (history) unless the box is unticked.
+#}
+{% import 'admin/rights/_macros.html.twig' as rm %}
+{% set inline_notices = true %}
+
+{% block title %}{{ 'admin.rights.title'|trans }}{% endblock %}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('admin/assignments') }}
+{% endblock javascripts %}
+
+{% block main %}
+  <main role="main" class="c-cadmin">
+    {% include 'admin/rights/_band.html.twig' %}
+
+    <div class="container-lg c-cadmin__body">
+      {% include 'admin/massmail/_flash.html.twig' %}
+      <section class="c-home-card c-radmin-table-card" aria-label="{{ 'admin.rights.list.rights'|trans }}">
+        <form method="get" action="{{ path('admin_rights_rights') }}" class="c-radmin-bar" data-autosubmit>
+          <input type="search" name="member" class="o-input c-radmin-bar__search" value="{{ filters.member }}" placeholder="{{ 'admin.rights.find.member'|trans }}" aria-label="{{ 'admin.rights.find.member'|trans }}">
+          <select name="right" class="o-input c-radmin-bar__select" aria-label="{{ 'admin.rights.right'|trans }}">
+            <option value="">{{ 'admin.rights.all'|trans }}</option>
+            {% for right in rights %}
+              <option value="{{ right.id }}"{{ filters.right == right.id ? ' selected' }}>{{ right.name }}</option>
+            {% endfor %}
+          </select>
+          <label class="c-radmin-bar__check">
+            <input type="hidden" name="history" value="0">
+            <input type="checkbox" name="history" value="1"{{ filters.history ? ' checked' }}>
+            {{ 'admin.rights.include.history'|trans }}
+          </label>
+          <span class="c-radmin-bar__count">{{ 'admin.rights.assignments.count'|trans({count: assignments.nbResults}) }}</span>
+          <button type="submit" class="u:sr-only">{{ 'admin.assignments.filter'|trans }}</button>
+        </form>
+
+        {% if assignments.nbResults == 0 %}
+          <p class="c-cadmin__empty c-radmin-empty"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>{{ 'admin.assignments.none'|trans }}</p>
+        {% else %}
+          <div class="c-radmin-table">
+            <div class="c-radmin-table__inner c-radmin-table__inner--rights">
+              <div class="c-radmin-table__row c-radmin-table__row--head" role="row">
+                <span>{{ 'admin.rights.member'|trans }}</span>
+                <span>{{ 'admin.rights.comment'|trans }}</span>
+                <span>{{ 'admin.rights.level'|trans }}</span>
+                <span>{{ 'admin.rights.scope'|trans }}</span>
+                <span>{{ 'admin.assignments.updated'|trans }}</span>
+                <span><span class="u:sr-only">{{ 'admin.assignments.actions'|trans }}</span></span>
+              </div>
+              {% set _right = null %}
+              {% set _xmark %}<i class="fas fa-xmark" aria-hidden="true"></i>{% endset %}
+              {% for assignment in assignments %}
+                {% if assignment.definition_id != _right %}
+                  {% set _right = assignment.definition_id %}
+                  <div class="c-hint c-hint--inline c-radmin-group">
+                    <span class="c-hint__icon" aria-hidden="true"><i class="fas fa-key"></i></span>
+                    <span class="c-radmin-group__text">
+                      <a class="c-hint__title c-radmin-group__name" href="{{ path('admin_rights_right', {id: assignment.definition_id}) }}">{{ assignment.definition_name }}</a>
+                      <span class="c-hint__muted">{{ assignment.definition_description }}</span>
+                    </span>
+                    <span class="c-tag c-tag--orange" title="{{ 'admin.rights.holders'|trans }}"><i class="fas fa-user" aria-hidden="true"></i>{{ holders[assignment.definition_id] ?? 0 }}</span>
+                  </div>
+                {% endif %}
+                {% set removed = assignment.level == 0 %}
+                <div class="c-radmin-table__row" role="row">
+                  <a class="c-radmin-member" href="{{ path('admin_rights_member', {username: assignment.username}) }}">
+                    <img class="c-radmin-member__avatar" src="{{ path('avatar', {username: assignment.username, size: 48}) }}" alt="" width="36" height="36" loading="lazy">
+                    <span class="c-radmin-member__text">
+                      <span class="c-radmin-member__name{{ removed ? ' is-removed' }}">{{ assignment.username }}</span>
+                      {% if removed %}{{ rm.removed_tag() }}{% endif %}
+                      <span class="c-radmin-member__place">{{ rm.place(assignment) }}</span>
+                    </span>
+                  </a>
+                  <span class="c-radmin-table__comment">{{ assignment.comment ?: '—' }}</span>
+                  <span>{{ assignment.level }}</span>
+                  {{ rm.scope(assignment.scope, true) }}
+                  <span class="c-radmin-muted">{{ (assignment.updated_at ?? assignment.created_at)|format_date('medium') }}</span>
+                  <span class="c-radmin-table__actions">
+                    <a class="c-radmin-icon" href="{{ path('admin_rights_edit', {id: assignment.definition_id, username: assignment.username, return: app.request.requestUri}) }}" aria-label="{{ 'admin.assignments.edit'|trans }}" title="{{ 'admin.assignments.edit'|trans }}"><i class="fas fa-pen" aria-hidden="true"></i></a>
+                    {% if not removed %}
+                      {{ rm.remove_button('c-radmin-remove', path('admin_rights_remove', {id: assignment.definition_id, username: assignment.username}),
+                        'admin.rights.remove.question'|trans({right: assignment.definition_name, username: assignment.username}),
+                        'c-radmin-icon c-radmin-icon--danger', _xmark, 'admin.assignments.remove'|trans) }}
+                    {% endif %}
+                  </span>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% if assignments.haveToPaginate %}
+            <div class="c-massmail-list__pager">{{ pagerfanta(assignments, 'rox_default') }}</div>
+          {% endif %}
+        {% endif %}
+      </section>
+    </div>
+
+    {{ include('admin/_remove_dialog.html.twig', {id: 'c-radmin-remove', title: 'admin.rights.remove.title'|trans, token: constant('App\\Controller\\Admin\\RightsController::TOKEN'), confirm: 'admin.rights.remove.button'|trans}) }}
+  </main>
+{% endblock main %}

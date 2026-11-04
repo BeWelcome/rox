@@ -34,12 +34,12 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             'route' => 'translations',
         ],
         'flags' => [
-            'trans' => 'AdminFlags',
+            'trans' => 'admin.flags.title',
             'rights' => [Member::ROLE_ADMIN_FLAGS],
             'route' => 'admin_flags',
         ],
         'rights' => [
-            'trans' => 'AdminRights',
+            'trans' => 'admin.rights.title',
             'rights' => [Member::ROLE_ADMIN_RIGHTS],
             'route' => 'admin_rights_members',
         ],

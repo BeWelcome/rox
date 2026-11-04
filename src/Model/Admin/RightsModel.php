@@ -49,13 +49,6 @@ class RightsModel
             || \in_array(strtolower($right->getName()), $scope, true);
     }
 
-    public function canCreate(Member $manager): bool
-    {
-        $scope = $this->getManagementScope($manager);
-
-        return \in_array('all', $scope, true) || \in_array('create', $scope, true);
-    }
-
     public function isScopeWellFormed(string $scope): bool
     {
         $tokens = $this->parseScope($scope);
@@ -114,49 +107,97 @@ class RightsModel
         $this->entityManager->flush();
     }
 
-    public function create(string $name, string $description): ?Right
-    {
-        if (null !== $this->rightRepository->findOneByNameCaseInsensitive($name)) {
-            return null;
-        }
-
-        $right = new Right();
-        $right->setName($name)
-            ->setDescription($description);
-        $this->entityManager->persist($right);
-        $this->entityManager->flush();
-
-        return $right;
-    }
-
     public function findAssignment(Member $member, Right $right): ?RightVolunteer
     {
         return $this->rightVolunteerRepository->findAssignment($member, $right);
     }
 
+    /**
+     * The By right view: assignments by right, then username.
+     */
     public function paginateAssignments(
         Member $manager,
         ?string $username,
         ?int $rightId,
         bool $includeHistory,
-        bool $memberFirst,
         int $page,
         int $itemsPerPage,
     ): Pagerfanta {
-        $allowedNames = array_map(
-            static fn (Right $right): string => $right->getName(),
-            $this->getManagedRights($manager),
-        );
-
         return $this->rightVolunteerRepository->paginateAssignments(
-            $allowedNames,
+            $this->getManagedRightNames($manager),
             $username,
             $rightId,
             $includeHistory,
-            $memberFirst,
             $page,
             $itemsPerPage,
         );
+    }
+
+    /**
+     * The By member view: the members (a page of them), each with their assignments.
+     *
+     * @return array{Pagerfanta<array<string, mixed>>, array<int, list<array<string, mixed>>>} the members and their
+     *                                                                                         assignments by member id
+     */
+    public function paginateMembers(
+        Member $manager,
+        ?string $username,
+        ?int $rightId,
+        int $page,
+        int $itemsPerPage,
+    ): array {
+        $names = $this->getManagedRightNames($manager);
+        $members = $this->rightVolunteerRepository->paginateMembers($names, $username, $rightId, $page, $itemsPerPage);
+        $ids = array_map(
+            static fn (array $row): int => (int) $row['member_id'],
+            iterator_to_array($members->getCurrentPageResults(), false),
+        );
+
+        return [$members, $this->groupByMember($this->rightVolunteerRepository->findAssignmentsOfMembers($names, $ids))];
+    }
+
+    /**
+     * Every assignment of one member, of the rights the volunteer manages: current ones first.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function findAssignmentsOfMember(Member $manager, Member $member): array
+    {
+        return $this->groupByMember($this->rightVolunteerRepository->findAssignmentsOfMembers(
+            $this->getManagedRightNames($manager),
+            [$member->getId()],
+        ))[$member->getId()] ?? [];
+    }
+
+    /**
+     * @return array<int, int> the current holders per right id
+     */
+    public function countHoldersByRight(Member $manager): array
+    {
+        return $this->rightVolunteerRepository->countHoldersByRight($this->getManagedRightNames($manager));
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getManagedRightNames(Member $manager): array
+    {
+        return array_map(static fn (Right $right): string => $right->getName(), $this->getManagedRights($manager));
+    }
+
+    /**
+     * @param list<array<string, mixed>> $assignments
+     *
+     * @return array<int, list<array<string, mixed>>>
+     */
+    private function groupByMember(array $assignments): array
+    {
+        $byMember = [];
+        foreach ($assignments as $assignment) {
+            $byMember[(int) $assignment['member_id']][] = $assignment;
+        }
+
+        return $byMember;
     }
 
     /**

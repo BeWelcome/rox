@@ -62,6 +62,7 @@ Encore
     .addEntry('admin/faqs', './assets/js/admin/faqs.js')
     .addEntry('admin/massmail', './assets/js/admin/massmail.js')
     .addEntry('admin/comments', './assets/js/admin/comments.js')
+    .addEntry('admin/assignments', './assets/js/admin/assignments.js')
     .addEntry('chartjs', './node_modules/chart.js/dist/chart.js')
     .addEntry('offcanvas', './assets/js/offcanvas.js')
     .addEntry('profile/profile', './assets/js/profile/profile.js')

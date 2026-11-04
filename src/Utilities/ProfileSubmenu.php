@@ -337,16 +337,17 @@ class ProfileSubmenu
         }
         if ($this->hasRole($roles, Member::ROLE_ADMIN_RIGHTS)) {
             $this->addSubmenuItem('adminrights', [
-                'key' => 'AdminRights',
+                'key' => 'admin.rights.title',
                 'icon' => 'bed invisible',
                 'url' => $this->routing->generate('admin_rights_member', ['username' => $username]),
             ]);
         }
         if ($this->hasRole($roles, Member::ROLE_ADMIN_FLAGS)) {
             $this->addSubmenuItem('adminflags', [
-                'key' => 'AdminFlags',
+                'key' => 'admin.flags.title',
                 'icon' => 'flag',
-                'url' => $this->routing->generate('admin_flags_member', ['username' => $username]),
+                // the flag switch of the Admin box links to the member's flag history
+                'url' => $this->routing->generate('admin_flags', ['member' => $username]),
             ]);
         }
         if ($this->hasRole($roles, Member::ROLE_ADMIN_LOGS)) {

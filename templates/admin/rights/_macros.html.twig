@@ -1,0 +1,22 @@
+{# The parts of the rights and flags pages #}
+
+{# Where the member lives, from a row of the assignment queries: place, country #}
+{% macro place(row) %}{{ [row.place_name ?? null, row.country_name ?? null]|filter(v => v)|join(', ') }}{% endmacro %}
+
+{# The values of a scope as chips: "DE";"FR" → DE FR (split on ; or , without the quotes) #}
+{% macro scope(scope, small = false) %}
+  {% set values = (scope ?? '')|replace({'"': '', ',': ';'})|split(';')|map(v => v|trim)|filter(v => v is not empty) %}
+  <span class="c-radmin-scope{{ small ? ' c-radmin-scope--small' }}">
+    {% for value in values %}<span class="c-radmin-scope__chip">{{ value }}</span>{% else %}<span class="c-radmin-muted">—</span>{% endfor %}
+  </span>
+{% endmacro %}
+
+{# A remove button that opens the remove dialog (_remove_dialog.html.twig) #}
+{% macro remove_button(dialog, action, text, class, content, label = null) %}
+  <button type="button" class="{{ class }}" data-remove="{{ dialog }}" data-action="{{ action }}" data-text="{{ text }}"{% if label %} aria-label="{{ label }}" title="{{ label }}"{% endif %}>{{ content }}</button>
+{% endmacro %}
+
+{# The username of a removed assignment: struck out, with the Removed tag #}
+{% macro removed_tag() %}
+  <span class="c-tag c-radmin-removed"><i class="fas fa-user-minus" aria-hidden="true"></i>{{ 'admin.assignments.removed'|trans }}</span>
+{% endmacro %}

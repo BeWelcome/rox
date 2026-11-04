@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The group pages that moved from the legacy code: search, my groups, a group's page and members, the pictures.
@@ -281,7 +282,7 @@ final class GroupPagesTest extends WebTestCase
         $crawler = $this->client->request('GET', '/groups/search');
 
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('#groups-near-title', 'Berlin');
+        self::assertSelectorTextContains('#groups-near-title', $this->trans('group.near.title', ['place' => 'Berlin']));
         self::assertSame(['Hiking Enthusiasts'], $crawler->filter('.p-groups-near__name')->each(static fn ($name) => $name->text()));
     }
 
@@ -327,7 +328,7 @@ final class GroupPagesTest extends WebTestCase
         self::assertSelectorExists('.p-groups__tab.is-active .fa-bell');
         $row = $crawler->filter('.p-groups-subs__row')->first();
         self::assertStringContainsString('is-unread', (string) $row->attr('class'), 'a post newer than the subscription is unread');
-        self::assertSelectorTextContains('.p-groups__count--new', '1 new');
+        self::assertSelectorTextContains('.p-groups__count--new', $this->trans('group.list.subscriptions.new', ['count' => 1]));
 
         // opening the thread reads it
         $this->client->request('GET', $row->filter('a.c-home-item__title')->attr('href'));
@@ -360,5 +361,15 @@ final class GroupPagesTest extends WebTestCase
         self::assertInstanceOf(Member::class, $member);
 
         return $member;
+    }
+
+    /**
+     * A text as the page shows it: the test database may have no translations (CI), then the key.
+     *
+     * @param array<string, int|string> $parameters
+     */
+    private function trans(string $id, array $parameters = []): string
+    {
+        return static::getContainer()->get(TranslatorInterface::class)->trans($id, $parameters);
     }
 }

@@ -9,7 +9,8 @@ use Fidry\AliceDataFixtures\ProcessorInterface;
 
 /**
  * Threads without a group in the fixtures are agora threads: they go into the BeWelcome group (id 0). That group
- * can't come from a fixture (an id of 0 means "the next id" to MariaDB), so it's inserted here.
+ * can't come from a fixture (an id of 0 means "the next id" to MariaDB), so it's inserted here, with the name
+ * Version20261103100000 gives it.
  */
 final readonly class ForumThreadProcessor implements ProcessorInterface
 {
@@ -40,7 +41,7 @@ final readonly class ForumThreadProcessor implements ProcessorInterface
         try {
             $connection->executeStatement(
                 'INSERT IGNORE INTO `group` (id, name, type, created, picture, members_only, approved)'
-                . " VALUES (0, 'BeWelcome', 'Public', NOW(), '', 0, 1)"
+                . " VALUES (0, 'BeWelcome Agora', 'Public', NOW(), '', 0, 1)"
             );
         } finally {
             $connection->executeStatement('SET SESSION sql_mode = ?', [$sqlMode]);

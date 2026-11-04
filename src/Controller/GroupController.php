@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Doctrine\GroupMembershipStatusType;
 use App\Doctrine\GroupType as DoctrineGroupType;
 use App\Doctrine\MemberStatusType;
+use App\Dto\GroupCategorySuggestion;
 use App\Entity\Group;
+use App\Entity\GroupCategory;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
 use App\Entity\Wiki;
@@ -16,6 +18,7 @@ use App\Form\WikiCreateForm;
 use App\Logger\Logger;
 use App\Model\GroupModel;
 use App\Model\WikiModel;
+use App\Repository\GroupCategoryRepository;
 use App\Repository\GroupRepository;
 use App\Repository\WikiRepository;
 use App\Security\GroupVoter;
@@ -39,6 +42,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\IsSignatureValid;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Throwable;
@@ -380,6 +384,7 @@ class GroupController extends AbstractController
         $groupRequest = new GroupRequest();
         $form = $this->createForm(GroupType::class, $groupRequest, [
             'allowInvitationOnly' => $member->getLevelForRight(Member::ROLE_ADMIN_GROUP),
+            'locale' => $request->getLocale(),
         ]);
         $form->handleRequest($request);
 
@@ -404,6 +409,26 @@ class GroupController extends AbstractController
         return $this->render('group/create.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Up to three categories whose keywords or names are words of the group's name and description, for the
+     * suggestions of the group forms.
+     */
+    #[Route(path: '/groups/categories/suggest', name: 'group_categories_suggest', methods: ['POST'])]
+    public function suggestCategories(
+        #[MapRequestPayload] GroupCategorySuggestion $suggestion,
+        Request $request,
+        EntityManagerInterface $entityManager,
+    ): JsonResponse {
+        /** @var GroupCategoryRepository $categories */
+        $categories = $entityManager->getRepository(GroupCategory::class);
+        $locale = $request->getLocale();
+
+        return new JsonResponse(array_map(
+            static fn (GroupCategory $category): array => ['id' => $category->getId(), 'name' => $category->getName($locale), 'icon' => $category->getIcon()],
+            $categories->findSuggested($suggestion->text, $suggestion->selected, 3),
+        ));
     }
 
     #[Route(path: '/new/group/check', name: 'new_group_check')]

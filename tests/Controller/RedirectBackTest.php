@@ -71,18 +71,6 @@ class RedirectBackTest extends WebTestCase
         $this->assertResponseRedirects('/members/' . $receiver->getUsername());
     }
 
-    public function testForumGroupFilterWithoutRefererGoesToTheForums(): void
-    {
-        $this->client->loginUser($this->member('member-2'));
-
-        // the switch is a POST with the token of the forum overview's form, here without a referer
-        $crawler = $this->client->request('GET', '/forums');
-        $token = $crawler->filter('form[action$="/forums/show/groups/only-mine"] input[name="_token"]')->attr('value');
-        $this->client->request('POST', '/forums/show/groups/only-mine', ['_token' => $token], [], ['HTTP_REFERER' => '']);
-
-        $this->assertResponseRedirects('/forums');
-    }
-
     public function testTranslationModeWithoutRefererGoesToTheTranslations(): void
     {
         $this->client->loginUser($this->member('bwadmin'));

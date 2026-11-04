@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Group;
+use App\Entity\GroupCategory;
 use App\Entity\GroupTranslation;
 use App\Entity\Member;
 use Doctrine\ORM\EntityManagerInterface;
@@ -10,6 +11,7 @@ use PHPUnit\Framework\Attributes\Group as TestGroup;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\DomCrawler\Field\FileFormField;
 use Symfony\Component\DomCrawler\Form;
 
@@ -21,6 +23,7 @@ use Symfony\Component\DomCrawler\Form;
 class GroupCreateTest extends WebTestCase
 {
     private const string NAME = 'Zz test cyclists';
+    private const int BERLIN = 2950159;
     private const string DESCRIPTION = '<p>For members who travel by bike.</p>';
 
     private KernelBrowser $client;
@@ -67,6 +70,33 @@ class GroupCreateTest extends WebTestCase
         self::assertInstanceOf(GroupTranslation::class, $descriptions['en']);
         self::assertSame(self::DESCRIPTION, $descriptions['en']->getContent());
         self::assertSame($creator->getId(), $descriptions['en']->getTranslator()?->getId());
+    }
+
+    public function testANewGroupGetsItsCategoriesAndPlace(): void
+    {
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $cycling = new GroupCategory()->setName('en', 'Cycling');
+        $entityManager->persist($cycling);
+        $entityManager->flush();
+        $this->client->loginUser($this->member('member-3'));
+        $crawler = $this->client->request('GET', '/new/group');
+        // the place and the categories, as pills (group/_categories_field.html.twig)
+        self::assertCount(1, $crawler->filter('.js-place-picker input[name="group[location]"]'));
+
+        $form = $this->form($crawler, 'Yes');
+        foreach ($form['group[categories]'] as $choice) {
+            self::assertInstanceOf(ChoiceFormField::class, $choice);
+            if (\in_array((string) $cycling->getId(), $choice->availableOptionValues(), true)) {
+                $choice->tick();
+            }
+        }
+        $form['group[location]'] = (string) self::BERLIN;
+        $this->client->submit($form);
+
+        $this->assertResponseRedirects();
+        $group = $this->group();
+        self::assertSame(['Cycling'], array_map(static fn (GroupCategory $category): string => $category->getName(), $group->getCategories()));
+        self::assertSame(self::BERLIN, $group->getLocation()?->getGeonameId());
     }
 
     public function testTheApprovalPageShowsTheDescription(): void

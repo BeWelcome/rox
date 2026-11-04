@@ -36,6 +36,15 @@ readonly class GroupSearch
     }
 
     /**
+     * Whether the search narrows the list (a name, a category, a place, the archived groups): then the agora is
+     * listed like the other groups instead of pinned above them.
+     */
+    public function isFiltered(): bool
+    {
+        return [] !== $this->getNameParts() || null !== $this->category || null !== $this->location || $this->archived;
+    }
+
+    /**
      * @return list<string>
      */
     public function getNameParts(): array

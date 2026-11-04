@@ -17,7 +17,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  * - GROUP_VIEW: see the group's page; approved groups for every member, others for their admins and the group admin
  *   team only;
  * - GROUP_VIEW_FORUM: read the group's forum; members-only groups for their members, admins and the group admin team;
- * - GROUP_ADMINISTER: manage the group (its admins and the group admin team).
+ * - GROUP_ADMINISTER: manage the group (its admins and the group admin team);
+ * - EDIT_CATEGORIES: change the group's categories (its admins for their group, the group admin team for any).
  *
  * @extends Voter<string, Group>
  */
@@ -26,8 +27,9 @@ class GroupVoter extends Voter
     public const string GROUP_VIEW = 'GROUP_VIEW';
     public const string GROUP_VIEW_FORUM = 'GROUP_VIEW_FORUM';
     public const string GROUP_ADMINISTER = 'GROUP_ADMINISTER';
+    public const string EDIT_CATEGORIES = 'GROUP_EDIT_CATEGORIES';
 
-    private const array ATTRIBUTES = [self::GROUP_VIEW, self::GROUP_VIEW_FORUM, self::GROUP_ADMINISTER];
+    private const array ATTRIBUTES = [self::GROUP_VIEW, self::GROUP_VIEW_FORUM, self::GROUP_ADMINISTER, self::EDIT_CATEGORIES];
 
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
@@ -52,7 +54,7 @@ class GroupVoter extends Voter
         $administers = $this->accessDecisionManager->decide($token, [Member::ROLE_ADMIN_GROUP]) || $group->isAdmin($member);
 
         return match ($attribute) {
-            self::GROUP_ADMINISTER => $administers,
+            self::GROUP_ADMINISTER, self::EDIT_CATEGORIES => $administers,
             self::GROUP_VIEW => $administers || Group::APPROVED === $group->getApproved(),
             self::GROUP_VIEW_FORUM => $administers || !$group->isMembersOnly() || $this->isMember($group, $member),
             default => false,

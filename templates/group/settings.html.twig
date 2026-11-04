@@ -1,21 +1,51 @@
 {% extends 'group/layout.html.twig' %}
 
+{#
+  Edit group, for its admins and the group admin team: a head with the group's picture, a link back to it and Edit
+  group; for the group admin team at a group they aren't admins of, a note that the changes are logged. Then one
+  card: the description, who may join, who sees the posts, the picture, the categories and the place.
+#}
+{% set group_head_hidden = true %}
+
 {% block javascripts %}
     {{ parent() }}
-    {{ encore_entry_script_tags('groups/location') }}
+    {{ encore_entry_script_tags('groups/form') }}
 {% endblock %}
 
+{% block title %}{{ 'group.menu.edit'|trans }} · {{ group.name }}{% endblock %}
+
 {% block group_content %}
-    <h2 class="h4">{{ 'groupsadministrategroup'|trans }}</h2>
-    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
-    {{ form_row(form.description) }}
-    {{ form_row(form.type) }}
-    {{ form_row(form.visiblePosts) }}
-    {{ form_row(form.picture) }}
-    {{ form_row(form.categories) }}
-    <div class="auto-search-wrapper max-height mb-3">
-        {{ form_row(form.locationName) }}
+    {% set _picture = group.beWelcome ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png')) %}
+    <div class="p-gedit">
+        <header class="p-forum-new__page-head">
+            <span class="p-forum-new__picture{{ group.beWelcome ? ' is-agora' }}"><img width="64" height="64" alt="" src="{{ _picture }}"></span>
+            <div>
+                <a class="p-forum-new__back" href="{{ path('group_start', {group_id: group.id}) }}"><i class="fas fa-chevron-left" aria-hidden="true"></i> {{ group.name }}</a>
+                <h1 class="p-forum-new__title">{{ 'group.menu.edit'|trans }}</h1>
+            </div>
+        </header>
+
+        {% if adminTeam %}
+            <p class="p-gedit__team"><i class="fas fa-shield-halved" aria-hidden="true"></i> <span>{{ 'group.edit.admin.team'|trans|purify }}</span></p>
+        {% endif %}
+
+        {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'p-gedit__card'}}) }}
+            {% for _error in form.vars.errors %}<p class="p-gnew__error p-gnew__error--form">{{ _error.message }}</p>{% endfor %}
+            {{ form_row(form.description) }}
+            {{ form_row(form.type) }}
+            {{ form_row(form.visiblePosts) }}
+            {{ form_row(form.picture) }}
+            {% if form.categories is defined %}
+                {% include 'group/_categories_field.html.twig' with {field: form.categories} %}
+            {% endif %}
+            {% include 'group/_place_field.html.twig' with {name: form.locationName, location: form.location, locationId: 'group_settings_location'} %}
+
+            {% do form.submit.setRendered %}
+            {{ form_rest(form) }}
+            <div class="p-gedit__foot">
+                <a class="p-group-btn" href="{{ path('group_start', {group_id: group.id}) }}">{{ 'cancel'|trans }}</a>
+                <button type="submit" name="{{ form.submit.vars.full_name }}" class="p-group-btn p-group-btn--primary">{{ 'group.edit.save'|trans }}</button>
+            </div>
+        {{ form_end(form) }}
     </div>
-    {{ form_row(form.location, {id: 'group_settings_location'}) }}
-    {{ form_end(form) }}
 {% endblock %}

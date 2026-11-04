@@ -1,0 +1,31 @@
+{#
+  The categories of a group as pills (filled when picked, at most three), with suggestions from the keywords of the
+  categories found in the name and description typed (assets/js/groups/form.js). Needs field (the categories).
+#}
+{% set _max = constant('App\\Entity\\Group::MAX_CATEGORIES') %}
+{% set _picked = field.children|filter(choice => choice.vars.checked)|length %}
+<div class="c-cat-picker js-cat-picker" data-max="{{ _max }}" data-suggest-url="{{ path('group_categories_suggest') }}"
+     data-count-text="{{ 'group.categories.count'|trans({count: '__count__', max: _max}) }}">
+    <div class="c-cat-picker__head">
+        <span class="p-gnew__label">{{ field.vars.label|trans }}</span>
+        <span class="c-cat-picker__count js-cat-count">{{ 'group.categories.count'|trans({count: _picked, max: _max}) }}</span>
+    </div>
+    <div class="c-cat-picker__suggest js-cat-suggest" hidden>
+        <span class="c-cat-picker__suggest-label"><i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> {{ 'group.categories.suggested'|trans }}</span>
+        <span class="c-cat-picker__suggest-list js-cat-suggest-list"></span>
+    </div>
+    <div class="c-cat-picker__pills" role="group" aria-label="{{ field.vars.label|trans }}">
+        {% for choice in field %}
+            <input type="checkbox" class="c-cat-pill__input js-cat-input" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}"{{ choice.vars.checked ? ' checked' }}>
+            <label class="c-cat-pill" for="{{ choice.vars.id }}">
+                <i class="fas fa-{{ choice.vars.attr['data-icon']|default('folder') }}" aria-hidden="true"></i>
+                <span>{{ choice.vars.label }}</span>
+                <span class="c-cat-pill__x" aria-hidden="true"><i class="fas fa-xmark"></i></span>
+            </label>
+            {% do choice.setRendered %}
+        {% endfor %}
+    </div>
+    {% for _error in field.vars.errors %}<p class="p-gnew__error">{{ _error.message }}</p>{% endfor %}
+    <p class="p-gnew__help">{{ 'group.categories.missing'|trans }}</p>
+</div>
+{% do field.setRendered %}

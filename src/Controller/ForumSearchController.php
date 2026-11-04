@@ -47,7 +47,7 @@ class ForumSearchController extends AbstractController
         $keyword = trim((string) $request->query->get('q'));
 
         return '' === $keyword
-            ? $this->redirectToRoute('forums')
+            ? $this->redirectToRoute('groups_redirect')
             : $this->redirectToRoute('forums_search', ['keyword' => $keyword]);
     }
 
@@ -72,11 +72,9 @@ class ForumSearchController extends AbstractController
             'posts' => '' === $keyword ? null : $this->findPosts($keyword, $group, max(1, $request->query->getInt('page', 1))),
             'group' => $group,
         ];
-        if (!$group->isBeWelcome()) {
-            /** @var Member $member */
-            $member = $this->getUser();
-            $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
-        }
+        /** @var Member $member */
+        $member = $this->getUser();
+        $parameters['submenu'] = ['items' => $this->getSubmenuItems($member, $group), 'active' => 'forum'];
 
         return $this->render('forum/search.html.twig', $parameters);
     }
@@ -90,7 +88,7 @@ class ForumSearchController extends AbstractController
     #[Route(path: '/forums/reverse', name: 'forums_reverse', methods: ['GET'])]
     public function legacyOverviews(): RedirectResponse
     {
-        return $this->redirectToRoute('forums', [], Response::HTTP_MOVED_PERMANENTLY);
+        return $this->redirectToRoute('groups_redirect', [], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     /**

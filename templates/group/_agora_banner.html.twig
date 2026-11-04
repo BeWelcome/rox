@@ -1,0 +1,26 @@
+{#
+  The agora (group 0) pinned above the group lists: the logo, its name with Official, the description, when the last
+  post was and the latest topic; Open goes to it. Needs agora, agoraDescription and agoraThread.
+#}
+{% import 'group/_macros.html.twig' as groups %}
+{% import 'forum/_macros.html.twig' as forum %}
+<section class="p-groups-agora" aria-label="{{ agora.name }}">
+    <a class="p-groups-agora__picture" href="{{ path('group_start', {group_id: agora.id}) }}" tabindex="-1" aria-hidden="true">
+        <img src="{{ asset('images/logo_icon_2025.svg') }}" alt="" width="50" height="58">
+    </a>
+    <div class="p-groups-agora__body">
+        <h2 class="p-groups-agora__title">
+            <i class="fas fa-thumbtack" aria-hidden="true"></i>
+            <a href="{{ path('group_start', {group_id: agora.id}) }}">{{ agora.name }}</a>
+            {{ groups.official() }}
+        </h2>
+        {% if agoraDescription %}<p class="p-groups-agora__text">{{ agoraDescription|striptags }}</p>{% endif %}
+        {% if agoraThread %}
+            <p class="p-groups-agora__activity">
+                {{ groups.activity(agoraThread.lastPost.created) }}
+                · {{ 'group.agora.latest'|trans({title: forum.thread_title(agoraThread, app.request.locale)|striptags|trim}) }}
+            </p>
+        {% endif %}
+    </div>
+    <a class="p-groups-agora__open" href="{{ path('group_start', {group_id: agora.id}) }}">{{ 'group.agora.open'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</section>

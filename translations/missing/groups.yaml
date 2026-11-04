@@ -152,3 +152,237 @@ group.list.active.months:
 group.list.active.years:
     - 'Active {count, plural, one {# year} other {# years}} ago'
     - Groups pages, on a group whose newest post is a year old or more
+group.official:
+    - Official
+    - Badge next to the name of the BeWelcome Agora (the group of the whole community).
+group.agora.open:
+    - Open
+    - Button on the BeWelcome Agora's card above the group lists, leads to it.
+group.agora.latest:
+    - 'Latest: “{title}”'
+    - The newest topic of the BeWelcome Agora on its card above the group lists. Keep {title} as it is.
+group.near.eyebrow:
+    - Near you
+    - Small heading above the groups near the member's place on the groups page.
+group.near.title:
+    - 'Groups around {place}'
+    - Title of the groups near the member's place (their city, region or country). Keep {place} as it is.
+group.near.see.all:
+    - 'See all {count} in {country}'
+    - Link to all groups in the member's country. Keep {count} and {country} as they are.
+group.categories.eyebrow:
+    - Browse
+    - Small heading above the group categories on the groups page.
+group.categories.title:
+    - By category
+    - Title of the group categories (tiles) on the groups page.
+group.list.subscriptions:
+    - Subscriptions
+    - Tab of the groups page with the topics the member follows and the groups whose posts they get by mail.
+group.list.subscriptions.new:
+    - '{count} new'
+    - Count on the Subscriptions tab of the groups page, topics with posts the member hasn't seen. Keep {count} as it is.
+group.subscriptions.topics:
+    - Topics
+    - The topics the member follows, on the Subscriptions tab of the groups page.
+group.subscriptions.groups:
+    - Groups
+    - The groups whose new posts the member gets by mail, on the Subscriptions tab of the groups page.
+group.subscriptions.notify:
+    - Notify me about new posts
+    - Switch next to a group on the Subscriptions tab; switching it off stops the mails about the group's posts.
+group.subscriptions.no.topics:
+    - 'You follow no topics. Subscribe to a topic to find it here.'
+    - Shown on the Subscriptions tab of the groups page when the member follows no topic.
+group.subscriptions.no.groups:
+    - 'You get no mails about the posts of any group.'
+    - Shown on the Subscriptions tab (groups) when the member gets mails about no group.
+group.subscriptions.unread:
+    - New posts
+    - Hidden text for screen readers next to a followed topic with posts the member hasn't seen.
+group.categories.too.many:
+    - 'A group can have at most 3 categories.'
+    - Error when more than 3 categories are chosen for a group.
+group.rules:
+    - 'Rules'
+    - Tab of a group's pages with the forum rules
+group.menu.more:
+    - 'More'
+    - Label of the "…" button in a group's head that opens the menu with the settings and the admin tools
+group.menu.settings:
+    - 'My settings for this group'
+    - Entry of the "…" menu in a group's head, leads to the member's settings for the group (mails about new posts)
+group.menu.edit:
+    - 'Edit group'
+    - Entry of the "…" menu in a group's head for the group's admins, leads to the group's settings
+group.place.everywhere:
+    - 'Everywhere'
+    - In a group's head instead of a place when the group isn't tied to one
+group.about:
+    - 'About'
+    - Heading of the card with the group's description on its overview
+group.discussions.all:
+    - 'All discussions'
+    - Link from the recent posts on a group's overview to its Discussions tab
+group.rules.info:
+    - 'These rules apply to every group on BeWelcome, including the Agora.'
+    - Strip at the top of the Rules tab of a group
+group.rules.in.short:
+    - 'In short'
+    - Heading of the short list of rules on the Rules tab of a group
+group.rules.forum:
+    - 'Forum rules'
+    - Heading of the forum rules on the Rules tab of a group
+group.rules.charter:
+    - 'Charter'
+    - Heading of the forum charter on the Rules tab of a group
+group.rules.report.title:
+    - 'Something breaks the rules?'
+    - Heading of the side card on the Rules tab of a group
+group.rules.report.text:
+    - 'Report the post from its menu. Forum moderators look at every report; group admins can also remove posts in their group.'
+    - Side card on the Rules tab of a group
+forum.rules.short.1:
+    - 'Be friendly and respectful, also when you disagree. No personal attacks.'
+    - First line of the forum rules in short (Rules tab of a group, new topic page)
+forum.rules.short.2:
+    - 'Stay on the topic of the group and post in the right place.'
+    - Second line of the forum rules in short
+forum.rules.short.3:
+    - 'No spam, advertising or commercial offers.'
+    - Third line of the forum rules in short
+forum.rules.short.4:
+    - "Don't post other people's personal details."
+    - Fourth line of the forum rules in short
+forum.rules.short.5:
+    - "Follow the moderators' advice, and report posts that break the rules."
+    - Fifth line of the forum rules in short
+group.no.description:
+    - 'No description yet.'
+    - In the About card of a group's overview when the group has no description
+group.categories.label:
+    - 'Categories'
+    - Label of the categories of a group in the forms to create and edit a group
+group.categories.count:
+    - '{count} of {max}'
+    - Next to the categories label in the group forms; how many categories are picked of the most allowed
+group.categories.suggested:
+    - 'Suggested from your text:'
+    - Before the categories suggested from the name and description typed in the group forms
+group.categories.missing:
+    - 'Missing a category? Ask the group admin team; only they can add new ones.'
+    - Help under the categories in the group forms
+group.place.label:
+    - 'Place'
+    - Label of the place of a group in the forms to create and edit a group
+group.place.anywhere:
+    - 'Anywhere'
+    - 'Option of the place of a group, not tied to a place'
+group.place.tied:
+    - 'Tied to a place'
+    - 'Option of the place of a group, about a town, region or country'
+group.place.where:
+    - 'Town, region or country'
+    - Label of the field for the place of a group
+group.place.placeholder:
+    - 'Search a town, region or country'
+    - Placeholder of the field for the place of a group
+group.place.hint:
+    - 'Members living in or near this place see the group under Groups near you, and searching for the place finds it.'
+    - Help under the place of a group in the group forms
+group.create.rules:
+    - 'Groups follow the forum rules.'
+    - Line above the buttons of the form for a new group
+group.edit.admin.team:
+    - "<b>Group admin team:</b> you're not an admin of this group. Changes are logged."
+    - Note on Edit group for the group admin team at a group they aren't admins of; keep the <b></b>
+group.edit.save:
+    - 'Save changes'
+    - Button of the form to edit a group
+admin.groups.title:
+    - 'Groups administration'
+    - Title of the group admin team's pages (approval, archival, categories, ...)
+admin.group.category:
+    - 'Category'
+    - Column of the list of group categories
+admin.group.category.languages:
+    - 'Languages'
+    - Column of the list of group categories, the languages the category has a name in
+admin.group.category.none:
+    - 'No categories yet.'
+    - The list of group categories when there are none
+admin.group.category.add:
+    - 'Add a category'
+    - Heading of the card to add a group category
+admin.group.category.name.en:
+    - 'Name in English'
+    - Label of the field for a new group category's name
+admin.group.category.add.hint:
+    - "Icon, other languages and keywords are set on the category's page next."
+    - Help under the field for a new group category
+admin.group.category.delete:
+    - 'Delete category'
+    - Button on a group category's page
+admin.group.category.delete.confirm:
+    - 'Delete {name}? {count, plural, one {# group loses} other {# groups lose}} this category.'
+    - Question before a group category is deleted
+admin.group.category.names:
+    - 'Names'
+    - Heading of the names per language on a group category's page
+admin.group.category.required:
+    - 'required'
+    - Tag next to the English name of a group category
+admin.group.category.icon:
+    - 'Icon'
+    - Heading of the icons to choose from on a group category's page
+admin.group.category.keywords:
+    - 'Keywords for suggestions'
+    - Heading of the keywords on a group category's page
+admin.group.category.keywords.help:
+    - "When a group's name or description contains one of these words, {name} is suggested while creating or editing the group. Words in any language; separate several with commas."
+    - Help of the keywords on a group category's page
+admin.group.category.keyword.add:
+    - 'Add a word…'
+    - Placeholder of the field to add keywords to a group category
+admin.group.category.keyword.remove:
+    - 'Remove {word}'
+    - Label of the × of a keyword of a group category
+admin.group.category.groups.in:
+    - 'Groups in this category'
+    - Heading of the groups on a group category's page
+admin.group.category.add.group:
+    - 'Add a group to {name}…'
+    - Field to add a group to a group category
+admin.group.category.no.group:
+    - 'No group found'
+    - When no group matches in the field to add a group to a category
+admin.group.category.full:
+    - 'already has 3 categories'
+    - After a group in the field to add a group to a category when the group can't take another one
+admin.group.category.remove.group:
+    - 'Remove from this category'
+    - Button next to a group on a group category's page
+admin.group.category.no.groups:
+    - 'No groups in this category yet.'
+    - A group category's page when no group is in the category
+admin.group.category.show.all:
+    - 'Show all {count}'
+    - Link under the first groups of a group category
+admin.group.category.max:
+    - "A group can have at most 3 categories; groups that already have 3 can't be added here."
+    - Footnote under the groups of a group category
+admin.groups.approval:
+    - 'Approval'
+    - Tab of the group admin team's pages, the groups waiting for approval
+admin.groups.archival:
+    - 'Archival'
+    - Tab of the group admin team's pages, archiving groups
+admin.groups.unarchival:
+    - 'Unarchival'
+    - Tab of the group admin team's pages, groups to take out of the archive
+admin.groups.rename:
+    - 'Rename'
+    - Tab of the group admin team's pages, renaming a group
+admin.groups.logs:
+    - 'Logs'
+    - Tab of the group admin team's pages, the log of the changes to groups

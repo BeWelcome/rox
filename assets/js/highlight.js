@@ -1,9 +1,9 @@
 import Mark from 'mark.js';
 
-const keyword = document.getElementById("keyword").value;
-const context = document.querySelector(".js-highlight");
-
-const  instance = new Mark(".js-highlight");
-instance.mark(keyword, {
-    "diacritics": false
-});
+// Marks the searched words (#keyword) in the results (.js-highlight); pages without a search have nothing to mark
+const keyword = document.getElementById('keyword');
+if (keyword && keyword.value) {
+    new Mark('.js-highlight').mark(keyword.value, {
+        'diacritics': false
+    });
+}

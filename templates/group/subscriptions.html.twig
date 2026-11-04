@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('groups/location') }}
+{% endblock %}
+
+{% block content %}
+    {% include 'group/_list.html.twig' with {tab: 'subscriptions'} %}
+{% endblock %}

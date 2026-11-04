@@ -8,9 +8,14 @@
   (EmbedFrameListener).
 #}
 {% block group_content %}
+    {# The rules in short above the editor #}
+{% set _rules_strip %}
+    <p class="p-forum-rules-strip"><i class="fas fa-scale-balanced" aria-hidden="true"></i> <span>{{ 'forum.rules.before.reply'|trans|purify }}</span> <a href="{{ thread.group ? path('group_rules', {group_id: thread.group.id}) : path('forum_rules') }}" target="_top">{{ 'forum.rules.all'|trans }}</a></p>
+{% endset %}
     {% if not app.request.query.getBoolean('embed') %}
         {% set heading = submenu is defined ? 'h2' : 'h1' %}
         <{{ heading }} class="h3">{{ 'forumreply'|trans }}: <a href="{{ forum.thread_url(thread) }}">{{ forum.thread_title(thread, app.request.locale) }}</a></{{ heading }}>
+        {{ _rules_strip }}
         {{ form(form, {attr: {novalidate: 'novalidate'}}) }}
     {% else %}
     <div class="c-contact c-contact--forum">
@@ -25,6 +30,7 @@
         </header>
 
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'c-contact__form js-forum-reply-form'}}) }}
+            {{ _rules_strip }}
             <div class="c-contact__body">
                 {{ form_errors(form) }}
 

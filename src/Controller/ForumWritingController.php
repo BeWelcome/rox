@@ -174,7 +174,7 @@ class ForumWritingController extends AbstractController
             $this->forumModel->savePost($post, $member, $data['locale'], $data['text'], $data['title'] ?? null, $data['visibility'] ?? null);
             $this->logger->write("Post #{$post->getId()} edited in {$data['locale']}", 'Forum');
 
-            return null === $thread ? $this->redirectToRoute('forums') : $this->redirectToThread($thread, $post);
+            return null === $thread ? $this->redirectToRoute('groups_redirect') : $this->redirectToThread($thread, $post);
         }
 
         return $this->renderForm('forum/edit.html.twig', $form, ['post' => $post, 'thread' => $thread], $thread?->getGroup());
@@ -209,7 +209,7 @@ class ForumWritingController extends AbstractController
     {
         $parameters['form'] = $form;
         $parameters['group'] = $group;
-        if (null !== $group && !$group->isBeWelcome()) {
+        if (null !== $group) {
             $parameters['submenu'] = ['items' => $this->getSubmenuItems($this->getMember(), $group), 'active' => 'forum'];
         }
 

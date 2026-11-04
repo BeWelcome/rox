@@ -50,7 +50,7 @@ final class GroupCategoryAdminTest extends WebTestCase
         self::assertSame('Outdoors', $category->getName('fr'), 'languages without a name fall back to English');
 
         $client->request('GET', '/admin/groups/categories');
-        self::assertSelectorTextContains('table', 'Outdoors');
+        self::assertSelectorTextContains('.p-gadmin__table', 'Outdoors');
     }
 
     public function testAnEmptyNameRemovesALanguageButNotEnglish(): void
@@ -90,6 +90,84 @@ final class GroupCategoryAdminTest extends WebTestCase
         $entityManager = static::getContainer()->get(EntityManagerInterface::class);
         $entityManager->clear();
         self::assertNull($entityManager->find(GroupCategory::class, $id));
+    }
+
+    public function testTheIconAndTheKeywordsSave(): void
+    {
+        $client = $this->groupAdmin();
+        $category = $this->createCategory(['en' => 'Outdoors']);
+        $url = '/admin/groups/categories/' . $category->getId();
+
+        $crawler = $client->request('GET', $url);
+        self::assertResponseIsSuccessful();
+        $client->submit($crawler->filter('form[action$="/icon"]')->selectButton('person-hiking')->form());
+        self::assertResponseRedirects($url);
+        self::assertSame('person-hiking', $this->findCategory('Outdoors')->getIcon());
+
+        $crawler = $client->request('GET', $url);
+        $client->submit($crawler->filter('form[action$="/keywords"]')->form(['add' => 'Hike, mountains']));
+        self::assertSame(['hike', 'mountains'], $this->findCategory('Outdoors')->getKeywords());
+
+        $crawler = $client->request('GET', $url);
+        self::assertCount(1, $crawler->filter('.p-gadmin__icon.is-on[value="person-hiking"]'));
+        $client->submit($crawler->filter('form[action$="/keywords"] button[value="hike"]')->form());
+        self::assertSame(['mountains'], $this->findCategory('Outdoors')->getKeywords());
+        self::assertSame(1, $this->countLogs('%(Outdoors): icon set to person-hiking'));
+        self::assertSame(2, $this->countLogs('%(Outdoors): keywords changed'));
+    }
+
+    public function testAGroupIsAddedToAndRemovedFromACategory(): void
+    {
+        $client = $this->groupAdmin();
+        $category = $this->createCategory(['en' => 'Outdoors']);
+        $group = $this->findGroup('Hiking Enthusiasts');
+        $url = '/admin/groups/categories/' . $category->getId();
+
+        $crawler = $client->request('GET', $url);
+        $client->submit($crawler->filter('form[action$="/groups"]')->form(['group' => (string) $group->getId()]));
+        self::assertResponseRedirects($url . '#groups');
+        self::assertTrue($this->findGroup('Hiking Enthusiasts')->hasCategory($this->findCategory('Outdoors')));
+        self::assertSame(1, $this->countLogs('%added to category Outdoors by member-3'));
+
+        $crawler = $client->request('GET', $url);
+        self::assertStringContainsString('Hiking Enthusiasts', $crawler->filter('.p-gadmin__groups')->text());
+        $client->submit($crawler->filter('form[action$="/groups/' . $group->getId() . '/remove"]')->form());
+        self::assertFalse($this->findGroup('Hiking Enthusiasts')->hasCategory($this->findCategory('Outdoors')));
+        self::assertSame(1, $this->countLogs('%removed from category Outdoors by member-3'));
+    }
+
+    public function testAGroupWithThreeCategoriesTakesNoFourth(): void
+    {
+        $client = $this->groupAdmin();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $group = $this->findGroup('Hiking Enthusiasts');
+        foreach (['One', 'Two', 'Three'] as $name) {
+            $group->addCategory($this->createCategory(['en' => $name]));
+        }
+        $entityManager->flush();
+        $fourth = $this->createCategory(['en' => 'Four']);
+        $url = '/admin/groups/categories/' . $fourth->getId();
+
+        // offered greyed in the field, refused when posted all the same
+        $crawler = $client->request('GET', $url);
+        self::assertCount(1, $crawler->filter('select[name="group"] option[value="' . $group->getId() . '"][disabled]'));
+        $client->request('POST', $url . '/groups', ['group' => $group->getId(), '_token' => $crawler->filter('form[action$="/groups"] input[name="_token"]')->attr('value')]);
+
+        self::assertCount(3, $this->findGroup('Hiking Enthusiasts')->getCategories());
+    }
+
+    public function testMembersWithoutTheGroupRightChangeNoCategory(): void
+    {
+        $client = static::createClient();
+        $category = $this->createCategory(['en' => 'Outdoors']);
+        $client->loginUser($this->getMember('member-2'));
+
+        foreach (['/icon', '/keywords', '/groups'] as $path) {
+            $client->request('POST', '/admin/groups/categories/' . $category->getId() . $path, ['icon' => 'book']);
+            self::assertResponseStatusCodeSame(403, $path);
+        }
+        $client->request('GET', '/admin/groups/categories/' . $category->getId());
+        self::assertResponseStatusCodeSame(403);
     }
 
     private function groupAdmin(): KernelBrowser
@@ -135,5 +213,23 @@ final class GroupCategoryAdminTest extends WebTestCase
         self::assertInstanceOf(Member::class, $member);
 
         return $member;
+    }
+
+    private function findGroup(string $name): \App\Entity\Group
+    {
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $entityManager->clear();
+        $group = $entityManager->getRepository(\App\Entity\Group::class)->findOneBy(['name' => $name]);
+        self::assertInstanceOf(\App\Entity\Group::class, $group);
+
+        return $group;
+    }
+
+    private function countLogs(string $like): int
+    {
+        return (int) static::getContainer()->get(EntityManagerInterface::class)->getConnection()->fetchOne(
+            "SELECT COUNT(*) FROM logs WHERE Type = 'Group' AND Str LIKE ?",
+            [$like],
+        );
     }
 }

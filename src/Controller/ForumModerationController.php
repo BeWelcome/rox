@@ -27,6 +27,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -36,7 +37,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 /**
  * Forum moderation, at the legacy forum's URLs: the moderator's page of a post (its thread's group, pin, visibility
  * and deletion; the post's visibility, deletion and whether its author can still edit it), members' reports about
- * posts and the moderators' answers, and the forum rules.
+ * posts and the moderators' answers.
  */
 class ForumModerationController extends AbstractController
 {
@@ -50,10 +51,13 @@ class ForumModerationController extends AbstractController
     ) {
     }
 
+    /**
+     * The rules are a tab of every group now; the agora's has them for the old URL.
+     */
     #[Route(path: '/forums/rules', name: 'forum_rules', methods: ['GET'])]
-    public function rules(): Response
+    public function rules(): RedirectResponse
     {
-        return $this->render('forum/rules.html.twig');
+        return $this->redirectToRoute('group_rules', ['group_id' => Group::BEWELCOME], Response::HTTP_MOVED_PERMANENTLY);
     }
 
     #[Route(path: '/forums/modfulleditpost/{postId}', name: 'forum_admin', requirements: ['postId' => '\d+'], methods: ['GET', 'POST'])]

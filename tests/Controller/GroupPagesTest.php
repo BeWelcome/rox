@@ -2,14 +2,18 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\ForumThread;
 use App\Entity\Group as GroupEntity;
 use App\Entity\GroupCategory;
 use App\Entity\Location;
 use App\Entity\Member;
+use App\Model\ForumModel;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The group pages that moved from the legacy code: search, my groups, a group's page and members, the pictures.
@@ -43,8 +47,10 @@ final class GroupPagesTest extends WebTestCase
         $names = $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text());
         self::assertContains('Hiking Enthusiasts', $names);
         self::assertContains('Language Exchange', $names);
-        self::assertContains('BeWelcome', $names);
         self::assertNotContains('Vegan Travelers', $names, 'groups waiting for approval are left out');
+        // the agora is pinned above the list, not in it
+        self::assertNotContains('BeWelcome Agora', $names);
+        self::assertSelectorTextContains('.p-groups-agora__title', 'BeWelcome Agora');
     }
 
     public function testArchivedGroupsHaveTheirOwnTab(): void
@@ -131,8 +137,10 @@ final class GroupPagesTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         $names = $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text());
-        self::assertContains('BeWelcome', $names);
+        self::assertNotContains('BeWelcome Agora', $names, 'the agora is pinned above the list');
         self::assertContains('Hiking Enthusiasts', $names);
+        // the count leaves the agora out too
+        self::assertSame((string) \count($names), $crawler->filter('.p-groups__tab.is-active .p-groups__count')->text());
     }
 
     public function testTheGroupPageShowsTheGroupAndItsLatestThreads(): void
@@ -146,7 +154,7 @@ final class GroupPagesTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertSelectorTextContains('h1', 'Hiking Enthusiasts');
         self::assertStringContainsString('Weekend hiking meetup - who is in?', $crawler->text());
-        self::assertStringContainsString('Germany › Land Berlin › Berlin', $crawler->text());
+        self::assertStringContainsString('Berlin, Germany', $crawler->text());
     }
 
     public function testTheGroupsMenuIsAboveThePageAndJoinIsForThoseWhoMay(): void
@@ -157,13 +165,21 @@ final class GroupPagesTest extends WebTestCase
         // member-2 is in the group: the menu's tabs, the discussions next to the members, a button for a topic
         $crawler = $this->client->request('GET', $groupUrl);
         self::assertCount(0, $crawler->filter('#sidebar'));
-        self::assertSame($groupUrl, $crawler->filter('.p-group__tab.is-active')->attr('href'));
-        // no description in the fixtures: no description card, the discussions in the main column
+        self::assertSame($groupUrl, $crawler->filter('.p-group-head .p-hero__tab--active')->attr('href'));
+        // no description in the fixtures: no description text, the discussions in the main column
         self::assertCount(0, $crawler->filter('.p-group-layout .p-group-description'));
         self::assertGreaterThan(0, $crawler->filter('.p-group-main .c-home-item')->count());
         self::assertCount(1, $crawler->filter('.p-group-side a[href="' . $groupUrl . '/members"]'));
-        self::assertCount(1, $crawler->filter('.p-group__actions a[href="' . $groupUrl . '/new"]'));
-        self::assertCount(0, $crawler->filter('.p-group__actions a[href$="/join"]'));
+        self::assertCount(1, $crawler->filter('.p-group-head__actions a[href="' . $groupUrl . '/new"]'));
+        self::assertCount(0, $crawler->filter('.p-group-head__actions a[href$="/join"]'));
+        // the member's settings and Leave are in the "…" menu, Delete only for the admins
+        self::assertCount(1, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="' . $groupUrl . '/membersettings"]'));
+        self::assertCount(1, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="' . $groupUrl . '/leave"]'));
+        self::assertCount(0, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="' . $groupUrl . '/delete"]'));
+        self::assertSame(
+            [$groupUrl, $groupUrl . '/forum', $groupUrl . '/rules', $groupUrl . '/wiki', $groupUrl . '/members'],
+            $crawler->filter('.p-group-head .p-hero__tab')->each(static fn ($tab): string => (string) $tab->attr('href')),
+        );
         // the threads in the group's page don't name the group again
         self::assertGreaterThan(0, $crawler->filter('.c-home-item')->count());
         self::assertCount(0, $crawler->filter('.c-home-item a[href="' . $groupUrl . '"]'));
@@ -175,7 +191,8 @@ final class GroupPagesTest extends WebTestCase
             [$group->getId(), $memberId],
         );
         $crawler = $this->client->request('GET', $groupUrl);
-        self::assertCount(1, $crawler->filter('.p-group__actions a[href="' . $groupUrl . '/join"]'));
+        self::assertCount(1, $crawler->filter('.p-group-head__actions a[href="' . $groupUrl . '/join"]'));
+        self::assertCount(0, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="' . $groupUrl . '/leave"]'));
 
         // waiting to be let in: no Join
         $connection->executeStatement(
@@ -185,7 +202,7 @@ final class GroupPagesTest extends WebTestCase
         );
         $this->entityManager->clear();
         $crawler = $this->client->request('GET', $groupUrl);
-        self::assertCount(0, $crawler->filter('.p-group__actions a'));
+        self::assertCount(0, $crawler->filter('.p-group-head__actions a'));
     }
 
     public function testMembersOnlyGroupsHideTheirThreadsFromOtherMembers(): void
@@ -248,6 +265,78 @@ final class GroupPagesTest extends WebTestCase
         self::assertResponseStatusCodeSame(404);
     }
 
+    public function testASearchFindsTheAgoraLikeAnyGroup(): void
+    {
+        $crawler = $this->client->request('GET', '/groups/search', ['name' => 'Agora']);
+
+        self::assertSame(['BeWelcome Agora'], $crawler->filter('.p-group-card__name')->each(static fn ($link) => $link->text()));
+        self::assertSelectorNotExists('.p-groups-agora', 'a search shows no pinned agora');
+    }
+
+    public function testTheGroupsNearTheMembersPlaceAreShown(): void
+    {
+        // member-2 lives in Berlin (fixtures/address.yml)
+        $this->getGroup('Hiking Enthusiasts')->setLocation($this->entityManager->find(Location::class, self::BERLIN));
+        $this->entityManager->flush();
+
+        $crawler = $this->client->request('GET', '/groups/search');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorTextContains('#groups-near-title', $this->trans('group.near.title', ['place' => 'Berlin']));
+        self::assertSame(['Hiking Enthusiasts'], $crawler->filter('.p-groups-near__name')->each(static fn ($name) => $name->text()));
+    }
+
+    public function testNoGroupsNearAreShownWithoutAny(): void
+    {
+        $this->client->request('GET', '/groups/search');
+
+        self::assertSelectorNotExists('.p-groups-near');
+    }
+
+    public function testTheCategoriesAreTilesAndChips(): void
+    {
+        $category = new GroupCategory()->setName('en', 'Outdoors')->setIcon('person-hiking');
+        $this->entityManager->persist($category);
+        $hiking = $this->getGroup('Hiking Enthusiasts');
+        $hiking->addCategory($category);
+        $hiking->setLocation($this->entityManager->find(Location::class, self::BERLIN));
+        $this->entityManager->flush();
+
+        $crawler = $this->client->request('GET', '/groups/search');
+
+        $tile = $crawler->filter('.p-groups-categories__tile')->reduce(static fn ($node) => str_contains($node->text(), 'Outdoors'));
+        self::assertCount(1, $tile);
+        self::assertSame('/groups/search?category=' . $category->getId(), $tile->attr('href'));
+        self::assertCount(1, $tile->filter('.fa-person-hiking'));
+        self::assertSame('1', $tile->filter('.p-groups-categories__count')->text());
+        $card = $crawler->filter('.p-group-card')->reduce(static fn ($node) => str_contains($node->text(), 'Hiking Enthusiasts'));
+        self::assertSame(['Berlin', 'Outdoors'], $card->filter('.c-group-chip')->each(static fn ($chip) => trim($chip->text())));
+    }
+
+    public function testTheSubscriptionsTabListsTheFollowedTopicsUnreadFirst(): void
+    {
+        $member = $this->getMember('member-2');
+        $forumModel = static::getContainer()->get(ForumModel::class);
+        $thread = $this->entityManager->getRepository(ForumThread::class)->findOneBy(['deleted' => 'NotDeleted'], ['id' => 'ASC']);
+        self::assertInstanceOf(ForumThread::class, $thread);
+        $forumModel->subscribe($thread, $member)->setSubscribed(new DateTime('-10 years'));
+        $this->entityManager->flush();
+
+        $crawler = $this->client->request('GET', '/groups/subscriptions');
+
+        self::assertResponseIsSuccessful();
+        self::assertSelectorExists('.p-groups__tab.is-active .fa-bell');
+        $row = $crawler->filter('.p-groups-subs__row')->first();
+        self::assertStringContainsString('is-unread', (string) $row->attr('class'), 'a post newer than the subscription is unread');
+        self::assertSelectorTextContains('.p-groups__count--new', $this->trans('group.list.subscriptions.new', ['count' => 1]));
+
+        // opening the thread reads it
+        $this->client->request('GET', $row->filter('a.c-home-item__title')->attr('href'));
+        $crawler = $this->client->request('GET', '/groups/subscriptions');
+        self::assertStringNotContainsString('is-unread', (string) $crawler->filter('.p-groups-subs__row')->first()->attr('class'));
+        self::assertSelectorNotExists('.p-groups__count--new');
+    }
+
     private function join(Member $member, int $groupId): void
     {
         $this->entityManager->getConnection()->executeStatement(
@@ -272,5 +361,15 @@ final class GroupPagesTest extends WebTestCase
         self::assertInstanceOf(Member::class, $member);
 
         return $member;
+    }
+
+    /**
+     * A text as the page shows it: the test database may have no translations (CI), then the key.
+     *
+     * @param array<string, int|string> $parameters
+     */
+    private function trans(string $id, array $parameters = []): string
+    {
+        return static::getContainer()->get(TranslatorInterface::class)->trans($id, $parameters);
     }
 }

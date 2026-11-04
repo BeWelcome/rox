@@ -1,0 +1,47 @@
+{# Small parts of the group pages: the Official badge, when the last post was, the place and the category chips #}
+
+{# The agora's badge #}
+{% macro official() %}
+    <span class="c-group-official"><i class="fas fa-circle-check" aria-hidden="true"></i> {{ 'group.official'|trans }}</span>
+{% endmacro %}
+
+{# "Active today" ... "Active 2 years ago" from the last post's date; green within a week #}
+{% macro activity(last) %}
+    {% if last %}
+        {% set _days = date(last|date('Y-m-d')).diff(date('today')).days %}
+        {% if _days == 0 %}
+            {% set _text = 'group.list.active.today'|trans %}
+        {% elseif _days == 1 %}
+            {% set _text = 'group.list.active.yesterday'|trans %}
+        {% else %}
+            {% set _text = _days < 7 ? 'group.list.active.days'|trans({count: _days})
+                : (_days < 31 ? 'group.list.active.weeks'|trans({count: _days // 7})
+                : (_days < 365 ? 'group.list.active.months'|trans({count: _days // 30})
+                : 'group.list.active.years'|trans({count: _days // 365}))) %}
+        {% endif %}
+        <span class="c-group-activity{{ _days < 7 ? ' is-recent' }}" title="{{ last|format_date('medium') }}"><i class="far fa-comment" aria-hidden="true"></i> {{ _text }}</span>
+    {% else %}
+        <span class="c-group-activity"><i class="far fa-comment" aria-hidden="true"></i> {{ 'groupsnopostyet'|trans }}</span>
+    {% endif %}
+{% endmacro %}
+
+{# The group's place as a chip (a link to the groups there with link) #}
+{% macro place(group, link = false) %}
+    {% if group.location %}
+        {% set _tag = link ? 'a' : 'span' %}
+        <{{ _tag }} class="c-group-chip c-group-chip--place"{% if link %} href="{{ path('groups_search', {location: group.location.geonameId, locationName: group.location.name}) }}"{% endif %}>
+            <i class="fas fa-location-dot" aria-hidden="true"></i> {{ group.location.name }}
+        </{{ _tag }}>
+    {% endif %}
+{% endmacro %}
+
+{# The group's categories as chips (links to the groups in the category with link); limit: how many at most #}
+{% macro categories(group, link = false, limit = 3) %}
+    {% for category in group.categories|slice(0, limit) %}
+        {% if link %}
+            <a class="c-group-chip" href="{{ path('groups_search', {category: category.id}) }}">{{ category.name(app.request.locale) }}</a>
+        {% else %}
+            <span class="c-group-chip">{{ category.name(app.request.locale) }}</span>
+        {% endif %}
+    {% endfor %}
+{% endmacro %}

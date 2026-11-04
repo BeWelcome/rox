@@ -1,0 +1,77 @@
+{#
+  The subscriptions tab of the groups page. Topics: the threads the member follows, unread ones (new posts since
+  they last opened it) first with a dot, and a button to unsubscribe. Groups: the groups whose new posts they get
+  by mail, with the switch to stop that. Needs view, topics and notifiedGroups.
+#}
+{% import 'forum/_macros.html.twig' as forum %}
+{% import 'group/_macros.html.twig' as groups %}
+{% set _token = csrf_token(constant('App\\Controller\\ForumSubscriptionController::TOKEN')) %}
+{% if view == 'groups' %}
+    {% if notifiedGroups is empty %}
+        <p class="p-groups__empty">{{ 'group.subscriptions.no.groups'|trans }}</p>
+    {% else %}
+        <div class="p-groups-subs">
+            {% for membership in notifiedGroups %}
+                {% set group = membership.group %}
+                <div class="p-groups-subs__row">
+                    <img class="p-groups-subs__picture" alt="" loading="lazy" width="52" height="52"
+                         src="{{ group.beWelcome ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png')) }}"
+                         {% if group.beWelcome %}data-agora{% endif %}>
+                    <a class="p-groups-subs__title" href="{{ path('group_start', {group_id: group.id}) }}">
+                        {{ group.name }}{% if group.beWelcome %} <i class="fas fa-circle-check p-groups-subs__official" aria-label="{{ 'group.official'|trans }}"></i>{% endif %}
+                    </a>
+                    <form class="p-groups-subs__switch" method="post" action="{{ path('group_notifications_disable', {groupId: group.id}) }}">
+                        <input type="hidden" name="_token" value="{{ _token }}">
+                        <button type="submit" class="c-switch is-on" role="switch" aria-checked="true">
+                            <span class="c-switch__track" aria-hidden="true"></span>
+                            <span>{{ 'group.subscriptions.notify'|trans }}</span>
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% else %}
+    {% if topics is empty %}
+        <p class="p-groups__empty">{{ 'group.subscriptions.no.topics'|trans }}</p>
+    {% else %}
+        <div class="p-groups-subs">
+            {% for subscription in topics %}
+                {% set thread = subscription.thread %}
+                <div class="p-groups-subs__row c-home-item c-home-item--thread{{ subscription.unread ? ' is-unread' }}">
+                    {% if thread.lastPost and thread.lastPost.author %}
+                        <img class="c-home-item__avatar" src="{{ path('avatar', {username: thread.lastPost.author.username, size: 64}) }}" alt="" loading="lazy">
+                    {% else %}
+                        <img class="c-home-item__avatar" src="{{ asset('images/empty_avatar_72_72.png') }}" alt="" loading="lazy">
+                    {% endif %}
+                    <div class="c-home-item__body">
+                        <a class="c-home-item__title c-home-item__title--link" href="{{ forum.thread_url(thread) }}">
+                            {%- if subscription.unread %}<span class="p-groups-subs__dot"><span class="visually-hidden">{{ 'group.subscriptions.unread'|trans }}</span></span>{% endif -%}
+                            {{ forum.thread_title(thread, app.request.locale) }}
+                        </a>
+                        <p class="c-home-item__meta">
+                            {% if thread.group %}
+                                <a class="c-home-item__group" href="{{ path('group_start', {group_id: thread.group.id}) }}">{{ thread.group.name }}</a>
+                                {%- if thread.group.beWelcome %} <i class="fas fa-circle-check p-groups-subs__official" aria-label="{{ 'group.official'|trans }}"></i>{% endif %}
+                            {% endif %}
+                            {% if thread.lastPost %}
+                                · {{ 'thread.lastpostby'|trans }} <span class="c-home-item__author">{{ forum.author(thread.lastPost, false) }}</span>
+                                · <span class="c-home-item__when">{{ thread.lastPost.updated.diffForHumans }}</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    {% set replies = thread.replies|default(0) %}
+                    <span class="c-home-item__replies{% if replies > 0 %} has-replies{% endif %}" aria-label="{{ 'landing.thread.replies'|trans({count: replies}) }}">
+                        <i class="far fa-comment" aria-hidden="true"></i> <span>{{ replies }}</span>
+                    </span>
+                    <form method="post" action="{{ path('forum_thread_unsubscribe', {threadId: thread.id}) }}">
+                        <input type="hidden" name="_token" value="{{ _token }}">
+                        <button type="submit" class="p-groups-subs__off" title="{{ 'forumunsubscribe'|trans }}" aria-label="{{ 'forumunsubscribe'|trans }}">
+                            <i class="far fa-bell-slash" aria-hidden="true"></i>
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endif %}

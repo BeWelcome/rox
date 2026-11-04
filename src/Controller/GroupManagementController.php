@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Doctrine\GroupMembershipStatusType;
 use App\Entity\Group;
+use App\Entity\GroupCategory;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
 use App\Form\CustomDataClass\GroupSettingsRequest;
@@ -239,13 +240,26 @@ class GroupManagementController extends AbstractController
         $member = $this->getMember();
 
         $settings = GroupSettingsRequest::fromGroup($group, $request->getLocale());
-        $form = $this->createForm(GroupSettingsType::class, $settings, ['locale' => $request->getLocale()]);
+        $form = $this->createForm(GroupSettingsType::class, $settings, [
+            'locale' => $request->getLocale(),
+            'with_categories' => $this->isGranted(GroupVoter::EDIT_CATEGORIES, $group),
+        ]);
+        $categoriesBefore = $this->categoryNames($group);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $picture = $settings->picture instanceof UploadedFile ? $this->storePicture($settings->picture, $groupDirectory) : null;
             $this->groupModel->updateSettings($group, $settings, $request->getLocale(), $member, $picture);
             $this->addTranslatedFlash('notice', 'groupmembersettingsupdated');
             $this->logger->write("Member #{$member->getId()} changed group settings for group #{$group->getId()}", 'Group');
+            // the group admin team changes groups they aren't admins of: logged, the group's admins aren't told
+            $categoriesAfter = $this->categoryNames($group);
+            if ($categoriesAfter !== $categoriesBefore && !$group->isAdmin($member)) {
+                $link = '<a href="' . $this->generateUrl('group_start', ['group_id' => $group->getId()]) . '">' . htmlspecialchars($group->getName()) . '</a>';
+                $this->logger->write(
+                    "Group {$link}: categories changed to " . ([] === $categoriesAfter ? '(none)' : implode(', ', $categoriesAfter)) . " by {$member->getUsername()}",
+                    'Group',
+                );
+            }
 
             return $this->redirectToRoute('group_start', ['group_id' => $group->getId()]);
         }
@@ -253,6 +267,8 @@ class GroupManagementController extends AbstractController
         return $this->render('group/settings.html.twig', [
             'group' => $group,
             'form' => $form,
+            // the group admin team at a group they aren't admins of
+            'adminTeam' => !$group->isAdmin($member),
             'submenu' => ['items' => $this->getSubmenuItems($member, $group), 'active' => 'groupsettings'],
         ]);
     }
@@ -346,5 +362,16 @@ class GroupManagementController extends AbstractController
         $member = $this->getUser();
 
         return $member;
+    }
+
+    /**
+     * @return list<string> the English names of the group's categories, sorted
+     */
+    private function categoryNames(Group $group): array
+    {
+        $names = array_map(static fn (GroupCategory $category): string => $category->getName('en'), $group->getCategories());
+        sort($names);
+
+        return $names;
     }
 }

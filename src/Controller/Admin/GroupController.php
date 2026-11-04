@@ -3,12 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Group;
-use App\Entity\GroupCategory;
 use App\Entity\Member;
-use App\Form\Admin\GroupCategoryNameType;
 use App\Logger\Logger;
-use App\Repository\GroupCategoryRepository;
 use App\Service\Mailer;
+use App\Utilities\GroupAdminSubmenuTrait;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\RedirectBackTrait;
 use App\Utilities\TranslatedFlashTrait;
@@ -20,7 +18,6 @@ use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
@@ -30,7 +27,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -40,6 +36,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class GroupController extends AbstractController
 {
+    use GroupAdminSubmenuTrait;
     use ItemsPerPageTraits;
     use RedirectBackTrait;
     use TranslatedFlashTrait;
@@ -410,102 +407,6 @@ class GroupController extends AbstractController
         ]);
     }
 
-    /**
-     * The list of group categories, with a form to add one (by its English name).
-     */
-    #[Route(path: '/admin/groups/categories', name: 'admin_groups_categories')]
-    #[IsGranted(Member::ROLE_ADMIN_GROUP)]
-    public function groupCategories(Request $request, Logger $logger): Response
-    {
-        $form = $this->createForm(GroupCategoryNameType::class, null, ['new' => true]);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $category = new GroupCategory()->setName('en', $form->get('name')->getData());
-            $this->entityManager->persist($category);
-            $this->entityManager->flush();
-
-            $this->addTranslatedFlash('notice', 'admin.group.category.saved');
-            $logger->write("Group category #{$category->getId()} ({$category->getName()}) added", 'Group');
-
-            return $this->redirectToRoute('admin_groups_category', ['id' => $category->getId()]);
-        }
-
-        /** @var GroupCategoryRepository $repository */
-        $repository = $this->entityManager->getRepository(GroupCategory::class);
-
-        return $this->render('admin/groups/categories.html.twig', [
-            'categories' => $repository->findAllSortedByName($request->getLocale()),
-            'groupCounts' => $repository->countGroups(),
-            'form' => $form,
-            'submenu' => [
-                'items' => $this->getSubmenuItems(),
-                'active' => 'categories',
-            ],
-        ]);
-    }
-
-    /**
-     * A group category's names: set one per language; an empty name removes the language (but not English).
-     */
-    #[Route(path: '/admin/groups/categories/{id}', name: 'admin_groups_category', requirements: ['id' => '\d+'])]
-    #[IsGranted(Member::ROLE_ADMIN_GROUP)]
-    public function groupCategory(
-        Request $request,
-        GroupCategory $category,
-        Logger $logger,
-        #[Autowire('%locales%')]
-        array $locales,
-    ): Response {
-        $form = $this->createForm(GroupCategoryNameType::class, ['locale' => $request->getLocale()], [
-            'locales' => $locales,
-            'display_locale' => $request->getLocale(),
-        ]);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $locale = $form->get('locale')->getData();
-            $name = (string) $form->get('name')->getData();
-            if ('en' === $locale && '' === trim($name)) {
-                $form->get('name')->addError(new FormError($this->getTranslator()->trans('admin.group.category.english')));
-            } else {
-                $category->setName($locale, $name);
-                $this->entityManager->flush();
-
-                $this->addTranslatedFlash('notice', 'admin.group.category.saved');
-                $logger->write("Group category #{$category->getId()} ({$category->getName()}): name in {$locale} set", 'Group');
-
-                return $this->redirectToRoute('admin_groups_category', ['id' => $category->getId()]);
-            }
-        }
-
-        return $this->render('admin/groups/category.html.twig', [
-            'category' => $category,
-            'form' => $form,
-            'submenu' => [
-                'items' => $this->getSubmenuItems(),
-                'active' => 'categories',
-            ],
-        ]);
-    }
-
-    /**
-     * Deletes a group category; the groups in it just lose it.
-     */
-    #[Route(path: '/admin/groups/categories/{id}/delete', name: 'admin_groups_category_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    #[IsGranted(Member::ROLE_ADMIN_GROUP)]
-    public function deleteGroupCategory(Request $request, GroupCategory $category, Logger $logger): RedirectResponse
-    {
-        if (!$this->isCsrfTokenValid('delete-group-category-' . $category->getId(), (string) $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException('Invalid CSRF token.');
-        }
-
-        $logger->write("Group category #{$category->getId()} ({$category->getName()}) deleted", 'Group');
-        $this->entityManager->remove($category);
-        $this->entityManager->flush();
-        $this->addTranslatedFlash('notice', 'admin.group.category.deleted');
-
-        return $this->redirectToRoute('admin_groups_categories');
-    }
-
     private function sendNewGroupApprovedNotification(Group $group, Member $creator): void
     {
         $subject = $this->translator->trans(// 'email.subject.group.approved'
@@ -526,36 +427,6 @@ class GroupController extends AbstractController
         $admin = $this->getUser();
 
         return $admin->getLevelForRight(Member::ROLE_ADMIN_GROUP) === $level;
-    }
-
-    private function getSubMenuItems(): array
-    {
-        return [
-            'approval' => [
-                'key' => 'admin.groups.approval',
-                'url' => $this->generateUrl('admin_groups_approval'),
-            ],
-            'archival' => [
-                'key' => 'admin.groups.archival',
-                'url' => $this->generateUrl('admin_groups_archival'),
-            ],
-            'unarchival' => [
-                'key' => 'admin.groups.unarchival',
-                'url' => $this->generateUrl('admin_groups_unarchival'),
-            ],
-            'rename' => [
-                'key' => 'admin.groups.rename',
-                'url' => $this->generateUrl('admin_groups_rename'),
-            ],
-            'categories' => [
-                'key' => 'admin.groups.categories',
-                'url' => $this->generateUrl('admin_groups_categories'),
-            ],
-            'logs' => [
-                'key' => 'admin.groups.logs',
-                'url' => $this->generateUrl('admin_groups_logs'),
-            ],
-        ];
     }
 
     private function getGroupLinkTag(Group $group): string

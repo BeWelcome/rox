@@ -9,11 +9,9 @@ use App\Repository\ForumPostRepository;
 use App\Utilities\ChangeProfilePictureGlobals;
 use App\Utilities\ItemsPerPageTraits;
 use App\Utilities\ProfileSubmenu;
-use App\Utilities\RedirectBackTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,51 +19,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class ForumsController extends AbstractController
 {
     use ItemsPerPageTraits;
-    use RedirectBackTrait;
-
-    /** The CSRF token id of the forum overview's switches. */
-    public const string TOKEN = 'forum-overview';
 
     public function __construct(private EntityManagerInterface $entityManager)
     {
-    }
-
-    #[Route(path: '/forums/show/groups/only-mine', name: 'forums_groups_only_mine', methods: ['POST'])]
-    public function showOnlyPostsInMyGroups(Request $request): RedirectResponse
-    {
-        $this->checkToken($request);
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
-        /** @var Preference $preference */
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MY_GROUP_POSTS_ONLY]);
-
-        $memberPreference = $member->getMemberPreference($preference);
-        $memberPreference->setValue('Yes');
-        $this->entityManager->persist($memberPreference);
-        $this->entityManager->flush();
-
-        return $this->redirectBack($request, 'forums');
-    }
-
-    #[Route(path: '/forums/show/groups/all', name: 'forums_groups_all', methods: ['POST'])]
-    public function showPostsInAllGroups(Request $request): RedirectResponse
-    {
-        $this->checkToken($request);
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $preferenceRepository = $this->entityManager->getRepository(Preference::class);
-        /** @var Preference $preference */
-        $preference = $preferenceRepository->findOneBy(['codename' => Preference::SHOW_MY_GROUP_POSTS_ONLY]);
-
-        $memberPreference = $member->getMemberPreference($preference);
-        $memberPreference->setValue('No');
-        $this->entityManager->persist($memberPreference);
-        $this->entityManager->flush();
-
-        return $this->redirectBack($request, 'forums');
     }
 
     #[Route(path: '/members/{username:member}/posts/{page}/{search}', name: 'profile_forum_posts_search')]
@@ -135,15 +91,5 @@ class ForumsController extends AbstractController
             'globals_js_json' => $globals->getGlobalsJsAsJson($loggedInMember, $member),
             'submenu' => $profileSubmenu->getSubmenu($loggedInMember, $member, ['active' => 'forum_posts']),
         ]);
-    }
-
-    /**
-     * The switches of the forum overview are POST requests with a CSRF token.
-     */
-    private function checkToken(Request $request): void
-    {
-        if (!$this->isCsrfTokenValid(self::TOKEN, (string) $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException('Invalid CSRF token.');
-        }
     }
 }

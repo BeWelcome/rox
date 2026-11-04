@@ -1,12 +1,6 @@
 {% extends 'group/layout.html.twig' %}
 
 {% block group_content %}
-    {% set newTopicUrl = is_granted('FORUM_GROUP_POST', group) ? (group.beWelcome ? path('forums_new') : path('group_new_post', {group_id: group.id})) : null %}
-    {% if group.beWelcome %}
-        {% include 'forum/_head.html.twig' with {active: 'agora', newTopicUrl: newTopicUrl} %}
-        <div class="mb-3">{{ 'agoratagline'|trans|purify }}</div>
-    {% endif %}
-
     {% if not canRead %}
         <p>{{ 'groupsnotpublic'|trans }}</p>
     {% else %}

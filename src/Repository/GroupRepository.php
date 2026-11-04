@@ -8,12 +8,15 @@ use App\Dto\GroupSearch;
 use App\Entity\ForumPost;
 use App\Entity\ForumThread;
 use App\Entity\Group;
+use App\Entity\GroupCategory;
 use App\Entity\GroupMembership;
+use App\Entity\Location;
 use App\Entity\Member;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * @extends EntityRepository<Group>
@@ -43,6 +46,13 @@ class GroupRepository extends EntityRepository
             ->setParameter('approved', Group::APPROVED)
             ->andWhere($search->archived ? 'g.name LIKE :archived' : 'g.name NOT LIKE :archived')
             ->setParameter('archived', addcslashes(GroupSearch::ARCHIVED_PREFIX, '%_') . '%');
+
+        // the agora is pinned above the unfiltered list (group/_agora_banner.html.twig)
+        if (!$search->isFiltered()) {
+            $queryBuilder
+                ->andWhere('g.id <> :agora')
+                ->setParameter('agora', Group::BEWELCOME);
+        }
 
         $nameParts = $search->getNameParts();
         if ([] !== $nameParts) {
@@ -75,12 +85,49 @@ class GroupRepository extends EntityRepository
     /**
      * The groups the member is in, rows as in createSearchQueryBuilder().
      */
-    public function createMyGroupsQueryBuilder(Member $member, string $order = 'nameasc'): QueryBuilder
+    /**
+     * The groups the member is in; the agora only with $withAgora (it is pinned above the lists, everyone is in it).
+     */
+    public function createMyGroupsQueryBuilder(Member $member, string $order = 'nameasc', bool $withAgora = true): QueryBuilder
     {
-        return $this->createListQueryBuilder($order)
+        $queryBuilder = $this->createListQueryBuilder($order)
             ->join('g.groupMemberships', 'mine', Join::WITH, 'mine.member = :member AND mine.status = :in')
             ->setParameter('member', $member)
             ->setParameter('in', GroupMembershipStatusType::CURRENT_MEMBER);
+        if (!$withAgora) {
+            $queryBuilder
+                ->andWhere('g.id <> :agora')
+                ->setParameter('agora', Group::BEWELCOME);
+        }
+
+        return $queryBuilder;
+    }
+
+    /**
+     * Groups near a place for "Groups near you": in the place itself, else in its region (admin1), else in its
+     * country; the most members first. Null when there are none in the country either.
+     *
+     * @return array{area: Location, groups: list<array<int|string, mixed>>, country: ?Location, countryCount: int}|null
+     */
+    public function findNear(Location $place, int $limit): ?array
+    {
+        $country = $place->getCountry();
+        foreach (array_filter([$place, $place->getAdmin1(), $country]) as $area) {
+            $groups = $this->createSearchQueryBuilder(new GroupSearch(location: $area->getGeonameId(), order: 'membersdesc'))
+                ->setMaxResults($limit)
+                ->getQuery()
+                ->getResult();
+            if ([] !== $groups) {
+                $countryCount = null === $country ? 0 : \count(new Paginator(
+                    $this->createSearchQueryBuilder(new GroupSearch(location: $country->getGeonameId()))->getQuery(),
+                    false,
+                ));
+
+                return ['area' => $area, 'groups' => $groups, 'country' => $country, 'countryCount' => $countryCount];
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -165,6 +212,68 @@ class GroupRepository extends EntityRepository
         return $qb
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * The groups in a category, by name.
+     *
+     * @return list<Group>
+     */
+    public function findInCategory(GroupCategory $category): array
+    {
+        return $this->createQueryBuilder('g')
+            ->join('g.categories', 'c')
+            ->where('c = :category')
+            ->setParameter('category', $category)
+            ->orderBy('g.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * The approved groups not in a category, by name, with their categories (to tell those that are full).
+     *
+     * @return list<Group>
+     */
+    public function findApprovedNotInCategory(GroupCategory $category): array
+    {
+        return $this->createQueryBuilder('g')
+            ->select('g', 'c')
+            ->leftJoin('g.categories', 'c')
+            ->where('g.approved = :approved')
+            ->andWhere(':category NOT MEMBER OF g.categories')
+            ->setParameter('approved', Group::APPROVED)
+            ->setParameter('category', $category)
+            ->orderBy('g.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param list<Group> $groups
+     *
+     * @return array<int, int> the number of current members of each group, by group id
+     */
+    public function countMembersOfGroups(array $groups): array
+    {
+        if ([] === $groups) {
+            return [];
+        }
+        $rows = $this->getEntityManager()->createQueryBuilder()
+            ->select('IDENTITY(gm.group) AS groupId', 'COUNT(gm.id) AS members')
+            ->from(GroupMembership::class, 'gm')
+            ->join('gm.member', 'm')
+            ->where('gm.group IN (:groups)')
+            ->andWhere('gm.status = :in')
+            ->andWhere('m.status IN (:active)')
+            ->setParameter('groups', $groups)
+            ->setParameter('in', GroupMembershipStatusType::CURRENT_MEMBER)
+            ->setParameter('active', MemberStatusType::ACTIVE_ALL_ARRAY)
+            ->groupBy('gm.group')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_column(array_map(static fn (array $row): array => [(int) $row['groupId'], (int) $row['members']], $rows), 1, 0);
     }
 
     private function createListQueryBuilder(string $order): QueryBuilder

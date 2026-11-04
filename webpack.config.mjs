@@ -50,6 +50,7 @@ Encore
     .addEntry('search/locations', './assets/js/search/locations.js')
     .addEntry('search/map', './assets/js/search/map.js')
     .addEntry('groups/location', './assets/js/groups/location.js')
+    .addEntry('groups/form', './assets/js/groups/form.js')
     .addEntry('requests', './assets/js/requests.js')
     .addEntry('message', './assets/js/message.js')
     .addEntry('trips', './assets/js/trips.js')

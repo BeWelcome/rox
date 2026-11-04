@@ -8,8 +8,8 @@
   (assets/js/contact/drawer.js, loaded by bewelcome.js): forum/reply.html.twig ?embed=1.
 #}
 
-{# A group's topic: its title in the group's head, under the group's name (group/_head.html.twig) #}
-{% if not thread.agora %}{% set group_head_topic = forum.thread_title(thread, locale) %}{% endif %}
+{# The topic's title in the group's head, under the group's name (group/_head.html.twig) #}
+{% set group_head_topic = forum.thread_title(thread, locale) %}
 
 {% block title %}{{ forum.thread_title(thread, locale) }}{% endblock %}
 
@@ -52,11 +52,6 @@
 
     <div class="p-thread">
     <div class="p-thread__top">
-        {# A group's thread has its title in the group's head, with the tabs (group/layout.html.twig) #}
-        {% if thread.agora %}
-            {% include 'forum/_head.html.twig' with {active: 'agora', tabsOnly: true} %}
-            <h1 class="p-thread__title">{{ forum.thread_title(thread, locale) }}</h1>
-        {% endif %}
         {% if thread.deleted == constant('App\\Doctrine\\ForumDeleteStatusType::DELETED') %}
             <p class="alert alert-warning">{{ 'threadclosed'|trans }}</p>
         {% endif %}

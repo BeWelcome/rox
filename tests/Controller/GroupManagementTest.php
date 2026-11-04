@@ -186,6 +186,91 @@ final class GroupManagementTest extends WebTestCase
         self::assertSame(self::BERLIN, $group->getLocation()?->getGeonameId());
     }
 
+    public function testAGroupHasAtMostThreeCategories(): void
+    {
+        foreach (['Outdoors', 'Travel', 'Food', 'Music'] as $name) {
+            $this->entityManager->persist(new GroupCategory()->setName('en', $name));
+        }
+        $this->entityManager->flush();
+        $this->client->loginUser($this->member('member-1'));
+
+        $crawler = $this->client->request('GET', $this->url('/groupsettings'));
+        $form = $crawler->filter('form[name="group_settings"]')->form();
+        $form['group_settings[description]'] = 'We walk a lot.';
+        foreach ($form['group_settings[categories]'] as $choice) {
+            self::assertInstanceOf(ChoiceFormField::class, $choice);
+            $choice->tick();
+        }
+        $this->client->submit($form);
+
+        self::assertResponseStatusCodeSame(422);
+        $this->entityManager->clear();
+        self::assertSame([], $this->entityManager->find(GroupEntity::class, $this->group->getId())->getCategories());
+    }
+
+    public function testTheGroupAdminTeamChangesTheCategoriesOfAnyGroupAndItIsLogged(): void
+    {
+        $category = new GroupCategory()->setName('en', 'Outdoors');
+        $this->entityManager->persist($category);
+        $this->entityManager->flush();
+        $logs = $this->countGroupLogs('%categories changed to Outdoors by member-3%');
+        // member-3 has the group right, but isn't an admin of the group
+        $this->client->loginUser($this->member('member-3'));
+
+        $crawler = $this->client->request('GET', $this->url('/groupsettings'));
+        self::assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('.p-gedit__team'));
+        $form = $crawler->filter('form[name="group_settings"]')->form();
+        $form['group_settings[description]'] = 'We walk a lot.';
+        $outdoors = $form['group_settings[categories]'][0];
+        self::assertInstanceOf(ChoiceFormField::class, $outdoors);
+        $outdoors->tick();
+        $this->client->submit($form);
+
+        self::assertResponseRedirects($this->url(''));
+        $this->entityManager->clear();
+        self::assertCount(1, $this->entityManager->find(GroupEntity::class, $this->group->getId())->getCategories());
+        self::assertSame($logs + 1, $this->countGroupLogs('%categories changed to Outdoors by member-3%'));
+
+        // the group's own admin: no note, no such log entry
+        $this->client->loginUser($this->member('member-1'));
+        $crawler = $this->client->request('GET', $this->url('/groupsettings'));
+        self::assertCount(0, $crawler->filter('.p-gedit__team'));
+    }
+
+    public function testAGroupsAdminCantEditOtherGroups(): void
+    {
+        $other = $this->entityManager->getRepository(GroupEntity::class)->findOneBy(['name' => 'Vegan Travelers']);
+        self::assertInstanceOf(GroupEntity::class, $other);
+        $this->client->loginUser($this->member('member-1'));
+
+        $this->client->request('GET', '/group/' . $other->getId() . '/groupsettings');
+
+        self::assertResponseStatusCodeSame(403);
+    }
+
+    public function testCategoriesAreSuggestedFromTheirKeywords(): void
+    {
+        $hiking = new GroupCategory()->setName('en', 'Outdoors')->setKeywords(['Hike', 'mountains']);
+        $food = new GroupCategory()->setName('en', 'Food');
+        $this->entityManager->persist($hiking);
+        $this->entityManager->persist($food);
+        $this->entityManager->flush();
+        $this->client->loginUser($this->member('member-2'));
+
+        $suggest = function (string $text, array $selected = []): array {
+            $this->client->request('POST', '/groups/categories/suggest', server: ['CONTENT_TYPE' => 'application/json'], content: json_encode(['text' => $text, 'selected' => $selected]));
+            self::assertResponseIsSuccessful();
+
+            return array_column(json_decode((string) $this->client->getResponse()->getContent(), true), 'name');
+        };
+
+        // keywords and names, whole words only, not the ones picked already
+        self::assertSame(['Outdoors'], $suggest('We <b>hike</b> in the Mountains.'));
+        self::assertSame(['Food'], $suggest('Food while hiking'));
+        self::assertSame([], $suggest('We hike', [$hiking->getId()]));
+    }
+
     public function testOtherMembersCantChangeTheGroupSettings(): void
     {
         $this->client->loginUser($this->member('member-2'));
@@ -307,5 +392,13 @@ final class GroupManagementTest extends WebTestCase
         self::assertInstanceOf(Member::class, $member);
 
         return $member;
+    }
+
+    private function countGroupLogs(string $like): int
+    {
+        return (int) $this->entityManager->getConnection()->fetchOne(
+            "SELECT COUNT(*) FROM logs WHERE Type = 'Group' AND Str LIKE ?",
+            [$like],
+        );
     }
 }

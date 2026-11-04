@@ -57,6 +57,10 @@ class MemberThreadSubscription
     /**
      * @var int
      */
+    /** When the subscriber last opened the thread; null: not since this column exists (the subscription date counts). */
+    #[ORM\Column(name: 'last_read', type: 'datetime', nullable: true)]
+    private ?DateTime $lastRead = null;
+
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
@@ -189,6 +193,32 @@ class MemberThreadSubscription
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getLastRead(): ?DateTime
+    {
+        return $this->lastRead;
+    }
+
+    public function setLastRead(DateTime $lastRead): self
+    {
+        $this->lastRead = $lastRead;
+
+        return $this;
+    }
+
+    /**
+     * Whether the thread has a post the subscriber hasn't seen: newer than their last visit, or than the
+     * subscription if they haven't opened it since.
+     */
+    public function isUnread(): bool
+    {
+        $lastPost = $this->thread->getLastPost();
+        if (null === $lastPost) {
+            return false;
+        }
+
+        return $lastPost->getCreated() > ($this->lastRead ?? $this->subscribed);
     }
 
     public function getSubscribed(): DateTime

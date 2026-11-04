@@ -6,6 +6,8 @@
 #}
 
 {% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('groups/form') }}
     <script>
         (function () {
             // Groups with a similar name, a second after the last key
@@ -83,7 +85,7 @@
         <h1 class="p-gnew__title">{{ 'group.create'|trans }}</h1>
         <p class="p-gnew__intro">
             <i class="fas fa-info-circle" aria-hidden="true"></i>
-            <span>{{ 'group.create.warning'|trans|escape|replace({'%link_start%': '<a href="/forums/rules#groups" target="_blank">', '%link_end%': '</a>'})|raw }}</span>
+            <span>{{ 'group.create.warning'|trans|escape|replace({'%link_start%': '<a href="' ~ path('group_rules', {group_id: constant('App\\Entity\\Group::BEWELCOME')}) ~ '#groups" target="_blank">', '%link_end%': '</a>'})|raw }}</span>
         </p>
 
         {{ form_start(form, {attr: {novalidate: 'novalidate', class: 'p-gnew__form'}}) }}
@@ -143,6 +145,16 @@
             </section>
             {% do _field.setRendered %}
         {% endfor %}
+
+        <section class="p-gnew__card">
+            {% include 'group/_categories_field.html.twig' with {field: form.categories} %}
+        </section>
+
+        <section class="p-gnew__card">
+            {% include 'group/_place_field.html.twig' with {name: form.locationName, location: form.location, locationId: 'group_location'} %}
+        </section>
+
+        <p class="p-gnew__rules"><i class="fas fa-scale-balanced" aria-hidden="true"></i> {{ 'group.create.rules'|trans }} <a href="{{ path('group_rules', {group_id: constant('App\\Entity\\Group::BEWELCOME')}) }}#groups">{{ 'forum.rules.read.all'|trans }}</a></p>
 
         <div class="p-gnew__foot">
             <a class="p-gnew__cancel" href="{{ path('groups_mygroups') }}">{{ 'cancel'|trans }}</a>

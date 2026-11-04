@@ -161,3 +161,18 @@ forum.thread.write.placeholder:
 forum.former.member:
     - 'Former member'
     - Forum, instead of the name on posts of members who aren't on BeWelcome any more
+forum.rules.in.short:
+    - 'Forum rules in short'
+    - Heading of the short rules next to the form for a new topic
+forum.rules.read.all:
+    - 'Read all rules'
+    - Link from the short rules (new topic) to the Rules tab of the group
+forum.post.topic:
+    - 'Post topic'
+    - Button that sends the form for a new topic
+forum.rules.before.reply:
+    - '<b>Before you reply:</b> be kind, stay on topic, no advertising or personal details of others.'
+    - Strip above the reply box of a forum thread; keep the <b></b>
+forum.rules.all:
+    - 'All rules'
+    - Link in the strip above the reply box to the Rules tab of the group

@@ -1,47 +1,180 @@
 {#
-  The head of a group's pages: the group's picture, name, place and categories, the button to join or to start
-  a topic, and the group's menu as tabs.
+  The head of a group's pages, like a member's profile: a white band with the group's picture, name (the agora
+  with its Official badge), a line with the place, categories, last activity and Joined (the agora: Open to every
+  member), the button to start a topic or to join and a "…" menu (settings, related groups, the admins' tools,
+  leave and delete); under it the tabs (Overview, Discussions, Rules, Wiki, Members).
+  On phones the head is small on every tab but the overview, the tabs stick to the top and the button sits at the
+  bottom of the screen.
   Needs group and submenu (items, active). group_head_topic (a topic's title): the group's name above it instead.
 #}
-<header class="p-group__head">
-    <div class="p-group__top">
-        <img class="p-group__picture" width="64" height="64" alt="" loading="lazy"
-             src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
-        <div class="p-group__titles">
-            {% if group_head_topic is defined %}
-                {# A topic of the group: the group's name in orange above, the topic's title below #}
-                <a class="p-group__eyebrow" href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a>
-                <h1 class="p-group__title">{{ group_head_topic }}</h1>
-            {% else %}
-                <h1 class="p-group__title"><a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a></h1>
-            {% endif %}
-            {% if group_head_topic is not defined and (group.location or group.categories|length) %}
-                <p class="p-group__meta">
-                    {% if group.location %}
-                        <span class="p-group-chip"><i class="fas fa-location-dot" aria-hidden="true"></i> {% include 'group/_location.html.twig' with {location: group.location} %}</span>
-                    {% endif %}
-                    {% for category in group.categories %}
-                        <span class="p-group-chip">{{ category.name(app.request.locale) }}</span>
+{% import 'group/_macros.html.twig' as groups %}
+{% set _numbers = group_numbers(group) %}
+{% set _agora = group.beWelcome %}
+{% set _status = app.user ? group.membership(app.user).status|default(null) : null %}
+{% set _joined = _status == constant('App\\Doctrine\\GroupMembershipStatusType::CURRENT_MEMBER') %}
+{% set _topic = group_head_topic ?? null %}
+{% set _picture = _agora ? asset('images/logo_icon_2025.svg') : (group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png')) %}
+
+{# The button: New topic for those who may post, Join for the others who may join (not those banned from the
+   group, waiting to be let in, or when it is by invitation only) #}
+{% set _canPost = is_granted('FORUM_GROUP_POST', group) %}
+{% set _waiting = _status in [constant('App\\Doctrine\\GroupMembershipStatusType::KICKED_FROM_GROUP'), constant('App\\Doctrine\\GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP')] %}
+{% set _canJoin = submenu.items.join is defined and submenu.active != 'join' and not _waiting and group.type != constant('App\\Doctrine\\GroupType::INVITE_ONLY') %}
+{% set _action = null %}
+{% if _canJoin and not (_agora and _canPost) %}
+    {% set _action = {url: submenu.items.join.url, label: 'group.join', icon: 'user-plus'} %}
+{% elseif _canPost %}
+    {% set _action = {url: _agora ? path('forums_new') : path('group_new_post', {group_id: group.id}), label: 'forumnewtopic', icon: 'plus'} %}
+{% endif %}
+
+{# A topic: Subscribed (a switch) in place of the button #}
+{% set _subscribe = null %}
+{% if _topic and thread is defined and subscribed is defined %}
+    {% set _action = null %}
+    {% set _subscribe %}
+        <form method="post" action="{{ subscribed ? path('forum_thread_unsubscribe', {threadId: thread.id}) : path('forum_thread_subscription', {threadId: thread.id}) }}">
+            <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\ForumSubscriptionController::TOKEN')) }}">
+            <button type="submit" class="p-group-head__subscribe{{ subscribed ? ' is-on' }}" aria-pressed="{{ subscribed ? 'true' : 'false' }}" title="{{ (subscribed ? 'forum.thread.subscribed' : 'forumsubscribe')|trans }}">
+                <i class="{{ subscribed ? 'fas fa-bell' : 'far fa-bell' }}" aria-hidden="true"></i>
+                <span>{{ (subscribed ? 'forum.thread.subscribed' : 'forumsubscribe')|trans }}</span>
+            </button>
+        </form>
+    {% endset %}
+{% endif %}
+
+{% set _tabs = submenu.items|filter((item, name) => name != 'join' and not (item.menu ?? false)) %}
+{% set _menu = submenu.items|filter(item => item.menu ?? false) %}
+{% set _resign = app.user and not _agora and group.isAdmin(app.user) %}
+
+{% set _more %}
+    {% if _menu is not empty or _resign %}
+        <div class="dropdown p-group-head__more">
+            <button type="button" class="p-group-head__round" data-bs-toggle="dropdown" aria-expanded="false" aria-label="{{ 'group.menu.more'|trans }}" title="{{ 'group.menu.more'|trans }}">
+                <i class="fas fa-ellipsis" aria-hidden="true"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end p-hero__dropdown p-group-head__menu">
+                {% for name, item in _menu|filter(item => not (item.danger ?? false)) %}
+                    <li><a class="dropdown-item p-hero__dropdown-item{{ submenu.active == name ? ' active' }}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>
+                        <i class="fas fa-fw fa-{{ item.icon }}" aria-hidden="true"></i> {{ item.key|lower|trans }}
+                        {%- if name == 'reports' and forum_open_reports() > 0 %} <span class="p-group-head__badge">{{ forum_open_reports() }}</span>{% endif %}
+                    </a></li>
+                {% endfor %}
+                {% if _resign %}
+                    <li>
+                        <form method="post" action="{{ path('group_resignadmin', {group_id: group.id}) }}"
+                              onsubmit="return confirm('{{ 'groupsconfirmresignasadmin'|trans|e('js') }}')">
+                            <input type="hidden" name="_token" value="{{ csrf_token('group-resign-' ~ group.id) }}">
+                            <button type="submit" class="dropdown-item p-hero__dropdown-item"><i class="fas fa-fw fa-user-minus" aria-hidden="true"></i> {{ 'group.admin.resign'|trans }}</button>
+                        </form>
+                    </li>
+                {% endif %}
+                {% set _danger = _menu|filter(item => item.danger ?? false) %}
+                {% if _danger is not empty %}
+                    <li><hr class="dropdown-divider"></li>
+                    {% for name, item in _danger %}
+                        <li><a class="dropdown-item p-hero__dropdown-item p-hero__dropdown-item--danger" href="{{ item.url }}">
+                            <i class="fas fa-fw fa-{{ item.icon }}" aria-hidden="true"></i> {{ item.key|lower|trans }}
+                        </a></li>
                     {% endfor %}
-                </p>
-            {% endif %}
+                {% endif %}
+            </ul>
         </div>
-        <div class="p-group__actions">
-            {# no Join for those banned from the group or waiting to be let in #}
-            {% set status = app.user ? group.membership(app.user).status|default(null) : null %}
-            {% set waiting = status in [constant('App\\Doctrine\\GroupMembershipStatusType::KICKED_FROM_GROUP'), constant('App\\Doctrine\\GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP')] %}
-            {% if submenu.items.join is defined and submenu.active != 'join' and not waiting and group.type != constant('App\\Doctrine\\GroupType::INVITE_ONLY') %}
-                <a class="p-group-btn p-group-btn--primary" href="{{ submenu.items.join.url }}" title="{{ submenu.items.join.key|lower|trans|striptags }}"><i class="fas fa-user-plus" aria-hidden="true"></i> <span class="p-group-btn__label">{{ submenu.items.join.key|lower|trans }}</span></a>
-            {% elseif is_granted('FORUM_GROUP_POST', group) %}
-                <a class="p-group-btn p-group-btn--primary" href="{{ path('group_new_post', {group_id: group.id}) }}" title="{{ 'forumnewtopic'|trans|striptags }}"><i class="fa fa-plus" aria-hidden="true"></i> <span class="p-group-btn__label">{{ 'forumnewtopic'|trans }}</span></a>
-            {% endif %}
+    {% endif %}
+{% endset %}
+
+<div class="p-group-head{{ submenu.active != 'overview' ? ' p-group-head--sub' }}{{ _topic ? ' p-group-head--topic' }}">
+    {# Phones, every tab but the overview: a small orange bar with the group's picture and name #}
+    <div class="p-group-head__bar">
+        <a class="p-group-head__back" href="{{ _topic ? path('group_forum', {group_id: group.id}) : path('group_start', {group_id: group.id}) }}" aria-label="{{ 'back'|trans }}"><i class="fas fa-chevron-left" aria-hidden="true"></i></a>
+        <span class="p-group-head__bar-picture{{ _agora ? ' is-agora' }}"><img width="34" height="34" alt="" src="{{ _picture }}"></span>
+        <span class="p-group-head__bar-name">
+            {% if _topic %}<small>{{ group.name }}</small>{% endif %}
+            {{ _topic ?: group.name }}
+        </span>
+        {{ _subscribe }}
+        {{ _more }}
+    </div>
+
+    <div class="container-lg p-group-head__wrap">
+        <div class="p-group-head__row">
+            <a class="p-group-head__picture{{ _agora ? ' is-agora' }}" href="{{ path('group_start', {group_id: group.id}) }}" tabindex="-1" aria-hidden="true">
+                <img alt="" src="{{ _picture }}" onerror="this.onerror=null;this.src='{{ asset('images/icons/group.png') }}'">
+            </a>
+            <div class="p-group-head__titles">
+                {% if _topic %}
+                    {# A topic of the group: the group's name in orange above, the topic's title below #}
+                    <a class="p-group-head__eyebrow" href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}{% if _agora %} <i class="fas fa-circle-check" aria-label="{{ 'group.official'|trans }}"></i>{% endif %}</a>
+                    <h1 class="p-group-head__title p-group-head__title--topic">{{ _topic }}</h1>
+                {% else %}
+                    <h1 class="p-group-head__title">
+                        <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a>
+                        {% if _agora %}{{ groups.official() }}{% endif %}
+                    </h1>
+                    <p class="p-group-head__meta">
+                        {% if group.location %}
+                            {% set _country = group.location.country %}
+                            <a class="p-group-head__place" href="{{ path('groups_search', {location: group.location.geonameId, locationName: group.location.name}) }}">
+                                {% if group.location.countryId %}<span class="p-group-head__flag o-flag o-flag--{{ group.location.countryId|upper }}" aria-hidden="true"></span>{% else %}<i class="fas fa-location-dot" aria-hidden="true"></i>{% endif %}
+                                <span>{{ group.location.name }}{% if _country and _country.name != group.location.name %}, {{ _country.name }}{% endif %}</span>
+                            </a>
+                        {% else %}
+                            <span class="p-group-head__place"><i class="fas fa-globe" aria-hidden="true"></i> {{ 'group.place.everywhere'|trans }}</span>
+                        {% endif %}
+                        {% if group.categories is not empty %}
+                            <span class="p-group-head__chips">{{ groups.categories(group, true) }}</span>
+                        {% endif %}
+                        <span class="p-group-head__activity">{{ groups.activity(_numbers.lastPost) }}</span>
+                        {% if _agora %}
+                            <span class="p-group-head__joined"><i class="fas fa-users" aria-hidden="true"></i> {{ 'group.agora.open'|trans }}</span>
+                        {% elseif _joined %}
+                            <span class="p-group-head__joined"><i class="fas fa-check" aria-hidden="true"></i> {{ 'group.list.joined'|trans }}</span>
+                        {% endif %}
+                    </p>
+                {% endif %}
+            </div>
+            <div class="p-group-head__actions">
+                {{ _subscribe }}
+                {% if _action %}
+                    <a class="p-group-head__primary" href="{{ _action.url }}"><i class="fas fa-{{ _action.icon }}" aria-hidden="true"></i> {{ _action.label|trans }}</a>
+                {% endif %}
+                {{ _more }}
+            </div>
         </div>
     </div>
-    <nav class="p-group__tabs" aria-label="{{ group.name }}">
-        {% for name, item in submenu.items %}
-            {% if name != 'join' %}
-                <a class="p-group__tab{% if submenu.active == name %} is-active{% endif %}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>{{ item.key|lower|trans }}</a>
-            {% endif %}
-        {% endfor %}
-    </nav>
-</header>
+
+    <div class="p-pro__tabs-wrap p-group-head__tabs">
+        <div class="container-lg">
+            <div class="p-hero__tabs-scroller" data-tabs-scroller>
+                <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--prev" data-tabs-scroll="-1" tabindex="-1" aria-hidden="true">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <nav class="p-hero__tabs" aria-label="{{ group.name }}">
+                    {% for name, item in _tabs %}
+                        {% set _count = item.count is defined ? _numbers[item.count] : 0 %}
+                        <a class="p-hero__tab{{ submenu.active == name ? ' p-hero__tab--active' }}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>
+                            <i class="fas fa-fw fa-{{ item.icon }}" aria-hidden="true"></i>
+                            {{ item.key|lower|trans }}
+                            {% if _count > 0 %}<span class="p-hero__tab-count">{{ _count }}</span>{% endif %}
+                        </a>
+                    {% endfor %}
+                </nav>
+                <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--next" data-tabs-scroll="1" tabindex="-1" aria-hidden="true">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <script>
+                (function (tabs) {
+                    var active = tabs && tabs.querySelector('.p-hero__tab--active');
+                    if (active) { tabs.scrollLeft = active.offsetLeft - (tabs.clientWidth - active.offsetWidth) / 2; }
+                })(document.currentScript.parentNode.querySelector('.p-hero__tabs'));
+            </script>
+        </div>
+    </div>
+
+    {# Phones: the button at the bottom of the screen #}
+    {% if _action and not (hide_group_bottom_bar ?? false) %}
+        <div class="p-group-head__bottom-bar">
+            <a class="p-group-head__primary" href="{{ _action.url }}"><i class="fas fa-{{ _action.icon }}" aria-hidden="true"></i> {{ _action.label|trans }}</a>
+        </div>
+    {% endif %}
+</div>

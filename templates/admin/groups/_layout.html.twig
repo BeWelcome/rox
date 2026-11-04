@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{#
+  The group admin team's category pages: a white band with "Groups administration" and the team's pages as tabs
+  (as a member's profile), the page under it. Needs submenu (items with icons, active, counts).
+#}
+{% set hide_sidebar = true %}
+
+{% block main %}
+    <main role="main" class="p-gadmin">
+        <div class="p-gadmin__head">
+            <div class="container-lg">
+                <h1 class="p-gadmin__title">{{ 'admin.groups.title'|trans }}</h1>
+            </div>
+            <div class="p-pro__tabs-wrap p-group-head__tabs">
+                <div class="container-lg">
+                    <div class="p-hero__tabs-scroller" data-tabs-scroller>
+                        <nav class="p-hero__tabs" aria-label="{{ 'admin.groups.title'|trans }}">
+                            {% for name, item in submenu.items %}
+                                {% set _count = submenu.counts[name] ?? 0 %}
+                                <a class="p-hero__tab{{ submenu.active == name ? ' p-hero__tab--active' }}" href="{{ item.url }}"{% if submenu.active == name %} aria-current="page"{% endif %}>
+                                    <i class="fas fa-fw fa-{{ item.icon }}" aria-hidden="true"></i>
+                                    {{ item.key|trans }}
+                                    {% if _count > 0 %}<span class="p-hero__tab-count">{{ _count }}</span>{% endif %}
+                                </a>
+                            {% endfor %}
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-lg p-gadmin__body">
+            {% set loggedInMember = app.user %}
+            {{ block('content') }}
+        </div>
+    </main>
+{% endblock %}

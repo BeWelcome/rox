@@ -1,0 +1,24 @@
+{#
+  The categories as tiles (icon, name, number of groups); a tile lists the groups in it, as the category filter does.
+  Categories without groups are left out. Needs categories and categoryCounts.
+#}
+{% set _tiles = categories|filter(category => (categoryCounts[category.id] ?? 0) > 0) %}
+{% if _tiles is not empty %}
+    <section class="p-groups-section" aria-labelledby="groups-categories-title">
+        <div class="p-groups-section__head">
+            <div>
+                <p class="p-groups-section__eyebrow">{{ 'group.categories.eyebrow'|trans }}</p>
+                <h2 class="p-groups-section__title" id="groups-categories-title">{{ 'group.categories.title'|trans }}</h2>
+            </div>
+        </div>
+        <div class="p-groups-categories">
+            {% for category in _tiles %}
+                <a class="p-groups-categories__tile{{ search.category == category.id ? ' is-on' }}" href="{{ path('groups_search', {category: category.id}) }}">
+                    <span class="c-group-icon"><i class="fas fa-{{ category.icon }}" aria-hidden="true"></i></span>
+                    <span class="p-groups-categories__name">{{ category.name(app.request.locale) }}</span>
+                    <span class="p-groups-categories__count">{{ categoryCounts[category.id] }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}

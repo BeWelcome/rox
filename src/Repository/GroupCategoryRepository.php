@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\GroupCategory;
+use App\Entity\GroupCategoryTranslation;
 use Collator;
 use Doctrine\ORM\EntityRepository;
 
@@ -48,5 +49,47 @@ class GroupCategoryRepository extends EntityRepository
         }
 
         return $counts;
+    }
+
+    /**
+     * The categories whose keywords or names (in any language) are words of the text, the most matches first.
+     *
+     * @param list<int> $without ids of categories left out (those already picked)
+     *
+     * @return list<GroupCategory>
+     */
+    public function findSuggested(string $text, array $without, int $limit): array
+    {
+        $text = mb_strtolower(html_entity_decode(strip_tags($text), \ENT_QUOTES | \ENT_HTML5));
+        if ('' === trim($text)) {
+            return [];
+        }
+
+        $scores = [];
+        $categories = [];
+        foreach ($this->findAllSortedByName('en') as $category) {
+            if (\in_array($category->getId(), $without, true)) {
+                continue;
+            }
+            $names = array_map(static fn (GroupCategoryTranslation $name): string => mb_strtolower((string) $name->getContent()), array_values($category->getNames()));
+            $words = array_merge($category->getKeywords(), $names);
+            $score = 0;
+            foreach (array_unique($words) as $word) {
+                $word = trim($word);
+                if ('' !== $word && 1 === preg_match('/(?<![\p{L}\p{N}])' . preg_quote($word, '/') . '(?![\p{L}\p{N}])/u', $text)) {
+                    ++$score;
+                }
+            }
+            if ($score > 0) {
+                $scores[$category->getId()] = $score;
+                $categories[$category->getId()] = $category;
+            }
+        }
+        arsort($scores);
+
+        return array_values(array_map(
+            static fn (int $id): GroupCategory => $categories[$id],
+            \array_slice(array_keys($scores), 0, $limit),
+        ));
     }
 }

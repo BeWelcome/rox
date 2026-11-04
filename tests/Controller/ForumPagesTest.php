@@ -14,7 +14,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
- * Reading the forums, now in src: the overview, a group's forum (the agora is the BeWelcome group's) and a thread.
+ * Reading the forums, now in src: a group's forum (the agora is the BeWelcome group's) and a thread.
  */
 #[Group('integration')]
 final class ForumPagesTest extends WebTestCase
@@ -33,35 +33,14 @@ final class ForumPagesTest extends WebTestCase
         $this->client->loginUser($this->member('member-2'));
     }
 
-    public function testTheOverviewListsTheLatestThreadsOfAllGroups(): void
+    public function testTheOverviewGoesToTheGroupsPage(): void
     {
-        $crawler = $this->request('GET', '/forums');
+        $this->request('GET', '/forums');
+        self::assertResponseRedirects('/groups/', 301);
 
-        self::assertResponseIsSuccessful();
-        self::assertStringContainsString(self::AGORA_THREAD, $crawler->text());
-        self::assertStringContainsString(self::HIKING_THREAD, $crawler->text());
-    }
-
-    public function testTheOverviewLeavesOutMembersOnlyGroupsOfOthers(): void
-    {
-        $this->connection->executeStatement("UPDATE `group` SET members_only = 1 WHERE name = 'Hiking Enthusiasts'");
-        $this->leaveHiking();
-
-        $crawler = $this->request('GET', '/forums');
-
-        self::assertStringNotContainsString(self::HIKING_THREAD, $crawler->text());
-    }
-
-    public function testMyGroupsOnlyShowsTheThreadsOfTheMembersGroups(): void
-    {
-        $this->leaveHiking();
-
-        $crawler = $this->request('GET', '/forums?groups=mine');
-        self::assertResponseIsSuccessful();
-        self::assertStringNotContainsString(self::HIKING_THREAD, $crawler->text());
-        self::assertCount(1, $crawler->filter('.p-forum__toolbar a.p-forum__btn[href="/forums"]'));
-
-        self::assertStringContainsString(self::HIKING_THREAD, $this->request('GET', '/forums')->text());
+        // the home page's link to the posts of the member's groups
+        $this->request('GET', '/forums?groups=mine');
+        self::assertResponseRedirects('/groups/mygroups', 301);
     }
 
     public function testAGroupThreadHasTheGroupsTabsAndListsOpenItAtItsTop(): void
@@ -71,10 +50,10 @@ final class ForumPagesTest extends WebTestCase
 
         $crawler = $this->request('GET', $uri);
         self::assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('.p-group__tabs .p-group__tab.is-active'));
+        self::assertCount(1, $crawler->filter('.p-group-head .p-hero__tab--active'));
 
         // the lists link to the thread itself, not to its last post
-        $links = $this->request('GET', '/forums')->filter('a.c-home-item__row-link')->each(
+        $links = $this->request('GET', '/group/' . $thread->getGroup()->getId() . '/forum')->filter('a.c-home-item__row-link')->each(
             static fn ($link): string => (string) $link->attr('href'),
         );
         self::assertContains($uri, $links);
@@ -135,9 +114,6 @@ final class ForumPagesTest extends WebTestCase
 
         $this->request('GET', '/group/' . $hiking->getGroup()->getId() . '/forum/s' . $hiking->getId());
         self::assertResponseStatusCodeSame(403);
-
-        $crawler = $this->request('GET', '/forums');
-        self::assertStringNotContainsString(self::HIKING_THREAD, $crawler->text());
     }
 
     public function testModeratorOnlyThreadsAreForModerators(): void
@@ -164,11 +140,6 @@ final class ForumPagesTest extends WebTestCase
             [ForumDeleteStatusType::DELETED, $hiking->getId()],
         );
         $this->client->loginUser($this->member('member-3'));
-
-        $crawler = $this->request('GET', '/forums');
-        self::assertResponseIsSuccessful();
-        self::assertStringContainsString(self::AGORA_THREAD, $crawler->text());
-        self::assertStringNotContainsString(self::HIKING_THREAD, $crawler->text());
 
         $crawler = $this->request('GET', '/group/0/forum');
         self::assertResponseIsSuccessful();
@@ -217,63 +188,43 @@ final class ForumPagesTest extends WebTestCase
             [$this->member('member-2')->getId()],
         );
 
-        $crawler = $this->request('GET', '/forums');
-        self::assertCount(1, $crawler->filter('.p-forum__list .c-home-item'));
-        self::assertCount(0, $crawler->filter('form[action$="/forums/more/group"], form[action$="/forums/less/group"]'));
-
         $crawler = $this->request('GET', '/group/0/forum');
         self::assertCount(1, $crawler->filter('.p-forum__list .c-home-item'));
     }
 
-    public function testTheForumPagesHaveTheForumsTabs(): void
+    public function testTheAgoraHasTheGroupsHeadWithItsOwnTabs(): void
     {
-        $tabs = static fn ($crawler): array => $crawler->filter('.p-forum__tabs a')->each(static fn ($tab) => $tab->attr('href'));
-        $forumTabs = ['/forums', '/group/0/forum', '/forums/subscriptions', '/forums/rules'];
+        $tabs = static fn ($crawler): array => $crawler->filter('.p-group-head .p-hero__tab')->each(static fn ($tab) => $tab->attr('href'));
+        $agoraTabs = ['/group/0', '/group/0/forum', '/group/0/rules'];
 
-        foreach ($forumTabs as $url) {
+        // no wiki and no members tab (every member is in it); its threads have the head too
+        foreach (['/group/0', '/group/0/forum', '/group/0/rules', '/forums/s' . $this->thread(self::AGORA_THREAD)->getId()] as $url) {
             $crawler = $this->request('GET', $url);
             self::assertResponseIsSuccessful();
-            self::assertSame($forumTabs, $tabs($crawler), $url);
+            self::assertSame($agoraTabs, $tabs($crawler), $url);
+            self::assertCount(0, $crawler->filter('#sidebar'), $url);
         }
+        self::assertCount(1, $crawler->filter('.p-group-head .c-group-official, .p-group-head__eyebrow'));
 
-        // the agora has the forum's tabs, not the BeWelcome group's menu; its threads have the tabs too
-        $crawler = $this->request('GET', '/group/0/forum');
-        self::assertSame('/group/0/forum', $crawler->filter('.p-forum__tab.is-active')->attr('href'));
-        self::assertCount(0, $crawler->filter('#sidebar'));
-        $crawler = $this->request('GET', '/forums/s' . $this->thread(self::AGORA_THREAD)->getId());
-        self::assertSame($forumTabs, $tabs($crawler));
-
-        // a group's forum has the group's head and menu
+        // a group's forum has the group's head with the Discussions tab active
         $crawler = $this->request('GET', '/group/' . $this->thread(self::HIKING_THREAD)->getGroup()->getId() . '/forum');
-        self::assertCount(0, $crawler->filter('.p-forum__tabs'));
-        self::assertStringEndsWith('/forum', (string) $crawler->filter('.p-group__tab.is-active')->attr('href'));
-        self::assertCount(0, $crawler->filter('#sidebar'));
+        self::assertStringEndsWith('/forum', (string) $crawler->filter('.p-group-head .p-hero__tab--active')->attr('href'));
     }
 
-    public function testTheModeratorsHaveATabForTheReports(): void
+    public function testTheModeratorsReachTheReportsFromTheAgorasMenu(): void
     {
         $post = $this->thread(self::AGORA_THREAD)->getFirstPost();
         static::getContainer()->get(ForumModerationModel::class)->report($post, $this->member('member-2'), 'Please have a look.');
+
+        $crawler = $this->request('GET', '/group/0');
+        self::assertCount(0, $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="/forums/reporttomod/AllActiveReports"]'));
+
         $this->client->loginUser($this->member('member-3'));
-
-        $crawler = $this->request('GET', '/forums');
-
-        $reports = $crawler->filter('.p-forum__tab[href="/forums/reporttomod/AllActiveReports"]');
+        $crawler = $this->request('GET', '/group/0');
+        $reports = $crawler->filter('.p-group-head__actions .p-group-head__menu a[href="/forums/reporttomod/AllActiveReports"]');
         self::assertCount(1, $reports);
-        self::assertSame('1', $reports->filter('.p-forum__tab-count')->text());
-    }
-
-    public function testTheGroupToolsHaveTabsForThoseWhoMayUseThem(): void
-    {
-        // members see only the forum's tabs (see above); bwadmin is a forum moderator and may approve groups
-        $this->client->loginUser($this->member('bwadmin'));
-        $crawler = $this->request('GET', '/forums');
-        self::assertCount(1, $crawler->filter('.p-forum__tab[href="/admin/logs/groups"]'));
-        self::assertCount(1, $crawler->filter('.p-forum__tab[href="/admin/groups/approval"]'));
-
-        $this->client->click($crawler->filter('.p-forum__tab[href="/admin/groups/approval"]')->link());
-        self::assertResponseIsSuccessful();
-        $this->client->click($crawler->filter('.p-forum__tab[href="/admin/logs/groups"]')->link());
+        self::assertSame('1', $reports->filter('.p-group-head__badge')->text());
+        $this->client->click($reports->link());
         self::assertResponseIsSuccessful();
     }
 
@@ -288,13 +239,13 @@ final class ForumPagesTest extends WebTestCase
         self::assertCount(1, $crawler->filter('a[href="/forums/s' . $thread->getId() . '#post' . $postId . '"]'));
     }
 
-    public function testLegacyOverviewUrlsGoToTheOverview(): void
+    public function testLegacyOverviewUrlsGoToTheGroupsPage(): void
     {
         $this->request('GET', '/groups/forums');
-        self::assertResponseRedirects('/forums', 301);
+        self::assertResponseRedirects('/groups/', 301);
 
         $this->request('GET', '/forums/page2/page1/');
-        self::assertResponseRedirects('/forums?page=2', 301);
+        self::assertResponseRedirects('/groups/', 301);
     }
 
     /**

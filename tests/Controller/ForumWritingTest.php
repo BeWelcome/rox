@@ -225,15 +225,38 @@ final class ForumWritingTest extends WebTestCase
         $this->client->submit($crawler->filter('form[action$="/forums/subscribe/thread/' . $thread->getId() . '"]')->form());
         self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ? AND notificationsEnabled = 1', [$thread->getId(), $member->getId()]));
 
-        $crawler = $this->request('GET', '/forums/subscriptions');
+        // the subscriptions are a tab of the groups page, where the member unsubscribes
+        $this->request('GET', '/forums/subscriptions');
+        self::assertResponseRedirects('/groups/subscriptions', 301);
+        $crawler = $this->request('GET', '/groups/subscriptions');
         self::assertResponseIsSuccessful();
-        self::assertStringContainsString(self::AGORA_THREAD, $crawler->filter('#thread-subscriptions')->text());
-        $this->client->submit($crawler->filter('form[action$="/forums/subscriptions/disable/thread/' . $thread->getId() . '"]')->form());
-        self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ? AND notificationsEnabled = 0', [$thread->getId(), $member->getId()]));
-
-        $crawler = $this->request('GET', '/forums/subscriptions');
+        self::assertStringContainsString(self::AGORA_THREAD, $crawler->filter('.p-groups-subs')->text());
         $this->client->submit($crawler->filter('form[action$="/forums/unsubscribe/thread/' . $thread->getId() . '"]')->form());
         self::assertSame(0, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $member->getId()]));
+    }
+
+    public function testTheRulesAreThereWhenWriting(): void
+    {
+        $thread = $this->thread(self::AGORA_THREAD);
+        $this->client->loginUser($this->member('member-2'));
+
+        // a new topic: the rules in short next to the form, a link to all of them
+        $crawler = $this->request('GET', '/forums/new');
+        self::assertCount(5, $crawler->filter('.js-forum-rules .p-group-rules__short li'));
+        self::assertCount(1, $crawler->filter('.js-forum-rules a[href="/group/0/rules"]'));
+
+        // a reply: the strip above the editor, in the side panel too
+        foreach (['', '?embed=1'] as $query) {
+            $crawler = $this->request('GET', '/forums/s' . $thread->getId() . '/reply' . $query);
+            self::assertCount(1, $crawler->filter('.p-forum-rules-strip a[href="/group/0/rules"]'), $query);
+        }
+
+        // the thread's head subscribes
+        $crawler = $this->request('GET', '/forums/s' . $thread->getId());
+        $this->client->submit($crawler->filter('.p-group-head__actions form[action$="/forums/subscribe/thread/' . $thread->getId() . '"]')->form());
+        self::assertSame(1, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $this->member('member-2')->getId()]));
+        $crawler = $this->request('GET', '/forums/s' . $thread->getId());
+        self::assertCount(1, $crawler->filter('.p-group-head__actions .p-group-head__subscribe.is-on'));
     }
 
     public function testSwitchesOnPagesNeedTheirToken(): void
@@ -245,8 +268,6 @@ final class ForumWritingTest extends WebTestCase
         $this->request('GET', '/forums/subscribe/thread/' . $thread->getId());
         self::assertResponseStatusCodeSame(405);
         $this->client->request('POST', '/forums/subscribe/thread/' . $thread->getId(), ['_token' => 'wrong']);
-        self::assertResponseStatusCodeSame(403);
-        $this->client->request('POST', '/forums/show/groups/only-mine', ['_token' => 'wrong']);
         self::assertResponseStatusCodeSame(403);
         self::assertSame(0, $this->countRows('members_threads_subscribed', 'IdThread = ? AND IdSubscriber = ?', [$thread->getId(), $member->getId()]));
     }
@@ -278,7 +299,7 @@ final class ForumWritingTest extends WebTestCase
 
         $this->request('GET', '/forums/subscriptions/disable/group/' . $hiking->getId());
 
-        self::assertResponseRedirects('/forums/subscriptions');
+        self::assertResponseRedirects('/groups/subscriptions');
         self::assertSame(1, $this->countRows('group_membership', 'group_id = ? AND member_id = ? AND notifications_enabled = 0', [$hiking->getId(), $member->getId()]));
     }
 

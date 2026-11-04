@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{#
+  The volunteer tools (Admin\VolunteerToolController): a header with the tool's title and description and the
+  volunteer's rights that open tools, the tools by group in a sidebar, the tool in a card next to it (block tool).
+  tool: the tool of the sidebar; page: the page within it (its title and description).
+#}
+
+{% block title %}{{ ('admin.tools.' ~ page ~ '.title')|trans }} · {{ 'admin.tools.eyebrow'|trans }}{% endblock %}
+
+{% block main %}
+  <main role="main" class="c-vtools">
+    <div class="container-lg">
+      <header class="c-vtools__head">
+        <div class="c-vtools__head-main">
+          <p class="c-page-head__eyebrow">{{ 'admin.tools.eyebrow'|trans }}</p>
+          <h1 class="c-page-head__title">{{ ('admin.tools.' ~ page ~ '.title')|trans }}</h1>
+          <p class="c-vtools__description">{{ ('admin.tools.' ~ page ~ '.description')|trans }}</p>
+        </div>
+        {% if tool_rights is not empty %}
+          <div class="c-vtools__rights">
+            <span class="c-vtools__rights-label">{{ 'admin.tools.your.rights'|trans }}</span>
+            {% for right in tool_rights %}
+              <span class="c-tag c-tag--orange"><i class="fas fa-handshake" aria-hidden="true"></i>{{ right|trans }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </header>
+
+      <div class="c-vtools__layout">
+        <nav class="c-vtools__nav" aria-label="{{ 'admin.tools.eyebrow'|trans }}">
+          {% for group, tools in tool_groups %}
+            <p class="c-vtools__group">{{ ('admin.tools.group.' ~ group)|trans }}</p>
+            <ul class="c-vtools__items">
+              {% for key, item in tools %}
+                <li>
+                  <a class="c-vtools__item{{ key == tool ? ' is-active' }}" href="{{ path(item.route) }}"{% if key == tool %} aria-current="page"{% endif %}>
+                    <i class="fas fa-{{ item.icon }} fa-fw" aria-hidden="true"></i>{{ ('admin.tools.' ~ key ~ '.title')|trans }}
+                  </a>
+                </li>
+              {% endfor %}
+            </ul>
+          {% endfor %}
+        </nav>
+
+        <section class="c-vtools__card" aria-labelledby="c-vtools-title">
+          <span class="u:sr-only" id="c-vtools-title">{{ ('admin.tools.' ~ page ~ '.title')|trans }}</span>
+          {% include 'admin/massmail/_flash.html.twig' %}
+          {% block tool %}{% endblock %}
+        </section>
+      </div>
+    </div>
+  </main>
+{% endblock main %}

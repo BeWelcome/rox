@@ -1,26 +1,32 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/tools/_layout.html.twig' %}
+{% import 'admin/tools/_macros.html.twig' as vt %}
 
-{% block title %}
-    {{ 'admin.tools.title' | trans }}
-{% endblock %}
+{% block tool %}
+  {{ form_start(form, {attr: {class: 'c-vtools-search', novalidate: 'novalidate'}}) }}
+    {{ form_widget(form.term, {attr: form.term.vars.attr|merge({class: 'o-input', 'aria-label': 'admin.tools.find_member.term'|trans})}) }}
+    <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>{{ 'admin.tools.find_member.search'|trans }}</button>
+  {{ form_end(form) }}
+  {% for error in form.term.vars.errors %}<p class="c-massmail-form__errors">{{ error.message|trans }}</p>{% endfor %}
 
-{% block content %}
-    <h1>{{ 'admin.tools.headline' | trans }}</h1>
-    <h2>{{ 'admin.tools.find_user' | trans }}</h2>
-
-    {{ form(form) }}
-    {% if members is defined %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                {% for member in members %}
-                    <tr>
-                        <td>{{ macros.avatar(member.username, 48) }}</td>
-                        <td>{{ macros.profilelink(member.username) }}</td>
-                        <td>{{ member.email }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
+  {% if members is not null %}
+    <p class="c-vtools__summary">{{ 'admin.tools.find_member.found'|trans({count: members|length, term: term}) }}</p>
+    {% if members is empty %}
+      <p class="c-cadmin__empty c-vtools__empty"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>{{ 'admin.tools.find_member.none'|trans }}</p>
+    {% else %}
+      <ul class="c-vtools-list">
+        {% for member in members %}
+          {% set _address = member.activeAddress %}
+          {% set _place = _address ? [_address.location.name, _address.location.country ? _address.location.country.name]|filter(v => v)|join(' · ') : null %}
+          <li class="c-vtools-list__row c-vtools-find">
+            {{ vt.member(member.username, [_place, 'admin.tools.find_member.since'|trans({year: member.created|date('Y')})]|filter(v => v)|join(' · '), 48) }}
+            {% if member.name %}<span class="c-vtools-find__name">{{ member.name }}</span>{% endif %}
+            <span class="c-vtools-find__end">
+              {{ vt.status(member.status) }}
+              <span class="c-vtools-find__email">{{ member.email }}</span>
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
     {% endif %}
-{% endblock content %}
+  {% endif %}
+{% endblock tool %}

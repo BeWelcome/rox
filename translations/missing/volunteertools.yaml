@@ -13,3 +13,261 @@ admin.tools.login_message.add:
     - Volunteer tool
     - 'messages+intl-icu'
     - yes
+admin.tools.eyebrow:
+    - 'Volunteer tools'
+    - 'Volunteer tools: the eyebrow above the title of every tool, and the name of the sidebar.'
+admin.tools.your.rights:
+    - 'Your rights'
+    - 'Volunteer tools: before the volunteer''s rights that open tools, in the header.'
+admin.tools.right.safetyteam:
+    - 'Safety team'
+    - 'Volunteer tools: the SafetyTeam right, in the header.'
+admin.tools.right.profile:
+    - Profile
+    - 'Volunteer tools: the Profile right, in the header.'
+admin.tools.right.accepter:
+    - Accepter
+    - 'Volunteer tools: the Accepter right, in the header.'
+admin.tools.right.checker:
+    - Checker
+    - 'Volunteer tools: the Checker right, in the header.'
+admin.tools.right.admin:
+    - Admin
+    - 'Volunteer tools: the Admin right, in the header.'
+admin.tools.group.members:
+    - Members
+    - 'Volunteer tools: group of the sidebar (find member, change username, messages by member).'
+admin.tools.group.spam:
+    - 'Spam checks'
+    - 'Volunteer tools: group of the sidebar (messages and requests sent, top spammers, damage done).'
+admin.tools.group.community:
+    - Community
+    - 'Volunteer tools: group of the sidebar (age by country).'
+admin.tools.group.site:
+    - Site
+    - 'Volunteer tools: group of the sidebar (uploaded images, login messages).'
+admin.tools.member:
+    - Member
+    - 'Volunteer tools: column heading.'
+admin.tools.status:
+    - Status
+    - 'Volunteer tools: column heading, a member''s status.'
+admin.tools.updated:
+    - Updated
+    - 'Volunteer tools: column heading, when the member''s profile was last changed.'
+admin.tools.username:
+    - Username
+    - 'Volunteer tools: label and placeholder of a username field.'
+admin.tools.nobody:
+    - 'Nobody to show.'
+    - 'Volunteer tools: an empty list.'
+admin.tools.find_member.title:
+    - 'Find member'
+    - 'Volunteer tool: title.'
+admin.tools.find_member.description:
+    - 'Search members by username, name or email address.'
+    - 'Volunteer tool Find member: description under the title.'
+admin.tools.find_member.term:
+    - 'Username, name or email address'
+    - 'Volunteer tool Find member: label of the search field.'
+admin.tools.find_member.placeholder:
+    - 'Username, name or email address'
+    - 'Volunteer tool Find member: placeholder of the search field.'
+admin.tools.find_member.search:
+    - Search
+    - 'Volunteer tool Find member: the search button.'
+admin.tools.find_member.found:
+    - '{count, plural, =0 {No member matches “{term}”} one {One member matches “{term}”} other {# members match “{term}”}}'
+    - 'Volunteer tool Find member: above the results (at most 20). Keep {count} and {term}.'
+admin.tools.find_member.none:
+    - 'No member matches this search.'
+    - 'Volunteer tool Find member: no results.'
+admin.tools.find_member.since:
+    - 'member since {year}'
+    - 'Volunteer tool Find member: when the member signed up. Keep {year}.'
+admin.tools.change_username.title:
+    - 'Change username'
+    - 'Volunteer tool: title, and its button.'
+admin.tools.change_username.description:
+    - 'Rename a member’s profile.'
+    - 'Volunteer tool Change username: description under the title.'
+admin.tools.change_username.old:
+    - 'Current username'
+    - 'Volunteer tool Change username: label.'
+admin.tools.change_username.old.placeholder:
+    - 'e.g. mariana.k'
+    - 'Volunteer tool Change username: placeholder of the current username.'
+admin.tools.change_username.new:
+    - 'New username'
+    - 'Volunteer tool Change username: label.'
+admin.tools.change_username.new.placeholder:
+    - 'e.g. mariana_krk'
+    - 'Volunteer tool Change username: placeholder of the new username.'
+admin.tools.change_username.note:
+    - 'Messages, references and notifications stay with the profile. The change is written to the admin log.'
+    - 'Volunteer tool Change username: note above the button.'
+admin.tools.change_username.done:
+    - '{old} is now {new}.'
+    - 'Volunteer tool Change username: notice after the change. Keep {old} and {new}.'
+admin.tools.change_username.error.unknown:
+    - 'There is no member with this username.'
+    - 'Volunteer tools: error of a username field.'
+admin.tools.change_username.error.taken:
+    - 'A member with this username already exists. Please choose another one.'
+    - 'Volunteer tool Change username: error of the new username.'
+admin.tools.messages_by_member.title:
+    - 'Messages by member'
+    - 'Volunteer tool: title.'
+admin.tools.messages_by_member.description:
+    - 'Everyone a member exchanged messages, stay requests or invitations with.'
+    - 'Volunteer tool Messages by member: description under the title.'
+admin.tools.messages_by_member.look.up:
+    - 'Look up'
+    - 'Volunteer tool Messages by member: the button.'
+admin.tools.messages_by_member.count:
+    - '{count, plural, =0 {Exchanged with nobody} one {Exchanged with one member} other {Exchanged with # members}}'
+    - 'Volunteer tool Messages by member: under the member. Keep {count}.'
+admin.tools.messages_by_member.message:
+    - Message
+    - 'Volunteer tool Messages by member: legend of the icons.'
+admin.tools.messages_by_member.request:
+    - 'Stay request'
+    - 'Volunteer tool Messages by member: legend of the icons.'
+admin.tools.messages_by_member.invitation:
+    - Invitation
+    - 'Volunteer tool Messages by member: legend of the icons.'
+admin.tools.messages_by_member.received:
+    - 'Received {date}'
+    - 'Volunteer tool Messages by member: when the member last got a message from them. Keep {date}.'
+admin.tools.messages_by_member.sent:
+    - 'Sent {date}'
+    - 'Volunteer tool Messages by member: when the member last wrote to them. Keep {date}.'
+admin.tools.messages_by_member.none:
+    - 'The member hasn’t exchanged any messages.'
+    - 'Volunteer tool Messages by member: no results.'
+admin.tools.messages_sent.title:
+    - 'Messages sent'
+    - 'Volunteer tool: title.'
+admin.tools.messages_sent.description:
+    - 'Members who sent the most messages in the last 7 days.'
+    - 'Volunteer tool Messages sent: description under the title.'
+admin.tools.messages_sent.unit:
+    - Messages
+    - 'Volunteer tools: column heading, a number of messages.'
+admin.tools.requests_sent.title:
+    - 'Requests sent'
+    - 'Volunteer tool: title.'
+admin.tools.requests_sent.description:
+    - 'Members who sent the most stay requests in the last 14 days.'
+    - 'Volunteer tool Requests sent: description under the title.'
+admin.tools.requests_sent.unit:
+    - Requests
+    - 'Volunteer tools: column heading, a number of stay requests.'
+admin.tools.top_spammers.title:
+    - 'Top spammers'
+    - 'Volunteer tool: title.'
+admin.tools.top_spammers.description:
+    - 'Banned members by number of messages sent in the last two months.'
+    - 'Volunteer tool Top spammers: description under the title.'
+admin.tools.damage_done.title:
+    - 'Damage done'
+    - 'Volunteer tool: title.'
+admin.tools.damage_done.description:
+    - 'Who banned members wrote to, and the status of those members now.'
+    - 'Volunteer tool Damage done: description under the title.'
+admin.tools.damage_done.spammer:
+    - Spammer
+    - 'Volunteer tool Damage done: column heading.'
+admin.tools.damage_done.wrote.to:
+    - 'Wrote to'
+    - 'Volunteer tool Damage done: column heading.'
+admin.tools.damage_done.updated:
+    - 'updated {date}'
+    - 'Volunteer tool Damage done: when the member''s profile was last changed. Keep {date}.'
+admin.tools.age_by_country.title:
+    - 'Age by country'
+    - 'Volunteer tool: title.'
+admin.tools.age_by_country.description:
+    - 'Members per country with their average birth year and age.'
+    - 'Volunteer tool Age by country: description under the title.'
+admin.tools.age_by_country.country:
+    - Country
+    - 'Volunteer tool Age by country: column heading.'
+admin.tools.age_by_country.members:
+    - Members
+    - 'Volunteer tool Age by country: column heading.'
+admin.tools.age_by_country.birth.year:
+    - 'Birth year'
+    - 'Volunteer tool Age by country: column heading, the average birth year.'
+admin.tools.age_by_country.age:
+    - Age
+    - 'Volunteer tool Age by country: column heading, the average age.'
+admin.tools.uploaded_images.title:
+    - 'Uploaded images'
+    - 'Volunteer tool: title.'
+admin.tools.uploaded_images.description:
+    - 'Images uploaded through the text editor, newest first.'
+    - 'Volunteer tool Uploaded images: description under the title.'
+admin.tools.uploaded_images.none:
+    - 'No images were uploaded yet.'
+    - 'Volunteer tool Uploaded images: no images.'
+admin.tools.login_messages.title:
+    - 'Login messages'
+    - 'Volunteer tool: title.'
+admin.tools.login_messages.description:
+    - 'Notices every member sees after logging in.'
+    - 'Volunteer tool Login messages: description under the title.'
+admin.tools.login_messages.count:
+    - '{active} active · {expired} expired'
+    - 'Volunteer tool Login messages: above the list. Keep {active} and {expired}.'
+admin.tools.login_messages.active:
+    - Active
+    - 'Volunteer tool Login messages: tag of a message members still see.'
+admin.tools.login_messages.expired:
+    - Expired
+    - 'Volunteer tool Login messages: tag of a message members no longer see.'
+admin.tools.login_messages.until:
+    - 'Shown until {date}'
+    - 'Volunteer tool Login messages: when an active message expires. Keep {date}.'
+admin.tools.login_messages.ended:
+    - 'Expired {date}'
+    - 'Volunteer tool Login messages: when a message expired. Keep {date}.'
+admin.tools.login_messages.expire:
+    - 'Expire now'
+    - 'Volunteer tool Login messages: button that stops showing a message.'
+admin.tools.login_messages.none:
+    - 'There are no login messages.'
+    - 'Volunteer tool Login messages: no messages.'
+admin.tools.login_messages.all:
+    - 'All login messages'
+    - 'Volunteer tool New login message: link back to the list.'
+admin.tools.login_message_add.title:
+    - 'New login message'
+    - 'Volunteer tool: title of the form, and its button on the list.'
+admin.tools.login_message_add.description:
+    - 'Shown to every member after they log in, until it expires.'
+    - 'Volunteer tool New login message: description under the title.'
+admin.tools.login_message.message:
+    - Message
+    - 'Volunteer tool New login message: label.'
+admin.tools.login_message.expires:
+    - 'Show until'
+    - 'Volunteer tool New login message: label of the date.'
+admin.tools.login_message.publish:
+    - Publish
+    - 'Volunteer tool New login message: the button.'
+admin.tools.login_message.added:
+    - 'The login message is published.'
+    - 'Volunteer tool Login messages: notice after adding one.'
+admin.tools.login_message.expired:
+    - 'The login message is no longer shown.'
+    - 'Volunteer tool Login messages: notice after expiring one.'
+admin.tools.change_username.error.empty:
+    - 'Please enter a username.'
+    - 'Volunteer tool Change username: error of an empty field.'
+admin.tools.change_username.error.invalid:
+    - 'A username has 4 to 20 letters, digits and the characters - . _, starts with a letter and ends with a letter or digit.'
+    - 'Volunteer tool Change username: error of a username that can''t be one.'
+admin.tools.change_username.error.same:
+    - 'The new username must differ from the current one.'
+    - 'Volunteer tool Change username: error when both names are the same.'

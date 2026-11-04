@@ -1,35 +1,22 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/tools/_layout.html.twig' %}
+{% import 'admin/tools/_macros.html.twig' as vt %}
 
-{% block title %}
-    {{ 'admin.tools.title' | trans }}
-{% endblock %}
-
-{% block content %}
-    <h1>{{ 'admin.tools.headline' | trans }}</h1>
-    <h2>{{ 'admin.tools.check_spam_messages' | trans }}</h2>
-
-    {% if messagesSent|length %}
-        <div class="table-responsive">
-            <table class="table table-striped tabel-hover">
-                <tr>
-                    <th colspan="2">Member</th>
-                    <th>Status</th>
-                    <th>Updated</th>
-                    <th># messages</th>
-                </tr>
-                {% for result in messagesSent %}
-                    <tr>
-                        <td>{{ macros.avatar(result.Username) }}</td>
-                        <td>{{ macros.profilelink(result.Username) }}</td>
-                        <td>{{ result.Status }}</td>
-                        <td>{{ result.Updated ? result.Updated|date('Y-m-d H:i') }}</td>
-                        <td>{{ result.MessagesSent }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
+{% block tool %}
+  {% if messagesSent is empty %}
+    <p class="c-cadmin__empty c-vtools__empty"><i class="fas fa-circle-check" aria-hidden="true"></i>{{ 'admin.tools.nobody'|trans }}</p>
+  {% else %}
+    <div class="c-vtools-table">
+      <div class="c-vtools-table__row c-vtools-table__row--head c-vtools-spammers">
+        <span>{{ 'admin.tools.member'|trans }}</span><span>{{ 'admin.tools.status'|trans }}</span><span>{{ 'admin.tools.updated'|trans }}</span><span class="u:text-right">{{ 'admin.tools.messages_sent.unit'|trans }}</span>
+      </div>
+      {% for spammer in messagesSent %}
+        <div class="c-vtools-table__row c-vtools-spammers">
+          {{ vt.member(spammer.Username) }}
+          <span>{{ vt.status(spammer.Status) }}</span>
+          <span class="c-radmin-muted">{{ spammer.Updated ? spammer.Updated|format_datetime('medium', 'short') }}</span>
+          <span class="c-vtools-ranked__count">{{ spammer.MessagesSent|format_number }}</span>
         </div>
-    {% else %}
-        {{ 'admin.tools.nothing' | trans }}
-    {% endif %}
-{% endblock content %}
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock tool %}

@@ -1,39 +1,23 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: raymund
- * Date: 15.08.2018
- * Time: 11:25.
- */
-
 namespace App\Form\CustomDataClass\Tools;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Change username of the volunteer tools: both names as a member's username can be (4 to 20 letters, digits and
+ * -._, starting with a letter), and different.
+ */
 class ChangeUsernameRequest
 {
-    /**
-     * @var string
-     *
-     * @Assert\Regex(
-     *     pattern = "/[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i",
-     *     htmlPattern = "/[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]/"
-     * )
-     */
-    public $oldUsername;
+    private const string PATTERN = '/^[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]$/i';
 
-    /**
-     * @var string
-     *
-     * @Assert\Regex(
-     *     pattern = "/[a-z](?!.*[-_.][-_.])[a-z0-9-._]{2,18}[a-z0-9]/i",
-     *     htmlPattern = "/[A-Za-z](?!.*[-_.][-_.])[A-Za-z0-9-._]{2,18}[A-Za-z0-9]/"
-     * )
-     *
-     * @Assert\NotIdenticalTo(
-     *     propertyPath = "oldUsername",
-     *     message = "New username must be different." )
-     */
-    public $newUsername;
+    #[Assert\NotBlank(message: 'admin.tools.change_username.error.empty')]
+    #[Assert\Regex(pattern: self::PATTERN, message: 'admin.tools.change_username.error.invalid')]
+    public ?string $oldUsername = null;
+
+    #[Assert\NotBlank(message: 'admin.tools.change_username.error.empty')]
+    #[Assert\Regex(pattern: self::PATTERN, message: 'admin.tools.change_username.error.invalid')]
+    #[Assert\NotIdenticalTo(propertyPath: 'oldUsername', message: 'admin.tools.change_username.error.same')]
+    public ?string $newUsername = null;
 }

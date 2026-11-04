@@ -1,22 +1,22 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
-
-{% block title %}
-    {{ 'admin.tools.title' | trans }}
-{% endblock %}
+{% extends 'admin/tools/_layout.html.twig' %}
+{% import 'admin/tools/_macros.html.twig' as vt %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('admin/tools/login_message') }}
-{% endblock %}
+  {{ encore_entry_script_tags('admin/tools/login_message') }}
+{% endblock javascripts %}
 
 {% block stylesheets %}
-    {{ encore_entry_link_tags('admin/tools/login_message') }}
+  {{ encore_entry_link_tags('admin/tools/login_message') }}
 {% endblock stylesheets %}
 
-{% block content %}
-    <h1>{{ 'admin.tools.headline' | trans }}</h1>
-    <h2>{{ 'admin.tools.login_message' | trans }}</h2>
-
-    {{ form(form) }}
-
-{% endblock content %}
+{% block tool %}
+  <a class="c-vtools-back" href="{{ path('admin_tools_login_messages_show') }}"><i class="fas fa-chevron-left" aria-hidden="true"></i>{{ 'admin.tools.login_messages.all'|trans }}</a>
+  {{ form_start(form, {attr: {class: 'c-massmail-form c-vtools-form', novalidate: 'novalidate'}}) }}
+    {{ vt.field(form.message) }}
+    <div class="c-vtools-form__date">{{ vt.field(form.expires) }}</div>
+    <div class="c-massmail-form__actions">
+      <button type="submit" class="o-button">{{ 'admin.tools.login_message.publish'|trans }}</button>
+      <a class="o-button o-button--outline-gray" href="{{ path('admin_tools_login_messages_show') }}">{{ 'cancel'|trans }}</a>
+    </div>
+  {{ form_end(form) }}
+{% endblock tool %}

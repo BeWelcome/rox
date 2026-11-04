@@ -144,12 +144,19 @@ class MemberRepository extends ServiceEntityRepository implements UserLoaderInte
         return $this->loadUserByIdentifier($username);
     }
 
-    public function findByProfileInfo($term): mixed
+    /**
+     * The members whose username, name or email address has the term (Find member of the volunteer tools).
+     *
+     * @return list<Member> at most 20, by username
+     */
+    public function findByProfileInfo(string $term): array
     {
         return $this->createQueryBuilder('u')
             ->where('u.username like :term')
+            ->orWhere('u.name like :term')
             ->orWhere('u.email like :term')
-            ->setParameter('term', '%' . $term . '%')
+            ->orderBy('u.username', 'ASC')
+            ->setParameter('term', '%' . addcslashes($term, '%_\\') . '%')
             ->setMaxResults(20)
             ->getQuery()
             ->getResult();

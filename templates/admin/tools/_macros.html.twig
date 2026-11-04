@@ -1,0 +1,32 @@
+{# The parts of the volunteer tools (templates/admin/tools) #}
+
+{# A member: avatar, username (to the profile) and a line under it #}
+{% macro member(username, line = null, size = 40) %}
+  <a class="c-vtools-member" href="{{ path('members_profile', {username: username}) }}">
+    <img class="c-vtools-member__avatar" src="{{ path('avatar', {username: username, size: 96}) }}" alt="" width="{{ size }}" height="{{ size }}" loading="lazy">
+    <span class="c-vtools-member__text">
+      <span class="c-vtools-member__name">{{ username }}</span>
+      {% if line %}<span class="c-vtools-member__line">{{ line }}</span>{% endif %}
+    </span>
+  </a>
+{% endmacro %}
+
+{# A member's status as a tag: green when active #}
+{% macro status(status) %}
+  <span class="c-tag c-vtools-status{{ status in ['Active', 'ActiveHidden', 'ChoiceInactive'] ? ' c-tag--green' }}">{{ status|trans }}</span>
+{% endmacro %}
+
+{# A form field: label, input, help and its errors (translated here) #}
+{% macro field(field, attr = {}) %}
+  <div class="o-form-group">
+    {# the theme's label also prints the errors (untranslated): they come once, under the field #}
+    <label class="form-label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
+    {{ form_widget(field, {attr: field.vars.attr|merge({class: ((field.vars.attr.class ?? '') ~ ' o-input')|trim})|merge(attr)}) }}
+    {{ form_help(field) }}
+    {% if field.vars.errors|length > 0 %}
+      <ul class="c-massmail-form__errors">
+        {% for error in field.vars.errors %}<li>{{ error.message|trans }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+{% endmacro %}

@@ -1,0 +1,126 @@
+/*
+ * The volunteer tools (templates/admin/tools): a header (eyebrow, title, description, the volunteer's rights), the
+ * tools by group in a sidebar card and the tool in a card next to it. Shares .c-tag, .c-cadmin-btn, .c-cadmin__empty
+ * and the form parts of the comments tool and the mass mail pages.
+ */
+
+main.c-vtools { padding: 2.5rem 0 4rem; background: #f0f0f0; }
+.c-vtools .container-lg { padding: 0 0.75rem; }
+
+/* Header */
+.c-vtools__head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 0.75rem 1.5rem; margin-bottom: 1.5rem; }
+.c-vtools__head-main { min-width: 0; }
+.c-vtools__head .c-page-head__title { margin-bottom: 0.4rem; }
+.c-vtools__description { margin: 0; color: #64748b; font-size: 1rem; }
+.c-vtools__rights { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; }
+.c-vtools__rights-label { margin-right: 0.25rem; color: #64748b; font-size: 0.8125rem; }
+
+/* Sidebar and card */
+.c-vtools__layout { display: grid; grid-template-columns: 16.5rem minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+.c-vtools__nav,
+.c-vtools__card { border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 20px rgba(15, 23, 42, 0.04); }
+.c-vtools__nav { position: sticky; top: calc(var(--bw-topbar-offset, 64px) + 1rem); padding: 1.25rem 0.75rem; }
+.c-vtools__card { min-width: 0; padding: 1.5rem 1.75rem; }
+.c-vtools__group { margin: 0.9rem 0.75rem 0.35rem; color: #64748b; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.c-vtools__group:first-child { margin-top: 0; }
+.c-vtools__items { margin: 0; padding: 0; list-style: none; }
+.c-vtools__item,
+.c-vtools__item:hover { display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 0.75rem; border-radius: 0.75rem; color: #334155; font-size: 0.9375rem; font-weight: 500; text-decoration: none; transition: background 0.15s ease; }
+.c-vtools__item i { color: #94a3b8; }
+.c-vtools__item:hover { background: #f8fafc; color: #0f172a; }
+.c-vtools__item.is-active { background: #fff7ed; color: #c2410c; font-weight: 700; }
+.c-vtools__item.is-active i { color: #ea7a2e; }
+.c-vtools__item:focus-visible { outline: 2px solid #f37000; outline-offset: 2px; }
+@media (max-width: 767.98px) {
+  .c-vtools__layout { grid-template-columns: minmax(0, 1fr); }
+  .c-vtools__nav { position: static; display: flex; gap: 0.25rem; overflow-x: auto; padding: 0.5rem; }
+  .c-vtools__group { display: none; }
+  .c-vtools__items { display: contents; }
+  .c-vtools__item { white-space: nowrap; }
+  .c-vtools__card { padding: 1.25rem 1rem; }
+}
+
+.c-vtools__summary { margin: 0.75rem 0 0; color: #64748b; font-size: 0.8125rem; }
+.c-cadmin__empty.c-vtools__empty i,
+.c-cadmin__empty.c-vtools__empty svg { color: #94a3b8; font-size: 1.75rem; }
+.c-vtools-back,
+.c-vtools-back:hover { display: inline-flex; align-items: center; gap: 0.4rem; margin-bottom: 1rem; color: #c2410c; font-size: 0.875rem; font-weight: 700; text-decoration: none; }
+
+/* A member: avatar, name and a line */
+.c-vtools-member,
+.c-vtools-member:hover { display: inline-flex; align-items: center; gap: 0.75rem; min-width: 0; color: inherit; text-decoration: none; }
+.c-vtools-member__avatar { flex: none; border-radius: 999px; object-fit: cover; }
+.c-vtools-member__text { display: flex; flex-direction: column; min-width: 0; }
+.c-vtools-member__name { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; }
+.c-vtools-member:hover .c-vtools-member__name { color: #c2410c; }
+.c-vtools-member__line { color: #64748b; font-size: 0.8125rem; }
+.c-tag.c-vtools-status { padding: 0.15rem 0.55rem; font-size: 0.75rem; }
+
+/* Search bar and forms */
+.c-vtools-search { display: flex; gap: 0.75rem; }
+.c-vtools-search .o-input { flex: 1; }
+.c-vtools-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.c-vtools-form .o-form-group { margin: 0; }
+.c-vtools-form__date { max-width: 16rem; }
+.c-vtools-rename { display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: start; }
+.c-vtools-rename__arrow { margin-top: 2.6rem; color: #94a3b8; }
+@media (max-width: 575.98px) {
+  .c-vtools-rename { grid-template-columns: minmax(0, 1fr); }
+  .c-vtools-rename__arrow { display: none; }
+}
+.c-cadmin-detail__info.c-vtools-note { margin: 0; padding: 0.85rem 1rem; border-radius: 0.75rem; background: #f8fafc; color: #475569; font-size: 0.875rem; }
+
+/* Lists */
+.c-vtools-list { margin: 0.75rem 0 0; padding: 0; list-style: none; }
+.c-vtools-list__row { display: flex; align-items: center; gap: 1rem; padding: 0.9rem 0; border-top: 1px solid #f1f5f9; }
+.c-vtools-find__name { color: #64748b; font-size: 0.875rem; }
+.c-vtools-find__end { display: flex; flex-direction: column; align-items: flex-end; gap: 0.3rem; margin-left: auto; text-align: right; }
+.c-vtools-find__email { color: #334155; font-size: 0.875rem; overflow-wrap: anywhere; }
+.c-vtools-mbm__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-top: 1.25rem; }
+.c-vtools-mbm__legend { display: flex; flex-wrap: wrap; gap: 1rem; color: #475569; font-size: 0.8125rem; }
+.c-vtools-mbm__legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+.c-vtools-mbm__legend i,
+.c-vtools-mbm__kinds i { color: #ea7a2e; }
+.c-vtools-mbm__kinds { display: flex; gap: 0.5rem; width: 3.5rem; }
+.c-vtools-mbm__direction { display: flex; flex-direction: column; width: 2rem; color: #64748b; font-size: 0.75rem; line-height: 1; }
+.c-vtools-mbm__direction .is-off { visibility: hidden; }
+
+/* Tables */
+.c-vtools-table { overflow-x: auto; }
+.c-vtools-table__row { display: grid; gap: 1rem; align-items: center; min-width: 32rem; padding: 0.8rem 0; border-top: 1px solid #f1f5f9; color: #334155; font-size: 0.9375rem; }
+.c-vtools-table__row--head { padding: 0 0 0.75rem; border-top: 0; color: #64748b; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.c-vtools-ranked { grid-template-columns: 2rem minmax(12rem, 1.2fr) minmax(6rem, 1fr) 4.5rem; }
+.c-vtools-ranked__rank { color: #64748b; font-weight: 700; }
+.c-vtools-ranked__count { color: #0f172a; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.c-vtools-bar { display: block; height: 0.4rem; border-radius: 999px; background: #f1f5f9; }
+.c-vtools-bar__fill { display: block; height: 100%; border-radius: 999px; background: #ea7a2e; }
+.c-vtools-spammers { grid-template-columns: minmax(12rem, 1.5fr) 7rem 9rem 5rem; }
+.c-vtools-damage { grid-template-columns: minmax(14rem, 1fr) 1.5rem minmax(14rem, 1fr); }
+.c-vtools-damage__side { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; }
+.c-vtools-damage__arrow { color: #cbd5e1; }
+.c-vtools-age { grid-template-columns: minmax(10rem, 1.6fr) repeat(3, minmax(5rem, 1fr)); }
+.c-vtools-age > :not(:first-child) { justify-content: flex-end; text-align: right; font-variant-numeric: tabular-nums; }
+.c-vtools-age__country { color: #0f172a; font-weight: 700; }
+.c-vtools-sort,
+.c-vtools-sort:hover { display: inline-flex; align-items: center; gap: 0.35rem; color: #94a3b8; text-decoration: none; }
+.c-vtools-sort.is-active { color: #0f172a; }
+
+/* Uploaded images */
+.c-vtools-images { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr)); gap: 1rem; margin: 0; padding: 0; list-style: none; }
+.c-vtools-image { display: flex; flex-direction: column; overflow: hidden; border: 1px solid #eef0f3; border-radius: 1rem; background: #fff; }
+.c-vtools-image__img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #f1f5f9; }
+.c-vtools-image__name { padding: 0.75rem 1rem 0; color: #0f172a; font-weight: 700; font-size: 0.9375rem; overflow-wrap: anywhere; }
+.c-vtools-image__meta { padding: 0.15rem 1rem 0.85rem; color: #64748b; font-size: 0.8125rem; }
+
+/* Login messages */
+.c-vtools-bar-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.c-vtools-bar-head .c-vtools__summary { margin: 0; }
+.c-vtools-login { align-items: flex-start; }
+.c-vtools-login__main { flex: 1; min-width: 0; }
+.c-vtools-login__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin: 0 0 0.4rem; color: #64748b; font-size: 0.8125rem; }
+.c-vtools-login__text { color: #1e293b; font-size: 0.9375rem; line-height: 1.55; overflow-wrap: anywhere; }
+.c-vtools-login__text p:last-child { margin-bottom: 0; }
+.c-vtools-login.is-expired .c-vtools-login__text { color: #64748b; }
+.c-cadmin-btn.c-vtools-login__expire { min-height: 2.25rem; padding: 0.3rem 0.9rem; font-size: 0.8125rem; }
+/* the mass mail form's parts inside the tool's card, which has its own padding */
+.c-vtools__card .c-massmail-form { padding: 0; }

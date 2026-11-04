@@ -1,29 +1,32 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/tools/_layout.html.twig' %}
 
-{% block title %}
-    {{ 'admin.tools.title' | trans }}
-{% endblock %}
-
-{% block content %}
-    {% import 'macros/post_button.html.twig' as post %}
-    <h1>{{ 'admin.tools.headline' | trans }}</h1>
-    <h2>{{ 'admin.tools.login_message' | trans }}</h2>
-
-    {% if login_messages|length > 0 %}
-        <table class="table table-striped">
-            <tr>
-                <th>Message</th>
-                <th>Action</th>
-            </tr>
-            {% for login_message in login_messages %}
-                <tr>
-                    <td class="u:p-8">{{ login_message.message|purify }}</td>
-                    <td class="u:align-top">{% if login_message.expires|date("U") > "now"|date("U") %}{{ post.post_link(path('admin_tools_login_message_expire', {'id': login_message.id}), 'login_message_expire', 'o-button', '<i class="fas fa-times"></i>'|raw) }}{% endif %}</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No login messages</p>
-    {% endif %}
-{% endblock content %}
+{% block tool %}
+  <div class="c-vtools-bar-head">
+    <span class="c-vtools__summary">{{ 'admin.tools.login_messages.count'|trans({active: active, expired: login_messages|length - active}) }}</span>
+    <a class="c-cadmin-btn c-cadmin-btn--primary c-radmin-assign" href="{{ path('admin_tools_login_message_add') }}"><i class="fas fa-plus" aria-hidden="true"></i>{{ 'admin.tools.login_message_add.title'|trans }}</a>
+  </div>
+  {% if login_messages is empty %}
+    <p class="c-cadmin__empty c-vtools__empty"><i class="fas fa-bullhorn" aria-hidden="true"></i>{{ 'admin.tools.login_messages.none'|trans }}</p>
+  {% else %}
+    <ul class="c-vtools-list">
+      {% for message in login_messages %}
+        {% set _active = message.expires > now %}
+        <li class="c-vtools-list__row c-vtools-login{{ _active ? '' : ' is-expired' }}">
+          <div class="c-vtools-login__main">
+            <p class="c-vtools-login__meta">
+              <span class="c-tag{{ _active ? ' c-tag--green' }}">{{ (_active ? 'admin.tools.login_messages.active' : 'admin.tools.login_messages.expired')|trans }}</span>
+              {{ (_active ? 'admin.tools.login_messages.until' : 'admin.tools.login_messages.ended')|trans({date: message.expires|format_date('medium')}) }}
+            </p>
+            <div class="c-vtools-login__text">{{ message.message|purify }}</div>
+          </div>
+          {% if _active %}
+            <form method="post" action="{{ path('admin_tools_login_message_expire', {id: message.id}) }}">
+              <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\Admin\\VolunteerToolController::LOGIN_MESSAGE_TOKEN')) }}">
+              <button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet c-vtools-login__expire"><i class="fas fa-xmark" aria-hidden="true"></i>{{ 'admin.tools.login_messages.expire'|trans }}</button>
+            </form>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock tool %}

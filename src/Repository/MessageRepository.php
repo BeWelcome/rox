@@ -46,56 +46,100 @@ class MessageRepository extends EntityRepository
     }
 
     /**
-     * Messages of banned or rejected members to members who then left (volunteer tool "damage done").
+     * Messages of banned or rejected members to members who then left (volunteer tool "damage done"): the spammers
+     * updated last first.
+     *
+     * The spammers are read in batches, newest first, until there are enough messages: joining all messages of all
+     * members who left and sorting them took a minute on the production data.
      *
      * @return list<array{Receiver: string, ReceiverStatus: string, LastUpdated: ?DateTimeInterface, Sender: string, SenderStatus: string}>
      */
-    public function findDamageDone(int $limit = 40): array
+    public function findDamageDone(int $limit = 40, int $batch = 500): array
     {
-        return $this->createQueryBuilder('msg')
-            ->select('r.username AS Receiver, r.status AS ReceiverStatus, r.updated AS LastUpdated')
-            ->addSelect('s.username AS Sender, s.status AS SenderStatus')
-            ->innerJoin('msg.sender', 's')
-            ->innerJoin('msg.receiver', 'r')
-            ->where('s.status IN (:spammers)')
-            ->andWhere('r.status IN (:left)')
-            ->setParameter('spammers', [MemberStatusType::BANNED, MemberStatusType::REJECTED])
-            ->setParameter('left', [MemberStatusType::TAKEN_OUT, MemberStatusType::ASKED_TO_LEAVE])
-            ->orderBy('s.updated', 'DESC')
-            ->addOrderBy('s.username')
-            ->addOrderBy('r.updated', 'DESC')
-            ->addOrderBy('r.id')
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getArrayResult();
+        $rows = [];
+        for ($offset = 0; \count($rows) < $limit; $offset += $batch) {
+            $spammers = $this->getEntityManager()->createQueryBuilder()
+                ->select('m.id')
+                ->from(Member::class, 'm')
+                ->where('m.status IN (:spammers)')
+                ->setParameter('spammers', [MemberStatusType::BANNED, MemberStatusType::REJECTED])
+                ->orderBy('m.updated', 'DESC')
+                ->addOrderBy('m.id', 'ASC')
+                ->setFirstResult($offset)
+                ->setMaxResults($batch)
+                ->getQuery()
+                ->getSingleColumnResult();
+            if ([] === $spammers) {
+                break;
+            }
+
+            $rows = array_merge($rows, $this->createQueryBuilder('msg')
+                ->select('r.username AS Receiver, r.status AS ReceiverStatus, r.updated AS LastUpdated')
+                ->addSelect('s.username AS Sender, s.status AS SenderStatus')
+                ->innerJoin('msg.sender', 's')
+                ->innerJoin('msg.receiver', 'r')
+                ->where('s.id IN (:spammers)')
+                ->andWhere('r.status IN (:left)')
+                ->setParameter('spammers', $spammers)
+                ->setParameter('left', [MemberStatusType::TAKEN_OUT, MemberStatusType::ASKED_TO_LEAVE])
+                ->orderBy('s.updated', 'DESC')
+                ->addOrderBy('s.id')
+                ->addOrderBy('r.updated', 'DESC')
+                ->addOrderBy('r.id')
+                ->setMaxResults($limit - \count($rows))
+                ->getQuery()
+                ->getArrayResult());
+        }
+
+        return $rows;
     }
 
     /**
      * Members who sent more than $moreThan messages (or only hosting requests and replies to them) during the last
      * $days days, with the place and country code of their active address (volunteer tools "messages sent" and
-     * "requests sent").
+     * "requests sent"), the most first.
+     *
+     * The messages are counted per sender first, and only those senders get their place: joining every message with
+     * the sender's address took seconds for a week of messages.
      *
      * @return list<array{Username: string, City: ?string, Country: ?string, Count: int}>
      */
     public function findFrequentSenders(int $days, bool $requestsOnly, int $moreThan = 9): array
     {
-        $qb = $this->createQueryBuilder('msg')
-            ->select('s.username AS Username, l.name AS City, l.countryId AS Country, COUNT(DISTINCT msg.id) AS Count')
-            ->innerJoin('msg.sender', 's')
-            ->leftJoin('s.addresses', 'a', Join::WITH, 'a.active = true')
-            ->leftJoin('a.location', 'l')
+        $counts = $this->createQueryBuilder('msg')
+            ->select('IDENTITY(msg.sender) AS sender', 'COUNT(msg.id) AS messages')
             ->where('msg.created > :since')
             ->setParameter('since', new DateTimeImmutable('-' . $days . ' days'))
-            ->groupBy('s.id')
-            ->addGroupBy('l.geonameId')
-            ->having('COUNT(DISTINCT msg.id) > :moreThan')
-            ->setParameter('moreThan', $moreThan)
-            ->orderBy('Count', 'DESC');
+            ->groupBy('msg.sender')
+            ->having('COUNT(msg.id) > :moreThan')
+            ->setParameter('moreThan', $moreThan);
         if ($requestsOnly) {
-            $qb->andWhere('msg.request IS NOT NULL');
+            $counts->andWhere('msg.request IS NOT NULL');
+        }
+        $counts = array_column($counts->getQuery()->getArrayResult(), 'messages', 'sender');
+        if ([] === $counts) {
+            return [];
         }
 
-        return $qb->getQuery()->getArrayResult();
+        // a row per active address, as before
+        $senders = $this->getEntityManager()->createQueryBuilder()
+            ->select('s.id AS id, s.username AS Username, l.name AS City, l.countryId AS Country')
+            ->from(Member::class, 's')
+            ->leftJoin('s.addresses', 'a', Join::WITH, 'a.active = true')
+            ->leftJoin('a.location', 'l')
+            ->where('s.id IN (:senders)')
+            ->setParameter('senders', array_keys($counts))
+            ->getQuery()
+            ->getArrayResult();
+        $rows = array_map(static fn (array $sender): array => [
+            'Username' => $sender['Username'],
+            'City' => $sender['City'],
+            'Country' => $sender['Country'],
+            'Count' => (int) $counts[$sender['id']],
+        ], $senders);
+        usort($rows, static fn (array $a, array $b): int => [$b['Count'], $a['Username']] <=> [$a['Count'], $b['Username']]);
+
+        return $rows;
     }
 
     /**

@@ -345,7 +345,7 @@ class TranslationController extends AbstractController
 
         // Check that the volunteer has rights for this language
         if (!$translator->hasRightsForLocale($language->getShortCode())) {
-            return $this->redirectToRoute('translations_no_permissions');
+            return $this->redirectToRoute('translations_no_permissions', ['locale' => $language->getShortCode()]);
         }
 
         // We want to redirect to the page where the translation was originally missing
@@ -490,18 +490,24 @@ class TranslationController extends AbstractController
     }
 
     /**
-     * @return Response
+     * A translator without the right for a language (?locale): back to their profile, with the languages they can
+     * translate.
      */
     #[Route(path: '/admin/translation/no_permissions', name: 'translations_no_permissions')]
-    public function translationNoRights(Request $request)
+    public function translationNoRights(Request $request): RedirectResponse
     {
-        $locale = $request->getLocale();
-        $locales = $this->getTranslatorLocales();
+        $this->denyAccessUnlessGranted(Member::ROLE_ADMIN_WORDS, null, 'Unable to access this page!');
+        $translator = $this->getTranslator();
+        $name = static fn (string $locale): string => $translator->trans('lang_' . $locale);
+        $this->addFlash('notice', $translator->trans('admin.translation.no.right.locale', [
+            'language' => $name($request->query->getString('locale', $request->getLocale())),
+            'languages' => implode(', ', array_map($name, $this->getTranslatorLocales())),
+        ]));
 
-        return $this->render('admin/translations/no.right.html.twig', [
-            'locale' => $locale,
-            'locales' => $locales,
-        ]);
+        /** @var Member $member */
+        $member = $this->getUser();
+
+        return $this->redirectToRoute('members_profile', ['username' => $member->getUsername()]);
     }
 
     /**
@@ -537,7 +543,7 @@ class TranslationController extends AbstractController
         $translator = $this->getUser();
         $locale = $language->getShortCode();
         if (!$translator->hasRightsForLocale($locale)) {
-            return $this->redirectToRoute('translations_no_permissions');
+            return $this->redirectToRoute('translations_no_permissions', ['locale' => $locale]);
         }
 
         // the search field: the code goes into the address, as links to a search have it
@@ -737,7 +743,10 @@ class TranslationController extends AbstractController
             return 'Words' === $volunteerRight->getRight()->getName();
         })->first();
 
-        $scope = preg_split('/[,;]/', str_replace('"', '', $wordRight->getScope()));
+        $scope = array_values(array_filter(array_map(
+            'trim',
+            preg_split('/[,;]/', str_replace('"', '', $wordRight->getScope())) ?: [],
+        )));
         if (\in_array('All', $scope, true)) {
             return ['this', 'should', 'never', 'happen'];
         }

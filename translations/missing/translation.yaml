@@ -364,3 +364,6 @@ translation.tool.mockups.broken.action:
     text: 'Start a topic about it in the translators group'
     description: 'Translation tool, preview of a mail or page that can''t be shown: link to a new topic in the translators group, below it'
     format: plain
+admin.translation.no.right.locale:
+    text: 'You can''t translate into {language}: your translator right is for {languages}. Ask in the BeWelcome Translators group to translate more languages.'
+    description: 'Notice on the translator''s profile when they opened a language their translator right (Words) doesn''t cover. Keep {language} and {languages} (a list of language names).'

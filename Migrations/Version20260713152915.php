@@ -18,8 +18,13 @@ final class Version20260713152915 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        // main's tables; a new database built from develop's entities has neither
-        $this->skipIf(!$schema->hasTable('membersgroups') || !$schema->hasTable('groups'), 'No membersgroups or groups table.');
+        // main's tables; a new database built from develop's entities has neither. Asks for the table names only:
+        // $schema reads every column, and main's ENUM columns (mapped to string without a length) then fail the
+        // schema comparison after the migration
+        $this->skipIf(
+            !$this->connection->createSchemaManager()->tablesExist(['membersgroups', 'groups']),
+            'No membersgroups or groups table.',
+        );
         $this->addSql('DELETE mg FROM membersgroups mg LEFT JOIN `groups` g ON g.id = mg.IdGroup WHERE g.id IS NULL');
     }
 

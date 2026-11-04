@@ -19,7 +19,8 @@
 {# A form field: label, input, help and its errors (translated here) #}
 {% macro field(field, attr = {}) %}
   <div class="o-form-group">
-    {{ form_label(field) }}
+    {# the theme's label also prints the errors (untranslated): they come once, under the field #}
+    <label class="form-label" for="{{ field.vars.id }}">{{ field.vars.label|trans }}</label>
     {{ form_widget(field, {attr: field.vars.attr|merge({class: ((field.vars.attr.class ?? '') ~ ' o-input')|trim})|merge(attr)}) }}
     {{ form_help(field) }}
     {% if field.vars.errors|length > 0 %}

@@ -262,3 +262,12 @@ admin.tools.login_message.added:
 admin.tools.login_message.expired:
     - 'The login message is no longer shown.'
     - 'Volunteer tool Login messages: notice after expiring one.'
+admin.tools.change_username.error.empty:
+    - 'Please enter a username.'
+    - 'Volunteer tool Change username: error of an empty field.'
+admin.tools.change_username.error.invalid:
+    - 'A username has 4 to 20 letters, digits and the characters - . _, starts with a letter and ends with a letter or digit.'
+    - 'Volunteer tool Change username: error of a username that can''t be one.'
+admin.tools.change_username.error.same:
+    - 'The new username must differ from the current one.'
+    - 'Volunteer tool Change username: error when both names are the same.'

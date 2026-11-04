@@ -90,7 +90,30 @@ final class VolunteerToolsTest extends WebTestCase
             'change_username_form[newUsername]' => 'member-4',
         ]));
         self::assertResponseStatusCodeSame(422);
-        self::assertCount(2, $this->client->getCrawler()->filter('.c-massmail-form__errors'));
+        $this->assertOneErrorUnder('oldUsername', 'admin.tools.change_username.error.unknown');
+        $this->assertOneErrorUnder('newUsername', 'admin.tools.change_username.error.taken');
+
+        // an unknown member and no new name: an error for each
+        $this->client->submit($crawler->filter('form[name="change_username_form"]')->form([
+            'change_username_form[oldUsername]' => 'zztest-nobody',
+            'change_username_form[newUsername]' => '',
+        ]));
+        self::assertResponseStatusCodeSame(422);
+        $this->assertOneErrorUnder('oldUsername', 'admin.tools.change_username.error.unknown');
+        $this->assertOneErrorUnder('newUsername', 'admin.tools.change_username.error.empty');
+
+        // not a username, and the same name twice
+        $this->client->submit($crawler->filter('form[name="change_username_form"]')->form([
+            'change_username_form[oldUsername]' => 'member-7',
+            'change_username_form[newUsername]' => 'member-7',
+        ]));
+        $this->assertOneErrorUnder('newUsername', 'admin.tools.change_username.error.same');
+        $this->client->submit($crawler->filter('form[name="change_username_form"]')->form([
+            'change_username_form[oldUsername]' => 'member-7',
+            'change_username_form[newUsername]' => 'no spaces allowed',
+        ]));
+        $this->assertOneErrorUnder('newUsername', 'admin.tools.change_username.error.invalid');
+        self::assertSame(0, (int) $this->connection->fetchOne("SELECT COUNT(*) FROM member WHERE Username = 'member-7'") - 1);
 
         $this->client->submit($crawler->filter('form[name="change_username_form"]')->form([
             'change_username_form[oldUsername]' => 'member-7',
@@ -174,6 +197,19 @@ final class VolunteerToolsTest extends WebTestCase
         $message = $this->entityManager->getRepository(LoginMessage::class)->findOneBy([], ['id' => 'DESC']);
         $this->entityManager->refresh($message);
         self::assertLessThanOrEqual(new DateTime(), $message->getExpires());
+    }
+
+    /**
+     * The field's error shows once, under it (not also in its label, as the form theme would), translated.
+     */
+    private function assertOneErrorUnder(string $field, string $key): void
+    {
+        $crawler = $this->client->getCrawler();
+        $group = $crawler->filter('#change_username_form_' . $field)->closest('.o-form-group');
+        self::assertCount(0, $group->filter('label .form-error-message, label .invalid-feedback'), $field);
+        $errors = $group->filter('.c-massmail-form__errors li')->each(static fn (Crawler $error): string => $error->text());
+        $translator = static::getContainer()->get('translator');
+        self::assertSame([$translator->trans($key)], $errors, $field);
     }
 
     /**

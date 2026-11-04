@@ -131,14 +131,19 @@ class VolunteerToolController extends AbstractController
         $form = $this->createForm(ChangeUsernameFormType::class, new ChangeUsernameRequest());
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted()) {
+            // both names are checked, each once its own field is fine: all errors show at once
             $data = $form->getData();
             $memberRepository = $entityManager->getRepository(Member::class);
-            $member = $memberRepository->findOneBy(['username' => $data->oldUsername]);
-            if (null === $member) {
-                $form->get('oldUsername')->addError(new FormError('admin.tools.change_username.error.unknown'));
+            $member = null;
+            if (0 === \count($form->get('oldUsername')->getErrors())) {
+                $member = $memberRepository->findOneBy(['username' => $data->oldUsername]);
+                if (null === $member) {
+                    $form->get('oldUsername')->addError(new FormError('admin.tools.change_username.error.unknown'));
+                }
             }
-            if (null !== $memberRepository->findOneBy(['username' => $data->newUsername])) {
+            $newUsernameFine = 0 === \count($form->get('newUsername')->getErrors());
+            if ($newUsernameFine && null !== $memberRepository->findOneBy(['username' => $data->newUsername])) {
                 $form->get('newUsername')->addError(new FormError('admin.tools.change_username.error.taken'));
             }
 

@@ -126,7 +126,7 @@ class MockupController extends TranslationController
         /** @var Member $translator */
         $translator = $this->getUser();
         if (!$translator->hasRightsForLocale($request->getLocale())) {
-            return $this->redirectToRoute('translations_no_permissions');
+            return $this->redirectToRoute('translations_no_permissions', ['locale' => $request->getLocale()]);
         }
 
         $features = array_keys($this->providers);

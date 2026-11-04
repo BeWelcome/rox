@@ -10,6 +10,7 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -49,6 +50,32 @@ class TranslationToolPagesTest extends WebTestCase
         $this->client->loginUser($this->translator('de'));
         $this->client->request('GET', '/admin/translations');
         $this->assertResponseRedirects('/admin/translations/missing/de');
+    }
+
+    public function testALanguageWithoutTheRightLeadsToTheProfileWithANotice(): void
+    {
+        $this->client->loginUser($this->translator('de'));
+
+        // the translation tool, adding a translation and the mockups of a language the right doesn't cover
+        foreach (['/admin/translations/all/fr', '/admin/translations/add/fr/zztest.tool.missing'] as $page) {
+            $this->client->request('GET', $page);
+            $this->assertResponseRedirects('/admin/translation/no_permissions?locale=fr', null, $page);
+        }
+
+        $this->client->followRedirect();
+        $this->assertResponseRedirects('/members/member-2');
+        $session = $this->client->getRequest()->getSession();
+        self::assertInstanceOf(FlashBagAwareSessionInterface::class, $session);
+        $notices = $session->getFlashBag()->peek('notice');
+        self::assertCount(1, $notices);
+        self::assertSame($this->trans('admin.translation.no.right.locale', [
+            'language' => $this->trans('lang_fr'),
+            'languages' => $this->trans('lang_de'),
+        ]), $notices[0]);
+
+        $this->client->followRedirect();
+        $this->assertResponseIsSuccessful();
+        self::assertSelectorExists('#toasts .bw-toast');
     }
 
     public function testEveryViewHasItsTexts(): void

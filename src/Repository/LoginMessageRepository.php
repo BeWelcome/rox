@@ -27,6 +27,9 @@ class LoginMessageRepository extends EntityRepository
             ->andWhere($qb->expr()->gt('lm.expires', ':now'))
             ->setParameter('now', new DateTime())
             ->setParameter('member', $member->getId())
+            // in the order they were written: the strips stack oldest first
+            ->orderBy('lm.created', 'ASC')
+            ->addOrderBy('lm.id', 'ASC')
             ->getQuery()
         ;
 

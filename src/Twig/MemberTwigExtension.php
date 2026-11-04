@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Doctrine\CommentAdminActionType;
 use App\Dto\ReplyRate;
 use App\Entity\Comment;
 use App\Entity\Group;
@@ -51,7 +52,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         'comments' => [
             'trans' => 'AdminComments',
             'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_COMMENTS],
-            'route' => 'admin_comment_overview',
+            'route' => 'admin_comment_reported_overview',
         ],
         'checker' => [
             'trans' => 'AdminChecker',
@@ -132,6 +133,7 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
             'loginmessages' => $this->getLoginMessages(),
             'groupsInApprovalQueue' => $this->getGroupsInApprovalQueueCount(),
             'reportedCommentsCount' => $this->getReportedCommentsCount(),
+            'safetyTeamCommentsCount' => $this->getSafetyTeamCommentsCount(),
             'reportedMessagesCount' => $this->getReportedMessagesCount(),
             'conversationCount' => $this->getUnreadConversationsCount(),
             'teams' => $teams,
@@ -243,12 +245,16 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         return $groupsInApprovalCount;
     }
 
+    /**
+     * The comments to check for the admin bar, for the Comments right. The Safety Team gets their own list's count
+     * instead (getSafetyTeamCommentsCount()), also when they have the Comments right.
+     */
     protected function getReportedCommentsCount(): ?int
     {
         $reportedCommentsCount = null;
         if (
             $this->security->isGranted(Member::ROLE_ADMIN_COMMENTS)
-            || $this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
+            && !$this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
         ) {
             /** @var CommentRepository $commentRepository */
             $commentRepository = $this->entityManager->getRepository(Comment::class);
@@ -256,6 +262,21 @@ class MemberTwigExtension extends AbstractExtension implements GlobalsInterface
         }
 
         return $reportedCommentsCount;
+    }
+
+    /**
+     * The comments handed to the Safety Team, for the admin bar of its members.
+     */
+    protected function getSafetyTeamCommentsCount(): ?int
+    {
+        if (!$this->security->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
+            return null;
+        }
+
+        /** @var CommentRepository $commentRepository */
+        $commentRepository = $this->entityManager->getRepository(Comment::class);
+
+        return $commentRepository->countByAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK);
     }
 
     protected function getReportedMessagesCount(): ?int

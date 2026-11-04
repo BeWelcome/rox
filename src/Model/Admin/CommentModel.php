@@ -27,11 +27,12 @@ class CommentModel
     }
 
     /**
-     * @param ?Member $member the member of CommentQueue::About and CommentQueue::By
+     * @param ?Member $member     the member of CommentQueue::About and CommentQueue::By
+     * @param bool    $safetyTeam whether the list is for the Safety Team: only they see the comments handed to them
      *
      * @return Pagerfanta<Comment> the newest first; a page after the last one is the last page
      */
-    public function getQueue(CommentQueue $queue, int $page, ?Member $member = null): Pagerfanta
+    public function getQueue(CommentQueue $queue, int $page, ?Member $member = null, bool $safetyTeam = true): Pagerfanta
     {
         $repository = $this->comments();
         $query = match ($queue) {
@@ -43,6 +44,11 @@ class CommentModel
             CommentQueue::About => $repository->queryAllForMember($member ?? throw new InvalidArgumentException('About whom?')),
             CommentQueue::By => $repository->queryAllFromMember($member ?? throw new InvalidArgumentException('By whom?')),
         };
+        if (!$safetyTeam) {
+            $query
+                ->andWhere('c.adminAction != :safetyTeamCheck')
+                ->setParameter('safetyTeamCheck', CommentAdminActionType::SAFETY_TEAM_CHECK);
+        }
 
         $pager = new Pagerfanta(new QueryAdapter($query));
         $pager->setMaxPerPage(self::PER_PAGE);

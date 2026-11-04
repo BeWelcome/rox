@@ -118,3 +118,9 @@ admin.comments.delete.confirm:
 flash.admin.comment.recheck:
     - 'The comment is back in the list to check.'
     - Notice after a volunteer put a checked comment back in the list to check.
+label.admin.comments.safetyteam:
+    - '{comments, plural, =0 {No comment for the Safety Team} one {One comment for the Safety Team} other {# comments for the Safety Team}}'
+    - Link in the admin bar of the Safety Team to the comments handed to them in the comments tool.
+admin.comments.safetyteam.handed.over:
+    - 'This comment is with the Safety Team now.'
+    - Notice in the comments tool when a volunteer without the Safety Team right opens a comment handed to the Safety Team.

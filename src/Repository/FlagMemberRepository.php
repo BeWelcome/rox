@@ -8,10 +8,7 @@ use App\Entity\FlagMember;
 use App\Entity\Member;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ArrayParameterType;
-use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use Pagerfanta\Doctrine\DBAL\QueryAdapter;
-use Pagerfanta\Pagerfanta;
 
 /**
  * @extends ServiceEntityRepository<FlagMember>
@@ -38,15 +35,15 @@ class FlagMemberRepository extends ServiceEntityRepository
         ;
     }
 
-    public function paginateAssignments(
-        ?string $username,
-        ?int $flagId,
-        bool $includeHistory,
-        bool $memberFirst,
-        int $page,
-        int $itemsPerPage,
-    ): Pagerfanta {
-        $connection = $this->getEntityManager()->getConnection();
+    /**
+     * Every assignment of the flag ever made (the flags list): the current ones first (the newest row of a member,
+     * not removed), then the others, newest first.
+     *
+     * @return list<array<string, mixed>> assignment_id, username, place_name, country_name, comment, created_at,
+     *                                    updated_at, current (1 or 0)
+     */
+    public function findAllOfFlag(Flag $flag, ?string $username): array
+    {
         $newerAssignment = <<<'SQL'
             SELECT 1
             FROM flagsmembers newer
@@ -57,27 +54,18 @@ class FlagMemberRepository extends ServiceEntityRepository
                 OR (newer.created = fm.created AND newer.id > fm.id)
               )
             SQL;
-        $query = $connection->createQueryBuilder()
+        $query = $this->getEntityManager()->getConnection()->createQueryBuilder()
             ->select(
                 'fm.id AS assignment_id',
-                'm.id AS member_id',
                 'm.Username AS username',
-                'm.Status AS status',
-                'm.LastActive AS last_active',
                 'place.name AS place_name',
                 'country.name AS country_name',
-                'f.id AS definition_id',
-                'f.Name AS definition_name',
-                'f.Description AS definition_description',
-                'fm.Level AS level',
-                'fm.Scope AS scope',
                 'fm.Comment AS comment',
                 'fm.created AS created_at',
                 'fm.updated AS updated_at',
-                'CASE WHEN EXISTS (' . $newerAssignment . ') THEN 1 ELSE 0 END AS superseded',
+                'CASE WHEN fm.Level <> 0 AND NOT EXISTS (' . $newerAssignment . ') THEN 1 ELSE 0 END AS current',
             )
             ->from('flagsmembers', 'fm')
-            ->innerJoin('fm', 'flags', 'f', 'f.id = fm.IdFlag')
             ->innerJoin('fm', 'member', 'm', 'm.id = fm.IdMember')
             ->leftJoin(
                 'm',
@@ -90,51 +78,34 @@ class FlagMemberRepository extends ServiceEntityRepository
             )
             ->leftJoin('a', 'location', 'place', 'place.geoname_id = a.location')
             ->leftJoin('place', 'location', 'country', 'country.geoname_id = place.country')
-            ->where('m.Status IN (:statuses)')
-            ->andWhere('f.Relevance > 0')
+            ->where('fm.IdFlag = :flag')
+            ->andWhere('m.Status IN (:statuses)')
+            ->setParameter('flag', $flag->getId())
             ->setParameter('statuses', MemberStatusType::ACTIVE_ALL_ARRAY, ArrayParameterType::STRING)
-        ;
-
-        if (null !== $username && '' !== $username) {
-            $query->andWhere('m.Username = :username')
-                ->setParameter('username', $username);
-        }
-        if (null !== $flagId) {
-            $query->andWhere('f.id = :flagId')
-                ->setParameter('flagId', $flagId);
-        }
-        if (!$includeHistory) {
-            $query->andWhere('NOT EXISTS (' . $newerAssignment . ')')
-                ->andWhere('fm.Level <> 0');
-        }
-
-        if ($memberFirst) {
-            $query->orderBy('m.Username', 'ASC')
-                ->addOrderBy('f.Relevance', 'DESC')
-                ->addOrderBy('f.Name', 'ASC');
-        } else {
-            $query->orderBy('f.Relevance', 'DESC')
-                ->addOrderBy('f.Name', 'ASC')
-                ->addOrderBy('m.Username', 'ASC');
-        }
-        $query->addOrderBy('fm.created', 'DESC')
+            ->orderBy('current', 'DESC')
+            ->addOrderBy('fm.created', 'DESC')
             ->addOrderBy('fm.id', 'DESC');
+        if (null !== $username && '' !== $username) {
+            $query->andWhere('m.Username LIKE :username')
+                ->setParameter('username', '%' . addcslashes($username, '%_\\') . '%');
+        }
 
-        return $this->paginate($query, $page, $itemsPerPage);
+        return $query->executeQuery()->fetchAllAssociative();
     }
 
-    private function paginate(QueryBuilder $query, int $page, int $itemsPerPage): Pagerfanta
+    /**
+     * How often the member had the flag before (removed assignments).
+     */
+    public function countRemoved(Member $member, Flag $flag): int
     {
-        $adapter = new QueryAdapter(
-            $query,
-            static fn (QueryBuilder $countQuery): QueryBuilder => $countQuery
-                ->select('COUNT(DISTINCT fm.id)')
-                ->resetOrderBy(),
-        );
-        $pager = new Pagerfanta($adapter);
-        $pager->setMaxPerPage($itemsPerPage);
-        $pager->setCurrentPage(min(max(1, $page), max(1, $pager->getNbPages())));
-
-        return $pager;
+        return (int) $this->createQueryBuilder('fm')
+            ->select('COUNT(fm.id)')
+            ->where('fm.member = :member')
+            ->andWhere('fm.flag = :flag')
+            ->andWhere('fm.level = 0')
+            ->setParameter('member', $member)
+            ->setParameter('flag', $flag)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 }

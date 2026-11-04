@@ -1,18 +1,24 @@
+admin.rights.title:
+  - Rights
+  - 'Title of the rights tool, and its link in the volunteer menu and the Admin box of the profile.'
+admin.rights.tab.assign:
+  - Assign
+  - 'Rights tool: the tab with the form that assigns a right.'
+admin.rights.tab.overview:
+  - Overview
+  - 'Rights tool: the tab with the rights and how many members have them.'
+admin.rights.tab.members:
+  - 'By member'
+  - 'Rights tool: the tab with the members and their rights.'
+admin.rights.tab.rights:
+  - 'By right'
+  - 'Rights tool: the tab with the assignments grouped by right.'
 admin.rights.edit:
   - 'Edit right assignment'
   - 'Heading for editing a member right.'
-admin.rights.created:
-  - 'Right %right% created.'
-  - 'Confirmation after creating a right. Keep %right%.'
-admin.rights.assigned:
-  - 'Assigned %right% to %username%.'
-  - 'Confirmation after assigning a right. Keep %right% and %username%.'
-admin.rights.removed:
-  - 'Removed %right% from %username%.'
-  - 'Confirmation after removing a right. Keep %right% and %username%.'
-admin.rights.remove.confirm:
-  - 'Remove %right% from %username%? The assignment remains in history.'
-  - 'Right removal confirmation. Keep %right% and %username%.'
+admin.rights.assign.title:
+  - 'Assign a right'
+  - 'Heading of the form that assigns a right to a member.'
 admin.rights.list.members:
   - '@-AdminRightsListMembers'
 admin.rights.list.rights:
@@ -21,8 +27,6 @@ admin.rights.member:
   - '@-AdminRightsMember'
 admin.rights.right:
   - '@-AdminRightsRight'
-admin.rights.history:
-  - '@-AdminRightsHistory'
 admin.rights.level:
   - '@-AdminRightsLevel'
 admin.rights.scope:
@@ -31,15 +35,89 @@ admin.rights.comment:
   - '@-AdminRightsComment'
 admin.rights.overview:
   - '@-AdminRightsOverview'
-admin.rights.name:
-  - '@-AdminRightsName'
-admin.rights.description:
-  - '@-AdminRightsDescription'
-admin.rights.remove:
-  - '@-AdminRightsRemove'
-admin.rights.create:
-  - '@-AdminRightsCreate'
 admin.rights.assign:
   - '@-AdminRightsAssign'
-admin.rights.right.edited:
-  - '@-AdminRightsRightEdited'
+admin.rights.find.member:
+  - 'Find a member'
+  - 'Placeholder of the member search in the rights and flags tools.'
+admin.rights.all:
+  - 'All rights'
+  - 'First option of the right filter in the rights tool: no filter.'
+admin.rights.earlier:
+  - '{count} earlier'
+  - 'Rights tool, list of members: how many of the member''s rights were removed. Keep {count}.'
+admin.rights.last.active:
+  - 'last active {date}'
+  - 'Rights tool: when the member was last active, after their status. Keep {date}.'
+admin.rights.assign.button:
+  - 'Assign right'
+  - 'Button of the rights tool that assigns a right (opens the form, submits it).'
+admin.rights.level.value:
+  - 'Level {level}'
+  - 'Rights tool: the level of an assignment. Keep {level}.'
+admin.rights.edit.button:
+  - Edit
+  - 'Rights tool: the link that edits an assignment.'
+admin.rights.remove.button:
+  - Remove
+  - 'Rights tool: the button that removes an assignment (asks first).'
+admin.rights.assigned.on:
+  - 'Assigned {date}'
+  - 'Rights tool: when a right was assigned. Keep {date}.'
+admin.rights.updated.on:
+  - 'updated {date}'
+  - 'Rights tool: when an assignment was last changed, after "Assigned {date}". Keep {date}.'
+admin.rights.history.title:
+  - History
+  - 'Rights tool: the heading of a member''s removed rights.'
+admin.rights.include.history:
+  - 'Include history'
+  - 'Rights tool, By right: the box that also lists removed assignments.'
+admin.rights.profile.of:
+  - 'Profile of {username}'
+  - 'Rights tool: link to the member''s profile. Keep {username}.'
+admin.rights.admin.box:
+  - 'Admin box on the profile'
+  - 'Rights tool: link to the Admin box of the member''s profile.'
+admin.rights.remove.title:
+  - 'Remove right?'
+  - 'Title of the dialog that asks before removing a right.'
+admin.rights.remove.question:
+  - 'Remove {right} from {username}? The assignment remains in history.'
+  - 'Text of the dialog that asks before removing a right. Keep {right} and {username}.'
+admin.rights.removed.notice:
+  - 'Removed {right} from {username}.'
+  - 'Notice after removing a right. Keep {right} and {username}.'
+admin.rights.assigned.notice:
+  - 'Assigned {right} to {username}.'
+  - 'Notice after assigning a right. Keep {right} and {username}.'
+admin.rights.edited.notice:
+  - 'Right assignment updated.'
+  - 'Notice after editing a right assignment.'
+admin.rights.assignments.count:
+  - '{count, plural, one {# assignment} other {# assignments}}'
+  - 'Rights tool, By right: how many assignments the filters found.'
+admin.rights.holders:
+  - 'Current holders'
+  - 'Rights tool: tooltip of the number of members who have a right.'
+admin.rights.in.scope:
+  - 'The rights in your scope'
+  - 'Rights tool, Overview: note next to the title.'
+admin.rights.username:
+  - Username
+  - 'Placeholder of the member field of the assign form.'
+admin.rights.choose:
+  - 'Choose a right'
+  - 'First option of the right select of the assign form.'
+admin.rights.save:
+  - 'Save changes'
+  - 'Button of the form that edits a right assignment.'
+admin.rights.error.member:
+  - 'There is no member with this username.'
+  - 'Error of the assign form: the username doesn''t exist.'
+admin.rights.error.right:
+  - 'Choose a right.'
+  - 'Error of the assign form: no right chosen.'
+admin.rights.error.assigned:
+  - 'This member already has this right.'
+  - 'Error of the assign form: the member has the right already.'

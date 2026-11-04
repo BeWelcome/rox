@@ -1,119 +1,77 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{#
+  Every NotAllowedToPostInForum flag ever set (Admin\FlagsController::index): the current ones first, then the removed
+  ones, newest first. Flags are set and removed in the Admin box of the member's profile; a current one also here.
+#}
+{% import 'admin/rights/_macros.html.twig' as rm %}
+{% set inline_notices = true %}
+
+{% block title %}{{ 'admin.flags.title'|trans }}{% endblock %}
 
 {% block javascripts %}
-  {{ encore_entry_script_tags('member/autocomplete') }}
+  {{ encore_entry_script_tags('admin/assignments') }}
 {% endblock javascripts %}
 
-{% block content %}
-  <h1 class="u:text-24">
-    {{ (member_first ? 'admin.flags.list.members' : 'admin.flags.list.flags')|trans }}
-  </h1>
+{% block main %}
+  <main role="main" class="c-cadmin">
+    <div class="p-pro__tabs-wrap c-cadmin__band">
+      <div class="container-lg c-cadmin__band-inner">
+        <h1 class="c-cadmin__title">{{ 'admin.flags.title'|trans }}</h1>
+        <p class="c-radmin-band-note">{{ 'admin.flags.note'|trans({flag: flag.name}) }}</p>
+      </div>
+    </div>
 
-  <form method="get" class="row g-2 align-items-end mb-3">
-    <div class="col-12 col-md-4">
-      <label for="flags-member" class="form-label">{{ 'admin.flags.member'|trans }}</label>
-      <input id="flags-member" name="member" value="{{ filters.member }}"
-             class="form-control member-autocomplete-start">
-    </div>
-    <div class="col-12 col-md-3">
-      <label for="flags-flag" class="form-label">{{ 'admin.flags.flag'|trans }}</label>
-      <select id="flags-flag" name="flag" class="form-select">
-        <option value=""></option>
-        {% for flag in flags %}
-          <option value="{{ flag.id }}"{% if filters.flag == flag.id %} selected{% endif %}>
-            {{ flag.name }}
-          </option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-8 col-md-3 form-check ms-2 mb-2">
-      <input type="hidden" name="history" value="0">
-      <input id="flags-history" name="history" value="1" type="checkbox"
-             class="form-check-input"{% if filters.history %} checked{% endif %}>
-      <label for="flags-history" class="form-check-label">{{ 'admin.flags.history'|trans }}</label>
-    </div>
-    <div class="col-4 col-md-1">
-      <button class="btn btn-primary" type="submit">{{ 'admin.assignments.filter'|trans }}</button>
-    </div>
-  </form>
+    <div class="container-lg c-cadmin__body">
+      {% include 'admin/massmail/_flash.html.twig' %}
+      <section class="c-home-card c-radmin-table-card" aria-label="{{ 'admin.flags.title'|trans }}">
+        <form method="get" action="{{ path('admin_flags') }}" class="c-radmin-bar">
+          <input type="search" name="member" class="o-input c-radmin-bar__search c-radmin-bar__search--narrow" value="{{ search }}" placeholder="{{ 'admin.rights.find.member'|trans }}" aria-label="{{ 'admin.rights.find.member'|trans }}">
+          <span class="c-radmin-bar__count">{{ 'admin.flags.count'|trans({count: assignments|length, current: current}) }}</span>
+          <button type="submit" class="u:sr-only">{{ 'admin.assignments.filter'|trans }}</button>
+        </form>
 
-  {% if assignments.nbResults > 0 %}
-    <div class="d-flex justify-content-end mb-2">{{ pagerfanta(assignments, 'rox_default') }}</div>
-  {% endif %}
-
-  <div class="table-responsive">
-    <table class="table table-striped table-hover align-middle">
-      <thead>
-        <tr>
-          <th>{{ 'admin.flags.member'|trans }}</th>
-          <th>{{ 'admin.flags.flag'|trans }}</th>
-          <th>{{ 'admin.flags.level'|trans }}</th>
-          <th>{{ 'admin.flags.scope'|trans }}</th>
-          <th>{{ 'admin.flags.comment'|trans }}</th>
-          <th>{{ 'admin.assignments.created'|trans }}</th>
-          <th>{{ 'admin.assignments.updated'|trans }}</th>
-          <th>{{ 'admin.assignments.actions'|trans }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for assignment in assignments %}
-          <tr{% if assignment.level == 0 or assignment.superseded %} class="text-muted"{% endif %}>
-            <td>
-              <div class="d-flex align-items-start gap-2">
-                {{ macros.avatar(assignment.username, 50, true) }}
-                <div>
-                  <a href="{{ url('members_profile', {username: assignment.username}) }}">
-                    {{ assignment.username }}
-                  </a>
-                  <div class="small">{{ assignment.status }}</div>
-                  <div class="small">
-                    {{ assignment.last_active ? assignment.last_active|date('Y-m-d') : '—' }}
-                  </div>
-                  <div class="small">
-                    {{ assignment.place_name|default('—') }}{% if assignment.country_name %}, {{ assignment.country_name }}{% endif %}
-                  </div>
-                </div>
-              </div>
-            </td>
-            <td>
-              <a href="{{ url('admin_flags_flag', {id: assignment.definition_id}) }}">
-                {{ assignment.definition_name }}
-              </a>
-              {% if assignment.superseded %}
-                <span class="badge text-bg-secondary">{{ 'admin.flags.superseded'|trans }}</span>
-              {% endif %}
-            </td>
-            <td>{{ assignment.level }}</td>
-            <td>{{ assignment.scope }}</td>
-            <td class="text-break">{{ assignment.comment|nl2br }}</td>
-            <td>{{ assignment.created_at|date('Y-m-d H:i') }}</td>
-            <td>{{ assignment.updated_at ? assignment.updated_at|date('Y-m-d H:i') : '—' }}</td>
-            <td class="text-nowrap">
-              {% if not assignment.superseded and assignment.level != 0 %}
-                <a class="btn btn-sm btn-outline-primary"
-                   href="{{ url('admin_flags_edit', {id: assignment.definition_id, username: assignment.username}) }}"
-                   aria-label="{{ 'admin.assignments.edit'|trans }}">
-                  <i class="fa fa-edit" aria-hidden="true"></i>
-                </a>
-                <a class="btn btn-sm btn-outline-danger"
-                   href="{{ url('admin_flags_remove', {id: assignment.definition_id, username: assignment.username}) }}"
-                   aria-label="{{ 'admin.assignments.remove'|trans }}">
-                  <i class="fa fa-times" aria-hidden="true"></i>
-                </a>
-              {% endif %}
-            </td>
-          </tr>
+        {% if assignments is empty %}
+          <p class="c-cadmin__empty c-radmin-empty"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>{{ 'admin.assignments.none'|trans }}</p>
         {% else %}
-          <tr>
-            <td colspan="8">{{ 'admin.assignments.none'|trans }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+          {% set _xmark %}<i class="fas fa-xmark" aria-hidden="true"></i>{% endset %}
+          <div class="c-radmin-table">
+            <div class="c-radmin-table__inner c-radmin-table__inner--flags">
+              <div class="c-radmin-table__row c-radmin-table__row--head" role="row">
+                <span>{{ 'admin.rights.member'|trans }}</span>
+                <span>{{ 'admin.rights.comment'|trans }}</span>
+                <span>{{ 'admin.flags.set'|trans }}</span>
+                <span>{{ 'admin.flags.removed.on'|trans }}</span>
+                <span><span class="u:sr-only">{{ 'admin.assignments.actions'|trans }}</span></span>
+              </div>
+              {% for assignment in assignments %}
+                {% set is_current = assignment.current == 1 %}
+                <div class="c-radmin-table__row" role="row">
+                  <a class="c-radmin-member" href="{{ path('members_profile', {username: assignment.username}) }}">
+                    <img class="c-radmin-member__avatar" src="{{ path('avatar', {username: assignment.username, size: 48}) }}" alt="" width="36" height="36" loading="lazy">
+                    <span class="c-radmin-member__text">
+                      <span class="c-radmin-member__name{{ is_current ? '' : ' is-removed' }}">{{ assignment.username }}</span>
+                      {% if not is_current %}{{ rm.removed_tag() }}{% endif %}
+                      <span class="c-radmin-member__place">{{ rm.place(assignment) }}</span>
+                    </span>
+                  </a>
+                  <span class="c-radmin-table__comment">{{ assignment.comment ?: '—' }}</span>
+                  <span class="c-radmin-muted">{{ assignment.created_at|format_date('medium') }}</span>
+                  <span class="c-radmin-muted">{{ is_current ? '—' : (assignment.updated_at ?? assignment.created_at)|format_date('medium') }}</span>
+                  <span class="c-radmin-table__actions">
+                    {% if is_current %}
+                      {{ rm.remove_button('c-radmin-flag-remove', path('admin_flags_unblock', {username: assignment.username}),
+                        'admin.flags.remove.question'|trans({flag: flag.name, username: assignment.username}),
+                        'c-radmin-icon c-radmin-icon--danger', _xmark, 'admin.assignments.remove'|trans) }}
+                    {% endif %}
+                  </span>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </section>
+    </div>
 
-  {% if assignments.nbResults > 0 %}
-    <div class="d-flex justify-content-end">{{ pagerfanta(assignments, 'rox_default') }}</div>
-  {% endif %}
-{% endblock content %}
+    {{ include('admin/_remove_dialog.html.twig', {id: 'c-radmin-flag-remove', title: 'admin.flags.remove.title'|trans, token: constant('App\\Controller\\Admin\\FlagsController::TOKEN'), confirm: 'admin.flags.remove.button'|trans}) }}
+  </main>
+{% endblock main %}

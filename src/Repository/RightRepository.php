@@ -27,14 +27,4 @@ class RightRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-    public function findOneByNameCaseInsensitive(string $name): ?Right
-    {
-        return $this->createQueryBuilder('r')
-            ->where('LOWER(r.name) = LOWER(:name)')
-            ->setParameter('name', $name)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
 }

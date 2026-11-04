@@ -294,6 +294,9 @@ services:
     App\Twig\AnalyticsExtension:
         tags: [twig.extension]
 
+    App\Twig\FlagsExtension:
+        tags: [twig.extension]
+
     rox.member_twig_extension:
         class: App\Twig\MemberTwigExtension
         public: true

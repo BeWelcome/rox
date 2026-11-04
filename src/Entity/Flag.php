@@ -19,6 +19,9 @@ class Flag
 {
     use LifecycleCallbacksTrait;
 
+    /** The one flag in use: the member may read but not write in forums and groups (ForumVoter). */
+    public const string NOT_ALLOWED_TO_POST_IN_FORUM = 'NotAllowedToPostInForum';
+
     /**
      * @var string
      */

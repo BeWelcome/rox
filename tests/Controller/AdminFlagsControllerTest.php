@@ -5,12 +5,12 @@ namespace App\Tests\Controller;
 use App\Entity\Flag;
 use App\Entity\Member;
 use App\Model\Admin\FlagsModel;
-use App\Repository\FlagMemberRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[Group('integration')]
@@ -27,153 +27,85 @@ final class AdminFlagsControllerTest extends WebTestCase
         self::assertResponseStatusCodeSame(403);
     }
 
-    public function testCreatingFlagsRequiresAllOrCreateScope(): void
-    {
-        $client = static::createClient();
-        $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
-        $this->grantFlagsManagement($connection, 'bwadmin', '"ForumModerator"');
-        $this->login($client, 'bwadmin', $entityManager);
-
-        $client->request('GET', '/admin/flags/create');
-
-        self::assertResponseStatusCodeSame(403);
-    }
-
-    public function testNewestAssignmentIsCurrentAndHistoryIdentifiesSupersededRows(): void
+    public function testTheProfileBlocksAndUnblocksForumPostingWithTheSwitch(): void
     {
         $client = static::createClient();
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
         $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
-        $historyFlagId = $this->createFlag($connection, 'Flag history');
-        $addressedFlagId = $this->createFlag($connection, 'Addressed flag');
-        $this->addFlagAssignment(
-            $connection,
-            'member-empty',
-            $historyFlagId,
-            8,
-            'Old active cycle',
-            '2021-01-01 00:00:00',
-        );
-        $this->addFlagAssignment(
-            $connection,
-            'member-empty',
-            $historyFlagId,
-            0,
-            'Newest removed cycle',
-            '2021-01-01 00:00:00',
-        );
-        $this->addFlagAssignment(
-            $connection,
-            'bwadmin',
-            $addressedFlagId,
-            5,
-            'Addressed current cycle',
-            '2022-01-01 00:00:00',
-        );
+        $flagId = $this->forumPostingFlag($connection);
         $this->login($client, 'bwadmin', $entityManager);
 
-        $crawler = $client->request('GET', '/admin/flags/list/members', [
-            'member' => 'member-empty',
-            'flag' => $historyFlagId,
-        ]);
+        // not blocked: the switch is off, the dialog asks why
+        $crawler = $client->request('GET', '/members/member-empty');
         self::assertResponseIsSuccessful();
-        self::assertStringNotContainsString('Old active cycle', $crawler->filter('table')->text());
+        $panel = $crawler->filter('.p-pro-flag')->first();
+        self::assertSame('false', $panel->filter('[role="switch"]')->attr('aria-checked'));
+        self::assertSame('/admin/flags', $panel->filter('.p-pro-flag__history')->attr('href'));
+        $form = $crawler->filter('form[action="/admin/flags/member-empty/block"]')->first();
+        self::assertCount(1, $form->filter('textarea[name="comment"]'));
+        // the Flags link of the Admin box is the switch now
+        self::assertCount(0, $crawler->filter('.p-pro-admin-tools__link[href*="/admin/flags"]'));
 
-        $crawler = $client->request('GET', '/admin/flags/list/members', [
-            'member' => 'member-empty',
-            'flag' => $historyFlagId,
-            'history' => 1,
+        // without a reason nothing happens
+        $client->submit($form->form(['comment' => '  ']));
+        self::assertResponseRedirects('/members/member-empty');
+        self::assertSame(0, $this->countFlagAssignments($connection, 'member-empty', $flagId));
+
+        $client->submit($form->form(['comment' => 'Spammed three groups']));
+        self::assertResponseRedirects('/members/member-empty');
+        $row = $connection->fetchAssociative(
+            'SELECT fm.Level, fm.Scope, fm.Comment FROM flagsmembers fm INNER JOIN member m ON m.id = fm.IdMember WHERE m.Username = ? AND fm.IdFlag = ?',
+            ['member-empty', $flagId],
+        );
+        self::assertSame(['Level' => 1, 'Scope' => '', 'Comment' => 'Spammed three groups'], ['Level' => (int) $row['Level']] + $row);
+        self::assertSame(1, $this->legacyCurrentLevel($connection, 'member-empty', $flagId));
+
+        // blocked: the switch is on, with the reason; the dialog asks before removing
+        $crawler = $client->request('GET', '/members/member-empty');
+        $panel = $crawler->filter('.p-pro-flag')->first();
+        self::assertSame('true', $panel->filter('[role="switch"]')->attr('aria-checked'));
+        self::assertStringContainsString('Spammed three groups', $panel->filter('.p-pro-flag__comment')->text());
+        $form = $crawler->filter('form[action="/admin/flags/member-empty/unblock"]')->first();
+        self::assertCount(0, $form->filter('textarea'));
+
+        // blocking twice doesn't add a second block
+        $client->request('POST', '/admin/flags/member-empty/block', [
+            '_token' => $form->filter('input[name="_token"]')->attr('value'),
+            'comment' => 'Again',
         ]);
-        self::assertResponseIsSuccessful();
-        self::assertCount(2, $crawler->filter('table tbody tr'));
-        self::assertStringContainsString('Old active cycle', $crawler->filter('table')->text());
-        self::assertStringContainsString('Newest removed cycle', $crawler->filter('table')->text());
-        self::assertCount(1, $crawler->filter('table .badge'));
+        self::assertSame(1, $this->countFlagAssignments($connection, 'member-empty', $flagId));
 
-        $crawler = $client->request('GET', '/admin/flags/list/members', ['history' => 1]);
-        self::assertResponseIsSuccessful();
-        self::assertStringContainsString('Berlin', $crawler->filter('table')->text());
-        self::assertStringContainsString('Germany', $crawler->filter('table')->text());
-        self::assertStringContainsString('member-empty', $crawler->filter('table')->text());
-    }
-
-    public function testFlagAssignmentsArePaginatedByItemsPerPagePreference(): void
-    {
-        $client = static::createClient();
-        $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
-        $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
-        $suffix = (string) random_int(100_000, 999_999);
-
-        for ($index = 1; $index <= 6; ++$index) {
-            $flagId = $this->createFlag($connection, "Paging flag {$suffix}-{$index}");
-            $this->addFlagAssignment(
-                $connection,
-                'member-empty',
-                $flagId,
-                1,
-                'Paging test',
-                \sprintf('2026-01-01 00:%02d:00', $index % 60),
-            );
-        }
-        $this->setItemsPerPage($connection, 'bwadmin', 5);
-        $this->login($client, 'bwadmin', $entityManager);
-
-        $crawler = $client->request('GET', '/admin/flags/list/members', [
-            'member' => 'member-empty',
-        ]);
-        self::assertResponseIsSuccessful();
-        self::assertCount(5, $crawler->filter('table tbody tr'));
-
-        $crawler = $client->request('GET', '/admin/flags/list/members', [
-            'member' => 'member-empty',
-            'page' => 2,
-        ]);
-        self::assertResponseIsSuccessful();
-        self::assertCount(1, $crawler->filter('table tbody tr'));
-        self::assertStringContainsString('Paging test', $crawler->filter('table tbody')->text());
-    }
-
-    public function testRemoveAndReassignCreatesANewCycleConsumedByLegacyNewestRecordRule(): void
-    {
-        $client = static::createClient();
-        $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
-        $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
-        $flagId = $this->createFlag($connection, 'NotAllowedToPostInForum');
-        $this->login($client, 'bwadmin', $entityManager);
-
-        $crawler = $client->request('GET', '/admin/flags/assign/member-empty');
-        $form = $crawler->filter('form')->form([
-            'flag_assignment[flag]' => (string) $flagId,
-            'flag_assignment[level]' => '10',
-            'flag_assignment[scope]' => '"All"',
-            'flag_assignment[comment]' => 'Initial forum restriction',
-        ]);
-        $client->submit($form);
-        self::assertResponseRedirects('/admin/flags/list/members/member-empty');
-        self::assertSame(10, $this->legacyCurrentLevel($connection, 'member-empty', $flagId));
-
-        $crawler = $client->request('GET', "/admin/flags/remove/{$flagId}/member-empty");
-        $client->submit($crawler->filter('form')->form());
-        self::assertResponseRedirects('/admin/flags/list/members/member-empty?history=1');
+        $client->submit($form->form());
+        self::assertResponseRedirects('/members/member-empty');
         self::assertSame(0, $this->legacyCurrentLevel($connection, 'member-empty', $flagId));
+        self::assertStringContainsString('Removed by bwadmin on ', (string) $connection->fetchOne(
+            'SELECT fm.Comment FROM flagsmembers fm INNER JOIN member m ON m.id = fm.IdMember WHERE m.Username = ? AND fm.IdFlag = ?',
+            ['member-empty', $flagId],
+        ));
 
-        $crawler = $client->request('GET', '/admin/flags/assign/member-empty');
-        $form = $crawler->filter('form')->form([
-            'flag_assignment[flag]' => (string) $flagId,
-            'flag_assignment[level]' => '6',
-            'flag_assignment[scope]' => '"All"',
-            'flag_assignment[comment]' => 'Forum restriction assigned again',
-        ]);
-        $client->submit($form);
-        self::assertResponseRedirects('/admin/flags/list/members/member-empty');
+        // the history: one earlier block
+        $crawler = $client->request('GET', '/members/member-empty');
+        self::assertSame('/admin/flags?member=member-empty', $crawler->filter('.p-pro-flag__history')->first()->attr('href'));
+    }
+
+    public function testBlockingAgainStartsANewRowThatMainReadsAsCurrent(): void
+    {
+        $client = static::createClient();
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
+        $flagId = $this->forumPostingFlag($connection);
+        // removed this very second: the new row must still be the newest
+        $this->addFlagAssignment($connection, 'member-empty', $flagId, 0, 'Earlier block', date('Y-m-d H:i:s'));
+        $this->login($client, 'bwadmin', $entityManager);
+
+        $crawler = $client->request('GET', '/members/member-empty');
+        $client->submit($crawler->filter('form[action="/admin/flags/member-empty/block"]')->first()->form(['comment' => 'Blocked again']));
 
         $cycles = $connection->fetchAllAssociative(
             <<<'SQL'
-                SELECT fm.id, fm.Level, fm.Comment, fm.created
+                SELECT fm.Level, fm.Comment, fm.created
                 FROM flagsmembers fm
                 INNER JOIN member m ON m.id = fm.IdMember
                 WHERE m.Username = ? AND fm.IdFlag = ?
@@ -182,48 +114,82 @@ final class AdminFlagsControllerTest extends WebTestCase
             ['member-empty', $flagId],
         );
         self::assertCount(2, $cycles);
-        self::assertSame(6, (int) $cycles[0]['Level']);
-        self::assertSame(0, (int) $cycles[1]['Level']);
+        self::assertSame([1, 'Blocked again'], [(int) $cycles[0]['Level'], $cycles[0]['Comment']]);
         self::assertGreaterThan($cycles[1]['created'], $cycles[0]['created']);
-        self::assertSame(6, $this->legacyCurrentLevel($connection, 'member-empty', $flagId));
-
-        $crawler = $client->request('GET', "/admin/flags/edit/{$flagId}/member-empty");
-        $form = $crawler->filter('form')->form([
-            'flag_assignment[level]' => '7',
-            'flag_assignment[scope]' => '"All"',
-            'flag_assignment[comment]' => 'Edited current cycle',
-        ]);
-        $client->submit($form);
-        self::assertResponseRedirects('/admin/flags/list/members/member-empty');
-
-        $comments = $connection->fetchFirstColumn(
-            <<<'SQL'
-                SELECT fm.Comment
-                FROM flagsmembers fm
-                INNER JOIN member m ON m.id = fm.IdMember
-                WHERE m.Username = ? AND fm.IdFlag = ?
-                ORDER BY fm.created DESC, fm.id DESC
-                SQL,
-            ['member-empty', $flagId],
-        );
-        self::assertSame('Edited current cycle', $comments[0]);
-        self::assertStringContainsString('Removed by bwadmin on ', $comments[1]);
+        self::assertSame(1, $this->legacyCurrentLevel($connection, 'member-empty', $flagId));
     }
 
-    public function testSupersededFlagCycleCannotBeChangedThroughAStaleEntity(): void
+    public function testTheListShowsEveryFlagCurrentOnesFirstAndRemovesFromThere(): void
+    {
+        $client = static::createClient();
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
+        $flagId = $this->forumPostingFlag($connection);
+        $connection->executeStatement('DELETE FROM flagsmembers WHERE IdFlag = ?', [$flagId]);
+        $this->addFlagAssignment($connection, 'member-1', $flagId, 0, 'Removed after a talk', '2026-06-01 00:00:00');
+        $this->addFlagAssignment($connection, 'member-2', $flagId, 1, 'Paid tours', '2026-05-01 00:00:00');
+        $this->addFlagAssignment($connection, 'member-3', $flagId, 1, 'Same request in 12 groups', '2026-10-01 00:00:00');
+        // another flag isn't listed
+        $otherId = $this->createFlag($connection, 'Some other flag ' . random_int(1000, 9999));
+        $this->addFlagAssignment($connection, 'member-4', $otherId, 1, 'Not this flag', '2026-10-02 00:00:00');
+        $this->login($client, 'bwadmin', $entityManager);
+
+        $crawler = $client->request('GET', '/admin/flags');
+        self::assertResponseIsSuccessful();
+        $rows = $crawler->filter('.c-radmin-table__row:not(.c-radmin-table__row--head)');
+        // the current ones first, newest first, then the removed one
+        self::assertSame(['member-3', 'member-2', 'member-1'], $rows->filter('.c-radmin-member__name')->each(
+            static fn (Crawler $name): string => $name->text(),
+        ));
+        self::assertCount(2, $crawler->filter('[data-remove]'));
+        self::assertCount(1, $rows->eq(2)->filter('.c-radmin-member__name.is-removed'));
+        self::assertCount(0, $rows->eq(2)->filter('[data-remove]'));
+        self::assertSame('/members/member-3', $rows->eq(0)->filter('.c-radmin-member')->attr('href'));
+
+        $crawler = $client->request('GET', '/admin/flags', ['member' => 'member-2']);
+        self::assertCount(1, $crawler->filter('.c-radmin-table__row:not(.c-radmin-table__row--head)'));
+
+        // removing from the list leads back to it
+        $client->request('POST', '/admin/flags/member-2/unblock', [
+            '_token' => $crawler->filter('[data-remove-form] input[name="_token"]')->attr('value'),
+            'return' => '/admin/flags?member=member-2',
+        ]);
+        self::assertResponseRedirects('/admin/flags?member=member-2');
+        self::assertSame(0, $this->legacyCurrentLevel($connection, 'member-2', $flagId));
+        $client->followRedirect();
+        self::assertSelectorExists('.c-inline-flash');
+    }
+
+    public function testBlockingNeedsTheTokenAndTheFlagsRight(): void
+    {
+        $client = static::createClient();
+        $entityManager = $this->getEntityManager();
+        $connection = $entityManager->getConnection();
+        $flagId = $this->forumPostingFlag($connection);
+
+        $this->login($client, 'member-5', $entityManager);
+        $client->request('POST', '/admin/flags/member-empty/block', ['comment' => 'No right']);
+        self::assertResponseStatusCodeSame(403);
+        $crawler = $client->request('GET', '/members/member-empty');
+        self::assertCount(0, $crawler->filter('.p-pro-flag'));
+
+        $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
+        $this->login($client, 'bwadmin', $entityManager);
+        $client->request('POST', '/admin/flags/member-empty/block', ['comment' => 'No token']);
+        self::assertResponseStatusCodeSame(403);
+        $client->request('GET', '/admin/flags/member-empty/block');
+        self::assertResponseStatusCodeSame(405);
+        self::assertSame(0, $this->countFlagAssignments($connection, 'member-empty', $flagId));
+    }
+
+    public function testAStaleBlockCannotBeRemoved(): void
     {
         static::createClient();
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
-        $flagId = $this->createFlag($connection, 'Immutable flag history');
-        $this->addFlagAssignment(
-            $connection,
-            'member-empty',
-            $flagId,
-            5,
-            'Older cycle',
-            '2020-01-01 00:00:00',
-        );
+        $flagId = $this->forumPostingFlag($connection);
+        $this->addFlagAssignment($connection, 'member-empty', $flagId, 5, 'Older cycle', '2020-01-01 00:00:00');
         $entityManager->clear();
 
         $member = $entityManager->getRepository(Member::class)->findOneBy(['username' => 'member-empty']);
@@ -233,182 +199,48 @@ final class AdminFlagsControllerTest extends WebTestCase
         self::assertInstanceOf(Member::class, $manager);
         self::assertInstanceOf(Flag::class, $flag);
 
-        $repository = static::getContainer()->get(FlagMemberRepository::class);
-        $staleAssignment = $repository->findCurrent($member, $flag);
-        self::assertNotNull($staleAssignment);
-
-        $this->addFlagAssignment(
-            $connection,
-            'member-empty',
-            $flagId,
-            6,
-            'Current cycle',
-            '2021-01-01 00:00:00',
-        );
-
         $model = static::getContainer()->get(FlagsModel::class);
-        self::assertFalse($model->edit($staleAssignment, 9, '"All"', 'Changed stale cycle'));
-        self::assertFalse($model->remove($staleAssignment, $manager));
+        $staleBlock = $model->findBlock($member, $flag);
+        self::assertNotNull($staleBlock);
 
-        $comments = $connection->fetchFirstColumn(
-            'SELECT Comment FROM flagsmembers WHERE IdFlag = ? ORDER BY created, id',
-            [$flagId],
+        $this->addFlagAssignment($connection, 'member-empty', $flagId, 6, 'Current cycle', '2021-01-01 00:00:00');
+        self::assertFalse($model->unblock($staleBlock, $manager));
+
+        $currentBlock = $model->findBlock($member, $flag);
+        self::assertNotNull($currentBlock);
+        $connection->update('flagsmembers', ['Level' => 0, 'Comment' => 'Removed by another request'], ['id' => $currentBlock->getId()]);
+        self::assertFalse($model->unblock($currentBlock, $manager));
+        self::assertSame(
+            ['Older cycle', 'Removed by another request'],
+            $connection->fetchFirstColumn('SELECT Comment FROM flagsmembers WHERE IdFlag = ? AND IdMember = ? ORDER BY created, id', [$flagId, $member->getId()]),
         );
-        self::assertSame(['Older cycle', 'Current cycle'], $comments);
-
-        $currentAssignment = $repository->findCurrent($member, $flag);
-        self::assertNotNull($currentAssignment);
-        $connection->update('flagsmembers', [
-            'Level' => 0,
-            'Comment' => 'Removed by another request',
-        ], [
-            'id' => $currentAssignment->getId(),
-        ]);
-
-        self::assertFalse($model->edit($currentAssignment, 9, '"All"', 'Resurrected by stale edit'));
-        self::assertFalse($model->remove($currentAssignment, $manager));
-        $removed = $connection->fetchAssociative(
-            'SELECT Level, Comment FROM flagsmembers WHERE id = ?',
-            [$currentAssignment->getId()],
-        );
-        self::assertIsArray($removed);
-        self::assertSame(0, (int) $removed['Level']);
-        self::assertSame('Removed by another request', $removed['Comment']);
     }
 
-    public function testDuplicateInvalidMemberAndMissingCsrfDoNotCreateAssignments(): void
+    public function testFlagRoutesAndTheirOldPages(): void
     {
         $client = static::createClient();
         $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
-        $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
-        $flagId = $this->createFlag($connection, 'Duplicate flag');
-        $otherFlagId = $this->createFlag($connection, 'CSRF flag');
-        $this->addFlagAssignment(
-            $connection,
-            'member-empty',
-            $flagId,
-            5,
-            'Existing current assignment',
-            '2026-01-01 00:00:00',
-        );
+        $this->grantFlagsManagement($entityManager->getConnection(), 'bwadmin', '"All"');
         $this->login($client, 'bwadmin', $entityManager);
-
-        $crawler = $client->request('GET', '/admin/flags/assign');
-        $form = $crawler->filter('form')->form([
-            'flag_assignment[username]' => 'member-empty',
-            'flag_assignment[flag]' => (string) $flagId,
-            'flag_assignment[level]' => '5',
-            'flag_assignment[scope]' => '',
-            'flag_assignment[comment]' => 'Duplicate',
-        ]);
-        $client->submit($form);
-        self::assertResponseStatusCodeSame(422);
-        self::assertSame(1, $this->countFlagAssignments($connection, 'member-empty', $flagId));
-
-        $crawler = $client->request('GET', '/admin/flags/assign');
-        $form = $crawler->filter('form')->form([
-            'flag_assignment[username]' => 'does-not-exist',
-            'flag_assignment[flag]' => (string) $otherFlagId,
-            'flag_assignment[level]' => '5',
-            'flag_assignment[scope]' => '',
-            'flag_assignment[comment]' => 'Invalid member',
-        ]);
-        $client->submit($form);
-        self::assertResponseStatusCodeSame(422);
-        self::assertSame(0, $this->countFlagAssignments($connection, 'member-empty', $otherFlagId));
-
-        $client->request('POST', '/admin/flags/assign', [
-            'flag_assignment' => [
-                'username' => 'member-empty',
-                'flag' => (string) $otherFlagId,
-                'level' => '5',
-                'scope' => '',
-                'comment' => 'Missing token',
-                'submit' => '',
-            ],
-        ]);
-        self::assertResponseStatusCodeSame(422);
-        self::assertSame(0, $this->countFlagAssignments($connection, 'member-empty', $otherFlagId));
-    }
-
-    public function testCreatedFlagsHaveRelevanceOneHundredAndIrrelevantFlagsStayHidden(): void
-    {
-        $client = static::createClient();
-        $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
-        $this->grantFlagsManagement($connection, 'bwadmin', '"Create"');
-        $hiddenFlagId = $this->createFlag($connection, 'Hidden legacy flag', 0);
-        self::assertGreaterThan(0, $hiddenFlagId);
-        $this->login($client, 'bwadmin', $entityManager);
-
-        $crawler = $client->request('GET', '/admin/flags/create');
-        $form = $crawler->filter('form')->form([
-            'flag_definition[name]' => 'Created modern flag',
-            'flag_definition[description]' => 'Created through Symfony',
-        ]);
-        $client->submit($form);
-        self::assertResponseRedirects('/admin/flags/overview');
-        self::assertSame(100, (int) $connection->fetchOne(
-            'SELECT Relevance FROM flags WHERE Name = ?',
-            ['Created modern flag'],
-        ));
-
-        $crawler = $client->request('GET', '/admin/flags/overview');
-        self::assertResponseIsSuccessful();
-        self::assertStringNotContainsString('Hidden legacy flag', $crawler->filter('table')->text());
-        self::assertStringContainsString('Created modern flag', $crawler->filter('table')->text());
-
-        $crawler = $client->request('GET', '/admin/flags/create');
-        $form = $crawler->filter('form')->form([
-            'flag_definition[name]' => 'Created modern flag',
-            'flag_definition[description]' => 'Duplicate definition',
-        ]);
-        $client->submit($form);
-        self::assertResponseStatusCodeSame(422);
-        self::assertSame(1, (int) $connection->fetchOne(
-            'SELECT COUNT(*) FROM flags WHERE Name = ?',
-            ['Created modern flag'],
-        ));
-    }
-
-    public function testFlagRouteNamesAndProfileAdminLinkRemainValid(): void
-    {
-        $client = static::createClient();
-        $entityManager = $this->getEntityManager();
-        $connection = $entityManager->getConnection();
-        $this->grantFlagsManagement($connection, 'bwadmin', '"All"');
-        $manager = $this->login($client, 'bwadmin', $entityManager);
         $router = static::getContainer()->get(UrlGeneratorInterface::class);
 
-        $routes = [
-            'admin_flags' => [[], '/admin/flags'],
-            'admin_flags_overview' => [[], '/admin/flags/overview'],
-            'admin_flags_members' => [[], '/admin/flags/list/members'],
-            'admin_flags_member' => [['username' => 'member-1'], '/admin/flags/list/members/member-1'],
-            'admin_flags_flags' => [[], '/admin/flags/list/flags'],
-            'admin_flags_flag' => [['id' => 3], '/admin/flags/list/flags/3'],
-            'admin_flags_assign' => [[], '/admin/flags/assign'],
-            'admin_flags_assign_user' => [['username' => 'member-1'], '/admin/flags/assign/member-1'],
-            'admin_flags_create' => [[], '/admin/flags/create'],
-            'admin_flags_edit' => [
-                ['id' => 3, 'username' => 'member-1'],
-                '/admin/flags/edit/3/member-1',
-            ],
-            'admin_flags_remove' => [
-                ['id' => 3, 'username' => 'member-1'],
-                '/admin/flags/remove/3/member-1',
-            ],
-        ];
-        foreach ($routes as $route => [$parameters, $path]) {
-            self::assertSame($path, $router->generate($route, $parameters));
+        self::assertSame('/admin/flags', $router->generate('admin_flags'));
+        self::assertSame('/admin/flags/member-1/block', $router->generate('admin_flags_block', ['username' => 'member-1']));
+        self::assertSame('/admin/flags/member-1/unblock', $router->generate('admin_flags_unblock', ['username' => 'member-1']));
+        foreach (['/admin/flags/overview', '/admin/flags/list/members', '/admin/flags/assign', '/admin/flags/create'] as $gone) {
+            $client->request('GET', $gone);
+            self::assertResponseStatusCodeSame(404, $gone);
         }
+    }
 
-        $client->loginUser($manager);
-        $crawler = $client->request('GET', '/members/member-1');
-        self::assertResponseIsSuccessful();
-        // The profile content, admin tools included, is rendered once per profile language
-        self::assertGreaterThanOrEqual(1, $crawler->filter('a[href="/admin/flags/list/members/member-1"]')->count());
+    /**
+     * The id of the NotAllowedToPostInForum flag; created where the test database lacks it.
+     */
+    private function forumPostingFlag(Connection $connection): int
+    {
+        $id = $connection->fetchOne('SELECT id FROM flags WHERE Name = ?', [Flag::NOT_ALLOWED_TO_POST_IN_FORUM]);
+
+        return false === $id ? $this->createFlag($connection, Flag::NOT_ALLOWED_TO_POST_IN_FORUM) : (int) $id;
     }
 
     private function getEntityManager(): EntityManagerInterface
@@ -447,20 +279,6 @@ final class AdminFlagsControllerTest extends WebTestCase
                     updated = NOW()
                 SQL,
             [$scope, $username],
-        );
-    }
-
-    private function setItemsPerPage(Connection $connection, string $username, int $itemsPerPage): void
-    {
-        $connection->executeStatement(
-            <<<'SQL'
-                INSERT INTO memberspreferences (IdMember, IdPreference, Value, updated, created)
-                SELECT m.id, p.id, ?, NOW(), NOW()
-                FROM member m
-                INNER JOIN preferences p ON p.codename = 'ItemsPerPage'
-                WHERE m.Username = ?
-                SQL,
-            [(string) $itemsPerPage, $username],
         );
     }
 

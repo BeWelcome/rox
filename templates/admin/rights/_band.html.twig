@@ -1,0 +1,24 @@
+{#
+  The band of the rights tool (Admin\RightsController): title and tabs, as in the comments tool.
+  tab: the active one (assign, overview, members, rights); tab_member: a member By member keeps.
+#}
+{% set _tabs = {
+  assign: {key: 'admin.rights.tab.assign', url: path('admin_rights')},
+  overview: {key: 'admin.rights.tab.overview', url: path('admin_rights_overview')},
+  members: {key: 'admin.rights.tab.members', url: (tab_member ?? null) ? path('admin_rights_member', {username: tab_member}) : path('admin_rights_members')},
+  rights: {key: 'admin.rights.tab.rights', url: path('admin_rights_rights')},
+} %}
+<div class="p-pro__tabs-wrap c-cadmin__band">
+  <div class="container-lg c-cadmin__band-inner">
+    <h1 class="c-cadmin__title">{{ 'admin.rights.title'|trans }}</h1>
+    <div class="p-hero__tabs-scroller" data-tabs-scroller>
+      <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--prev" data-tabs-scroll="-1" tabindex="-1" aria-hidden="true"><i class="fas fa-chevron-left"></i></button>
+      <nav class="p-hero__tabs" aria-label="{{ 'admin.rights.title'|trans }}">
+        {% for name, item in _tabs %}
+          <a href="{{ item.url }}" class="p-hero__tab{{ tab == name ? ' p-hero__tab--active' }}"{% if tab == name %} aria-current="page"{% endif %}>{{ item.key|trans }}</a>
+        {% endfor %}
+      </nav>
+      <button type="button" class="p-hero__tabs-arrow p-hero__tabs-arrow--next" data-tabs-scroll="1" tabindex="-1" aria-hidden="true"><i class="fas fa-chevron-right"></i></button>
+    </div>
+  </div>
+</div>

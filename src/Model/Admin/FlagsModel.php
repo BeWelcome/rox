@@ -7,73 +7,78 @@ use App\Entity\FlagMember;
 use App\Entity\Member;
 use App\Repository\FlagMemberRepository;
 use App\Repository\FlagRepository;
-use App\Repository\RightVolunteerRepository;
 use DateTime;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
-use Pagerfanta\Pagerfanta;
 
+/**
+ * The one flag in use, NotAllowedToPostInForum: set and removed in the Admin box of the member's profile, every
+ * assignment ever made in the flags list.
+ *
+ * Each block is a new flagsmembers row: main's code reads a member's newest row of a flag, so a removed block (level
+ * 0) stays as history and blocking again starts a new row.
+ */
 class FlagsModel
 {
-    public const string ASSIGNMENT_CREATED = 'created';
-    public const string ASSIGNMENT_DUPLICATE = 'duplicate';
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly FlagRepository $flagRepository,
         private readonly FlagMemberRepository $flagMemberRepository,
-        private readonly RightVolunteerRepository $rightVolunteerRepository,
     ) {
     }
 
+    public function getForumPostingFlag(): ?Flag
+    {
+        return $this->flagRepository->findForumPostingFlag();
+    }
+
     /**
-     * @return Flag[]
+     * The member's current block (the newest row, not removed), or null.
      */
-    public function getRelevantFlags(): array
+    public function findBlock(Member $member, Flag $flag): ?FlagMember
     {
-        return $this->flagRepository->findRelevant();
+        $current = $this->flagMemberRepository->findCurrent($member, $flag);
+
+        return null !== $current && 0 !== $current->getLevel() ? $current : null;
     }
 
-    public function canCreate(Member $manager): bool
+    public function countRemoved(Member $member, Flag $flag): int
     {
-        $assignment = $this->rightVolunteerRepository->findActiveForMemberAndName($manager, 'Flags');
-        if (null === $assignment) {
-            return false;
-        }
-
-        $scope = str_replace('"', '', (string) $assignment->getScope());
-        $tokens = preg_split('/[;,]/', $scope) ?: [];
-        $tokens = array_map(static fn (string $token): string => strtolower(trim($token)), $tokens);
-
-        return \in_array('all', $tokens, true) || \in_array('create', $tokens, true);
+        return $this->flagMemberRepository->countRemoved($member, $flag);
     }
 
-    public function assign(
-        Member $member,
-        Flag $flag,
-        int $level,
-        string $scope,
-        string $comment,
-    ): string {
+    /**
+     * @return list<array<string, mixed>> see FlagMemberRepository::findAllOfFlag()
+     */
+    public function findAllOfFlag(Flag $flag, ?string $username): array
+    {
+        return $this->flagMemberRepository->findAllOfFlag($flag, $username);
+    }
+
+    /**
+     * Blocks the member: a new assignment (level 1, no scope) with the comment. False if they're blocked already.
+     */
+    public function block(Member $member, Flag $flag, string $comment): bool
+    {
         return $this->entityManager->wrapInTransaction(
-            function (EntityManagerInterface $entityManager) use ($member, $flag, $level, $scope, $comment): string {
+            function (EntityManagerInterface $entityManager) use ($member, $flag, $comment): bool {
                 $entityManager->lock($member, LockMode::PESSIMISTIC_WRITE);
                 $current = $this->flagMemberRepository->findCurrent($member, $flag);
                 if (null !== $current) {
                     $entityManager->refresh($current);
-                }
-                if (null !== $current && 0 !== $current->getLevel()) {
-                    return self::ASSIGNMENT_DUPLICATE;
+                    if (0 !== $current->getLevel()) {
+                        return false;
+                    }
                 }
 
                 $assignment = new FlagMember();
                 $assignment->setMember($member)
                     ->setFlag($flag)
-                    ->setLevel($level)
-                    ->setScope($scope)
+                    ->setLevel(1)
+                    ->setScope('')
                     ->setComment($comment);
-
                 if (null !== $current) {
+                    // newer than the removed one, which main reads as the current row otherwise
                     $created = new DateTime();
                     if ($created->getTimestamp() <= $current->getCreated()->getTimestamp()) {
                         $created = DateTime::createFromInterface($current->getCreated());
@@ -81,46 +86,24 @@ class FlagsModel
                     }
                     $assignment->setCreated($created);
                 }
-
                 $entityManager->persist($assignment);
-
-                return self::ASSIGNMENT_CREATED;
-            }
-        );
-    }
-
-    public function edit(FlagMember $assignment, int $level, string $scope, string $comment): bool
-    {
-        return $this->entityManager->wrapInTransaction(
-            function () use ($assignment, $level, $scope, $comment): bool {
-                $member = $assignment->getMember();
-                $flag = $assignment->getFlag();
-                $this->entityManager->lock($member, LockMode::PESSIMISTIC_WRITE);
-                $current = $this->flagMemberRepository->findCurrent($member, $flag);
-                if (null !== $current) {
-                    $this->entityManager->refresh($current);
-                }
-                if (null === $current || $current->getId() !== $assignment->getId() || 0 === $current->getLevel()) {
-                    return false;
-                }
-
-                $current->setLevel($level)
-                    ->setScope($scope)
-                    ->setComment($comment);
 
                 return true;
             }
         );
     }
 
-    public function remove(FlagMember $assignment, Member $manager): bool
+    /**
+     * Removes the block: its row stays with level 0 and who removed it. False if the member isn't blocked (any more),
+     * or $assignment isn't the current block.
+     */
+    public function unblock(FlagMember $assignment, Member $manager): bool
     {
         return $this->entityManager->wrapInTransaction(
             function () use ($assignment, $manager): bool {
                 $member = $assignment->getMember();
-                $flag = $assignment->getFlag();
                 $this->entityManager->lock($member, LockMode::PESSIMISTIC_WRITE);
-                $current = $this->flagMemberRepository->findCurrent($member, $flag);
+                $current = $this->flagMemberRepository->findCurrent($member, $assignment->getFlag());
                 if (null !== $current) {
                     $this->entityManager->refresh($current);
                 }
@@ -128,53 +111,13 @@ class FlagsModel
                     return false;
                 }
 
-                $comment = rtrim($current->getComment())
-                    . "\n\nRemoved by {$manager->getUsername()} on "
-                    . new DateTime()->format('Y-m-d');
                 $current->setLevel(0)
-                    ->setComment($comment);
+                    ->setComment(rtrim($current->getComment())
+                        . "\n\nRemoved by {$manager->getUsername()} on "
+                        . new DateTime()->format('Y-m-d'));
 
                 return true;
             }
-        );
-    }
-
-    public function create(string $name, string $description): ?Flag
-    {
-        if (null !== $this->flagRepository->findOneByNameCaseInsensitive($name)) {
-            return null;
-        }
-
-        $flag = new Flag();
-        $flag->setName($name)
-            ->setDescription($description)
-            ->setRelevance(100);
-        $this->entityManager->persist($flag);
-        $this->entityManager->flush();
-
-        return $flag;
-    }
-
-    public function findCurrentAssignment(Member $member, Flag $flag): ?FlagMember
-    {
-        return $this->flagMemberRepository->findCurrent($member, $flag);
-    }
-
-    public function paginateAssignments(
-        ?string $username,
-        ?int $flagId,
-        bool $includeHistory,
-        bool $memberFirst,
-        int $page,
-        int $itemsPerPage,
-    ): Pagerfanta {
-        return $this->flagMemberRepository->paginateAssignments(
-            $username,
-            $flagId,
-            $includeHistory,
-            $memberFirst,
-            $page,
-            $itemsPerPage,
         );
     }
 }

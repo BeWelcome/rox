@@ -17,26 +17,10 @@ class FlagRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Flag[]
+     * The flag that closes writing in forums and groups; null where the database lacks it.
      */
-    public function findRelevant(): array
+    public function findForumPostingFlag(): ?Flag
     {
-        return $this->createQueryBuilder('f')
-            ->where('f.relevance > 0')
-            ->orderBy('f.relevance', 'DESC')
-            ->addOrderBy('f.name', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
-    public function findOneByNameCaseInsensitive(string $name): ?Flag
-    {
-        return $this->createQueryBuilder('f')
-            ->where('LOWER(f.name) = LOWER(:name)')
-            ->setParameter('name', $name)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $this->findOneBy(['name' => Flag::NOT_ALLOWED_TO_POST_IN_FORUM]);
     }
 }

@@ -41,7 +41,7 @@
         <div class="c-cnews-editor__edit" data-mode-pane="edit">
           <section class="c-cnews-card c-cnews-editor__main">
             <div class="o-form-group">
-              <label class="form-label" for="{{ form.title.vars.id }}">{{ form.title.vars.label|trans }}</label>
+              <label class="form-label" for="{{ form.title.vars.id }}">{{ 'admin.communitynews.field.title'|trans }}</label>
               {{ form_widget(form.title, {attr: {class: 'o-input c-cnews-editor__title', 'data-news-title': ''}}) }}
               {{ _self.errors(form.title) }}
             </div>
@@ -57,7 +57,8 @@
             <section class="c-cnews-card">
               <p class="c-cnews-eyebrow">{{ 'admin.communitynews.visibility'|trans }}</p>
               <label class="c-cnews-editor__check">
-                {{ form_widget(form.public, {attr: {'data-news-public': ''}}) }}
+                <input type="checkbox" id="{{ form.public.vars.id }}" name="{{ form.public.vars.full_name }}" value="1"{{ form.public.vars.data ? ' checked' }} data-news-public>
+                {% do form.public.setRendered() %}
                 <span>{{ form.public.vars.label|trans }}</span>
               </label>
               <p class="c-cnews-editor__hint" data-news-public-hint data-on="{{ 'admin.communitynews.visible.on'|trans }}" data-off="{{ 'admin.communitynews.visible.off'|trans }}">

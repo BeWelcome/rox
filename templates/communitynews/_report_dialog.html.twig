@@ -19,9 +19,10 @@
             <legend class="c-cnews-report__label">{{ 'communitynews.report.reason'|trans }}</legend>
             {% for choice in report_form.reason %}
               <label class="c-cnews-report__reason">
-                {{ form_widget(choice, {attr: {'data-report-reason': ''}}) }}
+                <input type="radio" id="{{ choice.vars.id }}" name="{{ choice.vars.full_name }}" value="{{ choice.vars.value }}" data-report-reason>
                 <span>{{ choice.vars.label|trans }}</span>
               </label>
+              {% do choice.setRendered() %}
             {% endfor %}
           </fieldset>
           <div>
@@ -33,7 +34,7 @@
         </div>
         <div class="c-cnews-report__actions">
           <button type="button" class="o-button o-button--outline-gray" data-micromodal-close>{{ 'cancel'|trans }}</button>
-          <button type="submit" class="o-button" data-report-submit disabled><i class="fas fa-flag" aria-hidden="true"></i> {{ 'communitynews.report'|trans }}</button>
+          <button type="submit" class="o-button c-cnews-report__submit" data-report-submit disabled><i class="fas fa-flag" aria-hidden="true"></i> {{ 'communitynews.report'|trans }}</button>
         </div>
       {{ form_end(report_form) }}
     </div>

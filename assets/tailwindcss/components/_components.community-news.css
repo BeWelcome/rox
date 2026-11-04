@@ -32,7 +32,12 @@ main.c-cnews { padding: 2rem 0 4rem; background: #f0f0f0; }
 .c-cnews-article__body h3 { margin: 1.75rem 0 0.75rem; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; font-weight: 700; }
 .c-cnews-article__body ul,
 .c-cnews-article__body ol { margin: 0 0 1.1rem; padding-left: 1.5rem; }
-.c-cnews-article__body blockquote { margin: 0 0 1.1rem; padding: 1rem 1.25rem; border-radius: 0.9rem; background: #fff7ed; color: #9a3412; font-style: italic; }
+/* over the site's quote style (assets/scss/bewelcome.scss): it is !important in the bootstrap layer, which only a
+   more specific !important rule in that same layer beats */
+@layer bootstrap {
+  .c-cnews .c-cnews-article__body blockquote { margin: 0 0 1.1rem !important; padding: 1rem 1.25rem !important; border: 0 !important; border-radius: 0.9rem; background: #fff7ed !important; color: #9a3412 !important; font-style: italic; }
+}
+.c-cnews .c-cnews-article__body blockquote::before { content: none; }
 .c-cnews-article__body blockquote p:last-child { margin-bottom: 0; }
 .c-cnews-article__body img { display: block; width: 100%; height: auto; border-radius: 1.25rem; }
 .c-cnews-article__body figure { margin: 0 0 1.1rem; }
@@ -101,7 +106,9 @@ main.c-cnews { padding: 2rem 0 4rem; background: #f0f0f0; }
 .c-cnews-report__comment strong { color: #0f172a; }
 .c-cnews-report__comment span { overflow: hidden; text-overflow: ellipsis; }
 .c-cnews-report__reasons { margin: 0; padding: 0; border: 0; }
-.c-cnews-report__label { display: block; margin: 0 0 0.4rem; color: #0f172a; font-weight: 700; }
+.c-cnews-report .c-cnews-report__label { display: block; float: none; width: auto; margin: 0 0 0.4rem; padding: 0; color: #0f172a; font-size: 1rem; font-weight: 700; line-height: 1.4; }
+.c-cnews-report__submit,
+.c-cnews-editor__save { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; }
 .c-cnews-report__reason { display: flex; align-items: center; gap: 0.6rem; margin: 0; padding: 0.2rem 0; color: #1e293b; cursor: pointer; }
 .c-cnews-report__reason input { accent-color: #f37000; }
 .c-cnews-report__help { margin: 0; color: #64748b; font-size: 0.8125rem; }

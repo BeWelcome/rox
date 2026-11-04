@@ -244,3 +244,6 @@ admin.checker.communitynews.kept:
 admin.checker.communitynews.deleted:
     - '{count, plural, one {The comment is deleted.} other {# comments are deleted.}}'
     - 'Checker: notice after deleting comments.'
+admin.communitynews.field.title:
+    - Title
+    - 'News editor: label of the title field.'

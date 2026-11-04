@@ -1,0 +1,10 @@
+{# The parts of the community news pages #}
+
+{# A comment's text: plain text from the comment form, HTML from the editor comments had before #}
+{% macro text(text) %}
+  {%- if text|trim starts with '<' -%}
+    {{ text|purify('custom') }}
+  {%- else -%}
+    {{ text|nl2br }}
+  {%- endif -%}
+{% endmacro %}

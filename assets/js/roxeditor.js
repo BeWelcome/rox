@@ -1,5 +1,6 @@
 import {
     ClassicEditor,
+    Heading,
     InlineEditor,
     Essentials,
     Bold,
@@ -168,6 +169,37 @@ const config = {
 }
 
 
+// The community news editor (data-editor-toolbar="news"): paragraphs and headings, quotes and images
+const newsConfig = {
+    ...config,
+    plugins: [...plugins, Heading],
+    toolbar: {
+        items: [
+            'heading',
+            '|',
+            'bold',
+            'italic',
+            'link',
+            '|',
+            'bulletedList',
+            'numberedList',
+            'blockQuote',
+            '|',
+            'imageUpload',
+            '|',
+            'undo',
+            'redo'
+        ],
+        shouldNotGroupWhenFull: false
+    },
+    heading: {
+        options: [
+            { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+            { model: 'heading2', view: 'h2', title: 'Heading', class: 'ck-heading_heading2' }
+        ]
+    }
+};
+
 for (let i = 0; i < mentions.length; i++) {
     feed.push('@' + mentions.item(i).value);
 }
@@ -183,7 +215,7 @@ sourceElements.forEach( (element) => {
     let editor = null;
     switch (element.dataset.editorType) {
         case 'textarea':
-            editor = ClassicEditor.create(element, config);
+            editor = ClassicEditor.create(element, element.dataset.editorToolbar === 'news' ? newsConfig : config);
             break;
         case 'inline':
             editor = InlineEditor.create(element, config);

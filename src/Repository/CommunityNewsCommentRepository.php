@@ -2,42 +2,61 @@
 
 namespace App\Repository;
 
+use App\Entity\CommunityNewsComment;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
 /**
- * CommunityNewsCommentRepository.
+ * @extends EntityRepository<CommunityNewsComment>
  */
 class CommunityNewsCommentRepository extends EntityRepository
 {
     /**
-     * Returns a Pagerfanta object encapsulating the matching paginated activities.
+     * The comments members reported and the checkers haven't handled yet: the most reported first, then the newest.
      *
-     * Only lists activities which do have only banned admins.
-     *
-     * @param int $page
-     * @param int $items
-     *
-     * @return Pagerfanta
+     * @return Pagerfanta<CommunityNewsComment>
      */
-    public function findLatestCommunityNewsComments($page = 1, $items = 10)
+    public function findReported(int $page = 1, int $items = 20): Pagerfanta
     {
-        $paginator = new Pagerfanta(new QueryAdapter($this->queryLatestCommunityNewsComments(), false));
-        $paginator->setMaxPerPage($items);
-        $paginator->setCurrentPage($page);
+        $query = $this->createQueryBuilder('c')
+            ->addSelect('COUNT(r.id) AS HIDDEN reports')
+            ->join('c.reports', 'r')
+            ->where('c.deleted IS NULL')
+            ->groupBy('c.id')
+            ->orderBy('reports', 'DESC')
+            ->addOrderBy('c.created', 'DESC');
 
-        return $paginator;
+        $pager = new Pagerfanta(new QueryAdapter($query, false, false));
+        $pager->setMaxPerPage($items);
+        $pager->setNormalizeOutOfRangePages(true);
+        $pager->setCurrentPage(max(1, $page));
+
+        return $pager;
     }
 
     /**
-     * @return Query
+     * @param list<int> $newsIds
+     *
+     * @return array<int, int> the comments of each news (not the removed ones), by news id
      */
-    public function queryLatestCommunityNewsComments()
+    public function countByNews(array $newsIds): array
     {
-        return $this->createQueryBuilder('c')
-            ->orderBy('c.created', 'desc')
-            ->getQuery();
+        if ([] === $newsIds) {
+            return [];
+        }
+        $rows = $this->createQueryBuilder('c')
+            ->select('IDENTITY(c.communityNews) AS news', 'COUNT(c.id) AS comments')
+            ->where('c.communityNews IN (:news)')
+            ->andWhere('c.deleted IS NULL')
+            ->setParameter('news', $newsIds)
+            ->groupBy('news')
+            ->getQuery()
+            ->getArrayResult();
+
+        return array_combine(
+            array_map(static fn (array $row): int => (int) $row['news'], $rows),
+            array_map(static fn (array $row): int => (int) $row['comments'], $rows),
+        );
     }
 }

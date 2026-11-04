@@ -1,11 +1,94 @@
 {% extends 'base.html.twig' %}
+{#
+  Writing or editing a community news (Admin\CommunityNewsController::editor): title and text on the left, the
+  visibility and Save on the right, who wrote and changed it below. Preview as member shows the article card with the
+  unsaved title and text (assets/js/communitynews.js); nothing is saved until Save.
+#}
 
-{% block title %}
-    {{ 'admin.community.news.headline' | trans }}
-{% endblock %}
+{% block title %}{{ (creating ? 'admin.communitynews.new' : 'admin.communitynews.edit.title')|trans }} · {{ 'admin.communitynews.title'|trans }}{% endblock %}
 
-{% block content %}
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    {{ form_widget(form) }}
-    {{ form_end(form) }}
-{% endblock content %}
+{% block javascripts %}
+  {{ encore_entry_script_tags('communitynews') }}
+{% endblock javascripts %}
+
+{% macro errors(field) %}
+  {% if field.vars.errors|length > 0 %}
+    <ul class="c-massmail-form__errors">{% for error in field.vars.errors %}<li>{{ error.message|trans }}</li>{% endfor %}</ul>
+  {% endif %}
+{% endmacro %}
+
+{% block main %}
+  <main role="main" class="c-cnews">
+    <div class="container-lg c-cnews__admin">
+      <header class="c-cnews-head">
+        <p class="c-page-head__eyebrow">{{ 'admin.communitynews.eyebrow'|trans }}</p>
+        <h1 class="c-page-head__title">{{ 'admin.communitynews.title'|trans }}</h1>
+      </header>
+
+      <div class="c-cnews-toolbar">
+        <p class="c-cnews-crumbs">
+          <a href="{{ path('admin_communitynews_overview') }}"><i class="fas fa-arrow-left" aria-hidden="true"></i>{{ 'admin.communitynews.all'|trans }}</a>
+          <span aria-hidden="true">/</span>
+          <span>{{ (creating ? 'admin.communitynews.new' : 'admin.communitynews.edit.title')|trans }}</span>
+        </p>
+        <div class="c-cnews-segments" role="tablist">
+          <button type="button" class="c-cnews-segments__item is-active" role="tab" aria-selected="true" data-mode="edit"><i class="fas fa-pen" aria-hidden="true"></i>{{ 'admin.communitynews.mode.edit'|trans }}</button>
+          <button type="button" class="c-cnews-segments__item" role="tab" aria-selected="false" data-mode="preview"><i class="fas fa-eye" aria-hidden="true"></i>{{ 'admin.communitynews.mode.preview'|trans }}</button>
+        </div>
+      </div>
+
+      {{ form_start(form, {attr: {class: 'c-cnews-editor', novalidate: 'novalidate', 'data-news-editor': ''}}) }}
+        <div class="c-cnews-editor__edit" data-mode-pane="edit">
+          <section class="c-cnews-card c-cnews-editor__main">
+            <div class="o-form-group">
+              <label class="form-label" for="{{ form.title.vars.id }}">{{ 'admin.communitynews.field.title'|trans }}</label>
+              {{ form_widget(form.title, {attr: {class: 'o-input c-cnews-editor__title', 'data-news-title': ''}}) }}
+              {{ _self.errors(form.title) }}
+            </div>
+            <div class="o-form-group">
+              <label class="form-label" for="{{ form.text.vars.id }}">{{ form.text.vars.label|trans }}</label>
+              {{ form_widget(form.text) }}
+              <small class="form-text">{{ 'admin.communitynews.images.help'|trans }}</small>
+              {{ _self.errors(form.text) }}
+            </div>
+          </section>
+
+          <aside class="c-cnews-editor__side">
+            <section class="c-cnews-card">
+              <p class="c-cnews-eyebrow">{{ 'admin.communitynews.visibility'|trans }}</p>
+              <label class="c-cnews-editor__check">
+                <input type="checkbox" id="{{ form.public.vars.id }}" name="{{ form.public.vars.full_name }}" value="1"{{ form.public.vars.data ? ' checked' }} data-news-public>
+                {% do form.public.setRendered() %}
+                <span>{{ form.public.vars.label|trans }}</span>
+              </label>
+              <p class="c-cnews-editor__hint" data-news-public-hint data-on="{{ 'admin.communitynews.visible.on'|trans }}" data-off="{{ 'admin.communitynews.visible.off'|trans }}">
+                {{ (form.public.vars.data ? 'admin.communitynews.visible.on' : 'admin.communitynews.visible.off')|trans }}
+              </p>
+              <button type="submit" class="o-button c-cnews-editor__save" data-news-save><i class="fas fa-check" aria-hidden="true"></i> {{ 'admin.communitynews.save'|trans }}</button>
+              <a class="o-button o-button--outline-gray c-cnews-editor__cancel" href="{{ path('admin_communitynews_overview') }}">{{ 'cancel'|trans }}</a>
+            </section>
+            {% if not creating %}
+              <section class="c-cnews-card c-cnews-history">
+                <p class="c-cnews-eyebrow">{{ 'admin.communitynews.history'|trans }}</p>
+                {% if communityNews.createdBy and communityNews.createdAt %}
+                  <p><i class="fas fa-feather" aria-hidden="true"></i>{{ 'admin.communitynews.written.by'|trans({username: communityNews.createdBy.username, date: communityNews.createdAt|format_datetime('medium', 'short')}) }}</p>
+                {% endif %}
+                {% if communityNews.updatedBy and communityNews.updatedAt %}
+                  <p><i class="fas fa-pen" aria-hidden="true"></i>{{ 'admin.communitynews.updated.by'|trans({username: communityNews.updatedBy.username, date: communityNews.updatedAt|format_datetime('medium', 'short')}) }}</p>
+                {% endif %}
+                <p><i class="far fa-comment" aria-hidden="true"></i>{{ 'communitynews.comments.count'|trans({count: comments}) }}</p>
+              </section>
+            {% endif %}
+          </aside>
+        </div>
+
+        <div class="c-cnews-editor__preview" data-mode-pane="preview" hidden>
+          <p class="c-cnews-banner"><i class="fas fa-eye" aria-hidden="true"></i><span><strong>{{ 'admin.communitynews.preview'|trans }}</strong> {{ 'admin.communitynews.preview.text'|trans }}</span></p>
+          <div class="c-cnews__narrow c-cnews__narrow--preview">
+            {% include 'communitynews/_article.html.twig' with {news: creating ? null : communityNews} %}
+          </div>
+        </div>
+      {{ form_end(form) }}
+    </div>
+  </main>
+{% endblock main %}

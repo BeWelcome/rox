@@ -4,7 +4,6 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -21,6 +20,7 @@ class CommunityNewsType extends AbstractType
                 'label' => 'label.admin.communitynews.title',
                 'attr' => [
                     'placeholder' => 'enter.title',
+                    'maxlength' => 255,
                 ],
                 'constraints' => [
                     new NotBlank(),
@@ -28,20 +28,19 @@ class CommunityNewsType extends AbstractType
             ])
             ->add('text', CkEditorType::class, [
                 'label' => 'label.admin.communitynews.text',
+                'image_upload' => true,
                 'attr' => [
                     'placeholder' => 'placeholder.admin.communitynews.text',
-                    'class' => 'editor mb-1',
+                    // headings, quotes and images (assets/js/roxeditor.js)
+                    'data-editor-toolbar' => 'news',
                 ],
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
             ->add('public', CheckboxType::class, [
-                'label' => 'label.admin.communitynews.public',
+                'label' => 'admin.communitynews.visible',
                 'required' => false,
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'label.submit',
             ]);
     }
 }

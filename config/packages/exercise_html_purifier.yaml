@@ -18,6 +18,24 @@ exercise_html_purifier:
             config:
                 Core.Encoding: 'UTF-8'
                 HTML.Allowed: ''
+        # Community news: the custom profile with headings (the news editor's toolbar)
+        news:
+            config:
+                Core.Encoding: 'UTF-8'
+                HTML.Allowed: 'p,b,a[href],br,i,u,strong,em,h2,h3,ol,ul,li,img[src|alt|width|height],blockquote,hr,figure[class],figcaption'
+                HTML.TargetBlank: true
+                AutoFormat.RemoveEmpty: true
+            elements:
+                figure:
+                    - Block
+                    - Flow
+                    - Common
+                    - src: URI
+                      class: Text
+                figcaption:
+                    - Block
+                    - Flow
+                    - Common
         custom:
             config:
                 Core.Encoding: 'UTF-8'

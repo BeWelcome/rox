@@ -1,0 +1,249 @@
+communitynews.eyebrow:
+    - 'Community news'
+    - 'Community news: the eyebrow above a news title.'
+communitynews.back:
+    - 'Community news'
+    - 'Community news article: the link back to the list.'
+communitynews.just.now:
+    - 'just now'
+    - 'Community news preview: the date of a news that isn''t saved yet.'
+communitynews.updated.by:
+    - 'Updated by {username}, {date}'
+    - 'Community news article: who changed it last and when (relative). Keep {username} and {date}.'
+communitynews.comments.count:
+    - '{count, plural, =0 {No comments} one {One comment} other {# comments}}'
+    - 'Community news: the number of comments, replies included.'
+communitynews.comment.label:
+    - 'Your comment'
+    - 'Community news: label of the comment field (for screen readers).'
+communitynews.comment.placeholder:
+    - 'Write a comment'
+    - 'Community news: placeholder of the comment field.'
+communitynews.comment.post:
+    - 'Post comment'
+    - 'Community news: the button that posts a comment.'
+communitynews.comment.reply:
+    - 'Reply'
+    - 'Community news: the link that opens the reply box, and its button.'
+communitynews.comment.removed:
+    - 'Comment removed'
+    - 'Community news: a comment the checkers removed; its replies stay.'
+communitynews.comment.to:
+    - 'to'
+    - 'Community news: before the member a deep reply answers ("to anna").'
+communitynews.comment.error.empty:
+    - 'Please write something.'
+    - 'Community news: error of an empty comment.'
+communitynews.comment.error.long:
+    - 'A comment can have at most 5000 characters.'
+    - 'Community news: error of a too long comment.'
+communitynews.comment.error.parent:
+    - 'This comment can''t be answered any more.'
+    - 'Community news: error of a reply to a comment that was removed or isn''t on this news.'
+communitynews.reply.to:
+    - 'Replying to'
+    - 'Community news: above the reply box, before the member answered.'
+communitynews.reply.placeholder:
+    - 'Write a reply'
+    - 'Community news: placeholder of the reply box.'
+communitynews.report:
+    - 'Report'
+    - 'Community news: the link that reports a comment, and the dialog''s button.'
+communitynews.report.thanks:
+    - 'Reported, thanks'
+    - 'Community news: instead of Report after the member reported the comment.'
+communitynews.report.title:
+    - 'Report comment'
+    - 'Community news: title of the report dialog.'
+communitynews.report.reason:
+    - 'What''s wrong with this comment?'
+    - 'Community news report dialog: the question above the reasons.'
+communitynews.report.reason.spam:
+    - 'Spam or advertising'
+    - 'Community news report: a reason.'
+communitynews.report.reason.offensive:
+    - 'Offensive or abusive'
+    - 'Community news report: a reason.'
+communitynews.report.reason.harassment:
+    - 'Harassment of a member'
+    - 'Community news report: a reason.'
+communitynews.report.reason.personal_data:
+    - 'Personal data shared without consent'
+    - 'Community news report: a reason.'
+communitynews.report.reason.other:
+    - 'Something else'
+    - 'Community news report: a reason; the note is then needed.'
+communitynews.report.note:
+    - 'Tell us more (optional)'
+    - 'Community news report dialog: label of the note.'
+communitynews.report.note.required:
+    - 'Tell us more'
+    - 'Community news report dialog: label of the note when "Something else" is picked.'
+communitynews.report.note.placeholder:
+    - 'Anything the checkers should know'
+    - 'Community news report dialog: placeholder of the note.'
+communitynews.report.help:
+    - 'The checker team reviews reports. The author is not told who reported the comment.'
+    - 'Community news report dialog: below the note.'
+communitynews.report.sent:
+    - 'Thanks, the checkers will look at the comment.'
+    - 'Community news: notice after reporting a comment.'
+communitynews.report.already:
+    - 'You have reported this comment already.'
+    - 'Community news: notice when reporting a comment a second time.'
+communitynews.report.error:
+    - 'The report couldn''t be sent. Please pick a reason (and say more for "Something else").'
+    - 'Community news: error of an incomplete report.'
+communitynews.report.error.reason:
+    - 'Please pick a reason.'
+    - 'Community news report: error without a reason.'
+communitynews.report.error.note:
+    - 'Please tell us more.'
+    - 'Community news report: error of "Something else" without a note.'
+admin.communitynews.eyebrow:
+    - 'News admin'
+    - 'News admin: the eyebrow above the title.'
+admin.communitynews.title:
+    - 'Community news'
+    - 'News admin: the title.'
+admin.communitynews.filter.all:
+    - 'All · {count}'
+    - 'News admin: filter with the number of news. Keep {count}.'
+admin.communitynews.filter.published:
+    - 'Published · {count}'
+    - 'News admin: filter with the number of published news. Keep {count}.'
+admin.communitynews.filter.hidden:
+    - 'Hidden · {count}'
+    - 'News admin: filter with the number of hidden news. Keep {count}.'
+admin.communitynews.create:
+    - 'Create news'
+    - 'News admin: the button that writes a news.'
+admin.communitynews.none:
+    - 'There are no news here.'
+    - 'News admin: an empty list.'
+admin.communitynews.published.tag:
+    - 'Published'
+    - 'News admin: tag of a news members see.'
+admin.communitynews.hidden.tag:
+    - 'Hidden'
+    - 'News admin: tag of a news members don''t see.'
+admin.communitynews.edit:
+    - 'Edit'
+    - 'News admin: the button that edits a news.'
+admin.communitynews.hide:
+    - 'Hide'
+    - 'News admin: the button that hides a news from members.'
+admin.communitynews.publish:
+    - 'Publish'
+    - 'News admin: the button that shows a news to members.'
+admin.communitynews.published:
+    - '“{title}” is now visible to members.'
+    - 'News admin: notice after publishing. Keep {title}.'
+admin.communitynews.hidden:
+    - '“{title}” is now hidden from members.'
+    - 'News admin: notice after hiding. Keep {title}.'
+admin.communitynews.created:
+    - '“{title}” is saved.'
+    - 'News admin: notice after writing a news. Keep {title}.'
+admin.communitynews.saved:
+    - '“{title}” is saved.'
+    - 'News admin: notice after editing a news. Keep {title}.'
+admin.communitynews.all:
+    - 'All posts'
+    - 'News editor: the link back to the list.'
+admin.communitynews.new:
+    - 'New news'
+    - 'News editor: where you are, writing a news.'
+admin.communitynews.edit.title:
+    - 'Edit news'
+    - 'News editor: where you are, editing a news.'
+admin.communitynews.mode.edit:
+    - 'Edit'
+    - 'News editor: the switch to the form.'
+admin.communitynews.mode.preview:
+    - 'Preview as member'
+    - 'News editor: the switch to the preview.'
+admin.communitynews.images.help:
+    - 'Images can be JPG, PNG or WebP. They are scaled to the width of the post.'
+    - 'News editor: below the text.'
+admin.communitynews.visibility:
+    - 'Visibility'
+    - 'News editor: heading of the visibility card.'
+admin.communitynews.visible:
+    - 'Visible to members'
+    - 'News editor: the checkbox that publishes the news.'
+admin.communitynews.visible.on:
+    - 'Members can read and comment on this post as soon as you save.'
+    - 'News editor: hint when the news is visible.'
+admin.communitynews.visible.off:
+    - 'Only the news team sees this post until you make it visible.'
+    - 'News editor: hint when the news is hidden.'
+admin.communitynews.save:
+    - 'Save'
+    - 'News editor: the save button.'
+admin.communitynews.history:
+    - 'History'
+    - 'News editor: heading of the card with who wrote and changed the news.'
+admin.communitynews.written.by:
+    - 'Written by {username}, {date}'
+    - 'News editor: who wrote the news and when. Keep {username} and {date}.'
+admin.communitynews.updated.by:
+    - 'Last changed by {username}, {date}'
+    - 'News editor: who changed the news last and when. Keep {username} and {date}.'
+admin.communitynews.preview:
+    - 'Preview.'
+    - 'News editor: start of the preview banner.'
+admin.communitynews.preview.text:
+    - 'This is how members will see the post. Nothing is saved until you click Save.'
+    - 'News editor: the preview banner after "Preview.".'
+admin.checker.eyebrow:
+    - 'Checker'
+    - 'Checker pages: the eyebrow above the title and the heading of the menu.'
+admin.checker.communitynews.title:
+    - 'Community news comments'
+    - 'Checker: title of the reported community news comments.'
+admin.checker.communitynews.intro:
+    - 'Comments members have reported on community news posts. Keep a comment to clear its reports, or delete it to remove it from the post.'
+    - 'Checker: the text above the reported community news comments.'
+admin.checker.communitynews.none:
+    - 'No reported comments'
+    - 'Checker: no reported community news comments.'
+admin.checker.communitynews.none.text:
+    - 'Members can report a comment from any news post.'
+    - 'Checker: below "No reported comments".'
+admin.checker.communitynews.select.all:
+    - 'Select all'
+    - 'Checker: the checkbox that selects all comments.'
+admin.checker.communitynews.selected:
+    - '{count} selected'
+    - 'Checker: how many comments are selected. Keep {count}.'
+admin.checker.communitynews.select:
+    - 'Select the comment'
+    - 'Checker: label of a comment''s checkbox (for screen readers).'
+admin.checker.communitynews.delete.selected:
+    - 'Delete selected'
+    - 'Checker: the button that deletes the selected comments.'
+admin.checker.communitynews.reports:
+    - '{count, plural, one {One report} other {# reports}}'
+    - 'Checker: how often a comment was reported.'
+admin.checker.communitynews.reason:
+    - 'Reason:'
+    - 'Checker: before the reasons of the reports.'
+admin.checker.communitynews.on:
+    - 'On'
+    - 'Checker: before the news a comment is on ("On {title}").'
+admin.checker.communitynews.keep:
+    - 'Keep'
+    - 'Checker: the button that keeps a comment and clears its reports.'
+admin.checker.communitynews.delete:
+    - 'Delete'
+    - 'Checker: the button that deletes a comment.'
+admin.checker.communitynews.kept:
+    - 'The comment stays; its reports are cleared.'
+    - 'Checker: notice after Keep.'
+admin.checker.communitynews.deleted:
+    - '{count, plural, one {The comment is deleted.} other {# comments are deleted.}}'
+    - 'Checker: notice after deleting comments.'
+admin.communitynews.field.title:
+    - Title
+    - 'News editor: label of the title field.'

@@ -2,48 +2,34 @@
 
 namespace App\Form;
 
+use App\Form\CustomDataClass\CommunityNewsCommentRequest;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * A comment on a community news, or a reply (parent, set by the page's script: assets/js/communitynews.js).
+ */
 class CommunityNewsCommentType extends AbstractType
 {
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title', TextType::class, [
-                'label' => 'label.commnunitynews.comment.title',
-                'label_attr' => [
-                    'class' => 'u-hidden',
-                ],
-                'attr' => [
-                    'class' => 'u-mt-32',
-                    'aria-label' => 'label.commnunitynews.comment.title',
-                    'placeholder' => 'label.commnunitynews.comment.title',
-                ],
+            ->add('text', TextareaType::class, [
+                'label' => 'communitynews.comment.label',
+                'attr' => ['rows' => 3, 'placeholder' => 'communitynews.comment.placeholder'],
             ])
-            ->add('text', CkEditorType::class, [
-                'label' => 'label.communitynews.comment.text',
-                'label_attr' => [
-                    'class' => 'u-hidden',
-                ],
-                'attr' => [
-                    'class' => 'editor form-control',
-                    'aria-label' => 'label.communitynews.comment.text',
-                    'placeholder' => 'label.communitynews.comment.text',
-                ],
-            ])
-            ->add('CommunityNewsCommentCreate', SubmitType::class, [
-                'label' => 'label.communitynews.comment.create',
-                'attr' => [
-                    'class' => 'o-button u-mt-8',
-                ],
-            ])
-            ->setAttribute('novalidate', 'novalidate')
-        ;
+            ->add('parent', HiddenType::class, [
+                'required' => false,
+            ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => CommunityNewsCommentRequest::class,
+        ]);
     }
 }

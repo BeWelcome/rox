@@ -7,6 +7,7 @@ use App\Doctrine\MessageStatusType;
 use App\Entity\HostingRequest;
 use App\Entity\Member;
 use App\Entity\Message;
+use App\Repository\MessageRepository;
 use DateTime;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,6 +55,57 @@ class VolunteerToolReportsTest extends WebTestCase
 
         $this->assertSelectorTextContains('main', $spammer->getUsername());
         $this->assertSelectorTextContains('main', $receiver->getUsername());
+    }
+
+    public function testDamageDoneReadsTheSpammersInBatchesNewestFirst(): void
+    {
+        [$older, $newer, $newest, $left] = $this->members(4);
+        foreach ([$older, $newer, $newest] as $spammer) {
+            $this->send($spammer, $left, 1);
+            $this->setStatus($spammer, MemberStatusType::BANNED);
+        }
+        $this->setStatus($left, MemberStatusType::ASKED_TO_LEAVE);
+        foreach ([[$older, '+1 day'], [$newer, '+2 days'], [$newest, '+3 days']] as [$spammer, $when]) {
+            $this->connection->executeStatement('UPDATE member SET updated = ? WHERE id = ?', [new DateTime($when)->format('Y-m-d H:i:s'), $spammer->getId()]);
+        }
+        /** @var MessageRepository $repository */
+        $repository = $this->entityManager->getRepository(Message::class);
+
+        // a batch of one spammer at a time finds what one batch finds, in the same order
+        $oneBatch = $repository->findDamageDone(3, 500);
+        self::assertEquals($oneBatch, $repository->findDamageDone(3, 1));
+        self::assertSame(
+            [$newest->getUsername(), $newer->getUsername(), $older->getUsername()],
+            array_column($oneBatch, 'Sender'),
+        );
+        self::assertSame([$left->getUsername()], array_values(array_unique(array_column($oneBatch, 'Receiver'))));
+    }
+
+    public function testFrequentSendersAreCountedAndSortedTheMostFirst(): void
+    {
+        [$sender, $receiver] = $this->members(2);
+        // the fixtures' own messages of the last week count too
+        $before = (int) $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM message WHERE sender_id = ? AND created > NOW() - INTERVAL 7 DAY',
+            [$sender->getId()]
+        );
+        $this->send($sender, $receiver, 12);
+        /** @var MessageRepository $repository */
+        $repository = $this->entityManager->getRepository(Message::class);
+
+        $rows = $repository->findFrequentSenders(7, false);
+
+        $mine = array_values(array_filter($rows, static fn (array $row): bool => $row['Username'] === $sender->getUsername()));
+        self::assertNotEmpty($mine);
+        self::assertSame(12 + $before, $mine[0]['Count']);
+        $counts = array_column($rows, 'Count');
+        $sorted = $counts;
+        rsort($sorted);
+        self::assertSame($sorted, $counts, 'the most first');
+        self::assertSame([], array_filter(
+            $repository->findFrequentSenders(7, true),
+            static fn (array $row): bool => $row['Username'] === $sender->getUsername() && $row['Count'] >= 12,
+        ), 'messages are no requests');
     }
 
     public function testMessagesAndRequestsSentListFrequentSendersWithTheirPlace(): void

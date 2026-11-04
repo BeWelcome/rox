@@ -33,6 +33,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 #[ORM\Table(name: 'member')]
 #[ORM\Index(name: 'idx_member_status_lastactive', columns: ['Status', 'LastActive'])]
+// the volunteer tools' spammers, newest first (MessageRepository::findTopSpammers, findDamageDone)
+#[ORM\Index(name: 'idx_member_status_updated', columns: ['Status', 'updated'])]
 #[ORM\Index(name: 'idx_member_accommodation', columns: ['Accommodation'])]
 #[ORM\Index(name: 'ft_member_search', columns: ['Username', 'Name', 'AboutMe', 'Hobbies', 'Books', 'Music', 'Movies', 'Occupation', 'PastTrips', 'PlannedTrips', 'PleaseBring', 'WhereYouSleep', 'OfferGuests', 'OfferHosts', 'GettingThere', 'Organizations', 'AdditionalAccommodationInfo', 'ILiveWith', 'MaxLengthOfStay', 'HouseRules'], flags: ['fulltext'])]
 #[ORM\Entity(repositoryClass: MemberRepository::class)]

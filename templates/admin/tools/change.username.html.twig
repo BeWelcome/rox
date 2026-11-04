@@ -1,13 +1,16 @@
-{% extends 'base.html.twig' %}
+{% extends 'admin/tools/_layout.html.twig' %}
+{% import 'admin/tools/_macros.html.twig' as vt %}
 
-{% block title %}
-    {{ 'admin.tools.title' | trans }}
-{% endblock %}
-
-{% block content %}
-    <h1>{{ 'admin.tools.headline' | trans }}</h1>
-    <h2>{{ 'admin.tools.change_username' | trans }}</h2>
-
-    {{ form(form) }}
-
-{% endblock content %}
+{% block tool %}
+  {{ form_start(form, {attr: {class: 'c-vtools-form', novalidate: 'novalidate'}}) }}
+    <div class="c-vtools-rename">
+      {{ vt.field(form.oldUsername) }}
+      <i class="fas fa-arrow-right c-vtools-rename__arrow" aria-hidden="true"></i>
+      {{ vt.field(form.newUsername) }}
+    </div>
+    <p class="c-cadmin-detail__info c-vtools-note"><i class="fas fa-circle-info" aria-hidden="true"></i>{{ 'admin.tools.change_username.note'|trans }}</p>
+    <div>
+      <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary">{{ 'admin.tools.change_username.title'|trans }}</button>
+    </div>
+  {{ form_end(form) }}
+{% endblock tool %}

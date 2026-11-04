@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -16,14 +15,11 @@ class FindUserFormType extends AbstractType
     {
         $builder
             ->add('term', TextType::class, [
-                'label' => 'label.username.part',
+                'label' => 'admin.tools.find_member.term',
                 'attr' => [
-                    'minlength' => 4,
-                    'placeholder' => 'placeholder.username.part',
+                    'minlength' => 3,
+                    'placeholder' => 'admin.tools.find_member.placeholder',
                 ],
-            ])
-            ->add('find_member', SubmitType::class, [
-                'label' => 'label.find.member',
             ]);
     }
 }

@@ -1,50 +1,54 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
-
-{% block title %}
-    {{ 'admin.tools.title' | trans }}
-{% endblock %}
+{% extends 'admin/tools/_layout.html.twig' %}
+{% import 'admin/tools/_macros.html.twig' as vt %}
+{#
+  results: per correspondent the kinds (type: 1 message, 2 invitation, 4 stay request) and the direction (1 received,
+  2 sent) with the last of each (Admin\VolunteerToolController::correspondents).
+#}
+{% set _kinds = {1: ['envelope', 'admin.tools.messages_by_member.message'], 4: ['house-user', 'admin.tools.messages_by_member.request'], 2: ['route', 'admin.tools.messages_by_member.invitation']} %}
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('member/autocomplete') }}
-{% endblock %}
+  {{ encore_entry_script_tags('member/autocomplete') }}
+{% endblock javascripts %}
 
 {% block stylesheets %}
+  {{ encore_entry_link_tags('member/autocomplete') }}
 {% endblock stylesheets %}
 
-{% block content %}
-    <h1>{{ 'admin.tools.headline' | trans }}</h1>
-    <h2>{{ 'admin.tools.messages_by_member' | trans }}</h2>
+{% block tool %}
+  {{ form_start(form, {attr: {class: 'c-vtools-search', novalidate: 'novalidate'}}) }}
+    {{ form_widget(form.username, {attr: form.username.vars.attr|merge({class: 'o-input member-autocomplete', 'aria-label': 'admin.tools.username'|trans, placeholder: 'admin.tools.username'|trans})}) }}
+    <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary"><i class="fas fa-magnifying-glass" aria-hidden="true"></i>{{ 'admin.tools.messages_by_member.look.up'|trans }}</button>
+  {{ form_end(form) }}
+  {% for error in form.username.vars.errors %}<p class="c-massmail-form__errors">{{ error.message|trans }}</p>{% endfor %}
 
-    {{ form(form) }}
-
-    {% if results|length %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <tr>
-                    <th>Type</th>
-                    <th colspan="2">Member 1</th>
-                    <th>Direction</th>
-                    <th colspan="2">Member 2</th>
-                </tr>
-                {% for result in results %}
-                    <tr>
-                        <td>{% if (result.type b-and 1) == 1 %}<i class="fa fa-envelope"></i>{% endif %}{% if (result.type b-and 2) == 2 %}<i class="fa fa-home"></i>{% endif %}{% if (result.type b-and 4) == 4 %}<i class="fa fa-house-user"></i>{% endif %}</td>
-                        <td>{{ macros.avatar(member.Username, 50) }}</td>
-                        <td>{{ macros.profilelink(member.Username) }}
-                            <br>{% if (result.direction b-and 1) == 1 %}{% if not result.last_received is null %}{{ result.last_received|format_datetime('medium', 'medium') }}{% endif %}{% endif %}
-                        </td>
-                        <td>
-                            <i class="fas fa-fw fa-arrow-left {% if (result.direction == 2) %}invisible{% endif %}"></i>
-                            <i class="fas fa-fw fa-arrow-right {% if (result.direction == 1) %}invisible {% endif %}"></i>
-                        </td>
-                        <td>{{ macros.avatar(result.username, 50) }}</td>
-                        <td>{{ macros.profilelink(result.username) }}
-                            <br>{% if (result.direction b-and 2) == 2 %}{% if not result.last_sent is null %}{{ result.last_sent|format_datetime('medium', 'medium') }}{% endif %}{% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
+  {% if member %}
+    <div class="c-vtools-mbm__head">
+      {{ vt.member(member.username, 'admin.tools.messages_by_member.count'|trans({count: results|length})) }}
+      <span class="c-vtools-mbm__legend">
+        {% for kind in _kinds %}<span><i class="fas fa-{{ kind[0] }}" aria-hidden="true"></i>{{ kind[1]|trans }}</span>{% endfor %}
+      </span>
+    </div>
+    {% if results is empty %}
+      <p class="c-cadmin__empty c-vtools__empty"><i class="fas fa-inbox" aria-hidden="true"></i>{{ 'admin.tools.messages_by_member.none'|trans }}</p>
+    {% else %}
+      <ul class="c-vtools-list">
+        {% for result in results %}
+          {% set _dates = [
+            result.direction b-and 1 and result.last_received ? 'admin.tools.messages_by_member.received'|trans({date: result.last_received|format_datetime('medium', 'short')}),
+            result.direction b-and 2 and result.last_sent ? 'admin.tools.messages_by_member.sent'|trans({date: result.last_sent|format_datetime('medium', 'short')}),
+          ]|filter(v => v)|join(' · ') %}
+          <li class="c-vtools-list__row c-vtools-mbm">
+            <span class="c-vtools-mbm__kinds">
+              {% for bit, kind in _kinds %}{% if result.type b-and bit %}<i class="fas fa-{{ kind[0] }}" title="{{ kind[1]|trans }}" aria-label="{{ kind[1]|trans }}"></i>{% endif %}{% endfor %}
+            </span>
+            <span class="c-vtools-mbm__direction" aria-hidden="true">
+              <i class="fas fa-arrow-left{{ result.direction b-and 1 ? '' : ' is-off' }}"></i>
+              <i class="fas fa-arrow-right{{ result.direction b-and 2 ? '' : ' is-off' }}"></i>
+            </span>
+            {{ vt.member(result.username, _dates) }}
+          </li>
+        {% endfor %}
+      </ul>
     {% endif %}
-{% endblock content %}
+  {% endif %}
+{% endblock tool %}

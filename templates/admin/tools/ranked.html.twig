@@ -1,0 +1,24 @@
+{% extends 'admin/tools/_layout.html.twig' %}
+{% import 'admin/tools/_macros.html.twig' as vt %}
+{# Messages sent and Requests sent: the members who sent the most, with a bar against the first #}
+
+{% block tool %}
+  {% if results is empty %}
+    <p class="c-cadmin__empty c-vtools__empty"><i class="fas fa-circle-check" aria-hidden="true"></i>{{ 'admin.tools.nobody'|trans }}</p>
+  {% else %}
+    {% set _max = max(results|map(r => r.Count)) %}
+    <div class="c-vtools-table">
+      <div class="c-vtools-table__row c-vtools-table__row--head c-vtools-ranked">
+        <span>#</span><span>{{ 'admin.tools.member'|trans }}</span><span></span><span class="u:text-right">{{ unit|trans }}</span>
+      </div>
+      {% for result in results %}
+        <div class="c-vtools-table__row c-vtools-ranked">
+          <span class="c-vtools-ranked__rank">{{ loop.index }}</span>
+          {{ vt.member(result.Username, [result.City, result.Country ? result.Country|country_name : null]|filter(v => v)|join(' · ')) }}
+          <span class="c-vtools-bar" aria-hidden="true"><span class="c-vtools-bar__fill" style="width: {{ (result.Count / _max * 100)|round }}%"></span></span>
+          <span class="c-vtools-ranked__count">{{ result.Count|format_number }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endblock tool %}

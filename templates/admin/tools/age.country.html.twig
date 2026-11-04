@@ -1,33 +1,24 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/tools/_layout.html.twig' %}
+{# The columns sort the list (?sort, ?dir); a second click turns the order round #}
+{% set _columns = {Name: 'admin.tools.age_by_country.country', Count: 'admin.tools.age_by_country.members', BirthYear: 'admin.tools.age_by_country.birth.year', Age: 'admin.tools.age_by_country.age'} %}
 
-{% block title %}
-    {{ 'admin.tools.title' | trans }}
-{% endblock %}
-
-{% block content %}
-    <h1>{{ 'admin.tools.headline' | trans }}</h1>
-    <h2>{{ 'admin.tools.age_by_country' | trans }}</h2>
-    {% if results|length %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
-                <tr>
-                    <th>{{ 'country' | trans }}</th>
-                    <th>{{ 'number.members' | trans }}</th>
-                    <th>{{ 'birth.year' | trans }}</th>
-                    <th>{{ 'age' | trans }}</th>
-                </tr>
-                {% for result in results %}
-                    <tr>
-                        <td>{{ result.Name }}</td>
-                        <td>{{ result.Count }}</td>
-                        <td>{{ result.BirthYear }}</td>
-                        <td>{{ result.Age }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        </div>
-    {% else %}
-        {{ 'admin.tools.age_by_country.nothing'| trans }}
-    {% endif %}
-{% endblock content %}
+{% block tool %}
+  <div class="c-vtools-table">
+    <div class="c-vtools-table__row c-vtools-table__row--head c-vtools-age">
+      {% for column, label in _columns %}
+        {% set _on = sort == column %}
+        <a class="c-vtools-sort{{ _on ? ' is-active' }}" href="{{ path('admin_tools_age_by_country', {sort: column, dir: _on and not ascending ? 'asc' : (_on ? 'desc' : (column == 'Name' ? 'asc' : 'desc'))}) }}"{% if _on %} aria-sort="{{ ascending ? 'ascending' : 'descending' }}"{% endif %}>
+          {{ label|trans }} <i class="fas fa-{{ _on ? (ascending ? 'arrow-up' : 'arrow-down') : 'sort' }}" aria-hidden="true"></i>
+        </a>
+      {% endfor %}
+    </div>
+    {% for row in results %}
+      <div class="c-vtools-table__row c-vtools-age">
+        <span class="c-vtools-age__country">{{ row.Name }}</span>
+        <span>{{ row.Count|format_number }}</span>
+        <span>{{ row.BirthYear }}</span>
+        <span>{{ row.Age }}</span>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock tool %}

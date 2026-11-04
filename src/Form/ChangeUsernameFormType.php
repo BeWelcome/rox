@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -19,23 +18,22 @@ class ChangeUsernameFormType extends AbstractType
     {
         $builder
             ->add('oldUsername', TextType::class, [
+                'label' => 'admin.tools.change_username.old',
                 'attr' => [
                     'minlength' => 4,
                     'maxlength' => 20,
                     'pattern' => self::PATTERN_USERNAME,
-                    'placeholder' => 'old.username',
+                    'placeholder' => 'admin.tools.change_username.old.placeholder',
                 ],
             ])
             ->add('newUsername', TextType::class, [
+                'label' => 'admin.tools.change_username.new',
                 'attr' => [
                     'minlength' => 4,
                     'maxlength' => 20,
                     'pattern' => self::PATTERN_USERNAME,
-                    'placeholder' => 'new.username',
+                    'placeholder' => 'admin.tools.change_username.new.placeholder',
                 ],
-            ])
-            ->add('change_username', SubmitType::class, [
-                'label' => 'label.admin.tools.change.username',
             ]);
     }
 }

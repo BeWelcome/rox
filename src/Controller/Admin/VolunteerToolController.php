@@ -10,21 +10,18 @@ use App\Entity\UploadedImage;
 use App\Form\ChangeUsernameFormType;
 use App\Form\CustomDataClass\Tools\ChangeUsernameRequest;
 use App\Form\CustomDataClass\Tools\FindUserRequest;
-use App\Form\FeedbackFormType;
 use App\Form\FindUserFormType;
 use App\Form\LoginMessageType;
 use App\Logger\Logger;
-use App\Model\FeedbackModel;
 use App\Repository\BrowserPushNotificationRepository;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
+use App\Utilities\TranslatorTrait;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -33,51 +30,103 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * The tools of the volunteers (templates/admin/tools): a sidebar with the tools grouped (Members, Spam checks,
+ * Community, Site), each tool in a card next to it. TOOLS says which rights open a tool; the header shows the
+ * volunteer's rights that open any.
+ *
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
- *
- * This controller handles all tools for volunteers. As they are organized by roles the sheer number es rather high.
  */
 class VolunteerToolController extends AbstractController
 {
-    private const string CHANGE_USERNAME = 'admin.tools.change_username';
-    private const string FIND_USER = 'admin.tools.find_user';
-    private const string MESSAGES_SENT = 'admin.tools.messages_sent';
-    private const string REQUESTS_SENT = 'admin.tools.requests_sent';
-    private const string MESSAGES_BY_MEMBER = 'admin.tools.messages_by_member';
-    private const string CHECK_FEEDBACK = 'admin.tools.check_feedback';
-    private const string CHECK_TOP_SPAMMER = 'admin.tools.check_spam_messages';
-    private const string DAMAGE_DONE = 'admin.tools.damage_done';
-    private const string AGE_BY_COUNTRY = 'admin.tools.age_by_country';
-    private const string UPLOADED_IMAGES = 'admin.tools.uploaded_images';
-    private const string LOGIN_MESSAGES_SHOW = 'admin.tools.login_messages.show';
-    private const string LOGIN_MESSAGE_ADD = 'admin.tools.login_message.add';
+    use TranslatorTrait;
 
-    public function __construct(private readonly FeedbackModel $feedbackModel)
-    {
-    }
+    /** The CSRF token id of expiring a login message. */
+    public const string LOGIN_MESSAGE_TOKEN = 'login_message_expire';
+
+    /**
+     * The tools in the order of the sidebar: route, icon, group and the rights that open it.
+     *
+     * @var array<string, array{route: string, icon: string, group: string, rights: list<string>}>
+     */
+    private const array TOOLS = [
+        'find_member' => ['route' => 'admin_tools_find_user', 'icon' => 'magnifying-glass', 'group' => 'members',
+            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE, Member::ROLE_ADMIN_ACCEPTER]],
+        'change_username' => ['route' => 'admin_tools_change_username', 'icon' => 'pen', 'group' => 'members',
+            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE]],
+        'messages_by_member' => ['route' => 'admin_tools_messages_by_member', 'icon' => 'comments', 'group' => 'members',
+            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM]],
+        'messages_sent' => ['route' => 'admin_tools_messages_sent', 'icon' => 'envelope', 'group' => 'spam',
+            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE]],
+        'requests_sent' => ['route' => 'admin_tools_requests_sent', 'icon' => 'bed', 'group' => 'spam',
+            'rights' => [Member::ROLE_ADMIN_SAFETYTEAM, Member::ROLE_ADMIN_PROFILE]],
+        'top_spammers' => ['route' => 'admin_tools_top_spammer', 'icon' => 'ban', 'group' => 'spam',
+            'rights' => [Member::ROLE_ADMIN_CHECKER]],
+        'damage_done' => ['route' => 'admin_tools_damage_done', 'icon' => 'triangle-exclamation', 'group' => 'spam',
+            'rights' => [Member::ROLE_ADMIN_CHECKER]],
+        'age_by_country' => ['route' => 'admin_tools_age_by_country', 'icon' => 'chart-simple', 'group' => 'community',
+            'rights' => [Member::ROLE_ADMIN_ACCEPTER, Member::ROLE_ADMIN_CHECKER, Member::ROLE_ADMIN_ADMIN]],
+        'uploaded_images' => ['route' => 'admin_tools_uploaded_images', 'icon' => 'images', 'group' => 'site',
+            'rights' => [Member::ROLE_ADMIN_ADMIN]],
+        'login_messages' => ['route' => 'admin_tools_login_messages_show', 'icon' => 'bullhorn', 'group' => 'site',
+            'rights' => [Member::ROLE_ADMIN_ADMIN]],
+    ];
+
+    /** The rights that open tools, as the header names them. */
+    private const array RIGHTS = [
+        Member::ROLE_ADMIN_SAFETYTEAM => 'admin.tools.right.safetyteam',
+        Member::ROLE_ADMIN_PROFILE => 'admin.tools.right.profile',
+        Member::ROLE_ADMIN_ACCEPTER => 'admin.tools.right.accepter',
+        Member::ROLE_ADMIN_CHECKER => 'admin.tools.right.checker',
+        Member::ROLE_ADMIN_ADMIN => 'admin.tools.right.admin',
+    ];
+
+    /** Columns of Age by country it can be sorted by. */
+    private const array AGE_SORTS = ['Name', 'Count', 'BirthYear', 'Age'];
 
     #[Route(path: '/admin/tools', name: 'admin_volunteer_tools')]
-    public function showOverview(Request $request): RedirectResponse
+    public function showOverview(): RedirectResponse
     {
-        $subMenuItems = $this->checkPermissions();
-        $firstSubMenuItem = reset($subMenuItems);
+        $tools = $this->allowedTools();
+        if ([] === $tools) {
+            throw $this->createAccessDeniedException('admin.tools.not.allowed');
+        }
 
-        return $this->redirect($firstSubMenuItem['url']);
+        return $this->redirectToRoute(self::TOOLS[array_key_first($tools)]['route']);
+    }
+
+    #[Route(path: '/admin/tools/findmember', name: 'admin_tools_find_user')]
+    public function findUser(Request $request, EntityManagerInterface $entityManager, Logger $logger): Response
+    {
+        $this->denyUnlessAllowed('find_member');
+
+        $form = $this->createForm(FindUserFormType::class, new FindUserRequest());
+        $form->handleRequest($request);
+
+        $members = null;
+        $term = null;
+        if ($form->isSubmitted() && $form->isValid()) {
+            $term = $form->getData()->term;
+            $logger->write('Searched for members using search term: ' . $term . '.', 'adminquery');
+
+            /** @var MemberRepository $memberRepository */
+            $memberRepository = $entityManager->getRepository(Member::class);
+            $members = $memberRepository->findByProfileInfo($term);
+        }
+
+        return $this->tool('find_member', 'admin/tools/find.user.html.twig', [
+            'form' => $form,
+            'members' => $members,
+            'term' => $term,
+        ]);
     }
 
     #[Route(path: '/admin/tools/change', name: 'admin_tools_change_username')]
-    public function changeUsername(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        TranslatorInterface $translator,
-        Logger $logger,
-    ): Response {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::CHANGE_USERNAME);
+    public function changeUsername(Request $request, EntityManagerInterface $entityManager, Logger $logger): Response
+    {
+        $this->denyUnlessAllowed('change_username');
 
         $form = $this->createForm(ChangeUsernameFormType::class, new ChangeUsernameRequest());
         $form->handleRequest($request);
@@ -85,403 +134,194 @@ class VolunteerToolController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $memberRepository = $entityManager->getRepository(Member::class);
-            $oldMember = $memberRepository->findOneBy(['username' => $data->oldUsername]);
-            if (null !== $oldMember) {
-                // check if new username is already taken
-                $Member = $memberRepository->findOneBy(['username' => $data->newUsername]);
-                if (null === $Member) {
-                    $logger->write(
-                        'Changed member username from ' . $data->oldUsername . ' to ' . $data->newUsername . '.',
-                        'adminquery'
-                    );
+            $member = $memberRepository->findOneBy(['username' => $data->oldUsername]);
+            if (null === $member) {
+                $form->get('oldUsername')->addError(new FormError('admin.tools.change_username.error.unknown'));
+            }
+            if (null !== $memberRepository->findOneBy(['username' => $data->newUsername])) {
+                $form->get('newUsername')->addError(new FormError('admin.tools.change_username.error.taken'));
+            }
 
-                    $entityManager->getConnection()->transactional(static function () use (
-                        $data,
-                        $entityManager,
-                        $oldMember,
-                    ): void {
-                        /** @var BrowserPushNotificationRepository $browserNotificationRepository */
-                        $browserNotificationRepository = $entityManager->getRepository(BrowserPushNotification::class);
-                        $browserNotificationRepository->updateSenderUsername(
-                            $data->oldUsername,
-                            $data->newUsername
-                        );
-                        $oldMember->setUsername($data->newUsername);
-                        $entityManager->persist($oldMember);
-                        $entityManager->flush();
-                    });
-                    $flashMessage = $translator->trans('flash.admin.tools.changed', [
-                        '%oldname%' => $data->oldUsername,
-                        '%newname%' => $data->newUsername,
-                    ]);
-                    $this->addFlash('notice', $flashMessage);
+            if (null !== $member && $form->isValid()) {
+                $logger->write(
+                    'Changed member username from ' . $data->oldUsername . ' to ' . $data->newUsername . '.',
+                    'adminquery'
+                );
+                $entityManager->getConnection()->transactional(static function () use ($data, $entityManager, $member): void {
+                    /** @var BrowserPushNotificationRepository $browserNotificationRepository */
+                    $browserNotificationRepository = $entityManager->getRepository(BrowserPushNotification::class);
+                    $browserNotificationRepository->updateSenderUsername($data->oldUsername, $data->newUsername);
+                    $member->setUsername($data->newUsername);
+                    $entityManager->flush();
+                });
+                $this->addFlash('notice', $this->getTranslator()->trans('admin.tools.change_username.done', [
+                    'old' => $data->oldUsername,
+                    'new' => $data->newUsername,
+                ]));
 
-                    return $this->redirectToRoute('admin_tools_change_username');
-                }
-                $form
-                    ->get('newUsername')
-                    ->addError(
-                        new FormError('A member with this username already exists. Please choose a different name.')
-                    )
-                ;
-            } else {
-                $form->get('oldUsername')->addError(new FormError('No member with this username found.'));
-                // check if new username is already taken
-                $Member = $memberRepository->findOneBy(['username' => $data->newUsername]);
-                if (null !== $Member) {
-                    $form
-                        ->get('newUsername')
-                        ->addError(
-                            new FormError('A member with this username already exists. Please choose a different name.')
-                        )
-                    ;
-                }
+                return $this->redirectToRoute('admin_tools_change_username');
             }
         }
 
-        return $this->render(
-            'admin/tools/change.username.html.twig',
-            [
-                'form' => $form->createView(),
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::CHANGE_USERNAME,
-                ],
-            ]
-        );
-    }
-
-    /**
-     * @throws Exception
-     */
-    #[Route(path: '/admin/tools/findmember', name: 'admin_tools_find_user')]
-    public function findUser(Request $request, EntityManagerInterface $entityManager, Logger $logger): Response
-    {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::FIND_USER);
-
-        $form = $this->createForm(FindUserFormType::class, new FindUserRequest());
-        $form->handleRequest($request);
-
-        $members = null;
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            $logger->write('Searched for members using search term: ' . $data->term . '.', 'adminquery');
-
-            /** @var MemberRepository $memberRepository */
-            $memberRepository = $entityManager->getRepository(Member::class);
-            $members = $memberRepository->findByProfileInfo($data->term);
-        }
-
-        return $this->render(
-            'admin/tools/find.user.html.twig',
-            [
-                'form' => $form->createView(),
-                'members' => $members,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::FIND_USER,
-                ],
-            ]
-        );
-    }
-
-    #[Route(path: '/admin/tools/check/feedback', name: 'admin_tools_check_feedback')]
-    public function showSignupFeedback(Request $request): Response
-    {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::CHECK_FEEDBACK);
-
-        $page = $request->query->get('page', 1);
-        $limit = $request->query->get('limit', 20);
-        $types = $request->query->get('types') ?? [];
-
-        $categories = $this->feedbackModel->getCategories();
-
-        $feedbackForm = $this->createForm(FeedbackFormType::class, [
-            'categories' => $categories,
-        ]);
-        $feedbackForm->handleRequest($request);
-
-        if ($feedbackForm->isSubmitted() && $feedbackForm->isValid()) {
-            $data = $feedbackForm->getData();
-            $types = $data['types'];
-        }
-
-        $feedbacks = $this->feedbackModel->getFilteredFeedback($types, $page, $limit);
-
-        return $this->render(
-            'admin/tools/check.feedback.html.twig',
-            [
-                'form' => $feedbackForm->createView(),
-                'feedbacks' => $feedbacks,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::CHECK_FEEDBACK,
-                ],
-            ]
-        );
-    }
-
-    /**
-     * @throws Exception
-     */
-    #[Route(path: '/admin/tools/topspammer', name: 'admin_tools_top_spammer')]
-    public function showTopSpammer(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::CHECK_TOP_SPAMMER);
-
-        // Get all banned members with the number of sent messages for the last two months
-        $messagesSent = $entityManager->getRepository(Message::class)->findTopSpammers();
-
-        return $this->render(
-            'admin/tools/top.spammer.html.twig',
-            [
-                'messagesSent' => $messagesSent,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::CHECK_TOP_SPAMMER,
-                ],
-            ]
-        );
-    }
-
-    #[Route(path: '/admin/tools/damagedone', name: 'admin_tools_damage_done')]
-    public function showDamageDone(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::DAMAGE_DONE);
-
-        // Get all banned members with the number of sent messages for the last two months
-        $damageDone = $entityManager->getRepository(Message::class)->findDamageDone();
-
-        return $this->render(
-            'admin/tools/damage.done.html.twig',
-            [
-                'damageDone' => $damageDone,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::DAMAGE_DONE,
-                ],
-            ]
-        );
-    }
-
-    #[Route(path: '/admin/tools/messages/sent', name: 'admin_tools_messages_sent')]
-    public function showMessagesLastWeekAction(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::MESSAGES_SENT);
-
-        $results = $entityManager->getRepository(Message::class)->findFrequentSenders(7, requestsOnly: false);
-
-        return $this->render(
-            'admin/tools/messages.sent.html.twig',
-            [
-                'results' => $results,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::MESSAGES_SENT,
-                ],
-            ]
-        );
-    }
-
-    #[Route(path: '/admin/tools/requests/sent', name: 'admin_tools_requests_sent')]
-    public function showRequestsLastTwoWeeks(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::REQUESTS_SENT);
-
-        $results = $entityManager->getRepository(Message::class)->findFrequentSenders(14, requestsOnly: true);
-
-        return $this->render(
-            'admin/tools/requests.sent.html.twig',
-            [
-                'results' => $results,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::REQUESTS_SENT,
-                ],
-            ]
-        );
+        return $this->tool('change_username', 'admin/tools/change.username.html.twig', [
+            'form' => $form,
+        ], $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK);
     }
 
     #[Route(path: '/admin/tools/messages/member', name: 'admin_tools_messages_by_member')]
     public function showMessagesByMember(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $subMenuItems = $this->checkPermissions(self::MESSAGES_BY_MEMBER);
+        $this->denyUnlessAllowed('messages_by_member');
 
-        $usernameForm = $this->createFormBuilder()
+        $form = $this->createFormBuilder()
             ->add('username', TextType::class, [
-                'attr' => [
-                    'class' => 'member-autocomplete',
-                ],
-                'constraints' => [
-                    new NotBlank(),
-                ],
+                'label' => 'admin.tools.username',
+                'attr' => ['class' => 'member-autocomplete'],
+                'constraints' => [new NotBlank()],
             ])
-            ->add('submit', SubmitType::class)
             ->setMethod('POST')
             ->getForm();
-        $usernameForm->handleRequest($request);
+        $form->handleRequest($request);
 
         $results = [];
         $member = null;
-        if ($usernameForm->isSubmitted() && $usernameForm->isValid()) {
-            $data = $usernameForm->getData();
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var MemberRepository $memberRepository */
             $memberRepository = $entityManager->getRepository(Member::class);
-            /** @var Member $member */
-            $member = $memberRepository->findOneBy(['username' => $data['username']]);
-
-            /** @var MessageRepository $messageRepository */
-            $messageRepository = $entityManager->getRepository(Message::class);
-            $messages = $messageRepository->findAllMessagesWithMember($member);
-
-            // Work through all messages and create list of members involved
-            foreach ($messages as $message) {
-                $sender = $message->getSender();
-                $receiver = $message->getReceiver();
-                $correspondent = ($sender === $member) ? $receiver : $sender;
-                $username = $correspondent->getUsername();
-                $type = $this->getConversationType($message);
-                if (!\array_key_exists($username, $results)) {
-                    $results[$username] = [
-                        'type' => 0,
-                        'username' => $username,
-                        'direction' => 0,
-                        'last_sent' => null,
-                        'last_received' => null,
-                    ];
-                }
-                $result = $results[$username];
-                $result['type'] |= $type;
-                if ($sender !== $member) {
-                    $result['direction'] |= 1;
-                    if ($message->getCreated() > $result['last_received']) {
-                        $result['last_received'] = $message->getCreated();
-                    }
-                } else {
-                    $result['direction'] |= 2;
-                    if ($message->getCreated() > $result['last_sent']) {
-                        $result['last_sent'] = $message->getCreated();
-                    }
-                }
-                $results[$username] = $result;
+            $member = $memberRepository->findOneBy(['username' => $form->getData()['username']]);
+            if (null === $member) {
+                $form->get('username')->addError(new FormError('admin.tools.change_username.error.unknown'));
+            } else {
+                /** @var MessageRepository $messageRepository */
+                $messageRepository = $entityManager->getRepository(Message::class);
+                $results = $this->correspondents($member, $messageRepository->findAllMessagesWithMember($member));
             }
         }
 
-        return $this->render(
-            'admin/tools/messages.by.member.html.twig',
-            [
-                'form' => $usernameForm->createView(),
-                'member' => $member,
-                'results' => $results,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::MESSAGES_BY_MEMBER,
-                ],
-            ]
-        );
+        return $this->tool('messages_by_member', 'admin/tools/messages.by.member.html.twig', [
+            'form' => $form,
+            'member' => $member,
+            'results' => $results,
+        ]);
     }
 
+    #[Route(path: '/admin/tools/messages/sent', name: 'admin_tools_messages_sent')]
+    public function showMessagesLastWeekAction(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyUnlessAllowed('messages_sent');
+
+        return $this->tool('messages_sent', 'admin/tools/ranked.html.twig', [
+            'results' => $entityManager->getRepository(Message::class)->findFrequentSenders(7, requestsOnly: false),
+            'unit' => 'admin.tools.messages_sent.unit',
+        ]);
+    }
+
+    #[Route(path: '/admin/tools/requests/sent', name: 'admin_tools_requests_sent')]
+    public function showRequestsLastTwoWeeks(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyUnlessAllowed('requests_sent');
+
+        return $this->tool('requests_sent', 'admin/tools/ranked.html.twig', [
+            'results' => $entityManager->getRepository(Message::class)->findFrequentSenders(14, requestsOnly: true),
+            'unit' => 'admin.tools.requests_sent.unit',
+        ]);
+    }
+
+    #[Route(path: '/admin/tools/topspammer', name: 'admin_tools_top_spammer')]
+    public function showTopSpammer(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyUnlessAllowed('top_spammers');
+
+        // the banned members with the number of messages they sent in the last two months
+        return $this->tool('top_spammers', 'admin/tools/top.spammer.html.twig', [
+            'messagesSent' => $entityManager->getRepository(Message::class)->findTopSpammers(),
+        ]);
+    }
+
+    #[Route(path: '/admin/tools/damagedone', name: 'admin_tools_damage_done')]
+    public function showDamageDone(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyUnlessAllowed('damage_done');
+
+        return $this->tool('damage_done', 'admin/tools/damage.done.html.twig', [
+            'damageDone' => $entityManager->getRepository(Message::class)->findDamageDone(),
+        ]);
+    }
+
+    /**
+     * The countries with their members' average birth year and age; ?sort= a column, ?dir=asc or desc.
+     */
     #[Route(path: '/admin/tools/countryage', name: 'admin_tools_age_by_country')]
     public function showAverageAgePerCountryAction(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::AGE_BY_COUNTRY);
+        $this->denyUnlessAllowed('age_by_country');
 
+        $sort = \in_array($request->query->getString('sort'), self::AGE_SORTS, true) ? $request->query->getString('sort') : 'Count';
+        $ascending = 'asc' === $request->query->getString('dir', 'Name' === $sort ? 'asc' : 'desc');
         $results = $entityManager->getRepository(Member::class)->getAgeByCountry();
+        usort($results, static function (array $a, array $b) use ($sort, $ascending): int {
+            $order = \is_string($a[$sort]) ? strcoll($a[$sort], $b[$sort]) : $a[$sort] <=> $b[$sort];
 
-        return $this->render(
-            'admin/tools/age.country.html.twig',
-            [
-                'results' => $results,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::AGE_BY_COUNTRY,
-                ],
-            ]
-        );
+            return $ascending ? $order : -$order;
+        });
+
+        return $this->tool('age_by_country', 'admin/tools/age.country.html.twig', [
+            'results' => $results,
+            'sort' => $sort,
+            'ascending' => $ascending,
+        ]);
     }
 
     #[Route(path: '/admin/tools/uploaded_images/{page}', name: 'admin_tools_uploaded_images')]
-    public function showUploadedImages(Request $request, EntityManagerInterface $entityManager, int $page = 1): Response
+    public function showUploadedImages(EntityManagerInterface $entityManager, int $page = 1): Response
     {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::UPLOADED_IMAGES);
+        $this->denyUnlessAllowed('uploaded_images');
 
-        $repository = $entityManager->getRepository(UploadedImage::class);
-        $qb = $repository->createQueryBuilder('i');
-        $query = $qb->orderBy('i.created', 'desc');
-        $adapter = new QueryAdapter($query);
-        $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage(100);
-        $pagerfanta->setCurrentPage($page);
+        $query = $entityManager->getRepository(UploadedImage::class)->createQueryBuilder('i')->orderBy('i.created', 'desc');
+        $images = new Pagerfanta(new QueryAdapter($query));
+        $images->setMaxPerPage(60);
+        $images->setNormalizeOutOfRangePages(true);
+        $images->setCurrentPage(max(1, $page));
 
-        return $this->render(
-            'admin/tools/uploaded.images.html.twig',
-            [
-                'results' => $pagerfanta,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::AGE_BY_COUNTRY,
-                ],
-            ]
-        );
+        return $this->tool('uploaded_images', 'admin/tools/uploaded.images.html.twig', [
+            'results' => $images,
+        ]);
+    }
+
+    #[Route(path: '/admin/tools/login_messages/show', name: 'admin_tools_login_messages_show')]
+    public function showLoginMessages(EntityManagerInterface $entityManager): Response
+    {
+        $this->denyUnlessAllowed('login_messages');
+
+        $loginMessages = $entityManager->getRepository(LoginMessage::class)->findBy([], ['expires' => 'DESC', 'id' => 'DESC']);
+        $now = new DateTime();
+
+        return $this->tool('login_messages', 'admin/tools/login.messages.show.html.twig', [
+            'login_messages' => $loginMessages,
+            'active' => \count(array_filter($loginMessages, static fn (LoginMessage $message): bool => $message->getExpires() > $now)),
+            'now' => $now,
+        ]);
     }
 
     #[Route(path: '/admin/tools/login_message/add', name: 'admin_tools_login_message_add')]
     public function addLoginMessage(Request $request, EntityManagerInterface $entityManager): Response
     {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::LOGIN_MESSAGE_ADD);
+        $this->denyUnlessAllowed('login_messages');
 
         $form = $this->createForm(LoginMessageType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $loginMessage = $form->getData();
-            $entityManager->persist($loginMessage);
+            $entityManager->persist($form->getData());
             $entityManager->flush();
+            $this->addFlash('notice', $this->getTranslator()->trans('admin.tools.login_message.added'));
 
-            return $this->redirectToRoute('homepage');
+            return $this->redirectToRoute('admin_tools_login_messages_show');
         }
 
-        return $this->render(
-            'admin/tools/login.message.html.twig',
-            [
-                'form' => $form->createView(),
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::LOGIN_MESSAGE_ADD,
-                ],
-            ]
-        );
-    }
-
-    #[Route(path: '/admin/tools/login_messages/show', name: 'admin_tools_login_messages_show')]
-    public function showLoginMessages(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        // check permissions
-        $subMenuItems = $this->checkPermissions(self::LOGIN_MESSAGES_SHOW);
-
-        $loginMessageRepository = $entityManager->getRepository(LoginMessage::class);
-        $loginMessages = $loginMessageRepository->findBy([], ['expires' => 'DESC', 'id' => 'DESC']);
-
-        return $this->render(
-            'admin/tools/login.messages.show.html.twig',
-            [
-                'login_messages' => $loginMessages,
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => self::LOGIN_MESSAGES_SHOW,
-                ],
-            ]
-        );
+        return $this->tool('login_messages', 'admin/tools/login.message.html.twig', [
+            'form' => $form,
+        ], $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK, 'login_message_add');
     }
 
     #[Route(
@@ -489,136 +329,105 @@ class VolunteerToolController extends AbstractController
         name: 'admin_tools_login_message_expire',
         methods: ['POST'],
     )]
-    #[IsCsrfTokenValid('login_message_expire')]
+    #[IsCsrfTokenValid(self::LOGIN_MESSAGE_TOKEN)]
     public function expireLoginMessage(LoginMessage $loginMessage, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_ADMIN)) {
-            return $this->redirectToRoute('homepage');
-        }
+        $this->denyUnlessAllowed('login_messages');
 
         $loginMessage->setExpires(new DateTime());
-        $entityManager->persist($loginMessage);
         $entityManager->flush();
+        $this->addFlash('notice', $this->getTranslator()->trans('admin.tools.login_message.expired'));
 
         return $this->redirectToRoute('admin_tools_login_messages_show');
     }
 
-    private function getSubMenuItems(): array
+    /**
+     * Renders a tool in the layout: the sidebar with the volunteer's tools, the header with their rights.
+     *
+     * @param array<string, mixed> $parameters
+     * @param string|null          $page       the page within the tool (its title and description), if not the tool
+     */
+    private function tool(string $tool, string $template, array $parameters, int $status = Response::HTTP_OK, ?string $page = null): Response
     {
-        $subMenu = [];
-        if (
-            $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)
-            || $this->isGranted(Member::ROLE_ADMIN_PROFILE)
-        ) {
-            $subMenu[self::CHANGE_USERNAME] = [
-                'key' => self::CHANGE_USERNAME,
-                'url' => $this->generateUrl('admin_tools_change_username'),
-            ];
-            $subMenu[self::FIND_USER] = [
-                'key' => self::FIND_USER,
-                'url' => $this->generateUrl('admin_tools_find_user'),
-            ];
-            $subMenu[self::MESSAGES_SENT] = [
-                'key' => self::MESSAGES_SENT,
-                'url' => $this->generateUrl('admin_tools_messages_sent'),
-            ];
-            $subMenu[self::REQUESTS_SENT] = [
-                'key' => self::REQUESTS_SENT,
-                'url' => $this->generateUrl('admin_tools_requests_sent'),
-            ];
+        $groups = [];
+        foreach ($this->allowedTools() as $key => $definition) {
+            $groups[$definition['group']][$key] = $definition;
         }
+        $rights = array_values(array_filter(
+            self::RIGHTS,
+            fn (string $label, string $role): bool => $this->isGranted($role),
+            \ARRAY_FILTER_USE_BOTH,
+        ));
 
-        if ($this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
-            $subMenu[self::MESSAGES_BY_MEMBER] = [
-                'key' => self::MESSAGES_BY_MEMBER,
-                'url' => $this->generateUrl('admin_tools_messages_by_member'),
-            ];
-        }
-
-        if ($this->isGranted(Member::ROLE_ADMIN_ACCEPTER)) {
-            $subMenu[self::FIND_USER] = [
-                'key' => self::FIND_USER,
-                'url' => $this->generateUrl('admin_tools_find_user'),
-            ];
-            $subMenu[self::AGE_BY_COUNTRY] = [
-                'key' => self::AGE_BY_COUNTRY,
-                'url' => $this->generateUrl('admin_tools_age_by_country'),
-            ];
-        }
-
-        if ($this->isGranted(Member::ROLE_ADMIN_CHECKER)) {
-            $subMenu[self::CHECK_FEEDBACK] = [
-                'key' => self::CHECK_FEEDBACK,
-                'url' => $this->generateUrl('admin_tools_check_feedback'),
-            ];
-            $subMenu[self::CHECK_TOP_SPAMMER] = [
-                'key' => self::CHECK_TOP_SPAMMER,
-                'url' => $this->generateUrl('admin_tools_top_spammer'),
-            ];
-            $subMenu[self::DAMAGE_DONE] = [
-                'key' => self::DAMAGE_DONE,
-                'url' => $this->generateUrl('admin_tools_damage_done'),
-            ];
-            $subMenu[self::AGE_BY_COUNTRY] = [
-                'key' => self::AGE_BY_COUNTRY,
-                'url' => $this->generateUrl('admin_tools_age_by_country'),
-            ];
-        }
-
-        if ($this->isGranted(Member::ROLE_ADMIN_ADMIN)) {
-            $subMenu[self::CHECK_FEEDBACK] = [
-                'key' => self::CHECK_FEEDBACK,
-                'url' => $this->generateUrl('admin_tools_check_feedback'),
-            ];
-            $subMenu[self::AGE_BY_COUNTRY] = [
-                'key' => self::AGE_BY_COUNTRY,
-                'url' => $this->generateUrl('admin_tools_age_by_country'),
-            ];
-            $subMenu[self::UPLOADED_IMAGES] = [
-                'key' => self::UPLOADED_IMAGES,
-                'url' => $this->generateUrl('admin_tools_uploaded_images'),
-            ];
-            $subMenu[self::LOGIN_MESSAGES_SHOW] = [
-                'key' => self::LOGIN_MESSAGES_SHOW,
-                'url' => $this->generateUrl('admin_tools_login_messages_show'),
-            ];
-            $subMenu[self::LOGIN_MESSAGE_ADD] = [
-                'key' => self::LOGIN_MESSAGE_ADD,
-                'url' => $this->generateUrl('admin_tools_login_message_add'),
-            ];
-        }
-
-        return $subMenu;
+        return $this->render($template, $parameters + [
+            'tool' => $tool,
+            'page' => $page ?? $tool,
+            'tool_groups' => $groups,
+            'tool_rights' => $rights,
+            'inline_notices' => true,
+        ], new Response(null, $status));
     }
 
     /**
-     * The tools the volunteer may use; denies access if there are none or $tool isn't one of them.
-     *
-     * @return array<string, array{key: string, url: string}>
+     * @return array<string, array{route: string, icon: string, group: string, rights: list<string>}> the tools the
+     *                                                                                                volunteer may use
      */
-    private function checkPermissions(?string $tool = null): array
+    private function allowedTools(): array
     {
-        // check permissions
-        $subMenuItems = $this->getSubMenuItems();
+        return array_filter(self::TOOLS, function (array $tool): bool {
+            foreach ($tool['rights'] as $role) {
+                if ($this->isGranted($role)) {
+                    return true;
+                }
+            }
 
-        // The callers render the returned menu, so a redirect can't be handed back: deny as the other admin pages do
-        if (empty($subMenuItems) || ((null !== $tool) && !\array_key_exists($tool, $subMenuItems))) {
-            throw $this->createAccessDeniedException('admin.tools.not.allowed');
-        }
-
-        return $subMenuItems;
+            return false;
+        });
     }
 
-    private function getConversationType(Message $message)
+    private function denyUnlessAllowed(string $tool): void
+    {
+        if (!\array_key_exists($tool, $this->allowedTools())) {
+            throw $this->createAccessDeniedException('admin.tools.not.allowed');
+        }
+    }
+
+    /**
+     * Everyone the member exchanged messages with: the kinds (1 message, 2 invitation, 4 stay request), the direction
+     * (1 received, 2 sent) and the last of each, the latest first.
+     *
+     * @param iterable<Message> $messages
+     *
+     * @return list<array{username: string, type: int, direction: int, last_sent: ?DateTime, last_received: ?DateTime}>
+     */
+    private function correspondents(Member $member, iterable $messages): array
+    {
+        $results = [];
+        foreach ($messages as $message) {
+            $received = $message->getSender() !== $member;
+            $username = ($received ? $message->getSender() : $message->getReceiver())->getUsername();
+            $result = $results[$username] ?? ['username' => $username, 'type' => 0, 'direction' => 0, 'last_sent' => null, 'last_received' => null];
+            $result['type'] |= $this->getConversationType($message);
+            $result['direction'] |= $received ? 1 : 2;
+            $last = $received ? 'last_received' : 'last_sent';
+            if ($message->getCreated() > $result[$last]) {
+                $result[$last] = $message->getCreated();
+            }
+            $results[$username] = $result;
+        }
+        $latest = static fn (array $result): ?DateTime => max($result['last_sent'], $result['last_received']);
+        usort($results, static fn (array $a, array $b): int => $latest($b) <=> $latest($a));
+
+        return $results;
+    }
+
+    private function getConversationType(Message $message): int
     {
         if (null === $message->getRequest()) {
-            $type = 1;
-        } elseif (null !== $message->getRequest()->getInviteForLeg()) {
-            $type = 2; // Invitation
-        } else {
-            $type = 4;
+            return 1;
         }
 
-        return $type;
+        // an invitation, else a stay request
+        return null !== $message->getRequest()->getInviteForLeg() ? 2 : 4;
     }
 }

@@ -1,39 +1,21 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/tools/_layout.html.twig' %}
 
-{% block title %}
-    {{ 'admin.tools.title' | trans }}
-{% endblock %}
-
-{% block content %}
-    <h1>{{ 'admin.tools.headline' | trans }}</h1>
-    <h2>{{ 'admin.tools.uploaded_images' | trans }}</h2>
-
+{% block tool %}
+  {% if results.nbResults == 0 %}
+    <p class="c-cadmin__empty c-vtools__empty"><i class="fas fa-images" aria-hidden="true"></i>{{ 'admin.tools.uploaded_images.none'|trans }}</p>
+  {% else %}
+    <ul class="c-vtools-images">
+      {% for image in results %}
+        {% set _src = path('gallery_uploaded_ckeditor', {id: image.id, fileInfo: image.fileInfo}) %}
+        <li class="c-vtools-image">
+          <a href="{{ _src }}" target="_blank" rel="noopener"><img class="c-vtools-image__img" src="{{ _src }}" alt="{{ image.filename }}" loading="lazy"></a>
+          <span class="c-vtools-image__name">{{ image.filename }}</span>
+          <span class="c-vtools-image__meta">{{ image.created|format_datetime('medium', 'short') }} · {{ image.width }} × {{ image.height }}</span>
+        </li>
+      {% endfor %}
+    </ul>
     {% if results.haveToPaginate %}
-        <div class="u:flex u:justify-end u:my-8">
-            {{ pagerfanta( results, 'rounded_pagination') }}
-        </div>
-
-        <div class="row">
-            {% for result in results %}
-                <div class="col-12 mt-2">
-                    <img width="{{ min(result.width, 1024) }}"
-                         alt="{{ result.Id ~ ' - ' ~ result.fileInfo}}"
-                         title="{{ result.Id ~ ' - ' ~ result.fileInfo}}"
-                         src="{{ url('gallery_uploaded_ckeditor', {id:result.Id, fileInfo: result.fileInfo}) }}"
-                    >
-                    <p>Created: {{ result.created|format_datetime() }} Resolution: {{ result.width }} x {{ result.height }}</p>
-                </div>
-            {% endfor %}
-        </div>
-
-        <div class="u:flex u:justify-end u:my-8">
-            {{ pagerfanta( results, 'rounded_pagination') }}
-        </div>
-    {% else %}
-        <div class="row"><div class="col-12">
-            {{ 'admin.tools.nothing' | trans }}
-        </div></div>
+      <div class="c-cadmin__pager">{{ pagerfanta(results, 'rox_default', {routeName: 'admin_tools_uploaded_images'}) }}</div>
     {% endif %}
-
-{% endblock content %}
+  {% endif %}
+{% endblock tool %}

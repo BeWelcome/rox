@@ -24,6 +24,9 @@ use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
  * the page it came from (return), the list (queue) and the comment after it (next): back on the page, a comment
  * that left the list makes room for the next one.
  *
+ * A volunteer with the Comments right hands a comment to the Safety Team; from then on it is theirs: the volunteers
+ * without the Safety Team right don't see it in any list and can't open it, so nobody works on it twice.
+ *
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
@@ -96,7 +99,14 @@ class CommentController extends AbstractController
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
         $this->denyUnlessVolunteer();
-        $comment = $this->comment($toMember, $fromMember);
+        $comment = $this->commentModel->findBetween($toMember, $fromMember)
+            ?? throw $this->createNotFoundException('No such comment.');
+        if (!$this->canSee($comment)) {
+            // e.g. the link of the report mail, after another volunteer handed the comment over
+            $this->addTranslatedFlash('notice', 'admin.comments.safetyteam.handed.over');
+
+            return $this->redirectToRoute('admin_comment_reported_overview');
+        }
 
         return $this->redirectToRoute('admin_comments_for_member', [
             'username' => $toMember->getUsername(),
@@ -163,11 +173,6 @@ class CommentController extends AbstractController
         #[MapEntity(mapping: ['to_member' => 'username'])] Member $toMember,
         #[MapEntity(mapping: ['from_member' => 'username'])] Member $fromMember,
     ): Response {
-        // the Safety Team's list is theirs: only they move comments into it
-        if (!$this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM)) {
-            throw $this->createAccessDeniedException('You need to have SafetyTeam right to access this.');
-        }
-
         return $this->act($request, $toMember, $fromMember, 'flash.admin.comment.safetyteam', static function (Comment $comment) {
             $comment->setAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK);
         });
@@ -226,12 +231,16 @@ class CommentController extends AbstractController
     {
         $this->denyUnlessVolunteer();
 
-        $comments = $this->commentModel->getQueue($queue, $request->query->getInt('page', 1), $member);
+        $safetyTeam = $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM);
+        $comments = $this->commentModel->getQueue($queue, $request->query->getInt('page', 1), $member, $safetyTeam);
         $list = iterator_to_array($comments->getCurrentPageResults(), false);
 
         // the chosen comment (also when it isn't on this page, e.g. from a mail), else the first one
         $selectedId = $request->query->getInt('selected');
-        $selected = (0 < $selectedId ? $this->commentModel->find($selectedId) : null) ?? ($list[0] ?? null);
+        $selected = 0 < $selectedId ? $this->commentModel->find($selectedId) : null;
+        if (null === $selected || !$this->canSee($selected)) {
+            $selected = $list[0] ?? null;
+        }
 
         return $this->render('admin/comment/comments.html.twig', [
             'queue' => $queue,
@@ -241,7 +250,6 @@ class CommentController extends AbstractController
             'next' => $this->nextAfter($selected, $list),
             'counts' => $this->commentModel->getCountsToCheck(),
             'tabs' => $this->getTabs(),
-            'safety_team' => $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM),
         ] + $this->commentModel->getDetails($selected, $list));
     }
 
@@ -289,7 +297,7 @@ class CommentController extends AbstractController
         parse_str((string) parse_url($return, \PHP_URL_QUERY), $query);
 
         $queue = CommentQueue::tryFrom($request->request->getString('queue'));
-        $stays = null !== $comment && (null === $queue || $queue->contains($comment));
+        $stays = null !== $comment && $this->canSee($comment) && (null === $queue || $queue->contains($comment));
         $next = $request->request->getInt('next');
         unset($query['selected']);
         if ($stays) {
@@ -301,10 +309,27 @@ class CommentController extends AbstractController
         return $this->redirect($path . ([] === $query ? '' : '?' . http_build_query($query)));
     }
 
+    /**
+     * The comment to act on; a comment handed to the Safety Team only for them.
+     */
     private function comment(Member $toMember, Member $fromMember): Comment
     {
-        return $this->commentModel->findBetween($toMember, $fromMember)
+        $comment = $this->commentModel->findBetween($toMember, $fromMember)
             ?? throw $this->createNotFoundException('No such comment.');
+        if (!$this->canSee($comment)) {
+            throw $this->createAccessDeniedException('The comment is with the Safety Team.');
+        }
+
+        return $comment;
+    }
+
+    /**
+     * Whether the volunteer may see the comment: one handed to the Safety Team only its members.
+     */
+    private function canSee(Comment $comment): bool
+    {
+        return CommentAdminActionType::SAFETY_TEAM_CHECK !== $comment->getAdminAction()
+            || $this->isGranted(Member::ROLE_ADMIN_SAFETYTEAM);
     }
 
     private function denyUnlessVolunteer(): void

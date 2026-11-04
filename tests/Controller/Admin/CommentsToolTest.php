@@ -17,7 +17,8 @@ use Symfony\Component\DomCrawler\Crawler;
 /**
  * The comments tool, as the volunteers use it: a list with the chosen comment next to it, and its actions, which lead
  * back to the list (with the next comment when the chosen one left it). bwadmin has the Comments right and is in the
- * Safety Team (fixtures/rightsvolunteers.yml); member-9 gets only the Comments right here.
+ * Safety Team (fixtures/rightsvolunteers.yml); member-9 gets only the Comments right here. A comment handed to the
+ * Safety Team is theirs: the volunteers without the Safety Team right no longer see it.
  */
 #[Group('integration')]
 final class CommentsToolTest extends WebTestCase
@@ -58,11 +59,12 @@ final class CommentsToolTest extends WebTestCase
         self::assertCount(1, $crawler->filter('form[action$="/safetyteam"]'));
     }
 
-    public function testAVolunteerWithoutTheSafetyTeamDoesntSendCommentsToThem(): void
+    public function testAVolunteerWithTheCommentsRightHandsACommentToTheSafetyTeamAndNoLongerSeesIt(): void
     {
-        [, $newer] = $this->commentsToCheck();
+        [$older, $newer] = $this->commentsToCheck();
         $volunteer = $this->commentsVolunteer();
         $this->client->loginUser($volunteer);
+        $about = '/admin/comment/for/' . $newer->getToMember()->getUsername();
 
         $crawler = $this->client->request('GET', '/admin/comment/reported');
 
@@ -71,16 +73,86 @@ final class CommentsToolTest extends WebTestCase
         self::assertSame(['/admin/comment/reported', '/admin/comment/checked', '/admin/comment'], $crawler->filter('.p-hero__tab')->each(
             static fn (Crawler $tab) => $tab->attr('href')
         ));
-        self::assertCount(0, $crawler->filter('form[action$="/safetyteam"]'));
-
         $this->client->request('GET', '/admin/comment/safetyteam');
         self::assertResponseStatusCodeSame(403);
 
-        $this->client->request('POST', $this->url($newer, 'safetyteam'), [
-            '_token' => $this->token($crawler),
-        ]);
+        // the newest is chosen: handed over, it leaves the list for the next one
+        $this->client->submit($crawler->filter('form[action$="/safetyteam"]')->form());
+        self::assertResponseRedirects('/admin/comment/reported?selected=' . $older->getId());
+        self::assertSame(CommentAdminActionType::SAFETY_TEAM_CHECK, $this->reload($newer)->getAdminAction());
+
+        // in no list, not even chosen by its id
+        foreach (['/admin/comment', $about, '/admin/comment/from/' . $newer->getFromMember()->getUsername()] as $page) {
+            $crawler = $this->client->request('GET', $page . '?selected=' . $newer->getId());
+            self::assertResponseIsSuccessful();
+            self::assertSelectorTextNotContains('.c-cadmin__card', 'zztest newer');
+        }
+
+        // its link (the report mail) leads to the reported comments with a notice
+        $this->client->request('GET', '/admin/comment/' . $newer->getToMember()->getUsername() . '/' . $newer->getFromMember()->getUsername());
+        self::assertResponseRedirects('/admin/comment/reported');
+
+        // and nothing can be done to it
+        $crawler = $this->client->request('GET', '/admin/comment/reported');
+        $this->client->request('POST', $this->url($newer, 'checked'), ['_token' => $this->token($crawler)]);
         self::assertResponseStatusCodeSame(403);
-        self::assertSame(CommentAdminActionType::ADMIN_CHECK, $this->reload($newer)->getAdminAction());
+        self::assertSame(CommentAdminActionType::SAFETY_TEAM_CHECK, $this->reload($newer)->getAdminAction());
+    }
+
+    public function testTheSafetyTeamFindsAHandedOverCommentInTheirListAndHandlesIt(): void
+    {
+        [, $newer] = $this->commentsToCheck();
+        $newer->setAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK);
+        $this->entityManager->flush();
+        $this->client->loginUser($this->member('bwadmin'));
+
+        $crawler = $this->client->request('GET', '/admin/comment/safetyteam');
+
+        self::assertResponseIsSuccessful();
+        // the Safety team and Negative tabs as well
+        self::assertSame(
+            ['/admin/comment/safetyteam', '/admin/comment/reported', '/admin/comment/negative', '/admin/comment/checked', '/admin/comment'],
+            $crawler->filter('.p-hero__tab')->each(static fn (Crawler $tab) => $tab->attr('href')),
+        );
+        self::assertSame('/admin/comment/safetyteam', $crawler->filter('.p-hero__tab--active')->attr('href'));
+        self::assertSelectorTextContains('.c-cadmin-row.is-selected .c-cadmin-row__excerpt', 'zztest newer');
+        // the status Safety team (shield)
+        self::assertSelectorExists('.c-cadmin-detail__tags .fa-shield-halved');
+        // already theirs: no button to hand it over again
+        self::assertCount(0, $crawler->filter('form[action$="/safetyteam"]'));
+
+        $this->client->submit($crawler->filter('form[action$="/checked"]')->form());
+        self::assertResponseRedirects('/admin/comment/safetyteam');
+        self::assertSame(CommentAdminActionType::ADMIN_CHECKED, $this->reload($newer)->getAdminAction());
+    }
+
+    public function testTheMenuOpensTheReportedCommentsAndTheAdminBarCountsTheVolunteersList(): void
+    {
+        [, $newer] = $this->commentsToCheck();
+        $newer->setAdminAction(CommentAdminActionType::SAFETY_TEAM_CHECK);
+        $this->entityManager->flush();
+
+        // the Comments right: the comments to check (the older one is left)
+        $this->client->loginUser($this->commentsVolunteer());
+        $crawler = $this->client->request('GET', '/admin/comment/checked');
+        self::assertCount(1, $crawler->filter('#volunteer_menu a[href="/admin/comment/reported"]'));
+        self::assertCount(1, $crawler->filter('.p-admin-bar__item.is-todo[href="/admin/comment/reported"]'));
+        self::assertCount(0, $crawler->filter('.p-admin-bar__item[href="/admin/comment/safetyteam"]'));
+
+        // the Safety Team (with the Comments right too): the comments handed to them, instead
+        $this->client->loginUser($this->member('bwadmin'));
+        $crawler = $this->client->request('GET', '/admin/comment/checked');
+        self::assertCount(1, $crawler->filter('#volunteer_menu a[href="/admin/comment/reported"]'));
+        self::assertCount(1, $crawler->filter('.p-admin-bar__item.is-todo[href="/admin/comment/safetyteam"]'));
+        self::assertCount(0, $crawler->filter('.p-admin-bar__item[href="/admin/comment/reported"]'));
+
+        // nothing left for the Safety Team: the link stays, without the to-do colour
+        // the kernel of the requests so far is gone, with its entity manager
+        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
+        $this->entityManager->find(Comment::class, $newer->getId())->setAdminAction(CommentAdminActionType::ADMIN_CHECKED);
+        $this->entityManager->flush();
+        $crawler = $this->client->request('GET', '/admin/comment/checked');
+        self::assertCount(1, $crawler->filter('.p-admin-bar__item[href="/admin/comment/safetyteam"]:not(.is-todo)'));
     }
 
     public function testMarkingAsCheckedShowsTheNextCommentOfTheList(): void

@@ -12,7 +12,12 @@
                     <i class="fas fa-users" aria-hidden="true"></i> {{ 'label.admin.groups.awaiting.approval'|trans({'groups': groupsInApprovalQueue}) }}
                 </a>
             {% endif %}
-            {% if not reportedCommentsCount is null %}
+            {# the Safety Team sees the comments handed to them, the Comments right the comments to check #}
+            {% if not safetyTeamCommentsCount is null %}
+                <a class="p-admin-bar__item{{ safetyTeamCommentsCount > 0 ? ' is-todo' }}" href="{{ path('admin_abuser_overview') }}">
+                    <i class="fas fa-shield-halved" aria-hidden="true"></i> {{ 'label.admin.comments.safetyteam'|trans({'comments': safetyTeamCommentsCount}) }}
+                </a>
+            {% elseif not reportedCommentsCount is null %}
                 <a class="p-admin-bar__item{{ reportedCommentsCount > 0 ? ' is-todo' }}" href="{{ path('admin_comment_reported_overview') }}">
                     <i class="fas fa-comment" aria-hidden="true"></i> {{ 'label.admin.comments.reported'|trans({'comments': reportedCommentsCount}) }}
                 </a>

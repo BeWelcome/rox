@@ -138,8 +138,8 @@
                 {% set content %}<i class="fas fa-check" aria-hidden="true"></i>{{ 'admin.comment.checked'|trans }}{% endset %}
                 {{ cm.action('admin_comment_mark_checked', selected, ctx, 'c-cadmin-btn c-cadmin-btn--primary', content) }}
               {% endif %}
-              {# only the Safety Team moves a comment into their list #}
-              {% if safety_team and selected.adminAction == 'AdminCommentMustCheck' %}
+              {# a comment to check goes to the Safety Team; from then on it is theirs (Admin\CommentController) #}
+              {% if selected.adminAction == 'AdminCommentMustCheck' %}
                 {% set content %}<i class="fas fa-shield-halved" aria-hidden="true"></i>{{ 'admin.comments.safetyteam'|trans }}{% endset %}
                 {{ cm.action('admin_comment_assign_safetyteam', selected, ctx, 'c-cadmin-btn c-cadmin-btn--outline', content) }}
               {% endif %}

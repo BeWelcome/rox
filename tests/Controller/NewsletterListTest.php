@@ -41,7 +41,7 @@ final class NewsletterListTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         foreach (['en', 'de'] as $locale) {
-            self::assertCount(1, $crawler->filter('a[href$="/newsletters/' . $newsletter->getId() . '/' . $locale . '"]'));
+            self::assertCount(1, $crawler->filter('a.c-newsletter-lang[href$="/newsletters/' . $newsletter->getId() . '/' . $locale . '"]'));
         }
     }
 }

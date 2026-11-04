@@ -1,0 +1,10 @@
+{# The language pills of a newsletter, each linking to it in that language; the active one is marked. #}
+{% macro languages(id, languages, active) %}
+  <ul class="c-newsletter-langs">
+    {% for language in languages %}
+      <li>
+        <a class="c-newsletter-lang{{ language == active ? ' is-active' }}" href="{{ path('newsletter_single', {id: id, language: language}) }}" hreflang="{{ language }}"{% if language == active %} aria-current="true"{% endif %}>{{ ('lang_' ~ language)|lower|trans }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}

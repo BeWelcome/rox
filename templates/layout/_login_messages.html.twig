@@ -1,0 +1,20 @@
+{#
+  The site announcements a member hasn't acknowledged yet (MemberTwigExtension: loginmessages, oldest first), as
+  full-width strips under the top bar and the admin bar. "Got it" acknowledges one (LoginMessageController,
+  assets/js/loginmessages.js); its strip folds away, the others move up.
+#}
+{% if loginmessages is not empty %}
+  <div class="p-login-messages" data-login-messages data-token="{{ csrf_token(constant('App\\Controller\\LoginMessageController::TOKEN')) }}" data-error="{{ 'loginmessage.acknowledge.error'|trans }}">
+    {% for loginmessage in loginmessages %}
+      <div class="p-login-message" role="alert" data-login-message="{{ path('acknowledge_login_message', {id: loginmessage.id}) }}">
+        <div class="p-login-message__fold">
+          <div class="container-lg p-login-message__inner">
+            <span class="p-login-message__icon" aria-hidden="true"><i class="fas fa-shield-halved"></i></span>
+            <div class="p-login-message__body">{{ loginmessage.message|purify('custom') }}</div>
+            <button type="button" class="p-login-message__ack" data-login-message-ack>{{ 'loginmessage.acknowledge'|trans }}</button>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

@@ -16,6 +16,7 @@ import './member-menu-dropdown.js';
 import './tom-select.js';
 import './confirm.js';
 import './footer.js';
+import './loginmessages.js';
 import './request-tip.js';
 
 window.bootstrap = bootstrap;

@@ -1,0 +1,37 @@
+/*
+ * Site announcements (templates/layout/_login_messages.html.twig): a full-width peach strip per message under the top
+ * bar and the admin bar, the message next to a shield and a "Got it" button. A strip folds away when acknowledged
+ * (assets/js/loginmessages.js: .is-leaving).
+ */
+
+.p-login-message { display: grid; grid-template-rows: 1fr; border-bottom: 1px solid #fde6d2; background: #fff7ed; opacity: 1; transition: grid-template-rows 0.35s ease, opacity 0.25s ease; }
+.p-login-message.is-leaving { grid-template-rows: 0fr; opacity: 0; }
+.p-login-message__fold { min-height: 0; overflow: hidden; }
+.p-login-message__inner { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding-top: 16px; padding-bottom: 16px; }
+.p-login-message__icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 999px; background: #fde6d2; color: #c2410c; font-size: 15px; }
+
+/* The message: its first bold line or heading is the title, the rest the text */
+.p-login-message__body { min-width: 0; color: #334155; font-size: 14px; line-height: 1.5; text-wrap: pretty; overflow-wrap: anywhere; }
+.p-login-message__body p,
+.p-login-message__body ul,
+.p-login-message__body ol { margin: 0; }
+.p-login-message__body :is(h1, h2, h3, h4, h5, h6) { margin: 0 0 2px; }
+.p-login-message__body :is(h1, h2, h3, h4, h5, h6),
+.p-login-message__body > p:first-child > :is(strong, b):first-child { display: block; margin-bottom: 2px; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 16px; font-weight: 700; line-height: 1.3; }
+/* the title is a block already, so a line break after it would leave an empty line */
+.p-login-message__body > p:first-child > :is(strong, b):first-child + br { display: none; }
+.p-login-message__body a { color: #c2410c; }
+.p-login-message__body a:hover { color: #9a3412; }
+
+/* Got it */
+.p-login-message__ack { display: inline-flex; align-items: center; height: 32px; padding: 0 16px; border: 1px solid #f37000; border-radius: 999px; background: #fff; color: #f37000; font-size: 14px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+.p-login-message__ack:hover { background: #f37000; color: #fff; }
+.p-login-message__ack:focus-visible { outline: 0; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.2); }
+
+@media (max-width: 575.98px) {
+  .p-login-message__inner { grid-template-columns: 36px minmax(0, 1fr); padding-top: 12px; padding-bottom: 12px; }
+  .p-login-message__ack { grid-column: 2; justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .p-login-message { transition: none; }
+}

@@ -1,39 +1,75 @@
 {% extends 'base.html.twig' %}
+{#
+  The newsletter archive (NewsletterController::showNewslettersOverview): the published newsletters, newest first,
+  grouped by year within the page, each with its languages. The title opens the member's locale, or the first
+  language the newsletter has.
+#}
+{% import 'newsletter/_macros.html.twig' as nl %}
 
-{% block content %}
-    <h1>{{ 'newsletter'|trans }}</h1>
+{% block title %}{{ 'newsletters.title'|trans }}{% endblock %}
 
-    {% if newsletters.nbResults == 0 %}
-        {{ 'newsletters.nothing'|trans }}
-    {% else %}
-        {% if newsletters.haveToPaginate %}
-            <div class="float-left">
-                {{ pagerfanta( newsletters, 'rox_default') }}
-            </div>
-            <div class="clearfix"></div>
-        {% endif %}
-
-        <div class="row mb-2">
-            <div class="col-12">
-            {% for newsletter in newsletters.currentPageResults %}
-                <p style="line-height: 1.5"><strong>{{ ('broadcast_title_' ~ newsletter.name)|lower|trans }}</strong> (<small>{{ newsletter.created.diffForHumans }}</small>)</br>
-                {% for language in newsletter.languages %}
-                    {% set button_type = 'btn-secondary' %}
-                    {% if app.request.locale == language %}
-                        {% set button_type = 'btn-primary' %}
-                    {% endif %}
-                    <a class="btn btn-sm {{ button_type }} mr-1 mt-1" href="{{ url('newsletter_single', {'id': newsletter.id, 'language': language }) }}" >{{ ('lang_' ~ language)|lower|trans }}</a>
-                 {% endfor %}
-                </p>
-            {% endfor %}
-            </div>
+{% block main %}
+  <main role="main" class="c-cnews c-newsletters">
+    <div class="c-newsletters__page">
+      <header class="c-page-head">
+        <div class="c-page-head__main">
+          <p class="c-page-head__eyebrow">{{ 'newsletters.eyebrow'|trans }}</p>
+          <h1 class="c-page-head__title">{{ 'newsletters.title'|trans }}</h1>
+          <p class="c-newsletters__intro">{{ 'newsletters.intro'|trans }}</p>
         </div>
+        {% if summary.total > 0 %}
+          <p class="c-newsletters__count">{{ 'newsletters.count'|trans({count: summary.total, year: summary.since}) }}</p>
+        {% endif %}
+      </header>
+
+      {% if newsletters.nbResults == 0 %}
+        <div class="c-cnews-card c-cnews-empty">
+          <span class="c-cnews-empty__icon"><i class="fas fa-newspaper" aria-hidden="true"></i></span>
+          <p class="c-cnews-empty__title">{{ 'newsletters.title'|trans }}</p>
+          <p class="c-cnews-empty__text">{{ 'newsletters.nothing'|trans }}</p>
+        </div>
+      {% else %}
+        {% set locale = app.request.locale %}
+        {% set years = [] %}
+        {% for newsletter in newsletters.currentPageResults %}
+          {% set year = newsletter.created|date('Y') %}
+          {% if year not in years %}{% set years = years|merge([year]) %}{% endif %}
+        {% endfor %}
+
+        {% for year in years %}
+          <section class="c-newsletters__year" aria-labelledby="c-newsletters-{{ year }}">
+            <h2 class="c-newsletters__year-title" id="c-newsletters-{{ year }}">{{ year }}</h2>
+            <ul class="c-newsletters__list">
+              {% for newsletter in newsletters.currentPageResults|filter(n => n.created|date('Y') == year) %}
+                {% set count = newsletter.languages|length %}
+                <li class="c-cnews-card c-newsletter-card">
+                  <div class="c-newsletter-card__date" aria-hidden="true">
+                    <span class="c-newsletter-card__day">{{ newsletter.created|format_date(pattern='d') }}</span>
+                    <span class="c-newsletter-card__month">{{ newsletter.created|format_date(pattern='MMM') }}</span>
+                  </div>
+                  <div class="c-newsletter-card__main">
+                    <h3 class="c-newsletter-card__title">
+                      <a href="{{ path('newsletter_single', {id: newsletter.id, language: newsletter.link}) }}">{{ ('broadcast_title_' ~ newsletter.name)|lower|trans }}</a>
+                    </h3>
+                    <p class="c-newsletter-card__meta">
+                      {{ newsletter.created|format_date(pattern='d MMMM y') }} · {{ newsletter.created.diffForHumans }} · {{ 'newsletters.languages'|trans({count: count}) }}
+                    </p>
+                    {% if count > 0 %}
+                      {{ nl.languages(newsletter.id, newsletter.languages, locale) }}
+                    {% endif %}
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </section>
+        {% endfor %}
 
         {% if newsletters.haveToPaginate %}
-            <div class="float-left">
-                {{ pagerfanta( newsletters, 'rox_default') }}
-            </div>
-            <div class="clearfix"></div>
+          <nav class="c-newsletters__pager" aria-label="{{ 'newsletters.title'|trans }}">
+            {{ pagerfanta(newsletters, 'rox_default', {routeName: 'newsletters'}) }}
+          </nav>
         {% endif %}
-    {% endif %}
+      {% endif %}
+    </div>
+  </main>
 {% endblock %}

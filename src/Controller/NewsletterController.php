@@ -4,73 +4,55 @@ namespace App\Controller;
 
 use App\Entity\Member;
 use App\Entity\Newsletter;
-use App\Entity\Word;
-use Doctrine\ORM\EntityManagerInterface;
-use Pagerfanta\Adapter\ArrayAdapter;
-use Pagerfanta\Pagerfanta;
+use App\Model\NewsletterArchiveModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class NewsletterController extends AbstractController
 {
     /**
-     * Show a page with all newsletters.
+     * The archive of published newsletters, newest first.
      */
-    #[Route(path: '/newsletters/{page}', name: 'newsletters')]
-    public function showNewslettersOverview(EntityManagerInterface $entityManager, int $page = 1)
+    #[Route(path: '/newsletters/{page}', name: 'newsletters', requirements: ['page' => '\\d+'])]
+    public function showNewslettersOverview(Request $request, NewsletterArchiveModel $archive, int $page = 1): Response
     {
-        $newsletters = [];
-        $newsletterRepository = $entityManager->getRepository(Newsletter::class);
-        $translationRepository = $entityManager->getRepository(Word::class);
-        $newslettersRaw = $newsletterRepository->findAllPublished();
-
-        /** @var Newsletter $newsletter */
-        foreach ($newslettersRaw as $newsletter) {
-            $id = $newsletter->getId();
-            $name = $newsletter->getName();
-            $translations = $translationRepository->findBy([
-                'code' => [
-                    strtolower('Broadcast_body_' . $name),
-                ],
-            ]);
-            $languages = [];
-            foreach ($translations as $translatedNewsletter) {
-                $languages[] = $translatedNewsletter->getLanguage()->getShortCode();
-            }
-            $newsletters[] = [
-                'id' => $id,
-                'name' => $name,
-                'created' => $newsletter->getCreated(),
-                'languages' => $languages,
-            ];
-        }
-
-        $pagerfanta = new Pagerfanta(new ArrayAdapter($newsletters));
-        $pagerfanta->setMaxPerPage(10);
-        $pagerfanta->setCurrentPage($page);
+        $locale = $request->getLocale();
 
         return $this->render('newsletter/list.html.twig', [
-            'newsletters' => $pagerfanta,
+            'newsletters' => $archive->getPage($page, $locale),
+            'summary' => $archive->getSummary($locale),
         ]);
     }
 
     /**
-     * Show a single newsletter translated.
+     * A newsletter in one language, with its other languages and the older and newer ones. A language it has no text
+     * in leads to English or its first language.
      */
     #[Route(path: '/newsletters/{id}/{language}', name: 'newsletter_single')]
-    public function showSingleNewsletter(Newsletter $newsletter, string $language): Response
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-        $username = (null === $member) ? 'anonymous' : $member->getUsername();
+    public function showSingleNewsletter(
+        Request $request,
+        Newsletter $newsletter,
+        string $language,
+        NewsletterArchiveModel $archive,
+    ): Response {
+        $languages = $archive->getLanguages($newsletter);
+        $redirect = $archive->getRedirectLanguage($languages, $language);
+        if (null !== $redirect) {
+            return $this->redirectToRoute('newsletter_single', ['id' => $newsletter->getId(), 'language' => $redirect]);
+        }
 
-        // \todo check if newsletter was translated into the given language
+        /** @var Member|null $member */
+        $member = $this->getUser();
+
         return $this->render('newsletter/show.html.twig', [
             'newsletter' => $newsletter,
             'language' => $language,
-            'username' => $username,
+            'languages' => $languages,
+            'username' => null === $member ? 'anonymous' : $member->getUsername(),
+            'neighbours' => $archive->getNeighbours($newsletter, $language, $request->getLocale()),
         ]);
     }
 

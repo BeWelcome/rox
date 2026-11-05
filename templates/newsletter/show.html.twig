@@ -1,12 +1,56 @@
 {% extends 'base.html.twig' %}
+{#
+  A newsletter in one language (NewsletterController::showSingleNewsletter): the article, the languages it can be
+  read in and the older and newer newsletters. The back link goes to the archive page the newsletter is on.
+#}
+{% import 'newsletter/_macros.html.twig' as nl %}
 
-{% block content %}
-    <h1>{{ 'newsletter'|trans }}</h1>
-    <h2>{{ ('broadcast_title_' ~ newsletter.name)|lower|trans({}, null, language) }} <button class="btn btn-primary">{{ ('lang_' ~ language)|trans }}</button></h2>
+{% set title = ('broadcast_title_' ~ newsletter.name)|lower|trans({}, null, language) %}
 
-    <div class="row mb-2">
-        <div class="col-12">
+{% block title %}{{ title }} · {{ 'newsletter'|trans }}{% endblock %}
+
+{% block main %}
+  <main role="main" class="c-cnews c-newsletters">
+    <div class="c-newsletters__page">
+      <a class="c-cnews__back" href="{{ path('newsletters', {page: neighbours.page}) }}"><i class="fas fa-arrow-left" aria-hidden="true"></i>{{ 'newsletter.back'|trans }}</a>
+
+      <div class="c-newsletter">
+        <article class="c-cnews-article c-newsletter__article" lang="{{ language }}">
+          <p class="c-page-head__eyebrow c-newsletter__eyebrow">{{ 'newsletter'|trans }} · {{ newsletter.created|format_date(pattern='d MMMM y') }}</p>
+          <h1 class="c-cnews-article__title">{{ title }}</h1>
+          <p class="c-newsletter__reading">
+            <i class="fas fa-globe" aria-hidden="true"></i>
+            {{ 'newsletter.reading'|trans({language: ('lang_' ~ language)|lower|trans, others: max(languages|length - 1, 0)}) }}
+          </p>
+          <div class="c-cnews-article__body">
             {{ ('broadcast_body_' ~ newsletter.name)|lower|trans({'username': username}, null, language)|prepare_newsletter(true) }}
-        </div>
+          </div>
+        </article>
+
+        <aside class="c-newsletter__aside">
+          {% if languages is not empty %}
+            <section class="c-cnews-card c-newsletter__box" aria-labelledby="c-newsletter-read-in">
+              <h2 class="c-newsletter__box-head" id="c-newsletter-read-in">
+                {{ 'newsletter.read.in'|trans }}
+                <span class="c-newsletter__box-count">{{ languages|length }}</span>
+              </h2>
+              {{ nl.languages(newsletter.id, languages, language) }}
+            </section>
+          {% endif %}
+
+          {% for direction in ['older', 'newer'] %}
+            {% set other = neighbours[direction] %}
+            {% if other %}
+              <a class="c-cnews-card c-newsletter__nav c-newsletter__nav--{{ direction }}" href="{{ path('newsletter_single', {id: other.id, language: other.link}) }}" rel="{{ direction == 'older' ? 'prev' : 'next' }}">
+                <span class="c-newsletter__nav-label">
+                  {% if direction == 'older' %}<i class="fas fa-arrow-left" aria-hidden="true"></i>{{ 'newsletter.older'|trans }}{% else %}{{ 'newsletter.newer'|trans }}<i class="fas fa-arrow-right" aria-hidden="true"></i>{% endif %}
+                </span>
+                <span class="c-newsletter__nav-title" lang="{{ other.link }}">{{ ('broadcast_title_' ~ other.name)|lower|trans({}, null, other.link) }}</span>
+              </a>
+            {% endif %}
+          {% endfor %}
+        </aside>
+      </div>
     </div>
+  </main>
 {% endblock %}

@@ -132,7 +132,7 @@ class SignupController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username:member}/resend', name: 'resend_confirmation_email')]
+    #[Route(path: '/members/{username:member}/resend', name: 'resend_confirmation_email', priority: 1)]
     public function resendConfirmationEmail(
         Member $member,
         AuthenticationUtils $helper,

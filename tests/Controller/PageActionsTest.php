@@ -180,6 +180,20 @@ final class PageActionsTest extends WebTestCase
         self::assertStringNotContainsString('alert(2)', $page);
     }
 
+    public function testTheMemberPagesUnderTheProfileReachTheirRoute(): void
+    {
+        // /members/{username}/{language} (the profile) took these pages
+        $router = static::getContainer()->get('router');
+        self::assertSame('profile_delete', $router->match('/members/member-2/delete')['_route']);
+        self::assertSame('resend_confirmation_email', $router->match('/members/member-2/resend')['_route']);
+
+        $this->client->loginUser($this->member('member-2'));
+        $crawler = $this->client->request('GET', '/members/member-2/delete');
+
+        self::assertResponseIsSuccessful();
+        self::assertCount(1, $crawler->filter('form button#delete'));
+    }
+
     public function testTheLegacySearchUrlsGoToTheSearch(): void
     {
         $this->client->loginUser($this->member('member-2'));

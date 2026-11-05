@@ -305,7 +305,7 @@ class ProfileController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/members/{username:member}/delete', name: 'profile_delete')]
+    #[Route(path: '/members/{username:member}/delete', name: 'profile_delete', priority: 1)]
     public function deleteProfile(
         Request $request,
         TokenStorageInterface $tokenStorage,

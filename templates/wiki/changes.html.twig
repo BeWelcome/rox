@@ -1,0 +1,16 @@
+{% extends 'wiki/_layout.html.twig' %}
+{# What a version of a page of the main wiki changed (WikiController::showChanges) #}
+{% set _title = scope.isFrontPage ? 'wiki.start.page'|trans : scope.title %}
+
+{% block title %}{{ 'wiki.changes.eyebrow'|trans }} · {{ _title }}{% endblock %}
+
+{% block wiki_crumbs %}
+  <li><a href="{{ scope.isFrontPage ? path('wiki_front_page') : path(scope.routes.read, scope.params) }}">{{ _title }}</a></li>
+  <li><a href="{{ path(scope.routes.history, scope.params) }}">{{ 'wiki.tab.history'|trans }}</a></li>
+  <li aria-current="page">{{ 'wiki.changes.eyebrow'|trans }}</li>
+{% endblock %}
+
+{% block wiki %}
+  {% include 'wiki/_head.html.twig' with {title: _title, eyebrow: 'wiki.changes.eyebrow'|trans, tab: 'history'} %}
+  {% include 'wiki/_changes.html.twig' %}
+{% endblock %}

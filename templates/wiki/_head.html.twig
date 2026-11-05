@@ -1,0 +1,15 @@
+{#
+  A page's header: eyebrow, title, the meta line of the version shown and the tabs. Variables: scope, title,
+  eyebrow (optional), subtitle (optional), page and latest for the meta line (optional), members, tab (the active
+  one; none on a new page). A group's Wiki tab has none: the group's head is its head.
+#}
+{% import 'wiki/_macros.html.twig' as w %}
+<header class="c-wiki-head">
+  <div class="c-wiki-head__main">
+    {% if eyebrow ?? false %}<p class="c-wiki-head__eyebrow">{{ eyebrow }}</p>{% endif %}
+    <h1 class="c-wiki-head__title">{{ title }}</h1>
+    {% if subtitle ?? false %}<p class="c-wiki-head__subtitle">{{ subtitle }}</p>{% endif %}
+    {% if page ?? false %}{{ w.meta(page, latest, members) }}{% endif %}
+  </div>
+  {% if tab ?? false %}{{ w.tabs(scope, tab, latest) }}{% endif %}
+</header>

@@ -1,9 +1,16 @@
 {% extends 'group/layout.html.twig' %}
-{% import 'macros.twig' as macros %}
+{# Editing or starting a group's wiki page (GroupWikiController::edit, create) #}
+
+{% block title %}{{ 'groupwiki'|trans }} · {{ group.name }}{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('wiki') }}
+{% endblock javascripts %}
 
 {% block group_content %}
-    <h2 class="h4">{{ 'wiki.page.edit'|trans }}</h2>
-
-    {{ form(form) }}
-
+  <div class="c-wiki c-wiki--group">
+    <h2 class="u:sr-only">{{ (is_create ? 'wiki.group.new' : 'wiki.group.editing')|trans }}</h2>
+    {% include 'wiki/_editor.html.twig' %}
+  </div>
 {% endblock group_content %}

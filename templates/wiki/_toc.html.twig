@@ -1,0 +1,11 @@
+{# "On this page": the h2 and h3 of the page; the script marks the one read (wiki.js) #}
+{% if parsed.headings is not empty %}
+  <nav class="c-wiki-card c-wiki-box c-wiki-toc" aria-labelledby="c-wiki-toc-title" data-wiki-toc>
+    <p class="c-wiki-box__eyebrow" id="c-wiki-toc-title">{{ 'wiki.toc'|trans }}</p>
+    <ol>
+      {% for heading in parsed.headings %}
+        <li class="c-wiki-toc__item c-wiki-toc__item--{{ heading.level }}"><a href="#{{ heading.id }}">{{ heading.text }}</a></li>
+      {% endfor %}
+    </ol>
+  </nav>
+{% endif %}

@@ -1,27 +1,39 @@
 {% extends 'group/layout.html.twig' %}
-{% import 'macros.twig' as macros %}
+{#
+  A group's Wiki tab (GroupWikiController::show, showVersion): the page with its table of contents and links, or,
+  without a page yet, the invitation to start one. Variables: group, submenu, scope, page (null: no page yet); with
+  a page parsed, latest, is_old, members.
+#}
+{% set inline_notices = true %}
+
+{% block title %}{{ 'groupwiki'|trans }} · {{ group.name }}{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {{ encore_entry_script_tags('wiki') }}
+{% endblock javascripts %}
 
 {% block group_content %}
-
-    {% if wikipage %}
-        <div id="wiki" class="u:leading-24">{{ content|purify('wiki') }}</div>
-
-        <div class="row">
-            <div class="col-12 col-sm-6">
-                <a class="btn btn-primary mb-3" href="{{ url('group_wiki_page_edit', { 'id': group.id} ) }}">{{ 'wiki.page.edit' | trans }}</a>
-            </div>
-            <div class="col-12 col-sm-6 text-end">{{ 'version'| trans| capitalize }}: {{ wikipage.version }} -
-                {{ 'wiki.page.created.by.on'|trans({'by': wikipage.author, 'on': wikipage.created|date('U')|format_datetime('short', 'short')}) }}
-            </div>
+  <div class="c-wiki c-wiki--group">
+    {% include 'admin/massmail/_flash.html.twig' %}
+    {% if page %}
+      {# the group's head and tabs are the page's head; Read / Edit / History are in the sidebar #}
+      <h2 class="u:sr-only">{{ 'groupwiki'|trans }}</h2>
+      <div class="c-wiki-layout">
+        <div class="c-wiki-layout__main">
+          {% include 'wiki/_article.html.twig' %}
         </div>
-
-        <div class="u:flex u:justify-end u:my-8">
-            {{ pagerfanta( history, 'rounded_pagination', { 'routeName': 'wiki_page', 'pageParameter': '[version]', 'routeParams': {'pageTitle': title} }) }}
-        </div>
-
+        {% include 'wiki/_sidebar_read.html.twig' %}
+      </div>
     {% else %}
-        <div id="wiki">{{ 'group.wiki.no.wiki'|trans }}</div>
-        <a class="btn btn-primary mb-3 float-end" href="{{ url('group_wiki_page_create', { 'id': group.id}) }}">{{ 'wiki.page.create' | trans }}</a>
+      <div class="c-wiki-card c-wiki-empty">
+        <span class="c-wiki-empty__icon" aria-hidden="true"><i class="fas fa-book-open"></i></span>
+        <h2 class="c-wiki-empty__title">{{ 'wiki.group.empty.title'|trans }}</h2>
+        <p class="c-wiki-empty__text">{{ 'wiki.group.empty.text'|trans({group: group.name}) }}</p>
+        {% if scope.canEdit %}
+          <a class="c-wiki-btn c-wiki-btn--primary" href="{{ path(scope.routes.create, scope.params) }}"><i class="fas fa-plus" aria-hidden="true"></i>{{ 'wiki.group.empty.create'|trans }}</a>
+        {% endif %}
+      </div>
     {% endif %}
-
+  </div>
 {% endblock group_content %}

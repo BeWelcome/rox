@@ -1,0 +1,15 @@
+{% extends 'wiki/_layout.html.twig' %}
+{# The versions of a page of the main wiki (WikiController::showHistory) #}
+{% set _title = scope.isFrontPage ? 'wiki.start.page'|trans : scope.title %}
+
+{% block title %}{{ 'wiki.tab.history'|trans }} · {{ _title }}{% endblock %}
+
+{% block wiki_crumbs %}
+  <li><a href="{{ scope.isFrontPage ? path('wiki_front_page') : path(scope.routes.read, scope.params) }}">{{ _title }}</a></li>
+  <li aria-current="page">{{ 'wiki.tab.history'|trans }}</li>
+{% endblock %}
+
+{% block wiki %}
+  {% include 'wiki/_head.html.twig' with {title: _title, eyebrow: 'wiki.history.eyebrow'|trans, subtitle: 'wiki.history.subtitle'|trans({count: latest}), tab: 'history'} %}
+  {% include 'wiki/_history.html.twig' %}
+{% endblock %}

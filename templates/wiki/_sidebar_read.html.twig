@@ -1,0 +1,80 @@
+{#
+  The read view's sidebar: the search; the start page browses categories and the pages changed last, a page has
+  its table of contents and related pages, a group's page its table of contents and links.
+#}
+{% import 'wiki/_macros.html.twig' as w %}
+<aside class="c-wiki-layout__side">
+  {% if scope.isGroup %}{{ w.tabs(scope, 'read', latest, true) }}{% endif %}
+  {% include 'wiki/_search.html.twig' %}
+
+  {% if scope.isFrontPage %}
+    {% if categories is not empty %}
+      <section class="c-wiki-card c-wiki-box" aria-labelledby="c-wiki-browse">
+        <h2 class="c-wiki-box__title" id="c-wiki-browse">{{ 'wiki.browse'|trans }}</h2>
+        <ul class="c-wiki-rows">
+          {% for name, count in categories %}
+            <li><a class="c-wiki-category-row" href="{{ path('wiki_category', {name: name}) }}">
+              <span class="c-wiki-tile" aria-hidden="true"><i class="fas fa-tag"></i></span>
+              <span class="c-wiki-category-row__name">{{ name }}</span>
+              <span class="c-wiki-count">{{ count }}</span>
+            </a></li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+    {% if recently_changed is not empty %}
+      <section class="c-wiki-card c-wiki-box" aria-labelledby="c-wiki-changed">
+        <div class="c-wiki-box__head">
+          <h2 class="c-wiki-box__title" id="c-wiki-changed">{{ 'wiki.recently.changed'|trans }}</h2>
+          <a href="{{ path('wiki_recent') }}">{{ 'wiki.see.all'|trans }}</a>
+        </div>
+        <ul class="c-wiki-rows">
+          {% for edit in recently_changed %}
+            <li class="c-wiki-person-row">
+              {{ w.avatar(edit.author, members, 32) }}
+              <div>
+                <a class="c-wiki-person-row__title" href="{{ edit.url }}">{{ edit.pagename == 'WikiFrontPage' ? 'wiki.start.page'|trans : edit.title }}</a>
+                <p class="c-wiki-person-row__line">{{ edit.author }} · {{ w.date(edit.created) }}</p>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+  {% else %}
+    {% include 'wiki/_toc.html.twig' %}
+    {% if scope.isGroup %}
+      {% if parsed.links is not empty %}
+        <section class="c-wiki-card c-wiki-box" aria-labelledby="c-wiki-links">
+          <h2 class="c-wiki-box__title" id="c-wiki-links">{{ 'wiki.links'|trans }}</h2>
+          <ul class="c-wiki-rows">
+            {% for link in parsed.links %}
+              <li><a class="c-wiki-link-row{{ link.exists ? '' : ' is-missing' }}" href="{{ link.url }}">
+                <span class="c-wiki-tile c-wiki-tile--slate" aria-hidden="true"><i class="fas {{ link.kind == 'group' ? 'fa-users' : (link.kind == 'external' ? 'fa-arrow-up-right-from-square' : (link.kind == 'category' ? 'fa-tag' : 'fa-file-lines')) }}"></i></span>
+                <span>
+                  <span class="c-wiki-link-row__title">{{ link.label }}</span>
+                  <span class="c-wiki-link-row__line">{{ w.link_kind(link) }}</span>
+                </span>
+              </a></li>
+            {% endfor %}
+          </ul>
+        </section>
+      {% endif %}
+    {% elseif related is not empty %}
+      <section class="c-wiki-card c-wiki-box" aria-labelledby="c-wiki-related">
+        <h2 class="c-wiki-box__title" id="c-wiki-related">{{ 'wiki.related'|trans }}</h2>
+        <ul class="c-wiki-rows">
+          {% for page in related %}
+            <li><a class="c-wiki-link-row" href="{{ path('wiki_page', {pageTitle: page.pagename}) }}">
+              <span class="c-wiki-tile c-wiki-tile--slate" aria-hidden="true"><i class="fas fa-file-lines"></i></span>
+              <span>
+                <span class="c-wiki-link-row__title">{{ page.title }}</span>
+                <span class="c-wiki-link-row__line">{{ page.category ?? 'wiki.related.links'|trans }}</span>
+              </span>
+            </a></li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
+  {% endif %}
+</aside>

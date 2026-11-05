@@ -1,0 +1,28 @@
+{% extends 'wiki/_layout.html.twig' %}
+{#
+  A page of the main wiki, or the start page (WikiController::showWikiPage, showWikiFrontPage); an older version
+  with a notice. Variables: scope, page, parsed, latest, is_old, members; the start page categories and
+  recently_changed, a page related.
+#}
+{% set _title = scope.isFrontPage ? 'wiki.start.page'|trans : scope.title %}
+
+{% block title %}{{ _title }} · {{ 'wiki'|trans }}{% endblock %}
+
+{% block wiki_crumbs %}
+  {% if not scope.isFrontPage %}
+    {% if parsed.categories is not empty %}
+      <li><a href="{{ path('wiki_category', {name: parsed.categories|first}) }}">{{ parsed.categories|first }}</a></li>
+    {% endif %}
+    <li aria-current="page">{{ _title }}</li>
+  {% endif %}
+{% endblock %}
+
+{% block wiki %}
+  {% include 'wiki/_head.html.twig' with {title: _title, eyebrow: scope.isFrontPage ? 'wiki.eyebrow'|trans : null, tab: 'read'} %}
+  <div class="c-wiki-layout">
+    <div class="c-wiki-layout__main">
+      {% include 'wiki/_article.html.twig' %}
+    </div>
+    {% include 'wiki/_sidebar_read.html.twig' %}
+  </div>
+{% endblock %}

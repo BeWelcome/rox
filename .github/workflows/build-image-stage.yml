@@ -39,7 +39,6 @@ on:
       - 'public/**'
       - 'bin/**'
       - 'translations/**'
-      - 'Mike42/**'
       - '.env'
       - '.trivyignore'
       - '.github/workflows/build-image-stage.yml'

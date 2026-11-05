@@ -1,0 +1,19 @@
+{% extends 'wiki/_layout.html.twig' %}
+{# Editing or creating a page of the main wiki (WikiController::editWikiPage, createWikiPage) #}
+{% set _title = scope.isFrontPage ? 'wiki.start.page'|trans : scope.title %}
+
+{% block title %}{{ _title }} · {{ 'wiki'|trans }}{% endblock %}
+
+{% block wiki_crumbs %}
+  {% if is_create %}
+    <li aria-current="page">{{ 'wiki.new.page'|trans }}</li>
+  {% else %}
+    <li><a href="{{ scope.isFrontPage ? path('wiki_front_page') : path(scope.routes.read, scope.params) }}">{{ _title }}</a></li>
+    <li aria-current="page">{{ 'wiki.tab.edit'|trans }}</li>
+  {% endif %}
+{% endblock %}
+
+{% block wiki %}
+  {% include 'wiki/_head.html.twig' with {title: _title, eyebrow: (is_create ? 'wiki.create.eyebrow' : 'wiki.editing')|trans, tab: is_create ? null : 'edit'} %}
+  {% include 'wiki/_editor.html.twig' %}
+{% endblock %}

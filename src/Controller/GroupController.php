@@ -10,17 +10,13 @@ use App\Entity\Group;
 use App\Entity\GroupCategory;
 use App\Entity\GroupMembership;
 use App\Entity\Member;
-use App\Entity\Wiki;
 use App\Form\CustomDataClass\GroupRequest;
 use App\Form\GroupType;
 use App\Form\JoinGroupType;
-use App\Form\WikiCreateForm;
 use App\Logger\Logger;
 use App\Model\GroupModel;
-use App\Model\WikiModel;
 use App\Repository\GroupCategoryRepository;
 use App\Repository\GroupRepository;
-use App\Repository\WikiRepository;
 use App\Security\GroupVoter;
 use App\Utilities\GroupSubmenuTrait;
 use App\Utilities\MailLinkTrait;
@@ -31,8 +27,6 @@ use App\Utilities\UniqueFilenameTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
-use Pagerfanta\Adapter\ArrayAdapter;
-use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Exception\SignedUriException;
@@ -453,105 +447,6 @@ class GroupController extends AbstractController
 
         return new JsonResponse([
             'html' => $html,
-        ]);
-    }
-
-    #[Route(path: '/group/{id}/wiki', name: 'group_wiki_page')]
-    public function showGroupWikiPage(
-        Group $group,
-        WikiModel $wikiModel,
-        EntityManagerInterface $entityManager,
-    ): Response {
-        $member = $this->getUser();
-
-        $pageName = $wikiModel->getPageName('Group_' . $group->getName());
-
-        /** @var WikiRepository $wikiRepository */
-        $wikiRepository = $entityManager->getRepository(Wiki::class);
-
-        $wikiPage = $wikiRepository->getPageByName($pageName, 0);
-        $historyPagination = null;
-        if (null === $wikiPage) {
-            $output = null;
-        } else {
-            $output = $wikiModel->parseWikiMarkup($wikiPage->getContent());
-            // Create paginator for history
-            $history = $wikiModel->getHistory($wikiPage);
-
-            $adapter = new ArrayAdapter($history);
-            $historyPagination = new Pagerfanta($adapter);
-            $historyPagination->setMaxPerPage(1);
-            $historyPagination->setCurrentPage($historyPagination->getNbResults());
-        }
-
-        return $this->render('group/wiki.html.twig', [
-            'title' => 'Group ' . $group->getName(),
-            'submenu' => [
-                'active' => 'wiki',
-                'items' => $this->getSubmenuItems($member, $group),
-            ],
-            'group' => $group,
-            'content' => $output,
-            'wikipage' => $wikiPage,
-            'history' => $historyPagination,
-        ]);
-    }
-
-    /**
-     * @return RedirectResponse
-     */
-    #[Route(path: '/group/{id}/wiki/create', name: 'group_wiki_page_create')]
-    public function createGroupWikiPage(Group $group, WikiModel $wikiModel)
-    {
-        $pageName = $wikiModel->getPageName('Group_' . $group->getName());
-
-        /** @var Wiki $wikiPage */
-        $wikiPage = $wikiModel->getPage($pageName);
-
-        if (null === $wikiPage) {
-            $wikiModel->createWikiPage($pageName, '');
-        }
-
-        return $this->redirectToRoute('group_wiki_page_edit', ['id' => $group->getId()]);
-    }
-
-    /**
-     * @return Response
-     */
-    #[Route(path: '/group/{id}/wiki/edit', name: 'group_wiki_page_edit')]
-    public function editGroupWikiPage(Request $request, Group $group, WikiModel $wikiModel)
-    {
-        /** @var Member $member */
-        $member = $this->getUser();
-
-        $pageName = $wikiModel->getPageName('Group_' . $group->getName());
-
-        /** @var Wiki $wikiPage */
-        $wikiPage = $wikiModel->getPage($pageName);
-
-        if (null === $wikiPage) {
-            return $this->redirectToRoute('group_wiki_page_create');
-        }
-
-        $form = $this->createForm(WikiCreateForm::class, ['wiki_markup' => $wikiPage->getContent()]);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $wikiModel->addNewVersion($wikiPage, $data['wiki_markup']);
-            $this->addTranslatedFlash('notice', 'flash.wiki.updated');
-
-            return $this->redirectToRoute('group_wiki_page', ['id' => $group->getId()]);
-        }
-
-        return $this->render('group/wiki.edit.html.twig', [
-            'title' => $group->getName(),
-            'group' => $group,
-            'submenu' => [
-                'active' => 'wiki',
-                'items' => $this->getSubmenuItems($member, $group),
-            ],
-            'form' => $form->createView(),
         ]);
     }
 

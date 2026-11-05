@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+{#
+  The frame of the main wiki's pages: the breadcrumb (block wiki_crumbs, after "Wiki") with Start page and Recent
+  changes, then block wiki. A group's wiki is in the group's frame instead (group/wiki*.html.twig).
+#}
+{% set inline_notices = true %}
+
+{% block title %}{{ 'wiki'|trans }}{% endblock %}
+
+{% block javascripts %}
+  {{ encore_entry_script_tags('wiki') }}
+{% endblock javascripts %}
+
+{% block main %}
+  <main role="main" class="c-wiki">
+    <div class="c-wiki__page">
+      <div class="c-wiki-toolbar">
+        <nav class="c-wiki-crumbs" aria-label="{{ 'wiki.breadcrumb'|trans }}">
+          <ol>
+            <li><a href="{{ path('wiki_front_page') }}">{{ 'wiki'|trans }}</a></li>
+            {% block wiki_crumbs %}{% endblock %}
+          </ol>
+        </nav>
+        <div class="c-wiki-toolbar__links">
+          <a href="{{ path('wiki_front_page') }}"><i class="fas fa-house" aria-hidden="true"></i>{{ 'wiki.start.page'|trans }}</a>
+          <a href="{{ path('wiki_recent') }}"><i class="fas fa-clock-rotate-left" aria-hidden="true"></i>{{ 'wiki.recent'|trans }}</a>
+        </div>
+      </div>
+      {% include 'admin/massmail/_flash.html.twig' %}
+      {% block wiki %}{% endblock %}
+    </div>
+  </main>
+{% endblock %}

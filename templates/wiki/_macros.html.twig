@@ -1,0 +1,63 @@
+{#
+  Pieces of the wiki pages. members: the authors who are members (WikiModel::getMembers); only they get an avatar
+  and a profile link (old versions have authors who left, or the old wiki's "ewiki").
+#}
+
+{% macro avatar(username, members, size) %}
+  {% if members[username] is defined %}
+    <img class="c-wiki-avatar" src="{{ path('avatar', {username: username, size: size > 30 ? 96 : 48}) }}" alt="" width="{{ size }}" height="{{ size }}" loading="lazy">
+  {% else %}
+    <span class="c-wiki-avatar c-wiki-avatar--none" style="width: {{ size }}px; height: {{ size }}px" aria-hidden="true"><i class="fas fa-user"></i></span>
+  {% endif %}
+{% endmacro %}
+
+{% macro author(username, members) %}
+  {%- if members[username] is defined -%}
+    <a class="c-wiki-author" href="{{ path('members_profile', {username: username}) }}">{{ username }}</a>
+  {%- else -%}
+    <span class="c-wiki-author">{{ username }}</span>
+  {%- endif -%}
+{% endmacro %}
+
+{# 2 Nov 2026 #}
+{% macro date(timestamp) %}{{ timestamp|format_date(pattern='d MMM y') }}{% endmacro %}
+
+{# Read / Edit / History; the editor of a new page has none. block: as wide as the sidebar (a group's Wiki tab) #}
+{% macro tabs(scope, active, versions, block = false) %}
+  <nav class="c-wiki-tabs{{ block ? ' c-wiki-tabs--block' }}" aria-label="{{ 'wiki.tabs'|trans }}">
+    {% set _items = [{name: 'read', url: scope.isFrontPage ? path('wiki_front_page') : path(scope.routes.read, scope.params), label: 'wiki.tab.read'}] %}
+    {% if scope.canEdit %}{% set _items = _items|merge([{name: 'edit', url: path(scope.routes.edit, scope.params), label: 'wiki.tab.edit'}]) %}{% endif %}
+    {% set _items = _items|merge([{name: 'history', url: path(scope.routes.history, scope.params), label: 'wiki.tab.history'}]) %}
+    {% for item in _items %}
+      <a class="c-wiki-tabs__item{{ item.name == active ? ' is-active' }}" href="{{ item.url }}"{% if item.name == active %} aria-current="page"{% endif %}>
+        {{- item.label|trans -}}
+        {% if item.name == 'history' %}<span class="c-wiki-tabs__count">{{ versions }}</span>{% endif %}
+      </a>
+    {% endfor %}
+  </nav>
+{% endmacro %}
+
+{# "Edited by anna_k · 2 Nov 2026 · Version 6" (or "Version 3 of 6") #}
+{% macro meta(page, latest, members) %}
+  <p class="c-wiki-meta">
+    {{ _self.avatar(page.author, members, 24) }}
+    <span>{{ 'wiki.edited.by'|trans({username: _self.author(page.author, members)})|raw }}</span>
+    <span aria-hidden="true">·</span>
+    <span>{{ _self.date(page.created) }}</span>
+    <span aria-hidden="true">·</span>
+    <span>{{ page.version < latest ? 'wiki.version.of'|trans({version: page.version, latest: latest}) : 'wiki.version'|trans({version: page.version}) }}</span>
+  </p>
+{% endmacro %}
+
+{# a link's line in "Links on this page" #}
+{% macro link_kind(link) %}
+  {%- if link.kind == 'group' -%}
+    {{ (link.exists ? 'wiki.links.group' : 'wiki.links.group.missing')|trans }}
+  {%- elseif link.kind == 'external' -%}
+    {{ 'wiki.links.external'|trans({domain: link.domain}) }}
+  {%- elseif link.kind == 'category' -%}
+    {{ 'wiki.links.category'|trans }}
+  {%- else -%}
+    {{ (link.exists ? 'wiki.links.main' : 'wiki.links.main.missing')|trans }}
+  {%- endif -%}
+{% endmacro %}

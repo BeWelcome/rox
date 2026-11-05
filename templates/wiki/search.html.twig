@@ -1,0 +1,35 @@
+{% extends 'wiki/_layout.html.twig' %}
+{# The search's results without the script (WikiController::search). Variables: query, search (results, exact), create_url. #}
+
+{% block title %}{{ 'wiki.search.title'|trans }} · {{ 'wiki'|trans }}{% endblock %}
+
+{% block wiki_crumbs %}
+  <li aria-current="page">{{ 'wiki.search.title'|trans }}</li>
+{% endblock %}
+
+{% block wiki %}
+  {% include 'wiki/_head.html.twig' with {title: 'wiki.search.title'|trans} %}
+  <div class="c-wiki-layout">
+    <div class="c-wiki-layout__main">
+      {% if query != '' and search.results is empty %}
+        <p class="c-wiki-card c-wiki-empty-line">{{ 'wiki.search.none'|trans({query: query}) }}</p>
+      {% endif %}
+      {% if search.results is not empty %}
+        <ul class="c-wiki-card c-wiki-list">
+          {% for result in search.results %}
+            <li class="c-wiki-version">
+              <div class="c-wiki-version__main">
+                <a class="c-wiki-version__title" href="{{ result.url }}">{{ result.title ?: 'wiki.start.page'|trans }}</a>
+                <p class="c-wiki-version__line">{{ result.snippet }}</p>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+      {% if create_url %}
+        <p class="c-wiki-search-create"><a class="c-wiki-btn c-wiki-btn--soft" href="{{ create_url }}"><i class="fas fa-plus" aria-hidden="true"></i>{{ 'wiki.search.create'|trans({title: query}) }}</a></p>
+      {% endif %}
+    </div>
+    <aside class="c-wiki-layout__side">{% include 'wiki/_search.html.twig' %}</aside>
+  </div>
+{% endblock %}

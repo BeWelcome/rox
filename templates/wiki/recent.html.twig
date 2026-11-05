@@ -1,39 +1,44 @@
-{% extends 'base.html.twig' %}
+{% extends 'wiki/_layout.html.twig' %}
+{# The latest edits, grouped by day (WikiController::showRecentChanges). Variables: pager, members. #}
+{% import 'wiki/_macros.html.twig' as w %}
 
-{% block title %}
-    {{ 'wiki' | trans }}
+{% block title %}{{ 'wiki.recent'|trans }} · {{ 'wiki'|trans }}{% endblock %}
+
+{% block wiki_crumbs %}
+  <li aria-current="page">{{ 'wiki.recent'|trans }}</li>
 {% endblock %}
 
-{% block content %}
-
-    <h5><a href="{{ path('wiki_front_page') }}">Wiki</a></h5>
-    <h1>{{ 'wiki.recent' | trans | title }}</h1>
-
-    {% if pager.haveToPaginate %}
-        <div class="u:flex u:justify-end u:my-8">
-                {{ pagerfanta( pager, 'rounded_pagination') }}
-        </div>
+{% block wiki %}
+  {% include 'wiki/_head.html.twig' with {title: 'wiki.recent'|trans, subtitle: 'wiki.recent.subtitle'|trans} %}
+  {% set _day = null %}
+  {% for edit in pager.currentPageResults %}
+    {% set _editDay = edit.created|date('Y-m-d') %}
+    {% if _editDay != _day %}
+      {% if _day is not null %}</ol></section>{% endif %}
+      {% set _day = _editDay %}
+      <section class="c-wiki-day">
+        <h2 class="c-wiki-day__title">{{ edit.created|format_date(pattern='EEE d MMM y') }}</h2>
+        <ol class="c-wiki-card c-wiki-list">
     {% endif %}
-
-    <div class="row">
-        <div class="col-12 u:leading-24">
-        {% for recent in pager.currentPageResults %}
-            <p>
-                <a href="{{ path('wiki_page', { 'pageTitle': recent.pagename, 'version': recent.version }) }}">{{ recent.pagename }}</a>:
-                {{ 'version'| trans| capitalize }}: {{ recent.version }} - {{ 'wiki.page.created.by.on'|trans({
-                        'by': '<a href="' ~ path('members_profile', { 'username': recent.author}) ~ '">' ~ recent.author ~ '</a>',
-                        'on': recent.created|date('U')|format_datetime('short', 'short')
-                    })|raw
-                }}
-            </p>
-        {% endfor %}
+    <li class="c-wiki-version">
+      {{ w.avatar(edit.author, members, 44) }}
+      <div class="c-wiki-version__main">
+        <a class="c-wiki-version__title" href="{{ edit.url }}">
+          {%- if edit.group %}<i class="fas fa-users c-wiki-version__group" aria-hidden="true"></i>{{ 'wiki.recent.group'|trans({group: edit.group}) }}
+          {%- elseif edit.pagename == 'WikiFrontPage' %}{{ 'wiki.start.page'|trans }}
+          {%- else %}{{ edit.title }}{% endif -%}
+        </a>
+        <p class="c-wiki-version__line">{{ (edit.version > 1 ? 'wiki.recent.version' : 'wiki.recent.created')|trans({version: edit.version, username: w.author(edit.author, members), time: edit.created|format_time(pattern='HH:mm')})|raw }}</p>
+      </div>
+      {% if edit.changes %}
+        <div class="c-wiki-version__actions">
+          <a class="c-wiki-btn c-wiki-btn--soft c-wiki-btn--small" href="{{ edit.changes }}"><i class="fas fa-code-compare" aria-hidden="true"></i>{{ 'wiki.history.changes'|trans }}</a>
         </div>
-    </div>
-
-    {% if pager.haveToPaginate %}
-        <div class="u:flex u:justify-end u:my-8">
-                {{ pagerfanta( pager, 'rounded_pagination') }}
-        </div>
-    {% endif %}
-
-{% endblock content %}
+      {% endif %}
+    </li>
+    {% if loop.last %}</ol></section>{% endif %}
+  {% endfor %}
+  {% if pager.haveToPaginate %}
+    <nav class="c-wiki-pager" aria-label="{{ 'wiki.recent'|trans }}">{{ pagerfanta(pager, 'rox_default', {routeName: 'wiki_recent'}) }}</nav>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,28 @@
+{# What a version changed, line by line. Variables: scope, changes (old, new, diff), latest. #}
+{% import 'wiki/_macros.html.twig' as w %}
+{% set _new = changes.new %}
+<section class="c-wiki-card c-wiki-diff">
+  <header class="c-wiki-diff__head">
+    <div>
+      <p class="c-wiki-diff__label">{{ 'wiki.changes.label'|trans({old: changes.old.version, new: _new.version}) }}</p>
+      <p class="c-wiki-diff__by">{{ _new.author }} · {{ _new.created|format_datetime(pattern='d MMM y, HH:mm') }}</p>
+    </div>
+    <div class="c-wiki-diff__counts">
+      <span class="c-wiki-diff__count is-added">+{{ changes.diff.added }}</span>
+      <span class="c-wiki-diff__count is-removed">−{{ changes.diff.removed }}</span>
+    </div>
+    <nav class="c-wiki-diff__nav">
+      {% if _new.version > 2 %}<a href="{{ path(scope.routes.changes, scope.params|merge({version: _new.version - 1})) }}"><span aria-hidden="true">←</span> {{ 'wiki.changes.older'|trans }}</a>{% endif %}
+      {% if _new.version < latest %}<a href="{{ path(scope.routes.changes, scope.params|merge({version: _new.version + 1})) }}">{{ 'wiki.changes.newer'|trans }} <span aria-hidden="true">→</span></a>{% endif %}
+    </nav>
+  </header>
+  <div class="c-wiki-diff__lines">
+    {% for row in changes.diff.rows %}
+      {% if row.type == 'gap' %}
+        <div class="c-wiki-diff__gap">{{ 'wiki.changes.gap'|trans({count: row.count}) }}</div>
+      {% else %}
+        <div class="c-wiki-diff__line is-{{ row.type }}"><span class="c-wiki-diff__mark" aria-hidden="true">{{ row.type == 'added' ? '+' : (row.type == 'removed' ? '−' : '') }}</span><span class="u:sr-only">{{ row.type == 'added' ? 'wiki.changes.sr.added'|trans : (row.type == 'removed' ? 'wiki.changes.sr.removed'|trans : '') }}</span><code>{{ row.text }}</code></div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>

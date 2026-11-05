@@ -8,11 +8,13 @@ exercise_html_purifier:
                 Core.Encoding: 'UTF-8'
                 # full configuration reference: http://htmlpurifier.org/live/configdoc/plain.html
         # Wiki pages: the wiki markup's HTML without scripts, event handlers and the like; ids stay for the
-        # headings the table of contents links to
+        # headings the table of contents links to; links to other sites open in a new tab, without passing rank
         wiki:
             config:
                 Core.Encoding: 'UTF-8'
                 Attr.EnableID: true
+                HTML.TargetBlank: true
+                HTML.Nofollow: true
         # Plain text such as titles: no markup at all
         text:
             config:

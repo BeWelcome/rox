@@ -2,12 +2,15 @@
 
 namespace App\Tests\Twig;
 
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Twig\Environment;
 
 /**
- * The prepare_newsletter filter keeps the headings of a newsletter and drops what isn't allowed.
+ * The prepare_newsletter filter keeps the headings of a newsletter and drops what isn't allowed. It translates the
+ * alt text of images, so it needs the database's translations.
  */
+#[Group('integration')]
 final class PrepareNewsletterTest extends KernelTestCase
 {
     public function testHeadingsStayAndOtherTagsGo(): void

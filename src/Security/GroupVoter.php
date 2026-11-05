@@ -28,8 +28,10 @@ class GroupVoter extends Voter
     public const string GROUP_VIEW_FORUM = 'GROUP_VIEW_FORUM';
     public const string GROUP_ADMINISTER = 'GROUP_ADMINISTER';
     public const string EDIT_CATEGORIES = 'GROUP_EDIT_CATEGORIES';
+    /** create and edit the group's wiki page: its members and those who administer it; the agora has no wiki */
+    public const string EDIT_WIKI = 'GROUP_EDIT_WIKI';
 
-    private const array ATTRIBUTES = [self::GROUP_VIEW, self::GROUP_VIEW_FORUM, self::GROUP_ADMINISTER, self::EDIT_CATEGORIES];
+    private const array ATTRIBUTES = [self::GROUP_VIEW, self::GROUP_VIEW_FORUM, self::GROUP_ADMINISTER, self::EDIT_CATEGORIES, self::EDIT_WIKI];
 
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
@@ -57,6 +59,7 @@ class GroupVoter extends Voter
             self::GROUP_ADMINISTER, self::EDIT_CATEGORIES => $administers,
             self::GROUP_VIEW => $administers || Group::APPROVED === $group->getApproved(),
             self::GROUP_VIEW_FORUM => $administers || !$group->isMembersOnly() || $this->isMember($group, $member),
+            self::EDIT_WIKI => !$group->isBeWelcome() && ($administers || $this->isMember($group, $member)),
             default => false,
         };
     }

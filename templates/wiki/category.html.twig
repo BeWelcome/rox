@@ -1,0 +1,26 @@
+{% extends 'wiki/_layout.html.twig' %}
+{# The pages of a category (WikiController::showCategory). Variables: category, pages, members. #}
+{% import 'wiki/_macros.html.twig' as w %}
+
+{% block title %}{{ category }} · {{ 'wiki'|trans }}{% endblock %}
+
+{% block wiki_crumbs %}
+  <li aria-current="page">{{ category }}</li>
+{% endblock %}
+
+{% block wiki %}
+  {% include 'wiki/_head.html.twig' with {title: category, eyebrow: 'wiki.category.eyebrow'|trans, subtitle: 'wiki.category.count'|trans({count: pages|length})} %}
+  {% if pages is not empty %}
+    <ul class="c-wiki-card c-wiki-list">
+      {% for page in pages %}
+        <li class="c-wiki-version">
+          {{ w.avatar(page.author, members, 44) }}
+          <div class="c-wiki-version__main">
+            <a class="c-wiki-version__title" href="{{ path('wiki_page', {pageTitle: page.pagename}) }}">{{ page.title }}</a>
+            <p class="c-wiki-version__line">{{ page.excerpt }}</p>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endblock %}

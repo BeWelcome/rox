@@ -1,3 +1,307 @@
 wiki.help:
     - 'For formatting help check https://en.wikipedia.org/wiki/Wiki#Editing.'
     - Shown below the editing box of a wiki page.
+wiki.eyebrow:
+    - 'BeWelcome wiki'
+    - 'Wiki start page: the eyebrow above the title.'
+wiki.start.page:
+    - 'Start page'
+    - 'Wiki: the title of the wiki''s start page and the link to it.'
+wiki.breadcrumb:
+    - 'Breadcrumb'
+    - 'Wiki: label of the breadcrumb (for screen readers).'
+wiki.tabs:
+    - 'Page views'
+    - 'Wiki: label of the Read / Edit / History tabs (for screen readers).'
+wiki.tab.read:
+    - 'Read'
+    - 'Wiki page: the tab that shows the page.'
+wiki.tab.edit:
+    - 'Edit'
+    - 'Wiki page: the tab that opens the editor, and the breadcrumb of the editor.'
+wiki.tab.history:
+    - 'History'
+    - 'Wiki page: the tab with the versions of the page.'
+wiki.edited.by:
+    - 'Edited by {username}'
+    - 'Wiki page: who saved the version shown. Keep {username}.'
+wiki.version:
+    - 'Version {version}'
+    - 'Wiki page: the number of a version.'
+wiki.version.of:
+    - 'Version {version} of {latest}'
+    - 'Wiki page: an older version and how many there are.'
+wiki.old.version:
+    - 'You are looking at version {version} from {date}, edited by {username}.'
+    - 'Wiki page: the notice above an older version. Keep {version}, {date} and {username}.'
+wiki.old.current:
+    - 'Go to current version'
+    - 'Wiki page: the link from an older version to the newest.'
+wiki.categories:
+    - 'Categories'
+    - 'Wiki page: the label of the page''s categories, and the editor''s box of categories.'
+wiki.link.missing:
+    - 'Page doesn''t exist yet'
+    - 'Wiki page: the tooltip of a link to a page nobody wrote yet.'
+wiki.toc:
+    - 'On this page'
+    - 'Wiki page: the heading of the table of contents.'
+wiki.related:
+    - 'Related pages'
+    - 'Wiki page: pages in the same category or linking to the page.'
+wiki.related.links:
+    - 'Links to this page'
+    - 'Wiki page, related pages: why a page is listed.'
+wiki.links:
+    - 'Links on this page'
+    - 'Group wiki: the list of the page''s links.'
+wiki.links.main:
+    - 'Main wiki'
+    - 'Group wiki, links on this page: a link to a page of the main wiki.'
+wiki.links.main.missing:
+    - 'Main wiki · doesn''t exist yet'
+    - 'Group wiki, links on this page: a link to a page of the main wiki nobody wrote yet.'
+wiki.links.group:
+    - 'Group wiki'
+    - 'Group wiki, links on this page: a link to another group''s wiki.'
+wiki.links.group.missing:
+    - 'Group wiki · no page yet'
+    - 'Group wiki, links on this page: a link to a group without a wiki page.'
+wiki.links.external:
+    - 'External · {domain}'
+    - 'Group wiki, links on this page: a link to another site. Keep {domain}.'
+wiki.links.category:
+    - 'Category'
+    - 'Group wiki, links on this page: a link to a category of the main wiki.'
+wiki.browse:
+    - 'Browse by category'
+    - 'Wiki start page: the box with the categories.'
+wiki.recently.changed:
+    - 'Recently changed'
+    - 'Wiki start page: the box with the pages changed last.'
+wiki.see.all:
+    - 'See all'
+    - 'Wiki start page: the link to all recent changes.'
+wiki.search.placeholder:
+    - 'Search the wiki'
+    - 'Wiki: the placeholder of the search box.'
+wiki.search.title:
+    - 'Search'
+    - 'Wiki: the title of the search results.'
+wiki.search.none:
+    - 'No page matches “{query}”.'
+    - 'Wiki search: nothing found. Keep {query}.'
+wiki.search.create:
+    - 'Create page “{title}”'
+    - 'Wiki search: start a page with the title searched for. Keep {title}.'
+wiki.editing:
+    - 'Editing'
+    - 'Wiki editor: the eyebrow above the page''s title.'
+wiki.create.eyebrow:
+    - 'Create page'
+    - 'Wiki editor of a new page: the eyebrow above its title.'
+wiki.new.page:
+    - 'New page'
+    - 'Wiki editor of a new page: the breadcrumb.'
+wiki.create.notice:
+    - 'This page doesn''t exist yet. Write the first version below.'
+    - 'Wiki editor of a new page: the notice above it.'
+wiki.editor.mode:
+    - 'Editing mode'
+    - 'Wiki editor: label of the Visual / Wiki markup switch (for screen readers).'
+wiki.editor.tools:
+    - 'Formatting'
+    - 'Wiki editor: label of the formatting buttons (for screen readers).'
+wiki.editor.visual:
+    - 'Visual'
+    - 'Wiki editor: the mode that shows the page as it reads.'
+wiki.editor.markup:
+    - 'Wiki markup'
+    - 'Wiki editor: the mode with the wiki markup, and the heading of the markup cheat sheet.'
+wiki.editor.markup.only:
+    - 'This page uses markup the visual editor can''t keep, such as tables, templates or HTML, so it opens as wiki markup.'
+    - 'Wiki editor: why the visual mode is off for a page.'
+wiki.editor.bold:
+    - 'Bold'
+    - 'Wiki editor: formatting button.'
+wiki.editor.italic:
+    - 'Italic'
+    - 'Wiki editor: formatting button.'
+wiki.editor.h2:
+    - 'Heading'
+    - 'Wiki editor: formatting button (H2).'
+wiki.editor.h3:
+    - 'Subheading'
+    - 'Wiki editor: formatting button (H3).'
+wiki.editor.paragraph:
+    - 'Paragraph'
+    - 'Wiki editor: formatting button that turns a heading or list back into text.'
+wiki.editor.bullets:
+    - 'Bulleted list'
+    - 'Wiki editor: formatting button.'
+wiki.editor.numbers:
+    - 'Numbered list'
+    - 'Wiki editor: formatting button.'
+wiki.editor.link:
+    - 'Link to a wiki page'
+    - 'Wiki editor: formatting button.'
+wiki.editor.link.prompt:
+    - 'Name of the wiki page'
+    - 'Wiki editor: the question when adding a link to a wiki page.'
+wiki.editor.saved.as:
+    - 'Saved as version {version} under your name. Older versions stay in the history.'
+    - 'Wiki editor: the note next to the save button. Keep {version}.'
+wiki.editor.update:
+    - 'Update page'
+    - 'Wiki editor: the button that saves a page.'
+wiki.editor.create:
+    - 'Create page'
+    - 'Wiki editor: the button that saves a new page.'
+wiki.editor.categories.help:
+    - 'Pages are listed under each category on the start page.'
+    - 'Wiki editor: the help of the categories box.'
+wiki.editor.categories.add:
+    - 'Add a category and press Enter'
+    - 'Wiki editor: the placeholder of the category field.'
+wiki.editor.categories.remove:
+    - 'Remove {category}'
+    - 'Wiki editor: the button on a category (for screen readers). Keep {category}.'
+wiki.cheat.heading:
+    - 'Section heading'
+    - 'Wiki markup cheat sheet.'
+wiki.cheat.subheading:
+    - 'Subsection'
+    - 'Wiki markup cheat sheet.'
+wiki.cheat.link.text:
+    - 'Link with other text'
+    - 'Wiki markup cheat sheet.'
+wiki.cheat.external:
+    - 'External link'
+    - 'Wiki markup cheat sheet.'
+wiki.cheat.category:
+    - 'Add to a category'
+    - 'Wiki markup cheat sheet.'
+wiki.cheat.missing:
+    - 'Links to pages that don''t exist yet show with a dotted red underline. Clicking one lets you create it.'
+    - 'Wiki markup cheat sheet: the note below it.'
+wiki.conflict:
+    - 'Someone saved version {version} while you were editing. Your text is still here: check the history first, saving makes your text the next version.'
+    - 'Wiki editor: someone saved the page in the meantime. Keep {version}.'
+wiki.content.empty:
+    - 'Write something before saving.'
+    - 'Wiki editor: the page is empty.'
+    - 'validators'
+wiki.flash.updated:
+    - 'The page has been updated.'
+    - 'Wiki: after saving a page.'
+wiki.flash.created:
+    - 'The page has been created.'
+    - 'Wiki: after saving a new page.'
+wiki.history.eyebrow:
+    - 'Page history'
+    - 'Wiki history: the eyebrow above the page''s title.'
+wiki.history.subtitle:
+    - '{count, plural, one {One version.} other {# versions.}} Every edit is kept, so nothing is lost.'
+    - 'Wiki history: the line under the title.'
+wiki.history.current:
+    - 'Current'
+    - 'Wiki history: the newest version.'
+wiki.history.new:
+    - 'New page'
+    - 'Wiki history: the first version, instead of the characters added.'
+wiki.history.view:
+    - 'View'
+    - 'Wiki history: the button that shows a version.'
+wiki.history.changes:
+    - 'Changes'
+    - 'Wiki history and recent changes: the button that shows what a version changed.'
+wiki.changes.eyebrow:
+    - 'Changes'
+    - 'Wiki changes: the eyebrow above the page''s title and the breadcrumb.'
+wiki.changes.label:
+    - 'Version {old} → {new}'
+    - 'Wiki changes: the versions compared.'
+wiki.changes.older:
+    - 'Older edit'
+    - 'Wiki changes: the link to the changes of the version before.'
+wiki.changes.newer:
+    - 'Newer edit'
+    - 'Wiki changes: the link to the changes of the next version.'
+wiki.changes.gap:
+    - '{count, plural, one {One unchanged line} other {# unchanged lines}}'
+    - 'Wiki changes: lines left out.'
+wiki.changes.sr.added:
+    - 'Added:'
+    - 'Wiki changes: before an added line (for screen readers).'
+wiki.changes.sr.removed:
+    - 'Removed:'
+    - 'Wiki changes: before a removed line (for screen readers).'
+wiki.recent.subtitle:
+    - 'The latest edits across the wiki.'
+    - 'Wiki recent changes: the line under the title.'
+wiki.recent.version:
+    - 'Version {version} by {username} at {time}'
+    - 'Wiki recent changes: an edit. Keep {version}, {username} and {time}.'
+wiki.recent.created:
+    - 'Created by {username} at {time}'
+    - 'Wiki recent changes: a new page. Keep {username} and {time}.'
+wiki.recent.group:
+    - '{group} group wiki'
+    - 'Wiki recent changes: an edit of a group''s wiki page. Keep {group}.'
+wiki.category.eyebrow:
+    - 'Category'
+    - 'Wiki category: the eyebrow above its name.'
+wiki.category.count:
+    - '{count, plural, =0 {No pages in this category.} one {One page in this category.} other {# pages in this category.}}'
+    - 'Wiki category: how many pages it has.'
+wiki.group.editing:
+    - 'Editing the wiki'
+    - 'Group wiki: the title of the editor.'
+wiki.group.new:
+    - 'New wiki page'
+    - 'Group wiki: the title of the editor of a new page.'
+wiki.group.history:
+    - 'Wiki history'
+    - 'Group wiki: the title of the history.'
+wiki.group.changes:
+    - 'Wiki changes'
+    - 'Group wiki: the title of the changes of a version.'
+wiki.group.empty.title:
+    - 'No wiki page yet'
+    - 'Group wiki without a page: the title.'
+wiki.group.empty.text:
+    - 'Members of {group} can start one: what the group is about, when you meet and links to useful pages.'
+    - 'Group wiki without a page: the text. Keep {group}.'
+wiki.group.empty.create:
+    - 'Create the wiki page'
+    - 'Group wiki without a page: the button.'
+wiki.editor.markup.only.at:
+    - 'This page uses markup the visual editor can''t keep ({what}, line {line}), so it opens as wiki markup.'
+    - 'Wiki editor: why the visual mode is off for a page. {what} is one of the wiki.editor.blocker texts. Keep {what} and {line}.'
+wiki.editor.blocker.template:
+    - 'a template'
+    - 'Wiki editor: what the visual mode can''t keep ({{…}}), in wiki.editor.markup.only.at.'
+wiki.editor.blocker.table:
+    - 'a table'
+    - 'Wiki editor: what the visual mode can''t keep ({| … |}), in wiki.editor.markup.only.at.'
+wiki.editor.blocker.html:
+    - 'HTML'
+    - 'Wiki editor: what the visual mode can''t keep (HTML tags or comments), in wiki.editor.markup.only.at.'
+wiki.editor.blocker.magic:
+    - 'a magic word'
+    - 'Wiki editor: what the visual mode can''t keep (__TOC__ and the like), in wiki.editor.markup.only.at.'
+wiki.editor.blocker.redirect:
+    - 'a redirect'
+    - 'Wiki editor: what the visual mode can''t keep (#REDIRECT), in wiki.editor.markup.only.at.'
+wiki.editor.blocker.preformatted:
+    - 'a line starting with a space'
+    - 'Wiki editor: what the visual mode can''t keep (preformatted text), in wiki.editor.markup.only.at.'
+wiki.editor.blocker.nested:
+    - 'a nested list'
+    - 'Wiki editor: what the visual mode can''t keep (** or :: and the like), in wiki.editor.markup.only.at.'
+wiki.editor.blocker.heading:
+    - 'a fifth-level heading'
+    - 'Wiki editor: what the visual mode can''t keep (===== heading =====), in wiki.editor.markup.only.at.'
+wiki.editor.blocker.image:
+    - 'an image'
+    - 'Wiki editor: what the visual mode can''t keep ([[Image:…]]), in wiki.editor.markup.only.at.'

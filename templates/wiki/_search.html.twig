@@ -1,0 +1,11 @@
+{# The search box; the script (wiki.js) shows suggestions as one types, without it the form opens the results. #}
+<form class="c-wiki-search" action="{{ path('wiki_search') }}" method="get" role="search" data-wiki-search="{{ path('wiki_search_suggest') }}">
+  <label class="u:sr-only" for="c-wiki-search-input">{{ 'wiki.search.placeholder'|trans }}</label>
+  <div class="c-wiki-search__field">
+    <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+    <input id="c-wiki-search-input" type="search" name="q" value="{{ query ?? '' }}" placeholder="{{ 'wiki.search.placeholder'|trans }}" autocomplete="off"
+           aria-autocomplete="list" aria-controls="c-wiki-search-results" aria-expanded="false"
+           data-none="{{ 'wiki.search.none'|trans({query: '__QUERY__'}) }}" data-create="{{ 'wiki.search.create'|trans({title: '__QUERY__'}) }}">
+  </div>
+  <div class="c-wiki-search__results" id="c-wiki-search-results" role="listbox" hidden></div>
+</form>

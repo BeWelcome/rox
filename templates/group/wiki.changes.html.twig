@@ -1,0 +1,15 @@
+{% extends 'group/layout.html.twig' %}
+{# What a version of a group's wiki page changed (GroupWikiController::changes) #}
+
+{% block title %}{{ 'wiki.group.changes'|trans }} · {{ group.name }}{% endblock %}
+
+{% block group_content %}
+  <div class="c-wiki c-wiki--group">
+    {% import 'wiki/_macros.html.twig' as w %}
+    <h2 class="u:sr-only">{{ 'wiki.group.changes'|trans }}</h2>
+    <div class="c-wiki-layout">
+      <div class="c-wiki-layout__main">{% include 'wiki/_changes.html.twig' %}</div>
+      <aside class="c-wiki-layout__side">{{ w.tabs(scope, 'history', latest, true) }}</aside>
+    </div>
+  </div>
+{% endblock group_content %}

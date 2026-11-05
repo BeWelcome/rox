@@ -115,7 +115,6 @@ COPY assets assets/
 COPY bin bin/
 COPY config config/
 COPY Migrations Migrations/
-COPY Mike42 Mike42/
 COPY public public/
 COPY src src/
 COPY templates templates/

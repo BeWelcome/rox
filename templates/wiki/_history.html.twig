@@ -1,0 +1,27 @@
+{# The versions of a page, newest first. Variables: scope, history, latest, members. #}
+{% import 'wiki/_macros.html.twig' as w %}
+<ol class="c-wiki-card c-wiki-list">
+  {% for version in history %}
+    <li class="c-wiki-version">
+      {{ w.avatar(version.author, members, 44) }}
+      <div class="c-wiki-version__main">
+        <p class="c-wiki-version__title">
+          {{ 'wiki.version'|trans({version: version.version}) }}
+          {% if version.version == latest %}<span class="c-tag c-tag--green">{{ 'wiki.history.current'|trans }}</span>{% endif %}
+        </p>
+        <p class="c-wiki-version__line">{{ w.author(version.author, members) }} · {{ version.created|format_datetime(pattern='d MMM y, HH:mm') }}</p>
+      </div>
+      {% if version.delta is null %}
+        <span class="c-wiki-delta">{{ 'wiki.history.new'|trans }}</span>
+      {% else %}
+        <span class="c-wiki-delta{{ version.delta > 0 ? ' is-added' : (version.delta < 0 ? ' is-removed' : '') }}">{{ version.delta > 0 ? '+' ~ version.delta : (version.delta < 0 ? '−' ~ (0 - version.delta) : '±0') }}</span>
+      {% endif %}
+      <div class="c-wiki-version__actions">
+        <a class="c-wiki-btn c-wiki-btn--outline c-wiki-btn--small" href="{{ path(scope.routes.version, scope.params|merge({version: version.version})) }}">{{ 'wiki.history.view'|trans }}</a>
+        {% if version.version > 1 %}
+          <a class="c-wiki-btn c-wiki-btn--soft c-wiki-btn--small" href="{{ path(scope.routes.changes, scope.params|merge({version: version.version})) }}"><i class="fas fa-code-compare" aria-hidden="true"></i>{{ 'wiki.history.changes'|trans }}</a>
+        {% endif %}
+      </div>
+    </li>
+  {% endfor %}
+</ol>

@@ -1,0 +1,30 @@
+{#
+  The page's card: an older version's notice, the text, the categories (main wiki); in a group's Wiki tab, which has
+  no head of its own, who edited it last. Variables: scope, page, parsed, latest, is_old, members.
+#}
+{% import 'wiki/_macros.html.twig' as w %}
+<article class="c-wiki-card c-wiki-article">
+  {% if is_old %}
+    <div class="c-wiki-notice">
+      <i class="fas fa-clock-rotate-left" aria-hidden="true"></i>
+      <p>
+        {{ 'wiki.old.version'|trans({version: page.version, date: w.date(page.created), username: w.author(page.author, members)})|raw }}
+        <a href="{{ scope.isFrontPage ? path('wiki_front_page') : path(scope.routes.read, scope.params) }}">{{ 'wiki.old.current'|trans }} <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+  {% endif %}
+  <div class="c-wiki-content" data-wiki-content>
+    {{ parsed.html|purify('wiki') }}
+  </div>
+  {% if parsed.categories is not empty and not scope.isGroup %}
+    <footer class="c-wiki-article__categories">
+      <span class="c-wiki-label">{{ 'wiki.categories'|trans }}</span>
+      {% for category in parsed.categories %}
+        <a class="c-tag c-tag--orange" href="{{ path('wiki_category', {name: category}) }}"><i class="fas fa-tag" aria-hidden="true"></i>{{ category }}</a>
+      {% endfor %}
+    </footer>
+  {% endif %}
+  {% if scope.isGroup %}
+    <footer class="c-wiki-article__meta">{{ w.meta(page, latest, members) }}</footer>
+  {% endif %}
+</article>

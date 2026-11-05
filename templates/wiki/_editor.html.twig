@@ -1,0 +1,92 @@
+{#
+  The editor (WikiPagesTrait::wikiEditPage). The form sends the markup; the visual mode (wiki.js) writes it before
+  sending, with the categories of the sidebar as [[Category:…]] lines. Pages with markup the visual mode can't keep
+  open as markup, with what blocks it (visual_blocker). Variables: scope, form, is_create, next_version,
+  visual_editable, visual_blocker, all_categories.
+#}
+{% import 'wiki/_macros.html.twig' as w %}
+{% set _cancel = is_create ? (scope.isGroup ? path(scope.routes.read, scope.params) : path('wiki_front_page')) : (scope.isFrontPage ? path('wiki_front_page') : path(scope.routes.read, scope.params)) %}
+{% set _tools = [
+  {cmd: 'bold', icon: 'fa-bold', label: 'wiki.editor.bold'},
+  {cmd: 'italic', icon: 'fa-italic', label: 'wiki.editor.italic'},
+  {cmd: 'h2', text: 'H2', label: 'wiki.editor.h2'},
+  {cmd: 'h3', text: 'H3', label: 'wiki.editor.h3'},
+  {cmd: 'paragraph', icon: 'fa-paragraph', label: 'wiki.editor.paragraph'},
+  {cmd: 'bullets', icon: 'fa-list-ul', label: 'wiki.editor.bullets'},
+  {cmd: 'numbers', icon: 'fa-list-ol', label: 'wiki.editor.numbers'},
+  {cmd: 'link', icon: 'fa-link', label: 'wiki.editor.link'},
+] %}
+{{ form_start(form, {attr: {class: 'c-wiki-layout c-wiki-editor', novalidate: 'novalidate', 'data-wiki-editor': visual_editable ? 'visual' : 'markup', 'data-link-prompt': 'wiki.editor.link.prompt'|trans}}) }}
+  <div class="c-wiki-layout__main">
+    {% if is_create %}
+      <div class="c-wiki-notice"><i class="fas fa-circle-info" aria-hidden="true"></i><p>{{ 'wiki.create.notice'|trans }}</p></div>
+    {% endif %}
+    {% for error in form.content.vars.errors %}
+      <div class="c-wiki-notice c-wiki-notice--error" role="alert"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i><p>{{ error.message }}</p></div>
+    {% endfor %}
+
+    <div class="c-wiki-card c-wiki-editor__card">
+      <div class="c-wiki-editor__bar">
+        <div class="c-wiki-segments" role="group" aria-label="{{ 'wiki.editor.mode'|trans }}" data-wiki-modes hidden>
+          <button type="button" class="c-wiki-segments__item" data-wiki-mode="visual"{% if not visual_editable %} disabled title="{{ 'wiki.editor.markup.only'|trans }}"{% endif %}>{{ 'wiki.editor.visual'|trans }}</button>
+          <button type="button" class="c-wiki-segments__item" data-wiki-mode="markup">{{ 'wiki.editor.markup'|trans }}</button>
+        </div>
+        <div class="c-wiki-editor__tools" role="toolbar" aria-label="{{ 'wiki.editor.tools'|trans }}" data-wiki-tools hidden>
+          {% for tool in _tools %}
+            <button type="button" class="c-wiki-tool" data-wiki-cmd="{{ tool.cmd }}" title="{{ tool.label|trans }}" aria-label="{{ tool.label|trans }}">
+              {%- if tool.icon is defined %}<i class="fas {{ tool.icon }}" aria-hidden="true"></i>{% else %}{{ tool.text }}{% endif -%}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+      {% if not visual_editable %}
+        <p class="c-wiki-editor__note"><i class="fas fa-circle-info" aria-hidden="true"></i>{{ 'wiki.editor.markup.only.at'|trans({what: ('wiki.editor.blocker.' ~ visual_blocker.what)|trans, line: visual_blocker.line}) }}</p>
+      {% endif %}
+      <div class="c-wiki-content c-wiki-editor__visual" contenteditable="true" role="textbox" aria-multiline="true" aria-label="{{ 'wiki.editor.visual'|trans }}" data-wiki-visual hidden></div>
+      {{ form_label(form.content, null, {label_attr: {class: 'u:sr-only'}}) }}
+      {{ form_widget(form.content, {attr: {class: 'c-wiki-editor__markup', rows: 22, spellcheck: 'true', 'data-wiki-markup': ''}}) }}
+      <div class="c-wiki-editor__foot">
+        <p class="c-wiki-editor__saved">{{ 'wiki.editor.saved.as'|trans({version: next_version}) }}</p>
+        <a class="c-wiki-btn c-wiki-btn--outline" href="{{ _cancel }}">{{ 'cancel'|trans }}</a>
+        <button type="submit" class="c-wiki-btn c-wiki-btn--primary">{{ (is_create ? 'wiki.editor.create' : 'wiki.editor.update')|trans }}</button>
+      </div>
+    </div>
+    {{ form_widget(form.version) }}
+  </div>
+
+  <aside class="c-wiki-layout__side">
+    {% if scope.isGroup and not is_create %}{{ w.tabs(scope, 'edit', latest, true) }}{% endif %}
+    {% if not scope.isGroup %}
+      <section class="c-wiki-card c-wiki-box c-wiki-categories" aria-labelledby="c-wiki-categories" data-wiki-categories hidden>
+        <h2 class="c-wiki-box__title" id="c-wiki-categories">{{ 'wiki.categories'|trans }}</h2>
+        <p class="c-wiki-box__help">{{ 'wiki.editor.categories.help'|trans }}</p>
+        <ul class="c-wiki-chips" data-wiki-chips data-remove="{{ 'wiki.editor.categories.remove'|trans({category: '__CATEGORY__'}) }}"></ul>
+        <label class="u:sr-only" for="c-wiki-category-input">{{ 'wiki.editor.categories.add'|trans }}</label>
+        <input class="c-wiki-input" id="c-wiki-category-input" type="text" list="c-wiki-category-list" placeholder="{{ 'wiki.editor.categories.add'|trans }}" data-wiki-category-input>
+        <datalist id="c-wiki-category-list">
+          {% for category in all_categories %}<option value="{{ category }}"></option>{% endfor %}
+        </datalist>
+      </section>
+    {% endif %}
+    <section class="c-wiki-card c-wiki-box" aria-labelledby="c-wiki-cheatsheet">
+      <h2 class="c-wiki-box__title" id="c-wiki-cheatsheet">{{ 'wiki.editor.markup'|trans }}</h2>
+      <dl class="c-wiki-cheats">
+        {% for markup, label in {
+          '== Heading ==': 'wiki.cheat.heading',
+          '=== Subheading ===': 'wiki.cheat.subheading',
+          "'''bold'''": 'wiki.editor.bold',
+          "''italic''": 'wiki.editor.italic',
+          '[[Page name]]': 'wiki.editor.link',
+          '[[Page name|text]]': 'wiki.cheat.link.text',
+          '[https://… text]': 'wiki.cheat.external',
+          '* item': 'wiki.editor.bullets',
+          '# item': 'wiki.editor.numbers',
+          '[[Category:Hosting]]': 'wiki.cheat.category',
+        } %}
+          <div><dt><code>{{ markup }}</code></dt><dd>{{ label|trans }}</dd></div>
+        {% endfor %}
+      </dl>
+      <p class="c-wiki-box__help">{{ 'wiki.cheat.missing'|trans }}</p>
+    </section>
+  </aside>
+{{ form_end(form) }}

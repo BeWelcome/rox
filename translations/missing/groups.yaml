@@ -386,3 +386,42 @@ admin.groups.rename:
 admin.groups.logs:
     - 'Logs'
     - Tab of the group admin team's pages, the log of the changes to groups
+group.admin.members.requests:
+    - 'Asking to join'
+    - 'Group member administration: the members who asked to join.'
+group.admin.members.accept:
+    - 'Accept'
+    - 'Group member administration: the button that lets a member in.'
+group.admin.members.members:
+    - 'Members'
+    - 'Group member administration: the group''s members.'
+group.admin.members.admin:
+    - 'Admin'
+    - 'Group member administration: a member who administers the group.'
+group.admin.members.make.admin:
+    - 'Make admin'
+    - 'Group member administration: the button that makes a member an admin of the group.'
+group.admin.members.remove:
+    - 'Remove'
+    - 'Group member administration: the button that takes a member out of the group.'
+group.admin.members.ban:
+    - 'Ban'
+    - 'Group member administration: the button that takes a member out and keeps them out.'
+group.admin.members.remove.hint:
+    - 'Removed members can join again; banned members can''t.'
+    - 'Group member administration: the difference between Remove and Ban.'
+group.admin.members.invite:
+    - 'Invite a member'
+    - 'Group member administration: the box to invite a member.'
+group.admin.members.invite.username:
+    - 'Username'
+    - 'Group member administration: the field of the member to invite.'
+group.admin.members.invite.hint:
+    - 'They get a message and join when they accept.'
+    - 'Group member administration: what inviting does.'
+group.admin.members.invited:
+    - 'Invited'
+    - 'Group member administration: the members invited who haven''t answered yet.'
+group.admin.members.withdraw:
+    - 'Withdraw'
+    - 'Group member administration: the button that takes an invitation back.'

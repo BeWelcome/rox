@@ -1,78 +1,116 @@
 {% extends 'group/layout.html.twig' %}
+{#
+  The member administration of a group's admins (GroupManagementController::memberAdministration): who asks to join
+  (accept, decline) and the members (make admin, remove, ban) next to inviting members and the open invitations.
+  Every action is a POST with its token; the ones that can't be undone ask first (confirm.js, data-confirm).
+#}
 
 {% macro action(route, group, member, token, label, class, confirm) %}
-    <form method="post" action="{{ path(route, {group_id: group.id, member_id: member.id}) }}" class="d-inline"
-          {% if confirm %}onsubmit="return confirm('{{ confirm|trans|e('js') }}')"{% endif %}>
+    <form method="post" action="{{ path(route, {group_id: group.id, member_id: member.id}) }}" class="p-gmembers__form">
         <input type="hidden" name="_token" value="{{ csrf_token('group-' ~ token ~ '-' ~ group.id ~ '-' ~ member.id) }}">
-        <button type="submit" class="btn btn-sm {{ class }}">{{ label|trans }}</button>
+        <button type="submit" class="p-group-btn {{ class }}"{% if confirm %} data-confirm="{{ confirm|trans }}" data-confirm-close="{{ 'cancel'|trans }}"{% endif %}>{{ label|trans }}</button>
     </form>
 {% endmacro %}
+
+{% macro person(member, note) %}
+    <img class="p-group-people__avatar" width="48" height="48" loading="lazy" alt="" src="{{ path('avatar', {username: member.username, size: 50}) }}">
+    <div class="p-group-people__text">
+        <a class="p-gmembers__name username" href="{{ path('members_profile', {username: member.username}) }}">{{ member.username }}</a>
+        {% if note|default('')|striptags|trim %}
+            <p class="p-group-people__comment">{{ note|purify|nl2br }}</p>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('member/autocomplete') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('member/autocomplete') }}
+{% endblock %}
 
 {% block group_content %}
     {% import 'macros/post_button.html.twig' as button %}
     {% import _self as admin %}
-    <h2 class="h4">{{ 'groupsadministratemembers'|trans }}</h2>
+    <h2 class="u:sr-only">{{ 'groupsadministratemembers'|trans }}</h2>
 
-    <h2 class="h4 mt-3">{{ 'groupsinvitemembers'|trans }}</h2>
-    <form method="post" action="{{ path('group_invite_member', {group_id: group.id}) }}" class="d-flex gap-2 mb-3">
-        <input type="hidden" name="_token" value="{{ csrf_token('group-invite-' ~ group.id) }}">
-        <input type="text" class="o-input" name="username" aria-label="{{ 'username'|trans }}" required>
-        <button type="submit" class="btn btn-primary">{{ 'groupsinvite'|trans }}</button>
-    </form>
+    <div class="p-gmembers">
+        <div class="p-gmembers__main">
+            {% if applicants is not empty %}
+                <section class="p-group-panel p-gmembers__requests" aria-labelledby="p-gmembers-requests">
+                    <h3 class="p-group-panel__title" id="p-gmembers-requests">{{ 'group.admin.members.requests'|trans }} <span class="p-group-panel__count">{{ applicants|length }}</span></h3>
+                    <ul class="p-gmembers__list">
+                        {% for membership in applicants %}
+                            <li class="p-gmembers__row">
+                                {{ admin.person(membership.member, membership.comment) }}
+                                <div class="p-gmembers__actions">
+                                    {{ admin.action('group_acceptmember', group, membership.member, 'accept', 'group.admin.members.accept', 'p-group-btn--primary', null) }}
+                                    {{ admin.action('group_declinemember', group, membership.member, 'decline', 'groupsdeclinemember', 'p-group-btn--danger', 'groupsconfirmmemberdecline') }}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
 
-    {% if applicants is not empty %}
-        <h2 class="h4 mt-3">{{ 'groupsacceptmember'|trans }}</h2>
-        <table class="table table-striped">
-            <tbody>
-                {% for membership in applicants %}
-                    <tr>
-                        <td><a href="{{ path('members_profile', {username: membership.member.username}) }}">{{ membership.member.username }}</a></td>
-                        <td><em>{{ membership.comment|purify }}</em></td>
-                        <td class="text-end">
-                            {{ admin.action('group_acceptmember', group, membership.member, 'accept', 'groupsacceptmember', 'btn-primary', null) }}
-                            {{ admin.action('group_declinemember', group, membership.member, 'decline', 'groupsdeclinemember', 'btn-outline-danger', 'groupsconfirmmemberdecline') }}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% endif %}
-
-    {% if invited is not empty %}
-        <h2 class="h4 mt-3">{{ 'groupsinvitedmembers'|trans }}</h2>
-        <ul>
-            {% for membership in invited %}
-                <li>
-                    <a href="{{ path('members_profile', {username: membership.member.username}) }}">{{ membership.member.username }}</a>
-                    {{ button.post_button(path('withdraw_member_invite_to_group', {groupId: group.id, memberId: membership.member.id}), 'group-withdraw-' ~ group.id ~ '-' ~ membership.member.id, 'groupswithdrawinvitation', 'btn btn-sm btn-outline-secondary') }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <h2 class="h4 mt-3">{{ 'groupscurrentmembers'|trans }}</h2>
-    <table class="table table-striped">
-        <tbody>
-            {% for membership in members %}
-                {% set member = membership.member %}
-                <tr>
-                    <td><a href="{{ path('members_profile', {username: member.username}) }}" class="username">{{ member.username }}</a></td>
-                    <td class="text-end">
-                        {% if member.id in administratorIds %}
-                            <span class="badge text-bg-secondary">{{ 'groupadmins'|trans }}</span>
-                        {% else %}
-                            {{ admin.action('group_addadmin', group, member, 'admin', 'groupsaddadmin', 'btn-outline-primary', 'groupsconfirmmemberasadmin') }}
-                            {{ admin.action('group_kickmember', group, member, 'kick', 'groupskickmember', 'btn-outline-danger', 'groupsconfirmmemberkick') }}
-                            {{ admin.action('group_banmember', group, member, 'ban', 'groupsbanmember', 'btn-danger', 'groupsconfirmmemberban') }}
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% if members.haveToPaginate %}
-        <div class="u:flex u:justify-end u:my-8">
-            {{ pagerfanta(members, 'rounded_pagination', {routeName: 'group_memberadministration_paged', routeParams: {group_id: group.id}, pageParameter: '[page_number]'}) }}
+            <section class="p-group-panel" aria-labelledby="p-gmembers-members">
+                <h3 class="p-group-panel__title" id="p-gmembers-members">{{ 'group.admin.members.members'|trans }} <span class="p-group-panel__count">{{ members.nbResults }}</span></h3>
+                <ul class="p-gmembers__list">
+                    {% for membership in members %}
+                        {% set member = membership.member %}
+                        <li class="p-gmembers__row">
+                            {{ admin.person(member, null) }}
+                            <div class="p-gmembers__actions">
+                                {% if member.id in administratorIds %}
+                                    <span class="c-group-chip p-gmembers__admin"><i class="fas fa-shield-halved" aria-hidden="true"></i>{{ 'group.admin.members.admin'|trans }}</span>
+                                {% else %}
+                                    {{ admin.action('group_addadmin', group, member, 'admin', 'group.admin.members.make.admin', '', 'groupsconfirmmemberasadmin') }}
+                                    {{ admin.action('group_kickmember', group, member, 'kick', 'group.admin.members.remove', 'p-group-btn--danger', 'groupsconfirmmemberkick') }}
+                                    {{ admin.action('group_banmember', group, member, 'ban', 'group.admin.members.ban', 'p-group-btn--danger-solid', 'groupsconfirmmemberban') }}
+                                {% endif %}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+                {% if members.haveToPaginate %}
+                    <div class="p-group-people__pages">
+                        {{ pagerfanta(members, 'rounded_pagination', {routeName: 'group_memberadministration_paged', routeParams: {group_id: group.id}, pageParameter: '[page_number]'}) }}
+                    </div>
+                {% endif %}
+                <p class="p-gmembers__hint">{{ 'group.admin.members.remove.hint'|trans }}</p>
+            </section>
         </div>
-    {% endif %}
+
+        <aside class="p-gmembers__side">
+            <section class="p-group-panel" aria-labelledby="p-gmembers-invite">
+                <h3 class="p-group-panel__title" id="p-gmembers-invite">{{ 'group.admin.members.invite'|trans }}</h3>
+                <form method="post" action="{{ path('group_invite_member', {group_id: group.id}) }}" class="p-gmembers__invite">
+                    <input type="hidden" name="_token" value="{{ csrf_token('group-invite-' ~ group.id) }}">
+                    <label class="u:sr-only" for="p-gmembers-username">{{ 'group.admin.members.invite.username'|trans }}</label>
+                    <input type="text" class="o-input member-autocomplete-start" id="p-gmembers-username" name="username" placeholder="{{ 'group.admin.members.invite.username'|trans }}" autocomplete="off" required>
+                    <button type="submit" class="p-group-btn p-group-btn--primary">{{ 'groupsinvite'|trans }}</button>
+                </form>
+                <p class="p-gmembers__hint">{{ 'group.admin.members.invite.hint'|trans }}</p>
+            </section>
+
+            {% if invited is not empty %}
+                <section class="p-group-panel" aria-labelledby="p-gmembers-invited">
+                    <h3 class="p-group-panel__title" id="p-gmembers-invited">{{ 'group.admin.members.invited'|trans }} <span class="p-group-panel__count">{{ invited|length }}</span></h3>
+                    <ul class="p-gmembers__list">
+                        {% for membership in invited %}
+                            <li class="p-gmembers__row p-gmembers__row--compact">
+                                {{ admin.person(membership.member, null) }}
+                                <div class="p-gmembers__actions">
+                                    {{ button.post_button(path('withdraw_member_invite_to_group', {groupId: group.id, memberId: membership.member.id}), 'group-withdraw-' ~ group.id ~ '-' ~ membership.member.id, 'group.admin.members.withdraw', 'p-group-btn') }}
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+        </aside>
+    </div>
 {% endblock %}

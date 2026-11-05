@@ -94,7 +94,39 @@ final class GroupManagementTest extends WebTestCase
         $this->client->loginUser($this->member('member-1'));
         $this->client->request('GET', $this->url('/memberadministration'));
         self::assertResponseIsSuccessful();
-        self::assertSelectorTextContains('table', 'member-2');
+        self::assertSelectorTextContains('.p-gmembers__list', 'member-2');
+    }
+
+    public function testTheAdministrationListsRequestsMembersAndInvitations(): void
+    {
+        $this->join($this->member('member-5'), $this->group, GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP);
+        $this->join($this->member('member-3'), $this->group, GroupMembershipStatusType::INVITED_INTO_GROUP);
+        $this->entityManager->clear();
+        $this->client->loginUser($this->member('member-1'));
+
+        $crawler = $this->client->request('GET', $this->url('/memberadministration'));
+
+        self::assertResponseIsSuccessful();
+        $request = $crawler->filter('.p-gmembers__requests .p-gmembers__row');
+        self::assertCount(1, $request);
+        self::assertSame('member-5', $request->filter('.p-gmembers__name')->text());
+        $applicant = $this->member('member-5')->getId();
+        self::assertCount(1, $request->filter('form[action$="/acceptmember/' . $applicant . '"]'));
+        // declining asks first, in the site's dialog
+        self::assertNotEmpty($request->filter('form[action$="/declinemember/' . $applicant . '"] button')->attr('data-confirm'));
+
+        $members = $crawler->filter('#p-gmembers-members')->closest('section')->filter('.p-gmembers__row');
+        $admin = $members->reduce(static fn ($row) => 'member-1' === $row->filter('.p-gmembers__name')->text());
+        self::assertCount(1, $admin->filter('.p-gmembers__admin'));
+        self::assertCount(0, $admin->filter('form'));
+        $member = $members->reduce(static fn ($row) => 'member-2' === $row->filter('.p-gmembers__name')->text());
+        self::assertSame(
+            ['/addAdmin/', '/kickmember/', '/banmember/'],
+            $member->filter('form')->each(static fn ($form) => preg_replace('~^.*(/[a-zA-Z]+/)\d+$~', '$1', (string) $form->attr('action'))),
+        );
+
+        self::assertSame('member-3', $crawler->filter('#p-gmembers-invited')->closest('section')->filter('.p-gmembers__name')->text());
+        self::assertCount(1, $crawler->filter('.p-gmembers__invite input.member-autocomplete-start[name="username"]'));
     }
 
     public function testAnAdminKicksBansAndPromotesMembers(): void

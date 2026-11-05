@@ -91,8 +91,23 @@ final class PageActionsTest extends WebTestCase
             ->setCreated(new DateTime())->setUpdated(new DateTime());
         $this->entityManager->persist($note);
         $this->entityManager->flush();
+        // the note's editor asks in the site's dialog (confirm.js) before deleting
+        $this->client->loginUser($member);
+        // (in the profile's side panel)
+        $crawler = $this->client->request('GET', '/members/member-3/note/edit?embed=1');
+        self::assertNotEmpty($crawler->filter('button[form="note-delete"]')->attr('data-confirm'));
+        self::assertNull($crawler->filter('button[form="note-delete"]')->attr('onclick'));
         $this->submit('/members/member-2/notes', '/members/member-3/note/delete');
         self::assertNull($this->entityManager->getRepository(ProfileNote::class)->findOneBy(['owner' => $member]));
+    }
+
+    public function testDeletingTheProfileAsksInTheDialog(): void
+    {
+        $crawler = $this->client->request('GET', '/deleteprofile');
+
+        self::assertResponseIsSuccessful();
+        self::assertNotEmpty($crawler->filter('button#delete')->attr('data-confirm'));
+        self::assertNull($crawler->filter('button#delete')->attr('onclick'));
     }
 
     public function testTheAdminPagesPostTheirActionsWithTheToken(): void

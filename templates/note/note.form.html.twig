@@ -43,7 +43,7 @@
             {% set deleteText = 'profile.note.delete'|trans %}
             <button type="submit" form="note-delete" class="o-post-link__button p-note-form__delete"
                title="{{ deleteText }}" aria-label="{{ deleteText }}"
-               onclick="return confirm({{ 'profile.notes.delete'|trans|striptags|json_encode|e('html_attr') }});">
+               data-confirm="{{ 'profile.notes.delete'|trans|striptags }}" data-confirm-ok="{{ deleteText }}" data-confirm-close="{{ 'cancel'|trans }}">
                 <i class="fas fa-trash-alt" aria-hidden="true"></i>
             </button>
         {% endif %}

@@ -9,15 +9,6 @@
     {{ form_row(form.password) }}
     {{ form_row(form.feedback) }}
     {{ form_row(form.data_retention) }}
-    <button type="submit" id="delete" class="o-button" onclick="return confirmDelete();">{{ 'profile.delete'|trans }}</button>
+    <button type="submit" id="delete" class="o-button" data-confirm="{{ 'profile.delete.confirm'|trans }}" data-confirm-close="{{ 'cancel'|trans }}">{{ 'profile.delete'|trans }}</button>
     {{ form_end(form) }}
 {% endblock content %}
-
-{% block javascripts %}
-<script type="application/ecmascript">
-    {% set confirmText = 'profile.delete.confirm'|trans%}
-    function confirmDelete() {
-        return confirm("{{ confirmText }}");
-    }
-</script>
-{% endblock javascripts %}

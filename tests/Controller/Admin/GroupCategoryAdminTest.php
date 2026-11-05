@@ -84,6 +84,9 @@ final class GroupCategoryAdminTest extends WebTestCase
         $id = $category->getId();
 
         $crawler = $client->request('GET', '/admin/groups/categories/' . $id);
+        // asks first in the site's dialog (confirm.js), not the browser's
+        self::assertNotEmpty($crawler->filter('form[action$="/delete"] button')->attr('data-confirm'));
+        self::assertNull($crawler->filter('form[action$="/delete"]')->attr('onsubmit'));
         $client->submit($crawler->filter('form[action$="/delete"]')->form());
 
         self::assertResponseRedirects('/admin/groups/categories');

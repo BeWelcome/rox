@@ -19,7 +19,7 @@
       <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\FriendshipController::TOKEN')) }}">
       {% for action, button in buttons %}
         <button type="submit" name="friendship" value="{{ action }}" class="o-button o-button--s {{ button.class }}"
-          {% if button.confirm is defined %}onclick="return confirm('{{ button.confirm|trans({username: other.username})|e('js') }}')"{% endif %}>
+          {% if button.confirm is defined %}data-confirm="{{ button.confirm|trans({username: other.username}) }}" data-confirm-close="{{ 'cancel'|trans }}"{% endif %}>
           {{ button.label|trans }}
         </button>
       {% endfor %}

@@ -15,10 +15,9 @@
     <div class="p-gadmin__title-row">
         <a class="p-forum-new__back" href="{{ path('admin_groups_categories') }}"><i class="fas fa-chevron-left" aria-hidden="true"></i> {{ 'admin.groups.categories'|trans }}</a>
         <h2 class="p-gadmin__category"><span class="c-group-icon"><i class="fas fa-{{ category.icon }}" aria-hidden="true"></i></span> {{ _name }}</h2>
-        <form method="post" action="{{ path('admin_groups_category_delete', {id: category.id}) }}"
-              onsubmit="return confirm('{{ 'admin.group.category.delete.confirm'|trans({name: _name, count: groupCount})|e('js') }}')">
+        <form method="post" action="{{ path('admin_groups_category_delete', {id: category.id}) }}">
             <input type="hidden" name="_token" value="{{ csrf_token('delete-group-category-' ~ category.id) }}">
-            <button type="submit" class="p-gadmin__delete"><i class="far fa-trash-can" aria-hidden="true"></i> {{ 'admin.group.category.delete'|trans }}</button>
+            <button type="submit" class="p-gadmin__delete" data-confirm="{{ 'admin.group.category.delete.confirm'|trans({name: _name, count: groupCount}) }}" data-confirm-ok="{{ 'admin.group.category.delete'|trans }}" data-confirm-close="{{ 'cancel'|trans }}"><i class="far fa-trash-can" aria-hidden="true"></i> {{ 'admin.group.category.delete'|trans }}</button>
         </form>
     </div>
 

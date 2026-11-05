@@ -202,7 +202,12 @@ class GroupManagementController extends AbstractController
 
         $username = trim((string) $request->request->get('username'));
         $member = '' === $username ? null : $this->entityManager->getRepository(Member::class)->findOneBy(['username' => $username]);
-        if (null !== $member && $this->groupModel->inviteMemberToGroup($group, $member, $this->getMember())) {
+        // the flash shows as HTML: the name as typed is escaped
+        $name = ['username' => htmlspecialchars($username)];
+        $refusal = null === $member ? 'group.invite.refused.unknown' : $this->groupModel->getInvitationRefusal($group, $member);
+        if (null !== $refusal) {
+            $this->addTranslatedFlash('error', $refusal, $name);
+        } elseif ($this->groupModel->inviteMemberToGroup($group, $member, $this->getMember())) {
             $this->addTranslatedFlash('notice', 'GroupsInvitedMember');
         } else {
             $this->addTranslatedFlash('error', 'groupscouldnotinvite');

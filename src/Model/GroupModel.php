@@ -14,6 +14,7 @@ use App\Entity\Privilege;
 use App\Entity\PrivilegeScope;
 use App\Entity\Role;
 use App\Form\CustomDataClass\GroupSettingsRequest;
+use App\Repository\GroupRepository;
 use App\Service\Mailer;
 use App\Utilities\BewelcomeAddressTrait;
 use Doctrine\DBAL\ArrayParameterType;
@@ -32,6 +33,24 @@ class GroupModel
         private readonly TranslatorInterface $translator,
         private readonly Mailer $mailer,
     ) {
+    }
+
+    /**
+     * Why the member can't be invited (a translation id with {username}), or null: a member has one membership per
+     * group, so those already in it, invited, asking to join or banned can't be.
+     */
+    public function getInvitationRefusal(Group $group, Member $member): ?string
+    {
+        /** @var GroupRepository $repository */
+        $repository = $this->entityManager->getRepository(Group::class);
+
+        return match ($repository->findMembershipStatus($group, $member)) {
+            null => null,
+            GroupMembershipStatusType::CURRENT_MEMBER => 'group.invite.refused.member',
+            GroupMembershipStatusType::INVITED_INTO_GROUP => 'group.invite.refused.invited',
+            GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP => 'group.invite.refused.applied',
+            default => 'group.invite.refused.banned',
+        };
     }
 
     public function inviteMemberToGroup(Group $group, Member $member, Member $admin): bool

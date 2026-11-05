@@ -1,11 +1,11 @@
 {#
   An action on a page as a POST form with a CSRF token (links are for mails only).
-  confirm: a translation id to ask before sending, if any.
+  confirm: a translation id to ask before sending, if any, in the site's dialog (confirm.js).
 #}
 {% macro post_button(url, tokenId, label, class = 'btn btn-sm btn-outline-primary', confirm = null) %}
-    <form method="post" action="{{ url }}" class="d-inline"{% if confirm %} onsubmit="return confirm('{{ confirm|trans|e('js') }}')"{% endif %}>
+    <form method="post" action="{{ url }}" class="d-inline">
         <input type="hidden" name="_token" value="{{ csrf_token(tokenId) }}">
-        <button type="submit" class="{{ class }}">{{ label|trans }}</button>
+        <button type="submit" class="{{ class }}"{% if confirm %} data-confirm="{{ confirm|trans }}" data-confirm-close="{{ 'cancel'|trans }}"{% endif %}>{{ label|trans }}</button>
     </form>
 {% endmacro %}
 

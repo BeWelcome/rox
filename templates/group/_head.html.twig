@@ -61,10 +61,9 @@
                 {% endfor %}
                 {% if _resign %}
                     <li>
-                        <form method="post" action="{{ path('group_resignadmin', {group_id: group.id}) }}"
-                              onsubmit="return confirm('{{ 'groupsconfirmresignasadmin'|trans|e('js') }}')">
+                        <form method="post" action="{{ path('group_resignadmin', {group_id: group.id}) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('group-resign-' ~ group.id) }}">
-                            <button type="submit" class="dropdown-item p-hero__dropdown-item"><i class="fas fa-fw fa-user-minus" aria-hidden="true"></i> {{ 'group.admin.resign'|trans }}</button>
+                            <button type="submit" class="dropdown-item p-hero__dropdown-item" data-confirm="{{ 'groupsconfirmresignasadmin'|trans }}" data-confirm-ok="{{ 'group.admin.resign'|trans }}" data-confirm-close="{{ 'cancel'|trans }}"><i class="fas fa-fw fa-user-minus" aria-hidden="true"></i> {{ 'group.admin.resign'|trans }}</button>
                         </form>
                     </li>
                 {% endif %}

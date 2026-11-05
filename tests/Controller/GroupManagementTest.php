@@ -214,6 +214,9 @@ final class GroupManagementTest extends WebTestCase
         $this->client->loginUser($this->member('member-1'));
 
         $crawler = $this->client->request('GET', $this->url(''));
+        // asks first in the site's dialog (confirm.js), not the browser's
+        self::assertNotEmpty($crawler->filter('form[action$="/resignAdmin"] button')->attr('data-confirm'));
+        self::assertNull($crawler->filter('form[action$="/resignAdmin"]')->attr('onsubmit'));
         $this->client->submit($crawler->filter('form[action$="/resignAdmin"]')->form());
 
         self::assertResponseRedirects($this->url(''));

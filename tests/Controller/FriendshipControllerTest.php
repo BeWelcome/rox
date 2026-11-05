@@ -54,8 +54,11 @@ final class FriendshipControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/members/member-6/friends');
         self::assertStringContainsString('member-7', $this->friendsList($crawler));
 
-        // and either side can remove it
+        // and either side can remove it, after the site's dialog asked (confirm.js)
         $this->client->loginUser($this->member('member-6'));
+        $crawler = $this->client->request('GET', '/members/member-6/friendships');
+        self::assertNotEmpty($crawler->filter('form[action$="/members/member-7/friendship/edit"] button[value="remove"]')->attr('data-confirm'));
+        self::assertNull($crawler->filter('form[action$="/members/member-7/friendship/edit"] button[value="remove"]')->attr('onclick'));
         $crawler = $this->client->request('GET', '/members/member-6/friendship/edit');
         self::assertResponseRedirects('/members/member-6');
         $crawler = $this->client->request('GET', '/members/member-7/friendship/edit');

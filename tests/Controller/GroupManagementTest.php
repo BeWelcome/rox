@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * What members and admins do with a group, now in src: member settings, leaving, member administration, admins,
@@ -154,6 +155,37 @@ final class GroupManagementTest extends WebTestCase
         self::assertCount(0, $crawler->filter('form[action$="/kickmember/' . $this->member('member-2')->getId() . '"]'));
         self::assertFalse($this->groupModel()->removeMember($this->group, $this->member('member-2'), false));
         self::assertNotNull($this->membership('member-2'));
+    }
+
+    public function testOnlyMembersWithoutAMembershipAreInvited(): void
+    {
+        $this->join($this->member('member-5'), $this->group, GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP);
+        $this->join($this->member('member-3'), $this->group, GroupMembershipStatusType::INVITED_INTO_GROUP);
+        $this->join($this->member('member-6'), $this->group, GroupMembershipStatusType::KICKED_FROM_GROUP);
+        $this->entityManager->clear();
+        $this->client->loginUser($this->member('member-1'));
+
+        // the admin themselves, a member, invited, asking to join, banned, a name that isn't a member's
+        $refusals = [
+            'member-1' => 'group.invite.refused.member',
+            'member-2' => 'group.invite.refused.member',
+            'member-3' => 'group.invite.refused.invited',
+            'member-5' => 'group.invite.refused.applied',
+            'member-6' => 'group.invite.refused.banned',
+            '<b>nobody</b>' => 'group.invite.refused.unknown',
+        ];
+        foreach ($refusals as $username => $refusal) {
+            $crawler = $this->client->request('GET', $this->url('/memberadministration'));
+            $this->client->submit($crawler->filter('form[action$="/invite"]')->form(), ['username' => $username]);
+
+            self::assertResponseRedirects($this->url('/memberadministration'), null, $username);
+            $crawler = $this->client->followRedirect();
+            $expected = static::getContainer()->get(TranslatorInterface::class)->trans($refusal, ['username' => htmlspecialchars($username)]);
+            self::assertSame($expected, $crawler->filter('.bw-toast--error .bw-toast__body')->html(), $username);
+        }
+        // the memberships stay as they were
+        self::assertSame(GroupMembershipStatusType::APPLIED_FOR_MEMBERSHIP, $this->membership('member-5')->getStatus());
+        self::assertSame(GroupMembershipStatusType::KICKED_FROM_GROUP, $this->membership('member-6')->getStatus());
     }
 
     public function testActionsNeedTheirToken(): void

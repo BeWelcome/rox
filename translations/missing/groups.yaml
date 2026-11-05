@@ -13,6 +13,21 @@ group.invitation.accepted:
 group.invitation.declined:
     - 'Your invitation to join the group {group} has been declined'
     - Subject of the notification that a group invitation has been declined
+group.invite.refused.unknown:
+    - 'There is no member called {username}.'
+    - 'Group member administration: the username to invite doesn''t exist. Keep {username}.'
+group.invite.refused.member:
+    - '{username} is already a member of the group.'
+    - 'Group member administration: inviting a member (or yourself). Keep {username}.'
+group.invite.refused.invited:
+    - '{username} is already invited.'
+    - 'Group member administration: inviting a member twice. Keep {username}.'
+group.invite.refused.applied:
+    - '{username} already asked to join: accept them under Asking to join.'
+    - 'Group member administration: inviting a member who asked to join. Keep {username}.'
+group.invite.refused.banned:
+    - '{username} is banned from the group.'
+    - 'Group member administration: inviting a banned member. Keep {username}.'
 group.admin.approved:
     - 'Your request to join the {group} has been approved by {admin}.'
     - Text in the email notification if a request to join a group is accepted.

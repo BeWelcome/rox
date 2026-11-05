@@ -4,3 +4,33 @@ newsletter:
 newsletter.embedded.image:
     - 'Embedded image'
     - Alt text if someone can't see the image in their mail program
+newsletters.eyebrow:
+    - 'Community'
+    - 'Newsletter archive: the eyebrow above the page title.'
+newsletters.title:
+    - 'Newsletters'
+    - 'Newsletter archive: the page title.'
+newsletters.intro:
+    - 'Every newsletter we have sent to members, in all the languages our volunteers translated it into.'
+    - 'Newsletter archive: the text under the page title.'
+newsletters.count:
+    - '{count, plural, one {One newsletter since {year}} other {# newsletters since {year}}}'
+    - 'Newsletter archive: how many newsletters there are and the year of the first one. Keep {year}.'
+newsletters.languages:
+    - '{count, plural, =0 {no translations} one {1 language} other {# languages}}'
+    - 'Newsletter archive: in how many languages a newsletter can be read.'
+newsletter.back:
+    - 'All newsletters'
+    - 'Newsletter: the link back to the archive.'
+newsletter.reading:
+    - '{others, plural, =0 {Only available in {language}} one {You are reading the {language} version · also available in one other language} other {You are reading the {language} version · also available in # other languages}}'
+    - 'Newsletter: the language it is read in and how many others it has. Keep {language}.'
+newsletter.read.in:
+    - 'Read in'
+    - 'Newsletter: the heading of the box with the languages it can be read in.'
+newsletter.older:
+    - 'Older'
+    - 'Newsletter: the link to the newsletter sent before this one.'
+newsletter.newer:
+    - 'Newer'
+    - 'Newsletter: the link to the newsletter sent after this one.'

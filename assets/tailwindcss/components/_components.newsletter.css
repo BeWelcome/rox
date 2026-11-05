@@ -1,0 +1,60 @@
+/*
+ * The newsletter archive and a newsletter (templates/newsletter). Builds on the community news cards
+ * (main.c-cnews, .c-cnews-card, .c-cnews-article, .c-cnews__back, .c-cnews-empty) and .c-page-head__*.
+ */
+
+.c-newsletters__page { max-width: 1140px; margin: 0 auto; padding: 0 0.9375rem; }
+.c-newsletters__intro { max-width: 52ch; margin: 0.6rem 0 0; color: #475569; text-wrap: pretty; }
+.c-newsletters__count { margin: 0; color: #64748b; font-size: 0.875rem; }
+
+/* The archive */
+.c-newsletters__year { margin-bottom: 1.75rem; }
+.c-newsletters__year-title { margin: 0 0 0.75rem; color: #64748b; font-family: inherit; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.c-newsletters__list { display: flex; flex-direction: column; gap: 0.75rem; margin: 0; padding: 0; list-style: none; }
+.c-newsletter-card { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.1rem; padding: 1.25rem 1.5rem; }
+.c-newsletter-card__date { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 3.5rem; height: 3.5rem; border-radius: 0.9rem; background: #fdebdc; color: #c2410c; }
+.c-newsletter-card__day { font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.375rem; font-weight: 700; line-height: 1; }
+.c-newsletter-card__month { margin-top: 0.15rem; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.c-newsletter-card__main { min-width: 0; }
+.c-newsletter-card__title { margin: 0 0 0.25rem; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.25rem; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; }
+.c-newsletter-card__title a,
+.c-newsletter-card__title a:hover { color: #0f172a; text-decoration: none; transition: color 0.15s ease; }
+.c-newsletter-card__title a:hover { color: #c2410c; }
+.c-newsletter-card__meta { margin: 0 0 0.75rem; color: #64748b; font-size: 0.875rem; }
+.c-newsletters__pager { display: flex; justify-content: center; margin-top: 2rem; }
+
+/* Language pills */
+.c-newsletter-langs { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.c-newsletter-lang,
+.c-newsletter-lang:hover { display: inline-block; padding: 0.3rem 0.8rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #475569; font: 600 0.8125rem/1.3 "Noto Sans", sans-serif; text-decoration: none; transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease; }
+.c-newsletter-lang:hover { border-color: #cbd5e1; background: #f8fafc; }
+.c-newsletter-lang.is-active { border-color: #fdba74; background: #fff7ed; color: #c2410c; }
+
+/* Focus ring on pills and links */
+.c-newsletters a:focus-visible { outline: 0; border-radius: 0.25rem; box-shadow: 0 0 0 3px rgba(243, 112, 0, 0.2); }
+.c-newsletters .c-newsletter-lang:focus-visible { border-radius: 999px; }
+.c-newsletters .c-newsletter__nav:focus-visible { border-radius: 1.25rem; }
+
+/* A newsletter */
+.c-newsletter { display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-start; }
+.c-newsletter__article { flex: 999 1 30rem; min-width: 0; max-width: 100%; }
+.c-newsletter__eyebrow { margin-bottom: 0.5rem; }
+.c-newsletter__reading { margin: 0 0 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e2e8f0; color: #64748b; font-size: 0.875rem; }
+.c-newsletter__reading i { margin-right: 0.4rem; color: #ea7a2e; }
+.c-newsletter__aside { display: flex; flex: 1 1 280px; flex-direction: column; gap: 0.75rem; position: sticky; top: 88px; }
+.c-newsletter__box { padding: 1.25rem 1.5rem; }
+.c-newsletter__box-head { display: flex; align-items: center; justify-content: space-between; margin: 0 0 0.75rem; color: #64748b; font-family: inherit; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+.c-newsletter__box-count { min-width: 1.5rem; padding: 0.05rem 0.45rem; border-radius: 999px; background: #ea7a2e; color: #fff; font-size: 0.75rem; font-weight: 700; letter-spacing: 0; text-align: center; }
+.c-newsletter__nav,
+.c-newsletter__nav:hover { display: flex; flex-direction: column; gap: 0.2rem; padding: 1rem 1.25rem; text-decoration: none; transition: background 0.15s ease; }
+.c-newsletter__nav:hover { background: #fff7ed; }
+.c-newsletter__nav--newer { align-items: flex-end; text-align: right; }
+.c-newsletter__nav-label { color: #64748b; font-size: 0.8125rem; font-weight: 600; }
+.c-newsletter__nav--older .c-newsletter__nav-label i { margin-right: 0.4rem; }
+.c-newsletter__nav--newer .c-newsletter__nav-label i { margin-left: 0.4rem; }
+.c-newsletter__nav-title { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; }
+@media (max-width: 767.98px) {
+  .c-newsletter__aside { position: static; }
+}
+/* prepare_newsletter(true) sets images to 60% wide inline (the mass mail preview keeps that); full width here */
+.c-newsletter__article .c-cnews-article__body img { width: 100% !important; margin: 0 0 1.1rem !important; }

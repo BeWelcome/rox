@@ -10,6 +10,7 @@ use HTMLPurifier_HTML5Config;
 use HtmlTruncator\Truncator;
 use Override;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface;
@@ -37,6 +38,9 @@ class Extension extends AbstractExtension implements GlobalsInterface
         private readonly array $locales,
         private readonly string $publicDirectory,
         private readonly NativeLanguageNames $nativeLanguageNames,
+        // the purifier bundle's cache (config/packages/exercise_html_purifier.yaml); HTML Purifier's default is in vendor
+        #[Autowire('%kernel.cache_dir%/htmlpurifier')]
+        private readonly string $purifierCacheDirectory,
     ) {
     }
 
@@ -222,7 +226,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $config = HTMLPurifier_HTML5Config::createDefault();
         $config->set(
             'HTML.Allowed',
-            'p,b,a[href],br,hr,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,'
+            'p,h2,h3,b,a[href],br,hr,i,u,strong,em,ol,ul,li,dl,dt,dd,img[src|alt|width|height],blockquote,del,'
             . 'figure[class],figcaption'
         );
         $config->set('HTML.TargetBlank', true);
@@ -230,6 +234,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         $config->set('Core.Encoding', 'UTF-8');
         $config->set('AutoFormat.AutoParagraph', true);
         $config->set('AutoFormat.Linkify', true);
+        $config->set('Cache.SerializerPath', $this->purifierCacheDirectory);
 
         $purifier = new HTMLPurifier($config);
         $text = $purifier->purify($text);

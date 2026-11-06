@@ -2,8 +2,11 @@
 
 namespace App\Utilities;
 
+use App\Entity\Group;
+
 /**
- * The tabs of the group admin team's pages (approval, archival, unarchival, rename, categories, logs).
+ * The tabs of the group admin team's pages (approval, archival, unarchival, rename, categories, logs). Needs the
+ * controller's entityManager for the number of groups waiting for approval.
  */
 trait GroupAdminSubmenuTrait
 {
@@ -20,5 +23,19 @@ trait GroupAdminSubmenuTrait
             'categories' => ['key' => 'admin.groups.categories', 'url' => $this->generateUrl('admin_groups_categories'), 'icon' => 'folder'],
             'logs' => ['key' => 'admin.groups.logs', 'url' => $this->generateUrl('admin_groups_logs'), 'icon' => 'list'],
         ];
+    }
+
+    /**
+     * The tabs with the active one and their counts; the approval tab always shows how many groups wait.
+     *
+     * @param array<string, int> $counts
+     *
+     * @return array{items: array<string, array{key: string, url: string, icon: string}>, active: string, counts: array<string, int>}
+     */
+    private function getGroupAdminSubmenu(string $active, array $counts = []): array
+    {
+        $waiting = $this->entityManager->getRepository(Group::class)->count(['approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION]]);
+
+        return ['items' => $this->getSubMenuItems(), 'active' => $active, 'counts' => $counts + ['approval' => $waiting]];
     }
 }

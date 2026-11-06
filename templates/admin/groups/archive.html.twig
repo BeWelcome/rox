@@ -1,54 +1,53 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/groups/_layout.html.twig' %}
+
+{#
+  Archiving (archived false) or unarchiving groups (Admin\GroupController::showArchive): the approved groups by name,
+  a search by name, a row per group with its picture, members and age, and Archive or Unarchive (asks first).
+  Expects groups (pager), archived, search, member_counts and submenu.
+#}
+
+{% set _route = archived ? 'admin_groups_unarchival' : 'admin_groups_archival' %}
+
+{% block title %}{{ (archived ? 'admin.groups.unarchival' : 'admin.groups.archival')|trans }}{% endblock %}
 
 {% block content %}
-    {% if groups|length %}
-        {% if groups.haveToPaginate %}
-            <div class="pull-right">{{ pagerfanta( groups, 'twitter_bootstrap4_ajax_translated' ) }}</div>
-        {% endif %}
+    {% set _token = csrf_token(constant('App\\Controller\\Admin\\GroupController::TOKEN')) %}
+    <p class="p-gadmin__intro">{{ (archived ? 'admin.groups.unarchival.intro' : 'admin.groups.archival.intro')|trans }}</p>
 
-        <div class="table-responsive ">
-            <table class="table table-striped w-100">
-                <colgroup>
-                    <col style="width:20%">
-                    <col style="width:55%">
-                    <col style="width:15%">
-                    <col style="width:10%">
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th scope="col">{{ 'admin.group.info'|trans }}</th>
-                        <th scope="col" class="w-100">{{ 'admin.group.description'|trans }}</th>
-                        <th scope="col">{{ 'admin.group.creator'|trans }}</th>
-                        <th scope="col">{{ 'admin.group.actions'|trans }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for group in groups %}
-                        <tr>
-                            <td><p><strong><a href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.Name }}</a></strong><br>
-                                    <small>Created: {{ group.created|format_date }}</small></p>
-                            <td>{% for locale, description in group.descriptions %}
-                                     <small class="text-muted">{{ language_name(locale) }} ({{ locale }})</small><br>{{ description.content|purify }}
-                                {% endfor %}
-                                </td>
-                            <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username, 50) }}{% endif %}</td>
-                            <td class="text-center">
-                                {% if group.name starts with '[Archived] ' %}
-                                    <a href="{{ path('admin_groups_unarchive', { 'id': group.id }) }}"><i class="fas fa-fw fa-2x fa-box-open" title="{{ 'admin.groups.unarchive'|trans }}"></i></a><br>
-                                {% else %}
-                                    <a href="{{ path('admin_groups_archive', { 'id': group.id }) }}"><i class="fas fa-fw fa-2x fa-archive" title="{{ 'admin.groups.archive'|trans }}"></i></a><br>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% if groups.haveToPaginate %}
-            <div class="pull-right">{{ pagerfanta( groups, 'twitter_bootstrap4_ajax_translated' ) }}</div>
-        {% endif %}
-    {% else %}
-        {{ 'admin.group.no.group' | trans }}
+    <section class="p-group-panel p-gadmin__table">
+        <form class="p-gadmin__search" method="get" action="{{ path(_route) }}" role="search">
+            <i class="fas fa-magnifying-glass" aria-hidden="true"></i>
+            <input class="o-input" type="search" name="q" value="{{ search }}" placeholder="{{ 'admin.groups.search'|trans }}" aria-label="{{ 'admin.groups.search'|trans }}">
+            {% if search != '' %}<a class="c-cadmin__clear" href="{{ path(_route) }}"><i class="fas fa-xmark" aria-hidden="true"></i>{{ 'admin.groups.search.clear'|trans }}</a>{% endif %}
+            <span class="p-gadmin__count">{{ 'admin.groups.count'|trans({count: groups.nbResults}) }}</span>
+        </form>
+
+        {% for group in groups.currentPageResults %}
+            {% set _name = archived ? group.name|replace({'[Archived] ': ''}) : group.name %}
+            <div class="p-gadmin__group p-gadmin__archive-row">
+                <img width="40" height="40" alt="" loading="lazy" src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+                <div class="p-gadmin__group-text">
+                    <a href="{{ path('group_start', {group_id: group.id}) }}">{{ _name }}</a>
+                    <span>{{ 'group.list.members'|trans({count: member_counts[group.id] ?? 0}) }} · {{ 'admin.groups.created'|trans({date: group.created|format_date('medium')}) }}</span>
+                </div>
+                <form method="post" action="{{ path(archived ? 'admin_groups_unarchive' : 'admin_groups_archive', {id: group.id}) }}">
+                    <input type="hidden" name="_token" value="{{ _token }}">
+                    {% if archived %}
+                        <button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small"><i class="fas fa-box-open" aria-hidden="true"></i>{{ 'admin.groups.unarchive.button'|trans }}</button>
+                    {% else %}
+                        <button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small" data-confirm="{{ 'admin.groups.archive.confirm'|trans({name: _name}) }}" data-confirm-ok="{{ 'admin.groups.archive.button'|trans }}" data-confirm-close="{{ 'cancel'|trans }}"><i class="fas fa-box-archive" aria-hidden="true"></i>{{ 'admin.groups.archive.button'|trans }}</button>
+                    {% endif %}
+                </form>
+            </div>
+        {% else %}
+            <div class="c-cnews-empty">
+                <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas {{ archived ? 'fa-box-open' : 'fa-box-archive' }}"></i></span>
+                <p class="c-cnews-empty__title">{{ (search != '' ? 'admin.groups.search.none' : (archived ? 'admin.groups.unarchival.none' : 'admin.groups.archival.none'))|trans }}</p>
+            </div>
+        {% endfor %}
+    </section>
+
+    {% if groups.haveToPaginate %}
+        <nav class="c-cadmin__pager">{{ pagerfanta(groups, 'rox_default') }}</nav>
     {% endif %}
 {% endblock %}

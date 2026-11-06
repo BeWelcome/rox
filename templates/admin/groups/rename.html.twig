@@ -1,7 +1,21 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/groups/_layout.html.twig' %}
+
+{#
+  Renaming a group (Admin\GroupController::renameGroup): pick the group by its name (searchable), type the new name.
+  Expects form and submenu.
+#}
+
+{% block title %}{{ 'admin.groups.rename'|trans }}{% endblock %}
 
 {% block content %}
-    <h1>{{ 'admin.group.rename'|trans }}</h1>
-    {{ form(form) }}
+    <p class="p-gadmin__intro">{{ 'admin.groups.rename.intro'|trans }}</p>
+    <section class="p-group-panel p-gadmin-rename">
+        {{ form_start(form, {attr: {class: 'p-gadmin__add'}}) }}
+            {{ form_errors(form) }}
+            {{ form_row(form.group) }}
+            {{ form_row(form.new_name, {attr: {class: 'p-forum-new__input'}}) }}
+            {{ form_widget(form.submit, {attr: {class: 'c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small'}}) }}
+            {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </section>
 {% endblock %}

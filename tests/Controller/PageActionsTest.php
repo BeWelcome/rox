@@ -194,13 +194,17 @@ final class PageActionsTest extends WebTestCase
         self::assertCount(1, $crawler->filter('form button#delete'));
     }
 
-    public function testTheLegacySearchUrlsGoToTheSearch(): void
+    public function testTheOldSearchUrlGoesToTheSearch(): void
     {
         $this->client->loginUser($this->member('member-2'));
 
-        foreach (['/search', '/search/members/text', '/search/members/map/advanced'] as $url) {
+        $this->client->request('GET', '/search');
+        self::assertResponseRedirects('/search/locations', 301);
+
+        // the legacy member search and the map search are gone
+        foreach (['/search/members/text', '/search/members/map/advanced', '/search/map'] as $url) {
             $this->client->request('GET', $url);
-            self::assertResponseRedirects('/search/locations', 301, $url);
+            self::assertResponseStatusCodeSame(404, $url);
         }
     }
 

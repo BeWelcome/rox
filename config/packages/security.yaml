@@ -74,7 +74,6 @@ security:
         - { path: ^/rox/in, roles: PUBLIC_ACCESS }
         - { path: ^/search/locations/places, roles: PUBLIC_ACCESS }
         - { path: ^/search/locations/all, roles: PUBLIC_ACCESS }
-        - { path: ^/search/map, roles: PUBLIC_ACCESS }
         - { path: ^/volunteer, roles: PUBLIC_ACCESS }
         - { path: ^/communitynews, roles: PUBLIC_ACCESS }
         - { path: ^/members/avatar/, roles: PUBLIC_ACCESS }

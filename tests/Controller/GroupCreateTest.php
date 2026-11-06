@@ -110,8 +110,8 @@ class GroupCreateTest extends WebTestCase
         $this->client->request('GET', '/admin/groups/approval');
 
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('table', self::NAME);
-        $this->assertSelectorTextContains('table', 'For members who travel by bike.');
+        $this->assertSelectorTextContains('.p-gadmin-request', self::NAME);
+        $this->assertSelectorTextContains('.p-gadmin-request', 'For members who travel by bike.');
     }
 
     public function testAGroupNeedsAPicture(): void

@@ -1,0 +1,99 @@
+admin.groups.approval.intro:
+  - 'New groups wait here until the team decides. Approving one tells its creator; discuss it first if you are not sure.'
+  - 'Groups admin, approval: the text above the list.'
+admin.groups.approval.none:
+  - 'No groups waiting'
+  - 'Groups admin, approval: nothing to decide.'
+admin.groups.approval.none.text:
+  - 'New groups show up here as soon as a member creates one.'
+  - 'Groups admin, approval: nothing to decide.'
+admin.groups.in.discussion:
+  - 'In discussion'
+  - 'Groups admin, approval: the tag of a group the team discusses.'
+admin.groups.requested:
+  - 'created {date}'
+  - 'Groups admin, approval: when the group was created, after its creator.'
+admin.groups.type.public:
+  - 'Anyone can join'
+  - 'Groups admin, approval: how members join the group.'
+admin.groups.type.needacceptance:
+  - 'Admins approve members'
+  - 'Groups admin, approval: how members join the group.'
+admin.groups.type.needinvitation:
+  - 'Invitation only'
+  - 'Groups admin, approval: how members join the group.'
+admin.groups.approve:
+  - 'Approve'
+  - 'Groups admin, approval: approves the group and tells its creator.'
+admin.groups.discuss:
+  - 'Discuss'
+  - 'Groups admin, approval: moves the group to the discussion queue.'
+admin.groups.dismiss:
+  - 'Dismiss'
+  - 'Groups admin, approval: dismisses the group.'
+admin.groups.dismiss.confirm:
+  - 'Dismiss the group "{name}"? It will not be created.'
+  - 'Groups admin, approval: asks before dismissing a group.'
+admin.groups.archival.intro:
+  - 'Archiving a group keeps it and its posts but puts "[Archived]" before its name.'
+  - 'Groups admin, archival: the text above the list.'
+admin.groups.unarchival.intro:
+  - 'The archived groups. Unarchiving one takes "[Archived]" off its name again.'
+  - 'Groups admin, unarchival: the text above the list.'
+admin.groups.search:
+  - 'Search by name'
+  - 'Groups admin, archival: the search field.'
+admin.groups.search.clear:
+  - 'Clear'
+  - 'Groups admin, archival: removes the search.'
+admin.groups.search.none:
+  - 'No group with that name'
+  - 'Groups admin, archival: the search found nothing.'
+admin.groups.count:
+  - '{count, plural, =0 {No groups} one {One group} other {# groups}}'
+  - 'Groups admin, archival: how many groups the list has.'
+admin.groups.created:
+  - 'created {date}'
+  - 'Groups admin, archival: when the group was created.'
+admin.groups.archive.button:
+  - 'Archive'
+  - 'Groups admin, archival: archives the group.'
+admin.groups.archive.confirm:
+  - 'Archive the group "{name}"?'
+  - 'Groups admin, archival: asks before archiving a group.'
+admin.groups.unarchive.button:
+  - 'Unarchive'
+  - 'Groups admin, unarchival: unarchives the group.'
+admin.groups.archival.none:
+  - 'No groups to archive'
+  - 'Groups admin, archival: the list is empty.'
+admin.groups.unarchival.none:
+  - 'No archived groups'
+  - 'Groups admin, unarchival: the list is empty.'
+admin.groups.rename.intro:
+  - 'Pick the group by its current name and give it a new one. The change is written to the group logs.'
+  - 'Groups admin, rename: the text above the form.'
+admin.groups.rename.pick:
+  - 'Choose a group'
+  - 'Groups admin, rename: the empty choice of the group field.'
+admin.groups.rename.submit:
+  - 'Rename'
+  - 'Groups admin, rename: renames the group.'
+admin.group.old.name:
+  - 'Group'
+  - 'Groups admin, rename: the label of the group field.'
+admin.group.new.name:
+  - 'New name'
+  - 'Groups admin, rename: the label of the new name.'
+admin.group.not.found:
+  - 'No group found'
+  - 'Groups admin, rename: the group search found nothing.'
+admin.group.renamed:
+  - 'Renamed "{oldName}" to "{newName}".'
+  - 'Groups admin, rename: confirmation after renaming a group.'
+admin.groups.archived:
+  - 'Archived the group, now called "{name}".'
+  - 'Groups admin, archival: confirmation after archiving a group.'
+admin.groups.unarchived:
+  - 'Unarchived the group "{name}".'
+  - 'Groups admin, unarchival: confirmation after unarchiving a group.'

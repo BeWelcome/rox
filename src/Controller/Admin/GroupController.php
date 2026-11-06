@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Group;
 use App\Entity\Member;
 use App\Logger\Logger;
+use App\Repository\GroupRepository;
 use App\Service\Mailer;
 use App\Utilities\GroupAdminSubmenuTrait;
 use App\Utilities\ItemsPerPageTraits;
@@ -13,24 +14,25 @@ use App\Utilities\TranslatedFlashTrait;
 use App\Utilities\TranslatorTrait;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
-use Exception;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
+use Pagerfanta\Exception\OutOfRangeCurrentPageException;
 use Pagerfanta\Pagerfanta;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Http\Attribute\IsCsrfTokenValid;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Class GroupController.
+ * The group admin team's pages: the new groups waiting for approval (approve, discuss, dismiss), archiving and
+ * unarchiving a group (its name gets or loses "[Archived] ") and renaming one. Needs the Group right at level 10.
+ * The actions are POSTs with a CSRF token and go back to the page they came from.
  *
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
  */
@@ -42,374 +44,230 @@ class GroupController extends AbstractController
     use TranslatedFlashTrait;
     use TranslatorTrait;
 
-    public function __construct(private Mailer $mailer, private EntityManagerInterface $entityManager)
-    {
+    public const string TOKEN = 'admin-groups';
+
+    private const string ARCHIVED = '[Archived] ';
+    private const int NAME_LENGTH = 100;
+
+    public function __construct(
+        private readonly Mailer $mailer,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Logger $logger,
+    ) {
     }
 
     /**
-     * Allows to set a status for group creation requests.
-     *
-     * @throws AccessDeniedException
+     * The new groups waiting for a decision, the ones under discussion first; no paging, there are only a few.
      */
-    #[Route(path: '/admin/groups/approval', name: 'admin_groups_approval')]
+    #[Route(path: '/admin/groups/approval', name: 'admin_groups_approval', methods: ['GET'])]
     public function approveGroups(): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.1');
-        }
+        $this->denyUnlessGroupAdmin();
 
-        if (!$this->hasGroupRightLevel(10)) {
-            /** @var Member $admin */
-            $admin = $this->getUser();
-            $level = $admin->getLevelForRight(Member::ROLE_ADMIN_GROUP);
-            throw $this->createAccessDeniedException('You need to have level 10 to access this.' . $level);
-        }
-
-        // Fetch unapproved groups and decide on their fate
-        // no pagination as there shouldn't be too many
-        $groupsRepository = $this->entityManager->getRepository(Group::class);
-        $groups = $groupsRepository->findBy([
-            'approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION],
-        ]);
+        $groups = $this->getGroupRepository()->findBy(
+            ['approved' => [Group::NOT_APPROVED, Group::IN_DISCUSSION]],
+            ['approved' => 'DESC', 'created' => 'ASC'],
+        );
 
         return $this->render('admin/groups/approve.html.twig', [
             'groups' => $groups,
-            'submenu' => [
-                'items' => $this->getSubmenuItems(),
-                'active' => 'approval',
-            ],
+            'submenu' => $this->getGroupAdminSubmenu('approval'),
         ]);
     }
 
-    /**
-     * Allows to archive a group.
-     *
-     * @throws AccessDeniedException
-     */
-    #[Route(path: '/admin/groups/archival', name: 'admin_groups_archival')]
-    public function archiveGroups(#[MapQueryParameter] int $currentPage = 1): Response
+    #[Route(path: '/admin/groups/archival', name: 'admin_groups_archival', methods: ['GET'])]
+    public function archiveGroups(Request $request): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
+        return $this->showArchive($request, false);
+    }
 
-        if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
-        }
+    #[Route(path: '/admin/groups/unarchival', name: 'admin_groups_unarchival', methods: ['GET'])]
+    public function unarchiveGroups(Request $request): Response
+    {
+        return $this->showArchive($request, true);
+    }
 
-        // Build Pagerfanta for groups
-        $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('g')
-            ->from(Group::class, 'g')
-            ->where("g.name NOT LIKE '[Archived] %'")
-        ;
+    #[Route(path: '/admin/groups/{id}/discuss', name: 'admin_groups_discuss', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function discussGroup(Request $request, Group $group): RedirectResponse
+    {
+        return $this->decide($request, $group, Group::IN_DISCUSSION, 'flash.group.moved.discussion', 'moved into discussion');
+    }
 
-        /** @var Member $user */
-        $user = $this->getUser();
-        $maxPerPage = $this->getItemsPerPage($user);
-
-        $adapter = new QueryAdapter($queryBuilder);
-        $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage($maxPerPage);
-        $pagerfanta->setCurrentPage($currentPage);
-
-        return $this->render('admin/groups/archive.html.twig', [
-            'groups' => $pagerfanta,
-            'submenu' => [
-                'items' => $this->getSubmenuItems(),
-                'active' => 'archival',
-            ],
-        ]);
+    #[Route(path: '/admin/groups/{id}/dismiss', name: 'admin_groups_dismiss', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function dismissGroup(Request $request, Group $group): RedirectResponse
+    {
+        return $this->decide($request, $group, Group::DISMISSED, 'flash.group.dismissed', 'dismissed');
     }
 
     /**
-     * Allows to unarchive a group.
-     *
-     * @throws AccessDeniedException
+     * Approves the group and tells its creator.
      */
-    #[Route(path: '/admin/groups/unarchival', name: 'admin_groups_unarchival')]
-    public function unarchiveGroups(#[MapQueryParameter] int $currentPage = 1): Response
+    #[Route(path: '/admin/groups/{id}/approve', name: 'admin_groups_approve', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function approveGroup(Request $request, Group $group): RedirectResponse
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
+        $response = $this->decide($request, $group, Group::APPROVED, 'flash.group.approved', 'approved');
 
-        if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
-        }
-
-        // Build Pagerfanta for groups
-        $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('g')
-            ->from(Group::class, 'g')
-            ->where("g.name LIKE '[Archived] %'")
-        ;
-
-        /** @var Member $user */
-        $user = $this->getUser();
-        $maxPerPage = $this->getItemsPerPage($user);
-
-        $adapter = new QueryAdapter($queryBuilder);
-        $pagerfanta = new Pagerfanta($adapter);
-
-        $pagerfanta->setMaxPerPage($maxPerPage);
-        $pagerfanta->setCurrentPage($currentPage);
-
-        return $this->render('admin/groups/archive.html.twig', [
-            'groups' => $pagerfanta,
-            'submenu' => [
-                'items' => $this->getSubmenuItems(),
-                'active' => 'unarchival',
-            ],
-        ]);
-    }
-
-    /**
-     * Move a group creation requests to the discussion queue.
-     *
-     * @throws AccessDeniedException|Exception
-     */
-    #[Route(path: '/admin/groups/{id}/discuss', name: 'admin_groups_discuss')]
-    public function discussGroup(Request $request, Group $group, Logger $logger): RedirectResponse
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
-
-        if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
-        }
-
-        $group->setApproved(Group::IN_DISCUSSION);
-
-        $this->entityManager->persist($group);
-        $this->entityManager->flush();
-
-        $this->addTranslatedFlash('notice', 'flash.group.moved.discussion', [
-            '%name%' => $group->getName(),
-        ]);
-
-        /** @var Member $groupAdmin */
-        $groupAdmin = $this->getUser();
-        $logger->write(
-            "Group {$this->getGroupLinkTag($group)} moved into discussion by {$groupAdmin->getUsername()}.",
-            'Group'
-        );
-
-        return $this->redirectBack($request, 'admin_groups_approval');
-    }
-
-    /**
-     * Dismiss a group creation requests.
-     *
-     * @throws AccessDeniedException
-     */
-    #[Route(path: '/admin/groups/{id}/dismiss', name: 'admin_groups_dismiss')]
-    public function dismissGroup(Request $request, Group $group, Logger $logger): RedirectResponse
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
-
-        if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
-        }
-
-        $group->setApproved(Group::DISMISSED);
-
-        $this->entityManager->persist($group);
-        $this->entityManager->flush();
-
-        $this->addTranslatedFlash('notice', 'flash.group.dismissed', [
-            '%name%' => $group->getName(),
-        ]);
-
-        /** @var Member $groupAdmin */
-        $groupAdmin = $this->getUser();
-        $logger->write("Group {$this->getGroupLinkTag($group)} dismissed by {$groupAdmin->getUsername()}", 'Group');
-
-        return $this->redirectBack($request, 'admin_groups_approval');
-    }
-
-    /**
-     * Approve a group creation requests.
-     *
-     * @throws AccessDeniedException
-     */
-    #[Route(path: '/admin/groups/{id}/approve', name: 'admin_groups_approve')]
-    public function approveGroup(Request $request, Group $group, Logger $logger): RedirectResponse
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have the Group right to access this.');
-        }
-
-        if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
-        }
-
-        $group->setApproved(Group::APPROVED);
-
-        $this->entityManager->persist($group);
-        $this->entityManager->flush();
-
-        $this->addTranslatedFlash('notice', 'flash.group.approved', [
-            '%name%' => $group->getName(),
-        ]);
-
-        /** @var Member $groupAdmin */
-        $groupAdmin = $this->getUser();
-        $logger->write("Group {$this->getGroupLinkTag($group)} approved by {$groupAdmin->getUsername()}.", 'Group');
-
-        /** @var Member $creator */
         $creator = current($group->getMembers());
-        $this->sendNewGroupApprovedNotification($group, $creator);
+        if ($creator instanceof Member) {
+            $this->sendNewGroupApprovedNotification($group, $creator);
+        }
 
-        return $this->redirectBack($request, 'admin_groups_approval');
+        return $response;
+    }
+
+    #[Route(path: '/admin/groups/{id}/archive', name: 'admin_groups_archive', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function archiveGroup(Request $request, Group $group): RedirectResponse
+    {
+        $this->denyUnlessGroupAdmin();
+
+        if (!str_starts_with($group->getName(), self::ARCHIVED)) {
+            $group->setName(mb_substr(self::ARCHIVED . $group->getName(), 0, self::NAME_LENGTH));
+            $this->entityManager->flush();
+            $this->log($group, 'archived');
+        }
+        $this->addTranslatedFlash('notice', 'admin.groups.archived', ['name' => $group->getName()]);
+
+        return $this->redirectBack($request, 'admin_groups_archival');
+    }
+
+    #[Route(path: '/admin/groups/{id}/unarchive', name: 'admin_groups_unarchive', methods: ['POST'])]
+    #[IsCsrfTokenValid(self::TOKEN)]
+    public function unarchiveGroup(Request $request, Group $group): RedirectResponse
+    {
+        $this->denyUnlessGroupAdmin();
+
+        if (str_starts_with($group->getName(), self::ARCHIVED)) {
+            $group->setName(substr($group->getName(), \strlen(self::ARCHIVED)));
+            $this->entityManager->flush();
+            $this->log($group, 'un-archived');
+        }
+        $this->addTranslatedFlash('notice', 'admin.groups.unarchived', ['name' => $group->getName()]);
+
+        return $this->redirectBack($request, 'admin_groups_unarchival');
     }
 
     /**
-     * Archive a group .
-     *
-     * @throws AccessDeniedException
+     * Renames an approved group, picked by its current name.
      */
-    #[Route(path: '/admin/groups/{id}/archive', name: 'admin_groups_archive')]
-    public function archiveGroup(Request $request, Group $group, Logger $logger): RedirectResponse
+    #[Route(path: '/admin/groups/rename', name: 'admin_groups_rename', methods: ['GET', 'POST'])]
+    public function renameGroup(Request $request): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
-
-        if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
-        }
-
-        $group->setName('[Archived] ' . $group->getName());
-
-        $this->entityManager->persist($group);
-        $this->entityManager->flush();
-
-        $this->addTranslatedFlash('notice', 'flash.group.archived', [
-            '%name%' => $group->getName(),
-        ]);
-
-        /** @var Member $groupAdmin */
-        $groupAdmin = $this->getUser();
-        $logger->write("Group {$this->getGroupLinkTag($group)} archived by {$groupAdmin->getUsername()}.", 'Group');
-
-        return $this->redirectBack($request, 'admin_groups_approval');
-    }
-
-    /**
-     * Un-archive a group .
-     *
-     * @throws AccessDeniedException
-     */
-    #[Route(path: '/admin/groups/{id}/unarchive', name: 'admin_groups_unarchive')]
-    public function unarchiveGroup(Request $request, Group $group, Logger $logger): RedirectResponse
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
-
-        if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
-        }
-
-        $group->setName(str_replace('[Archived] ', '', $group->getName()));
-
-        $this->entityManager->persist($group);
-        $this->entityManager->flush();
-
-        $this->addTranslatedFlash('notice', 'flash.group.unarchived', [
-            '%name%' => $group->getName(),
-        ]);
-
-        /** @var Member $groupAdmin */
-        $groupAdmin = $this->getUser();
-        $logger->write("Group {$this->getGroupLinkTag($group)} un-archived by {$groupAdmin->getUsername()}.", 'Group');
-
-        return $this->redirectBack($request, 'admin_groups_approval');
-    }
-
-    /**
-     * Rename a group .
-     *
-     * @throws AccessDeniedException
-     */
-    #[Route(path: '/admin/groups/rename', name: 'admin_groups_rename')]
-    public function renameGroup(Request $request, Logger $logger): Response|RedirectResponse
-    {
-        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
-            throw $this->createAccessDeniedException('You need to have Group right to access this.');
-        }
-
-        if (!$this->hasGroupRightLevel(10)) {
-            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
-        }
+        $this->denyUnlessGroupAdmin();
 
         $groupForm = $this->createFormBuilder()
             ->add('group', EntityType::class, [
                 'attr' => [
-                    'class' => 'select2',
+                    'class' => 'js-tom-select',
+                    'data-no-results-text' => $this->getTranslator()->trans('admin.group.not.found'),
                 ],
                 'class' => Group::class,
-                'query_builder' => static function (EntityRepository $er) {
-                    return $er->createQueryBuilder('g')
-                        ->where('g.approved = 1')
-                        ->orderBy('g.name', 'ASC');
-                },
+                'query_builder' => static fn (EntityRepository $repository) => $repository->createQueryBuilder('g')
+                    ->where('g.approved = :approved')
+                    ->setParameter('approved', Group::APPROVED)
+                    ->orderBy('g.name', 'ASC'),
                 'choice_label' => 'name',
+                'placeholder' => 'admin.groups.rename.pick',
                 'label' => 'admin.group.old.name',
-                'required' => false,
-                'constraints' => [
-                    new NotBlank(),
-                ],
+                'required' => true,
+                'constraints' => [new NotBlank()],
             ])
             ->add('new_name', TextType::class, [
                 'label' => 'admin.group.new.name',
-                'required' => false,
-                'constraints' => [
-                    new NotBlank(),
-                ],
+                'required' => true,
+                'attr' => ['maxlength' => self::NAME_LENGTH],
+                'constraints' => [new NotBlank(), new Length(max: self::NAME_LENGTH)],
             ])
-            ->add('submit', SubmitType::class)
+            ->add('submit', SubmitType::class, ['label' => 'admin.groups.rename.submit'])
             ->getForm();
 
         $groupForm->handleRequest($request);
         if ($groupForm->isSubmitted() && $groupForm->isValid()) {
-            $data = $groupForm->getData();
-            $group = $data['group'];
-            if (null === $group) {
-                $groupForm->addError(new FormError($this->getTranslator()->trans('admin.group.not.found')));
-            } else {
-                $oldName = $group->getName();
-                $group->setName($data['new_name']);
+            /** @var Group $group */
+            $group = $groupForm->get('group')->getData();
+            $newName = trim((string) $groupForm->get('new_name')->getData());
+            $oldName = $group->getName();
+            $group->setName($newName);
+            $this->entityManager->flush();
 
-                $this->entityManager->persist($group);
-                $this->entityManager->flush();
+            $this->addTranslatedFlash('notice', 'admin.group.renamed', [
+                'oldName' => $oldName,
+                'newName' => $newName,
+            ]);
+            $this->logger->write("Group {$oldName} renamed to {$this->getGroupLinkTag($group)} by {$this->getAdmin()->getUsername()}.", 'Group');
 
-                $this->addTranslatedFlash('notice', 'admin.group.renamed', [
-                    'oldName' => $oldName,
-                    'newName' => $data['new_name'],
-                ]);
-
-                /** @var Member $groupAdmin */
-                $groupAdmin = $this->getUser();
-                $logger->write("Group {$oldName} renamed to {$this->getGroupLinkTag($group)} by "
-                    . $groupAdmin->getUsername() . '.', 'Group');
-
-                return $this->redirectToRoute('admin_groups_approval');
-            }
+            return $this->redirectToRoute('admin_groups_rename');
         }
 
         return $this->render('admin/groups/rename.html.twig', [
             'form' => $groupForm->createView(),
+            'submenu' => $this->getGroupAdminSubmenu('rename'),
         ]);
+    }
+
+    /**
+     * The groups to archive (archived false) or the archived ones to unarchive, by name, filtered by a part of it.
+     */
+    private function showArchive(Request $request, bool $archived): Response
+    {
+        $this->denyUnlessGroupAdmin();
+
+        $search = trim($request->query->getString('q'));
+        $queryBuilder = $this->entityManager->createQueryBuilder()
+            ->select('g')
+            ->from(Group::class, 'g')
+            ->where($archived ? 'g.name LIKE :archived' : 'g.name NOT LIKE :archived')
+            ->setParameter('archived', self::ARCHIVED . '%')
+            // approved groups, also the closed ones; not the requests or the dismissed ones
+            ->andWhere('g.approved IN (:approved)')
+            ->setParameter('approved', [Group::APPROVED, Group::APPROVED_CLOSED])
+            ->orderBy('g.name', 'ASC');
+        if ('' !== $search) {
+            $queryBuilder->andWhere('g.name LIKE :search')->setParameter('search', '%' . addcslashes($search, '%_') . '%');
+        }
+
+        $groups = new Pagerfanta(new QueryAdapter($queryBuilder));
+        $groups->setMaxPerPage($this->getItemsPerPage($this->getAdmin()));
+        try {
+            $groups->setCurrentPage(max(1, $request->query->getInt('page', 1)));
+        } catch (OutOfRangeCurrentPageException) {
+            $groups->setCurrentPage(max(1, $groups->getNbPages()));
+        }
+        $onPage = iterator_to_array($groups->getCurrentPageResults(), false);
+
+        return $this->render('admin/groups/archive.html.twig', [
+            'groups' => $groups,
+            'archived' => $archived,
+            'search' => $search,
+            'member_counts' => $this->getGroupRepository()->countMembersOfGroups($onPage),
+            'submenu' => $this->getGroupAdminSubmenu($archived ? 'unarchival' : 'archival'),
+        ]);
+    }
+
+    private function decide(Request $request, Group $group, int $decision, string $flash, string $logText): RedirectResponse
+    {
+        $this->denyUnlessGroupAdmin();
+
+        $group->setApproved($decision);
+        $this->entityManager->flush();
+
+        $this->addTranslatedFlash('notice', $flash, ['%name%' => $group->getName()]);
+        $this->log($group, $logText);
+
+        return $this->redirectBack($request, 'admin_groups_approval');
+    }
+
+    private function log(Group $group, string $what): void
+    {
+        $this->logger->write("Group {$this->getGroupLinkTag($group)} {$what} by {$this->getAdmin()->getUsername()}.", 'Group');
     }
 
     private function sendNewGroupApprovedNotification(Group $group, Member $creator): void
     {
-        $subject = $this->translator->trans(// 'email.subject.group.approved'
+        $subject = $this->getTranslator()->trans(// 'email.subject.group.approved'
             '[New Group] %group% approved',
             ['%group%' => strip_tags($group->getName())]
         );
@@ -421,17 +279,35 @@ class GroupController extends AbstractController
         ]);
     }
 
-    private function hasGroupRightLevel(int $level): bool
+    private function denyUnlessGroupAdmin(): void
+    {
+        if (!$this->isGranted(Member::ROLE_ADMIN_GROUP)) {
+            throw $this->createAccessDeniedException('You need to have the Group right to access this.');
+        }
+        if (10 !== $this->getAdmin()->getLevelForRight(Member::ROLE_ADMIN_GROUP)) {
+            throw $this->createAccessDeniedException('You need to have level 10 to access this.');
+        }
+    }
+
+    private function getAdmin(): Member
     {
         /** @var Member $admin */
         $admin = $this->getUser();
 
-        return $admin->getLevelForRight(Member::ROLE_ADMIN_GROUP) === $level;
+        return $admin;
+    }
+
+    private function getGroupRepository(): GroupRepository
+    {
+        /** @var GroupRepository $repository */
+        $repository = $this->entityManager->getRepository(Group::class);
+
+        return $repository;
     }
 
     private function getGroupLinkTag(Group $group): string
     {
         return '<a href="' . $this->generateUrl('group_start', ['group_id' => $group->getId()]) . '">'
-            . $group->getName() . '</a>';
+            . htmlspecialchars($group->getName()) . '</a>';
     }
 }

@@ -1,50 +1,74 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/groups/_layout.html.twig' %}
+
+{#
+  The new groups waiting for approval (Admin\GroupController::approveGroups), the ones under discussion first: a card
+  per group with its picture, who asked and when, how members join, its categories and place and its description in
+  every language. Approve tells the creator, Dismiss asks first. Expects groups and submenu.
+#}
+
+{% block title %}{{ 'admin.groups.approval'|trans }}{% endblock %}
 
 {% block content %}
-    {% if groups|length %}
-        <div class="table-responsive ">
-            <table class="table table-striped w-100">
-                <colgroup>
-                    <col style="width:20%">
-                    <col style="width:55%">
-                    <col style="width:15%">
-                    <col style="width:10%">
-                </colgroup>
-                <thead>
-                    <tr>
-                        <th scope="col">{{ 'admin.group.info'|trans }}</th>
-                        <th scope="col" class="w-100">{{ 'admin.group.description'|trans }}</th>
-                        <th scope="col">{{ 'admin.group.creator'|trans }}</th>
-                        <th scope="col">{{ 'admin.group.actions'|trans }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for group in groups %}
-                        <tr>
-                            <td><p><strong><a href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.Name }}</a></strong><br>
-                                    <small>Created: {{ group.created|format_date }}</small></p>
-                                {% if group.approved == constant('App\\Entity\\Group::IN_DISCUSSION') %}
-                                    <p class="alert alert-danger my-2">{{ 'Group approval under discussion' }}</p>{% endif %}
-                                </td>
-                            <td>{% for locale, description in group.descriptions %}
-                                     <small class="text-muted">{{ language_name(locale) }} ({{ locale }})</small><br>{{ description.content|purify }}
-                                {% endfor %}
-                                </td>
-                            <td>{% if group.members|first %}{{ macros.avatarstack((group.members|first).Username, 50) }}{% endif %}</td>
-                            <td class="text-center">
-                                <a href="{{ path('admin_groups_approve', { 'id': group.id }) }}"><i class="fa fa-2x fa-fw fa-check" title="{{ 'admin.groups.create.approve'|trans }}"></i></a><br>
-                                <a href="{{ path('admin_groups_dismiss', { 'id': group.id }) }}"><i class="fa fa-2x fa-fw fa-ban" title="{{ 'admin.groups.create.dismiss'|trans }}"></i></a>
-                                {% if group.approved != constant('App\\Entity\\Group::IN_DISCUSSION') %}<br>
-                                    <a href="{{ path('admin_groups_discuss', { 'id': group.id }) }}"><i class="fa fa-2x fa-fw fa-comments" title="{{ 'admin.groups.create.discuss'|trans }}"></i></a>
-                                {% endif %}
-                            </td>
-                        </tr>
+    {% set _token = csrf_token(constant('App\\Controller\\Admin\\GroupController::TOKEN')) %}
+    {% set _discussion = constant('App\\Entity\\Group::IN_DISCUSSION') %}
+    <p class="p-gadmin__intro">{{ 'admin.groups.approval.intro'|trans }}</p>
+
+    {% for group in groups %}
+        {% set _creator = group.members|first %}
+        <article class="p-group-panel p-gadmin-request">
+            <img class="p-gadmin-request__picture" width="64" height="64" alt="" loading="lazy"
+                 src="{{ group.picture ? path('group_thumbimg', {group_id: group.id}) : asset('images/icons/group.png') }}">
+            <div class="p-gadmin-request__main">
+                <h2 class="p-gadmin-request__name">
+                    <a href="{{ path('group_start', {group_id: group.id}) }}">{{ group.name }}</a>
+                    {% if group.approved == _discussion %}<span class="c-tag c-tag--orange"><i class="fas fa-comments" aria-hidden="true"></i>{{ 'admin.groups.in.discussion'|trans }}</span>{% endif %}
+                </h2>
+                <p class="p-gadmin-request__meta">
+                    {% if _creator %}
+                        <a class="p-gadmin-request__creator" href="{{ path('members_profile', {username: _creator.username}) }}">
+                            <img src="{{ path('avatar', {username: _creator.username, size: 48}) }}" alt="" width="24" height="24" loading="lazy">{{ _creator.username }}
+                        </a> ·
+                    {% endif %}
+                    <span>{{ 'admin.groups.requested'|trans({date: group.created|format_date('medium')}) }}</span>
+                </p>
+                <div class="p-gadmin-request__chips">
+                    <span class="c-group-chip"><i class="fas {{ group.type == 'Public' ? 'fa-door-open' : (group.type == 'NeedAcceptance' ? 'fa-user-check' : 'fa-lock') }}" aria-hidden="true"></i>{{ ('admin.groups.type.' ~ group.type|lower)|trans }}</span>
+                    {% for category in group.categories %}
+                        <span class="c-group-chip"><i class="fas fa-{{ category.icon }}" aria-hidden="true"></i>{{ category.name(app.request.locale) }}</span>
                     {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                    {% if group.location %}
+                        <span class="c-group-chip"><i class="fas fa-location-dot" aria-hidden="true"></i>{{ group.location.name }}</span>
+                    {% endif %}
+                </div>
+                {% for locale, description in group.descriptions %}
+                    <div class="p-gadmin-request__description" lang="{{ locale }}">
+                        {% if group.descriptions|length > 1 %}<span class="p-gadmin__lang">{{ language_name(locale) }}</span>{% endif %}
+                        {{ description.content|purify }}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="p-gadmin-request__actions">
+                <form method="post" action="{{ path('admin_groups_approve', {id: group.id}) }}">
+                    <input type="hidden" name="_token" value="{{ _token }}">
+                    <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small"><i class="fas fa-check" aria-hidden="true"></i>{{ 'admin.groups.approve'|trans }}</button>
+                </form>
+                {% if group.approved != _discussion %}
+                    <form method="post" action="{{ path('admin_groups_discuss', {id: group.id}) }}">
+                        <input type="hidden" name="_token" value="{{ _token }}">
+                        <button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small"><i class="fas fa-comments" aria-hidden="true"></i>{{ 'admin.groups.discuss'|trans }}</button>
+                    </form>
+                {% endif %}
+                <form method="post" action="{{ path('admin_groups_dismiss', {id: group.id}) }}">
+                    <input type="hidden" name="_token" value="{{ _token }}">
+                    <button type="submit" class="p-gadmin__delete" data-confirm="{{ 'admin.groups.dismiss.confirm'|trans({name: group.name}) }}" data-confirm-ok="{{ 'admin.groups.dismiss'|trans }}" data-confirm-close="{{ 'cancel'|trans }}"><i class="fas fa-ban" aria-hidden="true"></i>{{ 'admin.groups.dismiss'|trans }}</button>
+                </form>
+            </div>
+        </article>
     {% else %}
-        {{ 'admin.group.no.group' | trans }}
-    {% endif %}
+        <div class="p-group-panel c-cnews-empty">
+            <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-check"></i></span>
+            <p class="c-cnews-empty__title">{{ 'admin.groups.approval.none'|trans }}</p>
+            <p class="c-cnews-empty__text">{{ 'admin.groups.approval.none.text'|trans }}</p>
+        </div>
+    {% endfor %}
 {% endblock %}

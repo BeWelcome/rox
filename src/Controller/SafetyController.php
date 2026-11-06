@@ -4,150 +4,64 @@ namespace App\Controller;
 
 use App\Model\SafetyModel;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * The safety pages (templates/safety/): an overview, the basics of trust, what to do in an uncomfortable or an
+ * emergency situation, tips, a FAQ and the Safety Team. Reporting a problem goes to the feedback form's safety
+ * category.
+ */
 class SafetyController extends AbstractController
 {
-    /**
-     * @return Response
-     */
     #[Route(path: '/safety', name: 'safety')]
-    public function showSafetyMain()
+    public function showSafetyMain(): Response
     {
-        return $this->render('safety/safetymain.html.twig', [
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'safety',
-            ],
-        ]);
+        return $this->render('safety/safetymain.html.twig');
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/safety/basics', name: 'safety_basics')]
-    public function showSafetyBasics()
+    public function showSafetyBasics(): Response
     {
-        return $this->render('safety/safetybasics.html.twig', [
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'safety_basics',
-            ],
-        ]);
+        return $this->render('safety/safetybasics.html.twig');
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/safety/whattodo', name: 'safety_what_to_do')]
-    public function showSafetyWhatToDo()
+    public function showSafetyWhatToDo(): Response
     {
-        return $this->render('safety/safetywhattodo.html.twig', [
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'safety_what_to_do',
-            ],
-        ]);
+        return $this->render('safety/safetywhattodo.html.twig');
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/safety/tips', name: 'safety_tips')]
-    public function showSafetyTips()
+    public function showSafetyTips(): Response
     {
-        return $this->render('safety/safetytips.html.twig', [
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'safety_tips',
-            ],
-        ]);
+        return $this->render('safety/safetytips.html.twig');
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/safety/faq', name: 'safety_faq')]
-    public function showSafetyFAQ()
+    public function showSafetyFAQ(): Response
     {
-        return $this->render('safety/safetyfaq.html.twig', [
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'safety_faq',
-            ],
-        ]);
+        return $this->render('safety/safetyfaq.html.twig');
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/safety/team', name: 'safety_team')]
-    public function showSafetyTeam(SafetyModel $safetyModel)
+    public function showSafetyTeam(SafetyModel $safetyModel): Response
     {
-        $teamMembers = $safetyModel->getSafetyTeamMembers();
-
         return $this->render('safety/safetyteam.html.twig', [
-            'team_members' => $teamMembers,
-            'submenu' => [
-                'items' => $this->getSubMenuItems(),
-                'active' => 'safety_team',
-            ],
+            'team_members' => $safetyModel->getSafetyTeamMembers(),
         ]);
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/feedback?IdCategory=2', name: 'safety_contact')]
-    public function showSafetyContact()
+    public function showSafetyContact(): RedirectResponse
     {
         return $this->redirectToRoute('feedback', ['IdCategory' => 2]);
     }
 
-    /**
-     * @return Response
-     */
     #[Route(path: '/feedback?IdCategory=2&no', name: 'safety_contact_no_modal')]
-    public function showSafetyContactNoModal()
+    public function showSafetyContactNoModal(): RedirectResponse
     {
         return $this->redirectToRoute('feedback', ['IdCategory' => 2, 'no' => 1]);
-    }
-
-    /**
-     * @return array
-     */
-    private function getSubMenuItems()
-    {
-        return [
-            'safety' => [
-                'key' => 'SafetyMain',
-                'url' => $this->generateUrl('safety'),
-            ],
-            'safety_basics' => [
-                'key' => 'SafetyBasics',
-                'url' => $this->generateUrl('safety_basics'),
-            ],
-            'safety_what_to_do' => [
-                'key' => 'SafetyWhatToDo',
-                'url' => $this->generateUrl('safety_what_to_do'),
-            ],
-            'safety_tips' => [
-                'key' => 'SafetyTips',
-                'url' => $this->generateUrl('safety_tips'),
-            ],
-            'safety_faq' => [
-                'key' => 'SafetyFAQ',
-                'url' => $this->generateUrl('safety_faq'),
-            ],
-            'safety_team' => [
-                'key' => 'SafetyTeam',
-                'url' => $this->generateUrl('safety_team'),
-            ],
-            'safety_contact' => [
-                'key' => 'SafetyContact',
-                'url' => $this->generateUrl('safety_contact'),
-            ],
-        ];
     }
 }

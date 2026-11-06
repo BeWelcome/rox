@@ -1,54 +1,41 @@
-{% extends 'base.html.twig' %}
+{% extends 'safety/_layout.html.twig' %}
+{#
+  The Safety Team: its tasks (#tasks), the proactive and reactive work, its members (#members, from SafetyModel) and
+  confidentiality. Expects team_members.
+#}
+{% set active = 'safety_team' %}
 
-{% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
+{% block safety_content %}
+    <article class="p-safety__card p-safety__article" id="tasks">
+        <h1>{{ 'safety_team'|trans|striptags }}</h1>
+        <div class="p-safety__text">{{ 'safety_teamintro'|trans|purify }}</div>
+        <section id="proactive">
+            <h2>{{ 'safety_proactive'|trans|striptags }}</h2>
+            <div class="p-safety__text">{{ 'safety_proactivetext'|trans|purify }}</div>
+        </section>
+        <section id="reactive">
+            <h2>{{ 'safety_reactive'|trans|striptags }}</h2>
+            <div class="p-safety__text">{{ 'safety_reactivetext'|trans({'safety_reactivetext.terms': '<a href="' ~ path('terms_of_use', {locale: app.request.locale}) ~ '">' ~ 'safety_reactivetext.terms'|trans ~ '</a>'})|purify }}</div>
+        </section>
+        <section id="confidentiality">
+            <h2>{{ 'safety_confidentiality'|trans|striptags }}</h2>
+            <div class="p-safety__text">{{ 'safety_confidentialitytext'|trans|purify }}</div>
+        </section>
+    </article>
+{% endblock safety_content %}
 
-{% block title %}
-    {{ 'safety' | trans }}
-{% endblock %}
-
-{% block content %}
-<div class="o-text">
-    <h1><a href="{{ url('safety') }}">{{ 'safety' | trans }}</a></h1>
-    <span class="clearfix"></span>
-    <div class="row">
-        <div class="col-12 col-lg-6">
-            <a id="tasks"></a>
-            <h3>{{ 'safety_team' | trans | purify }}</h3>
-            <p>{{ 'safety_teamintro' | trans | purify }}</p>
-            <a id="proactive"></a>
-            <h5>{{ 'safety_proactive' | trans | purify }}</h5>
-            <p>{{ 'safety_proactivetext' | trans | purify }}</p>
-            <a id="reactive"></a>
-            <h5>{{ 'safety_reactive' | trans | purify }}</h5>
-            <p>{{ 'safety_reactivetext' | trans | purify }}</p>
-            <p>{{ 'safety_reactivetext' | trans 
-                ({ 'safety_reactivetext.terms' : '<a href="' ~ url('terms_of_use', {'locale': app.request.locale}) ~ '">' ~ 'safety_reactivetext.terms'|trans ~ '</a>' })
-                | purify }}
-            </p>
-        </div>
-        <div class="col-12 col-lg-6 o-card">
-            <div class="card-body">
-                <div class="card-title">
-                    <a id="members"></a>
-                    <h3>{{ 'safety_teammembers' | trans | purify }}</h3>
-                </div>
-                <div class="card-text">
-                    <p>{{ 'safety_teammemberstext' | trans | purify }}</p>
-                    <ul>
-                        {% for member in team_members %}
-                            <li >{{ member.username }}</li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 mt-3">
-            <a id="confidentiality"></a>
-            <h3>{{ 'safety_confidentiality' | trans | purify }}</h3>
-            <p>{{ 'safety_confidentialitytext' | trans | purify }}</p>
-        </div>
-    </div>
-</div>
-{% endblock content %}
+{% block safety_side %}
+    <section class="p-safety__card" id="members">
+        <h2>{{ 'safety_teammembers'|trans|striptags }}</h2>
+        <div class="p-safety__text">{{ 'safety_teammemberstext'|trans|purify }}</div>
+        <ul class="p-safety__members">
+            {% for member in team_members %}
+                <li>
+                    <a href="{{ path('members_profile', {username: member.username}) }}">
+                        <img src="{{ path('avatar', {username: member.username, size: 48}) }}" alt="" width="32" height="32" loading="lazy">{{ member.username }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endblock safety_side %}

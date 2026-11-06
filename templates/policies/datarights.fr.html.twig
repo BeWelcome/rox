@@ -1,17 +1,21 @@
-{% extends 'base.html.twig' %}
+{% extends 'policies/_layout.html.twig' %}
 
-{% block content %}
-    <h1>Droits sur les données sur BeWelcome</h1>
+{% set policy = 'datarights' %}
+{% set policy_locale = 'fr' %}
+{% block policy_title %}Droits sur les données sur BeWelcome{% endblock %}
+{% block policy_updated %}Dernière mise à jour le 22 mars, 2020.{% endblock %}
 
-    <p>Dernière mise à jour le 22 mars, 2020.</p>
-
-    <h3>Vos droits sur les données</h3>
+{% block policy_body %}
+<section id="your-rights">
+    <h2>Vos droits sur les données</h2>
 
     <p>Le Règlement Général sur la Protection des Données (RGPD) européen et la loi française pour une République
         Numérique vous donnent certains droits sur vos données personnelles sur BeWelcome.
         En résumé, elles comprennent :</p>
+</section>
 
-    <p><strong>Le droit d'accès aux données / le droit de copie des données</strong></p>
+<section id="access">
+    <h2>Le droit d'accès aux données / le droit de copie des données</h2>
 
     <p>Vous avez le droit de savoir quelles données personnelles sur vous BeWelcome détient et traite. Dans notre
         politique de confidentialité, nous expliquons quelles données nous exigeons pour l'inscription. En dehors de
@@ -22,8 +26,10 @@
 
     <p>Vous avez le droit d'obtenir une copie de vos données personnelles de BeWelcome. Vous pouvez les télécharger via
         un lien protégé par un mot de passe dans votre profil BeWelcome.</p>
+</section>
 
-    <p><strong>Droit à la rectification des erreurs</strong></p>
+<section id="rectification">
+    <h2>Droit à la rectification des erreurs</h2>
 
     <p>Il est de votre responsabilité de garder votre profil précis et à jour, et toutes les erreurs doivent être
         corrigées directement par vous.</p>
@@ -36,8 +42,10 @@
         contact du site) qui cherchera une solution. Veuillez noter que, si c'est juste une différence d'opinion et
         qu'il n'y a pas de gros problème comme la violation des conditions d'utilisation du site, l'équipe de sécurité
         pourrait ne pas être en mesure de résoudre les problèmes et les commentaires pourraient rester.</p>
+</section>
 
-    <p><strong>Droit de suppression/droit à l'oubli</strong></p>
+<section id="deletion">
+    <h2>Droit de suppression/droit à l'oubli</h2>
 
     <p>Vous avez le droit de supprimer ou d'avoir supprimé toutes données personnelles, avec les exceptions suivantes
         :</p>
@@ -49,8 +57,10 @@
             de BeWelcome ou de messages à des tiers.
         </li>
     </ul>
+</section>
 
-    <p><strong>Droit de s'opposer ou de restreindre le traitement</strong></p>
+<section id="restrict-processing">
+    <h2>Droit de s'opposer ou de restreindre le traitement</h2>
 
     <p>Vous pouvez, à tout moment, bloquer le traitement ultérieur de vos données en rendant votre profil inactif. Cela
         suspend votre activité d'hébergement et supprime votre profil des liste de membres et des recherches, même si
@@ -60,8 +70,10 @@
     <p>Veuillez noter que vous pouvez suspendre votre activité sur le site pour maximum 2 ans. Une période d'inactivité
         plus longue entrainera l'annulation de votre adhésion et la suppression de toutes vos données (voir la section 6
         des conditions d'utilisation de BeWelcome).</p>
+</section>
 
-    <p><strong>Droit à la portabilité des données</strong></p>
+<section id="portability">
+    <h2>Droit à la portabilité des données</h2>
 
     <p>Le RGPD promeut l'idée que les données utilisateurs devraient être "portables" entre les fournisseurs de
         services. La nature individuelle des plateformes d'hospitalité fait qu'il y a des restrictions naturelles au
@@ -70,8 +82,10 @@
 
     <p>Néanmoins, si vous demandez une copie de vos données personnelles sur BeWelcome (voir ci-dessus) nous fournirons
         cette copie dans un format lisible sur ordinateur (par exemple un fichier .txt ou .html).</p>
+</section>
 
-    <p><strong>Droit de retirer son consentement</strong></p>
+<section id="withdraw-consent">
+    <h2>Droit de retirer son consentement</h2>
 
     <p>Vos données personnelles sont utilisées dans un but d'hospitalité et d'échanges culturels. Ces données sont
         fournies à votre propre discrétion et vous pouvez les restreindre où les modifier à tout moment.</p>
@@ -79,22 +93,28 @@
     <p>Vous pouvez retirer le consentement à tout moment en supprimant votre adhésion à BeWelcome (voir section 1 des
         termes d'utilisation de BeWelcome). Vous pouvez aussi supprimer complètement votre profil ou effacer les données
         du profil en utilisant la fonction d'édition de celui-ci.</p>
+</section>
 
-    <p><strong>Droit d'objection à une utilisation commerciale</strong></p>
+<section id="marketing">
+    <h2>Droit d'objection à une utilisation commerciale</h2>
 
     <p>Bewelcome n'utilise pas les données personnelles pour gagner de l'argent, que ce soit pour lui-même ou pour
         d'autres. Nos communications avec vous sont normalement seulement des informations sur le site (par exemple, des
         changements dans le site). Nous produisons occasionnellement un document d'information qui peut contenir une
         information plus large sur BeWelcome et l'hospitalité, mais vous pouvez choisir de ne pas le recevoir en
         changeant vos préférences de compte.</p>
+</section>
 
-    <p><strong>Droit de porter plainte auprès de l'autorité de protection des données compétente</strong></p>
+<section id="complain">
+    <h2>Droit de porter plainte auprès de l'autorité de protection des données compétente</h2>
 
     <p>Pour BeWelcome, l'autorité compétente pour la protection des données est la CNIL (Commission Nationale de
         l'Informatique et des Libertés) française, et les détails pour les contacter sont sur
         https://www.cnil.fr/fr/vous-souhaitez-contacter-la-cnil</p>
+</section>
 
-    <p><strong>Droits à l'héritage</strong></p>
+<section id="inheritance">
+    <h2>Droits à l'héritage</h2>
 
     <p>La loi française de 2016 pour une République Numérique donne un droit d'héritage des comptes numériques. à la
         mort de l'utilisateur, aux héritiers enregistrés nominalement auprès de la CNIL (Commission Nationale de
@@ -103,5 +123,5 @@
     <p>Compte tenu des circonstances particulières de BW, les comptes sont individuels et ne peuvent pas être transférés
         ou hérités. Toutefois, les héritiers enregistrés en vertu de la loi sur la République Numérique (voir ci-dessus)
         ont le droit d'obtenir une copie des données personnelles, avant la destruction du compte.</p>
-
-{% endblock content %}
+</section>
+{% endblock policy_body %}

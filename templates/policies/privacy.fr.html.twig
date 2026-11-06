@@ -1,10 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends 'policies/_layout.html.twig' %}
 
-{% block content %}
-    <h1>Politique de confidentialité de BeWelcome</h1>
-    <p>Dernière mise à jour le 9 juillet 2026.</p>
+{% set policy = 'privacy' %}
+{% set policy_locale = 'fr' %}
+{% block policy_title %}Politique de confidentialité de BeWelcome{% endblock %}
+{% block policy_updated %}Dernière mise à jour le 9 juillet 2026.{% endblock %}
 
-
+{% block policy_body %}
+<section id="introduction">
     <p>BeWelcome offre un site en ligne pour faire connaissance avec des gens partout dans le monde et pour avoir la
         chance de les rencontrer personnellement.</p>
 
@@ -52,17 +54,19 @@
 
     <p>En créant un compte et un profil sur BeWelcome, vous consentez que BeVolunteer et les autres membres de BeWelcome
         utilisent les données personnelles que vous fournissez à des fins d'hospitalité et d'échanges culturels.</p>
+</section>
 
-
-    <h3>Cookies</h3>
+<section id="cookies">
+    <h2>Cookies</h2>
 
     <p>BeWelcome ne met pas en place de cookie pour obtenir ou transmettre du démarchage ou d'autres informations. Les
         seuls cookies mis en place le sont dans le but essentiel de l'authentification des utilisateurs et de
         l'enregistrement des préférences d'affichage. Pour l'utilisation de ce site, il sera considéré qu'il y a un
         consentement pour ces cookies essentiels.</p>
+</section>
 
-
-    <h3>Utilisation de l'information</h3>
+<section id="use-of-information">
+    <h2>Utilisation de l'information</h2>
 
     <p>Tout membre de la communauté BeWelcome qui se connecte au site BeWelcome peut voir les informations du profil et
         les photos que vous avez téléversé.</p>
@@ -87,9 +91,10 @@
         de données car elles sont intrinsèques aux protocoles de communication. Elles seront conservées pour une période
         d'environ 6 mois et accessibles seulement par l'équipe technique à des fins de diagnostic. Ces données, une fois
         anonymisées, pourraient être utilisées à des fins statistiques ou de recherche, même après cette période.</p>
+</section>
 
-
-    <h3></h3>Sécurité</h3>
+<section id="safety">
+    <h2>Sécurité</h2>
 
     <p>En temps que membres de BeWelcome, nous ouvrons nos logements à des gens que nous n'avons jamais rencontré, ou
         séjournons chez eux lorsque nous voyageons nous mêmes. Cela nécessite beaucoup de confiance qui est souvent bien
@@ -104,9 +109,10 @@
         les données de navigation, et les messages qui sont signalés comme abusifs. Toutes ces enquêtes sont gardées
         confidentielles (sauf si elles entrainent des poursuites judiciaires) mais BeWelcome peut conserver certains
         détails, y compris des données personnelles, lorsqu'elles sont pertinentes pour une enquête sur un abus.</p>
+</section>
 
-
-    <h3>Partage et divulgation d’informations</h3>
+<section id="sharing">
+    <h2>Partage et divulgation d’informations</h2>
 
     <p>BeWelcome ne loue pas, ne vend pas, et ne partage pas d'informations personnelles à votre sujet avec d'autres
         gens ou entreprises sauf pour fournir les services que vous avez demandé, lorsque nous avons votre permission,
@@ -125,8 +131,10 @@
         droite de la page. Veuillez noter que vous ne pouvez pas vous désinscrire pour certains types de messages, comme
         les modifications des conditions d'utilisation, et les messages envoyés pour satisfaire aux contraintes légales
         comme la RGPD.</p>
+</section>
 
-    <h3>Suspendre ou supprimer votre compte</h3>
+<section id="account">
+    <h2>Suspendre ou supprimer votre compte</h2>
 
     <p>Voudriez-vous suspendre votre compte, pour rendre votre profils inaccessible un certain temps, mais en souhaitant
         conserver votre compte pour une utilisation future, veuillez utiliser le bouton "Désactiver mon profil" dans le
@@ -163,9 +171,10 @@
         utilisation ultérieure par une autre personne. Dans des circonstances exceptionnelles - généralement quand un
         nom d'utilisateur a une résonance très personnelle - BeWelcome prendra en considération une demande pour rendre
         de nom d'utilisateur indisponible pour les autres utilisateurs.</p>
+</section>
 
-
-    <h3>Confidentialité et Sécurité</h3>
+<section id="security">
+    <h2>Confidentialité et Sécurité</h2>
 
     <p>Nous limitons l'accès aux informations personnelles vous concernant aux volontaires qui ont besoin de cette
         information pour vous fournir des services ou pour faire fonctionner le site.</p>
@@ -180,27 +189,30 @@
         l'information personnelle. Nous faisons tous les efforts raisonnables pour maintenir la consistance et la
         sécurité de vos données, mais BeVolunteer ne peut pas être tenu responsable en cas de perte accidentelle de
         données et de dommages accessoires.</p>
+</section>
 
-
-    <h3>Autres Sites</h3>
+<section id="other-sites">
+    <h2>Autres Sites</h2>
 
     <p>Toute communication d'un lien vers un autre site web ou un endroit est pour votre commodité et ne signifie pas
         notre approbation de ces autres sites web ou endroits ou leur contenus. Nous n'avons pas de contrôle dessus, ne
         les passons pas en revue, et ne pouvons être tenus responsables de ces sites web externes ou de leur contenu.
         Veuillez noter que les termes de notre politique de confidentialité ne s'applique pas à ces sites web
         externes.</p>
+</section>
 
-
-    <h3>Nous contacter</h3>
+<section id="contact">
+    <h2>Nous contacter</h2>
 
     <p>Si vous avez des questions ou préoccupations au sujet de cette politique de confidentialité, veuillez nous
         contacter :<br>
         à : BeVolunteer, 19 rue de Paris, 35500 Vitré, FRANCE;</p>
     <p>en utilisant le lien Contact Us sur BeWelcome; ou</p>
-    <p>par email à : privacy@bewelcome.org</p>
+    <p>par email à : <a href="mailto:privacy@bewelcome.org">privacy@bewelcome.org</a></p>
+</section>
 
-
-    <h3>Modifications de cette politique de confidentialité</h3>
+<section id="changes">
+    <h2>Modifications de cette politique de confidentialité</h2>
 
     <p>BeWelcome peut mettre à jour cette politique de temps en temps. Nous vous notifierons les modifications
         significatives sur la manière dont nous traitons les informations personnelles en envoyant une notification à
@@ -208,5 +220,5 @@
         notre site web. Si vous êtes opposés à ces changements, vous devez cesser d'utiliser notre site web. Le fait de
         continuer d'utiliser notre site web après la notification de ces changements indiquera que vous reconnaissez ces
         changements et que vous êtes d'accord pour être lié à leurs termes et conditions.</p>
-
-{% endblock content %}
+</section>
+{% endblock policy_body %}

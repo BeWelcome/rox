@@ -1,10 +1,12 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'policies/_layout.html.twig' %}
 
-{% block content %}
-<div class="o-text">
-    <h1>Conditions d’Utilisation de BeWelcome</h1>
-    <p><em>(<a href="{{ url('terms_of_use', {'locale': 'en'}) }}">Version anglaise</a>)</em></p>
+{% set policy = 'terms' %}
+{% set policy_locale = 'fr' %}
+{% block policy_title %}Conditions d’Utilisation de BeWelcome{% endblock %}
+{% block policy_updated %}Dernière mise à jour le 30 avril 2026.{% endblock %}
+
+{% block policy_body %}
+<section id="introduction">
     <p>BeWelcome (<a href="https://www.bewelcome.org">www.bewelcome.org</a>) est un réseau qui encourage les idées
         d’hospitalité et d’échange culturel. BeWelcome est un projet de l’association à but non lucratif BeVolunteer, et
         géré exclusivement par des membres bénévoles. BeVolunteer est une association française (loi 1901), enregistrée
@@ -17,15 +19,17 @@
         BeWelcome utilisent les données personnelles que vous fournissez à des fins d'hospitalité et d'échange culturel.
         BeWelcome soutient les échanges dans de nombreux pays, certaines de ces données peuvent donc être utilisées en
         dehors de l'UE.</p>
+</section>
 
-    <h3>1. Adhésion</h3>
+<section id="membership">
+    <h2>1. Adhésion</h2>
 
     <p>En vous inscrivant sur le site BeWelcome, vous devenez membre de la communauté BeWelcome. Cela vous permet de
         participer pleinement au réseau et d'utiliser tous les services aux membres offerts par le site.</p>
 
     <p>Seule une personne physique peut devenir membre. (c'est-à-dire qu'elle n'est pas ouverte aux organisations).
-        Chaque membre ne peut ouvrir qu’un seul compte (profil) - tout compte supplémentaire sera supprimé, ainsi que
-        son contenu.</p>
+        Chaque membre ne peut ouvrir qu’un seul compte (profil). Si vous créez plusieurs comptes, ou si vous créez un nouveau compte sans l'autorisation de BeWelcome après la désactivation de votre compte d'origine, tous les comptes créés pourront être supprimés, ainsi que leur contenu.
+    </p>
 
     <p>L’âge minimum pour adhérer est 18 ans.</p>
 
@@ -45,8 +49,10 @@
     <p>Afin de conserver votre compte, vous devez vous connecter de temps en temps à BeWelcome. Si vous ne vous
         connectez pas pendant une période continue de 2 ans, votre compte peut être annulé et toutes les données de
         profil supprimées, sans préavis.</p>
+</section>
 
-    <h3>2. Inscription</h3>
+<section id="registration">
+    <h2>2. Inscription</h2>
 
     <p>Au moment de l’inscription, vous devrez fournir certaines données afin d'activer un compte BeWelcome. (Ceci est
         détaillé dans la <a href="{{ url('privacy_policy', {'locale': 'fr'}) }}">politique de confidentialité</a>.) Toute autre
@@ -61,8 +67,10 @@
 
     <p>Au cours du processus d’inscription, il vous sera demandé de saisir un mot de passe répondant à nos exigences de
         sécurité. Il est votre responsabilité de garder ce mot de passe confidentiel.</p>
+</section>
 
-    <h3>3. Confidentialité</h3>
+<section id="privacy">
+    <h2>3. Confidentialité</h2>
 
     <p>En créant un profil sur BeWelcome, vous consentez à l'utilisation de toutes les données que vous fournissez, y
         compris des données personnelles, à des fins d'hospitalité et d'échange culturel. Vous avez le droit de modifier
@@ -75,8 +83,10 @@
         politique de confidentialité et à l'utiliser pour prendre des décisions éclairées concernant les options de
         confidentialité que nous proposons. BeWelcome n'est pas une platforme de stockage de données. BeWelcome décline
         toute responsabilité pour les données (par exemple les photos) placées sur le site.</p>
+</section>
 
-    <h3>4. Comportement</h3>
+<section id="conduct">
+    <h2>4. Comportement</h2>
 
     <p>Vous acceptez d’utiliser BeWelcome pour l’usage prévu – l’hospitalité et l’échange culturel – et de contribuer à
         la promotion de ces idées de manière non commerciale, gratuitement. Cela implique de ne pas associer BeWelcome à
@@ -85,8 +95,8 @@
 
     <p>Pour illustrer ce point, voici quelques exemples de comportement à ne PAS avoir sur BeWelcome:</p>
 
-    <ol type="a">
-        <li>utiliser BeWelcome pour toute des activité illégale ou perturbatrice;</li>
+    <ol>
+        <li>utiliser BeWelcome pour toute activité illégale ou perturbatrice;</li>
         <li>fournir des informations erronées ou trompeuses;</li>
         <li>violer les droits d’un tiers;</li>
         <li>attaquer, diffamer ou tenir des propos discriminatoires à l’encontre d’une personne ou un groupe de
@@ -116,14 +126,28 @@
         <li>utiliser les services BeWelcome pour envoyer des messages privés non sollicités sans liens avec l’objectif
             du service – ceci inclut les invitations non sollicitées;
         </li>
-        <li>utiliser le service BeWelcome pour recueillir des dons pour toute entité autre que BeVolunteer; ou</li>
+        <li>utiliser le service BeWelcome pour recueillir des dons pour toute entité autre que BeVolunteer;</li>
+        <li>
+        tenter de communiquer en dehors de BeWelcome avant un premier échange sur le site. Pour des raisons de 
+        confidentialité et de sécurité, le premier échange doit avoir lieu sur BeWelcome et se poursuivre sur 
+        BeWelcome aussi longtemps que possible. Les premiers messages et demandes ne doivent pas contenir ni 
+        renvoyer vers des coordonnées externes telles que des numéros de téléphone, des adresses e-mail ou 
+        des noms d'utilisateur de messagerie instantanée. <a href="/safety/#external">Pour en savoir plus sur ce qui est interdit, cliquez ici</a>;
+        </li>
         <li>assister un tiers dans la réalisation d’une des actions précédemment mentionnées.</li>
     </ol>
+<p>
+À propos du NUDISME : BeWelcome n'encourage pas le nudisme pendant l'hébergement, mais autorise sa pratique respectueuse entre membres dans les conditions suivantes :<br>
+
+Afin d'éviter tout conflit ou abus, les hôtes qui pratiquent le nudisme chez eux pendant l'hébergement doivent l'indiquer clairement dans les Règles du lieu, dans la section Hébergement de leur profil. Ils doivent obtenir le consentement explicite de leurs invités lors de la conclusion d'un accord d'hébergement. Les hôtes ne peuvent pas exiger que leurs invités soient nus. Les invités ne peuvent pratiquer le nudisme qu'avec l'accord de leur hôte.
+</p>
     <p>BeWelcome se réserve le droit de bloquer votre accès à certaines sections du site ou de résilier votre adhésion
         et de supprimer votre compte en cas de violation de ces réglementations (pour en savoir plus, veuillez consulter
         la section 6. «Résiliation de l’adhésion»).</p>
+</section>
 
-    <h3>5. Contenu</h3>
+<section id="content">
+    <h2>5. Contenu</h2>
 
     <p>Le contenu qui vous appartient reste votre propriété lorsque vous le postez sur BeWelcome.</p>
 
@@ -151,8 +175,10 @@
     <p>D’autres parties du contenu de votre profil, vos photos et vos blogs sont supprimés avec votre compte. Nous
         ferons tout effort raisonnable afin de supprimer ces données dans un délai convenable. L’autorisation accordée
         expire avec la suppression du compte.</p>
+</section>
 
-    <h3>6. Résiliation de l’adhésion</h3>
+<section id="cancellation">
+    <h2>6. Résiliation de l’adhésion</h2>
 
     <p>BeWelcome se réserve le droit de refuser ou de résilier votre adhésion pour les raisons suivantes:</p>
     <ol>
@@ -186,8 +212,10 @@
 
     <p>En cas de résiliation pour abus grave, BeWelcome se réserve le droit de bannir l’adhésion de manière
         permanente.</p>
+</section>
 
-    <h3>7. Responsabilité</h3>
+<section id="liability">
+    <h2>7. Responsabilité</h2>
 
     <p>Nous fournissons aux membres inscrits une plateforme pour proposer et pour trouver de l’hospitalité privée, pour
         organiser des échanges culturels et pour organiser leurs voyages.</p>
@@ -215,8 +243,10 @@
         pertes ou dépenses, concernant entre autre autres les frais de procédure et d’expert, de consultations
         d’experts, découlant ou en lien de quelque manière que ce soit à l’accès de l’utilisateur aux services
         BeWelcome, ou de la violation des présentes conditions d’utilisation.</p>
+</section>
 
-    <h3>8. Litige</h3>
+<section id="litigation">
+    <h2>8. Litige</h2>
 
     <p>Ces conditions d’utilisations sont soumises au droit français et assujetties à la juridiction territorialement
         compétente.</p>
@@ -233,6 +263,5 @@
 
     <p>BeVolunteer se réserve le droit d’amender ou de modifier ces conditions d’utilisations et informera tous les
         membres au moins trente jours avant leur entrée en vigueur.</p>
-</div>
-
-{% endblock content %}
+</section>
+{% endblock policy_body %}

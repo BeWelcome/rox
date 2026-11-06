@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+{#
+  The policies (PoliciesController): terms of use, privacy policy and data rights in one layout. The pill tabs switch
+  document, the "On this page" list is read from the text (App\Service\PolicyToc), the text is in a card with its
+  title, date and the other languages, and the two other documents follow as "Read next".
+  A document sets policy (terms, privacy, datarights) and policy_locale and fills policy_title, policy_updated
+  (optional) and policy_body; the translated ones also policy_note and versions (both languages).
+#}
+{% set _routes = {terms: 'terms_of_use', privacy: 'privacy_policy', datarights: 'data_rights'} %}
+{% set _labels = {terms: 'termsofuse', privacy: 'privacy', datarights: 'datarights'} %}
+{% set _versions = versions ?? (policy_locale == 'fr' ? ['en'] : ['fr']) %}
+
+{% block title %}{{ block('policy_title')|striptags }}{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('policies') }}
+{% endblock javascripts %}
+
+{% block main %}
+    {% set _toc = policy_toc(block('policy_body'), 'policies.introduction'|trans({}, 'messages', policy_locale)) %}
+    {% set _updated = block('policy_updated') is defined ? block('policy_updated')|trim : '' %}
+    <main role="main" class="p-policies">
+        <div class="container-lg">
+            <header class="p-policies__head">
+                <p class="c-page-head__eyebrow">{{ 'policies.eyebrow'|trans({}, 'messages', policy_locale) }}</p>
+                <nav class="p-policies__tabs" aria-label="{{ 'policies.eyebrow'|trans({}, 'messages', policy_locale) }}">
+                    {% for name, route in _routes %}
+                        <a class="p-policies__tab{{ name == policy ? ' is-active' }}" href="{{ path(route, {locale: policy_locale}) }}"{% if name == policy %} aria-current="page"{% endif %}>{{ _labels[name]|trans({}, 'messages', policy_locale) }}</a>
+                    {% endfor %}
+                </nav>
+            </header>
+
+            <div class="p-policies__body">
+                {% if _toc.items is not empty %}
+                    <aside class="p-policies__toc">
+                        <details class="js-policies-toc" open>
+                            <summary>{{ 'policies.toc'|trans({}, 'messages', policy_locale) }}<i class="fas fa-chevron-down p-policies__chevron" aria-hidden="true"></i></summary>
+                            <nav aria-label="{{ 'policies.toc'|trans({}, 'messages', policy_locale) }}">
+                                {% for item in _toc.items %}
+                                    <a href="#{{ item.id }}" data-section="{{ item.id }}">{{ item.label }}</a>
+                                {% endfor %}
+                            </nav>
+                        </details>
+                    </aside>
+                {% endif %}
+
+                <article class="p-policies__card" lang="{{ policy_locale }}">
+                    <div class="p-policies__text">
+                        <header class="p-policies__doc-head">
+                            <h1>{{ block('policy_title') }}</h1>
+                            <div class="p-policies__meta">
+                                {% if _updated != '' %}
+                                    <span><i class="far fa-calendar" aria-hidden="true"></i>{{ _updated }}</span>
+                                {% endif %}
+                                {% for version in _versions %}
+                                    <a class="p-policies__version js-policies-version" href="{{ path(_routes[policy], {locale: version}) }}" hreflang="{{ version }}">
+                                        <i class="fas fa-globe" aria-hidden="true"></i>{{ ('policies.version.' ~ version)|trans({}, 'messages', policy_locale) }}
+                                    </a>
+                                {% endfor %}
+                            </div>
+                            {% if policy_locale == 'fr' %}
+                                <p class="p-policies__authoritative">{{ 'policies.authoritative'|trans({}, 'messages', 'fr') }}</p>
+                            {% endif %}
+                        </header>
+
+                        {% block policy_note %}{% endblock %}
+
+                        <div class="p-policies__sections js-policies-body">
+                            {{ _toc.html|raw }}
+                        </div>
+
+                        <nav class="p-policies__next" aria-label="{{ 'policies.readnext'|trans({}, 'messages', policy_locale) }}">
+                            {% for name, route in _routes|filter((route, name) => name != policy) %}
+                                <a class="p-policies__tile" href="{{ path(route, {locale: policy_locale}) }}">
+                                    <span>
+                                        <small>{{ 'policies.readnext'|trans({}, 'messages', policy_locale) }}</small>
+                                        <strong>{{ _labels[name]|trans({}, 'messages', policy_locale) }}</strong>
+                                    </span>
+                                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            {% endfor %}
+                        </nav>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </main>
+{% endblock main %}

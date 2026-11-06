@@ -1,0 +1,98 @@
+/*
+ * The policies (templates/policies/_layout.html.twig): the eyebrow and pill tabs, the "On this page" list (sticky,
+ * a <details> that starts closed on phones) next to the text in a card, its lettered and bulleted lists, the language
+ * links and the "Read next" tiles.
+ */
+
+main.p-policies { padding: 2.5rem 0 4rem; background: #f0f0f0; }
+.p-policies__head { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; margin-bottom: 2rem; }
+.p-policies__head .c-page-head__eyebrow { margin: 0; }
+
+/* Pill tabs */
+.p-policies__tabs { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; max-width: 100%; padding: 4px; border-radius: 999px; background: #f1f5f9; }
+.p-policies__tab,
+.p-policies__tab:hover { padding: 0.5rem 1.1rem; border-radius: 999px; color: #475569; font-size: 0.875rem; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background 0.15s ease, color 0.15s ease; }
+.p-policies__tab:hover { color: #0f172a; }
+.p-policies__tab.is-active { background: #fff; color: #0f172a; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12); }
+
+.p-policies__body { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 1.5rem; }
+
+/* On this page */
+.p-policies__toc { position: sticky; top: 88px; flex: 0 0 250px; max-height: calc(100vh - 112px); overflow-y: auto; padding: 1.25rem 0.75rem; border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 20px rgba(15, 23, 42, 0.04); }
+.p-policies__toc summary { display: block; padding: 0 0.75rem 0.75rem; color: #64748b; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; list-style: none; cursor: default; }
+.p-policies__toc summary::-webkit-details-marker { display: none; }
+.p-policies__chevron { display: none; }
+.p-policies__toc nav { display: flex; flex-direction: column; gap: 2px; }
+.p-policies__toc a,
+.p-policies__toc a:hover { display: block; padding: 0.5rem 0.75rem; border-radius: 0.75rem; color: #475569; font-size: 0.875rem; font-weight: 500; line-height: 1.35; text-decoration: none; transition: background 0.15s ease, color 0.15s ease; }
+.p-policies__toc a:hover { background: #f8fafc; color: #0f172a; }
+.p-policies__toc a.is-active { background: #fff7ed; color: #c2410c; font-weight: 600; }
+
+/* The text */
+.p-policies__card { flex: 1 1 560px; min-width: 0; padding: clamp(1.5rem, 4vw, 3.5rem); border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 20px rgba(15, 23, 42, 0.04); }
+.p-policies__text { max-width: 46rem; }
+.p-policies__doc-head { display: flex; flex-direction: column; gap: 0.9rem; margin-bottom: 1.75rem; padding-bottom: 1.75rem; border-bottom: 1px solid #e2e8f0; }
+.p-policies__doc-head h1 { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.p-policies__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; color: #64748b; font-size: 0.875rem; }
+.p-policies__meta > span { display: inline-flex; align-items: center; gap: 0.45rem; }
+.p-policies__meta > span > i,
+.p-policies__meta > span > svg { color: #94a3b8; }
+.p-policies__version,
+.p-policies__version:hover { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.3rem 0.8rem; border: 1px solid #e2e8f0; border-radius: 999px; color: #334155; font-weight: 600; text-decoration: none; transition: background 0.15s ease, border-color 0.15s ease; }
+.p-policies__version:hover { border-color: #cbd5e1; background: #f8fafc; }
+.p-policies__version > i,
+.p-policies__version > svg { color: #ea7a2e; }
+.p-policies__authoritative { margin: 0; color: #64748b; font-size: 0.8125rem; font-style: italic; }
+.p-policies__disclaimer { margin-bottom: 1.75rem; border-radius: 0.75rem; }
+
+.p-policies__sections > section,
+.p-policies__sections > h2,
+.p-policies__sections > h3 { scroll-margin-top: 88px; }
+.p-policies__sections > section { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.25rem; }
+.p-policies__sections h2,
+.p-policies__sections > h3 { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.5rem; font-weight: 700; line-height: 1.25; }
+.p-policies__sections > h2,
+.p-policies__sections > h3 { margin: 2.25rem 0 1rem; }
+.p-policies__sections p { margin: 0; color: #334155; font-size: 1rem; line-height: 1.7; text-wrap: pretty; overflow-wrap: anywhere; }
+.p-policies__sections > p { margin-bottom: 1rem; }
+.p-policies__sections a,
+.p-policies__text .p-policies__disclaimer a { color: #c2410c; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; transition: color 0.15s ease; }
+.p-policies__sections a:hover { color: #9a3412; }
+
+/* Lists: the marker is a small round tile, a number (a letter for ol type="a") or a dot for ul */
+.p-policies__sections ol,
+.p-policies__sections ul { display: flex; flex-direction: column; gap: 0.6rem; margin: 0; padding: 0; list-style: none; counter-reset: policy-item; }
+/* the marker is placed, not a grid column: an item's text and links stay one flowing line of text */
+.p-policies__sections li { position: relative; padding-left: 2.25rem; color: #334155; font-size: 1rem; line-height: 1.65; counter-increment: policy-item; }
+.p-policies__sections li::before { position: absolute; top: 0.05rem; left: 0; display: inline-flex; align-items: center; justify-content: center; width: 1.6rem; height: 1.6rem; border-radius: 999px; background: #fff7ed; color: #c2410c; font-size: 0.8125rem; font-weight: 700; line-height: 1; content: counter(policy-item); }
+.p-policies__sections ol[type="a"] > li::before { content: counter(policy-item, lower-alpha); }
+.p-policies__sections ul > li::before { content: "•"; }
+
+/* Read next */
+.p-policies__next { display: flex; flex-wrap: wrap; gap: 0.75rem; padding-top: 1.75rem; border-top: 1px solid #e2e8f0; }
+.p-policies__tile,
+.p-policies__tile:hover { display: flex; flex: 1 1 220px; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.25rem; border-radius: 0.9rem; background: #f8fafc; text-decoration: none; transition: background 0.15s ease; }
+.p-policies__tile:hover { background: #fff7ed; }
+.p-policies__tile span { display: flex; flex-direction: column; gap: 0.15rem; }
+.p-policies__tile small { color: #64748b; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.p-policies__tile strong { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.15rem; font-weight: 700; }
+.p-policies__tile > i,
+.p-policies__tile > svg { color: #ea7a2e; }
+
+/* Narrow: the list above the card, not sticky; on phones it opens and closes */
+@media (max-width: 859.98px) {
+  .p-policies__toc { position: static; flex-basis: 100%; max-height: none; }
+}
+@media (max-width: 575.98px) {
+  main.p-policies { padding-top: 1.5rem; }
+  .p-policies__toc { padding: 0.25rem 0.75rem; }
+  .p-policies__toc summary { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; cursor: pointer; }
+  .p-policies__toc .p-policies__chevron { display: inline-block; transition: transform 0.15s ease; }
+  .p-policies__toc details[open] .p-policies__chevron { transform: rotate(180deg); }
+  .p-policies__tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .p-policies__tabs::-webkit-scrollbar { display: none; }
+  .p-policies__toc details[open] nav { padding-bottom: 0.75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .p-policies__toc .p-policies__chevron { transition: none; }
+}

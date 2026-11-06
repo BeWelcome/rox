@@ -40,8 +40,9 @@ class FaqRequest
         $wordRepository = $em->getRepository(Word::class);
         $question = $wordRepository->findOneBy(['code' => 'faqq_' . $faqRequest->wordCode, 'language' => 'en']);
         $answer = $wordRepository->findOneBy(['code' => 'faqa_' . $faqRequest->wordCode, 'language' => 'en']);
-        $faqRequest->question = $question->getSentence();
-        $faqRequest->answer = $answer->getSentence();
+        // texts that are missing (never written, or removed) start empty and are written on save
+        $faqRequest->question = $question?->getSentence() ?? '';
+        $faqRequest->answer = $answer?->getSentence() ?? '';
         $faqRequest->active = ('Active' === $faq->getActive()) ? true : false;
 
         return $faqRequest;

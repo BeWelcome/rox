@@ -8,8 +8,7 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FaqCategoryFormType extends AbstractType
 {
@@ -21,6 +20,8 @@ class FaqCategoryFormType extends AbstractType
         $builder
             ->add('wordCode', TextType::class, [
                 'label' => 'label.admin.faq.category.translation.id',
+                // fixed once the FAQ or category exists: its texts are found by it
+                'disabled' => $options['edit'],
                 'help' => 'help.admin.faq.category.translation.id',
             ])
             ->add('description', TextType::class, [
@@ -49,24 +50,14 @@ class FaqCategoryFormType extends AbstractType
                     return 'faq_cat_' . $strippedWordCode;
                 }
             ));
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
-            $faqCategory = $event->getData();
-            $form = $event->getForm();
-            if (!$faqCategory) {
-                $form->add('FaqCategoryCreate', SubmitType::class, [
-                    'label' => 'label.create',
-                    'attr' => [
-                        'class' => 'btn-primary',
-                    ],
-                ]);
-            } else {
-                $form->add('FaqCategoryUpdate', SubmitType::class, [
-                    'label' => 'label.update',
-                    'attr' => [
-                        'class' => 'btn-primary',
-                    ],
-                ]);
-            }
-        });
+        $builder->add($options['edit'] ? 'FaqCategoryUpdate' : 'FaqCategoryCreate', SubmitType::class, [
+            'label' => $options['edit'] ? 'label.update' : 'label.create',
+        ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults(['edit' => false]);
+        $resolver->setAllowedTypes('edit', 'bool');
     }
 }

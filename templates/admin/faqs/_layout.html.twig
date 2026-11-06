@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+{#
+  The FAQ admin (Admin\FaqController, Admin\FaqCategoryController): the categories with their number of FAQs, sorting
+  them and a new category on the side; the page in the main column. Expects categories, counts and active (a
+  category id, sort or create); a page fills faq_admin.
+#}
+
+{% block title %}{{ 'faq'|trans }} · {{ 'admin.faqs.eyebrow'|trans }}{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('admin/faqs') }}
+{% endblock %}
+
+{% block main %}
+    <main role="main" class="p-faq p-faq--admin">
+        <div class="container-lg">
+            <header class="p-faq__head">
+                <p class="c-page-head__eyebrow">{{ 'admin.faqs.eyebrow'|trans }}</p>
+                <h1>{{ 'faq'|trans }}</h1>
+            </header>
+
+            <div class="p-faq__columns">
+                <aside class="p-faq__side">
+                    <nav class="p-faq__card p-faq__categories" aria-label="{{ 'faq'|trans }}">
+                        {% for category in categories %}
+                            {% set _active = category.id == active %}
+                            <a class="p-faq__category{{ _active ? ' is-active' }}" href="{{ path('admin_faqs_overview', {categoryId: category.id}) }}"{% if _active %} aria-current="page"{% endif %}>
+                                <span>{{ category.description|lower|trans({}, 'messages', 'en') }}</span>
+                                <span class="p-faq__count">{{ counts[category.id] ?? 0 }}</span>
+                            </a>
+                        {% endfor %}
+                        <hr>
+                        <a class="p-faq__category{{ active == 'sort' ? ' is-active' }}" href="{{ path('admin_faqs_category_sort') }}"><span><i class="fas fa-arrow-down-up-across-line fa-fw" aria-hidden="true"></i> {{ 'admin.faq.sort.categories'|trans }}</span></a>
+                        <a class="p-faq__category{{ active == 'create' ? ' is-active' }}" href="{{ path('admin_faqs_category_create') }}"><span><i class="fas fa-plus fa-fw" aria-hidden="true"></i> {{ 'admin.faq.create.category'|trans }}</span></a>
+                    </nav>
+                </aside>
+
+                <div class="p-faq__admin">
+                    {% include 'admin/massmail/_flash.html.twig' %}
+                    {% block faq_admin %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock main %}

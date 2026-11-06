@@ -1,48 +1,48 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/faqs/_layout.html.twig' %}
+{#
+  The FAQs of a category, the inactive ones too: drag them by the handle to change their order, then save it. Each
+  shows its translation id, its question and the start of its answer (in English), and opens its edit form.
+  Expects faqCategory, faqs and form (the order).
+#}
+{% set inline_notices = true %}
 
-{% block javascripts %}
-    {{ encore_entry_script_tags('admin/faqs') }}
-{% endblock %}
+{% block faq_admin %}
+    <section class="p-faq__card p-faq__main">
+        <div class="p-faq__title-row">
+            <h2 class="p-faq__title">{{ faqCategory.description|lower|trans({}, 'messages', 'en') }}</h2>
+            <a class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small" href="{{ path('admin_faqs_category_edit', {id: faqCategory.id}) }}"><i class="fas fa-pen" aria-hidden="true"></i>{{ 'admin.faq.edit.category'|trans }}</a>
+            <a class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small" href="{{ path('admin_faqs_faq_create', {categoryId: faqCategory.id}) }}"><i class="fas fa-plus" aria-hidden="true"></i>{{ 'faqs.button.create'|trans }}</a>
+        </div>
 
-{% block stylesheets %}
-{% endblock stylesheets %}
-
-{% block content %}
-    <h1>{{ faqCategory.description | lower | trans({}, 'messages', 'en') }}<a class="float-end" href="{{ path('admin_faqs_category_edit', {'id' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'button.edit' | trans }}</button></a></h1>
-    {% if faqs|length == 0 %}
-        <p>{{ 'faqs.none' | trans }}</p>
-        <p>{{ 'faqs.none.create' | trans }}<a class="float-end" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}"><button class="btn btn-primary">{{ 'faqs.button.create' | trans }}</button></a></p>
-    {% else %}
-        {{ form_start(form) }}
-            {{ form_row(form.sortOrder) }}
-            <div class="card o-card mb-1">
-                <div class="card-body">
-                    <h5 class="card-title">FAQ</h5>
-                    <p class="card-text">This shows the list of all FAQ in the above category. You can drag the cards to change the sort order.</p>
-                    <p class="card-text text-end">
-                        <a class="btn btn-primary" href="{{ path('admin_faqs_faq_create', {'categoryId' : faqCategory.id}) }}">{{ 'faqs.button.create' | trans }}</a>
-                        <button type="submit" class="btn btn-primary">{{ 'label.admin.faq.update.order' | trans }}</button>
-                    </p>
-                </div>
+        {% if faqs is empty %}
+            <div class="c-cnews-empty">
+                <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-circle-question"></i></span>
+                <p class="c-cnews-empty__title">{{ 'faqs.none'|trans }}</p>
+                <p class="c-cnews-empty__text">{{ 'faqs.none.create'|trans }}</p>
             </div>
-            <div id="faqs">
-            {% for faq in faqs %}
-                <div id="faq_{{ faq.id }}" class="card o-card mb-1 {% if faq.Active == "Not Active" %}bg-secondary{% endif %}">
-                    <div class="card-body">
-                        <small {% if faq.Active == "Active" %}class="text-muted card-title"{% endif %}>{{ faq.QandA }}</small>
-                        <div class="card-text"><em>Q: </em>{{ ('faqq_' ~ faq.QandA)|lower|trans|truncate(50)|purify }}</div>
-                        <div class="card-text"><em>A: </em>{{ ('faqa_' ~ faq.QandA)|lower|trans|truncate(100)|purify }}</div>
-                        <a class="btn btn-sm btn-primary float-end" href="{{ path('admin_faqs_faq_edit', {'id' : faq.id}) }}">{{ 'faqs.button.edit' | trans }}</a>
-                    </div>
+        {% else %}
+            {{ form_start(form, {attr: {class: 'p-faq__sort js-faq-sort'}}) }}
+                <p class="p-faq__hint">{{ 'admin.faqs.drag'|trans }}</p>
+                <ol class="p-faq__rows js-faq-sortable">
+                    {% for faq in faqs %}
+                        {% set _active = faq.Active == 'Active' %}
+                        <li class="p-faq__row{{ _active ? '' : ' is-inactive' }}" data-id="{{ faq.id }}">
+                            <span class="p-faq__handle js-faq-handle" title="{{ 'admin.faqs.move'|trans }}" aria-hidden="true"><i class="fas fa-grip-vertical"></i></span>
+                            <div class="p-faq__row-text">
+                                <p class="p-faq__code">{{ faq.QandA }}{% if not _active %} <span class="c-tag">{{ 'admin.faqs.inactive'|trans }}</span>{% endif %}</p>
+                                <p class="p-faq__question">{{ ('faqq_' ~ faq.QandA)|lower|trans({}, 'messages', 'en')|striptags|trim }}</p>
+                                <p class="p-faq__preview">{{ ('faqa_' ~ faq.QandA)|lower|trans({}, 'messages', 'en')|striptags|truncate(140) }}</p>
+                            </div>
+                            <a class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small" href="{{ path('admin_faqs_faq_edit', {id: faq.id}) }}"><i class="fas fa-pen" aria-hidden="true"></i>{{ 'admin.faqs.edit'|trans }}</a>
+                        </li>
+                    {% endfor %}
+                </ol>
+                {{ form_widget(form.sortOrder, {attr: {class: 'js-faq-order'}}) }}
+                <div class="p-faq__actions">
+                    <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small js-faq-save" disabled><i class="fas fa-floppy-disk" aria-hidden="true"></i>{{ 'label.admin.faq.update.order'|trans }}</button>
                 </div>
-            {% endfor %}
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">{{ 'label.admin.faq.update.order' | trans }}</button>
-                </div>
-            </div>
-        {{ form_end(form) }}
-    {% endif %}
+                {{ form_rest(form) }}
+            {{ form_end(form) }}
+        {% endif %}
+    </section>
 {% endblock %}

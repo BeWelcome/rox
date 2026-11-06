@@ -1,51 +1,32 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/faqs/_layout.html.twig' %}
+{#
+  The order of the FAQ categories: drag them by the handle, then save. Each shows its name in English and, for a
+  volunteer using another language, in that language. Expects faqCategories and form (the order).
+#}
+{% set inline_notices = true %}
 
-{% block javascripts %}
-    {{ encore_entry_script_tags('admin/faqs') }}
-{% endblock %}
-
-{% block stylesheets %}
-{% endblock stylesheets %}
-
-{% block content %}
-    <h1>{{ 'admin.faqs.sort_categories' | trans }}</h1>
-    {% if faqCategories|length == 0 %}
-        <p>{{ 'faqs.none' | trans }}</p>
-        <p>{{ 'faqs.none.create' | trans }}<a class="float-end" href="{{ path('admin_faqs_category_create') }}"><button class="btn btn-primary">{{ 'label.faq.create.category' | trans }}</button></a></p>
-    {% else %}
-        {{ form_start(form) }}
-            {{ form_row(form.sortOrder) }}
-            <div class="card o-card mb-1">
-                <div class="card-body">
-                    <h5 class="card-title">{{ 'faq' | trans }}</h5>
-                    <p class="card-text">{{ 'admin.faq.abstract' | trans }}</p>
-                    <p class="card-text text-end">
-                        <button type="submit" class="btn btn-primary">{{ 'admin.faq.category.update.order' | trans }}</button>
-                    </p>
-                </div>
+{% block faq_admin %}
+    <section class="p-faq__card p-faq__main">
+        <h2 class="p-faq__title">{{ 'admin.faqs.sort_categories'|trans }}</h2>
+        {{ form_start(form, {attr: {class: 'p-faq__sort js-faq-sort'}}) }}
+            <p class="p-faq__hint">{{ 'admin.faq.abstract'|trans }}</p>
+            <ol class="p-faq__rows js-faq-sortable">
+                {% for faqCategory in faqCategories %}
+                    <li class="p-faq__row" data-id="{{ faqCategory.id }}">
+                        <span class="p-faq__handle js-faq-handle" title="{{ 'admin.faqs.move'|trans }}" aria-hidden="true"><i class="fas fa-grip-vertical"></i></span>
+                        <div class="p-faq__row-text">
+                            <p class="p-faq__code">{{ faqCategory.description }}</p>
+                            <p class="p-faq__question">{{ faqCategory.description|lower|trans({}, 'messages', 'en') }}</p>
+                            {% if app.request.locale != 'en' %}<p class="p-faq__preview">{{ faqCategory.description|lower|trans }}</p>{% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ol>
+            {{ form_widget(form.sortOrder, {attr: {class: 'js-faq-order'}}) }}
+            <div class="p-faq__actions">
+                <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small js-faq-save" disabled><i class="fas fa-floppy-disk" aria-hidden="true"></i>{{ 'admin.faq.category.update.order'|trans }}</button>
             </div>
-            <div id="faqs">
-            {% for faqCategory in faqCategories %}
-                <div id="faq_{{ faqCategory.id }}" class="card o-card mb-1">
-                    <div class="card-body">
-                        <p class="card-text"><small class="text-muted">{{ faqCategory.description }} (en)</small><br>
-                        {{ faqCategory.description | lower | trans({}, 'messages', 'en') }}
-                        {% if app.request.locale != 'en' %}
-                            <hr>
-                            <small class="text-muted">{{ faqCategory.description }} ({{ app.request.locale }})</small><br>
-                            {{ faqCategory.description | lower | trans }}
-                        {% endif %}
-                        </p>
-                    </div>
-                </div>
-            {% endfor %}
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">{{  'admin.faq.category.update.order' | trans  }}</button>
-                </div>
-            </div>
+            {{ form_rest(form) }}
         {{ form_end(form) }}
-    {% endif %}
+    </section>
 {% endblock %}

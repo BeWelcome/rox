@@ -9,8 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FaqFormType extends AbstractType
@@ -27,9 +26,6 @@ class FaqFormType extends AbstractType
         $builder
             ->add('faqCategory', EntityType::class, [
                 'class' => FaqCategory::class,
-                'attr' => [
-                    'class' => 'select2',
-                ],
                 'choice_label' => function (FaqCategory $faqCategory) {
                     return $this->translator->trans(strtolower($faqCategory->getDescription()));
                 },
@@ -37,6 +33,8 @@ class FaqFormType extends AbstractType
             ])
             ->add('wordCode', TextType::class, [
                 'label' => 'label.admin.faq.translation.id',
+                // fixed once the FAQ or category exists: its texts are found by it
+                'disabled' => $options['edit'],
             ])
             ->add('question', CkEditorType::class, [
                 'label' => 'label.admin.faq.question',
@@ -50,24 +48,14 @@ class FaqFormType extends AbstractType
                 'required' => false,
             ])
         ;
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, static function (FormEvent $event) {
-            $faq = $event->getData();
-            $form = $event->getForm();
-            if (empty($faq->wordCode)) {
-                $form->add('FaqCreate', SubmitType::class, [
-                    'label' => 'label.create',
-                    'attr' => [
-                        'class' => 'btn-primary',
-                    ],
-                ]);
-            } else {
-                $form->add('FaqUpdate', SubmitType::class, [
-                    'label' => 'label.update',
-                    'attr' => [
-                        'class' => 'btn-primary',
-                    ],
-                ]);
-            }
-        });
+        $builder->add($options['edit'] ? 'FaqUpdate' : 'FaqCreate', SubmitType::class, [
+            'label' => $options['edit'] ? 'label.update' : 'label.create',
+        ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults(['edit' => false]);
+        $resolver->setAllowedTypes('edit', 'bool');
     }
 }

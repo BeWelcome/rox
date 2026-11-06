@@ -57,6 +57,62 @@ ORDER BY
     }
 
     /**
+     * Every FAQ of the category, the inactive ones too, in their order: the FAQ admin.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function getAllFaqsForCategory(FaqCategory $faqCategory): array
+    {
+        return $this->entityManager->getConnection()->fetchAllAssociative(
+            'SELECT f.* FROM faq f WHERE f.idCategory = ? ORDER BY f.SortOrder, f.id',
+            [$faqCategory->getId()],
+            [ParameterType::INTEGER],
+        );
+    }
+
+    /**
+     * @return array<int, int> the number of active FAQs of each category, by category id
+     */
+    public function countActiveFaqsByCategory(): array
+    {
+        $rows = $this->entityManager->getConnection()->fetchAllAssociative(
+            "SELECT idCategory AS category, COUNT(*) AS faqs FROM faq WHERE Active = 'Active' GROUP BY idCategory",
+        );
+
+        return array_column(array_map(static fn (array $row): array => [(int) $row['category'], (int) $row['faqs']], $rows), 1, 0);
+    }
+
+    /**
+     * Puts the FAQs of the category in the given order; ids of other categories are left out.
+     *
+     * @param list<int> $ids
+     */
+    public function sortFaqs(FaqCategory $faqCategory, array $ids): void
+    {
+        $faqs = $this->entityManager->getRepository(Faq::class)->findBy(['id' => $ids, 'category' => $faqCategory]);
+        $positions = array_flip($ids);
+        foreach ($faqs as $faq) {
+            $faq->setSortOrder($positions[$faq->getId()]);
+        }
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Puts the FAQ categories in the given order.
+     *
+     * @param list<int> $ids
+     */
+    public function sortCategories(array $ids): void
+    {
+        $categories = $this->entityManager->getRepository(FaqCategory::class)->findBy(['id' => $ids]);
+        $positions = array_flip($ids);
+        foreach ($categories as $category) {
+            $category->setSortOrder($positions[$category->getId()]);
+        }
+        $this->entityManager->flush();
+    }
+
+    /**
      * @return array
      */
     public function getFaqCategories()

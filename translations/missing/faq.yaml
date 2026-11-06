@@ -1,0 +1,39 @@
+faq.more.title:
+  - 'Your question is not here?'
+  - 'FAQ: the heading of the box under the categories that leads to the contact form.'
+faq.more.text:
+  - 'Write to us and a volunteer will answer.'
+  - 'FAQ: the text of the box under the categories that leads to the contact form.'
+admin.faqs.eyebrow:
+  - 'Volunteer tools'
+  - 'FAQ admin: the eyebrow above the title.'
+admin.faqs.order.saved:
+  - 'Saved the order of the FAQs.'
+  - 'FAQ admin: confirmation after saving the order of the FAQs of a category.'
+admin.faqs.drag:
+  - 'Drag the FAQs by their handle to change the order, then save it. Inactive FAQs are greyed out; members do not see them.'
+  - 'FAQ admin: the hint above the list of the FAQs of a category.'
+admin.faqs.move:
+  - 'Drag to move'
+  - 'FAQ admin: the tooltip of the handle of a row.'
+admin.faqs.inactive:
+  - 'Inactive'
+  - 'FAQ admin: the tag of a FAQ members do not see.'
+admin.faqs.edit:
+  - 'Edit'
+  - 'FAQ admin: the button that opens the form of a FAQ.'
+admin.faqs.help.category:
+  - 'The category the FAQ is shown in.'
+  - 'FAQ admin, FAQ form: the help of the category.'
+admin.faqs.help.code:
+  - 'The id of the texts of the FAQ: faqq_ and faqa_ are put before it.'
+  - 'FAQ admin, FAQ form: the help of the translation id of a new FAQ.'
+admin.faqs.help.code.fixed:
+  - 'The id of the texts; it cannot change once they exist.'
+  - 'FAQ admin, forms: the help of the translation id when editing.'
+admin.faqs.help.english:
+  - 'In English; the translators translate it.'
+  - 'FAQ admin, FAQ form: the help of the question and the answer.'
+admin.faqs.help.active:
+  - 'Members only see active FAQs.'
+  - 'FAQ admin, FAQ form: the help of the active checkbox.'

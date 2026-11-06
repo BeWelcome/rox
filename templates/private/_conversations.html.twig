@@ -1,0 +1,56 @@
+{#
+  A list of conversations (messages, requests, invitations): how many were sent and received, then a row per
+  conversation, the one answered last first, each opening its page. Expects section (messages, requests or
+  invitations), icon, conversations (MessagesExtractor::writeConversations), sent, received and member.
+#}
+{% import 'private/_macros.html.twig' as my %}
+{{ my.head({group: 'conversations', title: ('mydata.' ~ section ~ '.headline')|trans, abstract: ('mydata.' ~ section ~ '.abstract')|trans}) }}
+
+{% if conversations is empty %}
+    {{ my.empty(icon, ('mydata.' ~ section ~ '.no.' ~ section ~ (section == 'messages' ? '.' : ''))|trans) }}
+{% else %}
+    <div class="c-mydata-stats">
+        {% for direction, count in {sent: sent, received: received} %}
+            <div class="c-mydata-stat">
+                <span class="c-mydata-tile" aria-hidden="true"><i class="fas {{ direction == 'sent' ? 'fa-paper-plane' : 'fa-inbox' }}"></i></span>
+                <span><strong>{{ count }}</strong><small>{{ ('mydata.stats.' ~ direction)|trans }}</small></span>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="c-mydata-card c-mydata-list">
+        {% for conversation in conversations %}
+            {% set _last = conversation.last %}
+            {% set _request = conversation.request %}
+            {% set _preview = _last.message|replace({'\n': ' ', '<br />': ' ', '</p>': ' '})|striptags|trim %}
+            <div class="c-inbox-item{{ _request and _request.status in [1, 2] ? ' is-closed' }}">
+                <a class="c-inbox-item__link" href="{{ conversation.file }}">
+                    <span class="c-inbox-item__avatar">
+                        <img class="c-inbox-avatar" src="images/empty_avatar.png" alt="">
+                        {% if _request %}{% include 'conversations/_request_state.html.twig' with {request: _request, unread: false, part: 'kind'} only %}{% endif %}
+                    </span>
+                    <div class="c-inbox-item__body">
+                        <div class="c-inbox-item__top">
+                            <span class="c-inbox-item__name">{{ conversation.other.username }}</span>
+                            <span class="c-inbox-item__date">{{ _last.created|format_date('medium') }}</span>
+                        </div>
+                        <div class="c-inbox-item__middle">
+                            <div class="c-inbox-item__subject">{{ _last.subject ? _last.subject.subject|striptags : 'conversation.with'|trans({username: conversation.other.username}) }}</div>
+                            {% if _request %}{% include 'conversations/_request_state.html.twig' with {request: _request, unread: false, part: 'pill'} only %}{% endif %}
+                        </div>
+                        <div class="c-inbox-item__bottom">
+                            <span class="c-inbox-item__preview">
+                                {%- if _last.sender == member -%}
+                                    <svg class="c-inbox-item__dir c-inbox-item__dir--sent" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.5 2H8v4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                {%- else -%}
+                                    <svg class="c-inbox-item__dir c-inbox-item__dir--received" viewBox="0 0 10 10" aria-hidden="true"><path d="M8 2 2 8M6.5 8H2V3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                {%- endif -%}
+                                {{ _preview|truncate(140) }}
+                            </span>
+                            {% if _request %}{% include 'conversations/_request_state.html.twig' with {request: _request, unread: false, part: 'status'} only %}{% endif %}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

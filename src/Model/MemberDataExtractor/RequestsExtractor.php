@@ -10,23 +10,17 @@ use Override;
 final class RequestsExtractor extends MessagesExtractor
 {
     #[Override]
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         /** @var MessageRepository $messageRepository */
         $messageRepository = $this->getRepository(Message::class);
 
-        $requestsSentBy = $messageRepository->getRequestsSentBy($member);
-        $requestsReceivedBy = $messageRepository->getRequestsReceivedBy($member);
-        $this->process($requestsSentBy, $tempDir . 'requests', 'request', true);
-        $this->process($requestsReceivedBy, $tempDir . 'requests', 'request', false);
-
-        return $this->writePersonalDataFile(
-            [
-                'requestsSent' => \count($requestsSentBy),
-                'requestsReceived' => \count($requestsReceivedBy),
-            ],
+        return $this->writeConversations(
+            $member,
+            $tempDir,
             'requests',
-            $tempDir . 'requests.html'
+            $messageRepository->getRequestsSentBy($member),
+            $messageRepository->getRequestsReceivedBy($member),
         );
     }
 }

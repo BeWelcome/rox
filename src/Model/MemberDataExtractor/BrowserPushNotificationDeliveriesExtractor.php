@@ -8,7 +8,7 @@ use App\Repository\BrowserPushNotificationDeliveryRepository;
 
 final class BrowserPushNotificationDeliveriesExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         /** @var BrowserPushNotificationDeliveryRepository $repository */
         $repository = $this->getRepository(BrowserPushNotificationDelivery::class);
@@ -21,10 +21,12 @@ final class BrowserPushNotificationDeliveriesExtractor extends AbstractExtractor
             ->getResult()
         ;
 
-        return $this->writePersonalDataFile(
+        $this->writePersonalDataFile(
             ['browser_push_notification_deliveries' => $deliveries, 'member' => $member],
             'browser_push_notification_deliveries',
             $tempDir . 'browser_push_notification_deliveries.html'
         );
+
+        return ['browser_push_notification_deliveries' => \count($deliveries)];
     }
 }

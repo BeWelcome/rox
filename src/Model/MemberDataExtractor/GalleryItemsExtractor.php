@@ -19,7 +19,7 @@ final class GalleryItemsExtractor extends AbstractExtractor implements Extractor
         parent::__construct($entrypointLookup, $environment, $registry);
     }
 
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         $memberId = $member->getId();
 
@@ -48,6 +48,8 @@ final class GalleryItemsExtractor extends AbstractExtractor implements Extractor
             }
         }
 
-        return $this->writePersonalDataFile(['hrefs' => $hrefs], 'gallery', $tempDir . 'gallery.html');
+        $this->writePersonalDataFile(['hrefs' => $hrefs], 'gallery', $tempDir . 'gallery.html');
+
+        return ['gallery' => \count($hrefs)];
     }
 }

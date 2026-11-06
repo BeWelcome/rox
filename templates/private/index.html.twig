@@ -1,23 +1,46 @@
 {% extends 'private/mydata.html.twig' %}
+{#
+  The overview of the export (MemberModel): the member, how many messages, requests and invitations they sent and
+  received, and a card per section. Expects member, picture, sections (MyDataSections::withCounts) and counts.
+#}
+{% set section = 'index' %}
 
 {% block content %}
-    <h1>{{ 'mydata.headline' | trans({'username': member.username}) }}</h1>
-    <p>{{ 'mydata.abstract' | trans }}</p>
+    <section class="c-mydata-hello">
+        <img class="c-mydata-hello__avatar" src="{{ picture ? picture.thumbnail : 'images/empty_avatar.png' }}" alt="">
+        <div class="c-mydata-hello__text">
+            <p class="c-mydata-head__eyebrow">{{ 'mydata.export'|trans }}</p>
+            <h1>{{ 'mydata.headline'|trans({'username': member.username}) }}</h1>
+            <p>{{ 'mydata.abstract'|trans }}</p>
+        </div>
+    </section>
 
-    <div class="card-columns">
-        {% for current in extracted %}
-            {% set current = current|replace({'_': '.'}) %}
-            <div class="card o-card">
-                <div class="card-header text-truncate">
-                    {{ ('mydata.' ~ current ~ ".headline") | trans }}
-                </div>
-                <div class="card-body">
-                    <p>{{ ('mydata.' ~ current ~ ".abstract") | trans }}</p>
-                </div>
-                <div class="card-footer text-right">
-                    <a class="btn btn-primary" href="{{ current }}.html">{{ 'showdetails'|trans }}</a>
-                </div>
-            </div>
+    <div class="c-mydata-stats">
+        {% for kind, icon in {messages: 'fa-envelope', requests: 'fa-bed', invitations: 'fa-handshake'} %}
+            <a class="c-mydata-stat" href="{{ kind }}.html">
+                <span class="c-mydata-tile" aria-hidden="true"><i class="fas {{ icon }}"></i></span>
+                <span>
+                    <strong>{{ counts[kind] ?? 0 }}</strong>
+                    <small>{{ ('mydata.' ~ kind ~ '.headline')|trans }} · {{ 'mydata.stats.sent.received'|trans({'sent': counts[kind ~ '_sent'] ?? 0, 'received': counts[kind ~ '_received'] ?? 0}) }}</small>
+                </span>
+            </a>
         {% endfor %}
     </div>
+
+    {% for group, items in sections %}
+        <h2 class="c-mydata-head__eyebrow c-mydata-overview__group">{{ ('mydata.group.' ~ group)|trans }}</h2>
+        <div class="c-mydata-grid c-mydata-overview">
+            {% for item in items %}
+                <a class="c-mydata-card c-mydata-section-card{{ item.count == 0 ? ' is-empty' }}" href="{{ item.name }}.html">
+                    <div class="c-mydata-section-card__head">
+                        <span class="c-mydata-tile" aria-hidden="true"><i class="fas {{ item.icon }}"></i></span>
+                        <h3>{{ ('mydata.' ~ item.key ~ '.headline')|trans }}</h3>
+                        {% if item.count > 0 and item.name != 'profile' %}<span class="c-mydata-side__count">{{ item.count }}</span>{% endif %}
+                    </div>
+                    <p>{{ ('mydata.' ~ item.key ~ '.abstract')|trans }}</p>
+                    <span class="c-mydata-section-card__more">{{ 'showdetails'|trans }} <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
+            {% endfor %}
+        </div>
+    {% endfor %}
 {% endblock content %}

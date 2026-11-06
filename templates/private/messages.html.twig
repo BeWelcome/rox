@@ -1,13 +1,7 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's messages (MessagesExtractor::writeConversations): a row per conversation. #}
+{% set section = 'messages' %}
 
 {% block content %}
-    <h1>{{ 'mydata.messages.headline'|trans }}</h1>
-    <p>{{ 'mydata.messages.abstract'|trans }}</p>
-    {% if messagesSent == 0 or messagesReceived == 0%}
-    <p><strong>{{ 'mydata.messages.no.messages.'|trans }}</strong></p>
-    {% else %}
-        <p>{{ 'mydata.messages.sent'|trans({'sent': messagesSent }) }}</p>
-        <p>{{ 'mydata.messages.received'|trans({'received': messagesReceived }) }}</p>
-        <p>{{ 'mydata.messages.check.messages'|trans }}</p>
-    {% endif %}
-{% endblock %}
+    {% include 'private/_conversations.html.twig' with {icon: 'fa-envelope', sent: messagesSent, received: messagesReceived} %}
+{% endblock content %}

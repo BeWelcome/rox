@@ -8,7 +8,7 @@ use App\Repository\CommentRepository;
 
 final class CommentsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         // Comments the member left others
         /** @var CommentRepository $commentRepository */
@@ -41,6 +41,8 @@ final class CommentsExtractor extends AbstractExtractor implements ExtractorInte
             $comments[$comment->getToMember()->getId()] = $commentArray;
         }
 
-        return $this->writePersonalDataFile(['comments' => $comments], 'comments', $tempDir . 'comments.html');
+        $this->writePersonalDataFile(['comments' => $comments], 'comments', $tempDir . 'comments.html');
+
+        return ['comments' => \count($comments)];
     }
 }

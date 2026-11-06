@@ -8,7 +8,7 @@ use App\Entity\PollVote;
 
 final class PollsExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         $pollsDir = $tempDir . 'polls/';
         mkdir($pollsDir);
@@ -24,6 +24,8 @@ final class PollsExtractor extends AbstractExtractor implements ExtractorInterfa
 
         $this->writePersonalDataFileSubDirectory(['votes' => $votes], 'polls_voted', $tempDir . 'polls', 'polls_voted.html');
 
-        return $this->writePersonalDataFile([], 'polls', $tempDir . 'polls.html');
+        $this->writePersonalDataFile(['created' => \count($polls), 'voted' => \count($votes)], 'polls', $tempDir . 'polls.html');
+
+        return ['polls' => \count($polls) + \count($votes)];
     }
 }

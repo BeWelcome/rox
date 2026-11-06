@@ -1,31 +1,25 @@
 {% extends 'private/mydata.html.twig' %}
+{# The polls the member contributed (PollsExtractor), in polls/. Expects contributions. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'polls' %}
 
 {% block content %}
-    <h1>{{ 'mydata.polls.contributed.headline'|trans }}</h1>
-    <p>{{ 'mydata.polls.contributed.abstract'|trans }}</p>
+    {{ my.head({group: 'community', title: 'mydata.polls.contributed.headline'|trans, abstract: 'mydata.polls.contributed.abstract'|trans, prefix: '../', back: {url: '../polls.html', label: 'mydata.polls.headline'|trans}}) }}
     {% if contributions|length == 0 %}
-    <p><strong>{{ 'mydata.polls.contributed.no.polls'|trans }}</strong></p>
+        {{ my.empty('fa-square-poll-vertical', 'mydata.polls.contributed.no.polls'|trans, '../') }}
     {% else %}
-        <div class="card-columns">
+        <div class="c-mydata-grid">
             {% for contribution in contributions %}
-            <div class="card o-card">
-                <div class="card-header text-truncate">
-                    {% if contribution.poll.titles|length %}{{ contribution.poll.titles|first }}{% else %}No Title?{% endif %}
-                </div>
-                <div class="card-body">
-                    {% include 'private/poll.html.twig' with {'poll':contribution.poll} %}
+                {% set _poll = contribution.poll %}
+                <article class="c-mydata-card">
+                    <h2 class="c-mydata-card__title">{{ _poll.titles|length ? _poll.titles|first : 'mydata.polls.no.title'|trans }}</h2>
+                    {% include 'private/poll.html.twig' with {poll: _poll} %}
                     {% if contribution.comment|length %}
-                        <p>
-                            <strong>{{ 'mydata.polls.comment'|trans }}</strong><br>
-                            {{ contribution.comment|purify }}
-                        </p>
+                        <div class="c-mydata-box"><span class="c-mydata-label">{{ 'mydata.polls.comment'|trans }}</span>{{ contribution.comment|purify }}</div>
                     {% endif %}
-                </div>
-                <div class="card-footer text-right">
-                    <a class="btn btn-primary" href="{{ url('polls_view_results', {'pollId': contribution.poll.id}) }}">{{ 'showdetails'|trans }}</a>
-                </div>
-            </div>
+                    <div class="c-mydata-card__foot"><span></span>{{ my.site(url('polls_view_results', {pollId: _poll.id})) }}</div>
+                </article>
             {% endfor %}
         </div>
     {% endif %}
-{% endblock %}
+{% endblock content %}

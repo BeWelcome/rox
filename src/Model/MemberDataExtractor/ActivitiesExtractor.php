@@ -8,7 +8,7 @@ use App\Repository\ActivityAttendeeRepository;
 
 final class ActivitiesExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
         $activities = [];
         /** @var ActivityAttendeeRepository $attendeeRepository */
@@ -36,6 +36,8 @@ final class ActivitiesExtractor extends AbstractExtractor implements ExtractorIn
             }
         }
 
-        return $this->writePersonalDataFile(['activities' => $activities], 'activities', $tempDir . 'activities.html');
+        $this->writePersonalDataFile(['activities' => $activities], 'activities', $tempDir . 'activities.html');
+
+        return ['activities' => \count($activities)];
     }
 }

@@ -1,24 +1,22 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's volunteer rights (RightsExtractor). Expects volunteerrights. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'rights' %}
 
 {% block content %}
-    <h1>{{ 'mydata.rights.headline' | trans }}</h1>
-    <p>{{ 'mydata.rights.abstract' | trans }}</p>
+    {{ my.head({group: 'account', title: 'mydata.rights.headline'|trans, abstract: 'mydata.rights.abstract'|trans}) }}
     {% if volunteerrights|length == 0 %}
-        <p>{{ 'mydata.rights.no.rights'|trans }}</p>
+        {{ my.empty('fa-shield-halved', 'mydata.rights.no.rights'|trans) }}
     {% else %}
-        <div class="card-columns">
-        {% for volunteerright in volunteerrights %}
-            <div class="card o-card">
-                <div class="card-header text-truncate">
-                    {{ volunteerright.right.name }}
-                </div>
-                <div class="card-body">
-                    <p>{{ 'mydata.rights.scope'|trans }}: {{ volunteerright.scope }}</p>
-                    <p>{{ 'mydata.rights.level'|trans }}: {{ volunteerright.level }}</p>
-                    <p>{{ 'mydata.rights.assigned'|trans }}: {{ volunteerright.created|format_datetime('medium', 'short') }}</p>
-                </div>
-            </div>
-        {% endfor %}
+        <div class="c-mydata-grid">
+            {% for volunteerright in volunteerrights %}
+                <article class="c-mydata-card">
+                    <h2 class="c-mydata-card__title">{{ volunteerright.right.name }}</h2>
+                    <span class="c-mydata-label">{{ 'mydata.rights.scope'|trans }}</span><div>{{ volunteerright.scope }}</div>
+                    <span class="c-mydata-label">{{ 'mydata.rights.level'|trans }}</span><div>{{ volunteerright.level }}</div>
+                    <div class="c-mydata-card__foot"><span>{{ 'mydata.rights.assigned'|trans }} {{ volunteerright.created|format_datetime('medium', 'short') }}</span></div>
+                </article>
+            {% endfor %}
         </div>
     {% endif %}
 {% endblock content %}

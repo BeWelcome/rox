@@ -1,33 +1,28 @@
 {% extends 'private/mydata.html.twig' %}
+{# A single post with its translations (the mockups' post (thread), post (group)). Expects post, thread, group. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'posts' %}
 
 {% block content %}
-    <h3>{% if thread %}{{ thread.title|purify }} <a
-            class="btn btn-primary" href="{{ url('forum_thread', {'threadId': thread.id}) }}">{{ 'gotothread'|trans }}</a>{% else %}Orphaned post{% endif %}
-    </h3>
-    {% set posted_in %}{% if group %}<a
-        href="{{ url('group_start', {'group_id': group.id}) }}">{{ group.name }}</a>{% else %}the forum{% endif %}{% endset %}
-    <p>{{ 'mydata.forums.posted'|trans({'in': posted_in}) }}<br>
-        {{ 'mydata.forums.created'|trans({'posted':post.created}) }}{% if post.deleted == 'Deleted' %}<br>
-        {{ 'mydata.forums.status'|trans }}: {{ 'mydata.post.deleted'|trans }}{% endif %}</p>
-    <div class="post">
-        <small class="text-muted">{{ post.language.wordcode|lower|trans|raw }} ({{ post.language.shortCode }})</small><br>
-        {{ post.message | purify }}
-    </div>
-    {% if post.messageTranslations|length > 1 %}
-        <p>{{ 'mydata.posts.translations'|trans }}</p>
+    {{ my.head({group: 'community', title: thread ? thread.title|striptags : 'mydata.posts.headline'|trans}) }}
+    <article class="c-mydata-card">
+        {% set posted_in %}{% if group %}<a href="{{ url('group_start', {group_id: group.id}) }}">{{ group.name }}</a>{% else %}{{ 'forum'|trans }}{% endif %}{% endset %}
+        <p class="c-mydata-card__meta">
+            {{ 'mydata.forums.posted'|trans({'in': posted_in})|raw }} · {{ 'mydata.forums.created'|trans({'posted': post.created}) }}
+            {% if post.deleted == 'Deleted' %}<span class="c-mydata-tag">{{ 'mydata.post.deleted'|trans }}</span>{% endif %}
+        </p>
+        <small class="c-mydata-label">{{ ('lang_' ~ post.language.shortCode)|lower|trans }} ({{ post.language.shortCode }})</small>
+        <div class="c-mydata-card__text">{{ post.message|purify }}</div>
         {% for locale, translation in post.messageTranslations %}
             {% if post.message != translation.message %}
-            <div class="post">
-                <small class="text-muted">{{ translation.language.wordcode|lower|trans|raw }} ({{ translation.language.shortCode }})</small><br>
-                {{ translation.message | purify }}
-            </div>
+                <div class="c-mydata-post__translation">
+                    <small>{{ ('lang_' ~ translation.language.shortCode)|lower|trans }} ({{ translation.language.shortCode }})</small>
+                    <div class="c-mydata-card__text">{{ translation.message|purify }}</div>
+                </div>
             {% endif %}
         {% endfor %}
-    {% endif %}
-    {% if thread %}
-    <div class="text-right">
-        <a class="btn btn-primary" href="{{ url('forum_thread', {'threadId': thread.id, '_fragment': 'post' ~ post.id}) }}">{{ 'gotopost'|trans }}</a>
-    </div>
-    {% endif %}
+        {% if thread %}
+            <div class="c-mydata-card__foot"><span></span>{{ my.site(url('forum_thread', {threadId: thread.id, _fragment: 'post' ~ post.id})) }}</div>
+        {% endif %}
+    </article>
 {% endblock content %}
-

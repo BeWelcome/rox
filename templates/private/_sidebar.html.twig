@@ -1,0 +1,22 @@
+{#
+  Every section of the export by group (MyDataSections), on every page; the active one marked, sections without
+  anything grey and without a count. Expects sections, active and prefix ('../' in a subdirectory).
+#}
+<nav class="c-mydata-side" aria-label="{{ 'mydata.sections'|trans }}">
+    <ul>
+        <li><a class="c-mydata-side__row{{ active == 'index' ? ' is-active' }}" href="{{ prefix }}index.html"{% if active == 'index' %} aria-current="page"{% endif %}><i class="fas fa-house" aria-hidden="true"></i>{{ 'mydata.overview'|trans }}</a></li>
+    </ul>
+    {% for group, items in sections %}
+        <p class="c-mydata-side__group">{{ ('mydata.group.' ~ group)|trans }}</p>
+        <ul>
+            {% for item in items %}
+                {% set _active = item.name == active %}
+                <li><a class="c-mydata-side__row{{ _active ? ' is-active' }}{{ item.count == 0 ? ' is-empty' }}" href="{{ prefix }}{{ item.name }}.html"{% if _active %} aria-current="page"{% endif %}>
+                    <i class="fas {{ item.icon }}" aria-hidden="true"></i>
+                    <span>{{ ('mydata.' ~ item.key ~ '.headline')|trans }}</span>
+                    {% if item.count > 0 and item.name != 'profile' %}<span class="c-mydata-side__count">{{ item.count }}</span>{% endif %}
+                </a></li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+</nav>

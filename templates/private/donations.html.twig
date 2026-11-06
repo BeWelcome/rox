@@ -1,27 +1,23 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's donations (DoctrineExtractor). Expects donations. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'donations' %}
 
 {% block content %}
-    <h1>{{ 'mydata.donations.headline' | trans }}</h1>
-    <p>{{ 'mydata.donations.abstract' | trans }}</p>
+    {{ my.head({group: 'account', title: 'mydata.donations.headline'|trans, abstract: 'mydata.donations.abstract'|trans}) }}
     {% if donations|length == 0 %}
-        <p>{{ 'mydata.donations.no.donations'|trans }}</p>
+        {{ my.empty('fa-hand-holding-heart', 'mydata.donations.no.donations'|trans) }}
     {% else %}
-        <div class="card-columns">
+        <div class="c-mydata-grid">
             {% for donation in donations %}
-                <div class="card o-card">
-                    <div class="card-header text-truncate">
-                        {{ donation.money }}{{ donation.amount }}
-                    </div>
-                    <div class="card-body">
-                        <p>{{ donation.namegiven }}</p>
-                        {% if donation.referencepaypal %}
-                            <p>{{ 'mydata.donations.paypal'|trans }}: {{ donation.referencepaypal }}</p>
-                        {% endif %}
-                        <p>{{ donation.systemcomment }}</p>
-                        <p>{{ donation.membercomment }}</p>
-                        <p>{% if donation.statusprivate == 'showamountonly' %}{{ 'mydata.donations.amount.only'|trans }}{% else %}{{ 'mydata.donations.full.details'|trans }}{% endif %}</p>
-                    </div>
-                </div>
+                <article class="c-mydata-card">
+                    <h2 class="c-mydata-card__title">{{ donation.money }}{{ donation.amount }}</h2>
+                    {% if donation.namegiven %}<p>{{ donation.namegiven }}</p>{% endif %}
+                    {% if donation.referencepaypal %}<span class="c-mydata-label">{{ 'mydata.donations.paypal'|trans }}</span><div>{{ donation.referencepaypal }}</div>{% endif %}
+                    {% if donation.systemcomment %}<p>{{ donation.systemcomment }}</p>{% endif %}
+                    {% if donation.membercomment %}<p>{{ donation.membercomment }}</p>{% endif %}
+                    <div class="c-mydata-card__foot"><span class="c-mydata-tag">{{ (donation.statusprivate == 'showamountonly' ? 'mydata.donations.amount.only' : 'mydata.donations.full.details')|trans }}</span></div>
+                </article>
             {% endfor %}
         </div>
     {% endif %}

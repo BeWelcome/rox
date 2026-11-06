@@ -1,24 +1,22 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's privileges (PrivilegesExtractor). Expects privileges. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'privileges' %}
 
 {% block content %}
-    <h1>{{ 'mydata.privileges.headline' | trans }}</h1>
-    <p>{{ 'mydata.privileges.abstract' | trans }}</p>
+    {{ my.head({group: 'account', title: 'mydata.privileges.headline'|trans, abstract: 'mydata.privileges.abstract'|trans}) }}
     {% if privileges|length == 0 %}
-        <p>{{ 'mydata.privileges.no.privileges'|trans }}</p>
+        {{ my.empty('fa-key', 'mydata.privileges.no.privileges'|trans) }}
     {% else %}
-        <div class="card-columns">
-        {% for privilege in privileges %}
-            <div class="card o-card">
-                <div class="card-header text-truncate">
-                    {{ privilege.privilege }}
-                </div>
-                <div class="card-body">
-                    <p>{{ 'mydata.privileges.scope'|trans }}: {{ privilege.scope }}</p>
-                    <p>{{ 'mydata.privileges.role'|trans }}: {{ privilege.role }}</p>
-                    <p>{{ 'mydata.privileges.assigned'|trans }}: {{ privilege.assigned|format_date('medium') }}</p>
-                </div>
-            </div>
-        {% endfor %}
+        <div class="c-mydata-grid">
+            {% for privilege in privileges %}
+                <article class="c-mydata-card">
+                    <h2 class="c-mydata-card__title">{{ privilege.privilege }}</h2>
+                    <span class="c-mydata-label">{{ 'mydata.privileges.scope'|trans }}</span><div>{{ privilege.scope }}</div>
+                    <span class="c-mydata-label">{{ 'mydata.privileges.role'|trans }}</span><div>{{ privilege.role }}</div>
+                    <div class="c-mydata-card__foot"><span>{{ 'mydata.privileges.assigned'|trans }} {{ privilege.assigned|format_date('medium') }}</span></div>
+                </article>
+            {% endfor %}
         </div>
     {% endif %}
 {% endblock content %}

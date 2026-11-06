@@ -8,9 +8,8 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class ProfilePicturesExtractor extends AbstractExtractor implements ExtractorInterface
 {
-    public function extract(Member $member, string $tempDir): string
+    public function extract(Member $member, string $tempDir): array
     {
-        $pictures = [];
         $variants = ['_xs', '_30_30', '_75_75', '_150', '_200', '_500', '_original'];
 
         // Copy all profile pictures
@@ -25,9 +24,6 @@ final class ProfilePicturesExtractor extends AbstractExtractor implements Extrac
                 $filesystem->copy($photo->getFilepath(), $pictureDir
                     . pathinfo($photo->getFilepath(), \PATHINFO_FILENAME)
                     . $this->imageExtension($photo->getFilepath()));
-                $pictures[] =
-                    pathinfo($photo->getFilepath(), \PATHINFO_FILENAME)
-                    . $this->imageExtension($photo->getFilepath());
             }
             foreach ($variants as $variant) {
                 $filepath = $photo->getFilepath() . $variant;
@@ -36,11 +32,11 @@ final class ProfilePicturesExtractor extends AbstractExtractor implements Extrac
                     $filesystem->copy($filepath, $pictureDir
                         . $filename
                         . $this->imageExtension($filepath));
-                    $pictures[] = $filename . $this->imageExtension($filepath);
                 }
             }
         }
 
-        return $this->writePersonalDataFile(['pictures' => $pictures], 'pictures', $tempDir . 'pictures.html');
+        // no page: the profile shows the picture (MemberDataExtractor)
+        return [];
     }
 }

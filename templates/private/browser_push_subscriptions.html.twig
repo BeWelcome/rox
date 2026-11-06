@@ -1,46 +1,36 @@
 {% extends 'private/mydata.html.twig' %}
+{# The member's browsers that get notifications (DoctrineExtractor). Expects browser_push_subscriptions. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'browser_push_subscriptions' %}
+{% set k = 'mydata.browser.push.subscriptions.' %}
 
 {% block content %}
-    <h1>{{ 'mydata.browser.push.subscriptions.headline'|trans }}</h1>
-    <p>{{ 'mydata.browser.push.subscriptions.abstract'|trans }}</p>
+    {{ my.head({group: 'account', title: (k ~ 'headline')|trans, abstract: (k ~ 'abstract')|trans}) }}
     {% if browser_push_subscriptions|length == 0 %}
-        <p><strong>{{ 'mydata.browser.push.subscriptions.no.subscriptions'|trans }}</strong></p>
+        {{ my.empty('fa-bell', (k ~ 'no.subscriptions')|trans) }}
     {% else %}
-        <div class="row">
-            <div class="col-12 table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th>{{ 'mydata.browser.push.subscriptions.endpoint.hash'|trans }}</th>
-                        <th>{{ 'mydata.browser.push.subscriptions.endpoint.host'|trans }}</th>
-                        <th>{{ 'mydata.browser.push.subscriptions.endpoint'|trans }}</th>
-                        <th>{{ 'mydata.browser.push.subscriptions.public.key'|trans }}</th>
-                        <th>{{ 'mydata.browser.push.subscriptions.auth.token'|trans }}</th>
-                        <th>{{ 'mydata.browser.push.subscriptions.user.agent'|trans }}</th>
-                        <th>{{ 'mydata.browser.push.subscriptions.content.encoding'|trans }}</th>
-                        <th>{{ 'mydata.browser.push.subscriptions.created'|trans }}</th>
-                        <th>{{ 'mydata.browser.push.subscriptions.last.seen'|trans }}</th>
-                        <th>{{ 'mydata.browser.push.subscriptions.last.error'|trans }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+        <div class="c-mydata-card c-mydata-table-card">
+            <table class="c-mydata-table">
+                <thead><tr>
+                    {% for column in ['endpoint.hash', 'endpoint.host', 'endpoint', 'public.key', 'auth.token', 'user.agent', 'content.encoding', 'created', 'last.seen', 'last.error'] %}<th>{{ (k ~ column)|trans }}</th>{% endfor %}
+                </tr></thead>
+                <tbody>
                     {% for subscription in browser_push_subscriptions %}
                         <tr>
-                            <td class="align-middle">{{ subscription.endpointHash }}</td>
-                            <td class="align-middle">{{ subscription.endpointHost }}</td>
-                            <td class="align-middle">{{ subscription.endpoint }}</td>
-                            <td class="align-middle">{{ subscription.publicKey }}</td>
-                            <td class="align-middle">{{ subscription.authToken }}</td>
-                            <td class="align-middle">{{ subscription.userAgent }}</td>
-                            <td class="align-middle">{{ subscription.contentEncoding }}</td>
-                            <td class="align-middle">{{ subscription.created|format_datetime('medium', 'short') }}</td>
-                            <td class="align-middle">{% if subscription.lastSeen %}{{ subscription.lastSeen|format_datetime('medium', 'short') }}{% endif %}</td>
-                            <td class="align-middle">{{ subscription.lastError }}</td>
+                            <td class="is-long">{{ subscription.endpointHash }}</td>
+                            <td>{{ subscription.endpointHost }}</td>
+                            <td class="is-long">{{ subscription.endpoint }}</td>
+                            <td class="is-long">{{ subscription.publicKey }}</td>
+                            <td class="is-long">{{ subscription.authToken }}</td>
+                            <td class="is-long">{{ subscription.userAgent }}</td>
+                            <td>{{ subscription.contentEncoding }}</td>
+                            <td>{{ subscription.created|format_datetime('medium', 'short') }}</td>
+                            <td>{% if subscription.lastSeen %}{{ subscription.lastSeen|format_datetime('medium', 'short') }}{% endif %}</td>
+                            <td class="is-long">{{ subscription.lastError }}</td>
                         </tr>
                     {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
     {% endif %}
-{% endblock %}
+{% endblock content %}

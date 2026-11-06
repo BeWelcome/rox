@@ -12,7 +12,7 @@ interface ExtractorInterface
      * @param Member $member  the member
      * @param string $tempDir the temporary directory to store personal data files
      *
-     * @return string the personal data file
+     * @return array<string, int> the sections written (MyDataSections) and how many items each has
      */
-    public function extract(Member $member, string $tempDir): string;
+    public function extract(Member $member, string $tempDir): array;
 }

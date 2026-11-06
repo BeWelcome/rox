@@ -74,12 +74,6 @@ abstract class AbstractExtractor
 
     protected function imageExtension(string $filename): string
     {
-        return match (mime_content_type($filename)) {
-            'image/png' => '.png',
-            'image/jpeg' => '.jpg',
-            'image/gif' => '.gif',
-            'image/bmp' => '.bmp',
-            default => '',
-        };
+        return ProfilePicture::extension($filename);
     }
 }

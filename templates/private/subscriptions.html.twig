@@ -1,43 +1,26 @@
 {% extends 'private/mydata.html.twig' %}
+{# The forum threads the member follows (DoctrineExtractor), with their notifications on or off. Expects subscriptions. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'subscriptions' %}
 
 {% block content %}
-    <h1>{{ 'mydata.subscriptions.threads.headline'|trans }}</h1>
-    <p>{{ 'mydata.subscriptions.threads.abstract'|trans }}</p>
+    {{ my.head({group: 'community', title: 'mydata.subscriptions.threads.headline'|trans, abstract: 'mydata.subscriptions.threads.abstract'|trans}) }}
     {% if subscriptions|length == 0 %}
-        <p><strong>{{ 'mydata.subscriptions.threads.no.subscriptions'|trans }}</strong></p>
+        {{ my.empty('fa-bell', 'mydata.subscriptions.threads.no.subscriptions'|trans) }}
     {% else %}
-        <div class="row">
-            <div class="col-12 table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th class="w-100">{{ 'mydata.subscriptions.thread.name'|trans}}</th>
-                        <th>{{ 'mydata.subscriptions.subscription'|trans}}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
+        <div class="c-mydata-card c-mydata-table-card">
+            <table class="c-mydata-table">
+                <thead><tr><th>{{ 'mydata.subscriptions.thread.name'|trans }}</th><th>{{ 'created'|trans }}</th><th>{{ 'mydata.subscriptions.subscription'|trans }}</th></tr></thead>
+                <tbody>
                     {% for subscription in subscriptions %}
                         <tr>
-                            <td class="align-middle"><a
-                                        href="{{ url('forum_thread', {'threadId': subscription.thread.id }) }}">{{ subscription.thread.title|purify }}</a><br>
-                                <span class="small">{{ subscription.subscribed|format_datetime('medium', 'short') }}</span></td>
-
-                            <td class="align-middle">
-                                <div class="btn-group" role="group">
-                                    {% if subscription.notificationsEnabled %}
-                                        <span class="btn btn-primary active">{{ 'on'|trans }}</span>
-                                        <span class="btn btn-primary">{{ 'off'|trans }}</span>
-                                    {% else %}
-                                        <span class="btn btn-primary">{{ 'on'|trans }}</span>
-                                        <span class="btn btn-primary active">{{ 'off'|trans }}</span>
-                                    {% endif %}
-                                </div>
-                            </td>
+                            <td class="is-long"><a href="{{ url('forum_thread', {threadId: subscription.thread.id}) }}">{{ subscription.thread.title|striptags }}</a></td>
+                            <td>{{ subscription.subscribed|format_datetime('medium', 'short') }}</td>
+                            <td><span class="c-mydata-tag{{ subscription.notificationsEnabled ? ' c-mydata-tag--green' }}">{{ (subscription.notificationsEnabled ? 'on' : 'off')|trans }}</span></td>
                         </tr>
                     {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
     {% endif %}
-{% endblock %}
+{% endblock content %}

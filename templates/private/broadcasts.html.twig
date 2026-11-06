@@ -1,34 +1,26 @@
 {% extends 'private/mydata.html.twig' %}
+{# The newsletters the member received (DoctrineExtractor), in their language if there is one. Expects broadcasts. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'broadcasts' %}
 
 {% block content %}
-    <h1>{{ 'mydata.broadcasts.headline'|trans }}</h1>
-    <p>{{ 'mydata.broadcasts.abstract'|trans }}</p>
+    {{ my.head({group: 'community', title: 'mydata.broadcasts.headline'|trans, abstract: 'mydata.broadcasts.abstract'|trans}) }}
     {% if broadcasts|length == 0 %}
-        <p><strong>{{ 'mydata.broadcasts.no.broadcasts'|trans }}</strong></p>
+        {{ my.empty('fa-inbox', 'mydata.broadcasts.no.broadcasts'|trans) }}
     {% else %}
-    <div class="card-columns">
-        {% for broadcast in broadcasts %}
-            {% set translations = broadcast.newsletter.translations %}
-            {% if translations[app.request.locale] is defined %}
-                {% set newsletter = translations[app.request.locale] %}
-            {% else %}
-                {% set newsletter = translations|first %}
-            {% endif %}
-            <div class="card o-card">
-                <div class="card-header text-truncate">
-                    {% if newsletter.title is defined %}{{ newsletter.title }}{% else %}{{ 'mydata.newsletter.no.title'|trans }}{% endif %}
-                </div>
-                <div class="card-body">
-                    {% if newsletter.body is defined %}{{ newsletter.body|purify|truncate(100) }}{% else %}{{ 'mydata.newsletter.no.body'|trans }}{% endif %}
-                    <p class="small text-muted mb-0">{{ 'mydata.broadcast.sent'|trans({ 'sent':broadcast.updated}) }}</p>
-                </div>
-                {% if newsletter.locale is defined %}
-                <div class="card-footer text-right">
-                    <a class="btn btn-primary" href="{{ url('newsletter_single', {'id':broadcast.newsletter.id, 'language':newsletter.locale}) }}">{{ 'showfull'|trans }}</a>
-                </div>
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
+        <div class="c-mydata-grid">
+            {% for broadcast in broadcasts %}
+                {% set translations = broadcast.newsletter.translations %}
+                {% set newsletter = translations[app.request ? app.request.locale : app.locale] ?? translations|first %}
+                <article class="c-mydata-card">
+                    <h2 class="c-mydata-card__title">{{ newsletter.title ?? 'mydata.newsletter.no.title'|trans }}</h2>
+                    <p class="c-mydata-card__meta">{{ 'mydata.broadcast.sent'|trans({'sent': broadcast.updated}) }}</p>
+                    <div class="c-mydata-card__text">{{ newsletter.body is defined ? newsletter.body|purify|truncate(200) : 'mydata.newsletter.no.body'|trans }}</div>
+                    {% if newsletter.locale is defined %}
+                        <div class="c-mydata-card__foot"><span></span>{{ my.site(url('newsletter_single', {id: broadcast.newsletter.id, language: newsletter.locale})) }}</div>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
     {% endif %}
-{% endblock %}
+{% endblock content %}

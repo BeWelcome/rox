@@ -1,20 +1,21 @@
 {% extends 'private/mydata.html.twig' %}
+{#
+  The references (CommentsExtractor): one row per member, the one about the member next to the one they wrote, which
+  is muted. Expects comments (list of {to, from}, either may be null).
+#}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'comments' %}
 
 {% block content %}
-    <h1>{{ 'mydata.comments.headline' | trans }}</h1>
-    <p>{{ 'mydata.comments.abstract' | trans }}</p>
+    {{ my.head({group: 'you', title: 'mydata.comments.headline'|trans, abstract: 'mydata.comments.abstract'|trans}) }}
     {% if comments|length == 0 %}
-        <p>{{ 'mydata.comments.no.comment'|trans }}</p>
+        {{ my.empty('fa-comment-dots', 'mydata.comments.no.comment'|trans) }}
     {% else %}
         {% for comment in comments %}
-        <div class="row mb-2">
-            {% if comment.to %}
-                {% include 'private/comment.html.twig' with { 'comment': comment.to, 'mute': false } %}
-            {% endif %}
-            {% if comment.from %}
-                {% include 'private/comment.html.twig' with { 'comment': comment.from, 'mute': true } %}
-            {% endif %}
-        </div>
+            <div class="c-mydata-ref">
+                {% if comment.to %}{% include 'private/comment.html.twig' with {comment: comment.to, mute: false} %}{% endif %}
+                {% if comment.from %}{% include 'private/comment.html.twig' with {comment: comment.from, mute: true} %}{% endif %}
+            </div>
         {% endfor %}
     {% endif %}
 {% endblock content %}

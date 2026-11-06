@@ -1,29 +1,26 @@
 {% extends 'private/mydata.html.twig' %}
+{# The polls the member voted (PollsExtractor), in polls/. Expects votes. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'polls' %}
 
 {% block content %}
-    <h1>{{ 'mydata.polls.voted.headline'|trans }}</h1>
-    <p>{{ 'mydata.polls.voted.abstract'|trans }}</p>
+    {{ my.head({group: 'community', title: 'mydata.polls.voted.headline'|trans, abstract: 'mydata.polls.voted.abstract'|trans, prefix: '../', back: {url: '../polls.html', label: 'mydata.polls.headline'|trans}}) }}
     {% if votes|length == 0 %}
-    <p><strong>{{ 'mydata.polls.voted.no.polls'|trans }}</strong></p>
+        {{ my.empty('fa-square-poll-vertical', 'mydata.polls.voted.no.polls'|trans, '../') }}
     {% else %}
-        <div class="card-columns">
+        <div class="c-mydata-grid">
             {% for vote in votes %}
-            <div class="card o-card">
-                <div class="card-header text-truncate">
-                    {% if vote.poll.titles|length %}
-                        {{ vote.poll.titles|first }}
-                    {% else %}No Title?{% endif %}
-                </div>
-                <div class="card-body">
-                    {% include 'private/poll.html.twig' with {'poll':vote.poll} %}
-                    <p><strong>{{ 'mydata.polls.vote'|trans }}</strong><br>
-                    {% for choice in vote.choices %}{{ choice.texts|first }}{% if not loop.last %}, {% endif %}{% else %}{{ 'mydata.polls.vote.anonymous'|trans }}{% endfor %}</p>
-                </div>
-                <div class="card-footer text-right">
-                    <a class="btn btn-primary" href="{{ url('polls_view_results', {'pollId': vote.poll.id}) }}">{{ 'showdetails'|trans }}</a>
-                </div>
-            </div>
+                {% set _poll = vote.poll %}
+                <article class="c-mydata-card">
+                    <h2 class="c-mydata-card__title">{{ _poll.titles|length ? _poll.titles|first : 'mydata.polls.no.title'|trans }}</h2>
+                    {% include 'private/poll.html.twig' with {poll: _poll} %}
+                    <div class="c-mydata-box">
+                        <span class="c-mydata-label">{{ 'mydata.polls.vote'|trans }}</span>
+                        {% for choice in vote.choices %}{{ choice.texts|first }}{% if not loop.last %}, {% endif %}{% else %}{{ 'mydata.polls.vote.anonymous'|trans }}{% endfor %}
+                    </div>
+                    <div class="c-mydata-card__foot"><span></span>{{ my.site(url('polls_view_results', {pollId: _poll.id})) }}</div>
+                </article>
             {% endfor %}
         </div>
     {% endif %}
-{% endblock %}
+{% endblock content %}

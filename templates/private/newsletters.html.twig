@@ -1,30 +1,29 @@
 {% extends 'private/mydata.html.twig' %}
+{# The newsletters the member wrote (DoctrineExtractor), in each language they wrote. Expects newsletters, member. #}
+{% import 'private/_macros.html.twig' as my %}
+{% set section = 'newsletters' %}
 
 {% block content %}
-    <h1>{{ 'mydata.newsletters.headline'|trans }}</h1>
-    <p>{{ 'mydata.newsletters.abstract'|trans }}</p>
-    {% if newsletters|length == 0 %}
-        <p><strong>{{ 'mydata.newsletters.no.newsletters'|trans }}</strong></p>
-    {% else %}
-    <div class="card-columns">
-        {% for newsletter in newsletters %}
-            {% for translation in newsletter.translations %}
-                {% if translation.author == member %}
-            <div class="card o-card">
-                <div class="card-header text-truncate">
-                    {% if translation.title is defined %}{{ translation.title }}{% else %}{{ 'mydata.newsletter.no.title'|trans }}{% endif %}
-                </div>
-                <div class="card-body">
-                    {% if translation.body is defined %}{{ translation.body|purify|truncate(500) }}{% else %}{{ 'mydata.newsletter.no.body'|trans }}{% endif %}
-                    <p class="small text-muted mb-0">{{ 'created'|trans|capitalize }}:{{ newsletter.created|format_date('medium') }}</p>
-                </div>
-                <div class="card-footer text-right">
-                    <a class="btn btn-primary" href="{{ url('newsletter_single', {'id':newsletter.id, 'language':translation.locale}) }}">{{ 'showfull'|trans }}</a>
-                </div>
-            </div>
-                {% endif %}
-            {% endfor %}
+    {{ my.head({group: 'community', title: 'mydata.newsletters.headline'|trans, abstract: 'mydata.newsletters.abstract'|trans}) }}
+    {% set _written = [] %}
+    {% for newsletter in newsletters %}
+        {% for translation in newsletter.translations %}
+            {% if translation.author == member %}{% set _written = _written|merge([{newsletter: newsletter, translation: translation}]) %}{% endif %}
         {% endfor %}
-    </div>
+    {% endfor %}
+    {% if _written is empty %}
+        {{ my.empty('fa-envelope-open-text', 'mydata.newsletters.no.newsletters'|trans) }}
+    {% else %}
+        <div class="c-mydata-grid">
+            {% for item in _written %}
+                {% set translation = item.translation %}
+                <article class="c-mydata-card">
+                    <h2 class="c-mydata-card__title">{{ translation.title ?? 'mydata.newsletter.no.title'|trans }}</h2>
+                    <p class="c-mydata-card__meta">{{ item.newsletter.created|format_date('medium') }} · <span class="c-mydata-tag">{{ translation.locale }}</span></p>
+                    <div class="c-mydata-card__text">{{ translation.body is defined ? translation.body|purify|truncate(500) : 'mydata.newsletter.no.body'|trans }}</div>
+                    <div class="c-mydata-card__foot"><span></span>{{ my.site(url('newsletter_single', {id: item.newsletter.id, language: translation.locale})) }}</div>
+                </article>
+            {% endfor %}
+        </div>
     {% endif %}
-{% endblock %}
+{% endblock content %}

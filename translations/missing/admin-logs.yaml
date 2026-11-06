@@ -1,0 +1,39 @@
+admin.logs.eyebrow:
+    - 'Volunteer tools'
+    - 'Logs: the eyebrow above the title.'
+admin.logs.title:
+    - 'Logs'
+    - 'Logs: the page title.'
+admin.logs.description:
+    - 'What members and volunteers did on the site, newest first.'
+    - 'Logs: the line under the title.'
+admin.logs.type:
+    - 'Type'
+    - 'Logs: the label of the type filter and the column of the entry''s type.'
+admin.logs.member:
+    - 'Member'
+    - 'Logs: the label of the member filter and the column of the member.'
+admin.logs.member.placeholder:
+    - 'Any member'
+    - 'Logs: the placeholder of the member filter.'
+admin.logs.clear:
+    - 'Clear filters'
+    - 'Logs: removes the type and member filters.'
+admin.logs.count:
+    - '{count, plural, =0 {No entries} one {One entry} other {# entries}}'
+    - 'Logs: how many entries match the filters.'
+admin.logs.logged:
+    - 'Logged'
+    - 'Logs: the column of when an entry was written.'
+admin.logs.message:
+    - 'Message'
+    - 'Logs: the column of the entry''s text.'
+admin.logs.system:
+    - 'System'
+    - 'Logs: an entry without a member.'
+admin.logs.empty.title:
+    - 'No logs match these filters'
+    - 'Logs: nothing matches the filters.'
+admin.logs.empty.text:
+    - 'Pick other types or clear the member.'
+    - 'Logs: what to do when nothing matches.'

@@ -1,59 +1,100 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
-
-{% block subnav %}
-    {% for filter,menuItem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ menuItem.url }}">{{ menuItem.key | trans }}</a>
-    {% endfor %}
-{% endblock %}
+{#
+  The logs (Admin\LogController): what members and volunteers did on the site, newest first, filtered by type
+  (chips, no chip = all) and member. The group logs (filters false) show the group entries only.
+  Expects logs; with filters log_types, selected and username.
+#}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('member/autocomplete') }}
 {% endblock %}
 
 {% block stylesheets %}
+    {{ encore_entry_link_tags('member/autocomplete') }}
 {% endblock stylesheets %}
 
-{% block content %}
-    {%  if form is defined %}
-    {% form_theme form 'bootstrap_5_horizontal_layout.html.twig' %}
-    {{ form_start(form) }}
-    {{ form_rest(form) }}
-    <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
-    {{ form_end(form) }}
-    {% endif %}
-    <div class="log mb-3"></div>
-    {% if logs.nbResults == 0 %}
-        <div class="alert alert-warning">{{ 'admin.logs.no.logs' | trans }}</div>
-    {% else %}
-        {% if logs.haveToPaginate %}
-            <div class="float-start">
-                {{ pagerfanta( logs, 'rox_default' ) }}
+{% block main %}
+<main role="main" class="c-vtools c-logs">
+    <div class="container-lg">
+        <header class="c-vtools__head">
+            <div class="c-vtools__head-main">
+                <p class="c-page-head__eyebrow">{{ 'admin.logs.eyebrow'|trans }}</p>
+                <h1 class="c-page-head__title">{{ (filters ? 'admin.logs.title' : 'admin.groups.logs')|trans }}</h1>
+                <p class="c-vtools__description">{{ 'admin.logs.description'|trans }}</p>
             </div>
-        {% endif %}
-        <table class="table table-striped table-hover">
+        </header>
 
-        <tr>
-            <th>Type</th>
-            <th>Message</th>
-            <th>Member</th>
-            <th>Logged</th>
-        </tr>
-        {% for log in logs.currentPageResults %}
-            <tr>
-                <td>{{ log.type }}</td>
-                <td>{{ log.logMessage | raw }}</td>
-                <td>{{ log.member ? log.member.username }}</td>
-                <td>{{ log.created|date('Y-m-d H:i:s') }}</td>
-            </tr>
-        {% endfor %}
-        </table>
+        <section class="c-logs__card">
+            {% if filters %}
+                <form class="c-logs__filters" method="get" action="{{ path('admin_logs_overview') }}">
+                    {% if log_types|length > 1 %}
+                        <div class="c-logs__filter c-logs__filter--types" role="group" aria-labelledby="c-logs-types">
+                            <span class="c-logs__label" id="c-logs-types">{{ 'admin.logs.type'|trans }}</span>
+                            <div class="c-logs__chips">
+                                {% for type in log_types %}
+                                    {% set _on = type in selected %}
+                                    <label class="c-logs__chip{{ _on ? ' is-on' }}">
+                                        <input type="checkbox" name="log[types][]" value="{{ type }}"{{ _on ? ' checked' }} onchange="this.form.requestSubmit()">
+                                        {% if _on %}<i class="fas fa-check" aria-hidden="true"></i>{% endif %}{{ type }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="c-logs__filter">
+                        <label class="c-logs__label" for="c-logs-member">{{ 'admin.logs.member'|trans }}</label>
+                        <div class="c-logs__member">
+                            <i class="fas fa-user" aria-hidden="true"></i>
+                            <input class="o-input member-autocomplete-start" id="c-logs-member" type="text" name="log[username]" value="{{ username }}" placeholder="{{ 'admin.logs.member.placeholder'|trans }}" autocomplete="off" onchange="this.form.requestSubmit()">
+                        </div>
+                        {% if selected is not empty or username != '' %}
+                            <a class="c-cadmin__clear" href="{{ path('admin_logs_overview') }}"><i class="fas fa-xmark" aria-hidden="true"></i>{{ 'admin.logs.clear'|trans }}</a>
+                        {% endif %}
+                        <span class="c-logs__count">{{ 'admin.logs.count'|trans({count: logs.nbResults}) }}</span>
+                    </div>
+                    <noscript><button type="submit" class="c-cadmin-btn c-cadmin-btn--quiet">{{ 'button.update'|trans }}</button></noscript>
+                </form>
+            {% endif %}
+
+            {% if logs.nbResults == 0 %}
+                <div class="c-cnews-empty">
+                    <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-scroll"></i></span>
+                    <p class="c-cnews-empty__title">{{ 'admin.logs.empty.title'|trans }}</p>
+                    <p class="c-cnews-empty__text">{{ 'admin.logs.empty.text'|trans }}</p>
+                </div>
+            {% else %}
+                <div class="c-vtools-table c-logs__table">
+                    <div class="c-vtools-table__row c-vtools-table__row--head c-logs__row" role="row">
+                        <span>{{ 'admin.logs.logged'|trans }}</span>
+                        <span>{{ 'admin.logs.type'|trans }}</span>
+                        <span>{{ 'admin.logs.message'|trans }}</span>
+                        <span>{{ 'admin.logs.member'|trans }}</span>
+                    </div>
+                    {% for log in logs.currentPageResults %}
+                        {% set _type = log.type|lower %}
+                        {% set _tone = 'signup' in _type ? ' c-tag--green' : ('group' in _type ? ' c-tag--type' : ('message' in _type or 'right' in _type or 'admin' in _type ? ' c-tag--orange' : '')) %}
+                        <div class="c-vtools-table__row c-logs__row">
+                            <span class="c-logs__when"><strong>{{ log.created|date('Y-m-d') }}</strong><small>{{ log.created|date('H:i:s') }}</small></span>
+                            <span><span class="c-tag{{ _tone }}">{{ log.type }}</span></span>
+                            <span class="c-logs__message">{{ log.logMessage|raw }}</span>
+                            <span>
+                                {% if log.member %}
+                                    <a class="c-logs__person" href="{{ path('members_profile', {username: log.member.username}) }}">
+                                        <img src="{{ path('avatar', {username: log.member.username, size: 48}) }}" alt="" width="28" height="28" loading="lazy">{{ log.member.username }}
+                                    </a>
+                                {% else %}
+                                    <span class="c-logs__system">{{ 'admin.logs.system'|trans }}</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+
         {% if logs.haveToPaginate %}
-            <div class="float-start">
-                {{ pagerfanta( logs, 'rox_default') }}
-            </div>
+            <nav class="c-cadmin__pager">{{ pagerfanta(logs, 'rox_default') }}</nav>
         {% endif %}
-
-    {% endif %}
-{% endblock %}
+    </div>
+</main>
+{% endblock main %}

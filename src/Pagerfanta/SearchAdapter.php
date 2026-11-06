@@ -2,7 +2,6 @@
 
 namespace App\Pagerfanta;
 
-use AnthonyMartin\GeoLocation\GeoPoint;
 use App\Doctrine\CommentQualityType;
 use App\Doctrine\MemberStatusType;
 use App\Dto\MemberSearchResult;
@@ -14,6 +13,7 @@ use App\Entity\Message;
 use App\Form\CustomDataClass\SearchFormRequest;
 use App\Repository\MemberRepository;
 use App\Repository\MessageRepository;
+use App\Repository\PlacesInRectangle;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
@@ -21,6 +21,9 @@ use Pagerfanta\Adapter\AdapterInterface;
 
 class SearchAdapter implements AdapterInterface
 {
+    /** @var list<int>|null */
+    private ?array $placesInRectangle = null;
+
     public function __construct(
         private readonly SearchFormRequest $searchRequest,
         private readonly EntityManagerInterface $entityManager,
@@ -210,6 +213,21 @@ class SearchAdapter implements AdapterInterface
         return array_values($points);
     }
 
+    /**
+     * The places with members in the rectangle around the searched point, found once for the count, the page and
+     * the map.
+     *
+     * @return list<int>
+     */
+    private function placesInRectangle(): array
+    {
+        return $this->placesInRectangle ??= new PlacesInRectangle($this->entityManager->getConnection())->withMembers(
+            (float) $this->searchRequest->location_latitude,
+            (float) $this->searchRequest->location_longitude,
+            (float) $this->searchRequest->distance,
+        );
+    }
+
     private function applySearchFilters(QueryBuilder $qb): void
     {
         /** @var MemberRepository $memberRepository */
@@ -231,18 +249,6 @@ class SearchAdapter implements AdapterInterface
                     ->setParameter('admin_region', $adminUnit->getAdmin1Id());
             }
         } elseif ($this->searchRequest->distance > 0 && $this->searchRequest->location_latitude && $this->searchRequest->location_longitude) {
-            // 1. Calculate the bounding box
-            $center = new GeoPoint($this->searchRequest->location_latitude, $this->searchRequest->location_longitude);
-            $boundingBox = $center->boundingBox($this->searchRequest->distance, 'km');
-
-            $minLat = $boundingBox->getMinLatitude();
-            $maxLat = $boundingBox->getMaxLatitude();
-            $minLng = $boundingBox->getMinLongitude();
-            $maxLng = $boundingBox->getMaxLongitude();
-
-            // 2. Create a LINESTRING for ST_Envelope to define the bounding box polygon
-            $lineString = \sprintf('LINESTRING(%F %F, %F %F)', $minLng, $minLat, $maxLng, $maxLat);
-
             // Ensure joins are present if not already added by root entity change
             if (!\in_array('a', $qb->getAllAliases(), true)) {
                 $qb->join('m.addresses', 'a', 'WITH', 'a.active = 1');
@@ -251,9 +257,9 @@ class SearchAdapter implements AdapterInterface
                 $qb->join('a.location', 'l');
             }
 
-            $qb->andWhere('MBRContains(ST_Envelope(ST_GeomFromText(:lineString, 0)), l.coordinates) = 1')
-                ->andWhere('ST_Distance_Sphere(l.coordinates, ST_GeomFromText(:centerPoint, 0)) <= :distanceInMeters')
-                ->setParameter('lineString', $lineString)
+            // the places in the rectangle around the point first (see PlacesInRectangle), then the exact distance
+            PlacesInRectangle::restrict($qb, 'l.geonameId', $this->placesInRectangle(), 'placesInRectangle');
+            $qb->andWhere('ST_Distance_Sphere(l.coordinates, ST_GeomFromText(:centerPoint, 0)) <= :distanceInMeters')
                 ->setParameter('centerPoint', \sprintf('POINT(%F %F)', $this->searchRequest->location_longitude, $this->searchRequest->location_latitude))
                 ->setParameter('distanceInMeters', $this->searchRequest->distance * 1000); // ST_Distance_Sphere uses meters
         } elseif ($this->searchRequest->location_geoname_id) {

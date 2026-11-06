@@ -67,10 +67,50 @@ class SubtripRepositoryTest extends KernelTestCase
         self::assertSame($before + 4, $repository->getVisitorsCount($host, 20));
     }
 
+    public function testHostsToNotifyLiveWithinTheInvitationRadiusOnly(): void
+    {
+        [$hostId, $travellerId] = $this->connection->fetchFirstColumn(<<<'SQL'
+                SELECT m.id FROM member m JOIN address a ON a.member_id = m.id AND a.active = 1
+                JOIN location l ON l.geoname_id = a.location
+                WHERE m.Status = 'Active' AND m.MaxGuests >= 1
+                ORDER BY m.id LIMIT 2
+            SQL);
+        self::assertNotNull($travellerId, 'the test fixtures contain two active members with an address');
+
+        // the host wants to hear about trips right away
+        $preferenceId = $this->connection->fetchOne("SELECT id FROM preferences WHERE codename = 'TripsNotifications'");
+        $this->connection->executeStatement('DELETE FROM memberspreferences WHERE IdMember = ? AND IdPreference = ?', [$hostId, $preferenceId]);
+        $this->connection->executeStatement(
+            "INSERT INTO memberspreferences (IdMember, IdPreference, Value, updated, created) VALUES (?, ?, 'Immediately', NOW(), NOW())",
+            [$hostId, $preferenceId]
+        );
+
+        $town = $this->connection->fetchAssociative(<<<'SQL'
+                SELECT ST_Y(l.coordinates) AS latitude, ST_X(l.coordinates) AS longitude
+                FROM address a JOIN location l ON l.geoname_id = a.location WHERE a.member_id = ? AND a.active = 1
+            SQL, [$hostId]);
+
+        /** @var SubtripRepository $repository */
+        $repository = $this->entityManager->getRepository(Subtrip::class);
+        $traveller = $this->entityManager->find(Member::class, $travellerId);
+
+        // invitation radius 20 km: a leg 10 km north of the host's town reaches the host, one 22 km north doesn't
+        $latitudeKm = 1 / 111.2;
+        $trip = $this->createTrip($traveller, [
+            [(float) $town['latitude'] + 10 * $latitudeKm, (float) $town['longitude']],
+            [(float) $town['latitude'] + 22 * $latitudeKm, (float) $town['longitude']],
+        ], 20);
+        [$near, $far] = $trip->getLegs()->getValues();
+
+        $notified = static fn (Subtrip $leg): array => array_map(static fn (Member $host): int => $host->getId(), $repository->getMembersToNotifyAboutLeg($leg));
+        self::assertContains($hostId, $notified($near));
+        self::assertNotContains($hostId, $notified($far));
+    }
+
     /**
      * @param list<array{float, float}> $coordinates latitude and longitude of each leg
      */
-    private function createTrip(Member $creator, array $coordinates): Trip
+    private function createTrip(Member $creator, array $coordinates, int $invitationRadius = 50): Trip
     {
         $trip = new Trip();
         $trip
@@ -78,7 +118,7 @@ class SubtripRepositoryTest extends KernelTestCase
             ->setDescription('Bounding box test')
             ->setCreated(new DateTime())
             ->setCreator($creator)
-            ->setInvitationRadius(50)
+            ->setInvitationRadius($invitationRadius)
         ;
 
         $geonameId = (int) $this->connection->fetchOne('SELECT MAX(geoname_id) FROM location');

@@ -4,3 +4,150 @@ admin.newmembers.none:
 admin.newmembers.status.changed:
   - 'The status of %username% is %status% now.'
   - Confirmation after a volunteer changed the status of a new member. Keep %username% and %status%.
+admin.newmembers.eyebrow.greeting:
+  - 'Greeting team'
+  - 'New members: the eyebrow above the title for the greeting team.'
+admin.newmembers.eyebrow.safety:
+  - 'Safety team'
+  - 'New members: the eyebrow above the title for the safety team and the checkers.'
+admin.newmembers.title:
+  - 'New members'
+  - 'New members: the page title.'
+admin.newmembers.description.greeting:
+  - 'Members who signed up in the last 90 days and still wait for a greeting, newest first. A greeting opens a message to the member.'
+  - 'New members: the line under the title for the greeting team.'
+admin.newmembers.description.safety:
+  - 'Everybody who signed up in the last 90 days, oldest first, including unfinished signups. Send a greeting or change a status.'
+  - 'New members: the line under the title for the safety team and the checkers.'
+admin.newmembers.waiting:
+  - '{count, plural, =0 {Nobody waiting for a greeting} one {One waiting for a greeting} other {# waiting for a greeting}}'
+  - 'New members: how many active new members still wait for a greeting.'
+admin.newmembers.countries:
+  - 'My countries'
+  - 'New members: the label of the country filter.'
+admin.newmembers.countries.add:
+  - 'Add a country'
+  - 'New members: the first entry of the list of countries that can be added to the filter.'
+admin.newmembers.countries.add.button:
+  - 'Add'
+  - 'New members: adds the chosen country (only shown without JavaScript).'
+admin.newmembers.countries.remove:
+  - 'Remove {country}'
+  - 'New members: the label of the button that removes a country from the filter.'
+admin.newmembers.countries.saved:
+  - 'Saved for you'
+  - 'New members: next to the chosen countries, which are kept for the next visit.'
+admin.newmembers.countries.all:
+  - 'Showing all countries'
+  - 'New members: next to the country filter when no country is chosen.'
+admin.newmembers.profile:
+  - 'Profile'
+  - 'New members: the label of the profile filter.'
+admin.newmembers.profile.all:
+  - 'All'
+  - 'New members: profile filter, all members.'
+admin.newmembers.profile.full:
+  - 'Filled in'
+  - 'New members: profile filter, members with a photo or a profile text.'
+admin.newmembers.profile.empty:
+  - 'Not filled in'
+  - 'New members: profile filter, members without a photo and without a profile text.'
+admin.newmembers.profile.hint:
+  - 'Not filled in: no photo and no profile text'
+  - 'New members: explains the profile filter.'
+admin.newmembers.select.all:
+  - '{count, plural, one {Select the one shown} other {Select all # shown}}'
+  - 'New members: the checkbox that selects every member on the page.'
+admin.newmembers.select.some:
+  - '%count% selected'
+  - 'New members: the checkbox label once members are selected. Keep %count%.'
+admin.newmembers.select.member:
+  - 'Select {username}'
+  - 'New members: the label of the checkbox of a member.'
+admin.newmembers.send:
+  - 'Send standard greeting'
+  - 'New members: opens the dialog for one greeting to the selected members.'
+admin.newmembers.send.to:
+  - 'Send standard greeting to %count%'
+  - 'New members: the button once members are selected. Keep %count%.'
+admin.newmembers.signed.up:
+  - 'signed up {ago} ({date})'
+  - 'New members: when the member signed up, e.g. "signed up 2 days ago (2026-11-03)".'
+admin.newmembers.no.text:
+  - 'No profile text yet.'
+  - 'New members: shown for a member with a photo but without a profile text.'
+admin.newmembers.not.filled.in:
+  - 'No photo · no text'
+  - 'New members: the tag of a member without a photo and without a profile text.'
+admin.newmembers.greetings:
+  - 'Greetings'
+  - 'New members: the label above the greeting buttons.'
+admin.newmembers.greeting.local:
+  - 'Local greeting'
+  - 'New members: a greeting from the member''s region.'
+admin.newmembers.greeting.global:
+  - 'Global greeting'
+  - 'New members: a greeting from BeWelcome as a whole.'
+admin.newmembers.greeting.local.sent:
+  - 'Local greeting sent'
+  - 'New members: shown instead of the button once the local greeting was sent.'
+admin.newmembers.greeting.global.sent:
+  - 'Global greeting sent'
+  - 'New members: shown instead of the button once the global greeting was sent.'
+admin.newmembers.dialog.eyebrow:
+  - 'Standard greeting'
+  - 'New members: the eyebrow of the standard greeting dialog.'
+admin.newmembers.dialog.title.one:
+  - 'To one new member'
+  - 'New members: the title of the standard greeting dialog for one member.'
+admin.newmembers.dialog.title:
+  - 'To %count% new members'
+  - 'New members: the title of the standard greeting dialog. Keep %count%.'
+admin.newmembers.dialog.counts.as:
+  - 'Counts as'
+  - 'New members: the label of the choice whether the standard greeting is the local or the global one.'
+admin.newmembers.dialog.subject:
+  - 'Subject'
+  - 'New members: the label of the subject of the standard greeting.'
+admin.newmembers.dialog.subject.default:
+  - 'Welcome to BeWelcome!'
+  - 'New members: the default subject of the standard greeting.'
+admin.newmembers.dialog.message:
+  - 'Message'
+  - 'New members: the label of the text of the standard greeting.'
+admin.newmembers.dialog.message.default:
+  - "Hi %username%,\n\nwelcome to BeWelcome! I'm a volunteer from the welcome team.\n\nMembers find hosts and guests much more easily when they can see who you are. Adding a photo and a few lines about yourself on your profile makes a big difference.\n\nIf you have questions, just reply to this message.\n\nHappy travels,\n{volunteer}"
+  - 'New members: the default text of the standard greeting, which the volunteer can change before sending. Keep %username% (each member''s username) and {volunteer} (the volunteer''s username). Avoid e-mail addresses and the words support, system and verification: messages with them are held as spam.'
+admin.newmembers.dialog.message.hint:
+  - '%username% becomes each member''s username.'
+  - 'New members: the hint under the text of the standard greeting. Keep %username%.'
+admin.newmembers.dialog.info:
+  - 'Each member gets this as their own message from you, so nobody sees who else got it and replies come back to you one by one. The greeting is marked as sent for all of them.'
+  - 'New members: the explanation in the standard greeting dialog.'
+admin.newmembers.dialog.send.one:
+  - 'Send one message'
+  - 'New members: sends the standard greeting to one member.'
+admin.newmembers.dialog.send:
+  - 'Send %count% messages'
+  - 'New members: sends the standard greeting. Keep %count%.'
+admin.newmembers.bulk.sent.local:
+  - '{count, plural, one {Sent the standard greeting to one member.} other {Sent the standard greeting to # members as separate messages.}} The local greeting is marked as sent.'
+  - 'New members: confirmation after the standard greeting was sent as the local greeting.'
+admin.newmembers.bulk.sent.global:
+  - '{count, plural, one {Sent the standard greeting to one member.} other {Sent the standard greeting to # members as separate messages.}} The global greeting is marked as sent.'
+  - 'New members: confirmation after the standard greeting was sent as the global greeting.'
+admin.newmembers.bulk.incomplete:
+  - 'Please select members and fill in the subject and the message.'
+  - 'New members: the standard greeting was sent without members, subject or text.'
+admin.newmembers.empty.countries.title:
+  - 'Nobody to greet in your countries'
+  - 'New members: the list is empty with countries chosen.'
+admin.newmembers.empty.countries.text:
+  - 'Add another country or change the profile filter.'
+  - 'New members: the list is empty with countries chosen.'
+admin.newmembers.empty.none.title:
+  - 'Everyone has been greeted'
+  - 'New members: the list is empty without countries chosen.'
+admin.newmembers.empty.none.text:
+  - 'New members show up here as soon as they sign up.'
+  - 'New members: the list is empty without countries chosen.'

@@ -3,17 +3,13 @@
 namespace App\Controller;
 
 use App\Doctrine\MemberStatusType;
-use App\Doctrine\SpamInfoType;
 use App\Entity\Member;
 use App\Entity\Message;
-use App\Entity\Subject;
 use App\Form\MessageToMemberType;
 use App\Model\ConversationModel;
 use App\Security\MemberVoter;
-use App\Service\BrowserNotificationPayload;
-use App\Service\BrowserNotificationService;
 use App\Service\InboxFolders;
-use App\Service\Mailer;
+use App\Service\MessageSender;
 use App\Utilities\AllowContactCheck;
 use App\Utilities\ContactPanelTrait;
 use App\Utilities\ConversationThread;
@@ -43,12 +39,11 @@ class MessageController extends AbstractController
     use TranslatorTrait;
 
     public function __construct(
-        private readonly Mailer $mailer,
         private readonly ConversationModel $conversationModel,
         private readonly ConversationThread $conversationThread,
         private readonly EntityManagerInterface $entityManager,
-        private readonly BrowserNotificationService $browserNotificationService,
         private readonly InboxFolders $inboxFolders,
+        private readonly MessageSender $messageSender,
     ) {
     }
 
@@ -123,7 +118,7 @@ class MessageController extends AbstractController
             $subject = $messageForm->get('subject')->get('subject')->getData();
             $body = $messageForm->get('message')->getData();
 
-            $message = $this->addMessageAndSendNotification($sender, $receiver, null, $subject, $body);
+            $message = $this->messageSender->send($sender, $receiver, null, $subject, $body);
             // Sent from the search preview (in a frame): a short "sent" page instead of the profile.
             if ($request->query->getBoolean('embed')) {
                 return $this->render('conversations/embed_sent.html.twig', [
@@ -171,7 +166,7 @@ class MessageController extends AbstractController
             }
 
             $messageText = $data->getMessage();
-            $message = $this->addMessageAndSendNotification($sender, $receiver, $message, $replySubject, $messageText);
+            $message = $this->messageSender->send($sender, $receiver, $message, $replySubject, $messageText);
 
             return $this->redirectToRoute('conversation_view', ['id' => $message->getId()] + $request->query->all());
         }
@@ -182,58 +177,5 @@ class MessageController extends AbstractController
             'current' => $message,
             'thread' => $thread,
         ] + $this->inboxFolders->getContext($request, $sender));
-    }
-
-    /**
-     * Creates a new message and stores it into the database afterwards sends a notification to the receiver
-     * Only used for messages therefore request is set to null!
-     */
-    private function addMessageAndSendNotification(
-        Member $sender,
-        Member $receiver,
-        ?Message $parent,
-        string $subjectText,
-        string $body,
-    ): Message {
-        $message = new Message();
-        $message->setMessage($body);
-        $message->setStatus('Sent');
-        if (null === $parent) {
-            $subject = new Subject();
-            $subject->setSubject($subjectText);
-            $request = null;
-            $this->entityManager->persist($subject);
-            $this->entityManager->flush();
-            $message = $this->conversationModel->formatConversation($message);
-        } else {
-            $subject = $parent->getSubject();
-            $request = $parent->getRequest();
-        }
-
-        $message->setSubject($subject);
-        $message->setSender($sender);
-        $message->setRequest($request);
-        $message->setParent($parent);
-        $message->setSender($sender);
-        $message->setReceiver($receiver);
-        $this->entityManager->persist($message);
-        $this->entityManager->flush();
-
-        if (!str_contains($message->getSpamInfo(), SpamInfoType::SPAM_BLOCKED_WORD)) {
-            $this->mailer->sendMessageNotificationEmail($sender, $receiver, 'message', [
-                'message' => $message,
-                'subject' => $subjectText,
-                'body' => $body,
-            ]);
-            $this->browserNotificationService->queueAndSendAfterResponse(
-                $receiver,
-                BrowserNotificationPayload::message(
-                    $sender,
-                    $this->generateUrl('conversation_view', ['id' => $message->getId()])
-                )
-            );
-        }
-
-        return $message;
     }
 }

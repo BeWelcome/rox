@@ -9,11 +9,13 @@ use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The new members list for the greeters and the Safety Team, and the tool that turns the forum notifications of a
  * member on or off. In the fixtures member-2 greets new members, bwadmin is in the Safety Team, member-3 manages
- * subscriptions and member-6 (Jayapura, Indonesia) is the new member.
+ * subscriptions and member-6 (Jayapura, Indonesia) is the new member. The greeters choose their countries and send a
+ * standard greeting to many new members at once.
  */
 #[Group('integration')]
 class NewMembersAndSubscriptionsTest extends WebTestCase
@@ -42,7 +44,7 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
         self::assertStringContainsString('Jayapura, Indonesia', $row->text());
         self::assertCount(2, $row->filter('form[action$="/greeting/local"], form[action$="/greeting/global"]'));
         // the e-mail address and the status are for the Safety Team only
-        self::assertStringNotContainsString('@', $row->filter('td')->eq(1)->text());
+        self::assertCount(0, $row->filter('.c-newmembers__email'));
         self::assertCount(0, $row->filter('select[name="status"]'));
     }
 
@@ -55,7 +57,7 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
         $row = $this->row($crawler, 'member-6');
-        self::assertStringContainsString('@', $row->filter('td')->eq(1)->text());
+        self::assertStringContainsString('@', $row->filter('.c-newmembers__email')->text());
         self::assertCount(1, $row->filter('select[name="status"]'));
     }
 
@@ -73,7 +75,7 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
 
         // greeted twice: not in the greeters' list any longer
         $crawler = $this->client->request('GET', '/admin/newmembers');
-        self::assertCount(0, $crawler->filter('tr.js-new-member[data-username="member-6"]'));
+        self::assertCount(0, $crawler->filter('.js-new-member[data-username="member-6"]'));
     }
 
     public function testAGreetingNeedsTheToken(): void
@@ -118,6 +120,94 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
         $this->client->request('GET', '/admin/newmembers');
 
         $this->assertResponseStatusCodeSame(403);
+    }
+
+    public function testTheVolunteersCountriesAreSavedAndFilterTheList(): void
+    {
+        $country = $this->countryOfTheNewMember();
+        $this->client->loginUser($this->member('member-2'));
+        $token = $this->token($this->client->request('GET', '/admin/newmembers'));
+
+        $this->client->request('POST', '/admin/newmembers/countries', ['_token' => $token, 'add' => $country]);
+        $this->assertResponseRedirects('/admin/newmembers');
+        self::assertSame((string) $country, $this->savedCountries());
+
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        self::assertCount(1, $crawler->filter('.c-newmembers__pill input[name="remove"][value="' . $country . '"]'));
+        $this->row($crawler, 'member-6');
+
+        // another country only: member-6 isn't shown
+        $this->client->request('POST', '/admin/newmembers/countries', ['_token' => $token, 'remove' => $country]);
+        $this->client->request('POST', '/admin/newmembers/countries', ['_token' => $token, 'add' => $this->anotherCountry($country)]);
+        $crawler = $this->client->request('GET', '/admin/newmembers');
+        self::assertCount(0, $crawler->filter('.js-new-member[data-username="member-6"]'));
+
+        $this->client->request('POST', '/admin/newmembers/countries', ['_token' => 'wrong', 'remove' => $this->anotherCountry($country)]);
+        $this->assertResponseStatusCodeSame(403);
+    }
+
+    public function testTheProfileFilterShowsMembersWithoutPhotoAndText(): void
+    {
+        $this->connection()->executeStatement("UPDATE member SET AboutMe = '' WHERE id = ?", [$this->newMember]);
+        $this->connection()->executeStatement('DELETE FROM member_photo WHERE member_id = ?', [$this->newMember]);
+        $this->client->loginUser($this->member('member-2'));
+
+        $crawler = $this->client->request('GET', '/admin/newmembers?profile=empty');
+        $this->assertResponseIsSuccessful();
+        self::assertStringContainsString('is-empty', (string) $this->row($crawler, 'member-6')->attr('class'));
+
+        $crawler = $this->client->request('GET', '/admin/newmembers?profile=full');
+        self::assertCount(0, $crawler->filter('.js-new-member[data-username="member-6"]'));
+    }
+
+    public function testTheStandardGreetingIsAMessageToEachMember(): void
+    {
+        $this->client->loginUser($this->member('member-2'));
+        $token = $this->token($this->client->request('GET', '/admin/newmembers'));
+        $messages = $this->messagesTo($this->newMember);
+
+        $this->client->request('POST', '/admin/newmembers/greeting/global', [
+            '_token' => $token,
+            'usernames' => ['member-6'],
+            'subject' => 'Welcome, %username%!',
+            'text' => "Hi %username%,\n\nwelcome <b>here</b>.",
+        ]);
+
+        $this->assertResponseRedirects('/admin/newmembers');
+        self::assertSame($messages + 1, $this->messagesTo($this->newMember));
+        $message = $this->connection()->fetchAssociative(
+            'SELECT m.message, m.sender_id, s.subject FROM message m JOIN subject s ON s.id = m.subject_id WHERE m.receiver_id = ? ORDER BY m.id DESC LIMIT 1',
+            [$this->newMember],
+        );
+        self::assertSame('Welcome, member-6!', $message['subject']);
+        self::assertStringContainsString('Hi member-6,', $message['message']);
+        self::assertStringContainsString('&lt;b&gt;here&lt;/b&gt;', $message['message']);
+        self::assertSame($this->member('member-2')->getId(), (int) $message['sender_id']);
+        self::assertSame(2, $this->bewelcomed());
+
+        $crawler = $this->client->followRedirect();
+        $sent = static::getContainer()->get(TranslatorInterface::class)->trans('admin.newmembers.bulk.sent.global', ['count' => 1]);
+        self::assertStringContainsString($sent, $crawler->text());
+    }
+
+    public function testTheStandardGreetingNeedsMembersATextAndTheToken(): void
+    {
+        $this->client->loginUser($this->member('member-2'));
+        $token = $this->token($this->client->request('GET', '/admin/newmembers'));
+        $messages = $this->messagesTo($this->newMember);
+
+        $this->client->request('POST', '/admin/newmembers/greeting/local', ['_token' => $token, 'usernames' => [], 'subject' => 'Hi', 'text' => 'Hi']);
+        $this->assertResponseRedirects('/admin/newmembers');
+        $this->client->request('POST', '/admin/newmembers/greeting/local', ['_token' => $token, 'usernames' => ['member-6'], 'subject' => 'Hi', 'text' => ' ']);
+        $this->client->request('POST', '/admin/newmembers/greeting/local', ['_token' => 'wrong', 'usernames' => ['member-6'], 'subject' => 'Hi', 'text' => 'Hi']);
+        $this->assertResponseStatusCodeSame(403);
+
+        $this->client->loginUser($this->member('member-6'));
+        $this->client->request('POST', '/admin/newmembers/greeting/local', ['_token' => $token, 'usernames' => ['member-6'], 'subject' => 'Hi', 'text' => 'Hi']);
+        $this->assertResponseStatusCodeSame(403);
+
+        self::assertSame($messages, $this->messagesTo($this->newMember));
+        self::assertSame(0, $this->bewelcomed());
     }
 
     public function testTheOldUrlsLeadToTheNewOnes(): void
@@ -181,7 +271,7 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
 
     private function row(Crawler $crawler, string $username): Crawler
     {
-        $row = $crawler->filter('tr.js-new-member[data-username="' . $username . '"]');
+        $row = $crawler->filter('.js-new-member[data-username="' . $username . '"]');
         self::assertCount(1, $row);
 
         return $row;
@@ -189,7 +279,36 @@ class NewMembersAndSubscriptionsTest extends WebTestCase
 
     private function token(Crawler $crawler): string
     {
-        return (string) $crawler->filter('form[action*="/greeting/"] input[name="_token"], form[action$="/status"] input[name="_token"]')->first()->attr('value');
+        return (string) $crawler->filter('form[action*="/admin/newmembers/"] input[name="_token"]')->first()->attr('value');
+    }
+
+    private function countryOfTheNewMember(): int
+    {
+        return (int) $this->connection()->fetchOne(
+            'SELECT g.country FROM address a JOIN location g ON g.geoname_id = a.location WHERE a.member_id = ? AND a.active = 1',
+            [$this->newMember],
+        );
+    }
+
+    private function anotherCountry(int $country): int
+    {
+        return (int) $this->connection()->fetchOne(
+            'SELECT DISTINCT g.country FROM address a JOIN location g ON g.geoname_id = a.location WHERE g.country <> ? AND g.country IS NOT NULL LIMIT 1',
+            [$country],
+        );
+    }
+
+    private function savedCountries(): string
+    {
+        return (string) $this->connection()->fetchOne(
+            "SELECT mp.Value FROM memberspreferences mp JOIN preferences p ON p.id = mp.IdPreference WHERE p.codeName = 'NewMembersCountries' AND mp.IdMember = ?",
+            [$this->member('member-2')->getId()],
+        );
+    }
+
+    private function messagesTo(int $memberId): int
+    {
+        return (int) $this->connection()->fetchOne('SELECT COUNT(*) FROM message WHERE receiver_id = ?', [$memberId]);
     }
 
     private function bewelcomed(): int

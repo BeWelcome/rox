@@ -54,6 +54,8 @@ class CheckerModel
 
         /** @var Message $message */
         foreach ($messages as $message) {
+            // a decision changed from spam
+            $message->removeFromSpamInfo(SpamInfoType::CHECKER_SAYS_SPAM);
             // \todo If message wasn't sent yet, send it now
             if (MessageStatusType::FROZEN === $message->getStatus()) {
                 $message->setStatus(MessageStatusType::SEND);

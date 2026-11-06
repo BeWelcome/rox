@@ -1,94 +1,113 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{#
+  The checkers' messages (Admin\CheckerController::handleMessages), the same page for the four sections: one decision
+  per message, Not spam or Spam (decisions[id]), Mark all as presets every row, Save sends the decisions of the page.
+  The block word sections mark the words in the message and list them. The processed sections preselect the stored
+  decision. Expects messages (pager), counts, active, block_words, processed and spam_flag.
+#}
+{% set inline_notices = true %}
+{% set _titles = {messages: 'reported.messages', processed_messages: 'reported.messages.processed', blocked_words: 'block.words.messages', processed_blocked_words: 'block.words.processed'} %}
+
+{% block title %}{{ _titles[active]|trans }}{% endblock %}
 
 {% block javascripts %}
-  {{ encore_entry_script_tags('block_highlight') }}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        const checkAllSpam = document.getElementById('checkAllSpam');
-        const checkAllNoSpam  = document.getElementById('checkAllNoSpam');
-        const spam = document.querySelectorAll('.checkableSpam');
-        const noSpam = document.querySelectorAll('.checkableNoSpam');
-        checkAllSpam.addEventListener('click', function() {
-            const status = checkAllSpam.checked;
-            spam.forEach((checkbox) => {checkbox.checked = status;});
-            if (status) {
-                checkAllNoSpam.checked = false;
-                noSpam.forEach((checkbox) => {checkbox.checked = false;});
-            }
-        });
-        checkAllNoSpam.addEventListener('click', function() {
-            console.log(checkAllNoSpam.checked);
-            const status = checkAllNoSpam.checked;
-            noSpam.forEach((checkbox) => {checkbox.checked = status;});
-            if (status) {
-                checkAllSpam.checked = false;
-                spam.forEach((checkbox) => {checkbox.checked = false;});
-            }
-        });
-    });
-</script>
-{% endblock %}
+  {{ encore_entry_script_tags('admin/checker') }}
+{% endblock javascripts %}
 
-{% block content %}
-    {% if reported.nbResults == 0 %}
-        <div class="alert alert-warning">{{ 'admin.checker.no.messages' | trans }}</div>
-    {% else %}
-        {{ form_start(form) }}
-        {{ form_errors(form) }}
-        {% if reported.haveToPaginate %}
-            <div class="float-start">
-                {{ pagerfanta( reported, 'rox_default') }}
+{% block main %}
+  <main role="main" class="c-cnews c-checker">
+    <div class="container-lg c-cnews__admin">
+      <header class="c-cnews-head">
+        <p class="c-page-head__eyebrow">{{ 'admin.checker.eyebrow'|trans }}</p>
+        <h1 class="c-page-head__title">{{ _titles[active]|trans }}</h1>
+      </header>
+
+      <div class="c-cnews-checker">
+        {% include 'admin/checker/_menu.html.twig' %}
+
+        <section class="c-cnews-checker__main">
+          {% include 'admin/massmail/_flash.html.twig' %}
+          <p class="c-cnews-checker__intro">{{ ('admin.checker.intro.' ~ active)|trans }}</p>
+          {% if messages.nbResults == 0 %}
+            <div class="c-cnews-card c-cnews-empty">
+              <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-envelope-circle-check"></i></span>
+              <p class="c-cnews-empty__title">{{ 'admin.checker.messages.none'|trans }}</p>
+              <p class="c-cnews-empty__text">{{ 'admin.checker.messages.none.text'|trans }}</p>
             </div>
-            <div class="row">
-                <div class="col-12 text-end">
-                    <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
+          {% else %}
+            <form method="post" class="c-cnews-card c-checker__card js-checker-decisions">
+              <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\Admin\\CheckerController::TOKEN')) }}">
+              <div class="c-checker__bar">
+                <div class="c-checker__all">
+                  <span>{{ 'admin.checker.messages.mark.all'|trans }}</span>
+                  <button type="button" class="c-checker__chip js-checker-all" data-decision="ok"><i class="fas fa-check" aria-hidden="true"></i>{{ 'admin.checker.messages.ok'|trans }}</button>
+                  <button type="button" class="c-checker__chip js-checker-all" data-decision="spam"><i class="fas fa-ban" aria-hidden="true"></i>{{ 'admin.checker.messages.spam'|trans }}</button>
                 </div>
-            </div>
-        {% endif %}
-        <table class="table table-striped table-hover">
-
-            <tr>
-                <th>Sender</th>
-                <th>Message</th>
-                <th>Receiver</th>
-                <th>Created</th>
-                <th>Comment</th>
-                <th style="writing-mode: vertical-lr">ok</th>
-                <th style="writing-mode: vertical-lr">spam</th>
-            </tr>
-            <tr>
-                <td colspan="5">&nbsp;</td>
-                <td><div class="o-checkbox"><input type="checkbox" id="checkAllNoSpam" class="o-checkbox__input"><label class="o-checkbox__label"></label></div></td>
-                <td><div class="o-checkbox"><input type="checkbox" id="checkAllSpam" class="o-checkbox__input"><label class="o-checkbox__label"></label></div></td>
-            </tr>
-        {% for message in reported.currentPageResults %}
-            <tr>
-                <td>{{ macros.avatarstack(message.Sender.Username, 30) }}<br>
-                    <small class="text-muted">{{ ('memberstatus' ~ message.Sender.Status)|lower|trans }}</small></td>
-                <td class="js-highlight"><strong>{{ message.subject.subject }}</strong>&nbsp;{% if message.request is null %}<i class="fa fa-envelope"></i>{% else %}<i class="fa fa-bed"></i>{% endif %}<br>
-                    {{ message.Message|purify }}</td>
-                <td>{{ macros.avatarstack(message.Receiver.Username, 30) }}<br>
-                    <small class="text-muted">{{ ('memberstatus' ~ message.Receiver.Status)|lower|trans }}</small></td>
-                <td>{{ message.created.DiffForHumans }}<br>
-                ({{  message.created | format_datetime('short', 'short') }})</td>
-                <td>{{ message.checkerComment }}</td>
-                <td>{{ form_widget(form.noSpamMessages[loop.index0], {'attr': {'class': 'checkableNoSpam'}}) }}</td>
-                <td>{{ form_widget(form.spamMessages[loop.index0], {'attr': {'class': 'checkableSpam'}}) }}</td>
-            </tr>
-        {% endfor %}
-        </table>
-        <div class="row">
-            <div class="col-12 text-end">
-                <button type="submit" class="btn btn-primary">{{ 'button.update' | trans }}</button>
-            </div>
-        </div>
-        {% if reported.haveToPaginate %}
-            <div class="float-start">
-                {{ pagerfanta( reported, 'rox_default') }}
-            </div>
-        {% endif %}
-        {{ form_rest(form) }}
-        {{ form_end(form) }}
-    {% endif %}
-{% endblock %}
+                <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small js-checker-save" disabled>
+                  <i class="fas fa-floppy-disk" aria-hidden="true"></i><span data-none="{{ 'admin.checker.messages.save'|trans }}" data-one="{{ 'admin.checker.messages.save.one'|trans }}" data-some="{{ 'admin.checker.messages.save.count'|trans }}">{{ 'admin.checker.messages.save'|trans }}</span>
+                </button>
+              </div>
+              <ul class="c-checker__rows">
+                {% for message in messages.currentPageResults %}
+                  {% set _stored = processed ? (spam_flag in message.spamInfo ? 'spam' : 'ok') : '' %}
+                  {% set _words = block_words ? message.message|block_words : [] %}
+                  <li class="c-checker__row js-checker-row" data-stored="{{ _stored }}">
+                    <div class="c-checker__main">
+                      <div class="c-checker__people">
+                        {% for role, person in {from: message.sender, to: message.receiver} %}
+                          {% if not loop.first %}<i class="fas fa-arrow-right c-checker__arrow" aria-hidden="true"></i>{% endif %}
+                          <a class="c-checker__person" href="{{ path('members_profile', {username: person.username}) }}">
+                            <img src="{{ path('avatar', {username: person.username, size: 48}) }}" alt="" width="40" height="40" loading="lazy">
+                            <span>
+                              <small>{{ ('admin.checker.messages.' ~ role)|trans }} · {{ ('memberstatus' ~ person.status)|lower|trans }}</small>
+                              <strong>{{ person.username }}</strong>
+                            </span>
+                          </a>
+                        {% endfor %}
+                        <time class="c-checker__time" datetime="{{ message.created|date('c') }}" title="{{ message.created|format_datetime('medium', 'short') }}">{{ message.created.diffForHumans }}</time>
+                      </div>
+                      <p class="c-checker__subject">
+                        <i class="fas {{ message.request is null ? 'fa-envelope' : 'fa-bed' }}" aria-hidden="true"></i>{{ message.subject ? message.subject.subject }}
+                        {% if message.request and message.request.arrival and message.request.departure %}
+                          <span class="c-tag c-tag--type">{{ 'admin.checker.messages.stay'|trans({count: message.request.arrival.diffInDays(message.request.departure)|round|abs}) }}</span>
+                        {% endif %}
+                      </p>
+                      <div class="c-checker__text">{{ block_words ? message.message|purify|mark_block_words : message.message|purify }}</div>
+                      {% if message.checkerComment %}
+                        <div class="c-cadmin-report">
+                          <p class="c-cadmin-report__head"><i class="fas fa-flag" aria-hidden="true"></i>{{ 'admin.checker.messages.comment'|trans({username: message.receiver.username}) }}</p>
+                          <p>{{ message.checkerComment }}</p>
+                        </div>
+                      {% endif %}
+                      {% if _words is not empty %}
+                        <div class="c-cadmin-report">
+                          <p class="c-cadmin-report__head"><i class="fas fa-ban" aria-hidden="true"></i>{{ 'admin.checker.messages.blocked'|trans }}</p>
+                          <p class="c-checker__words">{% for word in _words %}<mark>{{ word }}</mark>{% endfor %}</p>
+                        </div>
+                      {% endif %}
+                    </div>
+                    <div class="c-checker__decision" role="radiogroup" aria-labelledby="c-checker-decision-{{ message.id }}">
+                      <span class="c-checker__label js-checker-label" id="c-checker-decision-{{ message.id }}" data-changed="{{ 'admin.checker.messages.changed'|trans }}">{{ 'admin.checker.messages.decision'|trans }}</span>
+                      <div class="c-checker__segments">
+                        {% for decision, icon in {ok: 'fa-check', spam: 'fa-ban'} %}
+                          <label class="c-checker__segment c-checker__segment--{{ decision }}">
+                            <input type="radio" name="decisions[{{ message.id }}]" value="{{ decision }}"{{ decision == _stored ? ' checked' }}>
+                            <i class="fas {{ icon }}" aria-hidden="true"></i>{{ ('admin.checker.messages.' ~ decision)|trans }}
+                          </label>
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+              <noscript><div class="c-checker__bar"><button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small">{{ 'admin.checker.messages.save'|trans }}</button></div></noscript>
+            </form>
+            {% if messages.haveToPaginate %}
+              <div class="c-cadmin__pager">{{ pagerfanta(messages, 'rox_default') }}</div>
+            {% endif %}
+          {% endif %}
+        </section>
+      </div>
+    </div>
+  </main>
+{% endblock main %}

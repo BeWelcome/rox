@@ -1,0 +1,93 @@
+admin.checker.intro.messages:
+  - 'Messages members reported. Decide for each one whether it is spam, then save. Spam goes to the sender''s record, not spam clears the report.'
+  - 'Checker, reported messages: the text above the list.'
+admin.checker.intro.processed_messages:
+  - 'Reported messages that have a decision. Change one and save if it was wrong.'
+  - 'Checker, processed messages: the text above the list.'
+admin.checker.intro.blocked_words:
+  - 'Messages that contain a blocked word. The words are highlighted. Many are fine, so read the whole message.'
+  - 'Checker, block word messages: the text above the list.'
+admin.checker.intro.processed_blocked_words:
+  - 'Block word messages that have a decision. Change one and save if it was wrong.'
+  - 'Checker, processed block word messages: the text above the list.'
+admin.checker.intro.activities:
+  - 'Activities that look like spam. Deleting one also removes it for everybody who joined.'
+  - 'Checker, activities: the text above the list.'
+admin.checker.messages.none:
+  - 'No messages to check'
+  - 'Checker: a message section is empty.'
+admin.checker.messages.none.text:
+  - 'Everything here has a decision.'
+  - 'Checker: a message section is empty.'
+admin.checker.messages.mark.all:
+  - 'Mark all as'
+  - 'Checker: before the buttons that set the decision of every message on the page.'
+admin.checker.messages.ok:
+  - 'Not spam'
+  - 'Checker: the decision that a message is fine.'
+admin.checker.messages.spam:
+  - 'Spam'
+  - 'Checker: the decision that a message is spam.'
+admin.checker.messages.save:
+  - 'Save decisions'
+  - 'Checker: saves the decisions of the page.'
+admin.checker.messages.save.one:
+  - 'Save one decision'
+  - 'Checker: saves the decisions of the page once one changed.'
+admin.checker.messages.save.count:
+  - 'Save %count% decisions'
+  - 'Checker: saves the decisions of the page once several changed. Keep %count%.'
+admin.checker.messages.from:
+  - 'From'
+  - 'Checker: above the sender of a message, e.g. "From · Active".'
+admin.checker.messages.to:
+  - 'To'
+  - 'Checker: above the receiver of a message, e.g. "To · Active".'
+admin.checker.messages.stay:
+  - '{count, plural, one {Stay request · one night} other {Stay request · # nights}}'
+  - 'Checker: the tag of a message that is a stay request.'
+admin.checker.messages.comment:
+  - 'Comment from {username}'
+  - 'Checker: the head of the comment the receiver wrote when reporting the message.'
+admin.checker.messages.blocked:
+  - 'Blocked words'
+  - 'Checker: the head of the list of block words found in the message.'
+admin.checker.messages.decision:
+  - 'Decision'
+  - 'Checker: the label above the choice Not spam / Spam.'
+admin.checker.messages.changed:
+  - 'Changed, not saved'
+  - 'Checker: the label above the choice once it was changed and not saved yet.'
+admin.checker.messages.saved:
+  - '{count, plural, one {Saved one decision} other {Saved # decisions}}: {spam} spam, {ok} not spam.'
+  - 'Checker: confirmation after saving the decisions.'
+admin.checker.activities.none:
+  - 'No activities to check'
+  - 'Checker: the activities section is empty.'
+admin.checker.activities.none.text:
+  - 'Activities that look like spam show up here.'
+  - 'Checker: the activities section is empty.'
+admin.checker.activities.select.all:
+  - 'Select all'
+  - 'Checker: the checkbox that selects every activity on the page.'
+admin.checker.activities.selected:
+  - '%count% selected'
+  - 'Checker: the checkbox label once activities are selected. Keep %count%.'
+admin.checker.activities.select:
+  - 'Select {title}'
+  - 'Checker: the label of the checkbox of an activity.'
+admin.checker.activities.delete.selected:
+  - 'Delete selected'
+  - 'Checker: deletes the selected activities.'
+admin.checker.activities.delete.selected.confirm:
+  - 'Delete the selected activities? They are removed for everybody who joined.'
+  - 'Checker: asks before deleting the selected activities.'
+admin.checker.activities.delete.confirm:
+  - 'Delete "{title}"? It is removed for everybody who joined.'
+  - 'Checker: asks before deleting an activity.'
+admin.checker.activities.organizers:
+  - 'Organised by'
+  - 'Checker: before the organizers of an activity.'
+admin.checker.activities.deleted:
+  - '{count, plural, one {Deleted one activity.} other {Deleted # activities.}}'
+  - 'Checker: confirmation after deleting activities.'

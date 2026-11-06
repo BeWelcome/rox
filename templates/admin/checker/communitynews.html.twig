@@ -22,19 +22,7 @@
       </header>
 
       <div class="c-cnews-checker">
-        <nav class="c-cnews-card c-cnews-menu" aria-label="{{ 'admin.checker.eyebrow'|trans }}">
-          <p class="c-cnews-eyebrow">{{ 'admin.checker.eyebrow'|trans }}</p>
-          <ul>
-            {% for key, item in menu %}
-              <li>
-                <a class="c-cnews-menu__item{{ key == active ? ' is-active' }}" href="{{ item.url }}"{% if key == active %} aria-current="page"{% endif %}>
-                  <i class="fas fa-{{ item.icon }} fa-fw" aria-hidden="true"></i><span>{{ item.key|trans }}</span>
-                  {% if key == 'community_news' and open > 0 %}<span class="c-cnews-menu__count">{{ open }}</span>{% endif %}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        </nav>
+        {% include 'admin/checker/_menu.html.twig' %}
 
         <section class="c-cnews-checker__main">
           {% include 'admin/massmail/_flash.html.twig' %}

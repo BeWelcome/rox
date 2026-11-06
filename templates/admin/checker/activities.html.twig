@@ -1,62 +1,85 @@
 {% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{#
+  The checkers' activities (Admin\CheckerController::showActivities): the ones that look like spam, with their date,
+  place, description and organizers. Delete removes one, Delete selected the ticked ones.
+  Expects activities (pager), counts and active.
+#}
+{% set inline_notices = true %}
+
+{% block title %}{{ 'activities'|trans }}{% endblock %}
 
 {% block javascripts %}
-<script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('checkAllDelete').addEventListener('click', function () {
-            document.querySelectorAll('input:checkbox.checkableDelete').forEach(checkbox => {
-                checkbox.checked = this.checked;
-            });
-        });
-    });
-</script>
-{% endblock %}
+  {{ encore_entry_script_tags('admin/checker') }}
+{% endblock javascripts %}
 
-{% block content %}
-    {% if reported.nbResults == 0 %}
-        <div class="alert alert-warning">{{ 'admin.checker.no.activities' | trans }}</div>
-    {% else %}
-        {{ form_start(form) }}
-        {{ form_errors(form) }}
-        {% if reported.haveToPaginate %}
-            <div class="float-start">
-                {{ pagerfanta( reported, 'rox_default') }}
-            </div>
-        {% endif %}
-        <table class="table table-striped table-hover">
+{% block main %}
+  <main role="main" class="c-cnews c-checker">
+    <div class="container-lg c-cnews__admin">
+      <header class="c-cnews-head">
+        <p class="c-page-head__eyebrow">{{ 'admin.checker.eyebrow'|trans }}</p>
+        <h1 class="c-page-head__title">{{ 'activities'|trans }}</h1>
+      </header>
 
-            <tr>
-                <th>Title</th>
-                <th>Admin</th>
-                <th>Created</th>
-                <th>{{ 'delete' | trans }}</th>
-            </tr>
-            <tr>
-                <th colspan="3"></th>
-                <th><input type="checkbox" id="checkAllDelete"></th>
-            </tr>
-        {% for activity in reported.currentPageResults %}
-            <tr>
-                <td><a href="{{ url('activities_show', {'id': activity.id}) }}">{{ activity.title|purify }}</a> ({{ activity.id }})<br><small>{{ activity.description|truncate(50) }}</small></td>
-                <td>{% for activityOrganizer in activity.organizers %}{{ macros.avatarstack(activityOrganizer.attendee.username) }}{% if not loop.last %},{% endif %}{% endfor %}</td>
-                <td>{{ activity.starts | format_datetime('short', 'short') }} &mdash; <br>
-                {{  activity.ends | format_datetime('short', 'short') }}</td>
-                <td>{{ form_widget(form.spamActivities[loop.index0], {'attr': {'class': 'checkableDelete'}}) }}</td>
-            </tr>
-        {% endfor %}
-        </table>
-        <div class="row">
-            <div class="col-12 text-end">
-                <button type="submit" class="btn btn-primary">{{ 'button.delete' | trans }}</button>
+      <div class="c-cnews-checker">
+        {% include 'admin/checker/_menu.html.twig' %}
+
+        <section class="c-cnews-checker__main">
+          {% include 'admin/massmail/_flash.html.twig' %}
+          <p class="c-cnews-checker__intro">{{ 'admin.checker.intro.activities'|trans }}</p>
+          {% if activities.nbResults == 0 %}
+            <div class="c-cnews-card c-cnews-empty">
+              <span class="c-cnews-empty__icon" aria-hidden="true"><i class="fas fa-calendar-days"></i></span>
+              <p class="c-cnews-empty__title">{{ 'admin.checker.activities.none'|trans }}</p>
+              <p class="c-cnews-empty__text">{{ 'admin.checker.activities.none.text'|trans }}</p>
             </div>
-        </div>
-        {% if reported.haveToPaginate %}
-            <div class="float-start">
-                {{ pagerfanta( reported, 'rox_default') }}
-            </div>
-        {% endif %}
-        {{ form_rest(form) }}
-        {{ form_end(form) }}
-    {% endif %}
-{% endblock %}
+          {% else %}
+            <form method="post" class="c-cnews-card c-checker__card js-checker-select">
+              <input type="hidden" name="_token" value="{{ csrf_token(constant('App\\Controller\\Admin\\CheckerController::TOKEN')) }}">
+              <div class="c-checker__bar">
+                <label class="c-checker__select-all">
+                  <input type="checkbox" class="js-checker-select-all">
+                  <span class="js-checker-select-label" data-none="{{ 'admin.checker.activities.select.all'|trans }}" data-some="{{ 'admin.checker.activities.selected'|trans }}">{{ 'admin.checker.activities.select.all'|trans }}</span>
+                </label>
+                <button type="submit" class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small js-checker-select-submit" disabled data-confirm="{{ 'admin.checker.activities.delete.selected.confirm'|trans }}" data-confirm-close="{{ 'cancel'|trans }}"><i class="fas fa-trash" aria-hidden="true"></i>{{ 'admin.checker.activities.delete.selected'|trans }}</button>
+              </div>
+              <ul class="c-checker__rows">
+                {% for activity in activities.currentPageResults %}
+                  <li class="c-checker__activity">
+                    <input type="checkbox" name="ids[]" value="{{ activity.id }}" class="js-checker-select-one" aria-label="{{ 'admin.checker.activities.select'|trans({title: activity.title}) }}">
+                    <span class="c-checker__date" aria-hidden="true">
+                      <small>{{ activity.starts|format_date(pattern: 'MMM') }}</small>
+                      <strong>{{ activity.starts|date('j') }}</strong>
+                    </span>
+                    <div class="c-checker__activity-main">
+                      <p class="c-checker__activity-title">
+                        <a href="{{ path('activities_show', {id: activity.id}) }}">{{ activity.title }}</a>
+                        <span>#{{ activity.id }}</span>
+                      </p>
+                      <p class="c-checker__activity-when">
+                        {{ activity.starts|format_datetime(pattern: 'EEE d MMM, HH:mm') }} – {{ activity.starts|date('Y-m-d') == activity.ends|date('Y-m-d') ? activity.ends|date('H:i') : activity.ends|format_datetime(pattern: 'EEE d MMM, HH:mm') }}
+                        · {{ activity.location.name }}
+                      </p>
+                      <div class="c-checker__activity-text">{{ activity.description|truncate(200) }}</div>
+                      <p class="c-checker__organizers">
+                        <span>{{ 'admin.checker.activities.organizers'|trans }}</span>
+                        {% for organizer in activity.organizers %}
+                          <a href="{{ path('members_profile', {username: organizer.attendee.username}) }}">
+                            <img src="{{ path('avatar', {username: organizer.attendee.username, size: 48}) }}" alt="" width="24" height="24" loading="lazy">{{ organizer.attendee.username }}
+                          </a>
+                        {% endfor %}
+                      </p>
+                    </div>
+                    <button type="submit" name="delete" value="{{ activity.id }}" class="c-cadmin-btn c-cnews-btn-small" data-confirm="{{ 'admin.checker.activities.delete.confirm'|trans({title: activity.title}) }}" data-confirm-close="{{ 'cancel'|trans }}"><i class="fas fa-trash" aria-hidden="true"></i>{{ 'delete'|trans }}</button>
+                  </li>
+                {% endfor %}
+              </ul>
+            </form>
+            {% if activities.haveToPaginate %}
+              <div class="c-cadmin__pager">{{ pagerfanta(activities, 'rox_default') }}</div>
+            {% endif %}
+          {% endif %}
+        </section>
+      </div>
+    </div>
+  </main>
+{% endblock main %}

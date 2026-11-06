@@ -1,0 +1,89 @@
+/*
+ * The checker's messages and activities (templates/admin/checker/): the community news checker's layout
+ * (.c-cnews-checker, .c-cnews-menu from admin/checker/_menu.html.twig), a bar and a row per message with one
+ * decision, Not spam or Spam; a row per activity with its date tile. Shares .c-tag, .c-cadmin-btn, .c-cadmin-report
+ * and .c-cnews-empty.
+ */
+
+.c-checker__card { overflow: hidden; }
+.c-checker__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1rem; padding: 0.9rem 1.5rem; background: #f8fafc; }
+.c-checker__all { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; color: #0f172a; font-size: 0.875rem; font-weight: 700; }
+.c-checker__all > span { margin-right: 0.2rem; }
+.c-checker__chip { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.8rem; border: 1px solid #e2e8f0; border-radius: 999px; background: #fff; color: #334155; font-size: 0.8125rem; font-weight: 700; cursor: pointer; transition: border-color 0.15s ease, color 0.15s ease; }
+.c-checker__chip:hover { border-color: #f37000; color: #c2410c; }
+.c-checker__select-all { display: flex; align-items: center; gap: 0.6rem; margin: 0; color: #0f172a; font-size: 0.875rem; font-weight: 700; cursor: pointer; }
+.c-checker input[type="checkbox"] { width: 1.05rem; height: 1.05rem; margin: 0; accent-color: #f37000; cursor: pointer; }
+.c-checker__rows { margin: 0; padding: 0; list-style: none; }
+
+/* Messages */
+.c-checker__row { display: flex; flex-wrap: wrap; gap: 1rem 1.5rem; padding: 1.25rem 1.5rem; border-top: 1px solid #e2e8f0; }
+.c-checker__row.is-changed { background: #fffaf4; }
+.c-checker__main { display: flex; flex: 999 1 24rem; flex-direction: column; gap: 0.6rem; min-width: 0; }
+.c-checker__main p { margin: 0; }
+.c-checker__people { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 0.9rem; }
+.c-checker__person,
+.c-checker__person:hover { display: inline-flex; align-items: center; gap: 0.55rem; min-width: 0; color: #0f172a; text-decoration: none; }
+.c-checker__person img { flex: none; border-radius: 999px; object-fit: cover; }
+.c-checker__person span { display: flex; flex-direction: column; min-width: 0; }
+.c-checker__person small { color: #64748b; font-size: 0.75rem; }
+.c-checker__person strong { font-family: var(--font-signika, "Signika", sans-serif); font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; }
+.c-checker__person:hover strong { color: #c2410c; }
+.c-checker__arrow { color: #cbd5e1; }
+.c-checker__time { margin-left: auto; color: #64748b; font-size: 0.8125rem; white-space: nowrap; }
+.c-checker__subject { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; color: #0f172a; font-weight: 700; overflow-wrap: anywhere; }
+.c-checker__subject > i,
+.c-checker__subject > svg { color: #94a3b8; }
+.c-checker__subject .c-tag { padding: 0.15rem 0.55rem; font-size: 0.75rem; }
+.c-checker__text { color: #1e293b; font-size: 0.9375rem; line-height: 1.6; overflow-wrap: anywhere; }
+.c-checker__text p:last-child { margin-bottom: 0; }
+.c-checker mark { padding: 0 0.2rem; border-radius: 0.3rem; background: #fde6d2; color: #9a3412; font-weight: 700; }
+.c-checker .c-cadmin-report { margin: 0; padding: 0.75rem 1rem; }
+.c-checker .c-cadmin-report p:not(.c-cadmin-report__head) { color: #1e293b; font-size: 0.9375rem; overflow-wrap: anywhere; }
+.c-checker__words { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+
+.c-checker__decision { display: flex; flex: 1 0 auto; flex-direction: column; gap: 0.4rem; }
+.c-checker__label { color: #64748b; font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
+.c-checker__row.is-changed .c-checker__label { color: #c2410c; }
+.c-checker__segments { display: inline-flex; align-self: flex-start; gap: 0.2rem; padding: 3px; border-radius: 999px; background: #f1f5f9; }
+.c-checker__segment { display: inline-flex; align-items: center; gap: 0.4rem; margin: 0; padding: 0.4rem 0.9rem; border-radius: 999px; color: #475569; font-size: 0.8125rem; font-weight: 700; white-space: nowrap; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+.c-checker__segment:hover { color: #0f172a; }
+.c-checker__segment input { position: absolute; opacity: 0; pointer-events: none; }
+.c-checker__segment:focus-within { outline: 2px solid #f37000; outline-offset: 2px; }
+.c-checker__segment--ok:has(input:checked) { background: #fff; color: #15803d; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12); }
+.c-checker__segment--spam:has(input:checked) { background: #f37000; color: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12); }
+
+/* Activities */
+.c-checker__activity { display: grid; grid-template-columns: auto auto minmax(0, 1fr) auto; gap: 1rem; align-items: start; padding: 1.25rem 1.5rem; border-top: 1px solid #e2e8f0; }
+.c-checker__activity > input { margin-top: 1rem !important; }
+.c-checker__date { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 3.25rem; height: 3.25rem; border-radius: 0.9rem; background: #fff4ea; color: #c2410c; line-height: 1.1; }
+.c-checker__date small { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; }
+.c-checker__date strong { font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.35rem; font-weight: 700; }
+.c-checker__activity-main { display: flex; flex-direction: column; gap: 0.35rem; min-width: 0; }
+.c-checker__activity-main p { margin: 0; }
+.c-checker__activity-title { overflow-wrap: anywhere; }
+.c-checker__activity-title a,
+.c-checker__activity-title a:hover { color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-size: 1.0625rem; font-weight: 700; text-decoration: none; }
+.c-checker__activity-title a:hover { color: #c2410c; }
+.c-checker__activity-title span { margin-left: 0.35rem; color: #94a3b8; font-size: 0.8125rem; }
+.c-checker__activity-when { color: #64748b; font-size: 0.8125rem; }
+.c-checker__activity-text { color: #1e293b; font-size: 0.9375rem; line-height: 1.55; overflow-wrap: anywhere; }
+.c-checker__organizers { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.75rem; color: #64748b; font-size: 0.8125rem; }
+.c-checker__organizers a,
+.c-checker__organizers a:hover { display: inline-flex; align-items: center; gap: 0.35rem; color: #0f172a; font-weight: 600; text-decoration: none; }
+.c-checker__organizers a:hover { color: #c2410c; }
+.c-checker__organizers img { border-radius: 999px; object-fit: cover; }
+
+/* the menu scrolls sideways on narrow screens */
+@media (max-width: 767.98px) {
+  .c-cnews-checker .c-cnews-menu { flex-basis: 100%; padding: 0.5rem; overflow-x: auto; }
+  .c-cnews-checker .c-cnews-menu .c-cnews-eyebrow { display: none; }
+  .c-cnews-checker .c-cnews-menu ul { display: flex; gap: 0.25rem; }
+  .c-cnews-checker .c-cnews-menu__item { white-space: nowrap; }
+}
+@media (max-width: 575.98px) {
+  .c-checker__row,
+  .c-checker__activity { padding: 1rem; }
+  .c-checker__activity { grid-template-columns: auto minmax(0, 1fr); }
+  .c-checker__date { display: none; }
+  .c-checker__activity > button { grid-column: 2; justify-self: start; }
+}

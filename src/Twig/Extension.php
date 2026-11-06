@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use App\Service\NativeLanguageNames;
+use App\Utilities\BlockWords;
 use App\Utilities\ForumUtilities;
 use Carbon\Carbon;
 use HTMLPurifier;
@@ -140,6 +141,14 @@ class Extension extends AbstractExtension implements GlobalsInterface
             new TwigFilter(
                 'forum_text',
                 $this->forumText(...),
+                [
+                    'is_safe' => ['html'],
+                ]
+            ),
+            new TwigFilter('block_words', BlockWords::found(...)),
+            new TwigFilter(
+                'mark_block_words',
+                BlockWords::mark(...),
                 [
                     'is_safe' => ['html'],
                 ]

@@ -1,83 +1,58 @@
-{% extends 'base.html.twig' %}
+{% extends 'safety/_layout.html.twig' %}
+{#
+  The safety overview: how hosting strangers can be safe, then the three situations (assessing trust, an
+  uncomfortable situation, an emergency) as cards leading to their pages and the rule on contact outside BeWelcome
+  (#external, linked from the terms); on the side, how to reach the Safety Team, how members help and the tips.
+#}
+{% set active = 'safety' %}
+{% set _contact = path('feedback', {IdCategory: 2}) %}
 
-{% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
+{% block safety_content %}
+    <section class="p-safety__card p-safety__intro">
+        <h1>{{ 'safety_how'|trans|striptags }}</h1>
+        <div class="p-safety__text">{{ 'safety_howtext'|trans|purify }}</div>
+    </section>
 
-{% block title %}
-    {{ 'safety' | trans }}
-{% endblock %}
-
-{% block content %}
-
-<div class="o-text">
-
-    <h1><a href="{{ url('safety') }}">{{ 'safety' | trans }}</a></h1>
-<span class="clearfix"></span>
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <h3>{{ 'safety_how' | trans | purify }}</h3>
-            <p>{{ 'safety_howtext' | trans | purify }}</p>
-            <a id="trustworthy"></a>
-            <h3>{{'safety_trustworthy' | trans | purify }}</h3>
-            <p>{{'safety_trustworthyintro' | trans | purify }}</p>
-            <p><a class="btn btn-outline-primary" href="{{ path('safety_basics', {'_fragment': 'trustworthy'}) }}"> <i class="fa fa-handshake me-2"></i>{{'safety_read.more.trustworthy' | trans }}</a></p>
-            <a id="uncomfortable"></a>
-            <h3>{{'safety_uncomfortablesituation' | trans | purify }}</h3>
-            <p>{{'safety_uncomfortablesituationintro' | trans | purify  }}</p>
-            <p><a class="btn btn-outline-primary" href="{{ path('safety_what_to_do', {'_fragment': 'uncomfortable'}) }}"><i class="fa fa-question me-2"></i>{{'safety_read.more.uncomfortablesituation' | trans }}</a></p>
-            <a id="emergency"></a>
-            <h3>{{'safety_emergency' | trans | purify }}</h3>
-            <p>{{
-               'safety_emergencyintro'|trans({
-                    'safety.emergencyintro.contact.us': '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.emergencyintro.contact.us'|trans ~ '</a>',
-                }) | purify
-            }}
-            </p>
-            <p><a class="btn btn-outline-primary" href="{{ path('safety_what_to_do', {'_fragment': 'emergency'}) }}"><i class="fa fa-first-aid me-2"></i>{{'safety_read.more.emergency' | trans }}</a></p>
-            
-        </div>
-        <div class="col-12 col-md-6">
-            <div class="card o-card mb-3">
-                <a id="contact"></a>
-                <h3>{{'safety_contact' | trans | purify }}</h3>
-                <p>{{'safety_contacttext'| trans 
-                    ({ 'safety.contacttext.contact.form' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.contacttext.contact.form'|trans ~ '</a>' })
-                    | purify
-                    }}
-                </p>
-                <a class="btn btn-outline-primary" href="{{ path('safety_team')}}"><i class="fa fa-users me-1"></i>{{'safety_learnaboutteam' | trans }}</a>
-            </div>
-          <div class="p-2">
-            <a id="keepitsafe"></a>
-            <h3>{{'safety_keepitsafe' | trans | purify }}</h3>
-            <p>{{'safety_keepitsafetext'| trans
-                ({ 'safety.keepitsafe.contact.form' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.keepitsafe.contact.form'|trans ~ '</a>' })
-              | purify
-              }}
-            </p>
-          </div>
-          <div class="p-2">
-            <a id="external" class="anchor"></a>
-            <h3>{{'safety_external.contact.headline' | trans | purify }}</h3>
-            {{'safety_external.contact'| trans | purify }}
-          </div>
-            <div class="p-2">
-                <a id="tips"></a>
-                <h3>{{'safety_tipsoverview' | trans | purify }}</h3>
-                    <div class="list-group">
-                        <a class="list-group-item list-group-item-action" href="{{ url('safety_faq') }}" title="{{'safety_list.link.faq' | trans  }}">
-                        <i class="fa fa-check me-2"></i>{{'safety_list.link.faq' | trans  }}
-                        </a>
-                        <a class="list-group-item list-group-item-action" href="{{ url('safety_tips') }}" title="{{'safety_list.link.tips' | trans  }}">
-                        <i class="fa fa-check me-2"></i>{{'safety_list.link.tips' | trans  }}
-                        </a>
-                        <a class="list-group-item list-group-item-action" href="{{ path('safety_tips', {'_fragment': 'female'}) }}" title="{{'safety_list.link.female' | trans  }}">
-                        <i class="fa fa-check me-2"></i>{{'safety_list.link.female' | trans  }}
-                        </a>
-                    </div>  
-            </div>
-        </div>
+    <div class="p-safety__situations">
+        <section class="p-safety__card p-safety__situation" id="trustworthy">
+            <span class="p-safety__icon" aria-hidden="true"><i class="fas fa-handshake"></i></span>
+            <h2>{{ 'safety_trustworthy'|trans|striptags }}</h2>
+            <div class="p-safety__text">{{ 'safety_trustworthyintro'|trans|purify }}</div>
+            <a class="p-safety__more" href="{{ path('safety_basics', {_fragment: 'trustworthy'}) }}">{{ 'safety_read.more.trustworthy'|trans }}<i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </section>
+        <section class="p-safety__card p-safety__situation" id="uncomfortable">
+            <span class="p-safety__icon" aria-hidden="true"><i class="fas fa-circle-question"></i></span>
+            <h2>{{ 'safety_uncomfortablesituation'|trans|striptags }}</h2>
+            <div class="p-safety__text">{{ 'safety_uncomfortablesituationintro'|trans|purify }}</div>
+            <a class="p-safety__more" href="{{ path('safety_what_to_do', {_fragment: 'uncomfortable'}) }}">{{ 'safety_read.more.uncomfortablesituation'|trans }}<i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </section>
+        <section class="p-safety__card p-safety__situation p-safety__situation--emergency" id="emergency">
+            <span class="p-safety__icon" aria-hidden="true"><i class="fas fa-kit-medical"></i></span>
+            <h2>{{ 'safety_emergency'|trans|striptags }}</h2>
+            <div class="p-safety__text">{{ 'safety_emergencyintro'|trans({'safety.emergencyintro.contact.us': '<a href="' ~ _contact ~ '">' ~ 'safety.emergencyintro.contact.us'|trans ~ '</a>'})|purify }}</div>
+            <a class="p-safety__more" href="{{ path('safety_what_to_do', {_fragment: 'emergency'}) }}">{{ 'safety_read.more.emergency'|trans }}<i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+        </section>
     </div>
-</div>
-{% endblock content %}
+
+    <section class="p-safety__card p-safety__article" id="external">
+        <span class="p-safety__icon" aria-hidden="true"><i class="fas fa-comments"></i></span>
+        <h2>{{ 'safety_external.contact.headline'|trans|striptags }}</h2>
+        <div class="p-safety__text">{{ 'safety_external.contact'|trans|purify }}</div>
+    </section>
+{% endblock safety_content %}
+
+{% block safety_side %}
+    <section class="p-safety__card" id="keepitsafe">
+        <h2>{{ 'safety_keepitsafe'|trans|striptags }}</h2>
+        <div class="p-safety__text">{{ 'safety_keepitsafetext'|trans({'safety.keepitsafe.contact.form': '<a href="' ~ _contact ~ '">' ~ 'safety.keepitsafe.contact.form'|trans ~ '</a>'})|purify }}</div>
+    </section>
+
+    <section class="p-safety__card" id="tips">
+        <h2>{{ 'safety_tipsoverview'|trans|striptags }}</h2>
+        <nav class="p-safety__links">
+            <a href="{{ path('safety_faq') }}"><i class="fas fa-list-ul" aria-hidden="true"></i>{{ 'safety_list.link.faq'|trans }}</a>
+            <a href="{{ path('safety_tips', {_fragment: 'general'}) }}"><i class="fas fa-lightbulb" aria-hidden="true"></i>{{ 'safety_list.link.tips'|trans }}</a>
+            <a href="{{ path('safety_tips', {_fragment: 'female'}) }}"><i class="fas fa-person-dress" aria-hidden="true"></i>{{ 'safety_list.link.female'|trans }}</a>
+        </nav>
+    </section>
+{% endblock safety_side %}

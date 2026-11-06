@@ -1,32 +1,17 @@
-{% extends 'base.html.twig' %}
+{% extends 'safety/_layout.html.twig' %}
+{# What to do in an emergency (first, highlighted) and in an uncomfortable situation #}
+{% set active = 'safety_what_to_do' %}
 
-{% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
-
-{% block title %}
-    {{ 'safety' | trans }}
-{% endblock %}
-
-
-
-{% block content %}
-<div class="o-text">
-    <h1><a href="{{ url('safety') }}">{{ 'safety' | trans }}</a></h1>
-    <div class="row">
-        <div class="col-12 col-md-6">
-            <a id="emergency"></a>
-            <h3>{{ 'safety_emergency' | trans | purify }}</h3>
-            <p>{{'safety_emergencytext'|trans
-                ({ 'safety.emergency.contact.us' : '<a href="' ~ url('safety_contact') ~ '">' ~ 'safety.emergency.contact.us'|trans ~ '</a>' })
-                | purify }}
-            </p>
-        </div>
-        <div class="col-12 col-lg-6">
-            <a id="uncomfortable"></a>
-            <h3>{{ 'safety_uncomfortablesituation' | trans | purify }}</h3>
-            <p>{{ 'safety_uncomfortablesituationtext' | trans | purify }}</p>
-        </div>
-    </div>
-</div>
-{% endblock content %}
+{% block safety_content %}
+    {% set _contact = path('feedback', {IdCategory: 2}) %}
+    <section class="p-safety__card p-safety__article p-safety__situation--emergency" id="emergency">
+        <span class="p-safety__icon" aria-hidden="true"><i class="fas fa-kit-medical"></i></span>
+        <h1>{{ 'safety_emergency'|trans|striptags }}</h1>
+        <div class="p-safety__text">{{ 'safety_emergencytext'|trans({'safety.emergency.contact.us': '<a href="' ~ _contact ~ '">' ~ 'safety.emergency.contact.us'|trans ~ '</a>'})|purify }}</div>
+    </section>
+    <section class="p-safety__card p-safety__article" id="uncomfortable">
+        <span class="p-safety__icon" aria-hidden="true"><i class="fas fa-circle-question"></i></span>
+        <h2>{{ 'safety_uncomfortablesituation'|trans|striptags }}</h2>
+        <div class="p-safety__text">{{ 'safety_uncomfortablesituationtext'|trans|purify }}</div>
+    </section>
+{% endblock safety_content %}

@@ -1,0 +1,97 @@
+/*
+ * The safety pages (templates/safety/): the eyebrow, the pages as pill tabs with the report button, then the same
+ * two columns on every page, white cards in the look of the policies: the cards of a page in the main column (the
+ * overview's situations side by side, the emergency standing out), the contact card and more on the side. The texts come from the translations, with or without
+ * their own paragraphs and lists, so they sit in .p-safety__text blocks.
+ */
+
+main.p-safety { padding: 2.5rem 0 4rem; background: #f0f0f0; }
+.p-safety__head { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+.p-safety__head .c-page-head__eyebrow { margin: 0; }
+.p-safety__bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1rem; }
+.p-safety__tabs { display: inline-flex; flex-wrap: wrap; gap: 0.25rem; max-width: 100%; padding: 4px; border-radius: 999px; background: #e9edf2; }
+.p-safety__tab,
+.p-safety__tab:hover { padding: 0.5rem 1.1rem; border-radius: 999px; color: #475569; font-size: 0.875rem; font-weight: 600; text-decoration: none; white-space: nowrap; transition: background 0.15s ease, color 0.15s ease; }
+.p-safety__tab:hover { color: #0f172a; }
+.p-safety__tab.is-active { background: #fff; color: #0f172a; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.12); }
+.p-safety .p-safety__report { min-height: 2.5rem; padding: 0.45rem 1.1rem; font-size: 0.875rem; text-decoration: none; }
+
+/* The same two columns on every page: the cards in the main column, the contact card and more on the side */
+.p-safety__columns { display: grid; grid-template-columns: minmax(0, 1fr) 20rem; gap: 1.5rem; align-items: start; }
+.p-safety__main { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
+.p-safety__side { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.p-safety__card { padding: clamp(1.25rem, 3vw, 2rem); border-radius: 1.25rem; background: #fff; box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 20px rgba(15, 23, 42, 0.04); scroll-margin-top: 88px; }
+.p-safety__article { display: flex; flex-direction: column; gap: 1rem; }
+.p-safety__article > section { display: flex; flex-direction: column; gap: 0.75rem; scroll-margin-top: 88px; }
+.p-safety__article > section + section { margin-top: 0.75rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0; }
+
+/* Headings and text */
+.p-safety h1,
+.p-safety h2,
+.p-safety h3 { margin: 0; color: #0f172a; font-family: var(--font-signika, "Signika", sans-serif); font-weight: 700; text-wrap: balance; }
+.p-safety h1 { font-size: clamp(1.75rem, 3.5vw, 2.25rem); line-height: 1.1; letter-spacing: -0.01em; }
+.p-safety h2 { font-size: 1.35rem; line-height: 1.25; }
+.p-safety h3 { font-size: 1.1rem; line-height: 1.3; }
+.p-safety__intro { display: flex; flex-direction: column; gap: 1rem; }
+.p-safety__text { color: #334155; font-size: 1rem; line-height: 1.7; text-wrap: pretty; overflow-wrap: anywhere; }
+.p-safety__text p { margin: 0 0 0.85rem; }
+.p-safety__text p:last-child,
+.p-safety__text ul:last-child,
+.p-safety__text ol:last-child { margin-bottom: 0; }
+.p-safety__text a { color: #c2410c; font-weight: 600; text-decoration: underline; text-underline-offset: 2px; transition: color 0.15s ease; }
+.p-safety__text a:hover { color: #9a3412; }
+.p-safety__text strong { color: #0f172a; }
+.p-safety__text ul,
+.p-safety__text ol { display: flex; flex-direction: column; gap: 0.5rem; margin: 0 0 0.85rem; padding: 0; list-style: none; }
+.p-safety__text li { position: relative; padding-left: 1.4rem; }
+.p-safety__text li::before { position: absolute; top: 0.7em; left: 0.3rem; width: 0.4rem; height: 0.4rem; border-radius: 999px; background: #ea7a2e; content: ""; }
+
+/* The overview's situations */
+.p-safety__situations { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1rem; }
+.p-safety__situation { display: flex; flex-direction: column; gap: 0.75rem; }
+.p-safety__situation .p-safety__text { flex: 1; font-size: 0.9375rem; line-height: 1.6; }
+.p-safety__icon { display: inline-flex; align-items: center; justify-content: center; width: 2.75rem; height: 2.75rem; border-radius: 0.9rem; background: #fff4ea; color: #c2410c; font-size: 1.15rem; }
+.p-safety__situation--emergency { box-shadow: inset 0 0 0 2px #fecaca, 0 6px 20px rgba(15, 23, 42, 0.04); }
+.p-safety__situation--emergency .p-safety__icon { background: #fee2e2; color: #dc2626; }
+.p-safety__more,
+.p-safety__more:hover { display: inline-flex; align-items: center; align-self: flex-start; gap: 0.45rem; color: #c2410c; font-weight: 700; text-decoration: none; }
+.p-safety__more:hover { color: #9a3412; }
+.p-safety__more > i,
+.p-safety__more > svg { font-size: 0.85em; }
+
+/* The side */
+.p-safety__side .p-safety__card { display: flex; flex-direction: column; gap: 0.75rem; }
+.p-safety__side h2 { font-size: 1.15rem; }
+.p-safety__side .p-safety__text { font-size: 0.9375rem; line-height: 1.6; }
+.p-safety__contact { background: #fff7ed; box-shadow: inset 0 0 0 1px #fde6d2; }
+.p-safety__contact h2 { display: flex; align-items: center; gap: 0.5rem; }
+.p-safety__contact h2 > i,
+.p-safety__contact h2 > svg { color: #ea7a2e; }
+.p-safety__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.p-safety__actions a { text-decoration: none; }
+.p-safety__links { display: flex; flex-direction: column; gap: 2px; margin: 0 -0.5rem; }
+.p-safety__links a,
+.p-safety__links a:hover { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.5rem; border-radius: 0.75rem; color: #334155; font-weight: 600; text-decoration: none; transition: background 0.15s ease, color 0.15s ease; }
+.p-safety__links a:hover { background: #fff7ed; color: #c2410c; }
+.p-safety__links a > i,
+.p-safety__links a > svg { width: 1rem; color: #ea7a2e; }
+
+/* FAQ */
+.p-safety__qa { display: flex; flex-direction: column; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid #f1f5f9; }
+
+/* Team members */
+.p-safety__members { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; }
+.p-safety__members a,
+.p-safety__members a:hover { display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.25rem 0.75rem 0.25rem 0.25rem; border-radius: 999px; background: #f1f5f9; color: #0f172a; font-size: 0.875rem; font-weight: 600; text-decoration: none; transition: background 0.15s ease, color 0.15s ease; }
+.p-safety__members a:hover { background: #fff7ed; color: #c2410c; }
+.p-safety__members img { border-radius: 999px; object-fit: cover; }
+
+@media (max-width: 991.98px) {
+  .p-safety__columns { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 575.98px) {
+  main.p-safety { padding-top: 1.5rem; }
+  .p-safety__tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .p-safety__tabs::-webkit-scrollbar { display: none; }
+  .p-safety__report { width: 100%; }
+}

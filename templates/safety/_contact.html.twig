@@ -1,0 +1,12 @@
+{# How to reach the Safety Team: the side card of every safety page #}
+{% set _contact = path('feedback', {IdCategory: 2}) %}
+<section class="p-safety__card p-safety__contact" id="contact">
+    <h2><i class="fas fa-shield-halved" aria-hidden="true"></i>{{ 'safety_contact'|trans|striptags }}</h2>
+    <div class="p-safety__text">{{ 'safety_contacttext'|trans({'safety.contacttext.contact.form': '<a href="' ~ _contact ~ '">' ~ 'safety.contacttext.contact.form'|trans ~ '</a>'})|purify }}</div>
+    <div class="p-safety__actions">
+        <a class="c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small" href="{{ _contact }}">{{ 'safetycontact'|trans }}</a>
+        {% if active != 'safety_team' %}
+            <a class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small" href="{{ path('safety_team') }}"><i class="fas fa-users" aria-hidden="true"></i>{{ 'safety_learnaboutteam'|trans }}</a>
+        {% endif %}
+    </div>
+</section>

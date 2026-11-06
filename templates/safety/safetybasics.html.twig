@@ -1,26 +1,13 @@
-{% extends 'base.html.twig' %}
+{% extends 'safety/_layout.html.twig' %}
+{# How to assess whether a member is trustworthy, then on to the safety FAQ #}
+{% set active = 'safety_basics' %}
 
-{% block stylesheets %}
-  {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
-
-{% block title %}
-    {{ 'safety' | trans }}
-{% endblock %}
-
-
-
-{% block content %}
-<div class="o-text">
-    <h1><a href="{{ url('safety') }}">{{ 'safety' | trans }}</a></h1>
-    <span class="clearfix"></span>
-    <div class="row">
-        <div class="col-12">
-        <a id="trustworthy"></a>
-        <h3>{{ 'safety_trustworthy' | trans | purify }}</h3>
-        <p>{{ 'safety_trustworthytext' | trans | purify }}</p>
-        <p><a class="btn btn-outline-primary" href="{{ path('safety_faq')}}"><i class="fa fa-list-ul mr-1"></i>{{'safety_learnaboutfaq' | trans }}</a></p>
-        </div>
-    </div>
-</div>
-{% endblock content %}
+{% block safety_content %}
+    <article class="p-safety__card p-safety__article">
+        <section id="trustworthy">
+            <h1>{{ 'safety_trustworthy'|trans|striptags }}</h1>
+            <div class="p-safety__text">{{ 'safety_trustworthytext'|trans|purify }}</div>
+        </section>
+        <a class="p-safety__more" href="{{ path('safety_faq') }}">{{ 'safety_learnaboutfaq'|trans }}<i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+    </article>
+{% endblock safety_content %}

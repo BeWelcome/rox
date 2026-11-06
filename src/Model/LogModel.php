@@ -91,6 +91,7 @@ class LogModel
             'MarkSpam',
             'MEMBERUPDATE',
             'Members',
+            'NewMembers',
             'message',
             'MyContacts',
             'MyRelations',

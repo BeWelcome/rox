@@ -63,6 +63,7 @@ Encore
     .addEntry('admin/faqs', './assets/js/admin/faqs.js')
     .addEntry('admin/massmail', './assets/js/admin/massmail.js')
     .addEntry('admin/comments', './assets/js/admin/comments.js')
+    .addEntry('admin/newmembers', './assets/js/admin/newmembers.js')
     .addEntry('communitynews', './assets/js/communitynews.js')
     .addEntry('wiki', './assets/js/wiki.js')
     .addEntry('admin/assignments', './assets/js/admin/assignments.js')

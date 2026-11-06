@@ -66,7 +66,7 @@ class GroupCategoryController extends AbstractController
             'categories' => $categories,
             'groupCounts' => $this->getCategoryRepository()->countGroups(),
             'form' => $form,
-            'submenu' => ['items' => $this->getSubMenuItems(), 'active' => 'categories', 'counts' => ['categories' => \count($categories)]],
+            'submenu' => $this->getGroupAdminSubmenu('categories', ['categories' => \count($categories)]),
         ]);
     }
 
@@ -118,7 +118,7 @@ class GroupCategoryController extends AbstractController
             'groupCount' => \count($groups),
             'memberCounts' => $this->getGroupRepository()->countMembersOfGroups($groups),
             'candidates' => $this->getGroupRepository()->findApprovedNotInCategory($category),
-            'submenu' => ['items' => $this->getSubMenuItems(), 'active' => 'categories'],
+            'submenu' => $this->getGroupAdminSubmenu('categories'),
         ]);
     }
 

@@ -1,11 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'policies/_layout.html.twig' %}
+{# The terms of use in a language other than English and French: the translation, below the disclaimer #}
 
-{% block content %}
-    <h1>BeWelcome {{ 'termsofuse'|trans({}, 'messages', locale) }}</h1>
-
-    <div class="o-text">
-        <div class="alert alert-notice">{{ 'policy_disclaimer'|trans({'policy_link_start': '<a href="' ~ policy_english ~ '">', 'policy_link_end': '</a>'}, 'messages', locale)|raw }}</div>
-
-        {{ 'termsofuse.text'|trans({}, 'messages', locale)|raw }}
-    </div>
-{% endblock content %}
+{% set policy = 'terms' %}
+{% set policy_locale = locale %}
+{% set versions = ['en', 'fr'] %}
+{% block policy_title %}BeWelcome {{ 'termsofuse'|trans({}, 'messages', locale) }}{% endblock %}
+{% block policy_note %}{% include 'policies/_disclaimer.html.twig' %}{% endblock %}
+{% block policy_body %}{{ 'termsofuse.text'|trans({}, 'messages', locale)|raw }}{% endblock %}

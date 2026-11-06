@@ -1,11 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends 'policies/_layout.html.twig' %}
+{# The data rights in a language other than English and French: the translation, below the disclaimer #}
 
-{% block content %}
-    <h1>BeWelcome {{ 'dataprivacy'|trans }}</h1>
-
-    <div class="alert alert-notice">{{ 'policy_disclaimer'|trans({'policy_link_start': '<a href="' ~ policy_english ~ '">', 'policy_link_end': '</a>'})|raw }}</div>
-
-    <div class="mt-3">
-        {{ 'dataprivacy.text'|trans|raw }}
-    </div>
-{% endblock content %}
+{% set policy = 'datarights' %}
+{% set policy_locale = locale %}
+{% set versions = ['en', 'fr'] %}
+{% block policy_title %}BeWelcome {{ 'datarights'|trans({}, 'messages', locale) }}{% endblock %}
+{% block policy_note %}{% include 'policies/_disclaimer.html.twig' %}{% endblock %}
+{% block policy_body %}{{ 'dataprivacy.text'|trans({}, 'messages', locale)|raw }}{% endblock %}

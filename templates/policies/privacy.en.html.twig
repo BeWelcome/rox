@@ -1,10 +1,12 @@
-{% extends 'base.html.twig' %}
+{% extends 'policies/_layout.html.twig' %}
 
-{% block content %}
-    <h1>BeWelcome Privacy Policy</h1>
-    <p>This policy was last updated on 9 July 2026. (<a href="{{ url('privacy_policy', {'locale':'fr'}) }}">French
-            version</a>)</p>
+{% set policy = 'privacy' %}
+{% set policy_locale = 'en' %}
+{% block policy_title %}BeWelcome Privacy Policy{% endblock %}
+{% block policy_updated %}This policy was last updated on 9 July 2026.{% endblock %}
 
+{% block policy_body %}
+<section id="introduction">
     <p>BeWelcome offers an online place to get to know people from all over the world and a chance to meet them in
         person.</p>
     <p>BeWelcome respects the privacy of the users of its website, https://www.bewelcome.org. This Privacy Policy
@@ -41,18 +43,25 @@
         information about yourself in the profile makes hosting and being hosted more likely.</p>
     <p>By creating an account and a profile on BeWelcome, you consent to BeVolunteer and other BeWelcome members using
         the personal data that you provide for the purposes of hospitality and cultural exchange.</p>
+</section>
 
-    <h3>Cookies</h3>
+<section id="cookies">
+    <h2>Cookies</h2>
+
     <p>BeWelcome does not set any cookies to obtain or transmit marketing or other information. The only cookies set are
         for the essential purpose of user authentication and to display preference settings. Use of the site will be
         deemed consent to these essential cookies.</p>
-    <h3>Use of information</h3>
+</section>
+
+<section id="use-of-information">
+    <h2>Use of information</h2>
+
     <p>Any member of the BeWelcome community logging in to the BeWelcome website can view the profile information and
         photos that you have uploaded.</p>
     <p>To provide you with some of the features that the BeWelcome community offers to its members, we use the personal
         information that is stored in your profile. How this information is used will depend upon how you set up your
         profile preferences. (For instance, you can opt in or out of the facility which alerts you when other members
-        visit your profile.)
+        visit your profile.)</p>
     <p>If you decide to use certain features of the site, such as the groups or forum, some of the personal information
         you entered into your BeWelcome profile, like your location, may be displayed.</p>
     <p>BeWelcome members can use the search feature to look for other members using various criteria, like location or
@@ -65,8 +74,10 @@
         be kept for a period of about 6 months and is accessible only by technical staff for diagnostic purposes. This
         data, once anonymised, could be used for statistical or research purposes, even beyond that period.
     </p>
+</section>
 
-    <h3>Safety</h3>
+<section id="safety">
+    <h2>Safety</h2>
 
     <p>As BeWelcome members, we open our homes to people we have never met, or stay in their homes while we are
         travelling ourselves. This requires a lot of trust which is often well deserved and the basis for many wonderful
@@ -78,9 +89,11 @@
         messages which are reported as abuse. All such investigations are kept confidential (unless they result in legal
         action) but BeWelcome may retain some details, including personal data, where these are relevant to an
         investigation about an abuse.</p>
+</section>
 
+<section id="sharing">
+    <h2>Information Sharing and Disclosure</h2>
 
-    <h3>Information Sharing and Disclosure</h3>
     <p>BeWelcome does not rent, sell, or share personal information about you with other people or companies except to
         provide the services you have requested, when we have your permission, or as otherwise described in this Privacy
         Policy.</p>
@@ -93,8 +106,10 @@
         account. If you would like to opt out of certain messages, log into BeWelcome and go to your account settings by
         clicking the account link in the top right hand corner. Note that you cannot opt out of certain kinds of
         messages, such Terms of Use changes and messages sent to comply with legislation such as GDPR.</p>
+</section>
 
-    <h3>Suspending or Deleting Your Account</h3>
+<section id="account">
+    <h2>Suspending or Deleting Your Account</h2>
 
     <p>Should you wish to suspend your account, to make your profile inaccessible for a time, but wish to retain your
         account on BeWelcome for use in the future, please use the “set inactive” button on ‘Edit my profile’.</p>
@@ -124,9 +139,10 @@
         cancelled and may therefore become available for future use by a different person. In exceptional circumstances
         - usually where a username has a very personal resonance - BeWelcome will consider a request to make that
         username unavailable for other users.</p>
+</section>
 
-
-    <h3>Confidentiality and Security</h3>
+<section id="security">
+    <h2>Confidentiality and Security</h2>
 
     <p>We limit access to personal information about you to the volunteers who need access to that information to
         provide services to you or in order to run the site.</p>
@@ -140,31 +156,33 @@
     <p>No organisation, including BeWelcome, can fully eliminate security risks associated with personal
         information. We make all reasonable efforts to maintain consistency and security of your data, but
         BeVolunteer cannot be deemed liable in case of accidental data losses and incidental damage.</p>
+</section>
 
-
-    <h3>Other Sites</h3>
+<section id="other-sites">
+    <h2>Other Sites</h2>
 
     <p>Any provision of a link to any other website or location is for your convenience and does not signify our
         endorsement of such other website or location or its contents. We have no control over, do not review, and
         cannot be responsible for these outside websites or their content. Please be aware that the terms of our Privacy
         Policy do not apply to these outside websites.</p>
+</section>
 
-
-    <h3>Contact Us</h3>
+<section id="contact">
+    <h2>Contact Us</h2>
 
     <p>Should you have any questions or concerns regarding this Privacy Policy, please contact us:<br>
         at BeVolunteer, 19 rue de Paris, 35500 Vitré, FRANCE;</p>
     <p>by using the Contact Us link on BeWelcome; or</p>
-    <p>by email to: privacy@bewelcome.org</p>
+    <p>by email to: <a href="mailto:privacy@bewelcome.org">privacy@bewelcome.org</a></p>
+</section>
 
-
-    <h3>Changes to this Privacy Policy</h3>
+<section id="changes">
+    <h2>Changes to this Privacy Policy</h2>
 
     <p>BeWelcome may update this policy from time to time. We will notify you about significant changes in the way we
         treat Personal Information by sending a notice to the primary email address specified in your BeWelcome account
         or by placing a prominent notice on our Website. If you object to any such changes, you must cease using our
         Website. Continued use of our Website following notice of any such changes shall indicate your acknowledgement
         of such changes and agreement to be bound by the terms and conditions of such changes.</p>
-
-
-{% endblock content %}
+</section>
+{% endblock policy_body %}

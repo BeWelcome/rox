@@ -2,7 +2,7 @@
 
 namespace App\Twig;
 
-use App\Service\NativeLanguageNames;
+use App\Service\LanguageNames;
 use App\Utilities\BlockWords;
 use App\Utilities\ForumUtilities;
 use Carbon\Carbon;
@@ -38,7 +38,7 @@ class Extension extends AbstractExtension implements GlobalsInterface
         private readonly LoggerInterface $logger,
         private readonly array $locales,
         private readonly string $publicDirectory,
-        private readonly NativeLanguageNames $nativeLanguageNames,
+        private readonly LanguageNames $languageNames,
         // the purifier bundle's cache (config/packages/exercise_html_purifier.yaml); HTML Purifier's default is in vendor
         #[Autowire('%kernel.cache_dir%/htmlpurifier')]
         private readonly string $purifierCacheDirectory,
@@ -77,15 +77,16 @@ class Extension extends AbstractExtension implements GlobalsInterface
         ];
     }
 
+    /** a language's name in itself (intl, App\Service\LanguageNames) */
     public function languageName(string $locale): string
     {
-        return $this->nativeLanguageNames->get($locale);
+        return $this->languageNames->native($locale);
     }
 
+    /** a language's name in the display language (intl) */
     public function languageNameTranslated(string $locale, string $display): string
     {
-        // trimmed: some language names were stored with a space at the end, which showed in the dropdowns
-        return trim($this->translator->trans(strtolower('lang_' . $locale), [], null, $display));
+        return $this->languageNames->in($locale, $display);
     }
 
     public function ago(Carbon $carbon): string

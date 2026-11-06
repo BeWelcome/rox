@@ -19,6 +19,10 @@
                    data-target="volunteer_menu" data-bs-toggle="dropdown" data-dropdown-click-only aria-haspopup="true" aria-expanded="false"
                    aria-label="{{ 'volunteer' | trans }}">
                     <span class="topbar-icon-dropdown__icon" aria-hidden="true"><i class="fas fa-handshake"></i></span>
+                    {% if app.session.get('translation_mode') == 'on' and is_granted('ROLE_ADMIN_WORDS') %}
+                        <span class="topbar-icon-dropdown__dot" title="{{ 'translation.mode.state.on'|trans }}"></span>
+                        <span class="visually-hidden">{{ 'translation.mode.state.on'|trans }}</span>
+                    {% endif %}
                 </a>
                 <ul id="volunteer_menu" class="dropdown-menu dropdown-menu-right nav-top-dropdown" role="menu">
                     <li class="member-menu__toolbar d-flex d-xl-none">
@@ -37,6 +41,12 @@
                                 <a href="{{ path(team.route) }}" class="dropdown-item text-left">{{ team.trans | trans }}</a>
                             {% endif %}
                         </li>
+                        {# translators turn translation mode on and off right below the translation tool (the footer, which
+                           phones don't show, had it) #}
+                        {% if team.route == 'translations' %}
+                            {% set _mode %}{% include 'layout/_translation_mode.html.twig' with {class: 'dropdown-item text-left'} %}{% endset %}
+                            {% if _mode|trim is not empty %}<li>{{ _mode }}</li>{% endif %}
+                        {% endif %}
                     {% endfor %}
                     <li>
                         <a href="{{ url('getactive') }}" class="dropdown-item text-left">{{ 'about_getactive' | trans }}</a>

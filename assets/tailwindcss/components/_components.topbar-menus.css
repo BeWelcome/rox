@@ -1,0 +1,30 @@
+/*
+ * What moved out of the footer, which phones show only on the front page and the members' home
+ * (footer.html.twig, footer_on_mobile): translation mode in the volunteer menu and in the header of the page's
+ * translation section (layout/_translation_mode.html.twig), with an orange dot on the volunteer menu's handshake
+ * while it is on. The language is on the preferences page.
+ */
+
+/* Phones: no footer except where a page keeps it; the in-place translation panel (also in <footer>) stays */
+@media (max-width: 767.98px) {
+  footer.footer--no-mobile #footer_content { display: none; }
+}
+
+/* The dot on the handshake while translation mode is on */
+#volunteer_menu_toggle { position: relative; }
+.topbar-icon-dropdown__dot { position: absolute; top: 0.3rem; right: 0.15rem; width: 0.6rem; height: 0.6rem; border: 2px solid #fff; border-radius: 999px; background: #ea7a2e; box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.12); pointer-events: none; }
+
+/* The switch: a form whose button looks like a menu item (volunteer menu) or a tool button */
+.c-translation-mode { margin: 0; }
+.c-translation-mode__button { display: flex; align-items: center; gap: 0.5rem; width: 100%; border: 0; background: none; text-align: left; cursor: pointer; }
+.c-translation-mode__button > i,
+.c-translation-mode__button > svg { color: #94a3b8; }
+.c-translation-mode__button.is-on { color: #c2410c; font-weight: 600; }
+.c-translation-mode__button.is-on > i,
+.c-translation-mode__button.is-on > svg { color: #ea7a2e; }
+/* in the header of the translation section of a page (admin/translations/_in_place.html.twig) */
+.c-in-place__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; margin: 0 0 1rem; }
+.c-in-place .c-in-place__head .c-in-place__title { margin: 0; }
+.c-in-place__mode { width: auto; padding: 0.4rem 0.9rem; border: 1px solid #cbd2dc; border-radius: 999px; background: #fff; font-size: 0.875rem; }
+.c-in-place__mode.is-on { border-color: #f37000; background: #fff7ed; }
+.c-in-place__mode:hover { border-color: #f37000; }

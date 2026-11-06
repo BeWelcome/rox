@@ -1,4 +1,6 @@
 {% extends 'base.html.twig' %}
+{# the members' home keeps the footer on phones too #}
+{% set footer_on_mobile = true %}
 {% import 'macros.twig' as macros %}
 
 {% block stylesheets %}

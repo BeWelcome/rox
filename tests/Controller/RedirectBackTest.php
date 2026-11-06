@@ -75,7 +75,9 @@ class RedirectBackTest extends WebTestCase
     {
         $this->client->loginUser($this->member('bwadmin'));
 
-        $this->client->request('GET', '/admin/translations/mode/on');
+        $token = (string) $this->client->request('GET', '/groups/search')->filter('form.c-translation-mode input[name="_token"]')->attr('value');
+        // no Referer: the switch is posted without the page it is on
+        $this->client->request('POST', '/admin/translations/mode/on', ['_token' => $token], [], ['HTTP_REFERER' => '']);
 
         $this->assertResponseRedirects('/admin/translations');
     }

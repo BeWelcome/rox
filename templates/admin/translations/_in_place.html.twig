@@ -3,7 +3,7 @@
   group: missing (no English original yet), not translated yet (shown in English) and translated, each with up to ten
   texts in view. Each opens the edit, add
   or create page in the side panel (assets/js/translations/in_place.js); once saved, the page shows the new text in
-  place. Rendered last in the footer: the texts translated after it (the footer's own end) aren't listed.
+  place. The header has the switch that turns translation mode off. Rendered last in the footer: the texts translated after it (the footer's own end) aren't listed.
 #}
 {% set _texts = in_place_translations(app.user) %}
 {% set _groups = [
@@ -12,7 +12,11 @@
     { key: 'defined', state: constant('Symfony\\Component\\Translation\\DataCollectorTranslator::MESSAGE_DEFINED') },
 ] %}
 <section id="translations" class="c-in-place js-in-place" data-render-url="{{ path('translation_render') }}" aria-labelledby="in-place-title">
-    <h2 class="c-in-place__title" id="in-place-title">{{ 'translation.information'|trans }} <span class="c-in-place__locale">{{ app.request.locale }}</span></h2>
+    <div class="c-in-place__head">
+        <h2 class="c-in-place__title" id="in-place-title">{{ 'translation.information'|trans }} <span class="c-in-place__locale">{{ app.request.locale }}</span></h2>
+        {# turns translation mode off again when the translator is done #}
+        {% include 'layout/_translation_mode.html.twig' with {class: 'c-in-place__mode'} %}
+    </div>
     {# A box per group, up to ten texts in view, the others by scrolling #}
     <div class="c-in-place__groups">
         {% for group in _groups %}

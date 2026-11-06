@@ -134,7 +134,7 @@ final class GroupAdminTest extends WebTestCase
 
     private function token(Crawler $crawler): string
     {
-        return (string) $crawler->filter('form[method="post"] input[name="_token"]')->first()->attr('value');
+        return (string) $crawler->filter('main form[method="post"] input[name="_token"]')->first()->attr('value');
     }
 
     private function id(string $name): int

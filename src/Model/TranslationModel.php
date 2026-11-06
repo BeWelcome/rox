@@ -5,7 +5,6 @@ namespace App\Model;
 use App\Doctrine\DomainType;
 use App\Entity\Word;
 use App\Repository\WordRepository;
-use App\Service\NativeLanguageNames;
 use App\TranslationLoader\DatabaseLoader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -24,7 +23,6 @@ class TranslationModel
         private readonly Filesystem $filesystem,
         private readonly string $cacheDirectory,
         private readonly array $locales,
-        private readonly NativeLanguageNames $nativeLanguageNames,
         private readonly LockFactory $lockFactory,
         #[Autowire('%translator.default_path%')]
         private readonly string $translationsDirectory,
@@ -62,8 +60,6 @@ class TranslationModel
         } finally {
             $lock->release();
         }
-
-        $this->nativeLanguageNames->clear();
     }
 
     /**
@@ -232,8 +228,5 @@ class TranslationModel
         }
 
         ini_set('memory_limit', $memoryLimit);
-
-        // Language names are cached separately from the catalogues; drop them so edits show up.
-        $this->nativeLanguageNames->clear();
     }
 }

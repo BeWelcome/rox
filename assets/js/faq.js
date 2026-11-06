@@ -1,45 +1,18 @@
-import '../scss/faq.scss';
-
-document.addEventListener('DOMContentLoaded', function () {
-    const faqs = document.getElementById('faqs');
-    if (faqs) {
-        const dds = faqs.querySelectorAll('dd');
-        dds.forEach(dd => dd.style.display = 'none');
-
-        const dts = faqs.querySelectorAll('dt');
-        dts.forEach(dt => {
-            dt.addEventListener('click', function (e) {
-                e.preventDefault();
-                const nextDd = this.nextElementSibling;
-                if (nextDd && nextDd.tagName === 'DD') {
-                    if (nextDd.style.display === 'none') {
-                        nextDd.style.display = 'block';
-                    } else {
-                        nextDd.style.display = 'none';
-                    }
-                }
-                
-                const icon = this.querySelector('[data-fa-i2svg]');
-                if (icon) {
-                    icon.classList.toggle('fa-plus-circle');
-                    icon.classList.toggle('fa-minus-circle');
-                }
-            });
-        });
-    }
-    
-    openHash();
-});
-
-window.addEventListener('hashchange', openHash);
-
+/*
+ * The FAQ (templates/faq/faq.html.twig): the questions are <details>; a link to #question12 (also when the hash
+ * changes on the page) opens that question and scrolls to it.
+ */
 function openHash() {
-    let hash = location.hash;
-    if (hash) {
-        const element = document.querySelector(hash);
-        if (element) {
-            element.click();
-            element.scrollIntoView();
-        }
+    const id = window.location.hash.slice(1);
+    if (id === '') {
+        return;
+    }
+    const item = document.getElementById(id);
+    if (item && item.tagName === 'DETAILS') {
+        item.open = true;
+        item.scrollIntoView({block: 'start'});
     }
 }
+
+openHash();
+window.addEventListener('hashchange', openHash);

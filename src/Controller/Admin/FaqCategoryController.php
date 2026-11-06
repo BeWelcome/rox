@@ -37,11 +37,7 @@ class FaqCategoryController extends FaqBaseController
     #[Route(path: '/admin/faqs/category/create', name: 'admin_faqs_category_create')]
     public function createCategoryAction(Request $request): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
-            throw $this->createAccessDeniedException('You need to have Faq right to access this.');
-        }
-
-        $faqCategories = $this->getSubMenuItems();
+        $this->denyUnlessFaqAdmin();
 
         $faqCategoryRequest = new FaqCategoryRequest();
         $faqCategoryForm = $this->createForm(FaqCategoryFormType::class, $faqCategoryRequest);
@@ -83,30 +79,19 @@ class FaqCategoryController extends FaqBaseController
             }
         }
 
-        return $this->render(
-            'admin/faqs/editcreate.category.html.twig',
-            [
-                'submenu' => [
-                    'items' => $faqCategories,
-                    'active' => 'createCategory',
-                ],
-                'form' => $faqCategoryForm->createView(),
-                'edit' => false,
-            ]
-        );
+        return $this->renderAdmin('admin/faqs/editcreate.category.html.twig', [
+            'form' => $faqCategoryForm->createView(),
+            'edit' => false,
+        ], 'create');
     }
 
     #[Route(path: '/admin/faqs/category/{id}/edit', name: 'admin_faqs_category_edit', requirements: ['id' => '\d+'])]
     public function editCategoryAction(Request $request, FaqCategory $faqCategory): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
-            throw $this->createAccessDeniedException('You need to have Faq right to access this.');
-        }
-
-        $faqCategories = $this->getSubMenuItems($faqCategory);
+        $this->denyUnlessFaqAdmin();
 
         $faqCategoryRequest = FaqCategoryRequest::fromFaqCategory($this->entityManager, $faqCategory);
-        $faqCategoryForm = $this->createForm(FaqCategoryFormType::class, $faqCategoryRequest);
+        $faqCategoryForm = $this->createForm(FaqCategoryFormType::class, $faqCategoryRequest, ['edit' => true]);
         $faqCategoryForm->handleRequest($request);
 
         if ($faqCategoryForm->isSubmitted() && $faqCategoryForm->isValid()) {
@@ -127,28 +112,17 @@ class FaqCategoryController extends FaqBaseController
             return $this->redirectToRoute('admin_faqs_overview', ['categoryId' => $faqCategory->getId()]);
         }
 
-        return $this->render(
-            'admin/faqs/editcreate.category.html.twig',
-            [
-                'submenu' => [
-                    'items' => $faqCategories,
-                    'active' => 'editCategory',
-                ],
-                'form' => $faqCategoryForm->createView(),
-                'edit' => true,
-            ]
-        );
+        return $this->renderAdmin('admin/faqs/editcreate.category.html.twig', [
+            'faqCategory' => $faqCategory,
+            'form' => $faqCategoryForm->createView(),
+            'edit' => true,
+        ], $faqCategory->getId());
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.UnusedLocalVariable")
-     */
     #[Route(path: '/admin/faqs/sort', name: 'admin_faqs_category_sort')]
     public function sortFaqCategoriesAction(Request $request, TranslatorInterface $translator): Response
     {
-        if (!$this->isGranted(Member::ROLE_ADMIN_FAQ)) {
-            throw $this->createAccessDeniedException('You need to have Faq right to access this.');
-        }
+        $this->denyUnlessFaqAdmin();
 
         $form = $this->createFormBuilder()
             ->add('sortOrder', HiddenType::class)
@@ -156,41 +130,18 @@ class FaqCategoryController extends FaqBaseController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            if (!empty($data['sortOrder'])) {
-                $ids = explode('&', (string) $data['sortOrder']);
-                array_walk(
-                    $ids,
-                    static function (&$item) {
-                        $item = str_replace('faq=', '', $item);
-                    }
-                );
-                $faqCategoryRepository = $this->entityManager->getRepository(FaqCategory::class);
-                foreach ($ids as $index => $id) {
-                    $faq = $faqCategoryRepository->find($id);
-                    $faq->setSortOrder($index);
-                    $this->entityManager->persist($faq);
-                }
-                $this->entityManager->flush();
-
+            $ids = $this->sortedIds((string) $form->get('sortOrder')->getData());
+            if ([] !== $ids) {
+                $this->faqModel->sortCategories($ids);
                 $this->addFlash('notice', $translator->trans('flash.admin.faq.sort.order.updated'));
-                $this->redirectToRoute('admin_faqs_category_sort');
             }
+
+            return $this->redirectToRoute('admin_faqs_category_sort');
         }
 
-        $subMenuItems = $this->getSubMenuItems();
-        $faqCategories = $this->faqModel->getFaqCategories();
-
-        return $this->render(
-            'admin/faqs/sort.categories.html.twig',
-            [
-                'form' => $form->createView(),
-                'submenu' => [
-                    'items' => $subMenuItems,
-                    'active' => 'sortCategories',
-                ],
-                'faqCategories' => $faqCategories,
-            ]
-        );
+        return $this->renderAdmin('admin/faqs/sort.categories.html.twig', [
+            'form' => $form->createView(),
+            'faqCategories' => $this->faqModel->getFaqCategories(),
+        ], 'sort');
     }
 }

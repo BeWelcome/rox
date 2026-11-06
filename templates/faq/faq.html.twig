@@ -1,32 +1,58 @@
-{% extends 'about/layout.html.twig' %}
+{% extends 'base.html.twig' %}
+{#
+  The FAQ (FaqController): the categories with questions on the side with their number, the questions of one category
+  in the main card, each opening its answer (a <details>, so it works without JavaScript); a link to #question12
+  opens that one. The questions and answers are translations (faqq_… and faqa_…) with their own paragraphs.
+  Expects faqCategory, faqs, categories and counts.
+#}
+
+{% block title %}{{ 'aboutfaq'|trans }}{% endblock %}
 
 {% block javascripts %}
     {{ encore_entry_script_tags('faq') }}
 {% endblock javascripts %}
 
-{% block stylesheets %}
-    {{ encore_entry_link_tags('faq') }}
-    {{ encore_entry_link_tags('tailwind') }}
-{% endblock stylesheets %}
+{% block main %}
+    <main role="main" class="p-faq">
+        <div class="container-lg">
+            <header class="p-faq__head">
+                <p class="c-page-head__eyebrow">{{ 'faq'|trans }}</p>
+                <h1>{{ 'aboutfaq'|trans }}</h1>
+            </header>
 
-{% block title %}
-    {{  'faq' | trans }}
-{% endblock %}
+            <div class="p-faq__columns">
+                <aside class="p-faq__side">
+                    <nav class="p-faq__card p-faq__categories" aria-label="{{ 'faq'|trans }}">
+                        {% for category in categories|filter(category => (counts[category.id] ?? 0) > 0 or category.id == faqCategory.id) %}
+                            {% set _active = category.id == faqCategory.id %}
+                            <a class="p-faq__category{{ _active ? ' is-active' }}" href="{{ path('faqs_overview', {category: category.id}) }}"{% if _active %} aria-current="page"{% endif %}>
+                                <span>{{ category.description|lower|trans }}</span>
+                                <span class="p-faq__count">{{ counts[category.id] ?? 0 }}</span>
+                            </a>
+                        {% endfor %}
+                    </nav>
+                    <section class="p-faq__card p-faq__help">
+                        <h2>{{ 'faq.more.title'|trans }}</h2>
+                        <p>{{ 'faq.more.text'|trans }}</p>
+                        <a class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small" href="{{ path('contactus') }}"><i class="fas fa-envelope" aria-hidden="true"></i>{{ 'contactus'|trans }}</a>
+                    </section>
+                </aside>
 
-{% block content %}
-<div class="row o-text">
-	<div class="col-12">
-		<h1>{{ 'aboutfaq' | trans}}</h1>
-		<h2>{{ faqCategory.description | lower | trans }}</h2>
-
-		<dl id="faqs">
-			{% for faq in faqs %}
-				<dt id="question{{ faq.id }}" class="h5"><i class="fas fa-plus-circle"></i> {{ ('faqq_' ~ faq.QandA) | lower | trans | striptags | purify }}</dt>
-				<dd>{{ ('<span>' ~ ('faqa_' ~ faq.QandA) | lower | trans ~ '</span>') | purify }}</dd>
-			{% endfor %}
-		</dl>
-	</div>
-</div>
-
-   
-{% endblock content %}
+                <section class="p-faq__card p-faq__main">
+                    <h2 class="p-faq__title">{{ faqCategory.description|lower|trans }}</h2>
+                    {% for faq in faqs %}
+                        <details class="p-faq__item" id="question{{ faq.id }}">
+                            <summary>
+                                <span>{{ ('faqq_' ~ faq.QandA)|lower|trans|striptags|trim }}</span>
+                                <i class="fas fa-chevron-down" aria-hidden="true"></i>
+                            </summary>
+                            <div class="p-faq__answer">{{ ('faqa_' ~ faq.QandA)|lower|trans|purify }}</div>
+                        </details>
+                    {% else %}
+                        <p class="p-faq__empty">{{ 'faqs.none'|trans }}</p>
+                    {% endfor %}
+                </section>
+            </div>
+        </div>
+    </main>
+{% endblock main %}

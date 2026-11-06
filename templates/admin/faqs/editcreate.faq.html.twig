@@ -1,44 +1,28 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/faqs/_layout.html.twig' %}
+{#
+  A new FAQ in a category, or an edit: the category, the translation id (fixed once the FAQ exists), the question
+  and the answer in English, and whether members see it. Expects form, edit, faqCategory and, when editing, faq.
+#}
 
-{% block subnav %}
-    {% for filter,menuItem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ menuItem.url }}">{{ menuItem.key | lower | trans }}</a>
-    {% endfor %}
-{% endblock %}
-
-{% block content %}
-    {% if edit %}
-        <h1>{{ 'admin.faq.edit' | trans}}</h1>
-    {% else %}
-        <h1>{{ 'admin.faq.create' | trans }}</h1>
-    {% endif %}
-    {{ form_start(form, {"attr": {"novalidate":"novalidate"}}) }}
-    {{ form_errors(form) }}
-    <div class="mb-3">
-        {{ form_label(form.faqCategory) }}
-        {{ form_widget(form.faqCategory) }}
-        <small class="form-text text-muted">The category the FAQ will be added to (read-only).</small>
-    </div>
-    <div class="mb-3">
-        {{ form_label(form.wordCode) }}
-        {{ form_widget(form.wordCode) }}
-        <small class="form-text text-muted">The word code to be used for the FAQ.</small>
-    </div>
-    <div class="mb-3">
-        {{ form_label(form.question) }}
-        {{ form_widget(form.question) }}
-        <small class="form-text text-muted">The question to be answered (English only).</small>
-    </div>
-    <div class="mb-3">
-        {{ form_label(form.answer) }}
-        {{ form_widget(form.answer) }}
-        <small class="form-text text-muted">The answer to the question (English only).</small>
-    </div>
-    <div class="mb-3">
-        {{ form_widget(form.active) }}
-        <small class="form-text text-muted">Is this an active FAQ (read will be shown to the users).</small>
-    </div>
-    {{ form_end(form) }}
+{% block faq_admin %}
+    <section class="p-faq__card p-faq__main p-faq__form">
+        <div class="p-faq__title-row">
+            <h2 class="p-faq__title">{{ (edit ? 'admin.faq.edit' : 'admin.faq.create')|trans }}</h2>
+            <a class="p-faq__back" href="{{ path('admin_faqs_overview', {categoryId: faqCategory.id}) }}"><i class="fas fa-chevron-left" aria-hidden="true"></i> {{ faqCategory.description|lower|trans({}, 'messages', 'en') }}</a>
+        </div>
+        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+            {{ form_errors(form) }}
+            {{ form_row(form.faqCategory, {help: 'admin.faqs.help.category'}) }}
+            {{ form_row(form.wordCode, {help: edit ? 'admin.faqs.help.code.fixed' : 'admin.faqs.help.code'}) }}
+            {{ form_row(form.question, {help: 'admin.faqs.help.english'}) }}
+            {{ form_row(form.answer, {help: 'admin.faqs.help.english'}) }}
+            {{ form_row(form.active, {help: 'admin.faqs.help.active'}) }}
+            <div class="p-faq__actions">
+                {% if form.FaqCreate is defined %}{{ form_widget(form.FaqCreate, {attr: {class: 'c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small'}}) }}{% endif %}
+                {% if form.FaqUpdate is defined %}{{ form_widget(form.FaqUpdate, {attr: {class: 'c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small'}}) }}{% endif %}
+                <a class="c-cadmin-btn c-cadmin-btn--quiet c-cnews-btn-small" href="{{ path('admin_faqs_overview', {categoryId: faqCategory.id}) }}">{{ 'cancel'|trans }}</a>
+            </div>
+            {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </section>
 {% endblock %}

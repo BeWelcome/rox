@@ -1,25 +1,24 @@
-{% extends 'base.html.twig' %}
-{% import 'macros.twig' as macros %}
+{% extends 'admin/faqs/_layout.html.twig' %}
+{#
+  A new FAQ category, or an edit of its English name: the translation id (fixed once the category exists) and the
+  name. Expects form, edit and, when editing, faqCategory.
+#}
 
-{% block subnav %}
-    {% for filter,menuItem in submenu.items %}
-        <a class="list-group-item nav-link {% if submenu.active == filter %}active{% endif %}"
-           href="{{ menuItem.url }}">{{ menuItem.key | lower | trans }}</a>
-    {% endfor %}
-{% endblock %}
-
-{% block content %}
-    {% if edit %}
-        <h1>{{ 'admin.faq.edit.category' | trans}}</h1>
-    {% else %}
-        <h1>{{ 'admin.faq.create.category' | trans }}</h1>
-    {% endif %}
-    {{ form_start(form) }}
-    <div class="mb-3">
-        {{ form_row(form.wordCode) }}
-    </div>
-    <div class="mb-3">
-        {{ form_row(form.description) }}
-    </div>
-    {{ form_end(form) }}
+{% block faq_admin %}
+    <section class="p-faq__card p-faq__main p-faq__form">
+        <div class="p-faq__title-row">
+            <h2 class="p-faq__title">{{ (edit ? 'admin.faq.edit.category' : 'admin.faq.create.category')|trans }}</h2>
+            {% if edit %}<a class="p-faq__back" href="{{ path('admin_faqs_overview', {categoryId: faqCategory.id}) }}"><i class="fas fa-chevron-left" aria-hidden="true"></i> {{ faqCategory.description|lower|trans({}, 'messages', 'en') }}</a>{% endif %}
+        </div>
+        {{ form_start(form) }}
+            {{ form_errors(form) }}
+            {{ form_row(form.wordCode) }}
+            {{ form_row(form.description) }}
+            <div class="p-faq__actions">
+                {% if form.FaqCategoryCreate is defined %}{{ form_widget(form.FaqCategoryCreate, {attr: {class: 'c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small'}}) }}{% endif %}
+                {% if form.FaqCategoryUpdate is defined %}{{ form_widget(form.FaqCategoryUpdate, {attr: {class: 'c-cadmin-btn c-cadmin-btn--primary c-cnews-btn-small'}}) }}{% endif %}
+            </div>
+            {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </section>
 {% endblock %}

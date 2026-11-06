@@ -1,0 +1,2 @@
+{# The note on a translated policy: the English version is the one that counts. Expects locale and policy_english. #}
+<div class="alert alert-notice p-policies__disclaimer">{{ 'policy_disclaimer'|trans({'policy_link_start': '<a href="' ~ policy_english ~ '">', 'policy_link_end': '</a>'}, 'messages', locale)|raw }}</div>

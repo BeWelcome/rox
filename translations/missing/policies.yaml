@@ -1,0 +1,21 @@
+policies.eyebrow:
+  - 'BeWelcome policies'
+  - 'Policies (terms of use, privacy policy, data rights): the eyebrow above the tabs. French: « Politiques de BeWelcome ».'
+policies.toc:
+  - 'On this page'
+  - 'Policies: the heading of the list of sections. French: « Sur cette page ».'
+policies.introduction:
+  - 'Introduction'
+  - 'Policies: the list entry of the text before the first heading.'
+policies.readnext:
+  - 'Read next'
+  - 'Policies: above the links to the two other documents at the end. French: « À lire aussi ».'
+policies.version.en:
+  - 'English version'
+  - 'Policies: the link to the English text. French: « Version anglaise ».'
+policies.version.fr:
+  - 'French version'
+  - 'Policies: the link to the French text. French: « Version française ».'
+policies.authoritative:
+  - 'Authoritative version'
+  - 'Policies: on the French texts, which are the ones that count in legal matters. French: « Version faisant foi ».'

@@ -50,6 +50,7 @@ class PoliciesController extends AbstractController
             return $this->render('policies/pp_translated.html.twig', [
                 'policy_french' => $this->generateUrl('privacy_policy', ['locale' => 'fr']),
                 'policy_english' => $this->generateUrl('privacy_policy', ['locale' => 'en']),
+                'locale' => $locale,
             ]);
         }
 
@@ -65,6 +66,7 @@ class PoliciesController extends AbstractController
             return $this->render('policies/dp_translated.html.twig', [
                 'policy_french' => $this->generateUrl('data_rights', ['locale' => 'fr']),
                 'policy_english' => $this->generateUrl('data_rights', ['locale' => 'en']),
+                'locale' => $locale,
             ]);
         }
 

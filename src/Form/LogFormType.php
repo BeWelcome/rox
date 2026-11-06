@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LogFormType extends AbstractType
 {
@@ -32,6 +33,15 @@ class LogFormType extends AbstractType
                     'class' => 'member-autocomplete',
                 ],
             ]);
+    }
+
+    /**
+     * A filter in the URL (GET): nothing to protect, and the page builds its own fields (admin/logs/index.html.twig).
+     */
+    #[Override]
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults(['csrf_protection' => false]);
     }
 
     #[Override]
